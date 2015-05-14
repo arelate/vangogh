@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,6 +49,8 @@
     <Compile Include="GOG\Games.cs" />
     <Compile Include="GOG\Images.cs" />
     <Compile Include="GOG\GamePage.cs" />
+    <Compile Include="Shared\HTMLHelper.cs" />
+    <Compile Include="Shared\Interfaces.cs" />
     <Compile Include="Shared\JSON.cs" />
     <Compile Include="Shared\Network.cs" />
     <Compile Include="GOG\Settings.cs" />
@@ -55,9 +58,13 @@
     <Compile Include="GOG\Wishlist.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Separators.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
