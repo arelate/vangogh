@@ -49,6 +49,9 @@
     <Compile Include="GOG\Games.cs" />
     <Compile Include="GOG\Images.cs" />
     <Compile Include="GOG\GamePage.cs" />
+    <Compile Include="GOG\Model\AccountModels.cs" />
+    <Compile Include="GOG\Model\Common.cs" />
+    <Compile Include="GOG\Model\GamesModels.cs" />
     <Compile Include="Shared\HTMLHelper.cs" />
     <Compile Include="Shared\Interfaces.cs" />
     <Compile Include="Shared\JSON.cs" />

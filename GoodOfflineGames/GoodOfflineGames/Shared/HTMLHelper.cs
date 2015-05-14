@@ -155,42 +155,42 @@ namespace GOG
             return attributeValuesCollection;
         }
 
-        public static List<string> ExtractInnerContent(string html, string fromTagValue, string toTagValue)
-        {
-            List<string> valuesToDiscard = new List<string>() { "/div", "br", "br\\", " ", "div class=\"list_det_head\"", "/span", "span", "My serial number:" };
-            List<string> innerHtmlStrings = SplitStringToInnerHtml(html);
-            List<string> filteredValues = new List<string>();
+        //public static List<string> ExtractInnerContent(string html, string fromTagValue, string toTagValue)
+        //{
+        //    List<string> valuesToDiscard = new List<string>() { "/div", "br", "br\\", " ", "div class=\"list_det_head\"", "/span", "span", "My serial number:" };
+        //    List<string> innerHtmlStrings = SplitStringToInnerHtml(html);
+        //    List<string> filteredValues = new List<string>();
 
-            if (innerHtmlStrings == null)
-            {
-                return null;
-            }
+        //    if (innerHtmlStrings == null)
+        //    {
+        //        return null;
+        //    }
 
-            bool processingInnerContent = false;
-            foreach (string line in innerHtmlStrings)
-            {
-                if (line.Contains(toTagValue))
-                {
-                    break;
-                }
+        //    bool processingInnerContent = false;
+        //    foreach (string line in innerHtmlStrings)
+        //    {
+        //        if (line.Contains(toTagValue))
+        //        {
+        //            break;
+        //        }
 
-                if (line.Contains(fromTagValue))
-                {
-                    processingInnerContent = true;
-                    continue;
-                }
+        //        if (line.Contains(fromTagValue))
+        //        {
+        //            processingInnerContent = true;
+        //            continue;
+        //        }
 
-                if (processingInnerContent)
-                {
-                    if (!valuesToDiscard.Contains(line))
-                    {
-                        filteredValues.Add(line.Trim());
-                    }
-                }
+        //        if (processingInnerContent)
+        //        {
+        //            if (!valuesToDiscard.Contains(line))
+        //            {
+        //                filteredValues.Add(line.Trim());
+        //            }
+        //        }
 
-            }
+        //    }
 
-            return filteredValues;
-        }
+        //    return filteredValues;
+        //}
     }
 }
