@@ -49,18 +49,21 @@
     <Compile Include="GOG\Games.cs" />
     <Compile Include="GOG\Images.cs" />
     <Compile Include="GOG\GamePage.cs" />
-    <Compile Include="GOG\Model\AccountModels.cs" />
-    <Compile Include="GOG\Model\Common.cs" />
-    <Compile Include="GOG\Model\GamesModels.cs" />
+    <Compile Include="GOG\Model\AccountResult.cs" />
+    <Compile Include="GOG\Model\Product.cs" />
+    <Compile Include="GOG\Model\GamesResult.cs" />
+    <Compile Include="GOG\Model\PagedProductResult.cs" />
+    <Compile Include="GOG\Storage.cs" />
     <Compile Include="Shared\HTMLHelper.cs" />
     <Compile Include="Shared\Interfaces.cs" />
     <Compile Include="Shared\JSON.cs" />
     <Compile Include="Shared\Network.cs" />
     <Compile Include="GOG\Settings.cs" />
-    <Compile Include="GOG\Urls.cs" />
+    <Compile Include="GOG\UrlsQueryParameters.cs" />
     <Compile Include="GOG\Wishlist.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\PagedResults.cs" />
     <Compile Include="Shared\Separators.cs" />
   </ItemGroup>
   <ItemGroup>

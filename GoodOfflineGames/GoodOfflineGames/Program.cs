@@ -13,12 +13,38 @@ namespace GOG
         {
             var consoleController = new ConsoleController();
             var streamController = new StreamController();
+            var storage = new Storage(streamController);
+
+            var jsonDataPrefix = "var data = ";
+            var filename = "data.js";
+            GamesResult storedGames = null;
+
+            try
+            {
+                var storedGamesJson = storage.Pull(filename)
+                    .Result
+                    .Replace(jsonDataPrefix, string.Empty);
+                storedGames = JSON.Parse<GamesResult>(storedGamesJson);
+            }
+            catch (IOException)
+            {
+                // ...
+            }
 
             Settings settings = Settings.LoadSettings(consoleController, streamController).Result;
 
             Auth.AuthorizeOnSite(settings, consoleController).Wait();
 
-            //string data = Network.Request(Urls.AccountGetFilteredProducts, QueryParameters.AccountGetFilteredProducts).Result;
+            var games = new Games(consoleController);
+            var gamesResult = games.GetGames().Result;
+
+            var account = new Account(consoleController);
+            var accountResult = account.GetAccountGames().Result;
+
+            games.MergeAccountGames(gamesResult, accountResult);
+
+            var gamesResultJson = "var data = " + JSON.Stringify(gamesResult);
+            storage.Put(filename, gamesResultJson).Wait();
         }
     }
 
