@@ -54,11 +54,11 @@ namespace GOG
 
             // mark all owned games as owned
 
-            ProductsResult.MarkAllOwned(accountResult);
+            accountResult.MarkAllAsOwned();
 
             // merge owned games into all available games 
 
-            ProductsResult.MergeOwned(gamesResult, accountResult);
+            gamesResult.MergeOwned(accountResult);
 
             // serialize and save on disk
 
@@ -68,7 +68,6 @@ namespace GOG
             // download new images 
             var images = new Images(ioController, consoleController);
             images.Update(gamesResult).Wait();
-            //images.Update(storedGames).Wait();
 
             // nothing left to do here
 
@@ -76,6 +75,8 @@ namespace GOG
             Console.ReadLine();
         }
     }
+
+    #region Console controller
 
     class ConsoleController : IConsoleController
     {
@@ -111,6 +112,10 @@ namespace GOG
         }
     }
 
+    #endregion
+
+    #region IOController
+
     class IOController : IIOController
     {
         public Stream OpenReadable(string uri)
@@ -138,5 +143,7 @@ namespace GOG
             Directory.CreateDirectory(uri);
         }
     }
+
+    #endregion
 
 }

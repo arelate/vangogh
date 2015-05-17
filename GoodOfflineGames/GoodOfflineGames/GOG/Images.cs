@@ -9,8 +9,6 @@ namespace GOG
 {
     public class Images
     {
-        // TODO: Understand and cache images from GOG image servers
-
         private const int standardWidth = 196;
         private const int retinaWidth = standardWidth * 2;
         private int[] imageWidths = new int[2] { standardWidth, retinaWidth };
