@@ -12,39 +12,68 @@ namespace GOG
         static void Main(string[] args)
         {
             var consoleController = new ConsoleController();
-            var streamController = new StreamController();
-            var storage = new Storage(streamController);
+            var ioController = new IOController();
+            var storage = new Storage(ioController);
 
             var jsonDataPrefix = "var data = ";
             var filename = "data.js";
-            GamesResult storedGames = null;
+            ProductsResult storedGames = null;
 
             try
             {
                 var storedGamesJson = storage.Pull(filename)
                     .Result
                     .Replace(jsonDataPrefix, string.Empty);
-                storedGames = JSON.Parse<GamesResult>(storedGamesJson);
+                storedGames = JSON.Parse<ProductsResult>(storedGamesJson);
             }
-            catch (IOException)
+            catch
             {
-                // ...
+                // file not found or couldn't be read
+                storedGames = new ProductsResult();
             }
 
-            Settings settings = Settings.LoadSettings(consoleController, streamController).Result;
+            Settings settings = Settings.LoadSettings(consoleController, ioController).Result;
 
             Auth.AuthorizeOnSite(settings, consoleController).Wait();
 
-            var games = new Games(consoleController);
-            var gamesResult = games.GetGames().Result;
+            // get all available games from gog.com/games
 
-            var account = new Account(consoleController);
-            var accountResult = account.GetAccountGames().Result;
+            var gamesResult = ProductsResult.RequestUpdated(storedGames,
+                Urls.GamesAjaxFiltered,
+                QueryParameters.GamesAjaxFiltered,
+                consoleController,
+                "Getting all games available on GOG.com...").Result;
 
-            games.MergeAccountGames(gamesResult, accountResult);
+            // get all owned games from gog.com/account
+
+            var accountResult = ProductsResult.RequestUpdated(storedGames,
+                Urls.AccountGetFilteredProducts,
+                QueryParameters.AccountGetFilteredProducts,
+                consoleController,
+                "Getting account games...").Result;
+
+            // mark all owned games as owned
+
+            ProductsResult.MarkAllOwned(accountResult);
+
+            // merge owned games into all available games 
+
+            ProductsResult.MergeOwned(gamesResult, accountResult);
+
+            // serialize and save on disk
 
             var gamesResultJson = "var data = " + JSON.Stringify(gamesResult);
             storage.Put(filename, gamesResultJson).Wait();
+
+            // download new images 
+            var images = new Images(ioController, consoleController);
+            images.Update(gamesResult).Wait();
+            //images.Update(storedGames).Wait();
+
+            // nothing left to do here
+
+            Console.WriteLine("All done. Press ENTER to quit...");
+            Console.ReadLine();
         }
     }
 
@@ -82,7 +111,7 @@ namespace GOG
         }
     }
 
-    class StreamController : IStreamController
+    class IOController : IIOController
     {
         public Stream OpenReadable(string uri)
         {
@@ -92,6 +121,21 @@ namespace GOG
         public Stream OpenWritable(string uri)
         {
             return new FileStream(uri, FileMode.Create, FileAccess.Write, FileShare.Read);
+        }
+
+        public bool ExistsFile(string uri)
+        {
+            return File.Exists(uri);
+        }
+
+        public bool ExistsDirectory(string uri)
+        {
+            return Directory.Exists(uri);
+        }
+
+        public void CreateDirectory(string uri)
+        {
+            Directory.CreateDirectory(uri);
         }
     }
 

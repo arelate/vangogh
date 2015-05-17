@@ -44,6 +44,25 @@ namespace GOG
         // ...
     }
 
+    public interface IFileController
+    {
+        bool ExistsFile(string uri);
+    }
+
+    public interface IDirectoryController
+    {
+        void CreateDirectory(string uri);
+        bool ExistsDirectory(string uri);
+    }
+
+    public interface IIOController:
+        IStreamController, 
+        IFileController,
+        IDirectoryController
+    {
+        // ...
+    }
+
     public interface IUsername
     {
         string Username { get; set; }
@@ -59,17 +78,5 @@ namespace GOG
         IPassword
     {
         // ..
-    }
-
-    public interface IDownloadRetinaImages
-    {
-        bool DownloadRetinaImages { get; set; }
-    }
-
-    public interface ISettings:
-        ICredentials,
-        IDownloadRetinaImages
-    {
-        // ...
     }
 }

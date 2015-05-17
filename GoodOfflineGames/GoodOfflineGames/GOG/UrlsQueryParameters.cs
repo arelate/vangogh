@@ -8,13 +8,13 @@ namespace GOG
 {
     public static class Urls
     {
-        private const string HttpProtocol = "http:";
-        private const string HttpsProtocol = "https:";
+        public const string HttpProtocol = "http:";
+        public const string HttpsProtocol = "https:";
         // Roots
         private const string Root = HttpsProtocol + "//www.gog.com";
         private const string Login = HttpsProtocol + "//login.gog.com";
         private const string Auth = HttpsProtocol + "//auth.gog.com";
-        public const string ImagesTemplate = HttpProtocol + "//images-{0}.gog.com";
+        //public const string ImagesTemplate = HttpProtocol + "//images-{0}.gog.com";
         // Authentication flow
         public const string Authenticate = Auth + "/auth";
         public const string LoginCheck = Login + "/login_check";
@@ -56,7 +56,7 @@ namespace GOG
         {
             { "mediaType", "game" },
             { "page", "1" },
-            { "sort", SortBy.Bestselling }
+            { "sort", SortBy.DateAdded }
         };
 
         public static Dictionary<string, string> Authenticate = new Dictionary<string, string>()

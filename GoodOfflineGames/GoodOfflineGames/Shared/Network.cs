@@ -10,7 +10,6 @@ namespace GOG
 {
     class Network
     {
-        // TODO: Port async download helper
         public const string postMethod = "POST";
         public const string getMethod = "GET";
         private const string defaultUserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko";
@@ -22,7 +21,15 @@ namespace GOG
         private static HttpWebRequest request = null;
         private static CookieContainer sharedCookies = new CookieContainer();
 
-        private static async Task<WebResponse> RequestResponse(string uri, string method, string data, string accept, string referer, Dictionary<string, string> additionalHeaders = null)
+        // TODO: we probably don't need few parameters anymore...
+
+        private static async Task<WebResponse> RequestResponse(
+            string uri,
+            string method,
+            string data,
+            string accept,
+            string referer,
+            Dictionary<string, string> additionalHeaders = null)
         {
             Uri requestUri = new Uri(uri);
 
@@ -112,13 +119,35 @@ namespace GOG
             return uri;
         }
 
+        public async static Task DownloadFile(string fromUri, string toFile, IStreamWritableController streamWriteableController)
+        {
+            WebResponse response = await RequestResponse(fromUri, getMethod, null, acceptHtml, null, null);
+            int bufferSize = 64 * 1024; // 64K
+            byte[] buffer = new byte[bufferSize];
+            int bytesRead = 0;
+
+            if (response != null)
+            {
+                using (Stream writeableStream = streamWriteableController.OpenWritable(toFile))
+                {
+                    using (Stream responseStream = response.GetResponseStream())
+                    {
+                        while ((bytesRead = await responseStream.ReadAsync(buffer, 0, bufferSize)) > 0)
+                        {
+                            await writeableStream.WriteAsync(buffer, 0, bytesRead);
+                        }
+                    }
+                }
+            }
+        }
+
         public async static Task<string> Request(
             string baseUri,
-            Dictionary<string, string> parameters = null, 
-            string method = getMethod, 
-            string data = null, 
-            string accept = acceptHtml, 
-            string referer = null, 
+            Dictionary<string, string> parameters = null,
+            string method = getMethod,
+            string data = null,
+            string accept = acceptHtml,
+            string referer = null,
             Dictionary<string, string> additionalHeaders = null)
         {
 

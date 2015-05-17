@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace GOG
 {
     class Auth
     {
-        // TODO: Authenticate on server to get available games
         public static async Task AuthorizeOnSite(ICredentials credentials, IConsoleController consoleController) {
 
             consoleController.WriteLine("Authorizing {0} on GOG.com...", credentials.Username);
@@ -17,16 +17,10 @@ namespace GOG
 
             string authResponse = await Network.Request(Urls.Authenticate, QueryParameters.Authenticate);
 
-            List<Dictionary<string, string>> loginTokenAttributesValues = HTMLHelper.ExtractAttributesValues(
-                authResponse,
-                new List<string>() { "login__token" },
-                new List<string>() { "value" });
-
-            string loginToken = string.Empty;
-            if (loginTokenAttributesValues.Count > 0)
-            {
-                loginToken = loginTokenAttributesValues[0]["value"];
-            }
+            // extracting login token that is 43 characters (letters, numbers...)
+            Regex regex = new Regex(@"\w{43}");
+            var match = regex.Match(authResponse);
+            string loginToken = match.Value;
 
             // login using username / password
 

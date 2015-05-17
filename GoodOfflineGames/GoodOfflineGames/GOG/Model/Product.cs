@@ -146,7 +146,7 @@ namespace GOG
         // GoodOfflineGames data
         [DataMember(Name = "owned")]
         public bool Owned { get; set; }
-        [DataMember(Name = "wishlist")]
+        [DataMember(Name = "wishlisted")]
         public bool Wishlisted { get; set; }
     }
 }

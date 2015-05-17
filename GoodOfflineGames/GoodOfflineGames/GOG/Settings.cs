@@ -9,21 +9,18 @@ using System.IO;
 namespace GOG
 {
     [DataContract]
-    class Settings: ISettings
+    class Settings: ICredentials
     {
         // TODO: Move properties and defaults from GOGServices
         [DataMember(Name = "username")]
         public string Username { get; set; }
         [DataMember(Name = "password")]
         public string Password { get; set; }
-        [DataMember(Name = "downloadRetinaImages")]
-        public bool DownloadRetinaImages { get; set; }
 
         private Settings()
         {
             Username = string.Empty;
             Password = string.Empty;
-            DownloadRetinaImages = true;
         }
 
         public static async Task<Settings> LoadSettings(
