@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace GOG
 {
-    class Auth
+    class AuthenticationController
     {
         public static async Task AuthorizeOnSite(ICredentials credentials, IConsoleController consoleController) {
 
@@ -15,7 +15,7 @@ namespace GOG
 
             // request authorization token
 
-            string authResponse = await Network.Request(Urls.Authenticate, QueryParameters.Authenticate);
+            string authResponse = await NetworkController.RequestString(Urls.Authenticate, QueryParameters.Authenticate);
 
             // extracting login token that is 43 characters (letters, numbers...)
             Regex regex = new Regex(@"\w{43}");
@@ -28,9 +28,9 @@ namespace GOG
             QueryParameters.LoginAuthenticate["login[password]"] = credentials.Password;
             QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
 
-            string loginData = Network.CombineQueryParameters(QueryParameters.LoginAuthenticate);
+            string loginData = NetworkController.CombineQueryParameters(QueryParameters.LoginAuthenticate);
 
-            await Network.Request(Urls.LoginCheck, null, "POST", loginData);
+            await NetworkController.RequestString(Urls.LoginCheck, null, "POST", loginData);
 
             consoleController.WriteLine("Successfully authorized {0} on GOG.com.", credentials.Username);
         }

@@ -3,26 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.Serialization;
 using System.IO;
 
 namespace GOG
 {
-    [DataContract]
-    class Settings: ICredentials
+    class SettingsController
     {
-        // TODO: Move properties and defaults from GOGServices
-        [DataMember(Name = "username")]
-        public string Username { get; set; }
-        [DataMember(Name = "password")]
-        public string Password { get; set; }
-
-        private Settings()
-        {
-            Username = string.Empty;
-            Password = string.Empty;
-        }
-
         public static async Task<Settings> LoadSettings(
             IConsoleController consoleController,
             IStreamController streamController)
@@ -37,7 +23,7 @@ namespace GOG
                     using (StreamReader streamReader = new StreamReader(streamReadable, Encoding.UTF8))
                     {
                         string settingsString = await streamReader.ReadToEndAsync();
-                        settings = JSON.Parse<Settings>(settingsString);
+                        settings = JSONController.Parse<Settings>(settingsString);
                     }
                 }
             }

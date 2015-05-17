@@ -58,7 +58,7 @@ namespace GOG
         [DataMember(Name = "downloads")]
         public LanguageDownloads Downloads { get; set; }
         [DataMember(Name = "extras")]
-        public string Extras { get; set; }
+        public List<DownloadEntry> Extras { get; set; }
         [DataMember(Name = "forumLink")]
         public string ForumLink { get; set; }
         [DataMember(Name = "isPreOrder")]

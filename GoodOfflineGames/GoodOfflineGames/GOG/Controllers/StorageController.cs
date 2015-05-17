@@ -7,11 +7,11 @@ using System.IO;
 
 namespace GOG
 {
-    public class Storage
+    public class StorageController
     {
         private IStreamController streamController;
 
-        public Storage(IStreamController streamController)
+        public StorageController(IStreamController streamController)
         {
             this.streamController = streamController;
         }

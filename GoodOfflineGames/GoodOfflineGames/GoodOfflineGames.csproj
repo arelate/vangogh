@@ -44,22 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GOG\Auth.cs" />
-    <Compile Include="GOG\Images.cs" />
-    <Compile Include="GOG\GameDetails.cs" />
+    <Compile Include="GOG\Controllers\AuthenticationController.cs" />
+    <Compile Include="GOG\Controllers\GameDetailsController.cs" />
+    <Compile Include="GOG\Controllers\ProductsResultController.cs" />
+    <Compile Include="GOG\Controllers\ImagesController.cs" />
+    <Compile Include="GOG\Model\GameDetails.cs" />
+    <Compile Include="GOG\Model\ProductData.cs" />
     <Compile Include="GOG\Model\Product.cs" />
     <Compile Include="GOG\Model\ProductResult.cs" />
-    <Compile Include="GOG\Storage.cs" />
-    <Compile Include="Shared\HTMLHelper.cs" />
-    <Compile Include="Shared\Interfaces.cs" />
-    <Compile Include="Shared\JSON.cs" />
-    <Compile Include="Shared\Network.cs" />
-    <Compile Include="GOG\Settings.cs" />
-    <Compile Include="GOG\UrlsQueryParameters.cs" />
-    <Compile Include="GOG\Wishlist.cs" />
+    <Compile Include="GOG\Controllers\ProductDataController.cs" />
+    <Compile Include="GOG\Controllers\StorageController.cs" />
+    <Compile Include="GOG\NetworkConstants\QueryParameters.cs" />
+    <Compile Include="SharedControllers\SettingsController.cs" />
+    <Compile Include="SharedModels\Interfaces.cs" />
+    <Compile Include="SharedControllers\JSONController.cs" />
+    <Compile Include="SharedControllers\NetworkController.cs" />
+    <Compile Include="SharedModels\Settings.cs" />
+    <Compile Include="GOG\NetworkConstants\Urls.cs" />
+    <Compile Include="GOG\Controllers\WishlistController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shared\Separators.cs" />
+    <Compile Include="SharedModels\Separators.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

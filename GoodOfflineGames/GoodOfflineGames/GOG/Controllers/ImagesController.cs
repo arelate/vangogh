@@ -7,7 +7,7 @@ using System.IO;
 
 namespace GOG
 {
-    public class Images
+    public class ImagesController
     {
         private const int standardWidth = 196;
         private const int retinaWidth = standardWidth * 2;
@@ -17,7 +17,7 @@ namespace GOG
         private IIOController ioController;
         private IConsoleController consoleController;
 
-        public Images(IIOController ioController, IConsoleController consoleController)
+        public ImagesController(IIOController ioController, IConsoleController consoleController)
         {
             this.ioController = ioController;
             this.consoleController = consoleController;
@@ -67,7 +67,7 @@ namespace GOG
 
                 consoleController.Write(".");
 
-                await Network.DownloadFile(imageUri, localFilename, ioController);
+                await NetworkController.RequestFile(imageUri, localFilename, ioController);
             }
         }
 

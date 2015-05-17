@@ -13,7 +13,7 @@ namespace GOG
         {
             var consoleController = new ConsoleController();
             var ioController = new IOController();
-            var storage = new Storage(ioController);
+            var storage = new StorageController(ioController);
 
             var jsonDataPrefix = "var data = ";
             var filename = "data.js";
@@ -24,7 +24,7 @@ namespace GOG
                 var storedGamesJson = storage.Pull(filename)
                     .Result
                     .Replace(jsonDataPrefix, string.Empty);
-                storedGames = JSON.Parse<ProductsResult>(storedGamesJson);
+                storedGames = JSONController.Parse<ProductsResult>(storedGamesJson);
             }
             catch
             {
@@ -32,41 +32,58 @@ namespace GOG
                 storedGames = new ProductsResult();
             }
 
-            Settings settings = Settings.LoadSettings(consoleController, ioController).Result;
+            var settings = SettingsController.LoadSettings(consoleController, ioController).Result;
 
-            Auth.AuthorizeOnSite(settings, consoleController).Wait();
+            AuthenticationController.AuthorizeOnSite(settings, consoleController).Wait();
+
+            //storedGames.UpdateProductsDetails().Wait();
 
             // get all available games from gog.com/games
 
-            var gamesResult = ProductsResult.RequestUpdated(storedGames,
+            var gamesResult = ProductsResultController.RequestUpdated(storedGames,
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
                 consoleController,
                 "Getting all games available on GOG.com...").Result;
 
+            // update product data from game pages
+
+            //gamesResult.UpdateProductData(consoleController).Wait();
+
             // get all owned games from gog.com/account
 
-            var accountResult = ProductsResult.RequestUpdated(storedGames,
+            // filter owned products, so that we can check if account has got new owned games,
+            // and not just new games, also this is critical as we mark games as owned later
+            var storedOwned = new ProductsResult();
+            storedOwned.Products = storedGames.Products.FindAll(p => p.Owned);
+
+            var ownedResult = ProductsResultController.RequestUpdated(storedOwned,
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
                 consoleController,
                 "Getting account games...").Result;
 
-            // mark all owned games as owned
-
-            accountResult.MarkAllAsOwned();
+            // mark all new owned games as owned
+            var ownedResultController = new ProductsResultController(ownedResult);
+            ownedResultController.MarkAllAsOwned();
 
             // merge owned games into all available games 
 
-            gamesResult.MergeOwned(accountResult);
+            var gamesResultController = new ProductsResultController(gamesResult);
+            gamesResultController.MergeOwned(ownedResult);
+
+            // update game details for all owned games
+
+            var gameDetailsController = new GameDetailsController(gamesResult);
+            gameDetailsController.UpdateGameDetails(consoleController).Wait();
 
             // serialize and save on disk
 
-            var gamesResultJson = "var data = " + JSON.Stringify(gamesResult);
+            var gamesResultJson = "var data = " + JSONController.Stringify(gamesResult);
             storage.Put(filename, gamesResultJson).Wait();
 
             // download new images 
-            var images = new Images(ioController, consoleController);
+            var images = new ImagesController(ioController, consoleController);
             images.Update(gamesResult).Wait();
 
             // nothing left to do here

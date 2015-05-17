@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GOG
 {
-    class Wishlist
+    class WishlistController
     {
         // TODO: Download and cache wishlist
     }

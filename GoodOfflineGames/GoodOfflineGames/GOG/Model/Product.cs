@@ -148,5 +148,9 @@ namespace GOG
         public bool Owned { get; set; }
         [DataMember(Name = "wishlisted")]
         public bool Wishlisted { get; set; }
+        [DataMember(Name = "gameDetails")]
+        public GameDetails GameDetails { get; set; }
+        [DataMember(Name = "productData")]
+        public ProductData ProductData { get; set; }
     }
 }
