@@ -19,8 +19,8 @@
             #products {
                 text-align: center;
                 position: relative;
-                width: 95%;
-                margin: 5em auto;
+                width: 98%;
+                margin: 4em auto;
             }
     
             .product {
@@ -29,6 +29,8 @@
                 margin: 0.2em 0.2em 0 0;
                 display: inline-block;
                 position: relative;
+                cursor: pointer;
+                overflow: hidden;
             }
     
                 .product .state {
@@ -36,6 +38,8 @@
                     padding: 0.2em 0.5em; 
                     position: absolute;
                     outline: black 1px solid;
+                        user-select: none;
+                    cursor: default;
                 }
     
                 .product.wishlisted .wishlisted,
@@ -62,7 +66,8 @@
             position: absolute;
             bottom :0;
             width: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.75);
+            user-select: none;
             }
     
            .state.wishlisted {
@@ -87,7 +92,8 @@
             
         <script src="data.js"></script>
         <script>
-            "use strict";
+
+        "use strict";
             
         // srcset polyfill
         var ImageSources = (function () {

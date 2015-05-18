@@ -13,11 +13,5 @@ namespace GOG
         public const string QueryStringParameters = "&";
         // common
         public const string KeyValueSeparator = "=";
-        // html helper
-        public const string HtmlOpenTag = "<";
-        public const string HtmlExplicitCloseTag = "/>";
-        public const string HtmlImplicitCloseTag = ">";
-        public const char Attributes = ' ';
-        public const char AttributeValueQuote = '"';
     }
 }

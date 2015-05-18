@@ -18,7 +18,7 @@ namespace GOG
             string authResponse = await NetworkController.RequestString(Urls.Authenticate, QueryParameters.Authenticate);
 
             // extracting login token that is 43 characters (letters, numbers...)
-            Regex regex = new Regex(@"\w{43}");
+            Regex regex = new Regex(@"[\w-]{43}");
             var match = regex.Match(authResponse);
             string loginToken = match.Value;
 
