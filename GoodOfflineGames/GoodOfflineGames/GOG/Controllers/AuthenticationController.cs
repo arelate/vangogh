@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace GOG
 {
     class AuthenticationController
     {
-        public static async Task<bool> AuthorizeOnSite(ICredentials credentials, IConsoleController consoleController) {
+        public static async Task<bool> AuthorizeOnSite(ICredentials credentials, IConsoleController consoleController)
+        {
 
             consoleController.WriteLine("Authorizing {0} on GOG.com...", credentials.Username);
 
@@ -17,7 +14,7 @@ namespace GOG
 
             string authResponse = await NetworkController.RequestString(Urls.Authenticate, QueryParameters.Authenticate);
 
-            // extracting login token that is 43 characters (letters, numbers...)
+            // extracting login token that is 43 characters (letters, numbers, - ...)
             Regex regex = new Regex(@"[\w-]{43}");
             var match = regex.Match(authResponse);
             string loginToken = match.Value;
@@ -31,13 +28,14 @@ namespace GOG
             string loginData = NetworkController.CombineQueryParameters(QueryParameters.LoginAuthenticate);
 
             var loginCheckResult = await NetworkController.RequestString(Urls.LoginCheck, null, "POST", loginData);
-            
+
             if (loginCheckResult.Contains("gogData"))
             {
                 // successful login
                 consoleController.WriteLine("Successfully authorized {0} on GOG.com.", credentials.Username);
                 return true;
-            } else
+            }
+            else
             {
                 consoleController.WriteLine("Failed to authenticate user with provided username and password.");
                 return false;
