@@ -9,7 +9,7 @@ namespace GOG
 {
     class AuthenticationController
     {
-        public static async Task AuthorizeOnSite(ICredentials credentials, IConsoleController consoleController) {
+        public static async Task<bool> AuthorizeOnSite(ICredentials credentials, IConsoleController consoleController) {
 
             consoleController.WriteLine("Authorizing {0} on GOG.com...", credentials.Username);
 
@@ -30,9 +30,18 @@ namespace GOG
 
             string loginData = NetworkController.CombineQueryParameters(QueryParameters.LoginAuthenticate);
 
-            await NetworkController.RequestString(Urls.LoginCheck, null, "POST", loginData);
-
-            consoleController.WriteLine("Successfully authorized {0} on GOG.com.", credentials.Username);
+            var loginCheckResult = await NetworkController.RequestString(Urls.LoginCheck, null, "POST", loginData);
+            
+            if (loginCheckResult.Contains("gogData"))
+            {
+                // successful login
+                consoleController.WriteLine("Successfully authorized {0} on GOG.com.", credentials.Username);
+                return true;
+            } else
+            {
+                consoleController.WriteLine("Failed to authenticate user with provided username and password.");
+                return false;
+            }
         }
     }
 }

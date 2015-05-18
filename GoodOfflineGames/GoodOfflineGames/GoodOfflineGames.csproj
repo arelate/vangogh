@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="GOG\Controllers\AuthenticationController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsController.cs" />
+    <Compile Include="GOG\Controllers\GogDataController.cs" />
     <Compile Include="GOG\Controllers\ProductsResultController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
     <Compile Include="GOG\Model\GameDetails.cs" />

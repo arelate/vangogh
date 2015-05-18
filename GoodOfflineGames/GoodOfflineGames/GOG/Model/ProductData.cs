@@ -62,7 +62,7 @@ namespace GOG
         [DataMember(Name = "id")]
         public long Id { get; set; }
         [DataMember(Name = "releaseDate")]
-        public long ReleaseDate { get; set; }
+        public long? ReleaseDate { get; set; }
         [DataMember(Name = "title")]
         public string Title { get; set; }
         [DataMember(Name = "image")]

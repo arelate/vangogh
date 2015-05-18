@@ -30,6 +30,6 @@ namespace GOG
         // Game page
         //public const string GamePage = Root + "/game/";
         // Wishlist
-        public const string AccountWishlist = Account + "/wishlist";
+        public const string Wishlist = Account + "/wishlist";
     }
 }

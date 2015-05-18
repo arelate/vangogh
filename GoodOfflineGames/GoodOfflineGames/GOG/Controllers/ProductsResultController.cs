@@ -70,7 +70,7 @@ namespace GOG
             return existing;
         }
 
-        public void MarkAllAsOwned()
+        public void UpdateOwned()
         {
             productsResult.Products.Select(p => p.Owned = true);
         }
@@ -87,30 +87,6 @@ namespace GOG
                 else productsResult.Products.Add(op);
 
             });
-        }
-
-        public async Task UpdateStoreProductData(IConsoleController consoleController)
-        {
-            string gogDataPrefix = "var gogData = ";
-            Regex regex = new Regex(gogDataPrefix + "(.*)");
-
-            foreach (Product product in productsResult.Products)
-            {
-                if (string.IsNullOrEmpty(product.Url)) continue;
-
-                var gamePageUri = Urls.HttpRoot + product.Url;
-                var gamePageContent = await NetworkController.RequestString(gamePageUri);
-
-                var match = regex.Match(gamePageContent);
-                string gogDataString = match.Value.Substring(
-                    gogDataPrefix.Length, // drop the prefix var gogData = 
-                    match.Value.Length - gogDataPrefix.Length - 1); // and closing ";"
-
-                GOGData gogData = JSONController.Parse<GOGData>(gogDataString);
-
-                consoleController.WriteLine(gogData.ToString());
-                //var gogData = 
-            }
         }
     }
 }

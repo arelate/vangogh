@@ -19,6 +19,8 @@ namespace GOG
             var filename = "data.js";
             ProductsResult storedGames = null;
 
+            // Try to load stored games data and use it to update games rather than download again
+
             try
             {
                 var storedGamesJson = storage.Pull(filename)
@@ -34,9 +36,12 @@ namespace GOG
 
             var settings = SettingsController.LoadSettings(consoleController, ioController).Result;
 
-            AuthenticationController.AuthorizeOnSite(settings, consoleController).Wait();
-
-            //storedGames.UpdateProductsDetails().Wait();
+            if (!AuthenticationController.AuthorizeOnSite(settings, consoleController).Result)
+            {
+                consoleController.WriteLine("Press ENTER to exit...");
+                consoleController.ReadLine();
+                return;
+            }
 
             // get all available games from gog.com/games
 
@@ -48,12 +53,14 @@ namespace GOG
 
             // update product data from game pages
 
-            //gamesResult.UpdateProductData(consoleController).Wait();
+            var productDataController = new ProductDataController(gamesResult);
+            //productDataController.UpdateProductData(consoleController).Wait();
 
             // get all owned games from gog.com/account
 
             // filter owned products, so that we can check if account has got new owned games,
             // and not just new games, also this is critical as we mark games as owned later
+
             var storedOwned = new ProductsResult();
             storedOwned.Products = storedGames.Products.FindAll(p => p.Owned);
 
@@ -64,8 +71,9 @@ namespace GOG
                 "Getting account games...").Result;
 
             // mark all new owned games as owned
+
             var ownedResultController = new ProductsResultController(ownedResult);
-            ownedResultController.MarkAllAsOwned();
+            ownedResultController.UpdateOwned();
 
             // merge owned games into all available games 
 
@@ -77,12 +85,17 @@ namespace GOG
             var gameDetailsController = new GameDetailsController(gamesResult);
             gameDetailsController.UpdateGameDetails(consoleController).Wait();
 
+            // update wishlisted games
+            var wishlistController = new WishlistController(gamesResult);
+            wishlistController.UpdateWishlisted(consoleController).Wait();
+
             // serialize and save on disk
 
             var gamesResultJson = "var data = " + JSONController.Stringify(gamesResult);
             storage.Put(filename, gamesResultJson).Wait();
 
             // download new images 
+
             var images = new ImagesController(ioController, consoleController);
             images.Update(gamesResult).Wait();
 
