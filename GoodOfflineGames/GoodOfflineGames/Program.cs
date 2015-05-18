@@ -54,7 +54,7 @@ namespace GOG
             // update product data from game pages
 
             var productDataController = new ProductDataController(gamesResult);
-            productDataController.UpdateProductData(consoleController).Wait();
+            //productDataController.UpdateProductData(consoleController).Wait();
 
             // get all owned games from gog.com/account
 
