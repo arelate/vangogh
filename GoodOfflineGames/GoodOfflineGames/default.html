@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+    
+    <head>
+        <title>GOG.com collection</title>
+        <style>
+            * {
+                font-family: "Segoe UI"; 
+                font-size: 8px;
+                box-sizing:border-box;
+                }
+    
+           body {
+            background: black;
+            padding: 0em;
+            margin: 0em;
+           }
+    
+            #products {
+                text-align: center;
+                position: relative;
+                width: 95%;
+                margin: 5em auto;
+            }
+    
+            .product {
+                width: 196px;
+                height: 110px;
+                margin: 0.2em 0.2em 0 0;
+                display: inline-block;
+                position: relative;
+            }
+    
+                .product .state {
+                    display: none;
+                    padding: 0.2em 0.5em; 
+                    position: absolute;
+                    outline: black 1px solid;
+                }
+    
+                .product.wishlisted .wishlisted,
+                .product.owned .owned,
+                .product.available .available
+            {
+                    display: block;
+                }
+    
+                .product img {
+                    width: 100%;
+                    height: 100%;
+                    padding: 0;
+                    margin: 0;
+                }
+
+            .product .title {
+                white-space: nowrap;
+                overflow: hidden;
+            text-overflow: ellipsis;
+            color: white;
+            padding: 0.5em;
+            text-transform: uppercase;
+            position: absolute;
+            bottom :0;
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            }
+    
+           .state.wishlisted {
+            background: #F0CE4E;
+           }
+    
+           .state.owned {
+            background: #55A300;
+            color: white;
+        }
+    
+          .state.available {
+          background: #5E4694;
+            color: white;
+          }
+        </style>
+    </head>
+    
+    <body>
+        
+        <div id="products"></div>
+            
+        <script src="data.js"></script>
+        <script>
+            "use strict";
+            
+        // srcset polyfill
+        var ImageSources = (function () {
+            var images = [];
+            // make it so we try to show ~1000 images over first 1 second
+            var imagesBatchSize = 17;
+
+            var setSources = function () {
+
+                for (var ii = 0; ii < imagesBatchSize; ii++) {
+
+                    var image = images.shift();
+
+                    if (!image) return;
+
+                    var srcset = image.getAttribute("data-srcset");
+
+                    if (srcset) {
+                        image.srcset = srcset;
+                    }
+                }
+
+                if (images.length) {
+                    requestAnimationFrame(setSources);
+                }
+            };
+            // initialize
+            var init = function () {
+
+                var imageElements = document.getElementsByTagName("img");
+                for (var ii = 0; ii < imageElements.length; ii++) {
+                    images.push(imageElements[ii]);
+                }
+                setSources();
+            };
+
+            return {
+                "init": init
+            };
+        })();
+
+            
+            var productTemplate = "<div class='product {state}'>"+
+                    "<div class='state wishlisted'>WISHLISTED</div>"+
+                    "<div class='state owned'>OWNED</div>"+ 
+                    "<div class='state available'>AVAILABLE</div>"+
+                    "<img data-srcset='_images/{image}_196.jpg 1x, _images/{image}_392.jpg 2x' />" +
+                    "<div class='title' >{title}</div>"+
+                    "</div>";
+    
+               function bindToData(template, model) {
+                   var result = template;
+                   for (var property in model) {
+                       
+                       var replacedProperty = "{" + property + "}";
+                       
+                       while (result.indexOf(replacedProperty) > -1) {
+                            result = result.replace(replacedProperty, model[property]);
+                       }
+                   }
+                   return result;
+               }
+    
+                document.addEventListener("DOMContentLoaded", function () {
+    
+                    var html = "";
+    
+                    for (var ii = 0; ii < data.products.length; ii++) {
+    
+                        var p = data.products[ii];
+    
+                        var state = "available";
+                        if (p.owned) state = "owned";
+                        if (p.wishlisted) state = "wishlisted";
+    
+                        var imageParts = p.image.split("/");
+                        var image = imageParts[imageParts.length - 1];
+    
+                        var model = {
+                            "state": state,
+                            "image": image,
+                            "title": p.title
+                        };
+    
+                        html += bindToData(productTemplate, model);
+    
+                    }
+    
+                    document.getElementById("products").innerHTML = html;
+                    
+                    ImageSources.init();
+                });
+        </script>
+    </body>
+
+</html>
