@@ -1,7 +1,7 @@
 GoodOfflineGames
 ================
 
-Note: this is a modern version of https://github.com/boggydigital/GOGService that uses current GOG.com site APIs. Using this opportunity I've removed most of the redundant parts and application is now structured to support further development and easier support. 
+Note: this is a modern version of GOGService that uses current GOG.com site APIs. Using this opportunity I've removed most of the redundant code. Application is now structured to support further development and easier support. 
 
 ![Screenshot](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/screenshot.png)
 HTML front end for offline GOG.com collection (games only at this time). Supports incremental updates and caching of images  and serial keys. Cross-platform frontend to downloaded products that looks good, supports search and stores some critical data offline (serial keys). It doesn't have any additional dependecies - having your disk with your collection and this data is all you need to use this on any PC that has a browser.
