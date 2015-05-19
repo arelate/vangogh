@@ -16,7 +16,7 @@ namespace GOG
             this.productsResult = productsResult;
         }
 
-        public static async Task<ProductsResult> RequestUpdated(
+        public static async Task<ProductsResult> RequestNew(
             ProductsResult existing,
             string uri,
             Dictionary<string, string> queryParameters,
@@ -27,6 +27,11 @@ namespace GOG
             int currentPageIndex = 1;
             ProductsResult currentPage = null;
             int totalNewProducts = 0;
+
+            if (existing == null)
+            {
+                existing = new ProductsResult();
+            }
 
             if (!queryParameters.Keys.Contains(pageQueryParameter))
             {
@@ -88,6 +93,19 @@ namespace GOG
 
             });
         }
+
+        public void MergeUpdated(ProductsResult updated)
+        {
+            if (updated == null) return;
+
+            updated.Products.ForEach(op =>
+            {
+                var game = productsResult.Products.Find(p => p.Id == op.Id);
+                if (game != null) game.Updates = 1;
+                else throw new InvalidOperationException("Games that are not owned cannot be marked updated.");
+            });
+        }
+
     }
 }
 

@@ -45,16 +45,11 @@ namespace GOG
 
             // get all available games from gog.com/games
 
-            var gamesResult = ProductsResultController.RequestUpdated(storedGames,
+            var gamesResult = ProductsResultController.RequestNew(storedGames,
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
                 consoleController,
                 "Getting all games available on GOG.com...").Result;
-
-            // update product data from game pages
-
-            var productDataController = new ProductDataController(gamesResult);
-            productDataController.UpdateProductData(consoleController).Wait();
 
             // get all owned games from gog.com/account
 
@@ -64,11 +59,22 @@ namespace GOG
             var storedOwned = new ProductsResult();
             storedOwned.Products = storedGames.Products.FindAll(p => p.Owned);
 
-            var ownedResult = ProductsResultController.RequestUpdated(storedOwned,
+            // get all games owned by user
+
+            var ownedResult = ProductsResultController.RequestNew(storedOwned,
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
                 consoleController,
                 "Getting account games...").Result;
+
+            // separately get all updated products
+
+            QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
+            var updatedResult = ProductsResultController.RequestNew(null,
+                Urls.AccountGetFilteredProducts,
+                QueryParameters.AccountGetFilteredProducts,
+                consoleController,
+                "Getting updated games...").Result;
 
             // mark all new owned games as owned
 
@@ -79,6 +85,17 @@ namespace GOG
 
             var gamesResultController = new ProductsResultController(gamesResult);
             gamesResultController.MergeOwned(ownedResult);
+
+            // merge updated games into owned games
+            gamesResultController.MergeUpdated(updatedResult);
+
+            // update details for individual games
+            // TODO: create single loop with parameters to update based on templates and predicates
+
+            // update product data from game pages
+
+            var productDataController = new ProductDataController(gamesResult);
+            productDataController.UpdateProductData(consoleController).Wait();
 
             // update game details for all owned games
 

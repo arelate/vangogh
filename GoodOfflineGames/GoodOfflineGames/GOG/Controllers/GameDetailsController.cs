@@ -19,10 +19,9 @@ namespace GOG
 
             foreach (Product product in productsResult.Products.FindAll(p => p.Owned))
             {
-                // skip games that already have game details
-                // TODO: make sure we have the right games marked as updated
-                if (product.GameDetails != null)
-                    continue;
+                // skip games that already have game details and have no updates
+                if (product.GameDetails != null &&
+                    product.Updates == 0) continue;
 
                 consoleController.Write(".");
 
@@ -30,6 +29,9 @@ namespace GOG
                 var gameDetails = await NetworkController.RequestData<GameDetails>(gameDetailsUri);
 
                 product.GameDetails = gameDetails;
+
+                // mark the game as not updated to avoid the need to update details in the future
+                product.Updates = 0;
             };
 
             consoleController.WriteLine("DONE.");
