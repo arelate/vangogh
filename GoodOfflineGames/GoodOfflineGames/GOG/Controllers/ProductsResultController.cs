@@ -59,7 +59,8 @@ namespace GOG
                     newProducts.Count() > 0)
                 {
                     totalNewProducts += newProducts.Count();
-                    existing.Products.AddRange(newProducts);
+                    // insert new games at the start
+                    existing.Products.InsertRange(0, newProducts);
                 }
                 else
                 {

@@ -7,7 +7,7 @@
     <style>
         * {
             font-family: "Segoe UI";
-            font-size: 8px;
+            font-size: 10px;
             box-sizing: border-box;
         }
 
@@ -21,6 +21,10 @@
             display: none !important;
         }
 
+        #products {
+            padding-bottom: 20em;
+        }
+
         #products,
         #searchContainer {
             text-align: center;
@@ -32,7 +36,7 @@
         .product {
             width: 196px;
             height: 110px;
-            margin: 0.2em 0.2em 0 0;
+            margin: 0.2em 0.2em 0;
             display: inline-block;
             position: relative;
             cursor: pointer;
@@ -49,12 +53,12 @@
                 cursor: default;
             }
 
-            .product.wishlisted .wishlisted,
-            .product.owned .owned,
-            .product.available .available,
-            .product.updated .updated {
-                display: block;
-            }
+                .product.wishlisted .wishlisted,
+                .product.owned .owned,
+                .product.available .available,
+                .product.updated .updated {
+                    display: block;
+                }
 
             .product img {
                 width: 100%;
@@ -104,15 +108,66 @@
             width: 50%;
             max-width: 25em;
         }
+
+        #productDetails {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2em;
+            padding-bottom: 3em;
+            background: black;
+            color: white;
+            outline: 1px solid rgba(255,255,255,0.25);
+        }
+
+            #productDetails .title {
+                font-size: 3em;
+                font-weight: 200;
+                margin-bottom: 0.5em;
+            }
+
+            #productDetails .label,
+            #productDetails .value {
+                font-size: 1.25em;
+                padding-right: 0.5em;
+            }
+
+            #productDetails .value {
+                font-weight: bold;
+            }
+
+            #productDetails a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            #productDetails .downloaderLinks {
+                margin-top: 1em;
+            }
     </style>
 </head>
 
 <body>
     <div id="searchContainer">
-        <input id="search" type="text" placeholder="Type to search..." />
+        <input id="search" type="text" placeholder="Type to search..." tabindex="0" />
     </div>
 
     <div id="products"></div>
+
+    <div id="productDetails" class="hidden">
+
+        <div class="title"></div>
+        <div>
+            <span class="developer"><span class="label">Developer:</span><span class="value"></span></span>
+            <span class="publisher"><span class="label">Publisher:</span><span class="value"></span></span>
+            <span class="series hidden"><span class="label">Series:</span><span class="value"></span></span>
+        </div>
+        <div class="downloaderLinks hidden">
+            <a class="value" href="#">Downloader links</a>
+        </div>
+    </div>
+
     <script src="./data.js"></script>
     <script>
         "use strict";
@@ -172,12 +227,12 @@
             }
         }();
 
-        var Templating = function () {
+        var DataBinding = function () {
             var productTemplate = "<div class='product {{productClass}}' data-id='{{id}}'>" +
                 "<div class='state wishlisted'>WISHLISTED</div>" +
                 "<div class='state owned'>OWNED</div>" +
                 "<div class='state available'>AVAILABLE</div>" +
-                "<div class='updated'>UPDATED</div>"+
+                "<div class='updated'>UPDATED</div>" +
                 "<img data-srcset='_images/{{image}}_196.jpg 1x, _images/{{image}}_392.jpg 2x' />" +
                 "<div class='title' title='{{title}}' >{{title}}</div>" +
                 "</div>";
@@ -279,7 +334,6 @@
             }
         }();
 
-
         var Search = function () {
             var show = [];
             var hide = [];
@@ -325,16 +379,84 @@
 
         }();
 
+        var ProductDetails = function () {
+            var productDetails = $("productDetails");
+            var pdTitle = productDetails.querySelector(".title");
+            var pdPublisher = productDetails.querySelector(".publisher .value");
+            var pdDeveloper = productDetails.querySelector(".developer .value");
+            var pdSeries = productDetails.querySelector(".series .value");
+            var pdSeriesContainer = productDetails.querySelector(".series");
+            var pdDownloaderLinksTitle = productDetails.querySelector(".downloaderLinks");
+            var pdDownloaderLinks = pdDownloaderLinksTitle.querySelector("a");
+
+            var getProductById = function (id) {
+                var productId = parseInt(id);
+                for (var ii = 0; ii < data.products.length; ii++) {
+                    if (data.products[ii].id == productId) {
+                        return data.products[ii];
+                    }
+                }
+            }
+            var show = function (id) {
+                var product = getProductById(id);
+                pdTitle.textContent = product.title;
+                // available in store
+                if (product.productData) {
+                    pdPublisher.textContent = product.productData.publisher.name;
+                    pdDeveloper.textContent = product.productData.developer.name;
+
+                    if (product.productData.series.name) {
+                        pdSeries.textContent = product.productData.series.name;
+                        pdSeriesContainer.classList.remove("hidden");
+                    } else {
+                        pdSeriesContainer.classList.add("hidden");
+                    }
+                } else {
+                    pdPublisher.textContent = "N/A";
+                    pdDeveloper.textContent = "N/A";
+                }
+
+                // owned
+                if (product.gameDetails) {
+                    //pdDownloaderLinksTitle.classList.remove("hidden");
+
+                } else {
+                    pdDownloaderLinksTitle.classList.add("hidden");
+                }
+                //alert(product.title);
+                productDetails.classList.remove("hidden");
+
+            }
+            var init = function () {
+                var products = document.getElementsByClassName("product");
+                for (var ii = 0; ii < products.length; ii++) {
+                    products[ii].addEventListener("click", function (e) {
+                        show(e.currentTarget.getAttribute("data-id"));
+                        e.stopPropagation();
+                    });
+                }
+                document.body.addEventListener("click", function () {
+                    productDetails.classList.add("hidden");
+                });
+            }
+            return {
+                "show": show,
+                "init": init
+            }
+        }();
+
         document.addEventListener("DOMContentLoaded", function () {
 
             Cache.init(data.products);
             var html = "";
             for (var ii = 0; ii < data.products.length; ii++) {
 
-                html += Templating.createProductView(data.products[ii], ModelProvider.getProductModel);
+                html += DataBinding.createProductView(data.products[ii], ModelProvider.getProductModel);
             }
 
             document.getElementById("products").innerHTML = html;
+
+            ProductDetails.init();
 
             SearchIndex.init(data.products);
 
@@ -345,6 +467,7 @@
             search.addEventListener("input", function (e) {
                 Search.search(e.currentTarget.value.toLowerCase())
             });
+
         });
     </script>
 </body>
