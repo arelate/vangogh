@@ -39,7 +39,8 @@
             overflow: hidden;
         }
 
-            .product .state {
+            .product .state,
+            .product .updated {
                 display: none;
                 padding: 0.2em 0.5em;
                 position: absolute;
@@ -50,7 +51,8 @@
 
             .product.wishlisted .wishlisted,
             .product.owned .owned,
-            .product.available .available {
+            .product.available .available,
+            .product.updated .updated {
                 display: block;
             }
 
@@ -73,6 +75,12 @@
                 width: 100%;
                 background: rgba(0,0,0,0.75);
                 user-select: none;
+            }
+
+            .product .updated {
+                right: 0;
+                background: red;
+                color: white;
             }
 
         .state.wishlisted {
@@ -117,7 +125,7 @@
         var ImageSources = function () {
             var images = [];
             // try to show ~1000 images over first 1 second
-            var imagesBatchSize = 10;
+            var imagesBatchSize = 50;
             var setSources = function () {
                 for (var ii = 0; ii < imagesBatchSize; ii++) {
                     var image = images.shift();
@@ -165,10 +173,11 @@
         }();
 
         var Templating = function () {
-            var productTemplate = "<div class='product {{state}}'>" +
+            var productTemplate = "<div class='product {{productClass}}' data-id='{{id}}'>" +
                 "<div class='state wishlisted'>WISHLISTED</div>" +
                 "<div class='state owned'>OWNED</div>" +
                 "<div class='state available'>AVAILABLE</div>" +
+                "<div class='updated'>UPDATED</div>"+
                 "<img data-srcset='_images/{{image}}_196.jpg 1x, _images/{{image}}_392.jpg 2x' />" +
                 "<div class='title' title='{{title}}' >{{title}}</div>" +
                 "</div>";
@@ -221,6 +230,8 @@
                     if (p.worksOn.Mac) parts.push("mac osx");
                     if (p.worksOn.Linux) parts.push("linux");
 
+                    if (p.updates) parts.push("updated");
+
                     searchIndex.push(parts.join(" "));
                 });
             };
@@ -246,15 +257,17 @@
 
         var ModelProvider = function () {
             var getProductModel = function (product) {
-                var state = "available";
-                if (product.owned) state = "owned";
-                if (product.wishlisted) state = "wishlisted";
+                var productClass = "available";
+                if (product.owned) productClass = "owned";
+                if (product.wishlisted) productClass = "wishlisted";
+                if (product.updates) productClass += " updated";
 
                 var imageParts = product.image.split("/");
                 var image = imageParts[imageParts.length - 1];
 
                 var model = {
-                    "state": state,
+                    "id": product.id,
+                    "productClass": productClass,
                     "image": image,
                     "title": product.title
                 };
@@ -270,10 +283,14 @@
         var Search = function () {
             var show = [];
             var hide = [];
-            var batchSize = 5;
+            var batchSize = 50;
             var productElements = document.getElementsByClassName("product");
+            var callback = undefined;
 
             var search = function (text) {
+
+                if (callback) cancelAnimationFrame(callback);
+
                 show = [];
                 hide = [];
                 var matchingIndexes = SearchIndex.match(text);
@@ -284,24 +301,22 @@
                         show.push(ii);
                     }
                 }
-                showResults();
+                callback = requestAnimationFrame(showResults);
             }
             var showResults = function (text) {
+
                 for (var ii = 0; ii < batchSize; ii++) {
-                    var showNext = show.shift();
-                    var hideNext = hide.shift();
 
-                    if (showNext !== undefined) {
-                        productElements[showNext].classList.remove("hidden");
-                    }
+                    var hideNext = undefined;
+                    var showNext = undefined;
 
-                    if (hideNext !== undefined) {
-                        productElements[hideNext].classList.add("hidden");
-                    }
+                    if (hide.length) hideNext = hide.shift();
+                    else if (show.length) showNext = show.shift();
 
-                    if (show.length || hide.length) {
-                        requestAnimationFrame(showResults);
-                    }
+                    if (hideNext !== undefined) productElements[hideNext].classList.add("hidden");
+                    else if (showNext !== undefined) productElements[showNext].classList.remove("hidden");
+
+                    if (show.length || hide.length) callback = requestAnimationFrame(showResults);
                 }
             }
             return {
@@ -328,7 +343,7 @@
             var search = $("search");
             var searchResults = $("searchResults");
             search.addEventListener("input", function (e) {
-                Search.search(e.currentTarget.value.toLowerCase());
+                Search.search(e.currentTarget.value.toLowerCase())
             });
         });
     </script>
