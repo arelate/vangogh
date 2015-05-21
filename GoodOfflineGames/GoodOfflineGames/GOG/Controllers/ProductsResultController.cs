@@ -80,6 +80,28 @@ namespace GOG
             productsResult.Products.Select(p => p.Owned = true);
         }
 
+        private void MergeDLCs(GameDetails dlc)
+        {
+            var dlcTitle = dlc.Title.Replace("DLC: ", string.Empty);
+
+            var game = productsResult.Products.Find(p => p.Title == dlcTitle);
+            if (game != null) game.Owned = true;
+            else
+            {
+                Console.WriteLine("Didn't find product for DLC {0}", dlcTitle);
+            }
+            //else throw new InvalidOperationException("Couldn't find DLC product by title.");
+
+            if (dlc.DLCs != null &&
+                dlc.DLCs.Count > 0)
+            {
+                foreach (GameDetails childDlc in dlc.DLCs)
+                {
+                    MergeDLCs(childDlc);
+                }
+            }
+        }
+
         public void MergeOwned(ProductsResult owned)
         {
             if (owned == null) return;
@@ -90,6 +112,17 @@ namespace GOG
 
                 if (game != null) game.Owned = true;
                 else productsResult.Products.Add(op);
+
+                // also merge DLC as owned
+                if (op.GameDetails != null &&
+                    op.GameDetails.DLCs != null &&
+                    op.GameDetails.DLCs.Count > 0)
+                {
+                    foreach (GameDetails dlc in op.GameDetails.DLCs)
+                    {
+                        MergeDLCs(dlc);
+                    }
+                }
 
             });
         }
@@ -104,6 +137,11 @@ namespace GOG
                 if (game != null) game.Updates = 1;
                 else throw new InvalidOperationException("Games that are not owned cannot be marked updated.");
             });
+        }
+
+        public void ResetUpdated()
+        {
+            this.productsResult.Products.ForEach(p => p.Updates = 0);
         }
 
     }

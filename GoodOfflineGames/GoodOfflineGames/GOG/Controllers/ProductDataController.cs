@@ -20,7 +20,7 @@ namespace GOG
 
             foreach (Product product in productsResult.Products)
             {
-                if (product.ProductData != null) continue;
+                //if (product.ProductData != null) continue;
                 if (string.IsNullOrEmpty(product.Url)) continue;
 
                 consoleController.Write(".");

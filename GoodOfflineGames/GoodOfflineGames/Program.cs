@@ -51,6 +51,8 @@ namespace GOG
                 consoleController,
                 "Getting all games available on GOG.com...").Result;
 
+
+
             // get all owned games from gog.com/account
 
             // filter owned products, so that we can check if account has got new owned games,
@@ -76,14 +78,18 @@ namespace GOG
                 consoleController,
                 "Getting updated games...").Result;
 
-            // mark all new owned games as owned
-
             var ownedResultController = new ProductsResultController(ownedResult);
+
+            // mark all new owned games as owned
+            //ownedResultController.ResetUpdated();
+
+            // reset updates between data source modifications
             ownedResultController.UpdateOwned();
 
             // merge owned games into all available games 
 
             var gamesResultController = new ProductsResultController(gamesResult);
+
             gamesResultController.MergeOwned(ownedResult);
 
             // merge updated games into owned games

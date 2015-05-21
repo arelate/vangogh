@@ -23,15 +23,17 @@ namespace GOG
                 if (product.GameDetails != null &&
                     product.Updates == 0) continue;
 
+                // skip DLCs as they won't have separate game details
+                if (product.ProductData != null &&
+                    product.ProductData.RequiredProducts != null &&
+                    product.ProductData.RequiredProducts.Count > 0) continue;
+
                 consoleController.Write(".");
 
                 var gameDetailsUri = string.Format(Urls.AccountGameDetailsTemplate, product.Id);
                 var gameDetails = await NetworkController.RequestData<GameDetails>(gameDetailsUri);
 
                 product.GameDetails = gameDetails;
-
-                // mark the game as not updated to avoid the need to update details in the future
-                product.Updates = 0;
             };
 
             consoleController.WriteLine("DONE.");

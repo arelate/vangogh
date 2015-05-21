@@ -72,7 +72,8 @@ namespace GOG
         [DataMember(Name = "dlcs")]
         public List<ProductData> DLCs { get; set; }
         //public List<ProductData> Packs { get; set; }
-        //public List<ProductData> RequiredProducts { get; set; }
+        [DataMember(Name = "requiredProducts")]
+        public List<ProductData> RequiredProducts { get; set; }
     }
 
     [DataContract]
