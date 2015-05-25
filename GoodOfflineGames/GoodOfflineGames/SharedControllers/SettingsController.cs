@@ -5,23 +5,35 @@ using System.IO;
 
 namespace GOG
 {
-    class SettingsController
+    public class SettingsController
     {
-        public static async Task<Settings> LoadSettings(
-            IConsoleController consoleController,
-            IStreamController streamController)
+        private IStreamReadableController streamReadableController;
+        private ISerializationController serializationController;
+        private IConsoleController consoleController;
+
+        public SettingsController(
+            IStreamReadableController streamReadableController,
+            ISerializationController serializationContoller,
+            IConsoleController consoleController)
+        {
+            this.streamReadableController = streamReadableController;
+            this.serializationController = serializationContoller;
+            this.consoleController = consoleController;
+        }
+
+        public async Task<Settings> LoadSettings()
         {
             string filename = "settings.json";
             Settings settings = null;
 
             try
             {
-                using (Stream streamReadable = streamController.OpenReadable(filename))
+                using (Stream streamReadable = streamReadableController.OpenReadable(filename))
                 {
                     using (StreamReader streamReader = new StreamReader(streamReadable, Encoding.UTF8))
                     {
                         string settingsString = await streamReader.ReadToEndAsync();
-                        settings = JSONController.Parse<Settings>(settingsString);
+                        settings = serializationController.Parse<Settings>(settingsString);
                     }
                 }
             }

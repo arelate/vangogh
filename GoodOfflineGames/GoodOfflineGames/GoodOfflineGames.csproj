@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="GOG\Controllers\AuthenticationController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsController.cs" />
-    <Compile Include="GOG\Controllers\GogDataController.cs" />
+    <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\ProductsResultController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
     <Compile Include="GOG\Model\GameDetails.cs" />
@@ -56,10 +56,13 @@
     <Compile Include="GOG\Controllers\ProductDataController.cs" />
     <Compile Include="GOG\Controllers\StorageController.cs" />
     <Compile Include="GOG\NetworkConstants\QueryParameters.cs" />
+    <Compile Include="SharedControllers\ConsoleController.cs" />
+    <Compile Include="SharedControllers\IOController.cs" />
     <Compile Include="SharedControllers\SettingsController.cs" />
-    <Compile Include="SharedModels\Interfaces.cs" />
+    <Compile Include="Interfaces.cs" />
     <Compile Include="SharedControllers\JSONController.cs" />
     <Compile Include="SharedControllers\NetworkController.cs" />
+    <Compile Include="SharedControllers\UriController.cs" />
     <Compile Include="SharedModels\Settings.cs" />
     <Compile Include="GOG\NetworkConstants\Urls.cs" />
     <Compile Include="GOG\Controllers\WishlistController.cs" />

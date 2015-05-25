@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
@@ -8,18 +7,38 @@ using System.IO;
 
 namespace GOG
 {
-    public class NetworkController
+    public class NetworkController :
+        IStringDataRequestController,
+        IFileRequestController,
+        IStringNetworkController
     {
         public const string postMethod = "POST";
         public const string getMethod = "GET";
 
+        // TODO: nothing is using accept type - confirm it's not needed and remove
         public const string acceptHtml = "text/html, application/xhtml+xml, */*";
         public const string acceptJson = "application/json, text/plain, */*";
 
-        private static HttpWebRequest request = null;
-        private static CookieContainer sharedCookies = new CookieContainer();
+        private static HttpWebRequest request;
+        private static CookieContainer sharedCookies;
 
-        private static async Task<WebResponse> RequestResponse(
+        private ISerializationController serializationController;
+        private IUriController uriController;
+
+        public NetworkController(IUriController uriController)
+        {
+            request = null;
+            sharedCookies = new CookieContainer();
+            this.uriController = uriController;
+        }
+
+        public NetworkController(IUriController uriController, ISerializationController serializationController) :
+            this(uriController)
+        {
+            this.serializationController = serializationController;
+        }
+
+        private async Task<WebResponse> RequestResponse(
             string uri,
             string method = getMethod,
             string data = null,
@@ -66,36 +85,9 @@ namespace GOG
             }
 
             return response;
-
         }
 
-        public static string CombineQueryParameters(Dictionary<string, string> parameters)
-        {
-            if (parameters == null) return string.Empty;
-
-            List<string> parametersStrings = new List<string>(parameters.Count);
-
-            foreach (string key in parameters.Keys)
-            {
-                parametersStrings.Add(
-                    Uri.EscapeDataString(key) +
-                    Separators.KeyValueSeparator +
-                    Uri.EscapeDataString(parameters[key]));
-            }
-
-            return string.Join(Separators.QueryStringParameters, parametersStrings);
-        }
-
-        private static string CombineUri(string baseUri, Dictionary<string, string> parameters)
-        {
-            return (parameters == null) ?
-                baseUri :
-                baseUri +
-                Separators.QueryString +
-                CombineQueryParameters(parameters);
-        }
-
-        public async static Task RequestFile(
+        public async Task RequestFile(
             string fromUri,
             string toFile,
             IStreamWritableController streamWriteableController)
@@ -113,16 +105,13 @@ namespace GOG
                     await writeableStream.WriteAsync(buffer, 0, bytesRead);
         }
 
-        public async static Task<string> RequestString(
+        public async Task<string> RequestString(
             string baseUri,
-            Dictionary<string, string> parameters = null,
-            string method = getMethod,
-            string data = null,
-            string accept = acceptJson)
+            IDictionary<string, string> parameters = null)
         {
-            string uri = CombineUri(baseUri, parameters);
+            string uri = uriController.CombineUri(baseUri, parameters);
 
-            WebResponse response = await RequestResponse(uri, method, data, accept);
+            WebResponse response = await RequestResponse(uri, getMethod, null, acceptJson);
 
             if (response == null) return null;
 
@@ -131,12 +120,33 @@ namespace GOG
                 return await reader.ReadToEndAsync();
         }
 
-        public async static Task<T> RequestData<T>(
+        public async Task<string> PostString(
+            string baseUri,
+            IDictionary<string, string> parameters = null,
+            string data = null)
+        {
+            string uri = uriController.CombineUri(baseUri, parameters);
+
+            WebResponse response = await RequestResponse(uri, postMethod, data, acceptJson);
+
+            if (response == null) return null;
+
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                return await reader.ReadToEndAsync();
+        }
+
+        public async Task<T> RequestData<T>(
             string baseUri,
             Dictionary<string, string> parameters = null)
         {
+            if (serializationController == null)
+            {
+                throw new InvalidOperationException("You need to instantiate NetworkController instance with ISerializationController to use RequestData");
+            }
+
             var dataString = await RequestString(baseUri, parameters);
-            return JSONController.Parse<T>(dataString);
+            return serializationController.Parse<T>(dataString);
         }
     }
 }

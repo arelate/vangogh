@@ -14,11 +14,14 @@ namespace GOG
         private int[] imageWidths = new int[2] { standardWidth, retinaWidth };
         private string imageFilenameTemplate = "{0}_{1}.jpg";
         private string imagesCacheFolder = "_images";
+
         private IIOController ioController;
         private IConsoleController consoleController;
+        private IFileRequestController fileRequestController;
 
-        public ImagesController(IIOController ioController, IConsoleController consoleController)
+        public ImagesController(IFileRequestController fileRequestController, IIOController ioController, IConsoleController consoleController)
         {
+            this.fileRequestController = fileRequestController;
             this.ioController = ioController;
             this.consoleController = consoleController;
         }
@@ -67,7 +70,7 @@ namespace GOG
 
                 consoleController.Write(".");
 
-                await NetworkController.RequestFile(imageUri, localFilename, ioController);
+                await fileRequestController.RequestFile(imageUri, localFilename, ioController);
             }
         }
 

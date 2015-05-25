@@ -7,21 +7,29 @@ using System.Text.RegularExpressions;
 
 namespace GOG
 {
-    public static class GogDataController
+    public class GOGDataController: IDataRequestController
     {
         private const string gogDataPrefix = "var gogData = ";
-        private static Regex regex = new Regex(gogDataPrefix + "(.*)");
+        private Regex regex = new Regex(gogDataPrefix + "(.*)");
+        private ISerializationController serializationController;
+        private IStringRequestController stringRequestController;
 
-        public static async Task<T> RequestData<T>(string uri)
+        public GOGDataController(ISerializationController serializationController, IStringRequestController stringRequestController)
         {
-            var gamePageContent = await NetworkController.RequestString(uri);
+            this.serializationController = serializationController;
+            this.stringRequestController = stringRequestController;
+        }
+
+        public async Task<T> RequestData<T>(string uri, Dictionary<string, string> parameters = null)
+        {
+            var gamePageContent = await stringRequestController.RequestString(uri);
 
             var match = regex.Match(gamePageContent);
             string gogDataString = match.Value.Substring(
                 gogDataPrefix.Length, // drop the prefix var gogData = 
                 match.Value.Length - gogDataPrefix.Length - 1); // and closing ";"
 
-            return JSONController.Parse<T>(gogDataString);
+            return serializationController.Parse<T>(gogDataString);
         }
     }
 }

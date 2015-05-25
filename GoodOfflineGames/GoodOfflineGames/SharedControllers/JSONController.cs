@@ -8,9 +8,9 @@ using System.IO;
 
 namespace GOG
 {
-    public static class JSONController
+    public class JSONController: ISerializationController
     {
-        public static string Stringify<Type>(Type data)
+        public string Stringify<Type>(Type data)
         {
             DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Type));
             string outputData = string.Empty;
@@ -39,7 +39,7 @@ namespace GOG
             return outputData;
         }
 
-        public static Type Parse<Type>(string data)
+        public Type Parse<Type>(string data)
         {
             DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Type));
             Type parsedData = default(Type);

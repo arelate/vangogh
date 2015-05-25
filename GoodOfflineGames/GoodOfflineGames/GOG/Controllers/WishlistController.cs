@@ -8,9 +8,11 @@ namespace GOG
 {
     public class WishlistController: ProductsResultController
     {
-        public WishlistController(ProductsResult productsResult): base(productsResult)
+        public WishlistController(ProductsResult productsResult,
+            IStringDataRequestController stringDataRequestController,
+            ISerializationController serializationController) :
+            base(productsResult, stringDataRequestController, serializationController)
         {
-
         }
 
         // TODO: Download and cache wishlist
@@ -18,7 +20,7 @@ namespace GOG
         {
             consoleController.Write("Updating wishlisted products...");
 
-            var wishlistGogData = await GogDataController.RequestData<ProductsResult>(Urls.Wishlist);
+            var wishlistGogData = await stringDataRequestController.RequestData<ProductsResult>(Urls.Wishlist);
 
             wishlistGogData.Products.ForEach(wp =>
             {

@@ -5,14 +5,27 @@ namespace GOG
 {
     class AuthenticationController
     {
-        public static async Task<bool> AuthorizeOnSite(ICredentials credentials, IConsoleController consoleController)
-        {
+        private IUriController uriController;
+        private IStringNetworkController stringNetworkController;
+        private IConsoleController consoleController;
 
+        public AuthenticationController(
+            IUriController uriController, 
+            IStringNetworkController stringNetworkController,
+            IConsoleController consoleController)
+        {
+            this.uriController = uriController;
+            this.stringNetworkController = stringNetworkController;
+            this.consoleController = consoleController;
+        }
+
+        public async Task<bool> AuthorizeOnSite(ICredentials credentials)
+        {
             consoleController.WriteLine("Authorizing {0} on GOG.com...", credentials.Username);
 
             // request authorization token
 
-            string authResponse = await NetworkController.RequestString(Urls.Authenticate, QueryParameters.Authenticate);
+            string authResponse = await stringNetworkController.RequestString(Urls.Authenticate, QueryParameters.Authenticate);
 
             // extracting login token that is 43 characters (letters, numbers, - ...)
             Regex regex = new Regex(@"[\w-]{43}");
@@ -25,9 +38,9 @@ namespace GOG
             QueryParameters.LoginAuthenticate["login[password]"] = credentials.Password;
             QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
 
-            string loginData = NetworkController.CombineQueryParameters(QueryParameters.LoginAuthenticate);
+            string loginData = uriController.CombineQueryParameters(QueryParameters.LoginAuthenticate);
 
-            var loginCheckResult = await NetworkController.RequestString(Urls.LoginCheck, null, "POST", loginData);
+            var loginCheckResult = await stringNetworkController.PostString(Urls.LoginCheck, null, loginData);
 
             if (loginCheckResult.Contains("gogData"))
             {

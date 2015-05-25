@@ -8,7 +8,11 @@ namespace GOG
 {
     class GameDetailsController: ProductsResultController
     {
-        public GameDetailsController(ProductsResult productsResult) : base(productsResult)
+        public GameDetailsController(
+            ProductsResult productsResult,
+            IStringDataRequestController stringDataRequestController,
+            ISerializationController serializationController) : 
+            base(productsResult, stringDataRequestController, serializationController)
         {
             // ... 
         }
@@ -31,7 +35,7 @@ namespace GOG
                 consoleController.Write(".");
 
                 var gameDetailsUri = string.Format(Urls.AccountGameDetailsTemplate, product.Id);
-                var gameDetails = await NetworkController.RequestData<GameDetails>(gameDetailsUri);
+                var gameDetails = await stringDataRequestController.RequestData<GameDetails>(gameDetailsUri);
 
                 product.GameDetails = gameDetails;
             };

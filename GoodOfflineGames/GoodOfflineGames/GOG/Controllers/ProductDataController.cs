@@ -9,9 +9,11 @@ namespace GOG
 {
     public class ProductDataController: ProductsResultController
     {
-        public ProductDataController(ProductsResult productsResult) : base(productsResult)
+        public ProductDataController(ProductsResult productsResult,
+            IStringDataRequestController stringDataRequestController,
+            ISerializationController serializationController) :
+            base(productsResult, stringDataRequestController, serializationController)
         {
-            // ... 
         }
 
         public async Task UpdateProductData(IConsoleController consoleController)
@@ -27,7 +29,7 @@ namespace GOG
 
                 var gamePageUri = Urls.HttpRoot + product.Url;
 
-                var gogData = await GogDataController.RequestData<GOGData>(gamePageUri);
+                var gogData = await stringDataRequestController.RequestData<GOGData>(gamePageUri);
                 product.ProductData = gogData.ProductData;
             }
 

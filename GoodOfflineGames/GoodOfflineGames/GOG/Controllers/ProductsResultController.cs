@@ -10,13 +10,24 @@ namespace GOG
     public class ProductsResultController
     {
         protected ProductsResult productsResult;
+        protected IStringDataRequestController stringDataRequestController;
+        private ISerializationController serializationController;
 
         public ProductsResultController(ProductsResult productsResult)
         {
             this.productsResult = productsResult;
         }
 
-        public static async Task<ProductsResult> RequestNew(
+        public ProductsResultController(
+            ProductsResult productsResult,
+            IStringDataRequestController stringDataRequestController,
+            ISerializationController serializationController): this(productsResult)
+        {
+            this.stringDataRequestController = stringDataRequestController;
+            this.serializationController = serializationController;
+        }
+
+        public async Task<ProductsResult> RequestNew(
             ProductsResult existing,
             string uri,
             Dictionary<string, string> queryParameters,
@@ -45,8 +56,8 @@ namespace GOG
                 queryParameters[pageQueryParameter] = currentPageIndex.ToString();
                 consoleController.Write("{0}..", currentPageIndex);
 
-                var json = await NetworkController.RequestString(uri, queryParameters);
-                currentPage = JSONController.Parse<ProductsResult>(json);
+                var json = await stringDataRequestController.RequestString(uri, queryParameters);
+                currentPage = serializationController.Parse<ProductsResult>(json);
 
                 var newProducts =
                     currentPage.Products.Where(

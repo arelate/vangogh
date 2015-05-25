@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GOG
+﻿namespace GOG
 {
     class Program
     {
@@ -14,19 +7,34 @@ namespace GOG
             var consoleController = new ConsoleController();
             var ioController = new IOController();
             var storage = new StorageController(ioController);
+            var jsonController = new JSONController();
+            var uriController = new UriController();
+            var networkController = new NetworkController(uriController);
+            var settingsController = new SettingsController(
+                ioController, 
+                jsonController, 
+                consoleController);
+            var authenticationController = new AuthenticationController(
+                uriController, 
+                networkController,
+                consoleController);
+
+            var productsResultController = new ProductsResultController(
+                null,
+                networkController,
+                jsonController);
 
             var jsonDataPrefix = "var data = ";
             var filename = "data.js";
             ProductsResult storedGames = null;
 
             // Try to load stored games data and use it to update games rather than download again
-
             try
             {
                 var storedGamesJson = storage.Pull(filename)
                     .Result
                     .Replace(jsonDataPrefix, string.Empty);
-                storedGames = JSONController.Parse<ProductsResult>(storedGamesJson);
+                storedGames = jsonController.Parse<ProductsResult>(storedGamesJson);
             }
             catch
             {
@@ -34,9 +42,9 @@ namespace GOG
                 storedGames = new ProductsResult();
             }
 
-            var settings = SettingsController.LoadSettings(consoleController, ioController).Result;
+            var settings = settingsController.LoadSettings().Result;
 
-            if (!AuthenticationController.AuthorizeOnSite(settings, consoleController).Result)
+            if (!authenticationController.AuthorizeOnSite(settings).Result)
             {
                 consoleController.WriteLine("Press ENTER to exit...");
                 consoleController.ReadLine();
@@ -45,13 +53,11 @@ namespace GOG
 
             // get all available games from gog.com/games
 
-            var gamesResult = ProductsResultController.RequestNew(storedGames,
+            var gamesResult = productsResultController.RequestNew(storedGames,
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
                 consoleController,
                 "Getting all games available on GOG.com...").Result;
-
-
 
             // get all owned games from gog.com/account
 
@@ -63,7 +69,7 @@ namespace GOG
 
             // get all games owned by user
 
-            var ownedResult = ProductsResultController.RequestNew(storedOwned,
+            var ownedResult = productsResultController.RequestNew(storedOwned,
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
                 consoleController,
@@ -72,7 +78,7 @@ namespace GOG
             // separately get all updated products
 
             QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
-            var updatedResult = ProductsResultController.RequestNew(null,
+            var updatedResult = productsResultController.RequestNew(null,
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
                 consoleController,
@@ -100,103 +106,41 @@ namespace GOG
 
             // update product data from game pages
 
-            var productDataController = new ProductDataController(gamesResult);
+            var productDataController = new ProductDataController(
+                gamesResult, 
+                networkController, 
+                jsonController);
             productDataController.UpdateProductData(consoleController).Wait();
 
             // update game details for all owned games
 
-            var gameDetailsController = new GameDetailsController(gamesResult);
+            var gameDetailsController = new GameDetailsController(
+                gamesResult, 
+                networkController, 
+                jsonController);
             gameDetailsController.UpdateGameDetails(consoleController).Wait();
 
             // update wishlisted games
-            var wishlistController = new WishlistController(gamesResult);
+            var wishlistController = new WishlistController(
+                gamesResult, 
+                networkController, 
+                jsonController);
             wishlistController.UpdateWishlisted(consoleController).Wait();
 
             // serialize and save on disk
 
-            var gamesResultJson = "var data = " + JSONController.Stringify(gamesResult);
+            var gamesResultJson = "var data = " + jsonController.Stringify(gamesResult);
             storage.Put(filename, gamesResultJson).Wait();
 
             // download new images 
 
-            var images = new ImagesController(ioController, consoleController);
+            var images = new ImagesController(networkController, ioController, consoleController);
             images.Update(gamesResult).Wait();
 
             // nothing left to do here
 
-            Console.WriteLine("All done. Press ENTER to quit...");
-            Console.ReadLine();
+            consoleController.WriteLine("All done. Press ENTER to quit...");
+            consoleController.ReadLine();
         }
     }
-
-    #region Console controller
-
-    class ConsoleController : IConsoleController
-    {
-        public string Read()
-        {
-            return Console.Read().ToString();
-        }
-
-        public string ReadLine()
-        {
-            return Console.ReadLine();
-        }
-
-        public string ReadPrivateLine()
-        {
-            ConsoleKeyInfo key;
-            string privateData = string.Empty;
-            while ((key = Console.ReadKey(true)).Key != ConsoleKey.Enter)
-            {
-                privateData += key.KeyChar;
-            }
-            return privateData;
-        }
-
-        public void Write(string message, params object[] data)
-        {
-            Console.Write(message, data);
-        }
-
-        public void WriteLine(string message, params object[] data)
-        {
-            Console.WriteLine(message, data);
-        }
-    }
-
-    #endregion
-
-    #region IOController
-
-    class IOController : IIOController
-    {
-        public Stream OpenReadable(string uri)
-        {
-            return new FileStream(uri, FileMode.Open, FileAccess.Read, FileShare.Read);
-        }
-
-        public Stream OpenWritable(string uri)
-        {
-            return new FileStream(uri, FileMode.Create, FileAccess.Write, FileShare.Read);
-        }
-
-        public bool ExistsFile(string uri)
-        {
-            return File.Exists(uri);
-        }
-
-        public bool ExistsDirectory(string uri)
-        {
-            return Directory.Exists(uri);
-        }
-
-        public void CreateDirectory(string uri)
-        {
-            Directory.CreateDirectory(uri);
-        }
-    }
-
-    #endregion
-
 }
