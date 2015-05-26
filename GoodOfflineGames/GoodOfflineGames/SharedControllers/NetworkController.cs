@@ -18,7 +18,6 @@ namespace GOG.SharedControllers
         private static HttpWebRequest request;
         private static CookieContainer sharedCookies;
 
-        private ISerializationController serializationController;
         private IUriController uriController;
 
         public NetworkController(IUriController uriController)
@@ -26,12 +25,6 @@ namespace GOG.SharedControllers
             request = null;
             sharedCookies = new CookieContainer();
             this.uriController = uriController;
-        }
-
-        public NetworkController(IUriController uriController, ISerializationController serializationController) :
-            this(uriController)
-        {
-            this.serializationController = serializationController;
         }
 
         private async Task<WebResponse> RequestResponse(

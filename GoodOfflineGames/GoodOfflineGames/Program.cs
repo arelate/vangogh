@@ -15,9 +15,7 @@ namespace GOG
             var storage = new StorageController(ioController);
             var jsonController = new JSONController();
             var uriController = new UriController();
-            var networkController = new NetworkController(
-                uriController,
-                jsonController);
+            var networkController = new NetworkController(uriController);
             var settingsController = new SettingsController(
                 ioController, 
                 jsonController, 
