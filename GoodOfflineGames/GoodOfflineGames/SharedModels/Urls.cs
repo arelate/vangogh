@@ -27,8 +27,8 @@ namespace GOG.SharedModels
         public const string AccountGameDetailsTemplate = Account + "/gameDetails/{0}.json";
         // Games
         public const string GamesAjaxFiltered = HttpsRoot + "/games/ajax/filtered";
-        // Game page
-        //public const string GamePage = Root + "/game/";
+        // Game product data
+        public const string GameProductDataPageTemplate = HttpRoot + "{0}";
         // Wishlist
         public const string Wishlist = Account + "/wishlist";
     }

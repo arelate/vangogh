@@ -2,6 +2,7 @@
 using GOG.Controllers;
 using GOG.Models;
 using GOG.SharedModels;
+using GOG.Providers;
 
 namespace GOG
 {
@@ -14,7 +15,9 @@ namespace GOG
             var storage = new StorageController(ioController);
             var jsonController = new JSONController();
             var uriController = new UriController();
-            var networkController = new NetworkController(uriController);
+            var networkController = new NetworkController(
+                uriController,
+                jsonController);
             var settingsController = new SettingsController(
                 ioController, 
                 jsonController, 
@@ -107,30 +110,27 @@ namespace GOG
             gamesResultController.MergeUpdated(updatedResult);
 
             // update details for individual games
-            // TODO: create single loop with parameters to update based on templates and predicates
+
+            var gogDataController = new GOGDataController(networkController);
 
             // update product data from game pages
 
-            var productDataController = new ProductDataController(
-                gamesResult, 
-                networkController, 
-                jsonController);
-            productDataController.UpdateProductData(consoleController).Wait();
+            var productDataProvider = new ProductDataProvider(gogDataController, jsonController);
+            gamesResultController.UpdateProductDetails(productDataProvider, consoleController).Wait();
 
             // update game details for all owned games
 
-            var gameDetailsController = new GameDetailsController(
-                gamesResult, 
-                networkController, 
-                jsonController);
-            gameDetailsController.UpdateGameDetails(consoleController).Wait();
+            var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
+            gamesResultController.UpdateProductDetails(gameDetailsProvider, consoleController).Wait();
 
             // update wishlisted games
             var wishlistController = new WishlistController(
-                gamesResult, 
-                networkController, 
+                gogDataController, 
                 jsonController);
-            wishlistController.UpdateWishlisted(consoleController).Wait();
+
+            var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
+
+            gamesResultController.UpdateWishlisted(wishlistResult);
 
             // serialize and save on disk
 

@@ -10,29 +10,30 @@ using GOG.SharedModels;
 
 namespace GOG.Controllers
 {
-    public class WishlistController: ProductsResultController
+    public class WishlistController
     {
-        public WishlistController(ProductsResult productsResult,
-            IStringDataRequestController stringDataRequestController,
-            ISerializationController serializationController) :
-            base(productsResult, stringDataRequestController, serializationController)
+        private IStringRequestController stringRequestController;
+        private ISerializationController serializationController;
+
+        public WishlistController(
+            IStringRequestController stringRequestController,
+            ISerializationController serializationController)
         {
+            this.stringRequestController = stringRequestController;
+            this.serializationController = serializationController;
         }
 
-        public async Task UpdateWishlisted(IConsoleController consoleController)
+        public async Task<ProductsResult> RequestWishlisted(IConsoleController consoleController)
         {
             consoleController.Write("Updating wishlisted products...");
 
-            var wishlistGogData = await stringDataRequestController.RequestData<ProductsResult>(Urls.Wishlist);
+            var wishlistGogDataString = await stringRequestController.RequestString(Urls.Wishlist);
 
-            wishlistGogData.Products.ForEach(wp =>
-            {
-                var wishlistedProduct = productsResult.Products.Find(p => p.Id == wp.Id);
-                wishlistedProduct.Wishlisted = true;
-
-            });
+            var wishlistGogData = serializationController.Parse<ProductsResult>(wishlistGogDataString);
 
             consoleController.WriteLine("DONE.");
+
+            return wishlistGogData;
         }
     }
 }

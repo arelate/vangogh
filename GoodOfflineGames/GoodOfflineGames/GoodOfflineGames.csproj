@@ -45,15 +45,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GOG\Controllers\AuthenticationController.cs" />
-    <Compile Include="GOG\Controllers\GameDetailsController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\ProductsResultController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
+    <Compile Include="GOG\DetailsProviders\AbstractDetailsProvider.cs" />
+    <Compile Include="GOG\DetailsProviders\GameDetailsProvider.cs" />
+    <Compile Include="GOG\DetailsProviders\ProductDataProvider.cs" />
     <Compile Include="GOG\Model\GameDetails.cs" />
     <Compile Include="GOG\Model\ProductData.cs" />
     <Compile Include="GOG\Model\Product.cs" />
     <Compile Include="GOG\Model\ProductResult.cs" />
-    <Compile Include="GOG\Controllers\ProductDataController.cs" />
     <Compile Include="SharedControllers\StorageController.cs" />
     <Compile Include="SharedModels\QueryParameters.cs" />
     <Compile Include="SharedControllers\ConsoleController.cs" />

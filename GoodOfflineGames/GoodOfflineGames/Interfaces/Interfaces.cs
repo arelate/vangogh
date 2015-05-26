@@ -112,11 +112,6 @@ namespace GOG.Interfaces
         Task RequestFile(string fromUri, string toUri, IStreamWritableController streamWritableController);
     }
 
-    public interface IDataRequestController
-    {
-        Task<T> RequestData<T>(string uri, Dictionary<string, string> parameters = null);
-    }
-
     public interface IStringRequestController
     {
         Task<string> RequestString(string uri, IDictionary<string, string> parameters = null);
@@ -134,11 +129,18 @@ namespace GOG.Interfaces
         // ... 
     }
 
-    public interface IStringDataRequestController:
-        IStringRequestController,
-        IDataRequestController
+    #endregion
+
+    #region Product data provider
+
+    public interface IProductDetailsProvider<Type>
     {
-        // ...
+        string Message { get; }
+        string RequestTemplate { get; }
+        bool SkipCondition(Type element);
+        string GetRequestDetails(Type element);
+        void SetDetails(Type element, string data);
+        IStringRequestController StringRequestController { get; }
     }
 
     #endregion

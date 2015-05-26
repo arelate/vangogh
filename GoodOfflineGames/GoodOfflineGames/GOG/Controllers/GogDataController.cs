@@ -9,20 +9,18 @@ using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
-    public class GOGDataController: IDataRequestController
+    public class GOGDataController: IStringRequestController
     {
         private const string gogDataPrefix = "var gogData = ";
         private Regex regex = new Regex(gogDataPrefix + "(.*)");
-        private ISerializationController serializationController;
         private IStringRequestController stringRequestController;
 
-        public GOGDataController(ISerializationController serializationController, IStringRequestController stringRequestController)
+        public GOGDataController(IStringRequestController stringRequestController)
         {
-            this.serializationController = serializationController;
             this.stringRequestController = stringRequestController;
         }
 
-        public async Task<T> RequestData<T>(string uri, Dictionary<string, string> parameters = null)
+        public async Task<string> RequestString(string uri, IDictionary<string, string> parameters = null)
         {
             var gamePageContent = await stringRequestController.RequestString(uri);
 
@@ -31,7 +29,7 @@ namespace GOG.Controllers
                 gogDataPrefix.Length, // drop the prefix var gogData = 
                 match.Value.Length - gogDataPrefix.Length - 1); // and closing ";"
 
-            return serializationController.Parse<T>(gogDataString);
+            return gogDataString;
         }
     }
 }

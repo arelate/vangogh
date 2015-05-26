@@ -9,16 +9,11 @@ using GOG.Interfaces;
 namespace GOG.SharedControllers
 {
     public class NetworkController :
-        IStringDataRequestController,
         IFileRequestController,
         IStringNetworkController
     {
         private const string postMethod = "POST";
         private const string getMethod = "GET";
-
-        // TODO: nothing is using accept type - confirm it's not needed and remove
-        //private const string acceptHtml = "text/html, application/xhtml+xml, */*";
-        private const string acceptJson = "application/json, text/plain, */*";
 
         private static HttpWebRequest request;
         private static CookieContainer sharedCookies;
@@ -42,8 +37,7 @@ namespace GOG.SharedControllers
         private async Task<WebResponse> RequestResponse(
             string uri,
             string method = getMethod,
-            string data = null,
-            string accept = acceptJson)
+            string data = null)
         {
             Uri requestUri = new Uri(uri);
 
@@ -57,7 +51,7 @@ namespace GOG.SharedControllers
             // using IE11 default UA string
             request.UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko";
             request.Method = method;
-            request.Accept = accept;
+            request.Accept = "application/json, text/plain, */*";
 
             if (!string.IsNullOrEmpty(data) &&
                 method == postMethod)
@@ -135,19 +129,6 @@ namespace GOG.SharedControllers
             using (Stream stream = response.GetResponseStream())
             using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                 return await reader.ReadToEndAsync();
-        }
-
-        public async Task<T> RequestData<T>(
-            string baseUri,
-            Dictionary<string, string> parameters = null)
-        {
-            if (serializationController == null)
-            {
-                throw new InvalidOperationException("You need to instantiate NetworkController instance with ISerializationController to use RequestData");
-            }
-
-            var dataString = await RequestString(baseUri, parameters);
-            return serializationController.Parse<T>(dataString);
         }
     }
 }

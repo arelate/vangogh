@@ -11,7 +11,6 @@ using GOG.SharedModels;
 namespace GoodOfflineGames.Tests
 {
     public class MockNetworkController :
-        IStringDataRequestController,
         IFileRequestController,
         IStringNetworkController
     {
@@ -102,13 +101,6 @@ namespace GoodOfflineGames.Tests
             }
 
             return string.Empty;
-        }
-
-        public async Task<T> RequestData<T>(
-            string baseUri,
-            Dictionary<string, string> parameters = null)
-        {
-            return default(T);
         }
     }
 }

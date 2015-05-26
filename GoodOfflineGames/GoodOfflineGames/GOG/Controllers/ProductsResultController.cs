@@ -13,7 +13,7 @@ namespace GOG.Controllers
     public class ProductsResultController
     {
         protected ProductsResult productsResult;
-        protected IStringDataRequestController stringDataRequestController;
+        protected IStringRequestController stringRequestController;
         private ISerializationController serializationController;
 
         public ProductsResultController(ProductsResult productsResult)
@@ -23,11 +23,11 @@ namespace GOG.Controllers
 
         public ProductsResultController(
             ProductsResult productsResult,
-            IStringDataRequestController stringDataRequestController,
-            ISerializationController serializationController): 
+            IStringRequestController stringRequestController,
+            ISerializationController serializationController) :
             this(productsResult)
         {
-            this.stringDataRequestController = stringDataRequestController;
+            this.stringRequestController = stringRequestController;
             this.serializationController = serializationController;
         }
 
@@ -60,7 +60,7 @@ namespace GOG.Controllers
                 queryParameters[pageQueryParameter] = currentPageIndex.ToString();
                 consoleController.Write("{0}..", currentPageIndex);
 
-                var json = await stringDataRequestController.RequestString(uri, queryParameters);
+                var json = await stringRequestController.RequestString(uri, queryParameters);
                 currentPage = serializationController.Parse<ProductsResult>(json);
 
                 var newProducts =
@@ -161,6 +161,38 @@ namespace GOG.Controllers
         public void ResetUpdated()
         {
             this.productsResult.Products.ForEach(p => p.Updates = 0);
+        }
+
+        public void UpdateWishlisted(ProductsResult wishlisted)
+        {
+            wishlisted.Products.ForEach(wp =>
+            {
+                var wishlistedProduct = productsResult.Products.Find(p => p.Id == wp.Id);
+                wishlistedProduct.Wishlisted = true;
+            });
+        }
+
+        public async Task UpdateProductDetails(IProductDetailsProvider<Product> detailsProvider, IConsoleController consoleController)
+        {
+            consoleController.Write(detailsProvider.Message);
+
+            foreach (Product product in productsResult.Products)
+            {
+                if (detailsProvider.SkipCondition(product))
+                {
+                    continue;
+                }
+
+                consoleController.Write(".");
+
+                var requestUri = string.Format(detailsProvider.RequestTemplate,
+                    detailsProvider.GetRequestDetails(product));
+                var detailsString = await detailsProvider.StringRequestController.RequestString(requestUri);
+
+                detailsProvider.SetDetails(product, detailsString);
+            }
+
+            consoleController.WriteLine("DONE");
         }
 
     }
