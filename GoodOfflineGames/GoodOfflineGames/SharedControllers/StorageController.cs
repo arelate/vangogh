@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.IO;
 
-namespace GOG
+using GOG.Interfaces;
+
+namespace GOG.SharedControllers
 {
     public class StorageController
     {

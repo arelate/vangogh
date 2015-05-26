@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.IO;
 
-namespace GOG
+namespace GOG.Interfaces
 {
     #region Console
 

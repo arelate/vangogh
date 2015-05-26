@@ -50,12 +50,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="GOG\Controllers\AuthenticationControllerTests.cs" />
+    <Compile Include="GOG\Controllers\ProductsResultControllerTests.cs" />
+    <Compile Include="MockSharedControllers\MockConsoleController.cs" />
+    <Compile Include="MockSharedControllers\MockNetworkController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="GOG\Controllers\" />
-    <Folder Include="SharedControllers\" />
+    <ProjectReference Include="..\GoodOfflineGames\GoodOfflineGames.csproj">
+      <Project>{295ec7da-7404-499c-abbd-3429145a04d5}</Project>
+      <Name>GoodOfflineGames</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -1,6 +1,7 @@
 ﻿using System;
+using GOG.Interfaces;
 
-namespace GOG
+namespace GOG.SharedControllers
 {
     class ConsoleController : IConsoleController
     {

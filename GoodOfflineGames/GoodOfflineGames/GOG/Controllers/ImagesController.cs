@@ -5,7 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace GOG
+using GOG.Interfaces;
+using GOG.Models;
+using GOG.SharedModels;
+
+namespace GOG.Controllers
 {
     public class ImagesController
     {

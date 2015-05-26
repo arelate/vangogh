@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace GOG
+using GOG.Interfaces;
+using GOG.Models;
+
+namespace GOG.Controllers
 {
     public class ProductsResultController
     {
@@ -21,7 +24,8 @@ namespace GOG
         public ProductsResultController(
             ProductsResult productsResult,
             IStringDataRequestController stringDataRequestController,
-            ISerializationController serializationController): this(productsResult)
+            ISerializationController serializationController): 
+            this(productsResult)
         {
             this.stringDataRequestController = stringDataRequestController;
             this.serializationController = serializationController;
@@ -89,7 +93,10 @@ namespace GOG
 
         public void UpdateOwned()
         {
-            productsResult.Products.Select(p => p.Owned = true);
+            foreach (Product p in productsResult.Products)
+            {
+                p.Owned = true;
+            }
         }
 
         private void MergeDLCs(GameDetails dlc)

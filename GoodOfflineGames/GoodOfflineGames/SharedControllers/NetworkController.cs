@@ -4,20 +4,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
+using GOG.Interfaces;
 
-namespace GOG
+namespace GOG.SharedControllers
 {
     public class NetworkController :
         IStringDataRequestController,
         IFileRequestController,
         IStringNetworkController
     {
-        public const string postMethod = "POST";
-        public const string getMethod = "GET";
+        private const string postMethod = "POST";
+        private const string getMethod = "GET";
 
         // TODO: nothing is using accept type - confirm it's not needed and remove
-        public const string acceptHtml = "text/html, application/xhtml+xml, */*";
-        public const string acceptJson = "application/json, text/plain, */*";
+        //private const string acceptHtml = "text/html, application/xhtml+xml, */*";
+        private const string acceptJson = "application/json, text/plain, */*";
 
         private static HttpWebRequest request;
         private static CookieContainer sharedCookies;
@@ -49,12 +50,12 @@ namespace GOG
             request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
             request.CookieContainer = sharedCookies;
 
+            // some special .Net magic to avoid getting network errors
             ServicePointManager.Expect100Continue = false;
             ServicePointManager.SetTcpKeepAlive(true, 10000, 10000);
 
             // using IE11 default UA string
-            request.UserAgent =
-                "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko";
             request.Method = method;
             request.Accept = accept;
 
@@ -74,7 +75,7 @@ namespace GOG
 
             try
             {
-                response = await Task.Factory.FromAsync<WebResponse>(
+                response = await Task.Factory.FromAsync(
                     request.BeginGetResponse,
                     request.EndGetResponse,
                     null);
@@ -93,7 +94,7 @@ namespace GOG
             IStreamWritableController streamWriteableController)
         {
             WebResponse response = await RequestResponse(fromUri);
-            int bufferSize = 64 * 1024; // 64K
+            int bufferSize = 128 * 1024; // 128K
             byte[] buffer = new byte[bufferSize];
             int bytesRead = 0;
 
@@ -111,7 +112,7 @@ namespace GOG
         {
             string uri = uriController.CombineUri(baseUri, parameters);
 
-            WebResponse response = await RequestResponse(uri, getMethod, null, acceptJson);
+            WebResponse response = await RequestResponse(uri, getMethod);
 
             if (response == null) return null;
 
@@ -127,7 +128,7 @@ namespace GOG
         {
             string uri = uriController.CombineUri(baseUri, parameters);
 
-            WebResponse response = await RequestResponse(uri, postMethod, data, acceptJson);
+            WebResponse response = await RequestResponse(uri, postMethod, data);
 
             if (response == null) return null;
 

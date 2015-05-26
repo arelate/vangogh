@@ -1,9 +1,12 @@
 ﻿using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace GOG
+using GOG.Interfaces;
+using GOG.SharedModels;
+
+namespace GOG.Controllers
 {
-    class AuthenticationController
+    public class AuthenticationController
     {
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;

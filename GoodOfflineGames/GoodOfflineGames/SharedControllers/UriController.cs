@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GOG
+using GOG.Interfaces;
+using GOG.SharedModels;
+
+namespace GOG.SharedControllers
 {
-    class UriController: IUriController
+    public class UriController: IUriController
     {
         public string CombineQueryParameters(IDictionary<string, string> parameters)
         {

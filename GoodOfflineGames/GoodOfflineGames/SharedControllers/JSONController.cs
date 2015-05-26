@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using GOG.Interfaces;
 
-namespace GOG
+namespace GOG.SharedControllers
 {
     public class JSONController: ISerializationController
     {

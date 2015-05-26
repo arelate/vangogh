@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GOG
+using GOG.Interfaces;
+using GOG.Models;
+using GOG.SharedModels;
+
+namespace GOG.Controllers
 {
     class GameDetailsController: ProductsResultController
     {

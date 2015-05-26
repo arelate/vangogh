@@ -3,7 +3,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace GOG
+using GOG.Interfaces;
+using GOG.SharedModels;
+
+namespace GOG.SharedControllers
 {
     public class SettingsController
     {

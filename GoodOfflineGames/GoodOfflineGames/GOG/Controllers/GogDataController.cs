@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace GOG
+using GOG.Interfaces;
+
+namespace GOG.Controllers
 {
     public class GOGDataController: IDataRequestController
     {

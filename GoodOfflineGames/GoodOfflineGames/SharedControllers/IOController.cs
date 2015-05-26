@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using GOG.Interfaces;
 
-namespace GOG
+namespace GOG.SharedControllers
 {
     class IOController : IIOController
     {

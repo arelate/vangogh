@@ -1,4 +1,9 @@
-﻿namespace GOG
+﻿using GOG.SharedControllers;
+using GOG.Controllers;
+using GOG.Models;
+using GOG.SharedModels;
+
+namespace GOG
 {
     class Program
     {
@@ -86,10 +91,10 @@
 
             var ownedResultController = new ProductsResultController(ownedResult);
 
-            // mark all new owned games as owned
+            // reset updates between data source modifications
             //ownedResultController.ResetUpdated();
 
-            // reset updates between data source modifications
+            // mark all new owned games as owned
             ownedResultController.UpdateOwned();
 
             // merge owned games into all available games 

@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 
-namespace GOG
+namespace GOG.Models
 {
     [DataContract]
     public class ProductsResult

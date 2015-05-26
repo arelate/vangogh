@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GOG
+using GOG.Interfaces;
+using GOG.Models;
+using GOG.SharedModels;
+
+namespace GOG.Controllers
 {
     public class WishlistController: ProductsResultController
     {
@@ -15,7 +19,6 @@ namespace GOG
         {
         }
 
-        // TODO: Download and cache wishlist
         public async Task UpdateWishlisted(IConsoleController consoleController)
         {
             consoleController.Write("Updating wishlisted products...");
