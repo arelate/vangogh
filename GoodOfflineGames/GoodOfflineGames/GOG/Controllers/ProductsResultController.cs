@@ -19,14 +19,19 @@ namespace GOG.Controllers
 
         public ProductsResultController(ProductsResult productsResult)
         {
+            if (productsResult == null)
+            {
+                productsResult = new ProductsResult();
+            }
+
             this.productsResult = productsResult;
         }
 
         public ProductsResultController(
-            ProductsResult productsResult,
             IStringRequestController stringRequestController,
             ISerializationController serializationController,
-            IConsoleController consoleController) :
+            IConsoleController consoleController,
+            ProductsResult productsResult = null) :
             this(productsResult)
         {
             this.stringRequestController = stringRequestController;
@@ -153,9 +158,10 @@ namespace GOG.Controllers
             if (game != null) game.Owned = true;
             else
             {
-                Console.WriteLine("Didn't find product for DLC {0}", dlcTitle);
+                // ah... I see you have discovered a hidden item
+                // that should be ok - not all DLCs are available as product 
+                // (e.g. special preorder bonuses and kickstarter items)
             }
-            //else throw new InvalidOperationException("Couldn't find DLC product by title.");
 
             if (dlc.DLCs != null &&
                 dlc.DLCs.Count > 0)
@@ -221,6 +227,7 @@ namespace GOG.Controllers
         public async Task UpdateProductDetails(IProductDetailsProvider<Product> detailsProvider)
         {
             consoleController.Write(detailsProvider.Message);
+            int totalProductsUpdated = 0;
 
             foreach (Product product in productsResult.Products)
             {
@@ -236,9 +243,10 @@ namespace GOG.Controllers
                 var detailsString = await detailsProvider.StringRequestController.RequestString(requestUri);
 
                 detailsProvider.SetDetails(product, detailsString);
+                totalProductsUpdated++;
             }
 
-            consoleController.WriteLine("DONE");
+            consoleController.WriteLine("Updated details for {0} products.", totalProductsUpdated);
         }
 
     }

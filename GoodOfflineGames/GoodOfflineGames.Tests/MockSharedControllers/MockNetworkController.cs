@@ -24,12 +24,12 @@ namespace GoodOfflineGames.Tests
             this.serializationController = serializationController;
         }
 
-        public async Task RequestFile(
+        public Task RequestFile(
             string fromUri,
             string toFile,
             IStreamWritableController streamWriteableController)
         {
-            return;
+            return null;
         }
 
         public async Task<string> RequestString(

@@ -55,7 +55,6 @@ namespace GOG
             // get all available games from gog.com/games
 
             var productsResultController = new ProductsResultController(
-                null,
                 networkController,
                 jsonController,
                 consoleController);
@@ -100,7 +99,12 @@ namespace GOG
 
             // merge owned games into all available games 
 
-            var gamesResultController = new ProductsResultController(gamesResult);
+            // TODO: Do we really need to switch controllers here? Aren't they pointing to the same data?
+            var gamesResultController = new ProductsResultController(
+                networkController,
+                jsonController,
+                consoleController,
+                gamesResult);
 
             gamesResultController.MergeOwned(ownedResult);
 

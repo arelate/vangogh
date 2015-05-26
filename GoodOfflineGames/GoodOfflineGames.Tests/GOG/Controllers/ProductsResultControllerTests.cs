@@ -26,10 +26,7 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
             stringRequestController = new MockNetworkController(uriController);
             consoleController = new MockConsoleController();
 
-            existingProductsResult = new ProductsResult();
-
             productsResultController = new ProductsResultController(
-                existingProductsResult,
                 stringRequestController,
                 serializationController,
                 consoleController);
