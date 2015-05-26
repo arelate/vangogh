@@ -10,6 +10,8 @@ using GOG.Models;
 
 namespace GOG.Providers
 {
+    // TODO: Unit tests
+
     class GameDetailsProvider : 
         AbstractDetailsProvider,
         IProductDetailsProvider<Product>

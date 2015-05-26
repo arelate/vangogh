@@ -15,6 +15,7 @@ namespace GOG.Controllers
         protected ProductsResult productsResult;
         protected IStringRequestController stringRequestController;
         private ISerializationController serializationController;
+        private IConsoleController consoleController;
 
         public ProductsResultController(ProductsResult productsResult)
         {
@@ -24,74 +25,119 @@ namespace GOG.Controllers
         public ProductsResultController(
             ProductsResult productsResult,
             IStringRequestController stringRequestController,
-            ISerializationController serializationController) :
+            ISerializationController serializationController,
+            IConsoleController consoleController) :
             this(productsResult)
         {
             this.stringRequestController = stringRequestController;
             this.serializationController = serializationController;
+            this.consoleController = consoleController;
         }
 
-        public async Task<ProductsResult> RequestNew(
-            ProductsResult existing,
-            string uri,
-            Dictionary<string, string> queryParameters,
-            IConsoleController consoleController,
-            string message)
+        private async Task<ProductsResult> RequestPage(string uri,
+            IDictionary<string, string> parameters,
+            int currentPage)
         {
             string pageQueryParameter = "page";
-            int currentPageIndex = 1;
-            ProductsResult currentPage = null;
-            int totalNewProducts = 0;
 
+            if (!parameters.Keys.Contains(pageQueryParameter))
+            {
+                parameters.Add(pageQueryParameter, currentPage.ToString());
+            }
+
+            parameters[pageQueryParameter] = currentPage.ToString();
+
+            var json = await stringRequestController.RequestString(uri, parameters);
+            return serializationController.Parse<ProductsResult>(json);
+        }
+
+        private IEnumerable<Product> FilterNewProducts(ProductsResult existing, ProductsResult current)
+        {
+            var newProducts =
+                current.Products.Where(
+                    cp =>
+                    !existing.Products.Any(ep => ep.Id == cp.Id));
+            return newProducts;
+        }
+
+        private int MergeNewProducts(ProductsResult existing, IEnumerable<Product> newProducts)
+        {
+            var newProductsCount = 0;
+
+            if (newProducts != null) {
+                newProductsCount = newProducts.Count();
+            }
+
+            if (newProductsCount > 0)
+            {
+                // insert new games at the start
+                existing.Products.InsertRange(0, newProducts);
+            }
+
+            return newProductsCount;
+        }
+
+        private async Task<ProductsResult> RequestPagedResult(
+            string uri,
+            IDictionary<string, string> parameters,
+            ProductsResult existing,
+            bool breakOnExistingPageResult = true,
+            string message = null)
+        {
+            consoleController.Write(message);
+
+            int currentPage = 1;
+            ProductsResult current;
             if (existing == null)
             {
                 existing = new ProductsResult();
             }
 
-            if (!queryParameters.Keys.Contains(pageQueryParameter))
-            {
-                queryParameters.Add(pageQueryParameter, currentPageIndex.ToString());
-            }
-
-            consoleController.Write(message);
+            int totalNewProducts = 0;
 
             do
             {
-                queryParameters[pageQueryParameter] = currentPageIndex.ToString();
-                consoleController.Write("{0}..", currentPageIndex);
+                consoleController.Write(".");
 
-                var json = await stringRequestController.RequestString(uri, queryParameters);
-                currentPage = serializationController.Parse<ProductsResult>(json);
+                current = await RequestPage(uri, parameters, currentPage);
 
-                var newProducts =
-                    currentPage.Products.Where(
-                        cp =>
-                        !existing.Products.Any(
-                            ep =>
-                            ep.Id == cp.Id));
+                var newProducts = FilterNewProducts(existing, current);
+                var newProductsCount = MergeNewProducts(existing, newProducts);
 
-                if (newProducts != null &&
-                    newProducts.Count() > 0)
+                totalNewProducts += newProductsCount;
+
+                if (newProductsCount == 0 &&
+                    breakOnExistingPageResult)
                 {
-                    totalNewProducts += newProducts.Count();
-                    // insert new games at the start
-                    existing.Products.InsertRange(0, newProducts);
-                }
-                else
-                {
-                    // ... current page didn't produce any new products
                     break;
                 }
-
             }
-            while (++currentPageIndex <= currentPage.TotalPages);
+            while (++currentPage <= current.TotalPages);
 
-            consoleController.WriteLine("Got {0} new products.", totalNewProducts);
+            consoleController.WriteLine("Got {0} products.", totalNewProducts);
 
             return existing;
         }
 
-        public void UpdateOwned()
+
+        public async Task<ProductsResult> UpdateExisting(
+            string uri,
+            IDictionary<string, string> parameters,
+            ProductsResult existing,
+            string message = null)
+        {
+            return await RequestPagedResult(uri, parameters, existing, true, message);
+        }
+
+        public async Task<ProductsResult> GetAll(
+            string uri,
+            Dictionary<string, string> parameters,
+            string message = null)
+        {
+            return await RequestPagedResult(uri, parameters, null, false, message);
+        }
+
+        public void SetAllAsOwned()
         {
             foreach (Product p in productsResult.Products)
             {
@@ -163,7 +209,7 @@ namespace GOG.Controllers
             this.productsResult.Products.ForEach(p => p.Updates = 0);
         }
 
-        public void UpdateWishlisted(ProductsResult wishlisted)
+        public void MergeWishlisted(ProductsResult wishlisted)
         {
             wishlisted.Products.ForEach(wp =>
             {
@@ -172,7 +218,7 @@ namespace GOG.Controllers
             });
         }
 
-        public async Task UpdateProductDetails(IProductDetailsProvider<Product> detailsProvider, IConsoleController consoleController)
+        public async Task UpdateProductDetails(IProductDetailsProvider<Product> detailsProvider)
         {
             consoleController.Write(detailsProvider.Message);
 

@@ -27,11 +27,6 @@ namespace GOG
                 networkController,
                 consoleController);
 
-            var productsResultController = new ProductsResultController(
-                null,
-                networkController,
-                jsonController);
-
             var jsonDataPrefix = "var data = ";
             var filename = "data.js";
             ProductsResult storedGames = null;
@@ -61,10 +56,16 @@ namespace GOG
 
             // get all available games from gog.com/games
 
-            var gamesResult = productsResultController.RequestNew(storedGames,
+            var productsResultController = new ProductsResultController(
+                null,
+                networkController,
+                jsonController,
+                consoleController);
+
+            var gamesResult = productsResultController.UpdateExisting(
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
-                consoleController,
+                storedGames,
                 "Getting all games available on GOG.com...").Result;
 
             // get all owned games from gog.com/account
@@ -77,19 +78,18 @@ namespace GOG
 
             // get all games owned by user
 
-            var ownedResult = productsResultController.RequestNew(storedOwned,
+            var ownedResult = productsResultController.UpdateExisting(
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
-                consoleController,
+                storedOwned,
                 "Getting account games...").Result;
 
             // separately get all updated products
 
             QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
-            var updatedResult = productsResultController.RequestNew(null,
+            var updatedResult = productsResultController.GetAll(
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
-                consoleController,
                 "Getting updated games...").Result;
 
             var ownedResultController = new ProductsResultController(ownedResult);
@@ -98,7 +98,7 @@ namespace GOG
             //ownedResultController.ResetUpdated();
 
             // mark all new owned games as owned
-            ownedResultController.UpdateOwned();
+            ownedResultController.SetAllAsOwned();
 
             // merge owned games into all available games 
 
@@ -116,12 +116,12 @@ namespace GOG
             // update product data from game pages
 
             var productDataProvider = new ProductDataProvider(gogDataController, jsonController);
-            gamesResultController.UpdateProductDetails(productDataProvider, consoleController).Wait();
+            gamesResultController.UpdateProductDetails(productDataProvider).Wait();
 
             // update game details for all owned games
 
             var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
-            gamesResultController.UpdateProductDetails(gameDetailsProvider, consoleController).Wait();
+            gamesResultController.UpdateProductDetails(gameDetailsProvider).Wait();
 
             // update wishlisted games
             var wishlistController = new WishlistController(
@@ -130,7 +130,7 @@ namespace GOG
 
             var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
 
-            gamesResultController.UpdateWishlisted(wishlistResult);
+            gamesResultController.MergeWishlisted(wishlistResult);
 
             // serialize and save on disk
 
