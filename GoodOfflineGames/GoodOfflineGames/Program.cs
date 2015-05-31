@@ -52,18 +52,10 @@ namespace GOG
                 return;
             }
 
-            // get all available games from gog.com/games
-
             var productsResultController = new ProductsResultController(
                 networkController,
                 jsonController,
                 consoleController);
-
-            var gamesResult = productsResultController.UpdateExisting(
-                Urls.GamesAjaxFiltered,
-                QueryParameters.GamesAjaxFiltered,
-                storedGames,
-                "Getting all games available on GOG.com...").Result;
 
             // get all owned games from gog.com/account
 
@@ -74,15 +66,20 @@ namespace GOG
             storedOwned.Products = storedGames.Products.FindAll(p => p.Owned);
 
             // get all games owned by user
-
             var ownedResult = productsResultController.UpdateExisting(
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
                 storedOwned,
-                "Getting account games...").Result;
+                "Getting new account games...").Result;
+
+            // get all available games from gog.com/games
+            var gamesResult = productsResultController.UpdateExisting(
+                Urls.GamesAjaxFiltered,
+                QueryParameters.GamesAjaxFiltered,
+                storedGames,
+                "Getting new games available on GOG.com...").Result;
 
             // separately get all updated products
-
             QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
             var updatedResult = productsResultController.GetAll(
                 Urls.AccountGetFilteredProducts,
@@ -98,32 +95,21 @@ namespace GOG
             ownedResultController.SetAllAsOwned();
 
             // merge owned games into all available games 
-
-            // TODO: Do we really need to switch controllers here? Aren't they pointing to the same data?
-            var gamesResultController = new ProductsResultController(
-                networkController,
-                jsonController,
-                consoleController,
-                gamesResult);
-
-            gamesResultController.MergeOwned(ownedResult);
+            productsResultController.MergeOwned(ownedResult);
 
             // merge updated games into owned games
-            gamesResultController.MergeUpdated(updatedResult);
+            productsResultController.MergeUpdated(updatedResult);
 
             // update details for individual games
-
             var gogDataController = new GOGDataController(networkController);
 
             // update product data from game pages
-
             var productDataProvider = new ProductDataProvider(gogDataController, jsonController);
-            gamesResultController.UpdateProductDetails(productDataProvider).Wait();
+            productsResultController.UpdateProductDetails(productDataProvider).Wait();
 
             // update game details for all owned games
-
             var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
-            gamesResultController.UpdateProductDetails(gameDetailsProvider).Wait();
+            productsResultController.UpdateProductDetails(gameDetailsProvider).Wait();
 
             // update wishlisted games
             var wishlistController = new WishlistController(
@@ -132,7 +118,7 @@ namespace GOG
 
             var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
 
-            gamesResultController.MergeWishlisted(wishlistResult);
+            productsResultController.MergeWishlisted(wishlistResult);
 
             // serialize and save on disk
 

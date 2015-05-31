@@ -58,6 +58,8 @@ namespace GOG.Controllers
 
         private IEnumerable<Product> FilterNewProducts(ProductsResult existing, ProductsResult current)
         {
+            if (existing == null) return current.Products;
+
             var newProducts =
                 current.Products.Where(
                     cp =>
@@ -90,13 +92,10 @@ namespace GOG.Controllers
             string message = null)
         {
             consoleController.Write(message);
+            var updatedProducts = new ProductsResult(existing); 
 
             int currentPage = 1;
             ProductsResult current;
-            if (existing == null)
-            {
-                existing = new ProductsResult();
-            }
 
             int totalNewProducts = 0;
 
@@ -107,7 +106,7 @@ namespace GOG.Controllers
                 current = await RequestPage(uri, parameters, currentPage);
 
                 var newProducts = FilterNewProducts(existing, current);
-                var newProductsCount = MergeNewProducts(existing, newProducts);
+                var newProductsCount = MergeNewProducts(updatedProducts, newProducts);
 
                 totalNewProducts += newProductsCount;
 
@@ -121,7 +120,7 @@ namespace GOG.Controllers
 
             consoleController.WriteLine("Got {0} products.", totalNewProducts);
 
-            return existing;
+            return updatedProducts;
         }
 
 
@@ -131,7 +130,8 @@ namespace GOG.Controllers
             ProductsResult existing,
             string message = null)
         {
-            return await RequestPagedResult(uri, parameters, existing, true, message);
+            productsResult = await RequestPagedResult(uri, parameters, existing, true, message);
+            return productsResult;
         }
 
         public async Task<ProductsResult> GetAll(

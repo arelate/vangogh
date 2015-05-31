@@ -273,11 +273,13 @@
                     parts.push(p.title.toLowerCase());
 
                     if (pd) {
-                        parts.push(pd.publisher.name.toLowerCase());
-                        parts.push(pd.developer.name.toLowerCase());
+                        if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
+                        if (pd.developer) parts.push(pd.developer.name.toLowerCase());
 
-                        for (var gg = 0; gg < p.productData.genres.length; gg++) {
-                            parts.push(pd.genres[gg].name.toLowerCase());
+                        if (pd.genres) {
+                            for (var gg = 0; gg < p.productData.genres.length; gg++) {
+                                parts.push(pd.genres[gg].name.toLowerCase());
+                            }
                         }
                     }
 
