@@ -17,9 +17,9 @@ namespace GOG.Providers
         IProductDetailsProvider<Product>
     {
         public GameDetailsProvider(
-            IStringRequestController stringRequestController,
+            IStringGetController stringGetController,
             ISerializationController serializationController):
-                base(stringRequestController, serializationController)
+                base(stringGetController, serializationController)
         {
             // ...
         }
@@ -40,11 +40,11 @@ namespace GOG.Providers
             }
         }
 
-        public IStringRequestController StringRequestController
+        public IStringGetController StringGetController
         {
             get
             {
-                return stringRequestController;
+                return stringGetController;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 
@@ -50,6 +51,7 @@ namespace GOG.Interfaces
     public interface IFileController
     {
         bool ExistsFile(string uri);
+        long GetSize(string uri);
     }
 
     public interface IDirectoryController
@@ -109,12 +111,17 @@ namespace GOG.Interfaces
 
     public interface IFileRequestController
     {
-        Task RequestFile(string fromUri, string toUri, IStreamWritableController streamWritableController);
+        Task RequestFile(
+            string fromUri, 
+            string toUri, 
+            IStreamWritableController streamWritableController, 
+            IFileController fileController = null, 
+            IProgress<double> progress = null);
     }
 
-    public interface IStringRequestController
+    public interface IStringGetController
     {
-        Task<string> RequestString(string uri, IDictionary<string, string> parameters = null);
+        Task<string> GetString(string uri, IDictionary<string, string> parameters = null);
     }
 
     public interface IStringPostController
@@ -123,7 +130,7 @@ namespace GOG.Interfaces
     }
 
     public interface IStringNetworkController:
-        IStringRequestController,
+        IStringGetController,
         IStringPostController
     {
         // ... 
@@ -140,7 +147,7 @@ namespace GOG.Interfaces
         bool SkipCondition(Type element);
         string GetRequestDetails(Type element);
         void SetDetails(Type element, string data);
-        IStringRequestController StringRequestController { get; }
+        IStringGetController StringGetController { get; }
     }
 
     #endregion

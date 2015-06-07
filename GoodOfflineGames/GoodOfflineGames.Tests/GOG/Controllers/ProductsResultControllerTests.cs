@@ -15,7 +15,7 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
         private ProductsResult existingProductsResult;
         private ProductsResultController productsResultController;
         private IUriController uriController;
-        private IStringRequestController stringRequestController;
+        private IStringGetController stringGetController;
         private ISerializationController serializationController;
         private IConsoleController consoleController;
 
@@ -23,71 +23,73 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
         {
             uriController = new UriController(); // no need to mock UriController
             serializationController = new JSONController(); // no need to mock JSONController
-            stringRequestController = new MockNetworkController(uriController);
+            stringGetController = new MockNetworkController(uriController);
             consoleController = new MockConsoleController();
 
             productsResultController = new ProductsResultController(
-                stringRequestController,
+                stringGetController,
                 serializationController,
                 consoleController);
         }
 
         [TestMethod]
-        public ProductsResult ProductsResultControllerCanGetAll()
+        public List<Product> ProductsResultControllerCanGetAll()
         {
-            var productsResult = productsResultController.GetAll(
+            var products = productsResultController.GetAll(
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered).Result;
 
-            Assert.AreEqual(productsResult.Products.Count, 100); // 2 pages * 50 per page
+            Assert.AreEqual(products.Count, 100); // 2 pages * 50 per page
 
-            return productsResult;
+            return products;
         }
 
         [TestMethod]
         public void ProductsResultControllerDoesntUpdateExisting()
         {
-            var productsResult = productsResultController.GetAll(
+            var products = productsResultController.GetAll(
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered).Result;
 
-            var anotherProductsResult = productsResultController.UpdateExisting(
+            var productsResult = new ProductsResult(products);
+
+            var anotherProductsResult = productsResultController.GetUpdated(
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
                 productsResult).Result;
 
             // requesting new shouldn't product new products on the same data set
-            Assert.AreEqual(anotherProductsResult.Products.Count, productsResult.Products.Count);
+            Assert.AreEqual(anotherProductsResult.Count, 0);
         }
 
         [TestMethod]
-        public ProductsResult ProductsResultControllerCanGetAccountProducts(bool updated = false)
+        public List<Product> ProductsResultControllerCanGetAccountProducts(bool updated = false)
         {
             var accountProductsQuery = new Dictionary<string, string>(QueryParameters.AccountGetFilteredProducts);
 
             accountProductsQuery["isUpdated"] = updated ? "1" : "0";
 
-            var accountProductsResult = productsResultController.GetAll(
+            var accountProducts = productsResultController.GetAll(
                 Urls.AccountGetFilteredProducts,
                 accountProductsQuery).Result;
 
             var expectedProducts = updated ? 5 : 100;
 
-            Assert.AreEqual(accountProductsResult.Products.Count, expectedProducts); // 2 pages * 50 per page or 5 updated
+            Assert.AreEqual(accountProducts.Count, expectedProducts); // 2 pages * 50 per page or 5 updated
 
-            return accountProductsResult;
+            return accountProducts;
         }
 
         [TestMethod]
         public void ProductsResultControllerCanUpdateOwned()
         {
-            var accountProductsResult = ProductsResultControllerCanGetAccountProducts(false);
+            var accountProducts = ProductsResultControllerCanGetAccountProducts(false);
 
-            var accountController = new ProductsResultController(accountProductsResult);
+            var accountController = new ProductsResultController(accountProducts);
 
             var allOwned = true;
 
-            foreach (Product product in accountProductsResult.Products)
+            foreach (Product product in accountProducts)
             {
                 allOwned &= product.Owned;
             }
@@ -96,11 +98,11 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
             Assert.IsFalse(allOwned);
 
             // set all to being owned
-            accountController.SetAllAsOwned();
+            accountController.SetAllAsOwned(accountProducts);
 
             allOwned = true;
 
-            foreach (Product product in accountProductsResult.Products)
+            foreach (Product product in accountProducts)
             {
                 allOwned &= product.Owned;
             }
@@ -112,13 +114,13 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
         [TestMethod]
         public void ProductsResultControllerCanResetUpdated()
         {
-            var accountProductsResult = ProductsResultControllerCanGetAccountProducts(false);
+            var accountProducts = ProductsResultControllerCanGetAccountProducts(false);
 
-            var accountController = new ProductsResultController(accountProductsResult);
+            var accountController = new ProductsResultController(accountProducts);
 
             var noneUpdated = true;
 
-            foreach (Product product in accountProductsResult.Products)
+            foreach (Product product in accountProducts)
             {
                 noneUpdated &= product.Updates == 0;
             }
@@ -131,7 +133,7 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
 
             noneUpdated = true;
 
-            foreach (Product product in accountProductsResult.Products)
+            foreach (Product product in accountProducts)
             {
                 noneUpdated &= product.Updates == 0;
             }
@@ -143,28 +145,28 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
         [TestMethod]
         public void ProductsResultControllerCanGetUpdated()
         {
-            var updatedProductsResult = ProductsResultControllerCanGetAccountProducts(true);
+            var updatedProducts = ProductsResultControllerCanGetAccountProducts(true);
 
-            Assert.AreEqual(updatedProductsResult.Products.Count, 5);
+            Assert.AreEqual(updatedProducts.Count, 5);
         }
 
         [TestMethod]
         public void ProductsResultControllerCanMergeOwned()
         {
-            var productsResult = ProductsResultControllerCanGetAll();
-            var ownedProductsResult = ProductsResultControllerCanGetAccountProducts(false);
+            var products = ProductsResultControllerCanGetAll();
+            var ownedProducts = ProductsResultControllerCanGetAccountProducts(false);
 
-            var ownedController = new ProductsResultController(ownedProductsResult);
-            ownedController.SetAllAsOwned();
+            var ownedController = new ProductsResultController(ownedProducts);
+            ownedController.SetAllAsOwned(ownedProducts);
 
-            var existingController = new ProductsResultController(productsResult);
+            var existingController = new ProductsResultController(products);
 
-            int existingCount = productsResult.Products.Count;
+            int existingCount = products.Count;
             int existingOwned = 0;
             // calculate delta
-            foreach (Product ownedProduct in ownedProductsResult.Products)
+            foreach (Product ownedProduct in ownedProducts)
             {
-                foreach (Product existingProduct in productsResult.Products)
+                foreach (Product existingProduct in products)
                 {
                     if (existingProduct.Id == ownedProduct.Id)
                     {
@@ -174,35 +176,35 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
                 }
             }
 
-            int newOwned = productsResult.Products.Count - existingOwned; // 100 - 29 = 71
+            int newOwned = products.Count - existingOwned; // 100 - 29 = 71
 
-            existingController.MergeOwned(ownedProductsResult);
+            existingController.MergeOwned(ownedProducts);
 
-            Assert.AreEqual(productsResult.Products.Count, existingCount + newOwned);
+            Assert.AreEqual(products.Count, existingOwned + newOwned);
 
             int checkOwned = 0;
-            foreach (Product p in productsResult.Products)
+            foreach (Product p in products)
             {
                 if (p.Owned) checkOwned++;
             }
 
-            Assert.AreEqual(checkOwned, ownedProductsResult.Products.Count);
+            Assert.AreEqual(checkOwned, existingOwned);
         }
 
         [TestMethod]
         public void ProductsResultControllerCanMergeUpdated()
         {
-            var productsResult = ProductsResultControllerCanGetAll();
-            var updatedProductsResult = ProductsResultControllerCanGetAccountProducts(true);
+            var products = ProductsResultControllerCanGetAll();
+            var updatedProducts = ProductsResultControllerCanGetAccountProducts(true);
 
-            var existingController = new ProductsResultController(productsResult);
+            var existingController = new ProductsResultController(products);
 
-            int existingCount = productsResult.Products.Count;
+            int existingCount = products.Count;
             int existingUpdated = 0;
             // calculate delta
-            foreach (Product ownedProduct in updatedProductsResult.Products)
+            foreach (Product ownedProduct in updatedProducts)
             {
-                foreach (Product existingProduct in productsResult.Products)
+                foreach (Product existingProduct in products)
                 {
                     if (existingProduct.Id == ownedProduct.Id)
                     {
@@ -213,13 +215,13 @@ namespace GoodOfflineGames.Tests.GOG.Controllers
             }
 
             // not all updated products are owned (per mocked data)
-            Assert.IsTrue(existingUpdated < updatedProductsResult.Products.Count);
+            Assert.IsTrue(existingUpdated < updatedProducts.Count);
 
             if (existingUpdated > 0)
             {
                 try
                 {
-                    existingController.MergeUpdated(updatedProductsResult);
+                    existingController.MergeUpdated(updatedProducts);
                 }
                 catch (System.InvalidOperationException)
                 {

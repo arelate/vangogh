@@ -28,7 +28,7 @@ namespace GOG.Controllers
 
             // request authorization token
 
-            string authResponse = await stringNetworkController.RequestString(Urls.Authenticate, QueryParameters.Authenticate);
+            string authResponse = await stringNetworkController.GetString(Urls.Authenticate, QueryParameters.Authenticate);
 
             // extracting login token that is 43 characters (letters, numbers, - ...)
             Regex regex = new Regex(@"[\w-]{43}");

@@ -1,4 +1,6 @@
-﻿using GOG.SharedControllers;
+﻿using System.Collections.Generic;
+
+using GOG.SharedControllers;
 using GOG.Controllers;
 using GOG.Models;
 using GOG.SharedModels;
@@ -17,11 +19,11 @@ namespace GOG
             var uriController = new UriController();
             var networkController = new NetworkController(uriController);
             var settingsController = new SettingsController(
-                ioController, 
-                jsonController, 
+                ioController,
+                jsonController,
                 consoleController);
             var authenticationController = new AuthenticationController(
-                uriController, 
+                uriController,
                 networkController,
                 consoleController);
 
@@ -66,18 +68,18 @@ namespace GOG
             storedOwned.Products = storedGames.Products.FindAll(p => p.Owned);
 
             // get all games owned by user
-            var ownedResult = productsResultController.UpdateExisting(
+            var updatedOwned = productsResultController.GetUpdated(
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
                 storedOwned,
                 "Getting new account games...").Result;
 
             // get all available games from gog.com/games
-            var gamesResult = productsResultController.UpdateExisting(
+            productsResultController.GetUpdated(
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
                 storedGames,
-                "Getting new games available on GOG.com...").Result;
+                "Getting new games available on GOG.com...").Wait();
 
             // separately get all updated products
             QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
@@ -86,16 +88,11 @@ namespace GOG
                 QueryParameters.AccountGetFilteredProducts,
                 "Getting updated games...").Result;
 
-            var ownedResultController = new ProductsResultController(ownedResult);
-
-            // reset updates between data source modifications
-            //ownedResultController.ResetUpdated();
-
             // mark all new owned games as owned
-            ownedResultController.SetAllAsOwned();
+            productsResultController.SetAllAsOwned(updatedOwned);
 
             // merge owned games into all available games 
-            productsResultController.MergeOwned(ownedResult);
+            productsResultController.MergeOwned(updatedOwned);
 
             // merge updated games into owned games
             productsResultController.MergeUpdated(updatedResult);
@@ -111,24 +108,64 @@ namespace GOG
             var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
             productsResultController.UpdateProductDetails(gameDetailsProvider).Wait();
 
-            // update wishlisted games
-            var wishlistController = new WishlistController(
-                gogDataController, 
-                jsonController);
+            using (var wishlistController = new WishlistController(gogDataController, jsonController))
+            {
+                // update wishlisted games
+                var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
 
-            var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
+                productsResultController.MergeWishlisted(wishlistResult);
+            }
 
-            productsResultController.MergeWishlisted(wishlistResult);
+            // get product files for updated and new files
+            var updatedProducts = productsResultController.GetUpdated();
 
+            var downloadProducts = new List<Product>(updatedProducts);
+
+            // when we got updated owned products they didn't have download links,
+            // since then we've updated all product details and productsResultController should have
+            // all the details we need - so for every newly obtained product we need to find match 
+            // in current productsReusltController to use for updating files
+            foreach (var uo in updatedOwned)
+            {
+                var updatedOwnedWithDetails = productsResultController.ProductsResult.Products.Find(p => p.Id == uo.Id);
+                if (updatedOwnedWithDetails != null)
+                {
+                    downloadProducts.Add(updatedOwnedWithDetails);
+                }
+            }
+
+            // also if we've passed products for manual update through settings.json
+            // add them for update as well
+
+            if (settings.ManualUpdate != null)
+            {
+                var manualUpdate = productsResultController.GetByName(settings.ManualUpdate);
+                downloadProducts.AddRange(manualUpdate);
+            }
+
+            // reset updates between data source modifications
+            productsResultController.ResetUpdated();
+
+            // since we're done with all model modifications at this point - 
             // serialize and save on disk
 
-            var gamesResultJson = "var data = " + jsonController.Stringify(gamesResult);
+            var gamesResultJson = "var data = " + jsonController.Stringify(productsResultController.ProductsResult);
             storage.Put(filename, gamesResultJson).Wait();
 
-            // download new images 
+            // update product files for updated, new account products and manual updates
+
+            var productFilesController = new ProductFilesController(
+                downloadProducts,
+                networkController,
+                ioController,
+                consoleController);
+
+            productFilesController.UpdateFiles().Wait();
+
+            // update images for all products
 
             var images = new ImagesController(networkController, ioController, consoleController);
-            images.Update(gamesResult).Wait();
+            images.Update(productsResultController.ProductsResult).Wait();
 
             // nothing left to do here
 

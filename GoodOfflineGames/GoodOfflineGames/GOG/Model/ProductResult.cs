@@ -18,11 +18,16 @@ namespace GOG.Models
             Products = new List<Product>();
         }
 
-        public ProductsResult(ProductsResult otherResult)
+        public ProductsResult(ProductsResult otherResult): this()
         {
             this.Products = (otherResult != null) ?
                 new List<Product>(otherResult.Products) :
                 new List<Product>();
+        }
+
+        public ProductsResult(List<Product> products): this()
+        {
+            this.Products = new List<Product>(products);
         }
     }
 }

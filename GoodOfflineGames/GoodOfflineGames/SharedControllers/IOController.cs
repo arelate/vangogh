@@ -12,12 +12,25 @@ namespace GOG.SharedControllers
 
         public Stream OpenWritable(string uri)
         {
+            var directoryName = Path.GetDirectoryName(uri);
+            if (!string.IsNullOrEmpty(directoryName) &&
+                !Directory.Exists(directoryName)) 
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
             return new FileStream(uri, FileMode.Create, FileAccess.Write, FileShare.Read);
         }
 
         public bool ExistsFile(string uri)
         {
             return File.Exists(uri);
+        }
+
+        public long GetSize(string uri)
+        {
+            var fileInfo = new FileInfo(uri);
+            return fileInfo.Length;
         }
 
         public bool ExistsDirectory(string uri)

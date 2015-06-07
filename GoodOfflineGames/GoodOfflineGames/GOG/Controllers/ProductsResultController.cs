@@ -10,31 +10,41 @@ using GOG.Models;
 
 namespace GOG.Controllers
 {
-    public class ProductsResultController
+    public class ProductsResultController : IDisposable
     {
-        protected ProductsResult productsResult;
-        protected IStringRequestController stringRequestController;
+        public ProductsResult ProductsResult { get; set; }
+        protected IStringGetController stringGetController;
         private ISerializationController serializationController;
         private IConsoleController consoleController;
 
-        public ProductsResultController(ProductsResult productsResult)
+        public ProductsResultController()
+        {
+            ProductsResult = new ProductsResult();
+        }
+
+        public ProductsResultController(List<Product> products): this()
+        {
+            this.ProductsResult = new ProductsResult(products);
+        }
+
+        public ProductsResultController(ProductsResult productsResult): this()
         {
             if (productsResult == null)
             {
                 productsResult = new ProductsResult();
             }
 
-            this.productsResult = productsResult;
+            ProductsResult = productsResult;
         }
 
         public ProductsResultController(
-            IStringRequestController stringRequestController,
+            IStringGetController stringGetController,
             ISerializationController serializationController,
             IConsoleController consoleController,
             ProductsResult productsResult = null) :
             this(productsResult)
         {
-            this.stringRequestController = stringRequestController;
+            this.stringGetController = stringGetController;
             this.serializationController = serializationController;
             this.consoleController = consoleController;
         }
@@ -52,26 +62,28 @@ namespace GOG.Controllers
 
             parameters[pageQueryParameter] = currentPage.ToString();
 
-            var json = await stringRequestController.RequestString(uri, parameters);
+            var json = await stringGetController.GetString(uri, parameters);
             return serializationController.Parse<ProductsResult>(json);
         }
 
-        private IEnumerable<Product> FilterNewProducts(ProductsResult existing, ProductsResult current)
+        private IEnumerable<Product> FilterNewProducts(ProductsResult current, ProductsResult existing)
         {
-            if (existing == null) return current.Products;
-
-            var newProducts =
-                current.Products.Where(
-                    cp =>
-                    !existing.Products.Any(ep => ep.Id == cp.Id));
-            return newProducts;
+            foreach (Product maybeNew in current.Products)
+            {
+                var existingProduct = existing.Products.Find(p => p.Id == maybeNew.Id);
+                if (existingProduct == null)
+                {
+                    yield return maybeNew;
+                }
+            }
         }
 
         private int MergeNewProducts(ProductsResult existing, IEnumerable<Product> newProducts)
         {
             var newProductsCount = 0;
 
-            if (newProducts != null) {
+            if (newProducts != null)
+            {
                 newProductsCount = newProducts.Count();
             }
 
@@ -84,7 +96,7 @@ namespace GOG.Controllers
             return newProductsCount;
         }
 
-        private async Task<ProductsResult> RequestPagedResult(
+        private async Task<List<Product>> RequestPagedResult(
             string uri,
             IDictionary<string, string> parameters,
             ProductsResult existing,
@@ -92,7 +104,8 @@ namespace GOG.Controllers
             string message = null)
         {
             consoleController.Write(message);
-            var updatedProducts = new ProductsResult(existing); 
+            //var updatedProducts = new ProductsResult(existing); 
+            var allNewProducts = new List<Product>();
 
             int currentPage = 1;
             ProductsResult current;
@@ -105,8 +118,11 @@ namespace GOG.Controllers
 
                 current = await RequestPage(uri, parameters, currentPage);
 
-                var newProducts = FilterNewProducts(existing, current);
-                var newProductsCount = MergeNewProducts(updatedProducts, newProducts);
+                var newProducts = (existing != null) ?
+                    FilterNewProducts(current, existing) :
+                    current.Products;
+                var newProductsCount = MergeNewProducts(ProductsResult, newProducts);
+                allNewProducts.AddRange(newProducts);
 
                 totalNewProducts += newProductsCount;
 
@@ -120,21 +136,25 @@ namespace GOG.Controllers
 
             consoleController.WriteLine("Got {0} products.", totalNewProducts);
 
-            return updatedProducts;
+            return allNewProducts;
         }
 
 
-        public async Task<ProductsResult> UpdateExisting(
+        public async Task<List<Product>> GetUpdated(
             string uri,
             IDictionary<string, string> parameters,
             ProductsResult existing,
             string message = null)
         {
-            productsResult = await RequestPagedResult(uri, parameters, existing, true, message);
-            return productsResult;
+            var updated = await RequestPagedResult(uri, parameters, existing, true, message);
+
+            ProductsResult = new ProductsResult(existing);
+            ProductsResult.Products.InsertRange(0, updated);
+
+            return updated;
         }
 
-        public async Task<ProductsResult> GetAll(
+        public async Task<List<Product>> GetAll(
             string uri,
             Dictionary<string, string> parameters,
             string message = null)
@@ -142,9 +162,9 @@ namespace GOG.Controllers
             return await RequestPagedResult(uri, parameters, null, false, message);
         }
 
-        public void SetAllAsOwned()
+        public void SetAllAsOwned(List<Product> products)
         {
-            foreach (Product p in productsResult.Products)
+            foreach (Product p in products)
             {
                 p.Owned = true;
             }
@@ -154,7 +174,7 @@ namespace GOG.Controllers
         {
             var dlcTitle = dlc.Title.Replace("DLC: ", string.Empty);
 
-            var game = productsResult.Products.Find(p => p.Title == dlcTitle);
+            var game = ProductsResult.Products.Find(p => p.Title == dlcTitle);
             if (game != null) game.Owned = true;
             else
             {
@@ -173,16 +193,16 @@ namespace GOG.Controllers
             }
         }
 
-        public void MergeOwned(ProductsResult owned)
+        public void MergeOwned(IEnumerable<Product> owned)
         {
             if (owned == null) return;
 
-            owned.Products.ForEach(op =>
+            foreach (var op in owned)
             {
-                var game = productsResult.Products.Find(p => p.Id == op.Id);
+                var game = ProductsResult.Products.Find(p => p.Id == op.Id);
 
                 if (game != null) game.Owned = true;
-                else productsResult.Products.Add(op);
+                else ProductsResult.Products.Add(op);
 
                 // also merge DLC as owned
                 if (op.GameDetails != null &&
@@ -194,32 +214,31 @@ namespace GOG.Controllers
                         MergeDLCs(dlc);
                     }
                 }
-
-            });
+            }
         }
 
-        public void MergeUpdated(ProductsResult updated)
+        public void MergeUpdated(List<Product> updated)
         {
             if (updated == null) return;
 
-            updated.Products.ForEach(op =>
+            foreach (Product op in updated)
             {
-                var game = productsResult.Products.Find(p => p.Id == op.Id);
+                var game = ProductsResult.Products.Find(p => p.Id == op.Id);
                 if (game != null) game.Updates = 1;
                 else throw new InvalidOperationException("Games that are not owned cannot be marked updated.");
-            });
+            }
         }
 
         public void ResetUpdated()
         {
-            this.productsResult.Products.ForEach(p => p.Updates = 0);
+            ProductsResult.Products.ForEach(p => p.Updates = 0);
         }
 
         public void MergeWishlisted(ProductsResult wishlisted)
         {
             wishlisted.Products.ForEach(wp =>
             {
-                var wishlistedProduct = productsResult.Products.Find(p => p.Id == wp.Id);
+                var wishlistedProduct = ProductsResult.Products.Find(p => p.Id == wp.Id);
                 wishlistedProduct.Wishlisted = true;
             });
         }
@@ -229,7 +248,7 @@ namespace GOG.Controllers
             consoleController.Write(detailsProvider.Message);
             int totalProductsUpdated = 0;
 
-            foreach (Product product in productsResult.Products)
+            foreach (Product product in ProductsResult.Products)
             {
                 if (detailsProvider.SkipCondition(product))
                 {
@@ -240,7 +259,7 @@ namespace GOG.Controllers
 
                 var requestUri = string.Format(detailsProvider.RequestTemplate,
                     detailsProvider.GetRequestDetails(product));
-                var detailsString = await detailsProvider.StringRequestController.RequestString(requestUri);
+                var detailsString = await detailsProvider.StringGetController.GetString(requestUri);
 
                 detailsProvider.SetDetails(product, detailsString);
                 totalProductsUpdated++;
@@ -249,6 +268,33 @@ namespace GOG.Controllers
             consoleController.WriteLine("Updated details for {0} products.", totalProductsUpdated);
         }
 
+        private IEnumerable<Product> Reduce(Predicate<Product> condition)
+        {
+            foreach (Product p in ProductsResult.Products)
+            {
+                if (condition(p)) yield return p;
+            }
+        }
+
+        public IEnumerable<Product> GetOwned()
+        {
+            return Reduce(p => p.Owned);
+        }
+
+        public IEnumerable<Product> GetUpdated()
+        {
+            return Reduce(p => p.Updates > 0);
+        }
+
+        public IEnumerable<Product> GetByName(IEnumerable<string> names)
+        {
+            return Reduce(p => names.Contains(p.Title));
+        }
+
+        public void Dispose()
+        {
+            ProductsResult = null;
+        }
     }
 }
 

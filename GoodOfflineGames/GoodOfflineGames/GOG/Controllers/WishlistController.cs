@@ -10,16 +10,16 @@ using GOG.SharedModels;
 
 namespace GOG.Controllers
 {
-    public class WishlistController
+    public class WishlistController: IDisposable
     {
-        private IStringRequestController stringRequestController;
+        private IStringGetController stringGetController;
         private ISerializationController serializationController;
 
         public WishlistController(
-            IStringRequestController stringRequestController,
+            IStringGetController stringRequestController,
             ISerializationController serializationController)
         {
-            this.stringRequestController = stringRequestController;
+            this.stringGetController = stringRequestController;
             this.serializationController = serializationController;
         }
 
@@ -27,13 +27,17 @@ namespace GOG.Controllers
         {
             consoleController.Write("Updating wishlisted products...");
 
-            var wishlistGogDataString = await stringRequestController.RequestString(Urls.Wishlist);
+            var wishlistGogDataString = await stringGetController.GetString(Urls.Wishlist);
 
             var wishlistGogData = serializationController.Parse<ProductsResult>(wishlistGogDataString);
 
             consoleController.WriteLine("DONE.");
 
             return wishlistGogData;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

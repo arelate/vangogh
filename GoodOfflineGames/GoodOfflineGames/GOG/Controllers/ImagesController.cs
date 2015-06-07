@@ -63,25 +63,21 @@ namespace GOG.Controllers
                 ioController.CreateDirectory(imagesCacheFolder);
             }
 
-            foreach (string imageUri in uris)
+            foreach (string imageRelativeUri in uris)
             {
-                string localFilename = GetImageLocalFilename(imageUri);
+                var imageUri = new Uri(imageRelativeUri, UriKind.Absolute);
+                var localFilename = imageUri.Segments.Last();
+                var localPath = Path.Combine(imagesCacheFolder, localFilename);
 
-                if (ioController.ExistsFile(localFilename))
+                if (ioController.ExistsFile(localPath))
                 {
                     continue;
                 }
 
                 consoleController.Write(".");
 
-                await fileRequestController.RequestFile(imageUri, localFilename, ioController);
+                await fileRequestController.RequestFile(imageUri.ToString(), imagesCacheFolder, ioController);
             }
-        }
-
-        private string GetImageLocalFilename(string imageUri)
-        {
-            Uri uri = new Uri(imageUri, UriKind.Absolute);
-            return Path.Combine(imagesCacheFolder, uri.Segments.Last());
         }
 
     }

@@ -10,14 +10,14 @@ namespace GOG.Providers
 {
     public abstract class AbstractDetailsProvider
     {
-        protected IStringRequestController stringRequestController;
+        protected IStringGetController stringGetController;
         protected ISerializationController serializationController;
 
         public AbstractDetailsProvider(
-            IStringRequestController stringRequestController,
+            IStringGetController stringGetController,
             ISerializationController serializationController)
         {
-            this.stringRequestController = stringRequestController;
+            this.stringGetController = stringGetController;
             this.serializationController = serializationController;
         }
 

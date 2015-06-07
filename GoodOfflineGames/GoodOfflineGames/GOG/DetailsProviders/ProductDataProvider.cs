@@ -17,9 +17,9 @@ namespace GOG.Providers
         IProductDetailsProvider<Product>
     {
         public ProductDataProvider(
-            IStringRequestController stringRequestController,
+            IStringGetController stringGetController,
             ISerializationController serializationController):
-                base(stringRequestController, serializationController)
+                base(stringGetController, serializationController)
         {
             // ...
         }
@@ -40,11 +40,11 @@ namespace GOG.Providers
             }
         }
 
-        public IStringRequestController StringRequestController
+        public IStringGetController StringGetController
         {
             get
             {
-                return stringRequestController;
+                return stringGetController;
             }
         }
 
@@ -55,8 +55,11 @@ namespace GOG.Providers
 
         public void SetDetails(Product element, string dataString)
         {
-            var data = serializationController.Parse<ProductData>(dataString);
-            element.ProductData = data;
+            var data = serializationController.Parse<GOGData>(dataString);
+            if (data != null)
+            {
+                element.ProductData = data.ProductData;
+            }
         }
 
         public bool SkipCondition(Product element)

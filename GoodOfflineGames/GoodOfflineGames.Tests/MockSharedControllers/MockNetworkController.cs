@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using GOG.Interfaces;
@@ -27,12 +28,14 @@ namespace GoodOfflineGames.Tests
         public Task RequestFile(
             string fromUri,
             string toFile,
-            IStreamWritableController streamWriteableController)
+            IStreamWritableController streamWriteableController,
+            IFileController fileController = null,
+            IProgress<double> progress = null)
         {
             return null;
         }
 
-        public async Task<string> RequestString(
+        public async Task<string> GetString(
             string baseUri,
             IDictionary<string, string> parameters = null)
         {

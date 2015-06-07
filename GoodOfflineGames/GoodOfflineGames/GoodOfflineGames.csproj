@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,6 +47,7 @@
   <ItemGroup>
     <Compile Include="GOG\Controllers\AuthenticationController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
+    <Compile Include="GOG\Controllers\ProductFilesController.cs" />
     <Compile Include="GOG\Controllers\ProductsResultController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
     <Compile Include="GOG\DetailsProviders\AbstractDetailsProvider.cs" />

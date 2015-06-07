@@ -12,7 +12,7 @@ namespace GOG.SharedModels
         public const string HttpsProtocol = "https:";
         // Roots
         private const string SiteRoot = "//www.gog.com";
-        private const string HttpsRoot = HttpsProtocol + SiteRoot;
+        public const string HttpsRoot = HttpsProtocol + SiteRoot;
         public const string HttpRoot = HttpProtocol + SiteRoot;
         private const string Login = HttpsProtocol + "//login.gog.com";
         private const string Auth = HttpsProtocol + "//auth.gog.com";
