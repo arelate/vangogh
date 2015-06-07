@@ -110,6 +110,9 @@ namespace GOG
 
             using (var wishlistController = new WishlistController(gogDataController, jsonController))
             {
+                // clear wishlisted before setting new ones
+                productsResultController.ClearWishlisted();
+
                 // update wishlisted games
                 var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
 

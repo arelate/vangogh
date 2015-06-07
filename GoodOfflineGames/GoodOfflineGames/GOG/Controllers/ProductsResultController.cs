@@ -234,6 +234,14 @@ namespace GOG.Controllers
             ProductsResult.Products.ForEach(p => p.Updates = 0);
         }
 
+        public void ClearWishlisted()
+        {
+            foreach (Product p in ProductsResult.Products)
+            {
+                p.Wishlisted = false;
+            }
+        }
+
         public void MergeWishlisted(ProductsResult wishlisted)
         {
             wishlisted.Products.ForEach(wp =>
