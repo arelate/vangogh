@@ -119,10 +119,19 @@ namespace GOG
                 productsResultController.MergeWishlisted(wishlistResult);
             }
 
+            // we'll drive downloads with product titles
+            // as for updated products and new account products 
+            // when we got those lists the result likely don't have product details
+            // that contain download links; using product titles 
+            // we'll query stored products that have details and get links
+            var downloadProductsNames = new List<string>();
+
             // get product files for updated and new files
             var updatedProducts = productsResultController.GetUpdated();
-
-            var downloadProducts = new List<Product>(updatedProducts);
+            foreach (var p in updatedProducts)
+            {
+                downloadProductsNames.Add(p.Title);
+            }
 
             // when we got updated owned products they didn't have download links,
             // since then we've updated all product details and productsResultController should have
@@ -130,21 +139,18 @@ namespace GOG
             // in current productsReusltController to use for updating files
             foreach (var uo in updatedOwned)
             {
-                var updatedOwnedWithDetails = productsResultController.ProductsResult.Products.Find(p => p.Id == uo.Id);
-                if (updatedOwnedWithDetails != null)
-                {
-                    downloadProducts.Add(updatedOwnedWithDetails);
-                }
+                downloadProductsNames.Add(uo.Title);
             }
 
             // also if we've passed products for manual update through settings.json
             // add them for update as well
-
             if (settings.ManualUpdate != null)
             {
-                var manualUpdate = productsResultController.GetByName(settings.ManualUpdate);
-                downloadProducts.AddRange(manualUpdate);
+                downloadProductsNames.AddRange(settings.ManualUpdate);
             }
+
+            // now actually create list of product that need product files update
+            var downloadProducts = productsResultController.GetByName(downloadProductsNames);
 
             // reset updates between data source modifications
             productsResultController.ResetUpdated();
