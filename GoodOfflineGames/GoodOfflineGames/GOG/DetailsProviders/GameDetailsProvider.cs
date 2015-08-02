@@ -12,13 +12,13 @@ namespace GOG.Providers
 {
     // TODO: Unit tests
 
-    class GameDetailsProvider : 
+    class GameDetailsProvider :
         AbstractDetailsProvider,
         IProductDetailsProvider<Product>
     {
         public GameDetailsProvider(
             IStringGetController stringGetController,
-            ISerializationController serializationController):
+            IStringifyController serializationController) :
                 base(stringGetController, serializationController)
         {
             // ...
@@ -59,14 +59,18 @@ namespace GOG.Providers
             element.GameDetails = data;
         }
 
+        //public bool SkipCondition(Product element)
+        //{
+        //    return false;
+        //}
+
         public bool SkipCondition(Product element)
         {
             // skip not owned games
             if (!element.Owned) return true;
 
             // skip games that already have game details and have no updates
-            if (element.GameDetails != null &&
-                element.Updates == 0)
+            if (element.GameDetails != null)
                 return true;
 
             // skip DLCs as they won't have separate game details

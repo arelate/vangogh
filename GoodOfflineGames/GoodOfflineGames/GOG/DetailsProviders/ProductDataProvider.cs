@@ -18,7 +18,7 @@ namespace GOG.Providers
     {
         public ProductDataProvider(
             IStringGetController stringGetController,
-            ISerializationController serializationController):
+            IStringifyController serializationController):
                 base(stringGetController, serializationController)
         {
             // ...

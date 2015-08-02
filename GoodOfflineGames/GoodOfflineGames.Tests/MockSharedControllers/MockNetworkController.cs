@@ -11,7 +11,7 @@ namespace GoodOfflineGames.Tests
         IFileRequestController,
         IStringNetworkController
     {
-        private ISerializationController serializationController;
+        private IStringifyController serializationController;
         private IUriController uriController;
 
         public MockNetworkController(IUriController uriController)
@@ -19,7 +19,7 @@ namespace GoodOfflineGames.Tests
             this.uriController = uriController;
         }
 
-        public MockNetworkController(IUriController uriController, ISerializationController serializationController) :
+        public MockNetworkController(IUriController uriController, IStringifyController serializationController) :
             this(uriController)
         {
             this.serializationController = serializationController;

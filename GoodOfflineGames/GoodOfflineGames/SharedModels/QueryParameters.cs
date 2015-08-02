@@ -37,16 +37,17 @@ namespace GOG.SharedModels
         public static Dictionary<string, string> Authenticate = new Dictionary<string, string>()
         {
             { "client_id", "46755278331571209" },
-            { "layout", "default" },
             { "redirect_uri", Urls.LoginRedirect},
-            { "response_type", "code" }
+            { "response_type", "code" },
+            { "layout", "default" }
         };
 
         public static Dictionary<string, string> LoginAuthenticate = new Dictionary<string, string>()
         {
-            { "login[username]", "" },
             { "login[password]", "" },
-            { "login[_token]", "" }
+            { "login[login]", "" },
+            { "login[id]", "" },
+            { "login[_token]", "" },
         };
     }
 }

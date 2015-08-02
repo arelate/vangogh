@@ -11,11 +11,11 @@ namespace GOG.Providers
     public abstract class AbstractDetailsProvider
     {
         protected IStringGetController stringGetController;
-        protected ISerializationController serializationController;
+        protected IStringifyController serializationController;
 
         public AbstractDetailsProvider(
             IStringGetController stringGetController,
-            ISerializationController serializationController)
+            IStringifyController serializationController)
         {
             this.stringGetController = stringGetController;
             this.serializationController = serializationController;

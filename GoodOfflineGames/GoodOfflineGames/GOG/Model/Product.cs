@@ -132,8 +132,8 @@ namespace GOG.Models
         public string Title { get; set; }
         //[DataMember(Name = "type")]
         //public int Type { get; set; }
-        [DataMember(Name = "updates")]
-        public int Updates { get; set; }
+        //[DataMember(Name = "updates")]
+        //public int Updates { get; set; }
         [DataMember(Name = "url")]
         public string Url { get; set; }
         [DataMember(Name = "worksOn")]

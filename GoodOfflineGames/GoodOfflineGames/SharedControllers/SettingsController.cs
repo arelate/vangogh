@@ -11,12 +11,12 @@ namespace GOG.SharedControllers
     public class SettingsController
     {
         private IStreamReadableController streamReadableController;
-        private ISerializationController serializationController;
+        private IStringifyController serializationController;
         private IConsoleController consoleController;
 
         public SettingsController(
             IStreamReadableController streamReadableController,
-            ISerializationController serializationContoller,
+            IStringifyController serializationContoller,
             IConsoleController consoleController)
         {
             this.streamReadableController = streamReadableController;

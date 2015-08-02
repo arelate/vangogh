@@ -31,13 +31,13 @@ namespace GoodOfflineGames.Tests
         [TestMethod]
         public void AuthenticationControllerAuthorizesWithCorrectCredentials()
         {
-            Assert.IsTrue(authenticationController.AuthorizeOnSite(correctCredentials).Result);
+            Assert.IsTrue(authenticationController.Authorize(correctCredentials).Result);
         }
 
         [TestMethod]
         public void AuthenticationControllerFailsAuthorizationWithWrongCredentials()
         {
-            Assert.IsFalse(authenticationController.AuthorizeOnSite(wrongCredentials).Result);
+            Assert.IsFalse(authenticationController.Authorize(wrongCredentials).Result);
         }
     }
 }

@@ -46,9 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GOG\Controllers\AuthenticationController.cs" />
+    <Compile Include="GOG\Controllers\Abstract\CollectionController.cs" />
+    <Compile Include="GOG\Controllers\DLCController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
+    <Compile Include="GOG\Controllers\Abstract\PagedResultController.cs" />
+    <Compile Include="GOG\Controllers\OwnedController.cs" />
+    <Compile Include="GOG\Controllers\ProductDetailsController.cs" />
     <Compile Include="GOG\Controllers\ProductFilesController.cs" />
-    <Compile Include="GOG\Controllers\ProductsResultController.cs" />
+    <Compile Include="GOG\Controllers\ProductsController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
     <Compile Include="GOG\DetailsProviders\AbstractDetailsProvider.cs" />
     <Compile Include="GOG\DetailsProviders\GameDetailsProvider.cs" />
@@ -57,12 +62,25 @@
     <Compile Include="GOG\Model\ProductData.cs" />
     <Compile Include="GOG\Model\Product.cs" />
     <Compile Include="GOG\Model\ProductResult.cs" />
+    <Compile Include="Interfaces\CollectionController.cs" />
+    <Compile Include="Interfaces\Console.cs" />
+    <Compile Include="Interfaces\GOG\AuthenticationController.cs" />
+    <Compile Include="Interfaces\GOG\Credentials.cs" />
+    <Compile Include="Interfaces\GOG\DLCController.cs" />
+    <Compile Include="Interfaces\GOG\OwnedController.cs" />
+    <Compile Include="Interfaces\Network.cs" />
+    <Compile Include="Interfaces\GOG\PagedResultController.cs" />
+    <Compile Include="Interfaces\GOG\PagedResultDelegate.cs" />
+    <Compile Include="Interfaces\GOG\ProductDataProvider.cs" />
+    <Compile Include="Interfaces\GOG\ProductsController.cs" />
+    <Compile Include="Interfaces\Stream.cs" />
+    <Compile Include="Interfaces\Stringify.cs" />
+    <Compile Include="Interfaces\GOG\WishlistController.cs" />
     <Compile Include="SharedControllers\StorageController.cs" />
     <Compile Include="SharedModels\QueryParameters.cs" />
     <Compile Include="SharedControllers\ConsoleController.cs" />
     <Compile Include="SharedControllers\IOController.cs" />
     <Compile Include="SharedControllers\SettingsController.cs" />
-    <Compile Include="Interfaces\Interfaces.cs" />
     <Compile Include="SharedControllers\JSONController.cs" />
     <Compile Include="SharedControllers\NetworkController.cs" />
     <Compile Include="SharedControllers\UriController.cs" />

@@ -5,7 +5,7 @@ using GOG.Interfaces;
 
 namespace GOG.SharedControllers
 {
-    public class JSONController: ISerializationController
+    public class JSONController: IStringifyController
     {
         public string Stringify<Type>(Type data)
         {

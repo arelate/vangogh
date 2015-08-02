@@ -95,7 +95,9 @@ namespace GOG.SharedControllers
         {
             string uri = uriController.CombineUri(baseUri, parameters);
 
-            using (var response = await client.PostAsync(uri, new StringContent(data)))
+            var content = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
+
+            using (var response = await client.PostAsync(uri, content))
             {
                 if (response == null) return null;
 

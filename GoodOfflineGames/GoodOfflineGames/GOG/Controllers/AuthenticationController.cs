@@ -6,7 +6,7 @@ using GOG.SharedModels;
 
 namespace GOG.Controllers
 {
-    public class AuthenticationController
+    public class AuthenticationController: IAuthenticationController
     {
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;
@@ -22,7 +22,7 @@ namespace GOG.Controllers
             this.consoleController = consoleController;
         }
 
-        public async Task<bool> AuthorizeOnSite(ICredentials credentials)
+        public async Task<bool> Authorize(ICredentials credentials)
         {
             consoleController.WriteLine("Authorizing {0} on GOG.com...", credentials.Username);
 
@@ -37,13 +37,15 @@ namespace GOG.Controllers
 
             // login using username / password
 
-            QueryParameters.LoginAuthenticate["login[username]"] = credentials.Username;
+            //QueryParameters.LoginAuthenticate["login[username]"] = credentials.Username;
             QueryParameters.LoginAuthenticate["login[password]"] = credentials.Password;
             QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
 
             string loginData = uriController.CombineQueryParameters(QueryParameters.LoginAuthenticate);
 
-            var loginCheckResult = await stringNetworkController.PostString(Urls.LoginCheck, null, loginData);
+            //var loginCheckResult = await stringNetworkController.PostString(Urls.LoginCheck, null, loginData);
+            var loginCheckResult = await stringNetworkController.PostString(Urls.Login, null, loginData);
+
 
             if (loginCheckResult.Contains("gogData"))
             {

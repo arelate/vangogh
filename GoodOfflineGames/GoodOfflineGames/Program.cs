@@ -6,30 +6,65 @@ using GOG.Models;
 using GOG.SharedModels;
 using GOG.Providers;
 
+using GOG.Interfaces;
+using System;
+
 namespace GOG
 {
+    class PagedResultFilter : IPagedResultFilterDelegate
+    {
+        private IEnumerable<Product> baseSet;
+        private IProductsController productsController;
+
+        public PagedResultFilter(IEnumerable<Product> baseSet)
+        {
+            this.baseSet = baseSet;
+            productsController = new ProductsController(baseSet, null, null, null, null);
+        }
+
+        public IEnumerable<Product> Filter(IEnumerable<Product> products)
+        {
+            foreach (var product in products)
+            {
+                if (productsController.Find(product.Id) != null)
+                {
+                    yield return product;
+                }
+            }
+        }
+    }
+
     class Program
     {
+
         static void Main(string[] args)
         {
-            var consoleController = new ConsoleController();
-            var ioController = new IOController();
+            // IO
+
+            IConsoleController consoleController = new ConsoleController();
+            IIOController ioController = new IOController();
             var storage = new StorageController(ioController);
-            var jsonController = new JSONController();
-            var uriController = new UriController();
-            var networkController = new NetworkController(uriController);
+            IStringifyController jsonController = new JSONController();
+            IUriController uriController = new UriController();
+            IStringNetworkController networkController = new NetworkController(uriController);
+
+            // GOG specific
+
             var settingsController = new SettingsController(
                 ioController,
                 jsonController,
                 consoleController);
-            var authenticationController = new AuthenticationController(
+            IAuthenticationController authenticationController = new AuthenticationController(
                 uriController,
                 networkController,
                 consoleController);
 
+            var pagedResultController = new PagedResultController(networkController, jsonController);
+
+            IList<Product> products = null;
+
             var jsonDataPrefix = "var data = ";
             var filename = "data.js";
-            ProductsResult storedGames = null;
 
             // Try to load stored games data and use it to update games rather than download again
             try
@@ -37,144 +72,152 @@ namespace GOG
                 var storedGamesJson = storage.Pull(filename)
                     .Result
                     .Replace(jsonDataPrefix, string.Empty);
-                storedGames = jsonController.Parse<ProductsResult>(storedGamesJson);
+                var productResult = jsonController.Parse<ProductsResult>(storedGamesJson);
+                products = productResult.Products;
             }
             catch
             {
                 // file not found or couldn't be read
-                storedGames = new ProductsResult();
+                products = new List<Product>();
             }
 
             var settings = settingsController.LoadSettings().Result;
 
-            if (!authenticationController.AuthorizeOnSite(settings).Result)
+            if (!authenticationController.Authorize(settings).Result)
             {
                 consoleController.WriteLine("Press ENTER to exit...");
                 consoleController.ReadLine();
                 return;
             }
 
-            var productsResultController = new ProductsResultController(
+            var productsController = new ProductsController(
+                products,
                 networkController,
                 jsonController,
-                consoleController);
+                consoleController,
+                pagedResultController);
+            var dlcController = new DLCController();
+
+            var ownedController = new OwnedController(productsController, dlcController);
+            var wishlistController = new WishlistController(productsController, networkController, jsonController);
 
             // get all owned games from gog.com/account
 
             // filter owned products, so that we can check if account has got new owned games,
             // and not just new games, also this is critical as we mark games as owned later
 
-            var storedOwned = new ProductsResult();
-            storedOwned.Products = storedGames.Products.FindAll(p => p.Owned);
+            var storedOwned = ownedController.GetOwned();
+            var storedFilter = new PagedResultFilter(products);
+            var ownedFilter = new PagedResultFilter(storedOwned);
 
             // get all games owned by user
-            var updatedOwned = productsResultController.GetUpdated(
+            var newOwned = productsController.Get(
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
-                storedOwned,
+                ownedFilter,
                 "Getting new account games...").Result;
 
             // get all available games from gog.com/games
-            productsResultController.GetUpdated(
+            var newAvailable = productsController.Get(
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
-                storedGames,
-                "Getting new games available on GOG.com...").Wait();
+                storedFilter,
+                "Getting new games available on GOG.com...").Result;
 
-            // separately get all updated products
-            QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
-            var updatedResult = productsResultController.GetAll(
-                Urls.AccountGetFilteredProducts,
-                QueryParameters.AccountGetFilteredProducts,
-                "Getting updated games...").Result;
+            Console.WriteLine(newOwned.ToString() + newAvailable.ToString());
 
-            // mark all new owned games as owned
-            productsResultController.SetAllAsOwned(updatedOwned);
+            //// separately get all updated products
+            //QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
+            //var updatedProducts = productsResultController.GetAll(
+            //    Urls.AccountGetFilteredProducts,
+            //    QueryParameters.AccountGetFilteredProducts,
+            //    "Getting updated games...").Result;
 
-            // merge owned games into all available games 
-            productsResultController.MergeOwned(updatedOwned);
+            //// mark all new owned games as owned
+            //productsResultController.SetAllAsOwned(newOwned);
 
-            // merge updated games into owned games
-            productsResultController.MergeUpdated(updatedResult);
+            //// merge owned games into all available games 
+            //productsResultController.MergeOwned(newOwned);
 
-            // update details for individual games
-            var gogDataController = new GOGDataController(networkController);
+            ////// merge updated games into owned games
+            ////productsResultController.MergeUpdated(updatedResult);
 
-            // update product data from game pages
-            var productDataProvider = new ProductDataProvider(gogDataController, jsonController);
-            productsResultController.UpdateProductDetails(productDataProvider).Wait();
+            //// update details for individual games
+            //var gogDataController = new GOGDataController(networkController);
 
-            // update game details for all owned games
-            var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
-            productsResultController.UpdateProductDetails(gameDetailsProvider).Wait();
+            //// update product data from game pages
+            //var productDataProvider = new ProductDataProvider(gogDataController, jsonController);
+            //productsResultController.UpdateProductDetails(productDataProvider).Wait();
 
-            using (var wishlistController = new WishlistController(gogDataController, jsonController))
-            {
-                // clear wishlisted before setting new ones
-                productsResultController.ClearWishlisted();
+            //// update game details for all owned games
+            //var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
+            //productsResultController.UpdateProductDetails(gameDetailsProvider, updatedProducts).Wait();
 
-                // update wishlisted games
-                var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
+            //var wishlistController = new WishlistController(gogDataController, jsonController);
+            //// clear wishlisted before setting new ones
+            //productsResultController.ClearWishlisted();
 
-                productsResultController.MergeWishlisted(wishlistResult);
-            }
+            //// update wishlisted games
+            //var wishlistResult = wishlistController.RequestWishlisted(consoleController).Result;
 
-            // we'll drive downloads with product titles
-            // as for updated products and new account products 
-            // when we got those lists the result likely don't have product details
-            // that contain download links; using product titles 
-            // we'll query stored products that have details and get links
-            var downloadProductsNames = new List<string>();
+            //productsResultController.MergeWishlisted(wishlistResult);
 
-            // get product files for updated and new files
-            var updatedProducts = productsResultController.GetUpdated();
-            foreach (var p in updatedProducts)
-            {
-                downloadProductsNames.Add(p.Title);
-            }
+            //// we'll drive downloads with product titles
+            //// as for updated products and new account products 
+            //// when we got those lists the result likely don't have product details
+            //// that contain download links; using product titles 
+            //// we'll query stored products that have details and get links
+            //var downloadProductsNames = new List<string>();
 
-            // when we got updated owned products they didn't have download links,
-            // since then we've updated all product details and productsResultController should have
-            // all the details we need - so for every newly obtained product we need to find match 
-            // in current productsReusltController to use for updating files
-            foreach (var uo in updatedOwned)
-            {
-                downloadProductsNames.Add(uo.Title);
-            }
+            //// get product files for updated and new files
+            ////var updatedProducts = productsResultController.GetUpdated();
+            //foreach (var p in updatedProducts)
+            //{
+            //    downloadProductsNames.Add(p.Title);
+            //}
 
-            // also if we've passed products for manual update through settings.json
-            // add them for update as well
-            if (settings.ManualUpdate != null)
-            {
-                downloadProductsNames.AddRange(settings.ManualUpdate);
-            }
+            //// when we got updated owned products they didn't have download links,
+            //// since then we've updated all product details and productsResultController should have
+            //// all the details we need - so for every newly obtained product we need to find match 
+            //// in current productsReusltController to use for updating files
+            //foreach (var uo in newOwned)
+            //{
+            //    downloadProductsNames.Add(uo.Title);
+            //}
 
-            // now actually create list of product that need product files update
-            var downloadProducts = productsResultController.GetByName(downloadProductsNames);
+            //// also if we've passed products for manual update through settings.json
+            //// add them for update as well
+            //if (settings.ManualUpdate != null)
+            //{
+            //    downloadProductsNames.AddRange(settings.ManualUpdate);
+            //}
 
-            // reset updates between data source modifications
-            productsResultController.ResetUpdated();
+            //// now actually create list of product that need product files update
+            //var downloadProducts = productsResultController.GetByName(downloadProductsNames);
 
-            // since we're done with all model modifications at this point - 
-            // serialize and save on disk
+            ////// reset updates between data source modifications
+            ////productsResultController.ResetUpdated();
 
-            var gamesResultJson = "var data = " + jsonController.Stringify(productsResultController.ProductsResult);
-            storage.Put(filename, gamesResultJson).Wait();
+            //// since we're done with all model modifications at this point - 
+            //// serialize and save on disk
 
-            // update product files for updated, new account products and manual updates
+            //var gamesResultJson = "var data = " + jsonController.Stringify(productsResultController.ProductsResult);
+            //storage.Put(filename, gamesResultJson).Wait();
 
-            var productFilesController = new ProductFilesController(
-                downloadProducts,
-                networkController,
-                ioController,
-                consoleController);
+            //// update product files for updated, new account products and manual updates
 
-            productFilesController.UpdateFiles().Wait();
+            //var productFilesController = new ProductFilesController(
+            //    downloadProducts,
+            //    networkController,
+            //    ioController,
+            //    consoleController);
 
-            // update images for all products
+            //productFilesController.UpdateFiles().Wait();
 
-            var images = new ImagesController(networkController, ioController, consoleController);
-            images.Update(productsResultController.ProductsResult).Wait();
+            //// update images for all products
+
+            //var images = new ImagesController(networkController, ioController, consoleController);
+            //images.Update(productsResultController.ProductsResult).Wait();
 
             // nothing left to do here
 
