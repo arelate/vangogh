@@ -37,15 +37,13 @@ namespace GOG.Controllers
 
             // login using username / password
 
-            //QueryParameters.LoginAuthenticate["login[username]"] = credentials.Username;
+            QueryParameters.LoginAuthenticate["login[username]"] = credentials.Username;
             QueryParameters.LoginAuthenticate["login[password]"] = credentials.Password;
             QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
 
             string loginData = uriController.CombineQueryParameters(QueryParameters.LoginAuthenticate);
 
-            //var loginCheckResult = await stringNetworkController.PostString(Urls.LoginCheck, null, loginData);
-            var loginCheckResult = await stringNetworkController.PostString(Urls.Login, null, loginData);
-
+            var loginCheckResult = await stringNetworkController.PostString(Urls.LoginCheck, null, loginData);
 
             if (loginCheckResult.Contains("gogData"))
             {

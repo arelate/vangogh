@@ -44,9 +44,9 @@ namespace GOG.SharedModels
 
         public static Dictionary<string, string> LoginAuthenticate = new Dictionary<string, string>()
         {
+            { "login[username]", "" },
             { "login[password]", "" },
             { "login[login]", "" },
-            { "login[id]", "" },
             { "login[_token]", "" },
         };
     }

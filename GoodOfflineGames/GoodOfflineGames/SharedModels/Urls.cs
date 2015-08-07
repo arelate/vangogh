@@ -20,6 +20,7 @@ namespace GOG.SharedModels
         // Authentication flow
         public const string Authenticate = Auth + "/auth";
         public const string Login = LoginHost + "/login";
+        public const string Logout = LoginHost + "/logout";
         public const string LoginCheck = LoginHost + "/login_check";
         public const string LoginRedirect = HttpsRoot + "/on_login_success";
         // Account

@@ -97,7 +97,7 @@ namespace GOG.SharedControllers
 
             var content = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
 
-            using (var response = await client.PostAsync(uri, content))
+                using (var response = await client.PostAsync(uri, content))
             {
                 if (response == null) return null;
 
