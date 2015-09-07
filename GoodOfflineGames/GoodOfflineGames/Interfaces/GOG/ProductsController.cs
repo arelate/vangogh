@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using GOG.Models;
+using GOG.Model;
 
 namespace GOG.Interfaces
 {

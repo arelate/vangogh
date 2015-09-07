@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using GOG.Interfaces;
 using GOG.SharedModels;
-using GOG.Models;
+using GOG.Model;
 
 namespace GOG.Providers
 {

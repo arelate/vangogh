@@ -2,7 +2,7 @@
 
 using GOG.SharedControllers;
 using GOG.Controllers;
-using GOG.Models;
+using GOG.Model;
 using GOG.SharedModels;
 using GOG.Providers;
 

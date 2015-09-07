@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 
 using GOG.Interfaces;
-using GOG.Models;
+using GOG.Model;
 using GOG.SharedModels;
 
 namespace GOG.Controllers

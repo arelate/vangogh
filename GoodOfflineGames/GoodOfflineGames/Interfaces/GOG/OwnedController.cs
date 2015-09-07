@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using GOG.Models;
+using GOG.Model;
 
 namespace GOG.Interfaces
 {

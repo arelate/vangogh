@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using GOG.Models;
+using GOG.Model;
 
 namespace GOG.Interfaces
 {

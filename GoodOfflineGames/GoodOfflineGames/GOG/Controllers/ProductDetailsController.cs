@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using GOG.Interfaces;
-using GOG.Models;
+using GOG.Model;
 
 namespace GOG.Controllers
 {

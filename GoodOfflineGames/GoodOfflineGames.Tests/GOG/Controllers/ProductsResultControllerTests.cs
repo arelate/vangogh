@@ -4,7 +4,7 @@
 //using GOG.Interfaces;
 //using GOG.Controllers;
 //using GOG.SharedControllers;
-//using GOG.Models;
+//using GOG.Model;
 //using GOG.SharedModels;
 
 //namespace GoodOfflineGames.Tests.GOG.Controllers
