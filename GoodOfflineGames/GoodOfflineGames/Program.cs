@@ -21,6 +21,7 @@ namespace GOG
             IList<long> owned = null;
             IList<long> wishlisted = null;
             IList<long> updated = null;
+            IList<ProductData> productsData = null;
 
             #endregion
 
@@ -50,6 +51,31 @@ namespace GOG
 
             #endregion
 
+            #region Loading stored data
+
+            // Load stored data for products, owned, wishlist and queued updates
+            products = saveLoadHelper.LoadData<List<Product>>(
+                filenames[ProductTypes.Products],
+                prefixes[ProductTypes.Products]).Result;
+            products = products ?? new List<Product>();
+
+            owned = saveLoadHelper.LoadData<List<long>>(
+                filenames[ProductTypes.Owned],
+                prefixes[ProductTypes.Owned]).Result;
+            owned = owned ?? new List<long>();
+
+            updated = saveLoadHelper.LoadData<List<long>>(
+                filenames[ProductTypes.Updated],
+                prefixes[ProductTypes.Updated]).Result;
+            updated = updated ?? new List<long>();
+
+            productsData = saveLoadHelper.LoadData<List<ProductData>>(
+                filenames[ProductTypes.ProductsData],
+                prefixes[ProductTypes.ProductsData]).Result;
+            productsData = productsData ?? new List<ProductData>();
+
+            #endregion
+
             #region GOG controllers
 
             var settingsController = new SettingsController(
@@ -70,38 +96,14 @@ namespace GOG
                     consoleController, 
                     existingProductsFilter);
 
-            var productsController = new ProductsController(
-                products,
-                networkController,
-                jsonController);
+            var productsController = new ProductsController(products);
 
             var gogDataController = new GOGDataController(networkController);
 
             var ownedController = new OwnedController(owned);
             var updatedController = new UpdatedController(updated);
-
-            #endregion
-
-            #region Loading stored data
-
-            // Load stored data for products, owned, wishlist and queued updates
-            products = saveLoadHelper.LoadData<List<Product>>(
-                filenames[ProductTypes.Products], 
-                prefixes[ProductTypes.Products]).Result;
-
-            products = products ?? new List<Product>();
-
-            owned = saveLoadHelper.LoadData<List<long>>(
-                filenames[ProductTypes.Owned], 
-                prefixes[ProductTypes.Owned]).Result;
-
-            owned = owned ?? new List<long>();
-
-            updated = saveLoadHelper.LoadData<List<long>>(
-                filenames[ProductTypes.Updated], 
-                prefixes[ProductTypes.Updated]).Result;
-
-            updated = updated ?? new List<long>();
+            var productsDataController = new ProductsDataController(productsData);
+            //var gameDetailsController = new GameDetailsController(gameDetails);
 
             #endregion
 
@@ -212,33 +214,47 @@ namespace GOG
 
             #endregion
 
+            #region Update product data
+
+            var productDataRequestTemplate = Urls.GameProductDataPageTemplate;
+
+            foreach (var p in products)
+            {
+                var requestUri = string.Format(productDataRequestTemplate, p.Url);
+                
+                // TODO: port the rest
+
+            }
+
             //// update product data from game pages
             //var productDataProvider = new ProductDataProvider(gogDataController, jsonController);
             //productsResultController.UpdateProductDetails(productDataProvider).Wait();
+
+            #endregion
+
+            #region Update game details 
 
             //// update game details for all owned games
             //var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
             //productsResultController.UpdateProductDetails(gameDetailsProvider, updatedProducts).Wait();
 
-            //// we'll drive downloads with product titles
-            //// as for updated products and new account products 
-            //// when we got those lists the result likely don't have product details
-            //// that contain download links; using product titles 
-            //// we'll query stored products that have details and get links
-            //var downloadProductsNames = new List<string>();
+            #endregion
 
-            //// now actually create list of product that need product files update
-            //var downloadProducts = productsResultController.GetByName(downloadProductsNames);
+            #region Download updated product files
 
-            //// update product files for updated, new account products and manual updates
+            var downloadDetails = new List<GameDetails>();
 
-            //var productFilesController = new ProductFilesController(
-            //    downloadProducts,
-            //    networkController,
-            //    ioController,
-            //    consoleController);
+            //foreach (var u in updated)
+            //    downloadDetails.Add(productsController.Find(u));
 
-            //productFilesController.UpdateFiles().Wait();
+            var productFilesController = new ProductFilesController(
+                fileRequestController,
+                ioController,
+                consoleController);
+
+            productFilesController.UpdateFiles(downloadDetails).Wait();
+
+            #endregion
 
             #region Update images
 
@@ -268,6 +284,11 @@ namespace GOG
                 filenames[ProductTypes.Updated], 
                 updated, 
                 prefixes[ProductTypes.Updated]).Wait();
+
+            saveLoadHelper.SaveData(
+                filenames[ProductTypes.ProductsData],
+                productsData,
+                prefixes[ProductTypes.ProductsData]).Wait();
 
             #endregion
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using GOG.Interfaces;
@@ -39,16 +38,15 @@ namespace GOG.Controllers
         }
     }
 
-
     class ProductFilesController
     {
-        private IEnumerable<Product> products;
         private IFileRequestController fileRequestController;
         private IIOController ioController;
         private IConsoleController consoleController;
 
         // Windows and Mac at this point, should make configuratble in the future
         private static OperatingSystems downloadOperatingSystem = OperatingSystems.Windows | OperatingSystems.Mac;
+
         // English at this point, should make configurable in the future
         private static Languages downloadLanguage = Languages.English;
 
@@ -60,14 +58,12 @@ namespace GOG.Controllers
         private string productLocation = string.Empty;
 
         public ProductFilesController(
-            IEnumerable<Product> products,
             IFileRequestController fileRequestController,
             IIOController ioController,
             IConsoleController consoleController)
         {
             downloadProgressReporter = new DownloadProgressReporter(consoleController);
 
-            this.products = products;
             this.fileRequestController = fileRequestController;
             this.ioController = ioController;
             this.consoleController = consoleController;
@@ -90,83 +86,60 @@ namespace GOG.Controllers
         {
             List<DownloadEntry> downloadEntries = new List<DownloadEntry>();
 
-            if (downloadOperatingSystem.HasFlag(OperatingSystems.Windows))
-            {
-                if (operatingSystemDownloads.Windows != null)
-                {
-                    downloadEntries.AddRange(operatingSystemDownloads.Windows);
-                }
-            }
-            if (downloadOperatingSystem.HasFlag(OperatingSystems.Mac))
-            {
-                if (operatingSystemDownloads.Mac != null)
-                {
-                    downloadEntries.AddRange(operatingSystemDownloads.Mac);
-                }
-            }
-            if (downloadOperatingSystem.HasFlag(OperatingSystems.Linux))
-            {
-                if (operatingSystemDownloads.Linux != null)
-                {
-                    downloadEntries.AddRange(operatingSystemDownloads.Linux);
-                }
-            }
+            if (downloadOperatingSystem.HasFlag(OperatingSystems.Windows) &&
+                operatingSystemDownloads.Windows != null)
+                downloadEntries.AddRange(operatingSystemDownloads.Windows);
+
+            if (downloadOperatingSystem.HasFlag(OperatingSystems.Mac) &&
+                operatingSystemDownloads.Mac != null)
+                downloadEntries.AddRange(operatingSystemDownloads.Mac);
+
+            if (downloadOperatingSystem.HasFlag(OperatingSystems.Linux) &&
+                operatingSystemDownloads.Linux != null)
+                downloadEntries.AddRange(operatingSystemDownloads.Linux);
 
             foreach (DownloadEntry downloadEntry in downloadEntries)
-            {
                 await UpdateProductFile(downloadEntry);
-            }
         }
 
         private async Task UpdateProductLanguageFiles(LanguageDownloads languageDownloads)
         {
             if (downloadLanguage.HasFlag(Languages.English))
-            {
                 await UpdateProductOperatingSystemFiles(languageDownloads.English);
-            }
         }
 
         private async Task UpdateProductFiles(GameDetails gameDetails)
         {
-
             // update game files
             await UpdateProductLanguageFiles(gameDetails.Downloads);
 
             // update extras
             foreach (DownloadEntry extraEntry in gameDetails.Extras)
-            {
                 await UpdateProductFile(extraEntry);
-            }
 
             // also recursively download DLC files
             foreach (var dlc in gameDetails.DLCs)
-            {
                 await UpdateProductFiles(dlc);
-            }
-
         }
 
-        public async Task UpdateFiles()
+        public async Task UpdateFiles(IEnumerable<GameDetails> details)
         {
-            // TODO: GameDetails controller
+            consoleController.WriteLine("Downloading files for {0} products...", details.Count());
+            consoleController.WriteLine(string.Empty);
 
-            //consoleController.WriteLine("Downloading files for {0} products...", products.Count());
-            //consoleController.WriteLine(string.Empty);
+            foreach (GameDetails d in details)
+            {
+                if (d == null) continue;
 
-            //foreach (Product p in products)
-            //{
-            //    if (p.GameDetails == null) continue;
+                consoleController.WriteLine("Downloading {0}...", d.Title);
 
-            //    consoleController.WriteLine("Downloading {0}...", p.Title);
+                // download product files
+                await UpdateProductFiles(d);
 
-            //    // download product files
-            //    await UpdateProductFiles(p.GameDetails);
+                consoleController.WriteLine(string.Empty);
+            }
 
-            //    consoleController.WriteLine(string.Empty);
-
-            //}
-
-            //consoleController.WriteLine("All product files updated.");
+            consoleController.WriteLine("All product files updated.");
         }
     }
 }

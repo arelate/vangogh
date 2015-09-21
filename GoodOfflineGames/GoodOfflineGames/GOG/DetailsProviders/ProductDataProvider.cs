@@ -10,46 +10,6 @@ using GOG.SharedModels;
 
 namespace GOG.Providers
 {
-    // TODO: Unit tests
-
-    // TODO: New ProductDataController
-
-    //class ProductDataProvider : 
-    //    AbstractDetailsProvider, 
-    //    IProductDetailsProvider<Product>
-    //{
-    //    public ProductDataProvider(
-    //        IStringGetController stringGetController,
-    //        IStringifyController serializationController):
-    //            base(stringGetController, serializationController)
-    //    {
-    //        // ...
-    //    }
-
-    //    public string Message
-    //    {
-    //        get
-    //        {
-    //            return "Updating product data for GOG.com products...";
-    //        }
-    //    }
-
-    //    public string RequestTemplate
-    //    {
-    //        get
-    //        {
-    //            return Urls.GameProductDataPageTemplate;
-    //        }
-    //    }
-
-    //    public IStringGetController StringGetController
-    //    {
-    //        get
-    //        {
-    //            return stringGetController;
-    //        }
-    //    }
-
     //    public string GetRequestDetails(Product element)
     //    {
     //        return element.Url;

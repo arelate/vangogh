@@ -8,26 +8,22 @@ namespace GOG.Model
     {
         // fields we won't be serializing
 
-        // public int VotesCount;
-        // public string DownloadSize;
-        // public List<ProductData> Packs;
+        // public int votesCount;
+        // public string downloadSize;
+        // public List<ProductData> packs;
+        // public List<NamedEntry> modes;
+        // public long? releaseDate;
+        // public string backgroundImageSource;
+        // public string cardSEOKeywords;
 
+        [DataMember(Name = "id")]
+        public long Id { get; set; }
         [DataMember(Name = "genres")]
         public List<NamedEntry> Genres { get; set; }
         [DataMember(Name = "publisher")]
         public NamedEntry Publisher { get; set; }
         [DataMember(Name = "developer")]
         public NamedEntry Developer { get; set; }
-        [DataMember(Name = "modes")]
-        public List<NamedEntry> Modes { get; set; }
-        [DataMember(Name = "backgroundImageSource")]
-        public string BackgroundImageSource { get; set; }
-        [DataMember(Name = "cardSeoKeywords ")]
-        public string CardSEOKeywords { get; set; }
-        [DataMember(Name = "id")]
-        public long Id { get; set; }
-        [DataMember(Name = "releaseDate")]
-        public long? ReleaseDate { get; set; }
         [DataMember(Name = "title")]
         public string Title { get; set; }
         [DataMember(Name = "image")]

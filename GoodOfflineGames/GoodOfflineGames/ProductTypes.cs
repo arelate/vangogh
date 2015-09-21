@@ -8,7 +8,8 @@ namespace GOG
         Products = 0,
         Owned = 1,
         Wishlisted = 2,
-        Updated = 3
+        Updated = 3,
+        ProductsData = 4
     }
 
     public class ProductTypesHelper

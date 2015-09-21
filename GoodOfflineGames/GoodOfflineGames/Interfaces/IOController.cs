@@ -21,11 +21,15 @@ namespace GOG.Interfaces
         // ...
     }
 
+    // TODO: split
+    
     public interface IFileController
     {
         bool ExistsFile(string uri);
         long GetSize(string uri);
     }
+
+    // TODO: split
 
     public interface IDirectoryController
     {
