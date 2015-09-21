@@ -95,6 +95,7 @@
     <Compile Include="Interfaces\Stringify.cs" />
     <Compile Include="Interfaces\GOG\WishlistController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
+    <Compile Include="ProductTypes.cs" />
     <Compile Include="SaveLoadDataHelper.cs" />
     <Compile Include="SharedModels\QueryParameters.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />

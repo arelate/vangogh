@@ -13,29 +13,6 @@ namespace GOG
 {
     class Program
     {
-        private static Dictionary<EnumType, string> CreateProductTypesDictionary<EnumType>(string template)
-        {
-            var dictionary = new Dictionary<EnumType, string>();
-
-            var productTypes = Enum.GetValues(typeof(EnumType));
-
-            foreach (var productType in productTypes)
-            {
-                var productTypeName = Enum.GetName(typeof(EnumType), productType).ToLower();
-                dictionary.Add((EnumType)productType, string.Format(template, productTypeName));
-            }
-
-            return dictionary;
-        }
-
-        private enum ProductTypes
-        {
-            Products = 0,
-            Owned = 1,
-            Wishlisted = 2,
-            Updated = 3
-        }
-
         static void Main(string[] args)
         {
             #region Model variables
@@ -49,11 +26,13 @@ namespace GOG
 
             #region IO variables
 
+            var productTypesHelper = new ProductTypesHelper();
+
             var filenameTemplate = "{0}.js";
-            var filenames = CreateProductTypesDictionary<ProductTypes>(filenameTemplate);
+            var filenames = productTypesHelper.CreateProductTypesDictionary<ProductTypes>(filenameTemplate);
 
             var prefixTemplate = "var {0}=";
-            var prefixes = CreateProductTypesDictionary<ProductTypes>(prefixTemplate);
+            var prefixes = productTypesHelper.CreateProductTypesDictionary<ProductTypes>(prefixTemplate);
 
             #endregion
 
