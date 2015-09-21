@@ -4,11 +4,11 @@ using GOG.Model;
 
 namespace GOG.Interfaces
 {
-    public interface IProductsController:
-        IFindController<string, Product>,
-        IFindController<long, Product>,
-        IFindCollectionController<string, Product>,
-        ICollectionController<Product>
+    public interface IProductsController<Type>:
+        IFindDelegate<string, Type>,
+        IFindDelegate<long, Type>,
+        IFindCollectionDelegate<string, Type>,
+        ICollectionController<Type>
     {
         // ...
     }

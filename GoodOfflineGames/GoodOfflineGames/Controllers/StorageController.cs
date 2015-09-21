@@ -5,7 +5,7 @@ using GOG.Interfaces;
 
 namespace GOG.SharedControllers
 {
-    public class StorageController
+    public class StorageController: IStorageController<string>
     {
         private IStreamController streamController;
 
@@ -14,7 +14,7 @@ namespace GOG.SharedControllers
             this.streamController = streamController;
         }
 
-        public async Task Put(
+        public async Task Push(
             string uri,
             string data)
         {

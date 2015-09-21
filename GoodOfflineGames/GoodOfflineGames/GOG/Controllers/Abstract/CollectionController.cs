@@ -8,19 +8,31 @@ namespace GOG.Controllers
     public abstract class CollectionController<T>:
         ICollectionController<T>
     {
-        public IEnumerable<T> Collection { get; private set; }
+        public IList<T> Collection { get; private set; }
 
-        protected CollectionController(IEnumerable<T> items)
+        protected CollectionController(IList<T> items)
         {
             Collection = items;
         }
 
-        public IEnumerable<T> Reduce(Predicate<T> condition)
+        public bool Contains(T item)
         {
-            foreach (var item in Collection)
-            {
-                if (condition(item)) yield return item;
-            }
+            return Collection.Contains(item);
+        }
+
+        public void Add(T item)
+        {
+            if (!Contains(item)) Collection.Add(item);
+        }
+
+        public void Insert(int index, T item)
+        {
+            if (!Contains(item)) Collection.Insert(index, item);
+        }
+
+        public bool Remove(T item)
+        {
+            return Collection.Remove(item);
         }
 
         public T Find(Predicate<T> findContition)
@@ -40,5 +52,14 @@ namespace GOG.Controllers
                 action(item);
             }
         }
+
+        public IEnumerable<T> Reduce(Predicate<T> condition)
+        {
+            foreach (var item in Collection)
+            {
+                if (condition(item)) yield return item;
+            }
+        }
+
     }
 }

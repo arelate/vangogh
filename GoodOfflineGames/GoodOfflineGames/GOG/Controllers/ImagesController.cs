@@ -30,18 +30,18 @@ namespace GOG.Controllers
             this.consoleController = consoleController;
         }
 
-        public async Task Update(ProductsResult result)
+        public async Task Update(IList<Product> products)
         {
             consoleController.Write("Updating cached images...");
 
-            await CacheImages(ExpandImagesUris(result.Products));
+            await CacheImages(ExpandImagesUris(products));
 
             consoleController.WriteLine("DONE.");
         }
 
-        private IEnumerable<string> ExpandImagesUris(List<Product> products)
+        private IEnumerable<string> ExpandImagesUris(IList<Product> products)
         {
-            foreach (Product product in products)
+            foreach (var product in products)
             {
                 var baseUri = product.Image;
                 if (!baseUri.StartsWith(Urls.HttpProtocol))

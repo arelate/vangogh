@@ -8,7 +8,7 @@ using GOG.SharedModels;
 
 namespace GOG.SharedControllers
 {
-    public class SettingsController
+    public class SettingsController: ISettingsController<Settings>
     {
         private IStreamReadableController streamReadableController;
         private IStringifyController serializationController;
@@ -24,7 +24,7 @@ namespace GOG.SharedControllers
             this.consoleController = consoleController;
         }
 
-        public async Task<Settings> LoadSettings()
+        public async Task<Settings> Load()
         {
             string filename = "settings.json";
             Settings settings = null;
@@ -59,6 +59,11 @@ namespace GOG.SharedControllers
             }
 
             return settings;
+        }
+
+        public async Task Save(Settings data)
+        {
+            // no-op
         }
     }
 }

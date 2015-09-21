@@ -9,24 +9,30 @@ using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
-    class PagedResultController : IPagedResultController
+    class MultipageRequestController : IMultipageRequestController<Product, long>
     {
         private IStringGetController stringGetController;
         private IStringifyController stringifyController;
+        private IConsoleController consoleController;
 
-        public IPagedResultFilterDelegate FilterDelegate { get; set; } = null;
+        private IFilterDelegate<Product, long> filterDelegate;
         public IWriteController MessageWriteDelegate { get; set; } = null;
 
-        public PagedResultController(
+        public MultipageRequestController(
             IStringGetController stringGetController,
-            IStringifyController stringifyController)
+            IStringifyController stringifyController,
+            IConsoleController consoleController = null,
+            IFilterDelegate<Product, long> filterDelegate = null)
         {
-
             this.stringifyController = stringifyController;
             this.stringGetController = stringGetController;
+            this.filterDelegate = filterDelegate;
         }
 
-        public async Task<IList<Product>> GetAll(string uri, IDictionary<string, string> parameters)
+        public async Task<IList<Product>> Request(
+            string uri, 
+            IDictionary<string, string> parameters, 
+            IList<long> filter = null)
         {
             var currentPage = 1;
             ProductsResult current;
@@ -34,16 +40,14 @@ namespace GOG.Controllers
 
             do
             {
-                if (MessageWriteDelegate != null)
-                {
-                    MessageWriteDelegate.Write(".");
-                }
+                if (consoleController != null)
+                    consoleController.Write(".");
 
-                current = await GetOne(uri, parameters, currentPage);
+                current = await RequestPage(uri, parameters, currentPage);
 
-                if (FilterDelegate != null)
+                if (filter != null && filterDelegate != null)
                 {
-                    var filteredProducts = FilterDelegate.Filter(current.Products);
+                    var filteredProducts = filterDelegate.Filter(current.Products, filter);
                     products.AddRange(filteredProducts);
 
                     if (filteredProducts.Count() == 0) break;
@@ -56,15 +60,13 @@ namespace GOG.Controllers
             }
             while (++currentPage <= current.TotalPages);
 
-            if (MessageWriteDelegate != null)
-            {
-                MessageWriteDelegate.WriteLine("Got {0} products.", products.Count);
-            }
+            if (consoleController != null)
+                consoleController.WriteLine("Got {0} products.", products.Count);
 
             return products;
         }
 
-        public async Task<ProductsResult> GetOne(string uri,
+        private async Task<ProductsResult> RequestPage(string uri,
             IDictionary<string, string> parameters,
             int currentPage)
         {

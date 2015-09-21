@@ -2,10 +2,10 @@
 
 namespace GOG.Controllers
 {
-    public class OwnedController: 
+    public class UpdatedController: 
         CollectionController<long>
     {
-        public OwnedController(IList<long> owned): base(owned)
+        public UpdatedController(IList<long> updated): base(updated)
         {
             // ...
         }

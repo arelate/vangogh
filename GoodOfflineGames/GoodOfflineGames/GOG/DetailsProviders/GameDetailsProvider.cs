@@ -12,74 +12,76 @@ namespace GOG.Providers
 {
     // TODO: Unit tests
 
-    class GameDetailsProvider :
-        AbstractDetailsProvider,
-        IProductDetailsProvider<Product>
-    {
-        public GameDetailsProvider(
-            IStringGetController stringGetController,
-            IStringifyController serializationController) :
-                base(stringGetController, serializationController)
-        {
-            // ...
-        }
+    // TODO: New gamedetails provider
 
-        public string Message
-        {
-            get
-            {
-                return "Updating game details for owned products...";
-            }
-        }
+    //class GameDetailsProvider :
+    //    AbstractDetailsProvider,
+    //    IProductDetailsProvider<Product>
+    //{
+    //    public GameDetailsProvider(
+    //        IStringGetController stringGetController,
+    //        IStringifyController serializationController) :
+    //            base(stringGetController, serializationController)
+    //    {
+    //        // ...
+    //    }
 
-        public string RequestTemplate
-        {
-            get
-            {
-                return Urls.AccountGameDetailsTemplate;
-            }
-        }
+    //    public string Message
+    //    {
+    //        get
+    //        {
+    //            return "Updating game details for owned products...";
+    //        }
+    //    }
 
-        public IStringGetController StringGetController
-        {
-            get
-            {
-                return stringGetController;
-            }
-        }
+    //    public string RequestTemplate
+    //    {
+    //        get
+    //        {
+    //            return Urls.AccountGameDetailsTemplate;
+    //        }
+    //    }
 
-        public string GetRequestDetails(Product element)
-        {
-            return element.Id.ToString();
-        }
+    //    public IStringGetController StringGetController
+    //    {
+    //        get
+    //        {
+    //            return stringGetController;
+    //        }
+    //    }
 
-        public void SetDetails(Product element, string dataString)
-        {
-            var data = serializationController.Parse<GameDetails>(dataString);
-            element.GameDetails = data;
-        }
+    //    public string GetRequestDetails(Product element)
+    //    {
+    //        return element.Id.ToString();
+    //    }
 
-        //public bool SkipCondition(Product element)
-        //{
-        //    return false;
-        //}
+    //    public void SetDetails(Product element, string dataString)
+    //    {
+    //        var data = serializationController.Parse<GameDetails>(dataString);
+    //        element.GameDetails = data;
+    //    }
 
-        public bool SkipCondition(Product element)
-        {
-            // skip not owned games
-            if (!element.Owned) return true;
+    //    //public bool SkipCondition(Product element)
+    //    //{
+    //    //    return false;
+    //    //}
 
-            // skip games that already have game details and have no updates
-            if (element.GameDetails != null)
-                return true;
+    //    public bool SkipCondition(Product element)
+    //    {
+    //        // skip not owned games
+    //        if (!element.Owned) return true;
 
-            // skip DLCs as they won't have separate game details
-            if (element.ProductData != null &&
-                element.ProductData.RequiredProducts != null &&
-                element.ProductData.RequiredProducts.Count > 0)
-                return true;
+    //        // skip games that already have game details and have no updates
+    //        if (element.GameDetails != null)
+    //            return true;
 
-            return false;
-        }
-    }
+    //        // skip DLCs as they won't have separate game details
+    //        if (element.ProductData != null &&
+    //            element.ProductData.RequiredProducts != null &&
+    //            element.ProductData.RequiredProducts.Count > 0)
+    //            return true;
+
+    //        return false;
+    //    }
+    //}
 }

@@ -148,23 +148,25 @@ namespace GOG.Controllers
 
         public async Task UpdateFiles()
         {
-            consoleController.WriteLine("Downloading files for {0} products...", products.Count());
-            consoleController.WriteLine(string.Empty);
+            // TODO: GameDetails controller
 
-            foreach (Product p in products)
-            {
-                if (p.GameDetails == null) continue;
+            //consoleController.WriteLine("Downloading files for {0} products...", products.Count());
+            //consoleController.WriteLine(string.Empty);
 
-                consoleController.WriteLine("Downloading {0}...", p.Title);
+            //foreach (Product p in products)
+            //{
+            //    if (p.GameDetails == null) continue;
 
-                // download product files
-                await UpdateProductFiles(p.GameDetails);
+            //    consoleController.WriteLine("Downloading {0}...", p.Title);
 
-                consoleController.WriteLine(string.Empty);
+            //    // download product files
+            //    await UpdateProductFiles(p.GameDetails);
 
-            }
+            //    consoleController.WriteLine(string.Empty);
 
-            consoleController.WriteLine("All product files updated.");
+            //}
+
+            //consoleController.WriteLine("All product files updated.");
         }
     }
 }

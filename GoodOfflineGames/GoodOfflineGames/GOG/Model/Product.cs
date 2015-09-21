@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace GOG.Model
 {
@@ -18,6 +17,15 @@ namespace GOG.Model
         // public string slug;
         // public int updates;
         // public bool IsHidden;
+        // public string category;
+        // public bool isComingSoon;
+        // public bool isNew;
+        // public int dlcCount;
+
+        // gog.com/account products have this
+        // public TimezoneDate releaseDate;
+        // gog.com/games products have this
+        // public long? releaseDate;
 
         [DataMember(Name = "id")]
         public long Id { get; set; }
@@ -29,25 +37,5 @@ namespace GOG.Model
         public string Url { get; set; }
         [DataMember(Name = "worksOn")]
         public WorksOn WorksOn { get; set; }
-        [DataMember(Name = "category")]
-        public string Category { get; set; }
-        [DataMember(Name = "isComingSoon")]
-        public bool IsComingSoon { get; set; }
-        [DataMember(Name = "isNew")]
-        public bool IsNew { get; set; }
-        [DataMember(Name = "dlcCount")]
-        public int DlcCount { get; set; }
-        [DataMember(Name = "releaseDate")]
-        public TimezoneDate ReleaseDate { get; set; }
-
-        // GoodOfflineGames data
-        [DataMember(Name = "owned")]
-        public bool Owned { get; set; }
-        [DataMember(Name = "wishlisted")]
-        public bool Wishlisted { get; set; }
-        [DataMember(Name = "gameDetails")]
-        public GameDetails GameDetails { get; set; }
-        [DataMember(Name = "productData")]
-        public ProductData ProductData { get; set; }
     }
 }

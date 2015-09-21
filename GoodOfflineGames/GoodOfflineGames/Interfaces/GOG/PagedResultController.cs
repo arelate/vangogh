@@ -5,11 +5,17 @@ using GOG.Model;
 
 namespace GOG.Interfaces
 {
-    public interface IPagedResultController
+    public interface IRequestDelegate<T, F>
     {
-        Task<IList<Product>> GetAll(string uri, IDictionary<string, string> parameters);
-        Task<ProductsResult> GetOne(string uri, IDictionary<string, string> parameters, int currentPage);
-        IPagedResultFilterDelegate FilterDelegate { get; set; }
-        IWriteController MessageWriteDelegate { get; set; }
+        Task<IList<T>> Request(
+            string uri, 
+            IDictionary<string, string> parameters, 
+            IList<F> filter = null);
+    }
+
+    public interface IMultipageRequestController<T,F>:
+        IRequestDelegate<T,F>
+    {
+        // ...
     }
 }

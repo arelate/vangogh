@@ -13,7 +13,7 @@ namespace GoodOfflineGames.Tests
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;
         private IConsoleController consoleController;
-        private AuthenticationController authenticationController;
+        private IAuthorizationController authorizationController;
         private ICredentials correctCredentials;
         private ICredentials wrongCredentials;
 
@@ -25,19 +25,19 @@ namespace GoodOfflineGames.Tests
             correctCredentials = new Settings() { Username = "username", Password = "password" };
             wrongCredentials = new Settings() { Username = "wrongusername", Password = "wrongpassword" };
 
-            authenticationController = new AuthenticationController(uriController, stringNetworkController, consoleController);
+            authorizationController = new AuthorizationController(uriController, stringNetworkController, consoleController);
         }
 
         [TestMethod]
         public void AuthenticationControllerAuthorizesWithCorrectCredentials()
         {
-            Assert.IsTrue(authenticationController.Authorize(correctCredentials).Result);
+            Assert.IsTrue(authorizationController.Authorize(correctCredentials).Result);
         }
 
         [TestMethod]
         public void AuthenticationControllerFailsAuthorizationWithWrongCredentials()
         {
-            Assert.IsFalse(authenticationController.Authorize(wrongCredentials).Result);
+            Assert.IsFalse(authorizationController.Authorize(wrongCredentials).Result);
         }
     }
 }

@@ -3,16 +3,17 @@ using System.Text.RegularExpressions;
 
 using GOG.Interfaces;
 using GOG.SharedModels;
+using System;
 
 namespace GOG.Controllers
 {
-    public class AuthenticationController: IAuthenticationController
+    public class AuthorizationController: IAuthorizationController
     {
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;
         private IConsoleController consoleController;
 
-        public AuthenticationController(
+        public AuthorizationController(
             IUriController uriController, 
             IStringNetworkController stringNetworkController,
             IConsoleController consoleController)
@@ -56,6 +57,11 @@ namespace GOG.Controllers
                 consoleController.WriteLine("Failed to authenticate user with provided username and password.");
                 return false;
             }
+        }
+
+        public async Task Deauthorize()
+        {
+            await stringNetworkController.GetString(Urls.Logout);
         }
     }
 }

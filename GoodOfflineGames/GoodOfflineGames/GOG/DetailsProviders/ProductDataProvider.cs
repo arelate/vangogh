@@ -12,65 +12,67 @@ namespace GOG.Providers
 {
     // TODO: Unit tests
 
-    class ProductDataProvider : 
-        AbstractDetailsProvider, 
-        IProductDetailsProvider<Product>
-    {
-        public ProductDataProvider(
-            IStringGetController stringGetController,
-            IStringifyController serializationController):
-                base(stringGetController, serializationController)
-        {
-            // ...
-        }
+    // TODO: New ProductDataController
 
-        public string Message
-        {
-            get
-            {
-                return "Updating product data for GOG.com products...";
-            }
-        }
+    //class ProductDataProvider : 
+    //    AbstractDetailsProvider, 
+    //    IProductDetailsProvider<Product>
+    //{
+    //    public ProductDataProvider(
+    //        IStringGetController stringGetController,
+    //        IStringifyController serializationController):
+    //            base(stringGetController, serializationController)
+    //    {
+    //        // ...
+    //    }
 
-        public string RequestTemplate
-        {
-            get
-            {
-                return Urls.GameProductDataPageTemplate;
-            }
-        }
+    //    public string Message
+    //    {
+    //        get
+    //        {
+    //            return "Updating product data for GOG.com products...";
+    //        }
+    //    }
 
-        public IStringGetController StringGetController
-        {
-            get
-            {
-                return stringGetController;
-            }
-        }
+    //    public string RequestTemplate
+    //    {
+    //        get
+    //        {
+    //            return Urls.GameProductDataPageTemplate;
+    //        }
+    //    }
 
-        public string GetRequestDetails(Product element)
-        {
-            return element.Url;
-        }
+    //    public IStringGetController StringGetController
+    //    {
+    //        get
+    //        {
+    //            return stringGetController;
+    //        }
+    //    }
 
-        public void SetDetails(Product element, string dataString)
-        {
-            var data = serializationController.Parse<GOGData>(dataString);
-            if (data != null)
-            {
-                element.ProductData = data.ProductData;
-            }
-        }
+    //    public string GetRequestDetails(Product element)
+    //    {
+    //        return element.Url;
+    //    }
 
-        public bool SkipCondition(Product element)
-        {
-            if (element.ProductData != null)
-                return true;
+    //    public void SetDetails(Product element, string dataString)
+    //    {
+    //        var data = serializationController.Parse<GOGData>(dataString);
+    //        if (data != null)
+    //        {
+    //            element.ProductData = data.ProductData;
+    //        }
+    //    }
 
-            if (string.IsNullOrEmpty(element.Url))
-                return true;
+    //    public bool SkipCondition(Product element)
+    //    {
+    //        if (element.ProductData != null)
+    //            return true;
 
-            return false;
-        }
-    }
+    //        if (string.IsNullOrEmpty(element.Url))
+    //            return true;
+
+    //        return false;
+    //    }
+    //}
 }

@@ -8,14 +8,10 @@ using GOG.Model;
 
 namespace GOG.Interfaces
 {
-    public interface IFilterDelegate<T>
+    public interface IFilterDelegate<SourceType, FilterType>
     {
-        IEnumerable<T> Filter(IEnumerable<T> products);
-    }
-
-    public interface IPagedResultFilterDelegate:
-        IFilterDelegate<Product>
-    {
-        // ...
+        IEnumerable<SourceType> Filter(
+            IEnumerable<SourceType> collection, 
+            IList<FilterType> filter);
     }
 }
