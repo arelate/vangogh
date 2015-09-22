@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
+using System;
 using System.Runtime.Serialization;
 
 namespace GOG.Model
@@ -26,9 +28,7 @@ namespace GOG.Model
         [DataMember(Name = "dlcs")]
         public List<GameDetails> DLCs { get; set; }
         [DataMember(Name = "downloads")]
-        public dynamic[][] DownloadObjects { get; set; }
-        [DataMember(Name = "languageDownloads")]
-        public LanguageDownloads LanguageDownloads { get; set; }
+        public LanguageDownloads[] Downloads { get; set; }
         [DataMember(Name = "extras")]
         public List<DownloadEntry> Extras { get; set; }
         [DataMember(Name = "title")]

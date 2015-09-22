@@ -4,10 +4,12 @@ namespace GOG.Model
     [DataContract]
     public class DownloadEntry
     {
-        [DataMember(Name = "date")]
-        public string Date { get; set; }
-        [DataMember(Name = "downloaderUrl")]
-        public string DownloaderUrl { get; set; }
+        // fields we won't be serializing
+
+        //public string date;
+        //public string downloaderUrl;
+
+
         [DataMember(Name = "manualUrl")]
         public string ManualUrl { get; set; }
         [DataMember(Name = "name")]
