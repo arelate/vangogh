@@ -12,7 +12,7 @@ namespace GOG.Controllers
     class MultipageRequestController : IMultipageRequestController<Product, long>
     {
         private IStringGetController stringGetController;
-        private IStringifyController stringifyController;
+        private ISerializationController<string> stringifyController;
         private IConsoleController consoleController;
 
         private IFilterDelegate<Product, long> filterDelegate;
@@ -20,7 +20,7 @@ namespace GOG.Controllers
 
         public MultipageRequestController(
             IStringGetController stringGetController,
-            IStringifyController stringifyController,
+            ISerializationController<string> stringifyController,
             IConsoleController consoleController = null,
             IFilterDelegate<Product, long> filterDelegate = null)
         {
@@ -80,7 +80,7 @@ namespace GOG.Controllers
             parameters[pageQueryParameter] = currentPage.ToString();
 
             var json = await stringGetController.GetString(uri, parameters);
-            return stringifyController.Parse<ProductsResult>(json);
+            return stringifyController.Deserialize<ProductsResult>(json);
         }
 
     }

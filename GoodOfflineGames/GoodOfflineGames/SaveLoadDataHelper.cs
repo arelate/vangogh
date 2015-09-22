@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using GOG.Interfaces;
 
@@ -7,28 +8,32 @@ namespace GOG
     public class SaveLoadDataHelper
     {
         private IStorageController<string> storageController;
-        private IStringifyController stringifyController;
+        private ISerializationController<string> stringifyController;
+        private Dictionary<ProductTypes, string> filenames;
+        private Dictionary<ProductTypes, string> prefixes;
 
         public SaveLoadDataHelper(
             IStorageController<string> storageController,
-            IStringifyController stringifyController)
+            ISerializationController<string> stringifyController,
+            Dictionary<ProductTypes, string> filenames,
+            Dictionary<ProductTypes, string> prefixes)
         {
             this.storageController = storageController;
             this.stringifyController = stringifyController;
+            this.filenames = filenames;
+            this.prefixes = prefixes;
         }
 
-        public async Task<T> LoadData<T>(
-            string uri,
-            string replaceString)
+        public async Task<T> LoadData<T>(ProductTypes type)
         {
             try
             {
-                var data = await storageController.Pull(uri);
+                var data = await storageController.Pull(filenames[type]);
 
-                if (replaceString != string.Empty)
-                    data = data.Replace(replaceString, string.Empty);
+                if (prefixes[type] != string.Empty)
+                    data = data.Replace(prefixes[type], string.Empty);
 
-                return stringifyController.Parse<T>(data);
+                return stringifyController.Deserialize<T>(data);
             }
             catch
             {
@@ -36,19 +41,16 @@ namespace GOG
             }
         }
 
-        public async Task SaveData<T>(
-            string uri,
-            T data,
-            string replaceString)
+        public async Task SaveData<T>(T data, ProductTypes type)
         {
             try
             {
-                var stringData = stringifyController.Stringify(data);
+                var stringData = stringifyController.Serialize(data);
 
-                if (replaceString != string.Empty)
-                    stringData = replaceString + stringData;
+                if (prefixes[type] != string.Empty)
+                    stringData = prefixes[type] + stringData;
 
-                await storageController.Push(uri, stringData);
+                await storageController.Push(filenames[type], stringData);
             }
             catch
             {

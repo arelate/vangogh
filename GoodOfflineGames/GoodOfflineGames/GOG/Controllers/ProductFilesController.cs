@@ -110,16 +110,16 @@ namespace GOG.Controllers
 
         private async Task UpdateProductFiles(GameDetails gameDetails)
         {
-            // update game files
-            await UpdateProductLanguageFiles(gameDetails.Downloads);
+            //// update game files
+            //await UpdateProductLanguageFiles(gameDetails.Downloads);
 
-            // update extras
-            foreach (DownloadEntry extraEntry in gameDetails.Extras)
-                await UpdateProductFile(extraEntry);
+            //// update extras
+            //foreach (DownloadEntry extraEntry in gameDetails.Extras)
+            //    await UpdateProductFile(extraEntry);
 
-            // also recursively download DLC files
-            foreach (var dlc in gameDetails.DLCs)
-                await UpdateProductFiles(dlc);
+            //// also recursively download DLC files
+            //foreach (var dlc in gameDetails.DLCs)
+            //    await UpdateProductFiles(dlc);
         }
 
         public async Task UpdateFiles(IEnumerable<GameDetails> details)

@@ -11,12 +11,12 @@ namespace GOG.SharedControllers
     public class SettingsController: ISettingsController<Settings>
     {
         private IStreamReadableController streamReadableController;
-        private IStringifyController serializationController;
+        private ISerializationController<string> serializationController;
         private IConsoleController consoleController;
 
         public SettingsController(
             IStreamReadableController streamReadableController,
-            IStringifyController serializationContoller,
+            ISerializationController<string> serializationContoller,
             IConsoleController consoleController)
         {
             this.streamReadableController = streamReadableController;
@@ -36,7 +36,7 @@ namespace GOG.SharedControllers
                     using (StreamReader streamReader = new StreamReader(streamReadable, Encoding.UTF8))
                     {
                         string settingsString = await streamReader.ReadToEndAsync();
-                        settings = serializationController.Parse<Settings>(settingsString);
+                        settings = serializationController.Deserialize<Settings>(settingsString);
                     }
                 }
             }

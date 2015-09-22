@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -51,15 +55,15 @@
     <Compile Include="GOG\Controllers\DLCController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\Abstract\MultipageRequestController.cs" />
+    <Compile Include="GOG\Controllers\GameDetailsController.cs" />
     <Compile Include="GOG\Controllers\ProductsDataController.cs" />
     <Compile Include="GOG\Controllers\UpdatedController.cs" />
     <Compile Include="GOG\Controllers\OwnedController.cs" />
     <Compile Include="GOG\Controllers\ProductFilesController.cs" />
     <Compile Include="GOG\Controllers\ProductsController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
-    <Compile Include="GOG\DetailsProviders\AbstractDetailsProvider.cs" />
     <Compile Include="GOG\DetailsProviders\GameDetailsProvider.cs" />
-    <Compile Include="GOG\DetailsProviders\ProductDataProvider.cs" />
+    <Compile Include="GOG\Model\GOGData.cs" />
     <Compile Include="GOG\Model\Unused\Availability.cs" />
     <Compile Include="GOG\Model\Unused\DateRange.cs" />
     <Compile Include="GOG\Model\DownloadEntry.cs" />
@@ -90,7 +94,7 @@
     <Compile Include="Interfaces\SettingsController.cs" />
     <Compile Include="Interfaces\StorageController.cs" />
     <Compile Include="Interfaces\IOController.cs" />
-    <Compile Include="Interfaces\StringifyController.cs" />
+    <Compile Include="Interfaces\SerializationController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="ProductTypes.cs" />
     <Compile Include="SaveLoadDataHelper.cs" />
@@ -109,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

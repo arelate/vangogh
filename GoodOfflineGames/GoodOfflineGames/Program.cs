@@ -22,6 +22,7 @@ namespace GOG
             IList<long> wishlisted = null;
             IList<long> updated = null;
             IList<ProductData> productsData = null;
+            IList<GameDetails> gamesDetails = null;
 
             #endregion
 
@@ -42,37 +43,36 @@ namespace GOG
             IConsoleController consoleController = new ConsoleController();
             IIOController ioController = new IOController();
             IStorageController<string> storageController = new StorageController(ioController);
-            IStringifyController jsonController = new JSONController();
+            ISerializationController<string> jsonStringController = new JSONStringController();
             IUriController uriController = new UriController();
             IStringNetworkController networkController = new NetworkController(uriController);
             IFileRequestController fileRequestController = networkController as IFileRequestController;
 
-            var saveLoadHelper = new SaveLoadDataHelper(storageController, jsonController);
+            var saveLoadHelper = new SaveLoadDataHelper(
+                storageController, 
+                jsonStringController, 
+                filenames, 
+                prefixes);
 
             #endregion
 
             #region Loading stored data
 
             // Load stored data for products, owned, wishlist and queued updates
-            products = saveLoadHelper.LoadData<List<Product>>(
-                filenames[ProductTypes.Products],
-                prefixes[ProductTypes.Products]).Result;
+            products = saveLoadHelper.LoadData<List<Product>>(ProductTypes.Products).Result;
             products = products ?? new List<Product>();
 
-            owned = saveLoadHelper.LoadData<List<long>>(
-                filenames[ProductTypes.Owned],
-                prefixes[ProductTypes.Owned]).Result;
+            owned = saveLoadHelper.LoadData<List<long>>(ProductTypes.Owned).Result;
             owned = owned ?? new List<long>();
 
-            updated = saveLoadHelper.LoadData<List<long>>(
-                filenames[ProductTypes.Updated],
-                prefixes[ProductTypes.Updated]).Result;
+            updated = saveLoadHelper.LoadData<List<long>>(ProductTypes.Updated).Result;
             updated = updated ?? new List<long>();
 
-            productsData = saveLoadHelper.LoadData<List<ProductData>>(
-                filenames[ProductTypes.ProductsData],
-                prefixes[ProductTypes.ProductsData]).Result;
+            productsData = saveLoadHelper.LoadData<List<ProductData>>(ProductTypes.ProductsData).Result;
             productsData = productsData ?? new List<ProductData>();
+
+            gamesDetails = saveLoadHelper.LoadData<List<GameDetails>>(ProductTypes.GameDetails).Result;
+            gamesDetails = gamesDetails ?? new List<GameDetails>();
 
             #endregion
 
@@ -80,7 +80,7 @@ namespace GOG
 
             var settingsController = new SettingsController(
                 ioController,
-                jsonController,
+                jsonStringController,
                 consoleController);
 
             var authorizationController = new AuthorizationController(
@@ -91,8 +91,8 @@ namespace GOG
             var existingProductsFilter = new ExistingProductsFilter();
 
             var pagedResultController = new MultipageRequestController(
-                    networkController, 
-                    jsonController, 
+                    networkController,
+                    jsonStringController, 
                     consoleController, 
                     existingProductsFilter);
 
@@ -103,136 +103,215 @@ namespace GOG
             var ownedController = new OwnedController(owned);
             var updatedController = new UpdatedController(updated);
             var productsDataController = new ProductsDataController(productsData);
-            //var gameDetailsController = new GameDetailsController(gameDetails);
+            var gameDetailsController = new GameDetailsController(gamesDetails);
 
             #endregion
 
-            #region Load settings
+            //#region Load settings
 
-            var settings = settingsController.Load().Result;
+            //var settings = settingsController.Load().Result;
 
-            #endregion
+            //#endregion
 
-            #region Authorize on site
+            //#region Authorize on site
 
-            if (!authorizationController.Authorize(settings).Result)
-            {
-                consoleController.WriteLine("Press ENTER to exit...");
-                consoleController.ReadLine();
-                return;
-            }
+            //if (!authorizationController.Authorize(settings).Result)
+            //{
+            //    consoleController.WriteLine("Press ENTER to exit...");
+            //    consoleController.ReadLine();
+            //    return;
+            //}
 
-            #endregion
+            //#endregion
 
-            #region Get new products from gog.com/games
+            //#region Get new products from gog.com/games
 
-            var productsFilter = new List<long>(products.Count);
-            foreach (var p in products) productsFilter.Add(p.Id);
+            //var productsFilter = new List<long>(products.Count);
+            //foreach (var p in products) productsFilter.Add(p.Id);
 
-            consoleController.Write("Requesting new products from {0}...", Urls.GamesAjaxFiltered);
+            //consoleController.Write("Requesting new products from {0}...", Urls.GamesAjaxFiltered);
 
-            var newProducts = pagedResultController.Request(
-                Urls.GamesAjaxFiltered,
-                QueryParameters.GamesAjaxFiltered,
-                productsFilter).Result;
+            //var newProducts = pagedResultController.Request(
+            //    Urls.GamesAjaxFiltered,
+            //    QueryParameters.GamesAjaxFiltered,
+            //    productsFilter).Result;
 
-            if (newProducts != null)
-            {
-                consoleController.Write("Got {0} new products.", newProducts.Count);
+            //if (newProducts != null)
+            //{
+            //    consoleController.Write("Got {0} new products.", newProducts.Count);
 
-                for (var pp = newProducts.Count - 1; pp >= 0; pp--)
-                    productsController.Insert(0, newProducts[pp]);
-            }
+            //    for (var pp = newProducts.Count - 1; pp >= 0; pp--)
+            //        productsController.Insert(0, newProducts[pp]);
+            //}
 
-            consoleController.WriteLine(string.Empty);
+            //saveLoadHelper.SaveData(products, ProductTypes.Products).Wait();
 
-            #endregion
+            //consoleController.WriteLine(string.Empty);
 
-            #region Get new owned products from gog.com/account
+            //#endregion
 
-            consoleController.Write("Requesting new products from {0}...", Urls.AccountGetFilteredProducts);
+            //#region Get new owned products from gog.com/account
 
-            var newOwned = pagedResultController.Request(
-                Urls.AccountGetFilteredProducts,
-                QueryParameters.AccountGetFilteredProducts,
-                owned).Result;
+            //consoleController.Write("Requesting new products from {0}...", Urls.AccountGetFilteredProducts);
 
-            if (newOwned != null)
-            {
-                consoleController.Write("Got {0} new products.", newOwned.Count);
+            //var newOwned = pagedResultController.Request(
+            //    Urls.AccountGetFilteredProducts,
+            //    QueryParameters.AccountGetFilteredProducts,
+            //    owned).Result;
 
-                for (var oo = newOwned.Count - 1; oo >= 0; oo--)
-                    ownedController.Insert(0, newOwned[oo].Id);
-            }
+            //if (newOwned != null)
+            //{
+            //    consoleController.Write("Got {0} new products.", newOwned.Count);
 
-            consoleController.WriteLine(string.Empty);
+            //    for (var oo = newOwned.Count - 1; oo >= 0; oo--)
+            //        ownedController.Insert(0, newOwned[oo].Id);
+            //}
 
-            #endregion
+            //saveLoadHelper.SaveData(owned, ProductTypes.Owned).Wait();
 
-            #region Get updated products
+            //consoleController.WriteLine(string.Empty);
 
-            consoleController.Write("Requesting updated products...");
+            //#endregion
 
-            QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
-            var productUpdates = pagedResultController.Request(
-                Urls.AccountGetFilteredProducts,
-                QueryParameters.AccountGetFilteredProducts).Result;
+            //#region Get updated products
 
-            if (productUpdates != null)
-            {
-                consoleController.Write("Got {0} updated products.", productUpdates.Count);
+            //consoleController.Write("Requesting updated products...");
 
-                foreach (var update in productUpdates)
-                    updatedController.Add(update.Id);
-            }
+            //QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
+            //var productUpdates = pagedResultController.Request(
+            //    Urls.AccountGetFilteredProducts,
+            //    QueryParameters.AccountGetFilteredProducts).Result;
 
-            consoleController.WriteLine(string.Empty);
+            //if (productUpdates != null)
+            //{
+            //    consoleController.Write("Got {0} updated products.", productUpdates.Count);
 
-            #endregion
+            //    foreach (var update in productUpdates)
+            //        updatedController.Add(update.Id);
+            //}
 
-            #region Get wishlisted 
+            //saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
 
-            consoleController.Write("Requesting wishlisted products...");
+            //consoleController.WriteLine(string.Empty);
 
-            var wishlistedString = gogDataController.GetString(Urls.Wishlist).Result;
-            var wishlistedProductResult = jsonController.Parse<ProductsResult>(wishlistedString);
+            //#endregion
 
-            if (wishlistedProductResult != null &&
-                wishlistedProductResult.Products != null)
-            {
-                var count = wishlistedProductResult.Products.Count;
+            //#region Get wishlisted 
 
-                consoleController.Write("Got {0} wishlisted products.", count);
+            //consoleController.Write("Requesting wishlisted products...");
 
-                wishlisted = new List<long>(count);
+            //var wishlistedString = gogDataController.GetString(Urls.Wishlist).Result;
+            //var wishlistedProductResult = jsonController.Parse<ProductsResult>(wishlistedString);
 
-                foreach (var wish in wishlistedProductResult.Products)
-                    wishlisted.Add(wish.Id);
-            }
+            //if (wishlistedProductResult != null &&
+            //    wishlistedProductResult.Products != null)
+            //{
+            //    var count = wishlistedProductResult.Products.Count;
 
-            consoleController.WriteLine(string.Empty);
+            //    consoleController.Write("Got {0} wishlisted products.", count);
 
-            #endregion
+            //    wishlisted = new List<long>(count);
 
-            #region Update product data
+            //    foreach (var wish in wishlistedProductResult.Products)
+            //        wishlisted.Add(wish.Id);
+            //}
 
-            var productDataRequestTemplate = Urls.GameProductDataPageTemplate;
+            //saveLoadHelper.SaveData(wishlisted, ProductTypes.Wishlisted).Wait();
 
-            foreach (var p in products)
-            {
-                var requestUri = string.Format(productDataRequestTemplate, p.Url);
-                
-                // TODO: port the rest
+            //consoleController.WriteLine(string.Empty);
 
-            }
+            //#endregion
 
-            //// update product data from game pages
-            //var productDataProvider = new ProductDataProvider(gogDataController, jsonController);
-            //productsResultController.UpdateProductDetails(productDataProvider).Wait();
+            //#region Update product data
 
-            #endregion
+            //var productDataRequestTemplate = Urls.GameProductDataPageTemplate;
+
+            //foreach (var p in products)
+            //{
+            //    var existingProductData = productsDataController.Find(p.Id);
+            //    if (existingProductData != null) continue;
+
+            //    if (string.IsNullOrEmpty(p.Url)) continue;
+
+            //    var requestUri = string.Format(productDataRequestTemplate, p.Url);
+            //    var productDataString = gogDataController.GetString(requestUri).Result;
+
+            //    if (!string.IsNullOrEmpty(productDataString))
+            //    {
+            //        var gogData = jsonController.Parse<GOGData>(productDataString);
+            //        if (gogData != null) productsDataController.Add(gogData.ProductData);
+            //    }
+            //}
+
+            //saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+
+            //#endregion
 
             #region Update game details 
+
+            //var gameDetailsRequestTemplate = Urls.AccountGameDetailsTemplate;
+
+            //foreach (var p in products)
+            //{
+            //    if (!owned.Contains(p.Id)) continue;
+
+            //    if (!updated.Contains(p.Id))
+            //    {
+            //        var existingGameDetails = gameDetailsController.Find(p.Id);
+            //        if (existingGameDetails != null) continue;
+
+            //        var existingProductData = productsDataController.Find(p.Id);
+            //        if (existingProductData != null &&
+            //            existingProductData.RequiredProducts != null &&
+            //            existingProductData.RequiredProducts.Count > 0)
+            //            continue;
+            //    }
+
+            //    var requestUri = string.Format(gameDetailsRequestTemplate, p.Id);
+            //    //var gameDetailsString = networkController.GetString(requestUri).Result;
+            //    var gameDetailsString = "{\"title\":\"The Incredible Adventures of Van Helsing II - Complete Pack\",\"backgroundImage\":\"\\/\\/images-3.gog.com\\/a2e80caaf4b6eb543e24243d6c5c407b6eb851f2b4dbf811c0d244e7f1abbc8d\",\"cdKey\":\"\",\"textInformation\":\"\",\"downloads\":[[\"English\",{\"windows\":[{\"manualUrl\":\"\\/downlink\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/en1installer1\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/installer_win_en\",\"name\":\"The Incredible Adventures of Van Helsing II - Complete Pack (Part 1 of 5)\",\"version\":\"1.3.4b (gog-1)\",\"date\":\"\",\"size\":\"36 MB\"},{\"manualUrl\":\"\\/downlink\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/en1installer2\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/installer_win_en\",\"name\":\"The Incredible Adventures of Van Helsing II - Complete Pack (Part 2 of 5)\",\"version\":\"1.3.4b (gog-1)\",\"date\":\"\",\"size\":\"4.2 GB\"},{\"manualUrl\":\"\\/downlink\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/en1installer3\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/installer_win_en\",\"name\":\"The Incredible Adventures of Van Helsing II - Complete Pack (Part 3 of 5)\",\"version\":\"1.3.4b (gog-1)\",\"date\":\"\",\"size\":\"4.2 GB\"},{\"manualUrl\":\"\\/downlink\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/en1installer4\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/installer_win_en\",\"name\":\"The Incredible Adventures of Van Helsing II - Complete Pack (Part 4 of 5)\",\"version\":\"1.3.4b (gog-1)\",\"date\":\"\",\"size\":\"4.2 GB\"},{\"manualUrl\":\"\\/downlink\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/en1installer5\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/installer_win_en\",\"name\":\"The Incredible Adventures of Van Helsing II - Complete Pack (Part 5 of 5)\",\"version\":\"1.3.4b (gog-1)\",\"date\":\"\",\"size\":\"468 MB\"}]}]],\"extras\":[{\"manualUrl\":\"\\/downlink\\/file\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/59763\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/59763\",\"name\":\"wallpaper\",\"type\":\"wallpapers\",\"info\":1,\"size\":\"2 MB\"},{\"manualUrl\":\"\\/downlink\\/file\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/59753\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/59753\",\"name\":\"soundtrack\",\"type\":\"audio\",\"info\":1,\"size\":\"89 MB\"},{\"manualUrl\":\"\\/downlink\\/file\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/59773\",\"downloaderUrl\":\"gogdownloader:\\/\\/the_incredible_adventures_of_van_helsing_ii_complete_pack\\/59773\",\"name\":\"avatar\",\"type\":\"avatars\",\"info\":1,\"size\":\"1 MB\"}],\"combinedExtrasDownloaderUrl\":[],\"dlcs\":[],\"tags\":[],\"isPreOrder\":false,\"releaseTimestamp\":1441975800,\"messages\":[],\"changelog\":\"\",\"forumLink\":\"https:\\/\\/www.gog.com\\/forum\\/van_helsing_series\"}";
+
+            //    if (!string.IsNullOrEmpty(gameDetailsString))
+            //    {
+
+            //        Newtonsoft.Json.JsonTextReader jtr = new Newtonsoft.Json.JsonTextReader(new System.IO.StringReader(gameDetailsString));
+            //        while(jtr.Read())
+            //        {
+            //            if (jtr.Value != null) {
+            //                Console.WriteLine("{0}:{1}:{2}", jtr.TokenType, jtr.ValueType, jtr.Value);
+            //            }
+            //        }
+
+
+            //        var gameDetails = jsonStringController.Deserialize<GameDetails>(gameDetailsString);
+
+            //        if (gameDetails != null)
+            //        {
+            //            // fix up. GOG started serving different JSON that doesn't work great with CLR JsonSerializer
+
+            //            foreach (var entry in gameDetails.DownloadObjects)
+            //            {
+            //                //if (entry != null)
+            //                //{
+            //                //    var array = entry as object[];
+            //                //    if (array != null &&
+            //                //        array.Length > 1)
+            //                //    {
+            //                //        if (array[0].ToString() == "English")
+            //                //        {
+            //                            Console.WriteLine(entry);
+            //                        //}
+            //                    //}
+            //                //}
+            //            }
+
+
+            //            gameDetailsController.Add(gameDetails);
+            //        }
+            //    }
+            //}
+
+            //saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 
             //// update game details for all owned games
             //var gameDetailsProvider = new GameDetailsProvider(networkController, jsonController);
@@ -260,35 +339,6 @@ namespace GOG
 
             var imagesController = new ImagesController(fileRequestController, ioController, consoleController);
             imagesController.Update(products).Wait();
-
-            #endregion
-
-            #region Saving stored data
-
-            saveLoadHelper.SaveData(
-                filenames[ProductTypes.Products], 
-                products, 
-                prefixes[ProductTypes.Products]).Wait();
-
-            saveLoadHelper.SaveData(
-                filenames[ProductTypes.Owned], 
-                owned, 
-                prefixes[ProductTypes.Owned]).Wait();
-
-            saveLoadHelper.SaveData(
-                filenames[ProductTypes.Wishlisted], 
-                wishlisted, 
-                prefixes[ProductTypes.Wishlisted]).Wait();
-
-            saveLoadHelper.SaveData(
-                filenames[ProductTypes.Updated], 
-                updated, 
-                prefixes[ProductTypes.Updated]).Wait();
-
-            saveLoadHelper.SaveData(
-                filenames[ProductTypes.ProductsData],
-                productsData,
-                prefixes[ProductTypes.ProductsData]).Wait();
 
             #endregion
 

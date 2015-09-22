@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 namespace GOG.Model
 {
     [DataContract]
+    [KnownType(typeof(OperatingSystemsDownloads))]
     public class GameDetails
     {
         // fields we won't be serializing
@@ -25,10 +26,12 @@ namespace GOG.Model
         [DataMember(Name = "dlcs")]
         public List<GameDetails> DLCs { get; set; }
         [DataMember(Name = "downloads")]
-        public LanguageDownloads Downloads { get; set; }
+        public dynamic[][] DownloadObjects { get; set; }
+        [DataMember(Name = "languageDownloads")]
+        public LanguageDownloads LanguageDownloads { get; set; }
         [DataMember(Name = "extras")]
         public List<DownloadEntry> Extras { get; set; }
         [DataMember(Name = "title")]
-        public string Title { get; set; } 
+        public string Title { get; set; }
     }
 }
