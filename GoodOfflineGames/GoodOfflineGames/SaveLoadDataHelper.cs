@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 using GOG.Interfaces;
 
@@ -52,7 +55,11 @@ namespace GOG
 
                 await storageController.Push(filenames[type], stringData);
             }
-            catch
+            catch (SerializationException serializationException)
+            {
+                // ...
+            }
+            catch (IOException ioException)
             {
                 // ...
             }

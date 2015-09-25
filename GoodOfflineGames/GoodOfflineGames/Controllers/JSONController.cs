@@ -5,53 +5,6 @@ using GOG.Interfaces;
 
 namespace GOG.SharedControllers
 {
-    //public class JSONController<FromType> : ISerializationController<FromType> where FromType: class
-    //{
-    //    public FromType Serialize<Type>(Type data)
-    //    {
-    //        DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Type));
-    //        FromType outputData = default(FromType);
-
-    //        MemoryStream memoryStream = null;
-    //        try
-    //        {
-    //            memoryStream = new MemoryStream();
-    //            jsonSerializer.WriteObject(memoryStream, data);
-
-    //            memoryStream.Position = 0;
-    //            using (StreamReader reader = new StreamReader(memoryStream, Encoding.UTF8))
-    //            {
-    //                memoryStream = null;
-    //                outputData = reader.ReadToEnd() as FromType;
-    //            }
-    //        }
-    //        finally
-    //        {
-    //            if (memoryStream != null)
-    //            {
-    //                memoryStream.Dispose();
-    //            }
-    //        }
-
-    //        return outputData;
-    //    }
-
-    //    public Type Deserialize<Type>(FromType data)
-    //    {
-    //        DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Type));
-    //        Type parsedData = default(Type);
-
-    //        try
-    //        {
-    //            using (MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-    //                parsedData = (Type)jsonSerializer.ReadObject(memoryStream);
-    //        }
-    //        catch (IOException) { }
-
-    //        return parsedData;
-    //    }
-    //}
-
     public class JSONStringController: ISerializationController<string>
     {
         public string Serialize<Type>(Type data)

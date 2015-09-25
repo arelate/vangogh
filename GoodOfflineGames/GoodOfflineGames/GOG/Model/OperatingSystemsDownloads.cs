@@ -6,6 +6,8 @@ namespace GOG.Model
     [DataContract]
     public class OperatingSystemsDownloads
     {
+        [DataMember(Name = "language")]
+        public string Language { get; set; }
         [DataMember(Name = "linux")]
         public List<DownloadEntry> Linux { get; set; }
         [DataMember(Name = "mac")]

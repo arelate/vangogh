@@ -7,7 +7,7 @@ namespace GOG.Model
 {
     [DataContract]
     [KnownType(typeof(OperatingSystemsDownloads))]
-    public class GameDetails
+    public class GameDetails: ProductCore
     {
         // fields we won't be serializing
 
@@ -21,17 +21,15 @@ namespace GOG.Model
         // public string textInformation;
         // public List<Tag> tags;
 
-        [DataMember(Name = "id")]
-        public long Id { get; set; }
         [DataMember(Name = "cdKey")]
         public string CDKey { get; set; }
         [DataMember(Name = "dlcs")]
         public List<GameDetails> DLCs { get; set; }
-        [DataMember(Name = "downloads")]
-        public LanguageDownloads[] Downloads { get; set; }
+        [DataMember(Name = "downloads"), IgnoreDataMember()]
+        public dynamic[][] DownloadsDynamic { get; set; }
+        [DataMember(Name = "languageDownloads")]
+        public List<OperatingSystemsDownloads> LanguageDownloads { get; set; }
         [DataMember(Name = "extras")]
         public List<DownloadEntry> Extras { get; set; }
-        [DataMember(Name = "title")]
-        public string Title { get; set; }
     }
 }

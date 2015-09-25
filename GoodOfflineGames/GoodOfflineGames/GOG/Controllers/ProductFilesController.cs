@@ -102,11 +102,11 @@ namespace GOG.Controllers
                 await UpdateProductFile(downloadEntry);
         }
 
-        private async Task UpdateProductLanguageFiles(LanguageDownloads languageDownloads)
-        {
-            if (downloadLanguage.HasFlag(Languages.English))
-                await UpdateProductOperatingSystemFiles(languageDownloads.English);
-        }
+        //private async Task UpdateProductLanguageFiles(LanguageDownloads languageDownloads)
+        //{
+        //    if (downloadLanguage.HasFlag(Languages.English))
+        //        await UpdateProductOperatingSystemFiles(languageDownloads.English);
+        //}
 
         private async Task UpdateProductFiles(GameDetails gameDetails)
         {

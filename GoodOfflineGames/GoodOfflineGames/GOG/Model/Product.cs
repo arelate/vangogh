@@ -1,9 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace GOG.Model
 {
     [DataContract]
-    public class Product
+    public class Product: ProductCore
     {
         // fields we won't be serializing
 
@@ -27,15 +28,13 @@ namespace GOG.Model
         // gog.com/games products have this
         // public long? releaseDate;
 
-        [DataMember(Name = "id")]
-        public long Id { get; set; }
-        [DataMember(Name = "title")]
-        public string Title { get; set; }
         [DataMember(Name = "image")]
         public string Image { get; set; }
         [DataMember(Name = "url")]
         public string Url { get; set; }
         [DataMember(Name = "worksOn")]
         public WorksOn WorksOn { get; set; }
+
+
     }
 }

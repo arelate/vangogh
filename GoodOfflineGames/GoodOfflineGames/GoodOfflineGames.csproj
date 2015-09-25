@@ -64,6 +64,7 @@
     <Compile Include="GOG\Controllers\ImagesController.cs" />
     <Compile Include="GOG\DetailsProviders\GameDetailsProvider.cs" />
     <Compile Include="GOG\Model\GOGData.cs" />
+    <Compile Include="GOG\Model\ProductCore.cs" />
     <Compile Include="GOG\Model\Unused\Availability.cs" />
     <Compile Include="GOG\Model\Unused\DateRange.cs" />
     <Compile Include="GOG\Model\DownloadEntry.cs" />

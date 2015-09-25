@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace GOG.Model
 {
     [DataContract]
-    public class ProductData
+    public class ProductData: ProductCore
     {
         // fields we won't be serializing
 
@@ -16,16 +17,12 @@ namespace GOG.Model
         // public string backgroundImageSource;
         // public string cardSEOKeywords;
 
-        [DataMember(Name = "id")]
-        public long Id { get; set; }
         [DataMember(Name = "genres")]
         public List<NamedEntry> Genres { get; set; }
         [DataMember(Name = "publisher")]
         public NamedEntry Publisher { get; set; }
         [DataMember(Name = "developer")]
         public NamedEntry Developer { get; set; }
-        [DataMember(Name = "title")]
-        public string Title { get; set; }
         [DataMember(Name = "image")]
         public string Image { get; set; }
         [DataMember(Name = "series")]
