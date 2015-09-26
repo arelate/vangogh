@@ -26,7 +26,7 @@ namespace GOG.Model
         [DataMember(Name = "dlcs")]
         public List<GameDetails> DLCs { get; set; }
         [DataMember(Name = "downloads"), IgnoreDataMember()]
-        public dynamic[][] DownloadsDynamic { get; set; }
+        public dynamic[][] DynamicDownloads { get; set; }
         [DataMember(Name = "languageDownloads")]
         public List<OperatingSystemsDownloads> LanguageDownloads { get; set; }
         [DataMember(Name = "extras")]

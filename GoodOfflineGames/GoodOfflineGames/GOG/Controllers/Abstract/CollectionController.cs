@@ -22,11 +22,13 @@ namespace GOG.Controllers
 
         public void Add(T item)
         {
+            if (item == null) return;
             if (!Contains(item)) Collection.Add(item);
         }
 
         public void Insert(int index, T item)
         {
+            if (item == null) return;
             if (!Contains(item)) Collection.Insert(index, item);
         }
 
