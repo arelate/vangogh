@@ -53,7 +53,6 @@
     <Compile Include="GOG\Controllers\Abstract\ProductCoreController.cs" />
     <Compile Include="GOG\Controllers\AuthorizationController.cs" />
     <Compile Include="GOG\Controllers\Abstract\CollectionController.cs" />
-    <Compile Include="GOG\Controllers\DLCController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\Abstract\MultipageRequestController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsController.cs" />
@@ -63,7 +62,6 @@
     <Compile Include="GOG\Controllers\ProductFilesController.cs" />
     <Compile Include="GOG\Controllers\ProductsController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
-    <Compile Include="GOG\DetailsProviders\GameDetailsProvider.cs" />
     <Compile Include="GOG\Model\GOGData.cs" />
     <Compile Include="GOG\Model\ProductCore.cs" />
     <Compile Include="GOG\Model\Unused\Availability.cs" />
@@ -88,11 +86,10 @@
     <Compile Include="Interfaces\ConsoleController.cs" />
     <Compile Include="Interfaces\GOG\AuthorizationController.cs" />
     <Compile Include="Interfaces\GOG\Credentials.cs" />
-    <Compile Include="Interfaces\GOG\DLCController.cs" />
+    <Compile Include="Interfaces\GOG\ProductCoreController.cs" />
     <Compile Include="Interfaces\Network.cs" />
     <Compile Include="Interfaces\GOG\MultipageRequestController.cs" />
     <Compile Include="Interfaces\GOG\FilterDelegate.cs" />
-    <Compile Include="Interfaces\GOG\ProductsController.cs" />
     <Compile Include="Interfaces\SettingsController.cs" />
     <Compile Include="Interfaces\StorageController.cs" />
     <Compile Include="Interfaces\IOController.cs" />

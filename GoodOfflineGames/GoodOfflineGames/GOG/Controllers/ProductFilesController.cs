@@ -26,6 +26,7 @@ namespace GOG.Controllers
     class DownloadProgressReporter : IProgress<double>
     {
         private IConsoleController consoleController;
+        private string lastReportedValue;
 
         public DownloadProgressReporter(IConsoleController consoleController)
         {
@@ -34,7 +35,12 @@ namespace GOG.Controllers
 
         public void Report(double value)
         {
-            consoleController.Write("\r{0:P1}...", value);
+            string formattedValue = string.Format("\r{0:P1}...", value);
+            if (formattedValue != lastReportedValue)
+            {
+                lastReportedValue = formattedValue;
+                consoleController.Write(formattedValue);
+            }
         }
     }
 
@@ -122,7 +128,7 @@ namespace GOG.Controllers
             //    await UpdateProductFiles(dlc);
         }
 
-        public async Task UpdateFiles(IEnumerable<GameDetails> details)
+        public async Task UpdateFiles(IEnumerable<GameDetails> details, IList<string> supportedLanguages)
         {
             consoleController.WriteLine("Downloading files for {0} products...", details.Count());
             consoleController.WriteLine(string.Empty);

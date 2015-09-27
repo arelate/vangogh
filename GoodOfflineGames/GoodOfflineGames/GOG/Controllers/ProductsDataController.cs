@@ -6,8 +6,8 @@ using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
-    public class ProductsDataController:
-        ProductCoreController<ProductData>
+    // TODO: Unit tests
+    public class ProductsDataController : ProductCoreController<ProductData>
     {
         private IDeserializeDelegate<string> stringDeserializeController;
 
@@ -15,7 +15,7 @@ namespace GOG.Controllers
             IList<ProductData> productsData,
             ICollectionContainer<Product> productsCollectionContainer,
             IStringGetController stringGetDelegate,
-            IDeserializeDelegate<string> stringDeserializeController) : 
+            IDeserializeDelegate<string> stringDeserializeController) :
             base(productsData,
                 productsCollectionContainer,
                 stringGetDelegate)

@@ -9,7 +9,7 @@ using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
-    class MultipageRequestController : IMultipageRequestController<Product, long>
+    class MultipageRequestController : IRequestDelegate<Product, long>
     {
         private IStringGetController stringGetController;
         private ISerializationController<string> stringifyController;
@@ -26,6 +26,7 @@ namespace GOG.Controllers
         {
             this.stringifyController = stringifyController;
             this.stringGetController = stringGetController;
+            this.consoleController = consoleController;
             this.filterDelegate = filterDelegate;
         }
 

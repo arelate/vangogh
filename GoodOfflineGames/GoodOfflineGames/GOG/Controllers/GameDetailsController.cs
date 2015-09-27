@@ -8,14 +8,14 @@ using Newtonsoft.Json;
 
 namespace GOG.Controllers
 {
+    // TODO: Unit tests
     public class GameDetailsController : ProductCoreController<GameDetails>
     {
         private ICollectionController<long> ownedController;
         private ICollectionController<long> updatedController;
         private IFindDelegate<long, ProductData> productDataFindDelegate;
         private IDeserializeDelegate<string> stringDeserializeController;
-
-        private List<string> allowedLanguages = new List<string>() { "English" };
+        private IList<string> supportedLanguages;
 
         public GameDetailsController(
             IList<GameDetails> gameDetails,
@@ -24,16 +24,17 @@ namespace GOG.Controllers
             IDeserializeDelegate<string> stringDeserializeController,
             ICollectionController<long> ownedController,
             ICollectionController<long> updatedController,
-            IFindDelegate<long, ProductData> productDataFindDelegate) :
+            IFindDelegate<long, ProductData> productDataFindDelegate,
+            IList<string> supportedLanguages) :
             base(gameDetails,
                 productsCollectionContainer,
                 stringGetDelegate)
         {
-            // ...
             this.ownedController = ownedController;
             this.updatedController = updatedController;
             this.productDataFindDelegate = productDataFindDelegate;
             this.stringDeserializeController = stringDeserializeController;
+            this.supportedLanguages = supportedLanguages;
         }
 
         protected override string GetRequestTemplate()
@@ -78,7 +79,7 @@ namespace GOG.Controllers
 
                 var language = entry[0];
 
-                if (!allowedLanguages.Contains(language)) continue;
+                if (!supportedLanguages.Contains(language)) continue;
 
                 string downloadsString = JsonConvert.SerializeObject(entry[1]);
                 var downloads = stringDeserializeController.Deserialize<OperatingSystemsDownloads>(
@@ -101,6 +102,17 @@ namespace GOG.Controllers
 
         protected override GameDetails Deserialize(string data)
         {
+            // GameDetails are complicated as GOG.com currently serves mixed type array
+            // where first entry is string "Language" and next entries are downloads
+            // so in order to overcome this we do it like this:
+            // 1) use Json.NET to deserialize with downloads mapped to dynamic[][] collection
+            // 2) walk through DynamicDownloads collection
+            // 3) for each language we expand second collection item (that is operating system downloads)
+            // 4) for each DLC we recursively expand DynamicDownloads
+            // 5) we nullify DynamicDownloads after expansion to allow further serialization
+
+            // TODO: keep an eye on further changes that might allow to simplify this
+
             GameDetails gameDetails = JsonConvert.DeserializeObject<GameDetails>(data);
 
             ExpandDynamicDownloads(ref gameDetails);

@@ -54,8 +54,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="GOG\Controllers\AuthenticationControllerTests.cs" />
-    <Compile Include="GOG\Controllers\ProductsResultControllerTests.cs" />
+    <Compile Include="GOG\Controllers\ProductsController.cs" />
+    <Compile Include="GOG\Controllers\GOGDataController.cs" />
+    <Compile Include="GOG\Controllers\AuthenticationController.cs" />
     <Compile Include="MockSharedControllers\MockConsoleController.cs" />
     <Compile Include="MockSharedControllers\MockNetworkController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

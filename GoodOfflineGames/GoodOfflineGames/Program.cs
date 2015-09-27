@@ -25,6 +25,8 @@ namespace GOG
             IList<ProductData> productsData = null;
             IList<GameDetails> gamesDetails = null;
 
+            List<string> gameDetailsLanguages = new List<string>() { "English" };
+
             #endregion
 
             #region IO variables
@@ -83,45 +85,47 @@ namespace GOG
 
             #region GOG controllers
 
-            var settingsController = new SettingsController(
+            ISettingsController<Settings> settingsController = new SettingsController(
                 ioController,
                 jsonStringController,
                 consoleController);
 
-            var authorizationController = new AuthorizationController(
+            IAuthorizationController authorizationController = new AuthorizationController(
                 uriController,
                 networkController,
                 consoleController);
 
-            var existingProductsFilter = new ExistingProductsFilter();
+            IFilterDelegate<Product, long> existingProductsFilter = new ExistingProductsFilter();
 
-            var pagedResultController = new MultipageRequestController(
+            IRequestDelegate<Product, long> pagedResultController = 
+                new MultipageRequestController(
                     networkController,
                     jsonStringController,
                     consoleController,
                     existingProductsFilter);
 
-            var productsController = new ProductsController(products);
+            IProductCoreController<Product> productsController = new ProductsController(products);
 
-            var gogDataController = new GOGDataController(networkController);
+            IStringGetController gogDataController = new GOGDataController(networkController);
 
-            var ownedController = new OwnedController(owned);
-            var updatedController = new UpdatedController(updated);
+            ICollectionController<long> ownedController = new OwnedController(owned);
+            ICollectionController<long> updatedController = new UpdatedController(updated);
 
-            var productsDataController = new ProductsDataController(
+            IProductCoreController<ProductData> productsDataController = new ProductsDataController(
                 productsData,
                 productsController,
                 gogDataController,
                 jsonStringController);
 
-            var gamesDetailsController = new GameDetailsController(
+            IProductCoreController<GameDetails> gamesDetailsController = new GameDetailsController(
                 gamesDetails,
                 productsController,
                 networkController,
-                jsonStringController, 
-                ownedController, 
-                updatedController, 
-                productsDataController);
+                jsonStringController,
+                ownedController,
+                updatedController,
+                productsDataController,
+                gameDetailsLanguages);
 
             var productFilesController = new ProductFilesController(
                 fileRequestController,
@@ -129,11 +133,14 @@ namespace GOG
                 consoleController);
 
             var imagesController = new ImagesController(
-                fileRequestController, 
-                ioController, 
+                fileRequestController,
+                ioController,
                 consoleController);
 
             #endregion
+
+            //var data = gogDataController.GetString(string.Format(Urls.GameProductDataPageTemplate, "/game/system_shock_enhanced_edition")).Result;
+            //Console.WriteLine(data);
 
             //#region Load settings
 
@@ -272,7 +279,7 @@ namespace GOG
 
             consoleController.Write("Updating game details...");
 
-            gamesDetailsController.Update(consoleController);
+            gamesDetailsController.Update(consoleController).Wait();
 
             saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 
@@ -284,10 +291,12 @@ namespace GOG
 
             var downloadDetails = new List<GameDetails>();
 
-            //foreach (var u in updated)
-            //    downloadDetails.Add(productsController.Find(u));
+            // TODO: add new products as well
 
-            productFilesController.UpdateFiles(downloadDetails).Wait();
+            foreach (var u in updated)
+                downloadDetails.Add(gamesDetailsController.Find(u));
+
+            productFilesController.UpdateFiles(downloadDetails, gameDetailsLanguages).Wait();
 
             #endregion
 

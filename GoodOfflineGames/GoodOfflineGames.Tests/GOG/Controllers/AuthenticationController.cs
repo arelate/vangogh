@@ -29,13 +29,13 @@ namespace GoodOfflineGames.Tests
         }
 
         [TestMethod]
-        public void AuthenticationControllerAuthorizesWithCorrectCredentials()
+        public void AuthorizesWithCorrectCredentials()
         {
             Assert.IsTrue(authorizationController.Authorize(correctCredentials).Result);
         }
 
         [TestMethod]
-        public void AuthenticationControllerFailsAuthorizationWithWrongCredentials()
+        public void FailsAuthorizationWithWrongCredentials()
         {
             Assert.IsFalse(authorizationController.Authorize(wrongCredentials).Result);
         }
