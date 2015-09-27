@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GOG\Controllers\ProductDataController.cs" />
     <Compile Include="GOG\Controllers\ProductsController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\AuthenticationController.cs" />

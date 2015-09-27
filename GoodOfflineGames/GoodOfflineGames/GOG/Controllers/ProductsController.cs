@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using GOG.Interfaces;
 using GOG.Model;
 
 namespace GOG.Controllers

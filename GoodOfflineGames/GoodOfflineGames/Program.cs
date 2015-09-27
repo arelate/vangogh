@@ -111,7 +111,7 @@ namespace GOG
             ICollectionController<long> ownedController = new OwnedController(owned);
             ICollectionController<long> updatedController = new UpdatedController(updated);
 
-            IProductCoreController<ProductData> productsDataController = new ProductsDataController(
+            IProductCoreController<ProductData> productsDataController = new ProductDataController(
                 productsData,
                 productsController,
                 gogDataController,

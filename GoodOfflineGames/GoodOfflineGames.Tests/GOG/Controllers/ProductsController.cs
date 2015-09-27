@@ -4,20 +4,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using GOG.Interfaces;
 using GOG.Model;
+using GOG.Controllers;
 
 namespace GoodOfflineGames.Tests
 {
     [TestClass]
-    public class ProductsController
+    public class ProductsControllerTests
     {
         private IProductCoreController<Product> productsController;
         private IList<Product> products;
         Product p;
 
-        public ProductsController()
+        public ProductsControllerTests()
         {
             products = new List<Product>();
-            productsController = new GOG.Controllers.ProductsController(products);
+            productsController = new ProductsController(products);
             p = new Product();
             p.Id = 1;
         }

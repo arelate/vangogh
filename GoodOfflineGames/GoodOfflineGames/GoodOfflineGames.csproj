@@ -56,7 +56,7 @@
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\Abstract\MultipageRequestController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsController.cs" />
-    <Compile Include="GOG\Controllers\ProductsDataController.cs" />
+    <Compile Include="GOG\Controllers\ProductDataController.cs" />
     <Compile Include="GOG\Controllers\UpdatedController.cs" />
     <Compile Include="GOG\Controllers\OwnedController.cs" />
     <Compile Include="GOG\Controllers\ProductFilesController.cs" />

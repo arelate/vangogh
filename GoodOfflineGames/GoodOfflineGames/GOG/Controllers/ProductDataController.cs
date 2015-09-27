@@ -7,11 +7,11 @@ using GOG.Interfaces;
 namespace GOG.Controllers
 {
     // TODO: Unit tests
-    public class ProductsDataController : ProductCoreController<ProductData>
+    public class ProductDataController : ProductCoreController<ProductData>
     {
         private IDeserializeDelegate<string> stringDeserializeController;
 
-        public ProductsDataController(
+        public ProductDataController(
             IList<ProductData> productsData,
             ICollectionContainer<Product> productsCollectionContainer,
             IStringGetController stringGetDelegate,
