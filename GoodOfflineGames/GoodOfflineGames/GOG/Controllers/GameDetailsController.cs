@@ -15,7 +15,7 @@ namespace GOG.Controllers
         private ICollectionController<long> updatedController;
         private IFindDelegate<long, ProductData> productDataFindDelegate;
         private IDeserializeDelegate<string> stringDeserializeController;
-        private IList<string> supportedLanguages;
+        private ICollection<string> supportedLanguages;
 
         public GameDetailsController(
             IList<GameDetails> gameDetails,
@@ -25,7 +25,7 @@ namespace GOG.Controllers
             ICollectionController<long> ownedController,
             ICollectionController<long> updatedController,
             IFindDelegate<long, ProductData> productDataFindDelegate,
-            IList<string> supportedLanguages) :
+            ICollection<string> supportedLanguages) :
             base(gameDetails,
                 productsCollectionContainer,
                 stringGetDelegate)
