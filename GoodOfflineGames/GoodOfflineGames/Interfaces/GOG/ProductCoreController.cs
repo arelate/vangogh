@@ -16,6 +16,6 @@ namespace GOG.Interfaces
         IFindDelegate<long, Type>,
         IUpdateDelegate
     {
-        // ...
+        event EventHandler<Type> OnProductUpdated;
     }
 }

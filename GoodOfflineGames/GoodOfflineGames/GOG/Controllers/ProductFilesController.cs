@@ -9,43 +9,16 @@ using GOG.SharedModels;
 
 namespace GOG.Controllers
 {
-    [Flags]
-    enum OperatingSystems
-    {
-        Windows,
-        Mac,
-        Linux
-    }
-
-    [Flags]
-    enum Languages
-    {
-        English
-    }
-
-    class DownloadProgressReporter : IProgress<double>
-    {
-        private IConsoleController consoleController;
-        private string lastReportedValue;
-
-        public DownloadProgressReporter(IConsoleController consoleController)
-        {
-            this.consoleController = consoleController;
-        }
-
-        public void Report(double value)
-        {
-            string formattedValue = string.Format("\r{0:P1}...", value);
-            if (formattedValue != lastReportedValue)
-            {
-                lastReportedValue = formattedValue;
-                consoleController.Write(formattedValue);
-            }
-        }
-    }
-
     class ProductFilesController
     {
+        [Flags]
+        private enum OperatingSystems
+        {
+            Windows,
+            Mac,
+            Linux
+        }
+
         private IFileRequestController fileRequestController;
         private IIOController ioController;
         private IConsoleController consoleController;
@@ -53,22 +26,16 @@ namespace GOG.Controllers
         // Windows and Mac at this point, should make configuratble in the future
         private static OperatingSystems downloadOperatingSystem = OperatingSystems.Windows | OperatingSystems.Mac;
 
-        // English at this point, should make configurable in the future
-        private static Languages downloadLanguage = Languages.English;
-
-        private const bool downloadWindows = true;
-        private const bool downloadMac = true;
-        private const bool downloadLinux = false;
-
-        private DownloadProgressReporter downloadProgressReporter;
+        private IProgress<double> downloadProgressReporter;
         private string productLocation = string.Empty;
 
         public ProductFilesController(
             IFileRequestController fileRequestController,
             IIOController ioController,
-            IConsoleController consoleController)
+            IConsoleController consoleController,
+            IProgress<double> downloadProgressReporter)
         {
-            downloadProgressReporter = new DownloadProgressReporter(consoleController);
+            this.downloadProgressReporter = downloadProgressReporter;
 
             this.fileRequestController = fileRequestController;
             this.ioController = ioController;
@@ -108,44 +75,23 @@ namespace GOG.Controllers
                 await UpdateProductFile(downloadEntry);
         }
 
-        //private async Task UpdateProductLanguageFiles(LanguageDownloads languageDownloads)
-        //{
-        //    if (downloadLanguage.HasFlag(Languages.English))
-        //        await UpdateProductOperatingSystemFiles(languageDownloads.English);
-        //}
-
-        private async Task UpdateProductFiles(GameDetails gameDetails)
+        public async Task UpdateFiles(GameDetails details, ICollection<string> supportedLanguages)
         {
-            //// update game files
-            //await UpdateProductLanguageFiles(gameDetails.Downloads);
-
-            //// update extras
-            //foreach (DownloadEntry extraEntry in gameDetails.Extras)
-            //    await UpdateProductFile(extraEntry);
-
-            //// also recursively download DLC files
-            //foreach (var dlc in gameDetails.DLCs)
-            //    await UpdateProductFiles(dlc);
-        }
-
-        public async Task UpdateFiles(IEnumerable<GameDetails> details, IList<string> supportedLanguages)
-        {
-            consoleController.WriteLine("Downloading files for {0} products...", details.Count());
+            consoleController.WriteLine("Downloading files for product {0}...", details.Title);
             consoleController.WriteLine(string.Empty);
 
-            foreach (GameDetails d in details)
-            {
-                if (d == null) continue;
+            // update game files
+            foreach (var download in details.LanguageDownloads)
+                if (supportedLanguages.Contains(download.Language))
+                    await UpdateProductOperatingSystemFiles(download);
 
-                consoleController.WriteLine("Downloading {0}...", d.Title);
+            // update extras
+            foreach (DownloadEntry extraEntry in details.Extras)
+                await UpdateProductFile(extraEntry);
 
-                // download product files
-                await UpdateProductFiles(d);
-
-                consoleController.WriteLine(string.Empty);
-            }
-
-            consoleController.WriteLine("All product files updated.");
+            // also recursively download DLC files
+            foreach (var dlc in details.DLCs)
+                await UpdateFiles(dlc, supportedLanguages);
         }
     }
 }

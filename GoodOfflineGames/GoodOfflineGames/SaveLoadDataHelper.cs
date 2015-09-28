@@ -8,7 +8,7 @@ using GOG.Interfaces;
 
 namespace GOG
 {
-    public class SaveLoadDataHelper
+    public class SaveLoadDataHelper: ISaveLoadDataHelper
     {
         private IStorageController<string> storageController;
         private ISerializationController<string> stringifyController;

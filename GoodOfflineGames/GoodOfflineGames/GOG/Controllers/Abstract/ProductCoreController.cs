@@ -36,6 +36,8 @@ namespace GOG.Controllers
             return Find(p => p.Id == id);
         }
 
+        public event EventHandler<Type> OnProductUpdated;
+
         protected virtual string GetRequestTemplate()
         {
             throw new NotImplementedException();
@@ -82,6 +84,11 @@ namespace GOG.Controllers
                 data.Id = product.Id;
 
                 Add(data);
+
+                if (OnProductUpdated != null)
+                {
+                    OnProductUpdated(this, data);
+                }
 
                 if (consoleController != null) consoleController.Write(".");
             }
