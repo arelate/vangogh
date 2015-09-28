@@ -168,7 +168,13 @@
         </div>
     </div>
 
-    <script src="./data.js"></script>
+    <script src="./products.js"></script>
+    <script src="./owned.js"></script>
+    <script src="./updated.js"></script>
+    <script src="./wishlisted.js"></script>
+    <script src="./productsdata.js"></script>
+    <script src="./gamedetails.js"></script>
+
     <script>
         "use strict";
 
@@ -231,7 +237,6 @@
             var productTemplate = "<div class='product {{productClass}}' data-id='{{id}}'>" +
                 "<div class='state wishlisted'>WISHLISTED</div>" +
                 "<div class='state owned'>OWNED</div>" +
-                "<div class='state available'>AVAILABLE</div>" +
                 "<div class='updated'>UPDATED</div>" +
                 "<img data-srcset='_images/{{image}}_196.jpg 1x, _images/{{image}}_392.jpg 2x' />" +
                 "<div class='title' title='{{title}}' >{{title}}</div>" +
@@ -287,7 +292,9 @@
                     if (p.worksOn.Mac) parts.push("mac osx");
                     if (p.worksOn.Linux) parts.push("linux");
 
-                    if (p.updates) parts.push("updated");
+                    if (updated.indexOf(p.Id) > -1) parts.push("updated");
+                    if (owned.indexOf(p.Id) > -1) parts.push("owned");
+                    if (wishlisted.indexOf(p.Id) > -1) parts.push("wishlisted");
 
                     searchIndex.push(parts.join(" "));
                 });
@@ -314,10 +321,10 @@
 
         var ModelProvider = function () {
             var getProductModel = function (product) {
-                var productClass = "available";
-                if (product.owned) productClass = "owned";
-                if (product.wishlisted) productClass = "wishlisted";
-                if (product.updates) productClass += " updated";
+                var productClass;
+                if (owned.indexOf(product.id) > -1) productClass = "owned";
+                if (wishlisted.indexOf(product.id) > -1) productClass = "wishlisted";
+                if (updated.indexOf(product.id) > -1) productClass += " updated";
 
                 var imageParts = product.image.split("/");
                 var image = imageParts[imageParts.length - 1];
@@ -393,9 +400,9 @@
 
             var getProductById = function (id) {
                 var productId = parseInt(id);
-                for (var ii = 0; ii < data.products.length; ii++) {
-                    if (data.products[ii].id == productId) {
-                        return data.products[ii];
+                for (var ii = 0; ii < products.length; ii++) {
+                    if (products[ii].id == productId) {
+                        return products[ii];
                     }
                 }
             }
@@ -403,12 +410,14 @@
                 var product = getProductById(id);
                 pdTitle.textContent = product.title;
                 // available in store
-                if (product.productData) {
-                    pdPublisher.textContent = product.productData.publisher.name;
-                    pdDeveloper.textContent = product.productData.developer.name;
+                var pdIndex = productsdata.indexOf(id);
+                if (pdIndex > -1) {
+                    var pd = productsdata[pdIndex];
+                    pdPublisher.textContent = pd.publisher.name;
+                    pdDeveloper.textContent = pd.developer.name;
 
-                    if (product.productData.series.name) {
-                        pdSeries.textContent = product.productData.series.name;
+                    if (pd.series.name) {
+                        pdSeries.textContent = pd.series.name;
                         pdSeriesContainer.classList.remove("hidden");
                     } else {
                         pdSeriesContainer.classList.add("hidden");
@@ -449,18 +458,18 @@
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            Cache.init(data.products);
+            Cache.init(products);
             var html = "";
-            for (var ii = 0; ii < data.products.length; ii++) {
+            for (var ii = 0; ii < products.length; ii++) {
 
-                html += DataBinding.createProductView(data.products[ii], ModelProvider.getProductModel);
+                html += DataBinding.createProductView(products[ii], ModelProvider.getProductModel);
             }
 
             document.getElementById("products").innerHTML = html;
 
             ProductDetails.init();
 
-            SearchIndex.init(data.products);
+            SearchIndex.init(products);
 
             ImageSources.init();
 
