@@ -14,20 +14,19 @@ namespace GOG.Controllers
         IProductCoreController<Type>
         where Type : ProductCore
     {
-        private ICollectionContainer<Product> productsCollectionContainer;
         private IStringGetController stringGetDelegate;
+
+        public event EventHandler<Type> OnProductUpdated;
+        public event BeforeAddingDelegate<Type> OnBeforeAdding;
 
         public ProductCoreController(IList<Type> collection): base (collection)
         {
             // ...
         }
 
-        public ProductCoreController(
-            IList<Type> collection,
-            ICollectionContainer<Product> productsCollectionContainer,
+        public ProductCoreController(IList<Type> collection,
             IStringGetController stringGetDelegate) : this(collection)
         {
-            this.productsCollectionContainer = productsCollectionContainer;
             this.stringGetDelegate = stringGetDelegate;
         }
 
@@ -36,19 +35,7 @@ namespace GOG.Controllers
             return Find(p => p.Id == id);
         }
 
-        public event EventHandler<Type> OnProductUpdated;
-
         protected virtual string GetRequestTemplate()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual string GetRequestDetails(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual bool Skip(Product product)
         {
             throw new NotImplementedException();
         }
@@ -58,30 +45,29 @@ namespace GOG.Controllers
             throw new NotImplementedException();
         }
 
-        public async Task Update(IConsoleController consoleController)
+        public async Task Update(IList<string> items, IConsoleController consoleController = null) 
         {
-            if (productsCollectionContainer == null ||
-                stringGetDelegate == null)
+            if (stringGetDelegate == null)
             {
                 throw new InvalidOperationException(@"To use Update method 
-                    you need to construct ProductCoreController instance 
-                    with ICollectionContainer, IStringGetController and 
+                    you need to construct IStringGetController and 
                     override protected methods in child class.");
             }
 
-            foreach (var product in productsCollectionContainer.Collection)
+            foreach (var item in items)
             {
-                if (Skip(product)) continue;
-
                 string requestUri = string.Format(
                     GetRequestTemplate(),
-                    GetRequestDetails(product));
+                    item);
 
                 var dataString = await stringGetDelegate.GetString(requestUri);
 
                 var data = Deserialize(dataString);
 
-                data.Id = product.Id;
+                if (OnBeforeAdding != null)
+                {
+                    OnBeforeAdding(ref data, item);
+                }
 
                 Add(data);
 

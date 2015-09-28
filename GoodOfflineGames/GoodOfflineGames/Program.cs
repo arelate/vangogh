@@ -39,6 +39,11 @@ namespace GOG
             saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
         }
 
+        static void OnBeforeGameDetailsAdding(ref GameDetails data, string item)
+        {
+            data.Id = long.Parse(item);
+        }
+
         static void Main(string[] args)
         {
             #region IO variables
@@ -125,18 +130,13 @@ namespace GOG
 
             IProductCoreController<ProductData> productsDataController = new ProductDataController(
                 productsData,
-                productsController,
                 gogDataController,
                 jsonStringController);
 
             IProductCoreController<GameDetails> gamesDetailsController = new GameDetailsController(
                 gamesDetails,
-                productsController,
                 networkController,
                 jsonStringController,
-                ownedController,
-                updatedController,
-                productsDataController,
                 gameDetailsLanguages);
 
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
@@ -281,7 +281,19 @@ namespace GOG
 
             productsDataController.OnProductUpdated += OnProductDataUpdated;
 
-            productsDataController.Update(consoleController).Wait();
+            var productWithoutProductData = new List<string>();
+
+            foreach (var p in products)
+            {
+                var existingProductData = productsDataController.Find(p.Id);
+                if (existingProductData != null) continue;
+
+                if (string.IsNullOrEmpty(p.Url)) continue;
+
+                productWithoutProductData.Add(p.Url);
+            }
+
+            productsDataController.Update(productWithoutProductData, consoleController).Wait();
 
             saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
 
@@ -294,8 +306,22 @@ namespace GOG
             consoleController.Write("Updating game details...");
 
             gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
+            gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
 
-            gamesDetailsController.Update(consoleController).Wait();
+            var ownedProductsWithoutGameDetails = new List<string>();
+
+            foreach (var op in owned)
+            {
+                if (!updatedController.Contains(op))
+                {
+                    var existingGameDetails = gamesDetailsController.Find(op);
+                    if (existingGameDetails != null) continue;
+
+                    ownedProductsWithoutGameDetails.Add(op.ToString());
+                }
+            }
+
+            gamesDetailsController.Update(ownedProductsWithoutGameDetails, consoleController).Wait();
 
             saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 

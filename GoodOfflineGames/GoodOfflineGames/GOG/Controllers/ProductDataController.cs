@@ -13,12 +13,9 @@ namespace GOG.Controllers
 
         public ProductDataController(
             IList<ProductData> productsData,
-            ICollectionContainer<Product> productsCollectionContainer,
             IStringGetController stringGetDelegate,
             IDeserializeDelegate<string> stringDeserializeController) :
-            base(productsData,
-                productsCollectionContainer,
-                stringGetDelegate)
+            base(productsData, stringGetDelegate)
         {
             this.stringDeserializeController = stringDeserializeController;
         }
@@ -28,20 +25,15 @@ namespace GOG.Controllers
             return Urls.GameProductDataPageTemplate;
         }
 
-        protected override string GetRequestDetails(Product product)
-        {
-            return product.Url;
-        }
+        //protected override bool Skip(Product product)
+        //{
+        //    var existingProductData = Find(product.Id);
+        //    if (existingProductData != null) return true;
 
-        protected override bool Skip(Product product)
-        {
-            var existingProductData = Find(product.Id);
-            if (existingProductData != null) return true;
+        //    if (string.IsNullOrEmpty(product.Url)) return true;
 
-            if (string.IsNullOrEmpty(product.Url)) return true;
-
-            return false;
-        }
+        //    return false;
+        //}
 
         protected override ProductData Deserialize(string data)
         {

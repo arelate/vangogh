@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 namespace GOG.Interfaces
 {
-    public interface IUpdateDelegate
+    public delegate void BeforeAddingDelegate<Type>(ref Type data, string item);
+
+    public interface IUpdateDelegate<Type>
     {
-        Task Update(IConsoleController consoleController = null);
+        Task Update(IList<string> items, IConsoleController consoleController = null);
     }
 
     public interface IProductCoreController<Type>:
         ICollectionController<Type>,
         IFindDelegate<long, Type>,
-        IUpdateDelegate
+        IUpdateDelegate<Type>
     {
         event EventHandler<Type> OnProductUpdated;
+        event BeforeAddingDelegate<Type> OnBeforeAdding;
     }
 }
