@@ -39,7 +39,6 @@ namespace GoodOfflineGames.Tests
             productsController = new ProductsController(products);
 
             productDataController = new ProductDataController(productsData, 
-                productsController, 
                 gogDataController, 
                 stringDeserializeDelegate);
         }
@@ -49,7 +48,7 @@ namespace GoodOfflineGames.Tests
         {
             try
             {
-                productDataController.Update().Wait();
+                productDataController.Update(new List<string>()).Wait();
             }
             catch
             {
@@ -62,21 +61,13 @@ namespace GoodOfflineGames.Tests
         {
             productsData.Clear();
 
-            var p = new Product();
-            p.Id = 1;
-            p.Url = "{0}";
+            var items = new List<string>() { "{0}" };
 
-            productsController.Add(p);
-
-            Assert.IsNotNull(productsController.Collection);
-            Assert.AreEqual(productsController.Collection.Count, 1);
-
-            productDataController.Update().Wait();
+            productDataController.Update(items).Wait();
 
             Assert.AreEqual(productsData.Count, 1);
             Assert.IsNotNull(productsData[0]);
             Assert.IsNotNull(productsData[0].Id);
-            Assert.AreEqual(productsData[0].Id, p.Id);
             Assert.IsFalse(string.IsNullOrEmpty(productsData[0].Title));
             Assert.IsFalse(string.IsNullOrWhiteSpace(productsData[0].Title));
         }

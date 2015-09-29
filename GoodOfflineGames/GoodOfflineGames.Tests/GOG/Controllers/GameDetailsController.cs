@@ -60,7 +60,6 @@ namespace GoodOfflineGames.Tests
             productsController = new ProductsController(products);
 
             productDataController = new ProductDataController(productsData,
-                productsController,
                 stringNetworkController,
                 stringDeserializeDelegate);
 
@@ -71,29 +70,21 @@ namespace GoodOfflineGames.Tests
             updatedController = new UpdatedController(updated);
 
             gameDetailsController = new GameDetailsController(gameDetails,
-                productsController,
                 stringNetworkController,
                 stringDeserializeDelegate,
-                ownedController,
-                updatedController,
-                productDataController,
                 supportedLanguages);
         }
 
         private void UpdateGameDetailsForProduct(Product product)
         {
             products.Clear();
-            productsData.Clear();
-
             productsController.Add(product);
 
-            var productData = new ProductData();
-            productData.Id = productWithDLC.Id;
-            productDataController.Add(productData);
+            var items = new List<string>() { product.Id.ToString() };
 
             gameDetails.Clear();
 
-            gameDetailsController.Update().Wait();
+            gameDetailsController.Update(items).Wait();
         }
 
         [TestMethod]

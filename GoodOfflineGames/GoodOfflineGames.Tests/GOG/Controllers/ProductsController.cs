@@ -28,7 +28,7 @@ namespace GoodOfflineGames.Tests
         {
             try
             {
-                productsController.Update().Wait();
+                productsController.Update(null).Wait();
             }
             catch
             {
