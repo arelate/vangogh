@@ -32,7 +32,7 @@
             margin-left: 0;
             margin-right: 2em;
             cursor: pointer;
-            color: #667788;
+            color: #aabbcc;
             display: inline-block;
         }
 
@@ -135,6 +135,15 @@
     <script src="./productsdata.js"></script>
     <script src="./gamedetails.js"></script>
     <script>
+
+        // TODO: mark DLC product as owned based on GameDetails
+        // since GameDetails don't contain ids for DLCs - we'll need to check requiredProducts and if not empty we can go to that required product 
+        // and check by title?
+        // TODO: also show GameDetails for products no longer available (products[] doesn't contain product with given id)
+        // where to get images?
+        // TODO: do manual bundling to properly attribute things like Descent 1+2 as owned
+        // duh
+
         "use strict";
 
         var $ = function (id) {
@@ -240,6 +249,23 @@
 
                 gameDetailsContainer.classList.remove("hidden");
             }
+            var getOwnedProductsAndDLCs = function () {
+                var result = [];
+
+                getOwnedProductsAndDLCsRecursive(gamedetails, result);
+
+                return result;
+            }
+            var getOwnedProductsAndDLCsRecursive = function (details, result) {
+                if (!details) return;
+                for (var ii=0;ii<details.length;ii++) {
+                    result.push(details[ii].id);
+                    if (details[ii].dlcs &&
+                        details[ii].dlcs.length) {
+                        getOwnedProductsAndDLCsRecursive(details[ii].dlcs, result);
+                    }
+                }
+            }
             var init = function (productElements) {
                 for (var ii = 0; ii < productElements.length; ii++) {
                     productElements[ii].addEventListener("click", function (e) {
@@ -250,7 +276,8 @@
             }
             return {
                 "init": init,
-                "getGameDetailsById": getGameDetailsById
+                "getGameDetailsById": getGameDetailsById,
+                "getOwnedProductsAndDLCs": getOwnedProductsAndDLCs
             }
         }();
 
@@ -279,7 +306,7 @@
                     if (p.worksOn.Linux) parts.push("linux");
 
                     if (updated.indexOf(p.id) > -1) parts.push("updated");
-                    if (owned.indexOf(p.id) > -1) parts.push("owned");
+                    if (ownedProductsAndDLCs.indexOf(p.id) > -1) parts.push("owned");
                     if (wishlisted.indexOf(p.id) > -1) parts.push("wishlisted");
 
                     searchIndex.push(parts.join(" "));
@@ -308,7 +335,7 @@
         var ModelProvider = function () {
             var getProductModel = function (product) {
                 var productClass = "";
-                if (owned.indexOf(product.id) > -1) productClass = "owned";
+                if (ownedProductsAndDLCs.indexOf(product.id) > -1) productClass = "owned";
                 if (wishlisted.indexOf(product.id) > -1) productClass = "wishlisted";
                 if (updated.indexOf(product.id) > -1) productClass += " updated";
 
@@ -383,7 +410,11 @@
 
         }();
 
+        var ownedProductsAndDLCs;
+
         document.addEventListener("DOMContentLoaded", function () {
+
+            ownedProductsAndDLCs = GameDetails.getOwnedProductsAndDLCs();
 
             Cache.init(products);
             var html = "";
