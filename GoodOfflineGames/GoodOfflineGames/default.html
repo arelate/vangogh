@@ -23,6 +23,7 @@
         #productsContainer,
         #searchResults {
             margin-top: 1em;
+            margin-bottom: 10em;
         }
 
         .product {
@@ -64,6 +65,49 @@
             color: white;
             text-decoration: none;
         }
+
+        #gameDetailsContainer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: auto;
+            background: inherit;
+            border-top: 1px solid #001122;
+            padding: 1em;
+            max-height: 10em;
+        }
+
+            #gameDetailsContainer img {
+                width: 192px;
+                height: 110px;
+                border: 0;
+                display: inline-block;
+            }
+
+            #gameDetailsContainer .detailsContainer {
+                display: inline-block;
+                vertical-align: top;
+                color: white;
+                margin-left: 0.5em;
+                font-weight: 200;
+            }
+
+                #gameDetailsContainer .detailsContainer > .title {
+                    font-size: 1.4em;
+                    margin-bottom: 0.4em;
+                }
+                
+                #gameDetailsContainer .detailsContainer .developer,
+                #gameDetailsContainer .detailsContainer .publisher {
+                    font-size: 0.75em;
+                }
+
+                #gameDetailsContainer .detailsContainer .developer .title,
+                #gameDetailsContainer .detailsContainer .publisher .title {
+                    font-size: inherit;
+                    font-weight: bolder;
+                }
     </style>
 </head>
 <body>
@@ -75,6 +119,15 @@
         <a id="showAllSearchResults" href="#">Show all <span class="resultsCount"></span> results...</a>
     </div>
     <div id="productsContainer"></div>
+    <div id="gameDetailsContainer" class="hidden">
+        <img class="image" />
+        <div class="detailsContainer">
+            <div class="title">Title</div>
+            <div class="developer">Developer: <span class="title">N/A</span></div>
+            <div class="publisher">Publisher: <span class="title">N/A</span></div>
+        </div>
+    </div>
+
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
     <script src="./updated.js"></script>
@@ -159,6 +212,48 @@
             }
         }();
 
+        var GameDetails = function () {
+            var gameDetailsContainer = $("gameDetailsContainer");
+            var gameDetailsImage = gameDetailsContainer.querySelector(".image");
+            var gameDetailsTitle = gameDetailsContainer.querySelector(".title");
+            var developerTitle = gameDetailsContainer.querySelector(".developer .title");
+            var publisherTitle = gameDetailsContainer.querySelector(".publisher .title");
+
+            var getGameDetailsById = function (id) {
+                for (var ii = 0; ii < gamedetails.length; ii++) {
+                    if (gamedetails[ii].id === id) {
+                        return gamedetails[ii];
+                    }
+                }
+            }
+            var show = function (id) {
+                var pd = ProductData.getProductDataById(id);
+                if (!pd) return;
+
+                var imageParts = pd.image.split("/");
+                var imageLocalUri = imageParts[imageParts.length - 1];
+
+                gameDetailsImage.srcset = "_images/" + imageLocalUri + "_196.jpg 1x, _images/" + imageLocalUri + "_392.jpg 2x";
+                gameDetailsTitle.textContent = pd.title;
+                developerTitle.textContent = pd.developer.name;
+                publisherTitle.textContent = pd.publisher.name;
+
+                gameDetailsContainer.classList.remove("hidden");
+            }
+            var init = function (productElements) {
+                for (var ii = 0; ii < productElements.length; ii++) {
+                    productElements[ii].addEventListener("click", function (e) {
+                        var id = parseInt(e.currentTarget.getAttribute("data-id"));
+                        show(id);
+                    });
+                }
+            }
+            return {
+                "init": init,
+                "getGameDetailsById": getGameDetailsById
+            }
+        }();
+
         var SearchIndex = function () {
             var searchIndex = [];
             var init = function (products) {
@@ -183,9 +278,9 @@
                     if (p.worksOn.Mac) parts.push("mac osx");
                     if (p.worksOn.Linux) parts.push("linux");
 
-                    if (updated.indexOf(p.Id) > -1) parts.push("updated");
-                    if (owned.indexOf(p.Id) > -1) parts.push("owned");
-                    if (wishlisted.indexOf(p.Id) > -1) parts.push("wishlisted");
+                    if (updated.indexOf(p.id) > -1) parts.push("updated");
+                    if (owned.indexOf(p.id) > -1) parts.push("owned");
+                    if (wishlisted.indexOf(p.id) > -1) parts.push("wishlisted");
 
                     searchIndex.push(parts.join(" "));
                 });
@@ -263,9 +358,16 @@
                         showAllSearchResults.classList.add("hidden");
                     }
 
+                    var clonedProductElements = [];
+
                     for (var ii = 0; ii < length; ii++) {
-                        searchResultsContainer.appendChild(productElements[matchingIndexes[ii]].cloneNode(true));
+                        var clonedProductElement = productElements[matchingIndexes[ii]].cloneNode(true);
+                        clonedProductElements.push(clonedProductElement);
+                        searchResultsContainer.appendChild(clonedProductElement);
                     }
+
+                    GameDetails.init(clonedProductElements);
+
                     searchResults.classList.remove("hidden");
 
                 } else {
@@ -304,6 +406,8 @@
             showAllSearchResults.addEventListener("click", function () {
                 Search.search(searchInput.value.toLowerCase(), true);
             });
+
+            GameDetails.init(document.querySelectorAll("#productsContainer > .product"));
 
         });
     </script>
