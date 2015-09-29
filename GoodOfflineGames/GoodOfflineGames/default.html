@@ -1,213 +1,92 @@
 ﻿<!doctype html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>GOG.com collection</title>
     <style>
         * {
             font-family: "Segoe UI";
-            font-size: 10px;
+            font-size: 17px;
             box-sizing: border-box;
         }
 
         body {
             background: black;
             padding: 0em;
-            margin: 0em;
+            margin: 1em;
         }
 
         .hidden {
             display: none !important;
         }
 
-        #products {
-            padding-bottom: 20em;
-        }
-
-        #products,
-        #searchContainer {
-            text-align: center;
-            position: relative;
-            width: 98%;
-            margin: 4em auto;
+        #productsContainer,
+        #searchResults {
+            margin-top: 1em;
         }
 
         .product {
-            width: 196px;
-            height: 110px;
-            margin: 0.2em 0.2em 0;
-            display: inline-block;
-            position: relative;
+            line-height: 32px;
+            margin: 0.2em;
+            margin-left: 0;
+            margin-right: 2em;
             cursor: pointer;
-            overflow: hidden;
+            color: #667788;
+            display: inline-block;
         }
 
-            .product .state,
-            .product .updated {
-                display: none;
-                padding: 0.2em 0.5em;
-                position: absolute;
-                outline: black 1px solid;
-                user-select: none;
-                cursor: default;
+            .product.wishlisted {
+                color: #FFBD00;
+                font-style: italic;
             }
 
-                .product.wishlisted .wishlisted,
-                .product.owned .owned,
-                .product.available .available,
-                .product.updated .updated {
-                    display: block;
-                }
-
-            .product img {
-                width: 100%;
-                height: 100%;
-                padding: 0;
-                margin: 0;
+            .product.owned {
+                color: #7FAF1B;
             }
 
-            .product .title {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                color: white;
-                padding: 0.5em;
-                text-transform: uppercase;
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                background: rgba(0,0,0,0.75);
-                user-select: none;
+            .product.updated {
+                color: #DB4128;
+                font-weight: 600;
             }
 
-            .product .updated {
-                right: 0;
-                background: red;
-                color: white;
-            }
-
-        .state.wishlisted {
-            background: #F0CE4E;
+        #searchResults a {
+            margin-top: 2em;
+            display: inline-block;
         }
 
-        .state.owned {
-            background: #55A300;
+        #searchContainer #searchInput {
+            padding: 0.25em;
+            border-radius: 0.2em;
+            border: none;
+        }
+
+        #searchResults #showAllSearchResults {
             color: white;
+            text-decoration: none;
         }
-
-        .state.available {
-            background: #5E4694;
-            color: white;
-        }
-
-        #search {
-            position: relative;
-            font-size: 1.75em;
-            padding: 0.2em;
-            width: 50%;
-            max-width: 25em;
-        }
-
-        #productDetails {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 2em;
-            padding-bottom: 3em;
-            background: black;
-            color: white;
-            outline: 1px solid rgba(255,255,255,0.25);
-        }
-
-            #productDetails .title {
-                font-size: 3em;
-                font-weight: 200;
-                margin-bottom: 0.5em;
-            }
-
-            #productDetails .label,
-            #productDetails .value {
-                font-size: 1.25em;
-                padding-right: 0.5em;
-            }
-
-            #productDetails .value {
-                font-weight: bold;
-            }
-
-            #productDetails a {
-                text-decoration: none;
-                color: inherit;
-            }
-
-            #productDetails .downloaderLinks {
-                margin-top: 1em;
-            }
     </style>
 </head>
-
 <body>
     <div id="searchContainer">
-        <input id="search" type="text" placeholder="Type to search..." tabindex="0" />
+        <input id="searchInput" type="text" placeholder="Type to search..." tabindex="0" />
     </div>
-
-    <div id="products"></div>
-
-    <div id="productDetails" class="hidden">
-
-        <div class="title"></div>
-        <div>
-            <span class="developer"><span class="label">Developer:</span><span class="value"></span></span>
-            <span class="publisher"><span class="label">Publisher:</span><span class="value"></span></span>
-            <span class="series hidden"><span class="label">Series:</span><span class="value"></span></span>
-        </div>
-        <div class="downloaderLinks hidden">
-            <a class="value" href="#">Downloader links</a>
-        </div>
+    <div id="searchResults" class="hidden">
+        <div class="container"></div>
+        <a id="showAllSearchResults" href="#">Show all <span class="resultsCount"></span> results...</a>
     </div>
-
+    <div id="productsContainer"></div>
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
     <script src="./updated.js"></script>
     <script src="./wishlisted.js"></script>
     <script src="./productsdata.js"></script>
     <script src="./gamedetails.js"></script>
-
     <script>
         "use strict";
 
         var $ = function (id) {
             return document.getElementById(id);
         }
-
-        // srcset polyfill
-        var ImageSources = function () {
-            var images = [];
-            // try to show ~1000 images over first 1 second
-            var imagesBatchSize = 50;
-            var setSources = function () {
-                for (var ii = 0; ii < imagesBatchSize; ii++) {
-                    var image = images.shift();
-                    if (image == null) continue;
-                    image.srcset = image.getAttribute("data-srcset");;
-                }
-                if (images.length) requestAnimationFrame(setSources);
-            };
-            // initialize
-            var init = function () {
-                var imageElements = document.getElementsByTagName("img");
-                for (var ii = 0; ii < imageElements.length; ii++) {
-                    if (imageElements[ii].srcset) continue;
-                    images.push(imageElements[ii]);
-                }
-                setSources();
-            };
-            return {
-                "init": init
-            };
-        }();
 
         var Cache = function () {
             var cache = [];
@@ -234,13 +113,12 @@
         }();
 
         var DataBinding = function () {
-            var productTemplate = "<div class='product {{productClass}}' data-id='{{id}}'>" +
-                "<div class='state wishlisted'>WISHLISTED</div>" +
-                "<div class='state owned'>OWNED</div>" +
-                "<div class='updated'>UPDATED</div>" +
-                "<img data-srcset='_images/{{image}}_196.jpg 1x, _images/{{image}}_392.jpg 2x' />" +
-                "<div class='title' title='{{title}}' >{{title}}</div>" +
-                "</div>";
+            var productTemplate = "<span class='product {{productClass}}' data-id='{{id}}'>" +
+              "<span class='title' title='{{title}}' >{{title}}</span>" +
+              "<span class='wishlisted'></span>" +
+              "<span class='owned'></span>" +
+              "<span class='updated'></span>" +
+              "</span>";
             var viewCache = [];
             var bindToData = function (template, model) {
                 var result = template;
@@ -268,11 +146,24 @@
             }
         }();
 
+        var ProductData = function () {
+            var getProductDataById = function (id) {
+                for (var ii = 0; ii < productsdata.length; ii++) {
+                    if (productsdata[ii].id === id) {
+                        return productsdata[ii];
+                    }
+                }
+            }
+            return {
+                "getProductDataById": getProductDataById
+            }
+        }();
+
         var SearchIndex = function () {
             var searchIndex = [];
             var init = function (products) {
                 products.forEach(function (p) {
-                    var pd = p.productData;
+                    var pd = ProductData.getProductDataById(p.id);
                     var parts = [];
 
                     parts.push(p.title.toLowerCase());
@@ -282,7 +173,7 @@
                         if (pd.developer) parts.push(pd.developer.name.toLowerCase());
 
                         if (pd.genres) {
-                            for (var gg = 0; gg < p.productData.genres.length; gg++) {
+                            for (var gg = 0; gg < pd.genres.length; gg++) {
                                 parts.push(pd.genres[gg].name.toLowerCase());
                             }
                         }
@@ -321,7 +212,7 @@
 
         var ModelProvider = function () {
             var getProductModel = function (product) {
-                var productClass;
+                var productClass = "";
                 if (owned.indexOf(product.id) > -1) productClass = "owned";
                 if (wishlisted.indexOf(product.id) > -1) productClass = "wishlisted";
                 if (updated.indexOf(product.id) > -1) productClass += " updated";
@@ -344,116 +235,50 @@
         }();
 
         var Search = function () {
-            var show = [];
-            var hide = [];
-            var batchSize = 50;
-            var productElements = document.getElementsByClassName("product");
-            var callback = undefined;
+            var productElements = undefined;
+            var searchResults = $("searchResults");
+            var searchResultsContainer = searchResults.querySelector(".container");
+            var productsContainer = $("productsContainer");
+            var showAllResultsLink = $("showAllSearchResults");
+            var resultsCount = showAllResultsLink.querySelector(".resultsCount");
+            var searchResultsLimit = 15;
+            var search = function (text, showAllResults) {
 
-            var search = function (text) {
+                if (productElements === undefined) {
+                    productElements = document.querySelectorAll("#productsContainer > .product");
+                }
 
-                if (callback) cancelAnimationFrame(callback);
+                if (text.length > 0) {
 
-                show = [];
-                hide = [];
-                var matchingIndexes = SearchIndex.match(text);
-                for (var ii = 0; ii < productElements.length; ii++) {
-                    if (matchingIndexes.indexOf(ii) === -1) {
-                        hide.push(ii);
+                    searchResultsContainer.innerHTML = "";
+                    productsContainer.classList.add("hidden");
+
+                    var matchingIndexes = SearchIndex.match(text);
+                    var length = showAllResults ? matchingIndexes.length : Math.min(matchingIndexes.length, searchResultsLimit);
+
+                    if (!showAllResults && matchingIndexes.length > searchResultsLimit) {
+                        showAllSearchResults.classList.remove("hidden");
+                        resultsCount.textContent = matchingIndexes.length;
                     } else {
-                        show.push(ii);
+                        showAllSearchResults.classList.add("hidden");
                     }
+
+                    for (var ii = 0; ii < length; ii++) {
+                        searchResultsContainer.appendChild(productElements[matchingIndexes[ii]].cloneNode(true));
+                    }
+                    searchResults.classList.remove("hidden");
+
+                } else {
+                    searchResults.classList.add("hidden");
+                    productsContainer.classList.remove("hidden");
                 }
-                callback = requestAnimationFrame(showResults);
-            }
-            var showResults = function (text) {
 
-                for (var ii = 0; ii < batchSize; ii++) {
 
-                    var hideNext = undefined;
-                    var showNext = undefined;
-
-                    if (hide.length) hideNext = hide.shift();
-                    else if (show.length) showNext = show.shift();
-
-                    if (hideNext !== undefined) productElements[hideNext].classList.add("hidden");
-                    else if (showNext !== undefined) productElements[showNext].classList.remove("hidden");
-
-                    if (show.length || hide.length) callback = requestAnimationFrame(showResults);
-                }
             }
             return {
                 "search": search
             }
 
-        }();
-
-        var ProductDetails = function () {
-            var productDetails = $("productDetails");
-            var pdTitle = productDetails.querySelector(".title");
-            var pdPublisher = productDetails.querySelector(".publisher .value");
-            var pdDeveloper = productDetails.querySelector(".developer .value");
-            var pdSeries = productDetails.querySelector(".series .value");
-            var pdSeriesContainer = productDetails.querySelector(".series");
-            var pdDownloaderLinksTitle = productDetails.querySelector(".downloaderLinks");
-            var pdDownloaderLinks = pdDownloaderLinksTitle.querySelector("a");
-
-            var getProductById = function (id) {
-                var productId = parseInt(id);
-                for (var ii = 0; ii < products.length; ii++) {
-                    if (products[ii].id == productId) {
-                        return products[ii];
-                    }
-                }
-            }
-            var show = function (id) {
-                var product = getProductById(id);
-                pdTitle.textContent = product.title;
-                // available in store
-                var pdIndex = productsdata.indexOf(id);
-                if (pdIndex > -1) {
-                    var pd = productsdata[pdIndex];
-                    pdPublisher.textContent = pd.publisher.name;
-                    pdDeveloper.textContent = pd.developer.name;
-
-                    if (pd.series.name) {
-                        pdSeries.textContent = pd.series.name;
-                        pdSeriesContainer.classList.remove("hidden");
-                    } else {
-                        pdSeriesContainer.classList.add("hidden");
-                    }
-                } else {
-                    pdPublisher.textContent = "N/A";
-                    pdDeveloper.textContent = "N/A";
-                }
-
-                // owned
-                if (product.gameDetails) {
-                    //pdDownloaderLinksTitle.classList.remove("hidden");
-
-                } else {
-                    pdDownloaderLinksTitle.classList.add("hidden");
-                }
-                //alert(product.title);
-                productDetails.classList.remove("hidden");
-
-            }
-            var init = function () {
-                var products = document.getElementsByClassName("product");
-                for (var ii = 0; ii < products.length; ii++) {
-                    products[ii].addEventListener("click", function (e) {
-                        show(e.currentTarget.getAttribute("data-id"));
-                        e.stopPropagation();
-                    });
-                }
-                document.body.addEventListener("click", function () {
-                    productDetails.classList.add("hidden");
-                });
-            }
-            return {
-                "show": show,
-                "init": init
-            }
         }();
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -465,22 +290,22 @@
                 html += DataBinding.createProductView(products[ii], ModelProvider.getProductModel);
             }
 
-            document.getElementById("products").innerHTML = html;
-
-            ProductDetails.init();
+            document.getElementById("productsContainer").innerHTML = html;
 
             SearchIndex.init(products);
 
-            ImageSources.init();
+            var searchInput = $("searchInput");
+            //var searchResults = $("searchResults");
+            searchInput.addEventListener("input", function (e) {
+                Search.search(searchInput.value.toLowerCase())
+            });
 
-            var search = $("search");
-            var searchResults = $("searchResults");
-            search.addEventListener("input", function (e) {
-                Search.search(e.currentTarget.value.toLowerCase())
+            var showAllSearchResults = $("showAllSearchResults");
+            showAllSearchResults.addEventListener("click", function () {
+                Search.search(searchInput.value.toLowerCase(), true);
             });
 
         });
     </script>
 </body>
-
 </html>
