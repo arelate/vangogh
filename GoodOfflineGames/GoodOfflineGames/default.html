@@ -46,8 +46,24 @@
             }
 
             .product.updated {
-                color: #DB4128;
-                font-weight: 600;
+            }
+
+                .product.updated::after {
+                    content: "*";
+                    margin-left: 0.1em;
+                    color: #DB4128;
+                }
+
+            .product.dlc::after {
+                content: "DLC";
+                background: #420943;
+                font-variant: small-caps;
+                border-radius: 0.2em;
+                padding: 0.1em 0.25em;
+                margin-left: 0.2em;
+                font-size: 0.6em;
+                vertical-align: top;
+                color: white;
             }
 
         #searchResults a {
@@ -97,17 +113,17 @@
                     font-size: 1.4em;
                     margin-bottom: 0.4em;
                 }
-                
+
                 #gameDetailsContainer .detailsContainer .developer,
                 #gameDetailsContainer .detailsContainer .publisher {
                     font-size: 0.75em;
                 }
 
-                #gameDetailsContainer .detailsContainer .developer .title,
-                #gameDetailsContainer .detailsContainer .publisher .title {
-                    font-size: inherit;
-                    font-weight: bolder;
-                }
+                    #gameDetailsContainer .detailsContainer .developer .title,
+                    #gameDetailsContainer .detailsContainer .publisher .title {
+                        font-size: inherit;
+                        font-weight: bolder;
+                    }
     </style>
 </head>
 <body>
@@ -136,11 +152,8 @@
     <script src="./gamedetails.js"></script>
     <script>
 
-        // TODO: mark DLC product as owned based on GameDetails
-        // since GameDetails don't contain ids for DLCs - we'll need to check requiredProducts and if not empty we can go to that required product 
-        // and check by title?
-        // TODO: also show GameDetails for products no longer available (products[] doesn't contain product with given id)
-        // where to get images?
+        // TODO: also show Products for no longer available (products[] doesn't contain product with given id, but owned does)
+
         // TODO: do manual bundling to properly attribute things like Descent 1+2 as owned
         // duh
 
@@ -150,39 +163,22 @@
             return document.getElementById(id);
         }
 
-        var Cache = function () {
-            var cache = [];
-            var init = function (elements) {
-                for (var ii = 0; ii < elements.length; ii++) {
-                    cache.push(elements[ii].id);
-                }
-            }
-            var getIndexById = function (id) {
-                return cache.indexOf(id);
-            }
-            var getIdsByIndexes = function (indexes) {
-                var ids = [];
-                for (var ii = 0; ii < indexes.length; ii++) {
-                    ids.push(cache[indexes[ii]]);
-                }
-                return ids;
+        var Templates = function () {
+            var getProductTemplate = function () {
+                return "<span class='product {{productClass}}' data-id='{{id}}'>" +
+                "<span class='title' title='{{title}}' >{{title}}</span>" +
+                "<span class='wishlisted'></span>" +
+                "<span class='owned'></span>" +
+                "<span class='updated'></span>" +
+                "</span>";
             }
             return {
-                "init": init,
-                "getIndexById": getIndexById,
-                "getIdsByIndexes": getIdsByIndexes
+                "getProductTemplate": getProductTemplate
             }
         }();
 
-        var DataBinding = function () {
-            var productTemplate = "<span class='product {{productClass}}' data-id='{{id}}'>" +
-              "<span class='title' title='{{title}}' >{{title}}</span>" +
-              "<span class='wishlisted'></span>" +
-              "<span class='owned'></span>" +
-              "<span class='updated'></span>" +
-              "</span>";
-            var viewCache = [];
-            var bindToData = function (template, model) {
+        var Views = function () {
+            var bindTemplateToModel = function (template, model) {
                 var result = template;
                 for (var property in model) {
                     var replacedProperty = "{{" + property + "}}";
@@ -192,16 +188,9 @@
                 return result;
             }
             var createProductView = function (product, modelProvider) {
-                var view = undefined;
-                var index = Cache.getIndexById(product.id);
-                if (viewCache[index]) {
-                    view = viewCache[index];
-                } else {
-                    var model = modelProvider(product);
-                    view = bindToData(productTemplate, model);
-                    viewCache[index] = view;
-                }
-                return view;
+                var model = modelProvider(product);
+                var productTemplate = Templates.getProductTemplate();
+                return bindTemplateToModel(productTemplate, model);
             }
             return {
                 "createProductView": createProductView
@@ -249,23 +238,6 @@
 
                 gameDetailsContainer.classList.remove("hidden");
             }
-            var getOwnedProductsAndDLCs = function () {
-                var result = [];
-
-                getOwnedProductsAndDLCsRecursive(gamedetails, result);
-
-                return result;
-            }
-            var getOwnedProductsAndDLCsRecursive = function (details, result) {
-                if (!details) return;
-                for (var ii=0;ii<details.length;ii++) {
-                    result.push(details[ii].id);
-                    if (details[ii].dlcs &&
-                        details[ii].dlcs.length) {
-                        getOwnedProductsAndDLCsRecursive(details[ii].dlcs, result);
-                    }
-                }
-            }
             var init = function (productElements) {
                 for (var ii = 0; ii < productElements.length; ii++) {
                     productElements[ii].addEventListener("click", function (e) {
@@ -276,8 +248,20 @@
             }
             return {
                 "init": init,
-                "getGameDetailsById": getGameDetailsById,
-                "getOwnedProductsAndDLCs": getOwnedProductsAndDLCs
+                "getGameDetailsById": getGameDetailsById
+            }
+        }();
+
+        var Products = function () {
+            var getProductById = function (id) {
+                for (var ii = 0; ii < products.length; ii++) {
+                    if (products[ii].id === id) {
+                        return products[ii];
+                    }
+                }
+            }
+            return {
+                "getProductById": getProductById
             }
         }();
 
@@ -305,9 +289,10 @@
                     if (p.worksOn.Mac) parts.push("mac osx");
                     if (p.worksOn.Linux) parts.push("linux");
 
-                    if (updated.indexOf(p.id) > -1) parts.push("updated");
-                    if (ownedProductsAndDLCs.indexOf(p.id) > -1) parts.push("owned");
-                    if (wishlisted.indexOf(p.id) > -1) parts.push("wishlisted");
+                    if (Updated.check(p.id)) parts.push("updated");
+                    if (Owned.check(p.id)) parts.push("owned");
+                    if (Wishlisted.check(p.id)) parts.push("wishlisted");
+                    if (DLC.isDLCById(p.id)) parts.push("dlc");
 
                     searchIndex.push(parts.join(" "));
                 });
@@ -332,27 +317,97 @@
             }
         }();
 
-        var ModelProvider = function () {
-            var getProductModel = function (product) {
-                var productClass = "";
-                if (ownedProductsAndDLCs.indexOf(product.id) > -1) productClass = "owned";
-                if (wishlisted.indexOf(product.id) > -1) productClass = "wishlisted";
-                if (updated.indexOf(product.id) > -1) productClass += " updated";
+        var DLC = function () {
+            var isDLCById = function (id) {
+                var productData = ProductData.getProductDataById(id);
+                return isDLCByProductData(productData);
+            }
+            var isDLCByProductData = function (productData) {
+
+                if (!productData) return false;
+
+                return (productData.requiredProducts !== undefined &&
+                        productData.requiredProducts.length > 0);
+            }
+            return {
+                "isDLCById": isDLCById,
+                "isDLCByProductData": isDLCByProductData
+            }
+        }();
+
+        var Owned = function () {
+            var check = function (id) {
+
+                if (owned.indexOf(id) > -1) return true;
+
+                var productData = ProductData.getProductDataById(id);
+
+                if (productData && productData.title === "Walking Dead: 400 Days, The") {
+                    console.log("ja");
+                }
+
+                // return false because if that is not DLC, we should have passed the check earlier
+                if (!DLC.isDLCByProductData(productData)) return false;
+
+                for (var rp = 0; rp < productData.requiredProducts.length; rp++) {
+                    var requiredProduct = productData.requiredProducts[rp].id;
+
+                    var gameDetails = GameDetails.getGameDetailsById(requiredProduct);
+
+                    if (!gameDetails ||
+                        !gameDetails.dlcs) continue;
+
+                    if (gameDetails.dlcs.length === 0) continue;
+
+                    for (var dd = 0; dd < gameDetails.dlcs.length; dd++) {
+                        var dlc = gameDetails.dlcs[dd];
+                        if (dlc.title === productData.title) return true;
+                    }
+                }
+            }
+            return {
+                "check": check
+            }
+        }();
+
+        var Updated = function () {
+            var check = function (id) {
+                return updated.indexOf(id) > -1;
+            }
+            return {
+                "check": check
+            }
+        }();
+
+        var Wishlisted = function () {
+            var check = function (id) {
+                return wishlisted.indexOf(id) > -1;
+            }
+            return {
+                "check": check
+            }
+        }();
+
+        var ViewModelProvider = function () {
+            var getProductViewModel = function (product) {
+                var productClass = [];
+                if (Owned.check(product.id)) productClass.push("owned");
+                if (Wishlisted.check(product.id)) productClass.push("wishlisted");
+                if (Updated.check(product.id)) productClass.push("updated");
+                if (DLC.isDLCById(product.id)) productClass.push("dlc");
 
                 var imageParts = product.image.split("/");
                 var image = imageParts[imageParts.length - 1];
 
-                var model = {
+                return {
                     "id": product.id,
-                    "productClass": productClass,
+                    "productClass": productClass.join(" "),
                     "image": image,
                     "title": product.title
                 };
-
-                return model;
             }
             return {
-                "getProductModel": getProductModel
+                "getProductViewModel": getProductViewModel
             }
         }();
 
@@ -410,17 +465,11 @@
 
         }();
 
-        var ownedProductsAndDLCs;
-
         document.addEventListener("DOMContentLoaded", function () {
 
-            ownedProductsAndDLCs = GameDetails.getOwnedProductsAndDLCs();
-
-            Cache.init(products);
             var html = "";
             for (var ii = 0; ii < products.length; ii++) {
-
-                html += DataBinding.createProductView(products[ii], ModelProvider.getProductModel);
+                html += Views.createProductView(products[ii], ViewModelProvider.getProductViewModel);
             }
 
             document.getElementById("productsContainer").innerHTML = html;
