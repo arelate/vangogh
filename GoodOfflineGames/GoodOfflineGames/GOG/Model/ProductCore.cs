@@ -15,6 +15,16 @@ namespace GOG.Model
         [DataMember(Name = "title")]
         public string Title { get; set; }
 
+        //public int Compare(Product x, Product y)
+        //{
+        //    return (int) (x.Id - y.Id);
+        //}
+
+        //public int CompareTo(Product other)
+        //{
+        //    return (int) (Id - other.Id);
+        //}
+
         public bool Equals(ProductCore other)
         {
             return Id.Equals(other.Id);

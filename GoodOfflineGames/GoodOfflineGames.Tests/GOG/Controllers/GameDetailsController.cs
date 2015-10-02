@@ -28,10 +28,10 @@ namespace GoodOfflineGames.Tests
         private Product productWithDLC;
         private Product productWithMultipleLanguages;
 
-        private IList<long> owned;
+        private IList<Product> owned;
         private IList<long> updated;
 
-        private ICollectionController<long> ownedController;
+        private ICollectionController<Product> ownedController;
         private ICollectionController<long> updatedController;
 
         private string[] supportedLanguages;
@@ -63,7 +63,7 @@ namespace GoodOfflineGames.Tests
                 stringNetworkController,
                 stringDeserializeDelegate);
 
-            owned = new List<long>() { productWithDLC.Id, productWithMultipleLanguages.Id };
+            owned = new List<Product>() { productWithDLC, productWithMultipleLanguages };
             ownedController = new OwnedController(owned);
 
             updated = new List<long>() { productWithDLC.Id, productWithMultipleLanguages.Id };

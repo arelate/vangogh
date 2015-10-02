@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 
+using GOG.Model;
+
 namespace GOG.Controllers
 {
-    public class OwnedController: CollectionController<long>
+    public class OwnedController: CollectionController<Product>
     {
-        public OwnedController(IList<long> owned): base(owned)
+        public OwnedController(IList<Product> owned): base(owned)
         {
             // ...
         }

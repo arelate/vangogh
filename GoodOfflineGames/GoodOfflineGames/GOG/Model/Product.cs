@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace GOG.Model
 {
     [DataContract]
-    public class Product: ProductCore
+    public class Product: ProductCore, IEquatable<Product>
     {
         // fields we won't be serializing
 
@@ -35,6 +35,9 @@ namespace GOG.Model
         [DataMember(Name = "worksOn")]
         public WorksOn WorksOn { get; set; }
 
-
+        public bool Equals(Product other)
+        {
+            return Id.Equals(other.Id);
+        }
     }
 }

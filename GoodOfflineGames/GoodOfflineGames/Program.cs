@@ -19,7 +19,7 @@ namespace GOG
         #region Model variables
 
         static IList<Product> products = null;
-        static IList<long> owned = null;
+        static IList<Product> owned = null;
         static IList<long> wishlisted = null;
         static IList<long> updated = null;
         static IList<ProductData> productsData = null;
@@ -84,8 +84,8 @@ namespace GOG
             products = saveLoadHelper.LoadData<List<Product>>(ProductTypes.Products).Result;
             products = products ?? new List<Product>();
 
-            owned = saveLoadHelper.LoadData<List<long>>(ProductTypes.Owned).Result;
-            owned = owned ?? new List<long>();
+            owned = saveLoadHelper.LoadData<List<Product>>(ProductTypes.Owned).Result;
+            owned = owned ?? new List<Product>();
 
             updated = saveLoadHelper.LoadData<List<long>>(ProductTypes.Updated).Result;
             updated = updated ?? new List<long>();
@@ -112,9 +112,9 @@ namespace GOG
                 networkController,
                 consoleController);
 
-            IFilterDelegate<Product, long> existingProductsFilter = new ExistingProductsFilter();
+            IFilterDelegate<Product> existingProductsFilter = new ExistingProductsFilter();
 
-            IRequestDelegate<Product, long> pagedResultController = 
+            IRequestDelegate<Product> pagedResultController = 
                 new MultipageRequestController(
                     networkController,
                     jsonStringController,
@@ -125,7 +125,7 @@ namespace GOG
 
             IStringGetController gogDataController = new GOGDataController(networkController);
 
-            ICollectionController<long> ownedController = new OwnedController(owned);
+            ICollectionController<Product> ownedController = new OwnedController(owned);
             ICollectionController<long> updatedController = new UpdatedController(updated);
 
             IProductCoreController<ProductData> productsDataController = new ProductDataController(
@@ -173,15 +173,15 @@ namespace GOG
 
             #region Get new products from gog.com/games
 
-            var productsFilter = new List<long>(products.Count);
-            foreach (var p in products) productsFilter.Add(p.Id);
+            //var productsFilter = new List<long>(products.Count);
+            //foreach (var p in products) productsFilter.Add(p.Id);
 
             consoleController.Write("Requesting new products from {0}...", Urls.GamesAjaxFiltered);
 
             var newProducts = pagedResultController.Request(
                 Urls.GamesAjaxFiltered,
                 QueryParameters.GamesAjaxFiltered,
-                productsFilter).Result;
+                products).Result;
 
             if (newProducts != null)
             {
@@ -201,6 +201,8 @@ namespace GOG
 
             consoleController.Write("Requesting new products from {0}...", Urls.AccountGetFilteredProducts);
 
+
+
             var newOwned = pagedResultController.Request(
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,
@@ -212,7 +214,7 @@ namespace GOG
 
                 for (var oo = newOwned.Count - 1; oo >= 0; oo--)
                 {
-                    ownedController.Insert(0, newOwned[oo].Id);
+                    ownedController.Insert(0, newOwned[oo]);
 
                     // also add to updated list as we haven't downloaded them previously,
                     // so they need to be updated just like other files
@@ -312,9 +314,9 @@ namespace GOG
 
             foreach (var op in owned)
             {
-                if (!updatedController.Contains(op))
+                if (!updatedController.Contains(op.Id))
                 {
-                    var existingGameDetails = gamesDetailsController.Find(op);
+                    var existingGameDetails = gamesDetailsController.Find(op.Id);
                     if (existingGameDetails != null) continue;
 
                     ownedProductsWithoutGameDetails.Add(op.ToString());

@@ -9,20 +9,20 @@ using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
-    class MultipageRequestController : IRequestDelegate<Product, long>
+    class MultipageRequestController : IRequestDelegate<Product>
     {
         private IStringGetController stringGetController;
         private ISerializationController<string> stringifyController;
         private IConsoleController consoleController;
 
-        private IFilterDelegate<Product, long> filterDelegate;
+        private IFilterDelegate<Product> filterDelegate;
         public IWriteController MessageWriteDelegate { get; set; } = null;
 
         public MultipageRequestController(
             IStringGetController stringGetController,
             ISerializationController<string> stringifyController,
             IConsoleController consoleController = null,
-            IFilterDelegate<Product, long> filterDelegate = null)
+            IFilterDelegate<Product> filterDelegate = null)
         {
             this.stringifyController = stringifyController;
             this.stringGetController = stringGetController;
@@ -33,7 +33,7 @@ namespace GOG.Controllers
         public async Task<IList<Product>> Request(
             string uri, 
             IDictionary<string, string> parameters, 
-            IList<long> filter = null)
+            IList<Product> filter = null)
         {
             var currentPage = 1;
             ProductsResult current;
