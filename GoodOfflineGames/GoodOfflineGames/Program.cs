@@ -61,6 +61,8 @@ namespace GOG
             #region Shared IO controllers
 
             IConsoleController consoleController = new ConsoleController();
+            IPostUpdateDelegate postUpdateDelegate = new ConsolePostUpdate(consoleController);
+
             IIOController ioController = new IOController();
             IStorageController<string> storageController = new StorageController(ioController);
             ISerializationController<string> jsonStringController = new JSONStringController();
@@ -118,7 +120,7 @@ namespace GOG
                 new MultipageRequestController(
                     networkController,
                     jsonStringController,
-                    consoleController,
+                    postUpdateDelegate,
                     existingProductsFilter);
 
             IProductCoreController<Product> productsController = new ProductsController(products);
@@ -150,7 +152,7 @@ namespace GOG
             var imagesController = new ImagesController(
                 fileRequestController,
                 ioController,
-                consoleController);
+                postUpdateDelegate);
 
             #endregion
 
@@ -295,7 +297,7 @@ namespace GOG
                 productWithoutProductData.Add(p.Url);
             }
 
-            productsDataController.Update(productWithoutProductData, consoleController).Wait();
+            productsDataController.Update(productWithoutProductData, postUpdateDelegate).Wait();
 
             saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
 
@@ -323,7 +325,7 @@ namespace GOG
                 }
             }
 
-            gamesDetailsController.Update(ownedProductsWithoutGameDetails, consoleController).Wait();
+            gamesDetailsController.Update(ownedProductsWithoutGameDetails, postUpdateDelegate).Wait();
 
             saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 
@@ -347,7 +349,16 @@ namespace GOG
 
             #region Update images
 
+            consoleController.Write("Updating product images...");
+
+            // for all products first
             imagesController.Update(products).Wait();
+
+            // then for owned products that are not in a products collection 
+            // (e.g. no longer sold, part of bundle)
+            imagesController.Update(existingProductsFilter.Filter(owned, products)).Wait();
+
+            consoleController.WriteLine("DONE.");
 
             #endregion
 

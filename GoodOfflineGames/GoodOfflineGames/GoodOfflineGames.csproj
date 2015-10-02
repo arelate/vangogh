@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsolePostUpdate.cs" />
     <Compile Include="ExistingProductsFilter.cs" />
     <Compile Include="GOG\Controllers\Abstract\ProductCoreController.cs" />
     <Compile Include="GOG\Controllers\AuthorizationController.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Interfaces\Network.cs" />
     <Compile Include="Interfaces\GOG\MultipageRequestController.cs" />
     <Compile Include="Interfaces\GOG\FilterDelegate.cs" />
+    <Compile Include="Interfaces\PostUpdate.cs" />
     <Compile Include="Interfaces\SaveLoadDataHelper.cs" />
     <Compile Include="Interfaces\SettingsController.cs" />
     <Compile Include="Interfaces\StorageController.cs" />

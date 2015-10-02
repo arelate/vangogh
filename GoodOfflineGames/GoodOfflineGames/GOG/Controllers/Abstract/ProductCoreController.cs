@@ -45,7 +45,7 @@ namespace GOG.Controllers
             throw new NotImplementedException();
         }
 
-        public async Task Update(IList<string> items, IConsoleController consoleController = null) 
+        public async Task Update(IList<string> items, IPostUpdateDelegate postUpdateDelegate = null) 
         {
             if (stringGetDelegate == null)
             {
@@ -76,7 +76,8 @@ namespace GOG.Controllers
                     OnProductUpdated(this, data);
                 }
 
-                if (consoleController != null) consoleController.Write(".");
+                if (postUpdateDelegate != null)
+                    postUpdateDelegate.PostUpdate();
             }
         }
     }

@@ -20,26 +20,24 @@ namespace GOG.Controllers
         private string imagesCacheFolder = "_images";
 
         private IIOController ioController;
-        private IConsoleController consoleController;
+        private IPostUpdateDelegate postUpdateDelegate;
         private IFileRequestController fileRequestController;
 
-        public ImagesController(IFileRequestController fileRequestController, IIOController ioController, IConsoleController consoleController)
+        public ImagesController(IFileRequestController fileRequestController,
+            IIOController ioController,
+            IPostUpdateDelegate postUpdateDelegate = null)
         {
             this.fileRequestController = fileRequestController;
             this.ioController = ioController;
-            this.consoleController = consoleController;
+            this.postUpdateDelegate = postUpdateDelegate;
         }
 
-        public async Task Update(IList<Product> products)
+        public async Task Update(IEnumerable<Product> products)
         {
-            consoleController.Write("Updating cached images...");
-
             await CacheImages(ExpandImagesUris(products));
-
-            consoleController.WriteLine("DONE.");
         }
 
-        private IEnumerable<string> ExpandImagesUris(IList<Product> products)
+        private IEnumerable<string> ExpandImagesUris(IEnumerable<Product> products)
         {
             foreach (var product in products)
             {
@@ -74,7 +72,8 @@ namespace GOG.Controllers
                     continue;
                 }
 
-                consoleController.Write(".");
+                if (postUpdateDelegate != null)
+                    postUpdateDelegate.PostUpdate();
 
                 await fileRequestController.RequestFile(imageUri.ToString(), imagesCacheFolder, ioController);
             }

@@ -10,7 +10,7 @@ namespace GOG.Interfaces
 
     public interface IUpdateDelegate<Type>
     {
-        Task Update(IList<string> items, IConsoleController consoleController = null);
+        Task Update(IList<string> items, IPostUpdateDelegate postUpdateDelegate = null);
     }
 
     public interface IProductCoreController<Type>:

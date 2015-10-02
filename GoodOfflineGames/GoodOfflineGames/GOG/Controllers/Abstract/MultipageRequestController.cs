@@ -13,7 +13,7 @@ namespace GOG.Controllers
     {
         private IStringGetController stringGetController;
         private ISerializationController<string> stringifyController;
-        private IConsoleController consoleController;
+        private IPostUpdateDelegate postUpdateDelegate;
 
         private IFilterDelegate<Product> filterDelegate;
         public IWriteController MessageWriteDelegate { get; set; } = null;
@@ -21,12 +21,12 @@ namespace GOG.Controllers
         public MultipageRequestController(
             IStringGetController stringGetController,
             ISerializationController<string> stringifyController,
-            IConsoleController consoleController = null,
+            IPostUpdateDelegate postUpdateDelegate = null,
             IFilterDelegate<Product> filterDelegate = null)
         {
             this.stringifyController = stringifyController;
             this.stringGetController = stringGetController;
-            this.consoleController = consoleController;
+            this.postUpdateDelegate = postUpdateDelegate;
             this.filterDelegate = filterDelegate;
         }
 
@@ -41,8 +41,8 @@ namespace GOG.Controllers
 
             do
             {
-                if (consoleController != null)
-                    consoleController.Write(".");
+                if (postUpdateDelegate != null)
+                    postUpdateDelegate.PostUpdate();
 
                 current = await RequestPage(uri, parameters, currentPage);
 
@@ -60,9 +60,6 @@ namespace GOG.Controllers
                 }
             }
             while (++currentPage <= current.TotalPages);
-
-            if (consoleController != null)
-                consoleController.WriteLine("Got {0} products.", products.Count);
 
             return products;
         }
