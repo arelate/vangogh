@@ -26,6 +26,11 @@ namespace GOG.Controllers
             if (!Contains(item)) Collection.Add(item);
         }
 
+        public virtual void UpdateOrAdd(T item)
+        {
+            throw new NotImplementedException("Cannot update or add for generic type.");
+        }
+
         public void Insert(int index, T item)
         {
             if (item == null) return;

@@ -45,6 +45,20 @@ namespace GOG.Controllers
             throw new NotImplementedException();
         }
 
+        public override void UpdateOrAdd(Type item)
+        {
+            for (var ii=0; ii<Collection.Count; ii++)
+            {
+                if (Collection[ii].Id == item.Id)
+                {
+                    Collection[ii] = item;
+                    return;
+                }
+            }
+
+            Add(item);
+        }
+
         public async Task Update(IList<string> items, IPostUpdateDelegate postUpdateDelegate = null) 
         {
             if (stringGetDelegate == null)
@@ -69,7 +83,7 @@ namespace GOG.Controllers
                     OnBeforeAdding(ref data, item);
                 }
 
-                Add(data);
+                UpdateOrAdd(data);
 
                 if (OnProductUpdated != null)
                 {

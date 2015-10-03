@@ -13,6 +13,11 @@ namespace GOG.Interfaces
         void Add(T item);
     }
 
+    public interface IUpdateOrAddDelegate<T>
+    {
+        void UpdateOrAdd(T item);
+    }
+
     public interface IInsertDelegate<T>
     {
         void Insert(int index, T item);
@@ -52,6 +57,7 @@ namespace GOG.Interfaces
         ICollectionContainer<T>,
         IContainsDelegate<T>,
         IAddDelegate<T>,
+        IUpdateOrAddDelegate<T>,
         IInsertDelegate<T>,
         IRemoveDelegate<T>,
         IMapDelegate<T>,

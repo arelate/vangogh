@@ -116,7 +116,7 @@ namespace GOG
 
             IFilterDelegate<Product> existingProductsFilter = new ExistingProductsFilter();
 
-            IRequestDelegate<Product> pagedResultController = 
+            IRequestDelegate<Product> pagedResultController =
                 new MultipageRequestController(
                     networkController,
                     jsonStringController,
@@ -320,9 +320,9 @@ namespace GOG
                 {
                     var existingGameDetails = gamesDetailsController.Find(op.Id);
                     if (existingGameDetails != null) continue;
-
-                    ownedProductsWithoutGameDetails.Add(op.ToString());
                 }
+
+                ownedProductsWithoutGameDetails.Add(op.Id.ToString());
             }
 
             gamesDetailsController.Update(ownedProductsWithoutGameDetails, postUpdateDelegate).Wait();
