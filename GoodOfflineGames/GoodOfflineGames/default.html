@@ -152,12 +152,12 @@
     <script src="./gamedetails.js"></script>
     <script>
 
-        // TODO: also show Products for no longer available (products[] doesn't contain product with given id, but owned does)
-
         // TODO: do manual bundling to properly attribute things like Descent 1+2 as owned
         // duh
 
         "use strict";
+
+        var combinedProducts = [];
 
         var $ = function (id) {
             return document.getElementById(id);
@@ -252,50 +252,39 @@
             }
         }();
 
-        var Products = function () {
-            var getProductById = function (id) {
-                for (var ii = 0; ii < products.length; ii++) {
-                    if (products[ii].id === id) {
-                        return products[ii];
-                    }
-                }
-            }
-            return {
-                "getProductById": getProductById
-            }
-        }();
-
         var SearchIndex = function () {
             var searchIndex = [];
-            var init = function (products) {
-                products.forEach(function (p) {
-                    var pd = ProductData.getProductDataById(p.id);
-                    var parts = [];
+            var indexProduct = function (p) {
+                var pd = ProductData.getProductDataById(p.id);
+                var parts = [];
 
-                    parts.push(p.title.toLowerCase());
+                parts.push(p.title.toLowerCase());
 
-                    if (pd) {
-                        if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
-                        if (pd.developer) parts.push(pd.developer.name.toLowerCase());
+                if (pd) {
+                    if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
+                    if (pd.developer) parts.push(pd.developer.name.toLowerCase());
 
-                        if (pd.genres) {
-                            for (var gg = 0; gg < pd.genres.length; gg++) {
-                                parts.push(pd.genres[gg].name.toLowerCase());
-                            }
+                    if (pd.genres) {
+                        for (var gg = 0; gg < pd.genres.length; gg++) {
+                            parts.push(pd.genres[gg].name.toLowerCase());
                         }
                     }
+                }
 
-                    if (p.worksOn.Windows) parts.push("windows");
-                    if (p.worksOn.Mac) parts.push("mac osx");
-                    if (p.worksOn.Linux) parts.push("linux");
+                if (p.worksOn.Windows) parts.push("windows");
+                if (p.worksOn.Mac) parts.push("mac osx");
+                if (p.worksOn.Linux) parts.push("linux");
 
-                    if (Updated.check(p.id)) parts.push("updated");
-                    if (Owned.check(p.id)) parts.push("owned");
-                    if (Wishlisted.check(p.id)) parts.push("wishlisted");
-                    if (DLC.isDLCById(p.id)) parts.push("dlc");
+                if (Updated.check(p.id)) parts.push("updated");
+                if (Owned.check(p.id)) parts.push("owned");
+                if (Wishlisted.check(p.id)) parts.push("wishlisted");
+                if (DLC.isDLCById(p.id)) parts.push("dlc");
 
-                    searchIndex.push(parts.join(" "));
-                });
+                searchIndex.push(parts.join(" "));
+
+            }
+            var init = function (products) {
+                combinedProducts.forEach(indexProduct);
             };
             var match = function (text) {
                 var textParts = text.split(" ");
@@ -338,7 +327,8 @@
         var Owned = function () {
             var check = function (id) {
 
-                if (owned.indexOf(id) > -1) return true;
+                var ownedProduct = getOwnedById(id);
+                if (ownedProduct) return true;
 
                 var productData = ProductData.getProductDataById(id);
 
@@ -365,14 +355,22 @@
                     }
                 }
             }
+            var getOwnedById = function (id) {
+                for (var ii = 0; ii < owned.length; ii++) {
+                    if (owned[ii].id === id) {
+                        return owned[ii];
+                    }
+                }
+            }
             return {
-                "check": check
+                "check": check,
+                "getOwnedById": getOwnedById
             }
         }();
 
         var Updated = function () {
             var check = function (id) {
-                return updated.indexOf(id) > -1;
+                return (updated.indexOf(id) > -1);
             }
             return {
                 "check": check
@@ -456,8 +454,6 @@
                     searchResults.classList.add("hidden");
                     productsContainer.classList.remove("hidden");
                 }
-
-
             }
             return {
                 "search": search
@@ -468,13 +464,26 @@
         document.addEventListener("DOMContentLoaded", function () {
 
             var html = "";
+            var addedProducts = [];
+
+            // first add available products
             for (var ii = 0; ii < products.length; ii++) {
-                html += Views.createProductView(products[ii], ViewModelProvider.getProductViewModel);
+                combinedProducts.push(products[ii]);
+                addedProducts.push(products[ii].id);
+            }
+            // TODO second add owned products that are no longer available
+            for (var ii = 0; ii < owned.length; ii++) {
+                if (addedProducts.indexOf(owned[ii].id) > -1) continue;
+                combinedProducts.push(owned[ii]);
+            }
+
+            for (var ii = 0; ii < combinedProducts.length; ii++) {
+                html += Views.createProductView(combinedProducts[ii], ViewModelProvider.getProductViewModel);
             }
 
             document.getElementById("productsContainer").innerHTML = html;
 
-            SearchIndex.init(products);
+            SearchIndex.init(combinedProducts);
 
             var searchInput = $("searchInput");
             //var searchResults = $("searchResults");
@@ -488,7 +497,6 @@
             });
 
             GameDetails.init(document.querySelectorAll("#productsContainer > .product"));
-
         });
     </script>
 </body>
