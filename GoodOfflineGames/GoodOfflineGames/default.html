@@ -23,7 +23,6 @@
         #productsContainer,
         #searchResults {
             margin-top: 1em;
-            margin-bottom: 10em;
         }
 
         .product {
@@ -143,12 +142,17 @@
             <div class="publisher">Publisher: <span class="title">N/A</span></div>
         </div>
     </div>
-    <script src="./products.js"></script>
-    <script src="./owned.js"></script>
-    <script src="./updated.js"></script>
-    <script src="./wishlisted.js"></script>
-    <script src="./productsdata.js"></script>
-    <script src="./gamedetails.js"></script>
+    <script async src="./products.js"></script>
+    <script async src="./owned.js"></script>
+    
+    <script async src="./updated.js"></script>
+    <script async src="./wishlisted.js"></script>
+    
+    <script async src="./productsdata.js"></script>
+    
+    <script async src="./gamedetails.js"></script>
+    <script async src="./bundles.js"></script>
+
     <script>
 
         // TODO: do manual bundling to properly attribute things like Descent 1+2 as owned
@@ -235,7 +239,7 @@
 
                 gameDetailsImage.srcset = "_images/" + imageLocalUri + "_196.jpg 1x, _images/" + imageLocalUri + "_392.jpg 2x";
                 gameDetailsTitle.textContent = product.title;
-                
+
 
                 developerTitle.textContent = (productData && productData.developer) ? productData.developer.name : "N/A";
                 publisherTitle.textContent = (productData && productData.publisher) ? productData.publisher.name : "N/A";
@@ -341,10 +345,6 @@
 
                 var productData = ProductData.getProductDataById(id);
 
-                if (productData && productData.title === "Walking Dead: 400 Days, The") {
-                    console.log("ja");
-                }
-
                 // return false because if that is not DLC, we should have passed the check earlier
                 if (!DLC.isDLCByProductData(productData)) return false;
 
@@ -410,7 +410,7 @@
                     "id": product.id,
                     "productClass": productClass.join(" "),
                     "image": image,
-                    "title": product.title
+                    "title": product.title + "/" + product.id
                 };
             }
             return {
@@ -516,7 +516,6 @@
             SearchIndex.init(combinedProducts);
 
             var searchInput = $("searchInput");
-            //var searchResults = $("searchResults");
             searchInput.addEventListener("input", function (e) {
                 Search.search(searchInput.value.toLowerCase())
             });

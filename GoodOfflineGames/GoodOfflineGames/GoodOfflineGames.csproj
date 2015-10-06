@@ -123,6 +123,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bundles.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
