@@ -159,8 +159,7 @@
 
     <script>
 
-        // TODO: do manual bundling to properly attribute things like Descent 1+2 as owned
-        // duh
+        // TODO: finish manual bundling
 
         "use strict";
 
@@ -231,6 +230,9 @@
                 }
             }
             var show = function (id) {
+
+                // TODO: show bundled products, cdKey, required products
+
                 var product = CombinedProducts.getProductById(id);
                 if (!product) return;
 
@@ -272,6 +274,9 @@
         var SearchIndex = function () {
             var searchIndex = [];
             var indexProduct = function (p) {
+
+                if (Bundles.isChild(p.id)) return;
+
                 var pd = ProductData.getProductDataById(p.id);
                 var parts = [];
 
@@ -296,6 +301,19 @@
                 if (Owned.check(p.id)) parts.push("owned");
                 if (Wishlisted.check(p.id)) parts.push("wishlisted");
                 if (DLC.isDLCById(p.id)) parts.push("dlc");
+
+                if (Bundles.isParent(p.id)) {
+                    // add child items title
+                    var bundle = Bundles.getBundleByParentId(p.id);
+                    if (bundle) {
+                        for (var ii = 0; ii < bundle.children.length; ii++) {
+                            var bundleChild = CombinedProducts.getProductById(bundle.children[ii]);
+                            if (bundleChild) {
+                                parts.push(bundleChild.title.toLowerCase());
+                            }
+                        }
+                    }
+                }
 
                 searchIndex.push(parts.join(" "));
 
@@ -347,6 +365,16 @@
                 var ownedProduct = getOwnedById(id);
                 if (ownedProduct) return true;
 
+                // if all bundled products are owned then bundle is owned
+                if (Bundles.isParent(id)) {
+                    var bundle = Bundles.getBundleByParentId(id);
+                    var childProductsOwned = true;
+                    for (var ii = 0; ii < bundle.children.length; ii++) {
+                        childProductsOwned &= check(bundle.children[ii]);
+                    }
+                    if (childProductsOwned) return true;
+                }
+
                 var productData = ProductData.getProductDataById(id);
 
                 // return false because if that is not DLC, we should have passed the check earlier
@@ -383,6 +411,17 @@
 
         var Updated = function () {
             var check = function (id) {
+
+                // if any of the bundled product is updated then bundle itself is updated
+                if (Bundles.isParent(id)) {
+                    var bundle = Bundles.getBundleByParentId(id);
+                    var childProductsUpdated = false;
+                    for (var ii = 0; ii < bundle.children.length; ii++) {
+                        childProductsUpdated |= check(bundle.children[ii]);
+                    }
+                    if (childProductsUpdated) return true;
+                }
+
                 return (updated.indexOf(id) > -1);
             }
             return {
@@ -402,6 +441,11 @@
         var ViewModelProvider = function () {
             var getProductViewModel = function (product) {
                 var productClass = [];
+
+                if (product.id === 1207658836) {
+                    console.log("ja");
+                }
+
                 if (Owned.check(product.id)) productClass.push("owned");
                 if (Wishlisted.check(product.id)) productClass.push("wishlisted");
                 if (Updated.check(product.id)) productClass.push("updated");
@@ -480,12 +524,12 @@
                 var cp = [];
                 var addedProducts = [];
 
-                // first add available products
+                // first add available products...
                 for (var ii = 0; ii < products.length; ii++) {
                     cp.push(products[ii]);
                     addedProducts.push(products[ii].id);
                 }
-                // TODO second add owned products that are no longer available
+                // ...then add owned products that are no longer available
                 for (var ii = 0; ii < owned.length; ii++) {
                     if (addedProducts.indexOf(owned[ii].id) > -1) continue;
                     cp.push(owned[ii]);
@@ -527,7 +571,7 @@
             }
             var getBundleByParentId = function (id) {
                 for (var ii = 0; ii < bundles.length; ii++) {
-                    if (bundles[ii].id === id) {
+                    if (bundles[ii].parent === id) {
                         return bundles[ii];
                     }
                 }
@@ -549,7 +593,7 @@
 
             for (var ii = 0; ii < combinedProducts.length; ii++) {
 
-                //if (Bundles.isChild(combinedProducts[ii].id)) continue;
+                if (Bundles.isChild(combinedProducts[ii].id)) continue;
                 // TODO: currently Search expects that cache index would be element index - so we either need to untangle this
                 // or cache bundle children as part of parent or both
                 html += Views.createProductView(combinedProducts[ii], ViewModelProvider.getProductViewModel);
