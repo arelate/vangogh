@@ -20,10 +20,15 @@ namespace GOG.Model
         // public bool hasHiddenProducts;
 
         [DataMember(Name = "products")]
-        public List<Product> Products { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; }
         [DataMember(Name = "page")]
         public int Page { get; set; }
         [DataMember(Name = "totalPages")]
         public int TotalPages { get; set; }
+
+        public ProductsResult()
+        {
+            Products = new List<Product>();
+        }
     }
 }
