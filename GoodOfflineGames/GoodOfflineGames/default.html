@@ -143,7 +143,6 @@
             <div class="publisher">Publisher: <span class="title">N/A</span></div>
         </div>
     </div>
-
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
     <script src="./updated.js"></script>
@@ -216,7 +215,6 @@
             var gameDetailsTitle = gameDetailsContainer.querySelector(".title");
             var developerTitle = gameDetailsContainer.querySelector(".developer .title");
             var publisherTitle = gameDetailsContainer.querySelector(".publisher .title");
-
             var getGameDetailsById = function (id) {
                 for (var ii = 0; ii < gamedetails.length; ii++) {
                     if (gamedetails[ii].id === id) {
@@ -225,16 +223,22 @@
                 }
             }
             var show = function (id) {
-                var pd = ProductData.getProductDataById(id);
-                if (!pd) return;
+                var product = CombinedProducts.getProductById(id);
+                if (!product) return;
 
-                var imageParts = pd.image.split("/");
-                var imageLocalUri = imageParts[imageParts.length - 1];
+                var productData = ProductData.getProductDataById(id);
+
+                if (product.image) {
+                    var imageParts = product.image.split("/");
+                    var imageLocalUri = imageParts[imageParts.length - 1];
+                }
 
                 gameDetailsImage.srcset = "_images/" + imageLocalUri + "_196.jpg 1x, _images/" + imageLocalUri + "_392.jpg 2x";
-                gameDetailsTitle.textContent = pd.title;
-                developerTitle.textContent = pd.developer.name;
-                publisherTitle.textContent = pd.publisher.name;
+                gameDetailsTitle.textContent = product.title;
+                
+
+                developerTitle.textContent = (productData && productData.developer) ? productData.developer.name : "N/A";
+                publisherTitle.textContent = (productData && productData.publisher) ? productData.publisher.name : "N/A";
 
                 gameDetailsContainer.classList.remove("hidden");
             }
@@ -243,8 +247,13 @@
                     productElements[ii].addEventListener("click", function (e) {
                         var id = parseInt(e.currentTarget.getAttribute("data-id"));
                         show(id);
+                        // stop it here, don't propagate to body handler that hides gameDetails containers
+                        e.stopPropagation();
                     });
                 }
+                document.body.addEventListener("click", function () {
+                    gameDetailsContainer.classList.add("hidden");
+                });
             }
             return {
                 "init": init,
@@ -461,21 +470,42 @@
 
         }();
 
+        var CombinedProducts = function () {
+            var init = function () {
+                var cp = [];
+                var addedProducts = [];
+
+                // first add available products
+                for (var ii = 0; ii < products.length; ii++) {
+                    cp.push(products[ii]);
+                    addedProducts.push(products[ii].id);
+                }
+                // TODO second add owned products that are no longer available
+                for (var ii = 0; ii < owned.length; ii++) {
+                    if (addedProducts.indexOf(owned[ii].id) > -1) continue;
+                    cp.push(owned[ii]);
+                }
+
+                return cp;
+            }
+            var getProductById = function (id) {
+                for (var ii = 0; ii < combinedProducts.length; ii++) {
+                    if (combinedProducts[ii].id === id) {
+                        return combinedProducts[ii];
+                    }
+                }
+            }
+            return {
+                "init": init,
+                "getProductById": getProductById
+            }
+        }();
+
         document.addEventListener("DOMContentLoaded", function () {
 
             var html = "";
-            var addedProducts = [];
 
-            // first add available products
-            for (var ii = 0; ii < products.length; ii++) {
-                combinedProducts.push(products[ii]);
-                addedProducts.push(products[ii].id);
-            }
-            // TODO second add owned products that are no longer available
-            for (var ii = 0; ii < owned.length; ii++) {
-                if (addedProducts.indexOf(owned[ii].id) > -1) continue;
-                combinedProducts.push(owned[ii]);
-            }
+            combinedProducts = CombinedProducts.init();
 
             for (var ii = 0; ii < combinedProducts.length; ii++) {
                 html += Views.createProductView(combinedProducts[ii], ViewModelProvider.getProductViewModel);
