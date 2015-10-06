@@ -44,6 +44,10 @@
                 color: #7FAF1B;
             }
 
+            .product.bundle {
+                font-weight: bold;
+            }
+
             .product.updated {
             }
 
@@ -144,12 +148,12 @@
     </div>
     <script async src="./products.js"></script>
     <script async src="./owned.js"></script>
-    
+
     <script async src="./updated.js"></script>
     <script async src="./wishlisted.js"></script>
-    
+
     <script async src="./productsdata.js"></script>
-    
+
     <script async src="./gamedetails.js"></script>
     <script async src="./bundles.js"></script>
 
@@ -402,6 +406,7 @@
                 if (Wishlisted.check(product.id)) productClass.push("wishlisted");
                 if (Updated.check(product.id)) productClass.push("updated");
                 if (DLC.isDLCById(product.id)) productClass.push("dlc");
+                if (Bundles.isParent(product.id)) productClass.push("bundle");
 
                 var imageParts = product.image.split("/");
                 var image = imageParts[imageParts.length - 1];
@@ -501,13 +506,52 @@
             }
         }();
 
+        var Bundles = function () {
+            var parents = [];
+            var children = [];
+            var init = function () {
+                if (!bundles || !bundles.length) return;
+
+                for (var ii = 0; ii < bundles.length; ii++) {
+                    parents.push(bundles[ii].parent);
+                    for (var jj = 0; jj < bundles[ii].children.length; jj++) {
+                        children.push(bundles[ii].children[jj]);
+                    }
+                }
+            }
+            var isParent = function (id) {
+                return parents.indexOf(id) > -1;
+            }
+            var isChild = function (id) {
+                return children.indexOf(id) > -1;
+            }
+            var getBundleByParentId = function (id) {
+                for (var ii = 0; ii < bundles.length; ii++) {
+                    if (bundles[ii].id === id) {
+                        return bundles[ii];
+                    }
+                }
+            }
+            return {
+                "init": init,
+                "isParent": isParent,
+                "isChild": isChild,
+                "getBundleByParentId": getBundleByParentId
+            }
+        }();
+
         document.addEventListener("DOMContentLoaded", function () {
 
             var html = "";
 
             combinedProducts = CombinedProducts.init();
+            Bundles.init();
 
             for (var ii = 0; ii < combinedProducts.length; ii++) {
+
+                //if (Bundles.isChild(combinedProducts[ii].id)) continue;
+                // TODO: currently Search expects that cache index would be element index - so we either need to untangle this
+                // or cache bundle children as part of parent or both
                 html += Views.createProductView(combinedProducts[ii], ViewModelProvider.getProductViewModel);
             }
 
