@@ -44,8 +44,17 @@
                 color: #7FAF1B;
             }
 
+            .product.partOwned {
+                font-style: italic;
+            }
+
             .product.bundle {
                 font-weight: bold;
+            }
+
+            .product.bundle.wishlisted {
+                /* wishlisted bundle should be normal to distinguish with partial owned */
+                font-style: normal;
             }
 
             .product.updated {
@@ -275,10 +284,16 @@
             var searchIndex = [];
             var indexProduct = function (p) {
 
+                var parts = [];
+
                 if (Bundles.isChild(p.id)) return;
 
+                if (DLC.isDLCById(p.id)) {
+                    parts.push(p.title.toLowerCase());
+                    return;
+                };
+
                 var pd = ProductData.getProductDataById(p.id);
-                var parts = [];
 
                 parts.push(p.title.toLowerCase());
 
@@ -396,6 +411,17 @@
                     }
                 }
             }
+            var checkPartialOwnership = function (id) {
+                // TODO: DRY - this code is used in 4 part at least
+                if (Bundles.isParent(id)) {
+                    var bundle = Bundles.getBundleByParentId(id);
+                    var childProductsOwned = false;
+                    for (var ii = 0; ii < bundle.children.length; ii++) {
+                        childProductsOwned |= check(bundle.children[ii]);
+                    }
+                    if (childProductsOwned) return true;
+                }
+            }
             var getOwnedById = function (id) {
                 for (var ii = 0; ii < owned.length; ii++) {
                     if (owned[ii].id === id) {
@@ -405,6 +431,7 @@
             }
             return {
                 "check": check,
+                "checkPartialOwnership": checkPartialOwnership,
                 "getOwnedById": getOwnedById
             }
         }();
@@ -431,6 +458,17 @@
 
         var Wishlisted = function () {
             var check = function (id) {
+
+                // if any of the bundled product is updated then bundle itself is updated
+                if (Bundles.isParent(id)) {
+                    var bundle = Bundles.getBundleByParentId(id);
+                    var childProductsWishlisted = false;
+                    for (var ii = 0; ii < bundle.children.length; ii++) {
+                        childProductsWishlisted |= check(bundle.children[ii]);
+                    }
+                    if (childProductsWishlisted) return true;
+                }
+
                 return wishlisted.indexOf(id) > -1;
             }
             return {
@@ -446,7 +484,12 @@
                     console.log("ja");
                 }
 
-                if (Owned.check(product.id)) productClass.push("owned");
+                if (Owned.check(product.id)) {
+                    productClass.push("owned");
+                } else if (Owned.checkPartialOwnership(product.id)) {
+                    productClass.push("partOwned");
+                }
+
                 if (Wishlisted.check(product.id)) productClass.push("wishlisted");
                 if (Updated.check(product.id)) productClass.push("updated");
                 if (DLC.isDLCById(product.id)) productClass.push("dlc");
@@ -594,8 +637,9 @@
             for (var ii = 0; ii < combinedProducts.length; ii++) {
 
                 if (Bundles.isChild(combinedProducts[ii].id)) continue;
-                // TODO: currently Search expects that cache index would be element index - so we either need to untangle this
-                // or cache bundle children as part of parent or both
+                // TODO: show DLC on GameDetails card
+                if (DLC.isDLCById(combinedProducts[ii].id)) continue;
+
                 html += Views.createProductView(combinedProducts[ii], ViewModelProvider.getProductViewModel);
             }
 
