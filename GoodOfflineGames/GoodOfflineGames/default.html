@@ -22,7 +22,7 @@
 
         #productsContainer,
         #searchResults {
-            margin-top: 1em;
+            margin-top: 4em;
         }
 
         .product {
@@ -81,6 +81,16 @@
         #searchResults a {
             margin-top: 2em;
             display: inline-block;
+        }
+
+        #searchContainer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: auto;
+            padding: 1em;
+            background: inherit;
         }
 
         #searchContainer #searchInput {
@@ -288,10 +298,10 @@
 
                 if (Bundles.isChild(p.id)) return;
 
-                if (DLC.isDLCById(p.id)) {
-                    parts.push(p.title.toLowerCase());
-                    return;
-                };
+                //if (DLC.isDLCById(p.id)) {
+                //    parts.push(p.title.toLowerCase());
+                //    return;
+                //};
 
                 var pd = ProductData.getProductDataById(p.id);
 
@@ -638,7 +648,7 @@
 
                 if (Bundles.isChild(combinedProducts[ii].id)) continue;
                 // TODO: show DLC on GameDetails card
-                if (DLC.isDLCById(combinedProducts[ii].id)) continue;
+                //if (DLC.isDLCById(combinedProducts[ii].id)) continue;
 
                 html += Views.createProductView(combinedProducts[ii], ViewModelProvider.getProductViewModel);
             }

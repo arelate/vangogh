@@ -118,6 +118,76 @@
         // Stealth Inc. 2: A Game of Clones Deluxe
         "parent": 1430386162,
         "children": [1430297341]
+    },
+    {
+        // Commandos Ammo Pack
+        "parent": 1207658800,
+        "children": [1207662193, 1207662203]
+    },
+    {
+        // Commandos 2+3
+        "parent": 1207658803,
+        "children": [1207662213, 1207662223]
+    },
+    {
+        // STAR WARS™ Jedi Knight: Dark Forces II
+        "parent": 1421405068,
+        "children": [1422286819, 1422285784]
+    },
+    {
+        // STAR WARS™: TIE Fighter Special Edition
+        "parent": 1207666273,
+        "children": [1207666403, 1207666413, 1207667223]
+    },
+    {
+        // STAR WARS™: X-Wing Special Edition
+        "parent": 1207666263,
+        "children": [1207666393, 1207666383, 1207667213]
+    },
+    {
+        // Star Control 1+2
+        "parent": 1207658925,
+        "children": [1207661663, 1207661673]
+    },
+    {
+        // Starflight™ 1+2
+        "parent": 1207658983,
+        "children": [1207662393, 1207662403]
+    },
+    {
+        // Titan Souls: Digital Special Edition
+        "parent": 1427987656,
+        "children": [1427985242]
+    },
+    {
+        // Hotline Miami 2: Wrong Number Digital Special Edition
+        "parent": 1424773562,
+        "children": [1424773427, 1424856371]
+    },
+    {
+        // Shelter 2 Special Edition
+        "parent": 1207664733,
+        "children": [1424868751]
+    },
+    {
+        // Republique Deluxe Edition
+        "parent": 1423214546,
+        "children": [1423080728]
+    },
+    {
+        // Men of War: Vietnam Special Edition
+        "parent": 1428588959,
+        "children": [1428587439, 1428588163]
+    },
+    {
+        // Men of War: Assault Squad GOTY Edition
+        "parent": 1428579671,
+        "children": [1428580803, 1428581105]
+    },
+    {
+        // Great Battles Collector's Edition
+        "parent": 1207659216,
+        "children": [1207662853, 1207662863, 1207662873]
     }
 
 
