@@ -573,7 +573,7 @@
         }();
 
         var CombinedProducts = function () {
-            var init = function () {
+            var init = function (products, owned) {
                 var cp = [];
                 var addedProducts = [];
 
@@ -641,7 +641,7 @@
 
             var html = "";
 
-            combinedProducts = CombinedProducts.init();
+            combinedProducts = CombinedProducts.init(products, owned);
             Bundles.init();
 
             for (var ii = 0; ii < combinedProducts.length; ii++) {
