@@ -10,7 +10,7 @@
         "children": [1435848742, 1435848814]
     },
     {
-        // Interstate '76 Arsenal, The 
+        // Interstate '76 Arsenal, The
         "parent": 1207658836,
         "children": [1207661003, 1207661023]
     },
@@ -157,22 +157,22 @@
     {
         // Titan Souls: Digital Special Edition
         "parent": 1427987656,
-        "children": [1427985242]
+        "children": [1427985242, 1429024794]
     },
     {
         // Hotline Miami 2: Wrong Number Digital Special Edition
         "parent": 1424773562,
-        "children": [1424773427, 1424856371]
+        "children": [1424773427, 1424773656]
     },
     {
         // Shelter 2 Special Edition
         "parent": 1207664733,
-        "children": [1424868751]
+        "children": [1424868751, 1424868860]
     },
     {
         // Republique Deluxe Edition
         "parent": 1423214546,
-        "children": [1423080728]
+        "children": [1423080728, 1423214759]
     },
     {
         // Men of War: Vietnam Special Edition
@@ -188,7 +188,116 @@
         // Great Battles Collector's Edition
         "parent": 1207659216,
         "children": [1207662853, 1207662863, 1207662873]
+    },
+    {
+        // Cultures: Northland + 8th Wonder of the World
+        "parent": 1207659199,
+        "children": [1207663833, 1207663853]
+    },
+    {
+        // Cultures 1+2/
+        "parent": 1207659152,
+        "children": [1207663793, 1207663813]
+    },
+    {
+        // Leisure Suit Larry
+        "parent": 1207659158,
+        "children": [1207662033, 1207662043, 1207662053, 1207662063, 1207662073, 1207662083, 1207662093]
+    },
+    {
+        // Wizardry 6+7
+        "parent": 1207659229,
+        "children": [1207662763, 1207662783]
+    },
+    {
+        // Two Worlds 2: Epic Edition
+        "parent": 1207659214,
+        "children": [1207661833, 1207661843]
+    },
+    {
+        // Avernum: The Complete Saga
+        "parent": 1207659156,
+        "children": [1207663333, 1207663353, 1207663373, 1207663383, 1207663403, 1207663423, 1207663443]
+    },
+    {
+        // Duke Nukem 1+2
+        "parent": 1207659149,
+        "children": [1207664963, 1207664973]
+    },
+    {
+        // Blitzkrieg 2 Anthology
+        "parent": 1207659119,
+        "children": [1207664013, 1207664033, 1207664063]
+    },
+    {
+        // Blitzkrieg Anthology
+        "parent": 1207659071,
+        "children": [1207663993, 1207664003]
+    },
+    {
+        // Tomb Raider: The Last Revelation + Chronicles
+        "parent": 1207659077,
+        "children": [1207663513, 1207663523]
+    },
+    {
+        // Tomb Raider 1+2+3
+        "parent": 1207659052,
+        "children": [1207663463, 1207663483, 1207663493]
+    },
+    {
+        // Age of Wonders 3 Deluxe Edition
+        "parent": 1207660903,
+        "children": [1207660893, 1207660883]
+    },
+    {
+        // Geneforge Saga
+        "parent": 1207659067,
+        "children": [1207662923, 1207662933, 1207662953, 1207662963, 1207662973]
+    },
+    {
+        // Hearts of Iron II: Complete
+        "parent": 1428932392,
+        "children": [1429023691, 1429024026]
+    },
+    {
+        // Act of War: Gold Edition
+        "parent": 1427704829,
+        "children": [1427704538, 1427704705]
+    },
+    {
+        // Ys I & II Chronicles+
+        "parent": 1422357672,
+        "children": [1422440106, 1422440145]
+    },
+    {
+        // Mortal Kombat 1+2+3
+        "parent": 1423059062,
+        "children": [1207667043, 1207667053, 1207667063]
+    },
+    {
+        // Lords of Xulima - Deluxe Edition
+        "parent": 1420648438,
+        "children": [1420648167, 1421250907]
+    },
+    {
+        // King's Bounty: Dark Side - Premium Edition
+        "parent": 1420813264,
+        "children": [1420812121, 1420813366]
+    },
+    {
+        // King's Bounty: Warriors of the North - Complete Edition
+        "parent": 1207667093,
+        "children": [1207667153, 1207667083]
+    },
+    {
+        // Neighbours From Hell Compilation
+        "parent": 1207658765,
+        "children": [1207663903, 1207663923]
+    },
+    {
+        // Agarest: Generations of War - Collector’s Edition Upgrade
+        "parent": 1207666993,
+        "children": [1207667003, 1207666943]
     }
-
 
 ];
