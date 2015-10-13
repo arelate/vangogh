@@ -298,6 +298,96 @@
         // Agarest: Generations of War - Collector’s Edition Upgrade
         "parent": 1207666993,
         "children": [1207667003, 1207666943]
+    },
+    {
+        // Ether One Deluxe Edition
+        "parent": 1207661353,
+        "children": [1207661343, 1207661363]
+    },
+    {
+        // Sword of the Stars: The Pit Gold Edition
+        "parent": 1207660193,
+        "children": [1207659212, 1207660183, 1207659245]
+    },
+    {
+        // Dreamfall Chapters Season Pass - Special Edition
+        "parent": 1207665633,
+        "children": [1207666513, 1207666503]
+    },
+    {
+        // Wasteland 2 Digital Deluxe Edition
+        "parent": 1207665153,
+        "children": [1207665713, 1207665723]
+    },
+    {
+        // AI War Collection
+        "parent": 1207665343,
+        "children": [1207665323, 1207665333]
+    },
+    {
+        // Mark of the Ninja Special Edition
+        "parent": 1207665143,
+        "children": [1207665123, 1207665133]
+    },
+    {
+        // Gods Will Be Watching: Special Edition
+        "parent": 1207665103,
+        "children": [1207664883, 1207665113]
+    },
+    {
+        // Unrest Special Edition
+        "parent": 1207665063,
+        "children": [1207665053, 1207665073]
+    },
+    {
+        // Omerta: City of Gangsters Gold Edition
+        "parent": 1207664223,
+        "children": [1207659157, 1207660383]
+    },
+    {
+        // Risen 2: Dark Waters Gold Edition
+        "parent": 1207663173,
+        "children": [1207663193, 1207664183]
+    },
+    {
+        // Silent Service 1+2
+        "parent": 1207660513,
+        "children": [1207661883, 1207661893]
+    },
+    {
+        // DROD 1+2+3
+        "parent": 1207660443,
+        "children": [1207662003, 1207662013, 1207662023]
+    },
+    {
+        // BloodNet
+        "parent": 1207660453,
+        "children": [1207661913, 1207661923]
+    },
+    {
+        // Broken Sword 5 - the Serpent's Curse
+        "parent": 1207660313,
+        "children": [1207660323]
+    },
+    {
+        // American McGee's Grimm
+        "parent": 1207660243,
+        "children": [1207663003, 1207663013, 1207663023]
+    },
+    {
+        // Wing Commander™ 1+2
+        "parent": 1207658960,
+        "children": [1207662643, 1207662653]
+    },
+    {
+        // Wing Commander™ 5: Prophecy Gold Edition
+        "parent": 1207660153,
+        "children": [1207662663, 1207662673]
+    },
+    {
+        // Shadow Warrior (2013)
+        "parent": 1207659573,
+        "children": [1429878383, 1430392753]
     }
 
 ];
