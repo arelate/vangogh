@@ -388,6 +388,121 @@
         // Shadow Warrior (2013)
         "parent": 1207659573,
         "children": [1429878383, 1430392753]
+    },
+    {
+        // Time Gentlemen, Please! + Ben There, Dan That!
+        "parent": 1207659743,
+        "children": [1207662993, 1207662983]
+    },
+    {
+        // Cognition: Game of the Year Edition
+        "parent": 1207659633,
+        "children": [1207659643, 1207659653, 1207659663, 1207659673]
+    },
+    {
+        // Divinity: Dragon Commander Imperial Edition
+        "parent": 1207659202,
+        "children": [1207659263, 1207659246]
+    },
+    {
+        // Dracula Trilogy
+        "parent": 1207659251,
+        "children": [1207661553, 1207661563, 1207661573]
+    },
+    {
+        // Dracula 4+5
+        "parent": 1207659250,
+        "children": [1207664273, 1207664283]
+    },
+    {
+        // Pirates! Gold Plus
+        "parent": 1207659060,
+        "children": [1207661643, 1207661653]
+    },
+    {
+        // Blackwell Bundle
+        "parent": 1207659050,
+        "children": [1207662883, 1207662893, 1207662903, 1207662913]
+    },
+    {
+        // Quest for Glory 1-5
+        "parent": 1207659040,
+        "children": [1207661313, 1207661323, 1207661383, 1207661393, 1207661403]
+    },
+    {
+        // Cossacks Anthology
+        "parent": 1207659005,
+        "children": [1207662823, 1207662833, 1207662843]
+    },
+    {
+        // Alien Breed + Tower Assault
+        "parent": 1207658988,
+        "children": [1207663733, 1207663753]
+    },
+    {
+        // Ultima™ 7 The Complete Edition
+        "parent": 1207658984,
+        "children": [1207662623, 1207662633]
+    },
+    {
+        // Ultima™ 4+5+6
+        "parent": 1207658965,
+        "children": [1207662433, 1207662443, 1207662453]
+    },
+    {
+        // Ultima™ 1+2+3
+        "parent": 1207658961,
+        "children": [1207662593, 1207662603, 1207662613]
+    },
+    {
+        // Ultima™ Underworld 1+2
+        "parent": 1207658937,
+        "children": [1207662463, 1207662473]
+    },
+    {
+        // Lands of Lore™ 1+2
+        "parent": 1207658980,
+        "children": [1207662513, 1207662563]
+    },
+    {
+        // Heroes Chronicles: All chapters
+        "parent": 1207658942,
+        "children": [1207661743, 1207661753, 1207661763, 1207661773, 1207661783, 1207661793, 1207661803, 1207661813]
+    },
+    {
+        // Alone in the Dark: The Trilogy 1+2+3
+        "parent": 1207658923,
+        "children": [1207660923, 1207660963, 1207660973]
+    },
+    {
+        // Battle Isle Platinum (includes Incubation)
+        "parent": 1207658917,
+        "children": [1207660993, 1207661073, 1207661103, 1207661123]
+    },
+    {
+        // Pinball Gold Pack
+        "parent": 1207658910,
+        "children": [1207664093, 1207664103, 1207664113]
+    },
+    {
+        // Zork Anthology, The
+        "parent": 1207658903,
+        "children": [1207661493, 1207661503, 1207661513, 1207661523, 1207661533, 1207661543]
+    },
+    {
+        // King's Quest 7+8
+        "parent": 1207658881,
+        "children": [1207661043, 1207661053]
+    },
+    {
+        // King's Quest 4+5+6
+        "parent": 1207658839,
+        "children": [1207661153, 1207661163, 1207661173]
+    },
+    {
+        // King's Quest 1+2+3
+        "parent": 1207658878,
+        "children": [1207661083, 1207661113, 1207661133]
     }
 
 ];

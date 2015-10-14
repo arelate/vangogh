@@ -41,7 +41,7 @@
             }
 
             .product.owned {
-                color: #43A047;
+                color: #66BB6A;
             }
 
             .product.partOwned {
@@ -51,6 +51,10 @@
 
             .product.bundle {
                 font-weight: bold;
+            }
+
+            .product.bundle.owned {
+              color: #2E7D32;
             }
 
             .product.bundle.wishlisted {
@@ -181,6 +185,8 @@
     <script>
 
         // TODO: finish manual bundling
+        // TODO: legend
+        // TODO: jump to top
 
         "use strict";
 
@@ -514,7 +520,7 @@
                     "id": product.id,
                     "productClass": productClass.join(" "),
                     "image": image,
-                    "title": product.title + "/" + product.id
+                    "title": product.title + " " + product.id
                 };
             }
             return {
