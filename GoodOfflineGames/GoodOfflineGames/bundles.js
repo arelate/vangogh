@@ -503,6 +503,151 @@
         // King's Quest 1+2+3
         "parent": 1207658878,
         "children": [1207661083, 1207661113, 1207661133]
+    },
+    {
+        // Space Quest 1+2+3
+        "parent": 1207658875,
+        "children": [1207661413, 1207661423, 1207661433]
+    },
+    {
+        // Space Quest 4+5+6
+        "parent": 1207658833,
+        "children": [1207661443, 1207661453, 1207661463]
+    },
+    {
+        // Betrayal at Krondor Pack
+        "parent": 1207658850,
+        "children": [1207660953, 1207660983]
+    },
+    {
+        // Gobliiins pack
+        "parent": 1207658846,
+        "children": [1207662273, 1207662293, 1207662313]
+    },
+    {
+        // Tropico Reloaded
+        "parent": 1207658817,
+        "children": [1207663953, 1207663963]
+    },
+    {
+        // Red Baron Pack
+        "parent": 1207658801,
+        "children": [1207663973, 1207663983]
+    },
+    {
+        // Incredible Machine Mega Pack, The
+        "parent": 1207658799,
+        "children": [1207663943, 1207664023, 1207664043, 1207664053]
+    },
+    {
+        // Incoming + Incoming Forces
+        "parent": 1207658790,
+        "children": [1207663863, 1207663873]
+    },
+    {
+        // Lords of the Realm: Royal Edition
+        "parent": 1207658780,
+        "children": [1207663213, 1207663233, 1207663263]
+    },
+    {
+        // Creatures: The Albian Years
+        "parent": 1207658813,
+        "children": [1207662233, 1207662243]
+    },
+    {
+        // Tex Murphy: Mean Streets + Martian Memorandum
+        "parent": 1207658766,
+        "children": [1207660933, 1207660943]
+    },
+    {
+        // Master of Orion 1+2
+        "parent": 1207658854,
+        "children": [1207661623, 1207661633]
+    },
+    {
+        // Police Quest: SWAT 1+2
+        "parent": 1207658909,
+        "children": [1207661473, 1207661483]
+    },
+    {
+        //  Police Quest Collection
+        "parent": 1207658902,
+        "children": [1207661263, 1207661283, 1207661293, 1207661303]
+    },
+    {
+        // Haegemonia Gold Edition
+        "parent": 1207658759,
+        "children": [1207661583, 1207661593]
+    },
+    {
+        // MegaRace 1+2
+        "parent": 1207658758,
+        "children": [1207661603, 1207661613]
+    },
+    {
+        // Ishar Compilation
+        "parent": 1207658685,
+        "children": [1207662343, 1207662353, 1207662363, 1207662333]
+    },
+    {
+        // Earth 2150 Trilogy
+        "parent": 1207658739,
+        "children": [1207661853, 1207661863, 1207661873]
+    },
+    {
+        // Robinson's Requiem Collection
+        "parent": 1207658686,
+        "children": [1207662373, 1207662383]
+    },
+    {
+        // Disciples 2 Gold
+        "parent": 1207658697,
+        "children": [1207663703, 1207663713]
+    },
+    {
+        // Castles 1+2
+        "parent": 1207658678,
+        "children": [1207663063, 1207663073]
+    },
+    {
+        // Battle Chess Special Edition
+        "parent": 1207658676,
+        "children": [1207663033, 1207663043, 1207663053]
+    },
+    {
+        // M.A.X. + M.A.X. 2
+        "parent": 10,
+        "children": [1207663773, 1207663783]
+    },
+    {
+        // Penumbra Collection, The
+        "parent": 1207659255,
+        "children": [1207662733, 1207662743, 1207662753]
+    },
+    {
+        // American Conquest + Fight Back
+        "parent": 1207659004,
+        "children": [1207662803, 1207662813]
+    },
+    {
+        // Patrician 1+2
+        "parent": 1207658802,
+        "children": [1207663913, 1207663933]
+    },
+    {
+        // Realms of Arkania 1+2
+        "parent": 1207658796,
+        "children": [1207661973, 1207661983]
+    },
+    {
+        // Earthworm Jim 1+2: The Whole Can 'O Worms
+        "parent": 1207658672,
+        "children": [1207663103, 1207663113]
+    },
+    {
+        // Descent 1+2
+        "parent": 1207658656,
+        "children": [1207663083, 1207663093]
     }
 
 ];
