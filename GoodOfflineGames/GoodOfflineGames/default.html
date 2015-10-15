@@ -13,16 +13,15 @@
         body {
             background: #212121;
             padding: 0em;
-            margin: 1em;
+            margin: 0 1em;
         }
 
         .hidden {
             display: none !important;
         }
 
-        #productsContainer,
-        #searchResults {
-            margin-top: 4em;
+        #top {
+            height: 4em;
         }
 
         .product {
@@ -45,22 +44,23 @@
             }
 
             .product.partOwned {
-              color: #A5D6A7;
+                color: #A5D6A7;
                 font-style: italic;
             }
 
             .product.bundle {
-                font-weight: bold;
+                font-weight: 600;
             }
 
-            .product.bundle.owned {
-              color: #2E7D32;
-            }
+                .product.bundle.owned {
+                    color: #2E7D32;
+                }
 
-            .product.bundle.wishlisted {
-                /* wishlisted bundle should be normal to distinguish with partial owned */
-                font-style: normal;
-            }
+                .product.bundle.wishlisted {
+                    /* wishlisted bundle should be normal
+                to distinguish with partial owned */
+                    font-style: normal;
+                }
 
             .product.updated {
             }
@@ -83,11 +83,6 @@
                 color: white;
             }
 
-        #searchResults a {
-            margin-top: 2em;
-            display: inline-block;
-        }
-
         #searchContainer {
             position: fixed;
             left: 0;
@@ -99,16 +94,21 @@
             opacity: 0.95;
         }
 
-        #searchContainer #searchInput {
-            padding: 0.25em;
-            border-radius: 0.2em;
-            border: none;
-        }
+            #searchContainer #searchInput {
+                padding: 0.25em;
+                border-radius: 0.2em;
+                border: none;
+            }
 
-        #searchResults #showAllSearchResults {
-            color: white;
-            text-decoration: none;
-        }
+            #searchContainer a {
+                color: white;
+                margin-left: 1em;
+                text-decoration: none;
+            }
+
+            #searchContainer #backToTop {
+                float: right;
+            }
 
         #gameDetailsContainer {
             position: fixed;
@@ -155,12 +155,14 @@
     </style>
 </head>
 <body>
+    <div id="top"></div>
     <div id="searchContainer">
         <input id="searchInput" type="text" placeholder="Type to search..." tabindex="0" />
+        <a id="showAllSearchResults" class="hidden" href="#">Show all <span class="resultsCount"></span> results...</a>
+        <a id="backToTop" href="#top">Back to top</a>
     </div>
     <div id="searchResults" class="hidden">
         <div class="container"></div>
-        <a id="showAllSearchResults" href="#">Show all <span class="resultsCount"></span> results...</a>
     </div>
     <div id="productsContainer"></div>
     <div id="gameDetailsContainer" class="hidden">
@@ -173,20 +175,14 @@
     </div>
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
-
     <script src="./updated.js"></script>
     <script src="./wishlisted.js"></script>
-
     <script src="./productsdata.js"></script>
-
     <script src="./gamedetails.js"></script>
     <script src="./bundles.js"></script>
-
     <script>
 
-        // TODO: finish manual bundling
         // TODO: legend
-        // TODO: jump to top
 
         "use strict";
 
@@ -570,6 +566,7 @@
                     searchResults.classList.remove("hidden");
 
                 } else {
+                    showAllSearchResults.classList.add("hidden");
                     searchResults.classList.add("hidden");
                     productsContainer.classList.remove("hidden");
                 }
