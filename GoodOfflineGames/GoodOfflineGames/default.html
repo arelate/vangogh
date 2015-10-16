@@ -1,679 +1,743 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>GOG.com collection</title>
-    <style>
-        * {
-            font-family: "Segoe UI";
-            font-size: 17px;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>GOG.com collection</title>
+  <style>
+    * {
+      font-family: "Segoe UI";
+      font-size: 17px;
+      box-sizing: border-box;
+    }
 
-        body {
-            background: #212121;
-            padding: 0em;
-            margin: 0 1em;
-        }
+    body {
+      background: #212121;
+      padding: 0em;
+      margin: 0 1em;
+    }
 
-        .hidden {
-            display: none !important;
-        }
+    .hidden {
+      display: none !important;
+    }
 
-        #top {
-            height: 4em;
-        }
+    #top {
+      height: 4em;
+    }
 
-        .product {
-            line-height: 32px;
-            margin: 0.2em;
-            margin-left: 0;
-            margin-right: 2em;
-            cursor: pointer;
-            color: #BDBDBD;
-            display: inline-block;
-        }
+    .product {
+      line-height: 32px;
+      margin: 0.2em;
+      margin-left: 0;
+      margin-right: 2em;
+      cursor: pointer;
+      color: #BDBDBD;
+      display: inline-block;
+    }
 
-            .product.wishlisted {
-                color: #FFC107;
-                font-style: italic;
-            }
+    .product.wishlisted {
+      color: #FFC107;
+      font-style: italic;
+    }
 
-            .product.owned {
-                color: #66BB6A;
-            }
+    .product.owned {
+      color: #66BB6A;
+    }
 
-            .product.partOwned {
-                color: #A5D6A7;
-                font-style: italic;
-            }
+    .product.partOwned {
+      color: #A5D6A7;
+      font-style: italic;
+    }
 
-            .product.bundle {
-                font-weight: 600;
-            }
+    .product.bundle {
+      font-weight: 600;
+    }
 
-                .product.bundle.owned {
-                    color: #2E7D32;
-                }
+    .product.bundle.owned {
+      color: #2E7D32;
+    }
 
-                .product.bundle.wishlisted {
-                    /* wishlisted bundle should be normal
+    .product.bundle.wishlisted {
+      /* wishlisted bundle should be normal
                 to distinguish with partial owned */
-                    font-style: normal;
-                }
+      font-style: normal;
+    }
 
-            .product.updated {
-            }
+    .product.updated {}
 
-                .product.updated::after {
-                    content: "*";
-                    margin-left: 0.1em;
-                    color: #F44336;
-                }
+    .product.updated::after {
+      content: "*";
+      margin-left: 0.1em;
+      color: #F44336;
+    }
 
-            .product.dlc::after {
-                content: "DLC";
-                background: #9C27B0;
-                font-variant: small-caps;
-                border-radius: 0.2em;
-                padding: 0.1em 0.25em;
-                margin-left: 0.2em;
-                font-size: 0.6em;
-                vertical-align: top;
-                color: white;
-            }
+    .product.dlc::after {
+      content: "DLC";
+      background: #9C27B0;
+      font-variant: small-caps;
+      border-radius: 0.2em;
+      padding: 0.1em 0.25em;
+      margin-left: 0.2em;
+      font-size: 0.6em;
+      vertical-align: top;
+      color: white;
+    }
 
-        #searchContainer {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: auto;
-            padding: 1em;
-            background: inherit;
-            opacity: 0.95;
-        }
+    #searchContainer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: auto;
+      padding: 1em;
+      background: inherit;
+      opacity: 0.95;
+    }
 
-            #searchContainer #searchInput {
-                padding: 0.25em;
-                border-radius: 0.2em;
-                border: none;
-            }
+    #searchContainer #searchInput {
+      padding: 0.25em;
+      border-radius: 0.2em;
+      border: none;
+    }
 
-            #searchContainer a {
-                color: white;
-                margin-left: 1em;
-                text-decoration: none;
-            }
+    #searchContainer a {
+      color: white;
+      margin-left: 1em;
+      text-decoration: none;
+    }
 
-            #searchContainer #backToTop {
-                float: right;
-            }
+    #searchContainer #backToTop {
+      float: right;
+    }
 
-        #gameDetailsContainer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: auto;
-            background: inherit;
-            border-top: 1px solid #001122;
-            padding: 1em;
-            max-height: 10em;
-        }
+    #gameDetailsContainer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: auto;
+      background: inherit;
+      padding: 1em;
+      max-height: 10em;
+    }
 
-            #gameDetailsContainer img {
-                width: 192px;
-                height: 110px;
-                border: 0;
-                display: inline-block;
-            }
+    #gameDetailsContainer img {
+      width: 192px;
+      height: 110px;
+      border: 0;
+      display: inline-block;
+    }
 
-            #gameDetailsContainer .detailsContainer {
-                display: inline-block;
-                vertical-align: top;
-                color: white;
-                margin-left: 0.5em;
-                font-weight: 200;
-            }
+    #gameDetailsContainer .detailsContainer {
+      display: inline-block;
+      vertical-align: top;
+      color: white;
+      margin-left: 0.5em;
+      font-weight: 200;
+    }
 
-                #gameDetailsContainer .detailsContainer > .title {
-                    font-size: 1.4em;
-                    margin-bottom: 0.4em;
-                }
+    #gameDetailsContainer .detailsContainer > .title {
+      font-size: 1.4em;
+      margin-bottom: 0.4em;
+    }
 
-                #gameDetailsContainer .detailsContainer .developer,
-                #gameDetailsContainer .detailsContainer .publisher {
-                    font-size: 0.75em;
-                }
+    #gameDetailsContainer .detailsContainer .developer,
+    #gameDetailsContainer .detailsContainer .publisher {
+      font-size: 0.75em;
+    }
 
-                    #gameDetailsContainer .detailsContainer .developer .title,
-                    #gameDetailsContainer .detailsContainer .publisher .title {
-                        font-size: inherit;
-                        font-weight: bolder;
-                    }
-    </style>
+    #gameDetailsContainer .detailsContainer .developer .title,
+    #gameDetailsContainer .detailsContainer .publisher .title {
+      font-size: inherit;
+      font-weight: bolder;
+    }
+  </style>
 </head>
+
 <body>
-    <div id="top"></div>
-    <div id="searchContainer">
-        <input id="searchInput" type="text" placeholder="Type to search..." tabindex="0" />
-        <a id="showAllSearchResults" class="hidden" href="#">Show all <span class="resultsCount"></span> results...</a>
-        <a id="backToTop" href="#top">Back to top</a>
+  <div id="top"></div>
+  <div id="searchContainer">
+    <input id="searchInput" type="text" placeholder="Type to search..." tabindex="0" />
+    <a id="showAllSearchResults" class="hidden" href="#">Show all <span class="resultsCount"></span> results...</a>
+    <a id="backToTop" href="#top">Back to top</a>
+  </div>
+  <div id="searchResults" class="hidden">
+    <div class="container"></div>
+  </div>
+  <div id="productsContainer"></div>
+  <div id="gameDetailsContainer" class="hidden">
+    <img class="image" />
+    <div class="detailsContainer">
+      <div class="title">Title</div>
+      <div class="developer">Developer:
+        <span class="title">N/A</span>
+      </div>
+      <div class="publisher">Publisher:
+        <span class="title">N/A</span>
+      </div>
     </div>
-    <div id="searchResults" class="hidden">
-        <div class="container"></div>
-    </div>
-    <div id="productsContainer"></div>
-    <div id="gameDetailsContainer" class="hidden">
-        <img class="image" />
-        <div class="detailsContainer">
-            <div class="title">Title</div>
-            <div class="developer">Developer: <span class="title">N/A</span></div>
-            <div class="publisher">Publisher: <span class="title">N/A</span></div>
-        </div>
-    </div>
-    <script src="./products.js"></script>
-    <script src="./owned.js"></script>
-    <script src="./updated.js"></script>
-    <script src="./wishlisted.js"></script>
-    <script src="./productsdata.js"></script>
-    <script src="./gamedetails.js"></script>
-    <script src="./bundles.js"></script>
-    <script>
+  </div>
+  <script src="./products.js"></script>
+  <script src="./owned.js"></script>
+  <script src="./updated.js"></script>
+  <script src="./wishlisted.js"></script>
+  <script src="./productsdata.js"></script>
+  <script src="./gamedetails.js"></script>
+  <script src="./bundles.js"></script>
+  <script>
+    // TODO: legend
+    // TODO: redo gamedetails show bundled products, cdKey, required products
 
-        // TODO: legend
+    "use strict";
 
-        "use strict";
+    var $ = function(id) {
+      return document.getElementById(id);
+    }
 
-        var combinedProducts = [];
+    var Templates = function() {
+      var getProductTemplate = function() {
+        return "<span class='product {{productClass}}' data-id='{{id}}'>" +
+          "<span class='title' title='{{title}}' >{{title}}</span>" +
+          "<span class='wishlisted'></span>" +
+          "<span class='owned'></span>" +
+          "<span class='updated'></span>" +
+          "</span>";
+      }
+      return {
+        "getProductTemplate": getProductTemplate
+      }
+    }();
 
-        var $ = function (id) {
-            return document.getElementById(id);
+    var Views = function() {
+      var bindTemplateToModel = function(template, model) {
+        var result = template;
+        for (var property in model) {
+          var replacedProperty = "{{" + property + "}}";
+          while (result.indexOf(replacedProperty) > -1)
+            result = result.replace(replacedProperty, model[property]);
+        }
+        return result;
+      }
+      var createProductView = function(product, modelProvider) {
+        var model = modelProvider(product);
+        var productTemplate = Templates.getProductTemplate();
+        return bindTemplateToModel(productTemplate, model);
+      }
+      return {
+        "createProductView": createProductView
+      }
+    }();
+
+    var Images = function() {
+      var getRelativeUri = function(absoluteUri) {
+        var imageParts = absoluteUri.split("/");
+        var imageLocalUri = imageParts[imageParts.length - 1];
+        return "_images/" + imageLocalUri + "_196.jpg 1x, _images/" + imageLocalUri + "_392.jpg 2x";
+      }
+      return {
+        "getRelativeUri": getRelativeUri
+      }
+    }();
+
+    var GameDetails = function() {
+      var pIndex;
+      var pdIndex;
+      var gameDetailsContainer = $("gameDetailsContainer");
+      var gameDetailsImage = gameDetailsContainer.querySelector(".image");
+      var gameDetailsTitle = gameDetailsContainer.querySelector(".title");
+      var developerTitle = gameDetailsContainer.querySelector(".developer .title");
+      var publisherTitle = gameDetailsContainer.querySelector(".publisher .title");
+      var show = function(id) {
+
+        var product = pIndex.getElementByKey(id);
+        if (!product) return;
+
+        var pd = pdIndex.getElementByKey(id);
+
+        if (product.image) gameDetailsImage.srcset = Images.getRelativeUri(product.image);
+        gameDetailsTitle.textContent = product.title;
+
+        developerTitle.textContent = (pd && pd.developer) ? pd.developer.name : "N/A";
+        publisherTitle.textContent = (pd && pd.publisher) ? pd.publisher.name : "N/A";
+
+        gameDetailsContainer.classList.remove("hidden");
+      }
+      var init = function(pi, pdi, elements) {
+        pIndex = pi;
+        pdIndex = pdi;
+        for (var ii = 0; ii < elements.length; ii++) {
+          elements[ii].addEventListener("click", function(e) {
+            var id = parseInt(e.currentTarget.getAttribute("data-id"));
+            show(id);
+            // stop it here, don't propagate to body handler that hides gameDetails containers
+            e.stopPropagation();
+          });
+        }
+        document.body.addEventListener("click", function() {
+          gameDetailsContainer.classList.add("hidden");
+        });
+      }
+      return {
+        "init": init
+      }
+    }();
+
+    var SearchIndex = function() {
+      var pIndex, pdIndex, oIndex, uIndex, wIndex;
+      var searchIndex = [];
+      var indexProduct = function(p) {
+
+        var parts = [];
+
+        if (Bundles.isChild(p.id)) return;
+
+        var pd = pdIndex.getElementByKey(p.id);
+
+        parts.push(p.title.toLowerCase());
+
+        if (pd) {
+
+          if (DLC.isDLC(pd)) parts.push("dlc");
+
+          if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
+          if (pd.developer) parts.push(pd.developer.name.toLowerCase());
+
+          if (pd.genres) {
+            for (var gg = 0; gg < pd.genres.length; gg++) {
+              parts.push(pd.genres[gg].name.toLowerCase());
+            }
+          }
         }
 
-        var Templates = function () {
-            var getProductTemplate = function () {
-                return "<span class='product {{productClass}}' data-id='{{id}}'>" +
-                "<span class='title' title='{{title}}' >{{title}}</span>" +
-                "<span class='wishlisted'></span>" +
-                "<span class='owned'></span>" +
-                "<span class='updated'></span>" +
-                "</span>";
+        if (p.worksOn.Windows) parts.push("windows");
+        if (p.worksOn.Mac) parts.push("mac osx");
+        if (p.worksOn.Linux) parts.push("linux");
+
+        if (uIndex.check(p.id)) parts.push("updated");
+        if (oIndex.check(p.id)) parts.push("owned");
+        if (wIndex.check(p.id)) parts.push("wishlisted");
+
+        if (Bundles.isParent(p.id)) {
+          // add child items title
+          var bundle = Bundles.getBundleByParentId(p.id);
+          if (bundle)
+            for (var ii = 0; ii < bundle.children.length; ii++) {
+              var bundleChild = pIndex.getElementByKey(bundle.children[ii]);
+              if (bundleChild) parts.push(bundleChild.title.toLowerCase());
             }
-            return {
-                "getProductTemplate": getProductTemplate
-            }
-        }();
-
-        var Views = function () {
-            var bindTemplateToModel = function (template, model) {
-                var result = template;
-                for (var property in model) {
-                    var replacedProperty = "{{" + property + "}}";
-                    while (result.indexOf(replacedProperty) > -1)
-                        result = result.replace(replacedProperty, model[property]);
-                }
-                return result;
-            }
-            var createProductView = function (product, modelProvider) {
-                var model = modelProvider(product);
-                var productTemplate = Templates.getProductTemplate();
-                return bindTemplateToModel(productTemplate, model);
-            }
-            return {
-                "createProductView": createProductView
-            }
-        }();
-
-        var ProductData = function () {
-            var getProductDataById = function (id) {
-                for (var ii = 0; ii < productsdata.length; ii++) {
-                    if (productsdata[ii].id === id) {
-                        return productsdata[ii];
-                    }
-                }
-            }
-            return {
-                "getProductDataById": getProductDataById
-            }
-        }();
-
-        var GameDetails = function () {
-            var gameDetailsContainer = $("gameDetailsContainer");
-            var gameDetailsImage = gameDetailsContainer.querySelector(".image");
-            var gameDetailsTitle = gameDetailsContainer.querySelector(".title");
-            var developerTitle = gameDetailsContainer.querySelector(".developer .title");
-            var publisherTitle = gameDetailsContainer.querySelector(".publisher .title");
-            var getGameDetailsById = function (id) {
-                for (var ii = 0; ii < gamedetails.length; ii++) {
-                    if (gamedetails[ii].id === id) {
-                        return gamedetails[ii];
-                    }
-                }
-            }
-            var show = function (id) {
-
-                // TODO: show bundled products, cdKey, required products
-
-                var product = CombinedProducts.getProductById(id);
-                if (!product) return;
-
-                var productData = ProductData.getProductDataById(id);
-
-                if (product.image) {
-                    var imageParts = product.image.split("/");
-                    var imageLocalUri = imageParts[imageParts.length - 1];
-                }
-
-                gameDetailsImage.srcset = "_images/" + imageLocalUri + "_196.jpg 1x, _images/" + imageLocalUri + "_392.jpg 2x";
-                gameDetailsTitle.textContent = product.title;
-
-
-                developerTitle.textContent = (productData && productData.developer) ? productData.developer.name : "N/A";
-                publisherTitle.textContent = (productData && productData.publisher) ? productData.publisher.name : "N/A";
-
-                gameDetailsContainer.classList.remove("hidden");
-            }
-            var init = function (productElements) {
-                for (var ii = 0; ii < productElements.length; ii++) {
-                    productElements[ii].addEventListener("click", function (e) {
-                        var id = parseInt(e.currentTarget.getAttribute("data-id"));
-                        show(id);
-                        // stop it here, don't propagate to body handler that hides gameDetails containers
-                        e.stopPropagation();
-                    });
-                }
-                document.body.addEventListener("click", function () {
-                    gameDetailsContainer.classList.add("hidden");
-                });
-            }
-            return {
-                "init": init,
-                "getGameDetailsById": getGameDetailsById
-            }
-        }();
-
-        var SearchIndex = function () {
-            var searchIndex = [];
-            var indexProduct = function (p) {
-
-                var parts = [];
-
-                if (Bundles.isChild(p.id)) return;
-
-                //if (DLC.isDLCById(p.id)) {
-                //    parts.push(p.title.toLowerCase());
-                //    return;
-                //};
-
-                var pd = ProductData.getProductDataById(p.id);
-
-                parts.push(p.title.toLowerCase());
-
-                if (pd) {
-                    if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
-                    if (pd.developer) parts.push(pd.developer.name.toLowerCase());
-
-                    if (pd.genres) {
-                        for (var gg = 0; gg < pd.genres.length; gg++) {
-                            parts.push(pd.genres[gg].name.toLowerCase());
-                        }
-                    }
-                }
-
-                if (p.worksOn.Windows) parts.push("windows");
-                if (p.worksOn.Mac) parts.push("mac osx");
-                if (p.worksOn.Linux) parts.push("linux");
-
-                if (Updated.check(p.id)) parts.push("updated");
-                if (Owned.check(p.id)) parts.push("owned");
-                if (Wishlisted.check(p.id)) parts.push("wishlisted");
-                if (DLC.isDLCById(p.id)) parts.push("dlc");
-
-                if (Bundles.isParent(p.id)) {
-                    // add child items title
-                    var bundle = Bundles.getBundleByParentId(p.id);
-                    if (bundle) {
-                        for (var ii = 0; ii < bundle.children.length; ii++) {
-                            var bundleChild = CombinedProducts.getProductById(bundle.children[ii]);
-                            if (bundleChild) {
-                                parts.push(bundleChild.title.toLowerCase());
-                            }
-                        }
-                    }
-                }
-
-                searchIndex.push(parts.join(" "));
-
-            }
-            var init = function (products) {
-                combinedProducts.forEach(indexProduct);
-            };
-            var match = function (text) {
-                var textParts = text.split(" ");
-                var matchingIds = [];
-                for (var ii = 0; ii < searchIndex.length; ii++) {
-                    if (!searchIndex[ii]) continue;
-                    var matches = true;
-                    for (var tt = 0; tt < textParts.length; tt++) {
-                        if (!textParts[tt]) continue;
-                        matches &= searchIndex[ii].indexOf(textParts[tt]) > -1;
-                    }
-                    if (matches) matchingIds.push(ii);
-                }
-                return matchingIds;
-            };
-            return {
-                "init": init,
-                "match": match
-            }
-        }();
-
-        var DLC = function () {
-            var isDLCById = function (id) {
-                var productData = ProductData.getProductDataById(id);
-                return isDLCByProductData(productData);
-            }
-            var isDLCByProductData = function (productData) {
-
-                if (!productData) return false;
-
-                return (productData.requiredProducts !== undefined &&
-                        productData.requiredProducts.length > 0);
-            }
-            return {
-                "isDLCById": isDLCById,
-                "isDLCByProductData": isDLCByProductData
-            }
-        }();
-
-        var Owned = function () {
-            var check = function (id) {
-
-                var ownedProduct = getOwnedById(id);
-                if (ownedProduct) return true;
-
-                // if all bundled products are owned then bundle is owned
-                if (Bundles.isParent(id)) {
-                    var bundle = Bundles.getBundleByParentId(id);
-                    var childProductsOwned = true;
-                    for (var ii = 0; ii < bundle.children.length; ii++) {
-                        childProductsOwned &= check(bundle.children[ii]);
-                    }
-                    if (childProductsOwned) return true;
-                }
-
-                var productData = ProductData.getProductDataById(id);
-
-                // return false because if that is not DLC, we should have passed the check earlier
-                if (!DLC.isDLCByProductData(productData)) return false;
-
-                for (var rp = 0; rp < productData.requiredProducts.length; rp++) {
-                    var requiredProduct = productData.requiredProducts[rp].id;
-
-                    var gameDetails = GameDetails.getGameDetailsById(requiredProduct);
-
-                    if (!gameDetails ||
-                        !gameDetails.dlcs) continue;
-
-                    if (gameDetails.dlcs.length === 0) continue;
-
-                    for (var dd = 0; dd < gameDetails.dlcs.length; dd++) {
-                        var dlc = gameDetails.dlcs[dd];
-                        if (dlc.title === productData.title) return true;
-                    }
-                }
-            }
-            var checkPartialOwnership = function (id) {
-                // TODO: DRY - this code is used in 4 part at least
-                if (Bundles.isParent(id)) {
-                    var bundle = Bundles.getBundleByParentId(id);
-                    var childProductsOwned = false;
-                    for (var ii = 0; ii < bundle.children.length; ii++) {
-                        childProductsOwned |= check(bundle.children[ii]);
-                    }
-                    if (childProductsOwned) return true;
-                }
-            }
-            var getOwnedById = function (id) {
-                for (var ii = 0; ii < owned.length; ii++) {
-                    if (owned[ii].id === id) {
-                        return owned[ii];
-                    }
-                }
-            }
-            return {
-                "check": check,
-                "checkPartialOwnership": checkPartialOwnership,
-                "getOwnedById": getOwnedById
-            }
-        }();
-
-        var Updated = function () {
-            var check = function (id) {
-
-                // if any of the bundled product is updated then bundle itself is updated
-                if (Bundles.isParent(id)) {
-                    var bundle = Bundles.getBundleByParentId(id);
-                    var childProductsUpdated = false;
-                    for (var ii = 0; ii < bundle.children.length; ii++) {
-                        childProductsUpdated |= check(bundle.children[ii]);
-                    }
-                    if (childProductsUpdated) return true;
-                }
-
-                return (updated.indexOf(id) > -1);
-            }
-            return {
-                "check": check
-            }
-        }();
-
-        var Wishlisted = function () {
-            var check = function (id) {
-
-                // if any of the bundled product is updated then bundle itself is updated
-                if (Bundles.isParent(id)) {
-                    var bundle = Bundles.getBundleByParentId(id);
-                    var childProductsWishlisted = false;
-                    for (var ii = 0; ii < bundle.children.length; ii++) {
-                        childProductsWishlisted |= check(bundle.children[ii]);
-                    }
-                    if (childProductsWishlisted) return true;
-                }
-
-                return wishlisted.indexOf(id) > -1;
-            }
-            return {
-                "check": check
-            }
-        }();
-
-        var ViewModelProvider = function () {
-            var getProductViewModel = function (product) {
-                var productClass = [];
-
-                if (product.id === 1207658836) {
-                    console.log("ja");
-                }
-
-                if (Owned.check(product.id)) {
-                    productClass.push("owned");
-                } else if (Owned.checkPartialOwnership(product.id)) {
-                    productClass.push("partOwned");
-                }
-
-                if (Wishlisted.check(product.id)) productClass.push("wishlisted");
-                if (Updated.check(product.id)) productClass.push("updated");
-                if (DLC.isDLCById(product.id)) productClass.push("dlc");
-                if (Bundles.isParent(product.id)) productClass.push("bundle");
-
-                var imageParts = product.image.split("/");
-                var image = imageParts[imageParts.length - 1];
-
-                return {
-                    "id": product.id,
-                    "productClass": productClass.join(" "),
-                    "image": image,
-                    "title": product.title + " " + product.id
-                };
-            }
-            return {
-                "getProductViewModel": getProductViewModel
-            }
-        }();
-
-        var Search = function () {
-            var productElements = undefined;
-            var searchResults = $("searchResults");
-            var searchResultsContainer = searchResults.querySelector(".container");
-            var productsContainer = $("productsContainer");
-            var showAllResultsLink = $("showAllSearchResults");
-            var resultsCount = showAllResultsLink.querySelector(".resultsCount");
-            var searchResultsLimit = 15;
-            var search = function (text, showAllResults) {
-
-                if (productElements === undefined) {
-                    productElements = document.querySelectorAll("#productsContainer > .product");
-                }
-
-                if (text.length > 0) {
-
-                    searchResultsContainer.innerHTML = "";
-                    productsContainer.classList.add("hidden");
-
-                    var matchingIndexes = SearchIndex.match(text);
-                    var length = showAllResults ? matchingIndexes.length : Math.min(matchingIndexes.length, searchResultsLimit);
-
-                    if (!showAllResults && matchingIndexes.length > searchResultsLimit) {
-                        showAllSearchResults.classList.remove("hidden");
-                        resultsCount.textContent = matchingIndexes.length;
-                    } else {
-                        showAllSearchResults.classList.add("hidden");
-                    }
-
-                    var clonedProductElements = [];
-
-                    for (var ii = 0; ii < length; ii++) {
-                        var clonedProductElement = productElements[matchingIndexes[ii]].cloneNode(true);
-                        clonedProductElements.push(clonedProductElement);
-                        searchResultsContainer.appendChild(clonedProductElement);
-                    }
-
-                    GameDetails.init(clonedProductElements);
-
-                    searchResults.classList.remove("hidden");
-
-                } else {
-                    showAllSearchResults.classList.add("hidden");
-                    searchResults.classList.add("hidden");
-                    productsContainer.classList.remove("hidden");
-                }
-            }
-            return {
-                "search": search
-            }
-
-        }();
-
-        var CombinedProducts = function () {
-            var init = function (products, owned) {
-                var cp = [];
-                var addedProducts = [];
-
-                // first add available products...
-                for (var ii = 0; ii < products.length; ii++) {
-                    cp.push(products[ii]);
-                    addedProducts.push(products[ii].id);
-                }
-                // ...then add owned products that are no longer available
-                for (var ii = 0; ii < owned.length; ii++) {
-                    if (addedProducts.indexOf(owned[ii].id) > -1) continue;
-                    cp.push(owned[ii]);
-                }
-
-                return cp;
-            }
-            var getProductById = function (id) {
-                for (var ii = 0; ii < combinedProducts.length; ii++) {
-                    if (combinedProducts[ii].id === id) {
-                        return combinedProducts[ii];
-                    }
-                }
-            }
-            return {
-                "init": init,
-                "getProductById": getProductById
-            }
-        }();
-
-        var Bundles = function () {
-            var parents = [];
-            var children = [];
-            var init = function () {
-                if (!bundles || !bundles.length) return;
-
-                for (var ii = 0; ii < bundles.length; ii++) {
-                    parents.push(bundles[ii].parent);
-                    for (var jj = 0; jj < bundles[ii].children.length; jj++) {
-                        children.push(bundles[ii].children[jj]);
-                    }
-                }
-            }
-            var isParent = function (id) {
-                return parents.indexOf(id) > -1;
-            }
-            var isChild = function (id) {
-                return children.indexOf(id) > -1;
-            }
-            var getBundleByParentId = function (id) {
-                for (var ii = 0; ii < bundles.length; ii++) {
-                    if (bundles[ii].parent === id) {
-                        return bundles[ii];
-                    }
-                }
-            }
-            return {
-                "init": init,
-                "isParent": isParent,
-                "isChild": isChild,
-                "getBundleByParentId": getBundleByParentId
-            }
-        }();
-
-        document.addEventListener("DOMContentLoaded", function () {
-
-            var html = "";
-
-            combinedProducts = CombinedProducts.init(products, owned);
-            Bundles.init();
-
-            for (var ii = 0; ii < combinedProducts.length; ii++) {
-
-                if (Bundles.isChild(combinedProducts[ii].id)) continue;
-                // TODO: show DLC on GameDetails card
-                //if (DLC.isDLCById(combinedProducts[ii].id)) continue;
-
-                html += Views.createProductView(combinedProducts[ii], ViewModelProvider.getProductViewModel);
-            }
-
-            document.getElementById("productsContainer").innerHTML = html;
-
-            SearchIndex.init(combinedProducts);
-
-            var searchInput = $("searchInput");
-            searchInput.addEventListener("input", function (e) {
-                Search.search(searchInput.value.toLowerCase())
-            });
-
-            var showAllSearchResults = $("showAllSearchResults");
-            showAllSearchResults.addEventListener("click", function () {
-                Search.search(searchInput.value.toLowerCase(), true);
-            });
-
-            GameDetails.init(document.querySelectorAll("#productsContainer > .product"));
+        }
+        searchIndex.push(parts.join(" "));
+
+      }
+      var init = function(pi, pdi, oi, ui, wi) {
+        pIndex = pi;
+        pdIndex = pdi;
+        oIndex = oi;
+        uIndex = ui;
+        wIndex = wi;
+        for (var ii = 0; ii < pi.getLength(); ii++) {
+          indexProduct(pi.getElementByIndex(ii));
+        }
+      };
+      var match = function(text) {
+        var textParts = text.split(" ");
+        var matchingIds = [];
+        for (var ii = 0; ii < searchIndex.length; ii++) {
+          if (!searchIndex[ii]) continue;
+          var matches = true;
+          for (var tt = 0; tt < textParts.length; tt++) {
+            if (!textParts[tt]) continue;
+            matches &= searchIndex[ii].indexOf(textParts[tt]) > -1;
+          }
+          if (matches) matchingIds.push(ii);
+        }
+        return matchingIds;
+      };
+      return {
+        "init": init,
+        "match": match
+      }
+    }();
+
+    var DLC = function() {
+      var isDLC = function(pd) {
+        return (pd &&
+          pd.requiredProducts !== undefined &&
+          pd.requiredProducts.length > 0);
+      }
+      return {
+        "isDLC": isDLC
+      }
+    }();
+
+    var Owned = function() {
+      var pdIndex;
+      var gdIndex;
+      var oIndex;
+      var check = function(id) {
+
+        var ownedProduct = oIndex.getElementByKey(id);
+        if (ownedProduct) return true;
+
+        // if all bundled products are owned then bundle is owned
+        if (Bundles.isParent(id)) {
+          var bundle = Bundles.getBundleByParentId(id);
+          var childProductsOwned = true;
+          for (var ii = 0; ii < bundle.children.length; ii++) {
+            childProductsOwned &= check(bundle.children[ii]);
+          }
+          if (childProductsOwned) return true;
+        }
+
+        var productData = pdIndex.getElementByKey(id);
+
+        // return false because if that is not DLC, we should have passed the check earlier
+        if (!DLC.isDLC(productData)) return false;
+
+        for (var rp = 0; rp < productData.requiredProducts.length; rp++) {
+          var requiredProduct = productData.requiredProducts[rp].id;
+
+          var gameDetails = gdIndex.getElementByKey(requiredProduct);
+
+          if (!gameDetails ||
+            !gameDetails.dlcs) continue;
+
+          if (gameDetails.dlcs.length === 0) continue;
+
+          for (var dd = 0; dd < gameDetails.dlcs.length; dd++) {
+            var dlc = gameDetails.dlcs[dd];
+            if (dlc.title === productData.title) return true;
+          }
+        }
+      }
+      var checkPartialOwnership = function(id) {
+        if (Bundles.isParent(id) &&
+          Bundles.checkChildrenAny(id, check)) return true;
+      }
+      var init = function(pdi, gdi, oi) {
+        pdIndex = pdi;
+        gdIndex = gdi;
+        oIndex = oi;
+      }
+      return {
+        "check": check,
+        "checkPartialOwnership": checkPartialOwnership,
+        "init": init
+      }
+    }();
+
+    var ViewModelProvider = function() {
+      var pdIndex, wIndex, uIndex;
+      var getProductViewModel = function(product) {
+        var productClass = [];
+
+        if (Owned &&
+          Owned.check(product.id)) {
+          productClass.push("owned");
+        } else if (owned &&
+          Owned.checkPartialOwnership &&
+          Owned.checkPartialOwnership(product.id)) {
+          productClass.push("partOwned");
+        }
+
+        if (wIndex.check(product.id)) productClass.push("wishlisted");
+        if (uIndex.check(product.id)) productClass.push("updated");
+
+        var pd = pdIndex.getElementByKey(product.id);
+        if (pd && DLC.isDLC(pd)) productClass.push("dlc");
+
+        if (Bundles.isParent(product.id)) productClass.push("bundle");
+
+        var imageParts = product.image.split("/");
+        var image = imageParts[imageParts.length - 1];
+
+        return {
+          "id": product.id,
+          "productClass": productClass.join(" "),
+          "image": image,
+          "title": product.title
+        };
+      }
+      var init = function(pdi, ui, wi) {
+        pdIndex = pdi;
+        wIndex = wi;
+        uIndex = ui;
+      }
+      return {
+        "init": init,
+        "getProductViewModel": getProductViewModel
+      }
+    }();
+
+    var IndexedCollection = function() {
+
+      var indexKeys = function(collection, getElementKey) {
+        var index = [];
+        collection.forEach(function(i) {
+          index[getElementKey(i)] = collection.indexOf(i);
         });
-    </script>
+        return index;
+      }
+      var create = function(collection, getElementKey) {
+        var index = indexKeys(collection, getElementKey);
+        var getElementByKey = function(key) {
+          return collection[index[key]];
+        }
+        var getElementByIndex = function(itemIndex) {
+          return collection[itemIndex];
+        }
+        var check = function(id, bundles) {
+
+          // if any of the bundled product is updated then bundle itself is updated
+          if (bundles &&
+            bundles.isParent &&
+            bundles.isParent(id) &&
+            bundles.checkChildrenAny &&
+            bundles.checkChildrenAny(id, check)) return true;
+
+          return collection.indexOf(id) > -1;
+        }
+        return {
+          "getElementByKey": getElementByKey,
+          "getElementByIndex": getElementByIndex,
+          "check": check,
+          "getLength": function() {
+            return collection.length
+          }
+        }
+      }
+      return {
+        "create": create
+      }
+    }();
+
+    var Search = function() {
+      var pIndex;
+      var pdIndex;
+      var productElements = undefined;
+      var searchResults = $("searchResults");
+      var searchResultsContainer = searchResults.querySelector(".container");
+      var productsContainer = $("productsContainer");
+      var showAllResultsLink = $("showAllSearchResults");
+      var resultsCount = showAllResultsLink.querySelector(".resultsCount");
+      var searchResultsLimit = 15;
+      var search = function(text, showAllResults) {
+
+        if (productElements === undefined) {
+          productElements = document.querySelectorAll("#productsContainer > .product");
+        }
+
+        if (text.length > 0) {
+
+          searchResultsContainer.innerHTML = "";
+          productsContainer.classList.add("hidden");
+
+          var matchingIndexes = SearchIndex.match(text);
+          var length = showAllResults ? matchingIndexes.length : Math.min(matchingIndexes.length, searchResultsLimit);
+
+          if (!showAllResults && matchingIndexes.length > searchResultsLimit) {
+            showAllSearchResults.classList.remove("hidden");
+            resultsCount.textContent = matchingIndexes.length;
+          } else {
+            showAllSearchResults.classList.add("hidden");
+          }
+
+          var clonedProductElements = [];
+
+          for (var ii = 0; ii < length; ii++) {
+            var clonedProductElement = productElements[matchingIndexes[ii]].cloneNode(true);
+            clonedProductElements.push(clonedProductElement);
+            searchResultsContainer.appendChild(clonedProductElement);
+          }
+
+          GameDetails.init(pIndex, pdIndex, clonedProductElements);
+
+          searchResults.classList.remove("hidden");
+
+        } else {
+          showAllSearchResults.classList.add("hidden");
+          searchResults.classList.add("hidden");
+          productsContainer.classList.remove("hidden");
+        }
+      }
+      var init = function(pi, pdi) {
+        pIndex = pi;
+        pdIndex = pdi;
+      }
+      return {
+        "search": search,
+        "init": init
+      }
+
+    }();
+
+    var CombinedProducts = function() {
+      var init = function(products, owned) {
+        var cp = [];
+        var addedProducts = [];
+
+        // first add available products...
+        for (var ii = 0; ii < products.length; ii++) {
+          cp.push(products[ii]);
+          addedProducts.push(products[ii].id);
+        }
+        // ...then add owned products that are no longer available
+        for (var ii = 0; ii < owned.length; ii++) {
+          if (addedProducts.indexOf(owned[ii].id) > -1) continue;
+          cp.push(owned[ii]);
+        }
+        return cp;
+      }
+      return {
+        "init": init
+      }
+    }();
+
+    var Bundles = function() {
+      var parents = [];
+      var children = [];
+      var init = function() {
+        if (!bundles || !bundles.length) return;
+        for (var ii = 0; ii < bundles.length; ii++) {
+          parents.push(bundles[ii].parent);
+          for (var jj = 0; jj < bundles[ii].children.length; jj++) {
+            children.push(bundles[ii].children[jj]);
+          }
+        }
+      }
+      var isParent = function(id) {
+        return parents.indexOf(id) > -1;
+      }
+      var isChild = function(id) {
+        return children.indexOf(id) > -1;
+      }
+      var getBundleByParentId = function(id) {
+        for (var ii = 0; ii < bundles.length; ii++) {
+          if (bundles[ii].parent === id) {
+            return bundles[ii];
+          }
+        }
+      }
+      var checkChildrenAny = function(id, predicate) {
+        return checkChildrenInternal(id, predicate, false, function(a, b) {
+          return a | b;
+        });
+      }
+      var checkChildrenAll = function(id, predicate) {
+        return checkChildrenInternal(id, predicate, true, function(a, b) {
+          return a & b;
+        });
+      }
+      var checkChildrenInternal = function(id, predicate, initialValue, comparison) {
+        var bundle = getBundleByParentId(id);
+        var result = initialValue;
+        for (var ii = 0; ii < bundle.children.length; ii++) {
+          result = comparison(result, predicate(bundle.children[ii]));
+        }
+        return result;
+      }
+      return {
+        "init": init,
+        "isParent": isParent,
+        "isChild": isChild,
+        "getBundleByParentId": getBundleByParentId,
+        "checkChildrenAny": checkChildrenAny,
+        "checkChildrenAll": checkChildrenAll
+      }
+    }();
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+      var getId = function(e) {
+        return e.id
+      };
+
+      var getValue = function(e) {
+        return e;
+      }
+
+      // TODO: Another DRY, Updated and Wishlisted are identical other than collection
+      // var ValueCollection = function() {
+
+      var start = new Date();
+      var cp = CombinedProducts.init(products, owned);
+      var elapsed = new Date() - start;
+      console.log("Combining products: " + elapsed + "ms");
+
+      start = new Date();
+      var productsIndex = IndexedCollection.create(cp, getId);
+      var productsDataIndex = IndexedCollection.create(productsdata, getId);
+      var gameDetailsIndex = IndexedCollection.create(gamedetails, getId);
+      var ownedIndex = IndexedCollection.create(owned, getId);
+      var updatedIndex = IndexedCollection.create(owned, getValue);
+      var wishlistedIndex = IndexedCollection.create(wishlisted, getValue);
+
+      ViewModelProvider.init(productsDataIndex, updatedIndex, wishlistedIndex);
+      Owned.init(productsDataIndex, gameDetailsIndex, ownedIndex);
+      elapsed = new Date() - start;
+      console.log("Indexing collections: " + elapsed + "ms");
+
+      start = new Date();
+      Bundles.init();
+      elapsed = new Date() - start;
+      console.log("Initializing bundles: " + elapsed + "ms");
+
+      start = new Date();
+      var html = [];
+      for (var ii = 0; ii < productsIndex.getLength(); ii++) {
+        var product = productsIndex.getElementByIndex(ii);
+
+        if (Bundles.isChild(product.id)) continue;
+
+        var view = Views.createProductView(product,
+          ViewModelProvider.getProductViewModel);
+        html.push(view);
+      }
+      elapsed = new Date() - start;
+      console.log("Creating views: " + elapsed + "ms");
+
+      var start = new Date();
+      // show first N elements ASAP, others delay for a bit
+      var throttle = 100;
+      var initialHtml = html.slice(0, throttle).join("");
+      var remainingHtml = html.slice(throttle, html.length).join("");
+      var pContainer = document.getElementById("productsContainer");
+      pContainer.innerHTML = initialHtml;
+      requestAnimationFrame(function() {
+        pContainer.innerHTML += remainingHtml;
+
+        start = new Date();
+        var productsElements = document.querySelectorAll("#productsContainer > .product");
+        GameDetails.init(productsIndex, productsDataIndex, productsElements);
+        elapsed = new Date() - start;
+        console.log("Initializing game details: " + elapsed + "ms");
+      });
+      var elapsed = new Date() - start;
+      console.log("Adding html to the DOM: " + elapsed + "ms");
+
+      start = new Date();
+      SearchIndex.init(
+        productsIndex,
+        productsDataIndex,
+        ownedIndex,
+        updatedIndex,
+        wishlistedIndex);
+      elapsed = new Date() - start;
+      console.log("Initializing search index: " + elapsed + "ms");
+
+      Search.init(productsIndex, productsDataIndex);
+      var searchInput = $("searchInput");
+      searchInput.addEventListener("input", function(e) {
+        Search.search(searchInput.value.toLowerCase())
+      });
+
+      var showAllSearchResults = $("showAllSearchResults");
+      showAllSearchResults.addEventListener("click", function() {
+        Search.search(searchInput.value.toLowerCase(), true);
+      });
+
+    });
+  </script>
 </body>
+
 </html>
