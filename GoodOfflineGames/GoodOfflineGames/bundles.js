@@ -648,6 +648,21 @@
         // Descent 1+2
         "parent": 1207658656,
         "children": [1207663083, 1207663093]
+    },
+    {
+        // Elder Scrolls III: Morrowind GOTY Edition, The
+        "parent": 1440163901,
+        "children": [1435828767]
+    },
+    {
+        // An Elder Scrolls Legend: Battlespire
+        "parent": 1440163341,
+        "children": [1435829464]
+    },
+    {
+        // Elder Scrolls Adventures: Redguard, The
+        "parent": 1440162836,
+        "children": [1435829617]
     }
 
 ];

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 
 <head>
@@ -452,10 +452,10 @@
         var image = imageParts[imageParts.length - 1];
 
         return {
-          "id": product.id,
-          "productClass": productClass.join(" "),
-          "image": image,
-          "title": product.title
+            "id": product.id,
+            "productClass": productClass.join(" "),
+            "image": image,
+            "title": product.title// + " " + product.id
         };
       }
       var init = function(pdi, ui, wi) {
