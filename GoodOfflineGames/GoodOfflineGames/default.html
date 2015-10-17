@@ -49,7 +49,7 @@
         }
 
         .product {
-            line-height: 2.5em;
+            line-height: 2em;
             margin-right: 2em;
             cursor: pointer;
             color: #BDBDBD;
@@ -150,6 +150,11 @@
                 margin-bottom: 1em;
             }
 
+            #gameDetailsContainer .header {
+                font-weight: 600;
+                padding-right: 0.5em;
+            }
+
         #legendContainer {
             top: 4em;
             left: auto;
@@ -203,7 +208,7 @@
     <script src="./gamedetails.js"></script>
     <script src="./bundles.js"></script>
     <script>
-        // TODO: redo gamedetails show bundled products, cdKey, required products
+        // TODO: redo gamedetails show bundled products, required products, dlcs
 
         "use strict";
 
@@ -218,10 +223,15 @@
                   "</span>";
             }
             var getGameDetailsTemplate = function () {
-                return "<div class='productTitle'>{{productTitle}}</div>"+
-                    "<img class=image' srcset='{{productImage}}' />"+
-                    "<div class='developer'>Developer:<span class='title'>{{developerTitle}}</span></div>"+
-                    "<div class='publisher'>Publisher:<span class='title'>{{publisherTitle}}</span></div>";
+                return "<h1 class='productTitle'>{{productTitle}}</h1>" +
+                    "<img class=image' srcset='{{productImage}}' />" +
+                    "<table>" +
+                    "<tr><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
+                    "<tr><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
+                    "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>"+
+                    "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
+                    "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title'>{{cdKeyTitle}}</td></tr>" +
+                    "</table>";
             }
             return {
                 "getProductTemplate": getProductTemplate,
@@ -496,7 +506,7 @@
         }();
 
         var ViewModelProvider = function () {
-            var pdIndex, wIndex, uIndex;
+            var pdIndex, gdIndex, wIndex, uIndex;
             var getProductViewModel = function (product) {
                 var productClass = [];
 
@@ -528,6 +538,7 @@
             }
             var getGameDetailsViewModel = function (product) {
                 var pd = pdIndex.getElementByKey(product.id);
+                var gd = gdIndex.getElementByKey(product.id);
 
                 var productImage = Images.getRelativeUri(product.image);
                 var productTitle = product.title;
@@ -535,15 +546,51 @@
                 var developerTitle = (pd && pd.developer) ? pd.developer.name : "N/A";
                 var publisherTitle = (pd && pd.publisher) ? pd.publisher.name : "N/A";
 
+                var seriesTitle, seriesClass = "hidden";
+
+                if (pd &&
+                    pd.series &&
+                    pd.series.name) {
+                    seriesTitle = pd.series.name;
+                    if (seriesTitle) seriesClass = "";
+                }
+
+                var genresTitle, genresClass = "hidden";
+                if (pd &&
+                    pd.genres &&
+                    pd.genres.length) {
+                    var genres = [];
+                    for (var ii = 0; ii < pd.genres.length; ii++) {
+                        genres.push(pd.genres[ii].name);
+                    }
+                    genresTitle = genres.join(", ");
+                    if (genresTitle) genresClass = "";
+                }
+
+                var cdKeyTitle, cdKeyClass = "hidden";
+
+                if (gd &&
+                    gd.cdKey) {
+                    cdKeyTitle = gd.cdKey;
+                    if (cdKeyTitle) cdKeyClass = "";
+                }
+
                 return {
                     "productTitle": productTitle,
                     "productImage": productImage,
                     "developerTitle": developerTitle,
-                    "publisherTitle": publisherTitle
+                    "publisherTitle": publisherTitle,
+                    "seriesTitle": seriesTitle,
+                    "seriesClass": seriesClass,
+                    "cdKeyTitle": cdKeyTitle,
+                    "cdKeyClass": cdKeyClass,
+                    "genresTitle": genresTitle,
+                    "genresClass": genresClass
                 }
             }
-            var init = function (pdi, ui, wi) {
+            var init = function (pdi, gdi, ui, wi) {
                 pdIndex = pdi;
+                gdIndex = gdi;
                 wIndex = wi;
                 uIndex = ui;
             }
@@ -682,7 +729,7 @@
             var updatedIndex = IndexedCollection.create(updated, getValue);
             var wishlistedIndex = IndexedCollection.create(wishlisted, getValue);
 
-            ViewModelProvider.init(productsDataIndex, updatedIndex, wishlistedIndex);
+            ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex);
             Owned.init(productsDataIndex, gameDetailsIndex, ownedIndex);
             elapsed = new Date() - start;
             console.log("Indexing collections: " + elapsed + "ms");
