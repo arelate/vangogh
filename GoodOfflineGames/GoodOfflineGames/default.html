@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>GOG.com collection</title>
+    <meta name="viewport" content="width=device-width" />
     <style>
         * {
             font-family: "Segoe UI";
@@ -16,6 +17,12 @@
             background: #212121;
             padding: 0em;
             margin: 0 1em;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         button {
@@ -113,9 +120,7 @@
             }
 
             #searchContainer a {
-                color: white;
                 margin-left: 1em;
-                text-decoration: none;
             }
 
             #searchContainer #backToTop,
@@ -176,7 +181,7 @@
         <a id="showAllSearchResults" class="hidden" href="#">
             Show all <span class="resultsCount"></span> results...
         </a>
-        <button id="backToTop" href="#top">Back to top</button>
+        <button id="backToTop" href="#top">Top</button>
         <button id="toggleLegend" href="#">?</button>
     </div>
     <div id="searchResults" class="container hidden"></div>
@@ -226,16 +231,21 @@
                 return "<h1 class='productTitle'>{{productTitle}}</h1>" +
                     "<img class=image' srcset='{{productImage}}' />" +
                     "<table>" +
-                    "<tr><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
-                    "<tr><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
-                    "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>"+
+                    "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
+                    "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
+                    "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>" +
                     "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
                     "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title'>{{cdKeyTitle}}</td></tr>" +
+                    "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                     "</table>";
+            }
+            var getRequiredProductTemplate = function () {
+                return "<a data-id='{{id}}'>{{title}}</a>"
             }
             return {
                 "getProductTemplate": getProductTemplate,
-                "getGameDetailsTemplate": getGameDetailsTemplate
+                "getGameDetailsTemplate": getGameDetailsTemplate,
+                "getRequiredProductTemplate": getRequiredProductTemplate
             }
         }();
 
@@ -276,7 +286,7 @@
             var gameDetailsContainer = $("gameDetailsContainer");
             var details = gameDetailsContainer.querySelector("#details");
             var closeButton = gameDetailsContainer.querySelector("#close");
-            var show = function (id) {
+            var show = function (id, fromId) {
                 var product = pIndex.getElementByKey(id);
                 if (!product) return;
 
@@ -286,25 +296,36 @@
 
                 details.innerHTML = htmlView;
 
+                var requiredProducts = details.querySelectorAll("a[data-id]");
+                initElements(requiredProducts, id);
+
+                closeButton.textContent = (fromId) ? "Back" : "Close";
+                closeButton.addEventListener("click", function () {
+                    if (fromId) show(fromId);
+                    else gameDetailsContainer.classList.add("hidden");
+                });
+
                 gameDetailsContainer.classList.remove("hidden");
             }
             var init = function (pi, pdi, elements) {
                 pIndex = pi;
                 pdIndex = pdi;
+
+                initElements(elements);
+            }
+            var initElements = function(elements, fromId) {
                 for (var ii = 0; ii < elements.length; ii++) {
                     elements[ii].addEventListener("click", function (e) {
                         var id = parseInt(e.currentTarget.getAttribute("data-id"));
-                        show(id);
+                        show(id, fromId);
                         // stop it here, don't propagate to body handler that hides gameDetails containers
                         e.stopPropagation();
                     });
                 }
-                closeButton.addEventListener("click", function () {
-                    gameDetailsContainer.classList.add("hidden");
-                });
             }
             return {
-                "init": init
+                "init": init,
+                "initElements": initElements
             }
         }();
 
@@ -417,7 +438,7 @@
                         searchResults.appendChild(clonedProductElement);
                     }
 
-                    GameDetails.init(pIndex, pdIndex, clonedProductElements);
+                    GameDetails.initElements(clonedProductElements);
 
                     searchResults.classList.remove("hidden");
 
@@ -536,6 +557,9 @@
                     "title": product.title// + " " + product.id
                 };
             }
+            var getRequiredProductViewModel = function (requiredProduct) {
+                return requiredProduct;
+            }
             var getGameDetailsViewModel = function (product) {
                 var pd = pdIndex.getElementByKey(product.id);
                 var gd = gdIndex.getElementByKey(product.id);
@@ -543,8 +567,21 @@
                 var productImage = Images.getRelativeUri(product.image);
                 var productTitle = product.title;
 
-                var developerTitle = (pd && pd.developer) ? pd.developer.name : "N/A";
-                var publisherTitle = (pd && pd.publisher) ? pd.publisher.name : "N/A";
+                var developerTitle, developerClass = "hidden";
+                if (pd &&
+                    pd.developer &&
+                    pd.developer.name) {
+                    developerTitle = pd.developer.name;
+                    if (developerTitle) developerClass = "";
+                }
+
+                var publisherTitle, publisherClass = "hidden";
+                if (pd &&
+                    pd.publisher &&
+                    pd.publisher.name) {
+                    publisherTitle = pd.publisher.name;
+                    if (publisherTitle) publisherClass = "";
+                }
 
                 var seriesTitle, seriesClass = "hidden";
 
@@ -575,17 +612,36 @@
                     if (cdKeyTitle) cdKeyClass = "";
                 }
 
+                var requiredProductsTitle, requiredProductsClass = "hidden";
+                if (pd &&
+                    pd.requiredProducts &&
+                    pd.requiredProducts.length) {
+                    var requiredProducts = [];
+                    for (var ii = 0; ii < pd.requiredProducts.length; ii++) {
+                        var requiredProductView = Views.createView(pd.requiredProducts[ii],
+                            getRequiredProductViewModel,
+                            Templates.getRequiredProductTemplate);
+                        requiredProducts.push(requiredProductView);
+                    }
+                    requiredProductsTitle = requiredProducts.join(", ");
+                    if (requiredProductsTitle) requiredProductsClass = "";
+                }
+
                 return {
                     "productTitle": productTitle,
                     "productImage": productImage,
                     "developerTitle": developerTitle,
+                    "developerClass": developerClass,
                     "publisherTitle": publisherTitle,
+                    "publisherClass": publisherClass,
                     "seriesTitle": seriesTitle,
                     "seriesClass": seriesClass,
                     "cdKeyTitle": cdKeyTitle,
                     "cdKeyClass": cdKeyClass,
                     "genresTitle": genresTitle,
-                    "genresClass": genresClass
+                    "genresClass": genresClass,
+                    "requiredProductsTitle": requiredProductsTitle,
+                    "requiredProductsClass": requiredProductsClass
                 }
             }
             var init = function (pdi, gdi, ui, wi) {
