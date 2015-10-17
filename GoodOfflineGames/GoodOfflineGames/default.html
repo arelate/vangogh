@@ -151,6 +151,10 @@
                 margin: 1em 0;
             }
 
+                #gameDetailsContainer .header1.bundle {
+                    font-weight: normal;
+                }
+
             #gameDetailsContainer .dlcContainer .header1,
             #gameDetailsContainer .bundleContainer .header1 {
                 font-size: 1.5rem;
@@ -229,7 +233,7 @@
                   "</span>";
             }
             var getGameDetailsTemplate = function () {
-                return "<div class='productTitle header1'>{{productTitle}}</div>" +
+                return "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
                     "<img class=image {{productImageClass}}' srcset='{{productImage}}' />" +
                     "<table>" +
                     "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
@@ -360,9 +364,9 @@
                 var requiredProducts = details.querySelectorAll("a[data-id]");
                 initElements(requiredProducts, id);
 
-                closeButton.textContent = (fromId) ? "Back" : "Close";
+                closeButton.textContent = (fromId && fromId !== id) ? "Back" : "Close";
                 closeButton.addEventListener("click", function () {
-                    if (fromId) show(fromId);
+                    if (fromId && fromId !== id) show(fromId);
                     else gameDetailsContainer.classList.add("hidden");
                 });
 
@@ -586,9 +590,9 @@
             }
         }();
 
-        var ViewModelProvider = function () {
-            var pdIndex, gdIndex, wIndex, uIndex;
-            var getProductViewModel = function (product) {
+        var ProductClass = function () {
+            var pdIndex, wIndex, uIndex;
+            var getClass = function (product) {
                 var productClass = [];
 
                 if (Owned && Owned.check(product.id)) {
@@ -607,6 +611,23 @@
 
                 if (Bundles.isParent(product.id)) productClass.push("bundle");
 
+                return productClass;
+            }
+            var init = function (pdi, ui, wi) {
+                pdIndex = pdi;
+                wIndex = wi;
+                uIndex = ui;
+            }
+            return {
+                "init": init,
+                "getClass": getClass
+            }
+        }();
+
+        var ViewModelProvider = function () {
+            var pdIndex, gdIndex, wIndex, uIndex;
+            var getProductViewModel = function (product) {
+                var productClass = ProductClass.getClass(product);
                 return {
                     "id": product.id,
                     "productClass": productClass.join(" "),
@@ -632,6 +653,8 @@
 
                 var pd = pdIndex.getElementByKey(product.id);
                 var gd = gdIndex.getElementByKey(product.id);
+
+                var productClass = ProductClass.getClass(product).join(" ");
 
                 var productImage, productImageClass = "hidden";
                 if (product.image) {
@@ -716,6 +739,7 @@
 
                 return {
                     "productTitle": productTitle,
+                    "productClass": productClass,
                     "productImage": productImage,
                     "developerTitle": developerTitle,
                     "developerClass": developerClass,
@@ -876,6 +900,7 @@
             var updatedIndex = IndexedCollection.create(updated, getValue);
             var wishlistedIndex = IndexedCollection.create(wishlisted, getValue);
 
+            ProductClass.init(productsDataIndex, updatedIndex, wishlistedIndex);
             ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex);
             Owned.init(productsDataIndex, gameDetailsIndex, ownedIndex);
             elapsed = new Date() - start;
