@@ -136,13 +136,13 @@
             color: #BDBDBD;
         }
 
-        #gameDetailsContainer .cdKey {
-            color: #212121;
-        }
+            #gameDetailsContainer .cdKey {
+                color: #212121;
+            }
 
-        #gameDetailsContainer .cdKey:focus {
-            background: inherit;
-        }
+                #gameDetailsContainer .cdKey:focus {
+                    background: inherit;
+                }
 
             #gameDetailsContainer img {
                 width: 192px;
@@ -252,6 +252,7 @@
                     "<table>" +
                     "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
                     "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
+                    "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title'>{{worksOnTitle}}</td></tr>" +
                     "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>" +
                     "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
                     "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
@@ -694,6 +695,18 @@
                     if (developerTitle) developerClass = "";
                 }
 
+                var worksOnTitle, worksOnClass = "hidden";
+                
+                if (product.worksOn) {
+                    var worksOn = [];
+                    if (product.worksOn.Windows) worksOn.push("Windows");
+                    if (product.worksOn.Mac) worksOn.push("Mac OS X");
+                    if (product.worksOn.Linux) worksOn.push("Linux");
+
+                    worksOnTitle = worksOn.join(", ");
+                    if (worksOnTitle) worksOnClass = "";
+                }
+
                 var publisherTitle, publisherClass = "hidden";
                 if (pd &&
                     pd.publisher &&
@@ -765,6 +778,8 @@
                     "productClass": productClass,
                     "productImage": productImage,
                     "productImageClass": productImageClass,
+                    "worksOnTitle": worksOnTitle,
+                    "worksOnClass": worksOnClass,
                     "developerTitle": developerTitle,
                     "developerClass": developerClass,
                     "publisherTitle": publisherTitle,
