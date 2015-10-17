@@ -136,6 +136,14 @@
             color: #BDBDBD;
         }
 
+        #gameDetailsContainer .cdKey {
+            color: #212121;
+        }
+
+        #gameDetailsContainer .cdKey:focus {
+            background: inherit;
+        }
+
             #gameDetailsContainer img {
                 width: 192px;
                 height: 110px;
@@ -246,7 +254,7 @@
                     "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
                     "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>" +
                     "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
-                    "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title'>{{cdKeyTitle}}</td></tr>" +
+                    "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
                     "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                     "</table>";
             }
