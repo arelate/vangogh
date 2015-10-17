@@ -57,7 +57,7 @@
 
                 .product.bundle.wishlisted {
                     /* wishlisted bundle should be normal
-                to distinguish with partial owned */
+                    to distinguish with partial owned */
                     font-style: normal;
                 }
 
@@ -75,7 +75,7 @@
                 background: #9C27B0;
                 border-radius: 0.2em;
                 padding: 0.1em 0.25em;
-                margin-left: 0.25em;
+                margin-left: 0.5em;
                 font-size: 0.6em;
                 vertical-align: top;
                 color: white;
@@ -89,7 +89,6 @@
             height: auto;
             padding: 1em;
             background: inherit;
-            /*opacity: 0.5;*/
             height: 3.75em;
         }
 
@@ -155,18 +154,20 @@
         #legendContainer {
             position: fixed;
             top: 3.75em;
+            bottom: 0;
             right: 0;
             width: auto;
             background: inherit;
             padding: 1.5em;
             padding-top: 0;
             border-left: solid 1px #BDBDBD;
+            overflow: auto;
         }
 
-        #legendContainer .product {
-            display: block;
-            cursor: default;
-        }
+            #legendContainer .product {
+                display: block;
+                cursor: default;
+            }
     </style>
 </head>
 
@@ -568,16 +569,14 @@
                 var getElementByIndex = function (itemIndex) {
                     return collection[itemIndex];
                 }
-                var check = function (id, bundles) {
+                var check = function (id) {
+                    if (Bundles &&
+                      Bundles.isParent &&
+                      Bundles.isParent(id) &&
+                      Bundles.checkChildrenAny &&
+                      Bundles.checkChildrenAny(id, check)) return true;
 
-                    // if any of the bundled product is updated then bundle itself is updated
-                    if (bundles &&
-                      bundles.isParent &&
-                      bundles.isParent(id) &&
-                      bundles.checkChildrenAny &&
-                      bundles.checkChildrenAny(id, check)) return true;
-
-                    return collection.indexOf(id) > -1;
+                    return getElementByKey(id) !== undefined;
                 }
                 return {
                     "getElementByKey": getElementByKey,
@@ -679,7 +678,7 @@
             var productsDataIndex = IndexedCollection.create(productsdata, getId);
             var gameDetailsIndex = IndexedCollection.create(gamedetails, getId);
             var ownedIndex = IndexedCollection.create(owned, getId);
-            var updatedIndex = IndexedCollection.create(owned, getValue);
+            var updatedIndex = IndexedCollection.create(updated, getValue);
             var wishlistedIndex = IndexedCollection.create(wishlisted, getValue);
 
             ViewModelProvider.init(productsDataIndex, updatedIndex, wishlistedIndex);
