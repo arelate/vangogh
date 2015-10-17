@@ -9,6 +9,7 @@
             font-family: "Segoe UI";
             font-size: 16px;
             box-sizing: border-box;
+            margin: 0;
         }
 
         body {
@@ -17,12 +18,34 @@
             margin: 0 1em;
         }
 
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 0.25em 0.5em;
+            margin: 0;
+        }
+
         .hidden {
             display: none !important;
         }
 
-        #top {
-            height: 3.75em;
+        .container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow: auto;
+            padding: 1em;
+            background: inherit;
+            cursor: default;
+        }
+
+        #productsContainer,
+        #searchResults {
+            top: 4em;
+            padding-top: 0;
         }
 
         .product {
@@ -33,63 +56,54 @@
             display: inline-block;
         }
 
-            .product.wishlisted {
-                color: #FFC107;
-                font-style: italic;
+        .wishlisted {
+            color: #FFC107;
+            font-style: italic;
+        }
+
+        .owned {
+            color: #66BB6A;
+        }
+
+        .partOwned {
+            color: #A5D6A7;
+            font-style: italic;
+        }
+
+        .bundle {
+            font-weight: 600;
+        }
+
+            .bundle.owned {
+                color: #2E7D32;
             }
 
-            .product.owned {
-                color: #66BB6A;
-            }
-
-            .product.partOwned {
-                color: #A5D6A7;
-                font-style: italic;
-            }
-
-            .product.bundle {
-                font-weight: 600;
-            }
-
-                .product.bundle.owned {
-                    color: #2E7D32;
-                }
-
-                .product.bundle.wishlisted {
-                    /* wishlisted bundle should be normal
+            .bundle.wishlisted {
+                /* wishlisted bundle should be normal
                     to distinguish with partial owned */
-                    font-style: normal;
-                }
-
-            .product.updated {
+                font-style: normal;
             }
 
-                .product.updated::after {
-                    content: "*";
-                    margin-left: 0.1em;
-                    color: #F44336;
-                }
+        .updated::after {
+            content: "*";
+            margin-left: 0.1em;
+            color: #F44336;
+        }
 
-            .product.dlc::after {
-                content: "DLC";
-                background: #9C27B0;
-                border-radius: 0.2em;
-                padding: 0.1em 0.25em;
-                margin-left: 0.5em;
-                font-size: 0.6em;
-                vertical-align: top;
-                color: white;
-            }
+        .dlc::after {
+            content: "DLC";
+            background: #9C27B0;
+            border-radius: 0.2em;
+            padding: 0.1em 0.25em;
+            margin-left: 0.5em;
+            font-size: 0.6em;
+            vertical-align: top;
+            color: white;
+        }
 
         #searchContainer {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: auto;
-            padding: 1em;
-            background: inherit;
-            height: 3.75em;
+            bottom: auto;
+            height: 4em;
         }
 
             #searchContainer #searchInput {
@@ -109,59 +123,38 @@
                 float: right;
             }
 
+            #searchContainer #toggleLegend {
+                margin-right: 1em;
+            }
+
         #gameDetailsContainer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: auto;
-            background: inherit;
-            padding: 1em;
-            max-height: 10em;
+            color: #BDBDBD;
         }
+
+            #gameDetailsContainer #close {
+                margin-bottom: 1em;
+            }
 
             #gameDetailsContainer img {
                 width: 192px;
                 height: 110px;
                 border: 0;
                 display: inline-block;
+                margin-bottom: 1em;
             }
 
-            #gameDetailsContainer .detailsContainer {
-                display: inline-block;
-                vertical-align: top;
-                color: white;
-                margin-left: 0.5em;
+
+            #gameDetailsContainer .productTitle {
+                font-size: 2em;
                 font-weight: 200;
+                margin-bottom: 1em;
             }
-
-                #gameDetailsContainer .detailsContainer > .title {
-                    font-size: 1.4em;
-                    margin-bottom: 0.4em;
-                }
-
-                #gameDetailsContainer .detailsContainer .developer,
-                #gameDetailsContainer .detailsContainer .publisher {
-                    font-size: 0.75em;
-                }
-
-                    #gameDetailsContainer .detailsContainer .developer .title,
-                    #gameDetailsContainer .detailsContainer .publisher .title {
-                        font-size: inherit;
-                        font-weight: bolder;
-                    }
 
         #legendContainer {
-            position: fixed;
-            top: 3.75em;
-            bottom: 0;
-            right: 0;
-            width: auto;
-            background: inherit;
-            padding: 1.5em;
+            top: 4em;
+            left: auto;
             padding-top: 0;
-            border-left: solid 1px #BDBDBD;
-            overflow: auto;
+            border-left: solid 1px #424242;
         }
 
             #legendContainer .product {
@@ -173,38 +166,37 @@
 
 <body>
     <div id="top"></div>
-    <div id="searchContainer">
+    <div id="searchContainer" class="container">
         <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
         <a id="showAllSearchResults" class="hidden" href="#">Show all <span class="resultsCount"></span> results...</a>
-        <a id="backToTop" href="#top">Back to top</a>
-        <a id="toggleLegend" href="#">?</a>
+        <button id="backToTop" href="#top">Back to top</button>
+        <button id="toggleLegend" href="#">?</button>
     </div>
-    <div id="searchResults" class="hidden">
-        <div class="container"></div>
-    </div>
-    <div id="productsContainer"></div>
-    <div id="gameDetailsContainer" class="hidden">
+    <div id="searchResults" class="container hidden"></div>
+    <div id="productsContainer" class="container"></div>
+    <div id="gameDetailsContainer" class="container hidden">
+        <button id="close">Close</button>
+        <div class="productTitle">Title</div>
         <img class="image" />
-        <div class="detailsContainer">
-            <div class="title">Title</div>
-            <div class="developer">
-                Developer:
-                <span class="title">N/A</span>
-            </div>
-            <div class="publisher">
-                Publisher:
-                <span class="title">N/A</span>
-            </div>
+        <div class="developer">
+            Developer:
+            <span class="title">N/A</span>
+        </div>
+        <div class="publisher">
+            Publisher:
+            <span class="title">N/A</span>
         </div>
     </div>
-    <div id="legendContainer" class="hidden">
+    <div id="legendContainer" class="container hidden">
         <div class="product">Available product</div>
         <div class="product owned">Owned product</div>
         <div class="product owned updated">Updated product</div>
         <div class="product wishlisted">Wishlisted product</div>
         <div class="product bundle">Bundle</div>
         <div class="product bundle partOwned">Partially owned bundle</div>
+        <div class="product bundle partOwned updated">Updated partially owned bundle</div>
         <div class="product bundle owned">Owned bundle</div>
+        <div class="product bundle owned updated">Updated bundle</div>
         <div class="product bundle wishlisted">Wishlisted bundle</div>
         <div class="product dlc">Downloadable content</div>
         <div class="product dlc owned">Owned Downloadable content</div>
@@ -230,9 +222,6 @@
             var getProductTemplate = function () {
                 return "<span class='product {{productClass}}' data-id='{{id}}'>" +
                   "<span class='title' title='{{title}}' >{{title}}</span>" +
-                  "<span class='wishlisted'></span>" +
-                  "<span class='owned'></span>" +
-                  "<span class='updated'></span>" +
                   "</span>";
             }
             return {
@@ -275,8 +264,9 @@
             var pIndex;
             var pdIndex;
             var gameDetailsContainer = $("gameDetailsContainer");
-            var gameDetailsImage = gameDetailsContainer.querySelector(".image");
-            var gameDetailsTitle = gameDetailsContainer.querySelector(".title");
+            var closeButton = gameDetailsContainer.querySelector("#close");
+            var productImage = gameDetailsContainer.querySelector(".image");
+            var productTitle = gameDetailsContainer.querySelector(".productTitle");
             var developerTitle = gameDetailsContainer.querySelector(".developer .title");
             var publisherTitle = gameDetailsContainer.querySelector(".publisher .title");
             var show = function (id) {
@@ -285,8 +275,8 @@
 
                 var pd = pdIndex.getElementByKey(id);
 
-                if (product.image) gameDetailsImage.srcset = Images.getRelativeUri(product.image);
-                gameDetailsTitle.textContent = product.title;
+                if (product.image) productImage.srcset = Images.getRelativeUri(product.image);
+                productTitle.textContent = product.title;
 
                 developerTitle.textContent = (pd && pd.developer) ? pd.developer.name : "N/A";
                 publisherTitle.textContent = (pd && pd.publisher) ? pd.publisher.name : "N/A";
@@ -304,7 +294,7 @@
                         e.stopPropagation();
                     });
                 }
-                document.body.addEventListener("click", function () {
+                closeButton.addEventListener("click", function () {
                     gameDetailsContainer.classList.add("hidden");
                 });
             }
@@ -389,7 +379,6 @@
             var pdIndex;
             var productElements = undefined;
             var searchResults = $("searchResults");
-            var searchResultsContainer = searchResults.querySelector(".container");
             var productsContainer = $("productsContainer");
             var showAllResultsLink = $("showAllSearchResults");
             var resultsCount = showAllResultsLink.querySelector(".resultsCount");
@@ -402,7 +391,7 @@
 
                 if (text.length > 0) {
 
-                    searchResultsContainer.innerHTML = "";
+                    searchResults.innerHTML = "";
                     productsContainer.classList.add("hidden");
 
                     var matchingIndexes = SearchIndex.match(text);
@@ -420,7 +409,7 @@
                     for (var ii = 0; ii < length; ii++) {
                         var clonedProductElement = productElements[matchingIndexes[ii]].cloneNode(true);
                         clonedProductElements.push(clonedProductElement);
-                        searchResultsContainer.appendChild(clonedProductElement);
+                        searchResults.appendChild(clonedProductElement);
                     }
 
                     GameDetails.init(pIndex, pdIndex, clonedProductElements);
@@ -751,6 +740,18 @@
                 var legendContainer = $("legendContainer");
                 legendContainer.classList.toggle("hidden");
                 e.preventDefault();
+            });
+
+            var backToTop = $("backToTop");
+            backToTop.addEventListener("click", function () {
+                var productsContainer = $("productsContainer");
+                var searchResults = $("searchResults");
+
+                if (!searchResults.classList.contains("hidden")) {
+                    searchResults.scrollTop = 0;
+                } else {
+                    productsContainer.scrollTop = 0;
+                }
             });
         });
     </script>
