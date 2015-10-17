@@ -136,10 +136,6 @@
             color: #BDBDBD;
         }
 
-            #gameDetailsContainer #close {
-                margin-bottom: 1em;
-            }
-
             #gameDetailsContainer img {
                 width: 192px;
                 height: 110px;
@@ -149,10 +145,15 @@
             }
 
 
-            #gameDetailsContainer .productTitle {
+            #gameDetailsContainer .header1 {
                 font-size: 2em;
                 font-weight: 200;
-                margin-bottom: 1em;
+                margin: 1em 0;
+            }
+
+            #gameDetailsContainer .dlcContainer .header1,
+            #gameDetailsContainer .bundleContainer .header1 {
+                font-size: 1.5rem;
             }
 
             #gameDetailsContainer .header {
@@ -175,21 +176,17 @@
 </head>
 
 <body>
-    <div id="top"></div>
+
     <div id="searchContainer" class="container">
         <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
         <a id="showAllSearchResults" class="hidden" href="#">
             Show all <span class="resultsCount"></span> results...
         </a>
-        <button id="backToTop" href="#top">Top</button>
-        <button id="toggleLegend" href="#">?</button>
+        <button id="backToTop">Top</button>
+        <button id="toggleLegend">?</button>
     </div>
-    <div id="searchResults" class="container hidden"></div>
     <div id="productsContainer" class="container"></div>
-    <div id="gameDetailsContainer" class="container hidden">
-        <button id="close">Close</button>
-        <div id="details"></div>
-    </div>
+    <div id="searchResults" class="container hidden"></div>
     <div id="legendContainer" class="container hidden">
         <div class="product">Available product</div>
         <div class="product owned">Owned product</div>
@@ -205,6 +202,10 @@
         <div class="product dlc owned">Owned Downloadable content</div>
         <div class="product dlc wishlisted">Wishlisted Downloadable content</div>
     </div>
+    <div id="gameDetailsContainer" class="container hidden">
+        <button id="close">Close</button>
+        <div id="details"></div>
+    </div>
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
     <script src="./updated.js"></script>
@@ -213,7 +214,7 @@
     <script src="./gamedetails.js"></script>
     <script src="./bundles.js"></script>
     <script>
-        // TODO: redo gamedetails show bundled products, required products, dlcs
+        // TODO: propagate product class to gamedetails
 
         "use strict";
 
@@ -228,8 +229,8 @@
                   "</span>";
             }
             var getGameDetailsTemplate = function () {
-                return "<h1 class='productTitle'>{{productTitle}}</h1>" +
-                    "<img class=image' srcset='{{productImage}}' />" +
+                return "<div class='productTitle header1'>{{productTitle}}</div>" +
+                    "<img class=image {{productImageClass}}' srcset='{{productImage}}' />" +
                     "<table>" +
                     "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
                     "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
@@ -239,13 +240,23 @@
                     "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                     "</table>";
             }
+            var getDLCsTemplate = function () {
+                return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
+                    "<div class='dlcContainer {{dlcClass}}'>{{dlcContent}}</div>";
+            }
+            var getBundleTemplate = function () {
+                return "<div class='bundleTitle header1 {{bundleClass}}'>Bundled products</div>" +
+                    "<div class='bundleContainer {{bundleClass}}'>{{bundleContent}}</div>";
+            }
             var getRequiredProductTemplate = function () {
                 return "<a data-id='{{id}}'>{{title}}</a>"
             }
             return {
                 "getProductTemplate": getProductTemplate,
                 "getGameDetailsTemplate": getGameDetailsTemplate,
-                "getRequiredProductTemplate": getRequiredProductTemplate
+                "getRequiredProductTemplate": getRequiredProductTemplate,
+                "getDLCsTemplate": getDLCsTemplate,
+                "getBundleTemplate": getBundleTemplate
             }
         }();
 
@@ -283,6 +294,7 @@
         var GameDetails = function () {
             var pIndex;
             var pdIndex;
+            var gdIndex;
             var gameDetailsContainer = $("gameDetailsContainer");
             var details = gameDetailsContainer.querySelector("#details");
             var closeButton = gameDetailsContainer.querySelector("#close");
@@ -296,6 +308,55 @@
 
                 details.innerHTML = htmlView;
 
+                // add DLC. Showing only 1st level of DLCs to avoid recursion
+                var dlcContent = [];
+                var dlcProducts = [];
+                var processedDlcs = [];
+
+                var gd = gdIndex.getElementByKey(id);
+                if (gd && gd.dlcs)
+                    for (var ii = 0; ii < gd.dlcs.length; ii++) {
+                        processedDlcs.push(gd.dlcs[ii].id);
+                        dlcProducts.push(gd.dlcs[ii]);
+                    }
+
+                var pd = pdIndex.getElementByKey(id);
+                if (pd && pd.dlcs)
+                    for (var ii = 0; ii < pd.dlcs.length; ii++) {
+                        if (processedDlcs.indexOf(pd.dlcs[ii].id) === -1) continue;
+                    }
+
+                for (var ii = 0; ii < dlcProducts.length; ii++) {
+                    dlcContent.push(Views.createView(dlcProducts[ii],
+                            ViewModelProvider.getGameDetailsViewModel,
+                            Templates.getGameDetailsTemplate));
+                }
+
+                var dlcView = Views.createView(dlcContent,
+                    ViewModelProvider.getDLCsViewModel,
+                    Templates.getDLCsTemplate);
+
+                details.innerHTML += dlcView;
+
+                // show bunlded
+                if (Bundles.isParent(id)) {
+                    var bundleContent = [], bundleClass;
+
+                    var bundle = Bundles.getBundleByParentId(id);
+                    for (var ii = 0; ii < bundle.children.length; ii++) {
+                        var product = pIndex.getElementByKey(bundle.children[ii]);
+                        bundleContent.push(Views.createView(product,
+                            ViewModelProvider.getGameDetailsViewModel,
+                            Templates.getGameDetailsTemplate));
+                    }
+
+                    var bundleView = Views.createView(bundleContent,
+                        ViewModelProvider.getBundleViewModel,
+                        Templates.getBundleTemplate);
+
+                    details.innerHTML += bundleView;
+                }
+
                 var requiredProducts = details.querySelectorAll("a[data-id]");
                 initElements(requiredProducts, id);
 
@@ -307,13 +368,12 @@
 
                 gameDetailsContainer.classList.remove("hidden");
             }
-            var init = function (pi, pdi, elements) {
+            var init = function (pi, pdi, gdi) {
                 pIndex = pi;
                 pdIndex = pdi;
-
-                initElements(elements);
+                gdIndex = gdi;
             }
-            var initElements = function(elements, fromId) {
+            var initElements = function (elements, fromId) {
                 for (var ii = 0; ii < elements.length; ii++) {
                     elements[ii].addEventListener("click", function (e) {
                         var id = parseInt(e.currentTarget.getAttribute("data-id"));
@@ -547,24 +607,38 @@
 
                 if (Bundles.isParent(product.id)) productClass.push("bundle");
 
-                var imageParts = product.image.split("/");
-                var image = imageParts[imageParts.length - 1];
-
                 return {
                     "id": product.id,
                     "productClass": productClass.join(" "),
-                    "image": image,
                     "title": product.title// + " " + product.id
                 };
             }
             var getRequiredProductViewModel = function (requiredProduct) {
                 return requiredProduct;
             }
+            var getDLCsViewModel = function (dlcs) {
+                return {
+                    "dlcContent": dlcs.join(""),
+                    "dlcClass": dlcs.length ? "" : "hidden"
+                }
+            }
+            var getBundleViewModel = function (bundles) {
+                return {
+                    "bundleContent": bundles.join(""),
+                    "bundleClass": bundles.length ? "" : "hidden"
+                }
+            }
             var getGameDetailsViewModel = function (product) {
+
                 var pd = pdIndex.getElementByKey(product.id);
                 var gd = gdIndex.getElementByKey(product.id);
 
-                var productImage = Images.getRelativeUri(product.image);
+                var productImage, productImageClass = "hidden";
+                if (product.image) {
+                    productImage = Images.getRelativeUri(product.image);
+                    if (productImage) productImageClass = "";
+                }
+
                 var productTitle = product.title;
 
                 var developerTitle, developerClass = "hidden";
@@ -605,10 +679,23 @@
                 }
 
                 var cdKeyTitle, cdKeyClass = "hidden";
+                var cdKeys = [];
 
                 if (gd &&
                     gd.cdKey) {
-                    cdKeyTitle = gd.cdKey;
+                    cdKeys.push(gd.title + ": " + gd.cdKey);
+
+                    if (gd.dlcs &&
+                        gd.dlcs.length) {
+                        for (var ii = 0; ii < gd.dlcs.length; ii++) {
+                            if (gd.dlcs[ii].cdKey) {
+                                cdKeys.push(gd.dlcs[ii].title + ": " + gd.dlcs[ii].cdKey);
+                            }
+                        }
+                    }
+
+                    cdKeyTitle = cdKeys.join(", ");
+
                     if (cdKeyTitle) cdKeyClass = "";
                 }
 
@@ -642,6 +729,8 @@
                     "genresClass": genresClass,
                     "requiredProductsTitle": requiredProductsTitle,
                     "requiredProductsClass": requiredProductsClass
+                    //"dlcClass": dlcClass,
+                    //"dlcContent": dlcContent
                 }
             }
             var init = function (pdi, gdi, ui, wi) {
@@ -653,7 +742,9 @@
             return {
                 "init": init,
                 "getProductViewModel": getProductViewModel,
-                "getGameDetailsViewModel": getGameDetailsViewModel
+                "getGameDetailsViewModel": getGameDetailsViewModel,
+                "getDLCsViewModel": getDLCsViewModel,
+                "getBundleViewModel": getBundleViewModel
             }
         }();
 
@@ -823,7 +914,8 @@
 
                 start = new Date();
                 var productsElements = document.querySelectorAll("#productsContainer > .product");
-                GameDetails.init(productsIndex, productsDataIndex, productsElements);
+                GameDetails.init(productsIndex, gameDetailsIndex, productsDataIndex);
+                GameDetails.initElements(productsElements);
                 elapsed = new Date() - start;
                 console.log("Initializing game details: " + elapsed + "ms");
             });
