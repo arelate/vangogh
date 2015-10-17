@@ -168,7 +168,9 @@
     <div id="top"></div>
     <div id="searchContainer" class="container">
         <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
-        <a id="showAllSearchResults" class="hidden" href="#">Show all <span class="resultsCount"></span> results...</a>
+        <a id="showAllSearchResults" class="hidden" href="#">
+            Show all <span class="resultsCount"></span> results...
+        </a>
         <button id="backToTop" href="#top">Back to top</button>
         <button id="toggleLegend" href="#">?</button>
     </div>
@@ -176,16 +178,7 @@
     <div id="productsContainer" class="container"></div>
     <div id="gameDetailsContainer" class="container hidden">
         <button id="close">Close</button>
-        <div class="productTitle">Title</div>
-        <img class="image" />
-        <div class="developer">
-            Developer:
-            <span class="title">N/A</span>
-        </div>
-        <div class="publisher">
-            Publisher:
-            <span class="title">N/A</span>
-        </div>
+        <div id="details"></div>
     </div>
     <div id="legendContainer" class="container hidden">
         <div class="product">Available product</div>
@@ -224,8 +217,15 @@
                   "<span class='title' title='{{title}}' >{{title}}</span>" +
                   "</span>";
             }
+            var getGameDetailsTemplate = function () {
+                return "<div class='productTitle'>{{productTitle}}</div>"+
+                    "<img class=image' srcset='{{productImage}}' />"+
+                    "<div class='developer'>Developer:<span class='title'>{{developerTitle}}</span></div>"+
+                    "<div class='publisher'>Publisher:<span class='title'>{{publisherTitle}}</span></div>";
+            }
             return {
-                "getProductTemplate": getProductTemplate
+                "getProductTemplate": getProductTemplate,
+                "getGameDetailsTemplate": getGameDetailsTemplate
             }
         }();
 
@@ -239,13 +239,13 @@
                 }
                 return result;
             }
-            var createProductView = function (product, modelProvider) {
-                var model = modelProvider(product);
-                var productTemplate = Templates.getProductTemplate();
-                return bindTemplateToModel(productTemplate, model);
+            var createView = function (model, viewModelProvider, templateProvider) {
+                var viewModel = viewModelProvider(model);
+                var template = templateProvider();
+                return bindTemplateToModel(template, viewModel);
             }
             return {
-                "createProductView": createProductView
+                "createView": createView
             }
         }();
 
@@ -264,22 +264,17 @@
             var pIndex;
             var pdIndex;
             var gameDetailsContainer = $("gameDetailsContainer");
+            var details = gameDetailsContainer.querySelector("#details");
             var closeButton = gameDetailsContainer.querySelector("#close");
-            var productImage = gameDetailsContainer.querySelector(".image");
-            var productTitle = gameDetailsContainer.querySelector(".productTitle");
-            var developerTitle = gameDetailsContainer.querySelector(".developer .title");
-            var publisherTitle = gameDetailsContainer.querySelector(".publisher .title");
             var show = function (id) {
                 var product = pIndex.getElementByKey(id);
                 if (!product) return;
 
-                var pd = pdIndex.getElementByKey(id);
+                var htmlView = Views.createView(product,
+                    ViewModelProvider.getGameDetailsViewModel,
+                    Templates.getGameDetailsTemplate);
 
-                if (product.image) productImage.srcset = Images.getRelativeUri(product.image);
-                productTitle.textContent = product.title;
-
-                developerTitle.textContent = (pd && pd.developer) ? pd.developer.name : "N/A";
-                publisherTitle.textContent = (pd && pd.publisher) ? pd.publisher.name : "N/A";
+                details.innerHTML = htmlView;
 
                 gameDetailsContainer.classList.remove("hidden");
             }
@@ -531,6 +526,22 @@
                     "title": product.title// + " " + product.id
                 };
             }
+            var getGameDetailsViewModel = function (product) {
+                var pd = pdIndex.getElementByKey(product.id);
+
+                var productImage = Images.getRelativeUri(product.image);
+                var productTitle = product.title;
+
+                var developerTitle = (pd && pd.developer) ? pd.developer.name : "N/A";
+                var publisherTitle = (pd && pd.publisher) ? pd.publisher.name : "N/A";
+
+                return {
+                    "productTitle": productTitle,
+                    "productImage": productImage,
+                    "developerTitle": developerTitle,
+                    "publisherTitle": publisherTitle
+                }
+            }
             var init = function (pdi, ui, wi) {
                 pdIndex = pdi;
                 wIndex = wi;
@@ -538,7 +549,8 @@
             }
             return {
                 "init": init,
-                "getProductViewModel": getProductViewModel
+                "getProductViewModel": getProductViewModel,
+                "getGameDetailsViewModel": getGameDetailsViewModel
             }
         }();
 
@@ -687,8 +699,9 @@
 
                 if (Bundles.isChild(product.id)) continue;
 
-                var view = Views.createProductView(product,
-                  ViewModelProvider.getProductViewModel);
+                var view = Views.createView(product,
+                  ViewModelProvider.getProductViewModel,
+                  Templates.getProductTemplate);
                 html.push(view);
             }
             elapsed = new Date() - start;
