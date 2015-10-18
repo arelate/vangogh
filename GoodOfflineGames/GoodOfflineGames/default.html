@@ -177,6 +177,11 @@
                 padding-right: 0.5em;
             }
 
+            #gameDetailsContainer .openFolder {
+                display: block;
+                margin-top: 1em;
+            }
+
         #legendContainer {
             top: 4em;
             left: auto;
@@ -188,6 +193,7 @@
                 display: block;
                 cursor: default;
             }
+
     </style>
 </head>
 
@@ -249,7 +255,7 @@
             var getGameDetailsTemplate = function () {
                 return "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
                     "<img class='image {{productImageClass}}' srcset='{{productImage}}' />" +
-                    "<table>" +
+                    "<table border='0' cellspacing='0' cellpadding='0'>" +
                     "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
                     "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
                     "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title'>{{worksOnTitle}}</td></tr>" +
@@ -258,7 +264,7 @@
                     "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
                     "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                     "</table>" +
-                    "<a href='./{{openFolderLink}}/' class='{{openFolderClass}}'>Open folder...</a>";
+                    "<a href='./{{openFolderLink}}/' class='openFolder {{openFolderClass}}'>Open folder...</a>";
             }
             var getDLCsTemplate = function () {
                 return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
