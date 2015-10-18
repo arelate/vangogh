@@ -203,8 +203,6 @@ namespace GOG
 
             consoleController.Write("Requesting new products from {0}...", Urls.AccountGetFilteredProducts);
 
-
-
             var newOwned = pagedResultController.Request(
                 Urls.AccountGetFilteredProducts,
                 QueryParameters.AccountGetFilteredProducts,

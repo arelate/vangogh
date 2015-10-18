@@ -15,7 +15,6 @@ namespace GOG.Model
         // public int rating;
         // public bool isGame;
         // public bool isMovie;
-        // public string slug;
         // public int updates;
         // public bool IsHidden;
         // public string category;
@@ -34,6 +33,8 @@ namespace GOG.Model
         public string Url { get; set; }
         [DataMember(Name = "worksOn")]
         public WorksOn WorksOn { get; set; }
+        [DataMember(Name = "slug")]
+        public string Slug { get; set; }
 
         public bool Equals(Product other)
         {

@@ -257,7 +257,8 @@
                     "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
                     "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
                     "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
-                    "</table>";
+                    "</table>" +
+                    "<a href='./{{openFolderLink}}/' class='{{openFolderClass}}'>Open folder...</a>";
             }
             var getDLCsTemplate = function () {
                 return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
@@ -679,6 +680,14 @@
 
                 var productClass = ProductClass.getClass(product).join(" ");
 
+                var openFolderLink, openFolderClass = "hidden";
+                if (!Bundles.isParent(product.id) &&
+                    Owned.check(product.id) &&
+                    product.slug) {
+                    openFolderLink = product.slug;
+                    openFolderClass = "";
+                }
+
                 var productImage, productImageClass = "hidden";
                 if (product.image) {
                     if (product.image) productImage = Images.getRelativeUri(product.image);
@@ -774,6 +783,8 @@
                 }
 
                 return {
+                    "openFolderLink": openFolderLink,
+                    "openFolderClass": openFolderClass,
                     "productTitle": productTitle,
                     "productClass": productClass,
                     "productImage": productImage,
