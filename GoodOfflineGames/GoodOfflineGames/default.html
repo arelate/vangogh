@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width" />
     <style>
         * {
-            font-family: "Segoe UI";
+            font-family: -apple-system, "Segoe UI";
             font-size: 16px;
             box-sizing: border-box;
             margin: 0;
@@ -173,8 +173,8 @@
             }
 
             #gameDetailsContainer .header {
-                font-weight: 600;
-                padding-right: 0.5em;
+                line-height: 1.5em;
+                padding-right: 0.75em;
             }
 
             #gameDetailsContainer .openFolder {
@@ -711,7 +711,7 @@
                 }
 
                 var worksOnTitle, worksOnClass = "hidden";
-                
+
                 if (product.worksOn) {
                     var worksOn = [];
                     if (product.worksOn.Windows) worksOn.push("Windows");
