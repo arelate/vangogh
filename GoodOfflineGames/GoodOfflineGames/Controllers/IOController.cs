@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Collections.Generic;
+
 using GOG.Interfaces;
 
 namespace GOG.SharedControllers
@@ -41,6 +43,11 @@ namespace GOG.SharedControllers
         public void CreateDirectory(string uri)
         {
             Directory.CreateDirectory(uri);
+        }
+
+        public IEnumerable<string> EnumerateFiles(string uri)
+        {
+            return Directory.EnumerateFiles(uri);
         }
     }
 }

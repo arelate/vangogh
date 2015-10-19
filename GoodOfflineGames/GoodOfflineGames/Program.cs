@@ -156,192 +156,213 @@ namespace GOG
 
             #endregion
 
-            #region Load settings
+            //#region Load settings
 
-            var settings = settingsController.Load().Result;
+            //var settings = settingsController.Load().Result;
 
-            #endregion
+            //#endregion
 
-            #region Authorize on site
+            //#region Authorize on site
 
-            if (!authorizationController.Authorize(settings).Result)
-            {
-                consoleController.WriteLine("Press ENTER to quit...");
-                consoleController.ReadLine();
-                return;
-            }
+            //if (!authorizationController.Authorize(settings).Result)
+            //{
+            //    consoleController.WriteLine("Press ENTER to quit...");
+            //    consoleController.ReadLine();
+            //    return;
+            //}
 
-            #endregion
+            //#endregion
 
-            #region Get new products from gog.com/games
+            //#region Get new products from gog.com/games
 
-            //var productsFilter = new List<long>(products.Count);
-            //foreach (var p in products) productsFilter.Add(p.Id);
+            ////var productsFilter = new List<long>(products.Count);
+            ////foreach (var p in products) productsFilter.Add(p.Id);
 
-            consoleController.Write("Requesting new products from {0}...", Urls.GamesAjaxFiltered);
+            //consoleController.Write("Requesting new products from {0}...", Urls.GamesAjaxFiltered);
 
-            var newProducts = pagedResultController.Request(
-                Urls.GamesAjaxFiltered,
-                QueryParameters.GamesAjaxFiltered,
-                products).Result;
+            //var newProducts = pagedResultController.Request(
+            //    Urls.GamesAjaxFiltered,
+            //    QueryParameters.GamesAjaxFiltered,
+            //    products).Result;
 
-            if (newProducts != null)
-            {
-                consoleController.Write("Got {0} new products.", newProducts.Count);
+            //if (newProducts != null)
+            //{
+            //    consoleController.Write("Got {0} new products.", newProducts.Count);
 
-                for (var pp = newProducts.Count - 1; pp >= 0; pp--)
-                    productsController.Insert(0, newProducts[pp]);
-            }
+            //    for (var pp = newProducts.Count - 1; pp >= 0; pp--)
+            //        productsController.Insert(0, newProducts[pp]);
+            //}
 
-            saveLoadHelper.SaveData(products, ProductTypes.Products).Wait();
+            //saveLoadHelper.SaveData(products, ProductTypes.Products).Wait();
 
-            consoleController.WriteLine(string.Empty);
+            //consoleController.WriteLine(string.Empty);
 
-            #endregion
+            //#endregion
 
-            #region Get new owned products from gog.com/account
+            //#region Get new owned products from gog.com/account
 
-            consoleController.Write("Requesting new products from {0}...", Urls.AccountGetFilteredProducts);
+            //consoleController.Write("Requesting new products from {0}...", Urls.AccountGetFilteredProducts);
 
-            var newOwned = pagedResultController.Request(
-                Urls.AccountGetFilteredProducts,
-                QueryParameters.AccountGetFilteredProducts,
-                owned).Result;
+            //var newOwned = pagedResultController.Request(
+            //    Urls.AccountGetFilteredProducts,
+            //    QueryParameters.AccountGetFilteredProducts,
+            //    owned).Result;
 
-            if (newOwned != null)
-            {
-                consoleController.Write("Got {0} new products.", newOwned.Count);
+            //if (newOwned != null)
+            //{
+            //    consoleController.Write("Got {0} new products.", newOwned.Count);
 
-                for (var oo = newOwned.Count - 1; oo >= 0; oo--)
-                {
-                    ownedController.Insert(0, newOwned[oo]);
+            //    for (var oo = newOwned.Count - 1; oo >= 0; oo--)
+            //    {
+            //        ownedController.Insert(0, newOwned[oo]);
 
-                    // also add to updated list as we haven't downloaded them previously,
-                    // so they need to be updated just like other files
-                    updatedController.Add(newOwned[oo].Id);
-                }
-            }
+            //        // also add to updated list as we haven't downloaded them previously,
+            //        // so they need to be updated just like other files
+            //        updatedController.Add(newOwned[oo].Id);
+            //    }
+            //}
 
-            saveLoadHelper.SaveData(owned, ProductTypes.Owned).Wait();
+            //saveLoadHelper.SaveData(owned, ProductTypes.Owned).Wait();
 
-            consoleController.WriteLine(string.Empty);
+            //consoleController.WriteLine(string.Empty);
 
-            #endregion
+            //#endregion
 
-            #region Get updated products
+            //#region Get updated products
 
-            consoleController.Write("Requesting updated products...");
+            //consoleController.Write("Requesting updated products...");
 
-            QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
-            var productUpdates = pagedResultController.Request(
-                Urls.AccountGetFilteredProducts,
-                QueryParameters.AccountGetFilteredProducts).Result;
+            //QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
+            //var productUpdates = pagedResultController.Request(
+            //    Urls.AccountGetFilteredProducts,
+            //    QueryParameters.AccountGetFilteredProducts).Result;
 
-            if (productUpdates != null)
-            {
-                consoleController.Write("Got {0} updated products.", productUpdates.Count);
+            //if (productUpdates != null)
+            //{
+            //    consoleController.Write("Got {0} updated products.", productUpdates.Count);
 
-                foreach (var update in productUpdates)
-                    updatedController.Add(update.Id);
-            }
+            //    foreach (var update in productUpdates)
+            //        updatedController.Add(update.Id);
+            //}
 
-            saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+            //saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
 
-            consoleController.WriteLine(string.Empty);
+            //consoleController.WriteLine(string.Empty);
 
-            #endregion
+            //#endregion
 
-            #region Get wishlisted 
+            //#region Get wishlisted 
 
-            consoleController.Write("Requesting wishlisted products...");
+            //consoleController.Write("Requesting wishlisted products...");
 
-            var wishlistedString = gogDataController.GetString(Urls.Wishlist).Result;
-            var wishlistedProductResult = jsonStringController.Deserialize<ProductsResult>(wishlistedString);
+            //var wishlistedString = gogDataController.GetString(Urls.Wishlist).Result;
+            //var wishlistedProductResult = jsonStringController.Deserialize<ProductsResult>(wishlistedString);
 
-            if (wishlistedProductResult != null &&
-                wishlistedProductResult.Products != null)
-            {
-                var count = wishlistedProductResult.Products.Count;
+            //if (wishlistedProductResult != null &&
+            //    wishlistedProductResult.Products != null)
+            //{
+            //    var count = wishlistedProductResult.Products.Count;
 
-                consoleController.Write("Got {0} wishlisted products.", count);
+            //    consoleController.Write("Got {0} wishlisted products.", count);
 
-                wishlisted = new List<long>(count);
+            //    wishlisted = new List<long>(count);
 
-                foreach (var wish in wishlistedProductResult.Products)
-                    wishlisted.Add(wish.Id);
-            }
+            //    foreach (var wish in wishlistedProductResult.Products)
+            //        wishlisted.Add(wish.Id);
+            //}
 
-            saveLoadHelper.SaveData(wishlisted, ProductTypes.Wishlisted).Wait();
+            //saveLoadHelper.SaveData(wishlisted, ProductTypes.Wishlisted).Wait();
 
-            consoleController.WriteLine(string.Empty);
+            //consoleController.WriteLine(string.Empty);
 
-            #endregion
+            //#endregion
 
-            #region Update product data
+            //#region Update product data
 
-            consoleController.Write("Updating product data...");
+            //consoleController.Write("Updating product data...");
 
-            productsDataController.OnProductUpdated += OnProductDataUpdated;
+            //productsDataController.OnProductUpdated += OnProductDataUpdated;
 
-            var productWithoutProductData = new List<string>();
+            //var productWithoutProductData = new List<string>();
 
-            foreach (var p in products)
-            {
-                var existingProductData = productsDataController.Find(p.Id);
-                if (existingProductData != null) continue;
+            //foreach (var p in products)
+            //{
+            //    var existingProductData = productsDataController.Find(p.Id);
+            //    if (existingProductData != null) continue;
 
-                if (string.IsNullOrEmpty(p.Url)) continue;
+            //    if (string.IsNullOrEmpty(p.Url)) continue;
 
-                productWithoutProductData.Add(p.Url);
-            }
+            //    productWithoutProductData.Add(p.Url);
+            //}
 
-            productsDataController.Update(productWithoutProductData, postUpdateDelegate).Wait();
+            //productsDataController.Update(productWithoutProductData, postUpdateDelegate).Wait();
 
-            saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+            //saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
 
-            consoleController.WriteLine("DONE.");
+            //consoleController.WriteLine("DONE.");
 
-            #endregion
+            //#endregion
 
-            #region Update game details 
+            //#region Update game details 
 
-            consoleController.Write("Updating game details...");
+            //consoleController.Write("Updating game details...");
 
-            gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
-            gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
+            //gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
+            //gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
 
-            var ownedProductsWithoutGameDetails = new List<string>();
+            //var ownedProductsWithoutGameDetails = new List<string>();
 
-            foreach (var op in owned)
-            {
-                if (!updatedController.Contains(op.Id))
-                {
-                    var existingGameDetails = gamesDetailsController.Find(op.Id);
-                    if (existingGameDetails != null) continue;
-                }
+            //foreach (var op in owned)
+            //{
+            //    if (!updatedController.Contains(op.Id))
+            //    {
+            //        var existingGameDetails = gamesDetailsController.Find(op.Id);
+            //        if (existingGameDetails != null) continue;
+            //    }
 
-                ownedProductsWithoutGameDetails.Add(op.Id.ToString());
-            }
+            //    ownedProductsWithoutGameDetails.Add(op.Id.ToString());
+            //}
 
-            gamesDetailsController.Update(ownedProductsWithoutGameDetails, postUpdateDelegate).Wait();
+            //gamesDetailsController.Update(ownedProductsWithoutGameDetails, postUpdateDelegate).Wait();
 
-            saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
+            //saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 
-            consoleController.WriteLine("DONE.");
+            //consoleController.WriteLine("DONE.");
 
-            #endregion
+            //#endregion
 
             #region Download updated product files
 
+            // clone the collection since we'll be removing items from it
             //var updatedProducts = new List<long>(updated);
+
             //foreach (var u in updatedProducts)
             //{
             //    var updatedGameDetails = gamesDetailsController.Find(u);
-            //    productFilesController.UpdateFiles(updatedGameDetails, gameDetailsLanguages).Wait();
+            //    var productFiles = 
+            //        productFilesController.UpdateFiles(
+            //            updatedGameDetails, 
+            //            gameDetailsLanguages).Result;
 
+            //    // remove update entry as all files have been downloaded
             //    updated.Remove(u);
             //    saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+
+            //    // use clean-up controller to remove files that are no longer associated with product
             //}
+
+            var recycleBin = "_RecycleBin";
+
+            var productFilesString = "[{\"Key\":\"age_of_wonders_3\",\"Value\":[\"setup_age_of_wonders3_2.5.0.19.exe\",\"patch_age_of_wonders3_2.5.0.19.exe\",\"aow3_wallpapers.zip\",\"aow3_beastiary.zip\",\"aow3_avatars.zip\",\"aow3_character_concepts.zip\",\"aow3_cities_concept_art.zip\",\"aow3_faction_crests.zip\"]},{\"Key\":\"age_of_wonders_3_deluxe_edition_upgrade\",\"Value\":[\"setup_aow3_dragons_throne_scenario_2.5.0.19.exe\",\"aow3_ost_deluxe_mp3.zip\",\"aow3_ost_deluxe_flac.zip\"]}]";
+            Dictionary<string, IList<string>> productFiles = jsonStringController.Deserialize<Dictionary<string, IList<string>>>(productFilesString);
+
+            FilesCleanupController filesCleanupController = new FilesCleanupController(ioController);
+            filesCleanupController.Cleanup(productFiles, recycleBin);
+
+            // TODO: Return actual files downlaoded and introduce folder files controller 
+            // that moves all files NOT in that list to _No_Longer_On_GOG folder (most would be older installer versions)
+            // TODO: Show what OS, Language files are being downloaded for
+            // TODO: Show relative progress on the list
 
             #endregion
 

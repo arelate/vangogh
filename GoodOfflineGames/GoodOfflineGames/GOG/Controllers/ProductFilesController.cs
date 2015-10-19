@@ -16,7 +16,8 @@ namespace GOG.Controllers
         {
             Windows,
             Mac,
-            Linux
+            Linux,
+            Extra
         }
 
         private IFileRequestController fileRequestController;
@@ -42,56 +43,139 @@ namespace GOG.Controllers
             this.consoleController = consoleController;
         }
 
-        private async Task UpdateProductFile(DownloadEntry downloadEntry)
+        private void MergeDictionary<Type>(
+            ref IDictionary<Type, IList<Type>> primary, 
+            IDictionary<Type, IList<Type>> additional)
         {
-            consoleController.WriteLine("{0} ({1})", downloadEntry.Name, downloadEntry.Size);
+            foreach (Type key in additional.Keys)
+            {
+                if (!primary.ContainsKey(key))
+                    primary.Add(key, new List<Type>());
 
-            var fromUri = Urls.HttpsRoot + downloadEntry.ManualUrl;
-            var toUriParts = downloadEntry.ManualUrl.Split(new string[1] { Separators.UriPart }, StringSplitOptions.RemoveEmptyEntries);
-            var productFolder = toUriParts[toUriParts.Length - 2];
-
-            await fileRequestController.RequestFile(fromUri, productFolder, ioController, ioController, downloadProgressReporter);
-
-            consoleController.WriteLine(string.Empty);
+                foreach (Type value in additional[key])
+                {
+                    if (!primary[key].Contains(value))
+                    {
+                        primary[key].Add(value);
+                    }
+                }
+            }
         }
 
-        private async Task UpdateProductOperatingSystemFiles(OperatingSystemsDownloads operatingSystemDownloads)
+        private async Task<IDictionary<string, IList<string>>> UpdateProductFile(
+            List<DownloadEntry> downloadEntries, 
+            OperatingSystems os, 
+            string language = "")
         {
-            List<DownloadEntry> downloadEntries = new List<DownloadEntry>();
+            IDictionary<string, IList<string>> productFiles = new Dictionary<string, IList<string>>();
+
+            foreach (var entry in downloadEntries)
+            {
+                consoleController.WriteLine("{0},{1}: {2} {3}, {4}", 
+                    os.ToString(), 
+                    language, 
+                    entry.Name, 
+                    entry.Version, 
+                    entry.Size);
+
+                var fromUri = Urls.HttpsRoot + entry.ManualUrl;
+                var toUriParts = entry.ManualUrl.Split(
+                    new string[1] { Separators.UriPart }, 
+                    StringSplitOptions.RemoveEmptyEntries);
+                var productFolder = toUriParts[toUriParts.Length - 2];
+
+                if (!productFiles.ContainsKey(productFolder))
+                {
+                    productFiles.Add(productFolder, new List<string>());
+                }
+
+                //productFiles[productFolder].Add()
+
+                var filename = await fileRequestController.RequestFile(
+                    fromUri, 
+                    productFolder, 
+                    ioController, 
+                    ioController, 
+                    downloadProgressReporter);
+
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    // only add valid filenames. 
+                    // string.Empty in this case indicates unsuccessful error code
+                    // which likely points to no longer available file (older version)
+                    productFiles[productFolder].Add(filename);
+                }
+
+                consoleController.WriteLine(string.Empty);
+            }
+
+            return productFiles;
+        }
+
+        private async Task<IDictionary<string, IList<string>>> UpdateProductOperatingSystemFiles(
+            OperatingSystemsDownloads operatingSystemDownloads)
+        {
+            IDictionary <string, IList<string>> productFiles = new Dictionary<string, IList<string>>();
 
             if (downloadOperatingSystem.HasFlag(OperatingSystems.Windows) &&
                 operatingSystemDownloads.Windows != null)
-                downloadEntries.AddRange(operatingSystemDownloads.Windows);
+            {
+                var windowsFiles = await UpdateProductFile(operatingSystemDownloads.Windows,
+                    OperatingSystems.Windows,
+                    operatingSystemDownloads.Language);
+
+                MergeDictionary(ref productFiles, windowsFiles);
+            }
 
             if (downloadOperatingSystem.HasFlag(OperatingSystems.Mac) &&
                 operatingSystemDownloads.Mac != null)
-                downloadEntries.AddRange(operatingSystemDownloads.Mac);
+            {
+                var macFiles = await UpdateProductFile(operatingSystemDownloads.Mac, 
+                    OperatingSystems.Mac, 
+                    operatingSystemDownloads.Language);
+
+                MergeDictionary(ref productFiles, macFiles);
+            }
 
             if (downloadOperatingSystem.HasFlag(OperatingSystems.Linux) &&
                 operatingSystemDownloads.Linux != null)
-                downloadEntries.AddRange(operatingSystemDownloads.Linux);
+            {
+                var linuxFiles = await UpdateProductFile(operatingSystemDownloads.Linux, 
+                    OperatingSystems.Linux, 
+                    operatingSystemDownloads.Language);
 
-            foreach (DownloadEntry downloadEntry in downloadEntries)
-                await UpdateProductFile(downloadEntry);
+                MergeDictionary(ref productFiles, linuxFiles);
+            }
+
+            return productFiles;
         }
 
-        public async Task UpdateFiles(GameDetails details, ICollection<string> supportedLanguages)
+        public async Task<IDictionary<string, IList<string>>> UpdateFiles(
+            GameDetails details, 
+            ICollection<string> supportedLanguages)
         {
             consoleController.WriteLine("Downloading files for product {0}...", details.Title);
             consoleController.WriteLine(string.Empty);
 
+            IDictionary<string, IList<string>> productFiles = new Dictionary<string, IList<string>>();
+
             // update game files
             foreach (var download in details.LanguageDownloads)
                 if (supportedLanguages.Contains(download.Language))
-                    await UpdateProductOperatingSystemFiles(download);
+                    productFiles = await UpdateProductOperatingSystemFiles(download);
 
             // update extras
-            foreach (DownloadEntry extraEntry in details.Extras)
-                await UpdateProductFile(extraEntry);
+            var extrasFiles = await UpdateProductFile(details.Extras, OperatingSystems.Extra);
+            MergeDictionary(ref productFiles, extrasFiles);
 
             // also recursively download DLC files
             foreach (var dlc in details.DLCs)
-                await UpdateFiles(dlc, supportedLanguages);
+            {
+                var dlcFiles = await UpdateFiles(dlc, supportedLanguages);
+                MergeDictionary(ref productFiles, dlcFiles);
+            }
+
+            return productFiles;
         }
     }
 }

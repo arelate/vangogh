@@ -23,7 +23,7 @@ namespace GOG.SharedControllers
             this.uriController = uriController;
         }
 
-        public async Task RequestFile(
+        public async Task<string> RequestFile(
             string fromUri,
             string toPath,
             IStreamWritableController streamWriteableController,
@@ -33,7 +33,7 @@ namespace GOG.SharedControllers
             using (var response = await client.GetAsync(fromUri,
                 HttpCompletionOption.ResponseHeadersRead))
             {
-                if (!response.IsSuccessStatusCode) return;
+                if (!response.IsSuccessStatusCode) return string.Empty;
                 var totalBytes = response.Content.Headers.ContentLength;
                 var requestUri = response.RequestMessage.RequestUri;
                 var filename = requestUri.Segments[requestUri.Segments.Length - 1];
@@ -51,7 +51,7 @@ namespace GOG.SharedControllers
                 {
                     // file already exists and has same length - assume it's downloaded
                     if (progress != null) progress.Report(1);
-                    return;
+                    return filename;
                 }
 
                 using (Stream writeableStream = streamWriteableController.OpenWritable(fullPath))
@@ -68,6 +68,8 @@ namespace GOG.SharedControllers
                         }
                     }
                 }
+
+                return filename;
             }
 
         }

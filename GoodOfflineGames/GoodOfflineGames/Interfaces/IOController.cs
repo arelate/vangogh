@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace GOG.Interfaces
 {
@@ -35,6 +37,7 @@ namespace GOG.Interfaces
     {
         void CreateDirectory(string uri);
         bool ExistsDirectory(string uri);
+        IEnumerable<string> EnumerateFiles(string uri);
     }
 
     public interface IIOController :
