@@ -33,10 +33,14 @@ namespace GOG.SharedControllers
             using (var response = await client.GetAsync(fromUri,
                 HttpCompletionOption.ResponseHeadersRead))
             {
-                if (!response.IsSuccessStatusCode) return string.Empty;
                 var totalBytes = response.Content.Headers.ContentLength;
                 var requestUri = response.RequestMessage.RequestUri;
                 var filename = requestUri.Segments[requestUri.Segments.Length - 1];
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return filename;
+                }
 
                 var fullPath = Path.Combine(toPath, filename);
 
@@ -99,7 +103,7 @@ namespace GOG.SharedControllers
 
             var content = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
 
-                using (var response = await client.PostAsync(uri, content))
+            using (var response = await client.PostAsync(uri, content))
             {
                 if (response == null) return null;
 
