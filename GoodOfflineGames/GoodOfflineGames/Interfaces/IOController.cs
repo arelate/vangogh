@@ -60,7 +60,6 @@ namespace GOG.Interfaces
     {
         IEnumerable<string> EnumerateFiles(string uri);
     }
-    // TODO: split
 
     public interface IDirectoryController:
         ICreateDirectoryDelegate,

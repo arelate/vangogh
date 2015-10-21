@@ -9,6 +9,7 @@ using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
+    // TODO: Unit tests
     public class CleanupController : ICleanupController
     {
         private IIOController ioController;
