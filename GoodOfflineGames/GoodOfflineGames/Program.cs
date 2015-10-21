@@ -308,10 +308,10 @@ namespace GOG
 
             var ownedProductsWithoutGameDetails = new List<string>();
 
-            //// clone the collection since we'll be removing items from it
-            //var updatedProducts = new List<long>(updated);
+            // clone the collection since we'll be removing items from it
+            var updatedProducts = new List<long>(updated);
 
-            foreach (var op in owned)
+            foreach (var u in updatedProducts)
             {
                 // we use single loop to:
                 // 1) update game details
@@ -322,18 +322,10 @@ namespace GOG
                 // just updating game details and not being able to update files
                 // which is highly likely in case of many updates
 
-
-                // only do work if the game was updated OR has no game details yet (=new product)
-                if (!updatedController.Contains(op.Id))
-                {
-                    var existingGameDetails = gamesDetailsController.Find(op.Id);
-                    if (existingGameDetails != null) continue;
-                }
-
                 // request updated game details
-                consoleController.Write("Updating game details for {0}...", op.Title);
+                consoleController.Write("Updating game details for {0}...", u);
 
-                gamesDetailsController.Update(new List<string> { op.Id.ToString() }).Wait();
+                gamesDetailsController.Update(new List<string> { u.ToString() }).Wait();
 
                 // save new details
                 saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
@@ -341,7 +333,7 @@ namespace GOG
                 consoleController.WriteLine("DONE.");
 
                 // request updated product files
-                var updatedGameDetails = gamesDetailsController.Find(op.Id);
+                var updatedGameDetails = gamesDetailsController.Find(u);
 
                 var productFiles =
                     productFilesController.UpdateFiles(
@@ -349,7 +341,7 @@ namespace GOG
                         gameDetailsLanguages).Result;
 
                 // remove update entry as all files have been downloaded
-                updated.Remove(op.Id);
+                updated.Remove(u);
                 saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
 
                 // cleanup product folder
