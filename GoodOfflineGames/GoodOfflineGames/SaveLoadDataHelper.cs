@@ -55,11 +55,11 @@ namespace GOG
 
                 await storageController.Push(filenames[type], stringData);
             }
-            catch (SerializationException serializationException)
+            catch (SerializationException)
             {
                 // ...
             }
-            catch (IOException ioException)
+            catch (IOException)
             {
                 // ...
             }

@@ -10,16 +10,16 @@ namespace GOG.SharedControllers
 {
     public class SettingsController: ISettingsController<Settings>
     {
-        private IStreamReadableController streamReadableController;
+        private IStreamReadableDelegate streamReadableDelegate;
         private ISerializationController<string> serializationController;
         private IConsoleController consoleController;
 
         public SettingsController(
-            IStreamReadableController streamReadableController,
+            IStreamReadableDelegate streamReadableDelegate,
             ISerializationController<string> serializationContoller,
             IConsoleController consoleController)
         {
-            this.streamReadableController = streamReadableController;
+            this.streamReadableDelegate = streamReadableDelegate;
             this.serializationController = serializationContoller;
             this.consoleController = consoleController;
         }
@@ -31,7 +31,7 @@ namespace GOG.SharedControllers
 
             try
             {
-                using (Stream streamReadable = streamReadableController.OpenReadable(filename))
+                using (Stream streamReadable = streamReadableDelegate.OpenReadable(filename))
                 {
                     using (StreamReader streamReader = new StreamReader(streamReadable, Encoding.UTF8))
                     {
@@ -61,9 +61,10 @@ namespace GOG.SharedControllers
             return settings;
         }
 
-        public async Task Save(Settings data)
+        public Task Save(Settings data)
         {
             // no-op
+            throw new NotImplementedException();
         }
     }
 }

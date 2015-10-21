@@ -56,7 +56,7 @@ namespace GOG.Controllers
 
         private async Task CacheImages(IEnumerable<string> uris)
         {
-            if (!ioController.ExistsDirectory(imagesCacheFolder))
+            if (!ioController.DirectoryExists(imagesCacheFolder))
             {
                 ioController.CreateDirectory(imagesCacheFolder);
             }
@@ -67,7 +67,7 @@ namespace GOG.Controllers
                 var localFilename = imageUri.Segments.Last();
                 var localPath = Path.Combine(imagesCacheFolder, localFilename);
 
-                if (ioController.ExistsFile(localPath))
+                if (ioController.FileExists(localPath))
                 {
                     continue;
                 }

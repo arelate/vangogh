@@ -26,7 +26,7 @@ namespace GOG.SharedControllers
         public async Task<string> RequestFile(
             string fromUri,
             string toPath,
-            IStreamWritableController streamWriteableController,
+            IStreamWritableDelegate streamWriteableDelegate,
             IFileController fileController = null,
             IProgress<double> progress = null)
         {
@@ -46,7 +46,7 @@ namespace GOG.SharedControllers
                 long totalBytesRead = 0;
 
                 if (fileController != null &&
-                    fileController.ExistsFile(fullPath) &&
+                    fileController.FileExists(fullPath) &&
                     fileController.GetSize(fullPath) == totalBytes)
                 {
                     // file already exists and has same length - assume it's downloaded
@@ -54,7 +54,7 @@ namespace GOG.SharedControllers
                     return filename;
                 }
 
-                using (Stream writeableStream = streamWriteableController.OpenWritable(fullPath))
+                using (Stream writeableStream = streamWriteableDelegate.OpenWritable(fullPath))
                 using (Stream responseStream = await response.Content.ReadAsStreamAsync())
                 {
                     while ((bytesRead = await responseStream.ReadAsync(buffer, 0, bufferSize)) > 0)

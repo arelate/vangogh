@@ -17,7 +17,7 @@ namespace GOG.Interfaces
         Task<string> RequestFile(
             string fromUri,
             string toUri,
-            IStreamWritableController streamWritableController,
+            IStreamWritableDelegate streamWritableDelegate,
             IFileController fileController = null,
             IProgress<double> progress = null);
     }

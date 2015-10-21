@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsolePostUpdate.cs" />
-    <Compile Include="Controllers\FilesCleanupController.cs" />
+    <Compile Include="Controllers\CleanupController.cs" />
     <Compile Include="ExistingProductsFilter.cs" />
     <Compile Include="GOG\Controllers\Abstract\ProductCoreController.cs" />
     <Compile Include="GOG\Controllers\AuthorizationController.cs" />
@@ -86,6 +86,7 @@
     <Compile Include="GOG\Model\Unused\TimezoneDate.cs" />
     <Compile Include="GOG\Model\Unused\User.cs" />
     <Compile Include="GOG\Model\WorksOn.cs" />
+    <Compile Include="Interfaces\CleanupController.cs" />
     <Compile Include="Interfaces\CollectionController.cs" />
     <Compile Include="Interfaces\ConsoleController.cs" />
     <Compile Include="Interfaces\GOG\AuthorizationController.cs" />

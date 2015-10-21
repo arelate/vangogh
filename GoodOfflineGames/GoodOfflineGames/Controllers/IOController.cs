@@ -24,9 +24,14 @@ namespace GOG.SharedControllers
             return new FileStream(uri, FileMode.Create, FileAccess.Write, FileShare.Read);
         }
 
-        public bool ExistsFile(string uri)
+        public bool FileExists(string uri)
         {
             return File.Exists(uri);
+        }
+
+        public void MoveFile(string fromUri, string toUri)
+        {
+            File.Move(fromUri, toUri);
         }
 
         public long GetSize(string uri)
@@ -35,7 +40,7 @@ namespace GOG.SharedControllers
             return fileInfo.Length;
         }
 
-        public bool ExistsDirectory(string uri)
+        public bool DirectoryExists(string uri)
         {
             return Directory.Exists(uri);
         }

@@ -6,38 +6,68 @@ namespace GOG.Interfaces
 {
     #region Stream IO
 
-    public interface IStreamReadableController
+    public interface IStreamReadableDelegate
     {
         Stream OpenReadable(string uri);
     }
 
-    public interface IStreamWritableController
+    public interface IStreamWritableDelegate
     {
         Stream OpenWritable(string uri);
     }
 
     public interface IStreamController :
-        IStreamReadableController,
-        IStreamWritableController
+        IStreamReadableDelegate,
+        IStreamWritableDelegate
     {
         // ...
     }
 
-    // TODO: split
-    
-    public interface IFileController
+    public interface IMoveDelegate
     {
-        bool ExistsFile(string uri);
+        void MoveFile(string fromUri, string toUri);
+    }
+
+    public interface IFileExistsDelegate
+    {
+        bool FileExists(string uri);
+    }
+
+    public interface IGetSizeDelegate
+    {
         long GetSize(string uri);
     }
 
-    // TODO: split
+    public interface IFileController:
+        IMoveDelegate,
+        IFileExistsDelegate,
+        IGetSizeDelegate
+    {
+        // ...
+    }
 
-    public interface IDirectoryController
+    public interface ICreateDirectoryDelegate
     {
         void CreateDirectory(string uri);
-        bool ExistsDirectory(string uri);
+    }
+
+    public interface IDirectoryExistsDelegate
+    {
+        bool DirectoryExists(string uri);
+    }
+
+    public interface IEnumerateFilesDelegate
+    {
         IEnumerable<string> EnumerateFiles(string uri);
+    }
+    // TODO: split
+
+    public interface IDirectoryController:
+        ICreateDirectoryDelegate,
+        IDirectoryExistsDelegate,
+        IEnumerateFilesDelegate
+    {
+        // ...
     }
 
     public interface IIOController :

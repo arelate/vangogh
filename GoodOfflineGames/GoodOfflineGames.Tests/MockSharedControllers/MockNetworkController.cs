@@ -28,7 +28,7 @@ namespace GoodOfflineGames.Tests
         public Task<string> RequestFile(
             string fromUri,
             string toFile,
-            IStreamWritableController streamWriteableController,
+            IStreamWritableDelegate streamWriteableDelegate,
             IFileController fileController = null,
             IProgress<double> progress = null)
         {

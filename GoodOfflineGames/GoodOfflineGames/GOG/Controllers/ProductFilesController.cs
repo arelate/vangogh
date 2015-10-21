@@ -155,7 +155,6 @@ namespace GOG.Controllers
             ICollection<string> supportedLanguages)
         {
             consoleController.WriteLine("Downloading files for product {0}...", details.Title);
-            consoleController.WriteLine(string.Empty);
 
             IDictionary<string, IList<string>> productFiles = new Dictionary<string, IList<string>>();
 
