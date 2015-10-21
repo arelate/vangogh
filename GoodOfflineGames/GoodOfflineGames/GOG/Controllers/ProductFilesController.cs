@@ -24,7 +24,7 @@ namespace GOG.Controllers
         private IIOController ioController;
         private IConsoleController consoleController;
 
-        // Windows and Mac at this point, should make configuratble in the future
+        // TODO: Windows and Mac at this point, should make configuratble in the future
         private static OperatingSystems downloadOperatingSystem = OperatingSystems.Windows | OperatingSystems.Mac;
 
         private IProgress<double> downloadProgressReporter;
@@ -88,8 +88,6 @@ namespace GOG.Controllers
                 {
                     productFiles.Add(productFolder, new List<string>());
                 }
-
-                //productFiles[productFolder].Add()
 
                 var filename = await fileRequestController.RequestFile(
                     fromUri, 

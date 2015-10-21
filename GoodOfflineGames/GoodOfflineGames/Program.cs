@@ -25,6 +25,7 @@ namespace GOG
         static IList<ProductData> productsData = null;
         static IList<GameDetails> gamesDetails = null;
 
+        // TODO: make configurable 
         static string[] gameDetailsLanguages = new string[1] { "English" };
 
         #endregion
