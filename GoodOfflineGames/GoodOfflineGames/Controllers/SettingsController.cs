@@ -58,6 +58,12 @@ namespace GOG.SharedControllers
                 settings.Password = consoleController.ReadPrivateLine();
             }
 
+            if (settings.DownloadLanguages == null ||
+                settings.DownloadLanguages.Length == 0)
+            {
+                settings.DownloadLanguages = new string[1] { "English" };
+            }
+
             return settings;
         }
 

@@ -25,9 +25,6 @@ namespace GOG
         static IList<ProductData> productsData = null;
         static IList<GameDetails> gamesDetails = null;
 
-        // TODO: make configurable 
-        static string[] gameDetailsLanguages = new string[1] { "English" };
-
         #endregion
 
         static void OnProductDataUpdated(object sender, ProductData data)
@@ -105,12 +102,18 @@ namespace GOG
 
             #endregion
 
-            #region GOG controllers
+            #region Load settings
 
             ISettingsController<Settings> settingsController = new SettingsController(
                 ioController,
                 jsonStringController,
                 consoleController);
+
+            var settings = settingsController.Load().Result;
+
+            #endregion
+
+            #region GOG controllers
 
             IAuthorizationController authorizationController = new AuthorizationController(
                 uriController,
@@ -142,7 +145,7 @@ namespace GOG
                 gamesDetails,
                 networkController,
                 jsonStringController,
-                gameDetailsLanguages);
+                settings.DownloadLanguages);
 
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
 
@@ -156,12 +159,6 @@ namespace GOG
                 fileRequestController,
                 ioController,
                 postUpdateDelegate);
-
-            #endregion
-
-            #region Load settings
-
-            var settings = settingsController.Load().Result;
 
             #endregion
 
@@ -338,17 +335,20 @@ namespace GOG
                 var productFiles =
                     productFilesController.UpdateFiles(
                         updatedGameDetails,
-                        gameDetailsLanguages).Result;
+                        settings.DownloadLanguages).Result;
 
                 // remove update entry as all files have been downloaded
                 updated.Remove(u);
                 saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
 
-                // cleanup product folder
-                consoleController.Write("Cleaning up product folder...");
+                if (settings.CleanupProductFolders)
+                {
+                    // cleanup product folder
+                    consoleController.Write("Cleaning up product folder...");
 
-                ICleanupController cleanupController = new CleanupController(ioController);
-                var moved = cleanupController.Cleanup(productFiles, recycleBin);
+                    ICleanupController cleanupController = new CleanupController(ioController);
+                    cleanupController.Cleanup(productFiles, recycleBin);
+                }
 
                 consoleController.WriteLine("DONE");
             }

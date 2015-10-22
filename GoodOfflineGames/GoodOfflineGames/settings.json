@@ -1,5 +1,7 @@
 ﻿{
-  "username": "Bogdan.Brinza@gmail.com",
+  "username": "",
   "password": "",
-  "manualUpdate": [ "Ys: The Oath in Felghana", "Ys Origin", "1954 Alcatraz", "Smugglers V: Invasion", "World of Goo", "Lichdom: Battlemage", "Double Dragon Trilogy" ]
+  "downloadLangugages": [ "English" ],
+  "cleanupProductFolders": true
+
 }
