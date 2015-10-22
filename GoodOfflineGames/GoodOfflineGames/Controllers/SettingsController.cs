@@ -8,7 +8,7 @@ using GOG.SharedModels;
 
 namespace GOG.SharedControllers
 {
-    public class SettingsController: ISettingsController<Settings>
+    public class SettingsController : ISettingsController<Settings>
     {
         private IStreamReadableDelegate streamReadableDelegate;
         private ISerializationController<string> serializationController;
@@ -62,6 +62,12 @@ namespace GOG.SharedControllers
                 settings.DownloadLanguages.Length == 0)
             {
                 settings.DownloadLanguages = new string[1] { "English" };
+            }
+
+            if (settings.DownloadOperatingSystems == null ||
+                settings.DownloadOperatingSystems.Length == 0)
+            {
+                settings.DownloadOperatingSystems = new string[1] { "Windows" };
             }
 
             return settings;

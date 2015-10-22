@@ -335,7 +335,8 @@ namespace GOG
                 var productFiles =
                     productFilesController.UpdateFiles(
                         updatedGameDetails,
-                        settings.DownloadLanguages).Result;
+                        settings.DownloadLanguages,
+                        settings.DownloadOperatingSystems).Result;
 
                 // remove update entry as all files have been downloaded
                 updated.Remove(u);

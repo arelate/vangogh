@@ -11,21 +11,13 @@ namespace GOG.Controllers
 {
     class ProductFilesController
     {
-        [Flags]
-        private enum OperatingSystems
-        {
-            Windows,
-            Mac,
-            Linux,
-            Extra
-        }
-
         private IFileRequestController fileRequestController;
         private IIOController ioController;
         private IConsoleController consoleController;
 
-        // TODO: Windows and Mac at this point, should make configuratble in the future
-        private static OperatingSystems downloadOperatingSystem = OperatingSystems.Windows | OperatingSystems.Mac;
+        private const string Windows = "Windows";
+        private const string Mac = "Mac";
+        private const string Linux = "Linux";
 
         private IProgress<double> downloadProgressReporter;
         private string productLocation = string.Empty;
@@ -44,7 +36,7 @@ namespace GOG.Controllers
         }
 
         private void MergeDictionary<Type>(
-            ref IDictionary<Type, IList<Type>> primary, 
+            ref IDictionary<Type, IList<Type>> primary,
             IDictionary<Type, IList<Type>> additional)
         {
             foreach (Type key in additional.Keys)
@@ -63,24 +55,28 @@ namespace GOG.Controllers
         }
 
         private async Task<IDictionary<string, IList<string>>> UpdateProductFile(
-            List<DownloadEntry> downloadEntries, 
-            OperatingSystems os, 
+            List<DownloadEntry> downloadEntries,
+            string operatingSystem = "",
             string language = "")
         {
             IDictionary<string, IList<string>> productFiles = new Dictionary<string, IList<string>>();
 
             foreach (var entry in downloadEntries)
             {
-                consoleController.WriteLine("{0} {1} ({2}, {3}, {4})",
-                    entry.Name,
-                    entry.Version,
-                    os.ToString(), 
-                    language, 
-                    entry.Size);
+                string entryMessage = (string.IsNullOrEmpty(operatingSystem) && string.IsNullOrEmpty(language)) ?
+                    string.Format("{0} ({1})", entry.Name, entry.Size) :
+                    string.Format("{0} {1} ({2}, {3}, {4})",
+                        entry.Name,
+                        entry.Version,
+                        operatingSystem,
+                        language,
+                        entry.Size);
+
+                consoleController.WriteLine(entryMessage);
 
                 var fromUri = Urls.HttpsRoot + entry.ManualUrl;
                 var toUriParts = entry.ManualUrl.Split(
-                    new string[1] { Separators.UriPart }, 
+                    new string[1] { Separators.UriPart },
                     StringSplitOptions.RemoveEmptyEntries);
                 var productFolder = toUriParts[toUriParts.Length - 2];
 
@@ -90,10 +86,10 @@ namespace GOG.Controllers
                 }
 
                 var filename = await fileRequestController.RequestFile(
-                    fromUri, 
-                    productFolder, 
-                    ioController, 
-                    ioController, 
+                    fromUri,
+                    productFolder,
+                    ioController,
+                    ioController,
                     downloadProgressReporter,
                     consoleController);
 
@@ -110,35 +106,36 @@ namespace GOG.Controllers
         }
 
         private async Task<IDictionary<string, IList<string>>> UpdateProductOperatingSystemFiles(
-            OperatingSystemsDownloads operatingSystemDownloads)
+            OperatingSystemsDownloads operatingSystemDownloads,
+            ICollection<string> downloadOperatingSystems)
         {
-            IDictionary <string, IList<string>> productFiles = new Dictionary<string, IList<string>>();
+            IDictionary<string, IList<string>> productFiles = new Dictionary<string, IList<string>>();
 
-            if (downloadOperatingSystem.HasFlag(OperatingSystems.Windows) &&
+            if (downloadOperatingSystems.Contains(Windows) &&
                 operatingSystemDownloads.Windows != null)
             {
                 var windowsFiles = await UpdateProductFile(operatingSystemDownloads.Windows,
-                    OperatingSystems.Windows,
+                    Windows,
                     operatingSystemDownloads.Language);
 
                 MergeDictionary(ref productFiles, windowsFiles);
             }
 
-            if (downloadOperatingSystem.HasFlag(OperatingSystems.Mac) &&
+            if (downloadOperatingSystems.Contains(Mac) &&
                 operatingSystemDownloads.Mac != null)
             {
-                var macFiles = await UpdateProductFile(operatingSystemDownloads.Mac, 
-                    OperatingSystems.Mac, 
+                var macFiles = await UpdateProductFile(operatingSystemDownloads.Mac,
+                    Mac,
                     operatingSystemDownloads.Language);
 
                 MergeDictionary(ref productFiles, macFiles);
             }
 
-            if (downloadOperatingSystem.HasFlag(OperatingSystems.Linux) &&
+            if (downloadOperatingSystems.Contains(Linux) &&
                 operatingSystemDownloads.Linux != null)
             {
-                var linuxFiles = await UpdateProductFile(operatingSystemDownloads.Linux, 
-                    OperatingSystems.Linux, 
+                var linuxFiles = await UpdateProductFile(operatingSystemDownloads.Linux,
+                    Linux,
                     operatingSystemDownloads.Language);
 
                 MergeDictionary(ref productFiles, linuxFiles);
@@ -148,8 +145,9 @@ namespace GOG.Controllers
         }
 
         public async Task<IDictionary<string, IList<string>>> UpdateFiles(
-            GameDetails details, 
-            ICollection<string> supportedLanguages)
+            GameDetails details,
+            ICollection<string> supportedLanguages,
+            ICollection<string> supportedOperatingSystems)
         {
             consoleController.WriteLine("Downloading files for product {0}...", details.Title);
 
@@ -158,16 +156,16 @@ namespace GOG.Controllers
             // update game files
             foreach (var download in details.LanguageDownloads)
                 if (supportedLanguages.Contains(download.Language))
-                    productFiles = await UpdateProductOperatingSystemFiles(download);
+                    productFiles = await UpdateProductOperatingSystemFiles(download, supportedOperatingSystems);
 
             // update extras
-            var extrasFiles = await UpdateProductFile(details.Extras, OperatingSystems.Extra);
+            var extrasFiles = await UpdateProductFile(details.Extras, string.Empty);
             MergeDictionary(ref productFiles, extrasFiles);
 
             // also recursively download DLC files
             foreach (var dlc in details.DLCs)
             {
-                var dlcFiles = await UpdateFiles(dlc, supportedLanguages);
+                var dlcFiles = await UpdateFiles(dlc, supportedLanguages, supportedOperatingSystems);
                 MergeDictionary(ref productFiles, dlcFiles);
             }
 

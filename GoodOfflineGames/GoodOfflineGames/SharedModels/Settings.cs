@@ -14,9 +14,9 @@ namespace GOG.SharedModels
         public string Password { get; set; }
         [DataMember(Name = "downloadLangugages")]
         public string[] DownloadLanguages { get; set; }
+        [DataMember(Name = "downloadOperatingSystems")]
+        public string[] DownloadOperatingSystems { get; set; }
         [DataMember(Name = "cleanupProductFolders")]
         public bool CleanupProductFolders { get; set; }
-        //[DataMember(Name = "manualUpdate")]
-        //public List<string> ManualUpdate { get; set; }
     }
 }
