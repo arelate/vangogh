@@ -41,7 +41,7 @@ namespace GOG.SharedControllers
                 if (!response.IsSuccessStatusCode)
                 {
                     if (consoleController != null)
-                        consoleController.WriteLine("HTTP error {0}. Couldn't download file.", response.StatusCode);
+                        consoleController.Write("HTTP error {0}. Couldn't download file.", response.StatusCode);
 
                     return filename;
                 }
@@ -59,7 +59,7 @@ namespace GOG.SharedControllers
                 {
                     // file already exists and has same length - assume it's downloaded
                     if (consoleController != null)
-                        consoleController.WriteLine("No need to download - latest version already available.");
+                        consoleController.Write("No need to download - latest version already available.");
 
                     return filename;
                 }

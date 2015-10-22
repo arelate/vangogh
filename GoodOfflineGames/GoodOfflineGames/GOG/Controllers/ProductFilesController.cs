@@ -93,6 +93,8 @@ namespace GOG.Controllers
                     downloadProgressReporter,
                     consoleController);
 
+                consoleController.WriteLine(string.Empty);
+
                 if (!string.IsNullOrEmpty(filename))
                 {
                     // only add valid filenames. 
