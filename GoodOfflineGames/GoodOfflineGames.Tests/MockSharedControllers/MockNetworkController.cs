@@ -30,7 +30,8 @@ namespace GoodOfflineGames.Tests
             string toFile,
             IStreamWritableDelegate streamWriteableDelegate,
             IFileController fileController = null,
-            IProgress<double> progress = null)
+            IProgress<double> progress = null,
+            IConsoleController consoleController = null)
         {
             return null;
         }

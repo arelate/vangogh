@@ -24,7 +24,8 @@ namespace GOG.Controllers
             if (formattedValue != lastReportedValue)
             {
                 lastReportedValue = formattedValue;
-                consoleController.Write(formattedValue);
+                if (value < 1) consoleController.Write(formattedValue);
+                else consoleController.WriteLine(formattedValue);
             }
         }
     }

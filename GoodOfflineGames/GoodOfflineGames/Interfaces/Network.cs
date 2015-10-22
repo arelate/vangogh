@@ -19,7 +19,8 @@ namespace GOG.Interfaces
             string toUri,
             IStreamWritableDelegate streamWritableDelegate,
             IFileController fileController = null,
-            IProgress<double> progress = null);
+            IProgress<double> progress = null,
+            IConsoleController consoleController = null);
     }
 
     public interface IStringGetController

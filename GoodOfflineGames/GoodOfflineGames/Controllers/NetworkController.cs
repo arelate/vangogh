@@ -28,7 +28,8 @@ namespace GOG.SharedControllers
             string toPath,
             IStreamWritableDelegate streamWriteableDelegate,
             IFileController fileController = null,
-            IProgress<double> progress = null)
+            IProgress<double> progress = null,
+            IConsoleController consoleController = null)
         {
             using (var response = await client.GetAsync(fromUri,
                 HttpCompletionOption.ResponseHeadersRead))
@@ -39,6 +40,9 @@ namespace GOG.SharedControllers
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    if (consoleController != null)
+                        consoleController.WriteLine("HTTP error {0}. Couldn't download file.", response.StatusCode);
+
                     return filename;
                 }
 
@@ -54,7 +58,9 @@ namespace GOG.SharedControllers
                     fileController.GetSize(fullPath) == totalBytes)
                 {
                     // file already exists and has same length - assume it's downloaded
-                    if (progress != null) progress.Report(1);
+                    if (consoleController != null)
+                        consoleController.WriteLine("No need to download - latest version already available.");
+
                     return filename;
                 }
 

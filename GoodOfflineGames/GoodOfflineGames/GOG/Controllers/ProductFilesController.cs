@@ -71,11 +71,11 @@ namespace GOG.Controllers
 
             foreach (var entry in downloadEntries)
             {
-                consoleController.WriteLine("{0},{1}: {2} {3}, {4}", 
+                consoleController.WriteLine("{0} {1} ({2}, {3}, {4})",
+                    entry.Name,
+                    entry.Version,
                     os.ToString(), 
                     language, 
-                    entry.Name, 
-                    entry.Version, 
                     entry.Size);
 
                 var fromUri = Urls.HttpsRoot + entry.ManualUrl;
@@ -94,7 +94,8 @@ namespace GOG.Controllers
                     productFolder, 
                     ioController, 
                     ioController, 
-                    downloadProgressReporter);
+                    downloadProgressReporter,
+                    consoleController);
 
                 if (!string.IsNullOrEmpty(filename))
                 {
@@ -103,8 +104,6 @@ namespace GOG.Controllers
                     // which likely points to no longer available file (older version)
                     productFiles[productFolder].Add(filename);
                 }
-
-                consoleController.WriteLine(string.Empty);
             }
 
             return productFiles;
