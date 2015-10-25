@@ -63,6 +63,14 @@
             display: inline-block;
         }
 
+        .productContainer {
+            display: inline-block;
+            margin-right: 1em;
+            margin-bottom: 1em;
+            width: 25em;
+            vertical-align: top;
+        }
+
         .wishlisted {
             color: #FFC107;
             font-style: italic;
@@ -136,6 +144,12 @@
             color: #BDBDBD;
         }
 
+        #gameDetailsContainer #details {
+            position: fixed;
+            top: 4em;
+            padding-bottom: 1em;
+        }
+
             #gameDetailsContainer .cdKey {
                 color: #212121;
             }
@@ -156,7 +170,7 @@
             #gameDetailsContainer .header1 {
                 font-size: 2em;
                 font-weight: 200;
-                margin: 1em 0;
+                margin-bottom: 1em;
             }
 
                 #gameDetailsContainer .header1.bundle {
@@ -175,6 +189,7 @@
             #gameDetailsContainer .header {
                 line-height: 1.5em;
                 padding-right: 0.75em;
+                min-width: 5em;
             }
 
             #gameDetailsContainer .openFolder {
@@ -226,7 +241,7 @@
     </div>
     <div id="gameDetailsContainer" class="container hidden">
         <button id="close">Close</button>
-        <div id="details"></div>
+        <div id="details" class="container"></div>
     </div>
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
@@ -252,8 +267,8 @@
                   "</span>";
             }
             var getGameDetailsTemplate = function () {
-                return "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
-                    "<img class='image {{productImageClass}}' srcset='{{productImage}}' />" +
+                return "<div class='productContainer'><div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
+                    "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' />" +
                     "<table border='0' cellspacing='0' cellpadding='0'>" +
                     "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
                     "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
@@ -263,7 +278,7 @@
                     "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
                     "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                     "</table>" +
-                    "<a href='./{{openFolderLink}}/' class='openFolder {{openFolderClass}}'>Open folder...</a>";
+                    "<a href='./{{openFolderLink}}/' class='openFolder {{openFolderClass}}'>Open folder...</a></div>";
             }
             var getDLCsTemplate = function () {
                 return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
@@ -309,7 +324,10 @@
             var getRelativeUri = function (absoluteUri) {
                 var imageParts = absoluteUri.split("/");
                 var imageLocalUri = imageParts[imageParts.length - 1];
-                return "_images/" + imageLocalUri + "_196.jpg 1x, _images/" + imageLocalUri + "_392.jpg 2x";
+                return {
+                    "productImage": "_images/" + imageLocalUri + "_196.jpg",
+                    "productRetinaImage": "_images/" + imageLocalUri + "_392.jpg"
+                }
             }
             return {
                 "getRelativeUri": getRelativeUri
@@ -693,10 +711,14 @@
                     openFolderClass = "";
                 }
 
-                var productImage, productImageClass = "hidden";
+                var images, productImageClass = "hidden";
                 if (product.image) {
-                    if (product.image) productImage = Images.getRelativeUri(product.image);
-                    if (productImage) productImageClass = "";
+                    if (product.image) images = Images.getRelativeUri(product.image);
+                    if (images) productImageClass = "";
+                }
+
+                if (!images) {
+                    images = {};
                 }
 
                 var productTitle = product.title;
@@ -792,7 +814,8 @@
                     "openFolderClass": openFolderClass,
                     "productTitle": productTitle,
                     "productClass": productClass,
-                    "productImage": productImage,
+                    "productImage": images.productImage,
+                    "productRetinaImage": images.productRetinaImage,
                     "productImageClass": productImageClass,
                     "worksOnTitle": worksOnTitle,
                     "worksOnClass": worksOnClass,
