@@ -2,7 +2,6 @@
   "username": "",
   "password": "",
   "downloadLangugages": [ "English" ],
-  "downloadOperatingSystems": [ "Windows", "Mac" ],
+  "downloadOperatingSystems": [ "Windows" ],
   "cleanupProductFolders": true
-
 }
