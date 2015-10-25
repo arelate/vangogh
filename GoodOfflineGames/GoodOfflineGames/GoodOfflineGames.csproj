@@ -128,10 +128,12 @@
     <Content Include="bundles.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="CMD.PNG" />
     <Content Include="default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="screenshot.png" />
+    <Content Include="HTML-Details.PNG" />
+    <Content Include="HTML-List.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
