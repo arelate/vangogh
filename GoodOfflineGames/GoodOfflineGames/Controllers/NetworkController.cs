@@ -23,7 +23,7 @@ namespace GOG.SharedControllers
             this.uriController = uriController;
         }
 
-        public async Task<string> RequestFile(
+        public async Task<Tuple<bool, string>> RequestFile(
             string fromUri,
             string toPath,
             IStreamWritableDelegate streamWriteableDelegate,
@@ -43,7 +43,7 @@ namespace GOG.SharedControllers
                     if (consoleController != null)
                         consoleController.Write("HTTP error {0}. Couldn't download file.", response.StatusCode);
 
-                    return filename;
+                    return new Tuple<bool, string>(false, filename);
                 }
 
                 var fullPath = Path.Combine(toPath, filename);
@@ -61,7 +61,7 @@ namespace GOG.SharedControllers
                     if (consoleController != null)
                         consoleController.Write("No need to download - latest version already available.");
 
-                    return filename;
+                    return new Tuple<bool, string>(true, filename);
                 }
 
                 using (Stream writeableStream = streamWriteableDelegate.OpenWritable(fullPath))
@@ -79,9 +79,8 @@ namespace GOG.SharedControllers
                     }
                 }
 
-                return filename;
+                return new Tuple<bool,string>(true, filename);
             }
-
         }
 
         public async Task<string> GetString(

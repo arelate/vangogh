@@ -14,7 +14,7 @@ namespace GOG.Interfaces
 
     public interface IFileRequestController
     {
-        Task<string> RequestFile(
+        Task<Tuple<bool, string>> RequestFile(
             string fromUri,
             string toUri,
             IStreamWritableDelegate streamWritableDelegate,

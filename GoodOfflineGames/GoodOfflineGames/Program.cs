@@ -100,6 +100,11 @@ namespace GOG
 
             consoleController.WriteLine("DONE.");
 
+            //// Add all to updated if you need fresh update library
+            //foreach (var o in owned) updated.Add(o.Id);
+            //saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+            //return;
+
             #endregion
 
             #region Load settings
@@ -332,23 +337,27 @@ namespace GOG
                 // request updated product files
                 var updatedGameDetails = gamesDetailsController.Find(u);
 
-                var productFiles =
+                var productFilesResult =
                     productFilesController.UpdateFiles(
                         updatedGameDetails,
                         settings.DownloadLanguages,
                         settings.DownloadOperatingSystems).Result;
 
-                // remove update entry as all files have been downloaded
-                updated.Remove(u);
-                saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
-
-                if (settings.CleanupProductFolders)
+                // remove from updated and cleanup only if download was successful
+                if (productFilesResult.Item1)
                 {
-                    // cleanup product folder
-                    consoleController.Write("Cleaning up product folder...");
+                    // remove update entry as all files have been downloaded
+                    updated.Remove(u);
+                    saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
 
-                    ICleanupController cleanupController = new CleanupController(ioController);
-                    cleanupController.Cleanup(productFiles, recycleBin);
+                    if (settings.CleanupProductFolders)
+                    {
+                        // cleanup product folder
+                        consoleController.Write("Cleaning up product folder...");
+
+                        ICleanupController cleanupController = new CleanupController(ioController);
+                        cleanupController.Cleanup(productFilesResult.Item2, recycleBin);
+                    }
                 }
 
                 consoleController.WriteLine("DONE");
