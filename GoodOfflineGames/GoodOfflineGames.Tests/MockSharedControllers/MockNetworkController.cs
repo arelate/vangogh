@@ -25,7 +25,7 @@ namespace GoodOfflineGames.Tests
             this.serializationController = serializationController;
         }
 
-        public Task<string> RequestFile(
+        public Task<Tuple<bool, string>> RequestFile(
             string fromUri,
             string toFile,
             IStreamWritableDelegate streamWriteableDelegate,
