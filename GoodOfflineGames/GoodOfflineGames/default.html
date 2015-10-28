@@ -28,9 +28,35 @@
         button {
             background: #2196f3;
             color: white;
-            border: none;
-            padding: 0.25em 0.5em;
+            border: 1px solid #1976d2;
+            border-radius: 4px;
+            padding: 0 1em;
             margin: 0;
+            cursor: pointer;
+            box-shadow: inset 0px 1px 0px rgba(255,255,255,0.2);
+            text-shadow: 0px 1px 0px rgba(0,0,0,0.2);
+            font-size: 0.8em;
+            height: 30px;
+        }
+
+            button:hover {
+                background: #1976d2;
+                border-color: #0d47a1;
+            }
+
+        input[type=search] {
+            padding: 4px;
+            height: 30px;
+            border: 1px solid #616161;
+            border-radius: 4px;
+            font-size: 0.8em;
+            box-shadow: inset 0px 1px 1px rgba(0,0,0,0.075);
+            color: #212121;
+        }
+
+        input[type=search]:focus {
+            border-color: #1976d2;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
         }
 
         .hidden {
@@ -67,7 +93,7 @@
             display: inline-block;
             margin-right: 1em;
             margin-bottom: 1em;
-            width: 25em;
+            max-width: 800px;
             vertical-align: top;
         }
 
@@ -121,11 +147,6 @@
             height: 4em;
         }
 
-            #searchContainer #searchInput {
-                padding: 0.25em;
-                height: 1.75em;
-                border: none;
-            }
 
             #searchContainer a {
                 margin-left: 1em;
@@ -144,11 +165,11 @@
             color: #BDBDBD;
         }
 
-        #gameDetailsContainer #details {
-            position: fixed;
-            top: 4em;
-            padding-bottom: 1em;
-        }
+            #gameDetailsContainer #details {
+                position: fixed;
+                top: 4em;
+                padding-bottom: 1em;
+            }
 
             #gameDetailsContainer .cdKey {
                 color: #212121;
@@ -159,8 +180,8 @@
                 }
 
             #gameDetailsContainer img {
-                width: 192px;
-                height: 110px;
+                width: 800px;
+                height: 370px;
                 border: 0;
                 display: inline-block;
                 margin-bottom: 1em;
@@ -197,6 +218,10 @@
                 margin-top: 1em;
             }
 
+            #gameDetailsContainer td.title {
+                color: white;
+            }
+
         #legendContainer {
             top: 4em;
             left: auto;
@@ -208,7 +233,6 @@
                 display: block;
                 cursor: default;
             }
-
     </style>
 </head>
 
@@ -325,8 +349,8 @@
                 var imageParts = absoluteUri.split("/");
                 var imageLocalUri = imageParts[imageParts.length - 1];
                 return {
-                    "productImage": "_images/" + imageLocalUri + "_196.jpg",
-                    "productRetinaImage": "_images/" + imageLocalUri + "_392.jpg"
+                    "productImage": "_images/" + imageLocalUri + "_800.jpg",
+                    "productRetinaImage": "_images/" + imageLocalUri + ".jpg"
                 }
             }
             return {

@@ -15,8 +15,11 @@ namespace GOG.Controllers
     {
         private const int standardWidth = 196;
         private const int retinaWidth = standardWidth * 2;
-        private int[] imageWidths = new int[2] { standardWidth, retinaWidth };
+        private const int largeWidth = 800;
+        private const int largeRetinaWidth = 1600;
+        private int[] imageWidths = new int[4] { standardWidth, retinaWidth, largeWidth, largeRetinaWidth };
         private string imageFilenameTemplate = "{0}_{1}.jpg";
+        private string largeRetinaImageFilenameTemplate = "{0}.jpg";
         private string imagesCacheFolder = "_images";
 
         private IIOController ioController;
@@ -37,6 +40,12 @@ namespace GOG.Controllers
             await CacheImages(ExpandImagesUris(products));
         }
 
+        private string FormatTemplate(string uri, int width)
+        {
+            string template = (width == largeRetinaWidth) ? largeRetinaImageFilenameTemplate : imageFilenameTemplate;
+            return (width == largeRetinaWidth) ? string.Format(template, uri) : string.Format(template, uri, width);   
+        }
+
         private IEnumerable<string> ExpandImagesUris(IEnumerable<Product> products)
         {
             foreach (var product in products)
@@ -49,7 +58,7 @@ namespace GOG.Controllers
 
                 foreach (int width in imageWidths)
                 {
-                    yield return string.Format(imageFilenameTemplate, baseUri, width);
+                    yield return FormatTemplate(baseUri, width);
                 }
             }
         }

@@ -360,11 +360,12 @@ namespace GOG
                         ICleanupController cleanupController = new CleanupController(ioController);
                         cleanupController.Cleanup(productFilesResult.Item2, recycleBin);
                     }
-                } else
+                }
+                else
                 {
                     if (++failedAttempts >= failedAttemptThreshold)
                     {
-                        consoleController.WriteLine("Last {0} attempts to download product files were not successful. "+
+                        consoleController.WriteLine("Last {0} attempts to download product files were not successful. " +
                             "Recommended: wait 12-24 hours and try again. Abandoning attempts.", failedAttempts);
                         break;
                     }
