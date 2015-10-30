@@ -782,9 +782,13 @@
 
                 if (product.worksOn) {
                     var worksOn = [];
-                    if (product.worksOn.Windows) worksOn.push("<svg viewBox='0 0 100 100'><use href='#windows'/></svg>");
-                    if (product.worksOn.Mac) worksOn.push("<svg viewBox='0 0 100 100'><use href='#macosx'/></svg>");
-                    if (product.worksOn.Linux) worksOn.push("<svg viewBox='0 0 100 100'><use href='#ubuntu'/></svg>");
+                    var svgTemplate = "<svg viewBox='0 0 100 100' "+
+                      "xmlns='http://www.w3.org/2000/svg' "+
+                      "xmlns:xlink='http://www.w3.org/1999/xlink'>"+
+                      "<use xlink:href='#{{0}}'></svg>";
+                    if (product.worksOn.Windows) worksOn.push(svgTemplate.replace("{{0}}", "windows"));
+                    if (product.worksOn.Mac) worksOn.push(svgTemplate.replace("{{0}}", "macosx"));
+                    if (product.worksOn.Linux) worksOn.push(svgTemplate.replace("{{0}}", "ubuntu"));
 
                     worksOnTitle = worksOn.join(" ");
                     if (worksOnTitle) worksOnClass = "";
