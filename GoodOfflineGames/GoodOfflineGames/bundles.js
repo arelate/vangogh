@@ -538,8 +538,8 @@ var bundles = [{
 },
   {
       // Pathologic Classic HD
-      "parent": 1444818876,
-      "children": [1445852217]
+      "parent": 1445852217,
+      "children": [1444818876]
   }
 
 ];
