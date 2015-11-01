@@ -292,7 +292,7 @@ namespace GOG
 
             var dataCheckThresholdDays = 30;
 
-            var productWithoutProductData = new List<string>();
+            var productsWithoutProductData = new List<string>();
 
             foreach (var p in products)
             {
@@ -309,10 +309,10 @@ namespace GOG
 
                 if (string.IsNullOrEmpty(p.Url)) continue;
 
-                productWithoutProductData.Add(p.Url);
+                productsWithoutProductData.Add(p.Url);
             }
 
-            productsDataController.Update(productWithoutProductData, postUpdateDelegate).Wait();
+            productsDataController.Update(productsWithoutProductData, postUpdateDelegate).Wait();
 
             saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
 
@@ -324,7 +324,8 @@ namespace GOG
 
             consoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
 
-            var updateAllThrottle = 1000 * 60 * 5;  // 5 mins
+            var updateAllThrottleMinutes = 2; // 2 mins
+            var updateAllThrottleMilliseconds = 1000 * 60 * updateAllThrottleMinutes;
 
             gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
             gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
@@ -422,13 +423,13 @@ namespace GOG
                 // throttle server access
                 if (settings.UpdateAll)
                 {
-                    Console.WriteLine("Waiting 5 minutes before next request to avoid being blocked...");
+                    Console.WriteLine("Waiting {0} minutes before next request...", updateAllThrottleMinutes);
 
                     if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
                     else checkedOwned[u] = DateTime.Today;
 
                     saveLoadHelper.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
-                    System.Threading.Thread.Sleep(updateAllThrottle);
+                    System.Threading.Thread.Sleep(updateAllThrottleMilliseconds);
                 }
             }
 

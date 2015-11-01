@@ -25,16 +25,6 @@ namespace GOG.Controllers
             return Urls.GameProductDataPageTemplate;
         }
 
-        //protected override bool Skip(Product product)
-        //{
-        //    var existingProductData = Find(product.Id);
-        //    if (existingProductData != null) return true;
-
-        //    if (string.IsNullOrEmpty(product.Url)) return true;
-
-        //    return false;
-        //}
-
         protected override ProductData Deserialize(string data)
         {
             if (string.IsNullOrEmpty(data)) return null;
