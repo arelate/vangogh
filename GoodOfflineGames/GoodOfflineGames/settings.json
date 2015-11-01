@@ -3,5 +3,6 @@
   "password": "",
   "downloadLangugages": [ "English" ],
   "downloadOperatingSystems": [ "Windows" ],
-  "cleanupProductFolders": true
+  "cleanupProductFolders": true,
+  "updateAll":  false
 }

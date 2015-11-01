@@ -18,5 +18,7 @@ namespace GOG.SharedModels
         public string[] DownloadOperatingSystems { get; set; }
         [DataMember(Name = "cleanupProductFolders")]
         public bool CleanupProductFolders { get; set; }
+        [DataMember(Name = "updateAll")]
+        public bool UpdateAll { get; set; }
     }
 }

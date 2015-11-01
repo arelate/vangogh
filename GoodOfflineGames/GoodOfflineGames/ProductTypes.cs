@@ -10,7 +10,8 @@ namespace GOG
         Wishlisted = 2,
         Updated = 3,
         ProductsData = 4,
-        GameDetails = 5
+        GameDetails = 5,
+        CheckedOwned = 6
     }
 
     public class ProductTypesHelper

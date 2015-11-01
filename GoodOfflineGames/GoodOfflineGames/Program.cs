@@ -25,6 +25,8 @@ namespace GOG
         static IList<ProductData> productsData = null;
         static IList<GameDetails> gamesDetails = null;
 
+        static IDictionary<long, DateTime> checkedOwned = null;
+
         #endregion
 
         static void OnProductDataUpdated(object sender, ProductData data)
@@ -97,6 +99,9 @@ namespace GOG
 
             gamesDetails = saveLoadHelper.LoadData<List<GameDetails>>(ProductTypes.GameDetails).Result;
             gamesDetails = gamesDetails ?? new List<GameDetails>();
+
+            checkedOwned = saveLoadHelper.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedOwned).Result;
+            checkedOwned = checkedOwned ?? new Dictionary<long, DateTime>();
 
             consoleController.WriteLine("DONE.");
 
@@ -305,13 +310,23 @@ namespace GOG
 
             consoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
 
+            var updateAllThrottle = 1000 * 60 * 5;  // 5 mins
+            var updateAllCheckedDaysThreshold = 30;
+
             gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
             gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
 
             var ownedProductsWithoutGameDetails = new List<string>();
 
             // clone the collection since we'll be removing items from it
-            var updatedProducts = new List<long>(updated);
+            var updatedProducts = (settings.UpdateAll) ?
+                new List<long>(owned.Count) :
+                new List<long>(updated);
+
+            if (settings.UpdateAll)
+                foreach (var o in owned)
+                    updatedProducts.Add(o.Id);
+
             var failedAttempts = 0;
             var failedAttemptThreshold = 2;
 
@@ -325,6 +340,21 @@ namespace GOG
                 // this is done to avoid spending all request limit on GOG.com
                 // just updating game details and not being able to update files
                 // which is highly likely in case of many updates
+
+                if (settings.UpdateAll)
+                {
+                    // check if we've checked same game within last 30 days
+                    if (checkedOwned.ContainsKey(u))
+                    {
+                        var checkedDays = DateTime.Today - checkedOwned[u];
+                        if (checkedDays.Days < updateAllCheckedDaysThreshold)
+                        {
+                            consoleController.WriteLine("Product {0} already checked within last {1} days.",
+                                u, updateAllCheckedDaysThreshold);
+                            continue;
+                        }
+                    }
+                }
 
                 // request updated game details
                 consoleController.Write("Updating game details for {0}...", u);
@@ -349,8 +379,11 @@ namespace GOG
                 if (productFilesResult.Item1)
                 {
                     // remove update entry as all files have been downloaded
-                    updated.Remove(u);
-                    saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+                    if (updated.Contains(u))
+                    {
+                        updated.Remove(u);
+                        saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+                    }
 
                     if (settings.CleanupProductFolders)
                     {
@@ -372,6 +405,18 @@ namespace GOG
                 }
 
                 consoleController.WriteLine("DONE");
+
+                // throttle server access
+                if (settings.UpdateAll)
+                {
+                    Console.WriteLine("Waiting 5 minutes before next request to avoid being blocked...");
+
+                    if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
+                    else checkedOwned[u] = DateTime.Today;
+
+                    saveLoadHelper.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
+                    System.Threading.Thread.Sleep(updateAllThrottle);
+                }
             }
 
             consoleController.WriteLine("DONE.");
