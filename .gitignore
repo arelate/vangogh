@@ -198,13 +198,9 @@ FakesAssemblies/
 *.jpg
 
 GoodOfflineGames/GoodOfflineGames/gamedetails.js
-
 GoodOfflineGames/GoodOfflineGames/owned.js
-
 GoodOfflineGames/GoodOfflineGames/products.js
-
 GoodOfflineGames/GoodOfflineGames/productsdata.js
-
 GoodOfflineGames/GoodOfflineGames/updated.js
-
 GoodOfflineGames/GoodOfflineGames/wishlisted.js
+GoodOfflineGames/GoodOfflineGames/checked*.js
