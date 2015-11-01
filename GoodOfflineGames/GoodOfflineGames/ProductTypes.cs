@@ -11,7 +11,8 @@ namespace GOG
         Updated = 3,
         ProductsData = 4,
         GameDetails = 5,
-        CheckedOwned = 6
+        CheckedOwned = 6,
+        CheckedProductData = 7
     }
 
     public class ProductTypesHelper

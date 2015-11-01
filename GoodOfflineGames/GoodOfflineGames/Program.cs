@@ -26,12 +26,18 @@ namespace GOG
         static IList<GameDetails> gamesDetails = null;
 
         static IDictionary<long, DateTime> checkedOwned = null;
+        static IDictionary<long, DateTime> checkedProductData = null;
 
         #endregion
 
         static void OnProductDataUpdated(object sender, ProductData data)
         {
             saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+
+            if (!checkedProductData.ContainsKey(data.Id)) checkedProductData.Add(data.Id, DateTime.Today);
+            else checkedProductData[data.Id] = DateTime.Today;
+
+            saveLoadHelper.SaveData(checkedProductData, ProductTypes.CheckedProductData).Wait();
         }
 
         static void OnGameDetailsUpdated(object sender, GameDetails data)
@@ -103,12 +109,10 @@ namespace GOG
             checkedOwned = saveLoadHelper.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedOwned).Result;
             checkedOwned = checkedOwned ?? new Dictionary<long, DateTime>();
 
-            consoleController.WriteLine("DONE.");
+            checkedProductData = saveLoadHelper.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedProductData).Result;
+            checkedProductData = checkedProductData ?? new Dictionary<long, DateTime>();
 
-            //// Add all to updated if you need fresh update library
-            //foreach (var o in owned) updated.Add(o.Id);
-            //saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
-            //return;
+            consoleController.WriteLine("DONE.");
 
             #endregion
 
@@ -286,12 +290,22 @@ namespace GOG
 
             productsDataController.OnProductUpdated += OnProductDataUpdated;
 
+            var dataCheckThresholdDays = 30;
+
             var productWithoutProductData = new List<string>();
 
             foreach (var p in products)
             {
                 var existingProductData = productsDataController.Find(p.Id);
-                if (existingProductData != null) continue;
+                if (existingProductData != null)
+                {
+                    // only skip data known to be checked within last 30 days
+                    if (checkedProductData.ContainsKey(p.Id) &&
+                        (DateTime.Today - checkedProductData[p.Id]).Days < dataCheckThresholdDays)
+                    {
+                        continue;
+                    }
+                }
 
                 if (string.IsNullOrEmpty(p.Url)) continue;
 
@@ -311,7 +325,6 @@ namespace GOG
             consoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
 
             var updateAllThrottle = 1000 * 60 * 5;  // 5 mins
-            var updateAllCheckedDaysThreshold = 30;
 
             gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
             gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
@@ -347,10 +360,10 @@ namespace GOG
                     if (checkedOwned.ContainsKey(u))
                     {
                         var checkedDays = DateTime.Today - checkedOwned[u];
-                        if (checkedDays.Days < updateAllCheckedDaysThreshold)
+                        if (checkedDays.Days < dataCheckThresholdDays)
                         {
                             consoleController.WriteLine("Product {0} already checked within last {1} days.",
-                                u, updateAllCheckedDaysThreshold);
+                                u, dataCheckThresholdDays);
                             continue;
                         }
                     }

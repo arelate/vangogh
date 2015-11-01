@@ -78,6 +78,8 @@ namespace GOG.Controllers
 
                 var data = Deserialize(dataString);
 
+                if (data == null) continue;
+
                 if (OnBeforeAdding != null)
                 {
                     OnBeforeAdding(ref data, item);
