@@ -540,6 +540,11 @@ var bundles = [{
       // Pathologic Classic HD
       "parent": 1445852217,
       "children": [1444818876]
+  },
+  {
+      // Prehistorik 1+2
+      "parent": 1430913339,
+      "children": [1430912792, 1430913246]
   }
 
 ];
