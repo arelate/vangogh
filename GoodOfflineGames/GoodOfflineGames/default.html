@@ -22,7 +22,6 @@
         a {
             color: white;
             text-decoration: none;
-            cursor: pointer;
         }
 
         button {
@@ -85,7 +84,6 @@
         .product {
             line-height: 2em;
             margin-right: 2em;
-            cursor: pointer;
             color: #BDBDBD;
             display: inline-block;
         }
@@ -310,9 +308,8 @@
 
         var Templates = function () {
             var getProductTemplate = function () {
-                return "<span class='product {{productClass}}' data-id='{{id}}'>" +
-                  "<span class='title' title='{{title}}' >{{title}}</span>" +
-                  "</span>";
+                return "<a class='product {{productClass}}' href='#{{id}}'>" +
+                  "<span class='title' title='{{title}}' >{{title}}</span></a>";
             }
             var getGameDetailsTemplate = function () {
                 return "<div class='productContainer'><div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
@@ -337,7 +334,7 @@
                     "<div class='bundleContainer {{bundleClass}}'>{{bundleContent}}</div>";
             }
             var getRequiredProductTemplate = function () {
-                return "<a data-id='{{id}}'>{{title}}</a>"
+                return "<a href='#{{id}}'>{{title}}</a>"
             }
             return {
                 "getProductTemplate": getProductTemplate,
@@ -423,7 +420,7 @@
                     ViewModelProvider.getDLCsViewModel,
                     Templates.getDLCsTemplate);
             }
-            var show = function (id, fromId) {
+            var show = function (id) {
                 var product = pIndex.getElementByKey(id);
                 if (!product) return;
 
@@ -457,35 +454,24 @@
                     details.innerHTML += bundleView;
                 }
 
-                var requiredProducts = details.querySelectorAll("a[data-id]");
-                initElements(requiredProducts, id);
-
-                closeButton.textContent = (fromId && fromId !== id) ? "Back" : "Close";
                 closeButton.addEventListener("click", function () {
-                    if (fromId && fromId !== id) show(fromId);
-                    else gameDetailsContainer.classList.add("hidden");
+                  history.back();
                 });
 
                 gameDetailsContainer.classList.remove("hidden");
+            }
+            var close = function() {
+              gameDetailsContainer.classList.add("hidden");
             }
             var init = function (pi, pdi, gdi) {
                 pIndex = pi;
                 pdIndex = pdi;
                 gdIndex = gdi;
             }
-            var initElements = function (elements, fromId) {
-                for (var ii = 0; ii < elements.length; ii++) {
-                    elements[ii].addEventListener("click", function (e) {
-                        var id = parseInt(e.currentTarget.getAttribute("data-id"));
-                        show(id, fromId);
-                        // stop it here, don't propagate to body handler that hides gameDetails containers
-                        e.stopPropagation();
-                    });
-                }
-            }
             return {
                 "init": init,
-                "initElements": initElements
+                "show": show,
+                "close": close
             }
         }();
 
@@ -599,7 +585,7 @@
                         searchResults.appendChild(clonedProductElement);
                     }
 
-                    GameDetails.initElements(clonedProductElements);
+                    // GameDetails.initElements(clonedProductElements);
 
                     searchResults.classList.remove("hidden");
 
@@ -1072,7 +1058,7 @@
                 start = new Date();
                 var productsElements = document.querySelectorAll("#productsContainer > .product");
                 GameDetails.init(productsIndex, productsDataIndex, gameDetailsIndex);
-                GameDetails.initElements(productsElements);
+                // GameDetails.initElements(productsElements);
                 elapsed = new Date() - start;
                 console.log("Initializing game details: " + elapsed + "ms");
             });
@@ -1104,7 +1090,6 @@
             toggleLegend.addEventListener("click", function (e) {
                 var legendContainer = $("legendContainer");
                 legendContainer.classList.toggle("hidden");
-                e.preventDefault();
             });
 
             var backToTop = $("backToTop");
@@ -1117,6 +1102,14 @@
                 } else {
                     productsContainer.scrollTop = 0;
                 }
+            });
+
+            window.addEventListener("hashchange", function() {
+              if (location.hash.indexOf("#") > -1) {
+                  GameDetails.show(location.hash.substr(1));
+              } else {
+                  GameDetails.close();
+              }
             });
         });
     </script>
