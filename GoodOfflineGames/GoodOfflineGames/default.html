@@ -1106,7 +1106,8 @@
 
             window.addEventListener("hashchange", function() {
               if (location.hash.indexOf("#") > -1) {
-                  GameDetails.show(location.hash.substr(1));
+                  var productId = parseInt(location.hash.substr(1));
+                  GameDetails.show(productId);
               } else {
                   GameDetails.close();
               }
