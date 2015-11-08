@@ -1,1170 +1,1186 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
-
 <head>
-  <meta charset="UTF-8">
-  <title>GOG.com collection</title>
-  <meta name="viewport" content="width=device-width" />
-  <style>
-    * {
-      font-family: -apple-system, "Segoe UI";
-      font-size: 15px;
-      box-sizing: border-box;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <title>GOG.com collection</title>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        * {
+            font-family: -apple-system, "Segoe UI";
+            font-size: 15px;
+            box-sizing: border-box;
+            margin: 0;
+        }
 
-    .background {
-      background: #212121;
-    }
+        .background {
+            background: #212121;
+        }
 
-    body {
-      padding: 0em;
-      margin: 0 1em;
-    }
+        body {
+            padding: 0em;
+            margin: 0 1em;
+        }
 
-    a {
-      color: white;
-      text-decoration: none;
-    }
+        a {
+            color: white;
+            text-decoration: none;
+        }
 
-    button {
-      background: #2196f3;
-      color: white;
-      border: 1px solid #1976d2;
-      border-radius: 4px;
-      padding: 0 1em;
-      margin: 0;
-      cursor: pointer;
-      box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2);
-      text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
-      font-size: 0.8em;
-      height: 30px;
-    }
+        button {
+            background: #42a5f5;
+            color: white;
+            border: 1px solid #1976d2;
+            border-radius: 4px;
+            padding: 0 1em;
+            margin: 0;
+            cursor: pointer;
+            box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2);
+            text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+            font-size: 0.8em;
+            height: 30px;
+            width: 44px;
+            padding-top: 4px;
+        }
 
-    button:hover {
-      background: #1976d2;
-      border-color: #0d47a1;
-    }
+            button:hover {
+                background: #1976d2;
+                border-color: #0d47a1;
+            }
 
-    input[type=search] {
-      padding: 4px;
-      height: 30px;
-      border: 1px solid #616161;
-      border-radius: 4px;
-      font-size: 0.8em;
-      box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.075);
-      color: #212121;
-      -webkit-appearance: none;
-    }
+        input[type=search] {
+            padding: 4px;
+            height: 30px;
+            border: 1px solid #616161;
+            border-radius: 4px;
+            font-size: 0.8em;
+            box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.075);
+            color: #212121;
+            -webkit-appearance: none;
+        }
 
-    input[type=search]:focus {
-      border-color: #1976d2;
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
-    }
+            input[type=search]:focus {
+                border-color: #1976d2;
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+            }
 
-    .hidden {
-      display: none !important;
-    }
+        .hidden {
+            display: none !important;
+        }
 
-    .container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      overflow: auto;
-      padding: 1.25em;
-      background: inherit;
-      cursor: default;
-    }
+        .container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow: auto;
+            padding: 1.25em;
+            background: inherit;
+            cursor: default;
+        }
 
-    #productsContainer,
-    #searchResults {
-      top: 4.5em;
-      padding-top: 0;
-    }
+        #productsContainer,
+        #searchResults {
+            top: 4.5em;
+            padding-top: 0;
+        }
 
-    .product {
-      line-height: 2em;
-      margin-right: 2em;
-      color: #B0BEC5;
-      display: inline-block;
-    }
+        .product {
+            line-height: 2em;
+            margin-right: 2em;
+            color: #B0BEC5;
+            display: inline-block;
+        }
 
-    .productContainer {
-      display: inline-block;
-      margin-right: 1em;
-      margin-bottom: 1em;
-      max-width: 800px;
-      vertical-align: top;
-    }
+        .productContainer {
+            display: inline-block;
+            margin-right: 1em;
+            margin-bottom: 1em;
+            max-width: 800px;
+            vertical-align: top;
+        }
 
-    .wishlisted {
-      color: #FFC107 !important;
-      font-style: italic;
-    }
+        .wishlisted {
+            color: #FFC107 !important;
+            font-style: italic;
+        }
 
-    .owned {
-      color: #4CAF50 !important;
-    }
+        .owned {
+            color: #4CAF50 !important;
+        }
 
-    .partOwned {
-      color: #A5D6A7;
-      font-style: italic;
-    }
+        .partOwned {
+            color: #A5D6A7;
+            font-style: italic;
+        }
 
-    .bundle {
-      font-weight: 600;
-    }
+        .bundle {
+            font-weight: 600;
+        }
 
-    .bundle.owned {
-      color: #388E3C;
-    }
+            .bundle.owned {
+                color: #388E3C;
+            }
 
-    .bundle.wishlisted {
-      /* wishlisted bundle should be normal
+            .bundle.wishlisted {
+                /* wishlisted bundle should be normal
                     to distinguish with partial owned */
-      color: #FF8F00 !important;
-      font-style: normal;
-    }
+                color: #FF8F00 !important;
+                font-style: normal;
+            }
 
-    .updated::after {
-      content: "*";
-      margin-left: 0.1em;
-      color: #F44336;
-    }
+        .updated::after {
+            content: "*";
+            margin-left: 0.1em;
+            color: #F44336;
+        }
 
-    .dlc {
-      color: #9FA8DA;
-    }
+        .dlc {
+            color: #9FA8DA;
+        }
 
-    .dlc::after {
-      content: "DLC";
-      background: #9C27B0;
-      border-radius: 0.2em;
-      padding:  0 0.25em;
-      margin-left: 0.25em;
-      font-size: 0.8em;
-      /*vertical-align: top;*/
-      color: white;
-    }
+            .dlc::after {
+                content: "DLC";
+                background: #9C27B0;
+                border-radius: 0.2em;
+                padding: 0 0.25em;
+                margin-left: 0.25em;
+                font-size: 0.8em;
+                /*vertical-align: top;*/
+                color: white;
+            }
 
-    #searchContainer {
-      bottom: auto;
-      height: 4.5em;
-    }
+        #searchContainer {
+            bottom: auto;
+            height: 4.5em;
+        }
 
-    #searchContainer a {
-      margin-left: 1em;
-    }
+            #searchContainer a {
+                margin-left: 1em;
+            }
 
-    #searchContainer button {
-      float: right;
-      margin-left: 1em;
-    }
+            #searchContainer button {
+                float: right;
+                margin-left: 1em;
+            }
 
-    #gameDetailsContainer {
-      color: #B0BEC5;
-    }
 
-    #gameDetailsContainer #details {
-      position: fixed;
-      top: 4.5em;
-      padding-bottom: 1em;
-    }
+        #gameDetailsContainer {
+            color: #B0BEC5;
+        }
 
-    #gameDetailsContainer .cdKey {
-      color: #212121 !important;
-    }
+            #gameDetailsContainer #details {
+                position: fixed;
+                top: 4.5em;
+                padding-bottom: 1em;
+            }
 
-    #gameDetailsContainer .cdKey:focus {
-      background: inherit;
-    }
+            #gameDetailsContainer .cdKey {
+                color: #212121 !important;
+            }
 
-    #gameDetailsContainer img {
-      width: 100%;
-      border: 0;
-      display: inline-block;
-      margin-bottom: 1em;
-    }
+                #gameDetailsContainer .cdKey:focus {
+                    background: inherit;
+                }
 
-    #gameDetailsContainer .header1 {
-      font-size: 2.25em;
-      font-weight: 300;
-      margin-bottom: 1em;
-    }
+            #gameDetailsContainer img {
+                width: 100%;
+                border: 0;
+                display: inline-block;
+                margin-bottom: 1em;
+            }
 
-    #gameDetailsContainer .header1.bundle {
-      font-weight: normal;
-    }
+            #gameDetailsContainer .header1 {
+                font-size: 2.25em;
+                font-weight: 300;
+                margin-bottom: 1em;
+            }
 
-    #gameDetailsContainer .dlcContainer .header1,
-    #gameDetailsContainer .bundleContainer .header1 {
-      font-size: 1.5rem;
-    }
+                #gameDetailsContainer .header1.bundle {
+                    font-weight: normal;
+                }
 
-    #gameDetailsContainer .bundleContainer .dlcContainer .header1 {
-      font-size: 1.25em;
-    }
+            #gameDetailsContainer .dlcContainer .header1,
+            #gameDetailsContainer .bundleContainer .header1 {
+                font-size: 1.5rem;
+            }
 
-    #gameDetailsContainer .header {
-      line-height: 1.5em;
-      padding-right: 0.75em;
-      min-width: 5em;
-    }
+            #gameDetailsContainer .bundleContainer .dlcContainer .header1 {
+                font-size: 1.25em;
+            }
 
-    #gameDetailsContainer .openFolder {
-      display: block;
-      margin-top: 1em;
-    }
+            #gameDetailsContainer .header {
+                line-height: 1.5em;
+                padding-right: 0.75em;
+                min-width: 5em;
+            }
 
-    #gameDetailsContainer td.title {
-      color: white;
-    }
+            #gameDetailsContainer .openFolder {
+                display: block;
+                margin-top: 1em;
+            }
 
-    #gameDetailsContainer td svg {
-      width: 1.5em;
-      height: 1.5em;
-      padding: 0.5em 0.2em 0 0;
-    }
+            #gameDetailsContainer td.title {
+                color: white;
+            }
 
-    #infoContainer {
-      top: 4.5em;
-      left: auto;
-      padding-top: 0;
-      border-left: solid 1px #424242;
-    }
+            #gameDetailsContainer td svg {
+                width: 1.5em;
+                height: 1.5em;
+                padding: 0.5em 0.2em 0 0;
+            }
 
-    #infoContainer .product {
-      display: inline-block;
-      cursor: default;
-    }
+        #infoContainer {
+            top: 4.5em;
+            left: auto;
+            padding-top: 0;
+            border-left: solid 1px #424242;
+        }
 
-    #infoContainer .count {
-      float: right;
-      margin-right: 0;
-    }
-  </style>
+            #infoContainer .product {
+                display: inline-block;
+                cursor: default;
+            }
+
+            #infoContainer .count {
+                float: right;
+                margin-right: 0;
+            }
+    </style>
 </head>
-
 <body class="background">
 
-  <svg viewBox="0 0 100 100" class="hidden">
-    <g id="windows" transform="translate(0,-952.36216)">
-      <g transform="matrix(2.6923075,0,0,2.6923075,-691.46883,403.20481)">
-        <path fill="white" d="m 272.05451,223.57098 -15.22321,0 0,12.43304 15.22321,2.09821 0,-14.53125 z m 0,-16.58482 -15.22321,2.09821 0,12.61161 15.22321,0 0,-14.70982 z m 21.91965,16.58482 -20.24554,0 0,14.75446 20.24554,2.79018 0,-17.54464 z m 0,-19.59821 -20.24554,2.79017 0,14.93304 20.24554,0 0,-17.72321 z"
-        />
-      </g>
-    </g>
-    <g id="macosx" transform="matrix(1.6666667,0,0,1.6666667,-33.333333,-33.333333)">
-      <path stroke="white" fill="white" d="M 50,79 C 34,79 21,66 21,50 21,34 34,21 50,21 66,21 79,34 79,50 79,66 66,79 50,79 Z" />
-      <path stroke="black" stroke-width="2px" d="m 62.8,31.6 c -0.2,-0.2 -0.5,-0.1 -0.7,0.1 L 50,49.1 37.9,31.7 c -0.2,-0.2 -0.5,-0.3 -0.7,-0.1 -0.2,0.2 -0.3,0.5 -0.1,0.7 L 49.4,50 37.1,67.7 c -0.2,0.2 -0.1,0.5 0.1,0.7 0.1,0.1 0.2,0.1 0.3,0.1 0.2,0 0.3,-0.1 0.4,-0.2 L 50,50.9 62.1,68.3 c 0.1,0.1 0.3,0.2 0.4,0.2 0.1,0 0.2,0 0.3,-0.1 0.2,-0.2 0.3,-0.5 0.1,-0.7 L 50.6,50 62.9,32.3 c 0.2,-0.2 0.1,-0.6 -0.1,-0.7 z"
-      />
-    </g>
-    <g id="ubuntu">
-      <g transform="matrix(1.1111076,0,0,1.1111111,-5.555385,-5.555555)">
-        <path fill="white" d="M 95.00015,50.000432 C 95.00015,74.852315 74.852463,95 49.999138,95 25.146388,95 4.9998625,74.852315 4.9998625,50.000432 c 0,-24.853612 20.1465255,-45.0004322 44.9992755,-45.0004322 24.853325,0 45.001012,20.1468202 45.001012,45.0004322"
-        />
-        <path fill="black" d="m 62.295912,28.701087 c 2.873376,1.659372 6.546563,0.675122 8.204788,-2.197388 1.659075,-2.873664 0.675688,-6.546562 -2.197975,-8.205644 -2.873087,-1.658504 -6.545987,-0.674543 -8.205062,2.199121 -1.6585,2.872509 -0.67455,6.545408 2.19825,8.203911 z M 50,67.549813 c -2.641888,0 -5.145512,-0.587374 -7.392837,-1.632816 l -4.174551,7.480879 C 41.919625,75.124499 45.845375,76.10009 50,76.10009 c 2.416175,0 4.7524,-0.334819 6.9726,-0.949614 0.392825,-2.413 1.825625,-4.636944 4.109888,-5.956013 2.280224,-1.316469 4.919225,-1.446933 7.203499,-0.583622 4.4424,-4.368222 7.333101,-10.311246 7.753925,-16.929679 l -8.5624,-0.124687 C 66.689537,60.521517 59.168538,67.549813 50,67.549813 Z m 0,-35.099916 c 9.168538,0 16.689537,7.029739 17.477512,15.993631 l 8.5624,-0.124975 C 75.6185,41.700699 72.727812,35.757675 68.284837,31.389741 66.00085,32.252475 63.362137,32.121722 61.081625,30.804963 58.797637,29.486472 57.365137,27.262817 56.972312,24.849528 54.7524,24.235311 52.416175,23.900204 50,23.900204 c -4.154625,0 -8.080075,0.975302 -11.566813,2.702502 l 4.174263,7.480012 C 44.854487,33.037277 47.358112,32.449902 50,32.449902 Z M 32.450338,49.999856 c 0,-5.93754 2.950725,-11.181774 7.4624,-14.357351 l -4.392175,-7.357919 c -5.257513,3.512993 -9.168825,8.882784 -10.793275,15.172749 1.897787,1.546802 3.11035,3.902363 3.11035,6.543097 0,2.640447 -1.21285,4.996008 -3.110638,6.542522 1.624163,6.290252 5.535475,11.660045 10.793275,15.173037 l 4.392463,-7.358207 c -4.511675,-3.175289 -7.4624,-8.419523 -7.4624,-14.357928 z m 29.84645,21.298479 c -2.873675,1.659081 -3.857625,5.331691 -2.198838,8.2042 1.659088,2.873663 5.331688,3.858202 8.20535,2.199121 2.8728,-1.658794 3.85705,-5.331691 2.197975,-8.205066 -1.658512,-2.872221 -5.3317,-3.85676 -8.204487,-2.198255 z M 19.400513,43.992755 c -3.31875,0 -6.007975,2.688936 -6.007975,6.007677 0,3.317876 2.689225,6.007102 6.007975,6.007102 3.317587,0 6.0071,-2.689226 6.0071,-6.007102 0,-3.318741 -2.689513,-6.007677 -6.0071,-6.007677"
-        />
-      </g>
-    </g>
-  </svg>
+    <svg viewBox="0 0 100 100" class="hidden">
+        <g id="windows" transform="translate(0,-952.36216)">
+            <g transform="matrix(2.6923075,0,0,2.6923075,-691.46883,403.20481)">
+                <path fill="white" d="m 272.05451,223.57098 -15.22321,0 0,12.43304 15.22321,2.09821 0,-14.53125 z m 0,-16.58482 -15.22321,2.09821 0,12.61161 15.22321,0 0,-14.70982 z m 21.91965,16.58482 -20.24554,0 0,14.75446 20.24554,2.79018 0,-17.54464 z m 0,-19.59821 -20.24554,2.79017 0,14.93304 20.24554,0 0,-17.72321 z" />
+            </g>
+        </g>
+        <g id="macosx" transform="matrix(1.6666667,0,0,1.6666667,-33.333333,-33.333333)">
+            <path stroke="white" fill="white" d="M 50,79 C 34,79 21,66 21,50 21,34 34,21 50,21 66,21 79,34 79,50 79,66 66,79 50,79 Z" />
+            <path stroke="black" stroke-width="2px" d="m 62.8,31.6 c -0.2,-0.2 -0.5,-0.1 -0.7,0.1 L 50,49.1 37.9,31.7 c -0.2,-0.2 -0.5,-0.3 -0.7,-0.1 -0.2,0.2 -0.3,0.5 -0.1,0.7 L 49.4,50 37.1,67.7 c -0.2,0.2 -0.1,0.5 0.1,0.7 0.1,0.1 0.2,0.1 0.3,0.1 0.2,0 0.3,-0.1 0.4,-0.2 L 50,50.9 62.1,68.3 c 0.1,0.1 0.3,0.2 0.4,0.2 0.1,0 0.2,0 0.3,-0.1 0.2,-0.2 0.3,-0.5 0.1,-0.7 L 50.6,50 62.9,32.3 c 0.2,-0.2 0.1,-0.6 -0.1,-0.7 z" />
+        </g>
+        <g id="ubuntu" transform="matrix(1.1111076,0,0,1.1111111,-5.555385,-5.555555)">
+            <path fill="white" d="M 95.00015,50.000432 C 95.00015,74.852315 74.852463,95 49.999138,95 25.146388,95 4.9998625,74.852315 4.9998625,50.000432 c 0,-24.853612 20.1465255,-45.0004322 44.9992755,-45.0004322 24.853325,0 45.001012,20.1468202 45.001012,45.0004322" />
+            <path fill="black" d="m 62.295912,28.701087 c 2.873376,1.659372 6.546563,0.675122 8.204788,-2.197388 1.659075,-2.873664 0.675688,-6.546562 -2.197975,-8.205644 -2.873087,-1.658504 -6.545987,-0.674543 -8.205062,2.199121 -1.6585,2.872509 -0.67455,6.545408 2.19825,8.203911 z M 50,67.549813 c -2.641888,0 -5.145512,-0.587374 -7.392837,-1.632816 l -4.174551,7.480879 C 41.919625,75.124499 45.845375,76.10009 50,76.10009 c 2.416175,0 4.7524,-0.334819 6.9726,-0.949614 0.392825,-2.413 1.825625,-4.636944 4.109888,-5.956013 2.280224,-1.316469 4.919225,-1.446933 7.203499,-0.583622 4.4424,-4.368222 7.333101,-10.311246 7.753925,-16.929679 l -8.5624,-0.124687 C 66.689537,60.521517 59.168538,67.549813 50,67.549813 Z m 0,-35.099916 c 9.168538,0 16.689537,7.029739 17.477512,15.993631 l 8.5624,-0.124975 C 75.6185,41.700699 72.727812,35.757675 68.284837,31.389741 66.00085,32.252475 63.362137,32.121722 61.081625,30.804963 58.797637,29.486472 57.365137,27.262817 56.972312,24.849528 54.7524,24.235311 52.416175,23.900204 50,23.900204 c -4.154625,0 -8.080075,0.975302 -11.566813,2.702502 l 4.174263,7.480012 C 44.854487,33.037277 47.358112,32.449902 50,32.449902 Z M 32.450338,49.999856 c 0,-5.93754 2.950725,-11.181774 7.4624,-14.357351 l -4.392175,-7.357919 c -5.257513,3.512993 -9.168825,8.882784 -10.793275,15.172749 1.897787,1.546802 3.11035,3.902363 3.11035,6.543097 0,2.640447 -1.21285,4.996008 -3.110638,6.542522 1.624163,6.290252 5.535475,11.660045 10.793275,15.173037 l 4.392463,-7.358207 c -4.511675,-3.175289 -7.4624,-8.419523 -7.4624,-14.357928 z m 29.84645,21.298479 c -2.873675,1.659081 -3.857625,5.331691 -2.198838,8.2042 1.659088,2.873663 5.331688,3.858202 8.20535,2.199121 2.8728,-1.658794 3.85705,-5.331691 2.197975,-8.205066 -1.658512,-2.872221 -5.3317,-3.85676 -8.204487,-2.198255 z M 19.400513,43.992755 c -3.31875,0 -6.007975,2.688936 -6.007975,6.007677 0,3.317876 2.689225,6.007102 6.007975,6.007102 3.317587,0 6.0071,-2.689226 6.0071,-6.007102 0,-3.318741 -2.689513,-6.007677 -6.0071,-6.007677" />
+        </g>
+        <g id="up" transform="translate(0,-952.36216)">
+            <path fill="white" d="m 99.999997,1023.2041 c 0,-0.8016 -0.400802,-1.7034 -1.002004,-2.3046 L 52.304607,974.20607 c -0.601202,-0.6012 -1.503006,-1.002 -2.304609,-1.002 -0.801603,0 -1.703406,0.4008 -2.304609,1.002 L 1.0020039,1020.8995 c -0.60120243,0.6012 -1.00200401920929,1.503 -1.00200401920929,2.3046 0,0.8016 0.40080158920929,1.7034 1.00200401920929,2.3046 l 5.0100198,5.01 c 0.6012024,0.6012 1.503006,1.002 2.3046092,1.002 0.8016032,0 1.7034071,-0.4008 2.3046091,-1.002 l 39.378756,-39.37876 39.378757,39.37876 c 0.601202,0.6012 1.503006,1.002 2.304609,1.002 0.901803,0 1.703406,-0.4008 2.304609,-1.002 l 5.01002,-5.01 c 0.601202,-0.6012 1.002004,-1.503 1.002004,-2.3046 z" />
+        </g>
+        <g id="info" transform="translate(0,-952.36216)">
+            <path fill="white" d="m 66.644972,1033.6182 c 0,1.1715 -0.911162,2.0827 -2.082656,2.0827 l -29.157175,0 c -1.171493,0 -2.082655,-0.9112 -2.082655,-2.0827 l 0,-10.4133 c 0,-1.1715 0.911162,-2.0826 2.082655,-2.0826 l 6.247966,0 0,-20.8266 -6.247966,0 c -1.171493,0 -2.082655,-0.91113 -2.082655,-2.08262 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08266 2.082655,-2.08266 l 20.826554,0 c 1.171493,0 2.082655,0.91117 2.082655,2.08266 l 0,33.3225 6.247966,0 c 1.171494,0 2.082656,0.9111 2.082656,2.0826 l 0,10.4133 z M 58.31435,975.30387 c 0,1.17149 -0.911162,2.08265 -2.082655,2.08265 l -12.495932,0 c -1.171494,0 -2.082656,-0.91116 -2.082656,-2.08265 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08265 2.082656,-2.08265 l 12.495932,0 c 1.171493,0 2.082655,0.91116 2.082655,2.08265 l 0,10.41328 z m 41.653107,27.07453 c 0,-27.5952 -22.388545,-49.98374 -49.983728,-49.98374 C 22.388545,952.39466 0,974.7832 0,1002.3784 c 0,27.5952 22.388545,49.9837 49.983729,49.9837 27.595183,0 49.983728,-22.3885 49.983728,-49.9837 z" />
+        </g>
+        <g id="back" transform="translate(0,-952.36216)">
+            <path fill="white" d="m 80.964871,969.41215 c 1.55135,-1.55135 1.55135,-4.0335 0,-5.58485 L 70.663909,953.52633 c -1.55135,-1.55135 -4.033509,-1.55135 -5.584859,0 l -46.044058,46.04406 c -1.55135,1.55131 -1.55135,4.03351 0,5.58491 l 46.044058,46.044 c 1.55135,1.5514 4.033509,1.5514 5.584859,0 l 10.300962,-10.301 c 1.55135,-1.5513 1.55135,-4.0335 0,-5.5848 l -32.950667,-32.9507 32.950667,-32.95065 z" />
+        </g>
+    </svg>
 
-  <div id="searchContainer" class="container">
-    <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
-    <a id="showAllSearchResults" class="hidden" href="#">
+    <div id="searchContainer" class="container">
+        <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
+        <a id="showAllSearchResults" class="hidden" href="#">
             Show all <span class="resultsCount"></span> results...
         </a>
-    <button id="backToTop">Top</button>
-    <button id="toggleInfo">Info</button>
-  </div>
-  <div id="productsContainer" class="container"></div>
-  <div id="searchResults" class="container hidden"></div>
-  <div id="infoContainer" class="container hidden"></div>
-  <div id="gameDetailsContainer" class="container hidden">
-    <button class="close">Close</button>
-    <div id="details" class="container"></div>
-  </div>
-  <script src="./products.js"></script>
-  <script src="./owned.js"></script>
-  <script src="./updated.js"></script>
-  <script src="./wishlisted.js"></script>
-  <script src="./productsdata.js"></script>
-  <script src="./gamedetails.js"></script>
-  <script src="./bundles.js"></script>
-  <script>
-    "use strict";
 
-    var DEBUG = false;
+        <button id="backToTop" title="Back to top">
+            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#up'></use>
+            </svg>
+        </button>
+        <button id="toggleInfo" title="Information">
+            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#info'></use>
+            </svg>
+        </button>
+    </div>
+    <div id="productsContainer" class="container"></div>
+    <div id="searchResults" class="container hidden"></div>
+    <div id="infoContainer" class="container hidden"></div>
+    <div id="gameDetailsContainer" class="container hidden">
+        <button class="close">
+            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#back'></use>
+            </svg>
+        </button>
+        <div id="details" class="container"></div>
+    </div>
+    <script src="./products.js"></script>
+    <script src="./owned.js"></script>
+    <script src="./updated.js"></script>
+    <script src="./wishlisted.js"></script>
+    <script src="./productsdata.js"></script>
+    <script src="./gamedetails.js"></script>
+    <script src="./bundles.js"></script>
+    <script>
+        "use strict";
 
-    var $ = function(id) {
-      return document.getElementById(id);
-    }
+        var DEBUG = false;
 
-    var Templates = function() {
-      var getProductTemplate = function() {
-        return "<a class='product {{productClass}}' href='#{{id}}'>" +
-          "<span class='title' title='{{title}}' >{{title}}</span></a>";
-      }
-      var getGameDetailsTemplate = function() {
-        return "<div class='productContainer'><div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
-          "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' />" +
-          "<table border='0' cellspacing='0' cellpadding='0'>" +
-          "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
-          "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
-          "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>" +
-          "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
-          "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
-          "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
-          "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title'>{{worksOnTitle}}</td></tr>" +
-          "</table>" +
-          "<a href='./{{openFolderLink}}/' class='openFolder {{openFolderClass}}'>Open folder...</a></div>";
-      }
-      var getDLCsTemplate = function() {
-        return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
-          "<div class='dlcContainer {{dlcClass}}'>{{dlcContent}}</div>";
-      }
-      var getBundleTemplate = function() {
-        return "<div class='bundleTitle header1 {{bundleClass}}'>Bundled products</div>" +
-          "<div class='bundleContainer {{bundleClass}}'>{{bundleContent}}</div>";
-      }
-      var getRequiredProductTemplate = function() {
-        return "<a href='#{{id}}'>{{title}}</a>"
-      }
-      return {
-        "getProductTemplate": getProductTemplate,
-        "getGameDetailsTemplate": getGameDetailsTemplate,
-        "getRequiredProductTemplate": getRequiredProductTemplate,
-        "getDLCsTemplate": getDLCsTemplate,
-        "getBundleTemplate": getBundleTemplate
-      }
-    }();
-
-    var Views = function() {
-      var bindTemplateToModel = function(template, model) {
-        var result = template;
-        for (var property in model) {
-          var replacedProperty = "{{" + property + "}}";
-          while (result.indexOf(replacedProperty) > -1)
-            result = result.replace(replacedProperty, model[property]);
-        }
-        return result;
-      }
-      var createView = function(model, viewModelProvider, templateProvider) {
-        var viewModel = viewModelProvider(model);
-        var template = templateProvider();
-        return bindTemplateToModel(template, viewModel);
-      }
-      return {
-        "createView": createView
-      }
-    }();
-
-    var Images = function() {
-      var getRelativeUri = function(absoluteUri) {
-        var imageParts = absoluteUri.split("/");
-        var imageLocalUri = imageParts[imageParts.length - 1];
-        return {
-          "productImage": "_images/" + imageLocalUri + "_800.jpg",
-          "productRetinaImage": "_images/" + imageLocalUri + ".jpg"
-        }
-      }
-      return {
-        "getRelativeUri": getRelativeUri
-      }
-    }();
-
-    var GameDetails = function() {
-      var pIndex;
-      var pdIndex;
-      var gdIndex;
-      var gameDetailsContainer = $("gameDetailsContainer");
-      var details = gameDetailsContainer.querySelector("#details");
-      var closeButton = gameDetailsContainer.querySelector(".close");
-      var showDLC = function(id) {
-        // add DLC. Showing only 1st level of DLCs to avoid recursion
-        var dlcContent = [];
-        var dlcProducts = [];
-        var processedDlcs = [];
-
-        var pd = pdIndex.getElementByKey(id);
-        if (pd && pd.dlcs)
-          for (var ii = 0; ii < pd.dlcs.length; ii++) {
-            dlcProducts.push(pd.dlcs[ii]);
-            processedDlcs.push(pd.dlcs[ii].id);
-          }
-
-
-        var gd = gdIndex.getElementByKey(id);
-        if (gd && gd.dlcs)
-          for (var ii = 0; ii < gd.dlcs.length; ii++) {
-            if (processedDlcs.indexOf(gd.dlcs[ii].id) > -1) continue;
-            dlcProducts.push(gd.dlcs[ii]);
-            processedDlcs.push(gd.dlcs[ii].id);
-          }
-
-
-        for (var ii = 0; ii < dlcProducts.length; ii++) {
-          dlcContent.push(Views.createView(dlcProducts[ii],
-            ViewModelProvider.getGameDetailsViewModel,
-            Templates.getGameDetailsTemplate));
+        var $ = function (id) {
+            return document.getElementById(id);
         }
 
-        return Views.createView(dlcContent,
-          ViewModelProvider.getDLCsViewModel,
-          Templates.getDLCsTemplate);
-      }
-      var show = function(id) {
-        var product = pIndex.getElementByKey(id);
-        if (!product) return;
-
-        var htmlView = Views.createView(product,
-          ViewModelProvider.getGameDetailsViewModel,
-          Templates.getGameDetailsTemplate);
-
-        details.innerHTML = htmlView;
-        details.innerHTML += showDLC(id);
-
-        // show bundled products
-        if (Bundles.isParent(id)) {
-          var bundleContent = [],
-            bundleClass;
-
-          var bundle = Bundles.getBundleByParentId(id);
-          for (var ii = 0; ii < bundle.children.length; ii++) {
-            var product = pIndex.getElementByKey(bundle.children[ii]);
-
-            var productView = Views.createView(product,
-              ViewModelProvider.getGameDetailsViewModel,
-              Templates.getGameDetailsTemplate);
-            var dlcView = showDLC(bundle.children[ii]);
-
-            bundleContent.push(productView + dlcView);
-          }
-
-          var bundleView = Views.createView(bundleContent,
-            ViewModelProvider.getBundleViewModel,
-            Templates.getBundleTemplate);
-
-          details.innerHTML += bundleView;
-        }
-
-        closeButton.addEventListener("click", function() {
-          history.back();
-        });
-
-        gameDetailsContainer.classList.remove("hidden");
-      }
-      var close = function() {
-        gameDetailsContainer.classList.add("hidden");
-      }
-      var init = function(pi, pdi, gdi) {
-        pIndex = pi;
-        pdIndex = pdi;
-        gdIndex = gdi;
-      }
-      return {
-        "init": init,
-        "show": show,
-        "close": close
-      }
-    }();
-
-    var SearchIndex = function() {
-      var pIndex, pdIndex, oIndex, uIndex, wIndex;
-      var searchIndex = [];
-      var indexProduct = function(p) {
-        var parts = [];
-
-        if (Bundles.isChild(p.id)) return;
-        var pd = pdIndex.getElementByKey(p.id);
-        parts.push(p.title.toLowerCase());
-
-        if (pd) {
-          if (DLC.isDLC(pd)) parts.push("dlc");
-          if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
-          if (pd.developer) parts.push(pd.developer.name.toLowerCase());
-          if (pd.genres) {
-            for (var gg = 0; gg < pd.genres.length; gg++) {
-              parts.push(pd.genres[gg].name.toLowerCase());
+        var Templates = function () {
+            var getProductTemplate = function () {
+                return "<a class='product {{productClass}}' href='#{{id}}'>" +
+                  "<span class='title' title='{{title}}' >{{title}}</span></a>";
             }
-          }
-        }
-
-        if (p.worksOn.Windows) parts.push("windows");
-        if (p.worksOn.Mac) parts.push("mac osx");
-        if (p.worksOn.Linux) parts.push("linux");
-
-        if (uIndex.check(p.id)) parts.push("updated");
-        if (oIndex.check(p.id)) parts.push("owned");
-        if (wIndex.check(p.id)) parts.push("wishlisted");
-
-        if (Bundles.isParent(p.id)) {
-          // add child items title
-          var bundle = Bundles.getBundleByParentId(p.id);
-          if (bundle)
-            for (var ii = 0; ii < bundle.children.length; ii++) {
-              var bundleChild = pIndex.getElementByKey(bundle.children[ii]);
-              if (bundleChild) parts.push(bundleChild.title.toLowerCase());
+            var getGameDetailsTemplate = function () {
+                return "<div class='productContainer'><div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
+                  "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' />" +
+                  "<table border='0' cellspacing='0' cellpadding='0'>" +
+                  "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
+                  "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
+                  "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>" +
+                  "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
+                  "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
+                  "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
+                  "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title'>{{worksOnTitle}}</td></tr>" +
+                  "</table>" +
+                  "<a href='./{{openFolderLink}}/' class='openFolder {{openFolderClass}}'>Open folder...</a></div>";
             }
-        }
-        searchIndex.push(parts.join(" "));
-
-      }
-      var init = function(pi, pdi, oi, ui, wi) {
-        pIndex = pi;
-        pdIndex = pdi;
-        oIndex = oi;
-        uIndex = ui;
-        wIndex = wi;
-        for (var ii = 0; ii < pi.getLength(); ii++) {
-          indexProduct(pi.getElementByIndex(ii));
-        }
-      };
-      var match = function(text) {
-        var textParts = text.split(" ");
-        var matchingIds = [];
-        for (var ii = 0; ii < searchIndex.length; ii++) {
-          if (!searchIndex[ii]) continue;
-          var matches = true;
-          for (var tt = 0; tt < textParts.length; tt++) {
-            if (!textParts[tt]) continue;
-            matches &= searchIndex[ii].indexOf(textParts[tt]) > -1;
-          }
-          if (matches) matchingIds.push(ii);
-        }
-        return matchingIds;
-      };
-      return {
-        "init": init,
-        "match": match
-      }
-    }();
-
-    var Search = function() {
-      var pIndex;
-      var pdIndex;
-      var productElements = undefined;
-      var searchResults = $("searchResults");
-      var productsContainer = $("productsContainer");
-      var showAllResultsLink = $("showAllSearchResults");
-      var resultsCount = showAllResultsLink.querySelector(".resultsCount");
-      var searchResultsLimit = 25;
-      var search = function(text, showAllResults) {
-
-        if (productElements === undefined) {
-          productElements = document.querySelectorAll("#productsContainer > .product");
-        }
-
-        if (text.length > 0) {
-
-          searchResults.innerHTML = "";
-          productsContainer.classList.add("hidden");
-
-          var matchingIndexes = SearchIndex.match(text);
-          var length = showAllResults ? matchingIndexes.length : Math.min(matchingIndexes.length, searchResultsLimit);
-
-          if (!showAllResults && matchingIndexes.length > searchResultsLimit) {
-            showAllSearchResults.classList.remove("hidden");
-            resultsCount.textContent = matchingIndexes.length;
-          } else {
-            showAllSearchResults.classList.add("hidden");
-          }
-
-          var clonedProductElements = [];
-
-          for (var ii = 0; ii < length; ii++) {
-            var clonedProductElement = productElements[matchingIndexes[ii]].cloneNode(true);
-            clonedProductElements.push(clonedProductElement);
-            searchResults.appendChild(clonedProductElement);
-          }
-
-          // GameDetails.initElements(clonedProductElements);
-
-          searchResults.classList.remove("hidden");
-
-        } else {
-          showAllSearchResults.classList.add("hidden");
-          searchResults.classList.add("hidden");
-          productsContainer.classList.remove("hidden");
-        }
-      }
-      var init = function(pi, pdi) {
-        pIndex = pi;
-        pdIndex = pdi;
-      }
-      return {
-        "search": search,
-        "init": init
-      }
-    }();
-
-    var DLC = function() {
-      var isDLC = function(pd) {
-        return (pd &&
-          pd.requiredProducts !== undefined &&
-          pd.requiredProducts.length > 0);
-      }
-      return {
-        "isDLC": isDLC
-      }
-    }();
-
-    var Owned = function() {
-      var pdIndex;
-      var gdIndex;
-      var oIndex;
-      var check = function(id) {
-
-        var ownedProduct = oIndex.getElementByKey(id);
-        if (ownedProduct) return true;
-
-        // if all bundled products are owned then bundle is owned
-        if (Bundles.isParent(id)) {
-          var bundle = Bundles.getBundleByParentId(id);
-          var childProductsOwned = true;
-          for (var ii = 0; ii < bundle.children.length; ii++) {
-            childProductsOwned &= check(bundle.children[ii]);
-          }
-          if (childProductsOwned) return true;
-        }
-
-        var productData = pdIndex.getElementByKey(id);
-
-        // return false because if that is not DLC, we should have passed the check earlier
-        if (!DLC.isDLC(productData)) return false;
-
-        for (var rp = 0; rp < productData.requiredProducts.length; rp++) {
-          var requiredProduct = productData.requiredProducts[rp].id;
-
-          var gameDetails = gdIndex.getElementByKey(requiredProduct);
-
-          if (!gameDetails ||
-            !gameDetails.dlcs) continue;
-
-          if (gameDetails.dlcs.length === 0) continue;
-
-          for (var dd = 0; dd < gameDetails.dlcs.length; dd++) {
-            var dlc = gameDetails.dlcs[dd];
-            if (dlc.title === productData.title) return true;
-          }
-        }
-      }
-      var checkPartialOwnership = function(id) {
-        if (Bundles.isParent(id) &&
-          Bundles.checkChildrenAny(id, check)) return true;
-      }
-      var init = function(pdi, gdi, oi) {
-        pdIndex = pdi;
-        gdIndex = gdi;
-        oIndex = oi;
-      }
-      return {
-        "check": check,
-        "checkPartialOwnership": checkPartialOwnership,
-        "init": init
-      }
-    }();
-
-    var ProductClass = function() {
-      var pdIndex, wIndex, uIndex;
-      var getClass = function(product) {
-        var productClass = [];
-
-        if (Owned && Owned.check(product.id)) {
-          productClass.push("owned");
-        } else if (owned &&
-          Owned.checkPartialOwnership &&
-          Owned.checkPartialOwnership(product.id)) {
-          productClass.push("partOwned");
-        }
-
-        if (wIndex.check(product.id)) productClass.push("wishlisted");
-        if (uIndex.check(product.id)) productClass.push("updated");
-
-        var pd = pdIndex.getElementByKey(product.id);
-        if (pd && DLC.isDLC(pd)) productClass.push("dlc");
-
-        if (Bundles.isParent(product.id)) productClass.push("bundle");
-
-        return productClass;
-      }
-      var init = function(pdi, ui, wi) {
-        pdIndex = pdi;
-        wIndex = wi;
-        uIndex = ui;
-      }
-      return {
-        "init": init,
-        "getClass": getClass
-      }
-    }();
-
-    var ViewModelProvider = function() {
-      var pdIndex, gdIndex, wIndex, uIndex;
-      var getProductViewModel = function(product) {
-        var productClass = ProductClass.getClass(product);
-        return {
-          "id": product.id,
-          "productClass": productClass.join(" "),
-          "title": (DEBUG) ? product.title + " " + product.id : product.title
-        };
-      }
-      var getRequiredProductViewModel = function(requiredProduct) {
-        return requiredProduct;
-      }
-      var getDLCsViewModel = function(dlcs) {
-        return {
-          "dlcContent": dlcs.join(""),
-          "dlcClass": dlcs.length ? "" : "hidden"
-        }
-      }
-      var getBundleViewModel = function(bundles) {
-        return {
-          "bundleContent": bundles.join(""),
-          "bundleClass": bundles.length ? "" : "hidden"
-        }
-      }
-      var getGameDetailsViewModel = function(product) {
-
-        var pd = pdIndex.getElementByKey(product.id);
-        var gd = gdIndex.getElementByKey(product.id);
-
-        var productClass = ProductClass.getClass(product).join(" ");
-
-        var openFolderLink, openFolderClass = "hidden";
-        if (!Bundles.isParent(product.id) &&
-          Owned.check(product.id) &&
-          product.slug) {
-          openFolderLink = product.slug;
-          openFolderClass = "";
-        }
-
-        var images, productImageClass = "hidden";
-        if (product.image) {
-          if (product.image) images = Images.getRelativeUri(product.image);
-          if (images) productImageClass = "";
-        }
-
-        if (!images) {
-          images = {};
-        }
-
-        var productTitle = product.title;
-
-        var developerTitle, developerClass = "hidden";
-        if (pd &&
-          pd.developer &&
-          pd.developer.name) {
-          developerTitle = pd.developer.name;
-          if (developerTitle) developerClass = "";
-        }
-
-        var worksOnTitle, worksOnClass = "hidden";
-
-        if (product.worksOn) {
-          var worksOn = [];
-          var svgTemplate = "<svg viewBox='0 0 100 100' " +
-            "xmlns='http://www.w3.org/2000/svg' " +
-            "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
-            "<use xlink:href='#{{0}}'></svg>";
-          if (product.worksOn.Windows) worksOn.push(svgTemplate.replace("{{0}}", "windows"));
-          if (product.worksOn.Mac) worksOn.push(svgTemplate.replace("{{0}}", "macosx"));
-          if (product.worksOn.Linux) worksOn.push(svgTemplate.replace("{{0}}", "ubuntu"));
-
-          worksOnTitle = worksOn.join(" ");
-          if (worksOnTitle) worksOnClass = "";
-        }
-
-        var publisherTitle, publisherClass = "hidden";
-        if (pd &&
-          pd.publisher &&
-          pd.publisher.name) {
-          publisherTitle = pd.publisher.name;
-          if (publisherTitle) publisherClass = "";
-        }
-
-        var seriesTitle, seriesClass = "hidden";
-
-        if (pd &&
-          pd.series &&
-          pd.series.name) {
-          seriesTitle = pd.series.name;
-          if (seriesTitle) seriesClass = "";
-        }
-
-        var genresTitle, genresClass = "hidden";
-        if (pd &&
-          pd.genres &&
-          pd.genres.length) {
-          var genres = [];
-          for (var ii = 0; ii < pd.genres.length; ii++) {
-            genres.push(pd.genres[ii].name);
-          }
-          genresTitle = genres.join(", ");
-          if (genresTitle) genresClass = "";
-        }
-
-        var cdKeyTitle, cdKeyClass = "hidden";
-        var cdKeys = [];
-
-        if (gd) {
-          if (gd.cdKey) {
-            cdKeys.push(gd.title + ": " + gd.cdKey);
-          }
-
-          if (gd.dlcs &&
-            gd.dlcs.length) {
-            for (var ii = 0; ii < gd.dlcs.length; ii++) {
-              if (gd.dlcs[ii].cdKey) {
-                cdKeys.push(gd.dlcs[ii].title + ": " + gd.dlcs[ii].cdKey);
-              }
+            var getDLCsTemplate = function () {
+                return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
+                  "<div class='dlcContainer {{dlcClass}}'>{{dlcContent}}</div>";
             }
-          }
+            var getBundleTemplate = function () {
+                return "<div class='bundleTitle header1 {{bundleClass}}'>Bundled products</div>" +
+                  "<div class='bundleContainer {{bundleClass}}'>{{bundleContent}}</div>";
+            }
+            var getRequiredProductTemplate = function () {
+                return "<a href='#{{id}}'>{{title}}</a>"
+            }
+            return {
+                "getProductTemplate": getProductTemplate,
+                "getGameDetailsTemplate": getGameDetailsTemplate,
+                "getRequiredProductTemplate": getRequiredProductTemplate,
+                "getDLCsTemplate": getDLCsTemplate,
+                "getBundleTemplate": getBundleTemplate
+            }
+        }();
 
-          cdKeyTitle = cdKeys.join(", ");
+        var Views = function () {
+            var bindTemplateToModel = function (template, model) {
+                var result = template;
+                for (var property in model) {
+                    var replacedProperty = "{{" + property + "}}";
+                    while (result.indexOf(replacedProperty) > -1)
+                        result = result.replace(replacedProperty, model[property]);
+                }
+                return result;
+            }
+            var createView = function (model, viewModelProvider, templateProvider) {
+                var viewModel = viewModelProvider(model);
+                var template = templateProvider();
+                return bindTemplateToModel(template, viewModel);
+            }
+            return {
+                "createView": createView
+            }
+        }();
 
-          if (cdKeyTitle) cdKeyClass = "";
-        }
+        var Images = function () {
+            var getRelativeUri = function (absoluteUri) {
+                var imageParts = absoluteUri.split("/");
+                var imageLocalUri = imageParts[imageParts.length - 1];
+                return {
+                    "productImage": "_images/" + imageLocalUri + "_800.jpg",
+                    "productRetinaImage": "_images/" + imageLocalUri + ".jpg"
+                }
+            }
+            return {
+                "getRelativeUri": getRelativeUri
+            }
+        }();
 
-        var requiredProductsTitle, requiredProductsClass = "hidden";
-        if (pd &&
-          pd.requiredProducts &&
-          pd.requiredProducts.length) {
-          var requiredProducts = [];
-          for (var ii = 0; ii < pd.requiredProducts.length; ii++) {
-            var requiredProductView = Views.createView(pd.requiredProducts[ii],
-              getRequiredProductViewModel,
-              Templates.getRequiredProductTemplate);
-            requiredProducts.push(requiredProductView);
-          }
-          requiredProductsTitle = requiredProducts.join(", ");
-          if (requiredProductsTitle) requiredProductsClass = "";
-        }
+        var GameDetails = function () {
+            var pIndex;
+            var pdIndex;
+            var gdIndex;
+            var gameDetailsContainer = $("gameDetailsContainer");
+            var details = gameDetailsContainer.querySelector("#details");
+            var closeButton = gameDetailsContainer.querySelector(".close");
+            var showDLC = function (id) {
+                // add DLC. Showing only 1st level of DLCs to avoid recursion
+                var dlcContent = [];
+                var dlcProducts = [];
+                var processedDlcs = [];
 
-        return {
-          "openFolderLink": openFolderLink,
-          "openFolderClass": openFolderClass,
-          "productTitle": productTitle,
-          "productClass": productClass,
-          "productImage": images.productImage,
-          "productRetinaImage": images.productRetinaImage,
-          "productImageClass": productImageClass,
-          "worksOnTitle": worksOnTitle,
-          "worksOnClass": worksOnClass,
-          "developerTitle": developerTitle,
-          "developerClass": developerClass,
-          "publisherTitle": publisherTitle,
-          "publisherClass": publisherClass,
-          "seriesTitle": seriesTitle,
-          "seriesClass": seriesClass,
-          "cdKeyTitle": cdKeyTitle,
-          "cdKeyClass": cdKeyClass,
-          "genresTitle": genresTitle,
-          "genresClass": genresClass,
-          "requiredProductsTitle": requiredProductsTitle,
-          "requiredProductsClass": requiredProductsClass
-            //"dlcClass": dlcClass,
-            //"dlcContent": dlcContent
-        }
-      }
-      var init = function(pdi, gdi, ui, wi) {
-        pdIndex = pdi;
-        gdIndex = gdi;
-        wIndex = wi;
-        uIndex = ui;
-      }
-      return {
-        "init": init,
-        "getProductViewModel": getProductViewModel,
-        "getGameDetailsViewModel": getGameDetailsViewModel,
-        "getDLCsViewModel": getDLCsViewModel,
-        "getBundleViewModel": getBundleViewModel
-      }
-    }();
+                var pd = pdIndex.getElementByKey(id);
+                if (pd && pd.dlcs)
+                    for (var ii = 0; ii < pd.dlcs.length; ii++) {
+                        dlcProducts.push(pd.dlcs[ii]);
+                        processedDlcs.push(pd.dlcs[ii].id);
+                    }
 
-    var IndexedCollection = function() {
-      var indexKeys = function(collection, getElementKey) {
-        var index = [];
-        collection.forEach(function(i) {
-          index[getElementKey(i)] = collection.indexOf(i);
+
+                var gd = gdIndex.getElementByKey(id);
+                if (gd && gd.dlcs)
+                    for (var ii = 0; ii < gd.dlcs.length; ii++) {
+                        if (processedDlcs.indexOf(gd.dlcs[ii].id) > -1) continue;
+                        dlcProducts.push(gd.dlcs[ii]);
+                        processedDlcs.push(gd.dlcs[ii].id);
+                    }
+
+
+                for (var ii = 0; ii < dlcProducts.length; ii++) {
+                    dlcContent.push(Views.createView(dlcProducts[ii],
+                      ViewModelProvider.getGameDetailsViewModel,
+                      Templates.getGameDetailsTemplate));
+                }
+
+                return Views.createView(dlcContent,
+                  ViewModelProvider.getDLCsViewModel,
+                  Templates.getDLCsTemplate);
+            }
+            var show = function (id) {
+                var product = pIndex.getElementByKey(id);
+                if (!product) return;
+
+                var htmlView = Views.createView(product,
+                  ViewModelProvider.getGameDetailsViewModel,
+                  Templates.getGameDetailsTemplate);
+
+                details.innerHTML = htmlView;
+                details.innerHTML += showDLC(id);
+
+                // show bundled products
+                if (Bundles.isParent(id)) {
+                    var bundleContent = [],
+                      bundleClass;
+
+                    var bundle = Bundles.getBundleByParentId(id);
+                    for (var ii = 0; ii < bundle.children.length; ii++) {
+                        var product = pIndex.getElementByKey(bundle.children[ii]);
+
+                        var productView = Views.createView(product,
+                          ViewModelProvider.getGameDetailsViewModel,
+                          Templates.getGameDetailsTemplate);
+                        var dlcView = showDLC(bundle.children[ii]);
+
+                        bundleContent.push(productView + dlcView);
+                    }
+
+                    var bundleView = Views.createView(bundleContent,
+                      ViewModelProvider.getBundleViewModel,
+                      Templates.getBundleTemplate);
+
+                    details.innerHTML += bundleView;
+                }
+
+                closeButton.addEventListener("click", function () {
+                    history.back();
+                });
+
+                gameDetailsContainer.classList.remove("hidden");
+            }
+            var close = function () {
+                gameDetailsContainer.classList.add("hidden");
+            }
+            var init = function (pi, pdi, gdi) {
+                pIndex = pi;
+                pdIndex = pdi;
+                gdIndex = gdi;
+            }
+            return {
+                "init": init,
+                "show": show,
+                "close": close
+            }
+        }();
+
+        var SearchIndex = function () {
+            var pIndex, pdIndex, oIndex, uIndex, wIndex;
+            var searchIndex = [];
+            var indexProduct = function (p) {
+                var parts = [];
+
+                if (Bundles.isChild(p.id)) return;
+                var pd = pdIndex.getElementByKey(p.id);
+                parts.push(p.title.toLowerCase());
+
+                if (pd) {
+                    if (DLC.isDLC(pd)) parts.push("dlc");
+                    if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
+                    if (pd.developer) parts.push(pd.developer.name.toLowerCase());
+                    if (pd.genres) {
+                        for (var gg = 0; gg < pd.genres.length; gg++) {
+                            parts.push(pd.genres[gg].name.toLowerCase());
+                        }
+                    }
+                }
+
+                if (p.worksOn.Windows) parts.push("windows");
+                if (p.worksOn.Mac) parts.push("mac osx");
+                if (p.worksOn.Linux) parts.push("linux");
+
+                if (uIndex.check(p.id)) parts.push("updated");
+                if (oIndex.check(p.id)) parts.push("owned");
+                if (wIndex.check(p.id)) parts.push("wishlisted");
+
+                if (Bundles.isParent(p.id)) {
+                    // add child items title
+                    var bundle = Bundles.getBundleByParentId(p.id);
+                    if (bundle)
+                        for (var ii = 0; ii < bundle.children.length; ii++) {
+                            var bundleChild = pIndex.getElementByKey(bundle.children[ii]);
+                            if (bundleChild) parts.push(bundleChild.title.toLowerCase());
+                        }
+                }
+                searchIndex.push(parts.join(" "));
+
+            }
+            var init = function (pi, pdi, oi, ui, wi) {
+                pIndex = pi;
+                pdIndex = pdi;
+                oIndex = oi;
+                uIndex = ui;
+                wIndex = wi;
+                for (var ii = 0; ii < pi.getLength() ; ii++) {
+                    indexProduct(pi.getElementByIndex(ii));
+                }
+            };
+            var match = function (text) {
+                var textParts = text.split(" ");
+                var matchingIds = [];
+                for (var ii = 0; ii < searchIndex.length; ii++) {
+                    if (!searchIndex[ii]) continue;
+                    var matches = true;
+                    for (var tt = 0; tt < textParts.length; tt++) {
+                        if (!textParts[tt]) continue;
+                        matches &= searchIndex[ii].indexOf(textParts[tt]) > -1;
+                    }
+                    if (matches) matchingIds.push(ii);
+                }
+                return matchingIds;
+            };
+            return {
+                "init": init,
+                "match": match
+            }
+        }();
+
+        var Search = function () {
+            var pIndex;
+            var pdIndex;
+            var productElements = undefined;
+            var searchResults = $("searchResults");
+            var productsContainer = $("productsContainer");
+            var showAllResultsLink = $("showAllSearchResults");
+            var resultsCount = showAllResultsLink.querySelector(".resultsCount");
+            var searchResultsLimit = 25;
+            var search = function (text, showAllResults) {
+
+                if (productElements === undefined) {
+                    productElements = document.querySelectorAll("#productsContainer > .product");
+                }
+
+                if (text.length > 0) {
+
+                    searchResults.innerHTML = "";
+                    productsContainer.classList.add("hidden");
+
+                    var matchingIndexes = SearchIndex.match(text);
+                    var length = showAllResults ? matchingIndexes.length : Math.min(matchingIndexes.length, searchResultsLimit);
+
+                    if (!showAllResults && matchingIndexes.length > searchResultsLimit) {
+                        showAllSearchResults.classList.remove("hidden");
+                        resultsCount.textContent = matchingIndexes.length;
+                    } else {
+                        showAllSearchResults.classList.add("hidden");
+                    }
+
+                    var clonedProductElements = [];
+
+                    for (var ii = 0; ii < length; ii++) {
+                        var clonedProductElement = productElements[matchingIndexes[ii]].cloneNode(true);
+                        clonedProductElements.push(clonedProductElement);
+                        searchResults.appendChild(clonedProductElement);
+                    }
+
+                    // GameDetails.initElements(clonedProductElements);
+
+                    searchResults.classList.remove("hidden");
+
+                } else {
+                    showAllSearchResults.classList.add("hidden");
+                    searchResults.classList.add("hidden");
+                    productsContainer.classList.remove("hidden");
+                }
+            }
+            var init = function (pi, pdi) {
+                pIndex = pi;
+                pdIndex = pdi;
+            }
+            return {
+                "search": search,
+                "init": init
+            }
+        }();
+
+        var DLC = function () {
+            var isDLC = function (pd) {
+                return (pd &&
+                  pd.requiredProducts !== undefined &&
+                  pd.requiredProducts.length > 0);
+            }
+            return {
+                "isDLC": isDLC
+            }
+        }();
+
+        var Owned = function () {
+            var pdIndex;
+            var gdIndex;
+            var oIndex;
+            var check = function (id) {
+
+                var ownedProduct = oIndex.getElementByKey(id);
+                if (ownedProduct) return true;
+
+                // if all bundled products are owned then bundle is owned
+                if (Bundles.isParent(id)) {
+                    var bundle = Bundles.getBundleByParentId(id);
+                    var childProductsOwned = true;
+                    for (var ii = 0; ii < bundle.children.length; ii++) {
+                        childProductsOwned &= check(bundle.children[ii]);
+                    }
+                    if (childProductsOwned) return true;
+                }
+
+                var productData = pdIndex.getElementByKey(id);
+
+                // return false because if that is not DLC, we should have passed the check earlier
+                if (!DLC.isDLC(productData)) return false;
+
+                for (var rp = 0; rp < productData.requiredProducts.length; rp++) {
+                    var requiredProduct = productData.requiredProducts[rp].id;
+
+                    var gameDetails = gdIndex.getElementByKey(requiredProduct);
+
+                    if (!gameDetails ||
+                      !gameDetails.dlcs) continue;
+
+                    if (gameDetails.dlcs.length === 0) continue;
+
+                    for (var dd = 0; dd < gameDetails.dlcs.length; dd++) {
+                        var dlc = gameDetails.dlcs[dd];
+                        if (dlc.title === productData.title) return true;
+                    }
+                }
+            }
+            var checkPartialOwnership = function (id) {
+                if (Bundles.isParent(id) &&
+                  Bundles.checkChildrenAny(id, check)) return true;
+            }
+            var init = function (pdi, gdi, oi) {
+                pdIndex = pdi;
+                gdIndex = gdi;
+                oIndex = oi;
+            }
+            return {
+                "check": check,
+                "checkPartialOwnership": checkPartialOwnership,
+                "init": init
+            }
+        }();
+
+        var ProductClass = function () {
+            var pdIndex, wIndex, uIndex;
+            var getClass = function (product) {
+                var productClass = [];
+
+                if (Owned && Owned.check(product.id)) {
+                    productClass.push("owned");
+                } else if (owned &&
+                  Owned.checkPartialOwnership &&
+                  Owned.checkPartialOwnership(product.id)) {
+                    productClass.push("partOwned");
+                }
+
+                if (wIndex.check(product.id)) productClass.push("wishlisted");
+                if (uIndex.check(product.id)) productClass.push("updated");
+
+                var pd = pdIndex.getElementByKey(product.id);
+                if (pd && DLC.isDLC(pd)) productClass.push("dlc");
+
+                if (Bundles.isParent(product.id)) productClass.push("bundle");
+
+                return productClass;
+            }
+            var init = function (pdi, ui, wi) {
+                pdIndex = pdi;
+                wIndex = wi;
+                uIndex = ui;
+            }
+            return {
+                "init": init,
+                "getClass": getClass
+            }
+        }();
+
+        var ViewModelProvider = function () {
+            var pdIndex, gdIndex, wIndex, uIndex;
+            var getProductViewModel = function (product) {
+                var productClass = ProductClass.getClass(product);
+                return {
+                    "id": product.id,
+                    "productClass": productClass.join(" "),
+                    "title": (DEBUG) ? product.title + " " + product.id : product.title
+                };
+            }
+            var getRequiredProductViewModel = function (requiredProduct) {
+                return requiredProduct;
+            }
+            var getDLCsViewModel = function (dlcs) {
+                return {
+                    "dlcContent": dlcs.join(""),
+                    "dlcClass": dlcs.length ? "" : "hidden"
+                }
+            }
+            var getBundleViewModel = function (bundles) {
+                return {
+                    "bundleContent": bundles.join(""),
+                    "bundleClass": bundles.length ? "" : "hidden"
+                }
+            }
+            var getGameDetailsViewModel = function (product) {
+
+                var pd = pdIndex.getElementByKey(product.id);
+                var gd = gdIndex.getElementByKey(product.id);
+
+                var productClass = ProductClass.getClass(product).join(" ");
+
+                var openFolderLink, openFolderClass = "hidden";
+                if (!Bundles.isParent(product.id) &&
+                  Owned.check(product.id) &&
+                  product.slug) {
+                    openFolderLink = product.slug;
+                    openFolderClass = "";
+                }
+
+                var images, productImageClass = "hidden";
+                if (product.image) {
+                    if (product.image) images = Images.getRelativeUri(product.image);
+                    if (images) productImageClass = "";
+                }
+
+                if (!images) {
+                    images = {};
+                }
+
+                var productTitle = product.title;
+
+                var developerTitle, developerClass = "hidden";
+                if (pd &&
+                  pd.developer &&
+                  pd.developer.name) {
+                    developerTitle = pd.developer.name;
+                    if (developerTitle) developerClass = "";
+                }
+
+                var worksOnTitle, worksOnClass = "hidden";
+
+                if (product.worksOn) {
+                    var worksOn = [];
+                    var svgTemplate = "<svg viewBox='0 0 100 100' " +
+                      "xmlns='http://www.w3.org/2000/svg' " +
+                      "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
+                      "<use xlink:href='#{{0}}' /></svg>";
+                    if (product.worksOn.Windows) worksOn.push(svgTemplate.replace("{{0}}", "windows"));
+                    if (product.worksOn.Mac) worksOn.push(svgTemplate.replace("{{0}}", "macosx"));
+                    if (product.worksOn.Linux) worksOn.push(svgTemplate.replace("{{0}}", "ubuntu"));
+
+                    worksOnTitle = worksOn.join(" ");
+                    if (worksOnTitle) worksOnClass = "";
+                }
+
+                var publisherTitle, publisherClass = "hidden";
+                if (pd &&
+                  pd.publisher &&
+                  pd.publisher.name) {
+                    publisherTitle = pd.publisher.name;
+                    if (publisherTitle) publisherClass = "";
+                }
+
+                var seriesTitle, seriesClass = "hidden";
+
+                if (pd &&
+                  pd.series &&
+                  pd.series.name) {
+                    seriesTitle = pd.series.name;
+                    if (seriesTitle) seriesClass = "";
+                }
+
+                var genresTitle, genresClass = "hidden";
+                if (pd &&
+                  pd.genres &&
+                  pd.genres.length) {
+                    var genres = [];
+                    for (var ii = 0; ii < pd.genres.length; ii++) {
+                        genres.push(pd.genres[ii].name);
+                    }
+                    genresTitle = genres.join(", ");
+                    if (genresTitle) genresClass = "";
+                }
+
+                var cdKeyTitle, cdKeyClass = "hidden";
+                var cdKeys = [];
+
+                if (gd) {
+                    if (gd.cdKey) {
+                        cdKeys.push(gd.title + ": " + gd.cdKey);
+                    }
+
+                    if (gd.dlcs &&
+                      gd.dlcs.length) {
+                        for (var ii = 0; ii < gd.dlcs.length; ii++) {
+                            if (gd.dlcs[ii].cdKey) {
+                                cdKeys.push(gd.dlcs[ii].title + ": " + gd.dlcs[ii].cdKey);
+                            }
+                        }
+                    }
+
+                    cdKeyTitle = cdKeys.join(", ");
+
+                    if (cdKeyTitle) cdKeyClass = "";
+                }
+
+                var requiredProductsTitle, requiredProductsClass = "hidden";
+                if (pd &&
+                  pd.requiredProducts &&
+                  pd.requiredProducts.length) {
+                    var requiredProducts = [];
+                    for (var ii = 0; ii < pd.requiredProducts.length; ii++) {
+                        var requiredProductView = Views.createView(pd.requiredProducts[ii],
+                          getRequiredProductViewModel,
+                          Templates.getRequiredProductTemplate);
+                        requiredProducts.push(requiredProductView);
+                    }
+                    requiredProductsTitle = requiredProducts.join(", ");
+                    if (requiredProductsTitle) requiredProductsClass = "";
+                }
+
+                return {
+                    "openFolderLink": openFolderLink,
+                    "openFolderClass": openFolderClass,
+                    "productTitle": productTitle,
+                    "productClass": productClass,
+                    "productImage": images.productImage,
+                    "productRetinaImage": images.productRetinaImage,
+                    "productImageClass": productImageClass,
+                    "worksOnTitle": worksOnTitle,
+                    "worksOnClass": worksOnClass,
+                    "developerTitle": developerTitle,
+                    "developerClass": developerClass,
+                    "publisherTitle": publisherTitle,
+                    "publisherClass": publisherClass,
+                    "seriesTitle": seriesTitle,
+                    "seriesClass": seriesClass,
+                    "cdKeyTitle": cdKeyTitle,
+                    "cdKeyClass": cdKeyClass,
+                    "genresTitle": genresTitle,
+                    "genresClass": genresClass,
+                    "requiredProductsTitle": requiredProductsTitle,
+                    "requiredProductsClass": requiredProductsClass
+                    //"dlcClass": dlcClass,
+                    //"dlcContent": dlcContent
+                }
+            }
+            var init = function (pdi, gdi, ui, wi) {
+                pdIndex = pdi;
+                gdIndex = gdi;
+                wIndex = wi;
+                uIndex = ui;
+            }
+            return {
+                "init": init,
+                "getProductViewModel": getProductViewModel,
+                "getGameDetailsViewModel": getGameDetailsViewModel,
+                "getDLCsViewModel": getDLCsViewModel,
+                "getBundleViewModel": getBundleViewModel
+            }
+        }();
+
+        var IndexedCollection = function () {
+            var indexKeys = function (collection, getElementKey) {
+                var index = [];
+                collection.forEach(function (i) {
+                    index[getElementKey(i)] = collection.indexOf(i);
+                });
+                return index;
+            }
+            var create = function (collection, getElementKey) {
+                var index = indexKeys(collection, getElementKey);
+                var getElementByKey = function (key) {
+                    return collection[index[key]];
+                }
+                var getElementByIndex = function (itemIndex) {
+                    return collection[itemIndex];
+                }
+                var check = function (id) {
+                    if (Bundles &&
+                      Bundles.isParent &&
+                      Bundles.isParent(id) &&
+                      Bundles.checkChildrenAny &&
+                      Bundles.checkChildrenAny(id, check)) return true;
+
+                    return getElementByKey(id) !== undefined;
+                }
+                return {
+                    "getElementByKey": getElementByKey,
+                    "getElementByIndex": getElementByIndex,
+                    "check": check,
+                    "getLength": function () {
+                        return collection.length
+                    }
+                }
+            }
+            return {
+                "create": create
+            }
+        }();
+
+        var Bundles = function () {
+            var parents = [];
+            var children = [];
+            var init = function () {
+                if (!bundles || !bundles.length) return;
+                for (var ii = 0; ii < bundles.length; ii++) {
+                    parents.push(bundles[ii].parent);
+                    for (var jj = 0; jj < bundles[ii].children.length; jj++) {
+                        children.push(bundles[ii].children[jj]);
+                    }
+                }
+            }
+            var isParent = function (id) {
+                return parents.indexOf(id) > -1;
+            }
+            var isChild = function (id) {
+                return children.indexOf(id) > -1;
+            }
+            var getBundleByParentId = function (id) {
+                for (var ii = 0; ii < bundles.length; ii++) {
+                    if (bundles[ii].parent === id) {
+                        return bundles[ii];
+                    }
+                }
+            }
+            var checkChildrenAny = function (id, predicate) {
+                return checkChildrenInternal(id, predicate, false, function (a, b) {
+                    return a | b;
+                });
+            }
+            var checkChildrenAll = function (id, predicate) {
+                return checkChildrenInternal(id, predicate, true, function (a, b) {
+                    return a & b;
+                });
+            }
+            var checkChildrenInternal = function (id, predicate, initialValue, comparison) {
+                var bundle = getBundleByParentId(id);
+                var result = initialValue;
+                for (var ii = 0; ii < bundle.children.length; ii++) {
+                    result = comparison(result, predicate(bundle.children[ii]));
+                }
+                return result;
+            }
+            return {
+                "init": init,
+                "isParent": isParent,
+                "isChild": isChild,
+                "getBundleByParentId": getBundleByParentId,
+                "checkChildrenAny": checkChildrenAny,
+                "checkChildrenAll": checkChildrenAll
+            }
+        }();
+
+        var Info = function () {
+            var infoContainer = $("infoContainer");
+            var init = function () {
+                var classes = [
+                  "product",
+                  "product owned",
+                  "product owned updated",
+                  "product wishlisted",
+                  "product bundle",
+                  "product bundle partOwned",
+                  "product bundle partOwned updated",
+                  "product bundle owned",
+                  "product bundle owned updated",
+                  "product bundle wishlisted",
+                  "product dlc",
+                  "product dlc owned",
+                  "product dlc wishlisted"
+                ];
+                var titles = [
+                  "Available product",
+                  "Owned product",
+                  "Updated product",
+                  "Wishlisted product",
+                  "Bundle",
+                  "Partially owned bundle",
+                  "Updated partially owned bundle",
+                  "Owned bundle",
+                  "Updated bundle",
+                  "Wishlisted bundle",
+                  "Downloadable content",
+                  "Owned Downloadable content",
+                  "Wishlisted Downloadable content"
+                ];
+
+                if (classes.length !== titles.length) {
+                    alert("Inconsistent information data!");
+                    return;
+                }
+
+                for (var i = 0; i < classes.length; i++) {
+                    var count = document.getElementsByClassName(classes[i]).length;
+                    var infoEntity = document.createElement("div");
+                    infoEntity.className = "info";
+
+                    var entityClass = document.createElement("span");
+                    entityClass.className = classes[i];
+                    entityClass.textContent = titles[i];
+                    infoEntity.appendChild(entityClass);
+
+                    var entityCount = document.createElement("span");
+                    entityCount.className = "product count";
+                    entityCount.textContent = count;
+                    infoEntity.appendChild(entityCount);
+
+                    infoContainer.appendChild(infoEntity);
+                }
+            }
+            return {
+                "init": init
+            }
+        }();
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            var getId = function (e) {
+                return e.id
+            };
+            var getValue = function (e) {
+                return e;
+            }
+
+            var start = new Date();
+            var cp = [];
+            var addedProducts = [];
+
+            // first add available products...
+            for (var ii = 0; ii < products.length; ii++) {
+                cp.push(products[ii]);
+                addedProducts.push(products[ii].id);
+            }
+            // ...then add owned products that are no longer available
+            for (var ii = 0; ii < owned.length; ii++) {
+                if (addedProducts.indexOf(owned[ii].id) > -1) continue;
+                cp.push(owned[ii]);
+            }
+
+            var elapsed = new Date() - start;
+            console.log("Combining products: " + elapsed + "ms");
+
+            start = new Date();
+            var productsIndex = IndexedCollection.create(cp, getId);
+            var productsDataIndex = IndexedCollection.create(productsdata, getId);
+            var gameDetailsIndex = IndexedCollection.create(gamedetails, getId);
+            var ownedIndex = IndexedCollection.create(owned, getId);
+            var updatedIndex = IndexedCollection.create(updated, getValue);
+            var wishlistedIndex = IndexedCollection.create(wishlisted, getValue);
+
+            ProductClass.init(productsDataIndex, updatedIndex, wishlistedIndex);
+            ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex);
+            Owned.init(productsDataIndex, gameDetailsIndex, ownedIndex);
+            GameDetails.init(productsIndex, productsDataIndex, gameDetailsIndex);
+
+            elapsed = new Date() - start;
+            console.log("Indexing collections: " + elapsed + "ms");
+
+            start = new Date();
+            Bundles.init();
+            elapsed = new Date() - start;
+            console.log("Initializing bundles: " + elapsed + "ms");
+
+            start = new Date();
+            var html = [];
+            for (var ii = 0; ii < productsIndex.getLength() ; ii++) {
+                var product = productsIndex.getElementByIndex(ii);
+
+                if (Bundles.isChild(product.id)) continue;
+
+                var view = Views.createView(product,
+                  ViewModelProvider.getProductViewModel,
+                  Templates.getProductTemplate);
+                html.push(view);
+            }
+            elapsed = new Date() - start;
+            console.log("Creating views: " + elapsed + "ms");
+
+            var start = new Date();
+            // show first N elements ASAP, others delay for a bit
+            var throttle = Math.min(150, html.length);
+            var initialHtml = html.slice(0, throttle).join("");
+            var pContainer = document.getElementById("productsContainer");
+            pContainer.innerHTML = initialHtml;
+
+            var remainingHtml = html.slice(throttle, html.length).join("");
+            requestAnimationFrame(function () {
+                pContainer.innerHTML += remainingHtml;
+                Info.init();
+            });
+            var elapsed = new Date() - start;
+            console.log("Adding html to the DOM: " + elapsed + "ms");
+
+            start = new Date();
+            SearchIndex.init(
+              productsIndex,
+              productsDataIndex,
+              ownedIndex,
+              updatedIndex,
+              wishlistedIndex);
+            elapsed = new Date() - start;
+            console.log("Initializing search index: " + elapsed + "ms");
+
+            Search.init(productsIndex, productsDataIndex);
+            var searchInput = $("searchInput");
+            searchInput.addEventListener("input", function (e) {
+                Search.search(searchInput.value.toLowerCase())
+            });
+
+            var showAllSearchResults = $("showAllSearchResults");
+            showAllSearchResults.addEventListener("click", function () {
+                Search.search(searchInput.value.toLowerCase(), true);
+            });
+
+            var toggleInfo = $("toggleInfo");
+            toggleInfo.addEventListener("click", function (e) {
+                var infoContainer = $("infoContainer");
+                infoContainer.classList.toggle("hidden");
+            });
+
+            var backToTop = $("backToTop");
+            backToTop.addEventListener("click", function () {
+                var productsContainer = $("productsContainer");
+                var searchResults = $("searchResults");
+
+                if (!searchResults.classList.contains("hidden")) {
+                    searchResults.scrollTop = 0;
+                } else {
+                    productsContainer.scrollTop = 0;
+                }
+            });
+
+            window.addEventListener("hashchange", function () {
+                if (location.hash.indexOf("#") > -1) {
+                    var productId = parseInt(location.hash.substr(1));
+                    if (productId !== undefined) GameDetails.show(productId);
+                } else {
+                    GameDetails.close();
+                }
+            });
         });
-        return index;
-      }
-      var create = function(collection, getElementKey) {
-        var index = indexKeys(collection, getElementKey);
-        var getElementByKey = function(key) {
-          return collection[index[key]];
-        }
-        var getElementByIndex = function(itemIndex) {
-          return collection[itemIndex];
-        }
-        var check = function(id) {
-          if (Bundles &&
-            Bundles.isParent &&
-            Bundles.isParent(id) &&
-            Bundles.checkChildrenAny &&
-            Bundles.checkChildrenAny(id, check)) return true;
-
-          return getElementByKey(id) !== undefined;
-        }
-        return {
-          "getElementByKey": getElementByKey,
-          "getElementByIndex": getElementByIndex,
-          "check": check,
-          "getLength": function() {
-            return collection.length
-          }
-        }
-      }
-      return {
-        "create": create
-      }
-    }();
-
-    var Bundles = function() {
-      var parents = [];
-      var children = [];
-      var init = function() {
-        if (!bundles || !bundles.length) return;
-        for (var ii = 0; ii < bundles.length; ii++) {
-          parents.push(bundles[ii].parent);
-          for (var jj = 0; jj < bundles[ii].children.length; jj++) {
-            children.push(bundles[ii].children[jj]);
-          }
-        }
-      }
-      var isParent = function(id) {
-        return parents.indexOf(id) > -1;
-      }
-      var isChild = function(id) {
-        return children.indexOf(id) > -1;
-      }
-      var getBundleByParentId = function(id) {
-        for (var ii = 0; ii < bundles.length; ii++) {
-          if (bundles[ii].parent === id) {
-            return bundles[ii];
-          }
-        }
-      }
-      var checkChildrenAny = function(id, predicate) {
-        return checkChildrenInternal(id, predicate, false, function(a, b) {
-          return a | b;
-        });
-      }
-      var checkChildrenAll = function(id, predicate) {
-        return checkChildrenInternal(id, predicate, true, function(a, b) {
-          return a & b;
-        });
-      }
-      var checkChildrenInternal = function(id, predicate, initialValue, comparison) {
-        var bundle = getBundleByParentId(id);
-        var result = initialValue;
-        for (var ii = 0; ii < bundle.children.length; ii++) {
-          result = comparison(result, predicate(bundle.children[ii]));
-        }
-        return result;
-      }
-      return {
-        "init": init,
-        "isParent": isParent,
-        "isChild": isChild,
-        "getBundleByParentId": getBundleByParentId,
-        "checkChildrenAny": checkChildrenAny,
-        "checkChildrenAll": checkChildrenAll
-      }
-    }();
-
-    var Info = function() {
-      var infoContainer = $("infoContainer");
-      var init = function() {
-        var classes = [
-          "product",
-          "product owned",
-          "product owned updated",
-          "product wishlisted",
-          "product bundle",
-          "product bundle partOwned",
-          "product bundle partOwned updated",
-          "product bundle owned",
-          "product bundle owned updated",
-          "product bundle wishlisted",
-          "product dlc",
-          "product dlc owned",
-          "product dlc wishlisted"
-        ];
-        var titles = [
-          "Available product",
-          "Owned product",
-          "Updated product",
-          "Wishlisted product",
-          "Bundle",
-          "Partially owned bundle",
-          "Updated partially owned bundle",
-          "Owned bundle",
-          "Updated bundle",
-          "Wishlisted bundle",
-          "Downloadable content",
-          "Owned Downloadable content",
-          "Wishlisted Downloadable content"
-        ];
-
-        if (classes.length !== titles.length) {
-          alert("Inconsistent information data!");
-          return;
-        }
-
-        for (var i = 0; i < classes.length; i++) {
-          var count = document.getElementsByClassName(classes[i]).length;
-          var infoEntity = document.createElement("div");
-          infoEntity.className = "info";
-
-          var entityClass = document.createElement("span");
-          entityClass.className = classes[i];
-          entityClass.textContent = titles[i];
-          infoEntity.appendChild(entityClass);
-
-          var entityCount = document.createElement("span");
-          entityCount.className = "product count";
-          entityCount.textContent = count;
-          infoEntity.appendChild(entityCount);
-
-          infoContainer.appendChild(infoEntity);
-        }
-      }
-      return {
-        "init": init
-      }
-    }();
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-      var getId = function(e) {
-        return e.id
-      };
-      var getValue = function(e) {
-        return e;
-      }
-
-      var start = new Date();
-      var cp = [];
-      var addedProducts = [];
-
-      // first add available products...
-      for (var ii = 0; ii < products.length; ii++) {
-        cp.push(products[ii]);
-        addedProducts.push(products[ii].id);
-      }
-      // ...then add owned products that are no longer available
-      for (var ii = 0; ii < owned.length; ii++) {
-        if (addedProducts.indexOf(owned[ii].id) > -1) continue;
-        cp.push(owned[ii]);
-      }
-
-      var elapsed = new Date() - start;
-      console.log("Combining products: " + elapsed + "ms");
-
-      start = new Date();
-      var productsIndex = IndexedCollection.create(cp, getId);
-      var productsDataIndex = IndexedCollection.create(productsdata, getId);
-      var gameDetailsIndex = IndexedCollection.create(gamedetails, getId);
-      var ownedIndex = IndexedCollection.create(owned, getId);
-      var updatedIndex = IndexedCollection.create(updated, getValue);
-      var wishlistedIndex = IndexedCollection.create(wishlisted, getValue);
-
-      ProductClass.init(productsDataIndex, updatedIndex, wishlistedIndex);
-      ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex);
-      Owned.init(productsDataIndex, gameDetailsIndex, ownedIndex);
-      GameDetails.init(productsIndex, productsDataIndex, gameDetailsIndex);
-
-      elapsed = new Date() - start;
-      console.log("Indexing collections: " + elapsed + "ms");
-
-      start = new Date();
-      Bundles.init();
-      elapsed = new Date() - start;
-      console.log("Initializing bundles: " + elapsed + "ms");
-
-      start = new Date();
-      var html = [];
-      for (var ii = 0; ii < productsIndex.getLength(); ii++) {
-        var product = productsIndex.getElementByIndex(ii);
-
-        if (Bundles.isChild(product.id)) continue;
-
-        var view = Views.createView(product,
-          ViewModelProvider.getProductViewModel,
-          Templates.getProductTemplate);
-        html.push(view);
-      }
-      elapsed = new Date() - start;
-      console.log("Creating views: " + elapsed + "ms");
-
-      var start = new Date();
-      // show first N elements ASAP, others delay for a bit
-      var throttle = Math.min(150, html.length);
-      var initialHtml = html.slice(0, throttle).join("");
-      var pContainer = document.getElementById("productsContainer");
-      pContainer.innerHTML = initialHtml;
-
-      var remainingHtml = html.slice(throttle, html.length).join("");
-      requestAnimationFrame(function() {
-        pContainer.innerHTML += remainingHtml;
-        Info.init();
-      });
-      var elapsed = new Date() - start;
-      console.log("Adding html to the DOM: " + elapsed + "ms");
-
-      start = new Date();
-      SearchIndex.init(
-        productsIndex,
-        productsDataIndex,
-        ownedIndex,
-        updatedIndex,
-        wishlistedIndex);
-      elapsed = new Date() - start;
-      console.log("Initializing search index: " + elapsed + "ms");
-
-      Search.init(productsIndex, productsDataIndex);
-      var searchInput = $("searchInput");
-      searchInput.addEventListener("input", function(e) {
-        Search.search(searchInput.value.toLowerCase())
-      });
-
-      var showAllSearchResults = $("showAllSearchResults");
-      showAllSearchResults.addEventListener("click", function() {
-        Search.search(searchInput.value.toLowerCase(), true);
-      });
-
-      var toggleInfo = $("toggleInfo");
-      toggleInfo.addEventListener("click", function(e) {
-        var infoContainer = $("infoContainer");
-        infoContainer.classList.toggle("hidden");
-      });
-
-      var backToTop = $("backToTop");
-      backToTop.addEventListener("click", function() {
-        var productsContainer = $("productsContainer");
-        var searchResults = $("searchResults");
-
-        if (!searchResults.classList.contains("hidden")) {
-          searchResults.scrollTop = 0;
-        } else {
-          productsContainer.scrollTop = 0;
-        }
-      });
-
-      window.addEventListener("hashchange", function() {
-        if (location.hash.indexOf("#") > -1) {
-          var productId = parseInt(location.hash.substr(1));
-          if (productId !== undefined) GameDetails.show(productId);
-        } else {
-          GameDetails.close();
-        }
-      });
-    });
-  </script>
+    </script>
 </body>
-
 </html>
