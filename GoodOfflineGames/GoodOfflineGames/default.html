@@ -8,19 +8,22 @@
   <style>
     * {
       font-family: -apple-system, "Segoe UI";
-      font-size: 16px;
+      font-size: 15px;
       box-sizing: border-box;
       margin: 0;
     }
 
-    body {
+    .background {
       background: #212121;
+    }
+
+    body {
       padding: 0em;
       margin: 0 1em;
     }
 
     a {
-      color: white;
+      color: inherit;
       text-decoration: none;
     }
 
@@ -84,7 +87,7 @@
     .product {
       line-height: 2em;
       margin-right: 2em;
-      color: #BDBDBD;
+      color: #B0BEC5;
       display: inline-block;
     }
 
@@ -156,7 +159,7 @@
     }
 
     #gameDetailsContainer {
-      color: #BDBDBD;
+      color: #B0BEC5;
     }
 
     #gameDetailsContainer #details {
@@ -236,11 +239,10 @@
       float: right;
       margin-right: 0;
     }
-
   </style>
 </head>
 
-<body>
+<body class="background">
 
   <svg viewBox="0 0 100 100" class="hidden">
     <g id="windows" transform="translate(0,-952.36216)">
@@ -1008,7 +1010,7 @@
           return;
         }
 
-        for (var i=0;i<classes.length;i++) {
+        for (var i = 0; i < classes.length; i++) {
           var count = document.getElementsByClassName(classes[i]).length;
           var infoEntity = document.createElement("div");
           infoEntity.className = "info";
