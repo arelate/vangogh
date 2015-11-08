@@ -27,16 +27,12 @@
         }
 
         button {
-            background: #42a5f5;
-            color: white;
-            border: 1px solid #1976d2;
+            border: 0;
+            background: transparent;
             border-radius: 4px;
             padding: 0 1em;
             margin: 0;
             cursor: pointer;
-            box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2);
-            text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
-            font-size: 0.8em;
             height: 30px;
             width: 44px;
             padding-top: 4px;
@@ -44,7 +40,6 @@
 
             button:hover {
                 background: #1976d2;
-                border-color: #0d47a1;
             }
 
         input[type=search] {
@@ -55,6 +50,7 @@
             font-size: 0.8em;
             box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.075);
             color: #212121;
+            /* WebKit insists that you can't change height of input type=search*/
             -webkit-appearance: none;
         }
 
