@@ -320,6 +320,23 @@ namespace GOG
 
             #endregion
 
+            #region Update images
+
+            consoleController.Write("Updating product images...");
+
+            // for all products first
+            imagesController.Update(products).Wait();
+
+            // then for owned products that are not in a products collection 
+            // (e.g. no longer sold, part of bundle)
+            imagesController.Update(existingProductsFilter.Filter(owned, products)).Wait();
+
+            imagesController.Update(productsData).Wait();
+
+            consoleController.WriteLine("DONE.");
+
+            #endregion
+
             #region Update products - game details, download and cleanup folders
 
             consoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
@@ -432,21 +449,6 @@ namespace GOG
                     System.Threading.Thread.Sleep(updateAllThrottleMilliseconds);
                 }
             }
-
-            consoleController.WriteLine("DONE.");
-
-            #endregion
-
-            #region Update images
-
-            consoleController.Write("Updating product images...");
-
-            // for all products first
-            imagesController.Update(products).Wait();
-
-            // then for owned products that are not in a products collection 
-            // (e.g. no longer sold, part of bundle)
-            imagesController.Update(existingProductsFilter.Filter(owned, products)).Wait();
 
             consoleController.WriteLine("DONE.");
 

@@ -37,32 +37,54 @@ namespace GOG.Controllers
 
         public async Task Update(IEnumerable<Product> products)
         {
-            await CacheImages(ExpandImagesUris(products));
+            await CacheImages(ExpandProductImagesUris(products));
+        }
+
+        public async Task Update(IEnumerable<ProductData> productData)
+        {
+            await CacheImages(ExpandProductDataImagesUris(productData));
         }
 
         private string FormatTemplate(string uri, int width)
         {
             string template = (width == largeRetinaWidth) ? largeRetinaImageFilenameTemplate : imageFilenameTemplate;
-            return (width == largeRetinaWidth) ? string.Format(template, uri) : string.Format(template, uri, width);   
+            return (width == largeRetinaWidth) ? string.Format(template, uri) : string.Format(template, uri, width);
         }
 
-        private IEnumerable<string> ExpandImagesUris(IEnumerable<Product> products)
+        private IEnumerable<string> ExpandImageUri(string image)
         {
-            foreach (var product in products)
+            var baseUri = image;
+            if (!baseUri.StartsWith(Urls.HttpProtocol))
             {
-                var baseUri = product.Image;
-                if (!baseUri.StartsWith(Urls.HttpProtocol))
-                {
-                    baseUri = Urls.HttpProtocol + baseUri;
-                }
+                baseUri = Urls.HttpProtocol + baseUri;
+            }
 
-                foreach (int width in imageWidths)
-                {
-                    yield return FormatTemplate(baseUri, width);
-                }
+            foreach (int width in imageWidths)
+            {
+                yield return FormatTemplate(baseUri, width);
             }
         }
 
+        private IEnumerable<string> ExpandProductImagesUris(IEnumerable<Product> products)
+        {
+            foreach (var product in products)
+                foreach (string uri in ExpandImageUri(product.Image))
+                    yield return uri;
+        }
+
+        private IEnumerable<string> ExpandProductDataImagesUris(IEnumerable<ProductData> productData)
+        {
+            foreach (var data in productData)
+            {
+                foreach (string uri in ExpandImageUri(data.Image))
+                    yield return uri;
+
+                if (data.DLCs == null) continue;
+
+                foreach (string uri in ExpandProductDataImagesUris(data.DLCs))
+                    yield return uri;
+            }
+        }
         private async Task CacheImages(IEnumerable<string> uris)
         {
             if (!ioController.DirectoryExists(imagesCacheFolder))
