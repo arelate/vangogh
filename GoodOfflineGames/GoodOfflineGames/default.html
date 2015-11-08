@@ -23,7 +23,7 @@
     }
 
     a {
-      color: inherit;
+      color: white;
       text-decoration: none;
     }
 
@@ -100,12 +100,12 @@
     }
 
     .wishlisted {
-      color: #FFC107;
+      color: #FFC107 !important;
       font-style: italic;
     }
 
     .owned {
-      color: #66BB6A;
+      color: #4CAF50 !important;
     }
 
     .partOwned {
@@ -118,12 +118,13 @@
     }
 
     .bundle.owned {
-      color: #2E7D32;
+      color: #388E3C;
     }
 
     .bundle.wishlisted {
       /* wishlisted bundle should be normal
                     to distinguish with partial owned */
+      color: #FF8F00 !important;
       font-style: normal;
     }
 
@@ -133,14 +134,18 @@
       color: #F44336;
     }
 
+    .dlc {
+      color: #9FA8DA;
+    }
+
     .dlc::after {
       content: "DLC";
       background: #9C27B0;
       border-radius: 0.2em;
-      padding: 0.1em 0.25em;
-      margin-left: 0.5em;
-      font-size: 0.6em;
-      vertical-align: top;
+      padding:  0 0.25em;
+      margin-left: 0.25em;
+      font-size: 0.8em;
+      /*vertical-align: top;*/
       color: white;
     }
 
