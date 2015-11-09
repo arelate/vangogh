@@ -145,6 +145,15 @@
                 color: white;
             }
 
+
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            margin-right: 0.5em;
+            vertical-align: text-bottom;
+        }
+
         #searchContainer {
             bottom: auto;
             height: 4.5em;
@@ -196,6 +205,19 @@
                     font-weight: normal;
                 }
 
+
+            #gameDetailsContainer h1 {
+                font-size: 1.25em;
+                font-weight: normal;
+            }
+
+            #gameDetailsContainer h2 {
+                font-weight: normal;
+                font-style: italic;
+                margin-top: 0.5em;
+                font-size: 1.2em;
+            }
+
             #gameDetailsContainer .dlcContainer .header1,
             #gameDetailsContainer .bundleContainer .header1 {
                 font-size: 1.5rem;
@@ -221,29 +243,25 @@
             }
 
             #gameDetailsContainer .worksOn {
-                height: 1.5em;
-                /*padding: 0.5em 0.2em 0 0;*/
-            }
-
-            #gameDetailsContainer td svg {
-                width: 1em;
-                height: 1em;
+                vertical-align: text-bottom;
             }
 
             #gameDetailsContainer .filesContainer {
                 margin-top: 1em;
             }
 
-            #gameDetailsContainer .filesContainer .fileEntry,
-            #gameDetailsContainer .filesContainer .extraEntry {
-                line-height: 1.5em;
-            }
+                #gameDetailsContainer .filesContainer .linkText {
+                    vertical-align: text-bottom;
+                }
 
-            #gameDetailsContainer .filesContainer svg {
-                width: 1.5em;
-                height: 1.5em;
-                /*padding: 0.75em 0.2em 0 0;*/
-            }
+                #gameDetailsContainer .filesContainer .icon {
+                    vertical-align: text-top;
+                }
+
+                #gameDetailsContainer .filesContainer .fileEntry,
+                #gameDetailsContainer .filesContainer .extraEntry {
+                    line-height: 1.5em;
+                }
 
         #infoContainer {
             top: 4.5em;
@@ -270,7 +288,7 @@
 </head>
 <body class="background">
 
-    <svg viewBox="0 0 100 100" class="hidden">
+    <svg id="icons" viewBox="0 0 100 100" class="hidden">
         <g id="Windows" transform="translate(0,-952.36216)">
             <g transform="matrix(2.6923075,0,0,2.6923075,-691.46883,403.20481)">
                 <path fill="white" d="m 272.05451,223.57098 -15.22321,0 0,12.43304 15.22321,2.09821 0,-14.53125 z m 0,-16.58482 -15.22321,2.09821 0,12.61161 15.22321,0 0,-14.70982 z m 21.91965,16.58482 -20.24554,0 0,14.75446 20.24554,2.79018 0,-17.54464 z m 0,-19.59821 -20.24554,2.79017 0,14.93304 20.24554,0 0,-17.72321 z" />
@@ -284,7 +302,7 @@
             <path fill="white" d="M 95.00015,50.000432 C 95.00015,74.852315 74.852463,95 49.999138,95 25.146388,95 4.9998625,74.852315 4.9998625,50.000432 c 0,-24.853612 20.1465255,-45.0004322 44.9992755,-45.0004322 24.853325,0 45.001012,20.1468202 45.001012,45.0004322" />
             <path fill="black" d="m 62.295912,28.701087 c 2.873376,1.659372 6.546563,0.675122 8.204788,-2.197388 1.659075,-2.873664 0.675688,-6.546562 -2.197975,-8.205644 -2.873087,-1.658504 -6.545987,-0.674543 -8.205062,2.199121 -1.6585,2.872509 -0.67455,6.545408 2.19825,8.203911 z M 50,67.549813 c -2.641888,0 -5.145512,-0.587374 -7.392837,-1.632816 l -4.174551,7.480879 C 41.919625,75.124499 45.845375,76.10009 50,76.10009 c 2.416175,0 4.7524,-0.334819 6.9726,-0.949614 0.392825,-2.413 1.825625,-4.636944 4.109888,-5.956013 2.280224,-1.316469 4.919225,-1.446933 7.203499,-0.583622 4.4424,-4.368222 7.333101,-10.311246 7.753925,-16.929679 l -8.5624,-0.124687 C 66.689537,60.521517 59.168538,67.549813 50,67.549813 Z m 0,-35.099916 c 9.168538,0 16.689537,7.029739 17.477512,15.993631 l 8.5624,-0.124975 C 75.6185,41.700699 72.727812,35.757675 68.284837,31.389741 66.00085,32.252475 63.362137,32.121722 61.081625,30.804963 58.797637,29.486472 57.365137,27.262817 56.972312,24.849528 54.7524,24.235311 52.416175,23.900204 50,23.900204 c -4.154625,0 -8.080075,0.975302 -11.566813,2.702502 l 4.174263,7.480012 C 44.854487,33.037277 47.358112,32.449902 50,32.449902 Z M 32.450338,49.999856 c 0,-5.93754 2.950725,-11.181774 7.4624,-14.357351 l -4.392175,-7.357919 c -5.257513,3.512993 -9.168825,8.882784 -10.793275,15.172749 1.897787,1.546802 3.11035,3.902363 3.11035,6.543097 0,2.640447 -1.21285,4.996008 -3.110638,6.542522 1.624163,6.290252 5.535475,11.660045 10.793275,15.173037 l 4.392463,-7.358207 c -4.511675,-3.175289 -7.4624,-8.419523 -7.4624,-14.357928 z m 29.84645,21.298479 c -2.873675,1.659081 -3.857625,5.331691 -2.198838,8.2042 1.659088,2.873663 5.331688,3.858202 8.20535,2.199121 2.8728,-1.658794 3.85705,-5.331691 2.197975,-8.205066 -1.658512,-2.872221 -5.3317,-3.85676 -8.204487,-2.198255 z M 19.400513,43.992755 c -3.31875,0 -6.007975,2.688936 -6.007975,6.007677 0,3.317876 2.689225,6.007102 6.007975,6.007102 3.317587,0 6.0071,-2.689226 6.0071,-6.007102 0,-3.318741 -2.689513,-6.007677 -6.0071,-6.007677" />
         </g>
-        <g id="up" transform="translate(0,-952.36216)">
+        <g id="top" transform="translate(0,-952.36216)">
             <path fill="white" d="m 99.999997,1023.2041 c 0,-0.8016 -0.400802,-1.7034 -1.002004,-2.3046 L 52.304607,974.20607 c -0.601202,-0.6012 -1.503006,-1.002 -2.304609,-1.002 -0.801603,0 -1.703406,0.4008 -2.304609,1.002 L 1.0020039,1020.8995 c -0.60120243,0.6012 -1.00200401920929,1.503 -1.00200401920929,2.3046 0,0.8016 0.40080158920929,1.7034 1.00200401920929,2.3046 l 5.0100198,5.01 c 0.6012024,0.6012 1.503006,1.002 2.3046092,1.002 0.8016032,0 1.7034071,-0.4008 2.3046091,-1.002 l 39.378756,-39.37876 39.378757,39.37876 c 0.601202,0.6012 1.503006,1.002 2.304609,1.002 0.901803,0 1.703406,-0.4008 2.304609,-1.002 l 5.01002,-5.01 c 0.601202,-0.6012 1.002004,-1.503 1.002004,-2.3046 z" />
         </g>
         <g id="info" transform="translate(0,-952.36216)">
@@ -303,7 +321,7 @@
 
         <button id="backToTop" title="Back to top">
             <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                <use xlink:href='#up'></use>
+                <use xlink:href='#top'></use>
             </svg>
         </button>
         <button id="toggleInfo" title="Information">
@@ -355,7 +373,7 @@
                   "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
                   "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
                   "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
-                  "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title'>{{worksOnTitle}}</td></tr>" +
+                  "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title worksOn'>{{worksOnTitle}}</td></tr>" +
                   "</table>" +
                   "<div class='filesContainer {{filesClass}}'><h1>Product files</h1>" +
                   "<div><h2>Installers, patches</h2><div>{{installersContent}}</div></div>" +
@@ -374,10 +392,18 @@
                 return "<a href='#{{id}}'>{{title}}</a>"
             }
             var getFileInstallerTemplate = function () {
-                return "<div class='fileEntry'><a href='./{{folder}}/{{file}}'><svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><use xlink:href='#{{operatingSystem}}'></use></svg>{{name}}, {{version}} {{size}}</a></div>";
+                return "<div class='fileEntry'><a href='./{{folder}}/{{file}}'>" +
+                    getOperatingSystemIconTemplate() +
+                    "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></div>";
             }
             var getFileExtraTemplate = function () {
                 return "<div class='extraEntry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></div>";
+            }
+            var getOperatingSystemIconTemplate = function () {
+                return "<span class='icon'><svg viewBox='0 0 100 100' " +
+                      "xmlns='http://www.w3.org/2000/svg' " +
+                      "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
+                      "<use xlink:href='#{{operatingSystem}}' /></svg></span>";
             }
             return {
                 "getProductTemplate": getProductTemplate,
@@ -386,7 +412,8 @@
                 "getDLCsTemplate": getDLCsTemplate,
                 "getBundleTemplate": getBundleTemplate,
                 "getFileInstallerTemplate": getFileInstallerTemplate,
-                "getFileExtraTemplate": getFileExtraTemplate
+                "getFileExtraTemplate": getFileExtraTemplate,
+                "getOperatingSystemIconTemplate": getOperatingSystemIconTemplate
             }
         }();
 
@@ -775,7 +802,7 @@
                     "bundleClass": bundles.length ? "" : "hidden"
                 }
             }
-            var getFileViewModel = function(file) {
+            var getFileViewModel = function (file) {
                 return file;
             }
             var getGameDetailsViewModel = function (product) {
@@ -817,13 +844,10 @@
 
                 if (product.worksOn) {
                     var worksOn = [];
-                    var svgTemplate = "<svg viewBox='0 0 100 100' " +
-                      "xmlns='http://www.w3.org/2000/svg' " +
-                      "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
-                      "<use xlink:href='#{{0}}' /></svg>";
-                    if (product.worksOn.Windows) worksOn.push(svgTemplate.replace("{{0}}", "Windows"));
-                    if (product.worksOn.Mac) worksOn.push(svgTemplate.replace("{{0}}", "Mac"));
-                    if (product.worksOn.Linux) worksOn.push(svgTemplate.replace("{{0}}", "Linux"));
+                    var svgTemplate = Templates.getOperatingSystemIconTemplate();
+                    if (product.worksOn.Windows) worksOn.push(svgTemplate.replace("{{operatingSystem}}", "Windows"));
+                    if (product.worksOn.Mac) worksOn.push(svgTemplate.replace("{{operatingSystem}}", "Mac"));
+                    if (product.worksOn.Linux) worksOn.push(svgTemplate.replace("{{operatingSystem}}", "Linux"));
 
                     worksOnTitle = worksOn.join(" ");
                     if (worksOnTitle) worksOnClass = "";
@@ -1114,7 +1138,7 @@
             var getFilesForProduct = function (id) {
                 if (!productfiles) return;
                 var files = [];
-                for (var ii = 0; ii < productfiles.length; ii++) 
+                for (var ii = 0; ii < productfiles.length; ii++)
                     if (productfiles[ii].id === id) files.push(productfiles[ii]);
                 return files;
             }
