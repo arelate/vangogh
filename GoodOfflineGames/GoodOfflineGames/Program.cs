@@ -28,6 +28,8 @@ namespace GOG
         static IDictionary<long, DateTime> checkedOwned = null;
         static IDictionary<long, DateTime> checkedProductData = null;
 
+        static IList<ProductFile> productFiles = null;
+
         #endregion
 
         static void OnProductDataUpdated(object sender, ProductData data)
@@ -112,6 +114,9 @@ namespace GOG
             checkedProductData = saveLoadHelper.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedProductData).Result;
             checkedProductData = checkedProductData ?? new Dictionary<long, DateTime>();
 
+            productFiles = saveLoadHelper.LoadData<List<ProductFile>>(ProductTypes.ProductFiles).Result;
+            productFiles = productFiles ?? new List<ProductFile>();
+
             consoleController.WriteLine("DONE.");
 
             #endregion
@@ -163,7 +168,7 @@ namespace GOG
 
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
 
-            var productFilesController = new ProductFilesController(
+            var productFilesDownloadController = new ProductFilesDownloadController(
                 fileRequestController,
                 ioController,
                 consoleController,
@@ -366,8 +371,9 @@ namespace GOG
                 // we use single loop to:
                 // 1) update game details
                 // 2) download product updates
-                // 3) cleanup product folder
-                // 4) remove from updated list   
+                // 3) store product files
+                // 4) cleanup product folder
+                // 5) remove from updated list   
                 // this is done to avoid spending all request limit on GOG.com
                 // just updating game details and not being able to update files
                 // which is highly likely in case of many updates
@@ -400,14 +406,25 @@ namespace GOG
                 // request updated product files
                 var updatedGameDetails = gamesDetailsController.Find(u);
 
-                var productFilesResult =
-                    productFilesController.UpdateFiles(
+                var productIntallersExtras =
+                    productFilesDownloadController.UpdateFiles(
                         updatedGameDetails,
                         settings.DownloadLanguages,
                         settings.DownloadOperatingSystems).Result;
 
-                // remove from updated and cleanup only if download was successful
-                if (productFilesResult.Item1)
+                IProductFileController productFilesController = new ProductFilesController(productIntallersExtras);
+
+                // product files contain all files for that product, to store them:
+                // - remove all entries for that id from productFiles
+                productFiles = productFilesController.Filter(productFiles);
+                // - add those new entries to productFiles
+                foreach (var productFile in productIntallersExtras)
+                    productFiles.Add(productFile);
+                // - write updated product files
+                saveLoadHelper.SaveData(productFiles, ProductTypes.ProductFiles);
+
+                // remove from updated and cleanup only if all files were downloaded successfully
+                if (productFilesController.CheckSuccess())
                 {
                     // remove update entry as all files have been downloaded
                     if (updated.Contains(u))
@@ -421,8 +438,12 @@ namespace GOG
                         // cleanup product folder
                         consoleController.Write("Cleaning up product folder...");
 
-                        ICleanupController cleanupController = new CleanupController(ioController);
-                        cleanupController.Cleanup(productFilesResult.Item2, recycleBin);
+                        ICleanupController cleanupController = 
+                            new CleanupController(
+                                productFilesController, 
+                                ioController);
+
+                        cleanupController.Cleanup(recycleBin);
                     }
                 }
                 else
@@ -435,7 +456,7 @@ namespace GOG
                     }
                 }
 
-                consoleController.WriteLine("DONE");
+                consoleController.WriteLine("DONE.");
 
                 // throttle server access
                 if (settings.UpdateAll)

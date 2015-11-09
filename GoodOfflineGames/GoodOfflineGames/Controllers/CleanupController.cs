@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using GOG.Interfaces;
+using GOG.Model;
 
 namespace GOG.Controllers
 {
@@ -13,22 +14,25 @@ namespace GOG.Controllers
     public class CleanupController : ICleanupController
     {
         private IIOController ioController;
+        private IProductFileController productFileController;
 
-        public CleanupController(IIOController ioController)
+        public CleanupController(
+            IProductFileController productFileController, 
+            IIOController ioController)
         {
             this.ioController = ioController;
+            this.productFileController = productFileController;
         }
 
         public int Cleanup(
-            IDictionary<string, IList<string>> filesInFolders, 
             string removeToFolder, 
             IPostUpdateDelegate postUpdateDelegate = null)
         {
             int movedFiles = 0;
 
-            foreach (string folder in filesInFolders.Keys)
+            foreach (string folder in productFileController.GetFolders())
             {
-                var expectedFiles = filesInFolders[folder];
+                var expectedFiles = productFileController.GetFiles(folder);
                 foreach (string file in ioController.EnumerateFiles(folder))
                 {
                     var existingFile = Path.GetFileName(file);

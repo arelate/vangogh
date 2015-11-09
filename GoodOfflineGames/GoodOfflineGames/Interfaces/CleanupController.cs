@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using GOG.Model;
+
 namespace GOG.Interfaces
 {
     public interface ICleanupController
     {
         int Cleanup(
-            IDictionary<string, IList<string>> filesInFolders, 
             string removeToFolder, 
             IPostUpdateDelegate postUpdateDelegate = null);
     }
