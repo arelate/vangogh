@@ -49,6 +49,10 @@ namespace GOG.Controllers
                 productFile.Id = id;
                 productFile.OperatingSystem = operatingSystem;
                 productFile.Language = language;
+                productFile.Name = entry.Name;
+                productFile.Version = entry.Version;
+                productFile.Size = entry.Size;
+
                 // Extras are generally OS and language agnostic - so instead of specific flag we use empty OS, language
                 productFile.Extra = 
                     string.IsNullOrEmpty(operatingSystem) && 
@@ -69,6 +73,7 @@ namespace GOG.Controllers
                 var toUriParts = entry.ManualUrl.Split(
                     new string[1] { Separators.UriPart },
                     StringSplitOptions.RemoveEmptyEntries);
+                productFile.Url = entry.ManualUrl;
                 productFile.Folder = toUriParts[toUriParts.Length - 2];
 
                 var result = await fileRequestController.RequestFile(

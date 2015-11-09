@@ -120,8 +120,7 @@
             }
 
             .bundle.wishlisted {
-                /* wishlisted bundle should be normal
-                    to distinguish with partial owned */
+                /* wishlisted bundle should be normal to distinguish with partial owned */
                 color: #FF8F00 !important;
                 font-style: normal;
             }
@@ -143,7 +142,6 @@
                 padding: 0 0.25em;
                 margin-left: 0.25em;
                 font-size: 0.8em;
-                /*vertical-align: top;*/
                 color: white;
             }
 
@@ -170,6 +168,7 @@
                 position: fixed;
                 top: 4.5em;
                 padding-bottom: 1em;
+                padding-top: 0;
             }
 
             #gameDetailsContainer .cdKey {
@@ -227,16 +226,21 @@
                 padding: 0.5em 0.2em 0 0;
             }
 
+            #gameDetailsContainer .filesContainer {
+                margin-top: 1em;
+            }
+
         #infoContainer {
             top: 4.5em;
             left: auto;
             padding-top: 0;
             border-left: solid 1px #424242;
         }
-        #infoContainer .info {
-            line-height: 2em;
-            height: 2em;
-        }
+
+            #infoContainer .info {
+                line-height: 2em;
+                height: 2em;
+            }
 
             #infoContainer .product {
                 display: inline-block;
@@ -311,6 +315,7 @@
     <script src="./productsdata.js"></script>
     <script src="./gamedetails.js"></script>
     <script src="./bundles.js"></script>
+    <script src="./productfiles.js"></script>
     <script>
         "use strict";
 
@@ -337,7 +342,8 @@
                   "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                   "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title'>{{worksOnTitle}}</td></tr>" +
                   "</table>" +
-                  "<a href='./{{openFolderLink}}/' class='openFolder {{openFolderClass}}'>Open folder...</a></div>";
+                  "<div class='filesContainer {{filesClass}}'><h1>Files</h1><div>{{filesContent}}</div></div>"
+                  "</div>";
             }
             var getDLCsTemplate = function () {
                 return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
@@ -350,12 +356,16 @@
             var getRequiredProductTemplate = function () {
                 return "<a href='#{{id}}'>{{title}}</a>"
             }
+            var getFileTemplate = function () {
+                return "<div><a href='./{{folder}}/{{file}}'>{{name}} {{version}} {{size}}</a></div>";
+            }
             return {
                 "getProductTemplate": getProductTemplate,
                 "getGameDetailsTemplate": getGameDetailsTemplate,
                 "getRequiredProductTemplate": getRequiredProductTemplate,
                 "getDLCsTemplate": getDLCsTemplate,
-                "getBundleTemplate": getBundleTemplate
+                "getBundleTemplate": getBundleTemplate,
+                "getFileTemplate": getFileTemplate
             }
         }();
 
@@ -744,6 +754,9 @@
                     "bundleClass": bundles.length ? "" : "hidden"
                 }
             }
+            var getFileViewModel = function(file) {
+                return file;
+            }
             var getGameDetailsViewModel = function (product) {
 
                 var pd = pdIndex.getElementByKey(product.id);
@@ -861,9 +874,20 @@
                     if (requiredProductsTitle) requiredProductsClass = "";
                 }
 
+                // files
+
+                var files = ProductFiles.getFilesForProduct(product.id);
+                var filesContent = "", filesClass = "hidden";
+                if (files &&
+                    files.length) {
+
+                    for (var ff = 0; ff < files.length; ff++) {
+                        filesContent += Views.createView(files[ff], getFileViewModel, Templates.getFileTemplate);
+                    }
+                    filesClass = "";
+                }
+
                 return {
-                    "openFolderLink": openFolderLink,
-                    "openFolderClass": openFolderClass,
                     "productTitle": productTitle,
                     "productClass": productClass,
                     "productImage": images.productImage,
@@ -882,9 +906,9 @@
                     "genresTitle": genresTitle,
                     "genresClass": genresClass,
                     "requiredProductsTitle": requiredProductsTitle,
-                    "requiredProductsClass": requiredProductsClass
-                    //"dlcClass": dlcClass,
-                    //"dlcContent": dlcContent
+                    "requiredProductsClass": requiredProductsClass,
+                    "filesClass": filesClass,
+                    "filesContent": filesContent
                 }
             }
             var init = function (pdi, gdi, ui, wi) {
@@ -1056,6 +1080,19 @@
             }
         }();
 
+        var ProductFiles = function () {
+            var getFilesForProduct = function (id) {
+                if (!productfiles) return;
+                var files = [];
+                for (var ii = 0; ii < productfiles.length; ii++) 
+                    if (productfiles[ii].id === id) files.push(productfiles[ii]);
+                return files;
+            }
+            return {
+                "getFilesForProduct": getFilesForProduct
+            }
+        }();
+
         document.addEventListener("DOMContentLoaded", function () {
 
             var getId = function (e) {
@@ -1181,6 +1218,10 @@
                     GameDetails.close();
                 }
             });
+
+            //var files = ProductFiles.getFilesForProduct(1207664803);
+            //console.log(files);
+
         });
     </script>
 </body>
