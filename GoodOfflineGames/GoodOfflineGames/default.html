@@ -1093,6 +1093,20 @@
             }
         }();
 
+        var NavigationController = function () {
+            var update = function () {
+                if (location.hash.indexOf("#") > -1) {
+                    var productId = parseInt(location.hash.substr(1));
+                    if (productId !== undefined) GameDetails.show(productId);
+                } else {
+                    GameDetails.close();
+                }
+            }
+            return {
+                "update": update
+            }
+        }();
+
         document.addEventListener("DOMContentLoaded", function () {
 
             var getId = function (e) {
@@ -1210,14 +1224,8 @@
                 }
             });
 
-            window.addEventListener("hashchange", function () {
-                if (location.hash.indexOf("#") > -1) {
-                    var productId = parseInt(location.hash.substr(1));
-                    if (productId !== undefined) GameDetails.show(productId);
-                } else {
-                    GameDetails.close();
-                }
-            });
+            window.addEventListener("hashchange", NavigationController.update);
+            NavigationController.update();
 
             //var files = ProductFiles.getFilesForProduct(1207664803);
             //console.log(files);

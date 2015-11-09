@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Newtonsoft.Json;
-
 using GOG.SharedControllers;
 using GOG.Controllers;
 using GOG.Model;
