@@ -344,7 +344,7 @@ namespace GOG
 
             consoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
 
-            var updateAllThrottleMinutes = 2; // 2 mins
+            var updateAllThrottleMinutes = 1; // 1 minute
             var updateAllThrottleMilliseconds = 1000 * 60 * updateAllThrottleMinutes;
 
             gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
@@ -459,7 +459,7 @@ namespace GOG
                 // throttle server access
                 if (settings.UpdateAll)
                 {
-                    Console.WriteLine("Waiting {0} minutes before next request...", updateAllThrottleMinutes);
+                    Console.WriteLine("Waiting {0} minute(s) before next request...", updateAllThrottleMinutes);
 
                     if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
                     else checkedOwned[u] = DateTime.Today;
