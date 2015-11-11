@@ -151,7 +151,7 @@
             width: 1em;
             height: 1em;
             margin-right: 0.5em;
-            vertical-align: text-bottom;
+            transform: translateY(0.2em);
         }
 
         #searchContainer {
@@ -180,6 +180,11 @@
                 padding-top: 0;
             }
 
+                /* Top level page header shouldn't have top margin */
+                #gameDetailsContainer #details .productContainer > .productTitle.header1 {
+                    margin-top: 0;
+                }
+
             #gameDetailsContainer .cdKey {
                 color: #212121 !important;
             }
@@ -198,72 +203,47 @@
             #gameDetailsContainer .header1 {
                 font-size: 2.25em;
                 font-weight: 300;
-                margin-bottom: 1em;
+                margin-top: 0.5em;
+                margin-bottom: 0.5em;
             }
 
                 #gameDetailsContainer .header1.bundle {
-                    font-weight: normal;
+                    font-weight: lighter;
                 }
 
-
-            #gameDetailsContainer h1 {
-                font-size: 1.25em;
-                font-weight: normal;
+            #gameDetailsContainer .filesContainer {
+                margin-top: 1em;
+                margin-bottom: 1em;
+                line-height: 2em;
+                text-transform: capitalize;
             }
 
-            #gameDetailsContainer h2 {
-                font-weight: normal;
-                font-style: italic;
-                margin-top: 0.5em;
-                font-size: 1.2em;
+                #gameDetailsContainer .filesContainer h1 {
+                    font-size: 1.5em;
+                    font-weight: lighter;
+                    margin: 0.5em 0;
+                }
+
+                #gameDetailsContainer .filesContainer h2 {
+                    font-weight: lighter;
+                    margin-top: 0.5em;
+                    font-size: 1.2em;
+                    margin: 0.5em 0;
+                }
+
+            #gameDetailsContainer tr {
+                line-height: 2em;
             }
 
-            #gameDetailsContainer .dlcContainer .header1,
-            #gameDetailsContainer .bundleContainer .header1 {
-                font-size: 1.5rem;
-            }
-
-            #gameDetailsContainer .bundleContainer .dlcContainer .header1 {
-                font-size: 1.25em;
-            }
-
-            #gameDetailsContainer .header {
+            #gameDetailsContainer td.header {
                 line-height: 1.5em;
                 padding-right: 0.75em;
                 min-width: 5em;
             }
 
-            #gameDetailsContainer .openFolder {
-                display: block;
-                margin-top: 1em;
-            }
-
             #gameDetailsContainer td.title {
                 color: white;
             }
-
-            #gameDetailsContainer .worksOn {
-                vertical-align: text-bottom;
-            }
-
-            #gameDetailsContainer .filesContainer {
-                margin-top: 1em;
-                margin-bottom: 1em;
-            }
-
-                #gameDetailsContainer .filesContainer .linkText {
-                    vertical-align: text-bottom;
-                }
-
-                #gameDetailsContainer .filesContainer .icon {
-                    vertical-align: text-top;
-                }
-
-                #gameDetailsContainer .filesContainer .fileEntry,
-                #gameDetailsContainer .filesContainer .extraEntry {
-                    line-height: 1.5em;
-                    text-transform: capitalize;
-                }
 
         #infoContainer {
             top: 4.5em;
