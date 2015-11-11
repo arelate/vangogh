@@ -323,6 +323,23 @@ namespace GOG
 
             #endregion
 
+            #region Enforce data consistency so that DLCs have proper ids
+
+            consoleController.Write("Enforcing data consistency for DLCs...");
+
+            var dataConsistencyController = new DataConsistencyController(gamesDetails, productsData);
+            if (dataConsistencyController.Update())
+            {
+                // only save to disk if we've indeed updated gamesDetails
+                // which shouldn't happen all updates but rather 
+                // only when user obtains new product with owned DLC or just DLC
+                saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails);
+            }
+
+            consoleController.WriteLine("DONE.");
+
+            #endregion
+
             #region Update images
 
             consoleController.Write("Updating product images...");
@@ -436,9 +453,9 @@ namespace GOG
                         // cleanup product folder
                         consoleController.Write("Cleaning up product folder...");
 
-                        ICleanupController cleanupController = 
+                        ICleanupController cleanupController =
                             new CleanupController(
-                                productFilesController, 
+                                productFilesController,
                                 ioController);
 
                         cleanupController.Cleanup(recycleBin);

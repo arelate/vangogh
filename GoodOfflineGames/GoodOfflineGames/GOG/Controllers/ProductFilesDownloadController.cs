@@ -36,8 +36,8 @@ namespace GOG.Controllers
         }
 
         private async Task<IList<ProductFile>> UpdateProductFiles(
-            long id,
             List<DownloadEntry> downloadEntries,
+            long id,
             string operatingSystem = "",
             string language = "")
         {
@@ -96,17 +96,17 @@ namespace GOG.Controllers
         }
 
         private async Task<IList<ProductFile>> UpdateProductOperatingSystemFiles(
-            long id,
             OperatingSystemsDownloads operatingSystemDownloads,
-            ICollection<string> downloadOperatingSystems)
+            ICollection<string> downloadOperatingSystems,
+            long id)
         {
             List<ProductFile> productFiles = new List<ProductFile>();
 
             if (downloadOperatingSystems.Contains(Windows) &&
                 operatingSystemDownloads.Windows != null)
             {
-                var windowsFiles = await UpdateProductFiles(id, 
-                    operatingSystemDownloads.Windows,
+                var windowsFiles = await UpdateProductFiles(operatingSystemDownloads.Windows,
+                    id,
                     Windows,
                     operatingSystemDownloads.Language);
 
@@ -116,8 +116,8 @@ namespace GOG.Controllers
             if (downloadOperatingSystems.Contains(Mac) &&
                 operatingSystemDownloads.Mac != null)
             {
-                var macFiles = await UpdateProductFiles(id, 
-                    operatingSystemDownloads.Mac,
+                var macFiles = await UpdateProductFiles(operatingSystemDownloads.Mac,
+                    id,
                     Mac,
                     operatingSystemDownloads.Language);
 
@@ -127,8 +127,8 @@ namespace GOG.Controllers
             if (downloadOperatingSystems.Contains(Linux) &&
                 operatingSystemDownloads.Linux != null)
             {
-                var linuxFiles = await UpdateProductFiles(id,
-                    operatingSystemDownloads.Linux,
+                var linuxFiles = await UpdateProductFiles(operatingSystemDownloads.Linux,
+                    id,
                     Linux,
                     operatingSystemDownloads.Language);
 
@@ -142,35 +142,41 @@ namespace GOG.Controllers
         public async Task<IList<ProductFile>> UpdateFiles(
             GameDetails details,
             ICollection<string> supportedLanguages,
-            ICollection<string> supportedOperatingSystems)
+            ICollection<string> supportedOperatingSystems,
+            long context = 0)
         {
             consoleController.WriteLine("Downloading files for product {0}...", details.Title);
 
             List<ProductFile> productFiles = new List<ProductFile>();
+
+            var currentContext = details.Id > 0 ? details.Id : context;
 
             // update game files
             foreach (var download in details.LanguageDownloads)
                 if (supportedLanguages.Contains(download.Language))
                 {
                     var productInstallers = await UpdateProductOperatingSystemFiles(
-                        details.Id, 
                         download, 
-                        supportedOperatingSystems);
+                        supportedOperatingSystems,
+                        currentContext);
 
                     productFiles.AddRange(productInstallers);
                 }
 
             // update extras
-            var extraFiles = await UpdateProductFiles(details.Id, details.Extras);
+            var extraFiles = await UpdateProductFiles(details.Extras, currentContext);
             productFiles.AddRange(extraFiles);
 
             // also recursively download DLC files
             foreach (var dlc in details.DLCs)
             {
+                // propagate parent product for DLCs of DLCs
+
                 var dlcFiles = await UpdateFiles(
-                    dlc, 
+                    dlc,
                     supportedLanguages, 
-                    supportedOperatingSystems);
+                    supportedOperatingSystems,
+                    currentContext);
 
                 productFiles.AddRange(dlcFiles);
             }
