@@ -805,6 +805,7 @@
                 }
             }
             var getFileViewModel = function (file) {
+                if (file && !file.version) file.version = "";
                 return file;
             }
             var getGameDetailsViewModel = function (product) {
