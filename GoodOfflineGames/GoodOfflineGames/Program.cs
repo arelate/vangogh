@@ -344,7 +344,7 @@ namespace GOG
 
             consoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
 
-            var updateAllThrottleMinutes = 1; // 1 minute
+            var updateAllThrottleMinutes = 2; // 2 minutes
             var updateAllThrottleMilliseconds = 1000 * 60 * updateAllThrottleMinutes;
 
             gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
@@ -454,17 +454,17 @@ namespace GOG
                     }
                 }
 
+                if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
+                else checkedOwned[u] = DateTime.Today;
+
+                saveLoadHelper.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
+
                 consoleController.WriteLine("DONE.");
 
                 // throttle server access
                 if (settings.UpdateAll)
                 {
                     Console.WriteLine("Waiting {0} minute(s) before next request...", updateAllThrottleMinutes);
-
-                    if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
-                    else checkedOwned[u] = DateTime.Today;
-
-                    saveLoadHelper.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
                     System.Threading.Thread.Sleep(updateAllThrottleMilliseconds);
                 }
             }
