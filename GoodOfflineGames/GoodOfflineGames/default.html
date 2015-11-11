@@ -94,7 +94,6 @@
             margin-right: 1em;
             margin-bottom: 1em;
             max-width: 800px;
-            vertical-align: top;
         }
 
         .wishlisted {
@@ -173,6 +172,10 @@
             color: #B0BEC5;
         }
 
+        #gameDetailsContainer .descriptionContainer {
+            margin-bottom: 1em;
+        }
+
             #gameDetailsContainer #details {
                 position: fixed;
                 top: 4.5em;
@@ -180,8 +183,12 @@
                 padding-top: 0;
             }
 
+            #gameDetailsContainer #details .productContainer {
+                margin-bottom: 0;
+            }
+
                 /* Top level page header shouldn't have top margin */
-                #gameDetailsContainer #details .productContainer > .productTitle.header1 {
+                #gameDetailsContainer #details > .productContainer > .productTitle.header1 {
                     margin-top: 0;
                 }
 
@@ -348,7 +355,7 @@
             var getGameDetailsTemplate = function () {
                 return "<div class='productContainer'><div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>" +
                   "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' />" +
-                  "<table border='0' cellspacing='0' cellpadding='0'>" +
+                  "<table border='0' cellspacing='0' cellpadding='0' class='descriptionContainer'>" +
                   "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
                   "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
                   "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>" +
