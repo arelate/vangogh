@@ -463,16 +463,19 @@
                 if (pd && pd.dlcs)
                     for (var ii = 0; ii < pd.dlcs.length; ii++) {
                         dlcProducts.push(pd.dlcs[ii]);
-                        processedDlcs.push(pd.dlcs[ii].id);
+                        // don't add DLCs that don't have id
+                        if (pd.dlcs[ii].id > 0)
+                            processedDlcs.push(pd.dlcs[ii].id);
                     }
-
 
                 var gd = gdIndex.getElementByKey(id);
                 if (gd && gd.dlcs)
                     for (var ii = 0; ii < gd.dlcs.length; ii++) {
                         if (processedDlcs.indexOf(gd.dlcs[ii].id) > -1) continue;
                         dlcProducts.push(gd.dlcs[ii]);
-                        processedDlcs.push(gd.dlcs[ii].id);
+                        // don't add DLCs that don't have id
+                        if (gd.dlcs[ii].id > 0)
+                            processedDlcs.push(gd.dlcs[ii].id);
                     }
 
 
@@ -1134,7 +1137,8 @@
         var ProductFiles = function () {
             var binExtension = ".bin";
             var getFilesForProduct = function (id) {
-                if (!productfiles) return;
+                if (!productfiles ||
+                    id === 0) return;
                 var files = [];
                 for (var ii = 0; ii < productfiles.length; ii++)
                     if (productfiles[ii].id === id) files.push(productfiles[ii]);
