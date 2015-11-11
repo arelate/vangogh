@@ -222,7 +222,6 @@
                 margin-top: 1em;
                 margin-bottom: 1em;
                 line-height: 2em;
-                text-transform: capitalize;
             }
 
                 #gameDetailsContainer .filesContainer h1 {
@@ -236,6 +235,13 @@
                     margin-top: 0.5em;
                     font-size: 1.2em;
                     margin: 0.5em 0;
+                }
+
+                #gameDetailsContainer .filesContainer .extraEntry,
+                #gameDetailsContainer .filesContainer .fileEntry
+                 {
+                    display: inline-block;
+                    margin-right: 2em;
                 }
 
             #gameDetailsContainer tr {
@@ -381,12 +387,12 @@
                 return "<a href='#{{id}}'>{{title}}</a>"
             }
             var getFileInstallerTemplate = function () {
-                return "<div class='fileEntry'><a href='./{{folder}}/{{file}}'>" +
+                return "<span class='fileEntry'><a href='./{{folder}}/{{file}}'>" +
                     getOperatingSystemIconTemplate() +
-                    "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></div>";
+                    "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></span>";
             }
             var getFileExtraTemplate = function () {
-                return "<div class='extraEntry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></div>";
+                return "<span class='extraEntry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></span>";
             }
             var getOperatingSystemIconTemplate = function () {
                 return "<span class='icon'><svg viewBox='0 0 100 100' " +
