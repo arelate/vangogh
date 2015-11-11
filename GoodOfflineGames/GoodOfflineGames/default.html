@@ -172,9 +172,9 @@
             color: #B0BEC5;
         }
 
-        #gameDetailsContainer .descriptionContainer {
-            margin-bottom: 1em;
-        }
+            #gameDetailsContainer .descriptionContainer {
+                margin-bottom: 1em;
+            }
 
             #gameDetailsContainer #details {
                 position: fixed;
@@ -183,9 +183,9 @@
                 padding-top: 0;
             }
 
-            #gameDetailsContainer #details .productContainer {
-                margin-bottom: 0;
-            }
+                #gameDetailsContainer #details .productContainer {
+                    margin-bottom: 0;
+                }
 
                 /* Top level page header shouldn't have top margin */
                 #gameDetailsContainer #details > .productContainer > .productTitle.header1 {
@@ -920,6 +920,7 @@
                             var content = Views.createView(files[ff], getFileViewModel, Templates.getFileExtraTemplate);
                             extrasContent += content;
                         } else {
+                            if (ProductFiles.hasBinExtension(files[ff].file)) continue;
                             var content = Views.createView(files[ff], getFileViewModel, Templates.getFileInstallerTemplate);
                             installersContent += content;
                         }
@@ -1125,6 +1126,7 @@
         }();
 
         var ProductFiles = function () {
+            var binExtension = ".bin";
             var getFilesForProduct = function (id) {
                 if (!productfiles) return;
                 var files = [];
@@ -1132,8 +1134,12 @@
                     if (productfiles[ii].id === id) files.push(productfiles[ii]);
                 return files;
             }
+            var hasBinExtension = function(filename) {
+                return filename && filename.indexOf(binExtension) === filename.length - binExtension.length;
+            }
             return {
-                "getFilesForProduct": getFilesForProduct
+                "getFilesForProduct": getFilesForProduct,
+                "hasBinExtension": hasBinExtension
             }
         }();
 
