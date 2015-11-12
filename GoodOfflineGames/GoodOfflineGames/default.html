@@ -225,21 +225,12 @@
             }
 
                 #gameDetailsContainer .filesContainer h1 {
-                    font-size: 1.5em;
+                    font-size: 1.25em;
                     font-weight: lighter;
                     margin: 0.5em 0;
                 }
 
-                #gameDetailsContainer .filesContainer h2 {
-                    font-weight: lighter;
-                    margin-top: 0.5em;
-                    font-size: 1.2em;
-                    margin: 0.5em 0;
-                }
-
-                #gameDetailsContainer .filesContainer .extraEntry,
-                #gameDetailsContainer .filesContainer .fileEntry
-                 {
+                #gameDetailsContainer .filesContainer .entry {
                     display: inline-block;
                     margin-right: 2em;
                 }
@@ -370,9 +361,9 @@
                   "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                   "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title worksOn'>{{worksOnTitle}}</td></tr>" +
                   "</table>" +
-                  "<div class='filesContainer {{filesClass}}'><h1>Product files</h1>" +
-                  "<div><h2>Installers, patches</h2><div>{{installersContent}}</div></div>" +
-                  "<div class='{{extrasClass}}'><h2>Extras</h2><div>{{extrasContent}}</div></div>" +
+                  "<div class='filesContainer {{filesClass}}'>" +
+                  "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
+                  "<div class='{{extrasClass}}'><h1>Extras</h1><div>{{extrasContent}}</div></div>" +
                   "</div>";
             }
             var getDLCsTemplate = function () {
@@ -387,12 +378,12 @@
                 return "<a href='#{{id}}'>{{title}}</a>"
             }
             var getFileInstallerTemplate = function () {
-                return "<span class='fileEntry'><a href='./{{folder}}/{{file}}'>" +
+                return "<span class='file entry'><a href='./{{folder}}/{{file}}'>" +
                     getOperatingSystemIconTemplate() +
                     "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></span>";
             }
             var getFileExtraTemplate = function () {
-                return "<span class='extraEntry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></span>";
+                return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></span>";
             }
             var getOperatingSystemIconTemplate = function () {
                 return "<span class='icon'><svg viewBox='0 0 100 100' " +
