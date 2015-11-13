@@ -812,7 +812,10 @@
 
                 var images, productImageClass = "hidden";
                 if (product.image) {
-                    if (product.image) images = Images.getRelativeUri(product.image);
+                    images = Images.getRelativeUri(product.image);
+                    if (images) productImageClass = "";
+                } else if (pd.image) {
+                    images = Images.getRelativeUri(pd.image);
                     if (images) productImageClass = "";
                 }
 

@@ -345,7 +345,7 @@ namespace GOG
 
             if (productsWithNewDLC.Count > 0)
             {
-                productsDataController.Update(productsWithoutProductData, postUpdateDelegate).Wait();
+                productsDataController.Update(productsWithNewDLC, postUpdateDelegate).Wait();
                 saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
             }
 
