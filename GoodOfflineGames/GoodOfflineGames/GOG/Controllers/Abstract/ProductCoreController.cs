@@ -59,7 +59,7 @@ namespace GOG.Controllers
             Add(item);
         }
 
-        public async Task Update(IList<string> items, IPostUpdateDelegate postUpdateDelegate = null) 
+        public async Task<IList<Type>> Update(IList<string> items, IPostUpdateDelegate postUpdateDelegate = null) 
         {
             if (stringGetDelegate == null)
             {
@@ -67,6 +67,8 @@ namespace GOG.Controllers
                     you need to construct IStringGetController and 
                     override protected methods in child class.");
             }
+
+            IList<Type> newItems = new List<Type>();
 
             foreach (var item in items)
             {
@@ -85,6 +87,7 @@ namespace GOG.Controllers
                     OnBeforeAdding(ref data, item);
                 }
 
+                newItems.Add(data);
                 UpdateOrAdd(data);
 
                 if (OnProductUpdated != null)
@@ -95,6 +98,8 @@ namespace GOG.Controllers
                 if (postUpdateDelegate != null)
                     postUpdateDelegate.PostUpdate();
             }
+
+            return newItems;
         }
     }
 }

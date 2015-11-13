@@ -315,9 +315,39 @@ namespace GOG
                 productsWithoutProductData.Add(p.Url);
             }
 
-            productsDataController.Update(productsWithoutProductData, postUpdateDelegate).Wait();
-
+            var newProductData = productsDataController.Update(productsWithoutProductData, postUpdateDelegate).Result;
             saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+
+            // after updating product data for new products, we need to check if any of the new products is DLC
+            // and if it is - add required product to updated and update product data for that product
+
+            var productsWithNewDLC = new List<string>();
+
+            foreach (var pData in newProductData)
+            {
+                // this is a DLC, so let's add RequiredProduct for update to download new DLC
+                // also we need to update RequiredProducts parent data as well
+                if (pData.RequiredProducts != null &&
+                    pData.RequiredProducts.Count > 0)
+                    foreach (var rp in pData.RequiredProducts)
+                    {
+                        if (!updated.Contains(rp.Id)) updated.Add(rp.Id);
+
+                        var productWithNewDLC = productsController.Find(rp.Id);
+
+                        if (string.IsNullOrEmpty(productWithNewDLC.Url)) continue;
+
+                        productsWithNewDLC.Add(productWithNewDLC.Url);
+                    }
+            }
+
+            saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+
+            if (productsWithNewDLC.Count > 0)
+            {
+                productsDataController.Update(productsWithoutProductData, postUpdateDelegate).Wait();
+                saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+            }
 
             consoleController.WriteLine("DONE.");
 
