@@ -814,7 +814,7 @@
                 if (product.image) {
                     images = Images.getRelativeUri(product.image);
                     if (images) productImageClass = "";
-                } else if (pd.image) {
+                } else if (pd && pd.image) {
                     images = Images.getRelativeUri(pd.image);
                     if (images) productImageClass = "";
                 }
