@@ -10,6 +10,7 @@
             font-size: 15px;
             box-sizing: border-box;
             margin: 0;
+            transition: all 334ms ease-in;
         }
 
         .background.dark {
@@ -192,7 +193,7 @@
             padding: 0 0.25em;
             margin-left: 0.25em;
             font-size: 0.8em;
-            color: white;
+            color: white !important;
         }
 
 
@@ -373,7 +374,8 @@
         .dark #icons #Linux #linux-background,
         .dark #icons #top,
         .dark #icons #info,
-        .dark #icons #back {
+        .dark #icons #back,
+        .dark #icons #theme {
             fill: white;
         }
 
@@ -382,12 +384,13 @@
         .light #icons #Linux #linux-background,
         .light #icons #top,
         .light #icons #info,
-        .light #icons #back {
+        .light #icons #back,
+        .light #icons #theme {
             fill: black;
         }
     </style>
 </head>
-<!-- switch themes on the body: dark, light --> 
+<!-- switch themes on the body: dark, light -->
 <body class="background light">
 
     <svg id="icons" viewBox="0 0 100 100" class="hidden">
@@ -413,6 +416,9 @@
         <g id="back" transform="translate(0,-952.36216)">
             <path d="m 80.964871,969.41215 c 1.55135,-1.55135 1.55135,-4.0335 0,-5.58485 L 70.663909,953.52633 c -1.55135,-1.55135 -4.033509,-1.55135 -5.584859,0 l -46.044058,46.04406 c -1.55135,1.55131 -1.55135,4.03351 0,5.58491 l 46.044058,46.044 c 1.55135,1.5514 4.033509,1.5514 5.584859,0 l 10.300962,-10.301 c 1.55135,-1.5513 1.55135,-4.0335 0,-5.5848 l -32.950667,-32.9507 32.950667,-32.95065 z" />
         </g>
+        <g id="theme">
+            <path xmlns="http://www.w3.org/2000/svg" d="M 50 8.333 c 23.012 0 41.667 18.655 41.667 41.667 S 73.012 91.667 50 91.667 S 8.333 73.012 8.333 50 S 26.988 8.333 50 8.333 Z M 50 0 C 22.385 0 0 22.385 0 50 s 22.385 50 50 50 s 50 -22.385 50 -50 S 77.615 0 50 0 Z M 50 5.583 C 50 5.583 5.583 7.167 5.583 50 S 50 94.417 50 94.417 S 30.25 82.083 30.25 50 S 50 5.583 50 5.583 Z" />
+        </g>
     </svg>
 
     <div id="searchContainer" class="container">
@@ -431,6 +437,12 @@
                 <use xlink:href='#info'></use>
             </svg>
         </button>
+        <button id="switchTheme" title="Switch theme">
+            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#theme'></use>
+            </svg>
+        </button>
+
     </div>
     <div id="productsContainer" class="container"></div>
     <div id="searchResults" class="container hidden"></div>
@@ -1391,6 +1403,18 @@
                     searchResults.scrollTop = 0;
                 } else {
                     productsContainer.scrollTop = 0;
+                }
+            });
+
+            var switchTheme = $("switchTheme");
+            switchTheme.addEventListener("click", function (e) {
+                var cl = document.body.classList;
+                if (cl.contains("dark")) {
+                    cl.remove("dark");
+                    cl.add("light");
+                } else {
+                    cl.add("dark");
+                    cl.remove("light");
                 }
             });
 
