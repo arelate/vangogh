@@ -12,8 +12,12 @@
             margin: 0;
         }
 
-        .background {
+        .background.dark {
             background: #212121;
+        }
+
+        .background.light {
+            background: #f5f5f5;
         }
 
         body {
@@ -22,8 +26,15 @@
         }
 
         a {
-            color: white;
             text-decoration: none;
+        }
+
+        .dark a {
+            color: white;
+        }
+
+        .light a {
+            color: black;
         }
 
         button {
@@ -38,14 +49,25 @@
             padding-top: 4px;
         }
 
-            button:hover {
-                background: #1976d2;
-            }
+        .dark button:hover {
+            background: #1976d2;
+        }
+
+        .light button:hover {
+            background: #2196f3;
+        }
+
+        .dark input[type=search] {
+            border: 1px solid #616161;
+        }
+
+        .light input[type=search] {
+            border: 1px solid #bdbdbd;
+        }
 
         input[type=search] {
             padding: 4px;
             height: 30px;
-            border: 1px solid #616161;
             border-radius: 4px;
             font-size: 0.8em;
             box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.075);
@@ -81,11 +103,18 @@
             padding-top: 0;
         }
 
+        .dark .product {
+            color: #B0BEC5;
+        }
+
+        .light .product {
+            color: #212121;
+        }
+
         .product {
             line-height: 2em;
             height: 2em;
             margin-right: 2em;
-            color: #B0BEC5;
             display: inline-block;
         }
 
@@ -97,17 +126,35 @@
         }
 
         .wishlisted {
-            color: #FFC107 !important;
             font-style: italic;
         }
 
-        .owned {
+        .dark .wishlisted {
+            color: #FFC107 !important;
+        }
+
+        .light .wishlisted {
+            color: #f57c00 !important;
+        }
+
+        .dark .owned {
             color: #4CAF50 !important;
         }
 
+        .light .owned {
+            color: #388e3c !important;
+        }
+
         .partOwned {
-            color: #A5D6A7;
             font-style: italic;
+        }
+
+        .dark .partOwned {
+            color: #A5D6A7;
+        }
+
+        .light .partOwned {
+            color: #66bb6a;
         }
 
         .bundle {
@@ -130,19 +177,23 @@
             color: #F44336;
         }
 
-        .dlc {
+        .dark .dlc {
             color: #9FA8DA;
         }
 
-            .dlc::after {
-                content: "DLC";
-                background: #9C27B0;
-                border-radius: 0.2em;
-                padding: 0 0.25em;
-                margin-left: 0.25em;
-                font-size: 0.8em;
-                color: white;
-            }
+        .light .dlc {
+            color: #283593;
+        }
+
+        .dlc::after {
+            content: "DLC";
+            background: #9C27B0;
+            border-radius: 0.2em;
+            padding: 0 0.25em;
+            margin-left: 0.25em;
+            font-size: 0.8em;
+            color: white;
+        }
 
 
         .icon {
@@ -168,134 +219,199 @@
             }
 
 
-        #gameDetailsContainer {
+        .dark #gameDetailsContainer {
             color: #B0BEC5;
         }
 
-            #gameDetailsContainer .descriptionContainer {
-                margin-bottom: 1em;
+        .light #gameDetailsContainer {
+            color: #212121;
+        }
+
+
+        #gameDetailsContainer .descriptionContainer {
+            margin-bottom: 1em;
+        }
+
+        #gameDetailsContainer #details {
+            position: fixed;
+            top: 4.5em;
+            padding-bottom: 1em;
+            padding-top: 0;
+        }
+
+            #gameDetailsContainer #details .productContainer {
+                margin-bottom: 0;
             }
 
-            #gameDetailsContainer #details {
-                position: fixed;
-                top: 4.5em;
-                padding-bottom: 1em;
-                padding-top: 0;
+            /* Top level page header shouldn't have top margin */
+            #gameDetailsContainer #details > .productContainer > .productTitle.header1 {
+                margin-top: 0;
             }
 
-                #gameDetailsContainer #details .productContainer {
-                    margin-bottom: 0;
-                }
+        .dark #gameDetailsContainer .cdKey {
+            color: #212121 !important;
+        }
 
-                /* Top level page header shouldn't have top margin */
-                #gameDetailsContainer #details > .productContainer > .productTitle.header1 {
-                    margin-top: 0;
-                }
+        .light #gameDetailsContainer .cdKey {
+            color: #f5f5f5 !important;
+        }
 
-            #gameDetailsContainer .cdKey {
-                color: #212121 !important;
+        #gameDetailsContainer .cdKey:focus {
+            background: inherit;
+        }
+
+        #gameDetailsContainer img {
+            width: 100%;
+            border: 0;
+            display: inline-block;
+            margin-bottom: 1em;
+        }
+
+        #gameDetailsContainer .header1 {
+            font-size: 2.25em;
+            font-weight: 300;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+            #gameDetailsContainer .header1.bundle {
+                font-weight: normal;
             }
 
-                #gameDetailsContainer .cdKey:focus {
-                    background: inherit;
-                }
+        #gameDetailsContainer .filesContainer {
+            margin-top: 1em;
+            margin-bottom: 1em;
+            line-height: 2em;
+        }
 
-            #gameDetailsContainer img {
-                width: 100%;
-                border: 0;
+            #gameDetailsContainer .filesContainer h1 {
+                font-size: 1.25em;
+                font-weight: lighter;
+                margin: 0.5em 0;
+            }
+
+            #gameDetailsContainer .filesContainer .entry {
                 display: inline-block;
-                margin-bottom: 1em;
+                margin-right: 2em;
             }
 
-            #gameDetailsContainer .header1 {
-                font-size: 2.25em;
-                font-weight: 300;
-                margin-top: 0.5em;
-                margin-bottom: 0.5em;
-            }
+        #gameDetailsContainer tr {
+            line-height: 2em;
+        }
 
-                #gameDetailsContainer .header1.bundle {
-                    font-weight: normal;
-                }
+        #gameDetailsContainer td.header {
+            line-height: 1.5em;
+            padding-right: 0.75em;
+            min-width: 5em;
+        }
 
-            #gameDetailsContainer .filesContainer {
-                margin-top: 1em;
-                margin-bottom: 1em;
-                line-height: 2em;
-            }
+        .dark #gameDetailsContainer td.title {
+            color: white;
+        }
 
-                #gameDetailsContainer .filesContainer h1 {
-                    font-size: 1.25em;
-                    font-weight: lighter;
-                    margin: 0.5em 0;
-                }
-
-                #gameDetailsContainer .filesContainer .entry {
-                    display: inline-block;
-                    margin-right: 2em;
-                }
-
-            #gameDetailsContainer tr {
-                line-height: 2em;
-            }
-
-            #gameDetailsContainer td.header {
-                line-height: 1.5em;
-                padding-right: 0.75em;
-                min-width: 5em;
-            }
-
-            #gameDetailsContainer td.title {
-                color: white;
-            }
+        .light #gameDetailsContainer td.title {
+            color: black;
+        }
 
         #infoContainer {
             top: 4.5em;
             left: auto;
             padding-top: 0;
+        }
+
+        .dark #infoContainer {
             border-left: solid 1px #424242;
         }
 
-            #infoContainer .info {
-                line-height: 2em;
-                height: 2em;
-            }
+        .light #infoContainer {
+            border-left: solid 1px #e0e0e0;
+        }
 
-            #infoContainer .product {
-                display: inline-block;
-                cursor: default;
-            }
+        #infoContainer .info {
+            line-height: 2em;
+            height: 2em;
+        }
 
-            #infoContainer .count {
-                float: right;
-                margin-right: 0;
-            }
+        #infoContainer .product {
+            display: inline-block;
+            cursor: default;
+        }
+
+        #infoContainer .count {
+            float: right;
+            margin-right: 0;
+        }
+
+        /* SVG */
+
+        .dark #icons #Mac #mac-background {
+            stroke: white;
+        }
+
+        .light #icons #Mac #mac-background {
+            stroke: black;
+        }
+
+        .dark #icons #Mac #mac-foreground {
+            stroke: black;
+        }
+
+        .light #icons #Mac #mac-foreground {
+            stroke: white;
+        }
+
+        .dark #icons #Linux #linux-foreground {
+            fill: black;
+        }
+
+        .light #icons #Linux #linux-foreground {
+            fill: white;
+        }
+
+        .dark #icons #Windows,
+        .dark #icons #Mac #mac-background,
+        .dark #icons #Linux #linux-background,
+        .dark #icons #top,
+        .dark #icons #info,
+        .dark #icons #back {
+            fill: white;
+        }
+
+        .light #icons #Windows,
+        .light #icons #Mac #mac-background,
+        .light #icons #Linux #linux-background,
+        .light #icons #top,
+        .light #icons #info,
+        .light #icons #back {
+            fill: black;
+        }
     </style>
 </head>
-<body class="background">
+<!-- switch themes on the body: dark, light --> 
+<body class="background light">
 
     <svg id="icons" viewBox="0 0 100 100" class="hidden">
         <g id="Windows" transform="translate(0,-952.36216)">
             <g transform="matrix(2.6923075,0,0,2.6923075,-691.46883,403.20481)">
-                <path fill="white" d="m 272.05451,223.57098 -15.22321,0 0,12.43304 15.22321,2.09821 0,-14.53125 z m 0,-16.58482 -15.22321,2.09821 0,12.61161 15.22321,0 0,-14.70982 z m 21.91965,16.58482 -20.24554,0 0,14.75446 20.24554,2.79018 0,-17.54464 z m 0,-19.59821 -20.24554,2.79017 0,14.93304 20.24554,0 0,-17.72321 z" />
+                <path d="m 272.05451,223.57098 -15.22321,0 0,12.43304 15.22321,2.09821 0,-14.53125 z m 0,-16.58482 -15.22321,2.09821 0,12.61161 15.22321,0 0,-14.70982 z m 21.91965,16.58482 -20.24554,0 0,14.75446 20.24554,2.79018 0,-17.54464 z m 0,-19.59821 -20.24554,2.79017 0,14.93304 20.24554,0 0,-17.72321 z" />
             </g>
         </g>
         <g id="Mac" transform="matrix(1.6666667,0,0,1.6666667,-33.333333,-33.333333)">
-            <path stroke="white" fill="white" d="M 50,79 C 34,79 21,66 21,50 21,34 34,21 50,21 66,21 79,34 79,50 79,66 66,79 50,79 Z" />
-            <path stroke="black" stroke-width="2px" d="m 62.8,31.6 c -0.2,-0.2 -0.5,-0.1 -0.7,0.1 L 50,49.1 37.9,31.7 c -0.2,-0.2 -0.5,-0.3 -0.7,-0.1 -0.2,0.2 -0.3,0.5 -0.1,0.7 L 49.4,50 37.1,67.7 c -0.2,0.2 -0.1,0.5 0.1,0.7 0.1,0.1 0.2,0.1 0.3,0.1 0.2,0 0.3,-0.1 0.4,-0.2 L 50,50.9 62.1,68.3 c 0.1,0.1 0.3,0.2 0.4,0.2 0.1,0 0.2,0 0.3,-0.1 0.2,-0.2 0.3,-0.5 0.1,-0.7 L 50.6,50 62.9,32.3 c 0.2,-0.2 0.1,-0.6 -0.1,-0.7 z" />
+            <path id="mac-background" d="M 50,79 C 34,79 21,66 21,50 21,34 34,21 50,21 66,21 79,34 79,50 79,66 66,79 50,79 Z" />
+            <path id="mac-foreground" stroke="black" stroke-width="2px" d="m 62.8,31.6 c -0.2,-0.2 -0.5,-0.1 -0.7,0.1 L 50,49.1 37.9,31.7 c -0.2,-0.2 -0.5,-0.3 -0.7,-0.1 -0.2,0.2 -0.3,0.5 -0.1,0.7 L 49.4,50 37.1,67.7 c -0.2,0.2 -0.1,0.5 0.1,0.7 0.1,0.1 0.2,0.1 0.3,0.1 0.2,0 0.3,-0.1 0.4,-0.2 L 50,50.9 62.1,68.3 c 0.1,0.1 0.3,0.2 0.4,0.2 0.1,0 0.2,0 0.3,-0.1 0.2,-0.2 0.3,-0.5 0.1,-0.7 L 50.6,50 62.9,32.3 c 0.2,-0.2 0.1,-0.6 -0.1,-0.7 z" />
         </g>
         <g id="Linux" transform="matrix(1.1111076,0,0,1.1111111,-5.555385,-5.555555)">
-            <path fill="white" d="M 95.00015,50.000432 C 95.00015,74.852315 74.852463,95 49.999138,95 25.146388,95 4.9998625,74.852315 4.9998625,50.000432 c 0,-24.853612 20.1465255,-45.0004322 44.9992755,-45.0004322 24.853325,0 45.001012,20.1468202 45.001012,45.0004322" />
-            <path fill="black" d="m 62.295912,28.701087 c 2.873376,1.659372 6.546563,0.675122 8.204788,-2.197388 1.659075,-2.873664 0.675688,-6.546562 -2.197975,-8.205644 -2.873087,-1.658504 -6.545987,-0.674543 -8.205062,2.199121 -1.6585,2.872509 -0.67455,6.545408 2.19825,8.203911 z M 50,67.549813 c -2.641888,0 -5.145512,-0.587374 -7.392837,-1.632816 l -4.174551,7.480879 C 41.919625,75.124499 45.845375,76.10009 50,76.10009 c 2.416175,0 4.7524,-0.334819 6.9726,-0.949614 0.392825,-2.413 1.825625,-4.636944 4.109888,-5.956013 2.280224,-1.316469 4.919225,-1.446933 7.203499,-0.583622 4.4424,-4.368222 7.333101,-10.311246 7.753925,-16.929679 l -8.5624,-0.124687 C 66.689537,60.521517 59.168538,67.549813 50,67.549813 Z m 0,-35.099916 c 9.168538,0 16.689537,7.029739 17.477512,15.993631 l 8.5624,-0.124975 C 75.6185,41.700699 72.727812,35.757675 68.284837,31.389741 66.00085,32.252475 63.362137,32.121722 61.081625,30.804963 58.797637,29.486472 57.365137,27.262817 56.972312,24.849528 54.7524,24.235311 52.416175,23.900204 50,23.900204 c -4.154625,0 -8.080075,0.975302 -11.566813,2.702502 l 4.174263,7.480012 C 44.854487,33.037277 47.358112,32.449902 50,32.449902 Z M 32.450338,49.999856 c 0,-5.93754 2.950725,-11.181774 7.4624,-14.357351 l -4.392175,-7.357919 c -5.257513,3.512993 -9.168825,8.882784 -10.793275,15.172749 1.897787,1.546802 3.11035,3.902363 3.11035,6.543097 0,2.640447 -1.21285,4.996008 -3.110638,6.542522 1.624163,6.290252 5.535475,11.660045 10.793275,15.173037 l 4.392463,-7.358207 c -4.511675,-3.175289 -7.4624,-8.419523 -7.4624,-14.357928 z m 29.84645,21.298479 c -2.873675,1.659081 -3.857625,5.331691 -2.198838,8.2042 1.659088,2.873663 5.331688,3.858202 8.20535,2.199121 2.8728,-1.658794 3.85705,-5.331691 2.197975,-8.205066 -1.658512,-2.872221 -5.3317,-3.85676 -8.204487,-2.198255 z M 19.400513,43.992755 c -3.31875,0 -6.007975,2.688936 -6.007975,6.007677 0,3.317876 2.689225,6.007102 6.007975,6.007102 3.317587,0 6.0071,-2.689226 6.0071,-6.007102 0,-3.318741 -2.689513,-6.007677 -6.0071,-6.007677" />
+            <path id="linux-background" d="M 95.00015,50.000432 C 95.00015,74.852315 74.852463,95 49.999138,95 25.146388,95 4.9998625,74.852315 4.9998625,50.000432 c 0,-24.853612 20.1465255,-45.0004322 44.9992755,-45.0004322 24.853325,0 45.001012,20.1468202 45.001012,45.0004322" />
+            <path id="linux-foreground" d="m 62.295912,28.701087 c 2.873376,1.659372 6.546563,0.675122 8.204788,-2.197388 1.659075,-2.873664 0.675688,-6.546562 -2.197975,-8.205644 -2.873087,-1.658504 -6.545987,-0.674543 -8.205062,2.199121 -1.6585,2.872509 -0.67455,6.545408 2.19825,8.203911 z M 50,67.549813 c -2.641888,0 -5.145512,-0.587374 -7.392837,-1.632816 l -4.174551,7.480879 C 41.919625,75.124499 45.845375,76.10009 50,76.10009 c 2.416175,0 4.7524,-0.334819 6.9726,-0.949614 0.392825,-2.413 1.825625,-4.636944 4.109888,-5.956013 2.280224,-1.316469 4.919225,-1.446933 7.203499,-0.583622 4.4424,-4.368222 7.333101,-10.311246 7.753925,-16.929679 l -8.5624,-0.124687 C 66.689537,60.521517 59.168538,67.549813 50,67.549813 Z m 0,-35.099916 c 9.168538,0 16.689537,7.029739 17.477512,15.993631 l 8.5624,-0.124975 C 75.6185,41.700699 72.727812,35.757675 68.284837,31.389741 66.00085,32.252475 63.362137,32.121722 61.081625,30.804963 58.797637,29.486472 57.365137,27.262817 56.972312,24.849528 54.7524,24.235311 52.416175,23.900204 50,23.900204 c -4.154625,0 -8.080075,0.975302 -11.566813,2.702502 l 4.174263,7.480012 C 44.854487,33.037277 47.358112,32.449902 50,32.449902 Z M 32.450338,49.999856 c 0,-5.93754 2.950725,-11.181774 7.4624,-14.357351 l -4.392175,-7.357919 c -5.257513,3.512993 -9.168825,8.882784 -10.793275,15.172749 1.897787,1.546802 3.11035,3.902363 3.11035,6.543097 0,2.640447 -1.21285,4.996008 -3.110638,6.542522 1.624163,6.290252 5.535475,11.660045 10.793275,15.173037 l 4.392463,-7.358207 c -4.511675,-3.175289 -7.4624,-8.419523 -7.4624,-14.357928 z m 29.84645,21.298479 c -2.873675,1.659081 -3.857625,5.331691 -2.198838,8.2042 1.659088,2.873663 5.331688,3.858202 8.20535,2.199121 2.8728,-1.658794 3.85705,-5.331691 2.197975,-8.205066 -1.658512,-2.872221 -5.3317,-3.85676 -8.204487,-2.198255 z M 19.400513,43.992755 c -3.31875,0 -6.007975,2.688936 -6.007975,6.007677 0,3.317876 2.689225,6.007102 6.007975,6.007102 3.317587,0 6.0071,-2.689226 6.0071,-6.007102 0,-3.318741 -2.689513,-6.007677 -6.0071,-6.007677" />
         </g>
         <g id="top" transform="translate(0,-952.36216)">
-            <path fill="white" d="m 99.999997,1023.2041 c 0,-0.8016 -0.400802,-1.7034 -1.002004,-2.3046 L 52.304607,974.20607 c -0.601202,-0.6012 -1.503006,-1.002 -2.304609,-1.002 -0.801603,0 -1.703406,0.4008 -2.304609,1.002 L 1.0020039,1020.8995 c -0.60120243,0.6012 -1.00200401920929,1.503 -1.00200401920929,2.3046 0,0.8016 0.40080158920929,1.7034 1.00200401920929,2.3046 l 5.0100198,5.01 c 0.6012024,0.6012 1.503006,1.002 2.3046092,1.002 0.8016032,0 1.7034071,-0.4008 2.3046091,-1.002 l 39.378756,-39.37876 39.378757,39.37876 c 0.601202,0.6012 1.503006,1.002 2.304609,1.002 0.901803,0 1.703406,-0.4008 2.304609,-1.002 l 5.01002,-5.01 c 0.601202,-0.6012 1.002004,-1.503 1.002004,-2.3046 z" />
+            <path d="m 99.999997,1023.2041 c 0,-0.8016 -0.400802,-1.7034 -1.002004,-2.3046 L 52.304607,974.20607 c -0.601202,-0.6012 -1.503006,-1.002 -2.304609,-1.002 -0.801603,0 -1.703406,0.4008 -2.304609,1.002 L 1.0020039,1020.8995 c -0.60120243,0.6012 -1.00200401920929,1.503 -1.00200401920929,2.3046 0,0.8016 0.40080158920929,1.7034 1.00200401920929,2.3046 l 5.0100198,5.01 c 0.6012024,0.6012 1.503006,1.002 2.3046092,1.002 0.8016032,0 1.7034071,-0.4008 2.3046091,-1.002 l 39.378756,-39.37876 39.378757,39.37876 c 0.601202,0.6012 1.503006,1.002 2.304609,1.002 0.901803,0 1.703406,-0.4008 2.304609,-1.002 l 5.01002,-5.01 c 0.601202,-0.6012 1.002004,-1.503 1.002004,-2.3046 z" />
         </g>
         <g id="info" transform="translate(0,-952.36216)">
-            <path fill="white" d="m 66.644972,1033.6182 c 0,1.1715 -0.911162,2.0827 -2.082656,2.0827 l -29.157175,0 c -1.171493,0 -2.082655,-0.9112 -2.082655,-2.0827 l 0,-10.4133 c 0,-1.1715 0.911162,-2.0826 2.082655,-2.0826 l 6.247966,0 0,-20.8266 -6.247966,0 c -1.171493,0 -2.082655,-0.91113 -2.082655,-2.08262 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08266 2.082655,-2.08266 l 20.826554,0 c 1.171493,0 2.082655,0.91117 2.082655,2.08266 l 0,33.3225 6.247966,0 c 1.171494,0 2.082656,0.9111 2.082656,2.0826 l 0,10.4133 z M 58.31435,975.30387 c 0,1.17149 -0.911162,2.08265 -2.082655,2.08265 l -12.495932,0 c -1.171494,0 -2.082656,-0.91116 -2.082656,-2.08265 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08265 2.082656,-2.08265 l 12.495932,0 c 1.171493,0 2.082655,0.91116 2.082655,2.08265 l 0,10.41328 z m 41.653107,27.07453 c 0,-27.5952 -22.388545,-49.98374 -49.983728,-49.98374 C 22.388545,952.39466 0,974.7832 0,1002.3784 c 0,27.5952 22.388545,49.9837 49.983729,49.9837 27.595183,0 49.983728,-22.3885 49.983728,-49.9837 z" />
+            <path d="m 66.644972,1033.6182 c 0,1.1715 -0.911162,2.0827 -2.082656,2.0827 l -29.157175,0 c -1.171493,0 -2.082655,-0.9112 -2.082655,-2.0827 l 0,-10.4133 c 0,-1.1715 0.911162,-2.0826 2.082655,-2.0826 l 6.247966,0 0,-20.8266 -6.247966,0 c -1.171493,0 -2.082655,-0.91113 -2.082655,-2.08262 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08266 2.082655,-2.08266 l 20.826554,0 c 1.171493,0 2.082655,0.91117 2.082655,2.08266 l 0,33.3225 6.247966,0 c 1.171494,0 2.082656,0.9111 2.082656,2.0826 l 0,10.4133 z M 58.31435,975.30387 c 0,1.17149 -0.911162,2.08265 -2.082655,2.08265 l -12.495932,0 c -1.171494,0 -2.082656,-0.91116 -2.082656,-2.08265 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08265 2.082656,-2.08265 l 12.495932,0 c 1.171493,0 2.082655,0.91116 2.082655,2.08265 l 0,10.41328 z m 41.653107,27.07453 c 0,-27.5952 -22.388545,-49.98374 -49.983728,-49.98374 C 22.388545,952.39466 0,974.7832 0,1002.3784 c 0,27.5952 22.388545,49.9837 49.983729,49.9837 27.595183,0 49.983728,-22.3885 49.983728,-49.9837 z" />
         </g>
         <g id="back" transform="translate(0,-952.36216)">
-            <path fill="white" d="m 80.964871,969.41215 c 1.55135,-1.55135 1.55135,-4.0335 0,-5.58485 L 70.663909,953.52633 c -1.55135,-1.55135 -4.033509,-1.55135 -5.584859,0 l -46.044058,46.04406 c -1.55135,1.55131 -1.55135,4.03351 0,5.58491 l 46.044058,46.044 c 1.55135,1.5514 4.033509,1.5514 5.584859,0 l 10.300962,-10.301 c 1.55135,-1.5513 1.55135,-4.0335 0,-5.5848 l -32.950667,-32.9507 32.950667,-32.95065 z" />
+            <path d="m 80.964871,969.41215 c 1.55135,-1.55135 1.55135,-4.0335 0,-5.58485 L 70.663909,953.52633 c -1.55135,-1.55135 -4.033509,-1.55135 -5.584859,0 l -46.044058,46.04406 c -1.55135,1.55131 -1.55135,4.03351 0,5.58491 l 46.044058,46.044 c 1.55135,1.5514 4.033509,1.5514 5.584859,0 l 10.300962,-10.301 c 1.55135,-1.5513 1.55135,-4.0335 0,-5.5848 l -32.950667,-32.9507 32.950667,-32.95065 z" />
         </g>
     </svg>
 
@@ -1138,7 +1254,7 @@
                     if (productfiles[ii].id === id) files.push(productfiles[ii]);
                 return files;
             }
-            var hasBinExtension = function(filename) {
+            var hasBinExtension = function (filename) {
                 return filename && filename.indexOf(binExtension) === filename.length - binExtension.length;
             }
             return {
