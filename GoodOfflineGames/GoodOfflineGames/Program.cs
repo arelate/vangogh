@@ -325,15 +325,18 @@ namespace GOG
 
             foreach (var pData in newProductData)
             {
-                // this is a DLC, so let's add RequiredProduct for update to download new DLC
+                // this is a DLC, so let's add RequiredProduct (if owned) for update to download new DLC
                 // also we need to update RequiredProducts parent data as well
                 if (pData.RequiredProducts != null &&
                     pData.RequiredProducts.Count > 0)
                     foreach (var rp in pData.RequiredProducts)
                     {
-                        if (!updated.Contains(rp.Id)) updated.Add(rp.Id);
-
                         var productWithNewDLC = productsController.Find(rp.Id);
+
+                        // only add parent product if it's owned
+                        if (ownedController.Contains(productWithNewDLC) &&
+                            !updated.Contains(rp.Id))
+                            updated.Add(rp.Id);
 
                         if (string.IsNullOrEmpty(productWithNewDLC.Url)) continue;
 
@@ -413,6 +416,18 @@ namespace GOG
 
             foreach (var u in updatedProducts)
             {
+                // fast bail on not owned products
+                var product = productsController.Find(u);
+                if (product != null &&
+                    !ownedController.Contains(product) &&
+                    updated.Contains(u))
+                {
+                    consoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.");
+                    updated.Remove(u);
+                    saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+                    continue;
+                }
+
                 // we use single loop to:
                 // 1) update game details
                 // 2) download product updates
