@@ -119,6 +119,26 @@ namespace GOG
 
             #endregion
 
+            #region Debug only - print all known folders and exit
+
+            //var dirs = new List<string>();
+            //foreach (var pf in productFiles)
+            //{
+            //    if (!dirs.Contains(pf.Folder)) dirs.Add(pf.Folder);
+            //}
+
+            //dirs.Sort();
+
+            //foreach (var f in dirs)
+            //{
+            //    consoleController.WriteLine(f);
+            //}
+
+            //consoleController.ReadLine();
+            //return;
+
+            #endregion
+
             #region Load settings
 
             ISettingsController<Settings> settingsController = new SettingsController(
