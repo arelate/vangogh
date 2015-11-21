@@ -723,7 +723,15 @@
                     var matches = true;
                     for (var tt = 0; tt < textParts.length; tt++) {
                         if (!textParts[tt]) continue;
-                        matches &= searchIndex[ii].indexOf(textParts[tt]) > -1;
+                        var exclude = textParts[tt].indexOf("-") === 0;
+                        if (exclude && textParts[tt].length > 1) {
+                            if (searchIndex[ii].indexOf(textParts[tt].substr(1)) > -1) {
+                                matches = false;
+                                break;
+                            }
+                        } else {
+                            matches &= searchIndex[ii].indexOf(textParts[tt]) > -1;
+                        }
                     }
                     if (matches) matchingIds.push(ii);
                 }
