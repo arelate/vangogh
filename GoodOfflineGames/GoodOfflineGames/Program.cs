@@ -22,6 +22,7 @@ namespace GOG
         static IList<long> updated = null;
         static IList<ProductData> productsData = null;
         static IList<GameDetails> gamesDetails = null;
+        static IDictionary<long, List<string>> screenshots = null;
 
         static IDictionary<long, DateTime> checkedOwned = null;
         static IDictionary<long, DateTime> checkedProductData = null;
@@ -115,12 +116,16 @@ namespace GOG
             productFiles = saveLoadHelper.LoadData<List<ProductFile>>(ProductTypes.ProductFiles).Result;
             productFiles = productFiles ?? new List<ProductFile>();
 
+            screenshots = saveLoadHelper.LoadData<Dictionary<long, List<string>>>(ProductTypes.Screenshots).Result;
+            screenshots = screenshots ?? new Dictionary<long, List<string>>();
+
             consoleController.WriteLine("DONE.");
 
             #endregion
 
             #region Debug only - print all known folders and exit
 
+            /*
             //var dirs = new List<string>();
             //foreach (var pf in productFiles)
             //{
@@ -136,6 +141,7 @@ namespace GOG
 
             //consoleController.ReadLine();
             //return;
+            */
 
             #endregion
 
@@ -183,6 +189,8 @@ namespace GOG
                 networkController,
                 jsonStringController,
                 settings.DownloadLanguages);
+
+            IScreenshotsController screenshotsController = new ScreenshotsController(networkController);
 
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
 
@@ -393,6 +401,25 @@ namespace GOG
 
             #endregion
 
+            #region Extract screenshots uris from the product pages
+
+            consoleController.Write("Requesting product screenshots...");
+
+            foreach (var product in products)
+            {
+                if (screenshots.ContainsKey(product.Id)) continue;
+
+                var productScreenshots = screenshotsController.GetScreenshotsUris(product, postUpdateDelegate).Result;
+
+                screenshots.Add(product.Id, productScreenshots);
+
+                saveLoadHelper.SaveData(screenshots, ProductTypes.Screenshots).Wait();
+            }
+
+            consoleController.WriteLine("DONE.");
+
+            #endregion
+
             #region Update images
 
             consoleController.Write("Updating product images...");
@@ -405,6 +432,9 @@ namespace GOG
             imagesController.Update(existingProductsFilter.Filter(owned, products)).Wait();
 
             imagesController.Update(productsData).Wait();
+
+            // then screenshots
+            imagesController.Update(screenshots).Wait();
 
             consoleController.WriteLine("DONE.");
 

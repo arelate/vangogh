@@ -17,9 +17,10 @@ namespace GOG.Controllers
         private const int retinaWidth = standardWidth * 2;
         private const int largeWidth = 800;
         private const int largeRetinaWidth = 1600;
+        private const int noSpecificWidth = 0;
         private int[] imageWidths = new int[4] { standardWidth, retinaWidth, largeWidth, largeRetinaWidth };
         private string imageFilenameTemplate = "{0}_{1}.jpg";
-        private string largeRetinaImageFilenameTemplate = "{0}.jpg";
+        private string largeRetinaFilenameTemplate = "{0}.jpg";
         private string imagesCacheFolder = "_images";
 
         private IIOController ioController;
@@ -35,6 +36,11 @@ namespace GOG.Controllers
             this.postUpdateDelegate = postUpdateDelegate;
         }
 
+        public async Task Update(IDictionary<long, List<string>> screenshots)
+        {
+            await CacheImages(ExpandScreenshotsUris(screenshots));
+        }
+
         public async Task Update(IEnumerable<Product> products)
         {
             await CacheImages(ExpandProductImagesUris(products));
@@ -47,11 +53,15 @@ namespace GOG.Controllers
 
         private string FormatTemplate(string uri, int width)
         {
-            string template = (width == largeRetinaWidth) ? largeRetinaImageFilenameTemplate : imageFilenameTemplate;
-            return (width == largeRetinaWidth) ? string.Format(template, uri) : string.Format(template, uri, width);
+            string template = (width == largeRetinaWidth) ?
+                largeRetinaFilenameTemplate :
+                imageFilenameTemplate;
+            return (width == largeRetinaWidth) ?
+                string.Format(template, uri) :
+                string.Format(template, uri, width);
         }
 
-        private IEnumerable<string> ExpandImageUri(string image)
+        private IEnumerable<string> ExpandImageUri(string image, params int[] widths)
         {
             var baseUri = image;
             if (!baseUri.StartsWith(Urls.HttpProtocol))
@@ -59,16 +69,17 @@ namespace GOG.Controllers
                 baseUri = Urls.HttpProtocol + baseUri;
             }
 
-            foreach (int width in imageWidths)
+            foreach (int width in widths)
             {
-                yield return FormatTemplate(baseUri, width);
+                if (width == noSpecificWidth) yield return baseUri;
+                else yield return FormatTemplate(baseUri, width);
             }
         }
 
         private IEnumerable<string> ExpandProductImagesUris(IEnumerable<Product> products)
         {
             foreach (var product in products)
-                foreach (string uri in ExpandImageUri(product.Image))
+                foreach (string uri in ExpandImageUri(product.Image, imageWidths))
                     yield return uri;
         }
 
@@ -76,7 +87,7 @@ namespace GOG.Controllers
         {
             foreach (var data in productData)
             {
-                foreach (string uri in ExpandImageUri(data.Image))
+                foreach (string uri in ExpandImageUri(data.Image, imageWidths))
                     yield return uri;
 
                 if (data.DLCs == null) continue;
@@ -85,6 +96,15 @@ namespace GOG.Controllers
                     yield return uri;
             }
         }
+
+        private IEnumerable<string> ExpandScreenshotsUris(IDictionary<long, List<string>> screenshots)
+        {
+            foreach (var productScreenshots in screenshots)
+                foreach (var uri in productScreenshots.Value)
+                    foreach (var eUri in ExpandImageUri(uri, noSpecificWidth))
+                        yield return eUri;
+        }
+
         private async Task CacheImages(IEnumerable<string> uris)
         {
             if (!ioController.DirectoryExists(imagesCacheFolder))

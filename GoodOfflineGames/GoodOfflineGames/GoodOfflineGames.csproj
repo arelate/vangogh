@@ -62,6 +62,7 @@
     <Compile Include="GOG\Controllers\Abstract\MultipageRequestController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsController.cs" />
     <Compile Include="GOG\Controllers\ProductDataController.cs" />
+    <Compile Include="GOG\Controllers\ScreenshotsController.cs" />
     <Compile Include="GOG\Controllers\UpdatedController.cs" />
     <Compile Include="GOG\Controllers\OwnedController.cs" />
     <Compile Include="GOG\Controllers\ProductFilesDownloadController.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Interfaces\GOG\Credentials.cs" />
     <Compile Include="Interfaces\GOG\ProductCoreController.cs" />
     <Compile Include="Interfaces\GOG\ProductFileController.cs" />
+    <Compile Include="Interfaces\GOG\ScreenshotsController.cs" />
     <Compile Include="Interfaces\Network.cs" />
     <Compile Include="Interfaces\GOG\MultipageRequestController.cs" />
     <Compile Include="Interfaces\GOG\FilterDelegate.cs" />
