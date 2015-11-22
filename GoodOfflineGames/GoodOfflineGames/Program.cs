@@ -67,11 +67,11 @@ namespace GOG
             var imagesFolder = "_images";
             var screenshotsFolder = "_screenshots";
 
-        #endregion
+            #endregion
 
-        #region Shared IO controllers
+            #region Shared IO controllers
 
-        IConsoleController consoleController = new ConsoleController();
+            IConsoleController consoleController = new ConsoleController();
             IPostUpdateDelegate postUpdateDelegate = new ConsolePostUpdate(consoleController);
 
             IIOController ioController = new IOController();
@@ -409,7 +409,18 @@ namespace GOG
 
             foreach (var product in products)
             {
-                if (screenshots.ContainsKey(product.Id)) continue;
+                if (screenshots.ContainsKey(product.Id))
+                {
+
+                    if (screenshots[product.Id] != null &&
+                        screenshots[product.Id].Count > 0)
+                        continue;
+                    else
+                    {
+                        // we have the entry but it's null or empty - we'll try to get it again
+                        screenshots.Remove(product.Id);
+                    }
+                }
 
                 var productScreenshots = screenshotsController.GetScreenshotsUris(product, postUpdateDelegate).Result;
 
