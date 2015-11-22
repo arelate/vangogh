@@ -21,7 +21,6 @@ namespace GOG.Controllers
         private int[] imageWidths = new int[4] { standardWidth, retinaWidth, largeWidth, largeRetinaWidth };
         private string imageFilenameTemplate = "{0}_{1}.jpg";
         private string largeRetinaFilenameTemplate = "{0}.jpg";
-        private string imagesCacheFolder = "_images";
 
         private IIOController ioController;
         private IPostUpdateDelegate postUpdateDelegate;
@@ -36,19 +35,19 @@ namespace GOG.Controllers
             this.postUpdateDelegate = postUpdateDelegate;
         }
 
-        public async Task Update(IDictionary<long, List<string>> screenshots)
+        public async Task Update(IDictionary<long, List<string>> screenshots, string folder)
         {
-            await CacheImages(ExpandScreenshotsUris(screenshots));
+            await CacheImages(ExpandScreenshotsUris(screenshots), folder);
         }
 
-        public async Task Update(IEnumerable<Product> products)
+        public async Task Update(IEnumerable<Product> products, string folder)
         {
-            await CacheImages(ExpandProductImagesUris(products));
+            await CacheImages(ExpandProductImagesUris(products), folder);
         }
 
-        public async Task Update(IEnumerable<ProductData> productData)
+        public async Task Update(IEnumerable<ProductData> productData, string folder)
         {
-            await CacheImages(ExpandProductDataImagesUris(productData));
+            await CacheImages(ExpandProductDataImagesUris(productData), folder);
         }
 
         private string FormatTemplate(string uri, int width)
@@ -105,18 +104,18 @@ namespace GOG.Controllers
                         yield return eUri;
         }
 
-        private async Task CacheImages(IEnumerable<string> uris)
+        private async Task CacheImages(IEnumerable<string> uris, string folder)
         {
-            if (!ioController.DirectoryExists(imagesCacheFolder))
+            if (!ioController.DirectoryExists(folder))
             {
-                ioController.CreateDirectory(imagesCacheFolder);
+                ioController.CreateDirectory(folder);
             }
 
             foreach (string imageRelativeUri in uris)
             {
                 var imageUri = new Uri(imageRelativeUri, UriKind.Absolute);
                 var localFilename = imageUri.Segments.Last();
-                var localPath = Path.Combine(imagesCacheFolder, localFilename);
+                var localPath = Path.Combine(folder, localFilename);
 
                 if (ioController.FileExists(localPath))
                 {
@@ -126,7 +125,7 @@ namespace GOG.Controllers
                 if (postUpdateDelegate != null)
                     postUpdateDelegate.PostUpdate();
 
-                await fileRequestController.RequestFile(imageUri.ToString(), imagesCacheFolder, ioController);
+                await fileRequestController.RequestFile(imageUri.ToString(), folder, ioController);
             }
         }
 

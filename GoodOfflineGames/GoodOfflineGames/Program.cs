@@ -64,12 +64,14 @@ namespace GOG
             var prefixes = productTypesHelper.CreateProductTypesDictionary<ProductTypes>(prefixTemplate);
 
             var recycleBin = "_RecycleBin";
+            var imagesFolder = "_images";
+            var screenshotsFolder = "_screenshots";
 
-            #endregion
+        #endregion
 
-            #region Shared IO controllers
+        #region Shared IO controllers
 
-            IConsoleController consoleController = new ConsoleController();
+        IConsoleController consoleController = new ConsoleController();
             IPostUpdateDelegate postUpdateDelegate = new ConsolePostUpdate(consoleController);
 
             IIOController ioController = new IOController();
@@ -425,16 +427,16 @@ namespace GOG
             consoleController.Write("Updating product images...");
 
             // for all products first
-            imagesController.Update(products).Wait();
+            imagesController.Update(products, imagesFolder).Wait();
 
             // then for owned products that are not in a products collection 
             // (e.g. no longer sold, part of bundle)
-            imagesController.Update(existingProductsFilter.Filter(owned, products)).Wait();
+            imagesController.Update(existingProductsFilter.Filter(owned, products), imagesFolder).Wait();
 
-            imagesController.Update(productsData).Wait();
+            imagesController.Update(productsData, imagesFolder).Wait();
 
             // then screenshots
-            imagesController.Update(screenshots).Wait();
+            imagesController.Update(screenshots, screenshotsFolder).Wait();
 
             consoleController.WriteLine("DONE.");
 
