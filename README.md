@@ -1,11 +1,12 @@
 GoodOfflineGames
 ================
 
-![List](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-List.PNG)
-![Details](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-Details.PNG)
+![List](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-List.png)
+![Details](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-Details.png)
+![Screenshot](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-Screenshots.png)
 ![Commandline](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/CMD.PNG)
 
-GoodOfflineGames is a cmd-line service to cache and keep in sync  you account data from GOG.com. Additionally it contains (offline) HTML frontend to your collection. 
+GoodOfflineGames is a cmd-line service to cache and keep in sync you account data from GOG.com. Additionally it contains (offline) HTML frontend to your collection, with links to product files and screenshot. 
 
 Sync service supports incremental updates, caching of images, serial keys and downloading your game files. Optionally it can clear folders to keep only the latest versions available. 
 
@@ -25,6 +26,9 @@ Options file that can be used to provide input data. Without this file the appli
 
 * username - your GOG.com username (email)
 * password - you GOG.com password (used only to authenticate current session)
-* downloadLangugages - what languages to download, default value is ["English"]
-* downloadOperatingSystems - files for which operating systems to download, default value is ["Windows"]
-* cleanupProductFolders - true: remove all files that are not specified for current version on GOG.com to _RecycleBin (preserving folder structure), false: don't remove any files from product folders
+* downloadLangugages - what languages to download, default: ["English"]
+* downloadOperatingSystems - files for which operating systems to download, default: ["Windows"]
+* downloadProductFiles - true: download product files, false (default): don't download product files
+* downloadScreenshots - true: download product screenshots, false (default): don't download product screenshots
+* updateAll - true: attempt to update all available products, false (default): only update product marked as updated
+* cleanupProductFolders - true (default): remove all files that are not specified for current version on GOG.com to _RecycleBin (preserving folder structure), false: don't remove any files from product folders
