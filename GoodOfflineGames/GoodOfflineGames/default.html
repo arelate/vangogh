@@ -467,6 +467,15 @@
         </button>
         <div id="details" class="container"></div>
     </div>
+    <script>
+        var productsdata = undefined;
+        var gamedetails = undefined;
+        var owned = undefined;
+        var updated = undefined;
+        var wishlisted = undefined;
+        var screenshots = undefined;
+        var productfiles = undefined;
+    </script>
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
     <script src="./updated.js"></script>
@@ -615,7 +624,7 @@
                             processedDlcs.push(pd.dlcs[ii].id);
                     }
 
-                var gd = gdIndex.getElementByKey(id);
+                var gd = gdIndex ? gdIndex.getElementByKey(id) : undefined;
                 if (gd && gd.dlcs)
                     for (var ii = 0; ii < gd.dlcs.length; ii++) {
                         if (processedDlcs.indexOf(gd.dlcs[ii].id) > -1) continue;
@@ -867,7 +876,7 @@
                 for (var rp = 0; rp < productData.requiredProducts.length; rp++) {
                     var requiredProduct = productData.requiredProducts[rp].id;
 
-                    var gameDetails = gdIndex.getElementByKey(requiredProduct);
+                    var gameDetails = gdIndex ? gdIndex.getElementByKey(requiredProduct) : undefined;
 
                     if (!gameDetails ||
                       !gameDetails.dlcs) continue;
@@ -967,7 +976,7 @@
             var getGameDetailsViewModel = function (product) {
 
                 var pd = pdIndex.getElementByKey(product.id);
-                var gd = gdIndex.getElementByKey(product.id);
+                var gd = gdIndex ? gdIndex.getElementByKey(product.id) : undefined;
 
                 var productClass = ProductClass.getClass(product).join(" ");
 
@@ -1103,7 +1112,7 @@
 
                 // screenshots
 
-                var productScreenshots = sIndex.getElementByKey(product.id);
+                var productScreenshots = sIndex ? sIndex.getElementByKey(product.id) : undefined;
                 var showScreenshotsClass = "hidden", screenshotsContent = "";
                 var screenshotsCount = 0;
 
@@ -1404,12 +1413,12 @@
 
             start = new Date();
             var productsIndex = IndexedCollection.create(cp, getId);
-            var productsDataIndex = IndexedCollection.create(productsdata, getId);
-            var gameDetailsIndex = IndexedCollection.create(gamedetails, getId);
-            var ownedIndex = IndexedCollection.create(owned, getId);
-            var updatedIndex = IndexedCollection.create(updated, getValue);
-            var wishlistedIndex = IndexedCollection.create(wishlisted, getValue);
-            var screenshotsIndex = IndexedCollection.create(screenshots, getKey);
+            var productsDataIndex = productsdata ? IndexedCollection.create(productsdata, getId) : undefined;
+            var gameDetailsIndex = gamedetails ? IndexedCollection.create(gamedetails, getId) : undefined;
+            var ownedIndex = owned ? IndexedCollection.create(owned, getId) : undefined;
+            var updatedIndex = updated ? IndexedCollection.create(updated, getValue) : undefined;
+            var wishlistedIndex = wishlisted ? IndexedCollection.create(wishlisted, getValue) : undefined;
+            var screenshotsIndex = screenshots ? IndexedCollection.create(screenshots, getKey) : undefined;
 
             ProductClass.init(productsDataIndex, updatedIndex, wishlistedIndex);
             ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex, screenshotsIndex);

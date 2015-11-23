@@ -16,6 +16,10 @@ namespace GOG.SharedModels
         public string[] DownloadLanguages { get; set; }
         [DataMember(Name = "downloadOperatingSystems")]
         public string[] DownloadOperatingSystems { get; set; }
+        [DataMember(Name = "downloadProductFiles")]
+        public bool DownloadProductFiles { get; set; }
+        [DataMember(Name = "downloadScreenshots")]
+        public bool DownloadScreenshots { get; set; }
         [DataMember(Name = "cleanupProductFolders")]
         public bool CleanupProductFolders { get; set; }
         [DataMember(Name = "updateAll")]

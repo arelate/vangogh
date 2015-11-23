@@ -3,6 +3,8 @@
   "password": "",
   "downloadLangugages": [ "English" ],
   "downloadOperatingSystems": [ "Windows" ],
+  "downloadProductFiles": true,
+  "downloadScreenshots":  true,
   "cleanupProductFolders": true,
   "updateAll":  false
 }
