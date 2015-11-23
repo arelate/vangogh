@@ -295,14 +295,18 @@
                 margin-right: 2em;
             }
 
-            #gameDetailsContainer .screenshotsContainer {
-                margin-bottom: 1em;
+        #gameDetailsContainer .screenshotsContainer {
+            margin-bottom: 1em;
+        }
+
+            #gameDetailsContainer .screenshotsContainer a {
+                font-size: 1.25em;
             }
 
-        #gameDetailsContainer .screenshotsContainer .screenshots {
-            margin-top: 1em;
-            text-align: center;
-        }
+            #gameDetailsContainer .screenshotsContainer .screenshots {
+                margin-top: 1em;
+                text-align: center;
+            }
 
         #gameDetailsContainer tr {
             line-height: 2em;
@@ -501,7 +505,7 @@
                   "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
                   "<div class='{{extrasClass}}'><h1>Extras</h1><div>{{extrasContent}}</div></div>";
             var gameDetailsScreenshotsContainer = "<div class='screenshotsContainer'>" +
-                "<a class='{{showScreenshotsClass}}' onclick='Screenshots.show(this);'>Toggle {{screenshotsCount}} screenshots</a>" +
+                "<a class='{{showScreenshotsClass}}' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</a>" +
                 "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
                 "</div>";
             var getGameDetailsTemplate = function () {
