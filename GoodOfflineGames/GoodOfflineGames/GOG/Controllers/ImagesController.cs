@@ -99,9 +99,12 @@ namespace GOG.Controllers
         private IEnumerable<string> ExpandScreenshotsUris(IDictionary<long, List<string>> screenshots)
         {
             foreach (var productScreenshots in screenshots)
+            {
+                if (productScreenshots.Value == null) continue;
                 foreach (var uri in productScreenshots.Value)
                     foreach (var eUri in ExpandImageUri(uri, noSpecificWidth))
                         yield return eUri;
+            }
         }
 
         private async Task CacheImages(IEnumerable<string> uris, string folder)
