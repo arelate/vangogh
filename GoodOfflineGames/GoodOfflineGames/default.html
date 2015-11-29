@@ -488,8 +488,6 @@
     <script>
         "use strict";
 
-        var DEBUG = false;
-
         var $ = function (id) {
             return document.getElementById(id);
         }
@@ -685,6 +683,10 @@
                 });
 
                 gameDetailsContainer.classList.remove("hidden");
+
+                // Reset scroll position between showing details for different products
+                // to resolve annoying behavior where you open details and already have
+                // scroller at some >0 position
                 details.scrollTop = 0;
             }
             var close = function () {
@@ -947,7 +949,7 @@
                 return {
                     "id": product.id,
                     "productClass": productClass.join(" "),
-                    "title": (DEBUG) ? product.title + " " + product.id : product.title
+                    "title": product.title
                 };
             }
             var getRequiredProductViewModel = function (requiredProduct) {
