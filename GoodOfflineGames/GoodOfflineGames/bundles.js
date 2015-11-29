@@ -545,6 +545,40 @@ var bundles = [{
       // X: Gold
       "parent": 1446131634,
       "children": [1441039809,1441039631]
+  },
+  {
+      // Prehistorik 1+2
+      "parent": 1430913339,
+      "children": [1430912792, 1430913246]
+  },
+  {
+      // Dungeons & Dragons: Krynn Series
+      "parent": 1444390670,
+      "children": [1432722131, 1432722599, 1432722998]
+  },
+  {
+      // Dungeons & Dragons: Dark Sun Series
+      "parent": 1444390881,
+      "children": [1432723859, 1432903719]
+  },
+  {
+      // Dungeons & Dragons: Ravenloft Series
+      "parent": 1444391327,
+      "children": [1432905053, 1432906190]
+  },
+  {
+      // Forgotten Realms - The Archives - Collection One
+      "parent": 1436868249,
+      "children": [1432575012, 1432576039, 1432576327]
+  },
+  {
+      // Forgotten Realms: The Archives - Collection Two
+      "parent": 1436871302,
+      "children": [1432640961, 1432642138, 1432640506, 1432641528, 1432643408, 1432649588, 1432641771, 1432650732]
+  },
+  {
+      // Forgotten Realms: The Archives - Collection Three
+      "parent": 1436873631,
+      "children": [1432579019, 1432578339]
   }
-
 ];
