@@ -232,19 +232,12 @@
             margin-bottom: 1em;
         }
 
-        #gameDetailsContainer #details {
-            position: fixed;
-            top: 4.5em;
-            padding-bottom: 1em;
-            padding-top: 0;
-        }
-
-            #gameDetailsContainer #details .productContainer {
+            #gameDetailsContainer .productContainer {
                 margin-bottom: 0;
             }
 
             /* Top level page header shouldn't have top margin */
-            #gameDetailsContainer #details > .productContainer > .productTitle.header1 {
+            #gameDetailsContainer > .productContainer > .productTitle.header1 {
                 margin-top: 0;
             }
 
@@ -426,9 +419,6 @@
         <g id="info" transform="translate(0,-952.36216)">
             <path d="m 66.644972,1033.6182 c 0,1.1715 -0.911162,2.0827 -2.082656,2.0827 l -29.157175,0 c -1.171493,0 -2.082655,-0.9112 -2.082655,-2.0827 l 0,-10.4133 c 0,-1.1715 0.911162,-2.0826 2.082655,-2.0826 l 6.247966,0 0,-20.8266 -6.247966,0 c -1.171493,0 -2.082655,-0.91113 -2.082655,-2.08262 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08266 2.082655,-2.08266 l 20.826554,0 c 1.171493,0 2.082655,0.91117 2.082655,2.08266 l 0,33.3225 6.247966,0 c 1.171494,0 2.082656,0.9111 2.082656,2.0826 l 0,10.4133 z M 58.31435,975.30387 c 0,1.17149 -0.911162,2.08265 -2.082655,2.08265 l -12.495932,0 c -1.171494,0 -2.082656,-0.91116 -2.082656,-2.08265 l 0,-10.41328 c 0,-1.17149 0.911162,-2.08265 2.082656,-2.08265 l 12.495932,0 c 1.171493,0 2.082655,0.91116 2.082655,2.08265 l 0,10.41328 z m 41.653107,27.07453 c 0,-27.5952 -22.388545,-49.98374 -49.983728,-49.98374 C 22.388545,952.39466 0,974.7832 0,1002.3784 c 0,27.5952 22.388545,49.9837 49.983729,49.9837 27.595183,0 49.983728,-22.3885 49.983728,-49.9837 z" />
         </g>
-        <g id="back" transform="translate(0,-952.36216)">
-            <path d="m 80.964871,969.41215 c 1.55135,-1.55135 1.55135,-4.0335 0,-5.58485 L 70.663909,953.52633 c -1.55135,-1.55135 -4.033509,-1.55135 -5.584859,0 l -46.044058,46.04406 c -1.55135,1.55131 -1.55135,4.03351 0,5.58491 l 46.044058,46.044 c 1.55135,1.5514 4.033509,1.5514 5.584859,0 l 10.300962,-10.301 c 1.55135,-1.5513 1.55135,-4.0335 0,-5.5848 l -32.950667,-32.9507 32.950667,-32.95065 z" />
-        </g>
         <g id="theme">
             <path xmlns="http://www.w3.org/2000/svg" d="M 50 8.333 c 23.012 0 41.667 18.655 41.667 41.667 S 73.012 91.667 50 91.667 S 8.333 73.012 8.333 50 S 26.988 8.333 50 8.333 Z M 50 0 C 22.385 0 0 22.385 0 50 s 22.385 50 50 50 s 50 -22.385 50 -50 S 77.615 0 50 0 Z M 50 5.583 C 50 5.583 5.583 7.167 5.583 50 S 50 94.417 50 94.417 S 30.25 82.083 30.25 50 S 50 5.583 50 5.583 Z" />
         </g>
@@ -460,14 +450,7 @@
     <div id="productsContainer" class="container"></div>
     <div id="searchResults" class="container hidden"></div>
     <div id="infoContainer" class="container hidden"></div>
-    <div id="gameDetailsContainer" class="container hidden">
-        <button class="close">
-            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                <use xlink:href='#back'></use>
-            </svg>
-        </button>
-        <div id="details" class="container"></div>
-    </div>
+    <div id="gameDetailsContainer" class="container hidden"></div>
     <script>
         var productsdata = undefined;
         var gamedetails = undefined;
@@ -545,7 +528,7 @@
                 return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></span>";
             }
             var getScreenshotTemplate = function () {
-                return "<img data-src={{uri}} />";
+                return "<a href='{{uri}}'><img data-src={{uri}} /></a>";
             }
             var getOperatingSystemIconTemplate = function () {
                 return "<span class='icon'><svg viewBox='0 0 100 100' " +
@@ -579,7 +562,7 @@
             var createView = function (model, viewModelProvider, templateProvider) {
                 var viewModel = viewModelProvider(model);
                 var template = templateProvider();
-                return bindTemplateToModel(template, viewModel);
+                return viewModel !== undefined ? bindTemplateToModel(template, viewModel) : "";
             }
             return {
                 "createView": createView
@@ -606,8 +589,6 @@
             var pdIndex;
             var gdIndex;
             var gameDetailsContainer = $("gameDetailsContainer");
-            var details = gameDetailsContainer.querySelector("#details");
-            var closeButton = gameDetailsContainer.querySelector(".close");
             var showDLC = function (id) {
                 // add DLC. Showing only 1st level of DLCs to avoid recursion
                 var dlcContent = [];
@@ -648,12 +629,14 @@
                 var product = pIndex.getElementByKey(id);
                 if (!product) return;
 
+		var markup = "";
+
                 var htmlView = Views.createView(product,
                   ViewModelProvider.getGameDetailsViewModel,
                   Templates.getGameDetailsTemplate);
 
-                details.innerHTML = htmlView;
-                details.innerHTML += showDLC(id);
+                markup = htmlView;
+                markup += showDLC(id);
 
                 // show bundled products
                 if (Bundles.isParent(id)) {
@@ -676,19 +659,16 @@
                       ViewModelProvider.getBundleViewModel,
                       Templates.getBundleTemplate);
 
-                    details.innerHTML += bundleView;
+                    markup += bundleView;
                 }
 
-                closeButton.addEventListener("click", function () {
-                    history.back();
-                });
-
+		gameDetailsContainer.innerHTML = markup;
                 gameDetailsContainer.classList.remove("hidden");
 
                 // Reset scroll position between showing details for different products
                 // to resolve annoying behavior where you open details and already have
                 // scroller at some >0 position
-                details.scrollTop = 0;
+                gameDetailsContainer.scrollTop = 0;
             }
             var close = function () {
                 gameDetailsContainer.classList.add("hidden");
@@ -978,6 +958,8 @@
                 }
             }
             var getGameDetailsViewModel = function (product) {
+
+		if (!product) return;
 
                 var pd = pdIndex.getElementByKey(product.id);
                 var gd = gdIndex ? gdIndex.getElementByKey(product.id) : undefined;
