@@ -38,15 +38,20 @@
         }
 
         button {
+            display: block;
+            color: inherit;
             border: 0;
-            background: transparent;
-            border-radius: 4px;
-            padding: 0 1em;
-            margin: 0;
+            background: inherit;
+            padding: 1.25em;
             cursor: pointer;
-            height: 30px;
-            width: 44px;
-            padding-top: 4px;
+        }
+
+        .dark button {
+            color: white;
+        }
+
+        .light button {
+            color: black;
         }
 
         .dark button:hover {
@@ -56,31 +61,6 @@
         .light button:hover {
             background: #2196f3;
         }
-
-        .dark input[type=search] {
-            border: 1px solid #616161;
-        }
-
-        .light input[type=search] {
-            border: 1px solid #bdbdbd;
-        }
-
-        input[type=search] {
-            padding: 4px;
-            height: 30px;
-            width: 160px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.075);
-            color: #212121;
-            /* WebKit insists that you can't change height of input type=search*/
-            -webkit-appearance: none;
-        }
-
-            input[type=search]:focus {
-                border-color: #1976d2;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
-            }
 
         .hidden {
             display: none !important;
@@ -100,7 +80,7 @@
 
         #productsContainer,
         #searchResults {
-            top: 4.5em;
+            top: 4em;
             padding-top: 0;
         }
 
@@ -204,21 +184,6 @@
             transform: translateY(0.125em);
         }
 
-        #searchContainer {
-            bottom: auto;
-            height: 4.5em;
-        }
-
-            #searchContainer a {
-                margin-left: 1em;
-            }
-
-            #searchContainer button {
-                float: right;
-                margin-left: 1em;
-            }
-
-
         .dark #gameDetailsContainer {
             color: #B0BEC5;
         }
@@ -232,14 +197,14 @@
             margin-bottom: 1em;
         }
 
-            #gameDetailsContainer .productContainer {
-                margin-bottom: 0;
-            }
+        #gameDetailsContainer .productContainer {
+            margin-bottom: 0;
+        }
 
-            /* Top level page header shouldn't have top margin */
-            #gameDetailsContainer > .productContainer > .productTitle.header1 {
-                margin-top: 0;
-            }
+        /* Top level page header shouldn't have top margin */
+        #gameDetailsContainer > .productContainer > .productTitle.header1 {
+            margin-top: 0;
+        }
 
         .dark #gameDetailsContainer .cdKey {
             color: #212121 !important;
@@ -321,32 +286,82 @@
         }
 
         #infoContainer {
-            top: 4.5em;
-            left: auto;
-            padding-top: 0;
+            padding: 1em;
         }
 
-        .dark #infoContainer {
-            border-left: solid 1px #424242;
+            #infoContainer .info {
+                line-height: 2em;
+                height: 2em;
+            }
+
+            #infoContainer .product {
+                display: inline-block;
+                cursor: default;
+            }
+
+            #infoContainer .count {
+                float: right;
+                margin-right: 0;
+            }
+
+        #topToolbarContainer {
+            height: auto;
+            bottom: auto;
+            padding: 0;
+            height: 4em;
         }
 
-        .light #infoContainer {
-            border-left: solid 1px #e0e0e0;
+            #topToolbarContainer #toggleMenu {
+                display: inline-block;
+            }
+
+        .dark #topToolbarContainer input[type=search] {
+            border: 1px solid #616161;
         }
 
-        #infoContainer .info {
-            line-height: 2em;
-            height: 2em;
+        .light #topToolbarContainer input[type=search] {
+            border: 1px solid #bdbdbd;
         }
 
-        #infoContainer .product {
-            display: inline-block;
-            cursor: default;
+        #topToolbarContainer input[type=search] {
+            padding: 4px;
+            height: 30px;
+            width: 120px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.075);
+            color: #212121;
+            /* WebKit insists that you can't change height of input type=search*/
+            -webkit-appearance: none;
+            margin-left: 1em;
         }
 
-        #infoContainer .count {
-            float: right;
-            margin-right: 0;
+            #topToolbarContainer input[type=search]:focus {
+                border-color: #1976d2;
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+            }
+
+        #topToolbarContainer #showAllSearchResults {
+            margin-left: 1em;
+        }
+
+        #menuContainer {
+            top: 4em;
+            right: auto;
+            padding: 0;
+        }
+
+            #menuContainer button {
+                width: 100%;
+                text-align: left;
+            }
+
+        .dark #menuContainer {
+            border-right: solid 1px #424242;
+        }
+
+        .light #menuContainer {
+            border-right: solid 1px #e0e0e0;
         }
 
         /* SVG */
@@ -381,7 +396,8 @@
         .dark #icons #top,
         .dark #icons #info,
         .dark #icons #back,
-        .dark #icons #theme {
+        .dark #icons #theme,
+        .dark #icons #menu {
             fill: white;
         }
 
@@ -391,7 +407,8 @@
         .light #icons #top,
         .light #icons #info,
         .light #icons #back,
-        .light #icons #theme {
+        .light #icons #theme,
+        .light #icons #menu {
             fill: black;
         }
     </style>
@@ -422,35 +439,51 @@
         <g id="theme">
             <path xmlns="http://www.w3.org/2000/svg" d="M 50 8.333 c 23.012 0 41.667 18.655 41.667 41.667 S 73.012 91.667 50 91.667 S 8.333 73.012 8.333 50 S 26.988 8.333 50 8.333 Z M 50 0 C 22.385 0 0 22.385 0 50 s 22.385 50 50 50 s 50 -22.385 50 -50 S 77.615 0 50 0 Z M 50 5.583 C 50 5.583 5.583 7.167 5.583 50 S 50 94.417 50 94.417 S 30.25 82.083 30.25 50 S 50 5.583 50 5.583 Z" />
         </g>
+        <g id="menu">
+            <rect x="5" y="13" width="90" height="13" />
+            <rect x="5" y="73" width="90" height="13" />
+            <rect x="5" y="43" width="90" height="13" />
+        </g>
     </svg>
 
-    <div id="searchContainer" class="container">
-        <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
-        <a id="showAllSearchResults" class="hidden" href="#">
-            Show all <span class="resultsCount"></span> results...
-        </a>
-
-        <button id="backToTop" title="Back to top">
-            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                <use xlink:href='#top'></use>
-            </svg>
-        </button>
-        <button id="toggleInfo" title="Information">
-            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                <use xlink:href='#info'></use>
-            </svg>
-        </button>
-        <button id="switchTheme" title="Switch theme">
-            <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                <use xlink:href='#theme'></use>
-            </svg>
-        </button>
-
-    </div>
     <div id="productsContainer" class="container"></div>
     <div id="searchResults" class="container hidden"></div>
-    <div id="infoContainer" class="container hidden"></div>
+
+    <div id="topToolbarContainer" class="container">
+        <button id="toggleMenu" title="Menu">
+            <svg class="icon" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#menu'></use>
+            </svg>
+            <span>Menu</span>
+        </button>
+        <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
+        <a id="showAllSearchResults" class="hidden" href="#">Show all</a>
+    </div>
+
     <div id="gameDetailsContainer" class="container hidden"></div>
+
+    <div id="menuContainer" class="container hidden">
+        <button id="backToTop" title="Back to top">
+            <svg class="icon" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#top'></use>
+            </svg>
+            <span>Back to top</span>
+        </button>
+        <button id="toggleInfo" title="Information">
+            <svg class="icon" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#info'></use>
+            </svg>
+            <span>Information</span>
+        </button>
+        <div id="infoContainer" class="hidden"></div>
+        <button id="switchTheme" title="Switch theme">
+            <svg class="icon" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                <use xlink:href='#theme'></use>
+            </svg>
+            <span>Switch theme</span>
+        </button>
+    </div>
+
     <script>
         var productsdata = undefined;
         var gamedetails = undefined;
@@ -629,7 +662,7 @@
                 var product = pIndex.getElementByKey(id);
                 if (!product) return;
 
-		var markup = "";
+                var markup = "";
 
                 var htmlView = Views.createView(product,
                   ViewModelProvider.getGameDetailsViewModel,
@@ -662,7 +695,7 @@
                     markup += bundleView;
                 }
 
-		gameDetailsContainer.innerHTML = markup;
+                gameDetailsContainer.innerHTML = markup;
                 gameDetailsContainer.classList.remove("hidden");
 
                 // Reset scroll position between showing details for different products
@@ -771,7 +804,6 @@
             var searchResults = $("searchResults");
             var productsContainer = $("productsContainer");
             var showAllResultsLink = $("showAllSearchResults");
-            var resultsCount = showAllResultsLink.querySelector(".resultsCount");
             var searchResultsLimit = 25;
             var search = function (text, showAllResults) {
 
@@ -789,7 +821,6 @@
 
                     if (!showAllResults && matchingIndexes.length > searchResultsLimit) {
                         showAllSearchResults.classList.remove("hidden");
-                        resultsCount.textContent = matchingIndexes.length;
                     } else {
                         showAllSearchResults.classList.add("hidden");
                     }
@@ -959,7 +990,7 @@
             }
             var getGameDetailsViewModel = function (product) {
 
-		if (!product) return;
+                if (!product) return;
 
                 var pd = pdIndex.getElementByKey(product.id);
                 var gd = gdIndex ? gdIndex.getElementByKey(product.id) : undefined;
@@ -1502,6 +1533,12 @@
 
             window.addEventListener("hashchange", NavigationController.update);
             NavigationController.update();
+
+            var menuContainer = $("menuContainer");
+            var toggleMenu = $("toggleMenu");
+            toggleMenu.addEventListener("click", function (e) {
+                menuContainer.classList.toggle("hidden");
+            });
 
         });
     </script>
