@@ -329,16 +329,16 @@
             height: 30px;
             width: 120px;
             font-size: 0.8em;
-            box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.075);
             color: #212121;
             /* WebKit insists that you can't change height of input type=search*/
             -webkit-appearance: none;
         }
 
-            #topToolbarContainer input[type=search]:focus {
-                border-color: #1976d2;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
-            }
+        #topToolbarContainer input[type=search]:focus {
+            border-color: #2196f3;
+            box-shadow: 0 0 10px #2196f3;
+            background-color: #e3f2fd;
+        }
 
         #topToolbarContainer #showAllSearchResults {
             margin-left: 0.5em;
@@ -655,7 +655,7 @@
                     }
 
 
-                for (var ii = 0; ii < dlcProducts.length; ii++) 
+                for (var ii = 0; ii < dlcProducts.length; ii++)
                     dlcContent.push(Views.createView(dlcProducts[ii], ViewModelProvider.getGameDetailsViewModel, Templates.getGameDetailsTemplate));
 
                 return Views.createView(dlcContent, ViewModelProvider.getDLCsViewModel, Templates.getDLCsTemplate);
