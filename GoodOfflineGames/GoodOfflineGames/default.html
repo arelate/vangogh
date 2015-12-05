@@ -332,18 +332,16 @@
             color: #212121;
             /* WebKit insists that you can't change height of input type=search*/
             -webkit-appearance: none;
-            margin-left: 1em;
-            transition: margin-left 167ms ease-in-out;
         }
 
             #topToolbarContainer input[type=search]:focus {
                 border-color: #1976d2;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
-                margin-left: -5em;
             }
 
         #topToolbarContainer #showAllSearchResults {
-            margin-left: 1em;
+            margin-left: 0.5em;
+            font-size: 0.8em;
         }
 
         #menuContainer {
@@ -456,7 +454,6 @@
             <svg class="icon" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
                 <use xlink:href='#menu'></use>
             </svg>
-            <span>Menu</span>
         </button>
         <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
         <a id="showAllSearchResults" class="hidden" href="#">
