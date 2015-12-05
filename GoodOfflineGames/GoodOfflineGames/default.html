@@ -506,9 +506,10 @@
     <script>
         "use strict";
 
-        var $ = function (id) {
-            return document.getElementById(id);
-        }
+        var $ = function (id) { return document.getElementById(id); }
+        var _$ = function (n, s) { return n.querySelector(s); }
+        var $$ = function (s) { return document.querySelectorAll(s); }
+        var _$$ = function (n, s) { return n.querySelectorAll(s); }
 
         var Templates = function () {
             var getProductTemplate = function () {
@@ -570,6 +571,9 @@
                       "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
                       "<use xlink:href='#{{operatingSystem}}' /></svg></span>";
             }
+            var getSearchLinkTemplate = function () {
+                return "<a href='?{{link}}'>{{title}}</a>";
+            }
             return {
                 "getProductTemplate": getProductTemplate,
                 "getGameDetailsTemplate": getGameDetailsTemplate,
@@ -579,7 +583,8 @@
                 "getFileInstallerTemplate": getFileInstallerTemplate,
                 "getFileExtraTemplate": getFileExtraTemplate,
                 "getOperatingSystemIconTemplate": getOperatingSystemIconTemplate,
-                "getScreenshotTemplate": getScreenshotTemplate
+                "getScreenshotTemplate": getScreenshotTemplate,
+                "getSearchLinkTemplate": getSearchLinkTemplate
             }
         }();
 
@@ -649,15 +654,10 @@
                     }
 
 
-                for (var ii = 0; ii < dlcProducts.length; ii++) {
-                    dlcContent.push(Views.createView(dlcProducts[ii],
-                      ViewModelProvider.getGameDetailsViewModel,
-                      Templates.getGameDetailsTemplate));
-                }
+                for (var ii = 0; ii < dlcProducts.length; ii++) 
+                    dlcContent.push(Views.createView(dlcProducts[ii], ViewModelProvider.getGameDetailsViewModel, Templates.getGameDetailsTemplate));
 
-                return Views.createView(dlcContent,
-                  ViewModelProvider.getDLCsViewModel,
-                  Templates.getDLCsTemplate);
+                return Views.createView(dlcContent, ViewModelProvider.getDLCsViewModel, Templates.getDLCsTemplate);
             }
             var show = function (id) {
                 var product = pIndex.getElementByKey(id);
@@ -665,9 +665,7 @@
 
                 var markup = "";
 
-                var htmlView = Views.createView(product,
-                  ViewModelProvider.getGameDetailsViewModel,
-                  Templates.getGameDetailsTemplate);
+                var htmlView = Views.createView(product, ViewModelProvider.getGameDetailsViewModel, Templates.getGameDetailsTemplate);
 
                 markup = htmlView;
                 markup += showDLC(id);
@@ -681,17 +679,13 @@
                     for (var ii = 0; ii < bundle.children.length; ii++) {
                         var product = pIndex.getElementByKey(bundle.children[ii]);
 
-                        var productView = Views.createView(product,
-                          ViewModelProvider.getGameDetailsViewModel,
-                          Templates.getGameDetailsTemplate);
+                        var productView = Views.createView(product, ViewModelProvider.getGameDetailsViewModel, Templates.getGameDetailsTemplate);
                         var dlcView = showDLC(bundle.children[ii]);
 
                         bundleContent.push(productView + dlcView);
                     }
 
-                    var bundleView = Views.createView(bundleContent,
-                      ViewModelProvider.getBundleViewModel,
-                      Templates.getBundleTemplate);
+                    var bundleView = Views.createView(bundleContent, ViewModelProvider.getBundleViewModel, Templates.getBundleTemplate);
 
                     markup += bundleView;
                 }
@@ -806,12 +800,12 @@
             var searchResults = $("searchResults");
             var productsContainer = $("productsContainer");
             var showAllResultsLink = $("showAllSearchResults");
-            var resultsCount = showAllResultsLink.querySelector(".resultsCount");
+            var resultsCount = _$(showAllResultsLink, ".resultsCount");
             var searchResultsLimit = 25;
             var search = function (text, showAllResults) {
 
                 if (productElements === undefined) {
-                    productElements = document.querySelectorAll("#productsContainer > .product");
+                    productElements = $$("#productsContainer > .product");
                 }
 
                 if (text.length > 0) {
@@ -992,6 +986,12 @@
                     "uri": Images.getRelativeUri(screenshot).screenshot
                 }
             }
+            var getSearchLinkModel = function (data) {
+                return {
+                    "link": escape(data),
+                    "title": data
+                }
+            }
             var getGameDetailsViewModel = function (product) {
 
                 if (!product) return;
@@ -1041,7 +1041,7 @@
                 if (pd &&
                   pd.publisher &&
                   pd.publisher.name) {
-                    publisherTitle = "<a href='?" + escape(pd.publisher.name) + "'>" + pd.publisher.name + "</a>";
+                    publisherTitle = Views.createView(pd.publisher.name, getSearchLinkModel, Templates.getSearchLinkTemplate);
                     if (publisherTitle) publisherClass = "";
                 }
 
@@ -1049,7 +1049,7 @@
                 if (pd &&
                   pd.developer &&
                   pd.developer.name) {
-                    developerTitle = "<a href='?" + escape(pd.developer.name) + "'>" + pd.developer.name + "</a>";
+                    developerTitle = Views.createView(pd.developer.name, getSearchLinkModel, Templates.getSearchLinkTemplate);
                     if (developerTitle) developerClass = "";
                 }
 
@@ -1058,7 +1058,7 @@
                 if (pd &&
                   pd.series &&
                   pd.series.name) {
-                    seriesTitle = "<a href='?" + escape(pd.series.name) + "'>" + pd.series.name + "</a>";
+                    seriesTitle = Views.createView(pd.series.name, getSearchLinkModel, Templates.getSearchLinkTemplate);
                     if (seriesTitle) seriesClass = "";
                 }
 
@@ -1102,9 +1102,7 @@
                   pd.requiredProducts.length) {
                     var requiredProducts = [];
                     for (var ii = 0; ii < pd.requiredProducts.length; ii++) {
-                        var requiredProductView = Views.createView(pd.requiredProducts[ii],
-                          getRequiredProductViewModel,
-                          Templates.getRequiredProductTemplate);
+                        var requiredProductView = Views.createView(pd.requiredProducts[ii], getRequiredProductViewModel, Templates.getRequiredProductTemplate);
                         requiredProducts.push(requiredProductView);
                     }
                     requiredProductsTitle = requiredProducts.join(", ");
@@ -1388,8 +1386,8 @@
             var show = function (element) {
                 if (element &&
                     element.parentNode) {
-                    var screenshotsContent = element.parentNode.querySelector(".screenshots");
-                    var images = screenshotsContent.querySelectorAll("img");
+                    var screenshotsContent = _$(element.parentNode, ".screenshots");
+                    var images = _$$(screenshotsContent, "img");
                     for (var ii = 0; ii < images.length; ii++) {
                         var image = images[ii];
                         image.src = image.getAttribute("data-src");
@@ -1461,9 +1459,7 @@
 
                 if (Bundles.isChild(product.id)) continue;
 
-                var view = Views.createView(product,
-                  ViewModelProvider.getProductViewModel,
-                  Templates.getProductTemplate);
+                var view = Views.createView(product, ViewModelProvider.getProductViewModel, Templates.getProductTemplate);
                 html.push(view);
             }
             elapsed = new Date() - start;
