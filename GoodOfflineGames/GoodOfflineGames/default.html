@@ -446,7 +446,7 @@
         </g>
     </svg>
 
-    <div id="productsContainer" class="container"></div>
+    <div id="productsContainer" class="container hidden"></div>
     <div id="searchResults" class="container hidden"></div>
 
     <div id="topToolbarContainer" class="container">
@@ -733,6 +733,7 @@
                     if (DLC.isDLC(pd)) parts.push("dlc");
                     if (pd.publisher) parts.push(pd.publisher.name.toLowerCase());
                     if (pd.developer) parts.push(pd.developer.name.toLowerCase());
+                    if (pd.series && pd.series.name) parts.push(pd.series.name.toLowerCase());
                     if (pd.genres) {
                         for (var gg = 0; gg < pd.genres.length; gg++) {
                             parts.push(pd.genres[gg].name.toLowerCase());
@@ -1023,14 +1024,6 @@
 
                 var productTitle = product.title;
 
-                var developerTitle, developerClass = "hidden";
-                if (pd &&
-                  pd.developer &&
-                  pd.developer.name) {
-                    developerTitle = pd.developer.name;
-                    if (developerTitle) developerClass = "";
-                }
-
                 var worksOnTitle, worksOnClass = "hidden";
 
                 if (product.worksOn) {
@@ -1048,8 +1041,16 @@
                 if (pd &&
                   pd.publisher &&
                   pd.publisher.name) {
-                    publisherTitle = pd.publisher.name;
+                    publisherTitle = "<a href='?" + escape(pd.publisher.name) + "'>" + pd.publisher.name + "</a>";
                     if (publisherTitle) publisherClass = "";
+                }
+
+                var developerTitle, developerClass = "hidden";
+                if (pd &&
+                  pd.developer &&
+                  pd.developer.name) {
+                    developerTitle = "<a href='?" + escape(pd.developer.name) + "'>" + pd.developer.name + "</a>";
+                    if (developerTitle) developerClass = "";
                 }
 
                 var seriesTitle, seriesClass = "hidden";
@@ -1057,7 +1058,7 @@
                 if (pd &&
                   pd.series &&
                   pd.series.name) {
-                    seriesTitle = pd.series.name;
+                    seriesTitle = "<a href='?" + escape(pd.series.name) + "'>" + pd.series.name + "</a>";
                     if (seriesTitle) seriesClass = "";
                 }
 
@@ -1478,6 +1479,7 @@
             var remainingHtml = html.slice(throttle, html.length).join("");
             requestAnimationFrame(function () {
                 pContainer.innerHTML += remainingHtml;
+                if (!location.search) pContainer.classList.remove("hidden");
                 Info.init();
             });
             var elapsed = new Date() - start;
@@ -1524,17 +1526,12 @@
 
             var switchTheme = $("switchTheme");
             switchTheme.addEventListener("click", function (e) {
-                var cl = document.body.classList;
-                if (cl.contains("dark")) {
-                    cl.remove("dark");
-                    cl.add("light");
-                } else {
-                    cl.add("dark");
-                    cl.remove("light");
-                }
+                document.body.classList.toggle("dark");
+                document.body.classList.toggle("light");
             });
 
             window.addEventListener("hashchange", NavigationController.update);
+
             NavigationController.update();
 
             var menuContainer = $("menuContainer");
@@ -1542,6 +1539,15 @@
             toggleMenu.addEventListener("click", function (e) {
                 menuContainer.classList.toggle("hidden");
             });
+
+            // check if we're navigating to search
+            if (location.search) {
+                requestAnimationFrame(function () {
+                    var searchString = unescape(location.search.substr(1, location.search.length - 1));
+                    searchInput.value = searchString;
+                    Search.search(searchString.toLowerCase(), true);
+                });
+            }
 
         });
     </script>
