@@ -80,8 +80,7 @@
 
         #productsContainer,
         #searchResults {
-            top: 4em;
-            padding-top: 0;
+            padding-top: 4em;
         }
 
         .dark .product {
@@ -310,6 +309,8 @@
             bottom: auto;
             padding: 0;
             height: 4em;
+            right: auto;
+            width: 350px;
         }
 
             #topToolbarContainer #toggleMenu {
@@ -327,7 +328,7 @@
         #topToolbarContainer input[type=search] {
             padding: 4px;
             height: 30px;
-            width: 120px;
+            width: 200px;
             font-size: 0.8em;
             color: #212121;
             /* WebKit insists that you can't change height of input type=search*/
@@ -357,11 +358,13 @@
                 text-align: left;
             }
 
-        .dark #menuContainer {
+        .dark #menuContainer,
+        .dark #topToolbarContainer {
             border-right: solid 1px #424242;
         }
 
-        .light #menuContainer {
+        .light #menuContainer,
+        .light #topToolbarContainer {
             border-right: solid 1px #e0e0e0;
         }
 
@@ -457,9 +460,7 @@
             </svg>
         </button>
         <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
-        <a id="showAllSearchResults" class="hidden" href="#">
-            Show all <span class="resultsCount"></span> results...
-        </a>
+        <a id="showAllSearchResults" class="hidden" href="#">+<span class="resultsCount"></span>...</a>
     </div>
 
     <div id="gameDetailsContainer" class="container hidden"></div>
@@ -819,7 +820,7 @@
 
                     if (!showAllResults && matchingIndexes.length > searchResultsLimit) {
                         showAllSearchResults.classList.remove("hidden");
-                        resultsCount.textContent = matchingIndexes.length;
+                        resultsCount.textContent = matchingIndexes.length - searchResultsLimit;
                     } else {
                         showAllSearchResults.classList.add("hidden");
                     }
