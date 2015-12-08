@@ -684,7 +684,7 @@
                 // Reset scroll position between showing details for different products
                 // to resolve annoying behavior where you open details and already have
                 // scroller at some >0 position
-                gameDetailsContainer.scrollTop = 0;
+                document.body.scrollTop = 0;
             }
             var close = function () {
                 gameDetailsContainer.classList.add("hidden");
