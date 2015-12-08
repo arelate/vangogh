@@ -21,7 +21,7 @@
         }
 
         body {
-            padding: 0em;
+            padding: 1em;
             margin: 0 1em;
         }
 
@@ -44,6 +44,7 @@
             background: inherit;
             padding: 1.25em;
             cursor: pointer;
+            height: 4em;
         }
 
         .dark button {
@@ -67,20 +68,15 @@
         }
 
         .container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            overflow: auto;
-            padding: 1.25em;
+            width: 100%;
+            height: 100%;
             background: inherit;
             cursor: default;
         }
 
         #productsContainer,
         #searchResults {
-            padding-top: 4em;
+            padding-top: 1em;
         }
 
         .dark .product {
@@ -174,7 +170,6 @@
             font-size: 0.8em;
             color: white !important;
         }
-
 
         .icon {
             display: inline-block;
@@ -304,28 +299,21 @@
                 margin-right: 0;
             }
 
-        #topToolbarContainer {
-            height: auto;
-            bottom: auto;
-            padding: 0;
-            height: 4em;
-            right: auto;
-            width: 350px;
+        #toggleMenu {
+            position: fixed;
+            right: 0;
+            top: 0;
         }
 
-            #topToolbarContainer #toggleMenu {
-                display: inline-block;
-            }
-
-        .dark #topToolbarContainer input[type=search] {
+        .dark input[type=search] {
             border: 1px solid #616161;
         }
 
-        .light #topToolbarContainer input[type=search] {
+        .light input[type=search] {
             border: 1px solid #bdbdbd;
         }
 
-        #topToolbarContainer input[type=search] {
+        input[type=search] {
             padding: 4px;
             height: 30px;
             width: 200px;
@@ -335,22 +323,25 @@
             -webkit-appearance: none;
         }
 
-        #topToolbarContainer input[type=search]:focus {
-            border-color: #2196f3;
-            box-shadow: 0 0 10px #2196f3;
-            background-color: #e3f2fd;
-        }
+            input[type=search]:focus {
+                border-color: #2196f3;
+                box-shadow: 0 0 10px #2196f3;
+                background-color: #e3f2fd;
+            }
 
-        #topToolbarContainer #showAllSearchResults {
+        #showAllSearchResults {
             margin-left: 0.5em;
             font-size: 0.8em;
         }
 
         #menuContainer {
-            top: 4em;
-            right: auto;
-            width: 350px;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 300px;
             padding: 0;
+            padding-top: 4em;
         }
 
             #menuContainer button {
@@ -440,18 +431,13 @@
         </g>
     </svg>
 
-    <div id="productsContainer" class="container hidden"></div>
-    <div id="searchResults" class="container hidden"></div>
-
-    <div id="topToolbarContainer" class="container">
-        <button id="toggleMenu" title="Menu">
-            <svg class="icon" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                <use xlink:href='#menu'></use>
-            </svg>
-        </button>
+    <div id="searchContainer">
         <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" />
         <a id="showAllSearchResults" class="hidden" href="#">+<span class="resultsCount"></span>...</a>
     </div>
+
+    <div id="productsContainer" class="container hidden"></div>
+    <div id="searchResults" class="container hidden"></div>
 
     <div id="gameDetailsContainer" class="container hidden"></div>
 
@@ -476,6 +462,15 @@
             <span>Switch theme</span>
         </button>
     </div>
+
+    <button id="toggleMenu" title="Menu">
+        <svg class="icon" viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+            <title>Menu</title>
+            <use xlink:href='#menu'></use>
+        </svg>
+    </button>
+
+
 
     <script>
         var productsdata = undefined;
@@ -561,6 +556,7 @@
                 return "<span class='icon'><svg viewBox='0 0 100 100' " +
                       "xmlns='http://www.w3.org/2000/svg' " +
                       "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
+                      "<title>{{operatingSystem}}</title>" +
                       "<use xlink:href='#{{operatingSystem}}' /></svg></span>";
             }
             var getSearchLinkTemplate = function () {
@@ -984,6 +980,28 @@
                     "title": data
                 }
             }
+            var getOperatingSystemModel = function (worksOn, operatingSystem) {
+                var os = "";
+                if (operatingSystem === "Windows" && worksOn.Windows) {
+                    os = "Windows";
+                } else if (operatingSystem === "Mac" && worksOn.Mac) {
+                    os = "Mac";
+                } else if (operatingSystem === "Linux" && worksOn.Linux) {
+                    os = "Linux";
+                }
+                return {
+                    "operatingSystem": os
+                }
+            }
+            var getWindowsModel = function(worksOn) {
+                return getOperatingSystemModel(worksOn, "Windows");
+            }
+            var getMacModel = function(worksOn) {
+                return getOperatingSystemModel(worksOn, "Mac");
+            }
+            var getLinuxModel = function(worksOn) {
+                return getOperatingSystemModel(worksOn, "Linux");
+            }
             var getGameDetailsViewModel = function (product) {
 
                 if (!product) return;
@@ -1021,9 +1039,9 @@
                 if (product.worksOn) {
                     var worksOn = [];
                     var svgTemplate = Templates.getOperatingSystemIconTemplate();
-                    if (product.worksOn.Windows) worksOn.push(svgTemplate.replace("{{operatingSystem}}", "Windows"));
-                    if (product.worksOn.Mac) worksOn.push(svgTemplate.replace("{{operatingSystem}}", "Mac"));
-                    if (product.worksOn.Linux) worksOn.push(svgTemplate.replace("{{operatingSystem}}", "Linux"));
+                    worksOn.push(Views.createView(product.worksOn, getWindowsModel, Templates.getOperatingSystemIconTemplate));
+                    worksOn.push(Views.createView(product.worksOn, getMacModel, Templates.getOperatingSystemIconTemplate));
+                    worksOn.push(Views.createView(product.worksOn, getLinuxModel, Templates.getOperatingSystemIconTemplate));
 
                     worksOnTitle = worksOn.join(" ");
                     if (worksOnTitle) worksOnClass = "";
@@ -1361,12 +1379,21 @@
         }();
 
         var NavigationController = function () {
+            var productsContainer = $("productsContainer");
+            var searchResults = $("searchResults");
+            var searchContainer = $("searchContainer");
             var update = function () {
                 if (location.hash.indexOf("#") > -1) {
                     var productId = parseInt(location.hash.substr(1));
                     if (productId !== undefined) GameDetails.show(productId);
+                    productsContainer.classList.add("hidden");
+                    searchResults.classList.add("hidden");
+                    searchContainer.classList.add("hidden");
                 } else {
                     GameDetails.close();
+                    productsContainer.classList.remove("hidden");
+                    searchResults.classList.remove("hidden");
+                    searchContainer.classList.remove("hidden");
                 }
             }
             return {
@@ -1467,7 +1494,7 @@
             var remainingHtml = html.slice(throttle, html.length).join("");
             requestAnimationFrame(function () {
                 pContainer.innerHTML += remainingHtml;
-                if (!location.search) pContainer.classList.remove("hidden");
+                if (!location.search && !location.hash) pContainer.classList.remove("hidden");
                 Info.init();
             });
             var elapsed = new Date() - start;
@@ -1502,14 +1529,7 @@
 
             var backToTop = $("backToTop");
             backToTop.addEventListener("click", function () {
-                var productsContainer = $("productsContainer");
-                var searchResults = $("searchResults");
-
-                if (!searchResults.classList.contains("hidden")) {
-                    searchResults.scrollTop = 0;
-                } else {
-                    productsContainer.scrollTop = 0;
-                }
+                document.body.scrollTop = 0;
             });
 
             var switchTheme = $("switchTheme");
@@ -1535,6 +1555,8 @@
                     searchInput.value = searchString;
                     Search.search(searchString.toLowerCase(), true);
                 });
+            } else if (location.hash) {
+                requestAnimationFrame(NavigationController.update);
             }
 
         });
