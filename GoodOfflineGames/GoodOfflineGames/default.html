@@ -41,7 +41,7 @@
             color: inherit;
             border: 0;
             background: inherit;
-            padding: 0.5em;
+            padding: 0.5em 1em;
             cursor: pointer;
             height: 3em;
         }
@@ -261,6 +261,18 @@
                 text-align: center;
             }
 
+            #gameDetailsContainer .screenshotsContainer .showScreenshots {
+                border-left: 2px solid;
+            }
+
+        .dark #gameDetailsContainer .screenshotsContainer .showScreenshots {
+            border-color: #1976d2;
+        }
+
+        .light #gameDetailsContainer .screenshotsContainer .showScreenshots {
+            border-color: #2196f3;
+        }
+
         #gameDetailsContainer tr {
             line-height: 2em;
         }
@@ -302,7 +314,7 @@
             position: fixed;
             right: 0;
             top: 0;
-            padding-left: 1em;
+            padding-right: 0.5em;
         }
 
         .dark input[type=search] {
@@ -518,7 +530,7 @@
                   "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
                   "<div class='{{extrasClass}}'><h1>Extras</h1><div>{{extrasContent}}</div></div>";
             var gameDetailsScreenshotsContainer = "<div class='screenshotsContainer'>" +
-                "<button class='{{showScreenshotsClass}}' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</button>" +
+                "<button class='{{showScreenshotsClass}} showScreenshots' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</button>" +
                 "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
                 "</div>";
             var getGameDetailsTemplate = function () {
@@ -993,13 +1005,13 @@
                     "operatingSystem": os
                 }
             }
-            var getWindowsModel = function(worksOn) {
+            var getWindowsModel = function (worksOn) {
                 return getOperatingSystemModel(worksOn, "Windows");
             }
-            var getMacModel = function(worksOn) {
+            var getMacModel = function (worksOn) {
                 return getOperatingSystemModel(worksOn, "Mac");
             }
-            var getLinuxModel = function(worksOn) {
+            var getLinuxModel = function (worksOn) {
                 return getOperatingSystemModel(worksOn, "Linux");
             }
             var getGameDetailsViewModel = function (product) {
