@@ -318,28 +318,20 @@
             padding-right: 0.5em;
         }
 
-        .dark input[type=search] {
-            border: 1px solid #616161;
-        }
-
-        .light input[type=search] {
-            border: 1px solid #bdbdbd;
-        }
-
         input[type=search] {
             padding: 4px;
             height: 30px;
             width: 200px;
             font-size: 0.8em;
             color: #212121;
+            border: 0;
             /* WebKit insists that you can't change height of input type=search*/
             -webkit-appearance: none;
         }
 
             input[type=search]:focus {
-                border-color: #2196f3;
-                box-shadow: 0 0 10px #2196f3;
                 background-color: #e3f2fd;
+                outline: 2px solid #2196f3;
             }
 
         #showAllSearchResults {
@@ -359,9 +351,27 @@
         }
 
             #menuContainer button {
-                width: 100%;
+                width: 98%;
                 text-align: left;
+                margin: 2px;
             }
+
+        *[accessKey] {
+            position: relative;
+        }
+
+        .mnemonic {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            padding: 0.25em 0.5em;
+            color: black;
+            background: #ffc107;
+            text-transform: uppercase;
+            font-size: 0.6em;
+            font-weight: bolder;
+            z-index:1;
+        }
 
         /* SVG */
 
@@ -445,8 +455,8 @@
         </g>
     </svg>
 
-    <div id="searchContainer">
-        <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" accesskey="4" />
+    <div id="searchContainer" accesskey="4">
+        <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" accesskey="4"/>
         <a id="showAllSearchResults" class="hidden" href="#">+<span class="resultsCount"></span>...</a>
     </div>
 
@@ -484,7 +494,9 @@
         </svg>
     </button>
 
+    <div id="shortcuts">
 
+    </div>
 
     <script>
         var productsdata = undefined;
@@ -695,6 +707,8 @@
                 gameDetailsContainer.innerHTML = markup;
                 gameDetailsContainer.classList.remove("hidden");
                 gameDetailsContainer.focus();
+
+                Mnemonics.init(gameDetailsContainer);
 
                 // Reset scroll position between showing details for different products
                 // to resolve annoying behavior where you open details and already have
@@ -1434,6 +1448,47 @@
             }
         }();
 
+        var Mnemonics = function () {
+            var mnemonicsVisible = false;
+            var init = function (container) {
+
+                var accessKeyElements = _$$(container, "*[accessKey]");
+                for (var ii = 0; ii < accessKeyElements.length; ii++) {
+                    var mnemonic = document.createElement("div");
+                    mnemonic.className = "mnemonic hidden";
+                    mnemonic.textContent = accessKeyElements[ii].accessKey;
+                    accessKeyElements[ii].appendChild(mnemonic);
+                }
+
+
+                window.addEventListener("keydown", function (e) {
+                    if (!e.altKey || mnemonicsVisible) return;
+
+                    mnemonicsVisible = true;
+
+                    var mnemonics = _$$(container, ".mnemonic");
+                    for (var ii = 0; ii < mnemonics.length; ii++) {
+                        mnemonics[ii].classList.remove("hidden");
+                    }
+
+                });
+
+                window.addEventListener("keyup", function (e) {
+                    if (e.keyCode !== 18) return;
+
+                    mnemonicsVisible = false;
+
+                    var mnemonics = _$$(container, ".mnemonic");
+                    for (var ii = 0; ii < mnemonics.length; ii++) {
+                        mnemonics[ii].classList.add("hidden");
+                    }
+                });
+            }
+            return {
+                "init": init
+            }
+        }();
+
         document.addEventListener("DOMContentLoaded", function () {
 
             var getId = function (e) {
@@ -1573,6 +1628,8 @@
             } else if (location.hash) {
                 requestAnimationFrame(NavigationController.update);
             }
+
+            Mnemonics.init(document.body);
 
         });
     </script>
