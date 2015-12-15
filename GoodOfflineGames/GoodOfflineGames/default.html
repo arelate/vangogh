@@ -1003,6 +1003,7 @@
         var wishlisted = undefined;
         var screenshots = undefined;
         var productfiles = undefined;
+        var wikipedia = undefined;
     </script>
     <script src="./products.js"></script>
     <script src="./owned.js"></script>
@@ -1013,6 +1014,7 @@
     <script src="./bundles.js"></script>
     <script src="./productfiles.js"></script>
     <script src="./screenshots.js"></script>
+    <script src="./wikipedia.js"></script>
     <script>
         "use strict";
 
@@ -1036,6 +1038,7 @@
                   "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
                   "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
                   "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title worksOn'>{{worksOnTitle}}</td></tr>" +
+                  "<tr class='{{wikiClass}}'><td colspan='2' class='header'><a href={{wikiLink}} accesskey='w'>Wikipedia article</a></td></tr>" +
                   "</table>";
             var gameDetailsFileContainer = "<div class='filesContainer {{filesClass}}'>" +
                   "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
@@ -1476,7 +1479,7 @@
         }();
 
         var ViewModelProvider = function () {
-            var pdIndex, gdIndex, wIndex, uIndex, sIndex;
+            var pdIndex, gdIndex, wIndex, uIndex, sIndex, wikiIndex;
             var getProductViewModel = function (product) {
                 var productClass = ProductClass.getClass(product);
                 return {
@@ -1654,6 +1657,16 @@
                     if (requiredProductsTitle) requiredProductsClass = "";
                 }
 
+                // wikipedia
+
+                var wikiLink, wikiClass = "hidden";
+                var wiki = wikiIndex && wikiIndex.getElementByKey(product.id);
+                if (wiki &&
+                    wiki.url) {
+                    wikiLink = wiki.url;
+                    wikiClass = "";
+                }
+
                 // files
 
                 var files = ProductFiles.getFilesForProduct(product.id);
@@ -1721,15 +1734,19 @@
                     // screenshots
                     "showScreenshotsClass": showScreenshotsClass,
                     "screenshotsCount": screenshotsCount,
-                    "screenshotsContent": screenshotsContent
+                    "screenshotsContent": screenshotsContent,
+                    // wiki
+                    "wikiLink": wikiLink,
+                    "wikiClass": wikiClass
                 }
             }
-            var init = function (pdi, gdi, ui, wi, si) {
+            var init = function (pdi, gdi, ui, wi, si, wikii) {
                 pdIndex = pdi;
                 gdIndex = gdi;
                 wIndex = wi;
                 uIndex = ui;
                 sIndex = si;
+                wikiIndex = wikii;
             }
             return {
                 "init": init,
@@ -2049,9 +2066,10 @@
             var updatedIndex = updated ? IndexedCollection.create(updated, getValue) : undefined;
             var wishlistedIndex = wishlisted ? IndexedCollection.create(wishlisted, getValue) : undefined;
             var screenshotsIndex = screenshots ? IndexedCollection.create(screenshots, getKey) : undefined;
+            var wikiIndex = wikipedia ? IndexedCollection.create(wikipedia, getId) :undefined;
 
             ProductClass.init(productsDataIndex, updatedIndex, wishlistedIndex);
-            ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex, screenshotsIndex);
+            ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex, screenshotsIndex, wikiIndex);
             Owned.init(productsDataIndex, gameDetailsIndex, ownedIndex);
             GameDetails.init(productsIndex, productsDataIndex, gameDetailsIndex);
 

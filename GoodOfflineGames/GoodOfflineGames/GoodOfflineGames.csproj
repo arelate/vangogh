@@ -161,6 +161,7 @@
     <Content Include="HTML-Details.png" />
     <Content Include="HTML-List.png" />
     <Content Include="HTML-Screenshots.png" />
+    <Content Include="wikipedia.js" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
