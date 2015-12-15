@@ -38,7 +38,7 @@ var bundles = [{
 }, {
     // Return to Castle Wolfenstein
     "parent": 1443699418,
-    "children": [1443699418]
+    "children": [1441704976]
 }, {
     // Wolfenstein 3D + Spear of Destiny
     "parent": 1441705226,
