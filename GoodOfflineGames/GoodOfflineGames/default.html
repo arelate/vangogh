@@ -499,6 +499,7 @@
         var gamedetails = undefined;
         var owned = undefined;
         var updated = undefined;
+        var bundles = undefined;
         var wishlisted = undefined;
         var screenshots = undefined;
         var productfiles = undefined;
@@ -648,7 +649,7 @@
                 var dlcProducts = [];
                 var processedDlcs = [];
 
-                var pd = pdIndex.getElementByKey(id);
+                var pd = pdIndex && pdIndex.getElementByKey(id);
                 if (pd && pd.dlcs)
                     for (var ii = 0; ii < pd.dlcs.length; ii++) {
                         dlcProducts.push(pd.dlcs[ii]);
@@ -737,7 +738,7 @@
                 var parts = [];
 
                 if (Bundles.isChild(p.id)) return;
-                var pd = pdIndex.getElementByKey(p.id);
+                var pd = pdIndex && pdIndex.getElementByKey(p.id);
                 parts.push(p.title.toLowerCase());
 
                 if (pd) {
@@ -756,9 +757,9 @@
                 if (p.worksOn.Mac) parts.push("mac osx");
                 if (p.worksOn.Linux) parts.push("linux");
 
-                if (uIndex.check(p.id)) parts.push("updated");
-                if (oIndex.check(p.id)) parts.push("owned");
-                if (wIndex.check(p.id)) parts.push("wishlisted");
+                if (uIndex && uIndex.check(p.id)) parts.push("updated");
+                if (oIndex && oIndex.check(p.id)) parts.push("owned");
+                if (wIndex && wIndex.check(p.id)) parts.push("wishlisted");
 
                 if (Bundles.isParent(p.id)) {
                     // add child items title
@@ -888,6 +889,8 @@
             var oIndex;
             var check = function (id) {
 
+                if (owned === undefined) return false;
+
                 var ownedProduct = oIndex.getElementByKey(id);
                 if (ownedProduct) return true;
 
@@ -901,7 +904,7 @@
                     if (childProductsOwned) return true;
                 }
 
-                var productData = pdIndex.getElementByKey(id);
+                var productData = pdIndex && pdIndex.getElementByKey(id);
 
                 // return false because if that is not DLC, we should have passed the check earlier
                 if (!DLC.isDLC(productData)) return false;
@@ -951,10 +954,10 @@
                     productClass.push("partOwned");
                 }
 
-                if (wIndex.check(product.id)) productClass.push("wishlisted");
-                if (uIndex.check(product.id)) productClass.push("updated");
+                if (wIndex && wIndex.check(product.id)) productClass.push("wishlisted");
+                if (uIndex && uIndex.check(product.id)) productClass.push("updated");
 
-                var pd = pdIndex.getElementByKey(product.id);
+                var pd = pdIndex && pdIndex.getElementByKey(product.id);
                 if (pd && DLC.isDLC(pd)) productClass.push("dlc");
 
                 if (Bundles.isParent(product.id)) productClass.push("bundle");
@@ -1038,7 +1041,7 @@
 
                 if (!product) return;
 
-                var pd = pdIndex.getElementByKey(product.id);
+                var pd = pdIndex && pdIndex.getElementByKey(product.id);
                 var gd = gdIndex ? gdIndex.getElementByKey(product.id) : undefined;
 
                 var productClass = ProductClass.getClass(product).join(" ");
@@ -1521,9 +1524,11 @@
                 addedProducts.push(products[ii].id);
             }
             // ...then add owned products that are no longer available
-            for (var ii = 0; ii < owned.length; ii++) {
-                if (addedProducts.indexOf(owned[ii].id) > -1) continue;
-                cp.push(owned[ii]);
+            if (owned !== undefined) {
+                for (var ii = 0; ii < owned.length; ii++) {
+                    if (addedProducts.indexOf(owned[ii].id) > -1) continue;
+                    cp.push(owned[ii]);
+                }
             }
 
             var elapsed = new Date() - start;
