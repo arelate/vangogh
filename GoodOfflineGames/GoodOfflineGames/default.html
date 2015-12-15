@@ -525,7 +525,7 @@
                 return "<a class='product {{productClass}}' href='#{{id}}'>" +
                   "<span class='title' title='{{title}}' >{{title}}</span></a>";
             }
-            var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' />";
+            var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' onerror='Images.hideOnError(this)' />";
             var gameDetailsProductHeader = "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>";
             var gameDetailsDescription = "<table border='0' cellspacing='0' cellpadding='0' class='descriptionContainer'>" +
                   "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
@@ -572,7 +572,7 @@
                 return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></span>";
             }
             var getScreenshotTemplate = function () {
-                return "<a href='{{uri}}'><img data-src={{uri}} /></a>";
+                return "<a href='{{uri}}'><img data-src={{uri}} onerror='Images.hideOnError(this)'/></a>";
             }
             var getOperatingSystemIconTemplate = function () {
                 return "<span class='icon'><svg viewBox='0 0 100 100' " +
@@ -628,8 +628,12 @@
                     "screenshot": "_screenshots/" + imageLocalUri
                 }
             }
+            var hideOnError = function (img) {
+                if (img && img.classList) img.classList.add("hidden");
+            }
             return {
-                "getRelativeUri": getRelativeUri
+                "getRelativeUri": getRelativeUri,
+                "hideOnError": hideOnError
             }
         }();
 
