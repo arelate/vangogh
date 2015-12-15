@@ -10,6 +10,11 @@ namespace GoodOfflineGames.Tests
 {
     public class MockConsoleController : IConsoleController
     {
+        public void Dispose()
+        {
+            // ...
+        }
+
         public string Read()
         {
             return string.Empty;

@@ -1,4 +1,6 @@
-﻿namespace GOG.Interfaces
+﻿using System;
+
+namespace GOG.Interfaces
 {
     #region Console
 
@@ -17,7 +19,8 @@
 
     public interface IConsoleController :
         IReadController,
-        IWriteController
+        IWriteController,
+        IDisposable
     {
         // ...
     }

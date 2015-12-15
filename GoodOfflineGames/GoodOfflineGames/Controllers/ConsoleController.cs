@@ -5,6 +5,11 @@ namespace GOG.SharedControllers
 {
     class ConsoleController : IConsoleController
     {
+        public void Dispose()
+        {
+            // ...
+        }
+
         public string Read()
         {
             return Console.Read().ToString();

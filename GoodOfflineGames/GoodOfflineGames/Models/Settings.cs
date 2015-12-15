@@ -24,5 +24,7 @@ namespace GOG.SharedModels
         public bool CleanupProductFolders { get; set; }
         [DataMember(Name = "updateAll")]
         public bool UpdateAll { get; set; }
+        [DataMember(Name = "useLog")]
+        public bool UseLog { get; set; }
     }
 }

@@ -10,9 +10,10 @@ using System.Net.Http;
 
 namespace GOG.SharedControllers
 {
-    public class NetworkController :
+    public sealed class NetworkController :
         IFileRequestController,
-        IStringNetworkController
+        IStringNetworkController,
+        IDisposable
     {
         private HttpClient client;
         private IUriController uriController;
@@ -116,6 +117,11 @@ namespace GOG.SharedControllers
                 using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                     return await reader.ReadToEndAsync();
             }
+        }
+
+        public void Dispose()
+        {
+            if (client != null) client.Dispose();
         }
     }
 }

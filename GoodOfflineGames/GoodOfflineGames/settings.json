@@ -6,5 +6,6 @@
   "downloadProductFiles": true,
   "downloadScreenshots":  true,
   "cleanupProductFolders": true,
-  "updateAll":  false
+  "updateAll": false,
+  "useLog":  true
 }
