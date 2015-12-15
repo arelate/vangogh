@@ -456,7 +456,7 @@
 
     <div id="searchContainer" accesskey="4">
         <input id="searchInput" type="search" placeholder="Type to search..." tabindex="0" accesskey="4"/>
-        <a id="showAllSearchResults" class="hidden" href="#">+<span class="resultsCount"></span>...</a>
+        <a id="showAllSearchResults" class="hidden" href="#showAll">+<span class="resultsCount"></span>...</a>
     </div>
 
     <div id="productsContainer" class="container hidden"></div>
@@ -494,6 +494,7 @@
     </button>
 
     <script>
+        var products = undefined;
         var productsdata = undefined;
         var gamedetails = undefined;
         var owned = undefined;
@@ -851,6 +852,9 @@
                     showAllSearchResults.classList.add("hidden");
                     searchResults.classList.add("hidden");
                     productsContainer.classList.remove("hidden");
+                    // reset location and hash when we clear out search input
+                    location.hash = "";
+                    location.search = "";
                 }
             }
             var init = function (pi, pdi) {
@@ -1408,6 +1412,13 @@
             var searchContainer = $("searchContainer");
             var update = function () {
                 if (location.hash.indexOf("#") > -1) {
+                    if (location.hash === "#showAll") {
+                        GameDetails.close();
+                        productsContainer.classList.add("hidden");
+                        searchResults.classList.remove("hidden");
+                        searchContainer.classList.remove("hidden");
+                        return;
+                    }
                     var productId = parseInt(location.hash.substr(1));
                     if (productId !== undefined) GameDetails.show(productId);
                     productsContainer.classList.add("hidden");
