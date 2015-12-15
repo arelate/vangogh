@@ -267,13 +267,13 @@
     'url': ''
 }, {
     'id': 1443699418, //Return to Castle Wolfenstein
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Return_to_Castle_Wolfenstein'
 }, {
     'id': 1443696817, //Quake II: Quad Damage
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Quake_II'
 }, {
     'id': 1443696086, //Quake III: Gold
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Quake_III_Arena'
 }, {
     'id': 1441705226, //Wolfenstein 3D + Spear of Destiny 
     'url': ''
@@ -435,10 +435,10 @@
     'url': ''
 }, {
     'id': 1440166133, //Quake: The Offering
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Quake_(video_game)'
 }, {
     'id': 1440164514, //Ultimate DOOM, The
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Doom_(1993_video_game)'
 }, {
     'id': 1440163901, //Elder Scrolls III: Morrowind GOTY Edition, The
     'url': ''
@@ -453,7 +453,7 @@
     'url': ''
 }, {
     'id': 1440161275, //DOOM II + Final DOOM
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Doom_II:_Hell_on_Earth'
 }, {
     'id': 1436885539, //Crookz - The Big Heist
     'url': ''
@@ -4125,10 +4125,10 @@
     'url': ''
 }, {
     'id': 1441704824, //Quake II: Quad Damage
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Quake_II'
 }, {
     'id': 1441704920, //Quake III: Gold
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Quake_III_Arena'
 }, {
     'id': 1441704976, //Return to Castle Wolfenstein 
     'url': 'https://en.wikipedia.org/wiki/Return_to_Castle_Wolfenstein'
@@ -4167,10 +4167,10 @@
     'url': ''
 }, {
     'id': 1435827232, //Ultimate Doom, The
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Doom_(1993_video_game)'
 }, {
     'id': 1435828198, //Quake: The Offering
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Quake_(video_game)'
 }, {
     'id': 1435828982, //Elder Scrolls: Arena, The
     'url': ''
@@ -4179,10 +4179,10 @@
     'url': ''
 }, {
     'id': 1435848742, //Final Doom
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Final_Doom'
 }, {
     'id': 1435848814, //DOOM II + Master Levels
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Doom_II:_Hell_on_Earth'
 }, {
     'id': 1434535097, //Pajama Sam 2: Thunder and Lightning Aren’t so Frightening
     'url': ''
