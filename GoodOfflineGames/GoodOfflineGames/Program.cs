@@ -630,7 +630,7 @@ namespace GOG
             loggingConsoleController.WriteLine("All done. Press ENTER to quit...");
             consoleController.ReadLine();
 
-            #region Dispose of IO objects
+            #region Disposal of IO objects
 
             loggingConsoleController.Dispose();
 
