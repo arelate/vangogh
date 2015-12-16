@@ -1,9 +1,9 @@
 ﻿var wikipedia = [{
     'id': 1447688349, //UnderRail
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Underrail'
 }, {
     'id': 1449139823, //Sins of a Solar Empire®: Rebellion Ultimate Edition
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Sins_of_a_Solar_Empire#Rebellion'
 }, {
     'id': 1448275717, //Blood & Gold: Caribbean!
     'url': ''
@@ -1431,7 +1431,7 @@
     'url': ''
 }, {
     'id': 1207666103, //Sword of the Stars: The Pit - Juggernaut
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Sword_of_the_Stars:_The_Pit'
 }, {
     'id': 1207666973, //The Marvellous Miss Take
     'url': ''
@@ -1476,7 +1476,7 @@
     'url': ''
 }, {
     'id': 1207666523, //Tales of Maj'Eyal
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Tales_of_Maj%27Eyal'
 }, {
     'id': 1207666703, //Devil's Dare 悪魔の挑戦
     'url': ''
@@ -1548,7 +1548,7 @@
     'url': ''
 }, {
     'id': 1207666433, //Gabriel Knight: Sins of the Fathers – 20th Anniversary Edition
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Gabriel_Knight:_Sins_of_the_Fathers#Remake'
 }, {
     'id': 1207666123, //Starpoint Gemini 2
     'url': ''
@@ -3363,7 +3363,7 @@
     'url': ''
 }, {
     'id': 1207658828, //Gabriel Knight: Sins of the Fathers
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/Gabriel_Knight:_Sins_of_the_Fathers'
 }, {
     'id': 1207658827, //Uru: Complete Chronicles
     'url': ''
@@ -4173,10 +4173,10 @@
     'url': 'https://en.wikipedia.org/wiki/Quake_(video_game)'
 }, {
     'id': 1435828982, //Elder Scrolls: Arena, The
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/The_Elder_Scrolls:_Arena'
 }, {
     'id': 1435829353, //Elder Scrolls: Chapter II - Daggerfall, The
-    'url': ''
+    'url': 'https://en.wikipedia.org/wiki/The_Elder_Scrolls_II:_Daggerfall'
 }, {
     'id': 1435848742, //Final Doom
     'url': 'https://en.wikipedia.org/wiki/Final_Doom'
