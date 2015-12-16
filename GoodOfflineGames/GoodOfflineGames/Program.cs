@@ -627,14 +627,14 @@ namespace GOG
 
             #endregion
 
+            loggingConsoleController.WriteLine("All done. Press ENTER to quit...");
+            consoleController.ReadLine();
+
             #region Dispose of IO objects
 
             loggingConsoleController.Dispose();
 
             #endregion
-
-            loggingConsoleController.WriteLine("All done. Press ENTER to quit...");
-            consoleController.ReadLine();
         }
     }
 }
