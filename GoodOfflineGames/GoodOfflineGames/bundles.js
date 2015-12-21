@@ -580,5 +580,20 @@ var bundles = [{
       // Forgotten Realms: The Archives - Collection Three
       "parent": 1436873631,
       "children": [1432579019, 1432578339]
+  },
+  {
+      // Fallout 2
+      "parent": 1440166436,
+      "children": [1440151285]
+  },
+  {
+      // Fallout
+      "parent": 1440166342,
+      "children": [1440148836]
+  },
+  {
+      // Fallout Tactics
+      "parent": 1440163405,
+      "children": [1440152063]
   }
 ];

@@ -37,7 +37,8 @@ namespace GOG.SharedControllers
 
         public void Write(string message, params object[] data)
         {
-            logStreamWriter.Write(message, data);
+            // even though write was requested, writeline works better in log context
+            logStreamWriter.WriteLine(message, data);
             consoleController.Write(message, data);
         }
 
