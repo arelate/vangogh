@@ -3,7 +3,6 @@ GoodOfflineGames
 
 ![List](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-List.PNG)
 ![Details](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-Details.PNG)
-![Screenshot](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-Screenshots.png)
 ![Commandline](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/CMD.PNG)
 
 GoodOfflineGames is a cmd-line service to cache and keep in sync you account data from GOG.com. Additionally it contains (offline) HTML frontend to your collection, with links to product files and screenshot. 
@@ -32,3 +31,4 @@ Options file that can be used to provide input data. Without this file the appli
 * downloadScreenshots - true: download product screenshots, false (default): don't download product screenshots
 * updateAll - true: attempt to update all available products, false (default): only update product marked as updated
 * cleanupProductFolders - true (default): remove all files that are not specified for current version on GOG.com to _RecycleBin (preserving folder structure), false: don't remove any files from product folders
+* useLog - true (default): write command line output to the log.txt file in the current folder (append), false: don't write log
