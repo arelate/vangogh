@@ -49,5 +49,15 @@ namespace GOG.SharedModels
             { "login[login]", "" },
             { "login[_token]", "" },
         };
+
+        public static Dictionary<string, string> TwoStepAuthenticate = new Dictionary<string, string>()
+        {
+            { "second_step_authentication[token][letter_1]", "" },
+            { "second_step_authentication[token][letter_2]", "" },
+            { "second_step_authentication[token][letter_3]", "" },
+            { "second_step_authentication[token][letter_4]", "" },
+            { "second_step_authentication[send]", "" },
+            { "second_step_authentication[_token]", "" }
+        };
     }
 }

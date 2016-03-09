@@ -41,6 +41,8 @@ namespace GOG.SharedControllers
             DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Type));
             Type parsedData = default(Type);
 
+            if (string.IsNullOrEmpty(data)) return parsedData;
+
             try
             {
                 using (MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))

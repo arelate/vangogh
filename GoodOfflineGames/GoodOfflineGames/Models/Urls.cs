@@ -22,6 +22,7 @@ namespace GOG.SharedModels
         public const string Login = LoginHost + "/login";
         public const string Logout = LoginHost + "/logout";
         public const string LoginCheck = LoginHost + "/login_check";
+        public const string TwoStep = Login + "/two_step";
         public const string LoginRedirect = HttpsRoot + "/on_login_success";
         // Account
         private const string Account = HttpsRoot + "/account";

@@ -2,23 +2,24 @@
 using System.IO;
 
 using GOG.Interfaces;
+using System;
 
 namespace GOG.SharedControllers
 {
     public class StorageController: IStorageController<string>
     {
-        private IStreamController streamController;
+        private IIOController ioController;
 
-        public StorageController(IStreamController streamController)
+        public StorageController(IIOController ioController)
         {
-            this.streamController = streamController;
+            this.ioController = ioController;
         }
 
         public async Task Push(
             string uri,
             string data)
         {
-            using (var stream = streamController.OpenWritable(uri))
+            using (var stream = ioController.OpenWritable(uri))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
@@ -32,7 +33,9 @@ namespace GOG.SharedControllers
         {
             string data = string.Empty;
 
-            using (var stream = streamController.OpenReadable(uri))
+            if (!ioController.FileExists(uri)) return data;
+
+            using (var stream = ioController.OpenReadable(uri))
             {
                 using (StreamReader reader = new StreamReader(stream))
                 {

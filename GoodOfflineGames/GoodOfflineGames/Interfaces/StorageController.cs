@@ -2,19 +2,19 @@
 
 namespace GOG.Interfaces
 {
-    public interface IPullController<Type>
+    public interface IPullDelegate<Type>
     {
         Task<Type> Pull(string uri);
     }
 
-    public interface IPushController<Type>
+    public interface IPushDelegate<Type>
     {
         Task Push(string uri, Type data);
     }
 
     public interface IStorageController<Type>:
-        IPullController<Type>,
-        IPushController<Type>
+        IPullDelegate<Type>,
+        IPushDelegate<Type>
     {
         // ...
     }
