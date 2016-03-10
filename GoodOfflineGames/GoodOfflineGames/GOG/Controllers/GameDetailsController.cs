@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 
 namespace GOG.Controllers
 {
-    // TODO: Unit tests
     public class GameDetailsController : ProductCoreController<GameDetails>
     {
         private IDeserializeDelegate<string> stringDeserializeController;
@@ -16,10 +15,10 @@ namespace GOG.Controllers
 
         public GameDetailsController(
             IList<GameDetails> gameDetails,
-            IStringGetController stringGetDelegate,
+            IGetStringDelegate getStringDelegate,
             IDeserializeDelegate<string> stringDeserializeController,
             ICollection<string> supportedLanguages) :
-            base(gameDetails, stringGetDelegate)
+            base(gameDetails, getStringDelegate)
         {
             this.stringDeserializeController = stringDeserializeController;
             this.supportedLanguages = supportedLanguages;

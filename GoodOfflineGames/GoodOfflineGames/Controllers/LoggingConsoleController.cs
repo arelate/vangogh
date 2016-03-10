@@ -4,7 +4,7 @@ using System.IO;
 
 namespace GOG.SharedControllers
 {
-    class LoggingConsoleController : IConsoleController
+    class LoggingConsoleController : IDisposableConsoleController
     {
         private string logFilename;
         private IConsoleController consoleController;

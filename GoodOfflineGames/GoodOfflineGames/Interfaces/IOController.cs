@@ -4,25 +4,6 @@ using System.IO;
 
 namespace GOG.Interfaces
 {
-    #region Stream IO
-
-    public interface IStreamReadableDelegate
-    {
-        Stream OpenReadable(string uri);
-    }
-
-    public interface IStreamWritableDelegate
-    {
-        Stream OpenWritable(string uri);
-    }
-
-    public interface IStreamController :
-        IStreamReadableDelegate,
-        IStreamWritableDelegate
-    {
-        // ...
-    }
-
     public interface IMoveDelegate
     {
         void MoveFile(string fromUri, string toUri);
@@ -76,6 +57,4 @@ namespace GOG.Interfaces
     {
         // ...
     }
-
-    #endregion
 }

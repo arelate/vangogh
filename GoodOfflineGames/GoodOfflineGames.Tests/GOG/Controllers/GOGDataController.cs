@@ -11,7 +11,7 @@ namespace GoodOfflineGames.Tests
     [TestClass]
     public class GOGDataControllerTests
     {
-        private IStringGetController gogDataController;
+        private IGetStringDelegate gogDataController;
 
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;

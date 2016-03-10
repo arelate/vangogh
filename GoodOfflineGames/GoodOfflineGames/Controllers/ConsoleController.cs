@@ -1,13 +1,14 @@
 ﻿using System;
+
 using GOG.Interfaces;
 
 namespace GOG.SharedControllers
 {
-    class ConsoleController : IConsoleController
+    class ConsoleController : IDisposableConsoleController
     {
         public void Dispose()
         {
-            // ...
+            // normal consoleController has nothing to dispose of
         }
 
         public string Read()

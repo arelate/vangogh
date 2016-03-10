@@ -16,7 +16,7 @@ namespace GoodOfflineGames.Tests
         private IProductCoreController<ProductData> productDataController;
         private IProductCoreController<Product> productsController;
 
-        private IStringGetController gogDataController;
+        private IGetStringDelegate gogDataController;
 
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;

@@ -13,13 +13,13 @@ namespace GOG.Controllers
 {
     public class ScreenshotsController: IScreenshotsController
     {
-        private IStringGetController stringGetController;
+        private IGetStringDelegate getStringDelegate;
         private const string attributePrefix = "data-src=\"";
         private Regex regex = new Regex(attributePrefix + "\\S*\"");
 
-        public ScreenshotsController(IStringGetController stringGetController)
+        public ScreenshotsController(IGetStringDelegate getStringDelegate)
         {
-            this.stringGetController = stringGetController;
+            this.getStringDelegate = getStringDelegate;
         }
 
         // TODO: Consider DRYing this with GOGDataController
@@ -30,7 +30,7 @@ namespace GOG.Controllers
             var screenshots = new List<string>();
 
             var requestUri = string.Format(Urls.GameProductDataPageTemplate, product.Url);
-            var productPage = await stringGetController.GetString(requestUri);
+            var productPage = await getStringDelegate.GetString(requestUri);
 
             var match = regex.Match(productPage);
             while (match.Success)

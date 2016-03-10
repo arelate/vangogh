@@ -11,7 +11,7 @@ using System.Net.Http;
 namespace GOG.SharedControllers
 {
     public sealed class NetworkController :
-        IFileRequestController,
+        IRequestFileDelegate,
         IStringNetworkController,
         IDisposable
     {
@@ -27,7 +27,7 @@ namespace GOG.SharedControllers
         public async Task<Tuple<bool, string>> RequestFile(
             string fromUri,
             string toPath,
-            IStreamWritableDelegate streamWriteableDelegate,
+            IOpenWritableDelegate openWriteableDelegate,
             IFileController fileController = null,
             IProgress<double> progress = null,
             IConsoleController consoleController = null)
@@ -65,7 +65,7 @@ namespace GOG.SharedControllers
                     return new Tuple<bool, string>(true, filename);
                 }
 
-                using (Stream writeableStream = streamWriteableDelegate.OpenWritable(fullPath))
+                using (Stream writeableStream = openWriteableDelegate.OpenWritable(fullPath))
                 using (Stream responseStream = await response.Content.ReadAsStreamAsync())
                 {
                     while ((bytesRead = await responseStream.ReadAsync(buffer, 0, bufferSize)) > 0)
@@ -88,7 +88,7 @@ namespace GOG.SharedControllers
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
-            string uri = uriController.CombineUri(baseUri, parameters);
+            string uri = uriController.ConcatenateUri(baseUri, parameters);
 
             using (var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead))
             {
@@ -105,7 +105,7 @@ namespace GOG.SharedControllers
             IDictionary<string, string> parameters = null,
             string data = null)
         {
-            string uri = uriController.CombineUri(baseUri, parameters);
+            string uri = uriController.ConcatenateUri(baseUri, parameters);
 
             var content = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
 

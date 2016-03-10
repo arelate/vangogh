@@ -11,21 +11,21 @@ namespace GOG.Controllers
 {
     class MultipageRequestController : IRequestDelegate<Product>
     {
-        private IStringGetController stringGetController;
+        private IGetStringDelegate getStringDelegate;
         private ISerializationController<string> stringifyController;
         private IPostUpdateDelegate postUpdateDelegate;
 
         private IFilterDelegate<Product> filterDelegate;
-        public IWriteController MessageWriteDelegate { get; set; } = null;
+        public IWriteDelegate MessageWriteDelegate { get; set; } = null;
 
         public MultipageRequestController(
-            IStringGetController stringGetController,
+            IGetStringDelegate getStringDelegate,
             ISerializationController<string> stringifyController,
             IPostUpdateDelegate postUpdateDelegate = null,
             IFilterDelegate<Product> filterDelegate = null)
         {
             this.stringifyController = stringifyController;
-            this.stringGetController = stringGetController;
+            this.getStringDelegate = getStringDelegate;
             this.postUpdateDelegate = postUpdateDelegate;
             this.filterDelegate = filterDelegate;
         }
@@ -77,7 +77,7 @@ namespace GOG.Controllers
 
             parameters[pageQueryParameter] = currentPage.ToString();
 
-            var json = await stringGetController.GetString(uri, parameters);
+            var json = await getStringDelegate.GetString(uri, parameters);
             return stringifyController.Deserialize<ProductsResult>(json);
         }
 

@@ -1,29 +1,44 @@
-﻿using System;
-
-namespace GOG.Interfaces
+﻿namespace GOG.Interfaces
 {
-    #region Console
-
-    public interface IReadController
+    public interface IReadDelegate
     {
         string Read();
+    }
+
+    public interface IReadLineDelegate
+    {
         string ReadLine();
+    }
+
+    public interface IReadPrivateLineDelegate
+    {
         string ReadPrivateLine();
     }
 
-    public interface IWriteController
+    public interface IWriteDelegate
     {
         void Write(string message, params object[] data);
+    }
+
+    public interface IWriteLineDelegate
+    {
         void WriteLine(string message, params object[] data);
     }
 
     public interface IConsoleController :
-        IReadController,
-        IWriteController,
-        IDisposable
+        IReadDelegate,
+        IReadLineDelegate,
+        IReadPrivateLineDelegate,
+        IWriteDelegate,
+        IWriteLineDelegate
     {
         // ...
     }
 
-    #endregion
+    public interface IDisposableConsoleController: 
+        IConsoleController,
+        System.IDisposable
+    {
+        // ...
+    }
 }

@@ -8,7 +8,7 @@ using GOG.SharedModels;
 namespace GoodOfflineGames.Tests
 {
     public class MockNetworkController :
-        IFileRequestController,
+        IRequestFileDelegate,
         IStringNetworkController
     {
         private ISerializationController<string> serializationController;
@@ -28,7 +28,7 @@ namespace GoodOfflineGames.Tests
         public Task<Tuple<bool, string>> RequestFile(
             string fromUri,
             string toFile,
-            IStreamWritableDelegate streamWriteableDelegate,
+            IOpenWritableDelegate openWritableDelegate,
             IFileController fileController = null,
             IProgress<double> progress = null,
             IConsoleController consoleController = null)

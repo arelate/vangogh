@@ -11,7 +11,7 @@ namespace GOG.Controllers
 {
     class ProductFilesDownloadController
     {
-        private IFileRequestController fileRequestController;
+        private IRequestFileDelegate requestFileDelegate;
         private IIOController ioController;
         private IConsoleController consoleController;
 
@@ -23,14 +23,14 @@ namespace GOG.Controllers
         private string productLocation = string.Empty;
 
         public ProductFilesDownloadController(
-            IFileRequestController fileRequestController,
+            IRequestFileDelegate requestFileDelegate,
             IIOController ioController,
             IConsoleController consoleController,
             IProgress<double> downloadProgressReporter)
         {
             this.downloadProgressReporter = downloadProgressReporter;
 
-            this.fileRequestController = fileRequestController;
+            this.requestFileDelegate = requestFileDelegate;
             this.ioController = ioController;
             this.consoleController = consoleController;
         }
@@ -76,7 +76,7 @@ namespace GOG.Controllers
                 productFile.Url = entry.ManualUrl;
                 productFile.Folder = toUriParts[toUriParts.Length - 2];
 
-                var result = await fileRequestController.RequestFile(
+                var result = await requestFileDelegate.RequestFile(
                     fromUri,
                     productFile.Folder,
                     ioController,

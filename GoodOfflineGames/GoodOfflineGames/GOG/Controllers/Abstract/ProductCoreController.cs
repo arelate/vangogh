@@ -14,7 +14,7 @@ namespace GOG.Controllers
         IProductCoreController<Type>
         where Type : ProductCore
     {
-        private IStringGetController stringGetDelegate;
+        private IGetStringDelegate getStringDelegate;
 
         public event EventHandler<Type> OnProductUpdated;
         public event BeforeAddingDelegate<Type> OnBeforeAdding;
@@ -25,9 +25,9 @@ namespace GOG.Controllers
         }
 
         public ProductCoreController(IList<Type> collection,
-            IStringGetController stringGetDelegate) : this(collection)
+            IGetStringDelegate getStringDelegate) : this(collection)
         {
-            this.stringGetDelegate = stringGetDelegate;
+            this.getStringDelegate = getStringDelegate;
         }
 
         public Type Find(long id)
@@ -61,7 +61,7 @@ namespace GOG.Controllers
 
         public async Task<IList<Type>> Update(IList<string> items, IPostUpdateDelegate postUpdateDelegate = null) 
         {
-            if (stringGetDelegate == null)
+            if (getStringDelegate == null)
             {
                 throw new InvalidOperationException(@"To use Update method 
                     you need to construct IStringGetController and 
@@ -76,24 +76,18 @@ namespace GOG.Controllers
                     GetRequestTemplate(),
                     item);
 
-                var dataString = await stringGetDelegate.GetString(requestUri);
+                var dataString = await getStringDelegate.GetString(requestUri);
 
                 var data = Deserialize(dataString);
 
                 if (data == null) continue;
 
-                if (OnBeforeAdding != null)
-                {
-                    OnBeforeAdding(ref data, item);
-                }
+                OnBeforeAdding?.Invoke(ref data, item);
 
                 newItems.Add(data);
                 UpdateOrAdd(data);
 
-                if (OnProductUpdated != null)
-                {
-                    OnProductUpdated(this, data);
-                }
+                OnProductUpdated?.Invoke(this, data);
 
                 if (postUpdateDelegate != null)
                     postUpdateDelegate.PostUpdate();

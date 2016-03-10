@@ -8,7 +8,7 @@ namespace GOG.SharedControllers
 {
     public class UriController: IUriController
     {
-        public string CombineQueryParameters(IDictionary<string, string> parameters)
+        public string ConcatenateQueryParameters(IDictionary<string, string> parameters)
         {
             if (parameters == null) return string.Empty;
 
@@ -25,13 +25,13 @@ namespace GOG.SharedControllers
             return string.Join(Separators.QueryStringParameters, parametersStrings);
         }
 
-        public string CombineUri(string baseUri, IDictionary<string, string> parameters)
+        public string ConcatenateUri(string baseUri, IDictionary<string, string> parameters)
         {
             return (parameters == null) ?
                 baseUri :
                 baseUri +
                 Separators.QueryString +
-                CombineQueryParameters(parameters);
+                ConcatenateQueryParameters(parameters);
         }
     }
 }

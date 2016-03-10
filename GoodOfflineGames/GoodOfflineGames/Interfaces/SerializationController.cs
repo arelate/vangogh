@@ -1,7 +1,5 @@
 ﻿namespace GOG.Interfaces
 {
-    #region Serialization
-
     public interface ISerializeDelegate<ToType>
     {
         ToType Serialize<T>(T data);
@@ -18,6 +16,4 @@
     {
         // ...
     }
-
-    #endregion
 }

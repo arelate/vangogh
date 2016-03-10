@@ -24,13 +24,13 @@ namespace GOG.Controllers
 
         private IIOController ioController;
         private IPostUpdateDelegate postUpdateDelegate;
-        private IFileRequestController fileRequestController;
+        private IRequestFileDelegate requestFileDelegate;
 
-        public ImagesController(IFileRequestController fileRequestController,
+        public ImagesController(IRequestFileDelegate requestFileDelegate,
             IIOController ioController,
             IPostUpdateDelegate postUpdateDelegate = null)
         {
-            this.fileRequestController = fileRequestController;
+            this.requestFileDelegate = requestFileDelegate;
             this.ioController = ioController;
             this.postUpdateDelegate = postUpdateDelegate;
         }
@@ -128,7 +128,7 @@ namespace GOG.Controllers
                 if (postUpdateDelegate != null)
                     postUpdateDelegate.PostUpdate();
 
-                await fileRequestController.RequestFile(imageUri.ToString(), folder, ioController);
+                await requestFileDelegate.RequestFile(imageUri.ToString(), folder, ioController);
             }
         }
 

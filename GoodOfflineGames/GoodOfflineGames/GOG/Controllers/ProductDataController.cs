@@ -13,9 +13,9 @@ namespace GOG.Controllers
 
         public ProductDataController(
             IList<ProductData> productsData,
-            IStringGetController stringGetDelegate,
+            IGetStringDelegate getStringDelegate,
             IDeserializeDelegate<string> stringDeserializeController) :
-            base(productsData, stringGetDelegate)
+            base(productsData, getStringDelegate)
         {
             this.stringDeserializeController = stringDeserializeController;
         }

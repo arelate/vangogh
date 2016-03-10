@@ -12,7 +12,7 @@ namespace GOG
 {
     class Program
     {
-        static ISaveLoadDataHelper saveLoadHelper;
+        static ISaveLoadDataController saveLoadDataController;
 
         #region Model variables
 
@@ -33,17 +33,17 @@ namespace GOG
 
         static void OnProductDataUpdated(object sender, ProductData data)
         {
-            saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+            saveLoadDataController.SaveData(productsData, ProductTypes.ProductsData).Wait();
 
             if (!checkedProductData.ContainsKey(data.Id)) checkedProductData.Add(data.Id, DateTime.Today);
             else checkedProductData[data.Id] = DateTime.Today;
 
-            saveLoadHelper.SaveData(checkedProductData, ProductTypes.CheckedProductData).Wait();
+            saveLoadDataController.SaveData(checkedProductData, ProductTypes.CheckedProductData).Wait();
         }
 
         static void OnGameDetailsUpdated(object sender, GameDetails data)
         {
-            saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
+            saveLoadDataController.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
         }
 
         static void OnBeforeGameDetailsAdding(ref GameDetails data, string item)
@@ -75,7 +75,7 @@ namespace GOG
 
             IConsoleController consoleController = new ConsoleController();
             // at this point we're not sure whether we'll be requested to write to log or not...
-            IConsoleController loggingConsoleController = new ConsoleController();
+            IDisposableConsoleController loggingConsoleController = new ConsoleController();
             IPostUpdateDelegate postUpdateDelegate = new ConsolePostUpdate(consoleController);
 
             IIOController ioController = new IOController();
@@ -84,9 +84,9 @@ namespace GOG
             ISerializationController<string> jsonStringController = new JSONStringController();
             IUriController uriController = new UriController();
             IStringNetworkController networkController = new NetworkController(uriController);
-            IFileRequestController fileRequestController = networkController as IFileRequestController;
+            IRequestFileDelegate requestFileDelegate = networkController as IRequestFileDelegate;
 
-            saveLoadHelper = new SaveLoadDataHelper(
+            saveLoadDataController = new SaveLoadDataHelper(
                 storageController,
                 jsonStringController,
                 filenames,
@@ -118,31 +118,31 @@ namespace GOG
             loggingConsoleController.Write("Loading stored data...");
 
             // Load stored data for products, owned, wishlist and queued updates
-            products = saveLoadHelper.LoadData<List<Product>>(ProductTypes.Products).Result;
+            products = saveLoadDataController.LoadData<List<Product>>(ProductTypes.Products).Result;
             products = products ?? new List<Product>();
 
-            owned = saveLoadHelper.LoadData<List<Product>>(ProductTypes.Owned).Result;
+            owned = saveLoadDataController.LoadData<List<Product>>(ProductTypes.Owned).Result;
             owned = owned ?? new List<Product>();
 
-            updated = saveLoadHelper.LoadData<List<long>>(ProductTypes.Updated).Result;
+            updated = saveLoadDataController.LoadData<List<long>>(ProductTypes.Updated).Result;
             updated = updated ?? new List<long>();
 
-            productsData = saveLoadHelper.LoadData<List<ProductData>>(ProductTypes.ProductsData).Result;
+            productsData = saveLoadDataController.LoadData<List<ProductData>>(ProductTypes.ProductsData).Result;
             productsData = productsData ?? new List<ProductData>();
 
-            gamesDetails = saveLoadHelper.LoadData<List<GameDetails>>(ProductTypes.GameDetails).Result;
+            gamesDetails = saveLoadDataController.LoadData<List<GameDetails>>(ProductTypes.GameDetails).Result;
             gamesDetails = gamesDetails ?? new List<GameDetails>();
 
-            checkedOwned = saveLoadHelper.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedOwned).Result;
+            checkedOwned = saveLoadDataController.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedOwned).Result;
             checkedOwned = checkedOwned ?? new Dictionary<long, DateTime>();
 
-            checkedProductData = saveLoadHelper.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedProductData).Result;
+            checkedProductData = saveLoadDataController.LoadData<Dictionary<long, DateTime>>(ProductTypes.CheckedProductData).Result;
             checkedProductData = checkedProductData ?? new Dictionary<long, DateTime>();
 
-            productFiles = saveLoadHelper.LoadData<List<ProductFile>>(ProductTypes.ProductFiles).Result;
+            productFiles = saveLoadDataController.LoadData<List<ProductFile>>(ProductTypes.ProductFiles).Result;
             productFiles = productFiles ?? new List<ProductFile>();
 
-            screenshots = saveLoadHelper.LoadData<Dictionary<long, List<string>>>(ProductTypes.Screenshots).Result;
+            screenshots = saveLoadDataController.LoadData<Dictionary<long, List<string>>>(ProductTypes.Screenshots).Result;
             screenshots = screenshots ?? new Dictionary<long, List<string>>();
 
             loggingConsoleController.WriteLine("DONE.");
@@ -189,7 +189,7 @@ namespace GOG
 
             IProductCoreController<Product> productsController = new ProductsController(products);
 
-            IStringGetController gogDataController = new GOGDataController(networkController);
+            IGetStringDelegate gogDataController = new GOGDataController(networkController);
 
             ICollectionController<Product> ownedController = new OwnedController(owned);
             ICollectionController<long> updatedController = new UpdatedController(updated);
@@ -210,13 +210,13 @@ namespace GOG
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
 
             var productFilesDownloadController = new ProductFilesDownloadController(
-                fileRequestController,
+                requestFileDelegate,
                 ioController,
                 loggingConsoleController,
                 downloadProgressReporter);
 
             var imagesController = new ImagesController(
-                fileRequestController,
+                requestFileDelegate,
                 ioController,
                 postUpdateDelegate);
 
@@ -250,7 +250,7 @@ namespace GOG
                     productsController.Insert(0, newProducts[pp]);
             }
 
-            saveLoadHelper.SaveData(products, ProductTypes.Products).Wait();
+            saveLoadDataController.SaveData(products, ProductTypes.Products).Wait();
 
             consoleController.WriteLine(string.Empty);
 
@@ -275,7 +275,7 @@ namespace GOG
                 }
             }
 
-            saveLoadHelper.SaveData(owned, ProductTypes.Owned).Wait();
+            saveLoadDataController.SaveData(owned, ProductTypes.Owned).Wait();
 
             loggingConsoleController.WriteLine(string.Empty);
 
@@ -298,7 +298,7 @@ namespace GOG
                     updatedController.Add(update.Id);
             }
 
-            saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+            saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
 
             loggingConsoleController.WriteLine(string.Empty);
 
@@ -324,7 +324,7 @@ namespace GOG
                     wishlisted.Add(wish.Id);
             }
 
-            saveLoadHelper.SaveData(wishlisted, ProductTypes.Wishlisted).Wait();
+            saveLoadDataController.SaveData(wishlisted, ProductTypes.Wishlisted).Wait();
 
             consoleController.WriteLine(string.Empty);
 
@@ -359,7 +359,7 @@ namespace GOG
             }
 
             var newProductData = productsDataController.Update(productsWithoutProductData, postUpdateDelegate).Result;
-            saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+            saveLoadDataController.SaveData(productsData, ProductTypes.ProductsData).Wait();
 
             // after updating product data for new products, we need to check if any of the new products is DLC
             // and if it is - add required product to updated and update product data for that product
@@ -387,12 +387,12 @@ namespace GOG
                     }
             }
 
-            saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+            saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
 
             if (productsWithNewDLC.Count > 0)
             {
                 productsDataController.Update(productsWithNewDLC, postUpdateDelegate).Wait();
-                saveLoadHelper.SaveData(productsData, ProductTypes.ProductsData).Wait();
+                saveLoadDataController.SaveData(productsData, ProductTypes.ProductsData).Wait();
             }
 
             loggingConsoleController.WriteLine("DONE.");
@@ -409,7 +409,7 @@ namespace GOG
                 // only save to disk if we've indeed updated gamesDetails
                 // which shouldn't happen all updates but rather 
                 // only when user obtains new product with owned DLC or just DLC
-                saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails);
+                saveLoadDataController.SaveData(gamesDetails, ProductTypes.GameDetails);
             }
 
             loggingConsoleController.WriteLine("DONE.");
@@ -441,7 +441,7 @@ namespace GOG
 
                     screenshots.Add(product.Id, productScreenshots);
 
-                    saveLoadHelper.SaveData(screenshots, ProductTypes.Screenshots).Wait();
+                    saveLoadDataController.SaveData(screenshots, ProductTypes.Screenshots).Wait();
                 }
             }
 
@@ -509,7 +509,7 @@ namespace GOG
                     {
                         loggingConsoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.");
                         updated.Remove(u);
-                        saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+                        saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
                         continue;
                     }
 
@@ -544,7 +544,7 @@ namespace GOG
                     gamesDetailsController.Update(new List<string> { u.ToString() }).Wait();
 
                     // save new details
-                    saveLoadHelper.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
+                    saveLoadDataController.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 
                     loggingConsoleController.WriteLine("DONE.");
 
@@ -566,7 +566,7 @@ namespace GOG
                     foreach (var productFile in productIntallersExtras)
                         productFiles.Add(productFile);
                     // - write updated product files
-                    saveLoadHelper.SaveData(productFiles, ProductTypes.ProductFiles);
+                    saveLoadDataController.SaveData(productFiles, ProductTypes.ProductFiles);
 
                     // remove from updated and cleanup only if all files were downloaded successfully
                     if (productFilesController.CheckSuccess())
@@ -575,7 +575,7 @@ namespace GOG
                         if (updated.Contains(u))
                         {
                             updated.Remove(u);
-                            saveLoadHelper.SaveData(updated, ProductTypes.Updated).Wait();
+                            saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
                         }
 
                         if (settings.CleanupProductFolders)
@@ -604,7 +604,7 @@ namespace GOG
                     if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
                     else checkedOwned[u] = DateTime.Today;
 
-                    saveLoadHelper.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
+                    saveLoadDataController.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
 
                     loggingConsoleController.WriteLine("DONE.");
 

@@ -9,20 +9,20 @@ using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
-    public class GOGDataController: IStringGetController
+    public class GOGDataController: IGetStringDelegate
     {
         private const string gogDataPrefix = "var gogData = ";
         private Regex regex = new Regex(gogDataPrefix + "(.*)");
-        private IStringGetController stringRequestController;
+        private IGetStringDelegate getStringDelegate;
 
-        public GOGDataController(IStringGetController stringRequestController)
+        public GOGDataController(IGetStringDelegate getStringDelegate)
         {
-            this.stringRequestController = stringRequestController;
+            this.getStringDelegate = getStringDelegate;
         }
 
         public async Task<string> GetString(string uri, IDictionary<string, string> parameters = null)
         {
-            var gamePageContent = await stringRequestController.GetString(uri);
+            var gamePageContent = await getStringDelegate.GetString(uri);
 
             var match = regex.Match(gamePageContent);
             string gogDataString = match.Value.Substring(

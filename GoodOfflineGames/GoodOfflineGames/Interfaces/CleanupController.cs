@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using GOG.Model;
-
-namespace GOG.Interfaces
+﻿namespace GOG.Interfaces
 {
-    public interface ICleanupController
+    public interface ICleanupDelegate
     {
-        int Cleanup(
-            string removeToFolder, 
-            IPostUpdateDelegate postUpdateDelegate = null);
+        int Cleanup(string removeToFolder, IPostUpdateDelegate postUpdateDelegate = null);
+    }
+
+    public interface ICleanupController: ICleanupDelegate
+    {
+        // ...
     }
 }
