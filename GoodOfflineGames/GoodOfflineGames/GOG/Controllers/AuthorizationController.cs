@@ -14,7 +14,7 @@ namespace GOG.Controllers
         private const string authorizingOnGOG = "Authorizing {0} on GOG.com...";
         private const string successfullyAuthorizedOnGOG = "Successfully authorized {0} on GOG.com.";
         private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
-        private const string securityCodeHasBeenSent = "A security code has been sent to {0}. Enter the 4 digit security code to continue:";
+        private const string securityCodeHasBeenSent = "Enter security code that has been sent to {0}:";
 
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;

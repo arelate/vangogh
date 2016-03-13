@@ -20,6 +20,8 @@ namespace GOG.SharedModels
         public bool DownloadProductFiles { get; set; }
         [DataMember(Name = "downloadScreenshots")]
         public bool DownloadScreenshots { get; set; }
+        [DataMember(Name = "downloadImages")]
+        public bool DownloadImages { get; set; }
         [DataMember(Name = "cleanupProductFolders")]
         public bool CleanupProductFolders { get; set; }
         [DataMember(Name = "updateAll")]

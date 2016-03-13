@@ -12,14 +12,11 @@ namespace GOG.Model
         // fields we won't be serializing
 
         // public string backgroundImage;
-        // public string changelog;
         // public string combinedExtrasDownloaderUrl { get; set; }
         // public string forumLink;
         // public bool isPreOrder;
-        // public string messages;
-        // public long releaseTimestamp;
+        // public string messages;`
         // public string textInformation;
-        // public List<Tag> tags;
 
         [DataMember(Name = "cdKey")]
         public string CDKey { get; set; }
@@ -31,5 +28,12 @@ namespace GOG.Model
         public List<OperatingSystemsDownloads> LanguageDownloads { get; set; }
         [DataMember(Name = "extras")]
         public List<DownloadEntry> Extras { get; set; }
+        [DataMember(Name = "changelog")]
+        public string Changelog { get; set; }
+        [DataMember(Name = "releaseTimestamp")]
+        public long ReleaseTimestamp { get; set; }
+        [DataMember(Name = "tags")]
+        public List<Tag> Tags;
+
     }
 }

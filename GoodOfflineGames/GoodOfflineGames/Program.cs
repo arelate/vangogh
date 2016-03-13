@@ -451,173 +451,179 @@ namespace GOG
 
             #region Update images
 
-            loggingConsoleController.Write("Updating product images...");
-
-            // for all products first
-            imagesController.Update(products, imagesFolder).Wait();
-
-            // then for owned products that are not in a products collection 
-            // (e.g. no longer sold, part of bundle)
-            imagesController.Update(existingProductsFilter.Filter(owned, products), imagesFolder).Wait();
-
-            imagesController.Update(productsData, imagesFolder).Wait();
-
-            // then screenshots
-            if (settings.DownloadScreenshots)
+            if (settings.DownloadImages)
             {
-                imagesController.Update(screenshots, screenshotsFolder).Wait();
-            }
+                loggingConsoleController.Write("Updating product images...");
 
-            loggingConsoleController.WriteLine("DONE.");
+                // for all products first
+                imagesController.Update(products, imagesFolder).Wait();
+
+                // then for owned products that are not in a products collection 
+                // (e.g. no longer sold, part of bundle)
+                imagesController.Update(existingProductsFilter.Filter(owned, products), imagesFolder).Wait();
+
+                imagesController.Update(productsData, imagesFolder).Wait();
+
+                // then screenshots
+                if (settings.DownloadScreenshots)
+                {
+                    imagesController.Update(screenshots, screenshotsFolder).Wait();
+                }
+
+                loggingConsoleController.WriteLine("DONE.");
+            }
 
             #endregion
 
             #region Update products - game details, download and cleanup folders
 
-            if (settings.DownloadProductFiles)
+            loggingConsoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
+
+            var updateAllThrottleMinutes = 2; // 2 minutes
+            var updateAllThrottleMilliseconds = 1000 * 60 * updateAllThrottleMinutes;
+
+            gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
+            gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
+
+            var ownedProductsWithoutGameDetails = new List<string>();
+
+            // clone the collection since we'll be removing items from it
+            var updatedProducts = (settings.UpdateAll) ?
+                new List<long>(owned.Count) :
+                new List<long>(updated);
+
+            if (settings.UpdateAll)
+                foreach (var o in owned)
+                    updatedProducts.Add(o.Id);
+
+            var failedAttempts = 0;
+            var failedAttemptThreshold = 2;
+
+            foreach (var u in updatedProducts)
             {
+                // fast bail on not owned products
+                var product = productsController.Find(u);
+                if (product != null &&
+                    !ownedController.Contains(product) &&
+                    updated.Contains(u))
+                {
+                    loggingConsoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.");
+                    updated.Remove(u);
+                    saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
+                    continue;
+                }
 
-                loggingConsoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
-
-                var updateAllThrottleMinutes = 2; // 2 minutes
-                var updateAllThrottleMilliseconds = 1000 * 60 * updateAllThrottleMinutes;
-
-                gamesDetailsController.OnProductUpdated += OnGameDetailsUpdated;
-                gamesDetailsController.OnBeforeAdding += OnBeforeGameDetailsAdding;
-
-                var ownedProductsWithoutGameDetails = new List<string>();
-
-                // clone the collection since we'll be removing items from it
-                var updatedProducts = (settings.UpdateAll) ?
-                    new List<long>(owned.Count) :
-                    new List<long>(updated);
+                // we use single loop to:
+                // 1) update game details
+                // 2) download product updates
+                // 3) store product files
+                // 4) cleanup product folder
+                // 5) remove from updated list   
+                // this is done to avoid spending all request limit on GOG.com
+                // just updating game details and not being able to update files
+                // which is highly likely in case of many updates
 
                 if (settings.UpdateAll)
-                    foreach (var o in owned)
-                        updatedProducts.Add(o.Id);
-
-                var failedAttempts = 0;
-                var failedAttemptThreshold = 2;
-
-                foreach (var u in updatedProducts)
                 {
-                    // fast bail on not owned products
-                    var product = productsController.Find(u);
-                    if (product != null &&
-                        !ownedController.Contains(product) &&
-                        updated.Contains(u))
+                    // check if we've checked same game within last 30 days
+                    if (checkedOwned.ContainsKey(u))
                     {
-                        loggingConsoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.");
-                        updated.Remove(u);
-                        saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
-                        continue;
-                    }
-
-                    // we use single loop to:
-                    // 1) update game details
-                    // 2) download product updates
-                    // 3) store product files
-                    // 4) cleanup product folder
-                    // 5) remove from updated list   
-                    // this is done to avoid spending all request limit on GOG.com
-                    // just updating game details and not being able to update files
-                    // which is highly likely in case of many updates
-
-                    if (settings.UpdateAll)
-                    {
-                        // check if we've checked same game within last 30 days
-                        if (checkedOwned.ContainsKey(u))
+                        var checkedDays = DateTime.Today - checkedOwned[u];
+                        if (checkedDays.Days < dataCheckThresholdDays)
                         {
-                            var checkedDays = DateTime.Today - checkedOwned[u];
-                            if (checkedDays.Days < dataCheckThresholdDays)
-                            {
-                                loggingConsoleController.WriteLine("Product {0} already checked within last {1} days.",
-                                    u, dataCheckThresholdDays);
-                                continue;
-                            }
+                            loggingConsoleController.WriteLine("Product {0} already checked within last {1} days.",
+                                u, dataCheckThresholdDays);
+                            continue;
                         }
                     }
+                }
 
-                    // request updated game details
-                    loggingConsoleController.Write("Updating game details for {0}...", u);
+                // request updated game details
+                loggingConsoleController.Write("Updating game details for {0}...", u);
 
-                    gamesDetailsController.Update(new List<string> { u.ToString() }).Wait();
+                gamesDetailsController.Update(new List<string> { u.ToString() }).Wait();
 
-                    // save new details
-                    saveLoadDataController.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
+                // save new details
+                saveLoadDataController.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 
-                    loggingConsoleController.WriteLine("DONE.");
+                loggingConsoleController.WriteLine("DONE.");
 
-                    // request updated product files
-                    var updatedGameDetails = gamesDetailsController.Find(u);
+                // request updated product files
+                var updatedGameDetails = gamesDetailsController.Find(u);
 
-                    var productIntallersExtras =
+
+
+                IList<ProductFile> productIntallersExtras = new List<ProductFile>();
+
+                if (settings.DownloadProductFiles)
+                {
+                    productIntallersExtras =
                         productFilesDownloadController.UpdateFiles(
                             updatedGameDetails,
                             settings.DownloadLanguages,
                             settings.DownloadOperatingSystems).Result;
+                }
 
-                    IProductFileController productFilesController = new ProductFilesController(productIntallersExtras);
+                IProductFileController productFilesController = new ProductFilesController(productIntallersExtras);
 
-                    // product files contain all files for that product, to store them:
-                    // - remove all entries for that id from productFiles
-                    productFiles = productFilesController.Filter(productFiles);
-                    // - add those new entries to productFiles
-                    foreach (var productFile in productIntallersExtras)
-                        productFiles.Add(productFile);
-                    // - write updated product files
-                    saveLoadDataController.SaveData(productFiles, ProductTypes.ProductFiles);
+                // product files contain all files for that product, to store them:
+                // - remove all entries for that id from productFiles
+                productFiles = productFilesController.Filter(productFiles);
+                // - add those new entries to productFiles
+                foreach (var productFile in productIntallersExtras)
+                    productFiles.Add(productFile);
+                // - write updated product files
+                saveLoadDataController.SaveData(productFiles, ProductTypes.ProductFiles);
 
-                    // remove from updated and cleanup only if all files were downloaded successfully
-                    if (productFilesController.CheckSuccess())
+                // remove from updated and cleanup only if all files were downloaded successfully
+                if (productFilesController.CheckSuccess())
+                {
+                    // remove update entry as all files have been downloaded
+                    if (updated.Contains(u))
                     {
-                        // remove update entry as all files have been downloaded
-                        if (updated.Contains(u))
-                        {
-                            updated.Remove(u);
-                            saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
-                        }
-
-                        if (settings.CleanupProductFolders)
-                        {
-                            // cleanup product folder
-                            loggingConsoleController.Write("Cleaning up product folder...");
-
-                            ICleanupController cleanupController =
-                                new CleanupController(
-                                    productFilesController,
-                                    ioController);
-
-                            cleanupController.Cleanup(recycleBin);
-                        }
-                    }
-                    else
-                    {
-                        if (++failedAttempts >= failedAttemptThreshold)
-                        {
-                            loggingConsoleController.WriteLine("Last {0} attempts to download product files were not successful. " +
-                                "Recommended: wait 12-24 hours and try again. Abandoning attempts.", failedAttempts);
-                            break;
-                        }
+                        updated.Remove(u);
+                        saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
                     }
 
-                    if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
-                    else checkedOwned[u] = DateTime.Today;
-
-                    saveLoadDataController.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
-
-                    loggingConsoleController.WriteLine("DONE.");
-
-                    // throttle server access
-                    if (settings.UpdateAll)
+                    if (settings.CleanupProductFolders)
                     {
-                        Console.WriteLine("Waiting {0} minute(s) before next request...", updateAllThrottleMinutes);
-                        System.Threading.Thread.Sleep(updateAllThrottleMilliseconds);
+                        // cleanup product folder
+                        loggingConsoleController.Write("Cleaning up product folder...");
+
+                        ICleanupController cleanupController =
+                            new CleanupController(
+                                productFilesController,
+                                ioController);
+
+                        cleanupController.Cleanup(recycleBin);
+                    }
+                }
+                else
+                {
+                    if (++failedAttempts >= failedAttemptThreshold)
+                    {
+                        loggingConsoleController.WriteLine("Last {0} attempts to download product files were not successful. " +
+                            "Recommended: wait 12-24 hours and try again. Abandoning attempts.", failedAttempts);
+                        break;
                     }
                 }
 
+                if (!checkedOwned.ContainsKey(u)) checkedOwned.Add(u, DateTime.Today);
+                else checkedOwned[u] = DateTime.Today;
+
+                saveLoadDataController.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
+
                 loggingConsoleController.WriteLine("DONE.");
+
+                // throttle server access
+                if (settings.UpdateAll)
+                {
+                    Console.WriteLine("Waiting {0} minute(s) before next request...", updateAllThrottleMinutes);
+                    System.Threading.Thread.Sleep(updateAllThrottleMilliseconds);
+                }
             }
+
+            loggingConsoleController.WriteLine("DONE.");
 
             #endregion
 
