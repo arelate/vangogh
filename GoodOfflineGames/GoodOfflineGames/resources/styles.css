@@ -425,6 +425,22 @@ input[type=search] {
     font-size: 0.9em;
 }
 
+.tag {
+    padding: 0 0.25em;
+    font-size: 0.8em;
+    margin-right: 0.2em;
+}
+
+.dark .tag {
+    color: #b9f6ca;
+    outline: 1px solid #b9f6ca;
+}
+
+.light .tag {
+    color: #1b5e20;
+    outline: 1px solid #1b5e20;
+}
+
 /* SVG */
 
 svg.dark {

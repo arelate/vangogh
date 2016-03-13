@@ -21,6 +21,7 @@ var Templates = function() {
         "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
         "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title worksOn'>{{worksOnTitle}}</td></tr>" +
         "<tr class='{{wikiClass}}'><td class='header'>Wikipedia</td><td class='title'><a href={{wikiLink}} accesskey='w'>Article</a></td></tr>" +
+        "<tr class='{{tagsClass}}'><td class='header'>Tags</td><td class='title'>{{tagsContent}}</td></tr>" +
         "</table>";
     var gameDetailsFileContainer = "<div class='filesContainer {{filesClass}}'>" +
         "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
@@ -29,9 +30,9 @@ var Templates = function() {
         "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</button>" +
         "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
         "</div>";
-    var gameDetailsChangelogContainer = "<div class='changelogContainer {{changelogClass}}'>"+
+    var gameDetailsChangelogContainer = "<div id='changelogContainer' class='{{changelogClass}}'>" +
         "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'>Show/hide changelog</button>" +
-        "<div class='changelogContent hidden'>{{changelogContent}}</div>"+
+        "<div class='changelogContent hidden'>{{changelogContent}}</div>" +
         "</div>";
     var getGameDetailsTemplate = function() {
         return "<div class='productContainer'>" +
@@ -60,8 +61,8 @@ var Templates = function() {
             "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></span>";
     }
     var getFileExtraTemplate = function() {
-        return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>"+
-            getExtraIconTemplate()+
+        return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>" +
+            getExtraIconTemplate() +
             "<span class='linkText'>{{name}} {{size}}</span></a></span>";
     }
     var getScreenshotTemplate = function() {
@@ -86,6 +87,9 @@ var Templates = function() {
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";
     }
+    var getTagTemplate = function() {
+        return "<span class='tag'>{{name}}</span>";
+    }
     return {
         "getProductTemplate": getProductTemplate,
         "getGameDetailsTemplate": getGameDetailsTemplate,
@@ -96,7 +100,8 @@ var Templates = function() {
         "getFileExtraTemplate": getFileExtraTemplate,
         "getOperatingSystemIconTemplate": getOperatingSystemIconTemplate,
         "getScreenshotTemplate": getScreenshotTemplate,
-        "getSearchLinkTemplate": getSearchLinkTemplate
+        "getSearchLinkTemplate": getSearchLinkTemplate,
+        "getTagTemplate": getTagTemplate
     }
 } ();
 
@@ -156,17 +161,17 @@ var GameDetails = function() {
                 dlcProducts.push(pd.dlcs[ii]);
                 // don't add DLCs that don't have id
                 if (pd.dlcs[ii].id > 0)
-                    processedDlcs.push(pd.dlcs[ii].id);
+                    processedDlcs.push(pd.dlcs[ii].title);
             }
 
         var gd = gdIndex ? gdIndex.getElementByKey(id) : undefined;
         if (gd && gd.dlcs)
             for (var ii = 0; ii < gd.dlcs.length; ii++) {
-                if (processedDlcs.indexOf(gd.dlcs[ii].id) > -1) continue;
+                if (processedDlcs.indexOf(gd.dlcs[ii].title) > -1) continue;
                 dlcProducts.push(gd.dlcs[ii]);
                 // don't add DLCs that don't have id
                 if (gd.dlcs[ii].id > 0)
-                    processedDlcs.push(gd.dlcs[ii].id);
+                    processedDlcs.push(gd.dlcs[ii].title);
             }
 
 
@@ -233,13 +238,14 @@ var GameDetails = function() {
 } ();
 
 var SearchIndex = function() {
-    var pIndex, pdIndex, oIndex, uIndex, wIndex;
+    var pIndex, pdIndex, gdIndex, oIndex, uIndex, wIndex;
     var searchIndex = [];
     var indexProduct = function(p) {
         var parts = [];
 
         if (Bundles.isChild(p.id)) return;
         var pd = pdIndex && pdIndex.getElementByKey(p.id);
+        var gd = gdIndex && gdIndex.getElementByKey(p.id);
         parts.push(p.title.toLowerCase());
 
         if (pd) {
@@ -253,6 +259,10 @@ var SearchIndex = function() {
                 }
             }
         }
+
+        if (gd && gd.tags && gd.tags.length)
+            for (var ii = 0; ii < gd.tags.length; ii++)
+                parts.push(gd.tags[ii].name.toLowerCase());
 
         if (p.worksOn.Windows) parts.push("windows");
         if (p.worksOn.Mac) parts.push("mac osx");
@@ -269,14 +279,20 @@ var SearchIndex = function() {
                 for (var ii = 0; ii < bundle.children.length; ii++) {
                     var bundleChild = pIndex.getElementByKey(bundle.children[ii]);
                     if (bundleChild) parts.push(bundleChild.title.toLowerCase());
+                    // add bundle children tags
+                    var bundleGd = gdIndex.getElementByKey(bundle.children[ii]);
+                    if (bundleGd && bundleGd.tags && bundleGd.tags.length)
+                        for (var ii = 0; ii < bundleGd.tags.length; ii++)
+                            parts.push(bundleGd.tags[ii].name.toLowerCase());
                 }
         }
         searchIndex.push(parts.join(" "));
 
     }
-    var init = function(pi, pdi, oi, ui, wi) {
+    var init = function(pi, pdi, gdi, oi, ui, wi) {
         pIndex = pi;
         pdIndex = pdi;
+        gdIndex = gdi;
         oIndex = oi;
         uIndex = ui;
         wIndex = wi;
@@ -522,6 +538,9 @@ var ViewModelProvider = function() {
             "title": data
         }
     }
+    var getTagModel = function(data) {
+        return data;
+    }
     var getOperatingSystemModel = function(worksOn, operatingSystem) {
         var os = "";
         if (operatingSystem === "Windows" && worksOn.Windows) {
@@ -692,10 +711,24 @@ var ViewModelProvider = function() {
         }
 
         // changelog
-        var changelogContent ="", changelogClass="hidden";
+
+        var changelogContent = "", changelogClass = "hidden";
         if (gd && gd.changelog) {
             changelogContent = gd.changelog;
             changelogClass = "";
+        }
+
+        // tags
+
+        var tagsContent = "", tagsClass = "hidden";
+        if (gd && gd.tags && gd.tags.length) {
+            var tags = [];
+            for (var ii = 0; ii < gd.tags.length; ii++) {
+                tags.push(Views.createView(gd.tags[ii], getTagModel, Templates.getTagTemplate));
+            }
+
+            tagsContent = tags.join("");
+            tagsClass = "";
         }
 
         // screenshots
@@ -749,6 +782,9 @@ var ViewModelProvider = function() {
             // changelogContainer
             "changelogContent": changelogContent,
             "changelogClass": changelogClass,
+            // tagsClass
+            "tagsClass": tagsClass,
+            "tagsContent": tagsContent,
             // wiki
             "wikiLink": wikiLink,
             "wikiClass": wikiClass
@@ -1141,6 +1177,7 @@ document.addEventListener("DOMContentLoaded", function() {
     SearchIndex.init(
         productsIndex,
         productsDataIndex,
+        gameDetailsIndex,
         ownedIndex,
         updatedIndex,
         wishlistedIndex);
@@ -1173,10 +1210,10 @@ document.addEventListener("DOMContentLoaded", function() {
     switchTheme.addEventListener("click", function(e) {
         document.body.classList.toggle("dark");
         document.body.classList.toggle("light");
-        
+
         // also reverse SVG elements
         var svgElements = document.getElementsByTagName("svg");
-        for (var ii=0; ii<svgElements.length; ii++) {
+        for (var ii = 0; ii < svgElements.length; ii++) {
             svgElements[ii].classList.toggle("dark");
             svgElements[ii].classList.toggle("light");
         }
