@@ -55,7 +55,9 @@ var Templates = function() {
             "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></span>";
     }
     var getFileExtraTemplate = function() {
-        return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>{{name}} {{size}}</a></span>";
+        return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>"+
+            getExtraIconTemplate()+
+            "<span class='linkText'>{{name}} {{size}}</span></a></span>";
     }
     var getScreenshotTemplate = function() {
         return "<a href='{{uri}}'><img data-src={{uri}} onerror='Images.hideOnError(this)'/></a>";
@@ -67,6 +69,14 @@ var Templates = function() {
             "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
             "<title>{{operatingSystem}}</title>" +
             "<use xlink:href='./resources/icons.svg#{{operatingSystem}}' /></svg></span>";
+    }
+    var getExtraIconTemplate = function() {
+        return "<span class='icon'><svg viewBox='0 0 100 100' " +
+            "class='{{theme}}'" +
+            "xmlns='http://www.w3.org/2000/svg' " +
+            "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
+            "<title>Extra</title>" +
+            "<use xlink:href='./resources/icons.svg#extra' /></svg></span>";
     }
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";
@@ -486,7 +496,13 @@ var ViewModelProvider = function() {
             "bundleClass": bundles.length ? "" : "hidden"
         }
     }
+    var getTheme = function() {
+        return document.body.classList.contains("dark") ?
+            "dark" :
+            "light";
+    }
     var getFileViewModel = function(file) {
+        if (file && !file.theme) file.theme = getTheme();
         if (file && !file.version) file.version = "";
         return file;
     }
@@ -503,10 +519,6 @@ var ViewModelProvider = function() {
     }
     var getOperatingSystemModel = function(worksOn, operatingSystem) {
         var os = "";
-        // this is needed for SVG theming
-        var theme = document.body.classList.contains("dark") ?
-            "dark" :
-            "light";
         if (operatingSystem === "Windows" && worksOn.Windows) {
             os = "Windows";
         } else if (operatingSystem === "Mac" && worksOn.Mac) {
@@ -516,7 +528,7 @@ var ViewModelProvider = function() {
         }
         return {
             "operatingSystem": os,
-            "theme": theme
+            "theme": getTheme()
         }
     }
     var getWindowsModel = function(worksOn) {
