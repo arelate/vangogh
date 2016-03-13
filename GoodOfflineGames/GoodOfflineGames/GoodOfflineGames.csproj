@@ -161,6 +161,9 @@
     </Content>
     <Content Include="HTML-Details.png" />
     <Content Include="HTML-List.png" />
+    <Content Include="resources\app.js" />
+    <Content Include="resources\icons.svg" />
+    <Content Include="resources\styles.css" />
     <Content Include="wikipedia.js" />
   </ItemGroup>
   <ItemGroup>

@@ -29,7 +29,7 @@ var Templates = function() {
         "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</button>" +
         "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
         "</div>";
-    var gameDetailsChangelogContainer = "<div id='changelogContainer' class='{{changelogClass}}'>"+
+    var gameDetailsChangelogContainer = "<div class='changelogContainer {{changelogClass}}'>"+
         "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'>Show/hide changelog</button>" +
         "<div class='changelogContent hidden'>{{changelogContent}}</div>"+
         "</div>";
