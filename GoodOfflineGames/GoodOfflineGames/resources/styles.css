@@ -55,6 +55,19 @@ button {
     background: #2196f3;
 }
 
+    .showHideButton {
+        border-left: 2px solid;
+    }
+
+.dark .showHideButton {
+    border-color: #1976d2;
+}
+
+.light .showHideButton {
+    border-color: #2196f3;
+}
+
+
 .hidden {
     display: none !important;
 }
@@ -156,7 +169,6 @@ button {
 .dlc::after {
     content: "DLC";
     border: #9C27B0 solid 1px;
-    /*border-radius: 0.2em;*/
     padding: 0 0.25em;
     margin-left: 0.4em;
     margin-top: -0.5em;
@@ -256,18 +268,6 @@ button {
         margin-top: 1em;
         text-align: center;
     }
-
-    #gameDetailsContainer .screenshotsContainer .showScreenshots {
-        border-left: 2px solid;
-    }
-
-.dark #gameDetailsContainer .screenshotsContainer .showScreenshots {
-    border-color: #1976d2;
-}
-
-.light #gameDetailsContainer .screenshotsContainer .showScreenshots {
-    border-color: #2196f3;
-}
 
 #gameDetailsContainer tr {
     line-height: 2em;
@@ -398,6 +398,32 @@ input[type=search] {
         font-size: 0.5em;
     }
 
+.changelogContent {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.changelogContent h4,h5 {
+    font-weight: normal;
+    margin: 0.5em 0;
+}
+
+.changelogContent h4 {
+    font-size: 1.25em;
+}
+
+.changelogContent h5 {
+    font-size: 1.1em;
+}
+
+.changelogContent hr {
+    margin: 0.5em 0;
+}
+
+.changelogContent li {
+    font-size: 0.9em;
+}
+
 /* SVG */
 
 svg.dark {
@@ -414,12 +440,4 @@ svg.dark.stroke {
 
 svg.light.stroke {
     stroke: white;
-}
-
-.dark #icons #Linux #linux-foreground {
-    fill: black;
-}
-
-.light #icons #Linux #linux-foreground {
-    fill: white;
 }

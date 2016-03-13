@@ -26,8 +26,12 @@ var Templates = function() {
         "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
         "<div class='{{extrasClass}}'><h1>Extras</h1><div>{{extrasContent}}</div></div>";
     var gameDetailsScreenshotsContainer = "<div class='screenshotsContainer'>" +
-        "<button accesskey='s' class='{{showScreenshotsClass}} showScreenshots' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</button>" +
+        "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</button>" +
         "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
+        "</div>";
+    var gameDetailsChangelogContainer = "<div id='changelogContainer' class='{{changelogClass}}'>"+
+        "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'>Show/hide changelog</button>" +
+        "<div class='changelogContent hidden'>{{changelogContent}}</div>"+
         "</div>";
     var getGameDetailsTemplate = function() {
         return "<div class='productContainer'>" +
@@ -35,6 +39,7 @@ var Templates = function() {
             gameDetailsImageTemplate +
             gameDetailsDescription +
             gameDetailsScreenshotsContainer +
+            gameDetailsChangelogContainer +
             gameDetailsFileContainer +
             "</div>";
     }
@@ -686,6 +691,13 @@ var ViewModelProvider = function() {
             filesClass = "";
         }
 
+        // changelog
+        var changelogContent ="", changelogClass="hidden";
+        if (gd && gd.changelog) {
+            changelogContent = gd.changelog;
+            changelogClass = "";
+        }
+
         // screenshots
 
         var productScreenshots = sIndex ? sIndex.getElementByKey(product.id) : undefined;
@@ -734,6 +746,9 @@ var ViewModelProvider = function() {
             "showScreenshotsClass": showScreenshotsClass,
             "screenshotsCount": screenshotsCount,
             "screenshotsContent": screenshotsContent,
+            // changelogContainer
+            "changelogContent": changelogContent,
+            "changelogClass": changelogClass,
             // wiki
             "wikiLink": wikiLink,
             "wikiClass": wikiClass
@@ -970,6 +985,19 @@ var Screenshots = function() {
                 image.src = image.getAttribute("data-src");
             }
             screenshotsContent.classList.toggle("hidden");
+        }
+    }
+    return {
+        "show": show
+    }
+} ();
+
+var Changelog = function() {
+    var show = function(element) {
+        if (element &&
+            element.parentNode) {
+            var changelogContent = _$(element.parentNode, ".changelogContent");
+            changelogContent.classList.toggle("hidden");
         }
     }
     return {
