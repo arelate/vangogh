@@ -1,0 +1,425 @@
+* {
+    font-family: -apple-system, "Segoe UI";
+    font-size: 15px;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.background.dark {
+    background: #212121;
+}
+
+.background.light {
+    background: #f5f5f5;
+}
+
+body {
+    padding: 1em;
+}
+
+a {
+    text-decoration: none;
+}
+
+.dark a {
+    color: white;
+}
+
+.light a {
+    color: black;
+}
+
+button {
+    display: block;
+    color: inherit;
+    border: 0;
+    background: inherit;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    height: 3em;
+}
+
+.dark button {
+    color: white;
+}
+
+.light button {
+    color: black;
+}
+
+.dark button:hover {
+    background: #1976d2;
+}
+
+.light button:hover {
+    background: #2196f3;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    cursor: default;
+}
+
+#productsContainer,
+#searchResults {
+    padding-top: 1em;
+}
+
+.dark .product {
+    color: #B0BEC5;
+}
+
+.light .product {
+    color: #212121;
+}
+
+.product {
+    line-height: 2em;
+    height: 2em;
+    margin-right: 2em;
+    display: inline-block;
+}
+
+.productContainer {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+
+.wishlisted {
+    font-style: italic;
+}
+
+.dark .wishlisted {
+    color: #FFC107 !important;
+}
+
+.light .wishlisted {
+    color: #f57c00 !important;
+}
+
+.dark .owned {
+    color: #4CAF50 !important;
+}
+
+.light .owned {
+    color: #388e3c !important;
+}
+
+.partOwned {
+    font-style: italic;
+}
+
+.dark .partOwned {
+    color: #A5D6A7;
+}
+
+.light .partOwned {
+    color: #66bb6a;
+}
+
+.bundle {
+    font-weight: 600;
+}
+
+    .bundle.owned {
+        color: #388E3C;
+    }
+
+    .bundle.wishlisted {
+        /* wishlisted bundle should be normal to distinguish with partial owned */
+        color: #FF8F00 !important;
+        font-style: normal;
+    }
+
+.updated::after {
+    content: "*";
+    margin-left: 0.1em;
+    color: #F44336;
+}
+
+.dark .dlc {
+    color: #9FA8DA;
+}
+
+.light .dlc {
+    color: #283593;
+}
+
+.dlc::after {
+    content: "DLC";
+    border: #9C27B0 solid 1px;
+    /*border-radius: 0.2em;*/
+    padding: 0 0.25em;
+    margin-left: 0.4em;
+    margin-top: -0.5em;
+    font-size: 0.5em;
+    color: #9C27B0 !important;
+    vertical-align: top;
+}
+
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.5em;
+    transform: translateY(0.125em);
+}
+
+.dark #gameDetailsContainer {
+    color: #B0BEC5;
+}
+
+.light #gameDetailsContainer {
+    color: #212121;
+}
+
+
+#gameDetailsContainer .descriptionContainer {
+    margin-bottom: 1em;
+}
+
+#gameDetailsContainer .productContainer {
+    margin-bottom: 0;
+}
+
+/* Top level page header shouldn't have top margin */
+#gameDetailsContainer > .productContainer > .productTitle.header1 {
+    margin-top: 0;
+}
+
+.dark #gameDetailsContainer .cdKey {
+    color: #212121 !important;
+}
+
+.light #gameDetailsContainer .cdKey {
+    color: #f5f5f5 !important;
+}
+
+#gameDetailsContainer .cdKey:focus {
+    background: inherit;
+}
+
+#gameDetailsContainer img {
+    width: 100%;
+    border: 0;
+    display: inline-block;
+    margin-bottom: 1em;
+    margin-right: 1em;
+    max-width: 800px;
+    vertical-align: top;
+}
+
+#gameDetailsContainer .header1 {
+    font-size: 2.25em;
+    font-weight: 300;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+    #gameDetailsContainer .header1.bundle {
+        font-weight: normal;
+    }
+
+#gameDetailsContainer .filesContainer {
+    margin-bottom: 1em;
+    line-height: 2em;
+}
+
+    #gameDetailsContainer .filesContainer h1 {
+        font-size: 1.25em;
+        font-weight: lighter;
+        margin: 0.5em 0;
+    }
+
+    #gameDetailsContainer .filesContainer .entry {
+        display: inline-block;
+        margin-right: 2em;
+    }
+
+#gameDetailsContainer .screenshotsContainer {
+    margin-bottom: 1em;
+}
+
+    #gameDetailsContainer .screenshotsContainer a {
+        font-weight: 600;
+    }
+
+    #gameDetailsContainer .screenshotsContainer .screenshots {
+        margin-top: 1em;
+        text-align: center;
+    }
+
+    #gameDetailsContainer .screenshotsContainer .showScreenshots {
+        border-left: 2px solid;
+    }
+
+.dark #gameDetailsContainer .screenshotsContainer .showScreenshots {
+    border-color: #1976d2;
+}
+
+.light #gameDetailsContainer .screenshotsContainer .showScreenshots {
+    border-color: #2196f3;
+}
+
+#gameDetailsContainer tr {
+    line-height: 2em;
+}
+
+#gameDetailsContainer td.header {
+    line-height: 1.5em;
+    padding-right: 0.75em;
+    min-width: 5em;
+}
+
+.dark #gameDetailsContainer td.title {
+    color: white;
+}
+
+.light #gameDetailsContainer td.title {
+    color: black;
+}
+
+#infoContainer {
+    padding: 1em;
+}
+
+    #infoContainer .info {
+        line-height: 2em;
+        height: 2em;
+    }
+
+    #infoContainer .product {
+        display: inline-block;
+        cursor: default;
+    }
+
+    #infoContainer .count {
+        float: right;
+        margin-right: 0;
+    }
+
+#toggleMenu {
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding-right: 0.5em;
+}
+
+input[type=search] {
+    padding: 4px;
+    height: 30px;
+    width: 200px;
+    font-size: 0.8em;
+    color: #212121;
+    border: 0;
+    /* WebKit insists that you can't change height of input type=search*/
+    -webkit-appearance: none;
+}
+
+    input[type=search]:focus {
+        background-color: #e3f2fd;
+        outline: 2px solid #2196f3;
+    }
+
+#showAllSearchResults {
+    margin-left: 0.5em;
+    font-size: 0.8em;
+}
+
+#menuContainer {
+    position: fixed;
+    overflow: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    padding: 0;
+    padding-top: 3em;
+}
+
+.dark #menuContainer {
+    box-shadow: 0px 0px 5px black;
+}
+
+.light #menuContainer {
+    box-shadow: 0px 0px 5px silver;
+}
+
+    #menuContainer button {
+        width: 100%;
+        text-align: left;
+    }
+
+*[accessKey] {
+    position: relative;
+}
+
+.mnemonic {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    padding: 0.25em 0.5em;
+    color: black;
+    background: #ffc107;
+    text-transform: uppercase;
+    font-size: 0.6em;
+    font-weight: bolder;
+    z-index: 1;
+}
+
+.dark #errorMessage {
+    color: white;
+}
+
+.light #errorMessage {
+    color: black;
+}
+
+#errorMessage {
+    font-size: 3em;
+    text-align: center;
+    margin: 1em;
+}
+
+    #errorMessage #hal {
+        width: 300px;
+        height: 300px;
+    }
+
+    #errorMessage .note {
+        font-size: 0.5em;
+    }
+
+/* SVG */
+
+svg.dark {
+    fill: white;
+}
+
+svg.light {
+    fill: black;
+}
+
+svg.dark.stroke {
+    stroke: black;
+}
+
+svg.light.stroke {
+    stroke: white;
+}
+
+.dark #icons #Linux #linux-foreground {
+    fill: black;
+}
+
+.light #icons #Linux #linux-foreground {
+    fill: white;
+}
