@@ -74,7 +74,7 @@ var Templates = function() {
             "xmlns='http://www.w3.org/2000/svg' " +
             "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
             "<title>{{operatingSystem}}</title>" +
-            "<use xlink:href='./resources/icons.svg#{{operatingSystem}}' /></svg></span>";
+            "<use xlink:href='./_resources/icons.svg#{{operatingSystem}}' /></svg></span>";
     }
     var getExtraIconTemplate = function() {
         return "<span class='icon'><svg viewBox='0 0 100 100' " +
@@ -82,7 +82,7 @@ var Templates = function() {
             "xmlns='http://www.w3.org/2000/svg' " +
             "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
             "<title>Extra</title>" +
-            "<use xlink:href='./resources/icons.svg#extra' /></svg></span>";
+            "<use xlink:href='./_resources/icons.svg#extra' /></svg></span>";
     }
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";
