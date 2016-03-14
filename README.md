@@ -28,6 +28,7 @@ Options file that can be used to provide input data. Without this file the appli
 * downloadLangugages - what languages to download, default: ["English"]
 * downloadOperatingSystems - files for which operating systems to download, default: ["Windows"]
 * downloadProductFiles - true: download product files, false (default): don't download product files
+* downloadImages - true (default): download product thumbnails, false: don't download product thumbnails
 * downloadScreenshots - true: download product screenshots, false (default): don't download product screenshots
 * updateAll - true: attempt to update all available products, false (default): only update product marked as updated
 * cleanupProductFolders - true (default): remove all files that are not specified for current version on GOG.com to _RecycleBin (preserving folder structure), false: don't remove any files from product folders
