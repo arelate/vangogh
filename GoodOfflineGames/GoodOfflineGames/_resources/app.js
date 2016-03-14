@@ -7,8 +7,9 @@ var _$$ = function(n, s) { return n.querySelectorAll(s); }
 
 var Templates = function() {
     var getProductTemplate = function() {
-        return "<a class='product {{productClass}}' href='#{{id}}'>" +
-            "<span class='title' title='{{title}}' >{{title}}</span></a>";
+        return "<div class='product {{productClass}}'><a href='#{{id}}'>" +
+            "<div class='productImageContainer'><img class='hidden' data-src='{{productImage}}' /></div>" +
+            "<span class='title' title='{{title}}' >{{title}}</span></a></div>";
     }
     var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' onerror='Images.hideOnError(this)' />";
     var gameDetailsProductHeader = "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>";
@@ -126,20 +127,50 @@ var Views = function() {
 } ();
 
 var Images = function() {
-    var getRelativeUri = function(absoluteUri) {
+    var thumbnails = [];
+    var getImageLocalUri = function(absoluteUri) {
         var imageParts = absoluteUri.split("/");
-        var imageLocalUri = imageParts[imageParts.length - 1];
+        return imageParts[imageParts.length - 1];
+    }
+    var getRelativeUri = function(absoluteUri) {
+        var imageLocalUri = getImageLocalUri(absoluteUri);
         return {
             "productImage": "_images/" + imageLocalUri + "_800.jpg",
             "productRetinaImage": "_images/" + imageLocalUri + ".jpg",
             "screenshot": "_screenshots/" + imageLocalUri
         }
     }
+    var getThumbnailSrc = function(absoluteUri) {
+        var imageLocalUri = getImageLocalUri(absoluteUri);
+        return "_images/" + imageLocalUri + "_196.jpg 1x, " +
+            "_images/" + imageLocalUri + "_392.jpg 2x";
+    }
     var hideOnError = function(img) {
         if (img && img.classList) img.classList.add("hidden");
     }
+    var updateProductThumbnails = function(container) {
+        var productThumbnails = container.querySelectorAll(".product img[data-src]");
+        for (var ii = 0; ii < productThumbnails.length; ii++) {
+            thumbnails.push(productThumbnails[ii]);
+        }
+        updateProductThumbnail();
+    }
+    var updateProductThumbnail = function() {
+        if (!thumbnails || !thumbnails.length) return;
+        for (var ii = 0; ii < 10; ii++) {
+            var image = thumbnails.shift();
+            if (!image) break;
+            var source = image.getAttribute("data-src");
+            image.srcset = getThumbnailSrc(source);
+            image.removeAttribute("data-src");
+            image.classList.remove("hidden");
+        }
+        requestAnimationFrame(updateProductThumbnail);
+    }
     return {
         "getRelativeUri": getRelativeUri,
+        "getThumbnailSrc": getThumbnailSrc,
+        "updateProductThumbnails": updateProductThumbnails,
         "hideOnError": hideOnError
     }
 } ();
@@ -366,7 +397,7 @@ var Search = function() {
                 searchResults.appendChild(clonedProductElement);
             }
 
-            // GameDetails.initElements(clonedProductElements);
+            Images.updateProductThumbnails(searchResults);
 
             searchResults.classList.remove("hidden");
 
@@ -499,6 +530,7 @@ var ViewModelProvider = function() {
         return {
             "id": product.id,
             "productClass": productClass.join(" "),
+            "productImage": product.image,
             "title": product.title
         };
     }
@@ -1169,6 +1201,8 @@ document.addEventListener("DOMContentLoaded", function() {
         pContainer.innerHTML += remainingHtml;
         if (!location.search && !location.hash) pContainer.classList.remove("hidden");
         Info.init();
+        
+        Images.updateProductThumbnails(pContainer);
     });
     var elapsed = new Date() - start;
     console.log("Adding html to the DOM: " + elapsed + "ms");
@@ -1241,5 +1275,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     Mnemonics.init(document.body);
+
 
 });

@@ -93,10 +93,38 @@ button {
 }
 
 .product {
-    line-height: 2em;
-    height: 2em;
-    margin-right: 2em;
+    /*line-height: 2em;*/
+    /*height: 2em;*/
+    margin-right: 1em;
+    margin-bottom: 1em;
     display: inline-block;
+    width: 196px;
+}
+
+.product .productImageContainer {
+    width: 196px;
+    height: 110px;
+    background: rgba(0,0,0,0.1);
+}
+
+.product img {
+    width: 100%;
+    height: 100%;
+}
+
+.product a {
+    color: inherit;
+}
+
+.product a .title {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: inherit;
+    font-size: 0.9em;
+    padding: 0.25em;
+    width: 100%;
 }
 
 .productContainer {
@@ -166,15 +194,15 @@ button {
     color: #283593;
 }
 
-.dlc::after {
+.dlc .title::before,
+#infoContainer .dlc::before {
     content: "DLC";
     border: #9C27B0 solid 1px;
     padding: 0 0.25em;
-    margin-left: 0.4em;
-    margin-top: -0.5em;
+    margin-right: 0.4em;
     font-size: 0.5em;
     color: #9C27B0 !important;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .icon {
@@ -292,13 +320,14 @@ button {
 }
 
     #infoContainer .info {
-        line-height: 2em;
-        height: 2em;
+        line-height: 1em;
     }
 
     #infoContainer .product {
         display: inline-block;
         cursor: default;
+        width: auto;
+        line-height: 1em;
     }
 
     #infoContainer .count {
