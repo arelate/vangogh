@@ -3,8 +3,9 @@
   "password": "",
   "downloadLangugages": [ "English" ],
   "downloadOperatingSystems": [ "Windows" ],
-  "downloadProductFiles": true,
+  "downloadImages": true,
   "downloadScreenshots":  true,
+  "downloadProductFiles": true,
   "cleanupProductFolders": true,
   "updateAll": false,
   "useLog":  true
