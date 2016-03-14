@@ -418,6 +418,15 @@ input[type=search] {
 
 .changelogContent hr {
     margin: 0.5em 0;
+    border: 1px solid;
+}
+
+.dark .changelogContent hr {
+    border-color: #424242;
+}
+
+.light .changelogContent hr {
+    border-color: #e0e0e0;
 }
 
 .changelogContent li {
