@@ -7,9 +7,9 @@ var _$$ = function(n, s) { return n.querySelectorAll(s); }
 
 var Templates = function() {
     var getProductTemplate = function() {
-        return "<div class='product {{productClass}}'><a href='#{{id}}'>" +
+        return "<div class='product {{productClass}}' title='{{title}}'><a href='#{{id}}'>" +
             "<div class='productImageContainer'><img class='hidden' data-src='{{productImage}}' /></div>" +
-            "<span class='title' title='{{title}}' >{{title}}</span></a></div>";
+            "<span class='title' >{{title}}</span></a></div>";
     }
     var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' onerror='Images.hideOnError(this)' />";
     var gameDetailsProductHeader = "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>";

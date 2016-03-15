@@ -101,6 +101,11 @@ button {
     width: 196px;
 }
 
+.product:hover {
+    /*background-color: #e3f2fd;*/
+    outline: 2px solid #2196f3;
+}
+
 .product .productImageContainer {
     width: 196px;
     height: 110px;
@@ -345,7 +350,7 @@ button {
 input[type=search] {
     padding: 4px;
     height: 30px;
-    width: 200px;
+    width: 196px;
     font-size: 0.8em;
     color: #212121;
     border: 0;
