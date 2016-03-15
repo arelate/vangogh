@@ -85,6 +85,7 @@ namespace GOG
             IUriController uriController = new UriController();
             IStringNetworkController networkController = new NetworkController(uriController);
             IRequestFileDelegate requestFileDelegate = networkController as IRequestFileDelegate;
+            ITokenExtractorController tokenExtractorController = new TokenExtractorController();
 
             saveLoadDataController = new SaveLoadDataHelper(
                 storageController,
@@ -176,6 +177,7 @@ namespace GOG
             IAuthorizationController authorizationController = new AuthorizationController(
                 uriController,
                 networkController,
+                tokenExtractorController,
                 loggingConsoleController);
 
             IFilterDelegate<Product> existingProductsFilter = new ExistingProductsFilter();

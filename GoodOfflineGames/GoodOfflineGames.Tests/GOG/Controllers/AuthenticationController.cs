@@ -5,6 +5,8 @@ using GOG.Controllers;
 using GOG.SharedControllers;
 using GOG.SharedModels;
 
+using GOG.Controllers;
+
 namespace GoodOfflineGames.Tests
 {
     [TestClass]
@@ -16,16 +18,18 @@ namespace GoodOfflineGames.Tests
         private IAuthorizationController authorizationController;
         private ICredentials correctCredentials;
         private ICredentials wrongCredentials;
+        private ITokenExtractorController tokenExtractorController;
 
         public AuthenticationControllerTests()
         {
             uriController = new UriController(); // no need to mock UriController
             stringNetworkController = new MockNetworkController(uriController);
             consoleController = new MockConsoleController();
+            tokenExtractorController = new TokenExtractorController();
             correctCredentials = new Settings() { Username = "username", Password = "password" };
             wrongCredentials = new Settings() { Username = "wrongusername", Password = "wrongpassword" };
 
-            authorizationController = new AuthorizationController(uriController, stringNetworkController, consoleController);
+            authorizationController = new AuthorizationController(uriController, stringNetworkController, tokenExtractorController, consoleController);
         }
 
         [TestMethod]

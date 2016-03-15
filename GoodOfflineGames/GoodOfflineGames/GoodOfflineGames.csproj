@@ -70,6 +70,7 @@
     <Compile Include="ConsolePostUpdate.cs" />
     <Compile Include="Controllers\CleanupController.cs" />
     <Compile Include="Controllers\LoggingConsoleController.cs" />
+    <Compile Include="Controllers\TokenExtractorController.cs" />
     <Compile Include="ExistingProductsFilter.cs" />
     <Compile Include="GOG\Controllers\Abstract\ProductCoreController.cs" />
     <Compile Include="GOG\Controllers\AuthorizationController.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Interfaces\StreamController.cs" />
     <Compile Include="Interfaces\StringNetworkController.cs" />
+    <Compile Include="Interfaces\TokenExtractorController.cs" />
     <Compile Include="Interfaces\UriController.cs" />
     <Compile Include="ProductTypes.cs" />
     <Compile Include="SaveLoadDataHelper.cs" />
