@@ -102,8 +102,8 @@ button {
 }
 
 .product:hover {
-    /*background-color: #e3f2fd;*/
-    outline: 2px solid #2196f3;
+    background-color: rgba(0,0,0,0.1);
+    /*outline: 2px solid #2196f3;*/
 }
 
 .product .productImageContainer {
