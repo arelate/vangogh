@@ -101,9 +101,13 @@ button {
     width: 196px;
 }
 
-.product:hover {
-    background-color: rgba(0,0,0,0.1);
+.dark .product:hover {
+    background-color: black;
     /*outline: 2px solid #2196f3;*/
+}
+
+.light .product:hover {
+    background-color: white;
 }
 
 .product .productImageContainer {
