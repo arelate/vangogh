@@ -313,8 +313,8 @@ var SearchIndex = function() {
                     // add bundle children tags
                     var bundleGd = gdIndex.getElementByKey(bundle.children[ii]);
                     if (bundleGd && bundleGd.tags && bundleGd.tags.length)
-                        for (var ii = 0; ii < bundleGd.tags.length; ii++)
-                            parts.push(bundleGd.tags[ii].name.toLowerCase());
+                        for (var tt = 0; tt < bundleGd.tags.length; tt++)
+                            parts.push(bundleGd.tags[tt].name.toLowerCase());
                 }
         }
         searchIndex.push(parts.join(" "));
