@@ -70,10 +70,10 @@ var Templates = function() {
         return "<a href='{{uri}}'><img data-src={{uri}} onerror='Images.hideOnError(this)'/></a>";
     }
     var getOperatingSystemIconTemplate = function() {
-        return "<i class='icon fa-{{operatingSystem}}'></i>";
+        return "<i class='icon fa-{{operatingSystem}}' title='{{operatingSystem}}'></i>";
     }
     var getExtraIconTemplate = function() {
-        return "<i class='icon fa-star'></i>";
+        return "<i class='icon fa-star' title='Extra'></i>";
     }
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";
@@ -1234,13 +1234,6 @@ document.addEventListener("DOMContentLoaded", function() {
     switchTheme.addEventListener("click", function(e) {
         document.body.classList.toggle("dark");
         document.body.classList.toggle("light");
-
-        // also reverse SVG elements
-        var svgElements = document.getElementsByTagName("svg");
-        for (var ii = 0; ii < svgElements.length; ii++) {
-            svgElements[ii].classList.toggle("dark");
-            svgElements[ii].classList.toggle("light");
-        }
     });
 
     window.addEventListener("hashchange", NavigationController.update);
