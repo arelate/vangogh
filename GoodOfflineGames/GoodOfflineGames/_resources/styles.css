@@ -263,6 +263,14 @@ button {
     content: '\f005';
 }
 
+.fa-file-picture-o::before {
+    content: '\f1c5';
+}
+
+.fa-file-text-o::before {
+    content: '\f0f6';
+}
+
 .dark #gameDetailsContainer {
     color: #B0BEC5;
 }

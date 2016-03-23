@@ -28,11 +28,11 @@ var Templates = function() {
         "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
         "<div class='{{extrasClass}}'><h1>Extras</h1><div>{{extrasContent}}</div></div>";
     var gameDetailsScreenshotsContainer = "<div class='screenshotsContainer'>" +
-        "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'>Show/hide {{screenshotsCount}} screenshots</button>" +
+        "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'><i class='icon fa-file-picture-o'></i> Show/hide {{screenshotsCount}} screenshots</button>" +
         "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
         "</div>";
     var gameDetailsChangelogContainer = "<div id='changelogContainer' class='{{changelogClass}}'>" +
-        "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'>Show/hide changelog</button>" +
+        "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'><i class='icon fa-file-text-o'></i> Show/hide changelog</button>" +
         "<div class='changelogContent hidden'>{{changelogContent}}</div>" +
         "</div>";
     var getGameDetailsTemplate = function() {
