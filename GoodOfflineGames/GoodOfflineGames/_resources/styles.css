@@ -1,8 +1,18 @@
+@font-face {
+    font-family: "fa";
+    src: url(fontawesome-webfont.woff) format(woff);
+}
+
 * {
     font-family: -apple-system, "Segoe UI";
     font-size: 15px;
     box-sizing: border-box;
     margin: 0;
+}
+
+i.icon {
+    font-family: "fa";
+    font-style:normal;
 }
 
 .background.dark {
@@ -219,8 +229,23 @@ button {
     width: 1em;
     height: 1em;
     margin-right: 0.5em;
-    transform: translateY(0.125em);
 }
+
+.fa-chevron-up::before {
+    content: '\f077';
+}
+
+.fa-info-circle::before {
+    content: '\f05a';
+}
+
+.fa-bars::before {
+    content: '\f0c9';
+}
+
+.fa-paint-brush::before {
+    content: '\f1fc';
+} 
 
 .dark #gameDetailsContainer {
     color: #B0BEC5;
