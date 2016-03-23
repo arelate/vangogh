@@ -70,20 +70,10 @@ var Templates = function() {
         return "<a href='{{uri}}'><img data-src={{uri}} onerror='Images.hideOnError(this)'/></a>";
     }
     var getOperatingSystemIconTemplate = function() {
-        return "<span class='icon'><svg viewBox='0 0 100 100' " +
-            "class='{{theme}} stroke'" +
-            "xmlns='http://www.w3.org/2000/svg' " +
-            "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
-            "<title>{{operatingSystem}}</title>" +
-            "<use xlink:href='./_resources/icons.svg#{{operatingSystem}}' /></svg></span>";
+        return "<i class='icon fa-{{operatingSystem}}'></i>";
     }
     var getExtraIconTemplate = function() {
-        return "<span class='icon'><svg viewBox='0 0 100 100' " +
-            "class='{{theme}}'" +
-            "xmlns='http://www.w3.org/2000/svg' " +
-            "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
-            "<title>Extra</title>" +
-            "<use xlink:href='./_resources/icons.svg#extra' /></svg></span>";
+        return "<i class='icon fa-star'></i>";
     }
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";

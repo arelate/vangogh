@@ -247,6 +247,22 @@ button {
     content: '\f1fc';
 } 
 
+.fa-Windows::before {
+    content: '\f17a';
+}
+
+.fa-Mac::before {
+    content: '\f179';
+}
+
+.fa-Linux::before {
+    content: '\f17c';
+}
+
+.fa-star::before {
+    content: '\f005';
+}
+
 .dark #gameDetailsContainer {
     color: #B0BEC5;
 }
