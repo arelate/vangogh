@@ -13,10 +13,16 @@ namespace GOG.Interfaces
         Task<IList<Type>> Update(IList<string> items, IPostUpdateDelegate postUpdateDelegate = null);
     }
 
+    public interface INewDeserializeDelegate<Type>
+    {
+        Type NewDeserialize();
+    }
+
     public interface IProductCoreController<Type>:
         ICollectionController<Type>,
         IFindDelegate<long, Type>,
-        IUpdateDelegate<Type>
+        IUpdateDelegate<Type>,
+        INewDeserializeDelegate<Type>
     {
         event EventHandler<Type> OnProductUpdated;
         event BeforeAddingDelegate<Type> OnBeforeAdding;

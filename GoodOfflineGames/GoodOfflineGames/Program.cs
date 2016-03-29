@@ -207,6 +207,8 @@ namespace GOG
                 jsonStringController,
                 settings.DownloadLanguages);
 
+            var gd = gamesDetailsController.NewDeserialize();
+
             IScreenshotsController screenshotsController = new ScreenshotsController(networkController);
 
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);

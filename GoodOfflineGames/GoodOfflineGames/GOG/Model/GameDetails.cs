@@ -22,8 +22,6 @@ namespace GOG.Model
         public string CDKey { get; set; }
         [DataMember(Name = "dlcs")]
         public List<GameDetails> DLCs { get; set; }
-        [DataMember(Name = "downloads"), IgnoreDataMember()]
-        public dynamic[][] DynamicDownloads { get; set; }
         [DataMember(Name = "languageDownloads")]
         public List<OperatingSystemsDownloads> LanguageDownloads { get; set; }
         [DataMember(Name = "extras")]
