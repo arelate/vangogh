@@ -34,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>E:\GOG.com\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -55,10 +55,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -77,6 +73,7 @@
     <Compile Include="GOG\Controllers\Abstract\CollectionController.cs" />
     <Compile Include="GOG\Controllers\DataConsistencyController.cs" />
     <Compile Include="GOG\Controllers\DownloadProgressReporter.cs" />
+    <Compile Include="GOG\Controllers\GameDetailsDownloadsController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\Abstract\MultipageRequestController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsController.cs" />
@@ -88,6 +85,7 @@
     <Compile Include="GOG\Controllers\ProductsController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
     <Compile Include="GOG\Model\GOGData.cs" />
+    <Compile Include="GOG\Model\Languages.cs" />
     <Compile Include="GOG\Model\ProductCore.cs" />
     <Compile Include="GOG\Model\ProductFile.cs" />
     <Compile Include="GOG\Model\Unused\Availability.cs" />
@@ -113,6 +111,7 @@
     <Compile Include="Interfaces\CollectionController.cs" />
     <Compile Include="Interfaces\ConsoleController.cs" />
     <Compile Include="Interfaces\GOG\AuthorizationController.cs" />
+    <Compile Include="Interfaces\GOG\GameDetailsDownloadsController.cs" />
     <Compile Include="Interfaces\GOG\Credentials.cs" />
     <Compile Include="Interfaces\GOG\ProductCoreController.cs" />
     <Compile Include="Interfaces\GOG\ProductFileController.cs" />

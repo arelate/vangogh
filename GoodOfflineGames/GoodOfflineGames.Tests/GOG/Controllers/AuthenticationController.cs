@@ -5,8 +5,6 @@ using GOG.Controllers;
 using GOG.SharedControllers;
 using GOG.SharedModels;
 
-using GOG.Controllers;
-
 namespace GoodOfflineGames.Tests
 {
     [TestClass]

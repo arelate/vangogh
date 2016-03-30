@@ -17,6 +17,8 @@ namespace GoodOfflineGames.Tests
         private IProductCoreController<Product> productsController;
         private IProductCoreController<ProductData> productDataController;
 
+        private IGameDetailsDownloadsController gameDetailsDownloadsController;
+
         private IUriController uriController;
         private IStringNetworkController stringNetworkController;
         private IDeserializeDelegate<string> stringDeserializeDelegate;
@@ -69,9 +71,12 @@ namespace GoodOfflineGames.Tests
             updated = new List<long>() { productWithDLC.Id, productWithMultipleLanguages.Id };
             updatedController = new UpdatedController(updated);
 
+            gameDetailsDownloadsController = new GameDetailsDownloadsController();
+
             gameDetailsController = new GameDetailsController(gameDetails,
                 stringNetworkController,
                 stringDeserializeDelegate,
+                gameDetailsDownloadsController,
                 supportedLanguages);
         }
 
@@ -108,7 +113,6 @@ namespace GoodOfflineGames.Tests
             Assert.AreEqual(gameDetails.Count, 1);
             Assert.IsNotNull(gameDetails[0]);
             Assert.AreEqual(gameDetails[0].Title, "Saints Row: The Third - The Full Package");
-            Assert.IsNull(gameDetails[0].DynamicDownloads);
             Assert.IsNotNull(gameDetails[0].LanguageDownloads);
             Assert.AreEqual(gameDetails[0].LanguageDownloads.Count, supportedLanguages.Length);
 

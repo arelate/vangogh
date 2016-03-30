@@ -201,10 +201,13 @@ namespace GOG
                 gogDataController,
                 jsonStringController);
 
+            IGameDetailsDownloadsController gameDetailsDownloadsController = new GameDetailsDownloadsController();
+
             IProductCoreController<GameDetails> gamesDetailsController = new GameDetailsController(
                 gamesDetails,
                 networkController,
                 jsonStringController,
+                gameDetailsDownloadsController,
                 settings.DownloadLanguages);
 
             var gd = gamesDetailsController.NewDeserialize();

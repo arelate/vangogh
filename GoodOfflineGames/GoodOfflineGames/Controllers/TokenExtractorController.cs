@@ -8,7 +8,7 @@ namespace GOG.Controllers
     // TODO: add tests
     public class TokenExtractorController : ITokenExtractorController
     {
-        public IEnumerable<string> Extract(string data)
+        public IEnumerable<string> ExtractMultiple(string data)
         {
             // extracting login token that is 43 characters (letters, numbers, - ...)
             Regex regex = new Regex(@"[\w-]{43}");
