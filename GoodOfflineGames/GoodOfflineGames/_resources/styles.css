@@ -111,15 +111,6 @@ button {
     width: 196px;
 }
 
-.dark .product:hover {
-    background-color: black;
-    /*outline: 2px solid #2196f3;*/
-}
-
-.light .product:hover {
-    background-color: white;
-}
-
 .product .productImageContainer {
     width: 196px;
     height: 110px;
@@ -199,10 +190,21 @@ button {
         font-style: normal;
     }
 
-.updated::after {
-    content: "*";
-    margin-left: 0.1em;
-    color: #F44336;
+.updated .title::before,
+.dlc .title::before,
+#infoContainer .dlc::before {
+    content: "DLC";
+    outline: transparent solid 1px;
+    padding: 0 0.25em;
+    margin-right: 0.4em;
+    font-size: 0.5em;
+    vertical-align: middle;
+}
+
+.updated .title::before {
+    content: "UPD";
+    outline-color: #dd2c00;
+    color: #dd2c00 !important;
 }
 
 .dark .dlc {
@@ -216,12 +218,8 @@ button {
 .dlc .title::before,
 #infoContainer .dlc::before {
     content: "DLC";
-    border: #9C27B0 solid 1px;
-    padding: 0 0.25em;
-    margin-right: 0.4em;
-    font-size: 0.5em;
+    outline-color: #9C27B0;
     color: #9C27B0 !important;
-    vertical-align: middle;
 }
 
 .icon {
