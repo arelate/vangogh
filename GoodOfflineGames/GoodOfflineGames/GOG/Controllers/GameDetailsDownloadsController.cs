@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using GOG.Interfaces;
+﻿using GOG.Interfaces;
 
 namespace GOG.Controllers
 {
-    public class GameDetailsDownloadsController : IGameDetailsDownloadsController
+    public class GameDetailsDownloadsController : 
+        IGameDetailsDownloadsController
     {
         private const string downloadsStart = "[[";
         private const string downloadsEnd = "]]";
