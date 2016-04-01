@@ -80,7 +80,7 @@ namespace GOG.Controllers
                     languages.ElementAt(ii),
                     new string[2] { "\"", "," });
 
-                download.Language = language;
+                download.Language = Uri.UnescapeDataString(language);
 
                 details?.LanguageDownloads.Add(download);
             }
