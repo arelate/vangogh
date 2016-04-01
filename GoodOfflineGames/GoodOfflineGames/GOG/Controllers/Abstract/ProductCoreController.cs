@@ -95,10 +95,5 @@ namespace GOG.Controllers
 
             return newItems;
         }
-
-        public virtual Type NewDeserialize()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
