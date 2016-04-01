@@ -1,18 +1,38 @@
-﻿namespace GOG.Interfaces
+﻿using System.Collections.Generic;
+
+using GOG.Model;
+
+namespace GOG.Interfaces
 {
-    public interface IExtractSingleDelegate
+    public interface IExtractSingleDelegate<Input, Output>
     {
-        string ExtractSingle(string input);
+        Output ExtractSingle(Input input);
     }
 
-    public interface ISanitazeDelegate
+    public interface ISanitazeSingleDelegate
     {
-        string Sanitize(string input1, string input2);
+        string SanitizeSingle(string input1, string input2);
+    }
+
+    public interface ISanitazeMultipleDelegate
+    {
+        string SanitizeMultiple(string input1, IEnumerable<string> input2);
+    }
+
+    public interface IExtractLanguageDownloads
+    {
+        GameDetails ExtractLanguageDownloads(
+            GameDetails details,
+            OperatingSystemsDownloads[][] downloads,
+            IEnumerable<string> languages);
     }
 
     public interface IGameDetailsDownloadsController:
-        IExtractSingleDelegate,
-        ISanitazeDelegate
+        IExtractSingleDelegate<string, string>,
+        IExtractMultipleDelegate<string, string>,
+        ISanitazeSingleDelegate,
+        ISanitazeMultipleDelegate,
+        IExtractLanguageDownloads
     {
         // ...
     }

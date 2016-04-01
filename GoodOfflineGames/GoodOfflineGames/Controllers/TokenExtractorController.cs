@@ -11,7 +11,8 @@ namespace GOG.Controllers
         public IEnumerable<string> ExtractMultiple(string data)
         {
             // extracting login token that is 43 characters (letters, numbers, - ...)
-            Regex regex = new Regex(@"[\w-]{43}");
+            const string tokenPattern = @"[\w-]{43}";
+            var regex = new Regex(tokenPattern);
             var match = regex.Match(data);
             while (match.Success)
             {

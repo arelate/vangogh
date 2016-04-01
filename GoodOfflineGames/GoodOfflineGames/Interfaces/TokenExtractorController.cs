@@ -2,13 +2,13 @@
 
 namespace GOG.Interfaces
 {
-    public interface IExtractMultipleDelegate
+    public interface IExtractMultipleDelegate<Input, Output>
     {
-        IEnumerable<string> ExtractMultiple(string data);
+        IEnumerable<Output> ExtractMultiple(Input data);
     }
 
     public interface ITokenExtractorController:
-        IExtractMultipleDelegate
+        IExtractMultipleDelegate<string, string>
     {
         // ...
     }
