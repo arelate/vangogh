@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 
 using GOG.Interfaces;
@@ -38,6 +39,12 @@ namespace GOG.SharedControllers
         {
             var fileInfo = new FileInfo(uri);
             return fileInfo.Length;
+        }
+
+        public DateTime GetTimestamp(string uri)
+        {
+            var fileInfo = new FileInfo(uri);
+            return fileInfo.CreationTimeUtc;
         }
 
         public bool DirectoryExists(string uri)

@@ -155,10 +155,16 @@ namespace GOG
 
             #region Debug only - file validation controller early invoke 
 
-            FileValidationController fileValidationController = new FileValidationController(ioController, requestFileDelegate, consoleController);
+            FileValidationController fileValidationController = new FileValidationController(ioController, requestFileDelegate);
 
-            fileValidationController.ValidateProductFile(productFiles[0]).Wait();
+            var result = fileValidationController.ValidateProductFile(productFiles[0]).Result;
 
+            if (!result.Item1)
+            {
+                consoleController.WriteLine(result.Item2);
+            }
+
+            consoleController.WriteLine("DONE.");
 
             #endregion
 
