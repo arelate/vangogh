@@ -73,6 +73,7 @@
     <Compile Include="GOG\Controllers\Abstract\CollectionController.cs" />
     <Compile Include="GOG\Controllers\DataConsistencyController.cs" />
     <Compile Include="GOG\Controllers\DownloadProgressReporter.cs" />
+    <Compile Include="GOG\Controllers\FileValidationController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsDownloadsController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\Abstract\MultipageRequestController.cs" />

@@ -82,7 +82,8 @@ namespace GOG.Controllers
 
             productFile.DownloadSuccessful = result.Item1;
             var fileUri = result.Item2;
-            productFile.File = fileUri.Segments[fileUri.Segments.Length - 1];
+            productFile.File = fileUri.Segments.Last();
+            productFile.ResolvedUrl = fileUri.ToString();
 
             consoleController.WriteLine(string.Empty);
 

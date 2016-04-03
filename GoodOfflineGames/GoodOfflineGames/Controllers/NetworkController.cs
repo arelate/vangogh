@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace GOG.SharedControllers
             {
                 var totalBytes = response.Content.Headers.ContentLength;
                 var requestUri = response.RequestMessage.RequestUri;
-                var filename = requestUri.Segments[requestUri.Segments.Length - 1];
+                var filename = requestUri.Segments.Last();
 
                 if (!response.IsSuccessStatusCode)
                 {

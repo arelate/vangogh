@@ -6,6 +6,7 @@
   "downloadImages": true,
   "downloadScreenshots":  true,
   "downloadProductFiles": true,
+  "validateProductFiles":  true,
   "cleanupProductFolders": true,
   "updateAll": false,
   "useLog":  true

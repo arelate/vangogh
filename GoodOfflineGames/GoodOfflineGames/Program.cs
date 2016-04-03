@@ -153,6 +153,15 @@ namespace GOG
 
             #endregion
 
+            #region Debug only - file validation controller early invoke 
+
+            FileValidationController fileValidationController = new FileValidationController(ioController, requestFileDelegate, consoleController);
+
+            fileValidationController.ValidateProductFile(productFiles[0]).Wait();
+
+
+            #endregion
+
             #region Debug only - print all known folders and exit
 
             /*
@@ -571,6 +580,11 @@ namespace GOG
                             updatedGameDetails,
                             settings.DownloadLanguageCodes,
                             settings.DownloadOperatingSystems).Result;
+                }
+
+                if (settings.ValidateProductFiles)
+                {
+
                 }
 
                 IProductFileController productFilesController = new ProductFilesController(productIntallersExtras);

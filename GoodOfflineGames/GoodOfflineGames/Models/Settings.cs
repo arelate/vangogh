@@ -18,6 +18,8 @@ namespace GOG.SharedModels
         public string[] DownloadOperatingSystems { get; set; }
         [DataMember(Name = "downloadProductFiles")]
         public bool DownloadProductFiles { get; set; }
+        [DataMember(Name = "validateProductFiles")]
+        public bool ValidateProductFiles { get; set; }
         [DataMember(Name = "downloadScreenshots")]
         public bool DownloadScreenshots { get; set; }
         [DataMember(Name = "downloadImages")]
