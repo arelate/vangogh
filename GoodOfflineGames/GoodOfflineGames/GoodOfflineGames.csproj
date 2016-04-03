@@ -115,6 +115,7 @@
     <Compile Include="Interfaces\GOG\Credentials.cs" />
     <Compile Include="Interfaces\GOG\ProductCoreController.cs" />
     <Compile Include="Interfaces\GOG\ProductFileController.cs" />
+    <Compile Include="Interfaces\GOG\ProductFilesDownloadController.cs" />
     <Compile Include="Interfaces\GOG\ScreenshotsController.cs" />
     <Compile Include="Interfaces\LanguageCodesController.cs" />
     <Compile Include="Interfaces\RequestFileDelegate.cs" />

@@ -9,7 +9,7 @@ using GOG.SharedModels;
 
 namespace GOG.Controllers
 {
-    class ProductFilesDownloadController
+    public class ProductFilesDownloadController: IProductFilesDownloadController
     {
         private IRequestFileDelegate requestFileDelegate;
         private IIOController ioController;
@@ -35,7 +35,7 @@ namespace GOG.Controllers
             this.consoleController = consoleController;
         }
 
-        private async Task<IList<ProductFile>> UpdateProductFiles(
+        public async Task<IList<ProductFile>> UpdateProductFiles(
             List<DownloadEntry> downloadEntries,
             long id,
             string operatingSystem = "",
@@ -85,7 +85,8 @@ namespace GOG.Controllers
                     consoleController);
 
                 productFile.DownloadSuccessful = result.Item1;
-                productFile.File = result.Item2;
+                var fileUri = result.Item2;
+                productFile.File = fileUri.Segments[fileUri.Segments.Length - 1];
 
                 productFiles.Add(productFile);
 
@@ -95,7 +96,7 @@ namespace GOG.Controllers
             return productFiles;
         }
 
-        private async Task<IList<ProductFile>> UpdateProductOperatingSystemFiles(
+        public async Task<IList<ProductFile>> UpdateProductOperatingSystemFiles(
             OperatingSystemsDownloads operatingSystemDownloads,
             ICollection<string> downloadOperatingSystems,
             long id)
