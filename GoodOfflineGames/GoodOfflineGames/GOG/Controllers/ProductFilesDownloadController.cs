@@ -141,7 +141,7 @@ namespace GOG.Controllers
 
         public async Task<IList<ProductFile>> UpdateFiles(
             GameDetails details,
-            ICollection<string> supportedLanguages,
+            ICollection<string> requiredLanguageCodes,
             ICollection<string> supportedOperatingSystems,
             long context = 0)
         {
@@ -153,7 +153,7 @@ namespace GOG.Controllers
 
             // update game files
             foreach (var download in details.LanguageDownloads)
-                if (supportedLanguages.Contains(download.Language))
+                if (requiredLanguageCodes.Contains(download.Language))
                 {
                     var productInstallers = await UpdateProductOperatingSystemFiles(
                         download, 
@@ -174,7 +174,7 @@ namespace GOG.Controllers
 
                 var dlcFiles = await UpdateFiles(
                     dlc,
-                    supportedLanguages, 
+                    requiredLanguageCodes, 
                     supportedOperatingSystems,
                     currentContext);
 

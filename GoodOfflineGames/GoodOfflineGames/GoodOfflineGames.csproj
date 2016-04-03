@@ -85,7 +85,7 @@
     <Compile Include="GOG\Controllers\ProductsController.cs" />
     <Compile Include="GOG\Controllers\ImagesController.cs" />
     <Compile Include="GOG\Model\GOGData.cs" />
-    <Compile Include="GOG\Model\Languages.cs" />
+    <Compile Include="Controllers\LanguageCodesController.cs" />
     <Compile Include="GOG\Model\ProductCore.cs" />
     <Compile Include="GOG\Model\ProductFile.cs" />
     <Compile Include="GOG\Model\Unused\Availability.cs" />
@@ -116,6 +116,7 @@
     <Compile Include="Interfaces\GOG\ProductCoreController.cs" />
     <Compile Include="Interfaces\GOG\ProductFileController.cs" />
     <Compile Include="Interfaces\GOG\ScreenshotsController.cs" />
+    <Compile Include="Interfaces\LanguageCodesController.cs" />
     <Compile Include="Interfaces\RequestFileDelegate.cs" />
     <Compile Include="Interfaces\GOG\MultipageRequestController.cs" />
     <Compile Include="Interfaces\GOG\FilterDelegate.cs" />

@@ -17,6 +17,7 @@ namespace GoodOfflineGames.Tests
         private IProductCoreController<Product> productsController;
         private IProductCoreController<ProductData> productDataController;
 
+        private ILanguageCodesController languageCodesController;
         private IGameDetailsDownloadsController gameDetailsDownloadsController;
 
         private IUriController uriController;
@@ -71,7 +72,9 @@ namespace GoodOfflineGames.Tests
             updated = new List<long>() { productWithDLC.Id, productWithMultipleLanguages.Id };
             updatedController = new UpdatedController(updated);
 
-            gameDetailsDownloadsController = new GameDetailsDownloadsController();
+            languageCodesController = new LanguageCodesController();
+
+            gameDetailsDownloadsController = new GameDetailsDownloadsController(languageCodesController);
 
             gameDetailsController = new GameDetailsController(gameDetails,
                 stringNetworkController,

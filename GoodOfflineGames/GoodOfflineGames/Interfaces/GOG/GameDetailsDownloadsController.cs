@@ -21,10 +21,10 @@ namespace GOG.Interfaces
 
     public interface IExtractLanguageDownloads
     {
-        GameDetails ExtractLanguageDownloads(
-            GameDetails details,
+        List<OperatingSystemsDownloads> ExtractLanguageDownloads(
             OperatingSystemsDownloads[][] downloads,
-            IEnumerable<string> languages);
+            IEnumerable<string> languages,
+            ICollection<string> requestedLanguages);
     }
 
     public interface IGameDetailsDownloadsController:

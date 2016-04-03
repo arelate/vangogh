@@ -16,6 +16,13 @@ namespace GOG.Controllers
         private const string nullString = "null";
         private const string emptyString = "";
 
+        private ILanguageCodesController languageCodesController;
+
+        public GameDetailsDownloadsController(ILanguageCodesController languageCodesController)
+        {
+            this.languageCodesController = languageCodesController;
+        }
+
         public string ExtractSingle(string input)
         {
             // downloads are double array and so far nothing else in the game details data is
@@ -60,15 +67,15 @@ namespace GOG.Controllers
             }
         }
 
-        public GameDetails ExtractLanguageDownloads(
-            GameDetails details, 
+        public List<OperatingSystemsDownloads> ExtractLanguageDownloads(
             OperatingSystemsDownloads[][] downloads, 
-            IEnumerable<string> languages)
+            IEnumerable<string> languages,
+            ICollection<string> supportedLanguageCodes)
         {
             if (downloads?.Length != languages?.Count())
                 throw new InvalidOperationException("Extracted different number of downloads and languages.");
 
-            details.LanguageDownloads = new List<OperatingSystemsDownloads>();
+            var osDownloads = new List<OperatingSystemsDownloads>();
 
             for (var ii = 0; ii < languages.Count(); ii++)
             {
@@ -80,12 +87,21 @@ namespace GOG.Controllers
                     languages.ElementAt(ii),
                     new string[2] { "\"", "," });
 
-                download.Language = Uri.UnescapeDataString(language);
+                language = Uri.UnescapeDataString(language);
+                var languageCode = languageCodesController.GetLanguageCode(language);
 
-                details?.LanguageDownloads.Add(download);
+                // don't store languages that were not set as required
+                // because if user selection changes we'll still update
+                // gameDetails with the full list anyway
+
+                if (!supportedLanguageCodes.Contains(languageCode)) continue;
+
+                download.Language = languageCode;
+
+                osDownloads.Add(download);
             }
 
-            return details;
+            return osDownloads;
         }
     }
 }

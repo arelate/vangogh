@@ -13,15 +13,18 @@ namespace GOG.SharedControllers
         private IOpenReadableDelegate openReadableDelegate;
         private ISerializationController<string> serializationController;
         private IConsoleController consoleController;
+        private ILanguageCodesController languageCodesController;
 
         public SettingsController(
             IOpenReadableDelegate openReadableDelegate,
-            ISerializationController<string> serializationContoller,
+            ISerializationController<string> serializationController,
+            ILanguageCodesController languageCodesController,
             IConsoleController consoleController)
         {
             this.openReadableDelegate = openReadableDelegate;
-            this.serializationController = serializationContoller;
+            this.serializationController = serializationController;
             this.consoleController = consoleController;
+            this.languageCodesController = languageCodesController;
         }
 
         public async Task<Settings> Load()
@@ -58,10 +61,25 @@ namespace GOG.SharedControllers
                 settings.Password = consoleController.ReadPrivateLine();
             }
 
-            if (settings.DownloadLanguages == null ||
-                settings.DownloadLanguages.Length == 0)
+            if (settings.DownloadLanguageCodes == null ||
+                settings.DownloadLanguageCodes.Length == 0)
             {
-                settings.DownloadLanguages = new string[1] { "English" };
+                settings.DownloadLanguageCodes = new string[1] { "en" };
+            }
+            else
+            {
+                // validate that download languages are actually codes and not language names
+                for (var ii = 0; ii < settings.DownloadLanguageCodes.Length; ii++)
+                {
+                    var languageOrLanguageCode = settings.DownloadLanguageCodes[ii];
+                    if (languageCodesController.IsLanguageCode(languageOrLanguageCode)) continue;
+                    else
+                    {
+                        var code = languageCodesController.GetLanguageCode(languageOrLanguageCode);
+                        if (!string.IsNullOrEmpty(code))
+                            settings.DownloadLanguageCodes[ii] = code;
+                    }
+                }
             }
 
             if (settings.DownloadOperatingSystems == null ||

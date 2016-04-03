@@ -87,6 +87,8 @@ namespace GOG
             IRequestFileDelegate requestFileDelegate = networkController as IRequestFileDelegate;
             ITokenExtractorController tokenExtractorController = new TokenExtractorController();
 
+            ILanguageCodesController languageCodesController = new LanguageCodesController();
+
             saveLoadDataController = new SaveLoadDataHelper(
                 storageController,
                 jsonStringController,
@@ -100,6 +102,7 @@ namespace GOG
             ISettingsController<Settings> settingsController = new SettingsController(
                 ioController,
                 jsonStringController,
+                languageCodesController,
                 consoleController);
 
             var settings = settingsController.Load().Result;
@@ -201,14 +204,15 @@ namespace GOG
                 gogDataController,
                 jsonStringController);
 
-            IGameDetailsDownloadsController gameDetailsDownloadsController = new GameDetailsDownloadsController();
+            IGameDetailsDownloadsController gameDetailsDownloadsController = new GameDetailsDownloadsController(
+                languageCodesController);
 
             IProductCoreController<GameDetails> gamesDetailsController = new GameDetailsController(
                 gamesDetails,
                 networkController,
                 jsonStringController,
                 gameDetailsDownloadsController,
-                settings.DownloadLanguages);
+                settings.DownloadLanguageCodes);
 
             IScreenshotsController screenshotsController = new ScreenshotsController(networkController);
 
@@ -565,7 +569,7 @@ namespace GOG
                     productIntallersExtras =
                         productFilesDownloadController.UpdateFiles(
                             updatedGameDetails,
-                            settings.DownloadLanguages,
+                            settings.DownloadLanguageCodes,
                             settings.DownloadOperatingSystems).Result;
                 }
 
