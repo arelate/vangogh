@@ -5,7 +5,17 @@ using GOG.Model;
 
 namespace GOG.Interfaces
 {
-    public interface IUpdateProductFilesDelegate {
+    public interface IUpdateDownloadEntryDelegate
+    {
+        Task<ProductFile> UpdateDownloadEntry(
+            DownloadEntry downloadEntry,
+            long id,
+            string operatingSystem = "",
+            string language = "");
+    }
+
+    public interface IUpdateProductFilesDelegate
+    {
         Task<IList<ProductFile>> UpdateProductFiles(
         List<DownloadEntry> downloadEntries,
         long id,
@@ -13,7 +23,8 @@ namespace GOG.Interfaces
         string language = "");
     }
 
-    public interface IUpdateProductOperatingSystemFilesDelegate {
+    public interface IUpdateProductOperatingSystemFilesDelegate
+    {
         Task<IList<ProductFile>> UpdateProductOperatingSystemFiles(
             OperatingSystemsDownloads operatingSystemDownloads,
             ICollection<string> downloadOperatingSystems,
@@ -29,7 +40,8 @@ namespace GOG.Interfaces
             long context = 0);
     }
 
-    public interface IProductFilesDownloadController:
+    public interface IProductFilesDownloadController :
+        IUpdateDownloadEntryDelegate,
         IUpdateProductFilesDelegate,
         IUpdateProductOperatingSystemFilesDelegate,
         IUpdateFilesDelegate
