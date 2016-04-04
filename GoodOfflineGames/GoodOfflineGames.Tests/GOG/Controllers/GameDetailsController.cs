@@ -46,8 +46,8 @@ namespace GoodOfflineGames.Tests
             gameDetails = new List<GameDetails>();
 
             supportedLanguages = new string[2] {
-                "English",
-                "русский"
+                "en",
+                "ru"
             };
 
             productWithDLC = new Product();

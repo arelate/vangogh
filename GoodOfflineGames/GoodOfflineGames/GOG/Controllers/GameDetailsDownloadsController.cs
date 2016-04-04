@@ -93,7 +93,7 @@ namespace GOG.Controllers
                     languages.ElementAt(ii),
                     new string[2] { "\"", "," });
 
-                language = Uri.UnescapeDataString(language);
+                language = Regex.Unescape(language);
                 var languageCode = languageCodesController.GetLanguageCode(language);
 
                 // don't store languages that were not set as required
