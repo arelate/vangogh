@@ -73,6 +73,7 @@
     <Compile Include="GOG\Controllers\Abstract\CollectionController.cs" />
     <Compile Include="GOG\Controllers\DataConsistencyController.cs" />
     <Compile Include="GOG\Controllers\DownloadProgressReporter.cs" />
+    <Compile Include="GOG\Controllers\FileValidationController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsDownloadsController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
     <Compile Include="GOG\Controllers\Abstract\MultipageRequestController.cs" />
@@ -110,11 +111,15 @@
     <Compile Include="Interfaces\CleanupController.cs" />
     <Compile Include="Interfaces\CollectionController.cs" />
     <Compile Include="Interfaces\ConsoleController.cs" />
+    <Compile Include="Interfaces\DirectoryController.cs" />
+    <Compile Include="Interfaces\FileController.cs" />
+    <Compile Include="Interfaces\FileValidationController.cs" />
     <Compile Include="Interfaces\GOG\AuthorizationController.cs" />
     <Compile Include="Interfaces\GOG\GameDetailsDownloadsController.cs" />
     <Compile Include="Interfaces\GOG\Credentials.cs" />
     <Compile Include="Interfaces\GOG\ProductCoreController.cs" />
     <Compile Include="Interfaces\GOG\ProductFileController.cs" />
+    <Compile Include="Interfaces\GOG\ProductFilesDownloadController.cs" />
     <Compile Include="Interfaces\GOG\ScreenshotsController.cs" />
     <Compile Include="Interfaces\LanguageCodesController.cs" />
     <Compile Include="Interfaces\RequestFileDelegate.cs" />

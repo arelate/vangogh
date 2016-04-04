@@ -214,6 +214,11 @@ namespace GOG
                 gameDetailsDownloadsController,
                 settings.DownloadLanguageCodes);
 
+            IFileValidationController fileValidationController = new FileValidationController(
+                ioController,
+                requestFileDelegate,
+                postUpdateDelegate);
+
             IScreenshotsController screenshotsController = new ScreenshotsController(networkController);
 
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
@@ -524,10 +529,11 @@ namespace GOG
 
                 // we use single loop to:
                 // 1) update game details
-                // 2) download product updates
-                // 3) store product files
+                // 2) download updated product files
+                // 3) validated downloaded product files
                 // 4) cleanup product folder
                 // 5) remove from updated list   
+
                 // this is done to avoid spending all request limit on GOG.com
                 // just updating game details and not being able to update files
                 // which is highly likely in case of many updates
@@ -560,8 +566,6 @@ namespace GOG
                 // request updated product files
                 var updatedGameDetails = gamesDetailsController.Find(u);
 
-
-
                 IList<ProductFile> productIntallersExtras = new List<ProductFile>();
 
                 if (settings.DownloadProductFiles)
@@ -571,6 +575,28 @@ namespace GOG
                             updatedGameDetails,
                             settings.DownloadLanguageCodes,
                             settings.DownloadOperatingSystems).Result;
+                }
+
+                if (settings.ValidateProductFiles)
+                {
+                    foreach (var productFile in productIntallersExtras)
+                    {
+                        // reset validation status
+                        productFile.Validated = false;
+
+                        consoleController.Write("Validating {0}: {1}.", productFile.Name, productFile.File);
+
+                        var result = fileValidationController.ValidateProductFile(productFile).Result;
+
+                        if (!result.Item1) consoleController.WriteLine("ERROR: ", result.Item2);
+                        else
+                        {
+                            consoleController.WriteLine("DONE: Successfully validated.");
+                            productFile.Validated = true;
+                        }
+                    }
+
+                    consoleController.WriteLine("DONE.");
                 }
 
                 IProductFileController productFilesController = new ProductFilesController(productIntallersExtras);

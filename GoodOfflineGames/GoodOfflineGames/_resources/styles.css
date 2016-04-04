@@ -269,6 +269,10 @@ button {
     content: '\f0f6';
 }
 
+.fa-check-circle::before {
+    content: '\f058';
+}
+
 .dark #gameDetailsContainer {
     color: #B0BEC5;
 }
@@ -338,6 +342,15 @@ button {
     #gameDetailsContainer .filesContainer .entry {
         display: inline-block;
         margin-right: 2em;
+    }
+
+    .dark .validated {
+        color: #b9f6ca;
+    }
+
+    .light .validated 
+    {
+        color: #1b5e20;
     }
 
 #gameDetailsContainer .screenshotsContainer {

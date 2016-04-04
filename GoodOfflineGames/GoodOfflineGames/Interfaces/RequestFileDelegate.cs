@@ -6,7 +6,7 @@ namespace GOG.Interfaces
 {
     public interface IRequestFileDelegate
     {
-        Task<Tuple<bool, string>> RequestFile(
+        Task<Tuple<bool, Uri>> RequestFile(
             string fromUri,
             string toUri,
             IOpenWritableDelegate openWritableDelegate,

@@ -30,6 +30,10 @@ namespace GOG.Model
         public string File { get; set; }
         [DataMember(Name = "extra")]
         public bool Extra { get; set; }
+        [DataMember(Name = "resolvedUrl")]
+        public string ResolvedUrl { get; set; }
+        [DataMember(Name = "validated")]
+        public bool Validated { get; set; }
         [IgnoreDataMember()]
         public bool DownloadSuccessful { get; set; }
     }

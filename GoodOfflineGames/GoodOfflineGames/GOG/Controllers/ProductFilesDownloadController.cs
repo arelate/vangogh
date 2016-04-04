@@ -9,7 +9,7 @@ using GOG.SharedModels;
 
 namespace GOG.Controllers
 {
-    class ProductFilesDownloadController
+    public class ProductFilesDownloadController: IProductFilesDownloadController
     {
         private IRequestFileDelegate requestFileDelegate;
         private IIOController ioController;
@@ -35,7 +35,62 @@ namespace GOG.Controllers
             this.consoleController = consoleController;
         }
 
-        private async Task<IList<ProductFile>> UpdateProductFiles(
+        public async Task<ProductFile> UpdateDownloadEntry(
+            DownloadEntry downloadEntry,
+            long id,
+            string operatingSystem = "",
+            string language = "")
+        {
+            var productFile = new ProductFile();
+            productFile.Id = id;
+            productFile.OperatingSystem = operatingSystem;
+            productFile.Language = language;
+            productFile.Name = downloadEntry.Name;
+            productFile.Version = downloadEntry.Version;
+            productFile.Size = downloadEntry.Size;
+
+            // Extras are generally OS and language agnostic - so instead of specific flag we use empty OS, language
+            productFile.Extra =
+                string.IsNullOrEmpty(operatingSystem) &&
+                string.IsNullOrEmpty(language);
+
+            string entryMessage = (string.IsNullOrEmpty(operatingSystem) && string.IsNullOrEmpty(language)) ?
+                string.Format("{0} ({1})", downloadEntry.Name, downloadEntry.Size) :
+                string.Format("{0} {1} ({2}, {3}, {4})",
+                    downloadEntry.Name,
+                    downloadEntry.Version,
+                    operatingSystem,
+                    language,
+                    downloadEntry.Size);
+
+            consoleController.WriteLine(entryMessage);
+
+            var fromUri = Urls.HttpsRoot + downloadEntry.ManualUrl;
+            var toUriParts = downloadEntry.ManualUrl.Split(
+                new string[1] { Separators.UriPart },
+                StringSplitOptions.RemoveEmptyEntries);
+            productFile.Url = downloadEntry.ManualUrl;
+            productFile.Folder = toUriParts[toUriParts.Length - 2];
+
+            var result = await requestFileDelegate.RequestFile(
+                fromUri,
+                productFile.Folder,
+                ioController,
+                ioController,
+                downloadProgressReporter,
+                consoleController);
+
+            productFile.DownloadSuccessful = result.Item1;
+            var fileUri = result.Item2;
+            productFile.File = fileUri.Segments.Last();
+            productFile.ResolvedUrl = fileUri.ToString();
+
+            consoleController.WriteLine(string.Empty);
+
+            return productFile;
+        }
+
+        public async Task<IList<ProductFile>> UpdateProductFiles(
             List<DownloadEntry> downloadEntries,
             long id,
             string operatingSystem = "",
@@ -45,57 +100,14 @@ namespace GOG.Controllers
 
             foreach (var entry in downloadEntries)
             {
-                var productFile = new ProductFile();
-                productFile.Id = id;
-                productFile.OperatingSystem = operatingSystem;
-                productFile.Language = language;
-                productFile.Name = entry.Name;
-                productFile.Version = entry.Version;
-                productFile.Size = entry.Size;
-
-                // Extras are generally OS and language agnostic - so instead of specific flag we use empty OS, language
-                productFile.Extra = 
-                    string.IsNullOrEmpty(operatingSystem) && 
-                    string.IsNullOrEmpty(language);
-
-                string entryMessage = (string.IsNullOrEmpty(operatingSystem) && string.IsNullOrEmpty(language)) ?
-                    string.Format("{0} ({1})", entry.Name, entry.Size) :
-                    string.Format("{0} {1} ({2}, {3}, {4})",
-                        entry.Name,
-                        entry.Version,
-                        operatingSystem,
-                        language,
-                        entry.Size);
-
-                consoleController.WriteLine(entryMessage);
-
-                var fromUri = Urls.HttpsRoot + entry.ManualUrl;
-                var toUriParts = entry.ManualUrl.Split(
-                    new string[1] { Separators.UriPart },
-                    StringSplitOptions.RemoveEmptyEntries);
-                productFile.Url = entry.ManualUrl;
-                productFile.Folder = toUriParts[toUriParts.Length - 2];
-
-                var result = await requestFileDelegate.RequestFile(
-                    fromUri,
-                    productFile.Folder,
-                    ioController,
-                    ioController,
-                    downloadProgressReporter,
-                    consoleController);
-
-                productFile.DownloadSuccessful = result.Item1;
-                productFile.File = result.Item2;
-
+                var productFile = await UpdateDownloadEntry(entry, id, operatingSystem, language);
                 productFiles.Add(productFile);
-
-                consoleController.WriteLine(string.Empty);
             }
 
             return productFiles;
         }
 
-        private async Task<IList<ProductFile>> UpdateProductOperatingSystemFiles(
+        public async Task<IList<ProductFile>> UpdateProductOperatingSystemFiles(
             OperatingSystemsDownloads operatingSystemDownloads,
             ICollection<string> downloadOperatingSystems,
             long id)
