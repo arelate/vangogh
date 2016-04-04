@@ -1,7 +1,7 @@
 ﻿{
   "username": "",
   "password": "",
-  "downloadLangugages": [ "English" ],
+  "downloadLangugages": [ "en" ],
   "downloadOperatingSystems": [ "Windows" ],
   "downloadImages": true,
   "downloadScreenshots":  true,
