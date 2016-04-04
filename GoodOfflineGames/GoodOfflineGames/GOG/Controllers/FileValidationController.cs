@@ -238,7 +238,7 @@ namespace GOG.Controllers
 
             var productFileExtension = Path.GetExtension(productFile.File);
             if (!extensionsWhitelist.Contains(productFileExtension))
-                return new Tuple<bool, string>(false, "File validation is only supported for binary product installers.");
+                return new Tuple<bool, string>(true, string.Empty);
 
             if (!ioController.FileExists(
                 Path.Combine(

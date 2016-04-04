@@ -581,12 +581,19 @@ namespace GOG
                 {
                     foreach (var productFile in productIntallersExtras)
                     {
-                        consoleController.Write("Validating product file {0}: {1}.", productFile.Name, productFile.File);
+                        // reset validation status
+                        productFile.Validated = false;
+
+                        consoleController.Write("Validating {0}: {1}.", productFile.Name, productFile.File);
 
                         var result = fileValidationController.ValidateProductFile(productFile).Result;
 
                         if (!result.Item1) consoleController.WriteLine("ERROR: ", result.Item2);
-                        else consoleController.WriteLine("DONE: Successfully validated.");
+                        else
+                        {
+                            consoleController.WriteLine("DONE: Successfully validated.");
+                            productFile.Validated = true;
+                        }
                     }
 
                     consoleController.WriteLine("DONE.");

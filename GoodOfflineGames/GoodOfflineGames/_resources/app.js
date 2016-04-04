@@ -59,10 +59,12 @@ var Templates = function() {
     var getFileInstallerTemplate = function() {
         return "<span class='file entry'><a href='./{{folder}}/{{file}}'>" +
             getOperatingSystemIconTemplate() +
+            getValidationTemplate() +
             "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></span>";
     }
     var getFileExtraTemplate = function() {
-        return "<span class='extra entry'><a href='./{{folder}}/{{file}}'>" +
+        return "<span class='extra entry'>" +
+            "<a href='./{{folder}}/{{file}}'>" +
             getExtraIconTemplate() +
             "<span class='linkText'>{{name}} {{size}}</span></a></span>";
     }
@@ -74,6 +76,9 @@ var Templates = function() {
     }
     var getExtraIconTemplate = function() {
         return "<i class='icon fa-star' title='Extra'></i>";
+    }
+    var getValidationTemplate = function () {
+        return "<i class='icon fa-check-circle validated {{validatedClass}}' title='Extra'></i>";
     }
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";
@@ -89,6 +94,7 @@ var Templates = function() {
         "getBundleTemplate": getBundleTemplate,
         "getFileInstallerTemplate": getFileInstallerTemplate,
         "getFileExtraTemplate": getFileExtraTemplate,
+        "getValidationTemplate": getValidationTemplate,
         "getOperatingSystemIconTemplate": getOperatingSystemIconTemplate,
         "getScreenshotTemplate": getScreenshotTemplate,
         "getSearchLinkTemplate": getSearchLinkTemplate,
@@ -545,8 +551,8 @@ var ViewModelProvider = function() {
             "light";
     }
     var getFileViewModel = function(file) {
-        if (file && !file.theme) file.theme = getTheme();
         if (file && !file.version) file.version = "";
+        if (file && !file.validated) file.validatedClass = "hidden";
         return file;
     }
     var getScreenshotModel = function(screenshot) {
