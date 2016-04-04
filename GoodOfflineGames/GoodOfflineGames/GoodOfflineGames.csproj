@@ -113,6 +113,7 @@
     <Compile Include="Interfaces\ConsoleController.cs" />
     <Compile Include="Interfaces\DirectoryController.cs" />
     <Compile Include="Interfaces\FileController.cs" />
+    <Compile Include="Interfaces\FileValidationController.cs" />
     <Compile Include="Interfaces\GOG\AuthorizationController.cs" />
     <Compile Include="Interfaces\GOG\GameDetailsDownloadsController.cs" />
     <Compile Include="Interfaces\GOG\Credentials.cs" />

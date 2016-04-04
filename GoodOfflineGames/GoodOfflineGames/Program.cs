@@ -214,6 +214,11 @@ namespace GOG
                 gameDetailsDownloadsController,
                 settings.DownloadLanguageCodes);
 
+            IFileValidationController fileValidationController = new FileValidationController(
+                ioController,
+                requestFileDelegate,
+                postUpdateDelegate);
+
             IScreenshotsController screenshotsController = new ScreenshotsController(networkController);
 
             IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
@@ -578,8 +583,6 @@ namespace GOG
 
                 if (settings.ValidateProductFiles)
                 {
-                    FileValidationController fileValidationController = new FileValidationController(ioController, requestFileDelegate, postUpdateDelegate);
-
                     foreach (var productFile in productIntallersExtras)
                     {
                         consoleController.Write("Validating product file {0}: {1}.", productFile.Name, productFile.File);

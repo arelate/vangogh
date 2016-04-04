@@ -11,7 +11,7 @@ using GOG.Model;
 
 namespace GOG.Controllers
 {
-    public class FileValidationController
+    public class FileValidationController: IFileValidationController
     {
         private const string validationFilesContainer = "_md5";
 
@@ -87,22 +87,22 @@ namespace GOG.Controllers
             }
         }
 
-        public async Task<bool> ValidateSize(string uri, long expectedSize)
+        public bool ValidateSize(string uri, long expectedSize)
         {
             return ioController.GetSize(uri) == expectedSize;
         }
 
-        public async Task<bool> ValidateName(string uri, string expectedFilename)
+        public bool ValidateName(string uri, string expectedFilename)
         {
             return uri == expectedFilename;
         }
 
-        public string HashToHexString(byte[] hash)
+        public string BytesToHexString(byte[] data)
         {
             var stringBuilder = new StringBuilder();
 
-            for (var ii = 0; ii < hash.Length; ii++)
-                stringBuilder.Append(hash[ii].ToString("x2"));
+            for (var ii = 0; ii < data.Length; ii++)
+                stringBuilder.Append(data[ii].ToString("x2"));
 
             return stringBuilder.ToString();
         }
@@ -140,14 +140,14 @@ namespace GOG.Controllers
 
             var length = (int) (to - from + 1);
             byte[] buffer = new byte[length];
-            productFileStream.Read(buffer, 0, length);
+            await productFileStream.ReadAsync(buffer, 0, length);
 
             md5CryptoServiceProvider.Initialize();
             md5CryptoServiceProvider.TransformFinalBlock(buffer, 0, length);
 
             byte[] hash = md5CryptoServiceProvider.Hash;
 
-            var computedMD5 = HashToHexString(hash);
+            var computedMD5 = BytesToHexString(hash);
 
             return computedMD5 == expectedMD5;
         }
@@ -203,9 +203,9 @@ namespace GOG.Controllers
 
             var productFileRelativeUri = Path.Combine(productFile.Folder, productFile.File);
 
-            if (!await ValidateName(productFile.File, expectedName))
+            if (!ValidateName(productFile.File, expectedName))
                 return new Tuple<bool, string>(false, "Product name doesn't match validation value.");
-            if (!await ValidateSize(productFileRelativeUri, expectedSize))
+            if (!ValidateSize(productFileRelativeUri, expectedSize))
                 return new Tuple<bool, string>(false, "Product size doesn't match validation value.");
 
             if (!fileElement[0].HasChildNodes ||
