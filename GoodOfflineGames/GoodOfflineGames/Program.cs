@@ -628,6 +628,7 @@ namespace GOG
                         ICleanupController cleanupController =
                             new CleanupController(
                                 productFilesController,
+                                fileValidationController,
                                 ioController);
 
                         cleanupController.Cleanup(recycleBin);

@@ -12,9 +12,14 @@ namespace GOG.Interfaces
         Uri GetValidationUri(string resolvedUri);
     }
 
-    public interface IGetLocalValidationFilenameDelegate
+    public interface IGetLocalValidationFilenameForUriDelegate
     {
         string GetLocalValidationFilename(Uri validationUri);
+    }
+
+    public interface IGetLocalValidationFilenameForLocalPathDelegate
+    {
+        string GetLocalValidationFilename(string localPath);
     }
 
     public interface IDownloadValidationFileDelegate
@@ -54,7 +59,8 @@ namespace GOG.Interfaces
 
     public interface IFileValidationController :
         IGetValidationUriDelegate,
-        IGetLocalValidationFilenameDelegate,
+        IGetLocalValidationFilenameForUriDelegate,
+        IGetLocalValidationFilenameForLocalPathDelegate,
         IDownloadValidationFileDelegate,
         IValidateSizeDelegate,
         IValidateNameDelegate,

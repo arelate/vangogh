@@ -15,17 +15,35 @@ namespace GOG.Controllers
     {
         private IIOController ioController;
         private IProductFileController productFileController;
+        private IFileValidationController fileValidationController;
 
         public CleanupController(
-            IProductFileController productFileController, 
+            IProductFileController productFileController,
+            IFileValidationController fileValidationController,
             IIOController ioController)
         {
             this.ioController = ioController;
             this.productFileController = productFileController;
+            this.fileValidationController = fileValidationController;
+        }
+
+        public bool CleanupValidationFile(string localFile, string removeToFolder)
+        {
+            var localValidationFile = fileValidationController.GetLocalValidationFilename(localFile);
+            if (ioController.FileExists(localValidationFile))
+            {
+                var to = Path.Combine(removeToFolder, Path.GetFileName(localValidationFile));
+
+                ioController.MoveFile(localValidationFile, to);
+
+                return true;
+            }
+
+            return false;
         }
 
         public int Cleanup(
-            string removeToFolder, 
+            string removeToFolder,
             IPostUpdateDelegate postUpdateDelegate = null)
         {
             int movedFiles = 0;
@@ -46,6 +64,9 @@ namespace GOG.Controllers
 
                     ioController.MoveFile(file, to);
                     movedFiles++;
+
+                    // also cleanup validation file
+                    if (CleanupValidationFile(file, removeToFolder)) movedFiles++;
 
                     if (postUpdateDelegate != null)
                     {

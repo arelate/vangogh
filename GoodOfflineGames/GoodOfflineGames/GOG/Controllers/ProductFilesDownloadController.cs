@@ -163,7 +163,9 @@ namespace GOG.Controllers
 
             var currentContext = details.Id > 0 ? details.Id : context;
 
-            // update game files
+            // update game files, check if LanguagesDownloads are null to account for the DLC files 
+            // that were extracted earlier and should be part of the core product file details
+            // don't bail out earlier as there might be extras specific to DLC we would want to handle
             if (details.LanguageDownloads != null)
             {
                 foreach (var download in details.LanguageDownloads)

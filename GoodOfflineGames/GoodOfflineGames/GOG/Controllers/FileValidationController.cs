@@ -69,6 +69,12 @@ namespace GOG.Controllers
                 validationUri.Segments.Last());
         }
 
+        public string GetLocalValidationFilename(string localPath)
+        {
+            var localFilename = Path.GetFileName(localPath);
+            return Path.Combine(validationFilesContainer, localFilename);
+        }
+
         public async Task<bool> DownloadValidationFile(Uri validationUri)
         {
             string validationFilename = GetLocalValidationFilename(validationUri);
