@@ -34,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>E:\GOG.com\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -156,6 +156,7 @@
     <None Include="settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="_resources\fontawesome-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bundles.js">
@@ -168,7 +169,6 @@
     <Content Include="HTML-Details.png" />
     <Content Include="HTML-List.png" />
     <Content Include="_resources\app.js" />
-    <Content Include="_resources\icons.svg" />
     <Content Include="_resources\styles.css" />
     <Content Include="wikipedia.js" />
   </ItemGroup>

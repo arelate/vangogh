@@ -591,7 +591,7 @@ namespace GOG
                         if (!result.Item1) consoleController.WriteLine("ERROR: ", result.Item2);
                         else
                         {
-                            consoleController.WriteLine("DONE: Successfully validated.");
+                            consoleController.WriteLine("Successfully validated.");
                             productFile.Validated = true;
                         }
                     }

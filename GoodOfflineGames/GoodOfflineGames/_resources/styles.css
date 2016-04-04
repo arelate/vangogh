@@ -115,6 +115,7 @@ button {
     width: 196px;
     height: 110px;
     background: rgba(0,0,0,0.1);
+    position: relative;
 }
 
 .product img {
@@ -134,6 +135,7 @@ button {
     color: inherit;
     font-size: 0.9em;
     padding: 0.25em;
+    padding-left: 0;
     width: 100%;
 }
 
@@ -190,20 +192,21 @@ button {
         font-style: normal;
     }
 
-.updated .title::before,
-.dlc .title::before,
-#infoContainer .dlc::before {
-    content: "DLC";
-    outline: transparent solid 1px;
+::before {
+    font-family: 'fa', Segoe UI;
     padding: 0 0.25em;
-    margin-right: 0.4em;
-    font-size: 0.5em;
-    vertical-align: middle;
+    margin-right: 0.25em;
+    font-style: normal !important;
 }
 
-.updated .title::before {
-    content: "UPD";
-    outline-color: #dd2c00;
+.validated .title::before,
+#infoContainer .validated::before {
+    content: '\f058';
+}
+
+.updated .title::before,
+#infoContainer .updated::before {
+    content: "\f055";
     color: #dd2c00 !important;
 }
 
@@ -217,16 +220,14 @@ button {
 
 .dlc .title::before,
 #infoContainer .dlc::before {
-    content: "DLC";
-    outline-color: #9C27B0;
-    color: #9C27B0 !important;
+    content: "\f12e";
+    /*color: #9C27B0 !important;*/
 }
 
 .icon {
     display: inline-block;
     width: 1em;
     height: 1em;
-    margin-right: 0.5em;
 }
 
 .fa-chevron-up::before {

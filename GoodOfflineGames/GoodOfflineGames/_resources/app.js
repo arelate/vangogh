@@ -8,8 +8,10 @@ var _$$ = function(n, s) { return n.querySelectorAll(s); }
 var Templates = function() {
     var getProductTemplate = function() {
         return "<div class='product {{productClass}}' title='{{title}}'><a href='#{{id}}'>" +
-            "<div class='productImageContainer'><img class='hidden' data-src='{{productImage}}' /></div>" +
-            "<span class='title' >{{title}}</span></a></div>";
+            "<div class='productImageContainer'>"+
+            "<img class='hidden' data-src='{{productImage}}' /></div>" +
+            "<span class='title' >{{title}}</span>"+
+            "</a></div>";
     }
     var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' onerror='Images.hideOnError(this)' />";
     var gameDetailsProductHeader = "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>";
@@ -28,11 +30,11 @@ var Templates = function() {
         "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
         "<div class='{{extrasClass}}'><h1>Extras</h1><div>{{extrasContent}}</div></div>";
     var gameDetailsScreenshotsContainer = "<div class='screenshotsContainer'>" +
-        "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'><i class='icon fa-file-picture-o'></i> Show/hide {{screenshotsCount}} screenshots</button>" +
+        "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'><i class='icon fa-file-picture-o'></i>&nbsp;&nbsp;Show/hide {{screenshotsCount}} screenshots</button>" +
         "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
         "</div>";
     var gameDetailsChangelogContainer = "<div id='changelogContainer' class='{{changelogClass}}'>" +
-        "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'><i class='icon fa-file-text-o'></i> Show/hide changelog</button>" +
+        "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'><i class='icon fa-file-text-o'></i>&nbsp;&nbsp;Show/hide changelog</button>" +
         "<div class='changelogContent hidden'>{{changelogContent}}</div>" +
         "</div>";
     var getGameDetailsTemplate = function() {
@@ -72,13 +74,13 @@ var Templates = function() {
         return "<a href='{{uri}}'><img data-src={{uri}} onerror='Images.hideOnError(this)'/></a>";
     }
     var getOperatingSystemIconTemplate = function() {
-        return "<i class='icon fa-{{operatingSystem}}' title='{{operatingSystem}}'></i>";
+        return "<i class='icon fa-{{operatingSystem}}' title='{{operatingSystem}}'></i>&nbsp;";
     }
     var getExtraIconTemplate = function() {
-        return "<i class='icon fa-star' title='Extra'></i>";
+        return "<i class='icon fa-star' title='Extra'></i>&nbsp;";
     }
     var getValidationTemplate = function () {
-        return "<i class='icon fa-check-circle validated {{validatedClass}}' title='Validated file'></i>";
+        return "<i class='icon fa-check-circle validated {{validatedClass}}' title='Validated file'></i>&nbsp;";
     }
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";
@@ -505,6 +507,8 @@ var ProductClass = function() {
         if (pd && DLC.isDLC(pd)) productClass.push("dlc");
 
         if (Bundles.isParent(product.id)) productClass.push("bundle");
+
+        if (ProductFiles.allFilesValidated(product.id)) productClass.push("validated");
 
         return productClass;
     }
@@ -933,6 +937,7 @@ var Info = function() {
         var classes = [
             "product",
             "product owned",
+            "product owned validated",
             "product owned updated",
             "product wishlisted",
             "product bundle",
@@ -948,6 +953,7 @@ var Info = function() {
         var titles = [
             "Avail. products",
             "Owned products",
+            "Validated products",
             "Upd. products",
             "Wishlisted products",
             "Bundles",
@@ -1002,9 +1008,17 @@ var ProductFiles = function() {
     var hasBinExtension = function(filename) {
         return filename && filename.indexOf(binExtension) === filename.length - binExtension.length;
     }
+    var allFilesValidated = function(id) {
+        var files = getFilesForProduct(id);
+        var validated = files && files.length > 0;
+        for (var ii=0; ii < files.length; ii++) 
+            validated &= files[ii].validated;
+        return validated;
+    }
     return {
         "getFilesForProduct": getFilesForProduct,
-        "hasBinExtension": hasBinExtension
+        "hasBinExtension": hasBinExtension,
+        "allFilesValidated": allFilesValidated
     }
 } ();
 
