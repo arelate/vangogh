@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
@@ -26,20 +27,26 @@ namespace GOG.Controllers
         private const string fromAttribute = "from";
         private const string toAttribute = "to";
 
-        private IIOController ioController;
-        //private IConsoleController consoleController;
-        private IRequestFileDelegate requestFileDelegate;
-        private MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
+        // only validate binary files
+        private readonly string[] extensionsWhitelist = new string[3] { ".exe", ".bin", ".dmg" };
 
+        private IIOController ioController;
+        private IRequestFileDelegate requestFileDelegate;
+        private IPostUpdateDelegate postUpdateDelegate;
+
+        private MD5CryptoServiceProvider md5CryptoServiceProvider;
 
         public FileValidationController(
             IIOController ioController,
-            IRequestFileDelegate requestFileDelegate)
-            //IConsoleController consoleController)
+            IRequestFileDelegate requestFileDelegate,
+            IPostUpdateDelegate postUpdateDelegate)
         {
             this.ioController = ioController;
-            //this.consoleController = consoleController;
             this.requestFileDelegate = requestFileDelegate;
+            this.postUpdateDelegate = postUpdateDelegate;
+
+            md5CryptoServiceProvider = new MD5CryptoServiceProvider();
+            md5CryptoServiceProvider.Initialize();
         }
 
         public Uri GetValidationUri(string resolvedUri)
@@ -90,14 +97,59 @@ namespace GOG.Controllers
             return uri == expectedFilename;
         }
 
-        public async Task<bool> ValidateTimestamp(string uri, DateTime expectedTimestamp)
+        public string HashToHexString(byte[] hash)
         {
-            return ioController.GetTimestamp(uri) == expectedTimestamp;
+            var stringBuilder = new StringBuilder();
+
+            for (var ii = 0; ii < hash.Length; ii++)
+                stringBuilder.Append(hash[ii].ToString("x2"));
+
+            return stringBuilder.ToString();
         }
 
         public async Task<bool> ValidateChunk(Stream productFileStream, XmlNode chunkElement)
         {
-            return false;
+            if (chunkElement == null ||
+                chunkElement.FirstChild == null ||
+                string.IsNullOrEmpty(chunkElement.FirstChild.Value)) return false;
+            if (!productFileStream.CanSeek) return false;
+
+            postUpdateDelegate.PostUpdate();
+
+            long from = 0, to = 0;
+            string expectedMD5 = string.Empty;
+
+            try
+            {
+                from = long.Parse(chunkElement.Attributes[fromAttribute]?.Value);
+                to = long.Parse(chunkElement.Attributes[toAttribute]?.Value);
+                expectedMD5 = chunkElement.FirstChild.Value;
+            }
+            catch (ArgumentNullException)
+            {
+                return false;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+            catch (OverflowException)
+            {
+                return false;
+            }
+
+            var length = (int) (to - from + 1);
+            byte[] buffer = new byte[length];
+            productFileStream.Read(buffer, 0, length);
+
+            md5CryptoServiceProvider.Initialize();
+            md5CryptoServiceProvider.TransformFinalBlock(buffer, 0, length);
+
+            byte[] hash = md5CryptoServiceProvider.Hash;
+
+            var computedMD5 = HashToHexString(hash);
+
+            return computedMD5 == expectedMD5;
         }
 
         public async Task<Tuple<bool, string>> ValidateProductFileData(ProductFile productFile, XmlDocument validationData)
@@ -106,7 +158,6 @@ namespace GOG.Controllers
             // - available
             // - filename
             // - size
-            // - timestamp
             // - md5 of each chunk
 
             if (validationData == null)
@@ -121,7 +172,6 @@ namespace GOG.Controllers
 
             long expectedSize;
             string expectedName;
-            DateTime expectedTimestamp;
             int chunks;
             bool available;
 
@@ -129,7 +179,6 @@ namespace GOG.Controllers
             {
                 expectedSize = long.Parse(fileElement[0].Attributes[totalSizeAttribute]?.Value);
                 expectedName = fileElement[0].Attributes[nameAttribute]?.Value;
-                expectedTimestamp = DateTime.Parse(fileElement[0].Attributes[timestampAttribute]?.Value);
                 chunks = int.Parse(fileElement[0].Attributes[chunksAttribute]?.Value);
                 available = fileElement[0].Attributes[availableAttribute]?.Value == "1";
 
@@ -147,6 +196,10 @@ namespace GOG.Controllers
             {
                 return new Tuple<bool, string>(false, "Validation data 'file' element attribute contain data in unsupported format.");
             }
+            catch (OverflowException)
+            {
+                return new Tuple<bool, string>(false, "Validation data 'file' element attribute contain data that cannot be processed.");
+            }
 
             var productFileRelativeUri = Path.Combine(productFile.Folder, productFile.File);
 
@@ -154,9 +207,6 @@ namespace GOG.Controllers
                 return new Tuple<bool, string>(false, "Product name doesn't match validation value.");
             if (!await ValidateSize(productFileRelativeUri, expectedSize))
                 return new Tuple<bool, string>(false, "Product size doesn't match validation value.");
-            if (!await ValidateTimestamp(productFileRelativeUri, expectedTimestamp))
-                return new Tuple<bool, string>(false, "Product timestamp doesn't match validation value.");
-
 
             if (!fileElement[0].HasChildNodes ||
                  fileElement[0].ChildNodes.Count < chunks)
@@ -164,14 +214,17 @@ namespace GOG.Controllers
                 return new Tuple<bool, string>(false, "Validation data doesn't contain expected number of 'chunk' elements.");
             }
 
+            var result = true;
             using (var productFileStream = ioController.OpenReadable(productFileRelativeUri))
             {
-                var result = true;
                 foreach (XmlNode chunkElement in fileElement[0].ChildNodes)
                 {
-                    result &= await ValidateChunk(null, chunkElement);
+                    result &= await ValidateChunk(productFileStream, chunkElement);
                 }
             }
+
+            if (result)
+                return new Tuple<bool, string>(true, string.Empty);
 
             return new Tuple<bool,string>(false, "Unknown validation error.");
         }
@@ -181,12 +234,17 @@ namespace GOG.Controllers
             if (productFile == null)
                 return new Tuple<bool, string>(false, "Product data is null.");
             if (!ioController.DirectoryExists(productFile.Folder))
-                return new Tuple<bool, string>(false, "Product directory doesn't exist."); ;
+                return new Tuple<bool, string>(false, "Product directory doesn't exist.");
+
+            var productFileExtension = Path.GetExtension(productFile.File);
+            if (!extensionsWhitelist.Contains(productFileExtension))
+                return new Tuple<bool, string>(false, "File validation is only supported for binary product installers.");
+
             if (!ioController.FileExists(
                 Path.Combine(
                     productFile.Folder,
                     productFile.File)))
-                return new Tuple<bool, string>(false, "Product file doesn't exist."); ;
+                return new Tuple<bool, string>(false, "Product file doesn't exist.");
 
             var validationUri = GetValidationUri(productFile.ResolvedUrl);
 
@@ -201,7 +259,7 @@ namespace GOG.Controllers
             }
             else return new Tuple<bool, string>(
                 false, 
-                "There is no validation file available and it couldn't be downloaded.") ;
+                "There is no validation file available and it couldn't be downloaded.");
         }
     }
 }

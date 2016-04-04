@@ -153,21 +153,6 @@ namespace GOG
 
             #endregion
 
-            #region Debug only - file validation controller early invoke 
-
-            FileValidationController fileValidationController = new FileValidationController(ioController, requestFileDelegate);
-
-            var result = fileValidationController.ValidateProductFile(productFiles[0]).Result;
-
-            if (!result.Item1)
-            {
-                consoleController.WriteLine(result.Item2);
-            }
-
-            consoleController.WriteLine("DONE.");
-
-            #endregion
-
             #region Debug only - print all known folders and exit
 
             /*
@@ -575,8 +560,6 @@ namespace GOG
                 // request updated product files
                 var updatedGameDetails = gamesDetailsController.Find(u);
 
-
-
                 IList<ProductFile> productIntallersExtras = new List<ProductFile>();
 
                 if (settings.DownloadProductFiles)
@@ -588,9 +571,26 @@ namespace GOG
                             settings.DownloadOperatingSystems).Result;
                 }
 
+                //foreach (var pf in productFiles)
+                //{
+                //    if (pf.Id == 1456922969) productIntallersExtras.Add(pf);
+                //}
+
                 if (settings.ValidateProductFiles)
                 {
+                    FileValidationController fileValidationController = new FileValidationController(ioController, requestFileDelegate, postUpdateDelegate);
 
+                    foreach (var productFile in productIntallersExtras)
+                    {
+                        consoleController.Write("Validating product file {0}: {1}.", productFile.Name, productFile.File);
+
+                        var result = fileValidationController.ValidateProductFile(productFile).Result;
+
+                        if (!result.Item1) consoleController.WriteLine(result.Item2);
+                        else consoleController.WriteLine("DONE: Successfully validated.");
+                    }
+
+                    consoleController.WriteLine("DONE.");
                 }
 
                 IProductFileController productFilesController = new ProductFilesController(productIntallersExtras);
