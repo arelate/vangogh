@@ -62,12 +62,14 @@ var Templates = function() {
         return "<span class='file entry'><a href='./{{folder}}/{{file}}'>" +
             getOperatingSystemIconTemplate() +
             getValidationTemplate() +
-            "<span class='linkText'>{{name}}, {{version}} {{size}}</span></a></span>";
+            "&nbsp;" +            
+            "<span class='linkText'>{{name}} ({{language}}), {{version}} {{size}}</span></a></span>";
     }
     var getFileExtraTemplate = function() {
         return "<span class='extra entry'>" +
             "<a href='./{{folder}}/{{file}}'>" +
             getExtraIconTemplate() +
+            "&nbsp;"+
             "<span class='linkText'>{{name}} {{size}}</span></a></span>";
     }
     var getScreenshotTemplate = function() {
