@@ -164,16 +164,19 @@ namespace GOG.Controllers
             var currentContext = details.Id > 0 ? details.Id : context;
 
             // update game files
-            foreach (var download in details.LanguageDownloads)
-                if (requiredLanguageCodes.Contains(download.Language))
-                {
-                    var productInstallers = await UpdateProductOperatingSystemFiles(
-                        download, 
-                        supportedOperatingSystems,
-                        currentContext);
+            if (details.LanguageDownloads != null)
+            {
+                foreach (var download in details.LanguageDownloads)
+                    if (requiredLanguageCodes.Contains(download.Language))
+                    {
+                        var productInstallers = await UpdateProductOperatingSystemFiles(
+                            download,
+                            supportedOperatingSystems,
+                            currentContext);
 
-                    productFiles.AddRange(productInstallers);
-                }
+                        productFiles.AddRange(productInstallers);
+                    }
+            }
 
             // update extras
             var extraFiles = await UpdateProductFiles(details.Extras, currentContext);

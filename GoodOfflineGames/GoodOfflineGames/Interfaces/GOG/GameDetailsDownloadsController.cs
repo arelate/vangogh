@@ -27,12 +27,18 @@ namespace GOG.Interfaces
             ICollection<string> requestedLanguages);
     }
 
+    public interface IContainsLanguageDownloadsDelegate
+    {
+        bool ContainsLanguageDownloads(string input);
+    }
+
     public interface IGameDetailsDownloadsController:
         IExtractSingleDelegate<string, string>,
         IExtractMultipleDelegate<string, string>,
         ISanitazeSingleDelegate,
         ISanitazeMultipleDelegate,
-        IExtractLanguageDownloads
+        IExtractLanguageDownloads,
+        IContainsLanguageDownloadsDelegate
     {
         // ...
     }

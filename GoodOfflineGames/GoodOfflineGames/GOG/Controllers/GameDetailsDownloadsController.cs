@@ -23,6 +23,12 @@ namespace GOG.Controllers
             this.languageCodesController = languageCodesController;
         }
 
+        public bool ContainsLanguageDownloads(string input)
+        {
+            return input.Contains(downloadsStart) &&
+                input.Contains(downloadsEnd);
+        }
+
         public string ExtractSingle(string input)
         {
             // downloads are double array and so far nothing else in the game details data is
