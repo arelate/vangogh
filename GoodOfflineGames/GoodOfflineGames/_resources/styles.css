@@ -113,7 +113,7 @@ button {
 
 .product .productImageContainer {
     width: 196px;
-    height: 110px;
+    /*height: 110px;*/
     background: rgba(0,0,0,0.1);
     position: relative;
 }

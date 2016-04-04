@@ -9,7 +9,7 @@ var Templates = function() {
     var getProductTemplate = function() {
         return "<div class='product {{productClass}}' title='{{title}}'><a href='#{{id}}'>" +
             "<div class='productImageContainer'>"+
-            "<img class='hidden' data-src='{{productImage}}' /></div>" +
+            "<img class='hidden' data-src='{{productImage}}' onerror='Images.hideOnError(this)' /></div>" +
             "<span class='title' >{{title}}</span>"+
             "</a></div>";
     }
@@ -1012,6 +1012,7 @@ var ProductFiles = function() {
     }
     var allFilesValidated = function(id) {
         var files = getFilesForProduct(id);
+        if (!files) return false;
         var validated = files && files.length > 0;
         for (var ii=0; ii < files.length; ii++) 
             validated &= files[ii].validated;
