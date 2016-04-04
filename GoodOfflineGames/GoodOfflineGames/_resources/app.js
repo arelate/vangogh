@@ -78,7 +78,7 @@ var Templates = function() {
         return "<i class='icon fa-star' title='Extra'></i>";
     }
     var getValidationTemplate = function () {
-        return "<i class='icon fa-check-circle validated {{validatedClass}}' title='Extra'></i>";
+        return "<i class='icon fa-check-circle validated {{validatedClass}}' title='Validated file'></i>";
     }
     var getSearchLinkTemplate = function() {
         return "<a href='?{{link}}'>{{title}}</a>";
