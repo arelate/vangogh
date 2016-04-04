@@ -529,10 +529,11 @@ namespace GOG
 
                 // we use single loop to:
                 // 1) update game details
-                // 2) download product updates
-                // 3) store product files
+                // 2) download updated product files
+                // 3) validated downloaded product files
                 // 4) cleanup product folder
                 // 5) remove from updated list   
+
                 // this is done to avoid spending all request limit on GOG.com
                 // just updating game details and not being able to update files
                 // which is highly likely in case of many updates
@@ -576,11 +577,6 @@ namespace GOG
                             settings.DownloadOperatingSystems).Result;
                 }
 
-                //foreach (var pf in productFiles)
-                //{
-                //    if (pf.Id == 1456922969) productIntallersExtras.Add(pf);
-                //}
-
                 if (settings.ValidateProductFiles)
                 {
                     foreach (var productFile in productIntallersExtras)
@@ -589,7 +585,7 @@ namespace GOG
 
                         var result = fileValidationController.ValidateProductFile(productFile).Result;
 
-                        if (!result.Item1) consoleController.WriteLine(result.Item2);
+                        if (!result.Item1) consoleController.WriteLine("ERROR: ", result.Item2);
                         else consoleController.WriteLine("DONE: Successfully validated.");
                     }
 
