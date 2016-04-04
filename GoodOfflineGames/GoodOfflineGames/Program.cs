@@ -521,7 +521,7 @@ namespace GOG
                     !ownedController.Contains(product) &&
                     updated.Contains(u))
                 {
-                    loggingConsoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.");
+                    loggingConsoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.", product.Title);
                     updated.Remove(u);
                     saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
                     continue;
