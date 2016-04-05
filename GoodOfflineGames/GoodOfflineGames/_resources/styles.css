@@ -247,6 +247,10 @@ button {
     content: '\f05a';
 }
 
+.fa-tags::before {
+    content: '\f02c';
+}
+
 .fa-bars::before {
     content: '\f0c9';
 }
