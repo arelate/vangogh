@@ -103,8 +103,6 @@ button {
 }
 
 .product {
-    /*line-height: 2em;*/
-    /*height: 2em;*/
     margin-right: 1em;
     margin-bottom: 1em;
     display: inline-block;
@@ -347,15 +345,6 @@ button {
     #gameDetailsContainer .filesContainer .entry {
         display: inline-block;
         margin-right: 2em;
-    }
-
-    .dark .validated {
-        color: #b9f6ca;
-    }
-
-    .light .validated 
-    {
-        color: #1b5e20;
     }
 
 #gameDetailsContainer .screenshotsContainer {
