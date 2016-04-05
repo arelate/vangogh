@@ -192,7 +192,8 @@ button {
         font-style: normal;
     }
 
-::before {
+::before,
+::after {
     font-family: 'fa', Segoe UI;
     padding: 0 0.25em;
     margin-right: 0.25em;
@@ -200,11 +201,13 @@ button {
 }
 
 .validated .title::before,
+.productTitle.validated::after,
 #infoContainer .validated::before {
     content: '\f058';
 }
 
 .updated .title::before,
+.productTitle.updated::after,
 #infoContainer .updated::before {
     content: "\f055";
     color: #dd2c00 !important;
@@ -219,6 +222,7 @@ button {
 }
 
 .dlc .title::before,
+.productTitle.dlc::after,
 #infoContainer .dlc::before {
     content: "\f12e";
     /*color: #9C27B0 !important;*/
@@ -409,7 +413,7 @@ button {
     position: fixed;
     right: 0;
     top: 0;
-    padding-right: 1.25em;
+    padding-right: 0.5em;
 }
 
 input[type=search] {
