@@ -409,7 +409,7 @@ button {
     position: fixed;
     right: 0;
     top: 0;
-    padding-right: 0.5em;
+    padding-right: 1.25em;
 }
 
 input[type=search] {
