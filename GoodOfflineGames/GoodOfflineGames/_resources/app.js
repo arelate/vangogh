@@ -8,9 +8,9 @@ var _$$ = function(n, s) { return n.querySelectorAll(s); }
 var Templates = function() {
     var getProductTemplate = function() {
         return "<div class='product {{productClass}}' title='{{title}}'><a href='#{{id}}'>" +
-            "<div class='productImageContainer'>"+
+            "<div class='productImageContainer'>" +
             "<img class='hidden' data-src='{{productImage}}' onerror='Images.hideOnError(this)' /></div>" +
-            "<span class='title' >{{title}}</span>"+
+            "<span class='title' >{{title}}</span>" +
             "</a></div>";
     }
     var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' onerror='Images.hideOnError(this)' />";
@@ -62,14 +62,14 @@ var Templates = function() {
         return "<span class='file entry'><a href='./{{folder}}/{{file}}'>" +
             getOperatingSystemIconTemplate() +
             getValidationTemplate() +
-            "&nbsp;" +            
+            "&nbsp;" +
             "<span class='linkText'>{{name}} ({{language}}), {{version}} {{size}}</span></a></span>";
     }
     var getFileExtraTemplate = function() {
         return "<span class='extra entry'>" +
             "<a href='./{{folder}}/{{file}}'>" +
             getExtraIconTemplate() +
-            "&nbsp;"+
+            "&nbsp;" +
             "<span class='linkText'>{{name}} {{size}}</span></a></span>";
     }
     var getScreenshotTemplate = function() {
@@ -81,7 +81,7 @@ var Templates = function() {
     var getExtraIconTemplate = function() {
         return "<i class='icon fa-star' title='Extra'></i>&nbsp;";
     }
-    var getValidationTemplate = function () {
+    var getValidationTemplate = function() {
         return "<i class='icon fa-check-circle validated {{validatedClass}}' title='Validated file'></i>&nbsp;";
     }
     var getSearchLinkTemplate = function() {
@@ -511,6 +511,21 @@ var ProductClass = function() {
         if (Bundles.isParent(product.id)) productClass.push("bundle");
 
         if (ProductFiles.allFilesValidated(product.id)) productClass.push("validated");
+        if (pd &&
+            pd.requiredProducts &&
+            pd.requiredProducts.length &&
+            Owned &&
+            Owned.check(product.id)) {
+            // if this is DLC - check validated status of the parent
+            // because DLC downloads are extracted to the parent and 
+            // validated as part of parent validation
+            var requiredProductsValidated = true;
+            for (var ii = 0; ii < pd.requiredProducts.length; ii++) {
+                var rp = pd.requiredProducts[ii];
+                requiredProductsValidated &= ProductFiles.allFilesValidated(rp.id);
+            }
+            if (requiredProductsValidated) productClass.push("validated");
+        }
 
         return productClass;
     }
@@ -950,6 +965,7 @@ var Info = function() {
             "product bundle wishlisted",
             "product dlc",
             "product dlc owned",
+            "product dlc owned validated",
             "product dlc wishlisted"
         ];
         var titles = [
@@ -966,6 +982,7 @@ var Info = function() {
             "Wishlisted bundles",
             "DLCs",
             "Owned DLCs",
+            "Validated DLCs",
             "Wishlisted DLCs"
         ];
 
@@ -1014,7 +1031,7 @@ var ProductFiles = function() {
         var files = getFilesForProduct(id);
         if (!files) return false;
         var validated = files && files.length > 0;
-        for (var ii=0; ii < files.length; ii++) 
+        for (var ii = 0; ii < files.length; ii++)
             validated &= files[ii].validated;
         return validated;
     }
@@ -1214,7 +1231,7 @@ document.addEventListener("DOMContentLoaded", function() {
         pContainer.innerHTML += remainingHtml;
         if (!location.search && !location.hash) pContainer.classList.remove("hidden");
         Info.init();
-        
+
         Images.updateProductThumbnails(pContainer);
     });
     var elapsed = new Date() - start;

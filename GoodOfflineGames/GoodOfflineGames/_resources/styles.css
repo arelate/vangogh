@@ -198,6 +198,13 @@ button {
     font-style: normal !important;
 }
 
+.dlc.validated .title::before,
+.productTitle.dlc.validated::after,
+#infoContainer .dlc.validated::before {
+    content: '\f12e\20\f058';
+}
+
+
 .validated .title::before,
 .productTitle.validated::after,
 #infoContainer .validated::before {
@@ -402,7 +409,7 @@ button {
     position: fixed;
     right: 0;
     top: 0;
-    padding-right: 0.5em;
+    padding-right: 1.25em;
 }
 
 input[type=search] {
