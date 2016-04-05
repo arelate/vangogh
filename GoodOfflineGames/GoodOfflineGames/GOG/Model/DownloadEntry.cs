@@ -10,7 +10,6 @@ namespace GOG.Model
         //public string date;
         //public string downloaderUrl;
 
-
         [DataMember(Name = "manualUrl")]
         public string ManualUrl { get; set; }
         [DataMember(Name = "name")]

@@ -62,7 +62,7 @@ namespace GOG.Controllers
 
         public IEnumerable<string> ExtractMultiple(string data)
         {
-            const string languagePattern = @"\[""[\w\\]*"",";
+            const string languagePattern = @"\[""[\w\\ ]*"",";
             var regex = new Regex(languagePattern);
 
             var match = regex.Match(data);

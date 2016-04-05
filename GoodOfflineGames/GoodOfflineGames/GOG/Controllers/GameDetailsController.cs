@@ -67,6 +67,7 @@ namespace GOG.Controllers
             // extract the languages that are used as first element in each array...
             foreach (var downloadString in downloadStrings)
             {
+
                 var languages = gameDetailsDownloadsController.ExtractMultiple(downloadString);
                 if (languages == null)
                     throw new InvalidOperationException("Download string doesn't seem to contain languages. Please check if GOG.com changed JSON data format.");
