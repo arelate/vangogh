@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./_resources/styles.css" />
 </head>
 <!-- switch default theme on the body: dark, light -->
-<body class="background dark">
+<body class="dark">
 
     <div id="errorMessage" class="hidden">
         I'm sorry, Dave. <br />I'm afraid I can't do that. <br /> <span class="note">Note: Please run GoodOfflineGames.exe at least once.</span>
@@ -42,6 +42,11 @@
     <button id="toggleMenu" title="Menu" accesskey="m">
         <i class="icon fa-bars"></i>
     </button>
+
+    <div id="loadingScreen">
+        <i class="icon fa-spinner"></i>&nbsp;
+        Loading, please wait...
+    </div>
 
     <script>
         var products = undefined;

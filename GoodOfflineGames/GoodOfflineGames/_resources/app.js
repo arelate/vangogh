@@ -7,11 +7,12 @@ var _$$ = function(n, s) { return n.querySelectorAll(s); }
 
 var Templates = function() {
     var getProductTemplate = function() {
-        return "<div class='product {{productClass}}' title='{{title}}'><a href='#{{id}}'>" +
-            "<div class='productImageContainer'>" +
-            "<img class='hidden' data-src='{{productImage}}' onerror='Images.hideOnError(this)' /></div>" +
+        return "<div class='product {{productClass}}' title='{{title}}'>" +
+            "<a href='#{{id}}'>" +
+            "<img data-src='{{productImage}}' onerror='Images.hideOnError(this)' />" +
             "<span class='title' >{{title}}</span>" +
-            "</a></div>";
+            "</a>" +
+            "</div>";
     }
     var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' onerror='Images.hideOnError(this)' />";
     var gameDetailsProductHeader = "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>";
@@ -150,22 +151,15 @@ var Images = function() {
     }
     var updateProductThumbnails = function(container) {
         var productThumbnails = container.querySelectorAll(".product img[data-src]");
+
         for (var ii = 0; ii < productThumbnails.length; ii++) {
-            thumbnails.push(productThumbnails[ii]);
-        }
-        updateProductThumbnail();
-    }
-    var updateProductThumbnail = function() {
-        if (!thumbnails || !thumbnails.length) return;
-        for (var ii = 0; ii < 10; ii++) {
-            var image = thumbnails.shift();
+            var image = productThumbnails[ii];
             if (!image) break;
             var source = image.getAttribute("data-src");
             image.srcset = getThumbnailSrc(source);
             image.removeAttribute("data-src");
             image.classList.remove("hidden");
         }
-        requestAnimationFrame(updateProductThumbnail);
     }
     return {
         "getRelativeUri": getRelativeUri,
@@ -397,7 +391,7 @@ var Search = function() {
                 searchResults.appendChild(clonedProductElement);
             }
 
-            Images.updateProductThumbnails(searchResults);
+            //Images.updateProductThumbnails(searchResults);
 
             searchResults.classList.remove("hidden");
 
@@ -1220,20 +1214,21 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("Creating views: " + elapsed + "ms");
 
     var start = new Date();
-    // show first N elements ASAP, others delay for a bit
-    var throttle = Math.min(150, html.length);
-    var initialHtml = html.slice(0, throttle).join("");
-    var pContainer = document.getElementById("productsContainer");
-    pContainer.innerHTML = initialHtml;
 
-    var remainingHtml = html.slice(throttle, html.length).join("");
-    requestAnimationFrame(function() {
-        pContainer.innerHTML += remainingHtml;
-        if (!location.search && !location.hash) pContainer.classList.remove("hidden");
+    var pContainer = document.getElementById("productsContainer");
+
+    requestAnimationFrame(() => {
+        pContainer.innerHTML = html.join("");
+        Images.updateProductThumbnails(pContainer);
         Info.init();
 
-        Images.updateProductThumbnails(pContainer);
+        requestAnimationFrame(() => {
+            var loadingScreen = $("loadingScreen");
+            loadingScreen.classList.add("hidden");
+        });
+
     });
+
     var elapsed = new Date() - start;
     console.log("Adding html to the DOM: " + elapsed + "ms");
 
