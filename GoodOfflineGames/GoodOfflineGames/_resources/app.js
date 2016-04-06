@@ -25,7 +25,7 @@ var Templates = function() {
         "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
         "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title worksOn'>{{worksOnTitle}}</td></tr>" +
         "<tr class='{{wikiClass}}'><td class='header'>Wikipedia</td><td class='title'><a href={{wikiLink}} accesskey='w'>Article</a></td></tr>" +
-        "<tr class='{{tagsClass}}'><td class='header'>Tags</td><td class='title'>{{tagsContent}}</td></tr>" +
+        "<tr class='{{tagsClass}}'><td class='header'>Tags&nbsp;<i class='icon fa-tags'></i></td><td class='title'>{{tagsContent}}</td></tr>" +
         "</table>";
     var gameDetailsFileContainer = "<div class='filesContainer {{filesClass}}'>" +
         "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
