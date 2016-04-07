@@ -27,6 +27,9 @@ namespace GOG.Controllers
         private const string fromAttribute = "from";
         private const string toAttribute = "to";
 
+        private const string replaceUriEntry = "?";
+        private const string replaceUriEntryWithExtension = ".xml";
+
         // only validate binary files
         private readonly string[] extensionsWhitelist = new string[3] { ".exe", ".bin", ".dmg" };
 
@@ -51,14 +54,13 @@ namespace GOG.Controllers
 
         public Uri GetValidationUri(string resolvedUri)
         {
-            const string replaceEntry = "?";
-            const string replaceWithEntry = ".xml";
+
 
             if (string.IsNullOrEmpty(resolvedUri)) return null;
 
-            var validationUri = (resolvedUri.Contains(replaceEntry)) ?
-                new Uri(resolvedUri.Replace(replaceEntry, replaceWithEntry + replaceEntry)) :
-                new Uri(resolvedUri + replaceWithEntry);
+            var validationUri = (resolvedUri.Contains(replaceUriEntry)) ?
+                new Uri(resolvedUri.Replace(replaceUriEntry, replaceUriEntryWithExtension + replaceUriEntry)) :
+                new Uri(resolvedUri + replaceUriEntryWithExtension);
 
             return validationUri;
         }
@@ -72,7 +74,7 @@ namespace GOG.Controllers
         public string GetLocalValidationFilename(string localPath)
         {
             var localFilename = Path.GetFileName(localPath);
-            return Path.Combine(validationFilesContainer, localFilename);
+            return Path.Combine(validationFilesContainer, localFilename + replaceUriEntryWithExtension);
         }
 
         public async Task<bool> DownloadValidationFile(Uri validationUri)
