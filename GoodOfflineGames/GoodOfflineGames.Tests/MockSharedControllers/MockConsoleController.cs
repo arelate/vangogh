@@ -30,11 +30,11 @@ namespace GoodOfflineGames.Tests
             return string.Empty;
         }
 
-        public void Write(string message, params object[] data)
+        public void Write(string message, ConsoleColor color, params object[] data)
         {
         }
 
-        public void WriteLine(string message, params object[] data)
+        public void WriteLine(string message, ConsoleColor color, params object[] data)
         {
         }
     }

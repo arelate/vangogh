@@ -19,7 +19,7 @@ namespace GOG
 
         public void PostUpdate()
         {
-            consoleController.Write(".");
+            consoleController.Write(".", ConsoleColor.Gray);
         }
     }
 }

@@ -35,17 +35,17 @@ namespace GOG.SharedControllers
             return consoleController.ReadPrivateLine();
         }
 
-        public void Write(string message, params object[] data)
+        public void Write(string message, ConsoleColor color, params object[] data)
         {
             // even though write was requested, writeline works better in log context
             logStreamWriter.WriteLine(message, data);
-            consoleController.Write(message, data);
+            consoleController.Write(message, color, data);
         }
 
-        public void WriteLine(string message, params object[] data)
+        public void WriteLine(string message, ConsoleColor color, params object[] data)
         {
             logStreamWriter.WriteLine(message, data);
-            consoleController.WriteLine(message, data);
+            consoleController.WriteLine(message, color, data);
         }
 
         public void Dispose()

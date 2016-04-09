@@ -53,6 +53,7 @@ namespace GOG
 
         static void Main(string[] args)
         {
+            var dataCheckThresholdDays = 30;
 
             #region IO variables
 
@@ -117,9 +118,9 @@ namespace GOG
 
             #region Loading stored data
 
-            loggingConsoleController.WriteLine("Starting update session {0}.", DateTime.Now);
+            loggingConsoleController.WriteLine("Starting update session {0}.", ConsoleColor.White, DateTime.Now);
 
-            loggingConsoleController.Write("Loading stored data...");
+            loggingConsoleController.Write("Loading stored data...", ConsoleColor.Gray);
 
             // Load stored data for products, owned, wishlist and queued updates
             products = saveLoadDataController.LoadData<List<Product>>(ProductTypes.Products).Result;
@@ -149,7 +150,7 @@ namespace GOG
             screenshots = saveLoadDataController.LoadData<Dictionary<long, List<string>>>(ProductTypes.Screenshots).Result;
             screenshots = screenshots ?? new Dictionary<long, List<string>>();
 
-            loggingConsoleController.WriteLine("DONE.");
+            loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
 
             #endregion
 
@@ -221,13 +222,20 @@ namespace GOG
 
             IScreenshotsController screenshotsController = new ScreenshotsController(networkController);
 
-            IProgress<double> downloadProgressReporter = new DownloadProgressReporter(consoleController);
+            IFormattingController bytesFormattingController = new BytesFormattingController();
+            IFormattingController secondsFormattingController = new SecondsFormattingController();
+
+            IDownloadProgressReportingController downloadProgressReportingController = 
+                new DownloadProgressReportingController(
+                    bytesFormattingController, 
+                    secondsFormattingController,
+                    consoleController);
 
             var productFilesDownloadController = new ProductFilesDownloadController(
                 requestFileDelegate,
                 ioController,
                 loggingConsoleController,
-                downloadProgressReporter);
+                downloadProgressReportingController);
 
             var imagesController = new ImagesController(
                 requestFileDelegate,
@@ -240,7 +248,7 @@ namespace GOG
 
             if (!authorizationController.Authorize(settings).Result)
             {
-                consoleController.WriteLine("Press ENTER to quit...");
+                consoleController.WriteLine("Press ENTER to quit...", ConsoleColor.White);
                 consoleController.ReadLine();
                 return;
             }
@@ -249,7 +257,7 @@ namespace GOG
 
             #region Get new products from gog.com/games and gog.com/account
 
-            loggingConsoleController.Write("Requesting new products from {0}...", Urls.GamesAjaxFiltered);
+            loggingConsoleController.Write("Requesting new products from {0}...", ConsoleColor.White, Urls.GamesAjaxFiltered);
 
             var newProducts = pagedResultController.Request(
                 Urls.GamesAjaxFiltered,
@@ -258,7 +266,7 @@ namespace GOG
 
             if (newProducts != null)
             {
-                loggingConsoleController.Write("Got {0} new products.", newProducts.Count);
+                loggingConsoleController.Write("Got {0} new products.", ConsoleColor.Gray, newProducts.Count);
 
                 for (var pp = newProducts.Count - 1; pp >= 0; pp--)
                     productsController.Insert(0, newProducts[pp]);
@@ -266,9 +274,9 @@ namespace GOG
 
             saveLoadDataController.SaveData(products, ProductTypes.Products).Wait();
 
-            consoleController.WriteLine(string.Empty);
+            consoleController.WriteLine(string.Empty, ConsoleColor.Gray);
 
-            loggingConsoleController.Write("Requesting new products from {0}...", Urls.AccountGetFilteredProducts);
+            loggingConsoleController.Write("Requesting new products from {0}...", ConsoleColor.White, Urls.AccountGetFilteredProducts);
 
             var newOwned = pagedResultController.Request(
                 Urls.AccountGetFilteredProducts,
@@ -277,7 +285,7 @@ namespace GOG
 
             if (newOwned != null)
             {
-                loggingConsoleController.Write("Got {0} new products.", newOwned.Count);
+                loggingConsoleController.Write("Got {0} new products.", ConsoleColor.Gray, newOwned.Count);
 
                 for (var oo = newOwned.Count - 1; oo >= 0; oo--)
                 {
@@ -291,13 +299,13 @@ namespace GOG
 
             saveLoadDataController.SaveData(owned, ProductTypes.Owned).Wait();
 
-            loggingConsoleController.WriteLine(string.Empty);
+            loggingConsoleController.WriteLine(string.Empty, ConsoleColor.Gray);
 
             #endregion
 
             #region Get updated products
 
-            loggingConsoleController.Write("Requesting updated products...");
+            loggingConsoleController.Write("Requesting updated products...", ConsoleColor.White);
 
             QueryParameters.AccountGetFilteredProducts["isUpdated"] = "1";
             var productUpdates = pagedResultController.Request(
@@ -306,7 +314,7 @@ namespace GOG
 
             if (productUpdates != null)
             {
-                loggingConsoleController.Write("Got {0} updated products.", productUpdates.Count);
+                loggingConsoleController.Write("Got {0} updated products.", ConsoleColor.Gray, productUpdates.Count);
 
                 foreach (var update in productUpdates)
                     updatedController.Add(update.Id);
@@ -314,13 +322,13 @@ namespace GOG
 
             saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
 
-            loggingConsoleController.WriteLine(string.Empty);
+            loggingConsoleController.WriteLine(string.Empty, ConsoleColor.Gray);
 
             #endregion
 
             #region Get wishlisted products
 
-            loggingConsoleController.Write("Requesting wishlisted products...");
+            loggingConsoleController.Write("Requesting wishlisted products...", ConsoleColor.White);
 
             var wishlistedString = gogDataController.GetString(Urls.Wishlist).Result;
             var wishlistedProductResult = jsonStringController.Deserialize<ProductsResult>(wishlistedString);
@@ -330,7 +338,7 @@ namespace GOG
             {
                 var count = wishlistedProductResult.Products.Count;
 
-                loggingConsoleController.Write("Got {0} wishlisted products.", count);
+                loggingConsoleController.Write("Got {0} wishlisted products.", ConsoleColor.Gray, count);
 
                 wishlisted = new List<long>(count);
 
@@ -340,17 +348,15 @@ namespace GOG
 
             saveLoadDataController.SaveData(wishlisted, ProductTypes.Wishlisted).Wait();
 
-            consoleController.WriteLine(string.Empty);
+            consoleController.WriteLine(string.Empty, ConsoleColor.Gray);
 
             #endregion
 
             #region Update product data
 
-            loggingConsoleController.Write("Updating product data...");
+            loggingConsoleController.Write("Updating product data...", ConsoleColor.White);
 
             productsDataController.OnProductUpdated += OnProductDataUpdated;
-
-            var dataCheckThresholdDays = 30;
 
             var productsWithoutProductData = new List<string>();
 
@@ -409,13 +415,13 @@ namespace GOG
                 saveLoadDataController.SaveData(productsData, ProductTypes.ProductsData).Wait();
             }
 
-            loggingConsoleController.WriteLine("DONE.");
+            loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
 
             #endregion
 
             #region Enforce data consistency so that DLCs have proper ids
 
-            loggingConsoleController.Write("Enforcing data consistency for DLCs...");
+            loggingConsoleController.Write("Enforcing data consistency for DLCs...", ConsoleColor.White);
 
             var dataConsistencyController = new DataConsistencyController(gamesDetails, productsData);
             if (dataConsistencyController.Update())
@@ -426,7 +432,7 @@ namespace GOG
                 saveLoadDataController.SaveData(gamesDetails, ProductTypes.GameDetails);
             }
 
-            loggingConsoleController.WriteLine("DONE.");
+            loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
 
             #endregion
 
@@ -434,7 +440,7 @@ namespace GOG
 
             if (settings.DownloadScreenshots)
             {
-                loggingConsoleController.Write("Requesting product screenshots...");
+                loggingConsoleController.Write("Requesting product screenshots...", ConsoleColor.White);
 
                 foreach (var product in products)
                 {
@@ -459,7 +465,7 @@ namespace GOG
                 }
             }
 
-            loggingConsoleController.WriteLine("DONE.");
+            loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
 
             #endregion
 
@@ -467,7 +473,7 @@ namespace GOG
 
             if (settings.DownloadImages)
             {
-                loggingConsoleController.Write("Updating product images...");
+                loggingConsoleController.Write("Updating product images...", ConsoleColor.White);
 
                 // for all products first
                 imagesController.Update(products, imagesFolder).Wait();
@@ -484,14 +490,14 @@ namespace GOG
                     imagesController.Update(screenshots, screenshotsFolder).Wait();
                 }
 
-                loggingConsoleController.WriteLine("DONE.");
+                loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
             }
 
             #endregion
 
             #region Update products - game details, download and cleanup folders
 
-            loggingConsoleController.WriteLine("Updating game details, product files and cleaning up product folders...");
+            loggingConsoleController.WriteLine("Updating game details, product files and cleaning up product folders...", ConsoleColor.White);
 
             var updateAllThrottleMinutes = 2; // 2 minutes
             var updateAllThrottleMilliseconds = 1000 * 60 * updateAllThrottleMinutes;
@@ -521,7 +527,7 @@ namespace GOG
                     !ownedController.Contains(product) &&
                     updated.Contains(u))
                 {
-                    loggingConsoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.", product.Title);
+                    loggingConsoleController.WriteLine("WARNING: Product {0} is not owned and couldn't be updated, removing it from updates.", ConsoleColor.Yellow, product.Title);
                     updated.Remove(u);
                     saveLoadDataController.SaveData(updated, ProductTypes.Updated).Wait();
                     continue;
@@ -546,7 +552,8 @@ namespace GOG
                         var checkedDays = DateTime.Today - checkedOwned[u];
                         if (checkedDays.Days < dataCheckThresholdDays)
                         {
-                            loggingConsoleController.WriteLine("Product {0} already checked within last {1} days.",
+                            loggingConsoleController.WriteLine("Product {0} has been checked within last {1} day(s).",
+                                ConsoleColor.DarkYellow,
                                 u, dataCheckThresholdDays);
                             continue;
                         }
@@ -554,14 +561,14 @@ namespace GOG
                 }
 
                 // request updated game details
-                loggingConsoleController.Write("Updating game details for {0}...", u);
+                loggingConsoleController.Write("Updating game details for {0}...", ConsoleColor.White, u);
 
                 gamesDetailsController.Update(new List<string> { u.ToString() }).Wait();
 
                 // save new details
                 saveLoadDataController.SaveData(gamesDetails, ProductTypes.GameDetails).Wait();
 
-                loggingConsoleController.WriteLine("DONE.");
+                loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
 
                 // request updated product files
                 var updatedGameDetails = gamesDetailsController.Find(u);
@@ -584,19 +591,19 @@ namespace GOG
                         // reset validation status
                         productFile.Validated = false;
 
-                        consoleController.Write("Validating {0}: {1}.", productFile.Name, productFile.File);
+                        consoleController.Write("Validating {0}: {1}.", ConsoleColor.Gray, productFile.Name, productFile.File);
 
                         var result = fileValidationController.ValidateProductFile(productFile).Result;
 
-                        if (!result.Item1) consoleController.WriteLine("ERROR: ", result.Item2);
+                        if (!result.Item1) consoleController.WriteLine("ERROR: ", ConsoleColor.Red, result.Item2);
                         else
                         {
-                            consoleController.WriteLine("Successfully validated.");
+                            consoleController.WriteLine("Successfully validated.", ConsoleColor.Green);
                             productFile.Validated = true;
                         }
                     }
 
-                    consoleController.WriteLine("DONE.");
+                    consoleController.WriteLine("DONE.", ConsoleColor.White);
                 }
 
                 IProductFileController productFilesController = new ProductFilesController(productIntallersExtras);
@@ -623,7 +630,7 @@ namespace GOG
                     if (settings.CleanupProductFolders)
                     {
                         // cleanup product folder
-                        loggingConsoleController.Write("Cleaning up product folder...");
+                        loggingConsoleController.Write("Cleaning up product folder...", ConsoleColor.White);
 
                         ICleanupController cleanupController =
                             new CleanupController(
@@ -638,8 +645,8 @@ namespace GOG
                 {
                     if (++failedAttempts >= failedAttemptThreshold)
                     {
-                        loggingConsoleController.WriteLine("Last {0} attempts to download product files were not successful. " +
-                            "Recommended: wait 12-24 hours and try again. Abandoning attempts.", failedAttempts);
+                        loggingConsoleController.WriteLine("ERROR: Last {0} attempts to download product files were not successful. " +
+                            "Recommended: wait 12-24 hours and try again. Abandoning attempts.", ConsoleColor.Red, failedAttempts);
                         break;
                     }
                 }
@@ -649,17 +656,17 @@ namespace GOG
 
                 saveLoadDataController.SaveData(checkedOwned, ProductTypes.CheckedOwned).Wait();
 
-                loggingConsoleController.WriteLine("DONE.");
+                loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
 
                 // throttle server access
                 if (settings.UpdateAll)
                 {
-                    Console.WriteLine("Waiting {0} minute(s) before next request...", updateAllThrottleMinutes);
+                    Console.WriteLine("Waiting {0} minute(s) before next request...", ConsoleColor.Gray, updateAllThrottleMinutes);
                     System.Threading.Thread.Sleep(updateAllThrottleMilliseconds);
                 }
             }
 
-            loggingConsoleController.WriteLine("DONE.");
+            loggingConsoleController.WriteLine("DONE.", ConsoleColor.White);
 
             #endregion
 
@@ -669,7 +676,7 @@ namespace GOG
 
             #endregion
 
-            loggingConsoleController.WriteLine("All done. Press ENTER to quit...");
+            loggingConsoleController.WriteLine("All done. Press ENTER to quit...", ConsoleColor.White);
             consoleController.ReadLine();
 
             #region Disposal of IO objects

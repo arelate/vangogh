@@ -43,7 +43,7 @@ namespace GOG.Controllers
 
         public async Task<bool> Authorize(ICredentials credentials)
         {
-            consoleController.WriteLine(authorizingOnGOG, credentials.Username);
+            consoleController.WriteLine(authorizingOnGOG, ConsoleColor.Gray, credentials.Username);
 
             // request authorization token
 
@@ -67,7 +67,7 @@ namespace GOG.Controllers
             if (loginCheckResult.Contains("gogData"))
             {
                 // successful login, and 2FA is not used for this user
-                consoleController.WriteLine(successfullyAuthorizedOnGOG, credentials.Username);
+                consoleController.WriteLine(successfullyAuthorizedOnGOG, ConsoleColor.Green, credentials.Username);
                 return true;
             }
             else
@@ -80,7 +80,7 @@ namespace GOG.Controllers
 
                     while (securityCode.Length != 4)
                     {
-                        consoleController.WriteLine(securityCodeHasBeenSent, credentials.Username);
+                        consoleController.WriteLine(securityCodeHasBeenSent, ConsoleColor.White, credentials.Username);
                         securityCode = consoleController.ReadLine();
                     }
 
@@ -99,17 +99,17 @@ namespace GOG.Controllers
                     if (twoStepLoginCheckResult.Contains("gogData"))
                     {
                         // successful login using 2FA
-                        consoleController.WriteLine(successfullyAuthorizedOnGOG, credentials.Username);
+                        consoleController.WriteLine(successfullyAuthorizedOnGOG, ConsoleColor.Green, credentials.Username);
                         return true;
                     }
                     else {
-                        consoleController.WriteLine(failedToAuthenticate);
+                        consoleController.WriteLine(failedToAuthenticate, ConsoleColor.Red);
                         return false;
                     }
                 }
                 else
                 {
-                    consoleController.WriteLine(failedToAuthenticate);
+                    consoleController.WriteLine(failedToAuthenticate, ConsoleColor.Red);
                     return false;
                 }
             }

@@ -30,20 +30,22 @@ namespace GOG.SharedControllers
             string toPath,
             IOpenWritableDelegate openWriteableDelegate,
             IFileController fileController = null,
-            IProgress<double> progress = null,
+            IDownloadProgressReportingController downloadProgressReportingController = null,
             IConsoleController consoleController = null)
         {
             using (var response = await client.GetAsync(fromUri,
                 HttpCompletionOption.ResponseHeadersRead))
             {
                 var totalBytes = response.Content.Headers.ContentLength;
+                if (totalBytes == null) totalBytes = 0;
+
                 var requestUri = response.RequestMessage.RequestUri;
                 var filename = requestUri.Segments.Last();
 
                 if (!response.IsSuccessStatusCode)
                 {
                     if (consoleController != null)
-                        consoleController.Write("HTTP error {0}. Couldn't download file.", response.StatusCode);
+                        consoleController.Write("ERROR {0}. Couldn't download file.", ConsoleColor.Red, response.StatusCode);
 
                     return new Tuple<bool, Uri>(false, requestUri);
                 }
@@ -61,10 +63,12 @@ namespace GOG.SharedControllers
                 {
                     // file already exists and has same length - assume it's downloaded
                     if (consoleController != null)
-                        consoleController.Write("No need to download - latest version already available.");
+                        consoleController.Write("The file with the same name and size already exists.", ConsoleColor.DarkGreen);
 
                     return new Tuple<bool, Uri>(true, requestUri);
                 }
+
+                downloadProgressReportingController?.Initialize();
 
                 using (Stream writeableStream = openWriteableDelegate.OpenWritable(fullPath))
                 using (Stream responseStream = await response.Content.ReadAsStreamAsync())
@@ -73,11 +77,7 @@ namespace GOG.SharedControllers
                     {
                         totalBytesRead += bytesRead;
                         await writeableStream.WriteAsync(buffer, 0, bytesRead);
-                        if (progress != null)
-                        {
-                            var percent = totalBytesRead / (double)totalBytes;
-                            progress.Report(percent);
-                        }
+                        downloadProgressReportingController?.Report(totalBytesRead, (long)totalBytes);
                     }
                 }
 

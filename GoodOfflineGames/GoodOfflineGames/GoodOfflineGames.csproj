@@ -34,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>E:\GOG.com\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsolePostUpdate.cs" />
+    <Compile Include="Controllers\Abstract\FormattingController.cs" />
+    <Compile Include="Controllers\BytesFormattingController - Copy.cs" />
+    <Compile Include="Controllers\SecondsFormattingController.cs" />
     <Compile Include="Controllers\CleanupController.cs" />
     <Compile Include="Controllers\LoggingConsoleController.cs" />
     <Compile Include="Controllers\TokenExtractorController.cs" />
@@ -72,7 +75,7 @@
     <Compile Include="GOG\Controllers\AuthorizationController.cs" />
     <Compile Include="GOG\Controllers\Abstract\CollectionController.cs" />
     <Compile Include="GOG\Controllers\DataConsistencyController.cs" />
-    <Compile Include="GOG\Controllers\DownloadProgressReporter.cs" />
+    <Compile Include="Controllers\DownloadProgressReporter.cs" />
     <Compile Include="GOG\Controllers\FileValidationController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsDownloadsController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
@@ -108,10 +111,12 @@
     <Compile Include="GOG\Model\Unused\User.cs" />
     <Compile Include="GOG\Model\WorksOn.cs" />
     <Compile Include="GOG\Controllers\ProductFilesController.cs" />
+    <Compile Include="Interfaces\BytesFormattingController.cs" />
     <Compile Include="Interfaces\CleanupController.cs" />
     <Compile Include="Interfaces\CollectionController.cs" />
     <Compile Include="Interfaces\ConsoleController.cs" />
     <Compile Include="Interfaces\DirectoryController.cs" />
+    <Compile Include="Interfaces\DownloadProgressReporter.cs" />
     <Compile Include="Interfaces\FileController.cs" />
     <Compile Include="Interfaces\FileValidationController.cs" />
     <Compile Include="Interfaces\GOG\AuthorizationController.cs" />
@@ -184,6 +189,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

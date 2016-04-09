@@ -19,16 +19,16 @@ namespace GOG.Controllers
         private const string Mac = "Mac";
         private const string Linux = "Linux";
 
-        private IProgress<double> downloadProgressReporter;
+        private IDownloadProgressReportingController downloadProgressReportingController;
         private string productLocation = string.Empty;
 
         public ProductFilesDownloadController(
             IRequestFileDelegate requestFileDelegate,
             IIOController ioController,
             IConsoleController consoleController,
-            IProgress<double> downloadProgressReporter)
+            IDownloadProgressReportingController downloadProgressReportingController)
         {
-            this.downloadProgressReporter = downloadProgressReporter;
+            this.downloadProgressReportingController = downloadProgressReportingController;
 
             this.requestFileDelegate = requestFileDelegate;
             this.ioController = ioController;
@@ -63,7 +63,7 @@ namespace GOG.Controllers
                     language,
                     downloadEntry.Size);
 
-            consoleController.WriteLine(entryMessage);
+            consoleController.WriteLine(entryMessage, ConsoleColor.Gray);
 
             var fromUri = Urls.HttpsRoot + downloadEntry.ManualUrl;
             var toUriParts = downloadEntry.ManualUrl.Split(
@@ -77,7 +77,7 @@ namespace GOG.Controllers
                 productFile.Folder,
                 ioController,
                 ioController,
-                downloadProgressReporter,
+                downloadProgressReportingController,
                 consoleController);
 
             productFile.DownloadSuccessful = result.Item1;
@@ -85,7 +85,7 @@ namespace GOG.Controllers
             productFile.File = fileUri.Segments.Last();
             productFile.ResolvedUrl = fileUri.ToString();
 
-            consoleController.WriteLine(string.Empty);
+            consoleController.WriteLine(string.Empty, ConsoleColor.Gray);
 
             return productFile;
         }
@@ -157,7 +157,7 @@ namespace GOG.Controllers
             ICollection<string> supportedOperatingSystems,
             long context = 0)
         {
-            consoleController.WriteLine("Downloading files for product {0}...", details.Title);
+            consoleController.WriteLine("Downloading files for product {0}...", ConsoleColor.White, details.Title);
 
             List<ProductFile> productFiles = new List<ProductFile>();
 

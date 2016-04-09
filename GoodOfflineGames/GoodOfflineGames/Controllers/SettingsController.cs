@@ -51,13 +51,13 @@ namespace GOG.SharedControllers
             // request additional data if needed
             if (string.IsNullOrEmpty(settings.Username))
             {
-                consoleController.WriteLine("Please enter your GOG.com username (email):");
+                consoleController.WriteLine("Please enter your GOG.com username (email):", ConsoleColor.White);
                 settings.Username = consoleController.ReadLine();
             }
 
             if (string.IsNullOrEmpty(settings.Password))
             {
-                consoleController.WriteLine("Please enter password for {0}:", settings.Username);
+                consoleController.WriteLine("Please enter password for {0}:", ConsoleColor.White, settings.Username);
                 settings.Password = consoleController.ReadPrivateLine();
             }
 

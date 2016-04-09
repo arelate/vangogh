@@ -1,4 +1,6 @@
-﻿namespace GOG.Interfaces
+﻿using System;
+
+namespace GOG.Interfaces
 {
     public interface IReadDelegate
     {
@@ -17,12 +19,12 @@
 
     public interface IWriteDelegate
     {
-        void Write(string message, params object[] data);
+        void Write(string message, ConsoleColor color, params object[] data);
     }
 
     public interface IWriteLineDelegate
     {
-        void WriteLine(string message, params object[] data);
+        void WriteLine(string message, ConsoleColor color, params object[] data);
     }
 
     public interface IConsoleController :

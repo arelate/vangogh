@@ -32,13 +32,15 @@ namespace GOG.SharedControllers
             return privateData;
         }
 
-        public void Write(string message, params object[] data)
+        public void Write(string message, ConsoleColor color, params object[] data)
         {
+            Console.ForegroundColor = color;
             Console.Write(message, data);
         }
 
-        public void WriteLine(string message, params object[] data)
+        public void WriteLine(string message, ConsoleColor color, params object[] data)
         {
+            Console.ForegroundColor = color;
             Console.WriteLine(message, data);
         }
     }
