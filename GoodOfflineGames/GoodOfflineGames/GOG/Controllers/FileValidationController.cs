@@ -232,7 +232,7 @@ namespace GOG.Controllers
             }
 
             if (result)
-                return new Tuple<bool, string>(true, string.Empty);
+                return new Tuple<bool, string>(true, "Couldn't validate one of the chunks. File might be corrupted.");
 
             return new Tuple<bool,string>(false, "Unknown validation error.");
         }
