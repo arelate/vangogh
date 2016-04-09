@@ -56,8 +56,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Controllers\BytesFormattingController - Copy.cs" />
-    <Compile Include="Controllers\DownloadProgressReportingController.cs" />
+    <Compile Include="Controllers\BytesFormattingController.cs" />
     <Compile Include="Controllers\SecondsFormattingController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsController.cs" />
     <Compile Include="GOG\Controllers\ProductDataController.cs" />
