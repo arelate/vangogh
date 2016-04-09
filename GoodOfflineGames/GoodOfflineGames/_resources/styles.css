@@ -203,8 +203,8 @@ button {
 .updated .title::before,
 .productTitle.updated::after,
 #infoContainer .updated::before {
-    content: "\f055";
-    color: #dd2c00 !important;
+    content: "\f0fe";
+    color: #ffa000 !important;
 }
 
 .dark .dlc {
