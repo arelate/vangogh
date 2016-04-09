@@ -661,7 +661,9 @@ namespace GOG
                 // throttle server access
                 if (settings.UpdateAll)
                 {
-                    Console.WriteLine("Waiting {0} minute(s) before next request...", ConsoleColor.Gray, updateAllThrottleMinutes);
+                    loggingConsoleController.WriteLine("Waiting {0} minute(s) before next request...", 
+                        ConsoleColor.Gray, 
+                        updateAllThrottleMinutes);
                     System.Threading.Thread.Sleep(updateAllThrottleMilliseconds);
                 }
             }

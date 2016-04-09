@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using GOG.Interfaces;
 
@@ -10,6 +11,7 @@ namespace GOG.Controllers
         protected string[] orderTitles;
         protected string format;
         protected string zero;
+        protected bool roundValue = false;
 
         public string Format(long value)
         {
@@ -18,10 +20,14 @@ namespace GOG.Controllers
             for (var ii = 0; ii < relativeOrders.Length; ii++)
             {
                 if (value >= max)
+                {
+                    var outputValue = decimal.Divide(value, max);
+                    if (roundValue) outputValue = Math.Round(outputValue);
                     return string.Format(
-                        format, 
-                        decimal.Divide(value, max), 
+                        format,
+                        outputValue,
                         orderTitles[ii]);
+                }
 
                 max /= relativeOrders[ii];
             }

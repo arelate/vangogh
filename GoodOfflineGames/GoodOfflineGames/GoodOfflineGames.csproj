@@ -65,7 +65,7 @@
   <ItemGroup>
     <Compile Include="ConsolePostUpdate.cs" />
     <Compile Include="Controllers\Abstract\FormattingController.cs" />
-    <Compile Include="Controllers\BytesFormattingController - Copy.cs" />
+    <Compile Include="Controllers\BytesFormattingController.cs" />
     <Compile Include="Controllers\SecondsFormattingController.cs" />
     <Compile Include="Controllers\CleanupController.cs" />
     <Compile Include="Controllers\LoggingConsoleController.cs" />

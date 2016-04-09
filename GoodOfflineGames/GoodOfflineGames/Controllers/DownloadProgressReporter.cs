@@ -11,7 +11,8 @@ namespace GOG.Controllers
         private IFormattingController secondsFormattingController;
         private DateTime startTimestamp;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
-        private const string reportFormat = "\r{0:P1} at {1:d}/s. Est. time: {2:d}";
+        private const string reportFormat = "\r{0:P1} at {1:D}/s. Est. time: {2:D}     ";
+        private const string downloadComplete = "\rSuccessfully downloaded the file.";
 
         public int ThrottleMilliseconds { get; set; }
         private const int throttleMillisecondsDefault = 1000;
@@ -40,10 +41,15 @@ namespace GOG.Controllers
             // throttle updates to once in throttleMillisecond
             if ((DateTime.Now - lastReportedTimestamp).TotalMilliseconds < ThrottleMilliseconds) return;
 
+            if (currentValue == maxValue)
+            {
+                consoleController.Write(reportFormat, ConsoleColor.Green, downloadComplete);
+                return;
+            }
             // calculate percent completion
             var percent = (double)currentValue / maxValue;
             var elapsed = DateTime.Now - startTimestamp;
-            var bytesPerSecond = (double)currentValue / elapsed.Seconds;
+            var bytesPerSecond = currentValue / elapsed.TotalSeconds;
             var remainingSeconds = (maxValue - currentValue) / bytesPerSecond;
 
             var formattedBytesPerSecond = bytesFormattingController.Format((long)bytesPerSecond);
