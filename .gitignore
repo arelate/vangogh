@@ -213,3 +213,6 @@ GoodOfflineGames/GoodOfflineGames/checked*.js
 /GoodOfflineGames/GoodOfflineGames/_resources/templateController.js
 /GoodOfflineGames/GoodOfflineGames/_resources/viewController.js
 /GoodOfflineGames/GoodOfflineGames/_resources/selectionController.js
+/GoodOfflineGames/GoodOfflineGames/_resources/changelogController.js
+/GoodOfflineGames/GoodOfflineGames/_resources/informationController.js
+/GoodOfflineGames/GoodOfflineGames/_resources/mnemonicsController.js

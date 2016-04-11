@@ -136,7 +136,7 @@
         </template>
         <template id="gameDetailsChangelogContainer">
             <div id='changelogContainer' class='{{changelogClass}}'>
-                <button accesskey='c' class='showHideButton' onclick='Changelog.show(this);'>
+                <button accesskey='c' class='showHideButton' onclick='changelogController.show(this);'>
                     <i class='icon fa-file-text-o'></i><span>Show/hide changelog</span>
                 </button>
                 <div class='changelogContent hidden'>{{changelogContent}}</div>
@@ -183,7 +183,7 @@
                 <a href='./{{folder}}/{{file}}'>
                     [[getExtraIconTemplate]]
                     <span class='linkText'>{{name}} {{size}}</span>
-                </a>
+            </a>
             </span>
         </template>
     </div>
@@ -218,7 +218,10 @@
     <script src="./_resources/selectionController.js"></script>
     <script src="./_resources/templateController.js"></script>
     <script src="./_resources/viewController.js"></script>
-    
+    <script src="./_resources/informationController.js"></script>
+    <script src="./_resources/changelogController.js"></script>
+    <script src="./_resources/mnemonicsController.js"></script>
+
     <script src="./_resources/app.js"></script>
 </body>
 

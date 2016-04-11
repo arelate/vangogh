@@ -7,6 +7,9 @@
     "files": [
         "selectionController.ts",
         "templateController.ts",
-        "viewController.ts"
+        "viewController.ts",
+        "informationController.ts",
+        "changelogController.ts",
+        "mnemonicsController.ts"
     ]
 }

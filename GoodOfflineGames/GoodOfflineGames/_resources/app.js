@@ -1,6 +1,7 @@
 /// <reference path="./selectionController.js" />
 /// <reference path="./templateController.js" />
 /// <reference path="./viewController.js" />
+/// <reference path="./mnemonicsController.js" />
 
 var Images = function() {
     var thumbnails = [];
@@ -247,7 +248,7 @@ var Search = function() {
     var search = function(text, showAllResults) {
 
         if (productElements === undefined) {
-            productElements = selectionController.getAllFromContainer("#productsContainer > .product");
+            productElements = selectionController.getAll("#productsContainer > .product");
         }
 
         if (text.length > 0) {
@@ -743,45 +744,6 @@ var ViewModelProvider = function() {
     }
 } ();
 
-var IndexedCollection = function() {
-    var indexKeys = function(collection, getElementKey) {
-        var index = [];
-        collection.forEach(function(i) {
-            index[getElementKey(i)] = collection.indexOf(i);
-        });
-        return index;
-    }
-    var create = function(collection, getElementKey) {
-        var index = indexKeys(collection, getElementKey);
-        var getElementByKey = function(key) {
-            return collection[index[key]];
-        }
-        var getElementByIndex = function(itemIndex) {
-            return collection[itemIndex];
-        }
-        var check = function(id) {
-            if (Bundles &&
-                Bundles.isParent &&
-                Bundles.isParent(id) &&
-                Bundles.checkChildrenAny &&
-                Bundles.checkChildrenAny(id, check)) return true;
-
-            return getElementByKey(id) !== undefined;
-        }
-        return {
-            "getElementByKey": getElementByKey,
-            "getElementByIndex": getElementByIndex,
-            "check": check,
-            "getLength": function() {
-                return collection.length
-            }
-        }
-    }
-    return {
-        "create": create
-    }
-} ();
-
 var Bundles = function() {
     var parents = [];
     var children = [];
@@ -832,81 +794,6 @@ var Bundles = function() {
         "getBundleByParentId": getBundleByParentId,
         "checkChildrenAny": checkChildrenAny,
         "checkChildrenAll": checkChildrenAll
-    }
-} ();
-
-var Info = function() {
-    var infoContainer;
-    var selectionController;
-    var init = function(sc) {
-        
-        selectionController = sc;
-        infoContainer = selectionController.getById("infoContainer");
-        
-        var classes = [
-            "product",
-            "product owned",
-            "product owned validated",
-            "product owned validationError",
-            "product owned updated",
-            "product wishlisted",
-            "product bundle",
-            "product bundle partOwned",
-            "product bundle partOwned updated",
-            "product bundle owned",
-            "product bundle owned updated",
-            "product bundle wishlisted",
-            "product dlc",
-            "product dlc owned",
-            "product dlc owned validated",
-            "product dlc owned validationError",
-            "product dlc wishlisted"
-        ];
-        var titles = [
-            "Avail. products",
-            "Owned products",
-            "Validated products",
-            "Validation error",
-            "Upd. products",
-            "Wishlisted products",
-            "Bundles",
-            "Part. owned bundles",
-            "Upd. part. owned bundles",
-            "Owned bundles",
-            "Upd. bundles",
-            "Wishlisted bundles",
-            "DLCs",
-            "Owned DLCs",
-            "Validated DLCs",
-            "Validation error DLCs",
-            "Wishlisted DLCs"
-        ];
-
-        if (classes.length !== titles.length) {
-            alert("Inconsistent information data!");
-            return;
-        }
-
-        for (var i = 0; i < classes.length; i++) {
-            var count = document.getElementsByClassName(classes[i]).length;
-            var infoEntity = document.createElement("div");
-            infoEntity.className = "info";
-
-            var entityClass = document.createElement("span");
-            entityClass.className = classes[i];
-            entityClass.textContent = titles[i];
-            infoEntity.appendChild(entityClass);
-
-            var entityCount = document.createElement("span");
-            entityCount.className = "product count";
-            entityCount.textContent = count;
-            infoEntity.appendChild(entityCount);
-
-            infoContainer.appendChild(infoEntity);
-        }
-    }
-    return {
-        "init": init
     }
 } ();
 
@@ -1003,60 +890,6 @@ var Screenshots = function() {
     }
 } ();
 
-var Changelog = function() {
-    var show = function(element) {
-        if (element &&
-            element.parentNode) {
-            var changelogContent = _$(element.parentNode, ".changelogContent");
-            changelogContent.classList.toggle("hidden");
-        }
-    }
-    return {
-        "show": show
-    }
-} ();
-
-var Mnemonics = function() {
-    var mnemonicsVisible = false;
-    var init = function(container) {
-
-        var accessKeyElements = _$$(container, "*[accessKey]");
-        for (var ii = 0; ii < accessKeyElements.length; ii++) {
-            var mnemonic = document.createElement("div");
-            mnemonic.className = "mnemonic hidden";
-            mnemonic.textContent = accessKeyElements[ii].accessKey;
-            accessKeyElements[ii].appendChild(mnemonic);
-        }
-
-
-        window.addEventListener("keydown", function(e) {
-            if (!e.altKey || mnemonicsVisible) return;
-
-            mnemonicsVisible = true;
-
-            var mnemonics = $$(".mnemonic");
-            for (var ii = 0; ii < mnemonics.length; ii++) {
-                mnemonics[ii].classList.remove("hidden");
-            }
-
-        });
-
-        window.addEventListener("keyup", function(e) {
-            if (e.keyCode !== 18) return;
-
-            mnemonicsVisible = false;
-
-            var mnemonics = $$(".mnemonic");
-            for (var ii = 0; ii < mnemonics.length; ii++) {
-                mnemonics[ii].classList.add("hidden");
-            }
-        });
-    }
-    return {
-        "init": init
-    }
-} ();
-
 document.addEventListener("DOMContentLoaded", function() {
 
     if (products === undefined) {
@@ -1102,6 +935,10 @@ document.addEventListener("DOMContentLoaded", function() {
     var templateController = new TemplateController(selectionController);
     var viewController = new ViewController(templateController);
     
+    var informationController = new InformationController(selectionController);
+    var changelogController = new ChangelogController(selectionController);
+    var mnemonicsController = new MnemonicsController(selectionController);    
+    
     var productsIndex = IndexedCollection.create(cp, getId);
     var productsDataIndex = productsdata ? IndexedCollection.create(productsdata, getId) : undefined;
     var gameDetailsIndex = gamedetails ? IndexedCollection.create(gamedetails, getId) : undefined;
@@ -1144,7 +981,7 @@ document.addEventListener("DOMContentLoaded", function() {
     requestAnimationFrame(() => {
         pContainer.innerHTML = html.join("");
         Images.updateProductThumbnails(pContainer);
-        Info.init(selectionController);
+        informationController.initialize();
 
         requestAnimationFrame(() => {
             var loadingScreen = selectionController.getById("loadingScreen");
@@ -1217,7 +1054,7 @@ document.addEventListener("DOMContentLoaded", function() {
         requestAnimationFrame(NavigationController.update);
     }
 
-    Mnemonics.init(document.body);
+    mnemonicsController.initializeForContainer(document.body);
 
 
 });
