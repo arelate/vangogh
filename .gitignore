@@ -207,3 +207,9 @@ GoodOfflineGames/GoodOfflineGames/checked*.js
 .DS_Store
 /GoodOfflineGames/GoodOfflineGames/productfiles.js
 /GoodOfflineGames/GoodOfflineGames/screenshots.js
+/GoodOfflineGames/GoodOfflineGames/_resource/selectionController.js
+/GoodOfflineGames/GoodOfflineGames/_resource/templateController.js
+/GoodOfflineGames/GoodOfflineGames/_resource/viewController.js
+/GoodOfflineGames/GoodOfflineGames/_resources/templateController.js
+/GoodOfflineGames/GoodOfflineGames/_resources/viewController.js
+/GoodOfflineGames/GoodOfflineGames/_resources/selectionController.js

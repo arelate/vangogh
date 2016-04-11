@@ -162,6 +162,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="_resources\fontawesome-webfont.woff" />
+    <None Include="_resources\tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bundles.js">
@@ -189,7 +190,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <TypeScriptCompile Include="_resources\selectionController.ts" />
+    <TypeScriptCompile Include="_resources\templateController.ts" />
+    <TypeScriptCompile Include="_resources\viewController.ts" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

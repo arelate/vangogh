@@ -1,131 +1,6 @@
-"use strict";
-
-var $ = function(id) { return document.getElementById(id); }
-var _$ = function(n, s) { return n.querySelector(s); }
-var $$ = function(s) { return document.querySelectorAll(s); }
-var _$$ = function(n, s) { return n.querySelectorAll(s); }
-
-var Templates = function() {
-    var getProductTemplate = function() {
-        return "<div class='product {{productClass}}' title='{{title}}'>" +
-            "<a href='#{{id}}'>" +
-            "<img data-src='{{productImage}}' onerror='Images.hideOnError(this)' />" +
-            "<span class='title' >{{title}}</span>" +
-            "</a>" +
-            "</div>";
-    }
-    var gameDetailsImageTemplate = "<img class='image {{productImageClass}}' srcset='{{productRetinaImage}} 2x, {{productImage}} 1x' src='{{productImage}}' onerror='Images.hideOnError(this)' />";
-    var gameDetailsProductHeader = "<div class='productTitle header1 {{productClass}}'>{{productTitle}}</div>";
-    var gameDetailsDescription = "<table border='0' cellspacing='0' cellpadding='0' class='descriptionContainer'>" +
-        "<tr class='{{developerClass}}'><td class='header'>Developer</td><td class='title'>{{developerTitle}}</td></tr>" +
-        "<tr class='{{publisherClass}}'><td class='header'>Publisher</td><td class='title'>{{publisherTitle}}</td></tr>" +
-        "<tr class='{{genresClass}}'><td class='header'>Genres</td><td class='title'>{{genresTitle}}</td></tr>" +
-        "<tr class='{{seriesClass}}'><td class='header'>Series</td><td class='title'>{{seriesTitle}}</td></tr>" +
-        "<tr class='{{cdKeyClass}}'><td class='header'>CD Key</td><td class='title cdKey' title='Select to reveal'>{{cdKeyTitle}}</td></tr>" +
-        "<tr class='{{requiredProductsClass}}'><td class='header'>Required products</td><td class='title'>{{requiredProductsTitle}}</td></tr>" +
-        "<tr class='{{worksOnClass}}'><td class='header'>Works on</td><td class='title worksOn'>{{worksOnTitle}}</td></tr>" +
-        "<tr class='{{wikiClass}}'><td class='header'>Wikipedia</td><td class='title'><a href={{wikiLink}} accesskey='w'>Article</a></td></tr>" +
-        "<tr class='{{tagsClass}}'><td class='header'>Tags&nbsp;<i class='icon fa-tags'></i></td><td class='title'>{{tagsContent}}</td></tr>" +
-        "</table>";
-    var gameDetailsFileContainer = "<div class='filesContainer {{filesClass}}'>" +
-        "<h1>Installers, patches</h1><div>{{installersContent}}</div>" +
-        "<div class='{{extrasClass}}'><h1>Extras</h1><div>{{extrasContent}}</div></div>";
-    var gameDetailsScreenshotsContainer = "<div class='screenshotsContainer'>" +
-        "<button accesskey='s' class='{{showScreenshotsClass}} showHideButton' onclick='Screenshots.show(this);'><i class='icon fa-file-picture-o'></i>&nbsp;&nbsp;Show/hide {{screenshotsCount}} screenshots</button>" +
-        "<div class='screenshots hidden'>{{screenshotsContent}}</div>" +
-        "</div>";
-    var gameDetailsChangelogContainer = "<div id='changelogContainer' class='{{changelogClass}}'>" +
-        "<button accesskey='c'class='showHideButton' onclick='Changelog.show(this);'><i class='icon fa-file-text-o'></i>&nbsp;&nbsp;Show/hide changelog</button>" +
-        "<div class='changelogContent hidden'>{{changelogContent}}</div>" +
-        "</div>";
-    var getGameDetailsTemplate = function() {
-        return "<div class='productContainer'>" +
-            gameDetailsProductHeader +
-            gameDetailsImageTemplate +
-            gameDetailsDescription +
-            gameDetailsScreenshotsContainer +
-            gameDetailsChangelogContainer +
-            gameDetailsFileContainer +
-            "</div>";
-    }
-    var getDLCsTemplate = function() {
-        return "<div class='dlcTitle header1 {{dlcClass}}'>Downloadable content</div>" +
-            "<div class='dlcContainer {{dlcClass}}'>{{dlcContent}}</div>";
-    }
-    var getBundleTemplate = function() {
-        return "<div class='bundleTitle header1 {{bundleClass}}'>Bundled products</div>" +
-            "<div class='bundleContainer {{bundleClass}}'>{{bundleContent}}</div>";
-    }
-    var getRequiredProductTemplate = function() {
-        return "<a href='#{{id}}'>{{title}}</a>"
-    }
-    var getFileInstallerTemplate = function() {
-        return "<span class='file entry'><a href='./{{folder}}/{{file}}'>" +
-            getOperatingSystemIconTemplate() +
-            getValidationTemplate() +
-            "&nbsp;" +
-            "<span class='linkText'>{{name}} ({{language}}), {{version}} {{size}}</span></a></span>";
-    }
-    var getFileExtraTemplate = function() {
-        return "<span class='extra entry'>" +
-            "<a href='./{{folder}}/{{file}}'>" +
-            getExtraIconTemplate() +
-            "&nbsp;" +
-            "<span class='linkText'>{{name}} {{size}}</span></a></span>";
-    }
-    var getScreenshotTemplate = function() {
-        return "<a href='{{uri}}'><img data-src={{uri}} onerror='Images.hideOnError(this)'/></a>";
-    }
-    var getOperatingSystemIconTemplate = function() {
-        return "<i class='icon fa-{{operatingSystem}}' title='{{operatingSystem}}'></i>&nbsp;";
-    }
-    var getExtraIconTemplate = function() {
-        return "<i class='icon fa-star' title='Extra'></i>&nbsp;";
-    }
-    var getValidationTemplate = function() {
-        return "<i class='icon fa-check-circle validated {{validatedClass}}' title='Validated file'></i>&nbsp;";
-    }
-    var getSearchLinkTemplate = function() {
-        return "<a href='?{{link}}'>{{title}}</a>";
-    }
-    var getTagTemplate = function() {
-        return "<span class='tag'>{{name}}</span>";
-    }
-    return {
-        "getProductTemplate": getProductTemplate,
-        "getGameDetailsTemplate": getGameDetailsTemplate,
-        "getRequiredProductTemplate": getRequiredProductTemplate,
-        "getDLCsTemplate": getDLCsTemplate,
-        "getBundleTemplate": getBundleTemplate,
-        "getFileInstallerTemplate": getFileInstallerTemplate,
-        "getFileExtraTemplate": getFileExtraTemplate,
-        "getValidationTemplate": getValidationTemplate,
-        "getOperatingSystemIconTemplate": getOperatingSystemIconTemplate,
-        "getScreenshotTemplate": getScreenshotTemplate,
-        "getSearchLinkTemplate": getSearchLinkTemplate,
-        "getTagTemplate": getTagTemplate
-    }
-} ();
-
-var Views = function() {
-    var bindTemplateToModel = function(template, model) {
-        var result = template;
-        for (var property in model) {
-            var replacedProperty = "{{" + property + "}}";
-            while (result.indexOf(replacedProperty) > -1)
-                result = result.replace(replacedProperty, model[property]);
-        }
-        return result;
-    }
-    var createView = function(model, viewModelProvider, templateProvider) {
-        var viewModel = viewModelProvider(model);
-        var template = templateProvider();
-        return viewModel !== undefined ? bindTemplateToModel(template, viewModel) : "";
-    }
-    return {
-        "createView": createView
-    }
-} ();
+/// <reference path="./selectionController.js" />
+/// <reference path="./templateController.js" />
+/// <reference path="./viewController.js" />
 
 var Images = function() {
     var thumbnails = [];
@@ -173,7 +48,9 @@ var GameDetails = function() {
     var pIndex;
     var pdIndex;
     var gdIndex;
-    var gameDetailsContainer = $("gameDetailsContainer");
+    var selectionController;
+    var viewController;
+    var gameDetailsContainer;
     var showDLC = function(id) {
         // add DLC. Showing only 1st level of DLCs to avoid recursion
         var dlcContent = [];
@@ -201,9 +78,9 @@ var GameDetails = function() {
 
 
         for (var ii = 0; ii < dlcProducts.length; ii++)
-            dlcContent.push(Views.createView(dlcProducts[ii], ViewModelProvider.getGameDetailsViewModel, Templates.getGameDetailsTemplate));
+            dlcContent.push(viewController.createView(dlcProducts[ii], ViewModelProvider.getGameDetailsViewModel, "gameDetails"));
 
-        return Views.createView(dlcContent, ViewModelProvider.getDLCsViewModel, Templates.getDLCsTemplate);
+        return viewController.createView(dlcContent, ViewModelProvider.getDLCsViewModel, "dlc");
     }
     var show = function(id) {
         var product = pIndex.getElementByKey(id);
@@ -211,7 +88,7 @@ var GameDetails = function() {
 
         var markup = "";
 
-        var htmlView = Views.createView(product, ViewModelProvider.getGameDetailsViewModel, Templates.getGameDetailsTemplate);
+        var htmlView = viewController.createView(product, ViewModelProvider.getGameDetailsViewModel, "gameDetails");
 
         markup = htmlView;
         markup += showDLC(id);
@@ -225,13 +102,13 @@ var GameDetails = function() {
             for (var ii = 0; ii < bundle.children.length; ii++) {
                 var product = pIndex.getElementByKey(bundle.children[ii]);
 
-                var productView = Views.createView(product, ViewModelProvider.getGameDetailsViewModel, Templates.getGameDetailsTemplate);
+                var productView = viewController.createView(product, ViewModelProvider.getGameDetailsViewModel, "getGameDetails");
                 var dlcView = showDLC(bundle.children[ii]);
 
                 bundleContent.push(productView + dlcView);
             }
 
-            var bundleView = Views.createView(bundleContent, ViewModelProvider.getBundleViewModel, Templates.getBundleTemplate);
+            var bundleView = viewController.createView(bundleContent, ViewModelProvider.getBundleViewModel, "bundle");
 
             markup += bundleView;
         }
@@ -250,10 +127,14 @@ var GameDetails = function() {
     var close = function() {
         gameDetailsContainer.classList.add("hidden");
     }
-    var init = function(pi, pdi, gdi) {
+    var init = function(pi, pdi, gdi, sc, vc) {
         pIndex = pi;
         pdIndex = pdi;
         gdIndex = gdi;
+        selectionController = sc;
+        viewController = vc;
+            
+        gameDetailsContainer = selectionController.getById("gameDetailsContainer");
     }
     return {
         "init": init,
@@ -357,15 +238,16 @@ var Search = function() {
     var pIndex;
     var pdIndex;
     var productElements = undefined;
-    var searchResults = $("searchResults");
-    var productsContainer = $("productsContainer");
-    var showAllResultsLink = $("showAllSearchResults");
-    var resultsCount = _$(showAllResultsLink, ".resultsCount");
+    var selectionController;
+    var searchResults;
+    var productsContainer;
+    var showAllResultsLink;
+    var resultsCount;
     var searchResultsLimit = 25;
     var search = function(text, showAllResults) {
 
         if (productElements === undefined) {
-            productElements = $$("#productsContainer > .product");
+            productElements = selectionController.getAllFromContainer("#productsContainer > .product");
         }
 
         if (text.length > 0) {
@@ -404,9 +286,16 @@ var Search = function() {
             location.search = "";
         }
     }
-    var init = function(pi, pdi) {
+    var init = function(pi, pdi, sc) {
         pIndex = pi;
         pdIndex = pdi;
+        selectionController = sc;
+        
+        searchResults = selectionController.getById("searchResults");
+        productsContainer = selectionController.getById("productsContainer");
+        showAllResultsLink = selectionController.getById("showAllSearchResults");
+        resultsCount = selectionController.getFromContainer(showAllResultsLink, ".resultsCount");
+
     }
     return {
         "search": search,
@@ -505,6 +394,8 @@ var ProductClass = function() {
         if (Bundles.isParent(product.id)) productClass.push("bundle");
 
         if (ProductFiles.allFilesValidated(product.id)) productClass.push("validated");
+        else if (ProductFiles.someFilesHaveValidationErrors(product.id)) productClass.push("validationError");
+
         if (pd &&
             pd.requiredProducts &&
             pd.requiredProducts.length &&
@@ -536,6 +427,7 @@ var ProductClass = function() {
 
 var ViewModelProvider = function() {
     var pdIndex, gdIndex, wIndex, uIndex, sIndex, wikiIndex;
+    var viewController;
     var getProductViewModel = function(product) {
         var productClass = ProductClass.getClass(product);
         return {
@@ -643,9 +535,9 @@ var ViewModelProvider = function() {
 
         if (product.worksOn) {
             var worksOn = [];
-            worksOn.push(Views.createView(product.worksOn, getWindowsModel, Templates.getOperatingSystemIconTemplate));
-            worksOn.push(Views.createView(product.worksOn, getMacModel, Templates.getOperatingSystemIconTemplate));
-            worksOn.push(Views.createView(product.worksOn, getLinuxModel, Templates.getOperatingSystemIconTemplate));
+            worksOn.push(viewController.createView(product.worksOn, getWindowsModel, "operatingSystemIcon"));
+            worksOn.push(viewController.createView(product.worksOn, getMacModel, "operatingSystemIcon"));
+            worksOn.push(viewController.createView(product.worksOn, getLinuxModel, "operatingSystemIcon"));
 
             worksOnTitle = worksOn.join(" ");
             if (worksOnTitle) worksOnClass = "";
@@ -655,7 +547,7 @@ var ViewModelProvider = function() {
         if (pd &&
             pd.publisher &&
             pd.publisher.name) {
-            publisherTitle = Views.createView(pd.publisher.name, getSearchLinkModel, Templates.getSearchLinkTemplate);
+            publisherTitle = viewController.createView(pd.publisher.name, getSearchLinkModel, "searchLink");
             if (publisherTitle) publisherClass = "";
         }
 
@@ -663,7 +555,7 @@ var ViewModelProvider = function() {
         if (pd &&
             pd.developer &&
             pd.developer.name) {
-            developerTitle = Views.createView(pd.developer.name, getSearchLinkModel, Templates.getSearchLinkTemplate);
+            developerTitle = viewController.createView(pd.developer.name, getSearchLinkModel, "searchLink");
             if (developerTitle) developerClass = "";
         }
 
@@ -672,7 +564,7 @@ var ViewModelProvider = function() {
         if (pd &&
             pd.series &&
             pd.series.name) {
-            seriesTitle = Views.createView(pd.series.name, getSearchLinkModel, Templates.getSearchLinkTemplate);
+            seriesTitle = viewController.createView(pd.series.name, getSearchLinkModel, "searchLink");
             if (seriesTitle) seriesClass = "";
         }
 
@@ -716,7 +608,7 @@ var ViewModelProvider = function() {
             pd.requiredProducts.length) {
             var requiredProducts = [];
             for (var ii = 0; ii < pd.requiredProducts.length; ii++) {
-                var requiredProductView = Views.createView(pd.requiredProducts[ii], getRequiredProductViewModel, Templates.getRequiredProductTemplate);
+                var requiredProductView = viewController.createView(pd.requiredProducts[ii], getRequiredProductViewModel, "requiredProduct");
                 requiredProducts.push(requiredProductView);
             }
             requiredProductsTitle = requiredProducts.join(", ");
@@ -741,11 +633,11 @@ var ViewModelProvider = function() {
             files.length) {
             for (var ff = 0; ff < files.length; ff++) {
                 if (files[ff].extra) {
-                    var content = Views.createView(files[ff], getFileViewModel, Templates.getFileExtraTemplate);
+                    var content = viewController.createView(files[ff], getFileViewModel, "fileExtra");
                     extrasContent += content;
                 } else {
                     if (ProductFiles.hasBinExtension(files[ff].file)) continue;
-                    var content = Views.createView(files[ff], getFileViewModel, Templates.getFileInstallerTemplate);
+                    var content = viewController.createView(files[ff], getFileViewModel, "fileInstaller");
                     installersContent += content;
                 }
             }
@@ -767,7 +659,7 @@ var ViewModelProvider = function() {
         if (gd && gd.tags && gd.tags.length) {
             var tags = [];
             for (var ii = 0; ii < gd.tags.length; ii++) {
-                tags.push(Views.createView(gd.tags[ii], getTagModel, Templates.getTagTemplate));
+                tags.push(viewController.createView(gd.tags[ii], getTagModel, "tag"));
             }
 
             tagsContent = tags.join("");
@@ -786,7 +678,7 @@ var ViewModelProvider = function() {
             screenshotsCount = productScreenshots.Value.length;
 
             for (var ss = 0; ss < productScreenshots.Value.length; ss++) {
-                screenshotsContent += Views.createView(productScreenshots.Value[ss], getScreenshotModel, Templates.getScreenshotTemplate);
+                screenshotsContent += viewController.createView(productScreenshots.Value[ss], getScreenshotModel, "screenshot");
             }
 
             showScreenshotsClass = "";
@@ -833,13 +725,14 @@ var ViewModelProvider = function() {
             "wikiClass": wikiClass
         }
     }
-    var init = function(pdi, gdi, ui, wi, si, wikii) {
+    var init = function(pdi, gdi, ui, wi, si, wikii, vc) {
         pdIndex = pdi;
         gdIndex = gdi;
         wIndex = wi;
         uIndex = ui;
         sIndex = si;
         wikiIndex = wikii;
+        viewController = vc;
     }
     return {
         "init": init,
@@ -943,12 +836,18 @@ var Bundles = function() {
 } ();
 
 var Info = function() {
-    var infoContainer = $("infoContainer");
-    var init = function() {
+    var infoContainer;
+    var selectionController;
+    var init = function(sc) {
+        
+        selectionController = sc;
+        infoContainer = selectionController.getById("infoContainer");
+        
         var classes = [
             "product",
             "product owned",
             "product owned validated",
+            "product owned validationError",
             "product owned updated",
             "product wishlisted",
             "product bundle",
@@ -960,12 +859,14 @@ var Info = function() {
             "product dlc",
             "product dlc owned",
             "product dlc owned validated",
+            "product dlc owned validationError",
             "product dlc wishlisted"
         ];
         var titles = [
             "Avail. products",
             "Owned products",
             "Validated products",
+            "Validation error",
             "Upd. products",
             "Wishlisted products",
             "Bundles",
@@ -977,6 +878,7 @@ var Info = function() {
             "DLCs",
             "Owned DLCs",
             "Validated DLCs",
+            "Validation error DLCs",
             "Wishlisted DLCs"
         ];
 
@@ -1029,17 +931,33 @@ var ProductFiles = function() {
             validated &= files[ii].validated;
         return validated;
     }
+    var someFilesHaveValidationErrors = function (id) {
+        var files = getFilesForProduct(id);
+        if (!files) return false;
+        for (var ii = 0; ii < files.length; ii++)
+            if (files[ii].validated === false) return true;
+        return false;
+    }
     return {
         "getFilesForProduct": getFilesForProduct,
         "hasBinExtension": hasBinExtension,
-        "allFilesValidated": allFilesValidated
+        "allFilesValidated": allFilesValidated,
+        "someFilesHaveValidationErrors": someFilesHaveValidationErrors
     }
 } ();
 
 var NavigationController = function() {
-    var productsContainer = $("productsContainer");
-    var searchResults = $("searchResults");
-    var searchContainer = $("searchContainer");
+    var selectionController;
+    var productsContainer;
+    var searchResults;
+    var searchContainer;
+    var init = function(sc) {
+        selectionController = sc;
+        
+        productsContainer = selectionController.getById("productsContainer");
+        searchResults = selectionController.getById("searchResults");
+        searchContainer = selectionController.getById("searchContainer");
+    }
     var update = function() {
         if (location.hash.indexOf("#") > -1) {
             if (location.hash === "#showAll") {
@@ -1062,7 +980,8 @@ var NavigationController = function() {
         }
     }
     return {
-        "update": update
+        "update": update,
+        "init": init
     }
 } ();
 
@@ -1178,6 +1097,11 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("Combining products: " + elapsed + "ms");
 
     start = new Date();
+    
+    var selectionController = new SelectionController();
+    var templateController = new TemplateController(selectionController);
+    var viewController = new ViewController(templateController);
+    
     var productsIndex = IndexedCollection.create(cp, getId);
     var productsDataIndex = productsdata ? IndexedCollection.create(productsdata, getId) : undefined;
     var gameDetailsIndex = gamedetails ? IndexedCollection.create(gamedetails, getId) : undefined;
@@ -1188,9 +1112,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var wikiIndex = wikipedia ? IndexedCollection.create(wikipedia, getId) : undefined;
 
     ProductClass.init(productsDataIndex, updatedIndex, wishlistedIndex);
-    ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex, screenshotsIndex, wikiIndex);
+    ViewModelProvider.init(productsDataIndex, gameDetailsIndex, updatedIndex, wishlistedIndex, screenshotsIndex, wikiIndex, viewController);
     Owned.init(productsDataIndex, gameDetailsIndex, ownedIndex);
-    GameDetails.init(productsIndex, productsDataIndex, gameDetailsIndex);
+    GameDetails.init(productsIndex, productsDataIndex, gameDetailsIndex, selectionController, viewController);
 
     elapsed = new Date() - start;
     console.log("Indexing collections: " + elapsed + "ms");
@@ -1207,7 +1131,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (Bundles.isChild(product.id)) continue;
 
-        var view = Views.createView(product, ViewModelProvider.getProductViewModel, Templates.getProductTemplate);
+        var view = viewController.createView(product, ViewModelProvider.getProductViewModel, "product");
         html.push(view);
     }
     elapsed = new Date() - start;
@@ -1220,10 +1144,10 @@ document.addEventListener("DOMContentLoaded", function() {
     requestAnimationFrame(() => {
         pContainer.innerHTML = html.join("");
         Images.updateProductThumbnails(pContainer);
-        Info.init();
+        Info.init(selectionController);
 
         requestAnimationFrame(() => {
-            var loadingScreen = $("loadingScreen");
+            var loadingScreen = selectionController.getById("loadingScreen");
             loadingScreen.classList.add("hidden");
         });
 
@@ -1243,29 +1167,29 @@ document.addEventListener("DOMContentLoaded", function() {
     elapsed = new Date() - start;
     console.log("Initializing search index: " + elapsed + "ms");
 
-    Search.init(productsIndex, productsDataIndex);
-    var searchInput = $("searchInput");
+    Search.init(productsIndex, productsDataIndex, selectionController);
+    var searchInput = selectionController.getById("searchInput");
     searchInput.addEventListener("input", function(e) {
         Search.search(searchInput.value.toLowerCase())
     });
 
-    var showAllSearchResults = $("showAllSearchResults");
+    var showAllSearchResults = selectionController.getById("showAllSearchResults");
     showAllSearchResults.addEventListener("click", function() {
         Search.search(searchInput.value.toLowerCase(), true);
     });
 
-    var toggleInfo = $("toggleInfo");
+    var toggleInfo = selectionController.getById("toggleInfo");
     toggleInfo.addEventListener("click", function(e) {
-        var infoContainer = $("infoContainer");
+        var infoContainer = selectionController.getById("infoContainer");
         infoContainer.classList.toggle("hidden");
     });
 
-    var backToTop = $("backToTop");
+    var backToTop = selectionController.getById("backToTop");
     backToTop.addEventListener("click", function() {
         document.body.scrollTop = 0;
     });
 
-    var switchTheme = $("switchTheme");
+    var switchTheme = selectionController.getById("switchTheme");
     switchTheme.addEventListener("click", function(e) {
         document.body.classList.toggle("dark");
         document.body.classList.toggle("light");
@@ -1273,10 +1197,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     window.addEventListener("hashchange", NavigationController.update);
 
+    NavigationController.init(selectionController);
     NavigationController.update();
 
-    var menuContainer = $("menuContainer");
-    var toggleMenu = $("toggleMenu");
+    var menuContainer = selectionController.getById("menuContainer");
+    var toggleMenu = selectionController.getById("toggleMenu");
     toggleMenu.addEventListener("click", function(e) {
         menuContainer.classList.toggle("hidden");
     });

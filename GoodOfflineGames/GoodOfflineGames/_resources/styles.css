@@ -187,17 +187,29 @@ button {
     font-style: normal !important;
 }
 
+.dlc.validationError .title::before,
+.productTitle.dlc.validationError::after,
+#infoContainer .dlc.validationError::before {
+    content: '\f12e\20\f071';
+}
+
 .dlc.validated .title::before,
 .productTitle.dlc.validated::after,
 #infoContainer .dlc.validated::before {
     content: '\f12e\20\f058';
 }
 
-
 .validated .title::before,
 .productTitle.validated::after,
 #infoContainer .validated::before {
     content: '\f058';
+}
+
+.validationError .title::before,
+.productTitle.validationError::after,
+#infoContainer .validationError::before {
+    content: '\f071';
+    color: #fbc02d !important;
 }
 
 .updated .title::before,
