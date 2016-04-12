@@ -79,9 +79,9 @@ namespace GOG.SharedControllers
                         await writeableStream.WriteAsync(buffer, 0, bytesRead);
                         downloadProgressReportingController?.Report(totalBytesRead, (long)totalBytes);
                     }
-
-                    downloadProgressReportingController?.Report((long)totalBytes, (long)totalBytes);
                 }
+
+                downloadProgressReportingController?.Report((long)totalBytes, (long)totalBytes);
 
                 return new Tuple<bool, Uri>(true, requestUri);
             }

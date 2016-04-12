@@ -43,7 +43,7 @@ namespace GOG.Controllers
 
             if (currentValue == maxValue)
             {
-                consoleController.Write(reportFormat, ConsoleColor.Green, downloadComplete);
+                consoleController.Write(downloadComplete, ConsoleColor.Green);
                 return;
             }
             // calculate percent completion
