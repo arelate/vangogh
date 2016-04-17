@@ -160,22 +160,9 @@
     <None Include="settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="_resources\fontawesome-webfont.woff" />
-    <None Include="_resources\tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bundles.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="CMD.png" />
-    <Content Include="default.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HTML-Details.png" />
-    <Content Include="HTML-List.png" />
-    <Content Include="_resources\app.js" />
-    <Content Include="_resources\styles.css" />
-    <Content Include="wikipedia.js" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -188,11 +175,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="_resources\selectionController.ts" />
-    <TypeScriptCompile Include="_resources\templateController.ts" />
-    <TypeScriptCompile Include="_resources\viewController.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
