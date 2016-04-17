@@ -66,6 +66,7 @@
     <Compile Include="ConsolePostUpdate.cs" />
     <Compile Include="Controllers\Abstract\FormattingController.cs" />
     <Compile Include="Controllers\BytesFormattingController.cs" />
+    <Compile Include="Controllers\DownloadProgressReportingController.cs" />
     <Compile Include="Controllers\SecondsFormattingController.cs" />
     <Compile Include="Controllers\CleanupController.cs" />
     <Compile Include="Controllers\LoggingConsoleController.cs" />
@@ -75,7 +76,6 @@
     <Compile Include="GOG\Controllers\AuthorizationController.cs" />
     <Compile Include="GOG\Controllers\Abstract\CollectionController.cs" />
     <Compile Include="GOG\Controllers\DataConsistencyController.cs" />
-    <Compile Include="Controllers\DownloadProgressReporter.cs" />
     <Compile Include="GOG\Controllers\FileValidationController.cs" />
     <Compile Include="GOG\Controllers\GameDetailsDownloadsController.cs" />
     <Compile Include="GOG\Controllers\GOGDataController.cs" />
@@ -97,7 +97,6 @@
     <Compile Include="GOG\Model\DownloadEntry.cs" />
     <Compile Include="GOG\Model\GameDetails.cs" />
     <Compile Include="GOG\Model\Unused\GOGData.cs" />
-    <Compile Include="GOG\Model\LanguageDownloads.cs" />
     <Compile Include="GOG\Model\Unused\Mix.cs" />
     <Compile Include="GOG\Model\NamedEntry.cs" />
     <Compile Include="GOG\Model\OperatingSystemsDownloads.cs" />

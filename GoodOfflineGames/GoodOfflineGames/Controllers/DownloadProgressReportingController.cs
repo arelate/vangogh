@@ -12,7 +12,7 @@ namespace GOG.Controllers
         private DateTime startTimestamp;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
         private const string reportFormat = "\r{0:P1} at {1:D}/s. Est. time: {2:D}     ";
-        private const string downloadComplete = "\rSuccessfully downloaded the file.";
+        private const string downloadComplete = "\rFile was successfully downloaded.                              ";
 
         public int ThrottleMilliseconds { get; set; }
         private const int throttleMillisecondsDefault = 1000;
@@ -38,14 +38,15 @@ namespace GOG.Controllers
 
         public void Report(long currentValue, long maxValue)
         {
-            // throttle updates to once in throttleMillisecond
-            if ((DateTime.Now - lastReportedTimestamp).TotalMilliseconds < ThrottleMilliseconds) return;
-
             if (currentValue == maxValue)
             {
                 consoleController.Write(downloadComplete, ConsoleColor.Green);
                 return;
             }
+
+            // throttle updates to once in throttleMillisecond
+            if ((DateTime.Now - lastReportedTimestamp).TotalMilliseconds < ThrottleMilliseconds) return;
+
             // calculate percent completion
             var percent = (double)currentValue / maxValue;
             var elapsed = DateTime.Now - startTimestamp;
