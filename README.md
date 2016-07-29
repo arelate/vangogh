@@ -1,37 +1,26 @@
 GoodOfflineGames
 ================
 
-GoodOfflineGames is a command line sync service to locally download and incrementally keep in sync you account data from GOG.com. Additionally it contains HTML frontend to your collection, with links to product files and (optionally) screenshots. 
+GoodOfflineGames is a command line sync service to locally download and incrementally keep in sync you account data from GOG.com. Sister project [GoodOfflineGames.html](https://github.com/boggydigital/GoodOfflineGames.html) provides HTML frontend for that data. 
 
 Command line sync service supports:
 * 2FA authentication
-* incremental updates
-* caching of images (optional)
-* caching of screenshots (optional)
-* tags from GOG.com account
-* serial keys
-* downloading your game files (optional)
-* validating your game files using same validation data GOG.com uses themselves
-* clear folders to keep only the latest versions available (optional)
-
-Web frontend features:
-* fast, even when opened from slow external media or NAS server
-* supports fast search, including additional meta-data like tags, wishlist status
-* stores some critical data offline (serial keys)
-* displays tags downloaded from GOG.com
-* displays local binary files validation status for your peace of mind
-* dark and light themes (can switch for the session, or change the class on <body>)
-* doesn't have any additional dependecies - data produced by the sync service and your local collection (optional) is all you need to use this on any PC that has a browser
+* Incremental updates
+* Optional downloading of images
+* Optional downloading of screenshots
+* Tags from GOG.com account
+* Serial keys
+* Optional downloading your game files
+* Validating your game files using same validation data GOG.com uses themselves
+* Optional clearing of game folders to keep only the latest versions available
 
 Screenshots
 ===========
 
-![List](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-List.PNG)
-![Details](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/HTML-Details.PNG)
 ![Commandline](https://github.com/boggydigital/GoodOfflineGames/blob/master/GoodOfflineGames/GoodOfflineGames/CMD.PNG)
 
-Usaging the app
-===============
+Using the app
+=============
 
 Sync service - GoodOfflineGames.exe: 
 * Run the binary in any folder, that might have results from previous runs 
@@ -49,10 +38,7 @@ Sync service - GoodOfflineGames.exe:
 * ./_screenshots - downloaded screenshots (optional)
 * ./_md5 - downloaded validation information containing expected filename, size and computed md5 for chunks of the file
 
-HTML frontend uses data produces by service and additional files:
-* default.html - frontend itself
-* bundles.js - bundling information, e.g. product Game Title 1+2 would match Game Title 1 and Game Title 2 in game details
-* wikipedia.js - links to Wikipedia articles for products (optional, manually added)
+Drop release from [GoodOfflineGames.html](https://github.com/boggydigital/GoodOfflineGames.html) over the results to get HTML frontend on local data.
 
 settings.json
 =============
