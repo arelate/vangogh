@@ -69,7 +69,6 @@
     <Compile Include="Controllers\DownloadProgressReportingController.cs" />
     <Compile Include="Controllers\SecondsFormattingController.cs" />
     <Compile Include="Controllers\CleanupController.cs" />
-    <Compile Include="Controllers\LoggingConsoleController.cs" />
     <Compile Include="Controllers\TokenExtractorController.cs" />
     <Compile Include="ExistingProductsFilter.cs" />
     <Compile Include="GOG\Controllers\Abstract\ProductCoreController.cs" />

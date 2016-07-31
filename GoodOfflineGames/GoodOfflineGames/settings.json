@@ -1,13 +1,20 @@
 ﻿{
-  "username": "",
-  "password": "",
-  "downloadLangugages": [ "en" ],
-  "downloadOperatingSystems": [ "Windows" ],
-  "downloadImages": true,
-  "downloadScreenshots":  true,
-  "downloadProductFiles": true,
-  "validateProductFiles":  true,
-  "cleanupProductFolders": true,
-  "updateAll": false,
-  "useLog":  true
+	"authentication": {
+		"username": "",
+		"password": ""
+	},
+	"download": {
+		"images": true,
+		"screenshots": true,
+		"files": true,
+		"languages": [ "en" ],
+		"operatingSystems": [ "Windows" ]
+	},
+	"validate": {
+		"afterDownload": true
+	},
+	"cleanup": {
+		"afterDownload": true
+	},
+  "updateAll": false
 }
