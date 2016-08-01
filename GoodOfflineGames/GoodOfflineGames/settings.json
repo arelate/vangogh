@@ -1,7 +1,10 @@
 ﻿{
-	"authentication": {
+	"authenticate": {
 		"username": "",
 		"password": ""
+	},
+	"update": {
+		"everything": false
 	},
 	"download": {
 		"images": true,
@@ -15,6 +18,5 @@
 	},
 	"cleanup": {
 		"afterDownload": true
-	},
-  "updateAll": false
+	}
 }

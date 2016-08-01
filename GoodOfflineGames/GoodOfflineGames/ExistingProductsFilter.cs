@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-using GOG.Interfaces;
-using GOG.Model;
+using Interfaces.Filtering;
+using GOG.Interfaces.Models;
 
-namespace GOG
+namespace GoodOfflineGames
 {
-    public class ExistingProductsFilter : IFilterDelegate<Product>
+    public class ExistingProductsFilter : IFilterDelegate<IProduct>
     {
-        public IEnumerable<Product> Filter(IEnumerable<Product> products, IList<Product> existingProducts)
+        public IEnumerable<IProduct> Filter(IEnumerable<IProduct> products, IList<IProduct> existingProducts)
         {
             foreach (var product in products)
             {
