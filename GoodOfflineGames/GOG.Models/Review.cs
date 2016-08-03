@@ -1,12 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    [KnownType(typeof(User))]
-    class Review: IReview
+    public class Review
     {
         [DataMember(Name = "id")]
         public long Id { get; set; }
@@ -17,7 +14,7 @@ namespace GOG.Models
         [DataMember(Name = "description")]
         public string Description { get; set; }
         [DataMember(Name = "author")]
-        public IUser Author { get; set; }
+        public User Author { get; set; }
         [DataMember(Name = "helpfulVotes")]
         public int HelpfulVotes { get; set; }
         [DataMember(Name = "totalVotes")]

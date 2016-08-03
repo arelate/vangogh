@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    class Language: ILanguage
+    public class Language
     {
         [DataMember(Name = "code")]
         public string Code { get; set; }
@@ -14,7 +12,7 @@ namespace GOG.Models
     }
 
     [DataContract]
-    public class Languages: ILanguages
+    public class Languages
     {
         [DataMember(Name = "cn")]
         public string Cn { get; set; }

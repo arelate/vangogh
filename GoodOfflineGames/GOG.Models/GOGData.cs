@@ -1,54 +1,43 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    [KnownType(typeof(Mix))]
-    [KnownType(typeof(ReviewsPages))]
-    [KnownType(typeof(GameProductData))]
-    [KnownType(typeof(Product))]
-    [KnownType(typeof(Languages))]
-    [KnownType(typeof(BrandRatings))]
-    [KnownType(typeof(Currency))]
-    [KnownType(typeof(Language))]
-    [KnownType(typeof(DateFormat))]
-    public class GOGData: IGOGData
+    public class GOGData
     {
         // product_ids... - happy to support when GOG returns consistent result
         // perhaps I'd consider pre-cleaning to something consistent?
 
         [DataMember(Name = "mixes")]
-        public IMix[] Mixes { get; set; }
+        public Mix[] Mixes { get; set; }
         [DataMember(Name = "mixesPerPage")]
         public int MixesPerPage { get; set; }
         [DataMember(Name = "proReviews")]
         public string[] ProReviews { get; set; }
         [DataMember(Name = "reviews")]
-        public IReviewsPages Reviews { get; set; }
+        public ReviewsPages Reviews { get; set; }
         [DataMember(Name = "series_ids")]
         public int[] SeriesIds { get; set; }
         [DataMember(Name = "gameProductData")]
-        public IGameProductData GameProductData { get; set; }
+        public GameProductData GameProductData { get; set; }
         [DataMember(Name = "gameProductSeriesData")]
-        public IProduct[] GameProductSeriesData { get; set; }
+        public Product[] GameProductSeriesData { get; set; }
         [DataMember(Name = "recommendedProducts")]
-        public IProduct[] RecommendedProducts { get; set; }
+        public Product[] RecommendedProducts { get; set; }
         [DataMember(Name = "requiredProductsData")]
-        public IProduct[] RequiredProductsData { get; set; }
+        public Product[] RequiredProductsData { get; set; }
         [DataMember(Name = "children")]
-        public IProduct[] Children { get; set; }
+        public Product[] Children { get; set; }
         [DataMember(Name = "parents")]
-        public IProduct[] Parents { get; set; }
+        public Product[] Parents { get; set; }
         [DataMember(Name = "dlcs")]
-        public IProduct[] DLCs { get; set; }
+        public Product[] DLCs { get; set; }
         [DataMember(Name = "packs")]
-        public string[] Packs { get; set; }
+        public Product[] Packs { get; set; }
         [DataMember(Name = "languages")]
-        public ILanguages Languages { get; set; }
+        public Languages Languages { get; set; }
         [DataMember(Name = "brandRatings")]
-        public IBrandRatings BrandRatings { get; set; }
+        public BrandRatings BrandRatings { get; set; }
         [DataMember(Name = "rating")]
         public int Rating { get; set; }
         [DataMember(Name = "screenshotCount")]
@@ -58,15 +47,15 @@ namespace GOG.Models
         [DataMember(Name = "anonymous_personalization")]
         public bool AnonymousPersonalization { get; set; }
         [DataMember(Name = "currentCurrency")]
-        public ICurrency CurrentCurrency { get; set; }
+        public Currency CurrentCurrency { get; set; }
         [DataMember(Name = "availableCurrencies")]
-        public ICurrency[] AvailableCurrencies { get; set; }
+        public Currency[] AvailableCurrencies { get; set; }
         [DataMember(Name = "currentLanguage")]
         public string CurrentLanguage { get; set; }
         [DataMember(Name = "availableLanguages")]
-        public ILanguage[] AvailableLanguages { get; set; }
+        public Language[] AvailableLanguages { get; set; }
         [DataMember(Name = "dateFormats")]
-        public IDateFormat DateFormats { get; set; }
+        public DateFormat DateFormats { get; set; }
         [DataMember(Name = "now")]
         public long Now { get; set; }
         [DataMember(Name = "currentCountry")]

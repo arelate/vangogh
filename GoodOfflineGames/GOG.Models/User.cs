@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    class User: IUser
+    public class User
     {
         [DataMember(Name = "name")]
         public string Name { get; set; }

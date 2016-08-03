@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using GOG.Interfaces.Models;
+using GOG.Models;
 using Interfaces.Extraction;
 
 namespace GOG.Interfaces
@@ -22,8 +22,8 @@ namespace GOG.Interfaces
 
     public interface IExtractLanguageDownloads
     {
-        IOperatingSystemsDownloads[] ExtractLanguageDownloads(
-            IOperatingSystemsDownloads[][] downloads,
+        OperatingSystemsDownloads[] ExtractLanguageDownloads(
+            OperatingSystemsDownloads[][] downloads,
             IEnumerable<string> languages,
             ICollection<string> requestedLanguages);
     }

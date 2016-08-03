@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    public class ProductFile: IProductFile
+    public class ProductFile
     {
         [DataMember(Name = "id")]
         public long Id { get; set; }
@@ -27,8 +25,6 @@ namespace GOG.Models
         public string File { get; set; }
         [DataMember(Name = "extra")]
         public bool Extra { get; set; }
-        [DataMember(Name = "resolvedUrl")]
-        public string ResolvedUrl { get; set; }
         [DataMember(Name = "validated")]
         public bool Validated { get; set; }
     }

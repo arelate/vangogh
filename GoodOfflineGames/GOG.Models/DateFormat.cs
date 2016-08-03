@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    public class DateFormat: IDateFormat
+    public class DateFormat
     {
         [DataMember(Name = "tiny")]
         public string Tiny { get; set; }

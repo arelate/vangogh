@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    class OSRequirements: IOSRequirements
+    public class OSRequirements
     {
         [DataMember(Name = "Windows")]
         public string[] Windows { get; set; }

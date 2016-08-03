@@ -1,27 +1,24 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-using GOG.Interfaces.Models;
+﻿using System.Runtime.Serialization;
 
 namespace GOG.Models
 {
     [DataContract]
-    public class Product: ProductCore, IProduct, IEquatable<Product>
+    public class Product: ProductCore
     {
         [DataMember(Name = "customAttributes")]
         public string[] CustomAttributes { get; set; }
         [DataMember(Name = "price")]
-        public IPrice Price { get; set; }
+        public Price Price { get; set; }
         [DataMember(Name = "isDiscounted")]
         public bool IsDiscounted { get; set; }
         [DataMember(Name = "isInDevelopment")]
         public bool IsInDevelopment { get; set; }
         [DataMember(Name = "releaseDate")]
-        public long ReleaseDate { get; set; }
+        public long? ReleaseDate { get; set; }
         [DataMember(Name = "availability")]
-        public IAvailability Availability { get; set; }
+        public Availability Availability { get; set; }
         [DataMember(Name = "salesVisibility")]
-        public ISalesVisibility SalesVisibility { get; set; }
+        public SalesVisibility SalesVisibility { get; set; }
         [DataMember(Name = "buyable")]
         public bool Buyable { get; set; }
         [DataMember(Name = "image")]
@@ -33,7 +30,7 @@ namespace GOG.Models
         [DataMember(Name = "forumUrl")]
         public string ForumUrl { get; set; }
         [DataMember(Name = "worksOn")]
-        public IWorksOn WorksOn { get; set; }
+        public WorksOn WorksOn { get; set; }
         [DataMember(Name = "category")]
         public string Category { get; set; }
         [DataMember(Name = "originalCategory")]
@@ -52,10 +49,5 @@ namespace GOG.Models
         public bool IsGame { get; set; }
         [DataMember(Name = "slug")]
         public string Slug { get; set; }
-
-        public bool Equals(Product other)
-        {
-            return Id.Equals(other.Id);
-        }
     }
 }

@@ -1,60 +1,42 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    [KnownType(typeof(SystemRequirements))]
-    [KnownType(typeof(OSRequirements))]
-    [KnownType(typeof(NamedEntry))]
-    [KnownType(typeof(Recommendations))]
-    [KnownType(typeof(TitledEntry))]
-    [KnownType(typeof(Series))]
-    [KnownType(typeof(BrandRatings))]
-    [KnownType(typeof(Product))]
-    [KnownType(typeof(Description))]
-    [KnownType(typeof(BonusContent))]
-    [KnownType(typeof(Product))]
-    [KnownType(typeof(Price))]
-    [KnownType(typeof(Availability))]
-    [KnownType(typeof(SalesVisibility))]
-    [KnownType(typeof(WorksOn))]
-    [KnownType(typeof(ReviewsPages))]
-    public class GameProductData: ProductCore, IGameProductData
+    public class GameProductData: ProductCore
     {
         [DataMember(Name = "votesCount")]
         public int VotesCount { get; set; }
         [DataMember(Name = "systemRequirements")]
-        public ISystemRequirements SystemRequirements { get; set; }
+        public SystemRequirements SystemRequirements { get; set; }
         [DataMember(Name = "osRequirements")]
-        public IOSRequirements OSRequirements { get; set; }
+        public OSRequirements OSRequirements { get; set; }
         [DataMember(Name = "languages")]
         public string Languages { get; set; }
         [DataMember(Name = "copyrights")]
         public string Copyrights { get; set; }
         [DataMember(Name = "genres")]
-        public INamedEntry[] Genres { get; set; }
+        public NamedEntry[] Genres { get; set; }
         [DataMember(Name = "publisher")]
-        public INamedEntry Publisher { get; set; }
+        public NamedEntry Publisher { get; set; }
         [DataMember(Name = "developer")]
-        public INamedEntry Developer { get; set; }
+        public NamedEntry Developer { get; set; }
         [DataMember(Name = "downloadSize")]
         public string downloadSize { get; set; }
         [DataMember(Name = "recommendations")]
-        public IRecommendations Recommendations { get; set; }
+        public Recommendations Recommendations { get; set; }
         [DataMember(Name = "features")]
-        public ITitledEntry[] Features { get; set; }
+        public TitledEntry[] Features { get; set; }
         [DataMember(Name = "series")]
-        public ISeries Series { get; set; }
+        public Series Series { get; set; }
         [DataMember(Name = "brandRatings")]
-        public IBrandRatings BrandRatings { get; set; }
+        public BrandRatings BrandRatings { get; set; }
         [DataMember(Name = "dlcs")]
-        public IProduct[] DLCs { get; set; }
+        public Product[] DLCs { get; set; }
         [DataMember(Name = "packs")]
-        public IProduct[] Packs { get; set; }
+        public Product[] Packs { get; set; }
         [DataMember(Name = "requiredProducts")]
-        public IProduct[] RequiredProducts { get; set; }
+        public Product[] RequiredProducts { get; set; }
         [DataMember(Name = "whatsCoolAboutIt")]
         public string WhatsCoolAboutIt { get; set; }
         [DataMember(Name = "backgroundImage")]
@@ -62,13 +44,13 @@ namespace GOG.Models
         [DataMember(Name = "backgroundImageSource")]
         public string BackgroundImageSource { get; set; }
         [DataMember(Name = "description")]
-        public IDescription Description { get; set; }
+        public Description Description { get; set; }
         [DataMember(Name = "bonusContent")]
-        public IBonusContent BonusContent { get; set; }
+        public BonusContent BonusContent { get; set; }
         [DataMember(Name = "children")]
-        public IProduct Children { get; set; }
+        public Product Children { get; set; }
         [DataMember(Name = "parents")]
-        public IProduct Parents { get; set; }
+        public Product Parents { get; set; }
         [DataMember(Name = "imageLogoFacebook")]
         public string ImageLogoFacebook { get; set; }
         [DataMember(Name = "cardSeoDescription")]
@@ -82,17 +64,17 @@ namespace GOG.Models
         // notification
         // screenshots
         [DataMember(Name = "price")]
-        public IPrice Price { get; set; }
+        public Price Price { get; set; }
         [DataMember(Name = "isDiscounted")]
         public bool IsDiscounted { get; set; }
         [DataMember(Name = "isInDevelopment")]
         public bool IsInDevelopment { get; set; }
         [DataMember(Name = "releaseDate")]
-        public long ReleaseDate { get; set; }
+        public long? ReleaseDate { get; set; }
         [DataMember(Name = "availability")]
-        public IAvailability Availability { get; set; }
+        public Availability Availability { get; set; }
         [DataMember(Name = "salesVisibility")]
-        public ISalesVisibility SalesVisibility { get; set; }
+        public SalesVisibility SalesVisibility { get; set; }
         [DataMember(Name = "buyable")]
         public bool Buyable { get; set; }
         [DataMember(Name = "image")]
@@ -104,7 +86,7 @@ namespace GOG.Models
         [DataMember(Name = "forumUrl")]
         public string ForumUrl { get; set; }
         [DataMember(Name = "worksOn")]
-        public IWorksOn WorksOn { get; set; }
+        public WorksOn WorksOn { get; set; }
         [DataMember(Name = "category")]
         public string Category { get; set; }
         [DataMember(Name = "originalCategory")]
@@ -124,7 +106,7 @@ namespace GOG.Models
         [DataMember(Name = "slug")]
         public string Slug { get; set; }
         [DataMember(Name = "reviews")]
-        public IReviewsPages Reviews { get; set; }
+        public ReviewsPages Reviews { get; set; }
         // media
     }
 }

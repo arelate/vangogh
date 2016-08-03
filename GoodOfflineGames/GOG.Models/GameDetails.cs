@@ -1,31 +1,24 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    [KnownType(typeof(GameDetails))]
-    [KnownType(typeof(OperatingSystemsDownloads))]
-    [KnownType(typeof(DownloadEntry))]
-    [KnownType(typeof(Tag))]
-    [KnownType(typeof(ProductCore))]
-    public class GameDetails: ProductCore, IGameDetails
+    public class GameDetails: ProductCore
     {
         [DataMember(Name = "cdKey")]
         public string CDKey { get; set; }
         [DataMember(Name = "dlcs")]
-        public IGameDetails[] DLCs { get; set; }
+        public GameDetails[] DLCs { get; set; }
         [DataMember(Name = "languageDownloads")]
-        public IOperatingSystemsDownloads[] LanguageDownloads { get; set; }
+        public OperatingSystemsDownloads[] LanguageDownloads { get; set; }
         [DataMember(Name = "extras")]
-        public IDownloadEntry[] Extras { get; set; }
+        public DownloadEntry[] Extras { get; set; }
         [DataMember(Name = "changelog")]
         public string Changelog { get; set; }
         [DataMember(Name = "releaseTimestamp")]
         public long ReleaseTimestamp { get; set; }
         [DataMember(Name = "tags")]
-        public ITag[] Tags { get; set; }
+        public Tag[] Tags { get; set; }
         [DataMember(Name = "backgroundImage")]
         public string BackgroundImage { get; set; }
         [DataMember(Name = "textInformation")]
@@ -39,7 +32,7 @@ namespace GOG.Models
         [DataMember(Name = "isBaseProductMissing")]
         public bool IsBaseProductMissing { get; set; }
         [DataMember(Name = "missingBaseProduct")]
-        public IProductCore MissingBaseProduct { get; set; }
+        public ProductCore MissingBaseProduct { get; set; }
 
     }
 }

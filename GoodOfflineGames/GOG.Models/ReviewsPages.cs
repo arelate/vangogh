@@ -1,15 +1,12 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    [KnownType(typeof(Review))]
-    class ReviewsPages: IReviewsPages
+    public class ReviewsPages
     {
         [DataMember(Name = "pages")]
-        public IReview[][] Pages { get; set; }
+        public Review[][] Pages { get; set; }
         [DataMember(Name = "totalResults")]
         public string TotalResults { get; set; }
         [DataMember(Name = "totalPages")]

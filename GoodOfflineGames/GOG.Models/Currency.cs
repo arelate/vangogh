@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    class Currency: ICurrency
+    public class Currency
     {
         [DataMember(Name =  "code")]
         public string Code { get; set; }

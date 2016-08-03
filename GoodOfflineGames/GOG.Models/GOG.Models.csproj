@@ -42,7 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountProduct.cs" />
+    <Compile Include="ApiDLC.cs" />
+    <Compile Include="ApiProduct.cs" />
     <Compile Include="BonusContent.cs" />
+    <Compile Include="ContentSystemCompatibility.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="DateFormat.cs" />
     <Compile Include="Description.cs" />
@@ -50,7 +53,10 @@
     <Compile Include="DownloadEntry.cs" />
     <Compile Include="GameDetails.cs" />
     <Compile Include="GOGData.cs" />
+    <Compile Include="Images.cs" />
+    <Compile Include="InDevelopment.cs" />
     <Compile Include="Languages.cs" />
+    <Compile Include="Links.cs" />
     <Compile Include="NamedEntry.cs" />
     <Compile Include="OperatingSystemsDownloads.cs" />
     <Compile Include="OSRequirements.cs" />
@@ -75,12 +81,6 @@
     <Compile Include="TitledEntry.cs" />
     <Compile Include="User.cs" />
     <Compile Include="WorksOn.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">
-      <Project>{60ba32af-cf00-4a69-816a-f90aba3d3f33}</Project>
-      <Name>GOG.Interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using GOG.Interfaces.Models;
+using GOG.Models;
 
 namespace GOG.Interfaces
 {
     public interface IUpdateDownloadEntryDelegate
     {
-        Task<IProductFile> UpdateDownloadEntry(
-            IDownloadEntry downloadEntry,
+        Task<ProductFile> UpdateDownloadEntry(
+            DownloadEntry downloadEntry,
             long id,
             string operatingSystem = "",
             string language = "");
@@ -16,8 +16,8 @@ namespace GOG.Interfaces
 
     public interface IUpdateProductFilesDelegate
     {
-        Task<IList<IProductFile>> UpdateProductFiles(
-        List<IDownloadEntry> downloadEntries,
+        Task<IList<ProductFile>> UpdateProductFiles(
+        List<DownloadEntry> downloadEntries,
         long id,
         string operatingSystem = "",
         string language = "");
@@ -25,16 +25,16 @@ namespace GOG.Interfaces
 
     public interface IUpdateProductOperatingSystemFilesDelegate
     {
-        Task<IList<IProductFile>> UpdateProductOperatingSystemFiles(
-            IOperatingSystemsDownloads operatingSystemDownloads,
+        Task<IList<ProductFile>> UpdateProductOperatingSystemFiles(
+            OperatingSystemsDownloads operatingSystemDownloads,
             ICollection<string> downloadOperatingSystems,
             long id);
     }
 
     public interface IUpdateFilesDelegate
     {
-        Task<IList<IProductFile>> UpdateFiles(
-            IGameDetails details,
+        Task<IList<ProductFile>> UpdateFiles(
+            GameDetails details,
             ICollection<string> requiredLanguageCodes,
             ICollection<string> supportedOperatingSystems,
             long context = 0);

@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    public class Tag: ITag
+    public class Tag
     {
         [DataMember(Name = "id")]
         public long Id { get; set; }

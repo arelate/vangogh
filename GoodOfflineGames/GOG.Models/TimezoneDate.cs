@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    public class TimezoneDate: ITimezoneDate
+    public class TimezoneDate
     {
         [DataMember(Name = "date")]
         public string Date { get; set; }

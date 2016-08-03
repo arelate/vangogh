@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="AuthorizationController.cs" />
     <Compile Include="GameDetailsDownloadsController.cs" />
-    <Compile Include="Models.cs" />
     <Compile Include="MultipageRequestController.cs" />
     <Compile Include="ProductCoreController.cs" />
     <Compile Include="ProductFileController.cs" />
@@ -51,6 +50,10 @@
     <Compile Include="ScreenshotsController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GOG.Models\GOG.Models.csproj">
+      <Project>{864ca735-6c74-4cfc-a5e4-387b2c3225e3}</Project>
+      <Name>GOG.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{4b835730-ad7f-4c9f-a390-6d3fa72e52f4}</Project>
       <Name>Interfaces</Name>

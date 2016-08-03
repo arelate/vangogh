@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    public class WorksOn: IWorksOn
+    public class WorksOn
     {
         [DataMember(Name = "Linux")]
         public bool Linux { get; set; }

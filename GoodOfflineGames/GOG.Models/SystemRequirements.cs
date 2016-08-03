@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    public class SystemRequirement: ISystemRequirement
+    public class SystemRequirement
     {
         [DataMember(Name = "minimum")]
         public string Minimum { get; set; }
@@ -15,13 +13,13 @@ namespace GOG.Models
 
     [DataContract]
     [KnownType(typeof(SystemRequirement))]
-    public class SystemRequirements: ISystemRequirements
+    public class SystemRequirements
     {
         [DataMember(Name = "windows")]
-        public ISystemRequirement Windows { get; set; }
+        public SystemRequirement Windows { get; set; }
         [DataMember(Name = "mac")]
-        public ISystemRequirement Mac { get; set; }
+        public SystemRequirement Mac { get; set; }
         [DataMember(Name = "linux")]
-        public ISystemRequirement Linux { get; set; }
+        public SystemRequirement Linux { get; set; }
     }
 }

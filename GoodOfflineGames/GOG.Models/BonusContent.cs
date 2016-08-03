@@ -1,7 +1,5 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
@@ -23,8 +21,8 @@ namespace GOG.Models
     public class BonusContent
     {
         [DataMember(Name = "visible")]
-        IBonusContent[] Visible { get; set; }
+        BonusContentItem[] Visible { get; set; }
         [DataMember(Name = "hidden")]
-        IBonusContent[] Hidden { get; set; }
+        BonusContentItem[] Hidden { get; set; }
     }
 }

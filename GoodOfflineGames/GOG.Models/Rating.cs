@@ -1,11 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-using GOG.Interfaces.Models;
-
 namespace GOG.Models
 {
     [DataContract]
-    public class RatingData: IRatingData
+    public class RatingData
     {
         [DataMember(Name = "brand")]
         public string Brand { get; set; }
@@ -16,33 +14,33 @@ namespace GOG.Models
     }
 
     [DataContract]
-    public class RatingAge: IRatingAge
+    public class RatingAge
     {
         [DataMember(Name = "ageString")]
         public string AgeString { get; set; }
         [DataMember(Name = "age")]
-        public int Age { get; set; }
+        public string Age { get; set; }
     }
 
     [DataContract]
     [KnownType(typeof(RatingData))]
-    public class Rating: IRating
+    public class Rating
     {
         [DataMember(Name = "data")]
-        public IRatingData Data { get; set; }
+        public RatingData Data { get; set; }
         [DataMember(Name = "age")]
-        public IRatingAge Age { get; set; }
+        public RatingAge Age { get; set; }
     }
 
     [DataContract]
     [KnownType(typeof(Rating))]
-    public class BrandRatings: IBrandRatings
+    public class BrandRatings
     {
         [DataMember(Name = "esrb")]
-        public IRating ESRB { get; set; }
+        public Rating ESRB { get; set; }
         [DataMember(Name = "pegi")]
-        public IRating PEGI { get; set; }
+        public Rating PEGI { get; set; }
         [DataMember(Name = "usk")]
-        public IRating USK { get; set; }
+        public Rating USK { get; set; }
     }
 }

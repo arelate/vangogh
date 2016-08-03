@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using GOG.Interfaces.Models;
+using GOG.Models;
 
 namespace GOG.Interfaces
 {
@@ -10,6 +10,6 @@ namespace GOG.Interfaces
         IEnumerable<long> GetIds();
         IEnumerable<string> GetFolders();
         IEnumerable<string> GetFiles(string folder);
-        IProductFile Filter(IProductFile[] productFiles);
+        ProductFile Filter(ProductFile[] productFiles);
     }
 }

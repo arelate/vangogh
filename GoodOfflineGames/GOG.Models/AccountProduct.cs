@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-
-using System.Runtime.Serialization;
-
-using GOG.Interfaces.Models;
+﻿using System.Runtime.Serialization;
 
 namespace GOG.Models
 {
     [DataContract]
-    public class AccountProduct: ProductCore, IAccountProduct
+    public class AccountProduct: ProductCore
     {
         [DataMember(Name = "isGalaxyCompatible")]
         public bool IsGalaxyCompatible { get; set; }
         [DataMember(Name = "tags")]
-        public ITag[] Tags { get; set; }
+        public Tag[] Tags { get; set; }
         [DataMember(Name = "availability")]
-        public IAvailability Availability { get; set; }
+        public Availability Availability { get; set; }
         [DataMember(Name = "image")]
         public string Image { get; set; }
         [DataMember(Name = "url")]
         public string Url { get; set; }
         [DataMember(Name = "worksOn")]
-        public IWorksOn WorksOn { get; set; }
+        public WorksOn WorksOn { get; set; }
         [DataMember(Name = "category")]
         public string Category { get; set; }
         [DataMember(Name = "rating")]
@@ -41,7 +36,7 @@ namespace GOG.Models
         [DataMember(Name = "dlcCount")]
         public int DLCCount { get; set; }
         [DataMember(Name = "releaseDate")]
-        public ITimezoneDate ReleaseDate { get; set; }
+        public TimezoneDate ReleaseDate { get; set; }
         [DataMember(Name = "isBaseProductMissing")]
         public bool IsBaseProductMissing { get; set; }
         [DataMember(Name = "isHidingDisabled")]
