@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace Interfaces.Collection
 {
-    public interface ICollectionContainer<T>
-    {
-        IList<T> Collection { get; }
-    }
+    //public interface ICollectionContainer<T>
+    //{
+    //    IList<T> Collection { get; }
+    //}
 
     public interface IAddDelegate<T>
     {
         void Add(T item);
     }
 
-    public interface IUpdateOrAddDelegate<T>
-    {
-        void UpdateOrAdd(T item);
-    }
+    //public interface IUpdateOrAddDelegate<T>
+    //{
+    //    void UpdateOrAdd(T item);
+    //}
 
     public interface IInsertDelegate<T>
     {
@@ -43,26 +43,26 @@ namespace Interfaces.Collection
         IEnumerable<T> Reduce(Predicate<T> condition);
     }
 
-    public interface IFindDelegate<Input, Result>
+    public interface IFindDelegate<T>
     {
-        Result Find(Input input);
+        T Find(Predicate<T> input);
     }
 
-    public interface IFindCollectionDelegate<Input, Result>
-    {
-        IEnumerable<Result> Find(IEnumerable<Input> input);
-    }
+    //public interface IFindCollectionDelegate<Input, Result>
+    //{
+    //    IEnumerable<Result> Find(IEnumerable<Input> input);
+    //}
 
     public interface ICollectionController<T>:
-        ICollectionContainer<T>,
+        //ICollectionContainer<T>,
         IContainsDelegate<T>,
         IAddDelegate<T>,
-        IUpdateOrAddDelegate<T>,
+        //IUpdateOrAddDelegate<T>,
         IInsertDelegate<T>,
         IRemoveDelegate<T>,
         IMapDelegate<T>,
         IReduceDelegate<T>,
-        IFindDelegate<Predicate<T>, T>
+        IFindDelegate<T>
     {
         // ...
     }

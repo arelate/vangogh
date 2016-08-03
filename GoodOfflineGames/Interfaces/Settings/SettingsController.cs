@@ -7,14 +7,13 @@ namespace Interfaces.Settings
         Task<Type> Load();
     }
 
-    public interface ISaveDelegate<Type>
-    {
-        Task Save(Type data);
-    }
+    //public interface ISaveDelegate<Type>
+    //{
+    //    Task Save(Type data);
+    //}
 
     public interface ISettingsController<Type>:
-        ILoadDelegate<Type>,
-        ISaveDelegate<Type>
+        ILoadDelegate<Type>
     {
         // ...
     }

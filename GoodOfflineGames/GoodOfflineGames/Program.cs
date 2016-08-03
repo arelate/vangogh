@@ -4,6 +4,7 @@ using System.IO;
 using GOG.Models;
 using Interfaces.Serialization;
 using Controllers.Serialization;
+using Controllers.IO.Stream;
 
 namespace GoodOfflineGames
 {
@@ -11,16 +12,18 @@ namespace GoodOfflineGames
     {
         static void Main(string[] args)
         {
-            var path = @"C:\Users\boggydigital\Desktop\api1433856545.json";
+            var path = @"C:\Users\boggydigital\Desktop\accountPageResult.json";
             var contents = "";
 
-            using (var fileStream = new FileStream(path, FileMode.Open))
+            var streamController = new StreamController();
+
+            using (var fileStream = streamController.OpenReadable(path))
                 using (var streamReader = new StreamReader(fileStream))
                     contents = streamReader.ReadToEnd();
 
             var jsonController = new JSONStringController();
 
-            var data = jsonController.Deserialize<ApiProduct>(contents);
+            var data = jsonController.Deserialize<AccountProductsPageResult>(contents);
 
             Console.WriteLine(data);
         }

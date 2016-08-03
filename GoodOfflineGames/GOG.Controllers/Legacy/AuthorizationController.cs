@@ -2,10 +2,10 @@
 using System.Linq;
 
 using GOG.Interfaces;
-using GOG.Interfaces.Settings;
-using GOG.Models.Settings;
-using GOG.Models.Uris;
-using GOG.Models.QueryParameters;
+using Interfaces.Settings;
+using Models.Settings;
+using Models.Uris;
+using Models.QueryParameters;
 using System;
 
 namespace GOG.Controllers

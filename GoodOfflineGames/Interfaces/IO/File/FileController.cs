@@ -4,12 +4,12 @@ namespace Interfaces.IO.File
 {
     public interface IMoveDelegate
     {
-        void MoveFile(string fromUri, string toUri);
+        void Move(string fromUri, string toUri);
     }
 
-    public interface IFileExistsDelegate
+    public interface IExistsDelegate
     {
-        bool FileExists(string uri);
+        bool Exists(string uri);
     }
 
     public interface IGetSizeDelegate
@@ -24,7 +24,7 @@ namespace Interfaces.IO.File
 
     public interface IFileController :
         IMoveDelegate,
-        IFileExistsDelegate,
+        IExistsDelegate,
         IGetSizeDelegate,
         IGetTimestampDelegate
     {

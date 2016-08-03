@@ -1,26 +1,23 @@
 ﻿using System.Collections.Generic;
 
+using Interfaces.IO.File;
+
 namespace Interfaces.IO.Directory
 {
-    public interface ICreateDirectoryDelegate
+    public interface ICreateDelegate
     {
-        void CreateDirectory(string uri);
+        void Create(string uri);
     }
 
-    public interface IDirectoryExistsDelegate
+    public interface IGetFilesDelegate
     {
-        bool DirectoryExists(string uri);
-    }
-
-    public interface IEnumerateFilesDelegate
-    {
-        IEnumerable<string> EnumerateFiles(string uri);
+        IEnumerable<string> GetFiles(string uri);
     }
 
     public interface IDirectoryController :
-        ICreateDirectoryDelegate,
-        IDirectoryExistsDelegate,
-        IEnumerateFilesDelegate
+        ICreateDelegate,
+        IExistsDelegate,
+        IGetFilesDelegate
     {
         // ...
     }

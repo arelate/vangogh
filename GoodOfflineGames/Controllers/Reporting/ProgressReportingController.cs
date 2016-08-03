@@ -4,7 +4,7 @@ using Interfaces.Console;
 using Interfaces.Network;
 using Interfaces.Formatting;
 
-namespace Controllers
+namespace Controllers.Reporting
 {
     public class DownloadProgressReportingController : IDownloadProgressReportingController
     {

@@ -14,7 +14,7 @@ namespace Controllers.Console
             return System.Console.ReadLine();
         }
 
-        public string ReadPrivateLine()
+        public string PrivateReadLine()
         {
             System.ConsoleKeyInfo key;
             string privateData = string.Empty;
@@ -25,13 +25,13 @@ namespace Controllers.Console
             return privateData;
         }
 
-        public void Write(string message, MessageType messageType, params object[] data)
+        public void Write(string message, MessageType messageType = MessageType.Default, params object[] data)
         {
             System.Console.ForegroundColor = GetColorByMessageType(messageType);
             System.Console.Write(message, data);
         }
 
-        public void WriteLine(string message, MessageType messageType, params object[] data)
+        public void WriteLine(string message, MessageType messageType = MessageType.Default, params object[] data)
         {
             System.Console.ForegroundColor = GetColorByMessageType(messageType);
             System.Console.WriteLine(message, data);
@@ -54,6 +54,5 @@ namespace Controllers.Console
                     return System.ConsoleColor.White;
             }
         }
-
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Interfaces.Console;
 using Interfaces.Reporting;
 
-namespace GoodOfflineGames
+namespace Controllers.Reporting
 {
     public class UpdateReportingController : IUpdateReportingController
     {

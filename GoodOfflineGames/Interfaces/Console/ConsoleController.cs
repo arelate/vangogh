@@ -19,25 +19,25 @@
         string ReadLine();
     }
 
-    public interface IReadPrivateLineDelegate
+    public interface IPrivateReadLineDelegate
     {
-        string ReadPrivateLine();
+        string PrivateReadLine();
     }
 
     public interface IWriteDelegate
     {
-        void Write(string message, MessageType messageType, params object[] data);
+        void Write(string message, MessageType messageType = MessageType.Default, params object[] data);
     }
 
     public interface IWriteLineDelegate
     {
-        void WriteLine(string message, MessageType messageType, params object[] data);
+        void WriteLine(string message, MessageType messageType = MessageType.Default, params object[] data);
     }
 
     public interface IConsoleController :
         IReadDelegate,
         IReadLineDelegate,
-        IReadPrivateLineDelegate,
+        IPrivateReadLineDelegate,
         IWriteDelegate,
         IWriteLineDelegate
     {

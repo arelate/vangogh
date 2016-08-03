@@ -8,7 +8,7 @@ namespace GOG.Models
         [DataMember(Name = "isGalaxyCompatible")]
         public bool IsGalaxyCompatible { get; set; }
         [DataMember(Name = "tags")]
-        public Tag[] Tags { get; set; }
+        public string[] Tags { get; set; }
         [DataMember(Name = "availability")]
         public Availability Availability { get; set; }
         [DataMember(Name = "image")]

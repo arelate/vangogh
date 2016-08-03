@@ -41,20 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collection\CollectionController.cs" />
+    <Compile Include="IO\Directory\DirectoryController.cs" />
+    <Compile Include="IO\File\FileController.cs" />
     <Compile Include="Reporting\UpdateReportingController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Formatting\BytesFormattingController.cs" />
-    <Compile Include="Cleanup\CleanupController.cs" />
     <Compile Include="Console\ConsoleController.cs" />
     <Compile Include="Reporting\ProgressReportingController.cs" />
-    <Compile Include="IO\IOController.cs" />
+    <Compile Include="IO\Stream\StreamController.cs" />
     <Compile Include="Serialization\JSONController.cs" />
     <Compile Include="Language\LanguageController.cs" />
     <Compile Include="Network\NetworkController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Formatting\SecondsFormattingController.cs" />
     <Compile Include="Settings\SettingsController.cs" />
-    <Compile Include="IO\StorageController.cs" />
+    <Compile Include="IO\Storage\StorageController.cs" />
     <Compile Include="Extraction\ExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
   </ItemGroup>
