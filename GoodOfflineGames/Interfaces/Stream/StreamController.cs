@@ -1,4 +1,4 @@
-﻿namespace Interfaces.IO.Stream
+﻿namespace Interfaces.Stream
 {
     public interface IOpenReadableDelegate
     {

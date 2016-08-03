@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.IO;
 
-using Interfaces.IO.Stream;
-using Interfaces.IO.File;
-using Interfaces.IO.Storage;
+using Interfaces.Stream;
+using Interfaces.File;
+using Interfaces.Storage;
 
 namespace Controllers.Storage
 {

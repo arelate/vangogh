@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Interfaces.IO.File
+namespace Interfaces.File
 {
     public interface IMoveDelegate
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.IO;
 
 using Interfaces.Console;
-using Interfaces.IO.Storage;
+using Interfaces.Storage;
 using Interfaces.Serialization;
 using Interfaces.Language;
 using Interfaces.Settings;

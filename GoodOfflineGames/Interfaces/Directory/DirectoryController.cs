@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using Interfaces.IO.File;
+using Interfaces.File;
 
-namespace Interfaces.IO.Directory
+namespace Interfaces.Directory
 {
     public interface ICreateDelegate
     {

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-using Interfaces.IO.Stream;
+using Interfaces.Stream;
 
-namespace Controllers.IO.Stream
+namespace Controllers.Stream
 {
     public class StreamController: IStreamController
     {

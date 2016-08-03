@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using Interfaces.IO.Directory;
+using Interfaces.Directory;
 
-namespace Controllers.IO.Directory
+namespace Controllers.Directory
 {
     public class DirectoryController: IDirectoryController
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Interfaces.IO.Storage
+namespace Interfaces.Storage
 {
     public interface IPullDelegate<Type>
     {

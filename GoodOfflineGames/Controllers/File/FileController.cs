@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-using Interfaces.IO.File;
+using Interfaces.File;
 
-namespace Controllers.IO.File
+namespace Controllers.File
 {
     public class FileController: IFileController
     {

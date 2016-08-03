@@ -44,9 +44,9 @@
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Console\ConsoleController.cs" />
-    <Compile Include="IO\Directory\DirectoryController.cs" />
+    <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Reporting\ProgressReportingController.cs" />
-    <Compile Include="IO\File\FileController.cs" />
+    <Compile Include="File\FileController.cs" />
     <Compile Include="Language\LanguageController.cs" />
     <Compile Include="Reporting\UpdateReportingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,8 +57,8 @@
     <Compile Include="Settings\SettingsController.cs" />
     <Compile Include="Settings\Update.cs" />
     <Compile Include="Settings\Validate.cs" />
-    <Compile Include="IO\Storage\StorageController.cs" />
-    <Compile Include="IO\Stream\StreamController.cs" />
+    <Compile Include="Storage\StorageController.cs" />
+    <Compile Include="Stream\StreamController.cs" />
     <Compile Include="Network\StringNetworkController.cs" />
     <Compile Include="Extraction\ExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />

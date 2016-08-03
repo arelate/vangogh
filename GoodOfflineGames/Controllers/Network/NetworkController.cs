@@ -1,19 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
 
-using Interfaces.IO.Stream;
-using Interfaces.IO.File;
-using Interfaces.Console;
 using Interfaces.Network;
 
 namespace Controllers.Network
 {
-    public sealed class NetworkController: IStringNetworkController
+    public sealed class NetworkController : IStringNetworkController
     {
         private HttpClient client;
         private IUriController uriController;
@@ -97,8 +92,8 @@ namespace Controllers.Network
             {
                 if (response == null) return null;
 
-                using (Stream stream = await response.Content.ReadAsStreamAsync())
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                using (var stream = await response.Content.ReadAsStreamAsync())
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
                     return await reader.ReadToEndAsync();
             }
         }
@@ -116,8 +111,8 @@ namespace Controllers.Network
             {
                 if (response == null) return null;
 
-                using (Stream stream = await response.Content.ReadAsStreamAsync())
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                using (var stream = await response.Content.ReadAsStreamAsync())
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
                     return await reader.ReadToEndAsync();
             }
         }

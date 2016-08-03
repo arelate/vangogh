@@ -14,9 +14,14 @@ namespace GOG.Interfaces
         Task<IList<Type>> Update(IList<string> items, IReportUpdateDelegate reportUpdateDelegate = null);
     }
 
+    public interface IFindById<Type>
+    {
+        Type FindById(long id);
+    }
+
     public interface IProductCoreController<Type>:
         ICollectionController<Type>,
-        IFindDelegate<long, Type>,
+        IFindById<Type>,
         IUpdateDelegate<Type>
     {
         event EventHandler<Type> OnProductUpdated;
