@@ -6,7 +6,7 @@ using Interfaces.Extraction;
 namespace Controllers.Extraction
 {
     // TODO: add tests
-    public class TokenExtractorController : IExtractionController
+    public class ExtractionController : IExtractionController
     {
         public IEnumerable<string> ExtractMultiple(string data)
         {

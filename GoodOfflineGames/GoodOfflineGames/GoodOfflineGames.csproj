@@ -94,6 +94,10 @@
       <Project>{7e25c189-ac83-4e20-ba55-ae68c39b31a9}</Project>
       <Name>Controllers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj">
+      <Project>{129ad02f-45fb-44ca-be10-d256900066da}</Project>
+      <Name>GOG.Controllers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">
       <Project>{60ba32af-cf00-4a69-816a-f90aba3d3f33}</Project>
       <Name>GOG.Interfaces</Name>

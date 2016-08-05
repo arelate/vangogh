@@ -6,7 +6,7 @@ namespace GOG.Interfaces
 {
     public interface IAuthorizeDelegate
     {
-        Task<bool> Authorize(IAuthenticateProperties usernamePassword);
+        Task Authorize(IAuthenticateProperties usernamePassword);
     }
 
     public interface IDeauthorizeDelegate

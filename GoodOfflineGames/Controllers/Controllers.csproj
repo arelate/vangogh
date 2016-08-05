@@ -49,6 +49,7 @@
     <Compile Include="Formatting\BytesFormattingController.cs" />
     <Compile Include="Console\ConsoleController.cs" />
     <Compile Include="Reporting\ProgressReportingController.cs" />
+    <Compile Include="RequestPage\RequestPageController.cs" />
     <Compile Include="Stream\StreamController.cs" />
     <Compile Include="Serialization\JSONController.cs" />
     <Compile Include="Language\LanguageController.cs" />

@@ -25,7 +25,7 @@
                 public const string Login = Roots.Login + "/login";
                 public const string Logout = Roots.Login + "/logout";
                 public const string LoginCheck = Roots.Login + "/login_check";
-                public const string TwoStep = Roots.Login + "/two_step";
+                public const string TwoStep = Authentication.Login + "/two_step";
                 public const string OnLoginSuccess = Protocols.Https + Roots.Website + "/on_login_success";
             }
 

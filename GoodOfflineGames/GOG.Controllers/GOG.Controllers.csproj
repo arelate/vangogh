@@ -40,10 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Legacy\Abstract\CollectionController.cs" />
-    <Compile Include="Legacy\Abstract\MultipageRequestController.cs" />
     <Compile Include="Legacy\Abstract\ProductCoreController.cs" />
-    <Compile Include="Legacy\AuthorizationController.cs" />
+    <Compile Include="Authorization\AuthorizationController.cs" />
     <Compile Include="Legacy\DataConsistencyController.cs" />
     <Compile Include="Legacy\FileValidationController.cs" />
     <Compile Include="Legacy\GameDetailsController.cs" />
@@ -68,7 +66,16 @@
       <Project>{864ca735-6c74-4cfc-a5e4-387b2c3225e3}</Project>
       <Name>GOG.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{4b835730-ad7f-4c9f-a390-6d3fa72e52f4}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{03a2d07a-5c0f-4948-b710-7ea1cbd21986}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
