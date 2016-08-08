@@ -9,8 +9,8 @@ namespace GOG.Models
         public int TotalProducts { get; set; }
         [DataMember(Name = "productsPerPage")]
         public int ProductsPerPage { get; set; }
-        [DataMember(Name = "accountProducts")]
-        public AccountProduct[] AccountProducts { get; set; }
+        [DataMember(Name = "products")]
+        public AccountProduct[] Products { get; set; }
         [DataMember(Name = "tags")]
         public Tag[] Tags { get; set; }
         [DataMember(Name = "updatedProductsCount")]

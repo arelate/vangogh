@@ -13,7 +13,7 @@ namespace GOG.Controllers.PageResults
             var products = new List<AccountProduct>();
 
             foreach (var pageResult in pageResults)
-                products.AddRange(pageResult.AccountProducts);
+                products.AddRange(pageResult.Products);
 
             return products;
         }
