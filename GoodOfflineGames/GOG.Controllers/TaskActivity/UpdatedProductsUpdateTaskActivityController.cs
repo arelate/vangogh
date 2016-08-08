@@ -56,9 +56,14 @@ namespace GOG.Controllers.TaskActivity
 
             #region Load existing updated products
 
+            var existingUpdatedProducts = new List<long>();
+
             var updatedProductsString = await storageController.Pull("updated.js");
-            updatedProductsString = updatedProductsString.Replace("var updated=", "");
-            var existingUpdatedProducts = serializationController.Deserialize<List<long>>(updatedProductsString);
+            if (!string.IsNullOrEmpty(updatedProductsString))
+            {
+                updatedProductsString = updatedProductsString.Replace("var updated=", "");
+                existingUpdatedProducts = serializationController.Deserialize<List<long>>(updatedProductsString);
+            }
 
             #endregion
 
