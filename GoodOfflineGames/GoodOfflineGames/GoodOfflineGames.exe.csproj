@@ -4,15 +4,33 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{129AD02F-45FB-44CA-BE10-D256900066DA}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{295EC7DA-7404-499C-ABBD-3429145A04D5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GOG.Controllers</RootNamespace>
-    <AssemblyName>GOG.Controllers</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>GoodOfflineGames</RootNamespace>
+    <AssemblyName>GoodOfflineGames</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -20,8 +38,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -29,44 +50,54 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>GoodOfflineGames.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Legacy\Abstract\ProductCoreController.cs" />
-    <Compile Include="Authorization\AuthorizationController.cs" />
-    <Compile Include="Legacy\FileValidationController.cs" />
-    <Compile Include="Legacy\GameDetailsController.cs" />
-    <Compile Include="Legacy\GameDetailsDownloadsController.cs" />
-    <Compile Include="Legacy\GogDataController.cs" />
-    <Compile Include="Legacy\ImagesController.cs" />
-    <Compile Include="Legacy\OwnedController.cs" />
-    <Compile Include="Legacy\ProductDataController.cs" />
-    <Compile Include="Legacy\ProductFilesController.cs" />
-    <Compile Include="Legacy\ProductFilesDownloadController.cs" />
-    <Compile Include="Legacy\ProductsController.cs" />
-    <Compile Include="PageResults\AccountProductsPageResultController.cs" />
-    <Compile Include="PageResults\PageResultController.cs" />
-    <Compile Include="PageResults\ProductsPageResultController.cs" />
-    <Compile Include="PageResults\AccountProductsPageResultsExtractingController.cs" />
-    <Compile Include="PageResults\ProductsPageResultsExtractingController.cs" />
+    <Compile Include="ExistingProductsFilter.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="LegacyProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Legacy\ScreenshotsController.cs" />
-    <Compile Include="Legacy\UpdatedController.cs" />
-    <Compile Include="TaskActivity\AccountProductsUpdateTaskActivityController.cs" />
-    <Compile Include="TaskActivity\AuthorizationTaskActivityController.cs" />
-    <Compile Include="TaskActivity\UpdatedProductsUpdateTaskActivityController.cs" />
-    <Compile Include="TaskActivity\ProductsUpdateTaskActivityController.cs" />
-    <Compile Include="TaskActivity\TaskActivityController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <None Include="settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CMD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Controllers\Controllers.csproj">
+      <Project>{7e25c189-ac83-4e20-ba55-ae68c39b31a9}</Project>
+      <Name>Controllers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj">
+      <Project>{129ad02f-45fb-44ca-be10-d256900066da}</Project>
+      <Name>GOG.Controllers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">
       <Project>{60ba32af-cf00-4a69-816a-f90aba3d3f33}</Project>
       <Name>GOG.Interfaces</Name>
@@ -84,7 +115,6 @@
       <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

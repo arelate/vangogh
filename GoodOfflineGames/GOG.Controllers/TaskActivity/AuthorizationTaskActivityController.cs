@@ -12,7 +12,7 @@ using GOG.Controllers.Authorization;
 
 namespace GOG.Controllers.TaskActivity
 {
-    public class AuthorizationTaskActivityController: TaskActivityController
+    public class AuthorizationTaskActivityController : TaskActivityController
     {
 
         private IUriController uriController;
@@ -28,7 +28,7 @@ namespace GOG.Controllers.TaskActivity
             IExtractionController extractionController,
             IConsoleController consoleController,
             IAuthenticateProperties authenticateProperties,
-            ITaskReportingController taskReportingController): 
+            ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.authenticateProperties = authenticateProperties;
@@ -48,15 +48,9 @@ namespace GOG.Controllers.TaskActivity
                 extractionController,
                 consoleController);
 
-            try
-            {
-                await authorizationController.Authorize(authenticateProperties);
-                taskReportingController.CompleteTask();
-            }
-            catch (System.Security.SecurityException ex)
-            {
-                taskReportingController.ReportFailure(ex.Message);
-            }
+            await authorizationController.Authorize(authenticateProperties);
+
+            taskReportingController.CompleteTask();
         }
     }
 }

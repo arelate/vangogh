@@ -12,13 +12,13 @@ using GOG.Controllers.PageResults;
 
 namespace GOG.Controllers.TaskActivity
 {
-    public class ProductsUpdateTaskActivityController : TaskActivityController
+    public class AccountProductsUpdateTaskActivityController : TaskActivityController
     {
         private IRequestPageController requestPageController;
         private ISerializationController<string> serializationController;
         private IStorageController<string> storageController;
 
-        public ProductsUpdateTaskActivityController(
+        public AccountProductsUpdateTaskActivityController(
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
             IStorageController<string> storageController,
@@ -32,22 +32,22 @@ namespace GOG.Controllers.TaskActivity
 
         public override async Task ProcessTask()
         {
-            taskReportingController.AddTask("Update products from " + Uris.Paths.Games.AjaxFiltered);
+            taskReportingController.AddTask("Update account products from " + Uris.Paths.Account.GetFilteredProducts);
 
-            var productsPageResultsController = new ProductsPageResultController(
+            var accountProductsPageResultsController = new AccountProductsPageResultController(
                 requestPageController,
                 serializationController,
-                Uris.Paths.Games.AjaxFiltered,
-                QueryParameters.GamesAjaxFiltered,
+                Uris.Paths.Account.GetFilteredProducts,
+                QueryParameters.AccountGetFilteredProducts,
                 taskReportingController);
-            var productsPageResults = await productsPageResultsController.GetPageResults();
+            var accountProductsPageResults = await accountProductsPageResultsController.GetPageResults();
 
             #region Extract product data
 
-            taskReportingController.AddTask("Extract product data");
+            taskReportingController.AddTask("Extract account product data");
 
-            var productsPageResultsExtractingController = new ProductsPageResultsExtractingController();
-            var products = productsPageResultsExtractingController.Extract(productsPageResults);
+            var accountProductsPageResultsExtractingController = new AccountProductsPageResultsExtractingController();
+            var accountProducts = accountProductsPageResultsExtractingController.Extract(accountProductsPageResults);
 
             taskReportingController.CompleteTask();
 
@@ -55,10 +55,10 @@ namespace GOG.Controllers.TaskActivity
 
             #region Save products on disk
 
-            taskReportingController.AddTask("Save products to disk");
+            taskReportingController.AddTask("Save account products to disk");
 
-            var productsDataString = "var products=" + serializationController.Serialize(products);
-            await storageController.Push("products.js", productsDataString);
+            var accountProductsString = "var accountProducts=" + serializationController.Serialize(accountProducts);
+            await storageController.Push("accountProducts.js", accountProductsString);
 
             taskReportingController.CompleteTask();
 
