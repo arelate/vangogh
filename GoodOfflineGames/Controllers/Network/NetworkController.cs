@@ -8,7 +8,7 @@ using Interfaces.Network;
 
 namespace Controllers.Network
 {
-    public sealed class NetworkController : IStringNetworkController
+    public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
         private IUriController uriController;
@@ -82,7 +82,7 @@ namespace Controllers.Network
         //    }
         //}
 
-        public async Task<string> GetString(
+        public async Task<string> Get(
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
@@ -98,7 +98,7 @@ namespace Controllers.Network
             }
         }
 
-        public async Task<string> PostString(
+        public async Task<string> Post(
             string baseUri,
             IDictionary<string, string> parameters = null,
             string data = null)

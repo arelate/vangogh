@@ -1,6 +1,5 @@
 ﻿using System;
-
-using Interfaces.Console;
+using System.Collections.Generic;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -11,11 +10,12 @@ using Controllers.Language;
 using Controllers.Serialization;
 using Controllers.Extraction;
 using Controllers.Console;
+using Controllers.Reporting;
 using Controllers.Settings;
+using Controllers.RequestPage;
 
-using GOG.Controllers.Authorization;
-
-using GOG.Models;
+using GOG.Controllers.TaskActivity;
+using Interfaces.TaskActivity;
 
 namespace GoodOfflineGames
 {
@@ -27,11 +27,16 @@ namespace GoodOfflineGames
             var fileController = new FileController();
             var directoryController = new DirectoryController();
             var storageController = new StorageController(
-                streamController, 
+                streamController,
                 fileController);
+
+            var consoleController = new ConsoleController();
+            var taskReportingController = new TaskReportingController(consoleController);
 
             var uriController = new UriController();
             var networkController = new NetworkController(uriController);
+            var requestPageController = new RequestPageController(
+                networkController);
 
             var languageController = new LanguageController();
 
@@ -39,41 +44,60 @@ namespace GoodOfflineGames
 
             var extractionController = new ExtractionController();
 
-            var consoleController = new ConsoleController();
-
             var settingsController = new SettingsController(
-                storageController, 
-                jsonController, 
-                languageController, 
+                storageController,
+                jsonController,
+                languageController,
                 consoleController);
 
+            // Load settings that (might) have authorization information, and request to run or not specific task activities
+
+            taskReportingController.AddTask("Load settings");
             var settings = settingsController.Load().Result;
+            taskReportingController.CompleteTask();
 
-            //var path = @"C:\Users\boggydigital\Desktop\accountPageResult.json";
-            //var contents = "";
+            // Create and add all task activity controllers
+            // Task activities are encapsulated set of activity - so no data can be passed around!
 
-            //using (var fileStream = streamController.OpenReadable(path))
-            //    using (var streamReader = new StreamReader(fileStream))
-            //        contents = streamReader.ReadToEnd();
+            var authorizationTaskActivityController = new AuthorizationTaskActivityController(
+                uriController,
+                networkController,
+                extractionController,
+                consoleController,
+                settings.Authenticate,
+                taskReportingController);
 
-            //var data = jsonController.Deserialize<AccountProductsPageResult>(contents);
+            var productsUpdateTaskActivityController = new ProductsUpdateTaskActivityController(
+                requestPageController,
+                jsonController,
+                storageController,
+                taskReportingController);
 
-            var authorizationController = new AuthorizationController(
-                uriController, 
-                networkController, 
-                extractionController, 
-                consoleController);
+            var taskActivityControllers = new List<ITaskActivityController>();
 
-            try
-            {
-                authorizationController.Authorize(settings.Authenticate).Wait();
-            }
-            catch (System.Security.SecurityException ex)
-            {
-                consoleController.WriteLine(ex.Message, MessageType.Error);
-            }
+            taskActivityControllers.Add(authorizationTaskActivityController);
+            taskActivityControllers.Add(productsUpdateTaskActivityController);
 
-            Console.WriteLine(settings);
+            // Iterate and process all tasks
+
+            foreach (var taskActivityController in taskActivityControllers)
+                taskActivityController.ProcessTask().Wait();
+
+            Console.WriteLine("Press ENTER to continue...");
+            Console.ReadLine();
+
+            //var accountProductsPageResultsController = new AccountProductsPageResultController(
+            //    requestPageController,
+            //    jsonController,
+            //    Uris.Paths.Account.GetFilteredProducts,
+            //    QueryParameters.AccountGetFilteredProducts);
+
+            //var updatedProductsPageResultsController = new AccountProductsPageResultController(
+            //    requestPageController,
+            //    jsonController,
+            //    Uris.Paths.Account.GetFilteredProducts,
+            //    QueryParameters.AccountGetUpdatedFilteredProducts);
+
         }
     }
 }

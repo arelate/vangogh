@@ -2,7 +2,7 @@
 
 using Interfaces.Settings;
 
-namespace GOG.Interfaces
+namespace GOG.Interfaces.Authorization
 {
     public interface IAuthorizeDelegate
     {

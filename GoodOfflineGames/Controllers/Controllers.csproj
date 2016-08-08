@@ -44,11 +44,11 @@
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="File\FileController.cs" />
-    <Compile Include="Reporting\UpdateReportingController.cs" />
+    <Compile Include="Reporting\TaskReportingController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Formatting\BytesFormattingController.cs" />
     <Compile Include="Console\ConsoleController.cs" />
-    <Compile Include="Reporting\ProgressReportingController.cs" />
+    <Compile Include="Reporting\DownloadProgressReportingController.cs" />
     <Compile Include="RequestPage\RequestPageController.cs" />
     <Compile Include="Stream\StreamController.cs" />
     <Compile Include="Serialization\JSONController.cs" />

@@ -23,6 +23,16 @@ namespace Models.QueryParameters
             { "sortBy", SortBy.DatePurchased }
         };
 
+        public static Dictionary<string, string> AccountGetUpdatedFilteredProducts = new Dictionary<string, string>()
+        {
+            { "hasHiddenProducts", "false" },
+            { "hiddenFlag", "0" },
+            { "isUpdated", "1" }, // only change from above
+            { "mediaType", "1" },
+            { "page", "1" },
+            { "sortBy", SortBy.DatePurchased }
+        };
+
         public static Dictionary<string, string> GamesAjaxFiltered = new Dictionary<string, string>()
         {
             { "mediaType", "game" },

@@ -3,19 +3,19 @@ using System.Threading.Tasks;
 
 namespace Interfaces.Network
 {
-    public interface IGetStringDelegate
+    public interface IGetDelegate
     {
-        Task<string> GetString(string uri, IDictionary<string, string> parameters = null);
+        Task<string> Get(string uri, IDictionary<string, string> parameters = null);
     }
 
-    public interface IPostStringDelegate
+    public interface IPostDelegate
     {
-        Task<string> PostString(string uri, IDictionary<string, string> parameters = null, string data = null);
+        Task<string> Post(string uri, IDictionary<string, string> parameters = null, string data = null);
     }
 
-    public interface IStringNetworkController :
-        IGetStringDelegate,
-        IPostStringDelegate
+    public interface INetworkController :
+        IGetDelegate,
+        IPostDelegate
     {
         // ... 
     }

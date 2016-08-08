@@ -3,17 +3,20 @@ using System.Threading.Tasks;
 
 using Interfaces.Network;
 using Interfaces.RequestPage;
+using Interfaces.Reporting;
 
 namespace Controllers.RequestPage
 {
     public class RequestPageController: IRequestPageController
     {
-        private IStringNetworkController stringNetworkingController;
+        private INetworkController networkController;
+
         private const string pageQueryParameter = "page";
 
-        public RequestPageController(IStringNetworkController stringNetworkingController)
+        public RequestPageController(
+            INetworkController networkController)
         {
-            this.stringNetworkingController = stringNetworkingController;
+            this.networkController = networkController;
         }
 
         public async Task<string> RequestPage(
@@ -26,7 +29,9 @@ namespace Controllers.RequestPage
 
             parameters[pageQueryParameter] = page.ToString();
 
-            return await stringNetworkingController.GetString(uri, parameters);
+            var pageResponse = await networkController.Get(uri, parameters);
+
+            return pageResponse;
         }
     }
 }

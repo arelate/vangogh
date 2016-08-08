@@ -4,17 +4,17 @@
     {
         public static class Protocols
         {
-            public const string Http = "http:";
-            public const string Https = "https:";
+            public const string Http = "http://";
+            public const string Https = "https://";
         }
 
         public static class Roots
         {
-            private const string GOG = "gog.com";
-            public const string Website = "//www." + GOG;
-            public const string Login = Protocols.Https + "//login." + GOG;
-            public const string Auth = Protocols.Https + "//auth." + GOG;
-            public const string Api = Protocols.Https + "//api." + GOG;
+            private const string GOGcom = "gog.com";
+            public const string Website = "www." + GOGcom;
+            public const string Login = Protocols.Https + "login." + GOGcom;
+            public const string Auth = Protocols.Https + "auth." + GOGcom;
+            public const string Api = Protocols.Https + "api." + GOGcom;
         }
 
         public static class Paths
@@ -25,7 +25,7 @@
                 public const string Login = Roots.Login + "/login";
                 public const string Logout = Roots.Login + "/logout";
                 public const string LoginCheck = Roots.Login + "/login_check";
-                public const string TwoStep = Authentication.Login + "/two_step";
+                public const string TwoStep = Login + "/two_step";
                 public const string OnLoginSuccess = Protocols.Https + Roots.Website + "/on_login_success";
             }
 

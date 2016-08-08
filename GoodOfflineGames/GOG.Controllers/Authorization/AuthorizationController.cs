@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Linq;
 
-using GOG.Interfaces;
+using GOG.Interfaces.Authorization;
 
 using Interfaces.Network;
 using Interfaces.Extraction;
@@ -15,34 +15,34 @@ namespace GOG.Controllers.Authorization
 {
     public class AuthorizationController : IAuthorizationController
     {
-        private const string authorizingOnGOG = "Authorizing {0} on GOG.com...";
-        private const string successfullyAuthorizedOnGOG = "Successfully authorized {0} on GOG.com.";
+        //private const string authorizingOnGOG = "Authorizing {0} on GOG.com...";
+        //private const string successfullyAuthorizedOnGOG = "Successfully authorized {0} on GOG.com.";
         private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
         private const string securityCodeHasBeenSent = "Enter security code that has been sent to {0}:";
 
         private IUriController uriController;
-        private IStringNetworkController stringNetworkController;
+        private INetworkController networkController;
         private IExtractionController extractionController;
         private IConsoleController consoleController;
 
         public AuthorizationController(
             IUriController uriController,
-            IStringNetworkController stringNetworkController,
+            INetworkController networkController,
             IExtractionController extractionController,
             IConsoleController consoleController)
         {
             this.uriController = uriController;
-            this.stringNetworkController = stringNetworkController;
+            this.networkController = networkController;
             this.extractionController = extractionController;
             this.consoleController = consoleController;
         }
 
         public async Task Authorize(IAuthenticateProperties usernamePassword)
         {
-            consoleController.WriteLine(authorizingOnGOG, MessageType.Progress, usernamePassword.Username);
+            //consoleController.WriteLine(authorizingOnGOG, MessageType.Progress, usernamePassword.Username);
 
             // request authorization token
-            string authResponse = await stringNetworkController.GetString(Uris.Paths.Authentication.Auth, QueryParameters.Authenticate);
+            string authResponse = await networkController.Get(Uris.Paths.Authentication.Auth, QueryParameters.Authenticate);
 
             string loginToken = extractionController.ExtractMultiple(authResponse).First();
 
@@ -54,7 +54,7 @@ namespace GOG.Controllers.Authorization
 
             string loginData = uriController.ConcatenateQueryParameters(QueryParameters.LoginAuthenticate);
 
-            var loginCheckResult = await stringNetworkController.PostString(Uris.Paths.Authentication.LoginCheck, null, loginData);
+            var loginCheckResult = await networkController.Post(Uris.Paths.Authentication.LoginCheck, null, loginData);
 
             if (!loginCheckResult.Contains("gogData"))
             {
@@ -80,24 +80,24 @@ namespace GOG.Controllers.Authorization
 
                 string twoStepData = uriController.ConcatenateQueryParameters(QueryParameters.TwoStepAuthenticate);
 
-                var twoStepLoginCheckResult = await stringNetworkController.PostString(Uris.Paths.Authentication.TwoStep, null, twoStepData);
+                var twoStepLoginCheckResult = await networkController.Post(Uris.Paths.Authentication.TwoStep, null, twoStepData);
 
                 if (twoStepLoginCheckResult.Contains("gogData"))
-                {
+                //{
                     // successful login using 2FA or exception
-                    consoleController.WriteLine(successfullyAuthorizedOnGOG, MessageType.Success, usernamePassword.Username);
+                    //consoleController.WriteLine(successfullyAuthorizedOnGOG, MessageType.Success, usernamePassword.Username);
                     return;
-                }
+                //}
                 else throw new System.Security.SecurityException(failedToAuthenticate);
             }
 
             // successful login, and 2FA is not used for this user
-            consoleController.WriteLine(successfullyAuthorizedOnGOG, MessageType.Success, usernamePassword.Username);
+            //consoleController.WriteLine(successfullyAuthorizedOnGOG, MessageType.Success, usernamePassword.Username);
         }
 
         public async Task Deauthorize()
         {
-            await stringNetworkController.GetString(Uris.Paths.Authentication.Logout);
+            await networkController.Get(Uris.Paths.Authentication.Logout);
         }
     }
 }
