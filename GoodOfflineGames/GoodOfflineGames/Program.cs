@@ -97,7 +97,7 @@ namespace GoodOfflineGames
             //taskActivityControllers.Add(authorizationController);
             //taskActivityControllers.Add(productsUpdateController);
             //taskActivityControllers.Add(accountProductsUpdateController);
-            taskActivityControllers.Add(newUpdatedAccountProductsController);
+            //taskActivityControllers.Add(newUpdatedAccountProductsController);
 
             foreach (var taskActivityController in taskActivityControllers)
                 try

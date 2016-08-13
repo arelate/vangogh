@@ -45,13 +45,10 @@
     <Compile Include="Legacy\FileValidationController.cs" />
     <Compile Include="Legacy\GameDetailsController.cs" />
     <Compile Include="Legacy\GameDetailsDownloadsController.cs" />
-    <Compile Include="Legacy\GogDataController.cs" />
     <Compile Include="Legacy\ImagesController.cs" />
-    <Compile Include="Legacy\OwnedController.cs" />
     <Compile Include="Legacy\ProductDataController.cs" />
     <Compile Include="Legacy\ProductFilesController.cs" />
     <Compile Include="Legacy\ProductFilesDownloadController.cs" />
-    <Compile Include="Legacy\ProductsController.cs" />
     <Compile Include="PageResults\AccountProductsPageResultController.cs" />
     <Compile Include="PageResults\PageResultController.cs" />
     <Compile Include="PageResults\ProductsPageResultController.cs" />
@@ -59,7 +56,6 @@
     <Compile Include="PageResults\ProductsPageResultsExtractingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Legacy\ScreenshotsController.cs" />
-    <Compile Include="Legacy\UpdatedController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">
