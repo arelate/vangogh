@@ -42,9 +42,10 @@
   <ItemGroup>
     <Compile Include="Abstract\UpdateController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProductsUpdate\AccountProductsUpdateController.cs" />
+    <Compile Include="Updates\AccountProductsUpdateController.cs" />
     <Compile Include="Authorization\AuthorizationController.cs" />
-    <Compile Include="ProductsUpdate\ProductsUpdateController.cs" />
+    <Compile Include="Updates\NewUpdatedAccountProductsController.cs" />
+    <Compile Include="Updates\ProductsUpdateController.cs" />
     <Compile Include="Abstract\TaskActivityController.cs" />
   </ItemGroup>
   <ItemGroup>

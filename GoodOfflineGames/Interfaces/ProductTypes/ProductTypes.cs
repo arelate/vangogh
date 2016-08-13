@@ -3,6 +3,7 @@
     public enum ProductTypes
     {
         Product,
-        AccountProduct
+        AccountProduct,
+        NewUpdatedProduct
     }
 }

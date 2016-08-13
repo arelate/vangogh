@@ -17,7 +17,7 @@ using Controllers.RequestPage;
 using Interfaces.TaskActivity;
 
 using GOG.TaskActivities.Authorization;
-using GOG.TaskActivities.ProductsUpdate;
+using GOG.TaskActivities.Updates;
 
 namespace GoodOfflineGames
 {
@@ -59,20 +59,20 @@ namespace GoodOfflineGames
                 consoleController);
 
             taskReportingController.AddTask("Load settings");
-            var settings = settingsController.Load().Result;
+            //var settings = settingsController.Load().Result;
             taskReportingController.CompleteTask();
 
             // Create and add all task activity controllersa
             // Task activities are encapsulated set of activity - so no data can be passed around!
             // Individual task activity would need to load data it needs from the disk / network
 
-            var authorizationController = new AuthorizationController(
-                uriController,
-                networkController,
-                extractionController,
-                consoleController,
-                settings.Authenticate,
-                taskReportingController);
+            //var authorizationController = new AuthorizationController(
+            //    uriController,
+            //    networkController,
+            //    extractionController,
+            //    consoleController,
+            //    settings.Authenticate,
+            //    taskReportingController);
 
             var productsUpdateController = new ProductsUpdateController(
                 requestPageController,
@@ -86,13 +86,18 @@ namespace GoodOfflineGames
                 productStorageController,
                 taskReportingController);
 
+            var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
+                productStorageController,
+                taskReportingController);
+
             // Iterate and process all tasks
 
             var taskActivityControllers = new List<ITaskActivityController>();
 
-            taskActivityControllers.Add(authorizationController);
-            taskActivityControllers.Add(productsUpdateController);
-            taskActivityControllers.Add(accountProductsUpdateController);
+            //taskActivityControllers.Add(authorizationController);
+            //taskActivityControllers.Add(productsUpdateController);
+            //taskActivityControllers.Add(accountProductsUpdateController);
+            taskActivityControllers.Add(newUpdatedAccountProductsController);
 
             foreach (var taskActivityController in taskActivityControllers)
                 try
