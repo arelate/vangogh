@@ -45,6 +45,7 @@ namespace GoodOfflineGames
             var serializationController = new JSONStringController();
 
             var extractionController = new ExtractionController();
+            var gogDataExtractionController = new GOGDataExtractionController();
 
             var productStorageController = new ProductStorageController(
                 storageController,
@@ -59,20 +60,20 @@ namespace GoodOfflineGames
                 consoleController);
 
             taskReportingController.AddTask("Load settings");
-            //var settings = settingsController.Load().Result;
+            var settings = settingsController.Load().Result;
             taskReportingController.CompleteTask();
 
             // Create and add all task activity controllersa
             // Task activities are encapsulated set of activity - so no data can be passed around!
             // Individual task activity would need to load data it needs from the disk / network
 
-            //var authorizationController = new AuthorizationController(
-            //    uriController,
-            //    networkController,
-            //    extractionController,
-            //    consoleController,
-            //    settings.Authenticate,
-            //    taskReportingController);
+            var authorizationController = new AuthorizationController(
+                uriController,
+                networkController,
+                extractionController,
+                consoleController,
+                settings.Authenticate,
+                taskReportingController);
 
             var productsUpdateController = new ProductsUpdateController(
                 requestPageController,
@@ -90,14 +91,22 @@ namespace GoodOfflineGames
                 productStorageController,
                 taskReportingController);
 
+            var wishlistedUpdateController = new WishlistedUpdateController(
+                networkController,
+                gogDataExtractionController,
+                serializationController,
+                productStorageController,
+                taskReportingController);
+
             // Iterate and process all tasks
 
             var taskActivityControllers = new List<ITaskActivityController>();
 
-            //taskActivityControllers.Add(authorizationController);
+            taskActivityControllers.Add(authorizationController);
             //taskActivityControllers.Add(productsUpdateController);
             //taskActivityControllers.Add(accountProductsUpdateController);
             //taskActivityControllers.Add(newUpdatedAccountProductsController);
+            taskActivityControllers.Add(wishlistedUpdateController);
 
             foreach (var taskActivityController in taskActivityControllers)
                 try

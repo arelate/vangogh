@@ -4,6 +4,7 @@
     {
         Product,
         AccountProduct,
-        NewUpdatedProduct
+        NewUpdatedProduct,
+        WishlistedProduct
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="Updates\NewUpdatedAccountProductsController.cs" />
     <Compile Include="Updates\ProductsUpdateController.cs" />
     <Compile Include="Abstract\TaskActivityController.cs" />
+    <Compile Include="Updates\WishlistedUpdateController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj">
