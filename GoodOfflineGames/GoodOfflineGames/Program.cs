@@ -14,7 +14,10 @@ using Controllers.Reporting;
 using Controllers.Settings;
 using Controllers.RequestPage;
 
-using GOG.Controllers.TaskActivity;
+using Interfaces.TaskActivity;
+
+using GOG.TaskActivities.Authorization;
+using GOG.TaskActivities.ProductsUpdate;
 
 namespace GoodOfflineGames
 {
@@ -39,15 +42,19 @@ namespace GoodOfflineGames
 
             var languageController = new LanguageController();
 
-            var jsonController = new JSONStringController();
+            var serializationController = new JSONStringController();
 
             var extractionController = new ExtractionController();
+
+            var productStorageController = new ProductStorageController(
+                storageController,
+                serializationController);
 
             // Load settings that (might) have authorization information, and request to run or not specific task activities
 
             var settingsController = new SettingsController(
                 storageController,
-                jsonController,
+                serializationController,
                 languageController,
                 consoleController);
 
@@ -55,11 +62,11 @@ namespace GoodOfflineGames
             var settings = settingsController.Load().Result;
             taskReportingController.CompleteTask();
 
-            // Create and add all task activity controllers
+            // Create and add all task activity controllersa
             // Task activities are encapsulated set of activity - so no data can be passed around!
             // Individual task activity would need to load data it needs from the disk / network
 
-            var authorizationTaskActivityController = new AuthorizationTaskActivityController(
+            var authorizationController = new AuthorizationController(
                 uriController,
                 networkController,
                 extractionController,
@@ -67,32 +74,25 @@ namespace GoodOfflineGames
                 settings.Authenticate,
                 taskReportingController);
 
-            var productsUpdateTaskActivityController = new ProductsUpdateTaskActivityController(
+            var productsUpdateController = new ProductsUpdateController(
                 requestPageController,
-                jsonController,
-                storageController,
+                serializationController,
+                productStorageController,
                 taskReportingController);
 
-            var accountProductsUpdateTaskActivityController = new AccountProductsUpdateTaskActivityController(
+            var accountProductsUpdateController = new AccountProductsUpdateController(
                 requestPageController,
-                jsonController,
-                storageController,
-                taskReportingController);
-
-            var updatedProductsUpdateTaskActivityController = new UpdatedProductsUpdateTaskActivityController(
-                requestPageController,
-                jsonController,
-                storageController,
+                serializationController,
+                productStorageController,
                 taskReportingController);
 
             // Iterate and process all tasks
 
-            var taskActivityControllers = new List<TaskActivityController>();
+            var taskActivityControllers = new List<ITaskActivityController>();
 
-            taskActivityControllers.Add(authorizationTaskActivityController);
-            taskActivityControllers.Add(productsUpdateTaskActivityController);
-            taskActivityControllers.Add(accountProductsUpdateTaskActivityController);
-            taskActivityControllers.Add(updatedProductsUpdateTaskActivityController);
+            taskActivityControllers.Add(authorizationController);
+            taskActivityControllers.Add(productsUpdateController);
+            taskActivityControllers.Add(accountProductsUpdateController);
 
             foreach (var taskActivityController in taskActivityControllers)
                 try
@@ -102,10 +102,10 @@ namespace GoodOfflineGames
                 catch (AggregateException ex)
                 {
                     List<string> errorMessages = new List<string>();
+
                     foreach (var innerException in ex.InnerExceptions)
-                    {
                         errorMessages.Add(innerException.Message);
-                    }
+
                     taskReportingController.ReportFailure(string.Join(", ", errorMessages));
                     break;
                 }

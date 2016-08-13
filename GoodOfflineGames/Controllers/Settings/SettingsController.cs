@@ -15,7 +15,7 @@ namespace Controllers.Settings
     public class SettingsController : ISettingsController<Models.Settings.Settings>
     {
         //private IOpenReadableDelegate openReadableDelegate;
-        private IStorageController<string> storageController;
+        private IStringStorageController storageController;
         private ISerializationController<string> serializationController;
         private IConsoleController consoleController;
         private ILanguageController languageController;
@@ -25,7 +25,7 @@ namespace Controllers.Settings
 
         public SettingsController(
             //IOpenReadableDelegate openReadableDelegate,
-            IStorageController<string> storageController,
+            IStringStorageController storageController,
             ISerializationController<string> serializationController,
             ILanguageController languageController,
             IConsoleController consoleController)

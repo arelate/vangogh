@@ -42,8 +42,8 @@ namespace GoodOfflineGames
         //    data.Id = long.Parse(item);
         //}
 
-        static void Main(string[] args)
-        {
+        //static void Main(string[] args)
+        //{
             //var dataCheckThresholdDays = 30;
 
             //#region IO variables
@@ -642,6 +642,6 @@ namespace GoodOfflineGames
 
             //consoleController.WriteLine("All done. Press ENTER to quit...", MessageType.Default);
             //consoleController.ReadLine();
-        }
+        //}
     }
 }

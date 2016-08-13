@@ -1,4 +1,6 @@
-﻿namespace Models.Uris
+﻿using Interfaces.ProductTypes;
+
+namespace Models.Uris
 {
     public static class Uris
     {
@@ -50,6 +52,19 @@
             public static class ProductData
             {
                 public const string ProductTemplate = Protocols.Http + Roots.Website + "{0}";
+            }
+
+            public static string GetUpdateUri(ProductTypes productType)
+            {
+                switch (productType)
+                {
+                    case ProductTypes.Product:
+                        return Games.AjaxFiltered;
+                    case ProductTypes.AccountProduct:
+                        return Account.GetFilteredProducts;
+                    default:
+                        throw new System.NotImplementedException();
+                }
             }
         }
     }

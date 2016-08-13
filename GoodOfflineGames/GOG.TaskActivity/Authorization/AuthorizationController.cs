@@ -8,11 +8,11 @@ using Interfaces.Console;
 
 using GOG.Interfaces.Authorization;
 
-using GOG.Controllers.Authorization;
+using GOG.TaskActivities.Abstract;
 
-namespace GOG.Controllers.TaskActivity
+namespace GOG.TaskActivities.Authorization
 {
-    public class AuthorizationTaskActivityController : TaskActivityController
+    public class AuthorizationController : TaskActivityController
     {
 
         private IUriController uriController;
@@ -22,7 +22,7 @@ namespace GOG.Controllers.TaskActivity
         private IAuthenticateProperties authenticateProperties;
         private IAuthorizationController authorizationController;
 
-        public AuthorizationTaskActivityController(
+        public AuthorizationController(
             IUriController uriController,
             INetworkController networkController,
             IExtractionController extractionController,
@@ -42,7 +42,7 @@ namespace GOG.Controllers.TaskActivity
         {
             taskReportingController.AddTask("Authorization on GOG.com");
 
-            authorizationController = new AuthorizationController(
+            authorizationController = new Controllers.Authorization.AuthorizationController(
                 uriController,
                 networkController,
                 extractionController,

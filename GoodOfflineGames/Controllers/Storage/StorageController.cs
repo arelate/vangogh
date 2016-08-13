@@ -7,7 +7,7 @@ using Interfaces.Storage;
 
 namespace Controllers.Storage
 {
-    public class StorageController: IStorageController<string>
+    public class StorageController: IStringStorageController
     {
         private IStreamController streamController;
         private IFileController fileController;
@@ -26,13 +26,12 @@ namespace Controllers.Storage
         {
             using (var stream = streamController.OpenWritable(uri))
                 using (StreamWriter writer = new StreamWriter(stream))
-                    await writer.WriteLineAsync(data);
+                    await writer.WriteLineAsync(data.ToString());
         }
 
-        public async Task<string> Pull(
-            string uri)
+        public async Task<string> Pull(string uri)
         {
-            string data = string.Empty;
+            var data = string.Empty;
 
             if (!fileController.Exists(uri)) return data;
 

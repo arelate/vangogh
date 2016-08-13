@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using Interfaces.ProductTypes;
+
 namespace Models.QueryParameters
 {
     public static class SortBy
@@ -18,16 +20,6 @@ namespace Models.QueryParameters
             { "hasHiddenProducts", "false" },
             { "hiddenFlag", "0" },
             { "isUpdated", "0" },
-            { "mediaType", "1" },
-            { "page", "1" },
-            { "sortBy", SortBy.DatePurchased }
-        };
-
-        public static Dictionary<string, string> AccountGetUpdatedFilteredProducts = new Dictionary<string, string>()
-        {
-            { "hasHiddenProducts", "false" },
-            { "hiddenFlag", "0" },
-            { "isUpdated", "1" }, // only change from above
             { "mediaType", "1" },
             { "page", "1" },
             { "sortBy", SortBy.DatePurchased }
@@ -65,5 +57,18 @@ namespace Models.QueryParameters
             { "second_step_authentication[send]", "" },
             { "second_step_authentication[_token]", "" }
         };
+
+        public static Dictionary<string, string> GetQueryParameters(ProductTypes productType)
+        {
+            switch (productType)
+            {
+                case ProductTypes.Product:
+                    return GamesAjaxFiltered;
+                case ProductTypes.AccountProduct:
+                    return AccountGetFilteredProducts;
+                default:
+                    throw new System.NotImplementedException();
+            }
+        }
     }
 }

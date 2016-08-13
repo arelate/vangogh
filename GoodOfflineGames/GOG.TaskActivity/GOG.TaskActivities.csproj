@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{129AD02F-45FB-44CA-BE10-D256900066DA}</ProjectGuid>
+    <ProjectGuid>{9052EDDA-E63B-4EB0-9560-3738CE0F7D8E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GOG.Controllers</RootNamespace>
-    <AssemblyName>GOG.Controllers</AssemblyName>
+    <RootNamespace>GOG.TaskActivities</RootNamespace>
+    <AssemblyName>GOG.TaskActivities</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,28 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Legacy\Abstract\ProductCoreController.cs" />
-    <Compile Include="Authorization\AuthorizationController.cs" />
-    <Compile Include="Legacy\FileValidationController.cs" />
-    <Compile Include="Legacy\GameDetailsController.cs" />
-    <Compile Include="Legacy\GameDetailsDownloadsController.cs" />
-    <Compile Include="Legacy\GogDataController.cs" />
-    <Compile Include="Legacy\ImagesController.cs" />
-    <Compile Include="Legacy\OwnedController.cs" />
-    <Compile Include="Legacy\ProductDataController.cs" />
-    <Compile Include="Legacy\ProductFilesController.cs" />
-    <Compile Include="Legacy\ProductFilesDownloadController.cs" />
-    <Compile Include="Legacy\ProductsController.cs" />
-    <Compile Include="PageResults\AccountProductsPageResultController.cs" />
-    <Compile Include="PageResults\PageResultController.cs" />
-    <Compile Include="PageResults\ProductsPageResultController.cs" />
-    <Compile Include="PageResults\AccountProductsPageResultsExtractingController.cs" />
-    <Compile Include="PageResults\ProductsPageResultsExtractingController.cs" />
+    <Compile Include="Abstract\UpdateController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Legacy\ScreenshotsController.cs" />
-    <Compile Include="Legacy\UpdatedController.cs" />
+    <Compile Include="ProductsUpdate\AccountProductsUpdateController.cs" />
+    <Compile Include="Authorization\AuthorizationController.cs" />
+    <Compile Include="ProductsUpdate\ProductsUpdateController.cs" />
+    <Compile Include="Abstract\TaskActivityController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj">
+      <Project>{129ad02f-45fb-44ca-be10-d256900066da}</Project>
+      <Name>GOG.Controllers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">
       <Project>{60ba32af-cf00-4a69-816a-f90aba3d3f33}</Project>
       <Name>GOG.Interfaces</Name>
@@ -79,7 +69,6 @@
       <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
