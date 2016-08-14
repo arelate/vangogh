@@ -1,4 +1,6 @@
-﻿using Interfaces.Reporting;
+﻿using System.Collections.Generic;
+
+using Interfaces.Reporting;
 using Interfaces.RequestPage;
 using Interfaces.Serialization;
 using Interfaces.ProductTypes;
@@ -13,11 +15,11 @@ using GOG.Controllers.PageResults;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.Updates
+namespace GOG.TaskActivities.UpdatePageResult
 {
-    public class AccountProductsUpdateController : UpdateController<AccountProductsPageResult, AccountProduct>
+    public class ProductsUpdateController : PageResultUpdateController<ProductsPageResult, Product>
     {
-        public AccountProductsUpdateController(
+        public ProductsUpdateController(
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
             IProductTypeStorageController productStorageController,
@@ -27,14 +29,14 @@ namespace GOG.TaskActivities.Updates
                 productStorageController,
                 taskReportingController)
         {
-            productType = ProductTypes.AccountProduct;
-            pageResultsController = new AccountProductsPageResultController(
+            productType = ProductTypes.Product;
+            pageResultsController = new ProductsPageResultController(
                 requestPageController,
                 serializationController,
                 Uris.Paths.GetUpdateUri(productType),
                 QueryParameters.GetQueryParameters(productType),
                 taskReportingController);
-            pageResultsExtractingController = new AccountProductsPageResultsExtractingController();
+            pageResultsExtractingController = new ProductsPageResultsExtractingController();
         }
     }
 }

@@ -45,6 +45,7 @@
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
+    <Compile Include="Politeness\PolitenessController.cs" />
     <Compile Include="Reporting\TaskReportingController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Formatting\BytesFormattingController.cs" />
@@ -73,6 +74,7 @@
       <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,7 +8,7 @@ using Interfaces.ProductTypes;
 using GOG.TaskActivities.Abstract;
 using GOG.Models;
 
-namespace GOG.TaskActivities.Updates
+namespace GOG.TaskActivities.UpdateNewUpdatedAccountProduct
 {
     public class NewUpdatedAccountProductsController: TaskActivityController
     {

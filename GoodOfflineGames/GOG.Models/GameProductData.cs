@@ -105,8 +105,8 @@ namespace GOG.Models
         public bool IsGame { get; set; }
         [DataMember(Name = "slug")]
         public string Slug { get; set; }
-        [DataMember(Name = "reviews")]
-        public ReviewsPages Reviews { get; set; }
+        //[DataMember(Name = "reviews")]
+        //public ReviewsPages Reviews { get; set; }
         // media
     }
 }

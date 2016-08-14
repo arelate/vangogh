@@ -14,7 +14,7 @@ using GOG.Interfaces.PageResults;
 
 namespace GOG.TaskActivities.Abstract
 {
-    public abstract class UpdateController<PageType, Type> : TaskActivityController 
+    public abstract class PageResultUpdateController<PageType, Type> : TaskActivityController 
         where PageType: PageResult 
         where Type : ProductCore
     {
@@ -29,7 +29,7 @@ namespace GOG.TaskActivities.Abstract
         private string filenameTemplate = "{0}s.js";
         internal string filename;
 
-        public UpdateController(
+        public PageResultUpdateController(
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
             IProductTypeStorageController productStorageController,

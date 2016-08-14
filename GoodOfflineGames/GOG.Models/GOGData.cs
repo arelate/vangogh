@@ -12,10 +12,10 @@ namespace GOG.Models
         public Mix[] Mixes { get; set; }
         [DataMember(Name = "mixesPerPage")]
         public int MixesPerPage { get; set; }
-        [DataMember(Name = "proReviews")]
-        public string[] ProReviews { get; set; }
-        [DataMember(Name = "reviews")]
-        public ReviewsPages Reviews { get; set; }
+        //[DataMember(Name = "proReviews")]
+        //public string[] ProReviews { get; set; }
+        //[DataMember(Name = "reviews")]
+        //public ReviewsPages Reviews { get; set; }
         [DataMember(Name = "series_ids")]
         public int[] SeriesIds { get; set; }
         [DataMember(Name = "gameProductData")]

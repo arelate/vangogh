@@ -46,7 +46,6 @@
     <Compile Include="Legacy\GameDetailsController.cs" />
     <Compile Include="Legacy\GameDetailsDownloadsController.cs" />
     <Compile Include="Legacy\ImagesController.cs" />
-    <Compile Include="Legacy\ProductDataController.cs" />
     <Compile Include="Legacy\ProductFilesController.cs" />
     <Compile Include="Legacy\ProductFilesDownloadController.cs" />
     <Compile Include="PageResults\AccountProductsPageResultController.cs" />

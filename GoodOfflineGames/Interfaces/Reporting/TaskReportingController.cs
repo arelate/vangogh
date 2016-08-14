@@ -20,11 +20,17 @@
         void ReportFailure(string errorMessage);
     }
 
+    public interface IReportWarningDelegate
+    {
+        void ReportWarning(string warningMessage);
+    }
+
     public interface ITaskReportingController:
-        ICompleTaskDelegate,
-        IReportFailureDelegate,
         IAddTaskDelegate,
-        IReportProgressDelegate
+        ICompleTaskDelegate,
+        IReportProgressDelegate,
+        IReportFailureDelegate,
+        IReportWarningDelegate
     {
         // ...
     }

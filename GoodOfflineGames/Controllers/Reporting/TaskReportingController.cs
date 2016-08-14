@@ -11,9 +11,10 @@ namespace Controllers.Reporting
         private IConsoleController consoleController;
 
         private const string startReportTemplate = "Starting task [{0}]...";
-        private const string completionReportTemplate = "Task [{0}] was completed successfully.";
+        private const string completionReportTemplate = "Task [{0}] was completed successfully";
         private const string failureReportTemplate = "Task [{0}] failed with the following message: {1}";
-        private const string progressReportTemplate = "\r{0} out of {1} completed.          ";
+        private const string warningReportTemplate = "Warning: {0}";
+        private const string progressReportTemplate = "\r{0} out of {1} completed";
 
         public TaskReportingController(IConsoleController consoleController)
         {
@@ -41,6 +42,11 @@ namespace Controllers.Reporting
         {
             if (value == maxValue) consoleController.WriteLine(progressReportTemplate, MessageType.Progress, value, maxValue);
             else consoleController.Write(progressReportTemplate, MessageType.Progress, value, maxValue);
+        }
+
+        public void ReportWarning(string warningMessage)
+        {
+            consoleController.WriteLine(warningReportTemplate, MessageType.Warning, warningMessage);
         }
     }
 }

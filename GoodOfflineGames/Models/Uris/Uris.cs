@@ -49,7 +49,7 @@ namespace Models.Uris
                 public const string AjaxFiltered = Protocols.Https + Roots.Website + "/games/ajax/filtered";
             }
 
-            public static class ProductData
+            public static class GameProductData
             {
                 public const string ProductTemplate = Protocols.Http + Roots.Website + "{0}";
             }
@@ -62,6 +62,12 @@ namespace Models.Uris
                         return Games.AjaxFiltered;
                     case ProductTypes.AccountProduct:
                         return Account.GetFilteredProducts;
+                    case ProductTypes.GameProductData:
+                        return GameProductData.ProductTemplate;
+                    case ProductTypes.ApiProduct:
+                        return Api.ProductTemplate;
+                    case ProductTypes.GameDetails:
+                        return Account.GameDetailsTemplate;
                     default:
                         throw new System.NotImplementedException();
                 }

@@ -3,66 +3,25 @@ using System.Collections.Generic;
 
 namespace Interfaces.Collection
 {
-    //public interface ICollectionContainer<T>
-    //{
-    //    IList<T> Collection { get; }
-    //}
-
-    public interface IAddDelegate<T>
+    public interface IMapDelegate
     {
-        void Add(T item);
+        void Map<T>(IEnumerable<T> collection, Predicate<T> map);
     }
 
-    //public interface IUpdateOrAddDelegate<T>
-    //{
-    //    void UpdateOrAdd(T item);
-    //}
-
-    public interface IInsertDelegate<T>
+    public interface IReduceDelegate
     {
-        void Insert(int index, T item);
+        IEnumerable<T> Reduce<T>(IEnumerable<T> collection, Predicate<T> reduce);
     }
 
-    public interface IRemoveDelegate<T>
+    public interface IFindDelegate
     {
-        bool Remove(T item);
+        T Find<T>(IEnumerable<T> collection, Predicate<T> find);
     }
 
-    public interface IContainsDelegate<T>
-    {
-        bool Contains(T item);
-    }
-
-    public interface IMapDelegate<T>
-    {
-        void Map(Predicate<T> action);
-    }
-
-    public interface IReduceDelegate<T>
-    {
-        IEnumerable<T> Reduce(Predicate<T> condition);
-    }
-
-    public interface IFindDelegate<T>
-    {
-        T Find(Predicate<T> input);
-    }
-
-    //public interface IFindCollectionDelegate<Input, Result>
-    //{
-    //    IEnumerable<Result> Find(IEnumerable<Input> input);
-    //}
-
-    public interface ICollectionController<T>:
-        //ICollectionContainer<T>,
-        IContainsDelegate<T>,
-        IAddDelegate<T>,
-        //IUpdateOrAddDelegate<T>,
-        IInsertDelegate<T>,
-        IRemoveDelegate<T>,
-        IMapDelegate<T>,
-        IReduceDelegate<T>,
-        IFindDelegate<T>
+    public interface ICollectionController:
+        IMapDelegate,
+        IReduceDelegate,
+        IFindDelegate
     {
         // ...
     }

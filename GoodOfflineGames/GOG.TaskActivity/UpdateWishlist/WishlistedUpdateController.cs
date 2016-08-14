@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Reporting;
@@ -12,11 +10,10 @@ using Interfaces.Storage;
 using Interfaces.ProductTypes;
 
 using Models.Uris;
-using Models.QueryParameters;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.Updates
+namespace GOG.TaskActivities.UpdateWishlist
 {
     public class WishlistedUpdateController: TaskActivityController
     {
@@ -61,7 +58,7 @@ namespace GOG.TaskActivities.Updates
 
             taskReportingController.AddTask("Deserialize wishlist data");
 
-            var wishlistedGogData = wishlistedGogDataCollection.ElementAt(0);
+            var wishlistedGogData = wishlistedGogDataCollection.First();
             var wishlistedProductPageResult = serializationController.Deserialize<Models.ProductsPageResult>(wishlistedGogData);
 
             if (wishlistedProductPageResult == null)
@@ -87,7 +84,7 @@ namespace GOG.TaskActivities.Updates
                 wishlisted.Add(product.Id);
             }
 
-            await productStorageController.Push(ProductTypes.WishlistedProduct, wishlisted);
+            await productStorageController.Push(ProductTypes.Wishlisted, wishlisted);
 
             taskReportingController.CompleteTask();
         }

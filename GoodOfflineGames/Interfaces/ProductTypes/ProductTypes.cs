@@ -5,6 +5,9 @@
         Product,
         AccountProduct,
         NewUpdatedProduct,
-        WishlistedProduct
+        Wishlisted,
+        GameProductData,
+        ApiProduct,
+        GameDetails
     }
 }

@@ -9,15 +9,20 @@ using Controllers.Network;
 using Controllers.Language;
 using Controllers.Serialization;
 using Controllers.Extraction;
+using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Reporting;
 using Controllers.Settings;
 using Controllers.RequestPage;
+using Controllers.Politeness;
 
 using Interfaces.TaskActivity;
 
 using GOG.TaskActivities.Authorization;
-using GOG.TaskActivities.Updates;
+using GOG.TaskActivities.UpdatePageResult;
+using GOG.TaskActivities.UpdateNewUpdatedAccountProduct;
+using GOG.TaskActivities.UpdateWishlist;
+using GOG.TaskActivities.UpdateProduct;
 
 namespace GoodOfflineGames
 {
@@ -46,6 +51,10 @@ namespace GoodOfflineGames
 
             var extractionController = new ExtractionController();
             var gogDataExtractionController = new GOGDataExtractionController();
+
+            var collectionController = new CollectionController();
+
+            var politenessController = new PolitenessController();
 
             var productStorageController = new ProductStorageController(
                 storageController,
@@ -98,15 +107,44 @@ namespace GoodOfflineGames
                 productStorageController,
                 taskReportingController);
 
+            var gameProductDataUpdateController = new GameProductDataUpdateController(
+                gogDataExtractionController,
+                productStorageController,
+                collectionController,
+                networkController,
+                serializationController,
+                null,
+                taskReportingController);
+
+            var apiProductUpdateController = new ApiProductUpdateController(
+                productStorageController,
+                collectionController,
+                networkController,
+                serializationController,
+                null,
+                taskReportingController);
+
+            var gameDetailsUpdateController = new GameDetailsUpdateController(
+                productStorageController,
+                collectionController,
+                networkController,
+                serializationController,
+                politenessController,
+                taskReportingController);
+
             // Iterate and process all tasks
 
-            var taskActivityControllers = new List<ITaskActivityController>();
-
-            taskActivityControllers.Add(authorizationController);
-            //taskActivityControllers.Add(productsUpdateController);
-            //taskActivityControllers.Add(accountProductsUpdateController);
-            //taskActivityControllers.Add(newUpdatedAccountProductsController);
-            taskActivityControllers.Add(wishlistedUpdateController);
+            var taskActivityControllers = new List<ITaskActivityController>()
+            {
+                authorizationController,
+                //productsUpdateController,
+                //accountProductsUpdateController,
+                //newUpdatedAccountProductsController,
+                //wishlistedUpdateController,
+                //gameProductDataUpdateController,
+                //apiProductUpdateController,
+                gameDetailsUpdateController
+            };
 
             foreach (var taskActivityController in taskActivityControllers)
                 try
