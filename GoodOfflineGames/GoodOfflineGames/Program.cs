@@ -49,7 +49,7 @@ namespace GoodOfflineGames
 
             var serializationController = new JSONStringController();
 
-            var extractionController = new ExtractionController();
+            var extractionController = new TokenExtractionController();
             var gogDataExtractionController = new GOGDataExtractionController();
 
             var collectionController = new CollectionController();

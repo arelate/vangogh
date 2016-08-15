@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Legacy\Abstract\ProductCoreController.cs" />
     <Compile Include="Authorization\AuthorizationController.cs" />
     <Compile Include="Legacy\FileValidationController.cs" />
     <Compile Include="Legacy\GameDetailsController.cs" />

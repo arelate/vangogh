@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
+    <Compile Include="Extraction\ScreenshotExtractionController.cs" />
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
     <Compile Include="Politeness\PolitenessController.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="Formatting\SecondsFormattingController.cs" />
     <Compile Include="Settings\SettingsController.cs" />
     <Compile Include="Storage\StorageController.cs" />
-    <Compile Include="Extraction\ExtractionController.cs" />
+    <Compile Include="Extraction\TokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
   </ItemGroup>
   <ItemGroup>
