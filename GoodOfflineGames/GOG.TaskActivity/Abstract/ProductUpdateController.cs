@@ -15,16 +15,19 @@ using GOG.Models;
 
 namespace GOG.TaskActivities.Abstract
 {
-    public abstract class ProductUpdateController<Type> : TaskActivityController where Type : ProductCore
+    public abstract class ProductUpdateController<UpdateType, ListType> : TaskActivityController
+        where ListType : ProductCore
+        where UpdateType : ProductCore 
     {
-        private IProductTypeStorageController productStorageController;
+        internal IProductTypeStorageController productStorageController;
         private ICollectionController collectionController;
         private INetworkController networkController;
         private IPolitenessController politenessController;
         internal ISerializationController<string> serializationController;
 
-        internal ProductTypes productType;
-        internal string name;
+        internal ProductTypes updateProductType;
+        internal ProductTypes listProductType;
+        internal string displayProductName;
 
         public ProductUpdateController(
             IProductTypeStorageController productStorageController,
@@ -44,62 +47,43 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTask()
         {
-            taskReportingController.AddTask("Load existing products and " + name);
-            var products = await productStorageController.Pull<Product>(ProductTypes.Product);
-            var existingData = await productStorageController.Pull<Type>(productType);
-            if (existingData == null) existingData = new List<Type>();
-            var dataCollection = new List<Type>(existingData);
+            taskReportingController.AddTask("Load existing products and " + displayProductName);
+
+            var products = await productStorageController.Pull<ListType>(listProductType);
+            var existingData = await productStorageController.Pull<UpdateType>(updateProductType);
+            if (existingData == null) existingData = new List<UpdateType>();
+            var updateCollection = new List<UpdateType>(existingData);
+
             taskReportingController.CompleteTask();
 
-            taskReportingController.AddTask("Get products without " + name);
-            var updateProducts = new List<Product>();
-            foreach (var product in products)
-            {
-                if (product == null) continue;
-                var foundGameProductData = collectionController.Find(dataCollection, p => p.Id == product.Id);
-                if (foundGameProductData == null) updateProducts.Add(product);
-            }
-            taskReportingController.CompleteTask();
+            var updateProducts = await GetUpdates(products, updateCollection);
 
-            taskReportingController.AddTask("Update required " + name);
+            taskReportingController.AddTask("Update required " + displayProductName);
 
             var currentProduct = 0;
             var storagePushNthProduct = 100; // push after updating every nth product
 
-            foreach (var product in updateProducts)
+            foreach (var id in updateProducts)
             {
+                var product = collectionController.Find(products, p => p.Id == id);
+
                 taskReportingController.AddTask(
                     string.Format(
                         "Update {0} {1}/{2}: {3}",
-                        name,
+                        displayProductName,
                         ++currentProduct,
                         updateProducts.Count,
                         product.Title));
 
-                var uri = string.Format(Uris.Paths.GetUpdateUri(productType), GetProductUri(product));
-                var rawResponse = await networkController.Get(uri);
+                var content = await GetContent(product);
+                if (content == null) continue;
 
-                var dataContent = ProcessRawData(rawResponse);
+                var data = Deserialize(content, product);
 
-                if (dataContent == null)
-                {
-                    taskReportingController.ReportWarning(
-                        string.Format(
-                            "Product {0} doesn't have valid " + name,
-                            product.Title));
-                    continue;
-                }
-
-                var data = Deserialize(dataContent);
-
-                dataCollection.Add(data);
+                if (data != null) updateCollection.Add(data);
 
                 if (currentProduct % storagePushNthProduct == 0)
-                {
-                    taskReportingController.AddTask("Save " + name + " to disk");
-                    await productStorageController.Push(productType, dataCollection);
-                    taskReportingController.CompleteTask();
-                }
+                    await PushChanges(updateCollection);
 
                 if (politenessController != null)
                 {
@@ -111,14 +95,72 @@ namespace GOG.TaskActivities.Abstract
                 taskReportingController.CompleteTask();
             }
 
-            taskReportingController.AddTask("Save " + name + " to disk");
-            await productStorageController.Push(productType, dataCollection);
-            taskReportingController.CompleteTask();
+            await PushChanges(updateCollection);
 
             taskReportingController.CompleteTask();
         }
 
-        internal virtual string GetProductUri(Product product)
+        internal virtual async Task<List<long>> GetUpdates(IEnumerable<ListType> products, IEnumerable<UpdateType> updateCollection)
+        {
+            taskReportingController.AddTask("Get a list of updates for " + displayProductName);
+
+            var updateProducts = new List<long>();
+
+            foreach (var id in await GetRequiredUpdates())
+            {
+                var product = collectionController.Find(products, p => p.Id == id);
+                if (product != null) updateProducts.Add(product.Id);
+            }
+
+            foreach (var product in products)
+            {
+                if (product == null) continue;
+                if (ShouldSkipProduct(product)) continue;
+                var foundGameProductData = collectionController.Find(updateCollection, p => p != null && p.Id == product.Id);
+                if (foundGameProductData == null &&
+                    !updateProducts.Contains(product.Id))
+                    updateProducts.Add(product.Id);
+            }
+
+            taskReportingController.CompleteTask();
+
+            return updateProducts;
+        }
+
+        internal virtual async Task<string> GetContent(ListType product)
+        {
+            var uri = string.Format(Uris.Paths.GetUpdateUri(updateProductType), GetProductUri(product));
+            var rawResponse = await networkController.Get(uri);
+
+            var content = ProcessRawData(rawResponse);
+
+            if (content == null)
+                taskReportingController.ReportWarning(
+                    string.Format(
+                        "Product {0} doesn't have valid " + displayProductName,
+                        product.Title));
+
+            return content;
+        }
+
+        internal virtual async Task PushChanges(IList<UpdateType> updateCollection)
+        {
+            taskReportingController.AddTask("Save " + displayProductName + " to disk");
+            await productStorageController.Push(updateProductType, updateCollection);
+            taskReportingController.CompleteTask();
+        }
+
+        internal virtual async Task<long[]> GetRequiredUpdates()
+        {
+            return new long[0];
+        }
+
+        internal virtual bool ShouldSkipProduct(ListType product)
+        {
+            return false;
+        }
+
+        internal virtual string GetProductUri(ListType product)
         {
             return product.Id.ToString(); // most product updates go by id
         }
@@ -128,9 +170,9 @@ namespace GOG.TaskActivities.Abstract
             return rawData; // passthrough by default
         }
 
-        internal virtual Type Deserialize(string content)
+        internal virtual UpdateType Deserialize(string content, ListType product)
         {
-            return serializationController.Deserialize<Type>(content);
+            return serializationController.Deserialize<UpdateType>(content);
         }
     }
 }

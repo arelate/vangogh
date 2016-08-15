@@ -15,7 +15,7 @@ using GOG.TaskActivities.Abstract;
 
 namespace GOG.TaskActivities.UpdateProduct
 {
-    public class GameProductDataUpdateController: ProductUpdateController<GameProductData>
+    public class GameProductDataUpdateController: ProductUpdateController<GameProductData, Product>
     {
         private IExtractionController gogDataExtractionController;
 
@@ -36,8 +36,10 @@ namespace GOG.TaskActivities.UpdateProduct
         {
             this.gogDataExtractionController = gogDataExtractionController;
 
-            productType = ProductTypes.GameProductData;
-            name = "game product data";
+            updateProductType = ProductTypes.GameProductData;
+            listProductType = ProductTypes.Product;
+
+            displayProductName = "game product data";
         }
 
         internal override string GetProductUri(Product product)
@@ -55,12 +57,17 @@ namespace GOG.TaskActivities.UpdateProduct
             return gogDataCollection.First();
         }
 
-        internal override GameProductData Deserialize(string content)
+        internal override GameProductData Deserialize(string content, Product product)
         {
             var gogData = serializationController.Deserialize<GOGData>(content);
             if (gogData == null) return null;
 
             return gogData.GameProductData;
+        }
+
+        internal override bool ShouldSkipProduct(Product product)
+        {
+            return product.IsComingSoon;
         }
     }
 }

@@ -12,7 +12,7 @@ using GOG.TaskActivities.Abstract;
 
 namespace GOG.TaskActivities.UpdateProduct
 {
-    public class ApiProductUpdateController : ProductUpdateController<ApiProduct>
+    public class ApiProductUpdateController : ProductUpdateController<ApiProduct, Product>
     {
         public ApiProductUpdateController(
             IProductTypeStorageController productStorageController,
@@ -28,8 +28,10 @@ namespace GOG.TaskActivities.UpdateProduct
                 politenessController,
                 taskReportingController)
         {
-            productType = ProductTypes.ApiProduct;
-            name = "API product";
+            updateProductType = ProductTypes.ApiProduct;
+            listProductType = ProductTypes.Product;
+
+            displayProductName = "API product";
         }
     }
 }

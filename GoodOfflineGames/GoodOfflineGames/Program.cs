@@ -136,14 +136,14 @@ namespace GoodOfflineGames
 
             var taskActivityControllers = new List<ITaskActivityController>()
             {
-                authorizationController,
+                //authorizationController,
                 //productsUpdateController,
                 //accountProductsUpdateController,
                 //newUpdatedAccountProductsController,
                 //wishlistedUpdateController,
-                //gameProductDataUpdateController,
+                gameProductDataUpdateController
                 //apiProductUpdateController,
-                gameDetailsUpdateController
+                //gameDetailsUpdateController
             };
 
             foreach (var taskActivityController in taskActivityControllers)
