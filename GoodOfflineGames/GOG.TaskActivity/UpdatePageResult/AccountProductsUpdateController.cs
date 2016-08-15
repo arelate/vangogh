@@ -10,6 +10,7 @@ using Models.QueryParameters;
 using GOG.Models;
 
 using GOG.Controllers.PageResults;
+using GOG.Controllers.Extraction;
 
 using GOG.TaskActivities.Abstract;
 
@@ -34,7 +35,7 @@ namespace GOG.TaskActivities.UpdatePageResult
                 Uris.Paths.GetUpdateUri(productType),
                 QueryParameters.GetQueryParameters(productType),
                 taskReportingController);
-            pageResultsExtractingController = new AccountProductsPageResultsExtractingController();
+            pageResultsExtractingController = new AccountProductsExtractionController();
         }
     }
 }

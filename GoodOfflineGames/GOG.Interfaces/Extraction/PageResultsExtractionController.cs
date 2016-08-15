@@ -2,14 +2,14 @@
 
 using GOG.Models;
 
-namespace GOG.Interfaces.PageResults
+namespace GOG.Interfaces.Extraction
 {
     public interface IExtractDelegate<Input, Output> where Input : PageResult
     {
         IList<Output> Extract(IList<Input> pageResults);
     }
 
-    public interface IPageResultsExtractingController<Input, Output> :
+    public interface IPageResultsExtractionController<Input, Output> :
         IExtractDelegate<Input, Output> where Input : PageResult
     {
         // ...

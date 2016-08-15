@@ -62,6 +62,7 @@ namespace GOG.TaskActivities.Abstract
 
             var currentProduct = 0;
             var storagePushNthProduct = 100; // push after updating every nth product
+            var somethingChanged = false;
 
             foreach (var id in updateProducts)
             {
@@ -80,7 +81,11 @@ namespace GOG.TaskActivities.Abstract
 
                 var data = Deserialize(content, product);
 
-                if (data != null) updateCollection.Add(data);
+                if (data != null)
+                {
+                    updateCollection.Add(data);
+                    somethingChanged = true;
+                }
 
                 if (currentProduct % storagePushNthProduct == 0)
                     await PushChanges(updateCollection);
@@ -95,7 +100,7 @@ namespace GOG.TaskActivities.Abstract
                 taskReportingController.CompleteTask();
             }
 
-            await PushChanges(updateCollection);
+            if (somethingChanged) await PushChanges(updateCollection);
 
             taskReportingController.CompleteTask();
         }

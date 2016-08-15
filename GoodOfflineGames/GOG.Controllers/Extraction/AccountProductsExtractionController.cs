@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-using GOG.Interfaces.PageResults;
+using GOG.Interfaces.Extraction;
 
 using GOG.Models;
 
-namespace GOG.Controllers.PageResults
+namespace GOG.Controllers.Extraction
 {
-    public class AccountProductsPageResultsExtractingController : IPageResultsExtractingController<AccountProductsPageResult, AccountProduct>
+    public class AccountProductsExtractionController : IPageResultsExtractionController<AccountProductsPageResult, AccountProduct>
     {
         public IList<AccountProduct> Extract(IList<AccountProductsPageResult> pageResults)
         {

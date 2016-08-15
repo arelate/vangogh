@@ -51,8 +51,8 @@
     <Compile Include="PageResults\AccountProductsPageResultController.cs" />
     <Compile Include="PageResults\PageResultController.cs" />
     <Compile Include="PageResults\ProductsPageResultController.cs" />
-    <Compile Include="PageResults\AccountProductsPageResultsExtractingController.cs" />
-    <Compile Include="PageResults\ProductsPageResultsExtractingController.cs" />
+    <Compile Include="Extraction\AccountProductsExtractionController.cs" />
+    <Compile Include="Extraction\ProductsExtractingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Legacy\ScreenshotsController.cs" />
   </ItemGroup>

@@ -71,6 +71,7 @@ namespace GoodOfflineGames
             taskReportingController.AddTask("Load settings");
             var settings = settingsController.Load().Result;
             taskReportingController.CompleteTask();
+            consoleController.WriteLine(string.Empty);
 
             // Create and add all task activity controllersa
             // Task activities are encapsulated set of activity - so no data can be passed around!
@@ -141,7 +142,7 @@ namespace GoodOfflineGames
                 //accountProductsUpdateController,
                 //newUpdatedAccountProductsController,
                 //wishlistedUpdateController,
-                gameProductDataUpdateController
+                //gameProductDataUpdateController
                 //apiProductUpdateController,
                 //gameDetailsUpdateController
             };
@@ -150,6 +151,7 @@ namespace GoodOfflineGames
                 try
                 {
                     taskActivityController.ProcessTask().Wait();
+                    consoleController.WriteLine(string.Empty);
                 }
                 catch (AggregateException ex)
                 {

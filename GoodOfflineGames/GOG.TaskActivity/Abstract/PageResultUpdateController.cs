@@ -11,6 +11,7 @@ using Models.Uris;
 using GOG.Models;
 
 using GOG.Interfaces.PageResults;
+using GOG.Interfaces.Extraction;
 
 namespace GOG.TaskActivities.Abstract
 {
@@ -24,7 +25,7 @@ namespace GOG.TaskActivities.Abstract
 
         internal ProductTypes productType;
         internal IPageResultsController<PageType> pageResultsController;
-        internal IPageResultsExtractingController<PageType, Type> pageResultsExtractingController;
+        internal IPageResultsExtractionController<PageType, Type> pageResultsExtractingController;
 
         private string filenameTemplate = "{0}s.js";
         internal string filename;
