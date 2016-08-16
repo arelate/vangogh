@@ -8,6 +8,7 @@
         Wishlisted,
         GameProductData,
         ApiProduct,
-        GameDetails
+        GameDetails,
+        Screenshot
     }
 }

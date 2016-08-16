@@ -1,8 +1,8 @@
 ﻿namespace Interfaces.Reporting
 {
-    public interface IAddTaskDelegate
+    public interface IStartTaskDelegate
     {
-        void AddTask(string name);
+        void StartTask(string name);
     }
 
     public interface ICompleTaskDelegate
@@ -26,7 +26,7 @@
     }
 
     public interface ITaskReportingController:
-        IAddTaskDelegate,
+        IStartTaskDelegate,
         ICompleTaskDelegate,
         IReportProgressDelegate,
         IReportFailureDelegate,

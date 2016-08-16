@@ -46,14 +46,14 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTask()
         {
-            taskReportingController.AddTask("Update products from " + Uris.Paths.GetUpdateUri(productType));
+            taskReportingController.StartTask("Update products from " + Uris.Paths.GetUpdateUri(productType));
             var productsPageResults = await pageResultsController.GetPageResults();
 
-            taskReportingController.AddTask("Extract product data");
+            taskReportingController.StartTask("Extract product data");
             var products = pageResultsExtractingController.Extract(productsPageResults);
             taskReportingController.CompleteTask();
 
-            taskReportingController.AddTask("Save products to disk");
+            taskReportingController.StartTask("Save products to disk");
             await productStorageController.Push(productType, products);
             taskReportingController.CompleteTask();
 

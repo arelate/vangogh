@@ -22,7 +22,7 @@ namespace Controllers.Reporting
             names = new Stack<string>();
         }
 
-        public void AddTask(string name)
+        public void StartTask(string name)
         {
             names.Push(name);
             consoleController.WriteLine(startReportTemplate, MessageType.Progress, names.Peek());

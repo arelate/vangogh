@@ -62,6 +62,7 @@ namespace Models.Uris
                         return Games.AjaxFiltered;
                     case ProductTypes.AccountProduct:
                         return Account.GetFilteredProducts;
+                    case ProductTypes.Screenshot: // screenshots use the same page as game product data
                     case ProductTypes.GameProductData:
                         return GameProductData.ProductTemplate;
                     case ProductTypes.ApiProduct:

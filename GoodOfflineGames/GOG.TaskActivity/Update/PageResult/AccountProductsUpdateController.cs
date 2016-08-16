@@ -14,7 +14,7 @@ using GOG.Controllers.Extraction;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.UpdatePageResult
+namespace GOG.TaskActivities.Update.PageResult
 {
     public class AccountProductsUpdateController : PageResultUpdateController<AccountProductsPageResult, AccountProduct>
     {

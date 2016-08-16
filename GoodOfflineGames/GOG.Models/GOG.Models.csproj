@@ -48,6 +48,7 @@
     <Compile Include="BonusContent.cs" />
     <Compile Include="ContentSystemCompatibility.cs" />
     <Compile Include="Currency.cs" />
+    <Compile Include="Custom\ProductScreenshots.cs" />
     <Compile Include="DateFormat.cs" />
     <Compile Include="Description.cs" />
     <Compile Include="DiscountedPrice.cs" />

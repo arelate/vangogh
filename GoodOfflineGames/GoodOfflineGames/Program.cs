@@ -19,10 +19,11 @@ using Controllers.Politeness;
 using Interfaces.TaskActivity;
 
 using GOG.TaskActivities.Authorization;
-using GOG.TaskActivities.UpdatePageResult;
-using GOG.TaskActivities.UpdateNewUpdatedAccountProduct;
-using GOG.TaskActivities.UpdateWishlist;
-using GOG.TaskActivities.UpdateProduct;
+using GOG.TaskActivities.Update.PageResult;
+using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
+using GOG.TaskActivities.Update.Wishlist;
+using GOG.TaskActivities.Update.Products;
+using GOG.TaskActivities.Update.Screenshots;
 
 namespace GoodOfflineGames
 {
@@ -51,6 +52,7 @@ namespace GoodOfflineGames
 
             var extractionController = new TokenExtractionController();
             var gogDataExtractionController = new GOGDataExtractionController();
+            var screenshotExtractionController = new ScreenshotExtractionController();
 
             var collectionController = new CollectionController();
 
@@ -68,8 +70,8 @@ namespace GoodOfflineGames
                 languageController,
                 consoleController);
 
-            taskReportingController.AddTask("Load settings");
-            var settings = settingsController.Load().Result;
+            taskReportingController.StartTask("Load settings");
+            //var settings = settingsController.Load().Result;
             taskReportingController.CompleteTask();
             consoleController.WriteLine(string.Empty);
 
@@ -77,13 +79,30 @@ namespace GoodOfflineGames
             // Task activities are encapsulated set of activity - so no data can be passed around!
             // Individual task activity would need to load data it needs from the disk / network
 
-            var authorizationController = new AuthorizationController(
-                uriController,
-                networkController,
-                extractionController,
-                consoleController,
-                settings.Authenticate,
-                taskReportingController);
+            //// temporary code to transform old dictionary schema to new list to align better with productStorageController
+            //var screenshotsContent = storageController.Pull("screenshots.js").Result;
+            //screenshotsContent = screenshotsContent.Replace("var screenshots=", "");
+            //var screenshots = serializationController.Deserialize<Dictionary<long, string[]>>(screenshotsContent);
+            //var newScreenshots = new List<GOG.Models.Custom.ProductScreenshots>(screenshots.Count);
+            //foreach (var kvp in screenshots)
+            //{
+            //    var newScreenshot = new GOG.Models.Custom.ProductScreenshots();
+            //    if (kvp.Value == null) continue;
+            //    newScreenshot.Id = kvp.Key;
+            //    newScreenshot.Uris = new List<string>(kvp.Value);
+            //    newScreenshots.Add(newScreenshot);
+            //}
+            //var newScreenshotsContent = "var screenshots=" + serializationController.Serialize(newScreenshots);
+            //storageController.Push("newscreenshots.js", newScreenshotsContent).Wait();
+            //return;
+
+            //var authorizationController = new AuthorizationController(
+            //    uriController,
+            //    networkController,
+            //    extractionController,
+            //    consoleController,
+            //    settings.Authenticate,
+            //    taskReportingController);
 
             var productsUpdateController = new ProductsUpdateController(
                 requestPageController,
@@ -133,6 +152,13 @@ namespace GoodOfflineGames
                 politenessController,
                 taskReportingController);
 
+            var screenshotUpdateController = new ScreenshotUpdateController(
+                productStorageController,
+                collectionController,
+                networkController,
+                screenshotExtractionController,
+                taskReportingController);
+
             // Iterate and process all tasks
 
             var taskActivityControllers = new List<ITaskActivityController>()
@@ -144,7 +170,8 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController
                 //apiProductUpdateController,
-                //gameDetailsUpdateController
+                //gameDetailsUpdateController,
+                screenshotUpdateController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

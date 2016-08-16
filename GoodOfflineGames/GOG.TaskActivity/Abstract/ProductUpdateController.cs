@@ -47,7 +47,7 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTask()
         {
-            taskReportingController.AddTask("Load existing products and " + displayProductName);
+            taskReportingController.StartTask("Load existing products and " + displayProductName);
 
             var products = await productStorageController.Pull<ListType>(listProductType);
             var existingData = await productStorageController.Pull<UpdateType>(updateProductType);
@@ -58,7 +58,7 @@ namespace GOG.TaskActivities.Abstract
 
             var updateProducts = await GetUpdates(products, updateCollection);
 
-            taskReportingController.AddTask("Update required " + displayProductName);
+            taskReportingController.StartTask("Update required " + displayProductName);
 
             var currentProduct = 0;
             var storagePushNthProduct = 100; // push after updating every nth product
@@ -68,7 +68,7 @@ namespace GOG.TaskActivities.Abstract
             {
                 var product = collectionController.Find(products, p => p.Id == id);
 
-                taskReportingController.AddTask(
+                taskReportingController.StartTask(
                     string.Format(
                         "Update {0} {1}/{2}: {3}",
                         displayProductName,
@@ -92,7 +92,7 @@ namespace GOG.TaskActivities.Abstract
 
                 if (politenessController != null)
                 {
-                    taskReportingController.AddTask("Throttle network requests");
+                    taskReportingController.StartTask("Throttle network requests");
                     politenessController.Throttle();
                     taskReportingController.CompleteTask();
                 }
@@ -107,7 +107,7 @@ namespace GOG.TaskActivities.Abstract
 
         internal virtual async Task<List<long>> GetUpdates(IEnumerable<ListType> products, IEnumerable<UpdateType> updateCollection)
         {
-            taskReportingController.AddTask("Get a list of updates for " + displayProductName);
+            taskReportingController.StartTask("Get a list of updates for " + displayProductName);
 
             var updateProducts = new List<long>();
 
@@ -150,7 +150,7 @@ namespace GOG.TaskActivities.Abstract
 
         internal virtual async Task PushChanges(IList<UpdateType> updateCollection)
         {
-            taskReportingController.AddTask("Save " + displayProductName + " to disk");
+            taskReportingController.StartTask("Save " + displayProductName + " to disk");
             await productStorageController.Push(updateProductType, updateCollection);
             taskReportingController.CompleteTask();
         }

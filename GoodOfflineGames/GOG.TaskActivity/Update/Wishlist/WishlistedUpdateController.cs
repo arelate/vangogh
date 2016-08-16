@@ -13,7 +13,7 @@ using Models.Uris;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.UpdateWishlist
+namespace GOG.TaskActivities.Update.Wishlist
 {
     public class WishlistedUpdateController: TaskActivityController
     {
@@ -38,11 +38,11 @@ namespace GOG.TaskActivities.UpdateWishlist
 
         public override async Task ProcessTask()
         {
-            taskReportingController.AddTask("Request wishlist content");
+            taskReportingController.StartTask("Request wishlist content");
             var wishlistedContent = await networkController.Get(Uris.Paths.Account.Wishlist);
             taskReportingController.CompleteTask();
 
-            taskReportingController.AddTask("Extract wishlist data");
+            taskReportingController.StartTask("Extract wishlist data");
             var wishlistedGogDataCollection = gogDataExtractionController.ExtractMultiple(wishlistedContent);
             if (wishlistedGogDataCollection == null)
             {
@@ -56,7 +56,7 @@ namespace GOG.TaskActivities.UpdateWishlist
             }
             taskReportingController.CompleteTask();
 
-            taskReportingController.AddTask("Deserialize wishlist data");
+            taskReportingController.StartTask("Deserialize wishlist data");
 
             var wishlistedGogData = wishlistedGogDataCollection.First();
             var wishlistedProductPageResult = serializationController.Deserialize<Models.ProductsPageResult>(wishlistedGogData);
@@ -75,7 +75,7 @@ namespace GOG.TaskActivities.UpdateWishlist
 
             taskReportingController.CompleteTask();
 
-            taskReportingController.AddTask("Save wishlist data");
+            taskReportingController.StartTask("Save wishlist data");
 
             var wishlisted = new List<long>();
             foreach (var product in wishlistedProductPageResult.Products)

@@ -8,7 +8,7 @@ using Interfaces.ProductTypes;
 using GOG.TaskActivities.Abstract;
 using GOG.Models;
 
-namespace GOG.TaskActivities.UpdateNewUpdatedAccountProduct
+namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
 {
     public class NewUpdatedAccountProductsController: TaskActivityController
     {
@@ -23,18 +23,18 @@ namespace GOG.TaskActivities.UpdateNewUpdatedAccountProduct
 
         public override async Task ProcessTask()
         {
-            taskReportingController.AddTask("Load existing new or updated products");
+            taskReportingController.StartTask("Load existing new or updated products");
             var newUpdatedProducts = await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct);
             if (newUpdatedProducts == null) newUpdatedProducts = new List<long>();
             taskReportingController.CompleteTask();
 
-            taskReportingController.AddTask("Load account products");
+            taskReportingController.StartTask("Load account products");
             var accountProducts = await productStorageController.Pull<AccountProduct>(ProductTypes.AccountProduct);
             taskReportingController.CompleteTask();
 
             if (accountProducts == null) return;
 
-            taskReportingController.AddTask("Update new or updated account products");
+            taskReportingController.StartTask("Update new or updated account products");
 
             foreach (var product in accountProducts)
             {
@@ -45,7 +45,7 @@ namespace GOG.TaskActivities.UpdateNewUpdatedAccountProduct
 
             taskReportingController.CompleteTask();
 
-            taskReportingController.AddTask("Save new or updated products");
+            taskReportingController.StartTask("Save new or updated products");
             await productStorageController.Push(ProductTypes.NewUpdatedProduct, newUpdatedProducts);
             taskReportingController.CompleteTask();
         }

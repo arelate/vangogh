@@ -40,7 +40,7 @@ namespace GOG.TaskActivities.Authorization
 
         public override async Task ProcessTask()
         {
-            taskReportingController.AddTask("Authorization on GOG.com");
+            taskReportingController.StartTask("Authorization on GOG.com");
 
             authorizationController = new Controllers.Authorization.AuthorizationController(
                 uriController,

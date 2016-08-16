@@ -61,6 +61,8 @@ namespace Controllers.Storage
                     return "apiProducts";
                 case ProductTypes.GameDetails:
                     return "gameDetails";
+                case ProductTypes.Screenshot:
+                    return "screenshots";
                 default:
                     throw new System.NotImplementedException();
             }

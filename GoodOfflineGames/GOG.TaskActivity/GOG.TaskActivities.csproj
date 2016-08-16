@@ -43,15 +43,16 @@
     <Compile Include="Abstract\ProductUpdateController.cs" />
     <Compile Include="Abstract\PageResultUpdateController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpdatePageResult\AccountProductsUpdateController.cs" />
+    <Compile Include="Update\PageResult\AccountProductsUpdateController.cs" />
     <Compile Include="Authorization\AuthorizationController.cs" />
-    <Compile Include="UpdateNewUpdatedAccountProduct\NewUpdatedAccountProductsController.cs" />
-    <Compile Include="UpdateProduct\ApiProductUpdateController.cs" />
-    <Compile Include="UpdateProduct\GameDetailsUpdateController.cs" />
-    <Compile Include="UpdateProduct\GameProductDataUpdateController.cs" />
-    <Compile Include="UpdatePageResult\ProductsUpdateController.cs" />
+    <Compile Include="Update\NewUpdatedAccountProducts\NewUpdatedAccountProductsController.cs" />
+    <Compile Include="Update\Products\ApiProductUpdateController.cs" />
+    <Compile Include="Update\Products\GameDetailsUpdateController.cs" />
+    <Compile Include="Update\Products\GameProductDataUpdateController.cs" />
+    <Compile Include="Update\PageResult\ProductsUpdateController.cs" />
     <Compile Include="Abstract\TaskActivityController.cs" />
-    <Compile Include="UpdateWishlist\WishlistedUpdateController.cs" />
+    <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
+    <Compile Include="Update\Wishlist\WishlistedUpdateController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj">
