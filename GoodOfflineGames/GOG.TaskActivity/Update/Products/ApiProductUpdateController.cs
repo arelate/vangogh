@@ -5,6 +5,7 @@ using Interfaces.Collection;
 using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Politeness;
+using Interfaces.UpdateDependencies;
 
 using GOG.Models;
 
@@ -20,12 +21,18 @@ namespace GOG.TaskActivities.Update.Products
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IPolitenessController politenessController,
+            IUpdateUriController updateUriController,
             ITaskReportingController taskReportingController) :
             base(productStorageController,
                 collectionController,
                 networkController,
                 serializationController,
                 politenessController,
+                updateUriController,
+                null, // requiredUpdatesController
+                null, // skipUpdateController
+                null, // dataDecodingController
+                null, // connectionController
                 taskReportingController)
         {
             updateProductType = ProductTypes.ApiProduct;

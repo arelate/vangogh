@@ -22,6 +22,9 @@ using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlist;
+using GOG.TaskActivities.Update.Dependencies.Product;
+using GOG.TaskActivities.Update.Dependencies.GameDetails;
+using GOG.TaskActivities.Update.Dependencies.GameProductData;
 using GOG.TaskActivities.Update.Products;
 using GOG.TaskActivities.Update.Screenshots;
 
@@ -127,13 +130,28 @@ namespace GoodOfflineGames
                 productStorageController,
                 taskReportingController);
 
+            // dependencies for update controllers
+
+            var productUpdateUriController = new ProductUpdateUriController();
+
+            var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
+            var gameProductDataSkipUpdateController = new GameProductDataSkipUpdateController();
+            var gameProductDataDecodingController = new GameProductDataDecodingController(
+                gogDataExtractionController, 
+                serializationController);
+
+            var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
+            var gameDetailsConnectionController = new GameDetailsConnectionController();
+
             var gameProductDataUpdateController = new GameProductDataUpdateController(
-                gogDataExtractionController,
                 productStorageController,
                 collectionController,
                 networkController,
                 serializationController,
                 null,
+                gameProductDataUpdateUriController,
+                gameProductDataSkipUpdateController,
+                gameProductDataDecodingController,
                 taskReportingController);
 
             var apiProductUpdateController = new ApiProductUpdateController(
@@ -142,6 +160,7 @@ namespace GoodOfflineGames
                 networkController,
                 serializationController,
                 null,
+                productUpdateUriController,
                 taskReportingController);
 
             var gameDetailsUpdateController = new GameDetailsUpdateController(
@@ -150,6 +169,9 @@ namespace GoodOfflineGames
                 networkController,
                 serializationController,
                 politenessController,
+                productUpdateUriController,
+                gameDetailsRequiredUpdatesController,
+                gameDetailsConnectionController,
                 taskReportingController);
 
             var screenshotUpdateController = new ScreenshotUpdateController(
@@ -168,10 +190,10 @@ namespace GoodOfflineGames
                 //accountProductsUpdateController,
                 //newUpdatedAccountProductsController,
                 //wishlistedUpdateController,
-                //gameProductDataUpdateController
+                gameProductDataUpdateController,
                 //apiProductUpdateController,
                 //gameDetailsUpdateController,
-                screenshotUpdateController
+                //screenshotUpdateController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

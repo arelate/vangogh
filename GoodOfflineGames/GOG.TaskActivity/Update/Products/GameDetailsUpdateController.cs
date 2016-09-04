@@ -1,13 +1,11 @@
-﻿using System.Threading.Tasks;
-using System.Linq;
-
-using Interfaces.Reporting;
+﻿using Interfaces.Reporting;
 using Interfaces.Storage;
 using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Politeness;
+using Interfaces.UpdateDependencies;
 
 using GOG.Models;
 
@@ -23,33 +21,26 @@ namespace GOG.TaskActivities.Update.Products
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IPolitenessController politenessController,
+            IUpdateUriController updateUriController,
+            IRequiredUpdatesController requiredUpdatesController,
+            IConnectionController connectionController,
             ITaskReportingController taskReportingController) :
             base(productStorageController,
                 collectionController,
                 networkController,
                 serializationController,
                 politenessController,
+                updateUriController,
+                requiredUpdatesController,
+                null, // skipUpdateController
+                null, // dataDecodingController
+                connectionController,
                 taskReportingController)
         {
             updateProductType = ProductTypes.GameDetails;
             listProductType = ProductTypes.AccountProduct;
 
             displayProductName = "game details";
-
-            //TODO: GameDetails should be driven from AccountProducts not Products
-        }
-
-        internal override async Task<long[]> GetRequiredUpdates()
-        {
-            return (await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct)).ToArray();
-        }
-
-        internal override GameDetails Deserialize(string content, AccountProduct product)
-        {
-            var gameDetails = base.Deserialize(content, product);
-            gameDetails.Id = product.Id; // gameDetails by themselves don't contain Id
-
-            return gameDetails;
         }
     }
 }

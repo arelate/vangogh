@@ -8,6 +8,7 @@ using Interfaces.Collection;
 using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Politeness;
+using Interfaces.UpdateDependencies;
 
 using Models.Uris;
 
@@ -25,6 +26,12 @@ namespace GOG.TaskActivities.Abstract
         private IPolitenessController politenessController;
         internal ISerializationController<string> serializationController;
 
+        private IUpdateUriController updateUriController;
+        private IRequiredUpdatesController requiredUpdatesController;
+        private ISkipUpdateController skipUpdateController;
+        private IDataDecodingController dataDecodingController;
+        private IConnectionController connectionController;
+
         internal ProductTypes updateProductType;
         internal ProductTypes listProductType;
         internal string displayProductName;
@@ -35,6 +42,11 @@ namespace GOG.TaskActivities.Abstract
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IPolitenessController politenessController,
+            IUpdateUriController updateUriController,
+            IRequiredUpdatesController requiredUpdatesController,
+            ISkipUpdateController skipUpdateController,
+            IDataDecodingController dataDecodingController,
+            IConnectionController connectionController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
@@ -43,6 +55,11 @@ namespace GOG.TaskActivities.Abstract
             this.networkController = networkController;
             this.serializationController = serializationController;
             this.politenessController = politenessController;
+
+            this.updateUriController = updateUriController;
+            this.requiredUpdatesController = requiredUpdatesController;
+            this.skipUpdateController = skipUpdateController;
+            this.dataDecodingController = dataDecodingController;
         }
 
         public override async Task ProcessTask()
@@ -79,10 +96,13 @@ namespace GOG.TaskActivities.Abstract
                 var content = await GetContent(product);
                 if (content == null) continue;
 
-                var data = Deserialize(content, product);
+                var data = serializationController.Deserialize<UpdateType>(content);
 
                 if (data != null)
                 {
+                    if (connectionController != null)
+                        connectionController.Connect(data, product);
+
                     updateCollection.Add(data);
                     somethingChanged = true;
                 }
@@ -105,22 +125,28 @@ namespace GOG.TaskActivities.Abstract
             taskReportingController.CompleteTask();
         }
 
-        internal virtual async Task<List<long>> GetUpdates(IEnumerable<ListType> products, IEnumerable<UpdateType> updateCollection)
+        private async Task<List<long>> GetUpdates(IEnumerable<ListType> products, IEnumerable<UpdateType> updateCollection)
         {
             taskReportingController.StartTask("Get a list of updates for " + displayProductName);
 
             var updateProducts = new List<long>();
 
-            foreach (var id in await GetRequiredUpdates())
+            if (requiredUpdatesController != null)
             {
-                var product = collectionController.Find(products, p => p.Id == id);
-                if (product != null) updateProducts.Add(product.Id);
+                foreach (var id in await requiredUpdatesController.GetRequiredUpdates())
+                {
+                    var product = collectionController.Find(products, p => p.Id == id);
+                    if (product != null) updateProducts.Add(product.Id);
+                }
             }
 
             foreach (var product in products)
             {
                 if (product == null) continue;
-                if (ShouldSkipProduct(product)) continue;
+
+                if (skipUpdateController != null &&
+                    skipUpdateController.SkipUpdate(product)) continue;
+
                 var foundGameProductData = collectionController.Find(updateCollection, p => p != null && p.Id == product.Id);
                 if (foundGameProductData == null &&
                     !updateProducts.Contains(product.Id))
@@ -132,12 +158,17 @@ namespace GOG.TaskActivities.Abstract
             return updateProducts;
         }
 
-        internal virtual async Task<string> GetContent(ListType product)
+        private async Task<string> GetContent(ListType product)
         {
-            var uri = string.Format(Uris.Paths.GetUpdateUri(updateProductType), GetProductUri(product));
+            var uri = string.Format(
+                Uris.Paths.GetUpdateUri(updateProductType), 
+                updateUriController.GetUpdateUri(product));
+
             var rawResponse = await networkController.Get(uri);
 
-            var content = ProcessRawData(rawResponse);
+            var content = dataDecodingController != null ?
+                dataDecodingController.DecodeData(rawResponse) :
+                rawResponse;
 
             if (content == null)
                 taskReportingController.ReportWarning(
@@ -148,36 +179,11 @@ namespace GOG.TaskActivities.Abstract
             return content;
         }
 
-        internal virtual async Task PushChanges(IList<UpdateType> updateCollection)
+        private async Task PushChanges(IList<UpdateType> updateCollection)
         {
             taskReportingController.StartTask("Save " + displayProductName + " to disk");
             await productStorageController.Push(updateProductType, updateCollection);
             taskReportingController.CompleteTask();
-        }
-
-        internal virtual async Task<long[]> GetRequiredUpdates()
-        {
-            return new long[0];
-        }
-
-        internal virtual bool ShouldSkipProduct(ListType product)
-        {
-            return false;
-        }
-
-        internal virtual string GetProductUri(ListType product)
-        {
-            return product.Id.ToString(); // most product updates go by id
-        }
-
-        internal virtual string ProcessRawData(string rawData)
-        {
-            return rawData; // passthrough by default
-        }
-
-        internal virtual UpdateType Deserialize(string content, ListType product)
-        {
-            return serializationController.Deserialize<UpdateType>(content);
         }
     }
 }
