@@ -46,7 +46,7 @@ namespace GOG.TaskActivities.Update.Screenshots
         {
             taskReportingController.StartTask("Load existing products and product screenshots");
             var products = await productStorageController.Pull<Product>(ProductTypes.Product);
-            var screenshots = (await productStorageController.Pull<ProductScreenshots>(ProductTypes.Screenshot)).ToList();
+            var screenshots = await productStorageController.Pull<ProductScreenshots>(ProductTypes.Screenshot);
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Update all products missing screenshots");

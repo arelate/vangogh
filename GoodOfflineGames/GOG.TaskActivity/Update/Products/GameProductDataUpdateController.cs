@@ -13,7 +13,7 @@ using GOG.TaskActivities.Abstract;
 
 namespace GOG.TaskActivities.Update.Products
 {
-    public class GameProductDataUpdateController: ProductUpdateController<GameProductData, Product>
+    public class GameProductDataUpdateController: ProductCoreUpdateController<GameProductData, Product>
     {
         public GameProductDataUpdateController(
             IProductTypeStorageController productStorageController,

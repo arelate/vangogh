@@ -74,6 +74,7 @@
     <Compile Include="Review.cs" />
     <Compile Include="ReviewsPages.cs" />
     <Compile Include="SalesVisibility.cs" />
+    <Compile Include="ScheduledDownload.cs" />
     <Compile Include="Series.cs" />
     <Compile Include="SystemRequirements.cs" />
     <Compile Include="Tag.cs" />

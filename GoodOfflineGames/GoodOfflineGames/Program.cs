@@ -15,10 +15,13 @@ using Controllers.Reporting;
 using Controllers.Settings;
 using Controllers.RequestPage;
 using Controllers.Politeness;
+using Controllers.Destination;
+using Controllers.ImageUri;
 
 using Interfaces.TaskActivity;
 
 using GOG.TaskActivities.Authorization;
+
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlist;
@@ -27,6 +30,11 @@ using GOG.TaskActivities.Update.Dependencies.GameDetails;
 using GOG.TaskActivities.Update.Dependencies.GameProductData;
 using GOG.TaskActivities.Update.Products;
 using GOG.TaskActivities.Update.Screenshots;
+
+using GOG.TaskActivities.Download.Dependencies.ProductImages;
+using GOG.TaskActivities.Download.Dependencies.Screenshots;
+using GOG.TaskActivities.Download.ProductImages;
+using GOG.TaskActivities.Download.Screenshots;
 
 namespace GoodOfflineGames
 {
@@ -45,6 +53,7 @@ namespace GoodOfflineGames
             var taskReportingController = new TaskReportingController(consoleController);
 
             var uriController = new UriController();
+            var uriDestinationController = new UriDestinationController();
             var networkController = new NetworkController(uriController);
             var requestPageController = new RequestPageController(
                 networkController);
@@ -61,6 +70,9 @@ namespace GoodOfflineGames
 
             var politenessController = new PolitenessController();
 
+            var imageUriController = new ImageUriController();
+            var screenshotUriController = new ScreenshotUriController();
+
             var productStorageController = new ProductStorageController(
                 storageController,
                 serializationController);
@@ -74,7 +86,7 @@ namespace GoodOfflineGames
                 consoleController);
 
             taskReportingController.StartTask("Load settings");
-            //var settings = settingsController.Load().Result;
+            var settings = settingsController.Load().Result;
             taskReportingController.CompleteTask();
             consoleController.WriteLine(string.Empty);
 
@@ -99,13 +111,13 @@ namespace GoodOfflineGames
             //storageController.Push("newscreenshots.js", newScreenshotsContent).Wait();
             //return;
 
-            //var authorizationController = new AuthorizationController(
-            //    uriController,
-            //    networkController,
-            //    extractionController,
-            //    consoleController,
-            //    settings.Authenticate,
-            //    taskReportingController);
+            var authorizationController = new AuthorizationController(
+                uriController,
+                networkController,
+                extractionController,
+                consoleController,
+                settings.Authenticate,
+                taskReportingController);
 
             var productsUpdateController = new ProductsUpdateController(
                 requestPageController,
@@ -137,11 +149,13 @@ namespace GoodOfflineGames
             var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
             var gameProductDataSkipUpdateController = new GameProductDataSkipUpdateController();
             var gameProductDataDecodingController = new GameProductDataDecodingController(
-                gogDataExtractionController, 
+                gogDataExtractionController,
                 serializationController);
 
             var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
             var gameDetailsConnectionController = new GameDetailsConnectionController();
+
+            // update controllers
 
             var gameProductDataUpdateController = new GameProductDataUpdateController(
                 productStorageController,
@@ -181,6 +195,36 @@ namespace GoodOfflineGames
                 screenshotExtractionController,
                 taskReportingController);
 
+            // dependencies for download controllers
+
+            var productsImagesDownloadSourcesController = new ProductsImagesDownloadSourcesController(
+                productStorageController,
+                imageUriController);
+
+            var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
+                productStorageController,
+                screenshotUriController);
+
+            // download controllers
+
+            var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
+                productsImagesDownloadSourcesController,
+                productStorageController, 
+                imageUriController,
+                collectionController, 
+                uriDestinationController, 
+                fileController, 
+                taskReportingController);
+
+            var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
+                screenshotsDownloadSourcesController,
+                productStorageController,
+                screenshotUriController,
+                collectionController,
+                uriDestinationController,
+                fileController,
+                taskReportingController);
+
             // Iterate and process all tasks
 
             var taskActivityControllers = new List<ITaskActivityController>()
@@ -190,10 +234,12 @@ namespace GoodOfflineGames
                 //accountProductsUpdateController,
                 //newUpdatedAccountProductsController,
                 //wishlistedUpdateController,
-                gameProductDataUpdateController,
+                //gameProductDataUpdateController,
                 //apiProductUpdateController,
                 //gameDetailsUpdateController,
-                //screenshotUpdateController
+                //screenshotUpdateController,
+                productImagesScheduleDownloadsController,
+                screenshotsScheduleDownloadsController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

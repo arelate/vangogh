@@ -40,12 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Destination\DestinationController.cs" />
+    <Compile Include="DownloadSources\DownloadSourcesController.cs" />
     <Compile Include="Filtering\FilterDelegate.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Console\ConsoleController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="File\FileController.cs" />
+    <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="Language\LanguageController.cs" />
     <Compile Include="Politeness\PolitenessController.cs" />
     <Compile Include="ProductTypes\ProductTypes.cs" />

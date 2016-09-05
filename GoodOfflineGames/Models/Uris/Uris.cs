@@ -6,8 +6,12 @@ namespace Models.Uris
     {
         public static class Protocols
         {
-            public const string Http = "http://";
-            public const string Https = "https://";
+            public const string HttpPrefix = "http:";
+            public const string HttpsPrefix = "https:";
+            public const string PrefixSeparator = "//";
+            public const string Http = HttpPrefix + PrefixSeparator;
+            public const string Https = HttpsPrefix + PrefixSeparator;
+
         }
 
         public static class Roots
@@ -52,6 +56,16 @@ namespace Models.Uris
             public static class GameProductData
             {
                 public const string ProductTemplate = Protocols.Http + Roots.Website + "{0}";
+            }
+
+            public static class Images
+            {
+                public const string FullUriTemplate = Protocols.HttpPrefix + "{0}.png";
+            }
+
+            public static class Screenshots
+            {
+                public const string FullUriTemplate = Protocols.HttpPrefix + "{0}";
             }
 
             public static string GetUpdateUri(ProductTypes productType)

@@ -25,7 +25,7 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
         {
             taskReportingController.StartTask("Load existing new or updated products");
             var newUpdatedProducts = await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct);
-            if (newUpdatedProducts == null) newUpdatedProducts = new List<long>();
+
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Load account products");

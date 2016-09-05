@@ -23,7 +23,7 @@ namespace Controllers.Storage
             this.serializationController = serializationController;
         }
 
-        public async Task<IList<Type>> Pull<Type>(ProductTypes productType)
+        public async Task<List<Type>> Pull<Type>(ProductTypes productType)
         {
             var prefix = string.Format(prefixTemplate, GetName(productType));
             var uri = GetFilename(productType);
@@ -31,7 +31,10 @@ namespace Controllers.Storage
             var dataString = await storageController.Pull(uri);
             var unprefixedDataString = dataString.Replace(prefix, string.Empty);
 
-            return serializationController.Deserialize<IList<Type>>(unprefixedDataString);
+            var data = serializationController.Deserialize<List<Type>>(unprefixedDataString);
+            if (data == null) data = new List<Type>();
+
+            return data;
         }
 
         public async Task Push<Type>(ProductTypes productType, IList<Type> products)
@@ -63,6 +66,8 @@ namespace Controllers.Storage
                     return "gameDetails";
                 case ProductTypes.Screenshot:
                     return "screenshots";
+                case ProductTypes.ScheduledDownload:
+                    return "scheduledDownloads";
                 default:
                     throw new System.NotImplementedException();
             }

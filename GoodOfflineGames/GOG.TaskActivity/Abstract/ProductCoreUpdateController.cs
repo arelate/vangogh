@@ -16,7 +16,7 @@ using GOG.Models;
 
 namespace GOG.TaskActivities.Abstract
 {
-    public abstract class ProductUpdateController<UpdateType, ListType> : TaskActivityController
+    public abstract class ProductCoreUpdateController<UpdateType, ListType> : TaskActivityController
         where ListType : ProductCore
         where UpdateType : ProductCore 
     {
@@ -36,7 +36,7 @@ namespace GOG.TaskActivities.Abstract
         internal ProductTypes listProductType;
         internal string displayProductName;
 
-        public ProductUpdateController(
+        public ProductCoreUpdateController(
             IProductTypeStorageController productStorageController,
             ICollectionController collectionController,
             INetworkController networkController,
@@ -68,7 +68,7 @@ namespace GOG.TaskActivities.Abstract
 
             var products = await productStorageController.Pull<ListType>(listProductType);
             var existingData = await productStorageController.Pull<UpdateType>(updateProductType);
-            if (existingData == null) existingData = new List<UpdateType>();
+
             var updateCollection = new List<UpdateType>(existingData);
 
             taskReportingController.CompleteTask();

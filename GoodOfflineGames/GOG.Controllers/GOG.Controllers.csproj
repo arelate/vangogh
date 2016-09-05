@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Authorization\AuthorizationController.cs" />
     <Compile Include="Legacy\FileValidationController.cs" />
-    <Compile Include="Legacy\GameDetailsController.cs" />
     <Compile Include="Legacy\GameDetailsDownloadsController.cs" />
     <Compile Include="Legacy\ImagesController.cs" />
     <Compile Include="Legacy\ProductFilesController.cs" />
@@ -53,7 +52,6 @@
     <Compile Include="Extraction\AccountProductsExtractionController.cs" />
     <Compile Include="Extraction\ProductsExtractingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Legacy\ScreenshotsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">

@@ -30,7 +30,7 @@ namespace Interfaces.Storage
 
     public interface IPullProductTypeDelegate
     {
-        Task<IList<Type>> Pull<Type>(ProductTypes.ProductTypes productType);
+        Task<List<Type>> Pull<Type>(ProductTypes.ProductTypes productType);
     }
 
     public interface IProductTypeStorageController:

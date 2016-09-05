@@ -9,6 +9,7 @@
         GameProductData,
         ApiProduct,
         GameDetails,
-        Screenshot
+        Screenshot,
+        ScheduledDownload
     }
 }

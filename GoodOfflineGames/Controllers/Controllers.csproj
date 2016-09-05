@@ -46,6 +46,9 @@
     <Compile Include="Extraction\ScreenshotExtractionController.cs" />
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
+    <Compile Include="Destination\DestinationController.cs" />
+    <Compile Include="ImageUri\ImageUriController.cs" />
+    <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="Politeness\PolitenessController.cs" />
     <Compile Include="Reporting\TaskReportingController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
