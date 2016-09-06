@@ -6,6 +6,7 @@ using Controllers.Storage;
 using Controllers.File;
 using Controllers.Directory;
 using Controllers.Network;
+using Controllers.Download;
 using Controllers.Language;
 using Controllers.Serialization;
 using Controllers.Extraction;
@@ -17,6 +18,7 @@ using Controllers.RequestPage;
 using Controllers.Politeness;
 using Controllers.Destination;
 using Controllers.ImageUri;
+using Controllers.Formatting;
 
 using Interfaces.TaskActivity;
 
@@ -35,6 +37,7 @@ using GOG.TaskActivities.Download.Dependencies.ProductImages;
 using GOG.TaskActivities.Download.Dependencies.Screenshots;
 using GOG.TaskActivities.Download.ProductImages;
 using GOG.TaskActivities.Download.Screenshots;
+using GOG.TaskActivities.Download;
 
 namespace GoodOfflineGames
 {
@@ -55,6 +58,18 @@ namespace GoodOfflineGames
             var uriController = new UriController();
             var uriDestinationController = new UriDestinationController();
             var networkController = new NetworkController(uriController);
+
+            var bytesFormattingController = new BytesFormattingController();
+            var secondsFormattingController = new SecondsFormattingController();
+            var downloadReportingController = new DownloadReportingController(
+                bytesFormattingController, 
+                secondsFormattingController, 
+                consoleController);
+            var downloadController = new DownloadController(
+                networkController, 
+                streamController, 
+                downloadReportingController);
+
             var requestPageController = new RequestPageController(
                 networkController);
 
@@ -93,23 +108,6 @@ namespace GoodOfflineGames
             // Create and add all task activity controllersa
             // Task activities are encapsulated set of activity - so no data can be passed around!
             // Individual task activity would need to load data it needs from the disk / network
-
-            //// temporary code to transform old dictionary schema to new list to align better with productStorageController
-            //var screenshotsContent = storageController.Pull("screenshots.js").Result;
-            //screenshotsContent = screenshotsContent.Replace("var screenshots=", "");
-            //var screenshots = serializationController.Deserialize<Dictionary<long, string[]>>(screenshotsContent);
-            //var newScreenshots = new List<GOG.Models.Custom.ProductScreenshots>(screenshots.Count);
-            //foreach (var kvp in screenshots)
-            //{
-            //    var newScreenshot = new GOG.Models.Custom.ProductScreenshots();
-            //    if (kvp.Value == null) continue;
-            //    newScreenshot.Id = kvp.Key;
-            //    newScreenshot.Uris = new List<string>(kvp.Value);
-            //    newScreenshots.Add(newScreenshot);
-            //}
-            //var newScreenshotsContent = "var screenshots=" + serializationController.Serialize(newScreenshots);
-            //storageController.Push("newscreenshots.js", newScreenshotsContent).Wait();
-            //return;
 
             var authorizationController = new AuthorizationController(
                 uriController,
@@ -155,7 +153,7 @@ namespace GoodOfflineGames
             var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
             var gameDetailsConnectionController = new GameDetailsConnectionController();
 
-            // update controllers
+            // product update controllers
 
             var gameProductDataUpdateController = new GameProductDataUpdateController(
                 productStorageController,
@@ -225,6 +223,11 @@ namespace GoodOfflineGames
                 fileController,
                 taskReportingController);
 
+            var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
+                productStorageController, 
+                downloadController, 
+                taskReportingController);
+
             // Iterate and process all tasks
 
             var taskActivityControllers = new List<ITaskActivityController>()
@@ -238,8 +241,9 @@ namespace GoodOfflineGames
                 //apiProductUpdateController,
                 //gameDetailsUpdateController,
                 //screenshotUpdateController,
-                productImagesScheduleDownloadsController,
-                screenshotsScheduleDownloadsController
+                //productImagesScheduleDownloadsController,
+                //screenshotsScheduleDownloadsController,
+                processScheduledDownloadsController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

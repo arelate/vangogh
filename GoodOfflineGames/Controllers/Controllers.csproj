@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
+    <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Extraction\ScreenshotExtractionController.cs" />
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
@@ -54,7 +55,7 @@
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Formatting\BytesFormattingController.cs" />
     <Compile Include="Console\ConsoleController.cs" />
-    <Compile Include="Reporting\DownloadProgressReportingController.cs" />
+    <Compile Include="Reporting\DownloadReportingController.cs" />
     <Compile Include="RequestPage\RequestPageController.cs" />
     <Compile Include="Storage\ProductStorageController.cs" />
     <Compile Include="Stream\StreamController.cs" />

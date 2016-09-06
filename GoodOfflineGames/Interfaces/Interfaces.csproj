@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Destination\DestinationController.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
+    <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Filtering\FilterDelegate.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Collection\CollectionController.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Language\LanguageController.cs" />
     <Compile Include="Politeness\PolitenessController.cs" />
     <Compile Include="ProductTypes\ProductTypes.cs" />
+    <Compile Include="Reporting\DownloadReportingController.cs" />
     <Compile Include="Reporting\TaskReportingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestPage\RequestPageController.cs" />
@@ -64,7 +66,7 @@
     <Compile Include="Settings\Validate.cs" />
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Stream\StreamController.cs" />
-    <Compile Include="Network\StringNetworkController.cs" />
+    <Compile Include="Network\NetworkController.cs" />
     <Compile Include="Extraction\ExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
     <Compile Include="TaskActivity\TaskActivityController.cs" />

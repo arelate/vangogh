@@ -6,7 +6,7 @@ using Interfaces.Serialization;
 
 namespace Controllers.Serialization
 {
-    public class JSONStringController: ISerializationController<string>
+    public class JSONStringController : ISerializationController<string>
     {
         public string Serialize<Type>(Type data)
         {
@@ -28,10 +28,7 @@ namespace Controllers.Serialization
             }
             finally
             {
-                if (memoryStream != null)
-                {
-                    memoryStream.Dispose();
-                }
+                memoryStream?.Dispose();
             }
 
             return outputData;

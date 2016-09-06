@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Interfaces.Network
 {
     public interface IGetDelegate
     {
         Task<string> Get(string uri, IDictionary<string, string> parameters = null);
+    }
+
+    public interface IGetResponseDelegate
+    {
+        Task<HttpResponseMessage> GetResponse(string uri);
     }
 
     public interface IPostDelegate
@@ -15,6 +21,7 @@ namespace Interfaces.Network
 
     public interface INetworkController :
         IGetDelegate,
+        IGetResponseDelegate,
         IPostDelegate
     {
         // ... 

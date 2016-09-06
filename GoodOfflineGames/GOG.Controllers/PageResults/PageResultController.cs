@@ -11,7 +11,7 @@ using GOG.Models;
 
 namespace GOG.Controllers.PageResults
 {
-    public class PageResultsController<T>: IPageResultsController<T> where T : PageResult
+    public class PageResultsController<T> : IPageResultsController<T> where T : PageResult
     {
         private IRequestPageController requestPageController;
         private string uri;

@@ -2,7 +2,7 @@
 {
     public interface IConnectDelegate
     {
-        void Connect<FromType, ToType>(FromType from, ToType to);
+        FromType Connect<FromType, ToType>(FromType from, ToType to);
     }
 
     public interface IConnectionController:

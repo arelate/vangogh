@@ -60,6 +60,7 @@ namespace GOG.TaskActivities.Abstract
             this.requiredUpdatesController = requiredUpdatesController;
             this.skipUpdateController = skipUpdateController;
             this.dataDecodingController = dataDecodingController;
+            this.connectionController = connectionController;
         }
 
         public override async Task ProcessTask()
@@ -101,7 +102,7 @@ namespace GOG.TaskActivities.Abstract
                 if (data != null)
                 {
                     if (connectionController != null)
-                        connectionController.Connect(data, product);
+                        data = connectionController.Connect(data, product);
 
                     updateCollection.Add(data);
                     somethingChanged = true;
