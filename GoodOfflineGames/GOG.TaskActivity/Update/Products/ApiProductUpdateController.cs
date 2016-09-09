@@ -33,6 +33,7 @@ namespace GOG.TaskActivities.Update.Products
                 null, // skipUpdateController
                 null, // dataDecodingController
                 null, // connectionController
+                null, // additionalDetailsController
                 taskReportingController)
         {
             updateProductType = ProductTypes.ApiProduct;

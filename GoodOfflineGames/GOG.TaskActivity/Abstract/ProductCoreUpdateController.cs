@@ -9,6 +9,7 @@ using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Politeness;
 using Interfaces.UpdateDependencies;
+using Interfaces.AdditionalDetails;
 
 using Models.Uris;
 
@@ -31,6 +32,7 @@ namespace GOG.TaskActivities.Abstract
         private ISkipUpdateController skipUpdateController;
         private IDataDecodingController dataDecodingController;
         private IConnectionController connectionController;
+        private IAdditionalDetailsController additionalDetailsController;
 
         internal ProductTypes updateProductType;
         internal ProductTypes listProductType;
@@ -47,6 +49,7 @@ namespace GOG.TaskActivities.Abstract
             ISkipUpdateController skipUpdateController,
             IDataDecodingController dataDecodingController,
             IConnectionController connectionController,
+            IAdditionalDetailsController additionalDetailsController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
@@ -61,6 +64,7 @@ namespace GOG.TaskActivities.Abstract
             this.skipUpdateController = skipUpdateController;
             this.dataDecodingController = dataDecodingController;
             this.connectionController = connectionController;
+            this.additionalDetailsController = additionalDetailsController;
         }
 
         public override async Task ProcessTask()
@@ -79,7 +83,7 @@ namespace GOG.TaskActivities.Abstract
             taskReportingController.StartTask("Update required " + displayProductName);
 
             var currentProduct = 0;
-            var storagePushNthProduct = 100; // push after updating every nth product
+            var storagePushNthProduct = 1; // push after updating every nth product
             var somethingChanged = false;
 
             foreach (var id in updateProducts)
@@ -101,8 +105,9 @@ namespace GOG.TaskActivities.Abstract
 
                 if (data != null)
                 {
-                    if (connectionController != null)
-                        data = connectionController.Connect(data, product);
+                    connectionController?.Connect(data, product);
+
+                    additionalDetailsController?.AddDetails(data, content);
 
                     updateCollection.Add(data);
                     somethingChanged = true;

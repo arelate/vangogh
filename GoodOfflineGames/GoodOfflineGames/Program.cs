@@ -53,7 +53,8 @@ namespace GoodOfflineGames
                 fileController);
 
             var consoleController = new ConsoleController();
-            var taskReportingController = new TaskReportingController(consoleController);
+            var taskReportingController = new TaskReportingController(
+                consoleController);
 
             var uriController = new UriController();
             var uriDestinationController = new UriDestinationController();
@@ -152,6 +153,9 @@ namespace GoodOfflineGames
 
             var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
             var gameDetailsConnectionController = new GameDetailsConnectionController();
+            var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
+                serializationController, 
+                languageController);
 
             // product update controllers
 
@@ -184,6 +188,7 @@ namespace GoodOfflineGames
                 productUpdateUriController,
                 gameDetailsRequiredUpdatesController,
                 gameDetailsConnectionController,
+                gameDetailsDownloadDetailsController,
                 taskReportingController);
 
             var screenshotUpdateController = new ScreenshotUpdateController(
@@ -239,11 +244,11 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                //gameDetailsUpdateController,
+                gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //productImagesScheduleDownloadsController,
                 //screenshotsScheduleDownloadsController,
-                processScheduledDownloadsController
+                //processScheduledDownloadsController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

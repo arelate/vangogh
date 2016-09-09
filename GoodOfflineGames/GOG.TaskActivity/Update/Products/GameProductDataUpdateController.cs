@@ -35,6 +35,7 @@ namespace GOG.TaskActivities.Update.Products
                 skipUpdateController,
                 dataDecodingController,
                 null, // connectionController
+                null, // additionalDetailsController
                 taskReportingController)
         {
             updateProductType = ProductTypes.GameProductData;

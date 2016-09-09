@@ -25,17 +25,17 @@ namespace Controllers.Language
                 { "norsk", "no" },
                 { "polski", "pl" },
                 { "português", "pt" },
-                { "português do Brasil", "br" },
+                { "português do brasil", "br" },
                 { "română", "ro" },
                 { "slovenský", "sk" },
                 { "suomi", "fi" },
                 { "svenska", "sv" },
                 { "türkçe", "tr" },
                 { "yкраїнська", "uk" },
-                { "Ελληνικά", "gk" },
+                { "ελληνικά", "gk" },
                 { "български", "bl" },
                 { "русский", "ru" },
-                { "Српска", "sb" },
+                { "српска", "sb" },
                 { "العربة", "ar" },
                 { "한국어", "ko" },
                 { "中文", "cn" },
@@ -46,11 +46,10 @@ namespace Controllers.Language
         public string GetLanguageCode(string language)
         {
             var code = string.Empty;
+            var languageLower = language.ToLower();
 
-            if (knownLanguages.Values.Contains(language))
-                code = language;
-            if (knownLanguages.Keys.Contains(language))
-                code = knownLanguages[language];
+            if (knownLanguages.Keys.Contains(languageLower))
+                code = knownLanguages[languageLower];
 
             return code;
         }

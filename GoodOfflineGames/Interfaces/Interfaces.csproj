@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalDetails\AdditionalDetailsController.cs" />
     <Compile Include="Destination\DestinationController.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
     <Compile Include="Download\DownloadController.cs" />

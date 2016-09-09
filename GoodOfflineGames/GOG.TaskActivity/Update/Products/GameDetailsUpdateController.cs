@@ -6,6 +6,7 @@ using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Politeness;
 using Interfaces.UpdateDependencies;
+using Interfaces.AdditionalDetails;
 
 using GOG.Models;
 
@@ -24,6 +25,7 @@ namespace GOG.TaskActivities.Update.Products
             IUpdateUriController updateUriController,
             IRequiredUpdatesController requiredUpdatesController,
             IConnectionController connectionController,
+            IAdditionalDetailsController additionalDetailsController,
             ITaskReportingController taskReportingController) :
             base(productStorageController,
                 collectionController,
@@ -35,6 +37,7 @@ namespace GOG.TaskActivities.Update.Products
                 null, // skipUpdateController
                 null, // dataDecodingController
                 connectionController,
+                additionalDetailsController,
                 taskReportingController)
         {
             updateProductType = ProductTypes.GameDetails;
