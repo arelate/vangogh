@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace GOG.Models
+namespace GOG.Models.Custom
 {
     [DataContract]
     public class ProductFile

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using GOG.Models;
+using GOG.Models.Custom;
 
 namespace GOG.Interfaces
 {
