@@ -8,14 +8,14 @@ using Interfaces.File;
 using Interfaces.Destination;
 using Interfaces.DownloadSources;
 
-using GOG.Models;
+using GOG.Models.Custom;
 
 namespace GOG.TaskActivities.Abstract
 {
     public abstract class ScheduleDownloadsController : TaskActivityController
     {
         internal string destination;
-        internal string downloadDescription;
+        internal ScheduledDownloadTypes downloadType;
 
         private IDownloadSourcesController downloadSourcesController;
         private IProductTypeStorageController productTypeStorageController;
@@ -45,7 +45,7 @@ namespace GOG.TaskActivities.Abstract
             var scheduledDownloads = await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
             taskReportingController.CompleteTask();
 
-            taskReportingController.StartTask("Get " + downloadDescription + " sources");
+            taskReportingController.StartTask("Get " + System.Enum.GetName(typeof(ScheduledDownloadTypes), downloadType) + " sources");
             var downloadSources = await downloadSourcesController.GetDownloadSources();
             taskReportingController.CompleteTask();
 
@@ -66,7 +66,7 @@ namespace GOG.TaskActivities.Abstract
                 }
 
                 var newScheduledDownload = new ScheduledDownload();
-                newScheduledDownload.Description = downloadDescription;
+                newScheduledDownload.Type = downloadType;
                 newScheduledDownload.Source = downloadSource;
                 newScheduledDownload.Destination = destination;
 

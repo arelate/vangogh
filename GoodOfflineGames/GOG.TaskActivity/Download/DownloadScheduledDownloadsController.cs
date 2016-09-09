@@ -6,7 +6,7 @@ using Interfaces.ProductTypes;
 using Interfaces.Storage;
 using Interfaces.Download;
 
-using GOG.Models;
+using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
 
@@ -46,8 +46,8 @@ namespace GOG.TaskActivities.Download
                     string.Format(
                         "Download {0}/{1}: {2}", 
                         ++currentDownload, 
-                        scheduledDownloads.Count, 
-                        download.Description));
+                        scheduledDownloads.Count,
+                        System.Enum.GetName(typeof(ScheduledDownloadTypes), download.Type)));
 
                 await downloadController.DownloadFile(download.Source, download.Destination);
 

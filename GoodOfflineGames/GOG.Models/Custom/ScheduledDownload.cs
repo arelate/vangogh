@@ -1,12 +1,12 @@
 ﻿using System.Runtime.Serialization;
 
-namespace GOG.Models
+namespace GOG.Models.Custom
 {
     [DataContract]
     public class ScheduledDownload
     {
-        [DataMember(Name = "description")]
-        public string Description { get; set; }
+        [DataMember(Name = "type")]
+        public ScheduledDownloadTypes Type { get; set; }
         [DataMember(Name = "source")]
         public string Source { get; set; }
         [DataMember(Name = "destination")]

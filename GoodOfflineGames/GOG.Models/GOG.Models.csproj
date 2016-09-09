@@ -49,6 +49,7 @@
     <Compile Include="ContentSystemCompatibility.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="Custom\ProductScreenshots.cs" />
+    <Compile Include="Custom\ScheduledDownloadTypes.cs" />
     <Compile Include="DateFormat.cs" />
     <Compile Include="Description.cs" />
     <Compile Include="DiscountedPrice.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Review.cs" />
     <Compile Include="ReviewsPages.cs" />
     <Compile Include="SalesVisibility.cs" />
-    <Compile Include="ScheduledDownload.cs" />
+    <Compile Include="Custom\ScheduledDownload.cs" />
     <Compile Include="Series.cs" />
     <Compile Include="SystemRequirements.cs" />
     <Compile Include="Tag.cs" />

@@ -28,7 +28,7 @@ namespace GOG.TaskActivities.Download.ProductImages
                 fileController,
                 taskReportingController)
         {
-            downloadDescription = "product image";
+            downloadType = Models.Custom.ScheduledDownloadTypes.Image;
             destination = "_images";
         }
     }

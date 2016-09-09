@@ -28,7 +28,7 @@ namespace GOG.TaskActivities.Download.Screenshots
                 fileController,
                 taskReportingController)
         {
-            downloadDescription = "screenshot";
+            downloadType = Models.Custom.ScheduledDownloadTypes.Screenshot;
             destination = "_screenshots";
         }
     }
