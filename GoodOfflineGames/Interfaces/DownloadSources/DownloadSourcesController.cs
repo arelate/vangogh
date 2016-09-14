@@ -5,7 +5,7 @@ namespace Interfaces.DownloadSources
 {
     public interface IGetDownloadSourcesDelegate
     {
-        Task<IList<string>> GetDownloadSources();
+        Task<IDictionary<long, IList<string>>> GetDownloadSources();
     }
 
     public interface IDownloadSourcesController :

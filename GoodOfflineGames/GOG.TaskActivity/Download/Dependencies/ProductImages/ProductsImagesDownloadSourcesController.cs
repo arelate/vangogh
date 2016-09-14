@@ -23,15 +23,15 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
             this.imageUriController = imageUriController;
         }
 
-        public async Task<IList<string>> GetDownloadSources()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
             var products = await productStorageController.Pull<Product>(ProductTypes.Product);
-
-            var productImageSources = new List<string>();
+            var productImageSources = new Dictionary<long, IList<string>>();
 
             foreach (var product in products)
             {
-                productImageSources.Add(imageUriController.ExpandUri(product.Image));
+                var imageSources = new List<string>() { imageUriController.ExpandUri(product.Image) };
+                productImageSources.Add(product.Id, imageSources);
             }
 
             return productImageSources;

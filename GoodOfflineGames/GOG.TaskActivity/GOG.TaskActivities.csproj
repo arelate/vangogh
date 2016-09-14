@@ -43,9 +43,11 @@
     <Compile Include="Abstract\ProductCoreUpdateController.cs" />
     <Compile Include="Abstract\PageResultUpdateController.cs" />
     <Compile Include="Abstract\ScheduleDownloadsController.cs" />
+    <Compile Include="Download\Dependencies\ProductFiles\ProductFilesDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductImages\ProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\Screenshots\ScreenshotsDownloadSourcesController.cs" />
     <Compile Include="Download\DownloadScheduledDownloadsController.cs" />
+    <Compile Include="Download\ProductFiles\ProductFilesScheduleDownloadsController.cs" />
     <Compile Include="Download\ProductImages\ProductImagesScheduleDownloadsController.cs" />
     <Compile Include="Download\Screenshots\ScreenshotsScheduleDownloadsController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

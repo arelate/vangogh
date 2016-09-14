@@ -231,6 +231,7 @@ namespace GoodOfflineGames
             var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 productStorageController, 
                 downloadController, 
+                collectionController,
                 taskReportingController);
 
             // Iterate and process all tasks
@@ -244,11 +245,11 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                gameDetailsUpdateController,
+                //gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //productImagesScheduleDownloadsController,
-                //screenshotsScheduleDownloadsController,
-                //processScheduledDownloadsController
+                screenshotsScheduleDownloadsController,
+                processScheduledDownloadsController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

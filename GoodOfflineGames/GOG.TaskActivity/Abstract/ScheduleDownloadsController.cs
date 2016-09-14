@@ -52,25 +52,29 @@ namespace GOG.TaskActivities.Abstract
             taskReportingController.StartTask("Schedule downloads if not previously scheduled and no file exists");
             foreach (var downloadSource in downloadSources)
             {
-                var existingProductDownload = collectionController.Find(scheduledDownloads, sd =>
-                    sd != null &&
-                    sd.Source == downloadSource);
-
-                if (existingProductDownload != null) continue;
-
-                if (destinationController != null &&
-                    fileController != null)
+                foreach (var source in downloadSource.Value)
                 {
-                    var localFile = destinationController.GetDestination(downloadSource, destination);
-                    if (fileController.Exists(localFile)) continue;
+                    var existingProductDownload = collectionController.Find(scheduledDownloads, sd =>
+                        sd != null &&
+                        sd.Source == source);
+
+                    if (existingProductDownload != null) continue;
+
+                    if (destinationController != null &&
+                        fileController != null)
+                    {
+                        var localFile = destinationController.GetDestination(source, destination);
+                        if (fileController.Exists(localFile)) continue;
+                    }
+
+                    var newScheduledDownload = new ScheduledDownload();
+                    newScheduledDownload.Id = downloadSource.Key;
+                    newScheduledDownload.Type = downloadType;
+                    newScheduledDownload.Source = source;
+                    newScheduledDownload.Destination = destination;
+
+                    scheduledDownloads.Add(newScheduledDownload);
                 }
-
-                var newScheduledDownload = new ScheduledDownload();
-                newScheduledDownload.Type = downloadType;
-                newScheduledDownload.Source = downloadSource;
-                newScheduledDownload.Destination = destination;
-
-                scheduledDownloads.Add(newScheduledDownload);
             }
             taskReportingController.CompleteTask();
 
