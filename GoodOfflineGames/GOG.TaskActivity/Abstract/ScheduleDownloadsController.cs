@@ -5,8 +5,10 @@ using Interfaces.Storage;
 using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.File;
-using Interfaces.Destination;
+using Interfaces.SourceDestination;
 using Interfaces.DownloadSources;
+using Interfaces.DestinationAdjustment;
+using Interfaces.UriResolution;
 
 using GOG.Models.Custom;
 
@@ -14,28 +16,36 @@ namespace GOG.TaskActivities.Abstract
 {
     public abstract class ScheduleDownloadsController : TaskActivityController
     {
-        internal string destination;
-        internal ScheduledDownloadTypes downloadType;
+        private ScheduledDownloadTypes downloadType;
+        private string destination;
 
         private IDownloadSourcesController downloadSourcesController;
+        private IUriResolutionController uriResolutionController;
+        private IDestinationAdjustmentController destinationAdjustmentController;
         private IProductTypeStorageController productTypeStorageController;
         private ICollectionController collectionController;
+        private ISourceDestinationController sourceDestinationController;
         private IFileController fileController;
-        private IDestinationController destinationController;
 
         public ScheduleDownloadsController(
+            ScheduledDownloadTypes downloadType,
+            string destination,
             IDownloadSourcesController downloadSourcesController,
+            IUriResolutionController uriResolutionController,
+            IDestinationAdjustmentController destinationAdjustmentController,
             IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
-            IDestinationController destinationController,
+            ISourceDestinationController sourceDestinationController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.downloadSourcesController = downloadSourcesController;
+            this.uriResolutionController = uriResolutionController;
+            this.destinationAdjustmentController = destinationAdjustmentController;
             this.productTypeStorageController = productTypeStorageController;
             this.collectionController = collectionController;
-            this.destinationController = destinationController;
+            this.sourceDestinationController = sourceDestinationController;
             this.fileController = fileController;
         }
 
@@ -52,6 +62,8 @@ namespace GOG.TaskActivities.Abstract
             taskReportingController.StartTask("Schedule downloads if not previously scheduled and no file exists");
             foreach (var downloadSource in downloadSources)
             {
+                var productId = downloadSource.Key;
+
                 foreach (var source in downloadSource.Value)
                 {
                     var existingProductDownload = collectionController.Find(scheduledDownloads, sd =>
@@ -60,18 +72,28 @@ namespace GOG.TaskActivities.Abstract
 
                     if (existingProductDownload != null) continue;
 
-                    if (destinationController != null &&
+                    var resolvedSource =
+                        uriResolutionController != null ?
+                        await uriResolutionController.ResolveUri(source) :
+                        source;
+
+                    var adjustedDestination =
+                        destinationAdjustmentController != null ?
+                        destinationAdjustmentController.AdjustDestination(resolvedSource) :
+                        destination;
+
+                    if (sourceDestinationController != null &&
                         fileController != null)
                     {
-                        var localFile = destinationController.GetDestination(source, destination);
+                        var localFile = sourceDestinationController.GetSourceDestination(source, adjustedDestination);
                         if (fileController.Exists(localFile)) continue;
                     }
 
                     var newScheduledDownload = new ScheduledDownload();
-                    newScheduledDownload.Id = downloadSource.Key;
+                    newScheduledDownload.Id = productId;
                     newScheduledDownload.Type = downloadType;
-                    newScheduledDownload.Source = source;
-                    newScheduledDownload.Destination = destination;
+                    newScheduledDownload.Source = resolvedSource;
+                    newScheduledDownload.Destination = adjustedDestination;
 
                     scheduledDownloads.Add(newScheduledDownload);
                 }

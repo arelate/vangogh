@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Interfaces.DownloadSources;
+﻿using Interfaces.DownloadSources;
 using Interfaces.Storage;
 using Interfaces.Collection;
-using Interfaces.Destination;
+using Interfaces.SourceDestination;
 using Interfaces.File;
 using Interfaces.Reporting;
+using Interfaces.UriResolution;
+using Interfaces.DestinationAdjustment;
 
 using GOG.TaskActivities.Abstract;
 
@@ -19,20 +15,26 @@ namespace GOG.TaskActivities.Download.ProductFiles
     {
         public ProductFilesScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
+            IUriResolutionController uriResolutionController,
+            IDestinationAdjustmentController destinationAdjustmentController,
             IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
-            IDestinationController destinationController,
+            ISourceDestinationController sourceDestinationController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
-            base (downloadSourcesController,
+            base (
+                Models.Custom.ScheduledDownloadTypes.File,
+                string.Empty,
+                downloadSourcesController,
+                uriResolutionController,
+                destinationAdjustmentController,
                 productTypeStorageController,
                 collectionController,
-                destinationController,
+                sourceDestinationController,
                 fileController,
                 taskReportingController)
         {
-            downloadType = Models.Custom.ScheduledDownloadTypes.File;
-            destination = "";
+            // ...
         }
     }
 }

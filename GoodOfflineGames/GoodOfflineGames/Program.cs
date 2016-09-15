@@ -16,9 +16,10 @@ using Controllers.Reporting;
 using Controllers.Settings;
 using Controllers.RequestPage;
 using Controllers.Politeness;
-using Controllers.Destination;
+using Controllers.SourceDestination;
 using Controllers.ImageUri;
 using Controllers.Formatting;
+using Controllers.UriResolution;
 
 using Interfaces.TaskActivity;
 
@@ -35,8 +36,10 @@ using GOG.TaskActivities.Update.Screenshots;
 
 using GOG.TaskActivities.Download.Dependencies.ProductImages;
 using GOG.TaskActivities.Download.Dependencies.Screenshots;
+using GOG.TaskActivities.Download.Dependencies.ProductFiles;
 using GOG.TaskActivities.Download.ProductImages;
 using GOG.TaskActivities.Download.Screenshots;
+using GOG.TaskActivities.Download.ProductFiles;
 using GOG.TaskActivities.Download;
 
 namespace GoodOfflineGames
@@ -57,18 +60,18 @@ namespace GoodOfflineGames
                 consoleController);
 
             var uriController = new UriController();
-            var uriDestinationController = new UriDestinationController();
+            var sourceUriDestinationController = new SourceUriDestinationController();
             var networkController = new NetworkController(uriController);
 
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();
             var downloadReportingController = new DownloadReportingController(
-                bytesFormattingController, 
-                secondsFormattingController, 
+                bytesFormattingController,
+                secondsFormattingController,
                 consoleController);
             var downloadController = new DownloadController(
-                networkController, 
-                streamController, 
+                networkController,
+                streamController,
                 downloadReportingController);
 
             var requestPageController = new RequestPageController(
@@ -88,6 +91,8 @@ namespace GoodOfflineGames
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
+            var uriResolutionController = new UriResolutionController(
+                networkController);
 
             var productStorageController = new ProductStorageController(
                 storageController,
@@ -154,7 +159,7 @@ namespace GoodOfflineGames
             var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
             var gameDetailsConnectionController = new GameDetailsConnectionController();
             var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
-                serializationController, 
+                serializationController,
                 languageController);
 
             // product update controllers
@@ -208,15 +213,20 @@ namespace GoodOfflineGames
                 productStorageController,
                 screenshotUriController);
 
+            var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
+                settings.Download.Languages,
+                settings.Download.OperatingSystems,
+                productStorageController);
+
             // download controllers
 
             var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
                 productsImagesDownloadSourcesController,
-                productStorageController, 
+                productStorageController,
                 imageUriController,
-                collectionController, 
-                uriDestinationController, 
-                fileController, 
+                collectionController,
+                sourceUriDestinationController,
+                fileController,
                 taskReportingController);
 
             var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
@@ -224,13 +234,23 @@ namespace GoodOfflineGames
                 productStorageController,
                 screenshotUriController,
                 collectionController,
-                uriDestinationController,
+                sourceUriDestinationController,
                 fileController,
                 taskReportingController);
 
-            var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
+            var productFilesScheduleDownloadsController = new ProductFilesScheduleDownloadsController(
+                productFilesDownloadSourcesController,
+                uriResolutionController,
+                null,
                 productStorageController, 
-                downloadController, 
+                collectionController,
+                sourceUriDestinationController, 
+                fileController, 
+                taskReportingController);
+
+            var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
+                productStorageController,
+                downloadController,
                 collectionController,
                 taskReportingController);
 
@@ -238,7 +258,7 @@ namespace GoodOfflineGames
 
             var taskActivityControllers = new List<ITaskActivityController>()
             {
-                //authorizationController,
+                authorizationController,
                 //productsUpdateController,
                 //accountProductsUpdateController,
                 //newUpdatedAccountProductsController,
@@ -248,8 +268,9 @@ namespace GoodOfflineGames
                 //gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //productImagesScheduleDownloadsController,
-                screenshotsScheduleDownloadsController,
-                processScheduledDownloadsController
+                //screenshotsScheduleDownloadsController,
+                productFilesScheduleDownloadsController,
+                //processScheduledDownloadsController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

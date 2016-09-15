@@ -68,6 +68,11 @@ namespace Models.Uris
                 public const string FullUriTemplate = Protocols.HttpPrefix + "{0}";
             }
 
+            public static class ProductFiles
+            {
+                public const string FullUriTemplate = Protocols.Https + Roots.Website + "{0}";
+            }
+
             public static string GetUpdateUri(ProductTypes productType)
             {
                 switch (productType)
