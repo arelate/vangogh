@@ -41,8 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdditionalDetails\AdditionalDetailsController.cs" />
-    <Compile Include="DestinationAdjustment\DestinationAdjustmentController.cs" />
-    <Compile Include="SourceDestination\SourceDestinationController.cs" />
+    <Compile Include="GOGUri\GOGUriController.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
     <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Filtering\FilterDelegate.cs" />

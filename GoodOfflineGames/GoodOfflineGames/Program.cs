@@ -16,11 +16,10 @@ using Controllers.Reporting;
 using Controllers.Settings;
 using Controllers.RequestPage;
 using Controllers.Politeness;
-using Controllers.SourceDestination;
 using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.UriResolution;
-using Controllers.DestinationAdjustment;
+using Controllers.GOGUri;
 
 using Interfaces.TaskActivity;
 
@@ -63,7 +62,6 @@ namespace GoodOfflineGames
                 consoleController);
 
             var uriController = new UriController();
-            var sourceUriDestinationController = new SourceUriDestinationController();
             var networkController = new NetworkController(uriController);
 
             var bytesFormattingController = new BytesFormattingController();
@@ -94,10 +92,10 @@ namespace GoodOfflineGames
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
-            var uriResolutionController = new UriResolutionController(
+            var uriRedirectController = new UriRedirectController(
                 networkController);
 
-            var directoryDestinationAdjustmentController = new DirectoryDestinationAdjustmentController();
+            var gogUriController = new GOGUriController();
 
             var productStorageController = new ProductStorageController(
                 storageController,
@@ -233,7 +231,6 @@ namespace GoodOfflineGames
                 productStorageController,
                 imageUriController,
                 collectionController,
-                sourceUriDestinationController,
                 fileController,
                 taskReportingController);
 
@@ -242,27 +239,24 @@ namespace GoodOfflineGames
                 productStorageController,
                 screenshotUriController,
                 collectionController,
-                sourceUriDestinationController,
                 fileController,
                 taskReportingController);
 
             var productFilesScheduleDownloadsController = new ProductFilesScheduleDownloadsController(
                 productFilesDownloadSourcesController,
-                uriResolutionController,
-                directoryDestinationAdjustmentController,
+                uriRedirectController,
+                gogUriController,
                 productStorageController, 
                 collectionController,
-                sourceUriDestinationController, 
                 fileController, 
                 taskReportingController);
 
             var productExtrasScheduleDownloadsController = new ProductExtrasScheduleDownloadsController(
                 productExtrasDownloadSourcesController,
-                uriResolutionController,
-                directoryDestinationAdjustmentController,
+                uriRedirectController,
+                gogUriController,
                 productStorageController,
                 collectionController,
-                sourceUriDestinationController,
                 fileController,
                 taskReportingController);
 

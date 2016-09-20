@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 
-namespace Interfaces.UriResolution
+namespace Interfaces.UriRedirect
 {
-    public interface IResolveUriDelegate
+    public interface IGetUriRedirectDelegate
     {
-        Task<string> ResolveUri(string uri);
+        Task<string> GetUriRedirect(string uri);
     }
 
-    public interface IUriResolutionController:
-        IResolveUriDelegate
+    public interface IUriRedirectController:
+        IGetUriRedirectDelegate
     {
         // ...
     }

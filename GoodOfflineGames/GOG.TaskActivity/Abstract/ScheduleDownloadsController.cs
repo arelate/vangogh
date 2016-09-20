@@ -5,10 +5,9 @@ using Interfaces.Storage;
 using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.File;
-using Interfaces.SourceDestination;
 using Interfaces.DownloadSources;
-using Interfaces.DestinationAdjustment;
-using Interfaces.UriResolution;
+using Interfaces.GOGUri;
+using Interfaces.UriRedirect;
 
 using GOG.Models.Custom;
 
@@ -20,32 +19,29 @@ namespace GOG.TaskActivities.Abstract
         private string destination;
 
         private IDownloadSourcesController downloadSourcesController;
-        private IUriResolutionController uriResolutionController;
-        private IDestinationAdjustmentController destinationAdjustmentController;
+        private IUriRedirectController uriRedirectController;
+        private IGOGUriController gogUriController;
         private IProductTypeStorageController productTypeStorageController;
         private ICollectionController collectionController;
-        private ISourceDestinationController sourceDestinationController;
         private IFileController fileController;
 
         public ScheduleDownloadsController(
             ScheduledDownloadTypes downloadType,
             string destination,
             IDownloadSourcesController downloadSourcesController,
-            IUriResolutionController uriResolutionController,
-            IDestinationAdjustmentController destinationAdjustmentController,
+            IUriRedirectController uriRedirectController,
+            IGOGUriController gogUriController,
             IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
-            ISourceDestinationController sourceDestinationController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.downloadSourcesController = downloadSourcesController;
-            this.uriResolutionController = uriResolutionController;
-            this.destinationAdjustmentController = destinationAdjustmentController;
+            this.uriRedirectController = uriRedirectController;
+            this.gogUriController = gogUriController;
             this.productTypeStorageController = productTypeStorageController;
             this.collectionController = collectionController;
-            this.sourceDestinationController = sourceDestinationController;
             this.fileController = fileController;
         }
 
@@ -72,27 +68,45 @@ namespace GOG.TaskActivities.Abstract
 
                     if (existingProductDownload != null) continue;
 
-                    var resolvedSource =
-                        uriResolutionController != null ?
-                        await uriResolutionController.ResolveUri(source) :
+                    var redirectedSource =
+                        uriRedirectController != null ?
+                        await uriRedirectController.GetUriRedirect(source) :
                         source;
 
                     var adjustedDestination =
-                        destinationAdjustmentController != null ?
-                        destinationAdjustmentController.AdjustDestination(resolvedSource) :
+                        gogUriController != null ?
+                        gogUriController.GetDirectory(redirectedSource) :
                         destination;
 
-                    if (sourceDestinationController != null &&
-                        fileController != null)
+                    if (fileController != null)
                     {
-                        var localFile = sourceDestinationController.GetSourceDestination(source, adjustedDestination);
+                        var resolvedFilename = string.Empty;
+
+                        switch (downloadType)
+                        {
+                            case ScheduledDownloadTypes.Image:
+                            case ScheduledDownloadTypes.Screenshot:
+                                var resolvedUri = new System.Uri(redirectedSource);
+                                resolvedFilename = resolvedUri.Segments[resolvedUri.Segments.Length - 1];
+                                break;
+
+                            case ScheduledDownloadTypes.File:
+                            case ScheduledDownloadTypes.Extra:
+                                resolvedFilename = gogUriController.GetFilename(redirectedSource);
+                                break;
+
+                            default:
+                                throw new System.NotImplementedException();
+                        }
+
+                        var localFile = System.IO.Path.Combine(adjustedDestination, resolvedFilename);
                         if (fileController.Exists(localFile)) continue;
                     }
 
                     var newScheduledDownload = new ScheduledDownload();
                     newScheduledDownload.Id = productId;
                     newScheduledDownload.Type = downloadType;
-                    newScheduledDownload.Source = resolvedSource;
+                    newScheduledDownload.Source = redirectedSource;
                     newScheduledDownload.Destination = adjustedDestination;
 
                     scheduledDownloads.Add(newScheduledDownload);

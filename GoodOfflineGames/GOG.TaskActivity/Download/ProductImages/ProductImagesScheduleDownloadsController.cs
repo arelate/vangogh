@@ -2,7 +2,6 @@
 using Interfaces.Storage;
 using Interfaces.Collection;
 using Interfaces.File;
-using Interfaces.SourceDestination;
 using Interfaces.ImageUri;
 using Interfaces.DownloadSources;
 
@@ -17,7 +16,6 @@ namespace GOG.TaskActivities.Download.ProductImages
             IProductTypeStorageController productTypeStorageController,
             IImageUriController imageUriController,
             ICollectionController collectionController,
-            ISourceDestinationController sourceDestinationController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
@@ -28,7 +26,6 @@ namespace GOG.TaskActivities.Download.ProductImages
                 null, // destinationAdjustmentController
                 productTypeStorageController,
                 collectionController,
-                sourceDestinationController,
                 fileController,
                 taskReportingController)
         {
