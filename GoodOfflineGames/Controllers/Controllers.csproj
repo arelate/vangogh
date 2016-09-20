@@ -42,7 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collection\CollectionController.cs" />
-    <Compile Include="GOGUri\GOGUriController.cs" />
+    <Compile Include="Destination\Abstract\ImagesScreenshotsDestinationController.cs" />
+    <Compile Include="Destination\FilesExtrasDestinationController.cs" />
+    <Compile Include="Destination\ScreenshotsDestinationController.cs" />
+    <Compile Include="Destination\ImagesDestinationController.cs" />
+    <Compile Include="Destination\GOGUriDestinationController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Extraction\ScreenshotExtractionController.cs" />

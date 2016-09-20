@@ -6,8 +6,8 @@ using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.DownloadSources;
-using Interfaces.GOGUri;
 using Interfaces.UriRedirect;
+using Interfaces.Destination;
 
 using GOG.Models.Custom;
 
@@ -16,21 +16,19 @@ namespace GOG.TaskActivities.Abstract
     public abstract class ScheduleDownloadsController : TaskActivityController
     {
         private ScheduledDownloadTypes downloadType;
-        private string destination;
 
         private IDownloadSourcesController downloadSourcesController;
         private IUriRedirectController uriRedirectController;
-        private IGOGUriController gogUriController;
+        private IDestinationController destinationController;
         private IProductTypeStorageController productTypeStorageController;
         private ICollectionController collectionController;
         private IFileController fileController;
 
         public ScheduleDownloadsController(
             ScheduledDownloadTypes downloadType,
-            string destination,
             IDownloadSourcesController downloadSourcesController,
             IUriRedirectController uriRedirectController,
-            IGOGUriController gogUriController,
+            IDestinationController destinationController,
             IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
@@ -39,7 +37,7 @@ namespace GOG.TaskActivities.Abstract
         {
             this.downloadSourcesController = downloadSourcesController;
             this.uriRedirectController = uriRedirectController;
-            this.gogUriController = gogUriController;
+            this.destinationController = destinationController;
             this.productTypeStorageController = productTypeStorageController;
             this.collectionController = collectionController;
             this.fileController = fileController;
@@ -68,46 +66,25 @@ namespace GOG.TaskActivities.Abstract
 
                     if (existingProductDownload != null) continue;
 
-                    var redirectedSource =
+                    var actualSource =
                         uriRedirectController != null ?
                         await uriRedirectController.GetUriRedirect(source) :
                         source;
 
-                    var adjustedDestination =
-                        gogUriController != null ?
-                        gogUriController.GetDirectory(redirectedSource) :
-                        destination;
+                    var destinationDirectory = destinationController?.GetDirectory(actualSource);
 
                     if (fileController != null)
                     {
-                        var resolvedFilename = string.Empty;
-
-                        switch (downloadType)
-                        {
-                            case ScheduledDownloadTypes.Image:
-                            case ScheduledDownloadTypes.Screenshot:
-                                var resolvedUri = new System.Uri(redirectedSource);
-                                resolvedFilename = resolvedUri.Segments[resolvedUri.Segments.Length - 1];
-                                break;
-
-                            case ScheduledDownloadTypes.File:
-                            case ScheduledDownloadTypes.Extra:
-                                resolvedFilename = gogUriController.GetFilename(redirectedSource);
-                                break;
-
-                            default:
-                                throw new System.NotImplementedException();
-                        }
-
-                        var localFile = System.IO.Path.Combine(adjustedDestination, resolvedFilename);
+                        var destinationFilename = destinationController?.GetFilename(actualSource);
+                        var localFile = System.IO.Path.Combine(destinationDirectory, destinationFilename);
                         if (fileController.Exists(localFile)) continue;
                     }
 
                     var newScheduledDownload = new ScheduledDownload();
                     newScheduledDownload.Id = productId;
                     newScheduledDownload.Type = downloadType;
-                    newScheduledDownload.Source = redirectedSource;
-                    newScheduledDownload.Destination = adjustedDestination;
+                    newScheduledDownload.Source = actualSource;
+                    newScheduledDownload.Destination = destinationDirectory;
 
                     scheduledDownloads.Add(newScheduledDownload);
                 }

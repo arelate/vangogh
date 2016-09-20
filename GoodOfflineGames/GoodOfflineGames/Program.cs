@@ -19,7 +19,7 @@ using Controllers.Politeness;
 using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.UriResolution;
-using Controllers.GOGUri;
+using Controllers.Destination;
 
 using Interfaces.TaskActivity;
 
@@ -95,7 +95,10 @@ namespace GoodOfflineGames
             var uriRedirectController = new UriRedirectController(
                 networkController);
 
-            var gogUriController = new GOGUriController();
+            var gogUriDestinationController = new GOGUriDestinationController();
+            var filesExtrasDestinationController = new FilesExtrasDestinationController(gogUriDestinationController);
+            var imagesDestinationController = new ImagesDestinationController();
+            var screenshotsDestinationController = new ScreenshotsDestinationController();
 
             var productStorageController = new ProductStorageController(
                 storageController,
@@ -228,16 +231,16 @@ namespace GoodOfflineGames
 
             var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
                 productsImagesDownloadSourcesController,
+                imagesDestinationController,
                 productStorageController,
-                imageUriController,
                 collectionController,
                 fileController,
                 taskReportingController);
 
             var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
                 screenshotsDownloadSourcesController,
+                screenshotsDestinationController,
                 productStorageController,
-                screenshotUriController,
                 collectionController,
                 fileController,
                 taskReportingController);
@@ -245,7 +248,7 @@ namespace GoodOfflineGames
             var productFilesScheduleDownloadsController = new ProductFilesScheduleDownloadsController(
                 productFilesDownloadSourcesController,
                 uriRedirectController,
-                gogUriController,
+                filesExtrasDestinationController,
                 productStorageController, 
                 collectionController,
                 fileController, 
@@ -254,7 +257,7 @@ namespace GoodOfflineGames
             var productExtrasScheduleDownloadsController = new ProductExtrasScheduleDownloadsController(
                 productExtrasDownloadSourcesController,
                 uriRedirectController,
-                gogUriController,
+                filesExtrasDestinationController,
                 productStorageController,
                 collectionController,
                 fileController,

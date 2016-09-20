@@ -4,6 +4,7 @@ using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.ImageUri;
 using Interfaces.DownloadSources;
+using Interfaces.Destination;
 
 using GOG.TaskActivities.Abstract;
 
@@ -13,17 +14,16 @@ namespace GOG.TaskActivities.Download.ProductImages
     {
         public ProductImagesScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
+            IDestinationController destinationController,
             IProductTypeStorageController productTypeStorageController,
-            IImageUriController imageUriController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
                 Models.Custom.ScheduledDownloadTypes.Image,
-                "_images",
-                downloadSourcesController,
-                null, // uriResolutionController
-                null, // destinationAdjustmentController
+                downloadSourcesController, 
+                null, // uriRedirectController
+                destinationController, // destinationAdjustmentController
                 productTypeStorageController,
                 collectionController,
                 fileController,

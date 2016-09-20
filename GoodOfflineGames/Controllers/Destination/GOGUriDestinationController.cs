@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Interfaces.GOGUri;
+using Interfaces.Destination;
 
-namespace Controllers.GOGUri
+namespace Controllers.Destination
 {
-    public class GOGUriController : IGOGUriController
+    public class GOGUriDestinationController : IDestinationController
     {
         private const char root = 'r',
             secure = 's',

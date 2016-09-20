@@ -4,7 +4,7 @@ using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.Reporting;
 using Interfaces.UriRedirect;
-using Interfaces.GOGUri;
+using Interfaces.Destination;
 
 using GOG.TaskActivities.Abstract;
 
@@ -15,17 +15,16 @@ namespace GOG.TaskActivities.Download.ProductExtras
         public ProductExtrasScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
             IUriRedirectController uriRedirectController,
-            IGOGUriController gogUriController,
+            IDestinationController destinationController,
             IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base (
                 Models.Custom.ScheduledDownloadTypes.Extra,
-                string.Empty,
                 downloadSourcesController,
                 uriRedirectController,
-                gogUriController,
+                destinationController,
                 productTypeStorageController,
                 collectionController,
                 fileController,

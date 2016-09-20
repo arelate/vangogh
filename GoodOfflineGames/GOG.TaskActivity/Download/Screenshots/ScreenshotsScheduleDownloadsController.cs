@@ -4,6 +4,7 @@ using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.ImageUri;
 using Interfaces.DownloadSources;
+using Interfaces.Destination;
 
 using GOG.TaskActivities.Abstract;
 
@@ -13,17 +14,16 @@ namespace GOG.TaskActivities.Download.Screenshots
     {
         public ScreenshotsScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
+            IDestinationController destinationController,
             IProductTypeStorageController productTypeStorageController,
-            IImageUriController screenshotsUriController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
                 Models.Custom.ScheduledDownloadTypes.Screenshot,
-                "_screenshots",
                 downloadSourcesController,
-                null, // uriResolutionController
-                null, // destinationAdjustmentController
+                null, // uriRedirectionController
+                destinationController, 
                 productTypeStorageController,
                 collectionController,
                 fileController,
