@@ -1,11 +1,11 @@
-﻿namespace Interfaces.Politeness
+﻿namespace Interfaces.Throttle
 {
     public interface IThrottleDelegate
     {
         void Throttle();
     }
 
-    public interface IPolitenessController:
+    public interface IThrottleController:
         IThrottleDelegate
     {
         // ...

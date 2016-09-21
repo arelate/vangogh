@@ -7,7 +7,7 @@ using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.Network;
 using Interfaces.Serialization;
-using Interfaces.Politeness;
+using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
 using Interfaces.AdditionalDetails;
 
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.Abstract
         internal IProductTypeStorageController productStorageController;
         private ICollectionController collectionController;
         private INetworkController networkController;
-        private IPolitenessController politenessController;
+        private IThrottleController throttleController;
         internal ISerializationController<string> serializationController;
 
         private IUpdateUriController updateUriController;
@@ -34,6 +34,7 @@ namespace GOG.TaskActivities.Abstract
         private IConnectionController connectionController;
         private IAdditionalDetailsController additionalDetailsController;
 
+        // TODO: Break this pattern and implement controllers
         internal ProductTypes updateProductType;
         internal ProductTypes listProductType;
         internal string displayProductName;
@@ -43,7 +44,7 @@ namespace GOG.TaskActivities.Abstract
             ICollectionController collectionController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IPolitenessController politenessController,
+            IThrottleController throttleController,
             IUpdateUriController updateUriController,
             IRequiredUpdatesController requiredUpdatesController,
             ISkipUpdateController skipUpdateController,
@@ -57,7 +58,7 @@ namespace GOG.TaskActivities.Abstract
             this.collectionController = collectionController;
             this.networkController = networkController;
             this.serializationController = serializationController;
-            this.politenessController = politenessController;
+            this.throttleController = throttleController;
 
             this.updateUriController = updateUriController;
             this.requiredUpdatesController = requiredUpdatesController;
@@ -116,10 +117,10 @@ namespace GOG.TaskActivities.Abstract
                 if (currentProduct % storagePushNthProduct == 0)
                     await PushChanges(updateCollection);
 
-                if (politenessController != null)
+                if (throttleController != null)
                 {
                     taskReportingController.StartTask("Throttle network requests");
-                    politenessController.Throttle();
+                    throttleController.Throttle();
                     taskReportingController.CompleteTask();
                 }
 

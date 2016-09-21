@@ -52,7 +52,7 @@
     <Compile Include="File\FileController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="Language\LanguageController.cs" />
-    <Compile Include="Politeness\PolitenessController.cs" />
+    <Compile Include="Throttle\PolitenessController.cs" />
     <Compile Include="ProductTypes\ProductTypes.cs" />
     <Compile Include="Reporting\DownloadReportingController.cs" />
     <Compile Include="Reporting\TaskReportingController.cs" />

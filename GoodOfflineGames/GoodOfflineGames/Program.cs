@@ -15,7 +15,7 @@ using Controllers.Console;
 using Controllers.Reporting;
 using Controllers.Settings;
 using Controllers.RequestPage;
-using Controllers.Politeness;
+using Controllers.Throttle;
 using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.UriResolution;
@@ -88,7 +88,7 @@ namespace GoodOfflineGames
 
             var collectionController = new CollectionController();
 
-            var politenessController = new PolitenessController();
+            var throttleController = new ThrottleController();
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
@@ -195,7 +195,7 @@ namespace GoodOfflineGames
                 collectionController,
                 networkController,
                 serializationController,
-                politenessController,
+                throttleController,
                 productUpdateUriController,
                 gameDetailsRequiredUpdatesController,
                 gameDetailsConnectionController,

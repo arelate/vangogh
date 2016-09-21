@@ -55,7 +55,7 @@
     <Compile Include="ResolveUri\ResolveUriController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
-    <Compile Include="Politeness\PolitenessController.cs" />
+    <Compile Include="Throttle\ThrottleController.cs" />
     <Compile Include="Reporting\TaskReportingController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Formatting\BytesFormattingController.cs" />

@@ -4,7 +4,7 @@ using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.Network;
 using Interfaces.Serialization;
-using Interfaces.Politeness;
+using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
 
 using GOG.Models;
@@ -20,14 +20,14 @@ namespace GOG.TaskActivities.Update.Products
             ICollectionController collectionController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IPolitenessController politenessController,
+            IThrottleController throttleController,
             IUpdateUriController updateUriController,
             ITaskReportingController taskReportingController) :
             base(productStorageController,
                 collectionController,
                 networkController,
                 serializationController,
-                politenessController,
+                throttleController,
                 updateUriController,
                 null, // requiredUpdatesController
                 null, // skipUpdateController

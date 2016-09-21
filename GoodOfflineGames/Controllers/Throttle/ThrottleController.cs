@@ -1,14 +1,14 @@
 ﻿using System.Threading;
 
-using Interfaces.Politeness;
+using Interfaces.Throttle;
 
-namespace Controllers.Politeness
+namespace Controllers.Throttle
 {
-    public class PolitenessController : IPolitenessController
+    public class ThrottleController : IThrottleController
     {
         private int delayMilliseconds; // default is 2 minutes
 
-        public PolitenessController(int delayMilliseconds = 1000 * 60 * 2) 
+        public ThrottleController(int delayMilliseconds = 1000 * 60 * 2) 
         {
             this.delayMilliseconds = delayMilliseconds;
         }
