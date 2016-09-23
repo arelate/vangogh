@@ -17,6 +17,8 @@ namespace Controllers.Network
         private ICookiesController cookiesController;
         private IUriController uriController;
         const string postMediaType = "application/x-www-form-urlencoded";
+        const string userAgentHeader = "User-Agent";
+        const string userAgentString = "Mozilla/5.0 (iPad; CPU OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1";
 
         public NetworkController(
             ICookiesController cookiesController,
@@ -25,6 +27,7 @@ namespace Controllers.Network
             cookieContainer = new CookieContainer();
             var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
             client = new HttpClient(httpHandler);
+            client.DefaultRequestHeaders.Add(userAgentHeader, userAgentString);
 
             this.cookiesController = cookiesController;
             this.uriController = uriController;
