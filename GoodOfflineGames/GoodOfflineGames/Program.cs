@@ -20,6 +20,7 @@ using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.UriResolution;
 using Controllers.Destination;
+using Controllers.Cookies;
 
 using Interfaces.TaskActivity;
 
@@ -61,8 +62,11 @@ namespace GoodOfflineGames
             var taskReportingController = new TaskReportingController(
                 consoleController);
 
+            var cookiesController = new CookiesController();
             var uriController = new UriController();
-            var networkController = new NetworkController(uriController);
+            var networkController = new NetworkController(
+                cookiesController,
+                uriController);
 
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();

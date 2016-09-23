@@ -2,21 +2,31 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 
 using Interfaces.Network;
+using Interfaces.Cookies;
 
 namespace Controllers.Network
 {
     public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
+        private CookieContainer cookieContainer;
+        private ICookiesController cookiesController;
         private IUriController uriController;
         const string postMediaType = "application/x-www-form-urlencoded";
 
-        public NetworkController(IUriController uriController)
+        public NetworkController(
+            ICookiesController cookiesController,
+            IUriController uriController)
         {
-            client = new HttpClient();
+            cookieContainer = new CookieContainer();
+            var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
+            client = new HttpClient(httpHandler);
+
+            this.cookiesController = cookiesController;
             this.uriController = uriController;
         }
 
@@ -41,6 +51,8 @@ namespace Controllers.Network
             return await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
         }
 
+
+        // TODO: FormUrlEncodedContent
         public async Task<string> Post(
             string baseUri,
             IDictionary<string, string> parameters = null,

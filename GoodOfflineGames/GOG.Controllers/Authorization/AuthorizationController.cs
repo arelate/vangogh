@@ -18,7 +18,12 @@ namespace GOG.Controllers.Authorization
         //private const string authorizingOnGOG = "Authorizing {0} on GOG.com...";
         //private const string successfullyAuthorizedOnGOG = "Successfully authorized {0} on GOG.com.";
         private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
+        private const string recaptchaDetected = "Login page contains reCAPTCHA.\n"+
+            "Please login in the browser, then export the cookies into ./cookies.txt\n"+
+            "INSTRUCTIONS";
         private const string securityCodeHasBeenSent = "Enter security code that has been sent to {0}:";
+
+        private const string recaptchaUri = "https://www.google.com/recaptcha";
 
         private IUriController uriController;
         private INetworkController networkController;
@@ -43,6 +48,11 @@ namespace GOG.Controllers.Authorization
 
             // request authorization token
             string authResponse = await networkController.Get(Uris.Paths.Authentication.Auth, QueryParameters.Authenticate);
+
+            if (authResponse.Contains(recaptchaUri))
+            {
+                throw new System.Security.SecurityException(recaptchaDetected);
+            }
 
             string loginToken = extractionController.ExtractMultiple(authResponse).First();
 
