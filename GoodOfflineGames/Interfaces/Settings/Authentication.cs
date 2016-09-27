@@ -10,7 +10,7 @@
         string Password { get; set; }
     }
 
-    public interface IAuthenticateProperties :
+    public interface IAuthenticationProperties :
         IUsernameProperty,
         IPasswordProperty
     {

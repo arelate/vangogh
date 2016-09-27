@@ -21,7 +21,7 @@ namespace GOG.TaskActivities.Authorization
         private ISerializationController<string> serializationController;
         private IExtractionController extractionController;
         private IConsoleController consoleController;
-        private IAuthenticateProperties authenticateProperties;
+        private IAuthenticationProperties authenticateProperties;
         private IAuthorizationController authorizationController;
 
         public AuthorizationController(
@@ -30,7 +30,7 @@ namespace GOG.TaskActivities.Authorization
             ISerializationController<string> serializationController,
             IExtractionController extractionController,
             IConsoleController consoleController,
-            IAuthenticateProperties authenticateProperties,
+            IAuthenticationProperties authenticateProperties,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {

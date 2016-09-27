@@ -6,7 +6,7 @@ namespace GOG.Interfaces.Authorization
 {
     public interface IAuthorizeDelegate
     {
-        Task Authorize(IAuthenticateProperties usernamePassword);
+        Task Authorize(IAuthenticationProperties usernamePassword);
     }
 
     public interface IIsAuthorizedDelegate

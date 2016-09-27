@@ -54,7 +54,7 @@ namespace GOG.Controllers.Authorization
             return userData.IsLoggedIn;
         }
 
-        public async Task Authorize(IAuthenticateProperties usernamePassword)
+        public async Task Authorize(IAuthenticationProperties usernamePassword)
         {
             //consoleController.WriteLine(authorizingOnGOG, MessageType.Progress, usernamePassword.Username);
 

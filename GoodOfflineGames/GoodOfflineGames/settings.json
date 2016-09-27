@@ -1,22 +1,25 @@
 ﻿{
-	"authenticate": {
-		"username": "",
-		"password": ""
-	},
-	"update": {
-		"everything": false
-	},
-	"download": {
-		"images": true,
-		"screenshots": true,
-		"files": true,
-		"languages": [ "en" ],
-		"operatingSystems": [ "Windows" ]
-	},
-	"validate": {
-		"afterDownload": true
-	},
-	"cleanup": {
-		"afterDownload": true
-	}
+  "connection": {
+    "userAgent": "Mozilla/5.0 (iPad; CPU OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1"
+  },
+  "authentication": {
+    "username": "",
+    "password": ""
+  },
+  "update": {
+    "everything": false
+  },
+  "download": {
+    "images": true,
+    "screenshots": true,
+    "files": true,
+    "languages": [ "en" ],
+    "operatingSystems": [ "Windows" ]
+  },
+  "validation": {
+    "afterDownload": true
+  },
+  "cleanup": {
+    "afterDownload": true
+  }
 }

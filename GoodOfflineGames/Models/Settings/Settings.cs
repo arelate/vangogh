@@ -5,7 +5,14 @@ using Interfaces.Settings;
 namespace Models.Settings
 {
     [DataContract]
-    public class SettingsAuthenticate : IAuthenticateProperties
+    public class ConnectionProperties: IConnectionProperties
+    {
+        [DataMember(Name = "userAgent")]
+        public string UserAgent { get; set; }
+    }
+
+    [DataContract]
+    public class AuthenticationProperties : IAuthenticationProperties
     {
         [DataMember(Name = "username")]
         public string Username { get; set; }
@@ -14,13 +21,13 @@ namespace Models.Settings
     }
 
     [DataContract]
-    public class SettingsUpdate : IUpdateProperties
+    public class UpdateProperties : IUpdateProperties
     {
         [DataMember(Name = "everything")]
         public bool Everything { get; set; }
     }
 
-    public class SettingsDownload : IDownloadProperties
+    public class DownloadProperties : IDownloadProperties
     {
         [DataMember(Name = "images")]
         public bool Images { get; set; }
@@ -34,13 +41,13 @@ namespace Models.Settings
         public string[] OperatingSystems { get; set; }
     }
 
-    public class SettingsValidate : IValidateProperties
+    public class ValidationProperties : IValidationProperties
     {
         [DataMember(Name = "afterDownload")]
         public bool AfterDownload { get; set; }
     }
 
-    public class SettingsCleanup : ICleanupProperties
+    public class CleanupProperties : ICleanupProperties
     {
         [DataMember(Name = "afterDownload")]
         public bool AfterDownload { get; set; }
@@ -49,27 +56,22 @@ namespace Models.Settings
     [DataContract]
     public class Settings
     {
-        [DataMember(Name = "authenticate")]
-        public SettingsAuthenticate Authenticate { get; set; }
+        [DataMember(Name = "connection")]
+        public ConnectionProperties Connection { get; set; }
+
+        [DataMember(Name = "authentication")]
+        public AuthenticationProperties Authentication { get; set; }
 
         [DataMember(Name = "update")]
-        public SettingsUpdate Update { get; set; }
+        public UpdateProperties Update { get; set; }
 
         [DataMember(Name = "download")]
-        public SettingsDownload Download { get; set; }
+        public DownloadProperties Download { get; set; }
 
-        [DataMember(Name = "validate")]
-        public SettingsValidate Validate { get; set; }
+        [DataMember(Name = "validation")]
+        public ValidationProperties Validation { get; set; }
 
         [DataMember(Name = "cleanup")]
-        public SettingsCleanup Cleanup { get; set; }
-
-        public Settings()
-        {
-            Authenticate = new SettingsAuthenticate();
-            Update = new SettingsUpdate();
-            Validate = new SettingsValidate();
-            Cleanup = new SettingsCleanup();
-        }
+        public CleanupProperties Cleanup { get; set; }
     }
 }

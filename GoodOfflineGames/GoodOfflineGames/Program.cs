@@ -21,6 +21,7 @@ using Controllers.Formatting;
 using Controllers.UriResolution;
 using Controllers.Destination;
 using Controllers.Cookies;
+using Controllers.PropertiesValidation;
 
 using Interfaces.TaskActivity;
 
@@ -115,14 +116,30 @@ namespace GoodOfflineGames
 
             var settingsController = new SettingsController(
                 storageController,
-                serializationController,
-                languageController,
-                consoleController);
+                serializationController);
 
             taskReportingController.StartTask("Load settings");
             var settings = settingsController.Load().Result;
             taskReportingController.CompleteTask();
             consoleController.WriteLine(string.Empty);
+
+            taskReportingController.StartTask("Validate settings");
+
+            taskReportingController.StartTask("Validate authentication settings");
+            var authenticationPropertiesValidationController = new AuthenticationPropertiesValidationController(consoleController);
+            settings.Authentication = authenticationPropertiesValidationController.ValidateProperties(settings.Authentication) as Models.Settings.AuthenticationProperties;
+            taskReportingController.CompleteTask();
+
+            taskReportingController.StartTask("Validate download settings");
+            var downloadPropertiesValidationController = new DownloadPropertiesValidationController(languageController);
+            settings.Download = downloadPropertiesValidationController.ValidateProperties(settings.Download) as Models.Settings.DownloadProperties;
+            taskReportingController.CompleteTask();
+
+            taskReportingController.CompleteTask();
+            consoleController.WriteLine(string.Empty);
+
+            // set user agent string used for network requests
+            networkController.UserAgent = settings.Connection.UserAgent;
 
             // Create and add all task activity controllersa
             // Task activities are encapsulated set of activity - so no data can be passed around!
@@ -134,7 +151,7 @@ namespace GoodOfflineGames
                 serializationController,
                 extractionController,
                 consoleController,
-                settings.Authenticate,
+                settings.Authentication,
                 taskReportingController);
 
             var productsUpdateController = new ProductsUpdateController(

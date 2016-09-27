@@ -5,7 +5,7 @@
         bool AfterDownload { get; set; }
     }
 
-    public interface IValidateProperties:
+    public interface IValidationProperties:
         IAfterDownload
     {
         // ...
