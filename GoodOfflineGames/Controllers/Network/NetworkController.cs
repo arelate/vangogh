@@ -23,7 +23,12 @@ namespace Controllers.Network
             IUriController uriController)
         {
             cookieContainer = new CookieContainer();
-            var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
+            var httpHandler = new HttpClientHandler()
+            {
+                CookieContainer = cookieContainer,
+                UseCookies = true,
+                UseDefaultCredentials = false
+            };
             client = new HttpClient(httpHandler);
 
             this.cookiesController = cookiesController;
@@ -38,7 +43,7 @@ namespace Controllers.Network
 
             using (var response = await GetResponse(uri))
             {
-                if (response == null) return null;
+                response.EnsureSuccessStatusCode();
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -48,9 +53,15 @@ namespace Controllers.Network
 
         public async Task<HttpResponseMessage> GetResponse(string uri)
         {
+            if (cookiesController != null &&
+                cookieContainer.Count == 0)
+            {
+                foreach (var cookie in await cookiesController.GetCookies())
+                    cookieContainer.Add(cookie);
+            }
+
             return await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
         }
-
 
         // TODO: FormUrlEncodedContent
         public async Task<string> Post(
@@ -64,7 +75,7 @@ namespace Controllers.Network
 
             using (var response = await client.PostAsync(uri, content))
             {
-                if (response == null) return null;
+                response.EnsureSuccessStatusCode();
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))

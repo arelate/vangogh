@@ -17,7 +17,7 @@ namespace Models.Uris
         public static class Roots
         {
             private const string GOGcom = "gog.com";
-            public const string Website = "www." + GOGcom;
+            public const string Website = Protocols.Https + "www." + GOGcom;
             public const string Login = Protocols.Https + "login." + GOGcom;
             public const string Auth = Protocols.Https + "auth." + GOGcom;
             public const string Api = Protocols.Https + "api." + GOGcom;
@@ -27,12 +27,13 @@ namespace Models.Uris
         {
             public static class Authentication
             {
+                public const string UserData = Roots.Website + "/userData.json";
                 public const string Auth = Roots.Auth + "/auth";
                 public const string Login = Roots.Login + "/login";
                 public const string Logout = Roots.Login + "/logout";
                 public const string LoginCheck = Roots.Login + "/login_check";
                 public const string TwoStep = Login + "/two_step";
-                public const string OnLoginSuccess = Protocols.Https + Roots.Website + "/on_login_success";
+                public const string OnLoginSuccess =  Roots.Website + "/on_login_success";
             }
 
             public static class Api
@@ -42,7 +43,7 @@ namespace Models.Uris
 
             public static class Account
             {
-                private const string AccountRoot = Protocols.Https + Roots.Website + "/account";
+                private const string AccountRoot = Roots.Website + "/account";
                 public const string GetFilteredProducts = AccountRoot + "/getFilteredProducts";
                 public const string GameDetailsTemplate = AccountRoot + "/gameDetails/{0}.json";
                 public const string Wishlist = AccountRoot + "/wishlist";
@@ -50,12 +51,12 @@ namespace Models.Uris
 
             public static class Games
             {
-                public const string AjaxFiltered = Protocols.Https + Roots.Website + "/games/ajax/filtered";
+                public const string AjaxFiltered = Roots.Website + "/games/ajax/filtered";
             }
 
             public static class GameProductData
             {
-                public const string ProductTemplate = Protocols.Http + Roots.Website + "{0}";
+                public const string ProductTemplate = Roots.Website + "{0}";
             }
 
             public static class Images
@@ -70,7 +71,7 @@ namespace Models.Uris
 
             public static class ProductFiles
             {
-                public const string FullUriTemplate = Protocols.Https + Roots.Website + "{0}";
+                public const string FullUriTemplate = Roots.Website + "{0}";
             }
 
             public static string GetUpdateUri(ProductTypes productType)

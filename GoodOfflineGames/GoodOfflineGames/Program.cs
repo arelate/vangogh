@@ -57,12 +57,16 @@ namespace GoodOfflineGames
             var storageController = new StorageController(
                 streamController,
                 fileController);
+            var serializationController = new JSONStringController();
 
             var consoleController = new ConsoleController();
             var taskReportingController = new TaskReportingController(
                 consoleController);
 
-            var cookiesController = new CookiesController();
+            var cookiesController = new CookiesController(
+                storageController,
+                serializationController);
+
             var uriController = new UriController();
             var networkController = new NetworkController(
                 cookiesController,
@@ -84,8 +88,6 @@ namespace GoodOfflineGames
 
             var languageController = new LanguageController();
 
-            var serializationController = new JSONStringController();
-
             var extractionController = new TokenExtractionController();
             var gogDataExtractionController = new GOGDataExtractionController();
             var screenshotExtractionController = new ScreenshotExtractionController();
@@ -100,7 +102,8 @@ namespace GoodOfflineGames
                 networkController);
 
             var gogUriDestinationController = new GOGUriDestinationController();
-            var filesExtrasDestinationController = new FilesExtrasDestinationController(gogUriDestinationController);
+            var filesExtrasDestinationController = new FilesExtrasDestinationController(
+                gogUriDestinationController);
             var imagesDestinationController = new ImagesDestinationController();
             var screenshotsDestinationController = new ScreenshotsDestinationController();
 
@@ -128,6 +131,7 @@ namespace GoodOfflineGames
             var authorizationController = new AuthorizationController(
                 uriController,
                 networkController,
+                serializationController,
                 extractionController,
                 consoleController,
                 settings.Authenticate,
@@ -288,8 +292,8 @@ namespace GoodOfflineGames
                 //screenshotUpdateController,
                 //productImagesScheduleDownloadsController,
                 //screenshotsScheduleDownloadsController,
-                productFilesScheduleDownloadsController,
-                productExtrasScheduleDownloadsController,
+                //productFilesScheduleDownloadsController,
+                //productExtrasScheduleDownloadsController,
                 //processScheduledDownloadsController
             };
 

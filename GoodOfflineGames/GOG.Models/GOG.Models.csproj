@@ -46,6 +46,7 @@
     <Compile Include="ApiDLC.cs" />
     <Compile Include="ApiProduct.cs" />
     <Compile Include="BonusContent.cs" />
+    <Compile Include="Checksum.cs" />
     <Compile Include="ContentSystemCompatibility.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="Custom\ProductScreenshots.cs" />
@@ -84,7 +85,9 @@
     <Compile Include="Price.cs" />
     <Compile Include="TimezoneDate.cs" />
     <Compile Include="TitledEntry.cs" />
+    <Compile Include="Updates.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserData.cs" />
     <Compile Include="WorksOn.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

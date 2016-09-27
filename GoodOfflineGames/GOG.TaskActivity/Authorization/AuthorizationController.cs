@@ -5,6 +5,7 @@ using Interfaces.Settings;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Console;
+using Interfaces.Serialization;
 
 using GOG.Interfaces.Authorization;
 
@@ -17,6 +18,7 @@ namespace GOG.TaskActivities.Authorization
 
         private IUriController uriController;
         private INetworkController networkController;
+        private ISerializationController<string> serializationController;
         private IExtractionController extractionController;
         private IConsoleController consoleController;
         private IAuthenticateProperties authenticateProperties;
@@ -25,6 +27,7 @@ namespace GOG.TaskActivities.Authorization
         public AuthorizationController(
             IUriController uriController,
             INetworkController networkController,
+            ISerializationController<string> serializationController,
             IExtractionController extractionController,
             IConsoleController consoleController,
             IAuthenticateProperties authenticateProperties,
@@ -34,6 +37,7 @@ namespace GOG.TaskActivities.Authorization
             this.authenticateProperties = authenticateProperties;
             this.uriController = uriController;
             this.networkController = networkController;
+            this.serializationController = serializationController;
             this.extractionController = extractionController;
             this.consoleController = consoleController;
         }
@@ -45,8 +49,18 @@ namespace GOG.TaskActivities.Authorization
             authorizationController = new Controllers.Authorization.AuthorizationController(
                 uriController,
                 networkController,
+                serializationController,
                 extractionController,
                 consoleController);
+
+            //if (await authorizationController.IsAuthorized())
+            //{
+            //    consoleController.WriteLine("authorized already");
+            //}
+            //else
+            //{
+            //    consoleController.WriteLine("not authorized");
+            //}
 
             await authorizationController.Authorize(authenticateProperties);
 

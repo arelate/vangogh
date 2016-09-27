@@ -9,12 +9,18 @@ namespace GOG.Interfaces.Authorization
         Task Authorize(IAuthenticateProperties usernamePassword);
     }
 
+    public interface IIsAuthorizedDelegate
+    {
+        Task<bool> IsAuthorized();
+    }
+
     public interface IDeauthorizeDelegate
     {
         Task Deauthorize();
     }
 
     public interface IAuthorizationController:
+        IIsAuthorizedDelegate,
         IAuthorizeDelegate,
         IDeauthorizeDelegate
     {

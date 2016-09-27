@@ -7,6 +7,7 @@ using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Console;
 using Interfaces.Settings;
+using Interfaces.Serialization;
 
 using Models.Uris;
 using Models.QueryParameters;
@@ -29,10 +30,12 @@ namespace GOG.Controllers.Authorization
         private INetworkController networkController;
         private IExtractionController extractionController;
         private IConsoleController consoleController;
+        private ISerializationController<string> serializationController;
 
         public AuthorizationController(
             IUriController uriController,
             INetworkController networkController,
+            ISerializationController<string> serializationController,
             IExtractionController extractionController,
             IConsoleController consoleController)
         {
@@ -40,6 +43,15 @@ namespace GOG.Controllers.Authorization
             this.networkController = networkController;
             this.extractionController = extractionController;
             this.consoleController = consoleController;
+            this.serializationController = serializationController;
+        }
+
+        public async Task<bool> IsAuthorized()
+        {
+            var userDataString = await networkController.Get(Uris.Paths.Authentication.UserData);
+            var userData = serializationController.Deserialize<Models.UserData>(userDataString);
+
+            return userData.IsLoggedIn;
         }
 
         public async Task Authorize(IAuthenticateProperties usernamePassword)
