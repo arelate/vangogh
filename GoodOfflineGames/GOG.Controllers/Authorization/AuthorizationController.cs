@@ -104,17 +104,9 @@ namespace GOG.Controllers.Authorization
 
                 var twoStepLoginCheckResult = await networkController.Post(Uris.Paths.Authentication.TwoStep, null, twoStepData);
 
-                if (twoStepLoginCheckResult.Contains("gogData"))
-                //{
-                    // successful login using 2FA or exception
-                    //consoleController.WriteLine(successfullyAuthorizedOnGOG, MessageType.Success, usernamePassword.Username);
-                    return;
-                //}
+                if (twoStepLoginCheckResult.Contains("gogData")) return;
                 else throw new System.Security.SecurityException(failedToAuthenticate);
             }
-
-            // successful login, and 2FA is not used for this user
-            //consoleController.WriteLine(successfullyAuthorizedOnGOG, MessageType.Success, usernamePassword.Username);
         }
 
         public async Task Deauthorize()

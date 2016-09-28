@@ -14,12 +14,13 @@ namespace Controllers.Network
     public sealed class NetworkController : INetworkController, IUserAgentProperty
     {
         private HttpClient client;
-        private CookieContainer cookieContainer;
+        //private CookieContainer cookieContainer;
         private ICookiesController cookiesController;
         private IUriController uriController;
         const string postMediaType = "application/x-www-form-urlencoded";
 
         const string userAgentHeader = "User-Agent";
+        const string setCookieHeader = "Set-Cookie";
 
         const string defaultUserAgentString = "Mozilla/5.0 (iPad; CPU OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1";
         private string userAgent;
@@ -44,11 +45,11 @@ namespace Controllers.Network
             ICookiesController cookiesController,
             IUriController uriController)
         {
-            cookieContainer = new CookieContainer();
+            //cookieContainer = new CookieContainer();
             var httpHandler = new HttpClientHandler()
             {
-                CookieContainer = cookieContainer,
-                UseCookies = true,
+                //CookieContainer = cookieContainer,
+                //UseCookies = true,
                 UseDefaultCredentials = false
             };
             client = new HttpClient(httpHandler);
@@ -67,6 +68,11 @@ namespace Controllers.Network
             {
                 response.EnsureSuccessStatusCode();
 
+                IEnumerable<string> responseCookies = new List<string>();
+                response.Headers.TryGetValues(setCookieHeader, out responseCookies);
+
+                await cookiesController.UpdateCookies(responseCookies);
+
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
                     return await reader.ReadToEndAsync();
@@ -75,12 +81,11 @@ namespace Controllers.Network
 
         public async Task<HttpResponseMessage> GetResponse(string uri)
         {
-            if (cookiesController != null &&
-                cookieContainer.Count == 0)
-            {
-                foreach (var cookie in await cookiesController.GetCookies())
-                    cookieContainer.Add(cookie);
-            }
+            while (client.DefaultRequestHeaders.Contains(setCookieHeader))
+                client.DefaultRequestHeaders.Remove(setCookieHeader);
+
+            foreach (var cookie in await cookiesController.GetCookies())
+                client.DefaultRequestHeaders.Add(setCookieHeader, cookie);
 
             return await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
         }
