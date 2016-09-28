@@ -53,15 +53,6 @@ namespace GOG.TaskActivities.Authorization
                 extractionController,
                 consoleController);
 
-            //if (await authorizationController.IsAuthorized())
-            //{
-            //    consoleController.WriteLine("authorized already");
-            //}
-            //else
-            //{
-            //    consoleController.WriteLine("not authorized");
-            //}
-
             await authorizationController.Authorize(authenticateProperties);
 
             taskReportingController.CompleteTask();

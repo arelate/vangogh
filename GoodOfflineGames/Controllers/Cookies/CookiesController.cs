@@ -34,7 +34,16 @@ namespace Controllers.Cookies
             return cookie.Substring(0, firstIndexOfPropertyValueSeparator);
         }
 
-        public async Task<IEnumerable<string>> GetCookies()
+        public string GetValue(string cookie)
+        {
+            if (string.IsNullOrEmpty(cookie)) return string.Empty;
+
+            var firstIndexOfPropertyValueSeparator = cookie.IndexOf(cookiePropertyValueSeparator);
+            var firstIndexOfCookieSectionsSeparator = cookie.IndexOf(cookieSectionsSeparator);
+            return cookie.Substring(firstIndexOfPropertyValueSeparator+1, firstIndexOfCookieSectionsSeparator - firstIndexOfPropertyValueSeparator-1);
+        }
+
+        public async Task<string> GetCookieHeader()
         {
             if (cookies == null)
             {
@@ -43,7 +52,12 @@ namespace Controllers.Cookies
                 if (cookies == null) cookies = new Dictionary<string, string>();
             }
 
-            return cookies.Values;
+            var cookieHeaderBuilder = new System.Text.StringBuilder();
+
+            foreach (var nameValue in cookies)
+                cookieHeaderBuilder.Append(nameValue.Key + cookiePropertyValueSeparator + nameValue.Value + cookieSectionsSeparator + " ");
+
+            return cookieHeaderBuilder.ToString();
         }
 
         public async Task UpdateCookies(IEnumerable<string> updatedCookies)
@@ -51,16 +65,17 @@ namespace Controllers.Cookies
             var somethingChanged = false;
             foreach (var cookie in updatedCookies)
             {
+                var cookieValue = GetValue(cookie);
                 var cookieName = GetName(cookie);
 
                 if (!cookies.ContainsKey(cookieName))
                 {
-                    cookies.Add(cookieName, cookie);
+                    cookies.Add(cookieName, cookieValue);
                     somethingChanged = true;
                 }
-                else if (cookies[cookieName] != cookie)
+                else if (cookies[cookieName] != cookieValue)
                 {
-                    cookies[cookieName] = cookie;
+                    cookies[cookieName] = cookieValue;
                     somethingChanged = true;
                 }
             }

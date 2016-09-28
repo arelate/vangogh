@@ -21,6 +21,7 @@ namespace Controllers.Network
 
         const string userAgentHeader = "User-Agent";
         const string setCookieHeader = "Set-Cookie";
+        const string cookieHeader = "Cookie";
 
         const string defaultUserAgentString = "Mozilla/5.0 (iPad; CPU OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1";
         private string userAgent;
@@ -84,8 +85,8 @@ namespace Controllers.Network
             while (client.DefaultRequestHeaders.Contains(setCookieHeader))
                 client.DefaultRequestHeaders.Remove(setCookieHeader);
 
-            foreach (var cookie in await cookiesController.GetCookies())
-                client.DefaultRequestHeaders.Add(setCookieHeader, cookie);
+            var cookieHeaderValue = await cookiesController.GetCookieHeader();
+            client.DefaultRequestHeaders.Add(cookieHeader, cookieHeaderValue);
 
             return await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
         }
@@ -97,6 +98,8 @@ namespace Controllers.Network
             string data = null)
         {
             string uri = uriController.ConcatenateUri(baseUri, parameters);
+
+            if (data == null) data = string.Empty;
 
             var content = new StringContent(data, Encoding.UTF8, postMediaType);
 

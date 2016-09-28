@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Interfaces.Cookies
@@ -9,9 +8,9 @@ namespace Interfaces.Cookies
         string GetName(string cookie);
     }
 
-    public interface IGetCookiesDelegate
+    public interface IGetCookieHeaderDelegate
     {
-        Task<IEnumerable<string>> GetCookies();
+        Task<string> GetCookieHeader();
     }
 
     public interface IUpdateCookiesDelegate
@@ -21,7 +20,7 @@ namespace Interfaces.Cookies
 
     public interface ICookiesController:
         IGetNameDelegate,
-        IGetCookiesDelegate,
+        IGetCookieHeaderDelegate,
         IUpdateCookiesDelegate
     {
         // ...
