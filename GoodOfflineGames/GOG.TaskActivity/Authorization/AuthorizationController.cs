@@ -6,6 +6,7 @@ using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Console;
 using Interfaces.Serialization;
+using Interfaces.PropertiesValidation;
 
 using GOG.Interfaces.Authorization;
 
@@ -22,6 +23,7 @@ namespace GOG.TaskActivities.Authorization
         private IExtractionController extractionController;
         private IConsoleController consoleController;
         private IAuthenticationProperties authenticateProperties;
+        private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
         private IAuthorizationController authorizationController;
 
         public AuthorizationController(
@@ -31,10 +33,12 @@ namespace GOG.TaskActivities.Authorization
             IExtractionController extractionController,
             IConsoleController consoleController,
             IAuthenticationProperties authenticateProperties,
+            IAuthenticationPropertiesValidationController  authenticationPropertiesValidationController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.authenticateProperties = authenticateProperties;
+            this.authenticationPropertiesValidationController = authenticationPropertiesValidationController;
             this.uriController = uriController;
             this.networkController = networkController;
             this.serializationController = serializationController;
@@ -47,6 +51,7 @@ namespace GOG.TaskActivities.Authorization
             taskReportingController.StartTask("Authorization on GOG.com");
 
             authorizationController = new Controllers.Authorization.AuthorizationController(
+                authenticationPropertiesValidationController,
                 uriController,
                 networkController,
                 serializationController,

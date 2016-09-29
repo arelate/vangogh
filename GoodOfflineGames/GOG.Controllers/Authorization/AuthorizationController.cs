@@ -8,6 +8,7 @@ using Interfaces.Extraction;
 using Interfaces.Console;
 using Interfaces.Settings;
 using Interfaces.Serialization;
+using Interfaces.PropertiesValidation;
 
 using Models.Uris;
 using Models.QueryParameters;
@@ -26,6 +27,7 @@ namespace GOG.Controllers.Authorization
 
         private const string recaptchaUri = "https://www.google.com/recaptcha";
 
+        private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
         private IUriController uriController;
         private INetworkController networkController;
         private IExtractionController extractionController;
@@ -33,12 +35,14 @@ namespace GOG.Controllers.Authorization
         private ISerializationController<string> serializationController;
 
         public AuthorizationController(
+            IAuthenticationPropertiesValidationController authenticationPropertiesValidationController,
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IExtractionController extractionController,
             IConsoleController consoleController)
         {
+            this.authenticationPropertiesValidationController = authenticationPropertiesValidationController;
             this.uriController = uriController;
             this.networkController = networkController;
             this.extractionController = extractionController;
@@ -57,6 +61,8 @@ namespace GOG.Controllers.Authorization
         public async Task Authorize(IAuthenticationProperties usernamePassword)
         {
             if (await IsAuthorized()) return;
+
+            usernamePassword = authenticationPropertiesValidationController.ValidateProperties(usernamePassword);
 
             // request authorization token
             string authResponse = await networkController.Get(Uris.Paths.Authentication.Auth, QueryParameters.Authenticate);

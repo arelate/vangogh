@@ -125,11 +125,6 @@ namespace GoodOfflineGames
 
             taskReportingController.StartTask("Validate settings");
 
-            taskReportingController.StartTask("Validate authentication settings");
-            var authenticationPropertiesValidationController = new AuthenticationPropertiesValidationController(consoleController);
-            settings.Authentication = authenticationPropertiesValidationController.ValidateProperties(settings.Authentication) as Models.Settings.AuthenticationProperties;
-            taskReportingController.CompleteTask();
-
             taskReportingController.StartTask("Validate download settings");
             var downloadPropertiesValidationController = new DownloadPropertiesValidationController(languageController);
             settings.Download = downloadPropertiesValidationController.ValidateProperties(settings.Download) as Models.Settings.DownloadProperties;
@@ -145,6 +140,8 @@ namespace GoodOfflineGames
             // Task activities are encapsulated set of activity - so no data can be passed around!
             // Individual task activity would need to load data it needs from the disk / network
 
+            var authenticationPropertiesValidationController = new AuthenticationPropertiesValidationController(consoleController);
+
             var authorizationController = new AuthorizationController(
                 uriController,
                 networkController,
@@ -152,6 +149,7 @@ namespace GoodOfflineGames
                 extractionController,
                 consoleController,
                 settings.Authentication,
+                authenticationPropertiesValidationController,
                 taskReportingController);
 
             var productsUpdateController = new ProductsUpdateController(
