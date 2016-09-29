@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Cookies;
@@ -52,21 +51,22 @@ namespace Controllers.Cookies
                 if (cookies == null) cookies = new Dictionary<string, string>();
             }
 
+            const string template = "{0}={1}; ";
             var cookieHeaderBuilder = new System.Text.StringBuilder();
 
             foreach (var nameValue in cookies)
-                cookieHeaderBuilder.Append(nameValue.Key + cookiePropertyValueSeparator + nameValue.Value + cookieSectionsSeparator + " ");
+                cookieHeaderBuilder.Append(string.Format(template, nameValue.Key, nameValue.Value));
 
             return cookieHeaderBuilder.ToString();
         }
 
-        public async Task UpdateCookies(IEnumerable<string> updatedCookies)
+        public async Task SetCookies(IEnumerable<string> setCookieHeaders)
         {
             var somethingChanged = false;
-            foreach (var cookie in updatedCookies)
+            foreach (var setCookie in setCookieHeaders)
             {
-                var cookieValue = GetValue(cookie);
-                var cookieName = GetName(cookie);
+                var cookieValue = GetValue(setCookie);
+                var cookieName = GetName(setCookie);
 
                 if (!cookies.ContainsKey(cookieName))
                 {

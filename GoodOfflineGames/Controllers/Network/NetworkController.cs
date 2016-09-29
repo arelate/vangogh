@@ -14,7 +14,6 @@ namespace Controllers.Network
     public sealed class NetworkController : INetworkController, IUserAgentProperty
     {
         private HttpClient client;
-        //private CookieContainer cookieContainer;
         private ICookiesController cookiesController;
         private IUriController uriController;
         const string postMediaType = "application/x-www-form-urlencoded";
@@ -46,11 +45,9 @@ namespace Controllers.Network
             ICookiesController cookiesController,
             IUriController uriController)
         {
-            //cookieContainer = new CookieContainer();
             var httpHandler = new HttpClientHandler()
             {
-                //CookieContainer = cookieContainer,
-                //UseCookies = true,
+                UseCookies = false,
                 UseDefaultCredentials = false
             };
             client = new HttpClient(httpHandler);
@@ -72,7 +69,7 @@ namespace Controllers.Network
                 IEnumerable<string> responseCookies = new List<string>();
                 response.Headers.TryGetValues(setCookieHeader, out responseCookies);
 
-                await cookiesController.UpdateCookies(responseCookies);
+                await cookiesController.SetCookies(responseCookies);
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -82,13 +79,9 @@ namespace Controllers.Network
 
         public async Task<HttpResponseMessage> GetResponse(string uri)
         {
-            while (client.DefaultRequestHeaders.Contains(setCookieHeader))
-                client.DefaultRequestHeaders.Remove(setCookieHeader);
-
-            var cookieHeaderValue = await cookiesController.GetCookieHeader();
-            client.DefaultRequestHeaders.Add(cookieHeader, cookieHeaderValue);
-
-            return await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+            requestMessage.Headers.Add(cookieHeader, await cookiesController.GetCookieHeader());
+            return await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
         }
 
         // TODO: FormUrlEncodedContent

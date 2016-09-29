@@ -56,7 +56,6 @@ namespace GOG.Controllers.Authorization
 
         public async Task Authorize(IAuthenticationProperties usernamePassword)
         {
-            //consoleController.WriteLine(authorizingOnGOG, MessageType.Progress, usernamePassword.Username);
             if (await IsAuthorized()) return;
 
             // request authorization token

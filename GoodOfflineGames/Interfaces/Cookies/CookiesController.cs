@@ -8,20 +8,25 @@ namespace Interfaces.Cookies
         string GetName(string cookie);
     }
 
-    public interface IGetCookieHeaderDelegate
+    public interface IGetValueDelegate
+    {
+        string GetValue(string cookie);
+    }
+
+    public interface IGetCookieHeader
     {
         Task<string> GetCookieHeader();
     }
 
-    public interface IUpdateCookiesDelegate
+    public interface ISetCookiesDelegate
     {
-        Task UpdateCookies(IEnumerable<string> cookies);
+        Task SetCookies(IEnumerable<string> setCookieHeader);
     }
 
     public interface ICookiesController:
         IGetNameDelegate,
-        IGetCookieHeaderDelegate,
-        IUpdateCookiesDelegate
+        IGetCookieHeader,
+        ISetCookiesDelegate
     {
         // ...
     }
