@@ -20,6 +20,7 @@ namespace Controllers.Console
             string privateData = string.Empty;
             while ((key = System.Console.ReadKey(true)).Key != System.ConsoleKey.Enter)
             {
+                System.Console.Write("*");
                 privateData += key.KeyChar;
             }
             return privateData;
