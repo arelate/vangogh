@@ -22,6 +22,7 @@ namespace GOG.TaskActivities.Authorization
         private ISerializationController<string> serializationController;
         private IExtractionController loginTokenExtractionController;
         private IExtractionController loginIdExtractionController;
+        private IExtractionController loginUsernameExtractionController;
         private IConsoleController consoleController;
         private IAuthenticationProperties authenticateProperties;
         private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
@@ -33,6 +34,7 @@ namespace GOG.TaskActivities.Authorization
             ISerializationController<string> serializationController,
             IExtractionController loginTokenExtractionController,
             IExtractionController loginIdExtractionController,
+            IExtractionController loginUsernameExtractionController,
             IConsoleController consoleController,
             IAuthenticationProperties authenticateProperties,
             IAuthenticationPropertiesValidationController  authenticationPropertiesValidationController,
@@ -46,6 +48,7 @@ namespace GOG.TaskActivities.Authorization
             this.serializationController = serializationController;
             this.loginTokenExtractionController = loginTokenExtractionController;
             this.loginIdExtractionController = loginIdExtractionController;
+            this.loginUsernameExtractionController = loginUsernameExtractionController;
             this.consoleController = consoleController;
         }
 
@@ -60,6 +63,7 @@ namespace GOG.TaskActivities.Authorization
                 serializationController,
                 loginTokenExtractionController,
                 loginIdExtractionController,
+                loginUsernameExtractionController,
                 consoleController);
 
             await authorizationController.Authorize(authenticateProperties);

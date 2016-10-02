@@ -51,8 +51,10 @@
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Extraction\LoginIdExtractionController.cs" />
+    <Compile Include="Extraction\LoginUsernameExtractionController.cs" />
     <Compile Include="Extraction\ScreenshotExtractionController.cs" />
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
+    <Compile Include="Extraction\ValueAttributeExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />
     <Compile Include="ResolveUri\ResolveUriController.cs" />

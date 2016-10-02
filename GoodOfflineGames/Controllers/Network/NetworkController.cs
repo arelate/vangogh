@@ -59,6 +59,14 @@ namespace Controllers.Network
             this.uriController = uriController;
         }
 
+        private async Task SetCookies(HttpResponseMessage response)
+        {
+            IEnumerable<string> responseCookies = new List<string>();
+            response.Headers.TryGetValues(setCookieHeader, out responseCookies);
+
+            await cookiesController.SetCookies(responseCookies);
+        }
+
         public async Task<string> Get(
             string baseUri,
             IDictionary<string, string> parameters = null)
@@ -69,10 +77,7 @@ namespace Controllers.Network
             {
                 response.EnsureSuccessStatusCode();
 
-                IEnumerable<string> responseCookies = new List<string>();
-                response.Headers.TryGetValues(setCookieHeader, out responseCookies);
-
-                await cookiesController.SetCookies(responseCookies);
+                await SetCookies(response);
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -101,9 +106,10 @@ namespace Controllers.Network
             var content = new StringContent(data, Encoding.UTF8, postMediaType);
 
             using (var response = await GetResponse(HttpMethod.Post, uri, content))
-            //using (var response = await client.PostAsync(uri, content))
             {
                 response.EnsureSuccessStatusCode();
+
+                await SetCookies(response);
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
