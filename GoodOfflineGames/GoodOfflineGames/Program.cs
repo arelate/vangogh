@@ -89,7 +89,8 @@ namespace GoodOfflineGames
 
             var languageController = new LanguageController();
 
-            var extractionController = new TokenExtractionController();
+            var loginTokenExtractionController = new LoginTokenExtractionController();
+            var loginIdExtractionController = new LoginIdExtractionController();
             var gogDataExtractionController = new GOGDataExtractionController();
             var screenshotExtractionController = new ScreenshotExtractionController();
 
@@ -146,7 +147,8 @@ namespace GoodOfflineGames
                 uriController,
                 networkController,
                 serializationController,
-                extractionController,
+                loginTokenExtractionController,
+                loginIdExtractionController,
                 consoleController,
                 settings.Authentication,
                 authenticationPropertiesValidationController,

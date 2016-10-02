@@ -17,10 +17,12 @@ namespace Controllers.Network
         private ICookiesController cookiesController;
         private IUriController uriController;
         const string postMediaType = "application/x-www-form-urlencoded";
+        const string acceptHeaderContent = "text/html, application/xhtml+xml, image/jxr, */*";
 
         const string userAgentHeader = "User-Agent";
         const string setCookieHeader = "Set-Cookie";
         const string cookieHeader = "Cookie";
+        const string acceptHeader = "Accept";
 
         const string defaultUserAgentString = "Mozilla/5.0 (iPad; CPU OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1";
         private string userAgent;
@@ -51,6 +53,7 @@ namespace Controllers.Network
                 UseDefaultCredentials = false
             };
             client = new HttpClient(httpHandler);
+            client.DefaultRequestHeaders.ExpectContinue = false;
 
             this.cookiesController = cookiesController;
             this.uriController = uriController;
@@ -62,7 +65,7 @@ namespace Controllers.Network
         {
             string uri = uriController.ConcatenateUri(baseUri, parameters);
 
-            using (var response = await GetResponse(uri))
+            using (var response = await GetResponse(HttpMethod.Get, uri))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -77,10 +80,12 @@ namespace Controllers.Network
             }
         }
 
-        public async Task<HttpResponseMessage> GetResponse(string uri)
+        public async Task<HttpResponseMessage> GetResponse(HttpMethod method, string uri, HttpContent content = null)
         {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+            var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(cookieHeader, await cookiesController.GetCookieHeader());
+            requestMessage.Headers.Add(acceptHeader, acceptHeaderContent);
+            if (content != null) requestMessage.Content = content;
             return await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
         }
 
@@ -93,10 +98,10 @@ namespace Controllers.Network
             string uri = uriController.ConcatenateUri(baseUri, parameters);
 
             if (data == null) data = string.Empty;
-
             var content = new StringContent(data, Encoding.UTF8, postMediaType);
 
-            using (var response = await client.PostAsync(uri, content))
+            using (var response = await GetResponse(HttpMethod.Post, uri, content))
+            //using (var response = await client.PostAsync(uri, content))
             {
                 response.EnsureSuccessStatusCode();
 

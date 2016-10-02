@@ -11,7 +11,7 @@ namespace Interfaces.Network
 
     public interface IGetResponseDelegate
     {
-        Task<HttpResponseMessage> GetResponse(string uri);
+        Task<HttpResponseMessage> GetResponse(HttpMethod method, string uri, HttpContent content = null);
     }
 
     public interface IPostDelegate

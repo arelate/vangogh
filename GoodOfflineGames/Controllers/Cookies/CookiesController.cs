@@ -23,6 +23,8 @@ namespace Controllers.Cookies
         {
             this.storageController = storageController;
             this.serializationController = serializationController;
+
+            cookies = new Dictionary<string, string>();
         }
 
         public string GetName(string cookie)
@@ -44,7 +46,7 @@ namespace Controllers.Cookies
 
         public async Task<string> GetCookieHeader()
         {
-            if (cookies == null)
+            if (cookies.Count == 0)
             {
                 var cookiesContent = await storageController.Pull(cookiesFilename);
                 cookies = serializationController.Deserialize<Dictionary<string, string>>(cookiesContent);

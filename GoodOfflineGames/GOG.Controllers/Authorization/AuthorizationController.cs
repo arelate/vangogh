@@ -20,8 +20,8 @@ namespace GOG.Controllers.Authorization
         //private const string authorizingOnGOG = "Authorizing {0} on GOG.com...";
         //private const string successfullyAuthorizedOnGOG = "Successfully authorized {0} on GOG.com.";
         private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
-        private const string recaptchaDetected = "Login page contains reCAPTCHA.\n"+
-            "Please login in the browser, then export the cookies into ./cookies.txt\n"+
+        private const string recaptchaDetected = "Login page contains reCAPTCHA.\n" +
+            "Please login in the browser, then export the cookies into ./cookies.txt\n" +
             "INSTRUCTIONS";
         private const string securityCodeHasBeenSent = "Enter security code that has been sent to {0}:";
 
@@ -30,7 +30,8 @@ namespace GOG.Controllers.Authorization
         private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
         private IUriController uriController;
         private INetworkController networkController;
-        private IExtractionController extractionController;
+        private IExtractionController loginTokenExtractionController;
+        private IExtractionController loginIdExtractionController;
         private IConsoleController consoleController;
         private ISerializationController<string> serializationController;
 
@@ -39,13 +40,15 @@ namespace GOG.Controllers.Authorization
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IExtractionController extractionController,
+            IExtractionController loginTokenExtractionController,
+            IExtractionController loginIdExtractionController,
             IConsoleController consoleController)
         {
             this.authenticationPropertiesValidationController = authenticationPropertiesValidationController;
             this.uriController = uriController;
             this.networkController = networkController;
-            this.extractionController = extractionController;
+            this.loginTokenExtractionController = loginTokenExtractionController;
+            this.loginIdExtractionController = loginIdExtractionController;
             this.consoleController = consoleController;
             this.serializationController = serializationController;
         }
@@ -72,17 +75,30 @@ namespace GOG.Controllers.Authorization
                 throw new System.Security.SecurityException(recaptchaDetected);
             }
 
-            string loginToken = extractionController.ExtractMultiple(authResponse).First();
+            string loginToken = loginTokenExtractionController.ExtractMultiple(authResponse).First();
 
-            // login using username / password
+            // login using username / password or login id / password
+            var loginUri = string.Empty;
+            if (authResponse.Contains("login[id]"))
+            {
+                var loginId = loginIdExtractionController.ExtractMultiple(authResponse).First();
+                QueryParameters.LoginAuthenticate.Remove("login[username]");
+                QueryParameters.LoginAuthenticate["login[id]"] = loginId;
+                loginUri = Uris.Paths.Authentication.Login;
+            }
+            else
+            {
+                QueryParameters.LoginAuthenticate.Remove("login[id]");
+                QueryParameters.LoginAuthenticate["login[username]"] = usernamePassword.Username;
+                loginUri = Uris.Paths.Authentication.LoginCheck;
+            }
 
-            QueryParameters.LoginAuthenticate["login[username]"] = usernamePassword.Username;
             QueryParameters.LoginAuthenticate["login[password]"] = usernamePassword.Password;
             QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
 
             string loginData = uriController.ConcatenateQueryParameters(QueryParameters.LoginAuthenticate);
 
-            var loginCheckResult = await networkController.Post(Uris.Paths.Authentication.LoginCheck, null, loginData);
+            var loginCheckResult = await networkController.Post(loginUri, null, loginData);
 
             if (!loginCheckResult.Contains("gogData"))
             {
@@ -98,7 +114,7 @@ namespace GOG.Controllers.Authorization
                     securityCode = consoleController.ReadLine();
                 }
 
-                var twoStepToken = extractionController.ExtractMultiple(loginCheckResult).First();
+                var twoStepToken = loginTokenExtractionController.ExtractMultiple(loginCheckResult).First();
 
                 QueryParameters.TwoStepAuthenticate["second_step_authentication[token][letter_1]"] = securityCode[0].ToString();
                 QueryParameters.TwoStepAuthenticate["second_step_authentication[token][letter_2]"] = securityCode[1].ToString();

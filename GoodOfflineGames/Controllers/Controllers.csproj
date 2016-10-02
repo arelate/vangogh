@@ -50,6 +50,7 @@
     <Compile Include="Destination\GOGUriDestinationController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Download\DownloadController.cs" />
+    <Compile Include="Extraction\LoginIdExtractionController.cs" />
     <Compile Include="Extraction\ScreenshotExtractionController.cs" />
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Formatting\SecondsFormattingController.cs" />
     <Compile Include="Settings\SettingsController.cs" />
     <Compile Include="Storage\StorageController.cs" />
-    <Compile Include="Extraction\TokenExtractionController.cs" />
+    <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
   </ItemGroup>
   <ItemGroup>

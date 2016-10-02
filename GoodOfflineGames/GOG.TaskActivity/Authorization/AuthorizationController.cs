@@ -20,7 +20,8 @@ namespace GOG.TaskActivities.Authorization
         private IUriController uriController;
         private INetworkController networkController;
         private ISerializationController<string> serializationController;
-        private IExtractionController extractionController;
+        private IExtractionController loginTokenExtractionController;
+        private IExtractionController loginIdExtractionController;
         private IConsoleController consoleController;
         private IAuthenticationProperties authenticateProperties;
         private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
@@ -30,7 +31,8 @@ namespace GOG.TaskActivities.Authorization
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IExtractionController extractionController,
+            IExtractionController loginTokenExtractionController,
+            IExtractionController loginIdExtractionController,
             IConsoleController consoleController,
             IAuthenticationProperties authenticateProperties,
             IAuthenticationPropertiesValidationController  authenticationPropertiesValidationController,
@@ -42,7 +44,8 @@ namespace GOG.TaskActivities.Authorization
             this.uriController = uriController;
             this.networkController = networkController;
             this.serializationController = serializationController;
-            this.extractionController = extractionController;
+            this.loginTokenExtractionController = loginTokenExtractionController;
+            this.loginIdExtractionController = loginIdExtractionController;
             this.consoleController = consoleController;
         }
 
@@ -55,7 +58,8 @@ namespace GOG.TaskActivities.Authorization
                 uriController,
                 networkController,
                 serializationController,
-                extractionController,
+                loginTokenExtractionController,
+                loginIdExtractionController,
                 consoleController);
 
             await authorizationController.Authorize(authenticateProperties);

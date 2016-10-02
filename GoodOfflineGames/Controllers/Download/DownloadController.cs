@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net.Http;
 
 using Interfaces.Download;
 using Interfaces.Network;
@@ -28,7 +29,7 @@ namespace Controllers.Download
 
         public async Task DownloadFile(string uri, string destination)
         {
-            using (var response = await networkController.GetResponse(uri))
+            using (var response = await networkController.GetResponse(HttpMethod.Get, uri))
             {
                 response.EnsureSuccessStatusCode();
 

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Net.Http;
 
 using Interfaces.UriRedirect;
 using Interfaces.Network;
@@ -19,6 +20,7 @@ namespace Controllers.UriResolution
         public async Task<string> GetUriRedirect(string uri)
         {
             var response = await networkController.GetResponse(
+                HttpMethod.Get,
                 string.Format( 
                     Uris.Paths.ProductFiles.FullUriTemplate,
                     uri));
