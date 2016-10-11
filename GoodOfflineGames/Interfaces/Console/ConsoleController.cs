@@ -19,9 +19,9 @@
         string ReadLine();
     }
 
-    public interface IPrivateReadLineDelegate
+    public interface IInputPasswordDelegate
     {
-        string PrivateReadLine();
+        string InputPassword();
     }
 
     public interface IWriteDelegate
@@ -37,7 +37,7 @@
     public interface IConsoleController :
         IReadDelegate,
         IReadLineDelegate,
-        IPrivateReadLineDelegate,
+        IInputPasswordDelegate,
         IWriteDelegate,
         IWriteLineDelegate
     {

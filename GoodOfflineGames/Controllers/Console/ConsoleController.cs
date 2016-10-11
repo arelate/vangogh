@@ -2,7 +2,7 @@
 
 namespace Controllers.Console
 {
-    public class ConsoleController: IConsoleController
+    public class ConsoleController : IConsoleController
     {
         public string Read()
         {
@@ -14,16 +14,41 @@ namespace Controllers.Console
             return System.Console.ReadLine();
         }
 
-        public string PrivateReadLine()
+        public string InputPassword()
         {
             System.ConsoleKeyInfo key;
-            string privateData = string.Empty;
+            string password = string.Empty;
             while ((key = System.Console.ReadKey(true)).Key != System.ConsoleKey.Enter)
             {
-                System.Console.Write("*");
-                privateData += key.KeyChar;
+                string output = string.Empty;
+                bool passwordIncrement = false;
+
+                switch (key.Key)
+                {
+                    case System.ConsoleKey.Backspace:
+                        if (password.Length > 0)
+                            password = password.Substring(0, password.Length - 1);
+                        break;
+                    case System.ConsoleKey.UpArrow:
+                    case System.ConsoleKey.DownArrow:
+                    case System.ConsoleKey.LeftArrow:
+                    case System.ConsoleKey.RightArrow:
+                        continue;
+                    default:
+                        password += key.KeyChar;
+                        passwordIncrement = true;
+                        break;
+                }
+
+                // clear the line
+                System.Console.Write("\r" + new string(' ', password.Length + 1) + "\r");
+
+                var length = passwordIncrement ? password.Length - 1 : password.Length;
+                System.Console.Write(new string('*', length));
+                if (passwordIncrement && password.Length > 0)
+                    System.Console.Write(password[password.Length - 1]);
             }
-            return privateData;
+            return password;
         }
 
         public void Write(string message, MessageType messageType = MessageType.Default, params object[] data)
