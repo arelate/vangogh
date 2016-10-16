@@ -81,6 +81,7 @@
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
     <Compile Include="UriRedirection\ValidationUriRedirectController.cs" />
+    <Compile Include="Validation\ValidationController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

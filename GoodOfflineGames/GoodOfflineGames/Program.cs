@@ -22,6 +22,7 @@ using Controllers.UriRedirection;
 using Controllers.Destination;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
+using Controllers.Validation;
 
 using Interfaces.TaskActivity;
 
@@ -47,6 +48,8 @@ using GOG.TaskActivities.Download.ProductFiles;
 using GOG.TaskActivities.Download.ProductExtras;
 using GOG.TaskActivities.Download.Validation;
 using GOG.TaskActivities.Download.Processing;
+
+using GOG.TaskActivities.Validation;
 
 namespace GoodOfflineGames
 {
@@ -113,8 +116,7 @@ namespace GoodOfflineGames
                 gogUriDestinationController);
             var imagesDestinationController = new ImagesDestinationController();
             var screenshotsDestinationController = new ScreenshotsDestinationController();
-            var validationDestinationController = new ValidationDestinationController(
-                gogUriDestinationController);
+            var validationDestinationController = new ValidationDestinationController();
 
             var productStorageController = new ProductStorageController(
                 storageController,
@@ -316,6 +318,18 @@ namespace GoodOfflineGames
                 collectionController,
                 taskReportingController);
 
+            // validation controllers
+
+            var validationController = new ValidationController(
+                validationDestinationController,
+                fileController);
+
+            var processValidationController = new ProcessValidationController(
+                gogUriDestinationController,
+                validationController,
+                productStorageController,
+                taskReportingController);
+
             // Iterate and process all tasks
 
             var taskActivityControllers = new List<ITaskActivityController>()
@@ -333,8 +347,9 @@ namespace GoodOfflineGames
                 //screenshotsScheduleDownloadsController,
                 //productFilesScheduleDownloadsController,
                 //productExtrasScheduleDownloadsController,
-                validationScheduleDownloadsController,
-                //processScheduledDownloadsController
+                //validationScheduleDownloadsController,
+                //processScheduledDownloadsController,
+                processValidationController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

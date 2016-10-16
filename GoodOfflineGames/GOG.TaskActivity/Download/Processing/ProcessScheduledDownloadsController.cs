@@ -59,7 +59,12 @@ namespace GOG.TaskActivities.Download.Processing
 
                 await downloadController.DownloadFile(download.Source, download.Destination);
 
-                existingScheduledDownloads.Remove(download);
+                // trivial file types can safely be removed
+                // however files won't be removed here
+                // instead they are expected to go through validation
+                // and validation task activity would remove validated files
+                if (download.Type != ScheduledDownloadTypes.File)
+                    existingScheduledDownloads.Remove(download);
 
                 if (currentDownload % storagePushNthProduct == 0)
                 {

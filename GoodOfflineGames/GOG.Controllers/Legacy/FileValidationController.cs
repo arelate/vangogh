@@ -16,28 +16,6 @@
 //        private const string validationFilesContainer = "_md5";
 
 //        // file element attributes
-//        private const string totalSizeAttribute = "total_size";
-//        private const string timestampAttribute = "timestamp";
-//        private const string chunksAttribute = "chunks";
-//        private const string availableAttribute = "available";
-//        private const string notAvailableMessageAttribute = "notavailablemsg";
-//        private const string nameAttribute = "name";
-//        // chunk elements attributes
-//        private const string idAttribute = "id";
-//        private const string fromAttribute = "from";
-//        private const string toAttribute = "to";
-
-//        private const string replaceUriEntry = "?";
-//        private const string replaceUriEntryWithExtension = ".xml";
-
-//        // only validate binary files
-//        private readonly string[] extensionsWhitelist = new string[3] { ".exe", ".bin", ".dmg" };
-
-//        private IIOController ioController;
-//        private IRequestFileDelegate requestFileDelegate;
-//        private IPostUpdateDelegate postUpdateDelegate;
-
-//        private MD5CryptoServiceProvider md5CryptoServiceProvider;
 
 //        public FileValidationController(
 //            IIOController ioController,
@@ -50,49 +28,6 @@
 
 //            md5CryptoServiceProvider = new MD5CryptoServiceProvider();
 //            md5CryptoServiceProvider.Initialize();
-//        }
-
-//        public Uri GetValidationUri(string resolvedUri)
-//        {
-
-
-//            if (string.IsNullOrEmpty(resolvedUri)) return null;
-
-//            var validationUri = (resolvedUri.Contains(replaceUriEntry)) ?
-//                new Uri(resolvedUri.Replace(replaceUriEntry, replaceUriEntryWithExtension + replaceUriEntry)) :
-//                new Uri(resolvedUri + replaceUriEntryWithExtension);
-
-//            return validationUri;
-//        }
-
-//        public string GetLocalValidationFilename(Uri validationUri)
-//        {
-//            return Path.Combine(validationFilesContainer,
-//                validationUri.Segments.Last());
-//        }
-
-//        public string GetLocalValidationFilename(string localPath)
-//        {
-//            var localFilename = Path.GetFileName(localPath);
-//            return Path.Combine(validationFilesContainer, localFilename + replaceUriEntryWithExtension);
-//        }
-
-//        public async Task<bool> DownloadValidationFile(Uri validationUri)
-//        {
-//            string validationFilename = GetLocalValidationFilename(validationUri);
-//            if (ioController.FileExists(validationFilename))
-//            {
-//                return true;
-//            }
-//            else
-//            {
-//                var result = await requestFileDelegate.RequestFile(
-//                    validationUri.ToString(),
-//                    validationFilesContainer,
-//                    ioController);
-
-//                return result.Item1;
-//            }
 //        }
 
 //        public bool ValidateSize(string uri, long expectedSize)
