@@ -3,7 +3,7 @@ using Interfaces.Storage;
 using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.Reporting;
-using Interfaces.UriRedirect;
+using Interfaces.UriRedirection;
 using Interfaces.Destination;
 
 using GOG.TaskActivities.Abstract;

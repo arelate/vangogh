@@ -18,7 +18,7 @@ using Controllers.RequestPage;
 using Controllers.Throttle;
 using Controllers.ImageUri;
 using Controllers.Formatting;
-using Controllers.UriResolution;
+using Controllers.UriRedirection;
 using Controllers.Destination;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
@@ -40,11 +40,13 @@ using GOG.TaskActivities.Download.Dependencies.ProductImages;
 using GOG.TaskActivities.Download.Dependencies.Screenshots;
 using GOG.TaskActivities.Download.Dependencies.ProductFiles;
 using GOG.TaskActivities.Download.Dependencies.ProductExtras;
+using GOG.TaskActivities.Download.Dependencies.Validation;
 using GOG.TaskActivities.Download.ProductImages;
 using GOG.TaskActivities.Download.Screenshots;
 using GOG.TaskActivities.Download.ProductFiles;
 using GOG.TaskActivities.Download.ProductExtras;
-using GOG.TaskActivities.Download;
+using GOG.TaskActivities.Download.Validation;
+using GOG.TaskActivities.Download.Processing;
 
 namespace GoodOfflineGames
 {
@@ -61,6 +63,7 @@ namespace GoodOfflineGames
             var serializationController = new JSONStringController();
 
             var consoleController = new ConsoleController();
+
             var taskReportingController = new TaskReportingController(
                 consoleController);
 
@@ -110,6 +113,8 @@ namespace GoodOfflineGames
                 gogUriDestinationController);
             var imagesDestinationController = new ImagesDestinationController();
             var screenshotsDestinationController = new ScreenshotsDestinationController();
+            var validationDestinationController = new ValidationDestinationController(
+                gogUriDestinationController);
 
             var productStorageController = new ProductStorageController(
                 storageController,
@@ -255,6 +260,12 @@ namespace GoodOfflineGames
             var productExtrasDownloadSourcesController = new ProductExtrasDownloadSourcesController(
                 productStorageController);
 
+            var validationUriRedirectController = new ValidationUriRedirectController();
+
+            var validationDownloadSourcesController = new ValidationDownloadSourcesController(
+                productStorageController,
+                validationUriRedirectController);
+
             // download controllers
 
             var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
@@ -291,6 +302,14 @@ namespace GoodOfflineGames
                 fileController,
                 taskReportingController);
 
+            var validationScheduleDownloadsController = new ValidationScheduleDownloadsController(
+                validationDownloadSourcesController,
+                validationDestinationController,
+                productStorageController,
+                collectionController,
+                fileController,
+                taskReportingController);
+
             var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 productStorageController,
                 downloadController,
@@ -314,6 +333,7 @@ namespace GoodOfflineGames
                 //screenshotsScheduleDownloadsController,
                 //productFilesScheduleDownloadsController,
                 //productExtrasScheduleDownloadsController,
+                validationScheduleDownloadsController,
                 //processScheduledDownloadsController
             };
 

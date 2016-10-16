@@ -64,6 +64,8 @@ namespace Controllers.Cookies
 
         public async Task SetCookies(IEnumerable<string> setCookieHeaders)
         {
+            if (setCookieHeaders == null) return;
+
             var somethingChanged = false;
             foreach (var setCookie in setCookieHeaders)
             {

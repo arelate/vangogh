@@ -11,7 +11,6 @@ namespace Models.Uris
             public const string PrefixSeparator = "//";
             public const string Http = HttpPrefix + PrefixSeparator;
             public const string Https = HttpsPrefix + PrefixSeparator;
-
         }
 
         public static class Roots

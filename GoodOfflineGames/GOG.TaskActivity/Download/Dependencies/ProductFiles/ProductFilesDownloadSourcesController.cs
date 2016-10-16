@@ -66,7 +66,13 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
                 foreach (var extraDownloadEntry in gameDetails.Extras)
                     downloadSources.Add(extraDownloadEntry.ManualUrl);
 
-                gameDetailsDownloadSources.Add(gameDetails.Id, downloadSources);
+                //gameDetailsDownloadSources.Add(gameDetails.Id, downloadSources);
+                if (!gameDetailsDownloadSources.ContainsKey(gameDetails.Id))
+                    gameDetailsDownloadSources.Add(gameDetails.Id, new List<string>());
+
+                foreach (var source in downloadSources)
+                    if (!gameDetailsDownloadSources[gameDetails.Id].Contains(source))
+                        gameDetailsDownloadSources[gameDetails.Id].Add(source);
             }
 
             return gameDetailsDownloadSources;

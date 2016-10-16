@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Interfaces.UriRedirect
+namespace Interfaces.UriRedirection
 {
     public interface IGetUriRedirectDelegate
     {

@@ -48,6 +48,7 @@
     <Compile Include="Destination\ScreenshotsDestinationController.cs" />
     <Compile Include="Destination\ImagesDestinationController.cs" />
     <Compile Include="Destination\GOGUriDestinationController.cs" />
+    <Compile Include="Destination\ValidationDestinationController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Extraction\LoginIdExtractionController.cs" />
@@ -57,7 +58,7 @@
     <Compile Include="Extraction\ValueAttributeExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />
-    <Compile Include="ResolveUri\ResolveUriController.cs" />
+    <Compile Include="UriRedirection\UriRedirectController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="PropertiesValidation\AuthenticationPropertiesValidationController.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
+    <Compile Include="UriRedirection\ValidationUriRedirectController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

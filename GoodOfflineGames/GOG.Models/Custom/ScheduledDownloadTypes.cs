@@ -5,6 +5,7 @@
         Image,
         Screenshot,
         File,
-        Extra
+        Extra,
+        Validation
     }
 }

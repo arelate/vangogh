@@ -6,7 +6,7 @@ using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.DownloadSources;
-using Interfaces.UriRedirect;
+using Interfaces.UriRedirection;
 using Interfaces.Destination;
 
 using GOG.Models.Custom;
@@ -35,6 +35,7 @@ namespace GOG.TaskActivities.Abstract
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
+            this.downloadType = downloadType;
             this.downloadSourcesController = downloadSourcesController;
             this.uriRedirectController = uriRedirectController;
             this.destinationController = destinationController;

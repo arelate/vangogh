@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using System.Net.Http;
 
-using Interfaces.UriRedirect;
+using Interfaces.UriRedirection;
 using Interfaces.Network;
 
 using Models.Uris;
 
-namespace Controllers.UriResolution
+namespace Controllers.UriRedirection
 {
     public class UriRedirectController : IUriRedirectController
     {

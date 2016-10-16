@@ -79,7 +79,7 @@
     <Compile Include="UpdateDependencies\RequiredUpdatesController.cs" />
     <Compile Include="UpdateDependencies\SkipUpdateController.cs" />
     <Compile Include="UpdateDependencies\UpdateUriController.cs" />
-    <Compile Include="UriResolution\UriResolutionController.cs" />
+    <Compile Include="UriResolution\UriRedirectController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

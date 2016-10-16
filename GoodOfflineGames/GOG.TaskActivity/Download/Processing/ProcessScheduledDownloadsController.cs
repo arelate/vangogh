@@ -11,7 +11,7 @@ using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.Download
+namespace GOG.TaskActivities.Download.Processing
 {
     public class ProcessScheduledDownloadsController: TaskActivityController
     {

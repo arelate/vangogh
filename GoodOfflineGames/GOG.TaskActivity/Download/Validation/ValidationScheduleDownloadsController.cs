@@ -3,27 +3,25 @@ using Interfaces.Storage;
 using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.Reporting;
-using Interfaces.UriRedirection;
 using Interfaces.Destination;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.Download.ProductFiles
+namespace GOG.TaskActivities.Download.Validation
 {
-    public class ProductFilesScheduleDownloadsController: ScheduleDownloadsController
+    public class ValidationScheduleDownloadsController: ScheduleDownloadsController
     {
-        public ProductFilesScheduleDownloadsController(
-            IDownloadSourcesController downloadSourcesController,
-            IUriRedirectController uriRedirectController,
+        public ValidationScheduleDownloadsController(
+            IDownloadSourcesController validationSourcesController,
             IDestinationController destinationController,
             IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base (
-                Models.Custom.ScheduledDownloadTypes.File,
-                downloadSourcesController,
-                uriRedirectController,
+                Models.Custom.ScheduledDownloadTypes.Validation,
+                validationSourcesController,
+                null, // uriRedirectController
                 destinationController,
                 productTypeStorageController,
                 collectionController,
