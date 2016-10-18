@@ -12,22 +12,6 @@ using Interfaces.Stream;
 
 namespace Controllers.Validation
 {
-    static class ValidationXmlMetadata
-    {
-        public const string File = "file";
-        // file element attributes
-        public const string TotalSize = "total_size";
-        public const string Timestamp = "timestamp";
-        public const string Chunks = "chunks";
-        public const string Available = "available";
-        public const string NotAvailableMessage = "notavailablemsg";
-        public const string Name = "name";
-        // chunk elements attributes
-        public const string Id = "id";
-        public const string From = "from";
-        public const string To = "to";
-    }
-
     public class ValidationController : IValidationController
     {
         private MD5CryptoServiceProvider md5CryptoServiceProvider;
@@ -63,7 +47,7 @@ namespace Controllers.Validation
 
             validationXml.Load(validationFilename);
 
-            var fileElement = validationXml.GetElementsByTagName(ValidationXmlMetadata.File);
+            var fileElement = validationXml.GetElementsByTagName("file");
             if (fileElement == null ||
                 fileElement.Count < 1 ||
                 fileElement[0] == null ||
@@ -77,14 +61,14 @@ namespace Controllers.Validation
 
             try
             {
-                expectedSize = long.Parse(fileElement[0].Attributes[ValidationXmlMetadata.TotalSize]?.Value);
-                expectedName = fileElement[0].Attributes[ValidationXmlMetadata.Name]?.Value;
-                chunks = int.Parse(fileElement[0].Attributes[ValidationXmlMetadata.Chunks]?.Value);
-                available = fileElement[0].Attributes[ValidationXmlMetadata.Available]?.Value == "1";
+                expectedSize = long.Parse(fileElement[0].Attributes["total_size"]?.Value);
+                expectedName = fileElement[0].Attributes["name"]?.Value;
+                chunks = int.Parse(fileElement[0].Attributes["chunks"]?.Value);
+                available = fileElement[0].Attributes["available"]?.Value == "1";
 
                 if (!available)
                 {
-                    var notAvailableMessage = fileElement[0].Attributes[ValidationXmlMetadata.NotAvailableMessage]?.Value;
+                    var notAvailableMessage = fileElement[0].Attributes["notavailablemsg"]?.Value;
                     throw new Exception(notAvailableMessage);
                 }
             }
@@ -112,8 +96,8 @@ namespace Controllers.Validation
                     long from, to = 0;
                     string expectedMd5 = string.Empty;
 
-                    from = long.Parse(chunkElement.Attributes[ValidationXmlMetadata.From]?.Value);
-                    to = long.Parse(chunkElement.Attributes[ValidationXmlMetadata.To]?.Value);
+                    from = long.Parse(chunkElement.Attributes["from"]?.Value);
+                    to = long.Parse(chunkElement.Attributes["to"]?.Value);
                     expectedMd5 = chunkElement.FirstChild.Value;
 
                     await ValidateChunk(fileStream, from, to, expectedMd5);
