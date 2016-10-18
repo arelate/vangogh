@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 using Interfaces.Reporting;
@@ -33,7 +34,11 @@ namespace GOG.TaskActivities.Validation
 
         public override async Task ProcessTask()
         {
+            taskReportingController.StartTask("Load downloads information");
             var scheduledDownloads = await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
+            taskReportingController.CompleteTask();
+
+            taskReportingController.StartTask("Validating product files");
 
             foreach (var download in scheduledDownloads)
             {
@@ -44,8 +49,19 @@ namespace GOG.TaskActivities.Validation
                     download.Destination,
                     destinationController.GetFilename(download.Source));
 
-                await validationController.Validate(filename);
+                try
+                {
+                    taskReportingController.StartTask("Validating file " + filename);
+                    await validationController.Validate(filename);
+                    taskReportingController.CompleteTask();
+                }
+                catch (Exception ex)
+                {
+                    taskReportingController.ReportFailure(ex.Message);
+                }
             }
+
+            taskReportingController.CompleteTask();
         }
     }
 }

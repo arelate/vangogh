@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdditionalDetails\AdditionalDetailsController.cs" />
+    <Compile Include="Conversion\ConversionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Destination\DestinationController.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />

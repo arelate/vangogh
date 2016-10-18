@@ -23,6 +23,7 @@ using Controllers.Destination;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
+using Controllers.Conversion;
 
 using Interfaces.TaskActivity;
 
@@ -320,9 +321,13 @@ namespace GoodOfflineGames
 
             // validation controllers
 
+            var byteToStringConversionController = new BytesToStringConvertionController();
+
             var validationController = new ValidationController(
                 validationDestinationController,
-                fileController);
+                fileController,
+                streamController,
+                byteToStringConversionController);
 
             var processValidationController = new ProcessValidationController(
                 gogUriDestinationController,
