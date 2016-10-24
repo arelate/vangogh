@@ -54,6 +54,7 @@
     <Compile Include="File\FileController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="Language\LanguageController.cs" />
+    <Compile Include="Products\ProductsController.cs" />
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="Settings\Connection.cs" />
     <Compile Include="Throttle\PolitenessController.cs" />
