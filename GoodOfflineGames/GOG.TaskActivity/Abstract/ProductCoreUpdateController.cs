@@ -12,6 +12,7 @@ using Interfaces.UpdateDependencies;
 using Interfaces.AdditionalDetails;
 
 using Models.Uris;
+using Models.ProductCore;
 
 using GOG.Models;
 

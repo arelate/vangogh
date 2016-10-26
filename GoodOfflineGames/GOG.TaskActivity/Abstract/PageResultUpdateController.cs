@@ -7,6 +7,7 @@ using Interfaces.ProductTypes;
 using Interfaces.Storage;
 
 using Models.Uris;
+using Models.ProductCore;
 
 using GOG.Models;
 

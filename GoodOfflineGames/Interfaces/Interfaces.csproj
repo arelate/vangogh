@@ -53,10 +53,13 @@
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="File\FileController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
+    <Compile Include="Indexing\IndexingController.cs" />
     <Compile Include="Language\LanguageController.cs" />
+    <Compile Include="ProductStoragePolicy\ProductStoragePolicy.cs" />
     <Compile Include="Products\ProductsController.cs" />
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="Settings\Connection.cs" />
+    <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Throttle\PolitenessController.cs" />
     <Compile Include="ProductTypes\ProductTypes.cs" />
     <Compile Include="Reporting\DownloadReportingController.cs" />

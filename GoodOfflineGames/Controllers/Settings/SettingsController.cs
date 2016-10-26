@@ -8,11 +8,11 @@ namespace Controllers.Settings
 {
     public class SettingsController : ISettingsController<Models.Settings.Settings>
     {
-        private IStringStorageController storageController;
+        private IStorageController<string> storageController;
         private ISerializationController<string> serializationController;
 
         public SettingsController(
-            IStringStorageController storageController,
+            IStorageController<string> storageController,
             ISerializationController<string> serializationController)
         {
             this.storageController = storageController;

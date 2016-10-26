@@ -7,6 +7,11 @@ namespace Interfaces.File
         void Move(string fromUri, string toUri);
     }
 
+    public interface IMoveToRecycleBinDelegate
+    {
+        void MoveToRecycleBin(string uri);
+    }
+
     public interface IExistsDelegate
     {
         bool Exists(string uri);
@@ -24,6 +29,7 @@ namespace Interfaces.File
 
     public interface IFileController :
         IMoveDelegate,
+        IMoveToRecycleBinDelegate,
         IExistsDelegate,
         IGetSizeDelegate,
         IGetTimestampDelegate

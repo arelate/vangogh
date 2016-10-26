@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace GOG.Models
+namespace Models.ProductCore
 {
     [DataContract]
     public abstract class ProductCore

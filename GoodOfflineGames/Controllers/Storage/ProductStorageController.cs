@@ -9,14 +9,14 @@ namespace Controllers.Storage
 {
     public class ProductStorageController : IProductTypeStorageController
     {
-        private IStringStorageController storageController;
+        private IStorageController<string> storageController;
         private ISerializationController<string> serializationController;
 
         private const string prefixTemplate = "var {0}=";
         private const string filenameTemplate = "{0}.js";
 
         public ProductStorageController(
-            IStringStorageController storageController,
+            IStorageController<string> storageController,
             ISerializationController<string> serializationController)
         {
             this.storageController = storageController;

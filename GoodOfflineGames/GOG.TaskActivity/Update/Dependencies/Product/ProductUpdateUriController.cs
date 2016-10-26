@@ -1,6 +1,6 @@
 ﻿using Interfaces.UpdateDependencies;
 
-using GOG.Models;
+using Models.ProductCore;
 
 namespace GOG.TaskActivities.Update.Dependencies.Product
 {

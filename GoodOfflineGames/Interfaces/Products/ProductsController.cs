@@ -2,9 +2,9 @@
 
 namespace Interfaces.Products
 {
-    public interface ILoadProductsListDelegate
+    public interface ILoadProductsDelegate
     {
-        Task LoadProductsList();
+        Task LoadProducts();
     }
 
     public interface IGetProductByIdDelegate<Type>
@@ -28,7 +28,7 @@ namespace Interfaces.Products
     }
 
     public interface IProductsController<Type>:
-        ILoadProductsListDelegate,
+        ILoadProductsDelegate,
         IGetProductByIdDelegate<Type>,
         IUpdateProductDelegate<Type>,
         IRemoveProductDelegate<Type>,

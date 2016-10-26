@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Serialization;
 
+using Models.ProductCore;
+
 namespace GOG.Models
 {
     [DataContract()]

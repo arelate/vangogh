@@ -10,7 +10,7 @@ namespace Controllers.Cookies
     public class CookiesController : ICookiesController
     {
         private Dictionary<string, string> cookies;
-        private IStringStorageController storageController;
+        private IStorageController<string> storageController;
         private ISerializationController<string> serializationController;
 
         const char cookieSectionsSeparator = ';';
@@ -18,7 +18,7 @@ namespace Controllers.Cookies
         const string cookiesFilename = "cookies.json";
 
         public CookiesController(
-            IStringStorageController storageController,
+            IStorageController<string> storageController,
             ISerializationController<string> serializationController)
         {
             this.storageController = storageController;

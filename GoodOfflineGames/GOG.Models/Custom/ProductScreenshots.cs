@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using Models.ProductCore;
+
 namespace GOG.Models.Custom
 {
     [DataContract]

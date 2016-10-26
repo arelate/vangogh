@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Conversion\BytesToStringConversionController.cs" />
+    <Compile Include="Conversion\JSONToJavaScriptConvetsionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Destination\Abstract\ImagesScreenshotsDestinationController.cs" />
     <Compile Include="Destination\FilesExtrasDestinationController.cs" />
@@ -58,6 +59,9 @@
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="Extraction\ValueAttributeExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
+    <Compile Include="Indexing\ProductCoreIndexingController.cs" />
+    <Compile Include="SerializedStorage\SerializedStorageController.cs" />
+    <Compile Include="Products\ProductsController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />
     <Compile Include="UriRedirection\UriRedirectController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
@@ -94,9 +98,7 @@
       <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Products\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

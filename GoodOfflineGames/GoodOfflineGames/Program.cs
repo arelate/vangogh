@@ -58,8 +58,10 @@ namespace GoodOfflineGames
     {
         static void Main(string[] args)
         {
+            string recycleBinUri = "_recycleBin";
+
             var streamController = new StreamController();
-            var fileController = new FileController();
+            var fileController = new FileController(recycleBinUri);
             var directoryController = new DirectoryController();
             var storageController = new StorageController(
                 streamController,

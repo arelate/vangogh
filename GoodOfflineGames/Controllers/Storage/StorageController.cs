@@ -7,7 +7,7 @@ using Interfaces.Storage;
 
 namespace Controllers.Storage
 {
-    public class StorageController: IStringStorageController
+    public class StorageController: IStorageController<string>
     {
         private IStreamController streamController;
         private IFileController fileController;

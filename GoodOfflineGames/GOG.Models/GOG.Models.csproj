@@ -66,7 +66,6 @@
     <Compile Include="OSRequirements.cs" />
     <Compile Include="PageResult.cs" />
     <Compile Include="Product.cs" />
-    <Compile Include="ProductCore.cs" />
     <Compile Include="GameProductData.cs" />
     <Compile Include="Custom\ProductFile.cs" />
     <Compile Include="ProductsPageResult.cs" />
@@ -89,6 +88,12 @@
     <Compile Include="User.cs" />
     <Compile Include="UserData.cs" />
     <Compile Include="WorksOn.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{03a2d07a-5c0f-4948-b710-7ea1cbd21986}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
