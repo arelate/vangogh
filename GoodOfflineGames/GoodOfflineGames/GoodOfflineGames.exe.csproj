@@ -92,6 +92,10 @@
       <Project>{7e25c189-ac83-4e20-ba55-ae68c39b31a9}</Project>
       <Name>Controllers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GOG.Models\GOG.Models.csproj">
+      <Project>{864ca735-6c74-4cfc-a5e4-387b2c3225e3}</Project>
+      <Name>GOG.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GOG.TaskActivity\GOG.TaskActivities.csproj">
       <Project>{9052edda-e63b-4eb0-9560-3738ce0f7d8e}</Project>
       <Name>GOG.TaskActivities</Name>

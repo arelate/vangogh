@@ -3,11 +3,11 @@ using Models.ProductCore;
 
 namespace Controllers.Indexing
 {
-    public class ProductCoreIndexingController : IIndexingController<ProductCore>
+    public class ProductCoreIndexingController : IIndexingController
     {
-        public long GetIndex(ProductCore data)
+        public long GetIndex<Type>(Type data)
         {
-            return data.Id;
+            return (data as ProductCore).Id;
         }
     }
 }

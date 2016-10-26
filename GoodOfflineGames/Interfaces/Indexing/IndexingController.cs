@@ -1,12 +1,12 @@
 ﻿namespace Interfaces.Indexing
 {
-    public interface IIndexDelegate<Type>
+    public interface IIndexDelegate
     {
-        long GetIndex(Type data);
+        long GetIndex<Type>(Type data);
     }
 
-    public interface IIndexingController<Type>:
-        IIndexDelegate<Type>
+    public interface IIndexingController:
+        IIndexDelegate
     {
         // ...
     }

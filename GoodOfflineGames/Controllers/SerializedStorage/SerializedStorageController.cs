@@ -5,15 +5,15 @@ using Interfaces.Storage;
 using Interfaces.Serialization;
 using Interfaces.Conversion;
 
-namespace Controllers.ProductSerializedStorageController
+namespace Controllers.SerializedStorage
 {
-    public class ProductSerializedStorageController : ISerializedStorageController
+    public class SerializedStorageController : ISerializedStorageController
     {
         private IStorageController<string> storageController;
         private ISerializationController<string> serializarionController;
         private IConversionController<string, string> stringConversionController;
 
-        public ProductSerializedStorageController(
+        public SerializedStorageController(
             IStorageController<string> storageController,
             ISerializationController<string> serializarionController,
             IConversionController<string, string> stringConversionController)

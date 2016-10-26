@@ -47,6 +47,7 @@
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Destination\Abstract\ImagesScreenshotsDestinationController.cs" />
     <Compile Include="Destination\FilesExtrasDestinationController.cs" />
+    <Compile Include="Destination\ProductsDestinationController.cs" />
     <Compile Include="Destination\ScreenshotsDestinationController.cs" />
     <Compile Include="Destination\ImagesDestinationController.cs" />
     <Compile Include="Destination\GOGUriDestinationController.cs" />

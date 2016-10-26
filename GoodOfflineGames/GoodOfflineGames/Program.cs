@@ -24,8 +24,13 @@ using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
 using Controllers.Conversion;
+using Controllers.Products;
+using Controllers.SerializedStorage;
+using Controllers.Indexing;
 
 using Interfaces.TaskActivity;
+
+using GOG.Models;
 
 using GOG.TaskActivities.Authorization;
 
@@ -124,6 +129,31 @@ namespace GoodOfflineGames
             var productStorageController = new ProductStorageController(
                 storageController,
                 serializationController);
+
+            // product controllers
+
+            var javaScriptPrefix = "var data=";
+            var jsonToJavaScriptConversionController = new JSONToJavaScriptConvetsionController(javaScriptPrefix);
+
+            var serializedStorageController = new SerializedStorageController(
+                storageController,
+                serializationController,
+                jsonToJavaScriptConversionController);
+
+            var productCoreIndexingController = new ProductCoreIndexingController();
+
+            var productsDestinationController = new ProductsDestinationController();
+
+            var productsController = new ProductsController<Product>(
+                serializedStorageController, 
+                Interfaces.ProductStoragePolicy.ProductStoragePolicy.SerializeItems,
+                productCoreIndexingController, 
+                collectionController,
+                productsDestinationController, 
+                fileController);
+
+            // TODO: Load existing data as TaskActivity
+            productsController.LoadProducts().Wait();
 
             // Load settings that (might) have authorization information, and request to run or not specific task activities
 

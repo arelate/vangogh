@@ -16,7 +16,7 @@ namespace Controllers.Products
     public class ProductsController<Type> : IProductsController<Type>
     {
         private ProductStoragePolicy productStoragePolicy;
-        private IIndexingController<Type> indexingController;
+        private IIndexingController indexingController;
         private ICollectionController collectionController;
 
         private IDestinationController destinationController;
@@ -38,7 +38,7 @@ namespace Controllers.Products
             ISerializedStorageController serializedStorageController,
 
             ProductStoragePolicy productStoragePolicy,
-            IIndexingController<Type> indexingController,
+            IIndexingController indexingController,
             ICollectionController collectionController,
             IDestinationController destinationController,
             IMoveToRecycleBinDelegate moveToRecycleBinDelegate)
