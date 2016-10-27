@@ -55,8 +55,8 @@
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="Indexing\IndexingController.cs" />
     <Compile Include="Language\LanguageController.cs" />
-    <Compile Include="ProductStoragePolicy\ProductStoragePolicy.cs" />
-    <Compile Include="Products\ProductsController.cs" />
+    <Compile Include="DataStoragePolicy\DataStoragePolicy.cs" />
+    <Compile Include="Data\DataController.cs" />
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="Settings\Connection.cs" />

@@ -8,5 +8,13 @@ namespace Controllers.Destination
         {
             return "_screenshots";
         }
+
+        public override string GetFilename(string source)
+        {
+            if (string.IsNullOrEmpty(source))
+                return "screenshots.js";
+
+            return base.GetFilename(source);
+        }
     }
 }

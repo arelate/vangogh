@@ -2,7 +2,7 @@
 using Interfaces.RequestPage;
 using Interfaces.Serialization;
 using Interfaces.ProductTypes;
-using Interfaces.Products;
+using Interfaces.Data;
 
 using Models.Uris;
 using Models.QueryParameters;
@@ -21,10 +21,10 @@ namespace GOG.TaskActivities.Update.PageResult
         public ProductsUpdateController(
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
-            IProductsController<Product> productsController,
+            IDataController<Product> productsDataController,
             ITaskReportingController taskReportingController) :
             base(requestPageController,
-                productsController,
+                productsDataController,
                 taskReportingController)
         {
             productType = ProductTypes.Product;

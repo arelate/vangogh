@@ -63,7 +63,7 @@
     <Compile Include="Indexing\ProductCoreIndexingController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
-    <Compile Include="Products\ProductsController.cs" />
+    <Compile Include="Data\DataController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />
     <Compile Include="UriRedirection\UriRedirectController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />

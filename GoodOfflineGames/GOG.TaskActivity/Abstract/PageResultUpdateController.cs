@@ -3,7 +3,7 @@
 using Interfaces.Reporting;
 using Interfaces.RequestPage;
 using Interfaces.ProductTypes;
-using Interfaces.Products;
+using Interfaces.Data;
 
 using Models.Uris;
 using Models.ProductCore;
@@ -20,7 +20,7 @@ namespace GOG.TaskActivities.Abstract
         where Type : ProductCore
     {
         private IRequestPageController requestPageController;
-        private IProductsController<Type> productsController;
+        private IDataController<Type> dataController;
 
         internal ProductTypes productType;
         internal IPageResultsController<PageType> pageResultsController;
@@ -31,12 +31,12 @@ namespace GOG.TaskActivities.Abstract
 
         public PageResultUpdateController(
             IRequestPageController requestPageController,
-            IProductsController<Type> productsController,
+            IDataController<Type> dataController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.requestPageController = requestPageController;
-            this.productsController = productsController;
+            this.dataController = dataController;
 
             //filename = string.Format(filenameTemplate, productType.ToString().ToLower());
         }
@@ -54,7 +54,7 @@ namespace GOG.TaskActivities.Abstract
             foreach (var product in products)
             {
                 taskReportingController.StartTask("Update product " + product.Title);
-                await productsController.UpdateProduct(product);
+                await dataController.Update(product);
                 taskReportingController.CompleteTask();
             }
             taskReportingController.CompleteTask();

@@ -24,14 +24,16 @@ using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
 using Controllers.Conversion;
-using Controllers.Products;
+using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Indexing;
 using Controllers.RecycleBin;
 
 using Interfaces.TaskActivity;
+using Interfaces.DataStoragePolicy;
 
 using GOG.Models;
+using GOG.Models.Custom;
 
 using GOG.TaskActivities.Authorization;
 
@@ -150,16 +152,25 @@ namespace GoodOfflineGames
 
             var productsDestinationController = new ProductsDestinationController();
 
-            var productsController = new ProductsController<Product>(
+            var productsDataController = new DataController<Product>(
                 serializedStorageController, 
-                Interfaces.ProductStoragePolicy.ProductStoragePolicy.SerializeItems,
+                DataStoragePolicy.SerializeItems,
                 productCoreIndexingController, 
                 collectionController,
                 productsDestinationController,
                 recycleBinController);
 
+            var screenshotsDataController = new DataController<ProductScreenshots>(
+                serializedStorageController,
+                DataStoragePolicy.SerializeItems,
+                productCoreIndexingController,
+                collectionController,
+                screenshotsDestinationController,
+                recycleBinController);
+
             // TODO: Load existing data as TaskActivity
-            productsController.LoadProducts().Wait();
+            //productDataController.Initialize().Wait();
+            screenshotsDataController.Initialize().Wait();
 
             // Load settings that (might) have authorization information, and request to run or not specific task activities
 
@@ -206,7 +217,7 @@ namespace GoodOfflineGames
             var productsUpdateController = new ProductsUpdateController(
                 requestPageController,
                 serializationController,
-                productsController,
+                productsDataController,
                 taskReportingController);
 
             //var accountProductsUpdateController = new AccountProductsUpdateController(
