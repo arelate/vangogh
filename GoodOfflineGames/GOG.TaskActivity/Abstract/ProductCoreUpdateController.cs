@@ -22,7 +22,7 @@ namespace GOG.TaskActivities.Abstract
         where ListType : ProductCore
         where UpdateType : ProductCore 
     {
-        internal IProductTypeStorageController productStorageController;
+        //internal IProductTypeStorageController productStorageController;
         private ICollectionController collectionController;
         private INetworkController networkController;
         private IThrottleController throttleController;
@@ -41,7 +41,7 @@ namespace GOG.TaskActivities.Abstract
         internal string displayProductName;
 
         public ProductCoreUpdateController(
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             ICollectionController collectionController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
@@ -55,7 +55,7 @@ namespace GOG.TaskActivities.Abstract
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
-            this.productStorageController = productStorageController;
+            //this.productStorageController = productStorageController;
             this.collectionController = collectionController;
             this.networkController = networkController;
             this.serializationController = serializationController;
@@ -73,8 +73,8 @@ namespace GOG.TaskActivities.Abstract
         {
             taskReportingController.StartTask("Load existing products and " + displayProductName);
 
-            var products = await productStorageController.Pull<ListType>(listProductType);
-            var existingData = await productStorageController.Pull<UpdateType>(updateProductType);
+            var products = new List<ListType>(); // await productStorageController.Pull<ListType>(listProductType);
+            var existingData = new List<UpdateType>(); // await productStorageController.Pull<UpdateType>(updateProductType);
 
             var updateCollection = new List<UpdateType>(existingData);
 
@@ -190,7 +190,7 @@ namespace GOG.TaskActivities.Abstract
         private async Task PushChanges(IList<UpdateType> updateCollection)
         {
             taskReportingController.StartTask("Save " + displayProductName + " to disk");
-            await productStorageController.Push(updateProductType, updateCollection);
+            //await productStorageController.Push(updateProductType, updateCollection);
             taskReportingController.CompleteTask();
         }
     }

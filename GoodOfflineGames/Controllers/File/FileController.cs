@@ -7,13 +7,6 @@ namespace Controllers.File
 {
     public class FileController: IFileController
     {
-        private string recycleBinUri;
-
-        public FileController(string recycleBinUri)
-        {
-            this.recycleBinUri = recycleBinUri;
-        }
-
         public bool Exists(string uri)
         {
             return System.IO.File.Exists(uri);
@@ -34,11 +27,6 @@ namespace Controllers.File
         {
             var fileInfo = new FileInfo(uri);
             return fileInfo.CreationTimeUtc;
-        }
-
-        public void MoveToRecycleBin(string uri)
-        {
-            Move(uri, recycleBinUri);
         }
     }
 }

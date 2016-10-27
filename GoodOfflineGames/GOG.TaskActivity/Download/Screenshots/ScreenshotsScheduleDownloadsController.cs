@@ -15,7 +15,7 @@ namespace GOG.TaskActivities.Download.Screenshots
         public ScreenshotsScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
-            IProductTypeStorageController productTypeStorageController,
+            //IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.Download.Screenshots
                 downloadSourcesController,
                 null, // uriRedirectionController
                 destinationController, 
-                productTypeStorageController,
+                //productTypeStorageController,
                 collectionController,
                 fileController,
                 taskReportingController)

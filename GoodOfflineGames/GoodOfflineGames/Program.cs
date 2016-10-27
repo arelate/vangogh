@@ -27,6 +27,7 @@ using Controllers.Conversion;
 using Controllers.Products;
 using Controllers.SerializedStorage;
 using Controllers.Indexing;
+using Controllers.RecycleBin;
 
 using Interfaces.TaskActivity;
 
@@ -66,7 +67,12 @@ namespace GoodOfflineGames
             string recycleBinUri = "_recycleBin";
 
             var streamController = new StreamController();
-            var fileController = new FileController(recycleBinUri);
+            var fileController = new FileController();
+
+            var recycleBinController = new RecycleBinController(
+                recycleBinUri, 
+                fileController);
+
             var directoryController = new DirectoryController();
             var storageController = new StorageController(
                 streamController,
@@ -126,9 +132,9 @@ namespace GoodOfflineGames
             var screenshotsDestinationController = new ScreenshotsDestinationController();
             var validationDestinationController = new ValidationDestinationController();
 
-            var productStorageController = new ProductStorageController(
-                storageController,
-                serializationController);
+            //var productStorageController = new ProductStorageController(
+            //    storageController,
+            //    serializationController);
 
             // product controllers
 
@@ -149,8 +155,8 @@ namespace GoodOfflineGames
                 Interfaces.ProductStoragePolicy.ProductStoragePolicy.SerializeItems,
                 productCoreIndexingController, 
                 collectionController,
-                productsDestinationController, 
-                fileController);
+                productsDestinationController,
+                recycleBinController);
 
             // TODO: Load existing data as TaskActivity
             productsController.LoadProducts().Wait();
@@ -200,172 +206,172 @@ namespace GoodOfflineGames
             var productsUpdateController = new ProductsUpdateController(
                 requestPageController,
                 serializationController,
-                productStorageController,
+                productsController,
                 taskReportingController);
 
-            var accountProductsUpdateController = new AccountProductsUpdateController(
-                requestPageController,
-                serializationController,
-                productStorageController,
-                taskReportingController);
+            //var accountProductsUpdateController = new AccountProductsUpdateController(
+            //    requestPageController,
+            //    serializationController,
+            //    productStorageController,
+            //    taskReportingController);
 
-            var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
-                productStorageController,
-                taskReportingController);
+            //var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
+            //    productStorageController,
+            //    taskReportingController);
 
-            var wishlistedUpdateController = new WishlistedUpdateController(
-                networkController,
-                gogDataExtractionController,
-                serializationController,
-                productStorageController,
-                taskReportingController);
+            //var wishlistedUpdateController = new WishlistedUpdateController(
+            //    networkController,
+            //    gogDataExtractionController,
+            //    serializationController,
+            //    productStorageController,
+            //    taskReportingController);
 
-            // dependencies for update controllers
+            //// dependencies for update controllers
 
-            var productUpdateUriController = new ProductUpdateUriController();
+            //var productUpdateUriController = new ProductUpdateUriController();
 
-            var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
-            var gameProductDataSkipUpdateController = new GameProductDataSkipUpdateController();
-            var gameProductDataDecodingController = new GameProductDataDecodingController(
-                gogDataExtractionController,
-                serializationController);
+            //var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
+            //var gameProductDataSkipUpdateController = new GameProductDataSkipUpdateController();
+            //var gameProductDataDecodingController = new GameProductDataDecodingController(
+            //    gogDataExtractionController,
+            //    serializationController);
 
-            var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
-            var gameDetailsConnectionController = new GameDetailsConnectionController();
-            var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
-                serializationController,
-                languageController);
+            //var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
+            //var gameDetailsConnectionController = new GameDetailsConnectionController();
+            //var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
+            //    serializationController,
+            //    languageController);
 
-            // product update controllers
+            //// product update controllers
 
-            var gameProductDataUpdateController = new GameProductDataUpdateController(
-                productStorageController,
-                collectionController,
-                networkController,
-                serializationController,
-                null,
-                gameProductDataUpdateUriController,
-                gameProductDataSkipUpdateController,
-                gameProductDataDecodingController,
-                taskReportingController);
+            //var gameProductDataUpdateController = new GameProductDataUpdateController(
+            //    productStorageController,
+            //    collectionController,
+            //    networkController,
+            //    serializationController,
+            //    null,
+            //    gameProductDataUpdateUriController,
+            //    gameProductDataSkipUpdateController,
+            //    gameProductDataDecodingController,
+            //    taskReportingController);
 
-            var apiProductUpdateController = new ApiProductUpdateController(
-                productStorageController,
-                collectionController,
-                networkController,
-                serializationController,
-                null,
-                productUpdateUriController,
-                taskReportingController);
+            //var apiProductUpdateController = new ApiProductUpdateController(
+            //    productStorageController,
+            //    collectionController,
+            //    networkController,
+            //    serializationController,
+            //    null,
+            //    productUpdateUriController,
+            //    taskReportingController);
 
-            var gameDetailsUpdateController = new GameDetailsUpdateController(
-                productStorageController,
-                collectionController,
-                networkController,
-                serializationController,
-                throttleController,
-                productUpdateUriController,
-                gameDetailsRequiredUpdatesController,
-                gameDetailsConnectionController,
-                gameDetailsDownloadDetailsController,
-                taskReportingController);
+            //var gameDetailsUpdateController = new GameDetailsUpdateController(
+            //    productStorageController,
+            //    collectionController,
+            //    networkController,
+            //    serializationController,
+            //    throttleController,
+            //    productUpdateUriController,
+            //    gameDetailsRequiredUpdatesController,
+            //    gameDetailsConnectionController,
+            //    gameDetailsDownloadDetailsController,
+            //    taskReportingController);
 
-            var screenshotUpdateController = new ScreenshotUpdateController(
-                productStorageController,
-                collectionController,
-                networkController,
-                screenshotExtractionController,
-                taskReportingController);
+            //var screenshotUpdateController = new ScreenshotUpdateController(
+            //    productStorageController,
+            //    collectionController,
+            //    networkController,
+            //    screenshotExtractionController,
+            //    taskReportingController);
 
-            // dependencies for download controllers
+            //// dependencies for download controllers
 
-            var productsImagesDownloadSourcesController = new ProductsImagesDownloadSourcesController(
-                productStorageController,
-                imageUriController);
+            //var productsImagesDownloadSourcesController = new ProductsImagesDownloadSourcesController(
+            //    productStorageController,
+            //    imageUriController);
 
-            var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
-                productStorageController,
-                screenshotUriController);
+            //var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
+            //    productStorageController,
+            //    screenshotUriController);
 
-            var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
-                settings.Download.Languages,
-                settings.Download.OperatingSystems,
-                productStorageController);
+            //var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
+            //    settings.Download.Languages,
+            //    settings.Download.OperatingSystems,
+            //    productStorageController);
 
-            var productExtrasDownloadSourcesController = new ProductExtrasDownloadSourcesController(
-                productStorageController);
+            //var productExtrasDownloadSourcesController = new ProductExtrasDownloadSourcesController(
+            //    productStorageController);
 
-            var validationUriRedirectController = new ValidationUriRedirectController();
+            //var validationUriRedirectController = new ValidationUriRedirectController();
 
-            var validationDownloadSourcesController = new ValidationDownloadSourcesController(
-                productStorageController,
-                validationUriRedirectController);
+            //var validationDownloadSourcesController = new ValidationDownloadSourcesController(
+            //    productStorageController,
+            //    validationUriRedirectController);
 
-            // download controllers
+            //// download controllers
 
-            var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
-                productsImagesDownloadSourcesController,
-                imagesDestinationController,
-                productStorageController,
-                collectionController,
-                fileController,
-                taskReportingController);
+            //var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
+            //    productsImagesDownloadSourcesController,
+            //    imagesDestinationController,
+            //    productStorageController,
+            //    collectionController,
+            //    fileController,
+            //    taskReportingController);
 
-            var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
-                screenshotsDownloadSourcesController,
-                screenshotsDestinationController,
-                productStorageController,
-                collectionController,
-                fileController,
-                taskReportingController);
+            //var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
+            //    screenshotsDownloadSourcesController,
+            //    screenshotsDestinationController,
+            //    productStorageController,
+            //    collectionController,
+            //    fileController,
+            //    taskReportingController);
 
-            var productFilesScheduleDownloadsController = new ProductFilesScheduleDownloadsController(
-                productFilesDownloadSourcesController,
-                uriRedirectController,
-                filesExtrasDestinationController,
-                productStorageController, 
-                collectionController,
-                fileController, 
-                taskReportingController);
+            //var productFilesScheduleDownloadsController = new ProductFilesScheduleDownloadsController(
+            //    productFilesDownloadSourcesController,
+            //    uriRedirectController,
+            //    filesExtrasDestinationController,
+            //    productStorageController, 
+            //    collectionController,
+            //    fileController, 
+            //    taskReportingController);
 
-            var productExtrasScheduleDownloadsController = new ProductExtrasScheduleDownloadsController(
-                productExtrasDownloadSourcesController,
-                uriRedirectController,
-                filesExtrasDestinationController,
-                productStorageController,
-                collectionController,
-                fileController,
-                taskReportingController);
+            //var productExtrasScheduleDownloadsController = new ProductExtrasScheduleDownloadsController(
+            //    productExtrasDownloadSourcesController,
+            //    uriRedirectController,
+            //    filesExtrasDestinationController,
+            //    productStorageController,
+            //    collectionController,
+            //    fileController,
+            //    taskReportingController);
 
-            var validationScheduleDownloadsController = new ValidationScheduleDownloadsController(
-                validationDownloadSourcesController,
-                validationDestinationController,
-                productStorageController,
-                collectionController,
-                fileController,
-                taskReportingController);
+            //var validationScheduleDownloadsController = new ValidationScheduleDownloadsController(
+            //    validationDownloadSourcesController,
+            //    validationDestinationController,
+            //    productStorageController,
+            //    collectionController,
+            //    fileController,
+            //    taskReportingController);
 
-            var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
-                productStorageController,
-                downloadController,
-                collectionController,
-                taskReportingController);
+            //var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
+            //    productStorageController,
+            //    downloadController,
+            //    collectionController,
+            //    taskReportingController);
 
-            // validation controllers
+            //// validation controllers
 
-            var byteToStringConversionController = new BytesToStringConvertionController();
+            //var byteToStringConversionController = new BytesToStringConvertionController();
 
-            var validationController = new ValidationController(
-                validationDestinationController,
-                fileController,
-                streamController,
-                byteToStringConversionController);
+            //var validationController = new ValidationController(
+            //    validationDestinationController,
+            //    fileController,
+            //    streamController,
+            //    byteToStringConversionController);
 
-            var processValidationController = new ProcessValidationController(
-                gogUriDestinationController,
-                validationController,
-                productStorageController,
-                taskReportingController);
+            //var processValidationController = new ProcessValidationController(
+            //    gogUriDestinationController,
+            //    validationController,
+            //    productStorageController,
+            //    taskReportingController);
 
             // Iterate and process all tasks
 
@@ -386,7 +392,7 @@ namespace GoodOfflineGames
                 //productExtrasScheduleDownloadsController,
                 //validationScheduleDownloadsController,
                 //processScheduledDownloadsController,
-                processValidationController
+                //processValidationController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

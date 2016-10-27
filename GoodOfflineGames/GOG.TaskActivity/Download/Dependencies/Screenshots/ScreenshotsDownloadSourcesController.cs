@@ -12,20 +12,20 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
 {
     public class ScreenshotsDownloadSourcesController : IDownloadSourcesController
     {
-        private IProductTypeStorageController productStorageController;
+        //private IProductTypeStorageController productStorageController;
         private IImageUriController screenshotUriController;
 
         public ScreenshotsDownloadSourcesController(
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             IImageUriController screenshotUriController)
         {
-            this.productStorageController = productStorageController;
+            //this.productStorageController = productStorageController;
             this.screenshotUriController = screenshotUriController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var screenshots = await productStorageController.Pull<ProductScreenshots>(ProductTypes.Screenshot);
+            var screenshots = new List<ProductScreenshots>(); // await productStorageController.Pull<ProductScreenshots>(ProductTypes.Screenshot);
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
 

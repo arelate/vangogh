@@ -13,7 +13,7 @@ namespace Controllers.Destination
 
         public string GetFilename(string source)
         {
-            throw new NotImplementedException();
+            return "products.js";
         }
     }
 }

@@ -20,7 +20,7 @@ namespace GOG.TaskActivities.Abstract
         private IDownloadSourcesController downloadSourcesController;
         private IUriRedirectController uriRedirectController;
         private IDestinationController destinationController;
-        private IProductTypeStorageController productTypeStorageController;
+        //private IProductTypeStorageController productTypeStorageController;
         private ICollectionController collectionController;
         private IFileController fileController;
 
@@ -29,7 +29,7 @@ namespace GOG.TaskActivities.Abstract
             IDownloadSourcesController downloadSourcesController,
             IUriRedirectController uriRedirectController,
             IDestinationController destinationController,
-            IProductTypeStorageController productTypeStorageController,
+            //IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
@@ -39,7 +39,7 @@ namespace GOG.TaskActivities.Abstract
             this.downloadSourcesController = downloadSourcesController;
             this.uriRedirectController = uriRedirectController;
             this.destinationController = destinationController;
-            this.productTypeStorageController = productTypeStorageController;
+            //this.productTypeStorageController = productTypeStorageController;
             this.collectionController = collectionController;
             this.fileController = fileController;
         }
@@ -47,7 +47,7 @@ namespace GOG.TaskActivities.Abstract
         public override async Task ProcessTask()
         {
             taskReportingController.StartTask("Load existing scheduled downloads");
-            var scheduledDownloads = await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
+            //var scheduledDownloads = await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Get " + System.Enum.GetName(typeof(ScheduledDownloadTypes), downloadType) + " sources");
@@ -61,11 +61,11 @@ namespace GOG.TaskActivities.Abstract
 
                 foreach (var source in downloadSource.Value)
                 {
-                    var existingProductDownload = collectionController.Find(scheduledDownloads, sd =>
-                        sd != null &&
-                        sd.Source == source);
+                    //var existingProductDownload = collectionController.Find(scheduledDownloads, sd =>
+                    //    sd != null &&
+                    //    sd.Source == source);
 
-                    if (existingProductDownload != null) continue;
+                    //if (existingProductDownload != null) continue;
 
                     var actualSource =
                         uriRedirectController != null ?
@@ -87,13 +87,13 @@ namespace GOG.TaskActivities.Abstract
                     newScheduledDownload.Source = actualSource;
                     newScheduledDownload.Destination = destinationDirectory;
 
-                    scheduledDownloads.Add(newScheduledDownload);
+                    //scheduledDownloads.Add(newScheduledDownload);
                 }
             }
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Save scheduled downloads");
-            await productTypeStorageController.Push(ProductTypes.ScheduledDownload, scheduledDownloads);
+            //await productTypeStorageController.Push(ProductTypes.ScheduledDownload, scheduledDownloads);
             taskReportingController.CompleteTask();
 
         }

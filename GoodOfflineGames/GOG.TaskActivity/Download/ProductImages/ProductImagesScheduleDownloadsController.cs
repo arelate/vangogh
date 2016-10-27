@@ -15,7 +15,7 @@ namespace GOG.TaskActivities.Download.ProductImages
         public ProductImagesScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
-            IProductTypeStorageController productTypeStorageController,
+            //IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.Download.ProductImages
                 downloadSourcesController, 
                 null, // uriRedirectController
                 destinationController, // destinationAdjustmentController
-                productTypeStorageController,
+                //productTypeStorageController,
                 collectionController,
                 fileController,
                 taskReportingController)

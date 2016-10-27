@@ -16,7 +16,7 @@ namespace GOG.TaskActivities.Download.ProductFiles
             IDownloadSourcesController downloadSourcesController,
             IUriRedirectController uriRedirectController,
             IDestinationController destinationController,
-            IProductTypeStorageController productTypeStorageController,
+            //IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
@@ -25,7 +25,7 @@ namespace GOG.TaskActivities.Download.ProductFiles
                 downloadSourcesController,
                 uriRedirectController,
                 destinationController,
-                productTypeStorageController,
+                //productTypeStorageController,
                 collectionController,
                 fileController,
                 taskReportingController)

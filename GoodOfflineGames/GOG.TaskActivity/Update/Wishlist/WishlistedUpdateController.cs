@@ -20,20 +20,20 @@ namespace GOG.TaskActivities.Update.Wishlist
         private INetworkController networkController;
         private IExtractionController gogDataExtractionController;
         private ISerializationController<string> serializationController;
-        private IProductTypeStorageController productStorageController;
+        //private IProductTypeStorageController productStorageController;
 
         public WishlistedUpdateController(
             INetworkController networkController,
             IExtractionController gogDataExtractionController,
             ISerializationController<string> serializationController,
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             ITaskReportingController taskReportingController):
             base(taskReportingController)
         {
             this.networkController = networkController;
             this.gogDataExtractionController = gogDataExtractionController;
             this.serializationController = serializationController;
-            this.productStorageController = productStorageController;
+            //this.productStorageController = productStorageController;
         }
 
         public override async Task ProcessTask()
@@ -84,7 +84,7 @@ namespace GOG.TaskActivities.Update.Wishlist
                 wishlisted.Add(product.Id);
             }
 
-            await productStorageController.Push(ProductTypes.Wishlisted, wishlisted);
+            //await productStorageController.Push(ProductTypes.Wishlisted, wishlisted);
 
             taskReportingController.CompleteTask();
         }

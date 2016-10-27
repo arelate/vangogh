@@ -17,7 +17,7 @@ namespace GOG.TaskActivities.Update.Products
     public class GameDetailsUpdateController : ProductCoreUpdateController<GameDetails, AccountProduct>
     {
         public GameDetailsUpdateController(
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             ICollectionController collectionController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
@@ -27,7 +27,8 @@ namespace GOG.TaskActivities.Update.Products
             IConnectionController connectionController,
             IAdditionalDetailsController additionalDetailsController,
             ITaskReportingController taskReportingController) :
-            base(productStorageController,
+            base(
+                //productStorageController,
                 collectionController,
                 networkController,
                 serializationController,

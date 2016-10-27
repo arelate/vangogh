@@ -13,7 +13,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
 {
     public class ValidationDownloadSourcesController : IDownloadSourcesController
     {
-        private IProductTypeStorageController productTypeStorageController;
+        //private IProductTypeStorageController productTypeStorageController;
         private IUriRedirectController uriRedirectController;
 
         private readonly List<string> extensionsWhitelist = new List<string>(4) {
@@ -24,16 +24,16 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
         };
 
         public ValidationDownloadSourcesController(
-            IProductTypeStorageController productTypeStorageController,
+            //IProductTypeStorageController productTypeStorageController,
             IUriRedirectController uriRedirectController)
         {
-            this.productTypeStorageController = productTypeStorageController;
+            //this.productTypeStorageController = productTypeStorageController;
             this.uriRedirectController = uriRedirectController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var scheduledDownloads = await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
+            var scheduledDownloads = new List<ScheduledDownload>(); // await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
             var validationSources = new Dictionary<long, IList<string>>();
 
             foreach (var download in scheduledDownloads)

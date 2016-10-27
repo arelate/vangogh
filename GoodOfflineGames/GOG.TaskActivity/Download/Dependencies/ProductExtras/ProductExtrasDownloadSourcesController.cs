@@ -11,17 +11,18 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductExtras
 {
     public class ProductExtrasDownloadSourcesController : IDownloadSourcesController
     {
-        private IProductTypeStorageController productTypeStorageController;
+        //private IProductTypeStorageController productTypeStorageController;
 
         public ProductExtrasDownloadSourcesController(
-            IProductTypeStorageController productTypeStorageController)
+            //IProductTypeStorageController productTypeStorageController
+            )
         {
-            this.productTypeStorageController = productTypeStorageController;
+            //this.productTypeStorageController = productTypeStorageController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var gameDetailsCollection = await productTypeStorageController.Pull<GameDetails>(ProductTypes.GameDetails);
+            var gameDetailsCollection = new List<GameDetails>(); // await productTypeStorageController.Pull<GameDetails>(ProductTypes.GameDetails);
 
             var extrasDownloadSources = new Dictionary<long, IList<string>>();
 

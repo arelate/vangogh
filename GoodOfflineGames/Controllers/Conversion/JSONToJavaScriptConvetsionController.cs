@@ -13,6 +13,8 @@ namespace Controllers.Conversion
 
         public string Convert(string data)
         {
+            if (string.IsNullOrEmpty(data)) return data;
+
             return (data.StartsWith(prefix)) ?
                 data.Substring(prefix.Length) :
                 prefix + data;

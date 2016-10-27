@@ -12,24 +12,24 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
 {
     public class NewUpdatedAccountProductsController: TaskActivityController
     {
-        private IProductTypeStorageController productStorageController;
+        //private IProductTypeStorageController productStorageController;
 
         public NewUpdatedAccountProductsController(
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             ITaskReportingController taskReportingController): base(taskReportingController)
         {
-            this.productStorageController = productStorageController;
+            //this.productStorageController = productStorageController;
         }
 
         public override async Task ProcessTask()
         {
             taskReportingController.StartTask("Load existing new or updated products");
-            var newUpdatedProducts = await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct);
+            var newUpdatedProducts = new List<long>(); // await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct);
 
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Load account products");
-            var accountProducts = await productStorageController.Pull<AccountProduct>(ProductTypes.AccountProduct);
+            var accountProducts = new List<AccountProduct>(); // await productStorageController.Pull<AccountProduct>(ProductTypes.AccountProduct);
             taskReportingController.CompleteTask();
 
             if (accountProducts == null) return;
@@ -46,7 +46,7 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Save new or updated products");
-            await productStorageController.Push(ProductTypes.NewUpdatedProduct, newUpdatedProducts);
+            //await productStorageController.Push(ProductTypes.NewUpdatedProduct, newUpdatedProducts);
             taskReportingController.CompleteTask();
         }
     }

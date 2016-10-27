@@ -14,7 +14,7 @@ namespace GOG.TaskActivities.Download.Validation
         public ValidationScheduleDownloadsController(
             IDownloadSourcesController validationSourcesController,
             IDestinationController destinationController,
-            IProductTypeStorageController productTypeStorageController,
+            //IProductTypeStorageController productTypeStorageController,
             ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
@@ -23,7 +23,7 @@ namespace GOG.TaskActivities.Download.Validation
                 validationSourcesController,
                 null, // uriRedirectController
                 destinationController,
-                productTypeStorageController,
+                //productTypeStorageController,
                 collectionController,
                 fileController,
                 taskReportingController)

@@ -7,7 +7,7 @@ using Interfaces.Collection;
 using Interfaces.Indexing;
 using Interfaces.ProductStoragePolicy;
 using Interfaces.Destination;
-using Interfaces.File;
+using Interfaces.RecycleBin;
 
 using Interfaces.SerializedStorage;
 
@@ -20,7 +20,7 @@ namespace Controllers.Products
         private ICollectionController collectionController;
 
         private IDestinationController destinationController;
-        private IMoveToRecycleBinDelegate moveToRecycleBinDelegate;
+        private IRecycleBinController recycleBinController;
 
         private ISerializedStorageController serializedStorageController;
 
@@ -41,7 +41,7 @@ namespace Controllers.Products
             IIndexingController indexingController,
             ICollectionController collectionController,
             IDestinationController destinationController,
-            IMoveToRecycleBinDelegate moveToRecycleBinDelegate)
+            IRecycleBinController recycleBinController)
         {
             this.productStoragePolicy = productStoragePolicy;
             this.indexingController = indexingController;
@@ -49,15 +49,15 @@ namespace Controllers.Products
 
             this.serializedStorageController = serializedStorageController;
 
-            if (this.productStoragePolicy == ProductStoragePolicy.SerializeItems)
-                productsUri = Path.Combine(destinationDirectory,
-                    destinationController.GetFilename(string.Empty));
-
             this.destinationController = destinationController;
             destinationDirectory = destinationController.GetDirectory(string.Empty);
             indexesUri = Path.Combine(destinationDirectory, indexesFilename);
 
-            this.moveToRecycleBinDelegate = moveToRecycleBinDelegate;
+            this.recycleBinController = recycleBinController;
+
+            if (this.productStoragePolicy == ProductStoragePolicy.SerializeItems)
+                productsUri = Path.Combine(destinationDirectory,
+                    destinationController.GetFilename(string.Empty));
 
             products = null;
             productsIndexes = null;
@@ -125,7 +125,7 @@ namespace Controllers.Products
                     var index = indexingController.GetIndex(product);
                     productsIndexes.Remove(index);
                     var productUri = GetProductUri(index);
-                    moveToRecycleBinDelegate.MoveToRecycleBin(productUri);
+                    recycleBinController.MoveToRecycleBin(productUri);
                     await serializedStorageController.SerializePush(indexesUri, productsIndexes);
                     break;
                 case ProductStoragePolicy.SerializeItems:

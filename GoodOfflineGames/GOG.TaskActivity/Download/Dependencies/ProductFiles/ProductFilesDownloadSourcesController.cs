@@ -12,24 +12,25 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
 {
     public class ProductFilesDownloadSourcesController : IDownloadSourcesController
     {
-        private IProductTypeStorageController productTypeStorageController;
+        //private IProductTypeStorageController productTypeStorageController;
         private string[] languages;
         private string[] operatingSystems;
 
         public ProductFilesDownloadSourcesController(
             string[] languages,
-            string[] operatingSystems,
-            IProductTypeStorageController productTypeStorageController)
+            string[] operatingSystems
+            //IProductTypeStorageController productTypeStorageController
+            )
         {
             this.languages = languages;
             this.operatingSystems = operatingSystems;
 
-            this.productTypeStorageController = productTypeStorageController;
+            //this.productTypeStorageController = productTypeStorageController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var gameDetailsCollection = await productTypeStorageController.Pull<GameDetails>(ProductTypes.GameDetails);
+            var gameDetailsCollection = new List<GameDetails>();// await productTypeStorageController.Pull<GameDetails>(ProductTypes.GameDetails);
 
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 

@@ -23,20 +23,20 @@ namespace GOG.TaskActivities.Update.Screenshots
 {
     public class ScreenshotUpdateController : TaskActivityController
     {
-        private IProductTypeStorageController productStorageController;
+        //private IProductTypeStorageController productStorageController;
         private ICollectionController collectionController;
         private INetworkController networkController;
         private IExtractionController screenshotExtractionController;
 
         public ScreenshotUpdateController(
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             ICollectionController collectionController,
             INetworkController networkController,
             IExtractionController screenshotExtractionController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
-            this.productStorageController = productStorageController;
+            //this.productStorageController = productStorageController;
             this.collectionController = collectionController;
             this.networkController = networkController;
             this.screenshotExtractionController = screenshotExtractionController;
@@ -45,8 +45,8 @@ namespace GOG.TaskActivities.Update.Screenshots
         public override async Task ProcessTask()
         {
             taskReportingController.StartTask("Load existing products and product screenshots");
-            var products = await productStorageController.Pull<Product>(ProductTypes.Product);
-            var screenshots = await productStorageController.Pull<ProductScreenshots>(ProductTypes.Screenshot);
+            //var products = await productStorageController.Pull<Product>(ProductTypes.Product);
+            //var screenshots = await productStorageController.Pull<ProductScreenshots>(ProductTypes.Screenshot);
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Update all products missing screenshots");
@@ -54,11 +54,11 @@ namespace GOG.TaskActivities.Update.Screenshots
             taskReportingController.StartTask("Get a list of updates for product screenshots");
 
             var productsMissingScreenshots = new List<Product>();
-            foreach (var product in products)
-            {
-                var foundProductScreenshots = collectionController.Find(screenshots, ps => ps.Id == product.Id);
-                if (foundProductScreenshots == null) productsMissingScreenshots.Add(product);
-            }
+            //foreach (var product in products)
+            //{
+            //    var foundProductScreenshots = collectionController.Find(screenshots, ps => ps.Id == product.Id);
+            //    if (foundProductScreenshots == null) productsMissingScreenshots.Add(product);
+            //}
 
             taskReportingController.CompleteTask();
 
@@ -73,8 +73,8 @@ namespace GOG.TaskActivities.Update.Screenshots
                         productsMissingScreenshots.Count,
                         product.Title));
 
-                var foundProductScreenshots = collectionController.Find(screenshots, ps => ps.Id == product.Id);
-                if (foundProductScreenshots != null) continue;
+                //var foundProductScreenshots = collectionController.Find(screenshots, ps => ps.Id == product.Id);
+                //if (foundProductScreenshots != null) continue;
 
                 taskReportingController.StartTask("Request product page containing screenshots information");
                 var productPageUri = string.Format(Uris.Paths.GetUpdateUri(ProductTypes.Screenshot), product.Url);
@@ -90,14 +90,14 @@ namespace GOG.TaskActivities.Update.Screenshots
                 productScreenshots.Id = product.Id;
                 productScreenshots.Uris = new List<string>(extractedProductScreenshots);
 
-                screenshots.Add(productScreenshots);
+                //screenshots.Add(productScreenshots);
                 taskReportingController.CompleteTask();
 
                 taskReportingController.CompleteTask();
             }
 
             taskReportingController.StartTask("Save product screenshots to disk");
-            await productStorageController.Push<ProductScreenshots>(ProductTypes.Screenshot, screenshots);
+            //await productStorageController.Push<ProductScreenshots>(ProductTypes.Screenshot, screenshots);
             taskReportingController.CompleteTask();
 
             taskReportingController.CompleteTask();

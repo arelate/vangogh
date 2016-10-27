@@ -15,18 +15,18 @@ namespace GOG.TaskActivities.Download.Processing
 {
     public class ProcessScheduledDownloadsController: TaskActivityController
     {
-        private IProductTypeStorageController productStorageController;
+        //private IProductTypeStorageController productStorageController;
         private IDownloadController downloadController;
         private ICollectionController collectionController;
 
         public ProcessScheduledDownloadsController(
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             IDownloadController downloadController,
             ICollectionController collectionController,
             ITaskReportingController taskReportingController):
             base(taskReportingController)
         {
-            this.productStorageController = productStorageController;
+            //this.productStorageController = productStorageController;
             this.downloadController = downloadController;
             this.collectionController = collectionController;
         }
@@ -34,8 +34,8 @@ namespace GOG.TaskActivities.Download.Processing
         public override async Task ProcessTask()
         {
             taskReportingController.StartTask("Load existing scheduled downloads and products");
-            var existingScheduledDownloads = await productStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
-            var products = await productStorageController.Pull<Models.Product>(ProductTypes.Product);
+            var existingScheduledDownloads = new List<ScheduledDownload>(); // await productStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
+            var products = new List<Models.Product>(); // await productStorageController.Pull<Models.Product>(ProductTypes.Product);
 
             var scheduledDownloads = new List<ScheduledDownload>(existingScheduledDownloads);
 
@@ -69,7 +69,7 @@ namespace GOG.TaskActivities.Download.Processing
                 if (currentDownload % storagePushNthProduct == 0)
                 {
                     taskReportingController.StartTask("Saving updated scheduled downloads");
-                    await productStorageController.Push(ProductTypes.ScheduledDownload, existingScheduledDownloads);
+                    //await productStorageController.Push(ProductTypes.ScheduledDownload, existingScheduledDownloads);
                     taskReportingController.CompleteTask();
                 }
 
@@ -77,7 +77,7 @@ namespace GOG.TaskActivities.Download.Processing
             }
 
             taskReportingController.StartTask("Saving updated scheduled downloads");
-            await productStorageController.Push(ProductTypes.ScheduledDownload, existingScheduledDownloads);
+            //await productStorageController.Push(ProductTypes.ScheduledDownload, existingScheduledDownloads);
             taskReportingController.CompleteTask();
 
             taskReportingController.CompleteTask();

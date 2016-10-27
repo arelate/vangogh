@@ -16,26 +16,26 @@ using GOG.TaskActivities.Abstract;
 
 namespace GOG.TaskActivities.Update.PageResult
 {
-    public class AccountProductsUpdateController : PageResultUpdateController<AccountProductsPageResult, AccountProduct>
-    {
-        public AccountProductsUpdateController(
-            IRequestPageController requestPageController,
-            ISerializationController<string> serializationController,
-            IProductTypeStorageController productStorageController,
-            ITaskReportingController taskReportingController) :
-            base(requestPageController,
-                serializationController,
-                productStorageController,
-                taskReportingController)
-        {
-            productType = ProductTypes.AccountProduct;
-            pageResultsController = new AccountProductsPageResultController(
-                requestPageController,
-                serializationController,
-                Uris.Paths.GetUpdateUri(productType),
-                QueryParameters.GetQueryParameters(productType),
-                taskReportingController);
-            pageResultsExtractingController = new AccountProductsExtractionController();
-        }
-    }
+    //public class AccountProductsUpdateController : PageResultUpdateController<AccountProductsPageResult, AccountProduct>
+    //{
+    //    public AccountProductsUpdateController(
+    //        IRequestPageController requestPageController,
+    //        ISerializationController<string> serializationController,
+    //        //IProductTypeStorageController productStorageController,
+    //        ITaskReportingController taskReportingController) :
+    //        base(requestPageController,
+    //            serializationController,
+    //            //productStorageController,
+    //            taskReportingController)
+    //    {
+    //        productType = ProductTypes.AccountProduct;
+    //        pageResultsController = new AccountProductsPageResultController(
+    //            requestPageController,
+    //            serializationController,
+    //            Uris.Paths.GetUpdateUri(productType),
+    //            QueryParameters.GetQueryParameters(productType),
+    //            taskReportingController);
+    //        pageResultsExtractingController = new AccountProductsExtractionController();
+    //    }
+    //}
 }

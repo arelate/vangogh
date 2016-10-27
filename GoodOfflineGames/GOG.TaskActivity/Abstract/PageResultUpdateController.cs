@@ -2,9 +2,8 @@
 
 using Interfaces.Reporting;
 using Interfaces.RequestPage;
-using Interfaces.Serialization;
 using Interfaces.ProductTypes;
-using Interfaces.Storage;
+using Interfaces.Products;
 
 using Models.Uris;
 using Models.ProductCore;
@@ -21,28 +20,25 @@ namespace GOG.TaskActivities.Abstract
         where Type : ProductCore
     {
         private IRequestPageController requestPageController;
-        private ISerializationController<string> serializationController;
-        private IProductTypeStorageController productStorageController;
+        private IProductsController<Type> productsController;
 
         internal ProductTypes productType;
         internal IPageResultsController<PageType> pageResultsController;
         internal IPageResultsExtractionController<PageType, Type> pageResultsExtractingController;
 
-        private string filenameTemplate = "{0}s.js";
-        internal string filename;
+        //private string filenameTemplate = "{0}s.js";
+        //internal string filename;
 
         public PageResultUpdateController(
             IRequestPageController requestPageController,
-            ISerializationController<string> serializationController,
-            IProductTypeStorageController productStorageController,
+            IProductsController<Type> productsController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.requestPageController = requestPageController;
-            this.serializationController = serializationController;
-            this.productStorageController = productStorageController;
+            this.productsController = productsController;
 
-            filename = string.Format(filenameTemplate, productType.ToString().ToLower());
+            //filename = string.Format(filenameTemplate, productType.ToString().ToLower());
         }
 
         public override async Task ProcessTask()
@@ -54,10 +50,15 @@ namespace GOG.TaskActivities.Abstract
             var products = pageResultsExtractingController.Extract(productsPageResults);
             taskReportingController.CompleteTask();
 
-            taskReportingController.StartTask("Save products to disk");
-            await productStorageController.Push(productType, products);
+            taskReportingController.StartTask("Update existing products");
+            foreach (var product in products)
+            {
+                taskReportingController.StartTask("Update product " + product.Title);
+                await productsController.UpdateProduct(product);
+                taskReportingController.CompleteTask();
+            }
             taskReportingController.CompleteTask();
-
+        
             taskReportingController.CompleteTask();
         }
     }

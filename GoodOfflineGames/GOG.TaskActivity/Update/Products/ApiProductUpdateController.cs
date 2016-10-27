@@ -16,14 +16,15 @@ namespace GOG.TaskActivities.Update.Products
     public class ApiProductUpdateController : ProductCoreUpdateController<ApiProduct, Product>
     {
         public ApiProductUpdateController(
-            IProductTypeStorageController productStorageController,
+            //IProductTypeStorageController productStorageController,
             ICollectionController collectionController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IThrottleController throttleController,
             IUpdateUriController updateUriController,
             ITaskReportingController taskReportingController) :
-            base(productStorageController,
+            base(
+                //productStorageController,
                 collectionController,
                 networkController,
                 serializationController,

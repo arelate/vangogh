@@ -61,6 +61,7 @@
     <Compile Include="Extraction\ValueAttributeExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
     <Compile Include="Indexing\ProductCoreIndexingController.cs" />
+    <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Products\ProductsController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />
@@ -75,7 +76,6 @@
     <Compile Include="Console\ConsoleController.cs" />
     <Compile Include="Reporting\DownloadReportingController.cs" />
     <Compile Include="RequestPage\RequestPageController.cs" />
-    <Compile Include="Storage\ProductStorageController.cs" />
     <Compile Include="Stream\StreamController.cs" />
     <Compile Include="Serialization\JSONController.cs" />
     <Compile Include="Language\LanguageController.cs" />

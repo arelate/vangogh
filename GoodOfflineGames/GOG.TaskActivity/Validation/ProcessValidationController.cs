@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Reporting;
@@ -18,24 +19,24 @@ namespace GOG.TaskActivities.Validation
     {
         private IDestinationController destinationController;
         private IValidationController validationController;
-        private IProductTypeStorageController productTypeStorageController;
+        //private IProductTypeStorageController productTypeStorageController;
 
         public ProcessValidationController(
             IDestinationController destinationController,
             IValidationController validationController,
-            IProductTypeStorageController productTypeStorageController,
+            //IProductTypeStorageController productTypeStorageController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.destinationController = destinationController;
             this.validationController = validationController;
-            this.productTypeStorageController = productTypeStorageController;
+            //this.productTypeStorageController = productTypeStorageController;
         }
 
         public override async Task ProcessTask()
         {
             taskReportingController.StartTask("Load downloads information");
-            var scheduledDownloads = await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
+            var scheduledDownloads = new List<ScheduledDownload>(); // await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Validating product files");

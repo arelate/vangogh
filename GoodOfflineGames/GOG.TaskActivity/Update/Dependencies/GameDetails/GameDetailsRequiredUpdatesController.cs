@@ -9,16 +9,19 @@ namespace GOG.TaskActivities.Update.Dependencies.GameDetails
 {
     public class GameDetailsRequiredUpdatesController : IRequiredUpdatesController
     {
-        IProductTypeStorageController productStorageController;
+        //IProductTypeStorageController productStorageController;
 
-        public GameDetailsRequiredUpdatesController(IProductTypeStorageController productStorageController)
+        public GameDetailsRequiredUpdatesController(
+            //IProductTypeStorageController productStorageController
+            )
         {
-            this.productStorageController = productStorageController;
+            //this.productStorageController = productStorageController;
         }
 
         public async Task<long[]> GetRequiredUpdates()
         {
-            return (await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct)).ToArray();
+            return null;
+            //return (await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct)).ToArray();
         }
     }
 }
