@@ -24,15 +24,15 @@ namespace Controllers.Data
 
         private ISerializedStorageController serializedStorageController;
 
-        private IList<Type> products;
-        private IList<long> productsIndexes;
+        private IList<Type> dataItems;
+        private IList<long> dataIndexes;
 
         private string destinationDirectory;
 
-        private const string indexesFilename = "indexes.json";
-        private string indexesUri;
+        private const string dataIndexesFilename = "indexes.json";
+        private string dataIndexesUri;
 
-        private string productsUri;
+        private string dataItemsUri;
 
         public DataController(
             ISerializedStorageController serializedStorageController,
@@ -51,36 +51,38 @@ namespace Controllers.Data
 
             this.destinationController = destinationController;
             destinationDirectory = destinationController.GetDirectory(string.Empty);
-            indexesUri = Path.Combine(destinationDirectory, indexesFilename);
+            dataIndexesUri = Path.Combine(destinationDirectory, dataIndexesFilename);
 
             this.recycleBinController = recycleBinController;
 
-            if (this.dataStoragePolicy == DataStoragePolicy.SerializeItems)
-                productsUri = Path.Combine(destinationDirectory,
+            if (this.dataStoragePolicy == DataStoragePolicy.ItemsList)
+                dataItemsUri = Path.Combine(destinationDirectory,
                     destinationController.GetFilename(string.Empty));
 
-            products = null;
-            productsIndexes = null;
+            dataItems = null;
+            dataIndexes = null;
         }
 
-        public bool Contains(Type product)
+        public bool Contains(Type data)
         {
+            if (data == null) return true;
+
             switch (dataStoragePolicy)
             {
-                case DataStoragePolicy.IndexAndSerializeItems:
-                    return productsIndexes.Contains(indexingController.GetIndex(product));
-                case DataStoragePolicy.SerializeItems:
-                    var productIndex = indexingController.GetIndex(product);
-                    var existingProduct = collectionController.Find(
-                        products,
-                        p =>
-                            indexingController.GetIndex(p) == productIndex);
-                    return existingProduct != null;
+                case DataStoragePolicy.IndexAndItems:
+                    return dataIndexes.Contains(indexingController.GetIndex(data));
+                case DataStoragePolicy.ItemsList:
+                    var index = indexingController.GetIndex(data);
+                    var existingData = collectionController.Find(
+                        dataItems,
+                        d =>
+                            indexingController.GetIndex(d) == index);
+                    return existingData != null;
             }
             return false;
         }
 
-        private string GetProductUri(long index)
+        private string GetDataUri(long index)
         {
             return Path.Combine(
                 destinationDirectory,
@@ -91,12 +93,12 @@ namespace Controllers.Data
         {
             switch (dataStoragePolicy)
             {
-                case DataStoragePolicy.IndexAndSerializeItems:
-                    var productUri = GetProductUri(id);
-                    return await serializedStorageController.DeserializePull<Type>(productUri);
-                case DataStoragePolicy.SerializeItems:
+                case DataStoragePolicy.IndexAndItems:
+                    var dataUri = GetDataUri(id);
+                    return await serializedStorageController.DeserializePull<Type>(dataUri);
+                case DataStoragePolicy.ItemsList:
                     return collectionController.Find(
-                        products,
+                        dataItems,
                         p =>
                             indexingController.GetIndex(p) == id);
             }
@@ -108,53 +110,61 @@ namespace Controllers.Data
         {
             switch (dataStoragePolicy)
             {
-                case DataStoragePolicy.IndexAndSerializeItems:
-                    productsIndexes = await serializedStorageController.DeserializePull<List<long>>(indexesUri);
+                case DataStoragePolicy.IndexAndItems:
+                    dataIndexes = await serializedStorageController.DeserializePull<List<long>>(dataIndexesUri);
+                    if (dataIndexes == null) dataIndexes = new List<long>();
                     break;
-                case DataStoragePolicy.SerializeItems:
-                    products = await serializedStorageController.DeserializePull<List<Type>>(productsUri);
-                    break;
-            }
-        }
-
-        public async Task Remove(Type product)
-        {
-            switch (dataStoragePolicy)
-            {
-                case DataStoragePolicy.IndexAndSerializeItems:
-                    var index = indexingController.GetIndex(product);
-                    productsIndexes.Remove(index);
-                    var productUri = GetProductUri(index);
-                    recycleBinController.MoveToRecycleBin(productUri);
-                    await serializedStorageController.SerializePush(indexesUri, productsIndexes);
-                    break;
-                case DataStoragePolicy.SerializeItems:
-                    products.Remove(product);
-                    await serializedStorageController.SerializePush(productsUri, products);
+                case DataStoragePolicy.ItemsList:
+                    dataItems = await serializedStorageController.DeserializePull<List<Type>>(dataItemsUri);
+                    if (dataItems == null) dataItems = new List<Type>();
                     break;
             }
         }
 
-        public async Task Update(Type product)
+        public async Task Remove(Type data)
         {
             switch (dataStoragePolicy)
             {
-                case DataStoragePolicy.IndexAndSerializeItems:
-                    var index = indexingController.GetIndex(product);
-                    var productUri = GetProductUri(index);
-                    await serializedStorageController.SerializePush(productUri, product);
+                case DataStoragePolicy.IndexAndItems:
+                    var index = indexingController.GetIndex(data);
+                    dataIndexes.Remove(index);
+                    var dataUri = GetDataUri(index);
+                    recycleBinController.MoveToRecycleBin(dataUri);
+                    await serializedStorageController.SerializePush(dataIndexesUri, dataIndexes);
                     break;
-                case DataStoragePolicy.SerializeItems:
-                    var productIndex = indexingController.GetIndex(product);
+                case DataStoragePolicy.ItemsList:
+                    dataItems.Remove(data);
+                    await serializedStorageController.SerializePush(dataItemsUri, dataItems);
+                    break;
+            }
+        }
+
+        public async Task Update(Type data)
+        {
+
+            var index = indexingController.GetIndex(data);
+
+            switch (dataStoragePolicy)
+            {
+                case DataStoragePolicy.IndexAndItems:
+                    if (!dataIndexes.Contains(index))
+                    {
+                        dataIndexes.Add(index);
+                        await serializedStorageController.SerializePush(dataIndexesUri, dataIndexes);
+                    }
+                    var dataUri = GetDataUri(index);
+                    await serializedStorageController.SerializePush(dataUri, data);
+                    break;
+                case DataStoragePolicy.ItemsList:
                     var updated = false;
-                    for (var ii = 0; ii < products.Count; ii++)
-                        if (indexingController.GetIndex(products[ii]) == productIndex)
+                    for (var ii = 0; ii < dataItems.Count; ii++)
+                        if (indexingController.GetIndex(dataItems[ii]) == index)
                         {
-                            products[ii] = product;
+                            dataItems[ii] = data;
                             updated = true;
                         }
-                    if (!updated) products.Add(product);
-                    await serializedStorageController.SerializePush(productsUri, products);
+                    if (!updated) dataItems.Add(data);
+                    await serializedStorageController.SerializePush(dataItemsUri, dataItems);
                     break;
             }
         }

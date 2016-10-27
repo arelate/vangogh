@@ -2,7 +2,7 @@
 
 namespace Controllers.Destination
 {
-    public class ScreenshotsDestinationController : ImagesScreenshotsDestinationController
+    public class ScreenshotsFilesDestinationController : ImagesScreenshotsDestinationController
     {
         public override string GetDirectory(string source)
         {
@@ -11,9 +11,6 @@ namespace Controllers.Destination
 
         public override string GetFilename(string source)
         {
-            if (string.IsNullOrEmpty(source))
-                return "screenshots.js";
-
             return base.GetFilename(source);
         }
     }

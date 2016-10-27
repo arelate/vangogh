@@ -46,9 +46,17 @@
     <Compile Include="Conversion\JSONToJavaScriptConvetsionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Destination\Abstract\ImagesScreenshotsDestinationController.cs" />
+    <Compile Include="Destination\Abstract\DataDestinationController.cs" />
+    <Compile Include="Destination\Data\AccountProductDestinationController.cs" />
+    <Compile Include="Destination\Data\GameProductDataDestinationController - Copy.cs" />
+    <Compile Include="Destination\Data\GameDetailsDestinationController.cs" />
+    <Compile Include="Destination\Data\ScreenshotsDestinationController.cs" />
+    <Compile Include="Destination\Data\UpdatedDestinationController.cs" />
+    <Compile Include="Destination\Data\WishlistedDestinationController.cs" />
     <Compile Include="Destination\FilesExtrasDestinationController.cs" />
-    <Compile Include="Destination\ProductsDestinationController.cs" />
-    <Compile Include="Destination\ScreenshotsDestinationController.cs" />
+    <Compile Include="Destination\Data\ProductsDestinationController.cs" />
+    <Compile Include="Destination\Data\ApiProductsDestinationController.cs" />
+    <Compile Include="Destination\ScreenshotsFilesDestinationController.cs" />
     <Compile Include="Destination\ImagesDestinationController.cs" />
     <Compile Include="Destination\GOGUriDestinationController.cs" />
     <Compile Include="Destination\ValidationDestinationController.cs" />
@@ -60,6 +68,7 @@
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="Extraction\ValueAttributeExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
+    <Compile Include="Indexing\PassthroughIndexingController.cs" />
     <Compile Include="Indexing\ProductCoreIndexingController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />

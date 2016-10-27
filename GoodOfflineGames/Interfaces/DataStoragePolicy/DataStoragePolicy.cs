@@ -2,7 +2,7 @@
 {
     public enum DataStoragePolicy
     {
-        SerializeItems,
-        IndexAndSerializeItems
+        ItemsList,
+        IndexAndItems
     }
 }

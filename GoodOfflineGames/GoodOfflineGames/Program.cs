@@ -20,6 +20,7 @@ using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.UriRedirection;
 using Controllers.Destination;
+using Controllers.Destination.Data;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
@@ -131,7 +132,7 @@ namespace GoodOfflineGames
             var filesExtrasDestinationController = new FilesExtrasDestinationController(
                 gogUriDestinationController);
             var imagesDestinationController = new ImagesDestinationController();
-            var screenshotsDestinationController = new ScreenshotsDestinationController();
+            var screenshotsFilesDestinationController = new ScreenshotsFilesDestinationController();
             var validationDestinationController = new ValidationDestinationController();
 
             //var productStorageController = new ProductStorageController(
@@ -149,28 +150,105 @@ namespace GoodOfflineGames
                 jsonToJavaScriptConversionController);
 
             var productCoreIndexingController = new ProductCoreIndexingController();
+            var passthroughIndexingController = new PassthroughIndexingController();
 
             var productsDestinationController = new ProductsDestinationController();
+            var accountProductsDestinationController = new AccountProductDestinationController();
+            var gameDetailsDestinationController = new GameDetailsDestinationController();
+            var screenshotsDestinationController = new ScreenshotsDestinationController();
+            var apiProductsDestinationController = new ApiProductsDestinationController();
+            var gameProductDataDestinationController = new GameProductDataDestinationController();
+            var wishlistedDestinationController = new WishlistedDestinationController();
+            var updatedDestinationController = new UpdatedDestinationController();
 
             var productsDataController = new DataController<Product>(
                 serializedStorageController, 
-                DataStoragePolicy.SerializeItems,
+                DataStoragePolicy.ItemsList,
                 productCoreIndexingController, 
                 collectionController,
                 productsDestinationController,
                 recycleBinController);
 
+            var accountProductsDataController = new DataController<AccountProduct>(
+                serializedStorageController,
+                DataStoragePolicy.ItemsList,
+                productCoreIndexingController,
+                collectionController,
+                accountProductsDestinationController,
+                recycleBinController);
+
+            var gameDetailsDataController = new DataController<GameDetails>(
+                serializedStorageController,
+                DataStoragePolicy.IndexAndItems,
+                productCoreIndexingController,
+                collectionController,
+                gameDetailsDestinationController,
+                recycleBinController);
+
+            var gameProductDataController = new DataController<GameProductData>(
+                serializedStorageController,
+                DataStoragePolicy.IndexAndItems,
+                productCoreIndexingController,
+                collectionController,
+                gameProductDataDestinationController,
+                recycleBinController);
+
+            var wishlistedDataController = new DataController<long>(
+                serializedStorageController,
+                DataStoragePolicy.ItemsList,
+                passthroughIndexingController,
+                collectionController,
+                wishlistedDestinationController,
+                recycleBinController);
+
+            var updatedDataController = new DataController<long>(
+                serializedStorageController,
+                DataStoragePolicy.ItemsList,
+                passthroughIndexingController,
+                collectionController,
+                updatedDestinationController,
+                recycleBinController);
+
+            var apiProductsDataController = new DataController<ApiProduct>(
+                serializedStorageController,
+                DataStoragePolicy.IndexAndItems,
+                productCoreIndexingController,
+                collectionController,
+                apiProductsDestinationController,
+                recycleBinController);
+
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 serializedStorageController,
-                DataStoragePolicy.SerializeItems,
+                DataStoragePolicy.IndexAndItems,
                 productCoreIndexingController,
                 collectionController,
                 screenshotsDestinationController,
                 recycleBinController);
 
             // TODO: Load existing data as TaskActivity
-            //productDataController.Initialize().Wait();
-            screenshotsDataController.Initialize().Wait();
+            //productsDataController.Initialize().Wait();
+            //accountProductsDataController.Initialize().Wait();
+            //gameDetailsDataController.Initialize().Wait();
+            //gameProductDataController.Initialize().Wait();
+            //screenshotsDataController.Initialize().Wait();
+            //apiProductsDataController.Initialize().Wait();
+            //wishlistedDataController.Initialize().Wait();
+            updatedDataController.Initialize().Wait();
+
+            //Console.WriteLine("Loading existing data");
+
+            //var serializedData = jsonToJavaScriptConversionController.Convert(storageController.Pull("_data\\gameDetails.js").Result);
+            //var legacyData = serializationController.Deserialize<List<GameDetails>>(serializedData);
+            //var counter = 0;
+
+            //Console.WriteLine("DONE");
+
+            //foreach (var li in legacyData)
+            //{
+            //    if (gameDetailsDataController.Contains(li)) continue;
+            //    gameDetailsDataController.Update(li).Wait();
+            //    Console.WriteLine("{0}/{1}", ++counter, legacyData.Count);
+            //}
 
             // Load settings that (might) have authorization information, and request to run or not specific task activities
 
