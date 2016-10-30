@@ -38,18 +38,18 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
 
             foreach (var download in scheduledDownloads)
             {
-                // only product files are eligible for validation
-                if (download.Type != ScheduledDownloadTypes.File)
-                    continue;
+                //// only product files are eligible for validation
+                //if (download.Type != ScheduledDownloadTypes.File)
+                //    continue;
 
-                // and among product files only executables are eligible for validation
-                if (!extensionsWhitelist.Contains(Path.GetExtension(download.Source)))
-                    continue;
+                //// and among product files only executables are eligible for validation
+                //if (!extensionsWhitelist.Contains(Path.GetExtension(download.Source)))
+                //    continue;
 
-                if (!validationSources.ContainsKey(download.Id))
-                    validationSources.Add(download.Id, new List<string>());
+                //if (!validationSources.ContainsKey(download.Id))
+                //    validationSources.Add(download.Id, new List<string>());
 
-                validationSources[download.Id].Add(await uriRedirectController.GetUriRedirect(download.Source));
+                //validationSources[download.Id].Add(await uriRedirectController.GetUriRedirect(download.Source));
             }
 
             return validationSources;

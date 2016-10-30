@@ -49,22 +49,22 @@ namespace GOG.TaskActivities.Download.Processing
             {
                 var product = collectionController.Find(products, p => p.Id == download.Id);
 
-                taskReportingController.StartTask(
-                    string.Format(
-                        "Download {0}/{1}: {2} for {3}", 
-                        ++currentDownload, 
-                        scheduledDownloads.Count,
-                        System.Enum.GetName(typeof(ScheduledDownloadTypes), download.Type),
-                        product?.Title));
+                //taskReportingController.StartTask(
+                //    string.Format(
+                //        "Download {0}/{1}: {2} for {3}", 
+                //        ++currentDownload, 
+                //        scheduledDownloads.Count,
+                //        System.Enum.GetName(typeof(ScheduledDownloadTypes), download.Type),
+                //        product?.Title));
 
-                await downloadController.DownloadFile(download.Source, download.Destination);
+                //await downloadController.DownloadFile(download.Source, download.Destination);
 
                 // trivial file types can safely be removed
                 // however files won't be removed here
                 // instead they are expected to go through validation
                 // and validation task activity would remove validated files
-                if (download.Type != ScheduledDownloadTypes.File)
-                    existingScheduledDownloads.Remove(download);
+                //if (download.Type != ScheduledDownloadTypes.File)
+                //    existingScheduledDownloads.Remove(download);
 
                 if (currentDownload % storagePushNthProduct == 0)
                 {

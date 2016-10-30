@@ -38,6 +38,8 @@ using GOG.Models.Custom;
 
 using GOG.TaskActivities.Authorization;
 
+using GOG.TaskActivities.Load;
+
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlist;
@@ -135,11 +137,9 @@ namespace GoodOfflineGames
             var screenshotsFilesDestinationController = new ScreenshotsFilesDestinationController();
             var validationDestinationController = new ValidationDestinationController();
 
-            //var productStorageController = new ProductStorageController(
-            //    storageController,
-            //    serializationController);
+            #region Data controllers
 
-            // product controllers
+            // Data controllers for products, game details, game product data, etc.
 
             var javaScriptPrefix = "var data=";
             var jsonToJavaScriptConversionController = new JSONToJavaScriptConvetsionController(javaScriptPrefix);
@@ -160,6 +160,7 @@ namespace GoodOfflineGames
             var gameProductDataDestinationController = new GameProductDataDestinationController();
             var wishlistedDestinationController = new WishlistedDestinationController();
             var updatedDestinationController = new UpdatedDestinationController();
+            var scheduledDownloadsDestinationController = new ScheduledDownloadsDestinationController();
 
             var productsDataController = new DataController<Product>(
                 serializedStorageController, 
@@ -225,30 +226,15 @@ namespace GoodOfflineGames
                 screenshotsDestinationController,
                 recycleBinController);
 
-            // TODO: Load existing data as TaskActivity
-            //productsDataController.Initialize().Wait();
-            //accountProductsDataController.Initialize().Wait();
-            //gameDetailsDataController.Initialize().Wait();
-            //gameProductDataController.Initialize().Wait();
-            //screenshotsDataController.Initialize().Wait();
-            //apiProductsDataController.Initialize().Wait();
-            //wishlistedDataController.Initialize().Wait();
-            updatedDataController.Load().Wait();
+            var scheduledDownloadsController = new DataController<ScheduledDownload>(
+                serializedStorageController,
+                DataStoragePolicy.ItemsList,
+                productCoreIndexingController,
+                collectionController,
+                scheduledDownloadsDestinationController,
+                recycleBinController);
 
-            //Console.WriteLine("Loading existing data");
-
-            //var serializedData = jsonToJavaScriptConversionController.Convert(storageController.Pull("_data\\gameDetails.js").Result);
-            //var legacyData = serializationController.Deserialize<List<GameDetails>>(serializedData);
-            //var counter = 0;
-
-            //Console.WriteLine("DONE");
-
-            //foreach (var li in legacyData)
-            //{
-            //    if (gameDetailsDataController.Contains(li)) continue;
-            //    gameDetailsDataController.Update(li).Wait();
-            //    Console.WriteLine("{0}/{1}", ++counter, legacyData.Count);
-            //}
+            #endregion
 
             // Load settings that (might) have authorization information, and request to run or not specific task activities
 
@@ -274,7 +260,20 @@ namespace GoodOfflineGames
             // set user agent string used for network requests
             networkController.UserAgent = settings.Connection.UserAgent;
 
-            // Create and add all task activity controllersa
+            // load existing data
+
+            var loadDataController = new LoadDataController(
+                taskReportingController,
+                productsDataController,
+                accountProductsDataController,
+                gameDetailsDataController,
+                gameProductDataController,
+                screenshotsDataController,
+                apiProductsDataController,
+                wishlistedDataController,
+                updatedDataController);
+
+            // Create and add all task activity controllers
             // Task activities are encapsulated set of activity - so no data can be passed around!
             // Individual task activity would need to load data it needs from the disk / network
 
@@ -466,6 +465,7 @@ namespace GoodOfflineGames
 
             var taskActivityControllers = new List<ITaskActivityController>()
             {
+                loadDataController,
                 authorizationController,
                 //productsUpdateController,
                 //accountProductsUpdateController,

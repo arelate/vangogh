@@ -43,18 +43,18 @@ namespace GOG.TaskActivities.Validation
 
             foreach (var download in scheduledDownloads)
             {
-                if (download.Type != ScheduledDownloadTypes.File)
-                    continue;
+                //if (download.Type != ScheduledDownloadTypes.File)
+                //    continue;
 
-                var filename = Path.Combine(
-                    download.Destination,
-                    destinationController.GetFilename(download.Source));
+                //var filename = Path.Combine(
+                //    download.Destination,
+                //    destinationController.GetFilename(download.Source));
 
                 try
                 {
-                    taskReportingController.StartTask("Validating file " + filename);
-                    await validationController.Validate(filename);
-                    taskReportingController.CompleteTask();
+                    //taskReportingController.StartTask("Validating file " + filename);
+                    //await validationController.Validate(filename);
+                    //taskReportingController.CompleteTask();
                 }
                 catch (Exception ex)
                 {

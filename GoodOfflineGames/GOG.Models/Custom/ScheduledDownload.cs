@@ -1,12 +1,20 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+
+using Models.ProductCore;
 
 namespace GOG.Models.Custom
 {
     [DataContract]
-    public class ScheduledDownload
+    public class ScheduledDownload : ProductCore
     {
-        [DataMember(Name = "id")]
-        public long Id { get; set; }
+        [DataMember(Name = "downloads")]
+        public List<ScheduledDownloadEntry> Downloads { get; set; }
+    }
+
+    [DataContract]
+    public class ScheduledDownloadEntry
+    {
         [DataMember(Name = "type")]
         public ScheduledDownloadTypes Type { get; set; }
         [DataMember(Name = "source")]

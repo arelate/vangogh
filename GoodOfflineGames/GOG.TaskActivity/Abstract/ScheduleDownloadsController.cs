@@ -81,11 +81,11 @@ namespace GOG.TaskActivities.Abstract
                         if (fileController.Exists(localFile)) continue;
                     }
 
-                    var newScheduledDownload = new ScheduledDownload();
-                    newScheduledDownload.Id = productId;
-                    newScheduledDownload.Type = downloadType;
-                    newScheduledDownload.Source = actualSource;
-                    newScheduledDownload.Destination = destinationDirectory;
+                    //var newScheduledDownload = new ScheduledDownload();
+                    //newScheduledDownload.Id = productId;
+                    //newScheduledDownload.Type = downloadType;
+                    //newScheduledDownload.Source = actualSource;
+                    //newScheduledDownload.Destination = destinationDirectory;
 
                     //scheduledDownloads.Add(newScheduledDownload);
                 }
