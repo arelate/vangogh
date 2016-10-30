@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\ProductCoreUpdateController.cs" />
-    <Compile Include="Abstract\PageResultUpdateController.cs" />
+    <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
     <Compile Include="Abstract\ScheduleDownloadsController.cs" />
     <Compile Include="Download\Dependencies\ProductExtras\ProductExtrasDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductFiles\ProductFilesDownloadSourcesController.cs" />
@@ -64,13 +64,11 @@
     <Compile Include="Update\Dependencies\GameProductData\GameProductDataSkipUpdateController.cs" />
     <Compile Include="Update\Dependencies\GameProductData\GameProductDataUpdateUriController.cs" />
     <Compile Include="Update\Dependencies\Product\ProductUpdateUriController.cs" />
-    <Compile Include="Update\PageResult\AccountProductsUpdateController.cs" />
     <Compile Include="Authorization\AuthorizationController.cs" />
     <Compile Include="Update\NewUpdatedAccountProducts\NewUpdatedAccountProductsController.cs" />
     <Compile Include="Update\Products\ApiProductUpdateController.cs" />
     <Compile Include="Update\Products\GameDetailsUpdateController.cs" />
     <Compile Include="Update\Products\GameProductDataUpdateController.cs" />
-    <Compile Include="Update\PageResult\ProductsUpdateController.cs" />
     <Compile Include="Abstract\TaskActivityController.cs" />
     <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
     <Compile Include="Update\Wishlist\WishlistedUpdateController.cs" />

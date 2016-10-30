@@ -30,16 +30,18 @@ using Controllers.SerializedStorage;
 using Controllers.Indexing;
 using Controllers.RecycleBin;
 
+using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
 using Interfaces.DataStoragePolicy;
 
 using GOG.Models;
 using GOG.Models.Custom;
 
+using GOG.Controllers.PageResults;
+using GOG.Controllers.Extraction;
+
 using GOG.TaskActivities.Authorization;
-
 using GOG.TaskActivities.Load;
-
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlist;
@@ -48,7 +50,6 @@ using GOG.TaskActivities.Update.Dependencies.GameDetails;
 using GOG.TaskActivities.Update.Dependencies.GameProductData;
 using GOG.TaskActivities.Update.Products;
 using GOG.TaskActivities.Update.Screenshots;
-
 using GOG.TaskActivities.Download.Dependencies.ProductImages;
 using GOG.TaskActivities.Download.Dependencies.Screenshots;
 using GOG.TaskActivities.Download.Dependencies.ProductFiles;
@@ -63,12 +64,17 @@ using GOG.TaskActivities.Download.Processing;
 
 using GOG.TaskActivities.Validation;
 
+using Models.Uris;
+using Models.QueryParameters;
+
 namespace GoodOfflineGames
 {
     class Program
     {
         static void Main(string[] args)
         {
+            #region Foundation Controllers
+
             string recycleBinUri = "_recycleBin";
 
             var streamController = new StreamController();
@@ -137,7 +143,9 @@ namespace GoodOfflineGames
             var screenshotsFilesDestinationController = new ScreenshotsFilesDestinationController();
             var validationDestinationController = new ValidationDestinationController();
 
-            #region Data controllers
+            #endregion
+
+            #region Data Controllers
 
             // Data controllers for products, game details, game product data, etc.
 
@@ -236,7 +244,7 @@ namespace GoodOfflineGames
 
             #endregion
 
-            // Load settings that (might) have authorization information, and request to run or not specific task activities
+            #region Settings: Load, Validation
 
             var settingsController = new SettingsController(
                 storageController,
@@ -260,7 +268,14 @@ namespace GoodOfflineGames
             // set user agent string used for network requests
             networkController.UserAgent = settings.Connection.UserAgent;
 
-            // load existing data
+            #endregion
+
+            #region Task Activity Controllers
+
+            // Create and add all task activity controllers
+            // Task activities are encapsulated set of activity - so no data can be passed around!
+
+            #region Load
 
             var loadDataController = new LoadDataController(
                 taskReportingController,
@@ -273,9 +288,9 @@ namespace GoodOfflineGames
                 wishlistedDataController,
                 updatedDataController);
 
-            // Create and add all task activity controllers
-            // Task activities are encapsulated set of activity - so no data can be passed around!
-            // Individual task activity would need to load data it needs from the disk / network
+            #endregion
+
+            #region Authorization
 
             var authenticationPropertiesValidationController = new AuthenticationPropertiesValidationController(consoleController);
 
@@ -291,17 +306,49 @@ namespace GoodOfflineGames
                 authenticationPropertiesValidationController,
                 taskReportingController);
 
-            var productsUpdateController = new ProductsUpdateController(
+            #endregion
+
+            #region Update.PageResults
+
+            var productsPageResultsController = new ProductsPageResultController(
                 requestPageController,
                 serializationController,
-                productsDataController,
+                Uris.Paths.GetUpdateUri(ProductTypes.Product),
+                QueryParameters.GetQueryParameters(ProductTypes.Product),
                 taskReportingController);
 
-            //var accountProductsUpdateController = new AccountProductsUpdateController(
-            //    requestPageController,
-            //    serializationController,
-            //    productStorageController,
-            //    taskReportingController);
+            var productsExtractionController = new ProductsExtractionController();
+
+            var productsUpdateController = new PageResultUpdateController<
+                ProductsPageResult, 
+                Product>(
+                    ProductTypes.Product,
+                    productsPageResultsController,
+                    productsExtractionController,
+                    requestPageController,
+                    productsDataController,
+                    taskReportingController);
+
+            var accountProductsPageResultsController = new AccountProductsPageResultController(
+                requestPageController,
+                serializationController,
+                Uris.Paths.GetUpdateUri(ProductTypes.AccountProduct),
+                QueryParameters.GetQueryParameters(ProductTypes.AccountProduct),
+                taskReportingController);
+
+            var accountProductsExtractionController = new AccountProductsExtractionController();
+
+            var accountProductsUpdateController = new PageResultUpdateController<
+                AccountProductsPageResult, 
+                AccountProduct>(
+                    ProductTypes.AccountProduct,
+                    accountProductsPageResultsController,
+                    accountProductsExtractionController,
+                    requestPageController,
+                    accountProductsDataController,
+                    taskReportingController);
+
+            #endregion
 
             //var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
             //    productStorageController,
@@ -461,7 +508,9 @@ namespace GoodOfflineGames
             //    productStorageController,
             //    taskReportingController);
 
-            // Iterate and process all tasks
+            #endregion
+
+            #region TACs Execution
 
             var taskActivityControllers = new List<ITaskActivityController>()
             {
@@ -503,6 +552,8 @@ namespace GoodOfflineGames
 
             consoleController.WriteLine("Press ENTER to continue...");
             consoleController.ReadLine();
+
+            #endregion
         }
     }
 }
