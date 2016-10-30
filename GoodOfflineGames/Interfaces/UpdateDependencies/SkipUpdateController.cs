@@ -1,8 +1,10 @@
-﻿namespace Interfaces.UpdateDependencies
+﻿using System.Threading.Tasks;
+
+namespace Interfaces.UpdateDependencies
 {
     public interface ISkipUpdateDelegate
     {
-        bool SkipUpdate<T>(T item);
+        Task<bool> SkipUpdate(long id);
     }
 
     public interface ISkipUpdateController:

@@ -2,31 +2,30 @@
 using System.Threading.Tasks;
 
 using Interfaces.Reporting;
-using Interfaces.Storage;
 using Interfaces.ProductTypes;
-using Interfaces.Collection;
 using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
 using Interfaces.AdditionalDetails;
+using Interfaces.Data;
 
 using Models.Uris;
 using Models.ProductCore;
 
-using GOG.Models;
-
 namespace GOG.TaskActivities.Abstract
 {
-    public abstract class ProductCoreUpdateController<UpdateType, ListType> : TaskActivityController
+    public abstract class ProductCoreUpdateController<UpdateType, ListType> :
+        TaskActivityController
         where ListType : ProductCore
-        where UpdateType : ProductCore 
+        where UpdateType : ProductCore
     {
-        //internal IProductTypeStorageController productStorageController;
-        private ICollectionController collectionController;
+        private IDataController<UpdateType> updateTypeDataController;
+        private IDataController<ListType> listTypeDataController;
+
         private INetworkController networkController;
         private IThrottleController throttleController;
-        internal ISerializationController<string> serializationController;
+        private ISerializationController<string> serializationController;
 
         private IUpdateUriController updateUriController;
         private IRequiredUpdatesController requiredUpdatesController;
@@ -35,14 +34,14 @@ namespace GOG.TaskActivities.Abstract
         private IConnectionController connectionController;
         private IAdditionalDetailsController additionalDetailsController;
 
-        // TODO: Break this pattern and implement controllers
-        internal ProductTypes updateProductType;
-        internal ProductTypes listProductType;
-        internal string displayProductName;
+        private ProductTypes updateProductType;
+
+        private string updateTypeDescription;
 
         public ProductCoreUpdateController(
-            //IProductTypeStorageController productStorageController,
-            ICollectionController collectionController,
+            ProductTypes updateProductType,
+            IDataController<UpdateType> updateTypeDataController,
+            IDataController<ListType> listTypeDataController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IThrottleController throttleController,
@@ -55,8 +54,9 @@ namespace GOG.TaskActivities.Abstract
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
-            //this.productStorageController = productStorageController;
-            this.collectionController = collectionController;
+            this.updateTypeDataController = updateTypeDataController;
+            this.listTypeDataController = listTypeDataController;
+
             this.networkController = networkController;
             this.serializationController = serializationController;
             this.throttleController = throttleController;
@@ -67,130 +67,85 @@ namespace GOG.TaskActivities.Abstract
             this.dataDecodingController = dataDecodingController;
             this.connectionController = connectionController;
             this.additionalDetailsController = additionalDetailsController;
+
+            this.updateProductType = updateProductType;
+            updateTypeDescription = typeof(UpdateType).Name;
         }
 
         public override async Task ProcessTask()
         {
-            taskReportingController.StartTask("Load existing products and " + displayProductName);
+            var updateProducts = new List<long>();
 
-            var products = new List<ListType>(); // await productStorageController.Pull<ListType>(listProductType);
-            var existingData = new List<UpdateType>(); // await productStorageController.Pull<UpdateType>(updateProductType);
+            taskReportingController.StartTask("Enumerate missing data");
 
-            var updateCollection = new List<UpdateType>(existingData);
+            foreach (var id in listTypeDataController.EnumerateIds())
+            {
+                if (skipUpdateController != null &&
+                    await skipUpdateController.SkipUpdate(id)) continue;
+
+                if (!updateTypeDataController.ContainsId(id))
+                    updateProducts.Add(id);
+            }
 
             taskReportingController.CompleteTask();
 
-            var updateProducts = await GetUpdates(products, updateCollection);
+            taskReportingController.StartTask("Enumerate required data updates");
 
-            taskReportingController.StartTask("Update required " + displayProductName);
+            if (requiredUpdatesController != null)
+                updateProducts.AddRange(requiredUpdatesController.GetRequiredUpdates());
+
+            taskReportingController.CompleteTask();
+
+            taskReportingController.StartTask("Getting updates for data type: " + updateTypeDescription);
 
             var currentProduct = 0;
-            var storagePushNthProduct = 1; // push after updating every nth product
-            var somethingChanged = false;
 
             foreach (var id in updateProducts)
             {
-                var product = collectionController.Find(products, p => p.Id == id);
+                var product = await listTypeDataController.GetById(id);
 
                 taskReportingController.StartTask(
                     string.Format(
                         "Update {0} {1}/{2}: {3}",
-                        displayProductName,
+                        updateTypeDescription,
                         ++currentProduct,
                         updateProducts.Count,
                         product.Title));
 
-                var content = await GetContent(product);
-                if (content == null) continue;
+                var uri = string.Format(
+                    Uris.Paths.GetUpdateUri(updateProductType),
+                    updateUriController.GetUpdateUri(product));
+
+                var rawResponse = await networkController.Get(uri);
+
+                var content = dataDecodingController != null ?
+                    dataDecodingController.DecodeData(rawResponse) :
+                    rawResponse;
+
+                if (content == null)
+                {
+                    taskReportingController.ReportWarning(
+                        string.Format(
+                            "Product {0} doesn't have valid associated data of type: " + updateTypeDescription,
+                            product.Title));
+                    continue;
+                }
 
                 var data = serializationController.Deserialize<UpdateType>(content);
 
                 if (data != null)
                 {
                     connectionController?.Connect(data, product);
-
                     additionalDetailsController?.AddDetails(data, content);
 
-                    updateCollection.Add(data);
-                    somethingChanged = true;
+                    await updateTypeDataController.Update(data);
                 }
 
-                if (currentProduct % storagePushNthProduct == 0)
-                    await PushChanges(updateCollection);
-
-                if (throttleController != null)
-                {
-                    taskReportingController.StartTask("Throttle network requests");
-                    throttleController.Throttle();
-                    taskReportingController.CompleteTask();
-                }
+                throttleController?.Throttle();
 
                 taskReportingController.CompleteTask();
             }
 
-            if (somethingChanged) await PushChanges(updateCollection);
-
-            taskReportingController.CompleteTask();
-        }
-
-        private async Task<List<long>> GetUpdates(IEnumerable<ListType> products, IEnumerable<UpdateType> updateCollection)
-        {
-            taskReportingController.StartTask("Get a list of updates for " + displayProductName);
-
-            var updateProducts = new List<long>();
-
-            if (requiredUpdatesController != null)
-            {
-                foreach (var id in await requiredUpdatesController.GetRequiredUpdates())
-                {
-                    var product = collectionController.Find(products, p => p.Id == id);
-                    if (product != null) updateProducts.Add(product.Id);
-                }
-            }
-
-            foreach (var product in products)
-            {
-                if (product == null) continue;
-
-                if (skipUpdateController != null &&
-                    skipUpdateController.SkipUpdate(product)) continue;
-
-                var foundGameProductData = collectionController.Find(updateCollection, p => p != null && p.Id == product.Id);
-                if (foundGameProductData == null &&
-                    !updateProducts.Contains(product.Id))
-                    updateProducts.Add(product.Id);
-            }
-
-            taskReportingController.CompleteTask();
-
-            return updateProducts;
-        }
-
-        private async Task<string> GetContent(ListType product)
-        {
-            var uri = string.Format(
-                Uris.Paths.GetUpdateUri(updateProductType), 
-                updateUriController.GetUpdateUri(product));
-
-            var rawResponse = await networkController.Get(uri);
-
-            var content = dataDecodingController != null ?
-                dataDecodingController.DecodeData(rawResponse) :
-                rawResponse;
-
-            if (content == null)
-                taskReportingController.ReportWarning(
-                    string.Format(
-                        "Product {0} doesn't have valid " + displayProductName,
-                        product.Title));
-
-            return content;
-        }
-
-        private async Task PushChanges(IList<UpdateType> updateCollection)
-        {
-            taskReportingController.StartTask("Save " + displayProductName + " to disk");
-            //await productStorageController.Push(updateProductType, updateCollection);
             taskReportingController.CompleteTask();
         }
     }

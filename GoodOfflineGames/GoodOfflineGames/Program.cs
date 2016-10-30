@@ -129,7 +129,9 @@ namespace GoodOfflineGames
 
             var collectionController = new CollectionController();
 
-            var throttleController = new ThrottleController();
+            var throttleController = new ThrottleController(
+                taskReportingController,
+                secondsFormattingController);
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
@@ -370,55 +372,59 @@ namespace GoodOfflineGames
 
             #endregion
 
-            //// dependencies for update controllers
+            #region Update.Products
 
-            //var productUpdateUriController = new ProductUpdateUriController();
+            // dependencies for update controllers
 
-            //var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
-            //var gameProductDataSkipUpdateController = new GameProductDataSkipUpdateController();
-            //var gameProductDataDecodingController = new GameProductDataDecodingController(
-            //    gogDataExtractionController,
-            //    serializationController);
+            var productUpdateUriController = new ProductUpdateUriController();
 
-            //var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(productStorageController);
-            //var gameDetailsConnectionController = new GameDetailsConnectionController();
-            //var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
-            //    serializationController,
-            //    languageController);
+            var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
+            var gameProductDataSkipUpdateController = new GameProductDataSkipUpdateController(
+                productsDataController);
+            var gameProductDataDecodingController = new GameProductDataDecodingController(
+                gogDataExtractionController,
+                serializationController);
 
-            //// product update controllers
+            var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(
+                updatedDataController);
+            var gameDetailsConnectionController = new GameDetailsConnectionController();
+            var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
+                serializationController,
+                languageController);
 
-            //var gameProductDataUpdateController = new GameProductDataUpdateController(
-            //    productStorageController,
-            //    collectionController,
-            //    networkController,
-            //    serializationController,
-            //    null,
-            //    gameProductDataUpdateUriController,
-            //    gameProductDataSkipUpdateController,
-            //    gameProductDataDecodingController,
-            //    taskReportingController);
+            // product update controllers
 
-            //var apiProductUpdateController = new ApiProductUpdateController(
-            //    productStorageController,
-            //    collectionController,
-            //    networkController,
-            //    serializationController,
-            //    null,
-            //    productUpdateUriController,
-            //    taskReportingController);
+            var gameProductDataUpdateController = new GameProductDataUpdateController(
+                gameProductDataController,
+                productsDataController,
+                networkController,
+                serializationController,
+                gameProductDataUpdateUriController,
+                gameProductDataSkipUpdateController,
+                gameProductDataDecodingController,
+                taskReportingController);
 
-            //var gameDetailsUpdateController = new GameDetailsUpdateController(
-            //    productStorageController,
-            //    collectionController,
-            //    networkController,
-            //    serializationController,
-            //    throttleController,
-            //    productUpdateUriController,
-            //    gameDetailsRequiredUpdatesController,
-            //    gameDetailsConnectionController,
-            //    gameDetailsDownloadDetailsController,
-            //    taskReportingController);
+            var apiProductUpdateController = new ApiProductUpdateController(
+                apiProductsDataController,
+                productsDataController,
+                networkController,
+                serializationController,
+                productUpdateUriController,
+                taskReportingController);
+
+            var gameDetailsUpdateController = new GameDetailsUpdateController(
+                gameDetailsDataController,
+                accountProductsDataController,
+                networkController,
+                serializationController,
+                throttleController,
+                productUpdateUriController,
+                gameDetailsRequiredUpdatesController,
+                gameDetailsConnectionController,
+                gameDetailsDownloadDetailsController,
+                taskReportingController);
+
+            #endregion
 
             //var screenshotUpdateController = new ScreenshotUpdateController(
             //    productStorageController,
@@ -531,7 +537,7 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                //gameDetailsUpdateController,
+                gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //productImagesScheduleDownloadsController,
                 //screenshotsScheduleDownloadsController,

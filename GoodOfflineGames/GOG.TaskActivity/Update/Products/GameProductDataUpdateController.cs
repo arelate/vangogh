@@ -6,6 +6,7 @@ using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
+using Interfaces.Data;
 
 using GOG.Models;
 
@@ -16,21 +17,21 @@ namespace GOG.TaskActivities.Update.Products
     public class GameProductDataUpdateController: ProductCoreUpdateController<GameProductData, Product>
     {
         public GameProductDataUpdateController(
-            //IProductTypeStorageController productStorageController,
-            ICollectionController collectionController,
+            IDataController<GameProductData> gameProductDataController,
+            IDataController<Product> productsDataController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IThrottleController throttleController,
             IUpdateUriController updateUriController,
             ISkipUpdateController skipUpdateController,
             IDataDecodingController dataDecodingController,
             ITaskReportingController taskReportingController):
             base(
-                //productStorageController,
-                collectionController,
+                ProductTypes.GameProductData,
+                gameProductDataController,
+                productsDataController,
                 networkController,
                 serializationController,
-                throttleController,
+                null, // throttleController
                 updateUriController,
                 null, // requiredUpdatesController
                 skipUpdateController,
@@ -39,10 +40,7 @@ namespace GOG.TaskActivities.Update.Products
                 null, // additionalDetailsController
                 taskReportingController)
         {
-            updateProductType = ProductTypes.GameProductData;
-            listProductType = ProductTypes.Product;
-
-            displayProductName = "game product data";
+            // ...
         }
     }
 }

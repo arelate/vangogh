@@ -6,6 +6,7 @@ using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
+using Interfaces.Data;
 
 using GOG.Models;
 
@@ -16,19 +17,19 @@ namespace GOG.TaskActivities.Update.Products
     public class ApiProductUpdateController : ProductCoreUpdateController<ApiProduct, Product>
     {
         public ApiProductUpdateController(
-            //IProductTypeStorageController productStorageController,
-            ICollectionController collectionController,
+            IDataController<ApiProduct> apiProductDataController,
+            IDataController<Product> productsDataController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IThrottleController throttleController,
             IUpdateUriController updateUriController,
             ITaskReportingController taskReportingController) :
             base(
-                //productStorageController,
-                collectionController,
+                ProductTypes.ApiProduct,
+                apiProductDataController,
+                productsDataController,
                 networkController,
                 serializationController,
-                throttleController,
+                null, // throttleController
                 updateUriController,
                 null, // requiredUpdatesController
                 null, // skipUpdateController
@@ -37,10 +38,7 @@ namespace GOG.TaskActivities.Update.Products
                 null, // additionalDetailsController
                 taskReportingController)
         {
-            updateProductType = ProductTypes.ApiProduct;
-            listProductType = ProductTypes.Product;
-
-            displayProductName = "API product";
+            // ...
         }
     }
 }

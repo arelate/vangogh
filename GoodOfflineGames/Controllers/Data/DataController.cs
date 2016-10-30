@@ -67,20 +67,8 @@ namespace Controllers.Data
         public bool Contains(Type data)
         {
             if (data == null) return true;
-
-            switch (dataStoragePolicy)
-            {
-                case DataStoragePolicy.IndexAndItems:
-                    return dataIndexes.Contains(indexingController.GetIndex(data));
-                case DataStoragePolicy.ItemsList:
-                    var index = indexingController.GetIndex(data);
-                    var existingData = collectionController.Find(
-                        dataItems,
-                        d =>
-                            indexingController.GetIndex(d) == index);
-                    return existingData != null;
-            }
-            return false;
+            var index = indexingController.GetIndex(data);
+            return dataIndexes.Contains(index);
         }
 
         private string GetDataUri(long index)
@@ -118,6 +106,9 @@ namespace Controllers.Data
                 case DataStoragePolicy.ItemsList:
                     dataItems = await serializedStorageController.DeserializePull<List<Type>>(dataItemsUri);
                     if (dataItems == null) dataItems = new List<Type>();
+                    dataIndexes = new List<long>();
+                    foreach (var item in dataItems)
+                        dataIndexes.Add(indexingController.GetIndex(item));
                     break;
             }
         }
@@ -159,14 +150,12 @@ namespace Controllers.Data
             foreach (var item in data)
             {
                 var index = indexingController.GetIndex(item);
+                if (!dataIndexes.Contains(index))
+                    dataIndexes.Add(index);
 
                 switch (dataStoragePolicy)
                 {
                     case DataStoragePolicy.IndexAndItems:
-                        if (!dataIndexes.Contains(index))
-                        {
-                            dataIndexes.Add(index);
-                        }
                         var dataUri = GetDataUri(index);
                         await serializedStorageController.SerializePush(dataUri, item);
                         break;
@@ -188,18 +177,12 @@ namespace Controllers.Data
 
         public IEnumerable<long> EnumerateIds()
         {
-            switch (dataStoragePolicy)
-            {
-                case DataStoragePolicy.IndexAndItems:
-                    return dataIndexes;
-                case DataStoragePolicy.ItemsList:
-                    var indexes = new List<long>();
-                    foreach (var item in dataItems)
-                        indexes.Add(indexingController.GetIndex(item));
-                    return indexes;
-            }
+            return dataIndexes;
+        }
 
-            return null;
+        public bool ContainsId(long id)
+        {
+            return dataIndexes.Contains(id);
         }
     }
 }

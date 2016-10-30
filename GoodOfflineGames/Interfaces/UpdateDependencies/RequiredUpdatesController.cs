@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-
-namespace Interfaces.UpdateDependencies
+﻿namespace Interfaces.UpdateDependencies
 {
     public interface IGetRequiredUpdatesDelegate
     {
-        Task<long[]> GetRequiredUpdates();
+        long[] GetRequiredUpdates();
     }
 
     public interface IRequiredUpdatesController:

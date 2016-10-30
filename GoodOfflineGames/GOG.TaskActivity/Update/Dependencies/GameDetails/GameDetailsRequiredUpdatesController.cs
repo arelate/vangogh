@@ -1,27 +1,22 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 
-using Interfaces.ProductTypes;
-using Interfaces.Storage;
 using Interfaces.UpdateDependencies;
+using Interfaces.Data;
 
 namespace GOG.TaskActivities.Update.Dependencies.GameDetails
 {
     public class GameDetailsRequiredUpdatesController : IRequiredUpdatesController
     {
-        //IProductTypeStorageController productStorageController;
+        private IDataController<long> updatedDataController;
 
-        public GameDetailsRequiredUpdatesController(
-            //IProductTypeStorageController productStorageController
-            )
+        public GameDetailsRequiredUpdatesController(IDataController<long> updatedDataController)
         {
-            //this.productStorageController = productStorageController;
+            this.updatedDataController = updatedDataController;
         }
 
-        public async Task<long[]> GetRequiredUpdates()
+        public long[] GetRequiredUpdates()
         {
-            return null;
-            //return (await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct)).ToArray();
+            return updatedDataController.EnumerateIds().ToArray();
         }
     }
 }

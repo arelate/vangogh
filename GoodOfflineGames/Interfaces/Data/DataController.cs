@@ -38,6 +38,11 @@ namespace Interfaces.Data
         bool Contains(Type data);
     }
 
+    public interface IContainsIdDelegate
+    {
+        bool ContainsId(long id);
+    }
+
     public interface IDataController<Type>:
         ILoadDelegate,
         ISaveDelegate,
@@ -45,7 +50,8 @@ namespace Interfaces.Data
         IGetByIdDelegate<Type>,
         IUpdateDelegate<Type>,
         IRemoveDelegate<Type>,
-        IContainsDelegate<Type>
+        IContainsDelegate<Type>,
+        IContainsIdDelegate
     {
         // ...
     }
