@@ -106,7 +106,7 @@ namespace Controllers.Data
             return default(Type);
         }
 
-        public async Task Initialize()
+        public async Task Load()
         {
             switch (dataStoragePolicy)
             {
@@ -121,52 +121,68 @@ namespace Controllers.Data
             }
         }
 
-        public async Task Remove(Type data)
+        public async Task Save()
         {
             switch (dataStoragePolicy)
             {
                 case DataStoragePolicy.IndexAndItems:
-                    var index = indexingController.GetIndex(data);
-                    dataIndexes.Remove(index);
-                    var dataUri = GetDataUri(index);
-                    recycleBinController.MoveToRecycleBin(dataUri);
                     await serializedStorageController.SerializePush(dataIndexesUri, dataIndexes);
                     break;
                 case DataStoragePolicy.ItemsList:
-                    dataItems.Remove(data);
                     await serializedStorageController.SerializePush(dataItemsUri, dataItems);
                     break;
             }
         }
 
-        public async Task Update(Type data)
+        public async Task Remove(params Type[] data)
+        {
+            foreach (var item in data)
+            {
+                if (dataItems.Contains(item)) dataItems.Remove(item);
+
+                var index = indexingController.GetIndex(item);
+                if (dataIndexes.Contains(index))
+                {
+                    dataIndexes.Remove(index);
+                    var dataUri = GetDataUri(index);
+                    recycleBinController.MoveToRecycleBin(dataUri);
+                }
+            }
+
+            await Save();
+        }
+
+        public async Task Update(params Type[] data)
         {
 
-            var index = indexingController.GetIndex(data);
-
-            switch (dataStoragePolicy)
+            foreach (var item in data)
             {
-                case DataStoragePolicy.IndexAndItems:
-                    if (!dataIndexes.Contains(index))
-                    {
-                        dataIndexes.Add(index);
-                        await serializedStorageController.SerializePush(dataIndexesUri, dataIndexes);
-                    }
-                    var dataUri = GetDataUri(index);
-                    await serializedStorageController.SerializePush(dataUri, data);
-                    break;
-                case DataStoragePolicy.ItemsList:
-                    var updated = false;
-                    for (var ii = 0; ii < dataItems.Count; ii++)
-                        if (indexingController.GetIndex(dataItems[ii]) == index)
+                var index = indexingController.GetIndex(item);
+
+                switch (dataStoragePolicy)
+                {
+                    case DataStoragePolicy.IndexAndItems:
+                        if (!dataIndexes.Contains(index))
                         {
-                            dataItems[ii] = data;
-                            updated = true;
+                            dataIndexes.Add(index);
                         }
-                    if (!updated) dataItems.Add(data);
-                    await serializedStorageController.SerializePush(dataItemsUri, dataItems);
-                    break;
+                        var dataUri = GetDataUri(index);
+                        await serializedStorageController.SerializePush(dataUri, item);
+                        break;
+                    case DataStoragePolicy.ItemsList:
+                        var updated = false;
+                        for (var ii = 0; ii < dataItems.Count; ii++)
+                            if (indexingController.GetIndex(dataItems[ii]) == index)
+                            {
+                                dataItems[ii] = item;
+                                updated = true;
+                            }
+                        if (!updated) dataItems.Add(item);
+                        break;
+                }
             }
+
+            await Save();
         }
     }
 }

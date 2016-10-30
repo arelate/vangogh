@@ -233,7 +233,7 @@ namespace GoodOfflineGames
             //screenshotsDataController.Initialize().Wait();
             //apiProductsDataController.Initialize().Wait();
             //wishlistedDataController.Initialize().Wait();
-            updatedDataController.Initialize().Wait();
+            updatedDataController.Load().Wait();
 
             //Console.WriteLine("Loading existing data");
 

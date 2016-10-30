@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.Reporting;
 using Interfaces.RequestPage;
@@ -15,8 +16,8 @@ using GOG.Interfaces.Extraction;
 
 namespace GOG.TaskActivities.Abstract
 {
-    public abstract class PageResultUpdateController<PageType, Type> : TaskActivityController 
-        where PageType: PageResult 
+    public abstract class PageResultUpdateController<PageType, Type> : TaskActivityController
+        where PageType : PageResult
         where Type : ProductCore
     {
         private IRequestPageController requestPageController;
@@ -26,9 +27,6 @@ namespace GOG.TaskActivities.Abstract
         internal IPageResultsController<PageType> pageResultsController;
         internal IPageResultsExtractionController<PageType, Type> pageResultsExtractingController;
 
-        //private string filenameTemplate = "{0}s.js";
-        //internal string filename;
-
         public PageResultUpdateController(
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
@@ -37,8 +35,6 @@ namespace GOG.TaskActivities.Abstract
         {
             this.requestPageController = requestPageController;
             this.dataController = dataController;
-
-            //filename = string.Format(filenameTemplate, productType.ToString().ToLower());
         }
 
         public override async Task ProcessTask()
@@ -51,14 +47,9 @@ namespace GOG.TaskActivities.Abstract
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Update existing products");
-            foreach (var product in products)
-            {
-                taskReportingController.StartTask("Update product " + product.Title);
-                await dataController.Update(product);
-                taskReportingController.CompleteTask();
-            }
+            await dataController.Update(products.ToArray());
             taskReportingController.CompleteTask();
-        
+
             taskReportingController.CompleteTask();
         }
     }

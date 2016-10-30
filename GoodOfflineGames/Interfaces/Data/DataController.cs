@@ -2,9 +2,14 @@
 
 namespace Interfaces.Data
 {
-    public interface IInitializeDelegate
+    public interface ILoadDelegate
     {
-        Task Initialize();
+        Task Load();
+    }
+
+    public interface ISaveDelegate
+    {
+        Task Save();
     }
 
     public interface IGetByIdDelegate<Type>
@@ -14,21 +19,22 @@ namespace Interfaces.Data
 
     public interface IUpdateDelegate<Type>
     {
-        Task Update(Type product);
+        Task Update(params Type[] data);
     }
 
     public interface IRemoveDelegate<Type>
     {
-        Task Remove(Type product);
+        Task Remove(params Type[] data);
     }
 
     public interface IContainsDelegate<Type>
     {
-        bool Contains(Type product);
+        bool Contains(Type data);
     }
 
     public interface IDataController<Type>:
-        IInitializeDelegate,
+        ILoadDelegate,
+        ISaveDelegate,
         IGetByIdDelegate<Type>,
         IUpdateDelegate<Type>,
         IRemoveDelegate<Type>,

@@ -27,7 +27,6 @@ namespace GOG.TaskActivities.Update.PageResult
                 productsDataController,
                 taskReportingController)
         {
-            productType = ProductTypes.Product;
             pageResultsController = new ProductsPageResultController(
                 requestPageController,
                 serializationController,
