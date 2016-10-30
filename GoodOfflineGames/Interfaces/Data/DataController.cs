@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Interfaces.Data
 {
@@ -15,6 +16,11 @@ namespace Interfaces.Data
     public interface IGetByIdDelegate<Type>
     {
         Task<Type> GetById(long id);
+    }
+
+    public interface IEnumerateIds
+    {
+        IEnumerable<long> EnumerateIds();
     }
 
     public interface IUpdateDelegate<Type>
@@ -35,6 +41,7 @@ namespace Interfaces.Data
     public interface IDataController<Type>:
         ILoadDelegate,
         ISaveDelegate,
+        IEnumerateIds,
         IGetByIdDelegate<Type>,
         IUpdateDelegate<Type>,
         IRemoveDelegate<Type>,

@@ -350,9 +350,14 @@ namespace GoodOfflineGames
 
             #endregion
 
-            //var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
-            //    productStorageController,
-            //    taskReportingController);
+            #region Update.NewUpdatedAccountProducts
+
+            var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
+                updatedDataController,
+                accountProductsDataController,
+                taskReportingController);
+
+            #endregion
 
             //var wishlistedUpdateController = new WishlistedUpdateController(
             //    networkController,

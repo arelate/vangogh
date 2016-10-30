@@ -10,6 +10,7 @@ using Interfaces.Destination;
 using Interfaces.RecycleBin;
 
 using Interfaces.SerializedStorage;
+using System;
 
 namespace Controllers.Data
 {
@@ -183,6 +184,22 @@ namespace Controllers.Data
             }
 
             await Save();
+        }
+
+        public IEnumerable<long> EnumerateIds()
+        {
+            switch (dataStoragePolicy)
+            {
+                case DataStoragePolicy.IndexAndItems:
+                    return dataIndexes;
+                case DataStoragePolicy.ItemsList:
+                    var indexes = new List<long>();
+                    foreach (var item in dataItems)
+                        indexes.Add(indexingController.GetIndex(item));
+                    return indexes;
+            }
+
+            return null;
         }
     }
 }

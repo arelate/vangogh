@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Interfaces.Storage;
+﻿using System.Threading.Tasks;
 using Interfaces.Reporting;
-using Interfaces.ProductTypes;
+using Interfaces.Data;
 
 using GOG.TaskActivities.Abstract;
 using GOG.Models;
@@ -12,41 +9,33 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
 {
     public class NewUpdatedAccountProductsController: TaskActivityController
     {
-        //private IProductTypeStorageController productStorageController;
+        private IDataController<long> updatedDataController;
+        private IDataController<AccountProduct> accountProductsDataController;
 
         public NewUpdatedAccountProductsController(
-            //IProductTypeStorageController productStorageController,
+            IDataController<long> updatedDataController,
+            IDataController<AccountProduct> accountProductsDataController,
             ITaskReportingController taskReportingController): base(taskReportingController)
         {
-            //this.productStorageController = productStorageController;
+            this.updatedDataController = updatedDataController;
+            this.accountProductsDataController = accountProductsDataController;
         }
 
         public override async Task ProcessTask()
         {
-            taskReportingController.StartTask("Load existing new or updated products");
-            var newUpdatedProducts = new List<long>(); // await productStorageController.Pull<long>(ProductTypes.NewUpdatedProduct);
+            taskReportingController.StartTask("Process new or updated account products");
 
-            taskReportingController.CompleteTask();
-
-            taskReportingController.StartTask("Load account products");
-            var accountProducts = new List<AccountProduct>(); // await productStorageController.Pull<AccountProduct>(ProductTypes.AccountProduct);
-            taskReportingController.CompleteTask();
-
-            if (accountProducts == null) return;
-
-            taskReportingController.StartTask("Update new or updated account products");
-
-            foreach (var product in accountProducts)
+            foreach (var id in accountProductsDataController.EnumerateIds())
             {
-                if (product == null) continue;
-                if (product.IsNew && !newUpdatedProducts.Contains(product.Id)) newUpdatedProducts.Add(product.Id);
-                if (product.Updates > 0 && !newUpdatedProducts.Contains(product.Id)) newUpdatedProducts.Add(product.Id);
+                if (updatedDataController.Contains(id)) continue;
+
+                var accountProduct = await accountProductsDataController.GetById(id);
+
+                if (accountProduct.IsNew ||
+                    accountProduct.Updates > 0)
+                    await updatedDataController.Update(id);
             }
 
-            taskReportingController.CompleteTask();
-
-            taskReportingController.StartTask("Save new or updated products");
-            //await productStorageController.Push(ProductTypes.NewUpdatedProduct, newUpdatedProducts);
             taskReportingController.CompleteTask();
         }
     }
