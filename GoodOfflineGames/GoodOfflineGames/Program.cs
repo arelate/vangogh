@@ -44,7 +44,7 @@ using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
-using GOG.TaskActivities.Update.Wishlist;
+using GOG.TaskActivities.Update.Wishlisted;
 using GOG.TaskActivities.Update.Dependencies.Product;
 using GOG.TaskActivities.Update.Dependencies.GameDetails;
 using GOG.TaskActivities.Update.Dependencies.GameProductData;
@@ -359,12 +359,16 @@ namespace GoodOfflineGames
 
             #endregion
 
-            //var wishlistedUpdateController = new WishlistedUpdateController(
-            //    networkController,
-            //    gogDataExtractionController,
-            //    serializationController,
-            //    productStorageController,
-            //    taskReportingController);
+            #region Update.Wishlisted
+
+            var wishlistedUpdateController = new WishlistedUpdateController(
+                networkController,
+                gogDataExtractionController,
+                serializationController,
+                wishlistedDataController,
+                taskReportingController);
+
+            #endregion
 
             //// dependencies for update controllers
 

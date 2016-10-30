@@ -6,34 +6,33 @@ using Interfaces.Reporting;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Serialization;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
+using Interfaces.Data;
 
 using Models.Uris;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.Update.Wishlist
+namespace GOG.TaskActivities.Update.Wishlisted
 {
     public class WishlistedUpdateController: TaskActivityController
     {
         private INetworkController networkController;
         private IExtractionController gogDataExtractionController;
         private ISerializationController<string> serializationController;
-        //private IProductTypeStorageController productStorageController;
+        private IDataController<long> wishlistedDataController;
 
         public WishlistedUpdateController(
             INetworkController networkController,
             IExtractionController gogDataExtractionController,
             ISerializationController<string> serializationController,
-            //IProductTypeStorageController productStorageController,
+            IDataController<long> wishlistedDataController,
             ITaskReportingController taskReportingController):
             base(taskReportingController)
         {
             this.networkController = networkController;
             this.gogDataExtractionController = gogDataExtractionController;
             this.serializationController = serializationController;
-            //this.productStorageController = productStorageController;
+            this.wishlistedDataController = wishlistedDataController;
         }
 
         public override async Task ProcessTask()
@@ -61,15 +60,10 @@ namespace GOG.TaskActivities.Update.Wishlist
             var wishlistedGogData = wishlistedGogDataCollection.First();
             var wishlistedProductPageResult = serializationController.Deserialize<Models.ProductsPageResult>(wishlistedGogData);
 
-            if (wishlistedProductPageResult == null)
+            if (wishlistedProductPageResult == null ||
+                wishlistedProductPageResult.Products == null)
             {
                 taskReportingController.ReportFailure("Failed to deserialize wishlist data");
-                return;
-            }
-
-            if (wishlistedProductPageResult.Products == null)
-            {
-                taskReportingController.ReportFailure("Deserialized wishlist data contains to products");
                 return;
             }
 
@@ -77,14 +71,13 @@ namespace GOG.TaskActivities.Update.Wishlist
 
             taskReportingController.StartTask("Save wishlist data");
 
-            var wishlisted = new List<long>();
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                wishlisted.Add(product.Id);
-            }
+                if (wishlistedDataController.Contains(product.Id)) continue;
 
-            //await productStorageController.Push(ProductTypes.Wishlisted, wishlisted);
+                await wishlistedDataController.Update(product.Id);
+            }
 
             taskReportingController.CompleteTask();
         }

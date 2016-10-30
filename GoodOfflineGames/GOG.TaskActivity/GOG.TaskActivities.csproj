@@ -71,7 +71,7 @@
     <Compile Include="Update\Products\GameProductDataUpdateController.cs" />
     <Compile Include="Abstract\TaskActivityController.cs" />
     <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
-    <Compile Include="Update\Wishlist\WishlistedUpdateController.cs" />
+    <Compile Include="Update\Wishlisted\WishlistedUpdateController.cs" />
     <Compile Include="Validation\ProcessValidationController.cs" />
   </ItemGroup>
   <ItemGroup>
