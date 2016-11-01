@@ -22,9 +22,12 @@ namespace Controllers.Reporting
             names = new Stack<string>();
         }
 
-        public void StartTask(string name)
+        public void StartTask(string name, params object[] values)
         {
-            names.Push(name);
+            var formattedName = values == null ?
+                name :
+                string.Format(name, values);
+            names.Push(formattedName);
             consoleController.WriteLine(startReportTemplate, MessageType.Progress, names.Peek());
         }
 

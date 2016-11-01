@@ -3,8 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.DownloadSources;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
+using Interfaces.Data;
 
 using GOG.Models;
 
@@ -12,30 +11,29 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
 {
     public class ProductFilesDownloadSourcesController : IDownloadSourcesController
     {
-        //private IProductTypeStorageController productTypeStorageController;
+        private IDataController<GameDetails> gameDetailsDataController;
         private string[] languages;
         private string[] operatingSystems;
 
         public ProductFilesDownloadSourcesController(
             string[] languages,
-            string[] operatingSystems
-            //IProductTypeStorageController productTypeStorageController
-            )
+            string[] operatingSystems,
+            IDataController<GameDetails> gameDetailsDataController)
         {
             this.languages = languages;
             this.operatingSystems = operatingSystems;
 
-            //this.productTypeStorageController = productTypeStorageController;
+            this.gameDetailsDataController = gameDetailsDataController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var gameDetailsCollection = new List<GameDetails>();// await productTypeStorageController.Pull<GameDetails>(ProductTypes.GameDetails);
-
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 
-            foreach (var gameDetails in gameDetailsCollection)
+            foreach (var id in gameDetailsDataController.EnumerateIds())
             {
+                var gameDetails = await gameDetailsDataController.GetById(id);
+
                 var downloadSources = new List<string>();
 
                 foreach (var languageDownload in gameDetails.LanguageDownloads)
@@ -67,9 +65,8 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
                 foreach (var extraDownloadEntry in gameDetails.Extras)
                     downloadSources.Add(extraDownloadEntry.ManualUrl);
 
-                //gameDetailsDownloadSources.Add(gameDetails.Id, downloadSources);
-                if (!gameDetailsDownloadSources.ContainsKey(gameDetails.Id))
-                    gameDetailsDownloadSources.Add(gameDetails.Id, new List<string>());
+                if (!gameDetailsDownloadSources.ContainsKey(id))
+                    gameDetailsDownloadSources.Add(id, new List<string>());
 
                 foreach (var source in downloadSources)
                     if (!gameDetailsDownloadSources[gameDetails.Id].Contains(source))

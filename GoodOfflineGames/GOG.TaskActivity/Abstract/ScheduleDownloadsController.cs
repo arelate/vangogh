@@ -1,14 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Reporting;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
 using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.DownloadSources;
 using Interfaces.UriRedirection;
 using Interfaces.Destination;
+using Interfaces.Data;
 
+using GOG.Models;
 using GOG.Models.Custom;
 
 namespace GOG.TaskActivities.Abstract
@@ -20,17 +21,19 @@ namespace GOG.TaskActivities.Abstract
         private IDownloadSourcesController downloadSourcesController;
         private IUriRedirectController uriRedirectController;
         private IDestinationController destinationController;
-        //private IProductTypeStorageController productTypeStorageController;
-        private ICollectionController collectionController;
+        private IDataController<ScheduledDownload> scheduledDownloadsDataController;
+        IDataController<Product> productsDataController;
         private IFileController fileController;
+
+        private string scheduledDownloadTitle;
 
         public ScheduleDownloadsController(
             ScheduledDownloadTypes downloadType,
             IDownloadSourcesController downloadSourcesController,
             IUriRedirectController uriRedirectController,
             IDestinationController destinationController,
-            //IProductTypeStorageController productTypeStorageController,
-            ICollectionController collectionController,
+            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<Product> productsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
@@ -39,33 +42,54 @@ namespace GOG.TaskActivities.Abstract
             this.downloadSourcesController = downloadSourcesController;
             this.uriRedirectController = uriRedirectController;
             this.destinationController = destinationController;
-            //this.productTypeStorageController = productTypeStorageController;
-            this.collectionController = collectionController;
+            this.scheduledDownloadsDataController = scheduledDownloadsDataController;
+            this.productsDataController = productsDataController;
             this.fileController = fileController;
+
+            scheduledDownloadTitle = System.Enum.GetName(typeof(ScheduledDownloadTypes), downloadType);
         }
 
         public override async Task ProcessTask()
         {
-            taskReportingController.StartTask("Load existing scheduled downloads");
-            //var scheduledDownloads = await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
-            taskReportingController.CompleteTask();
+            taskReportingController.StartTask(
+                "Get sources for the type: {0}", 
+                scheduledDownloadTitle);
 
-            taskReportingController.StartTask("Get " + System.Enum.GetName(typeof(ScheduledDownloadTypes), downloadType) + " sources");
             var downloadSources = await downloadSourcesController.GetDownloadSources();
             taskReportingController.CompleteTask();
 
-            taskReportingController.StartTask("Schedule downloads if not previously scheduled and no file exists");
+            taskReportingController.StartTask(
+                "Filtering previously scheduled downloads and existing files");
+
             foreach (var downloadSource in downloadSources)
             {
-                var productId = downloadSource.Key;
+                var key = downloadSource.Key;
+                var product = await productsDataController.GetById(key);
+                if (product == null)
+                {
+                    taskReportingController.ReportWarning(
+                        "Downloads are scheduled for the product that doesn't exist");
+                    continue;
+                }
+
+                var scheduledDownloads = await scheduledDownloadsDataController.GetById(product.Id);
+                if (scheduledDownloads == null)
+                {
+                    scheduledDownloads = new ScheduledDownload();
+                    scheduledDownloads.Id = product.Id;
+                    scheduledDownloads.Title = product.Title;
+                    scheduledDownloads.Downloads = new List<ScheduledDownloadEntry>();
+                }
+
+                var productSourceAlreadyScheduled = false;
 
                 foreach (var source in downloadSource.Value)
                 {
-                    //var existingProductDownload = collectionController.Find(scheduledDownloads, sd =>
-                    //    sd != null &&
-                    //    sd.Source == source);
+                    // skip the source if we've already scheduled a download for same id
+                    foreach (var download in scheduledDownloads.Downloads)
+                        if (download.Source == source) productSourceAlreadyScheduled = true;
 
-                    //if (existingProductDownload != null) continue;
+                    if (productSourceAlreadyScheduled) continue;
 
                     var actualSource =
                         uriRedirectController != null ?
@@ -81,21 +105,25 @@ namespace GOG.TaskActivities.Abstract
                         if (fileController.Exists(localFile)) continue;
                     }
 
-                    //var newScheduledDownload = new ScheduledDownload();
-                    //newScheduledDownload.Id = productId;
-                    //newScheduledDownload.Type = downloadType;
-                    //newScheduledDownload.Source = actualSource;
-                    //newScheduledDownload.Destination = destinationDirectory;
+                    taskReportingController.StartTask(
+                        "Scheduling new downloads for: {0}, {1}",
+                        scheduledDownloadTitle,
+                        product.Title);
 
-                    //scheduledDownloads.Add(newScheduledDownload);
+                    var scheduledDownloadEntry = new ScheduledDownloadEntry();
+                    scheduledDownloadEntry.Type = downloadType;
+                    scheduledDownloadEntry.Source = actualSource;
+                    scheduledDownloadEntry.Destination = destinationDirectory;
+
+                    scheduledDownloads.Downloads.Add(scheduledDownloadEntry);
+
+                    await scheduledDownloadsDataController.Update(scheduledDownloads);
+
+                    taskReportingController.CompleteTask();
                 }
             }
-            taskReportingController.CompleteTask();
 
-            taskReportingController.StartTask("Save scheduled downloads");
-            //await productTypeStorageController.Push(ProductTypes.ScheduledDownload, scheduledDownloads);
             taskReportingController.CompleteTask();
-
         }
     }
 }

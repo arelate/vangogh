@@ -1,10 +1,11 @@
 ﻿using Interfaces.Reporting;
-using Interfaces.Storage;
-using Interfaces.Collection;
 using Interfaces.File;
-using Interfaces.ImageUri;
 using Interfaces.DownloadSources;
 using Interfaces.Destination;
+using Interfaces.Data;
+
+using GOG.Models;
+using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
 
@@ -15,17 +16,17 @@ namespace GOG.TaskActivities.Download.Screenshots
         public ScreenshotsScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
-            //IProductTypeStorageController productTypeStorageController,
-            ICollectionController collectionController,
+            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<Product> productsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
-                Models.Custom.ScheduledDownloadTypes.Screenshot,
+                ScheduledDownloadTypes.Screenshot,
                 downloadSourcesController,
                 null, // uriRedirectionController
-                destinationController, 
-                //productTypeStorageController,
-                collectionController,
+                destinationController,
+                scheduledDownloadsDataController,
+                productsDataController,
                 fileController,
                 taskReportingController)
         {

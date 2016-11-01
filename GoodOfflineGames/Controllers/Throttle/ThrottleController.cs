@@ -25,9 +25,9 @@ namespace Controllers.Throttle
 
         public void Throttle()
         {
-            taskReportingController?.StartTask(string.Format(
+            taskReportingController?.StartTask(
                 "Throttle current activity by {0}",
-                secondsFormattingController?.Format(delayMilliseconds / 1000)));
+                secondsFormattingController?.Format(delayMilliseconds / 1000));
             Thread.Sleep(delayMilliseconds);
             taskReportingController?.CompleteTask();
         }

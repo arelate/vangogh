@@ -43,10 +43,16 @@ namespace Interfaces.Data
         bool ContainsId(long id);
     }
 
+    public interface ICountDelegate
+    {
+        int Count();
+    }
+
     public interface IDataController<Type>:
         ILoadDelegate,
         ISaveDelegate,
         IEnumerateIds,
+        ICountDelegate,
         IGetByIdDelegate<Type>,
         IUpdateDelegate<Type>,
         IRemoveDelegate<Type>,

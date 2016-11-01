@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.DownloadSources;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
+using Interfaces.Data;
 
 using GOG.Models;
 
@@ -11,23 +10,20 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductExtras
 {
     public class ProductExtrasDownloadSourcesController : IDownloadSourcesController
     {
-        //private IProductTypeStorageController productTypeStorageController;
+        private IDataController<GameDetails> gameDetailsDataController;
 
-        public ProductExtrasDownloadSourcesController(
-            //IProductTypeStorageController productTypeStorageController
-            )
+        public ProductExtrasDownloadSourcesController(IDataController<GameDetails> gameDetailsDataController)
         {
-            //this.productTypeStorageController = productTypeStorageController;
+            this.gameDetailsDataController = gameDetailsDataController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var gameDetailsCollection = new List<GameDetails>(); // await productTypeStorageController.Pull<GameDetails>(ProductTypes.GameDetails);
-
             var extrasDownloadSources = new Dictionary<long, IList<string>>();
 
-            foreach (var gameDetails in gameDetailsCollection)
+            foreach (var id in gameDetailsDataController.EnumerateIds())
             {
+                var gameDetails = await gameDetailsDataController.GetById(id);
                 var extrasSources = new List<string>();
 
                 foreach (var extraDownloadEntry in gameDetails.Extras)

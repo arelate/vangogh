@@ -52,6 +52,7 @@
     <Compile Include="Destination\Data\GameProductDataDestinationController - Copy.cs" />
     <Compile Include="Destination\Data\GameDetailsDestinationController.cs" />
     <Compile Include="Destination\Data\ScheduledDownloadsDestinationController.cs" />
+    <Compile Include="Destination\Data\ScheduledScreenshotsUpdatesDestinationController.cs" />
     <Compile Include="Destination\Data\ScreenshotsDestinationController.cs" />
     <Compile Include="Destination\Data\UpdatedDestinationController.cs" />
     <Compile Include="Destination\Data\WishlistedDestinationController.cs" />

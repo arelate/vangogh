@@ -2,7 +2,7 @@
 {
     public interface IStartTaskDelegate
     {
-        void StartTask(string name);
+        void StartTask(string template, params object[] values);
     }
 
     public interface ICompleTaskDelegate

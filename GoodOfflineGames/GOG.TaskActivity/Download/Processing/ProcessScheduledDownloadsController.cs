@@ -50,12 +50,11 @@ namespace GOG.TaskActivities.Download.Processing
                 var product = collectionController.Find(products, p => p.Id == download.Id);
 
                 //taskReportingController.StartTask(
-                //    string.Format(
                 //        "Download {0}/{1}: {2} for {3}", 
                 //        ++currentDownload, 
                 //        scheduledDownloads.Count,
                 //        System.Enum.GetName(typeof(ScheduledDownloadTypes), download.Type),
-                //        product?.Title));
+                //        product?.Title);
 
                 //await downloadController.DownloadFile(download.Source, download.Destination);
 

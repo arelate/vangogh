@@ -29,7 +29,7 @@ namespace Controllers.Reporting
             this.secondsFormattingController = secondsFormattingController;
         }
 
-        public void StartTask(string name)
+        public void StartTask(string name, params object[] values)
         {
             startTimestamp = DateTime.Now;
             lastReportedTimestamp = DateTime.Now;

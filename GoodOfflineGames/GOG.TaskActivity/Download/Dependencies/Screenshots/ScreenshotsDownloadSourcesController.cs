@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.DownloadSources;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
 using Interfaces.ImageUri;
+using Interfaces.Data;
+using Interfaces.Reporting;
 
 using GOG.Models.Custom;
 
@@ -12,30 +13,56 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
 {
     public class ScreenshotsDownloadSourcesController : IDownloadSourcesController
     {
-        //private IProductTypeStorageController productStorageController;
+        private IDataController<long> scheduledScreenshotsUpdatesDataController;
+        private IDataController<ProductScreenshots> screenshotsDataController;
         private IImageUriController screenshotUriController;
+        private ITaskReportingController taskReportingController;
 
         public ScreenshotsDownloadSourcesController(
-            //IProductTypeStorageController productStorageController,
-            IImageUriController screenshotUriController)
+            IDataController<long> scheduledScreenshotsUpdatesDataController,
+            IDataController<ProductScreenshots> screenshotsDataController,
+            IImageUriController screenshotUriController,
+            ITaskReportingController taskReportingController)
         {
-            //this.productStorageController = productStorageController;
+            this.scheduledScreenshotsUpdatesDataController = scheduledScreenshotsUpdatesDataController;
+            this.screenshotsDataController = screenshotsDataController;
             this.screenshotUriController = screenshotUriController;
+            this.taskReportingController = taskReportingController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var screenshots = new List<ProductScreenshots>(); // await productStorageController.Pull<ProductScreenshots>(ProductTypes.Screenshot);
-
             var screenshotsSources = new Dictionary<long, IList<string>>();
+            var counter = 0;
+            var total = scheduledScreenshotsUpdatesDataController.Count();
 
-            foreach (var screenshot in screenshots)
+            taskReportingController.StartTask("Process {0} scheduled screenshot updates", total);
+
+            foreach (var id in scheduledScreenshotsUpdatesDataController.EnumerateIds())
             {
-                screenshotsSources.Add(screenshot.Id, new List<string>());
+                taskReportingController.StartTask("Process screenshot update {0}/{1}", ++counter, total);
+
+                var screenshot = await screenshotsDataController.GetById(id);
+
+                if (screenshot == null)
+                {
+                    taskReportingController.ReportWarning("Screenshots scheduled to be updated do not exist");
+                    continue;
+                }
+
+                screenshotsSources.Add(id, new List<string>());
 
                 foreach (var uri in screenshot.Uris)
-                    screenshotsSources[screenshot.Id].Add(screenshotUriController.ExpandUri(uri));
+                    screenshotsSources[id].Add(screenshotUriController.ExpandUri(uri));
+
+                taskReportingController.CompleteTask();
             }
+
+            taskReportingController.CompleteTask();
+
+            taskReportingController.StartTask("Clear scheduled screenshot updates");
+            await scheduledScreenshotsUpdatesDataController.Remove(scheduledScreenshotsUpdatesDataController.EnumerateIds().ToArray());
+            taskReportingController.CompleteTask();
 
             return screenshotsSources;
         }

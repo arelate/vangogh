@@ -42,7 +42,7 @@ namespace Controllers.Data
             IIndexingController indexingController,
             ICollectionController collectionController,
             IDestinationController destinationController,
-            IRecycleBinController recycleBinController)
+            IRecycleBinController recycleBinController = null)
         {
             this.dataStoragePolicy = dataStoragePolicy;
             this.indexingController = indexingController;
@@ -101,16 +101,17 @@ namespace Controllers.Data
             {
                 case DataStoragePolicy.IndexAndItems:
                     dataIndexes = await serializedStorageController.DeserializePull<List<long>>(dataIndexesUri);
-                    if (dataIndexes == null) dataIndexes = new List<long>();
                     break;
                 case DataStoragePolicy.ItemsList:
                     dataItems = await serializedStorageController.DeserializePull<List<Type>>(dataItemsUri);
-                    if (dataItems == null) dataItems = new List<Type>();
                     dataIndexes = new List<long>();
                     foreach (var item in dataItems)
                         dataIndexes.Add(indexingController.GetIndex(item));
                     break;
             }
+
+            if (dataIndexes == null) dataIndexes = new List<long>();
+            if (dataItems == null) dataItems = new List<Type>();
         }
 
         public async Task Save()
@@ -137,7 +138,7 @@ namespace Controllers.Data
                 {
                     dataIndexes.Remove(index);
                     var dataUri = GetDataUri(index);
-                    recycleBinController.MoveToRecycleBin(dataUri);
+                    recycleBinController?.MoveToRecycleBin(dataUri);
                 }
             }
 
@@ -146,7 +147,6 @@ namespace Controllers.Data
 
         public async Task Update(params Type[] data)
         {
-
             foreach (var item in data)
             {
                 var index = indexingController.GetIndex(item);
@@ -178,6 +178,11 @@ namespace Controllers.Data
         public IEnumerable<long> EnumerateIds()
         {
             return dataIndexes;
+        }
+
+        public int Count()
+        {
+            return dataIndexes.Count;
         }
 
         public bool ContainsId(long id)

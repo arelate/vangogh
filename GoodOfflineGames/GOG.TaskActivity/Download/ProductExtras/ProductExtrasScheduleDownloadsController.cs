@@ -17,7 +17,6 @@ namespace GOG.TaskActivities.Download.ProductExtras
             IUriRedirectController uriRedirectController,
             IDestinationController destinationController,
             //IProductTypeStorageController productTypeStorageController,
-            ICollectionController collectionController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base (
@@ -26,7 +25,8 @@ namespace GOG.TaskActivities.Download.ProductExtras
                 uriRedirectController,
                 destinationController,
                 //productTypeStorageController,
-                collectionController,
+                null,
+                null,
                 fileController,
                 taskReportingController)
         {

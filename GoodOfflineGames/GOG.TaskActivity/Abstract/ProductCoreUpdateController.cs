@@ -105,12 +105,11 @@ namespace GOG.TaskActivities.Abstract
                 var product = await listTypeDataController.GetById(id);
 
                 taskReportingController.StartTask(
-                    string.Format(
                         "Update {0} {1}/{2}: {3}",
                         updateTypeDescription,
                         ++currentProduct,
                         updateProducts.Count,
-                        product.Title));
+                        product.Title);
 
                 var uri = string.Format(
                     Uris.Paths.GetUpdateUri(updateProductType),

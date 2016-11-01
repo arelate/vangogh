@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 
 using Interfaces.DownloadSources;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
 using Interfaces.ImageUri;
+using Interfaces.Data;
 
 using GOG.Models;
 
@@ -12,24 +11,25 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
 {
     public class ProductsImagesDownloadSourcesController : IDownloadSourcesController
     {
-        //private IProductTypeStorageController productStorageController;
+        private IDataController<Product> productsDataController;
         private IImageUriController imageUriController;
 
         public ProductsImagesDownloadSourcesController(
-            //IProductTypeStorageController productStorageController,
+            IDataController<Product> productsDataController,
             IImageUriController imageUriController)
         {
-            //this.productStorageController = productStorageController;
+            this.productsDataController = productsDataController;
             this.imageUriController = imageUriController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var products = new List<Product>();// await productStorageController.Pull<Product>(ProductTypes.Product);
             var productImageSources = new Dictionary<long, IList<string>>();
 
-            foreach (var product in products)
+            foreach (var id in productsDataController.EnumerateIds())
             {
+                var product = await productsDataController.GetById(id);
+
                 var imageSources = new List<string>() { imageUriController.ExpandUri(product.Image) };
                 productImageSources.Add(product.Id, imageSources);
             }

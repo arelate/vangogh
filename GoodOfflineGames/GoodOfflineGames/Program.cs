@@ -171,22 +171,21 @@ namespace GoodOfflineGames
             var wishlistedDestinationController = new WishlistedDestinationController();
             var updatedDestinationController = new UpdatedDestinationController();
             var scheduledDownloadsDestinationController = new ScheduledDownloadsDestinationController();
+            var scheduledScreenshotsUpdatesDestinationController = new ScheduledScreenshotsUpdatesDestinationController();
 
             var productsDataController = new DataController<Product>(
                 serializedStorageController, 
                 DataStoragePolicy.ItemsList,
                 productCoreIndexingController, 
                 collectionController,
-                productsDestinationController,
-                recycleBinController);
+                productsDestinationController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
                 serializedStorageController,
                 DataStoragePolicy.ItemsList,
                 productCoreIndexingController,
                 collectionController,
-                accountProductsDestinationController,
-                recycleBinController);
+                accountProductsDestinationController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 serializedStorageController,
@@ -209,16 +208,14 @@ namespace GoodOfflineGames
                 DataStoragePolicy.ItemsList,
                 passthroughIndexingController,
                 collectionController,
-                wishlistedDestinationController,
-                recycleBinController);
+                wishlistedDestinationController);
 
             var updatedDataController = new DataController<long>(
                 serializedStorageController,
                 DataStoragePolicy.ItemsList,
                 passthroughIndexingController,
                 collectionController,
-                updatedDestinationController,
-                recycleBinController);
+                updatedDestinationController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
                 serializedStorageController,
@@ -228,6 +225,13 @@ namespace GoodOfflineGames
                 apiProductsDestinationController,
                 recycleBinController);
 
+            var scheduledScreenshotsUpdatesDataController = new DataController<long>(
+                serializedStorageController,
+                DataStoragePolicy.ItemsList,
+                passthroughIndexingController,
+                collectionController,
+                scheduledScreenshotsUpdatesDestinationController);
+
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 serializedStorageController,
                 DataStoragePolicy.IndexAndItems,
@@ -236,13 +240,12 @@ namespace GoodOfflineGames
                 screenshotsDestinationController,
                 recycleBinController);
 
-            var scheduledDownloadsController = new DataController<ScheduledDownload>(
+            var scheduledDownloadsDataController = new DataController<ScheduledDownload>(
                 serializedStorageController,
                 DataStoragePolicy.ItemsList,
                 productCoreIndexingController,
                 collectionController,
-                scheduledDownloadsDestinationController,
-                recycleBinController);
+                scheduledDownloadsDestinationController);
 
             #endregion
 
@@ -288,7 +291,9 @@ namespace GoodOfflineGames
                 screenshotsDataController,
                 apiProductsDataController,
                 wishlistedDataController,
-                updatedDataController);
+                updatedDataController,
+                scheduledScreenshotsUpdatesDataController,
+                scheduledDownloadsDataController);
 
             #endregion
 
@@ -426,54 +431,58 @@ namespace GoodOfflineGames
 
             #endregion
 
-            //var screenshotUpdateController = new ScreenshotUpdateController(
-            //    productStorageController,
-            //    collectionController,
-            //    networkController,
-            //    screenshotExtractionController,
-            //    taskReportingController);
+            var screenshotUpdateController = new ScreenshotUpdateController(
+                screenshotsDataController,
+                scheduledScreenshotsUpdatesDataController,
+                productsDataController,
+                networkController,
+                screenshotExtractionController,
+                taskReportingController);
 
-            //// dependencies for download controllers
+            // dependencies for download controllers
 
-            //var productsImagesDownloadSourcesController = new ProductsImagesDownloadSourcesController(
-            //    productStorageController,
-            //    imageUriController);
+            var productsImagesDownloadSourcesController = new ProductsImagesDownloadSourcesController(
+                productsDataController,
+                imageUriController);
 
-            //var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
-            //    productStorageController,
-            //    screenshotUriController);
+            var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
+                scheduledScreenshotsUpdatesDataController,
+                screenshotsDataController,
+                screenshotUriController,
+                taskReportingController);
 
-            //var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
-            //    settings.Download.Languages,
-            //    settings.Download.OperatingSystems,
-            //    productStorageController);
+            var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
+                settings.Download.Languages,
+                settings.Download.OperatingSystems,
+                gameDetailsDataController);
 
-            //var productExtrasDownloadSourcesController = new ProductExtrasDownloadSourcesController(
-            //    productStorageController);
+            var productExtrasDownloadSourcesController = new ProductExtrasDownloadSourcesController(
+                gameDetailsDataController);
 
-            //var validationUriRedirectController = new ValidationUriRedirectController();
+            var validationUriRedirectController = new ValidationUriRedirectController();
 
+            // TODO: Change this to adding filenames to scheduledValidation and drive from there
             //var validationDownloadSourcesController = new ValidationDownloadSourcesController(
             //    productStorageController,
             //    validationUriRedirectController);
 
-            //// download controllers
+            // download controllers
 
-            //var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
-            //    productsImagesDownloadSourcesController,
-            //    imagesDestinationController,
-            //    productStorageController,
-            //    collectionController,
-            //    fileController,
-            //    taskReportingController);
+            var productImagesScheduleDownloadsController = new ProductImagesScheduleDownloadsController(
+                productsImagesDownloadSourcesController,
+                imagesDestinationController,
+                scheduledDownloadsDataController,
+                productsDataController,
+                fileController,
+                taskReportingController);
 
-            //var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
-            //    screenshotsDownloadSourcesController,
-            //    screenshotsDestinationController,
-            //    productStorageController,
-            //    collectionController,
-            //    fileController,
-            //    taskReportingController);
+            var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
+                screenshotsDownloadSourcesController,
+                screenshotsDestinationController,
+                scheduledDownloadsDataController,
+                productsDataController,
+                fileController,
+                taskReportingController);
 
             //var productFilesScheduleDownloadsController = new ProductFilesScheduleDownloadsController(
             //    productFilesDownloadSourcesController,
@@ -537,10 +546,10 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                gameDetailsUpdateController,
-                //screenshotUpdateController,
+                //gameDetailsUpdateController,
+                screenshotUpdateController,
                 //productImagesScheduleDownloadsController,
-                //screenshotsScheduleDownloadsController,
+                screenshotsScheduleDownloadsController,
                 //productFilesScheduleDownloadsController,
                 //productExtrasScheduleDownloadsController,
                 //validationScheduleDownloadsController,
