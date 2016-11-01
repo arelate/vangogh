@@ -2,12 +2,13 @@
 using System.Threading.Tasks;
 
 using Interfaces.Reporting;
-using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.DownloadSources;
 using Interfaces.UriRedirection;
 using Interfaces.Destination;
 using Interfaces.Data;
+
+using Models.ProductCore;
 
 using GOG.Models;
 using GOG.Models.Custom;
@@ -22,7 +23,8 @@ namespace GOG.TaskActivities.Abstract
         private IUriRedirectController uriRedirectController;
         private IDestinationController destinationController;
         private IDataController<ScheduledDownload> scheduledDownloadsDataController;
-        IDataController<Product> productsDataController;
+        private IDataController<Product> productsDataController;
+        private IDataController<AccountProduct> accountProductsDataController;
         private IFileController fileController;
 
         private string scheduledDownloadTitle;
@@ -34,6 +36,7 @@ namespace GOG.TaskActivities.Abstract
             IDestinationController destinationController,
             IDataController<ScheduledDownload> scheduledDownloadsDataController,
             IDataController<Product> productsDataController,
+            IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
@@ -44,6 +47,7 @@ namespace GOG.TaskActivities.Abstract
             this.destinationController = destinationController;
             this.scheduledDownloadsDataController = scheduledDownloadsDataController;
             this.productsDataController = productsDataController;
+            this.accountProductsDataController = accountProductsDataController;
             this.fileController = fileController;
 
             scheduledDownloadTitle = System.Enum.GetName(typeof(ScheduledDownloadTypes), downloadType);
@@ -58,17 +62,19 @@ namespace GOG.TaskActivities.Abstract
             var downloadSources = await downloadSourcesController.GetDownloadSources();
             taskReportingController.CompleteTask();
 
-            taskReportingController.StartTask(
-                "Filtering previously scheduled downloads and existing files");
-
             foreach (var downloadSource in downloadSources)
             {
                 var key = downloadSource.Key;
-                var product = await productsDataController.GetById(key);
+                // try Product first
+                ProductCore product = await productsDataController.GetById(key);
+                // if it doesn't exist it not sold on GOG.com anymore, but since it's updated - it should be available in account products
+                if (product == null)
+                    product = await accountProductsDataController.GetById(key);
+
                 if (product == null)
                 {
                     taskReportingController.ReportWarning(
-                        "Downloads are scheduled for the product that doesn't exist");
+                        "Downloads are scheduled for the product/account product that doesn't exist");
                     continue;
                 }
 
@@ -106,7 +112,7 @@ namespace GOG.TaskActivities.Abstract
                     }
 
                     taskReportingController.StartTask(
-                        "Scheduling new downloads for: {0}, {1}",
+                        "Schedule new downloads for: {0}, {1}",
                         scheduledDownloadTitle,
                         product.Title);
 
@@ -122,8 +128,6 @@ namespace GOG.TaskActivities.Abstract
                     taskReportingController.CompleteTask();
                 }
             }
-
-            taskReportingController.CompleteTask();
         }
     }
 }

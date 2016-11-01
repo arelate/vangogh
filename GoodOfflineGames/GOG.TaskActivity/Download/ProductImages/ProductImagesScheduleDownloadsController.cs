@@ -11,22 +11,24 @@ using GOG.TaskActivities.Abstract;
 
 namespace GOG.TaskActivities.Download.ProductImages
 {
-    public class ProductImagesScheduleDownloadsController : ScheduleDownloadsController
+    public class ImagesScheduleDownloadsController : ScheduleDownloadsController
     {
-        public ProductImagesScheduleDownloadsController(
+        public ImagesScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
             IDataController<ScheduledDownload> scheduledDownloadsDataController,
             IDataController<Product> productsDataController,
+            IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
                 ScheduledDownloadTypes.Image,
                 downloadSourcesController, 
                 null, // uriRedirectController
-                destinationController, // destinationAdjustmentController
+                destinationController,
                 scheduledDownloadsDataController,
                 productsDataController,
+                accountProductsDataController,
                 fileController,
                 taskReportingController)
         {

@@ -12,25 +12,32 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
     public class ProductFilesDownloadSourcesController : IDownloadSourcesController
     {
         private IDataController<GameDetails> gameDetailsDataController;
+        private IDataController<long> updatedDataController;
         private string[] languages;
         private string[] operatingSystems;
+        private bool downloadExtras;
 
         public ProductFilesDownloadSourcesController(
+            IDataController<long> updatedDataController,
+            IDataController<GameDetails> gameDetailsDataController,
             string[] languages,
             string[] operatingSystems,
-            IDataController<GameDetails> gameDetailsDataController)
+            bool downloadExtras)
         {
             this.languages = languages;
             this.operatingSystems = operatingSystems;
 
+            this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
+
+            this.downloadExtras = downloadExtras;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 
-            foreach (var id in gameDetailsDataController.EnumerateIds())
+            foreach (var id in updatedDataController.EnumerateIds())
             {
                 var gameDetails = await gameDetailsDataController.GetById(id);
 
@@ -62,8 +69,11 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
                     }
                 }
 
-                foreach (var extraDownloadEntry in gameDetails.Extras)
-                    downloadSources.Add(extraDownloadEntry.ManualUrl);
+                if (downloadExtras)
+                {
+                    foreach (var extraDownloadEntry in gameDetails.Extras)
+                        downloadSources.Add(extraDownloadEntry.ManualUrl);
+                }
 
                 if (!gameDetailsDownloadSources.ContainsKey(id))
                     gameDetailsDownloadSources.Add(id, new List<string>());

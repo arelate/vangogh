@@ -18,6 +18,7 @@ namespace GOG.TaskActivities.Download.Screenshots
             IDestinationController destinationController,
             IDataController<ScheduledDownload> scheduledDownloadsDataController,
             IDataController<Product> productsDataController,
+            IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
@@ -27,6 +28,7 @@ namespace GOG.TaskActivities.Download.Screenshots
                 destinationController,
                 scheduledDownloadsDataController,
                 productsDataController,
+                accountProductsDataController,
                 fileController,
                 taskReportingController)
         {

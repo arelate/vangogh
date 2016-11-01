@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.DownloadSources;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
 using Interfaces.UriRedirection;
+using Interfaces.Data;
 
 using GOG.Models.Custom;
 
@@ -13,7 +12,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
 {
     public class ValidationDownloadSourcesController : IDownloadSourcesController
     {
-        //private IProductTypeStorageController productTypeStorageController;
+        private IDataController<ScheduledDownload> scheduledDownloadsDataController;
         private IUriRedirectController uriRedirectController;
 
         private readonly List<string> extensionsWhitelist = new List<string>(4) {
@@ -24,32 +23,36 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
         };
 
         public ValidationDownloadSourcesController(
-            //IProductTypeStorageController productTypeStorageController,
+            IDataController<ScheduledDownload> scheduledDownloadsDataController,
             IUriRedirectController uriRedirectController)
         {
-            //this.productTypeStorageController = productTypeStorageController;
+            this.scheduledDownloadsDataController = scheduledDownloadsDataController;
             this.uriRedirectController = uriRedirectController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
         {
-            var scheduledDownloads = new List<ScheduledDownload>(); // await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
             var validationSources = new Dictionary<long, IList<string>>();
 
-            foreach (var download in scheduledDownloads)
+            foreach (var id in scheduledDownloadsDataController.EnumerateIds())
             {
-                //// only product files are eligible for validation
-                //if (download.Type != ScheduledDownloadTypes.File)
-                //    continue;
+                var scheduledDownload = await scheduledDownloadsDataController.GetById(id);
 
-                //// and among product files only executables are eligible for validation
-                //if (!extensionsWhitelist.Contains(Path.GetExtension(download.Source)))
-                //    continue;
+                foreach (var downloadEntry in scheduledDownload.Downloads)
+                { 
+                    // only product files are eligible for validation
+                    if (downloadEntry.Type != ScheduledDownloadTypes.File)
+                        continue;
 
-                //if (!validationSources.ContainsKey(download.Id))
-                //    validationSources.Add(download.Id, new List<string>());
+                    // and among product files only executables are eligible for validation
+                    if (!extensionsWhitelist.Contains(Path.GetExtension(downloadEntry.Source)))
+                        continue;
 
-                //validationSources[download.Id].Add(await uriRedirectController.GetUriRedirect(download.Source));
+                    if (!validationSources.ContainsKey(id))
+                        validationSources.Add(id, new List<string>());
+
+                    validationSources[id].Add(await uriRedirectController.GetUriRedirect(downloadEntry.Source));
+                }
             }
 
             return validationSources;

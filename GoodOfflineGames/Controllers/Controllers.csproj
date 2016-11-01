@@ -53,10 +53,11 @@
     <Compile Include="Destination\Data\GameDetailsDestinationController.cs" />
     <Compile Include="Destination\Data\ScheduledDownloadsDestinationController.cs" />
     <Compile Include="Destination\Data\ScheduledScreenshotsUpdatesDestinationController.cs" />
+    <Compile Include="Destination\Data\ScheduledValidationsDestinationController.cs" />
     <Compile Include="Destination\Data\ScreenshotsDestinationController.cs" />
     <Compile Include="Destination\Data\UpdatedDestinationController.cs" />
     <Compile Include="Destination\Data\WishlistedDestinationController.cs" />
-    <Compile Include="Destination\FilesExtrasDestinationController.cs" />
+    <Compile Include="Destination\ProductFilesDestinationController.cs" />
     <Compile Include="Destination\Data\ProductsDestinationController.cs" />
     <Compile Include="Destination\Data\ApiProductsDestinationController.cs" />
     <Compile Include="Destination\ScreenshotsFilesDestinationController.cs" />

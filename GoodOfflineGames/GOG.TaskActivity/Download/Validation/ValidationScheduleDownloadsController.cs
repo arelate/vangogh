@@ -1,30 +1,34 @@
 ﻿using Interfaces.DownloadSources;
-using Interfaces.Storage;
-using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.Reporting;
 using Interfaces.Destination;
+using Interfaces.Data;
+
+using GOG.Models;
+using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
 
 namespace GOG.TaskActivities.Download.Validation
 {
-    public class ValidationScheduleDownloadsController: ScheduleDownloadsController
+    public class ValidationScheduleDownloadsController : ScheduleDownloadsController
     {
         public ValidationScheduleDownloadsController(
             IDownloadSourcesController validationSourcesController,
             IDestinationController destinationController,
-            //IProductTypeStorageController productTypeStorageController,
+            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<Product> productsDataController,
+            IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
-            base (
-                Models.Custom.ScheduledDownloadTypes.Validation,
+            base(
+                ScheduledDownloadTypes.Validation,
                 validationSourcesController,
                 null, // uriRedirectController
                 destinationController,
-                //productTypeStorageController,
-                null,
-                null,
+                scheduledDownloadsDataController,
+                productsDataController,
+                accountProductsDataController,
                 fileController,
                 taskReportingController)
         {

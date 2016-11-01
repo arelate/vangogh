@@ -1,10 +1,12 @@
 ﻿using Interfaces.DownloadSources;
-using Interfaces.Storage;
-using Interfaces.Collection;
 using Interfaces.File;
 using Interfaces.Reporting;
 using Interfaces.UriRedirection;
 using Interfaces.Destination;
+using Interfaces.Data;
+
+using GOG.Models;
+using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
 
@@ -16,16 +18,19 @@ namespace GOG.TaskActivities.Download.ProductFiles
             IDownloadSourcesController downloadSourcesController,
             IUriRedirectController uriRedirectController,
             IDestinationController destinationController,
+            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<Product> productsDataController,
+            IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base (
-                Models.Custom.ScheduledDownloadTypes.File,
+                ScheduledDownloadTypes.File,
                 downloadSourcesController,
                 uriRedirectController,
                 destinationController,
-                //productTypeStorageController,
-                null,
-                null,
+                scheduledDownloadsDataController,
+                productsDataController,
+                accountProductsDataController,
                 fileController,
                 taskReportingController)
         {

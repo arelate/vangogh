@@ -52,6 +52,7 @@
     <Compile Include="Currency.cs" />
     <Compile Include="Custom\ProductScreenshots.cs" />
     <Compile Include="Custom\ScheduledDownloadTypes.cs" />
+    <Compile Include="Custom\ScheduledValidation.cs" />
     <Compile Include="DateFormat.cs" />
     <Compile Include="Description.cs" />
     <Compile Include="DiscountedPrice.cs" />

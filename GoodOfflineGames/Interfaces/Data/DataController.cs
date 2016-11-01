@@ -18,7 +18,7 @@ namespace Interfaces.Data
         Task<Type> GetById(long id);
     }
 
-    public interface IEnumerateIds
+    public interface IEnumerateIdsDelegate
     {
         IEnumerable<long> EnumerateIds();
     }
@@ -51,7 +51,7 @@ namespace Interfaces.Data
     public interface IDataController<Type>:
         ILoadDelegate,
         ISaveDelegate,
-        IEnumerateIds,
+        IEnumerateIdsDelegate,
         ICountDelegate,
         IGetByIdDelegate<Type>,
         IUpdateDelegate<Type>,
