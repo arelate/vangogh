@@ -241,7 +241,7 @@ namespace GoodOfflineGames
                 screenshotsDestinationController,
                 recycleBinController);
 
-            var scheduledDownloadsDataController = new DataController<ScheduledDownload>(
+            var productDownloadsDataController = new DataController<ProductDownloads>(
                 serializedStorageController,
                 DataStoragePolicy.ItemsList,
                 productCoreIndexingController,
@@ -301,7 +301,7 @@ namespace GoodOfflineGames
                 wishlistedDataController,
                 updatedDataController,
                 scheduledScreenshotsUpdatesDataController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 scheduledValidationsDataController);
 
             #endregion
@@ -474,7 +474,7 @@ namespace GoodOfflineGames
             var validationUriRedirectController = new ValidationUriRedirectController();
 
             var validationDownloadSourcesController = new ValidationDownloadSourcesController(
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 validationUriRedirectController);
 
             // schedule download controllers
@@ -482,7 +482,7 @@ namespace GoodOfflineGames
             var productsImagesScheduleDownloadsController = new ImagesScheduleDownloadsController(
                 productsImagesDownloadSourcesController,
                 imagesDestinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,
@@ -491,7 +491,7 @@ namespace GoodOfflineGames
             var accountProductsImagesScheduleDownloadsController = new ImagesScheduleDownloadsController(
                 accountProductsImagesDownloadSourcesController,
                 imagesDestinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,
@@ -500,7 +500,7 @@ namespace GoodOfflineGames
             var screenshotsScheduleDownloadsController = new ScreenshotsScheduleDownloadsController(
                 screenshotsDownloadSourcesController,
                 screenshotsDestinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,
@@ -510,7 +510,7 @@ namespace GoodOfflineGames
                 productFilesDownloadSourcesController,
                 uriRedirectController,
                 productFilesDestinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,
@@ -519,7 +519,7 @@ namespace GoodOfflineGames
             var validationScheduleDownloadsController = new ValidationScheduleDownloadsController(
                 validationDownloadSourcesController,
                 validationDestinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,
@@ -528,7 +528,7 @@ namespace GoodOfflineGames
             // downloads processing
 
             var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 scheduledValidationsDataController,
                 downloadController,
                 productFilesDestinationController,
@@ -564,14 +564,14 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                //gameDetailsUpdateController,
+                gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //productsImagesScheduleDownloadsController,
                 //accountProductsImagesScheduleDownloadsController,
                 //screenshotsScheduleDownloadsController,
                 //productFilesScheduleDownloadsController,
                 //validationScheduleDownloadsController,
-                processScheduledDownloadsController,
+                //processScheduledDownloadsController,
                 //processValidationController
             };
 

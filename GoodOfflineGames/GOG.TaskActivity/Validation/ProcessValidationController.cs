@@ -36,12 +36,12 @@ namespace GOG.TaskActivities.Validation
         public override async Task ProcessTask()
         {
             taskReportingController.StartTask("Load downloads information");
-            var scheduledDownloads = new List<ScheduledDownload>(); // await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
+            var productDownloads = new List<ProductDownloads>(); // await productTypeStorageController.Pull<ScheduledDownload>(ProductTypes.ScheduledDownload);
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Validating product files");
 
-            foreach (var download in scheduledDownloads)
+            foreach (var download in productDownloads)
             {
                 //if (download.Type != ScheduledDownloadTypes.File)
                 //    continue;

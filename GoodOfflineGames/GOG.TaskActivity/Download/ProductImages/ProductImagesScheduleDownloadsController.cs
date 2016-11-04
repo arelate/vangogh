@@ -16,17 +16,17 @@ namespace GOG.TaskActivities.Download.ProductImages
         public ImagesScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
-            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<Product> productsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
-                ScheduledDownloadTypes.Image,
+                ProductDownloadTypes.Image,
                 downloadSourcesController, 
                 null, // uriRedirectController
                 destinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,

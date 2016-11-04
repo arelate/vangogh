@@ -1,6 +1,6 @@
 ﻿namespace GOG.Models.Custom
 {
-    public enum ScheduledDownloadTypes
+    public enum ProductDownloadTypes
     {
         Image,
         Screenshot,

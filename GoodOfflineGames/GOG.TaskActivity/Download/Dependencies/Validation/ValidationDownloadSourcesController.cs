@@ -12,7 +12,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
 {
     public class ValidationDownloadSourcesController : IDownloadSourcesController
     {
-        private IDataController<ScheduledDownload> scheduledDownloadsDataController;
+        private IDataController<ProductDownloads> productDownloadsDataController;
         private IUriRedirectController uriRedirectController;
 
         private readonly List<string> extensionsWhitelist = new List<string>(4) {
@@ -23,10 +23,10 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
         };
 
         public ValidationDownloadSourcesController(
-            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<ProductDownloads> productDownloadsDataController,
             IUriRedirectController uriRedirectController)
         {
-            this.scheduledDownloadsDataController = scheduledDownloadsDataController;
+            this.productDownloadsDataController = productDownloadsDataController;
             this.uriRedirectController = uriRedirectController;
         }
 
@@ -34,24 +34,24 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
         {
             var validationSources = new Dictionary<long, IList<string>>();
 
-            foreach (var id in scheduledDownloadsDataController.EnumerateIds())
+            foreach (var id in productDownloadsDataController.EnumerateIds())
             {
-                var scheduledDownload = await scheduledDownloadsDataController.GetById(id);
+                var productDownloads = await productDownloadsDataController.GetById(id);
 
-                foreach (var downloadEntry in scheduledDownload.Downloads)
+                foreach (var downloadEntry in productDownloads.Downloads)
                 { 
                     // only product files are eligible for validation
-                    if (downloadEntry.Type != ScheduledDownloadTypes.File)
+                    if (downloadEntry.Type != ProductDownloadTypes.File)
                         continue;
 
                     // and among product files only executables are eligible for validation
-                    if (!extensionsWhitelist.Contains(Path.GetExtension(downloadEntry.Source)))
+                    if (!extensionsWhitelist.Contains(Path.GetExtension(downloadEntry.SourceUri)))
                         continue;
 
                     if (!validationSources.ContainsKey(id))
                         validationSources.Add(id, new List<string>());
 
-                    validationSources[id].Add(await uriRedirectController.GetUriRedirect(downloadEntry.Source));
+                    validationSources[id].Add(await uriRedirectController.GetUriRedirect(downloadEntry.SourceUri));
                 }
             }
 

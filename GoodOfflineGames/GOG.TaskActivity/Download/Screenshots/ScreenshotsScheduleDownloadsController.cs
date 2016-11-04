@@ -16,17 +16,17 @@ namespace GOG.TaskActivities.Download.Screenshots
         public ScreenshotsScheduleDownloadsController(
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
-            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<Product> productsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
-                ScheduledDownloadTypes.Screenshot,
+                ProductDownloadTypes.Screenshot,
                 downloadSourcesController,
                 null, // uriRedirectionController
                 destinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,

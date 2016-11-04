@@ -16,17 +16,17 @@ namespace GOG.TaskActivities.Download.Validation
         public ValidationScheduleDownloadsController(
             IDownloadSourcesController validationSourcesController,
             IDestinationController destinationController,
-            IDataController<ScheduledDownload> scheduledDownloadsDataController,
+            IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<Product> productsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(
-                ScheduledDownloadTypes.Validation,
+                ProductDownloadTypes.Validation,
                 validationSourcesController,
                 null, // uriRedirectController
                 destinationController,
-                scheduledDownloadsDataController,
+                productDownloadsDataController,
                 productsDataController,
                 accountProductsDataController,
                 fileController,
