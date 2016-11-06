@@ -7,6 +7,7 @@ using Interfaces.Download;
 using Interfaces.Network;
 using Interfaces.Stream;
 using Interfaces.Reporting;
+using Interfaces.File;
 
 namespace Controllers.Download
 {
@@ -15,20 +16,25 @@ namespace Controllers.Download
         private INetworkController networkController;
         private IStreamController streamController;
         private IDownloadReportingController downloadReportingController;
+        private IFileController fileController;
 
         public DownloadController(
             INetworkController networkController,
             IStreamController streamController,
+            IFileController fileController,
             IDownloadReportingController downloadReportingController)
         {
             this.networkController = networkController;
             this.streamController = streamController;
+            this.fileController = fileController;
 
             this.downloadReportingController = downloadReportingController;
         }
 
-        public async Task DownloadFile(string uri, string destination)
+        public async Task<string> DownloadFile(string uri, string destination)
         {
+            var filename = string.Empty;
+
             using (var response = await networkController.GetResponse(HttpMethod.Get, uri))
             {
                 response.EnsureSuccessStatusCode();
@@ -37,13 +43,18 @@ namespace Controllers.Download
                 if (totalBytes == null) totalBytes = 0;
 
                 var requestUri = response.RequestMessage.RequestUri;
-                var filename = requestUri.Segments.Last();
+                filename = requestUri.Segments.Last();
                 var fullPath = Path.Combine(destination, filename);
 
                 int bufferSize = 1024 * 1024; // 1M
                 byte[] buffer = new byte[bufferSize];
                 int bytesRead = 0;
                 long totalBytesRead = 0;
+
+                // don't redownload file with the same name and size
+                if (fileController.Exists(fullPath) &&
+                    fileController.GetSize(fullPath) == totalBytes)
+                    return filename;
 
                 downloadReportingController?.StartTask(string.Empty);
 
@@ -60,6 +71,8 @@ namespace Controllers.Download
 
                 downloadReportingController?.CompleteTask();
             }
+
+            return filename;
         }
     }
 }

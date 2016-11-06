@@ -49,7 +49,6 @@
     <Compile Include="Download\Dependencies\ProductImages\AccountProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\Screenshots\ScreenshotsDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\Validation\ValidationDownloadSourcesController.cs" />
-    <Compile Include="Download\UriResolution\UpdateResolvedUrisController.cs" />
     <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
     <Compile Include="Abstract\UpdateDownloadsController.cs" />
     <Compile Include="Download\Processing\ProcessScheduledDownloadsController.cs" />

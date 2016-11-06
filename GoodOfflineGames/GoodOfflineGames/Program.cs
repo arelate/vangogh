@@ -57,7 +57,6 @@ using GOG.TaskActivities.Download.Dependencies.Validation;
 using GOG.TaskActivities.Download.ProductImages;
 using GOG.TaskActivities.Download.Screenshots;
 using GOG.TaskActivities.Download.ProductFiles;
-using GOG.TaskActivities.Download.UriResolution;
 using GOG.TaskActivities.Download.Processing;
 
 using GOG.TaskActivities.Validation;
@@ -112,6 +111,7 @@ namespace GoodOfflineGames
             var downloadController = new DownloadController(
                 networkController,
                 streamController,
+                fileController,
                 downloadReportingController);
 
             var requestPageController = new RequestPageController(
@@ -134,8 +134,6 @@ namespace GoodOfflineGames
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
-            var uriResolutionController = new UriResolutionController(
-                networkController);
 
             var gogUriDestinationController = new GOGUriDestinationController();
             var productFilesDestinationController = new ProductFilesDestinationController(
@@ -522,15 +520,6 @@ namespace GoodOfflineGames
                 accountProductsDataController,
                 taskReportingController);
 
-            // resolve file downloads
-
-            var updateResolvedUrisController = new UpdateResolvedUrisController(
-                updatedDataController,
-                productDownloadsDataController,
-                uriResolutionController,
-                throttleController,
-                taskReportingController);
-
             // downloads processing
 
             var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -570,14 +559,14 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                //gameDetailsUpdateController,
+                gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //updateProductsImagesDownloadsController,
                 //updateAccountProductsImagesDownloadsController,
                 //updateScreenshotsDownloadsController,
                 //updateProductFilesDownloadsController,
                 //updateProductExtrasDownloadsController,
-                updateResolvedUrisController,
+                //updateResolvedUrisController,
                 //updateValidationDownloadsController, 
                 //processScheduledDownloadsController,
                 //processValidationController

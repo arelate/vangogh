@@ -65,14 +65,16 @@ namespace GOG.TaskActivities.Download.Processing
                         downloadEntries.Length,
                         System.Enum.GetName(typeof(ProductDownloadTypes), entry.Type));
 
-                    await downloadController.DownloadFile(entry.SourceUri, entry.Destination);
+                    var previousResolvedUri = entry.ResolvedUri;
 
-                    // remove currently downloaded entry
-                    productDownloads.Downloads.RemoveAt(0);
-                    if (productDownloads.Downloads.Count == 0)
-                        await productDownloadsDataController.Remove(productDownloads);
-                    else
+                    entry.ResolvedUri = await downloadController.DownloadFile(entry.SourceUri, entry.Destination);
+
+                    if (previousResolvedUri != entry.ResolvedUri)
+                    {
+                        taskReportingController.StartTask("Update resolved product Uri: {0}", productDownloads.Title);
                         await productDownloadsDataController.Update(productDownloads);
+                        taskReportingController.CompleteTask();
+                    }
 
                     taskReportingController.CompleteTask();
 
@@ -92,8 +94,11 @@ namespace GOG.TaskActivities.Download.Processing
                         var filePath = Path.Combine(entry.Destination,
                             destinationController.GetFilename(entry.SourceUri));
 
-                        scheduledValidation.Files.Add(filePath);
-                        await scheduledValidationsDataController.Update(scheduledValidation);
+                        if (!scheduledValidation.Files.Contains(filePath))
+                        {
+                            scheduledValidation.Files.Add(filePath);
+                            await scheduledValidationsDataController.Update(scheduledValidation);
+                        }
 
                         taskReportingController.CompleteTask();
                     }

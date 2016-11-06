@@ -78,7 +78,6 @@
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Data\DataController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />
-    <Compile Include="UriResolution\UriResolutionController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="PropertiesValidation\AuthenticationPropertiesValidationController.cs" />

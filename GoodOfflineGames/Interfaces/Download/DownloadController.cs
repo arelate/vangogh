@@ -4,7 +4,7 @@ namespace Interfaces.Download
 {
     public interface IDownloadFileDelegate
     {
-        Task DownloadFile(string uri, string destination);
+        Task<string> DownloadFile(string uri, string destination);
     }
 
     public interface IDownloadController:
