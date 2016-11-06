@@ -15,22 +15,18 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
         private IDataController<long> updatedDataController;
         private string[] languages;
         private string[] operatingSystems;
-        private bool downloadExtras;
 
         public ProductFilesDownloadSourcesController(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             string[] languages,
-            string[] operatingSystems,
-            bool downloadExtras)
+            string[] operatingSystems)
         {
             this.languages = languages;
             this.operatingSystems = operatingSystems;
 
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
-
-            this.downloadExtras = downloadExtras;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
@@ -67,12 +63,6 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
                         foreach (var linuxDownloadEntry in languageDownload.Linux)
                             downloadSources.Add(linuxDownloadEntry.ManualUrl);
                     }
-                }
-
-                if (downloadExtras)
-                {
-                    foreach (var extraDownloadEntry in gameDetails.Extras)
-                        downloadSources.Add(extraDownloadEntry.ManualUrl);
                 }
 
                 if (!gameDetailsDownloadSources.ContainsKey(id))

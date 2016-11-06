@@ -4,7 +4,8 @@
     {
         Image,
         Screenshot,
-        File,
+        ProductFile,
+        Extra,
         Validation
     }
 }

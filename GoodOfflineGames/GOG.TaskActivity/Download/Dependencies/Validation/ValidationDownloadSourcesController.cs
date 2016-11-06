@@ -41,7 +41,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                 foreach (var downloadEntry in productDownloads.Downloads)
                 { 
                     // only product files are eligible for validation
-                    if (downloadEntry.Type != ProductDownloadTypes.File)
+                    if (downloadEntry.Type != ProductDownloadTypes.ProductFile)
                         continue;
 
                     // and among product files only executables are eligible for validation

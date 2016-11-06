@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Reporting;
-using Interfaces.File;
 using Interfaces.DownloadSources;
-using Interfaces.UriRedirection;
 using Interfaces.Destination;
 using Interfaces.Data;
 
@@ -15,40 +13,31 @@ using GOG.Models.Custom;
 
 namespace GOG.TaskActivities.Abstract
 {
-    public abstract class ScheduleDownloadsController : TaskActivityController
+    public abstract class UpdateDownloadsController : TaskActivityController
     {
         private ProductDownloadTypes downloadType;
 
         private IDownloadSourcesController downloadSourcesController;
-        private IUriRedirectController uriRedirectController;
         private IDestinationController destinationController;
         private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDataController<Product> productsDataController;
         private IDataController<AccountProduct> accountProductsDataController;
-        private IFileController fileController;
 
         private string scheduledDownloadTitle;
 
-        public ScheduleDownloadsController(
+        public UpdateDownloadsController(
             ProductDownloadTypes downloadType,
             IDownloadSourcesController downloadSourcesController,
-            IUriRedirectController uriRedirectController,
             IDestinationController destinationController,
             IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<Product> productsDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            IFileController fileController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.downloadType = downloadType;
             this.downloadSourcesController = downloadSourcesController;
-            this.uriRedirectController = uriRedirectController;
             this.destinationController = destinationController;
             this.productDownloadsDataController = productDownloadsDataController;
-            this.productsDataController = productsDataController;
             this.accountProductsDataController = accountProductsDataController;
-            this.fileController = fileController;
 
             scheduledDownloadTitle = System.Enum.GetName(typeof(ProductDownloadTypes), downloadType);
         }
@@ -65,11 +54,8 @@ namespace GOG.TaskActivities.Abstract
             foreach (var downloadSource in downloadSources)
             {
                 var key = downloadSource.Key;
-                // try Product first
-                ProductCore product = await productsDataController.GetById(key);
-                // if it doesn't exist it not sold on GOG.com anymore, but since it's updated - it should be available in account products
-                if (product == null)
-                    product = await accountProductsDataController.GetById(key);
+
+                ProductCore product = await accountProductsDataController.GetById(key);
 
                 if (product == null)
                 {
@@ -97,19 +83,7 @@ namespace GOG.TaskActivities.Abstract
 
                     if (productSourceAlreadyScheduled) continue;
 
-                    var actualSource =
-                        uriRedirectController != null ?
-                        await uriRedirectController.GetUriRedirect(source) :
-                        source;
-
-                    var destinationDirectory = destinationController?.GetDirectory(actualSource);
-
-                    if (fileController != null)
-                    {
-                        var destinationFilename = destinationController?.GetFilename(actualSource);
-                        var localFile = System.IO.Path.Combine(destinationDirectory, destinationFilename);
-                        if (fileController.Exists(localFile)) continue;
-                    }
+                    var destinationDirectory = destinationController?.GetDirectory(source);
 
                     taskReportingController.StartTask(
                         "Schedule new downloads for: {0}, {1}",
@@ -118,7 +92,7 @@ namespace GOG.TaskActivities.Abstract
 
                     var scheduledDownloadEntry = new ProductDownloadEntry();
                     scheduledDownloadEntry.Type = downloadType;
-                    scheduledDownloadEntry.SourceUri = actualSource;
+                    scheduledDownloadEntry.SourceUri = source;
                     scheduledDownloadEntry.Destination = destinationDirectory;
 
                     productDownloads.Downloads.Add(scheduledDownloadEntry);

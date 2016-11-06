@@ -8,9 +8,11 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
     public class ProductsImagesDownloadSourcesController : ProductCoreImagesDownloadSourcesController<Product>
     {
         public ProductsImagesDownloadSourcesController(
+            IDataController<long> updatedDataController,
             IDataController<Product> productsDataController,
             IImageUriController imageUriController): 
             base(
+                updatedDataController,
                 productsDataController, 
                 imageUriController)
         {

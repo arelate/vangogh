@@ -76,7 +76,7 @@ namespace GOG.TaskActivities.Download.Processing
 
                     taskReportingController.CompleteTask();
 
-                    if (entry.Type == ProductDownloadTypes.File)
+                    if (entry.Type == ProductDownloadTypes.ProductFile)
                     {
                         taskReportingController.StartTask("Schedule validation for downloaded file");
 

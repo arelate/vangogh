@@ -1,7 +1,5 @@
-﻿using Interfaces.DownloadSources;
-using Interfaces.File;
-using Interfaces.Reporting;
-using Interfaces.UriRedirection;
+﻿using Interfaces.Reporting;
+using Interfaces.DownloadSources;
 using Interfaces.Destination;
 using Interfaces.Data;
 
@@ -10,28 +8,22 @@ using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
 
-namespace GOG.TaskActivities.Download.ProductFiles
+namespace GOG.TaskActivities.Download.ProductImages
 {
-    public class ProductFilesScheduleDownloadsController: ScheduleDownloadsController
+    public class UpdateImagesDownloadsController : UpdateDownloadsController
     {
-        public ProductFilesScheduleDownloadsController(
+        public UpdateImagesDownloadsController(
             IDownloadSourcesController downloadSourcesController,
-            IUriRedirectController uriRedirectController,
             IDestinationController destinationController,
             IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<Product> productsDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            IFileController fileController,
             ITaskReportingController taskReportingController) :
-            base (
-                ProductDownloadTypes.File,
-                downloadSourcesController,
-                uriRedirectController,
+            base(
+                ProductDownloadTypes.Image,
+                downloadSourcesController, 
                 destinationController,
                 productDownloadsDataController,
-                productsDataController,
                 accountProductsDataController,
-                fileController,
                 taskReportingController)
         {
             // ...

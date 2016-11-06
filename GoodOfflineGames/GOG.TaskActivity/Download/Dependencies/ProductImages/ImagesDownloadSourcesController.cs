@@ -13,12 +13,15 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
         where T: ProductCore
     {
         private IDataController<T> dataController;
+        private IDataController<long> updateDataController;
         private IImageUriController imageUriController;
 
         public ProductCoreImagesDownloadSourcesController(
+            IDataController<long> updateDataController,
             IDataController<T> dataController,
             IImageUriController imageUriController)
         {
+            this.updateDataController = updateDataController;
             this.dataController = dataController;
             this.imageUriController = imageUriController;
         }
@@ -27,7 +30,7 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
         {
             var productImageSources = new Dictionary<long, IList<string>>();
 
-            foreach (var id in dataController.EnumerateIds())
+            foreach (var id in updateDataController.EnumerateIds())
             {
                 var productCore = await dataController.GetById(id);
 
