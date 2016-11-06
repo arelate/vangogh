@@ -525,6 +525,10 @@ namespace GoodOfflineGames
             // resolve file downloads
 
             var updateResolvedUrisController = new UpdateResolvedUrisController(
+                updatedDataController,
+                productDownloadsDataController,
+                uriResolutionController,
+                throttleController,
                 taskReportingController);
 
             // downloads processing
@@ -568,11 +572,11 @@ namespace GoodOfflineGames
                 //apiProductUpdateController,
                 //gameDetailsUpdateController,
                 //screenshotUpdateController,
-                updateProductsImagesDownloadsController,
-                updateAccountProductsImagesDownloadsController,
-                updateScreenshotsDownloadsController,
-                updateProductFilesDownloadsController,
-                updateProductExtrasDownloadsController,
+                //updateProductsImagesDownloadsController,
+                //updateAccountProductsImagesDownloadsController,
+                //updateScreenshotsDownloadsController,
+                //updateProductFilesDownloadsController,
+                //updateProductExtrasDownloadsController,
                 updateResolvedUrisController,
                 //updateValidationDownloadsController, 
                 //processScheduledDownloadsController,
