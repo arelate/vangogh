@@ -18,7 +18,7 @@ using Controllers.RequestPage;
 using Controllers.Throttle;
 using Controllers.ImageUri;
 using Controllers.Formatting;
-using Controllers.UriRedirection;
+using Controllers.UriResolution;
 using Controllers.Destination;
 using Controllers.Destination.Data;
 using Controllers.Cookies;
@@ -57,7 +57,7 @@ using GOG.TaskActivities.Download.Dependencies.Validation;
 using GOG.TaskActivities.Download.ProductImages;
 using GOG.TaskActivities.Download.Screenshots;
 using GOG.TaskActivities.Download.ProductFiles;
-using GOG.TaskActivities.Download.Validation;
+using GOG.TaskActivities.Download.UriResolution;
 using GOG.TaskActivities.Download.Processing;
 
 using GOG.TaskActivities.Validation;
@@ -134,7 +134,7 @@ namespace GoodOfflineGames
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
-            var uriRedirectController = new UriRedirectController(
+            var uriResolutionController = new UriResolutionController(
                 networkController);
 
             var gogUriDestinationController = new GOGUriDestinationController();
@@ -476,11 +476,12 @@ namespace GoodOfflineGames
                 updatedDataController,
                 gameDetailsDataController);
 
-            var validationUriRedirectController = new ValidationUriRedirectController();
+            var validationUriResolutionController = new ValidationUriResolutionController();
 
             var validationDownloadSourcesController = new ValidationDownloadSourcesController(
+                updatedDataController,
                 productDownloadsDataController,
-                validationUriRedirectController);
+                validationUriResolutionController);
 
             // schedule download controllers
 
@@ -521,16 +522,10 @@ namespace GoodOfflineGames
                 accountProductsDataController,
                 taskReportingController);
 
-            var updateValidationDownloadsController = new UpdateValidationDownloadsController(
-                validationDownloadSourcesController,
-                validationDestinationController,
-                productDownloadsDataController,
-                accountProductsDataController,
-                taskReportingController);
-
             // resolve file downloads
 
-
+            var updateResolvedUrisController = new UpdateResolvedUrisController(
+                taskReportingController);
 
             // downloads processing
 
@@ -572,13 +567,14 @@ namespace GoodOfflineGames
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
                 //gameDetailsUpdateController,
-                updateScreenshotsDownloadsController,
+                //screenshotUpdateController,
                 updateProductsImagesDownloadsController,
                 updateAccountProductsImagesDownloadsController,
                 updateScreenshotsDownloadsController,
                 updateProductFilesDownloadsController,
                 updateProductExtrasDownloadsController,
-                //validationScheduleDownloadsController,
+                updateResolvedUrisController,
+                //updateValidationDownloadsController, 
                 //processScheduledDownloadsController,
                 //processValidationController
             };

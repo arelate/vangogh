@@ -3,38 +3,38 @@ using System.Collections.Generic;
 
 using Interfaces.Destination;
 
+using Models.Separators;
+
 namespace Controllers.Destination
 {
     public class GOGUriDestinationController : IDestinationController
     {
-        private const char root = 'r',
-            secure = 's',
-            directory = 'd',
-            operatingSystem = 'o',
-            file = 'f';
-        private readonly List<char> uriStructure = new List<char>(5) {
-            root, // /
-            secure, // secure/
-            directory, // {directory}
-            operatingSystem, // {win, mac, linux}
-            file }; // {filename.exe}
-
         public string GetDirectory(string source)
         {
-            return GetUriPart(source, directory);
+            var parts = GetUriParts(source);
+
+            return parts.Length >= 2 ?
+                parts[parts.Length - 2] :
+                source;
         }
 
         public string GetFilename(string source)
         {
-            return GetUriPart(source, file);
+            var parts = GetUriParts(source);
+            return RemoveQueryParameters(parts[parts.Length - 1]);
         }
 
-        private string GetUriPart(string source, char part)
+        private string[] GetUriParts(string source)
         {
-            var partIndex = uriStructure.IndexOf(part);
-            var uri = new Uri(source);
-            var uriPart = uri.Segments[partIndex];
-            return uriPart;
+            return source.Split(new string[1] { Separators.UriPart }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private string RemoveQueryParameters(string source)
+        {
+            var parts = source.Split(new string[1] { Separators.QueryString }, StringSplitOptions.RemoveEmptyEntries);
+            return parts.Length >= 1 ?
+                parts[0] :
+                source;
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.UriRedirection;
+using Interfaces.UriResolution;
 
 using Models.Separators;
 
-namespace Controllers.UriRedirection
+namespace Controllers.UriResolution
 {
-    public class ValidationUriRedirectController : IUriRedirectController
+    public class ValidationUriResolutionController : IUriResolutionController
     {
         private const string validationExtension = ".xml";
 
-        public async Task<string> GetUriRedirect(string uri)
+        public async Task<string> ResolveUri(string uri)
         {
             return uri.Contains(Separators.QueryString) ?
                 uri.Replace(Separators.QueryString, validationExtension + Separators.QueryString) :

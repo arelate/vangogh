@@ -1,6 +1,5 @@
 ﻿using Interfaces.DownloadSources;
 using Interfaces.Reporting;
-using Interfaces.UriRedirection;
 using Interfaces.Destination;
 using Interfaces.Data;
 

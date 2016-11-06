@@ -34,6 +34,9 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
             {
                 var productCore = await dataController.GetById(id);
 
+                // not all updated products can be found with all dataControllers
+                if (productCore == null) continue;
+
                 var imageSources = new List<string>() { imageUriController.ExpandUri(GetImageUri(productCore)) };
                 productImageSources.Add(productCore.Id, imageSources);
             }

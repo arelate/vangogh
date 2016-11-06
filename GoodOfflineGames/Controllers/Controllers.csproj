@@ -78,7 +78,7 @@
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Data\DataController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />
-    <Compile Include="UriRedirection\UriRedirectController.cs" />
+    <Compile Include="UriResolution\UriResolutionController.cs" />
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="PropertiesValidation\AuthenticationPropertiesValidationController.cs" />
@@ -99,7 +99,7 @@
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
-    <Compile Include="UriRedirection\ValidationUriRedirectController.cs" />
+    <Compile Include="UriResolution\ValidationUriResolutionController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
   </ItemGroup>
   <ItemGroup>
