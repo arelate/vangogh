@@ -73,6 +73,7 @@
     <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
     <Compile Include="Update\Wishlisted\WishlistedUpdateController.cs" />
     <Compile Include="Validation\ProcessValidationController.cs" />
+    <Compile Include="Validation\ValidationFilesDownloadController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj">

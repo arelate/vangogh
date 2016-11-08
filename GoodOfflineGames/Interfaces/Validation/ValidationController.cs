@@ -14,7 +14,7 @@ namespace Interfaces.Validation
 
     public interface IValidateChunkDelegate
     {
-        Task ValidateChunk(System.IO.Stream fileStream, long from, long to, string expectedMd5);
+        Task ValidateChunk(System.IO.Stream fileStream, IValidationChunk chunk);
     }
 
     public interface IValidateDelegate

@@ -100,6 +100,7 @@
     <Compile Include="Network\UriController.cs" />
     <Compile Include="UriResolution\ValidationUriResolutionController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
+    <Compile Include="Validation\ValidationDataDownloadController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

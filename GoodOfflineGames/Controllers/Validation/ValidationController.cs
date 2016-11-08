@@ -10,6 +10,8 @@ using Interfaces.File;
 using Interfaces.Conversion;
 using Interfaces.Stream;
 
+using Models.ValidationChunk;
+
 namespace Controllers.Validation
 {
     public class ValidationController : IValidationController
@@ -19,7 +21,6 @@ namespace Controllers.Validation
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
-        //private System.IO.Stream fileStream;
         private IConversionController<byte[], string> byteToStringConversionController;
 
         public ValidationController(
@@ -100,19 +101,26 @@ namespace Controllers.Validation
                     to = long.Parse(chunkElement.Attributes["to"]?.Value);
                     expectedMd5 = chunkElement.FirstChild.Value;
 
-                    await ValidateChunk(fileStream, from, to, expectedMd5);
+                    var chunk = new ValidationChunk()
+                    {
+                        From = from,
+                        To = to,
+                        ExpectedMD5 = expectedMd5
+                    };
+
+                    await ValidateChunk(fileStream, chunk);
                 }
             }
         }
 
-        public async Task ValidateChunk(System.IO.Stream fileStream, long from, long to, string expectedMd5)
+        public async Task ValidateChunk(System.IO.Stream fileStream, IValidationChunk chunk)
         {
             if (!fileStream.CanSeek)
                 throw new Exception("Unable to seek in the file stream");
 
-            fileStream.Seek(from, SeekOrigin.Begin);
+            fileStream.Seek(chunk.From, SeekOrigin.Begin);
 
-            var length = (int)(to - from + 1);
+            var length = (int)(chunk.To - chunk.From + 1);
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
@@ -123,12 +131,12 @@ namespace Controllers.Validation
 
             var computedMD5 = byteToStringConversionController.Convert(hash);
 
-            if (computedMD5 != expectedMd5)
+            if (computedMD5 != chunk.ExpectedMD5)
                 throw new Exception(
                     string.Format(
-                        "Chunk {0}-{1} failed validation", 
-                        from,
-                        to));
+                        "Chunk {0}-{1} failed validation",
+                        chunk.From,
+                        chunk.To));
         }
 
         public void ValidateFilename(string uri, string expectedFilename)

@@ -48,6 +48,7 @@
     <Compile Include="Separators\Separators.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Uris\Uris.cs" />
+    <Compile Include="ValidationChunk\ValidationChunk.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

@@ -10,7 +10,7 @@ namespace Controllers.UriResolution
     {
         private const string validationExtension = ".xml";
 
-        public async Task<string> ResolveUri(string uri)
+        public string ResolveUri(string uri)
         {
             return uri.Contains(Separators.QueryString) ?
                 uri.Replace(Separators.QueryString, validationExtension + Separators.QueryString) :

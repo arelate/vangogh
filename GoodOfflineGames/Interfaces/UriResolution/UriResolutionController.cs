@@ -4,7 +4,7 @@ namespace Interfaces.UriResolution
 {
     public interface IResolveUriDelegate
     {
-        Task<string> ResolveUri(string uri);
+        string ResolveUri(string uri);
     }
 
     public interface IUriResolutionController :

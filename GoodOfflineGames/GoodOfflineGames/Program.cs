@@ -531,6 +531,11 @@ namespace GoodOfflineGames
 
             // validation controllers
 
+            var validationDataDownloadController = new ValidationDataDownloadController(
+                validationUriResolutionController,
+                validationDestinationController,
+                downloadController);
+
             var byteToStringConversionController = new BytesToStringConvertionController();
 
             var validationController = new ValidationController(
@@ -538,6 +543,12 @@ namespace GoodOfflineGames
                 fileController,
                 streamController,
                 byteToStringConversionController);
+
+            var validationFilesDownloadController = new ValidationFilesDownloadController(
+                updatedDataController,
+                productDownloadsDataController,
+                validationDataDownloadController,
+                taskReportingController);
 
             //var processValidationController = new ProcessValidationController(
             //    gogUriDestinationController,
@@ -559,16 +570,16 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                gameDetailsUpdateController,
+                //gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //updateProductsImagesDownloadsController,
                 //updateAccountProductsImagesDownloadsController,
                 //updateScreenshotsDownloadsController,
                 //updateProductFilesDownloadsController,
                 //updateProductExtrasDownloadsController,
-                //updateResolvedUrisController,
                 //updateValidationDownloadsController, 
                 //processScheduledDownloadsController,
+                validationFilesDownloadController,
                 //processValidationController
             };
 
