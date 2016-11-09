@@ -33,7 +33,7 @@ namespace Controllers.Download
 
         public async Task<string> DownloadFile(string uri, string destination)
         {
-            var filename = string.Empty;
+            var responseUriString = string.Empty;
 
             using (var response = await networkController.GetResponse(HttpMethod.Get, uri))
             {
@@ -42,8 +42,10 @@ namespace Controllers.Download
                 var totalBytes = response.Content.Headers.ContentLength;
                 if (totalBytes == null) totalBytes = 0;
 
-                var requestUri = response.RequestMessage.RequestUri;
-                filename = requestUri.Segments.Last();
+                var responseUri = response.RequestMessage.RequestUri;
+                responseUriString = responseUri.ToString();
+
+                var filename = responseUri.Segments.Last();
                 var fullPath = Path.Combine(destination, filename);
 
                 int bufferSize = 1024 * 1024; // 1M
@@ -54,7 +56,7 @@ namespace Controllers.Download
                 // don't redownload file with the same name and size
                 if (fileController.Exists(fullPath) &&
                     fileController.GetSize(fullPath) == totalBytes)
-                    return filename;
+                    return responseUriString;
 
                 downloadReportingController?.StartTask(string.Empty);
 
@@ -72,7 +74,7 @@ namespace Controllers.Download
                 downloadReportingController?.CompleteTask();
             }
 
-            return filename;
+            return responseUriString;
         }
     }
 }

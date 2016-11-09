@@ -104,14 +104,14 @@ namespace Controllers.Data
                     break;
                 case DataStoragePolicy.ItemsList:
                     dataItems = await serializedStorageController.DeserializePull<List<Type>>(dataItemsUri);
-                    dataIndexes = new List<long>();
-                    foreach (var item in dataItems)
-                        dataIndexes.Add(indexingController.GetIndex(item));
                     break;
             }
 
             if (dataIndexes == null) dataIndexes = new List<long>();
             if (dataItems == null) dataItems = new List<Type>();
+
+            foreach (var item in dataItems)
+                dataIndexes.Add(indexingController.GetIndex(item));
         }
 
         public async Task Save()

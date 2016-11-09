@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-using Interfaces.DownloadSources;
 using Interfaces.Data;
 
 using GOG.Models;
 
 namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
 {
-    public class ProductFilesDownloadSourcesController : IDownloadSourcesController
+    public class ProductFilesDownloadSourcesController : ProductDownloadSourcesController
     {
-        private IDataController<GameDetails> gameDetailsDataController;
-        private IDataController<long> updatedDataController;
         private string[] languages;
         private string[] operatingSystems;
 
@@ -20,60 +16,46 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             string[] languages,
-            string[] operatingSystems)
+            string[] operatingSystems):
+            base(
+                updatedDataController,
+                gameDetailsDataController)
         {
             this.languages = languages;
             this.operatingSystems = operatingSystems;
-
-            this.updatedDataController = updatedDataController;
-            this.gameDetailsDataController = gameDetailsDataController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
+        internal override List<string> GetDownloadSources(GameDetails gameDetails)
         {
-            var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
+            var downloadSources = new List<string>();
 
-            foreach (var id in updatedDataController.EnumerateIds())
+            foreach (var languageDownload in gameDetails.LanguageDownloads)
             {
-                var gameDetails = await gameDetailsDataController.GetById(id);
+                if (!languages.Contains(languageDownload.Language)) continue;
 
-                var downloadSources = new List<string>();
-
-                foreach (var languageDownload in gameDetails.LanguageDownloads)
+                if (languageDownload.Windows != null &&
+                    operatingSystems.Contains("Windows"))
                 {
-                    if (!languages.Contains(languageDownload.Language)) continue;
-
-                    if (languageDownload.Windows != null &&
-                        operatingSystems.Contains("Windows"))
-                    {
-                        foreach (var windowsDownloadEntry in languageDownload.Windows)
-                            downloadSources.Add(windowsDownloadEntry.ManualUrl);
-                    }
-
-                    if (languageDownload.Mac != null &&
-                        operatingSystems.Contains("Mac"))
-                    {
-                        foreach (var macDownloadEntry in languageDownload.Mac)
-                            downloadSources.Add(macDownloadEntry.ManualUrl);
-                    }
-
-                    if (languageDownload.Linux != null &&
-                        operatingSystems.Contains("Linux"))
-                    {
-                        foreach (var linuxDownloadEntry in languageDownload.Linux)
-                            downloadSources.Add(linuxDownloadEntry.ManualUrl);
-                    }
+                    foreach (var windowsDownloadEntry in languageDownload.Windows)
+                        downloadSources.Add(windowsDownloadEntry.ManualUrl);
                 }
 
-                if (!gameDetailsDownloadSources.ContainsKey(id))
-                    gameDetailsDownloadSources.Add(id, new List<string>());
+                if (languageDownload.Mac != null &&
+                    operatingSystems.Contains("Mac"))
+                {
+                    foreach (var macDownloadEntry in languageDownload.Mac)
+                        downloadSources.Add(macDownloadEntry.ManualUrl);
+                }
 
-                foreach (var source in downloadSources)
-                    if (!gameDetailsDownloadSources[gameDetails.Id].Contains(source))
-                        gameDetailsDownloadSources[gameDetails.Id].Add(source);
+                if (languageDownload.Linux != null &&
+                    operatingSystems.Contains("Linux"))
+                {
+                    foreach (var linuxDownloadEntry in languageDownload.Linux)
+                        downloadSources.Add(linuxDownloadEntry.ManualUrl);
+                }
             }
 
-            return gameDetailsDownloadSources;
+            return downloadSources;
         }
     }
 }

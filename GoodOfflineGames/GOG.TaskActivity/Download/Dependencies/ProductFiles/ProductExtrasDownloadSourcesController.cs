@@ -1,49 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-using Interfaces.DownloadSources;
 using Interfaces.Data;
 
 using GOG.Models;
 
 namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
 {
-    public class ProductExtrasDownloadSourcesController : IDownloadSourcesController
+    public class ProductExtrasDownloadSourcesController : ProductDownloadSourcesController
     {
-        private IDataController<GameDetails> gameDetailsDataController;
-        private IDataController<long> updatedDataController;
-
         public ProductExtrasDownloadSourcesController(
             IDataController<long> updatedDataController,
-            IDataController<GameDetails> gameDetailsDataController)
+            IDataController<GameDetails> gameDetailsDataController):
+            base (
+                updatedDataController,
+                gameDetailsDataController)
         {
-            this.updatedDataController = updatedDataController;
-            this.gameDetailsDataController = gameDetailsDataController;
+            // ...
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
+        internal override List<string> GetDownloadSources(GameDetails gameDetails)
         {
-            var extrasDownloadSources = new Dictionary<long, IList<string>>();
+            var downloadSources = new List<string>();
 
-            foreach (var id in updatedDataController.EnumerateIds())
-            {
-                var gameDetails = await gameDetailsDataController.GetById(id);
+            foreach (var extraDownloadEntry in gameDetails.Extras)
+                downloadSources.Add(extraDownloadEntry.ManualUrl);
 
-                var downloadSources = new List<string>();
-
-                foreach (var extraDownloadEntry in gameDetails.Extras)
-                    downloadSources.Add(extraDownloadEntry.ManualUrl);
-
-                if (!extrasDownloadSources.ContainsKey(id))
-                    extrasDownloadSources.Add(id, new List<string>());
-
-                foreach (var source in downloadSources)
-                    if (!extrasDownloadSources[gameDetails.Id].Contains(source))
-                        extrasDownloadSources[gameDetails.Id].Add(source);
-            }
-
-            return extrasDownloadSources;
+            return downloadSources;
         }
     }
 }

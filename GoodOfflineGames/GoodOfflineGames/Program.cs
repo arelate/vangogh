@@ -171,6 +171,7 @@ namespace GoodOfflineGames
             var productDownloadsDestinationController = new ProductDownloadsDestinationController();
             var scheduledScreenshotsUpdatesDestinationController = new ScheduledScreenshotsUpdatesDestinationController();
             var scheduledValidationsDestinationController = new ScheduledValidationsDestinationController();
+            var lastKnownValidDestinationController = new LastKnownValidDestinationController();
 
             var productsDataController = new DataController<Product>(
                 serializedStorageController,
@@ -253,6 +254,13 @@ namespace GoodOfflineGames
                 collectionController,
                 scheduledValidationsDestinationController);
 
+            var lastKnownValidDataController = new DataController<long>(
+                serializedStorageController,
+                DataStoragePolicy.ItemsList,
+                passthroughIndexingController,
+                collectionController,
+                lastKnownValidDestinationController);
+
             #endregion
 
             #region Settings: Load, Validation
@@ -300,7 +308,8 @@ namespace GoodOfflineGames
                 updatedDataController,
                 scheduledScreenshotsUpdatesDataController,
                 productDownloadsDataController,
-                scheduledValidationsDataController);
+                scheduledValidationsDataController,
+                lastKnownValidDataController);
 
             #endregion
 
@@ -523,6 +532,7 @@ namespace GoodOfflineGames
             // downloads processing
 
             var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
+                updatedDataController,
                 productDownloadsDataController,
                 scheduledValidationsDataController,
                 downloadController,
@@ -550,11 +560,13 @@ namespace GoodOfflineGames
                 validationDataDownloadController,
                 taskReportingController);
 
-            //var processValidationController = new ProcessValidationController(
-            //    gogUriDestinationController,
-            //    validationController,
-            //    productStorageController,
-            //    taskReportingController);
+            var processValidationController = new ProcessValidationController(
+                gogUriDestinationController,
+                validationController,
+                updatedDataController,
+                lastKnownValidDataController,
+                scheduledValidationsDataController,
+                taskReportingController);
 
             #endregion
 
@@ -577,10 +589,9 @@ namespace GoodOfflineGames
                 //updateScreenshotsDownloadsController,
                 //updateProductFilesDownloadsController,
                 //updateProductExtrasDownloadsController,
-                //updateValidationDownloadsController, 
-                //processScheduledDownloadsController,
+                processScheduledDownloadsController,
                 validationFilesDownloadController,
-                //processValidationController
+                processValidationController
             };
 
             foreach (var taskActivityController in taskActivityControllers)

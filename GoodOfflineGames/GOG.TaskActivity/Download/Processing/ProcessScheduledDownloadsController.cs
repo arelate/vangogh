@@ -7,21 +7,26 @@ using Interfaces.Reporting;
 using Interfaces.Download;
 using Interfaces.Data;
 using Interfaces.Destination;
+using Interfaces.Network;
 
 using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
+using System;
+using System.Net.Http;
 
 namespace GOG.TaskActivities.Download.Processing
 {
     public class ProcessScheduledDownloadsController : TaskActivityController
     {
+        private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<ScheduledValidation> scheduledValidationsDataController;
         private IDownloadController downloadController;
         private IDestinationController destinationController;
 
         public ProcessScheduledDownloadsController(
+            IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<ScheduledValidation> scheduledValidationsDataController,
             IDownloadController downloadController,
@@ -29,6 +34,7 @@ namespace GOG.TaskActivities.Download.Processing
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
+            this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.scheduledValidationsDataController = scheduledValidationsDataController;
             this.downloadController = downloadController;
@@ -38,14 +44,13 @@ namespace GOG.TaskActivities.Download.Processing
         public override async Task ProcessTask()
         {
             var counter = 0;
-            var total = productDownloadsDataController.Count();
+            var total = updatedDataController.Count();
 
-            var productDownloadsIds = productDownloadsDataController.EnumerateIds().ToArray();
-
-            taskReportingController.StartTask("Process scheduled downloads");
-            foreach (var id in productDownloadsIds)
+            taskReportingController.StartTask("Process updated downloads");
+            foreach (var id in updatedDataController.EnumerateIds())
             {
                 var productDownloads = await productDownloadsDataController.GetById(id);
+                if (productDownloads == null) continue;
 
                 taskReportingController.StartTask(
                         "Process downloads for product {0}/{1}: {2}",
@@ -63,7 +68,7 @@ namespace GOG.TaskActivities.Download.Processing
                         "Download entry {0}/{1}: {2}",
                         ii + 1,
                         downloadEntries.Length,
-                        System.Enum.GetName(typeof(ProductDownloadTypes), entry.Type));
+                        Enum.GetName(typeof(ProductDownloadTypes), entry.Type));
 
                     var previousResolvedUri = entry.ResolvedUri;
 
@@ -92,7 +97,7 @@ namespace GOG.TaskActivities.Download.Processing
                         }
 
                         var filePath = Path.Combine(entry.Destination,
-                            destinationController.GetFilename(entry.SourceUri));
+                            destinationController.GetFilename(entry.ResolvedUri));
 
                         if (!scheduledValidation.Files.Contains(filePath))
                         {

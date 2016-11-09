@@ -33,6 +33,7 @@ namespace GOG.TaskActivities.Validation
             foreach (var id in updatedDataController.EnumerateIds())
             {
                 var productDownloads = await productDownloadsDataController.GetById(id);
+                if (productDownloads == null) continue;
 
                 foreach (var download in productDownloads.Downloads)
                 {
