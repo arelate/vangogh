@@ -76,6 +76,7 @@
     <Compile Include="Indexing\PassthroughIndexingController.cs" />
     <Compile Include="Indexing\ProductCoreIndexingController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
+    <Compile Include="Reporting\ValidationReportingController.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Data\DataController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />

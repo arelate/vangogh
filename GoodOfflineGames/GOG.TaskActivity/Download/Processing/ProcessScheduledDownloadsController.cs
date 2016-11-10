@@ -70,12 +70,12 @@ namespace GOG.TaskActivities.Download.Processing
                         downloadEntries.Length,
                         Enum.GetName(typeof(ProductDownloadTypes), entry.Type));
 
-                    var previousResolvedUri = entry.ResolvedUri;
+                    var resolvedUri = await downloadController.DownloadFile(entry.SourceUri, entry.Destination);
 
-                    entry.ResolvedUri = await downloadController.DownloadFile(entry.SourceUri, entry.Destination);
-
-                    if (previousResolvedUri != entry.ResolvedUri)
+                    if (entry.Type == ProductDownloadTypes.ProductFile &&
+                        entry.ResolvedUri != resolvedUri)
                     {
+                        entry.ResolvedUri = resolvedUri;
                         taskReportingController.StartTask("Update resolved product Uri: {0}", productDownloads.Title);
                         await productDownloadsDataController.Update(productDownloads);
                         taskReportingController.CompleteTask();

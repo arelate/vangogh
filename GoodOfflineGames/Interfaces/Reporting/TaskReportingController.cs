@@ -12,7 +12,7 @@
 
     public interface IReportProgressDelegate
     {
-        void ReportProgress(long value, long maxValue);
+        void ReportProgress(long value, long maxValue, LongToStringFormattingDelegate formattingDelegate = null);
     }
 
     public interface IReportFailureDelegate
@@ -24,6 +24,8 @@
     {
         void ReportWarning(string warningMessage);
     }
+
+    public delegate string LongToStringFormattingDelegate(long value);
 
     public interface ITaskReportingController:
         IStartTaskDelegate,

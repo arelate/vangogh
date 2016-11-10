@@ -9,6 +9,7 @@ using Interfaces.Destination;
 using Interfaces.File;
 using Interfaces.Conversion;
 using Interfaces.Stream;
+using Interfaces.Reporting;
 
 using Models.ValidationChunk;
 
@@ -22,17 +23,20 @@ namespace Controllers.Validation
         private IStreamController streamController;
         private XmlDocument validationXml;
         private IConversionController<byte[], string> byteToStringConversionController;
+        private IReportProgressDelegate validationReportingController;
 
         public ValidationController(
             IDestinationController validationDestinationController,
             IFileController fileController,
             IStreamController streamController,
-            IConversionController<byte[], string> byteToStringConversionController)
+            IConversionController<byte[], string> byteToStringConversionController,
+            IReportProgressDelegate validationReportingController)
         {
             this.validationDestinationController = validationDestinationController;
             this.fileController = fileController;
             this.streamController = streamController;
             this.byteToStringConversionController = byteToStringConversionController;
+            this.validationReportingController = validationReportingController;
 
             validationXml = new XmlDocument();
 
@@ -92,6 +96,8 @@ namespace Controllers.Validation
 
             using (var fileStream = streamController.OpenReadable(uri))
             {
+                long length = 0;
+
                 foreach (XmlNode chunkElement in fileElement[0].ChildNodes)
                 {
                     long from, to = 0;
@@ -99,6 +105,7 @@ namespace Controllers.Validation
 
                     from = long.Parse(chunkElement.Attributes["from"]?.Value);
                     to = long.Parse(chunkElement.Attributes["to"]?.Value);
+                    length += (to - from);
                     expectedMd5 = chunkElement.FirstChild.Value;
 
                     var chunk = new ValidationChunk()
@@ -109,7 +116,11 @@ namespace Controllers.Validation
                     };
 
                     await ValidateChunk(fileStream, chunk);
+
+                    validationReportingController?.ReportProgress(length, expectedSize);
                 }
+
+                validationReportingController?.ReportProgress(expectedSize, expectedSize);
             }
         }
 

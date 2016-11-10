@@ -548,11 +548,16 @@ namespace GoodOfflineGames
 
             var byteToStringConversionController = new BytesToStringConvertionController();
 
+            var validationReportingController = new ValidationReportingController(
+                bytesFormattingController, 
+                taskReportingController);
+
             var validationController = new ValidationController(
                 validationDestinationController,
                 fileController,
                 streamController,
-                byteToStringConversionController);
+                byteToStringConversionController,
+                validationReportingController);
 
             var validationFilesDownloadController = new ValidationFilesDownloadController(
                 updatedDataController,
@@ -582,15 +587,15 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                //gameDetailsUpdateController,
+                ////gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //updateProductsImagesDownloadsController,
                 //updateAccountProductsImagesDownloadsController,
                 //updateScreenshotsDownloadsController,
                 //updateProductFilesDownloadsController,
                 //updateProductExtrasDownloadsController,
-                processScheduledDownloadsController,
-                validationFilesDownloadController,
+                //processScheduledDownloadsController,
+                //validationFilesDownloadController,
                 processValidationController
             };
 

@@ -30,10 +30,14 @@ namespace GOG.TaskActivities.Validation
 
         public override async Task ProcessTask()
         {
+            taskReportingController.StartTask("Download validation files");
+
             foreach (var id in updatedDataController.EnumerateIds())
             {
                 var productDownloads = await productDownloadsDataController.GetById(id);
                 if (productDownloads == null) continue;
+
+                taskReportingController.StartTask("Download validation files for product: {0}", productDownloads.Title);
 
                 foreach (var download in productDownloads.Downloads)
                 {
@@ -42,7 +46,11 @@ namespace GOG.TaskActivities.Validation
 
                     await validationDataDownloadController.DownloadValidationData(download.ResolvedUri);
                 }
+
+                taskReportingController.CompleteTask();
             }
+
+            taskReportingController.CompleteTask();
         }
 
     }

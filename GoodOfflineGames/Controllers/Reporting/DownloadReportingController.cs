@@ -35,7 +35,7 @@ namespace Controllers.Reporting
             lastReportedTimestamp = DateTime.Now;
         }
 
-        public void ReportProgress(long currentValue, long maxValue)
+        public void ReportProgress(long currentValue, long maxValue, LongToStringFormattingDelegate formattingDelegate = null)
         {
             // throttle updates to once in throttleMillisecond
             if ((DateTime.Now - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;

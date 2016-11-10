@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Interfaces.Console;
 using Interfaces.Reporting;
@@ -14,7 +15,8 @@ namespace Controllers.Reporting
         private const string completionReportTemplate = "Task [{0}] was completed successfully";
         private const string failureReportTemplate = "Task [{0}] failed with the following message: {1}";
         private const string warningReportTemplate = "Warning: {0}";
-        private const string progressReportTemplate = "\r{0} out of {1} completed";
+        private const string progressReportTemplate = "\r{0} out of {1} completed         ";
+        private const string progressCompletedReportTemplate = "\r";
 
         public TaskReportingController(IConsoleController consoleController)
         {
@@ -41,10 +43,18 @@ namespace Controllers.Reporting
             consoleController.WriteLine(failureReportTemplate, MessageType.Error, names.Pop(), errorMessage);
         }
 
-        public void ReportProgress(long value, long maxValue)
+        public void ReportProgress(long value, long maxValue, LongToStringFormattingDelegate formattingDelegate = null)
         {
-            if (value == maxValue) consoleController.WriteLine(progressReportTemplate, MessageType.Progress, value, maxValue);
-            else consoleController.Write(progressReportTemplate, MessageType.Progress, value, maxValue);
+            var formattedValue = formattingDelegate != null ?
+                formattingDelegate(value) :
+                value.ToString();
+
+            var formattedMaxValue = formattingDelegate != null ?
+                formattingDelegate(maxValue) :
+                maxValue.ToString();
+
+            if (value.Equals(maxValue)) consoleController.Write(progressCompletedReportTemplate, MessageType.Progress);
+            else consoleController.Write(progressReportTemplate, MessageType.Progress, formattedValue, formattedMaxValue);
         }
 
         public void ReportWarning(string warningMessage)

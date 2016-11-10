@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.Reporting;
 using Interfaces.Validation;
@@ -41,7 +42,9 @@ namespace GOG.TaskActivities.Validation
         {
             taskReportingController.StartTask("Validate product files");
 
-            foreach (var id in scheduledValidationDataController.EnumerateIds())
+            var scheduledValidationIds = scheduledValidationDataController.EnumerateIds().ToArray();
+
+            foreach (var id in scheduledValidationIds)
             {
                 var productIsValid = true;
 
@@ -63,6 +66,7 @@ namespace GOG.TaskActivities.Validation
                     finally
                     {
                         taskReportingController.CompleteTask();
+                        await scheduledValidationDataController.Remove(scheduledValidation);
                     }
                 }
 
