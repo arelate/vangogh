@@ -46,9 +46,15 @@ namespace Controllers.Validation
 
         public async Task Validate(string uri)
         {
+            if (string.IsNullOrEmpty(uri))
+                throw new ArgumentNullException("File location is invalid");
+
             var validationFilename = Path.Combine(
                 validationDestinationController.GetDirectory(uri),
                 validationDestinationController.GetFilename(uri));
+
+            if (!fileController.Exists(validationFilename))
+                return;
 
             validationXml.Load(validationFilename);
 
@@ -100,6 +106,9 @@ namespace Controllers.Validation
 
                 foreach (XmlNode chunkElement in fileElement[0].ChildNodes)
                 {
+                    if (chunkElement.Name != "chunk")
+                        continue;
+
                     long from, to = 0;
                     string expectedMd5 = string.Empty;
 

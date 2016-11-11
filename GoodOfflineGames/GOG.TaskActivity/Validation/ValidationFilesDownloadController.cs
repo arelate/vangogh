@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.IO;
 
 using Interfaces.Validation;
 using Interfaces.Reporting;
@@ -15,6 +16,7 @@ namespace GOG.TaskActivities.Validation
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IValidationDataDownloadController validationDataDownloadController;
+        private const string patchPrefix = "patch_";
 
         public ValidationFilesDownloadController(
             IDataController<long> updatedDataController,
@@ -43,6 +45,9 @@ namespace GOG.TaskActivities.Validation
                 {
                     if (download.Type != ProductDownloadTypes.ProductFile) continue;
                     if (string.IsNullOrEmpty(download.ResolvedUri)) continue;
+
+                    if (Path.GetFileName(download.ResolvedUri).StartsWith(patchPrefix))
+                        continue;
 
                     await validationDataDownloadController.DownloadValidationData(download.ResolvedUri);
                 }

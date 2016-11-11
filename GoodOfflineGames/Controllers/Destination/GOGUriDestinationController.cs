@@ -20,6 +20,8 @@ namespace Controllers.Destination
 
         public string GetFilename(string source)
         {
+            if (string.IsNullOrEmpty(source)) return source;
+
             var parts = GetUriParts(source);
             return RemoveQueryParameters(parts[parts.Length - 1]);
         }

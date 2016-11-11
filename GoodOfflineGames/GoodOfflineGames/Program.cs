@@ -130,7 +130,8 @@ namespace GoodOfflineGames
 
             var throttleController = new ThrottleController(
                 taskReportingController,
-                secondsFormattingController);
+                secondsFormattingController,
+                10000);
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
@@ -544,7 +545,8 @@ namespace GoodOfflineGames
             var validationDataDownloadController = new ValidationDataDownloadController(
                 validationUriResolutionController,
                 validationDestinationController,
-                downloadController);
+                downloadController,
+                taskReportingController);
 
             var byteToStringConversionController = new BytesToStringConvertionController();
 
@@ -587,7 +589,7 @@ namespace GoodOfflineGames
                 //wishlistedUpdateController,
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
-                ////gameDetailsUpdateController,
+                //gameDetailsUpdateController,
                 //screenshotUpdateController,
                 //updateProductsImagesDownloadsController,
                 //updateAccountProductsImagesDownloadsController,
@@ -595,7 +597,7 @@ namespace GoodOfflineGames
                 //updateProductFilesDownloadsController,
                 //updateProductExtrasDownloadsController,
                 //processScheduledDownloadsController,
-                //validationFilesDownloadController,
+                validationFilesDownloadController,
                 processValidationController
             };
 
