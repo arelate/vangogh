@@ -131,7 +131,7 @@ namespace GoodOfflineGames
             var throttleController = new ThrottleController(
                 taskReportingController,
                 secondsFormattingController,
-                10000);
+                2 * 60 * 1000);
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
@@ -583,20 +583,20 @@ namespace GoodOfflineGames
             {
                 loadDataController,
                 authorizationController,
-                //productsUpdateController,
-                //accountProductsUpdateController,
-                //newUpdatedAccountProductsController,
-                //wishlistedUpdateController,
-                //gameProductDataUpdateController,
-                //apiProductUpdateController,
-                //gameDetailsUpdateController,
-                //screenshotUpdateController,
-                //updateProductsImagesDownloadsController,
-                //updateAccountProductsImagesDownloadsController,
-                //updateScreenshotsDownloadsController,
-                //updateProductFilesDownloadsController,
-                //updateProductExtrasDownloadsController,
-                //processScheduledDownloadsController,
+                productsUpdateController,
+                accountProductsUpdateController,
+                newUpdatedAccountProductsController,
+                wishlistedUpdateController,
+                gameProductDataUpdateController,
+                apiProductUpdateController,
+                gameDetailsUpdateController,
+                screenshotUpdateController,
+                updateProductsImagesDownloadsController,
+                updateAccountProductsImagesDownloadsController,
+                updateScreenshotsDownloadsController,
+                updateProductFilesDownloadsController,
+                updateProductExtrasDownloadsController,
+                processScheduledDownloadsController,
                 validationFilesDownloadController,
                 processValidationController
             };

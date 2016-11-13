@@ -43,6 +43,7 @@ namespace GOG.TaskActivities.Validation
             taskReportingController.StartTask("Validate product files");
 
             var scheduledValidationIds = scheduledValidationDataController.EnumerateIds().ToArray();
+            var counter = 0;
 
             foreach (var id in scheduledValidationIds)
             {
@@ -50,11 +51,16 @@ namespace GOG.TaskActivities.Validation
 
                 var scheduledValidation = await scheduledValidationDataController.GetById(id);
 
+                taskReportingController.StartTask("Validate product {0}/{1}: {2}", 
+                    ++counter, 
+                    scheduledValidationIds.Length, 
+                    scheduledValidation.Title);
+
                 foreach (var file in scheduledValidation.Files)
                 {
                     try
                     {
-                        taskReportingController.StartTask("Validate product file: {0}, {1}", scheduledValidation.Title, file);
+                        taskReportingController.StartTask("Validate product file: {0}", file);
                         await validationController.Validate(file);
                         productIsValid &= true;
                     }
@@ -66,9 +72,12 @@ namespace GOG.TaskActivities.Validation
                     finally
                     {
                         taskReportingController.CompleteTask();
-                        await scheduledValidationDataController.Remove(scheduledValidation);
                     }
                 }
+
+                taskReportingController.StartTask("Remove scheduled validation for product: {0}", scheduledValidation.Title);
+                await scheduledValidationDataController.Remove(scheduledValidation);
+                taskReportingController.CompleteTask();
 
                 if (productIsValid)
                 {
@@ -83,6 +92,8 @@ namespace GOG.TaskActivities.Validation
                     await lastKnownValidDataController.Remove(id);
                     taskReportingController.CompleteTask();
                 }
+
+                taskReportingController.CompleteTask();
             }
 
             taskReportingController.CompleteTask();
