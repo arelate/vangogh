@@ -48,7 +48,7 @@ namespace GOG.TaskActivities.Validation
 
             var counter = 0;
 
-            var updatedProducts = updatedDataController.EnumerateIds();
+            var updatedProducts = updatedDataController.EnumerateIds().ToArray();
 
             foreach (var id in updatedProducts)
             {

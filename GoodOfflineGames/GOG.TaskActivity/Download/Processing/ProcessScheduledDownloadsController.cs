@@ -93,32 +93,33 @@ namespace GOG.TaskActivities.Download.Processing
 
                     try
                     {
-                        var response = await networkController.GetResponse(HttpMethod.Get, entry.SourceUri);
-
-                        resolvedUri = response.RequestMessage.RequestUri.ToString();
-
-                        if (entry.Type == ProductDownloadTypes.ProductFile)
+                        using (var response = await networkController.GetResponse(HttpMethod.Get, entry.SourceUri))
                         {
-                            var existingRouteUpdated = false;
-                            foreach (var route in productRoutes.Routes)
-                                if (route.Source == entry.SourceUri)
-                                {
-                                    route.Destination = resolvedUri;
-                                    existingRouteUpdated = true;
-                                    break;
-                                }
+                            resolvedUri = response.RequestMessage.RequestUri.ToString();
 
-                            if (!existingRouteUpdated)
-                                productRoutes.Routes.Add(new ProductRoutesEntry()
-                                {
-                                    Source = entry.SourceUri,
-                                    Destination = resolvedUri
-                                });
+                            if (entry.Type == ProductDownloadTypes.ProductFile)
+                            {
+                                var existingRouteUpdated = false;
+                                foreach (var route in productRoutes.Routes)
+                                    if (route.Source == entry.SourceUri)
+                                    {
+                                        route.Destination = resolvedUri;
+                                        existingRouteUpdated = true;
+                                        break;
+                                    }
 
-                            await productRoutesDataController.UpdateAsync(productRoutes);
+                                if (!existingRouteUpdated)
+                                    productRoutes.Routes.Add(new ProductRoutesEntry()
+                                    {
+                                        Source = entry.SourceUri,
+                                        Destination = resolvedUri
+                                    });
+
+                                await productRoutesDataController.UpdateAsync(productRoutes);
+                            }
+
+                            await downloadController.DownloadFileAsync(response, entry.Destination);
                         }
-
-                        await downloadController.DownloadFileAsync(response, entry.Destination);
                     }
                     catch (Exception ex)
                     {

@@ -604,14 +604,14 @@ namespace GoodOfflineGames
                 // authorize
                 authorizationController,
                 // data updates
-                productsUpdateController,
-                accountProductsUpdateController,
-                newUpdatedAccountProductsController,
-                wishlistedUpdateController,
-                gameProductDataUpdateController,
-                apiProductUpdateController,
-                gameDetailsUpdateController,
-                screenshotUpdateController,
+                //productsUpdateController,
+                //accountProductsUpdateController,
+                //newUpdatedAccountProductsController,
+                //wishlistedUpdateController,
+                //gameProductDataUpdateController,
+                //apiProductUpdateController,
+                //gameDetailsUpdateController,
+                //screenshotUpdateController,
                 // schedule downloads
                 updateProductsImagesDownloadsController,
                 updateAccountProductsImagesDownloadsController,
