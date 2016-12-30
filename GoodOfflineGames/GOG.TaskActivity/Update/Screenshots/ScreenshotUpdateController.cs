@@ -41,7 +41,7 @@ namespace GOG.TaskActivities.Update.Screenshots
             this.screenshotExtractionController = screenshotExtractionController;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask("Update all products missing screenshots");
 
@@ -59,7 +59,7 @@ namespace GOG.TaskActivities.Update.Screenshots
 
             foreach (var id in productsMissingScreenshots)
             {
-                var product = await productsDataController.GetById(id);
+                var product = await productsDataController.GetByIdAsync(id);
 
                 taskReportingController.StartTask(
                         "Update product screenshots {0}/{1}: {2}",
@@ -77,18 +77,19 @@ namespace GOG.TaskActivities.Update.Screenshots
 
                 if (extractedProductScreenshots == null) continue;
 
-                var productScreenshots = new ProductScreenshots();
-                productScreenshots.Id = product.Id;
-                productScreenshots.Uris = new List<string>(extractedProductScreenshots);
-
+                var productScreenshots = new ProductScreenshots()
+                {
+                    Id = product.Id,
+                    Uris = new List<string>(extractedProductScreenshots)
+                };
                 taskReportingController.CompleteTask();
 
                 taskReportingController.StartTask("Update product screenshots");
-                await screenshotsDataController.Update(productScreenshots);
+                await screenshotsDataController.UpdateAsync(productScreenshots);
                 taskReportingController.CompleteTask();
 
                 taskReportingController.StartTask("Schedule screenshot files update");
-                await scheduledScreenshotsUpdatesDataController.Update(product.Id);
+                await scheduledScreenshotsUpdatesDataController.UpdateAsync(product.Id);
                 taskReportingController.CompleteTask();
 
                 taskReportingController.CompleteTask();

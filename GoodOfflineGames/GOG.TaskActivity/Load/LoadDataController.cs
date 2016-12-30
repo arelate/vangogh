@@ -20,11 +20,11 @@ namespace GOG.TaskActivities.Load
             this.loadDelegates = loadDelegates;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask("Load existing data");
             foreach (var loadDelegate in loadDelegates)
-                await loadDelegate.Load();
+                await loadDelegate.LoadAsync();
             taskReportingController.CompleteTask();
         }
     }

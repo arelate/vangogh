@@ -15,7 +15,7 @@ namespace GOG.TaskActivities.Abstract
             this.taskReportingController = taskReportingController;
         }
 
-        public virtual Task ProcessTask()
+        public virtual Task ProcessTaskAsync()
         {
             throw new NotImplementedException();
         }

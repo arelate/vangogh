@@ -31,50 +31,37 @@ namespace Controllers.Download
             this.downloadReportingController = downloadReportingController;
         }
 
-        public async Task<string> DownloadFile(string uri, string destination)
+        public async Task DownloadFileAsync(HttpResponseMessage response, string destination)
         {
-            var responseUriString = string.Empty;
+            response.EnsureSuccessStatusCode();
 
-            using (var response = await networkController.GetResponse(HttpMethod.Get, uri))
+            var filename = response.RequestMessage.RequestUri.Segments.Last();
+            var fullPath = Path.Combine(destination, filename);
+
+            int bufferSize = 1024 * 1024; // 1M
+            byte[] buffer = new byte[bufferSize];
+            int bytesRead = 0;
+            long totalBytesRead = 0;
+
+            // don't redownload file with the same name and size
+            if (fileController.Exists(fullPath) &&
+                fileController.GetSize(fullPath) == response.Content.Headers.ContentLength)
+                return;
+
+            downloadReportingController?.StartTask(string.Empty);
+
+            using (var writeableStream = streamController.OpenWritable(fullPath))
+            using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
-                response.EnsureSuccessStatusCode();
-
-                var totalBytes = response.Content.Headers.ContentLength;
-                if (totalBytes == null) totalBytes = 0;
-
-                var responseUri = response.RequestMessage.RequestUri;
-                responseUriString = responseUri.ToString();
-
-                var filename = responseUri.Segments.Last();
-                var fullPath = Path.Combine(destination, filename);
-
-                int bufferSize = 1024 * 1024; // 1M
-                byte[] buffer = new byte[bufferSize];
-                int bytesRead = 0;
-                long totalBytesRead = 0;
-
-                // don't redownload file with the same name and size
-                if (fileController.Exists(fullPath) &&
-                    fileController.GetSize(fullPath) == totalBytes)
-                    return responseUriString;
-
-                downloadReportingController?.StartTask(string.Empty);
-
-                using (var writeableStream = streamController.OpenWritable(fullPath)) 
-                    using (var responseStream = await response.Content.ReadAsStreamAsync())
+                while ((bytesRead = await responseStream.ReadAsync(buffer, 0, bufferSize)) > 0)
                 {
-                    while ((bytesRead = await responseStream.ReadAsync(buffer, 0, bufferSize)) > 0)
-                    {
-                        totalBytesRead += bytesRead;
-                        await writeableStream.WriteAsync(buffer, 0, bytesRead);
-                        downloadReportingController?.ReportProgress(totalBytesRead, (long)totalBytes);
-                    }
+                    totalBytesRead += bytesRead;
+                    await writeableStream.WriteAsync(buffer, 0, bytesRead);
+                    downloadReportingController?.ReportProgress(totalBytesRead, response.Content.Headers.ContentLength);
                 }
-
-                downloadReportingController?.CompleteTask();
             }
 
-            return responseUriString;
+            downloadReportingController?.CompleteTask();
         }
     }
 }

@@ -1,63 +1,76 @@
-﻿using System.IO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿//using System.IO;
+//using System.Collections.Generic;
+//using System.Threading.Tasks;
 
-using Interfaces.DownloadSources;
-using Interfaces.UriResolution;
-using Interfaces.Data;
+//using Interfaces.DownloadSources;
+//using Interfaces.UriResolution;
+//using Interfaces.Data;
 
-using GOG.Models.Custom;
+//using GOG.Models.Custom;
 
-namespace GOG.TaskActivities.Download.Dependencies.Validation
-{
-    public class ValidationDownloadSourcesController : IDownloadSourcesController
-    {
-        private IDataController<long> updatedDataController;
-        private IDataController<ProductDownloads> productDownloadsDataController;
-        private IUriResolutionController uriResolutionController;
+//namespace GOG.TaskActivities.Download.Dependencies.Validation
+//{
+//    public class ValidationDownloadSourcesController : IDownloadSourcesController
+//    {
+//        private IDataController<ProductDownloads> productDownloadsDataController;
+//        private IDataController<ProductRoutes> productRoutesDataController;
+//        private IUriResolutionController uriResolutionController;
 
-        private readonly List<string> extensionsWhitelist = new List<string>(4) {
-            ".exe", // Windows
-            ".bin", // Windows
-            ".dmg", // Mac
-            ".sh" // Linux
-        };
+//        private readonly List<string> extensionsWhitelist = new List<string>(4) {
+//            ".exe", // Windows
+//            ".bin", // Windows
+//            ".dmg", // Mac
+//            ".sh" // Linux
+//        };
 
-        public ValidationDownloadSourcesController(
-            IDataController<long> updatedDataController,
-            IDataController<ProductDownloads> productDownloadsDataController,
-            IUriResolutionController uriResolutionController)
-        {
-            this.productDownloadsDataController = productDownloadsDataController;
-            this.uriResolutionController = uriResolutionController;
-        }
+//        public ValidationDownloadSourcesController(
+//            IDataController<long> updatedDataController,
+//            IDataController<ProductDownloads> productDownloadsDataController,
+//            IDataController<ProductRoutes> productRoutesDataController,
+//            IUriResolutionController uriResolutionController)
+//        {
+//            this.productDownloadsDataController = productDownloadsDataController;
+//            this.productRoutesDataController = productRoutesDataController;
+//            this.uriResolutionController = uriResolutionController;
+//        }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
-        {
-            var validationSources = new Dictionary<long, IList<string>>();
+//        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+//        {
+//            var validationSources = new Dictionary<long, IList<string>>();
 
-            //foreach (var id in productDownloadsDataController.EnumerateIds())
-            //{
-            //    var productDownloads = await productDownloadsDataController.GetById(id);
+//            foreach (var id in productDownloadsDataController.EnumerateIds())
+//            {
+//                var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
+//                if (productDownloads == null) continue;
 
-            //    foreach (var downloadEntry in productDownloads.Downloads)
-            //    { 
-            //        // only product files are eligible for validation
-            //        if (downloadEntry.Type != ProductDownloadTypes.ProductFile)
-            //            continue;
+//                var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+//                if (productRoutes == null) continue;
 
-            //        // and among product files only executables are eligible for validation
-            //        if (!extensionsWhitelist.Contains(Path.GetExtension(downloadEntry.SourceUri)))
-            //            continue;
+//                foreach (var downloadEntry in productDownloads.Downloads)
+//                {
+//                    // only product files are eligible for validation
+//                    if (downloadEntry.Type != ProductDownloadTypes.ProductFile)
+//                        continue;
 
-            //        if (!validationSources.ContainsKey(id))
-            //            validationSources.Add(id, new List<string>());
+//                    // trace route for the product file
+//                    var resolvedUri = string.Empty;
 
-            //        validationSources[id].Add(await uriResolutionController.ResolveUri(downloadEntry.SourceUri));
-            //    }
-            //}
+//                    foreach (var route in productRoutes.Routes)
+//                        if (route.Source == downloadEntry.SourceUri)
+//                            resolvedUri = route.Destination;
 
-            return validationSources;
-        }
-    }
-}
+//                    // only executables are eligible for validation
+//                    if (!extensionsWhitelist.Contains(Path.GetExtension(downloadEntry.SourceUri)))
+//                        continue;
+
+//                    if (!validationSources.ContainsKey(id))
+//                        validationSources.Add(id, new List<string>());
+
+//                    validationSources[id].Add(uriResolutionController.ResolveUri(resolvedUri));
+//                }
+//            }
+
+//            return validationSources;
+//        }
+//    }
+//}

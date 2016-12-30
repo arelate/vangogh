@@ -26,13 +26,13 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
             this.imageUriController = imageUriController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
             var productImageSources = new Dictionary<long, IList<string>>();
 
             foreach (var id in updateDataController.EnumerateIds())
             {
-                var productCore = await dataController.GetById(id);
+                var productCore = await dataController.GetByIdAsync(id);
 
                 // not all updated products can be found with all dataControllers
                 if (productCore == null) continue;

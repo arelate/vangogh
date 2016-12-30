@@ -4,7 +4,7 @@ namespace Interfaces.Validation
 {
     public interface IDownloadValidationDataDelegate
     {
-        Task DownloadValidationData(string resolvedUri);
+        Task DownloadValidationDataAsync(string resolvedUri);
     }
 
     public interface IValidationDataDownloadController:

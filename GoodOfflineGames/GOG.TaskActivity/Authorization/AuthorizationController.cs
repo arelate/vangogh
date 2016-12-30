@@ -52,7 +52,7 @@ namespace GOG.TaskActivities.Authorization
             this.consoleController = consoleController;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask("Authorization on GOG.com");
 

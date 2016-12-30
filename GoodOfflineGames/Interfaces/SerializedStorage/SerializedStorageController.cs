@@ -4,12 +4,12 @@ namespace Interfaces.SerializedStorage
 {
     public interface ISerializePushDelegate
     {
-        Task SerializePush<T>(string uri, T data);
+        Task SerializePushAsync<T>(string uri, T data);
     }
 
     public interface IDeserializePullDelegate
     {
-        Task<T> DeserializePull<T>(string uri);
+        Task<T> DeserializePullAsync<T>(string uri);
     }
 
     public interface ISerializedStorageController:

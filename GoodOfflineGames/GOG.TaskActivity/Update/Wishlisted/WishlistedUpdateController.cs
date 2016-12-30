@@ -35,7 +35,7 @@ namespace GOG.TaskActivities.Update.Wishlisted
             this.wishlistedDataController = wishlistedDataController;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask("Request wishlist content");
             var wishlistedContent = await networkController.Get(Uris.Paths.Account.Wishlist);
@@ -76,7 +76,7 @@ namespace GOG.TaskActivities.Update.Wishlisted
                 if (product == null) continue;
                 if (wishlistedDataController.Contains(product.Id)) continue;
 
-                await wishlistedDataController.Update(product.Id);
+                await wishlistedDataController.UpdateAsync(product.Id);
             }
 
             taskReportingController.CompleteTask();

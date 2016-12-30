@@ -19,8 +19,6 @@ namespace GOG.Models.Custom
         public ProductDownloadTypes Type { get; set; }
         [DataMember(Name = "sourceUri")]
         public string SourceUri { get; set; }
-        [DataMember(Name = "resolvedUri")]
-        public string ResolvedUri { get; set; }
         [DataMember(Name = "destination")]
         public string Destination { get; set; }
     }

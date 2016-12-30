@@ -43,14 +43,14 @@ namespace Controllers.Reporting
             consoleController.WriteLine(failureReportTemplate, MessageType.Error, names.Pop(), errorMessage);
         }
 
-        public void ReportProgress(long value, long maxValue, LongToStringFormattingDelegate formattingDelegate = null)
+        public void ReportProgress(long value, long? maxValue, LongToStringFormattingDelegate formattingDelegate = null)
         {
             var formattedValue = formattingDelegate != null ?
                 formattingDelegate(value) :
                 value.ToString();
 
             var formattedMaxValue = formattingDelegate != null ?
-                formattingDelegate(maxValue) :
+                formattingDelegate((long)maxValue) :
                 maxValue.ToString();
 
             if (value.Equals(maxValue)) consoleController.Write(progressCompletedReportTemplate, MessageType.Progress);

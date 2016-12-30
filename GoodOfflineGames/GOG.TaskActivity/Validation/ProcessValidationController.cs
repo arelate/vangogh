@@ -38,7 +38,7 @@ namespace GOG.TaskActivities.Validation
             this.lastKnownValidDataController = lastKnownValidDataController;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask("Validate product files");
 
@@ -49,7 +49,7 @@ namespace GOG.TaskActivities.Validation
             {
                 var productIsValid = true;
 
-                var scheduledValidation = await scheduledValidationDataController.GetById(id);
+                var scheduledValidation = await scheduledValidationDataController.GetByIdAsync(id);
 
                 taskReportingController.StartTask("Validate product {0}/{1}: {2}", 
                     ++counter, 
@@ -76,20 +76,20 @@ namespace GOG.TaskActivities.Validation
                 }
 
                 taskReportingController.StartTask("Remove scheduled validation for product: {0}", scheduledValidation.Title);
-                await scheduledValidationDataController.Remove(scheduledValidation);
+                await scheduledValidationDataController.RemoveAsync(scheduledValidation);
                 taskReportingController.CompleteTask();
 
                 if (productIsValid)
                 {
                     taskReportingController.StartTask("Congratulations, all product files are valid! removing product from updates: {0}", scheduledValidation.Title);
-                    await lastKnownValidDataController.Update(id);
-                    await updatedDataController.Remove(id);
+                    await lastKnownValidDataController.UpdateAsync(id);
+                    await updatedDataController.RemoveAsync(id);
                     taskReportingController.CompleteTask();
                 }
                 else
                 {
                     taskReportingController.StartTask("Unfortunately, some product files failed validation, updating last known valid state: {0}", scheduledValidation.Title);
-                    await lastKnownValidDataController.Remove(id);
+                    await lastKnownValidDataController.RemoveAsync(id);
                     taskReportingController.CompleteTask();
                 }
 

@@ -30,7 +30,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
             this.taskReportingController = taskReportingController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
             var screenshotsSources = new Dictionary<long, IList<string>>();
             var counter = 0;
@@ -42,7 +42,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
             {
                 taskReportingController.StartTask("Process screenshot update {0}/{1}", ++counter, total);
 
-                var screenshot = await screenshotsDataController.GetById(id);
+                var screenshot = await screenshotsDataController.GetByIdAsync(id);
 
                 if (screenshot == null)
                 {
@@ -61,7 +61,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Clear scheduled screenshot updates");
-            await scheduledScreenshotsUpdatesDataController.Remove(scheduledScreenshotsUpdatesDataController.EnumerateIds().ToArray());
+            await scheduledScreenshotsUpdatesDataController.RemoveAsync(scheduledScreenshotsUpdatesDataController.EnumerateIds().ToArray());
             taskReportingController.CompleteTask();
 
             return screenshotsSources;

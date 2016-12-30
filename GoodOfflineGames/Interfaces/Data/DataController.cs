@@ -5,17 +5,17 @@ namespace Interfaces.Data
 {
     public interface ILoadDelegate
     {
-        Task Load();
+        Task LoadAsync();
     }
 
     public interface ISaveDelegate
     {
-        Task Save();
+        Task SaveAsync();
     }
 
     public interface IGetByIdDelegate<Type>
     {
-        Task<Type> GetById(long id);
+        Task<Type> GetByIdAsync(long id);
     }
 
     public interface IEnumerateIdsDelegate
@@ -25,12 +25,12 @@ namespace Interfaces.Data
 
     public interface IUpdateDelegate<Type>
     {
-        Task Update(params Type[] data);
+        Task UpdateAsync(params Type[] data);
     }
 
     public interface IRemoveDelegate<Type>
     {
-        Task Remove(params Type[] data);
+        Task RemoveAsync(params Type[] data);
     }
 
     public interface IContainsDelegate<Type>

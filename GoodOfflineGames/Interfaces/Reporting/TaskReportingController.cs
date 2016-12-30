@@ -12,7 +12,7 @@
 
     public interface IReportProgressDelegate
     {
-        void ReportProgress(long value, long maxValue, LongToStringFormattingDelegate formattingDelegate = null);
+        void ReportProgress(long value, long? maxValue, LongToStringFormattingDelegate formattingDelegate = null);
     }
 
     public interface IReportFailureDelegate

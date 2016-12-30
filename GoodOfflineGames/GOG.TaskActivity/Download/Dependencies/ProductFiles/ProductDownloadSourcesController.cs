@@ -24,13 +24,13 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSources()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 
             foreach (var id in updatedDataController.EnumerateIds())
             {
-                var gameDetails = await gameDetailsDataController.GetById(id);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
                 if (gameDetails == null) continue;
 
                 var downloadSources = GetDownloadSources(gameDetails);

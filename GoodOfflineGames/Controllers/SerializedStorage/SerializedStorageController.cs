@@ -23,7 +23,7 @@ namespace Controllers.SerializedStorage
             this.stringConversionController = stringConversionController;
         }
 
-        public async Task<T> DeserializePull<T>(string uri)
+        public async Task<T> DeserializePullAsync<T>(string uri)
         {
             var serializedData = await storageController.Pull(uri);
             if (stringConversionController != null)
@@ -31,7 +31,7 @@ namespace Controllers.SerializedStorage
             return serializarionController.Deserialize<T>(serializedData);
         }
 
-        public async Task SerializePush<T>(string uri, T data)
+        public async Task SerializePushAsync<T>(string uri, T data)
         {
             var serializedData = serializarionController.Serialize(data);
             if (stringConversionController != null)

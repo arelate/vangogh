@@ -53,7 +53,7 @@ using GOG.TaskActivities.Update.Screenshots;
 using GOG.TaskActivities.Download.Dependencies.ProductImages;
 using GOG.TaskActivities.Download.Dependencies.Screenshots;
 using GOG.TaskActivities.Download.Dependencies.ProductFiles;
-using GOG.TaskActivities.Download.Dependencies.Validation;
+//using GOG.TaskActivities.Download.Dependencies.Validation;
 using GOG.TaskActivities.Download.ProductImages;
 using GOG.TaskActivities.Download.Screenshots;
 using GOG.TaskActivities.Download.ProductFiles;
@@ -131,6 +131,7 @@ namespace GoodOfflineGames
             var throttleController = new ThrottleController(
                 taskReportingController,
                 secondsFormattingController,
+                //0);
                 2 * 60 * 1000);
 
             var imageUriController = new ImageUriController();
@@ -170,6 +171,7 @@ namespace GoodOfflineGames
             var wishlistedDestinationController = new WishlistedDestinationController();
             var updatedDestinationController = new UpdatedDestinationController();
             var productDownloadsDestinationController = new ProductDownloadsDestinationController();
+            var productRoutesDestinationController = new ProductRoutesDestinationController();
             var scheduledScreenshotsUpdatesDestinationController = new ScheduledScreenshotsUpdatesDestinationController();
             var scheduledValidationsDestinationController = new ScheduledValidationsDestinationController();
             var lastKnownValidDestinationController = new LastKnownValidDestinationController();
@@ -248,6 +250,13 @@ namespace GoodOfflineGames
                 collectionController,
                 productDownloadsDestinationController);
 
+            var productRoutesDataController = new DataController<ProductRoutes>(
+                serializedStorageController,
+                DataStoragePolicy.IndexAndItems,
+                productCoreIndexingController,
+                collectionController,
+                productRoutesDestinationController);
+
             var scheduledValidationsDataController = new DataController<ScheduledValidation>(
                 serializedStorageController,
                 DataStoragePolicy.ItemsList,
@@ -309,6 +318,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 scheduledScreenshotsUpdatesDataController,
                 productDownloadsDataController,
+                productRoutesDataController,
                 scheduledValidationsDataController,
                 lastKnownValidDataController);
 
@@ -486,10 +496,11 @@ namespace GoodOfflineGames
 
             var validationUriResolutionController = new ValidationUriResolutionController();
 
-            var validationDownloadSourcesController = new ValidationDownloadSourcesController(
-                updatedDataController,
-                productDownloadsDataController,
-                validationUriResolutionController);
+            //var validationDownloadSourcesController = new ValidationDownloadSourcesController(
+            //    updatedDataController,
+            //    productDownloadsDataController,
+            //    productRoutesDataController,
+            //    validationUriResolutionController);
 
             // schedule download controllers
 
@@ -535,7 +546,9 @@ namespace GoodOfflineGames
             var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 updatedDataController,
                 productDownloadsDataController,
+                productRoutesDataController,
                 scheduledValidationsDataController,
+                networkController,
                 downloadController,
                 productFilesDestinationController,
                 taskReportingController);
@@ -545,6 +558,7 @@ namespace GoodOfflineGames
             var validationDataDownloadController = new ValidationDataDownloadController(
                 validationUriResolutionController,
                 validationDestinationController,
+                networkController,
                 downloadController,
                 taskReportingController);
 
@@ -564,6 +578,7 @@ namespace GoodOfflineGames
             var validationFilesDownloadController = new ValidationFilesDownloadController(
                 updatedDataController,
                 productDownloadsDataController,
+                productRoutesDataController,
                 validationDataDownloadController,
                 taskReportingController);
 
@@ -591,12 +606,15 @@ namespace GoodOfflineGames
                 apiProductUpdateController,
                 gameDetailsUpdateController,
                 screenshotUpdateController,
+
                 updateProductsImagesDownloadsController,
                 updateAccountProductsImagesDownloadsController,
                 updateScreenshotsDownloadsController,
                 updateProductFilesDownloadsController,
                 updateProductExtrasDownloadsController,
+
                 processScheduledDownloadsController,
+
                 validationFilesDownloadController,
                 processValidationController
             };
@@ -604,7 +622,7 @@ namespace GoodOfflineGames
             foreach (var taskActivityController in taskActivityControllers)
                 try
                 {
-                    taskActivityController.ProcessTask().Wait();
+                    taskActivityController.ProcessTaskAsync().Wait();
                     consoleController.WriteLine(string.Empty);
                 }
                 catch (AggregateException ex)

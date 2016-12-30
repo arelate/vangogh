@@ -21,7 +21,7 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
             this.accountProductsDataController = accountProductsDataController;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask("Process new or updated account products");
 
@@ -29,11 +29,11 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
             {
                 if (updatedDataController.Contains(id)) continue;
 
-                var accountProduct = await accountProductsDataController.GetById(id);
+                var accountProduct = await accountProductsDataController.GetByIdAsync(id);
 
                 if (accountProduct.IsNew ||
                     accountProduct.Updates > 0)
-                    await updatedDataController.Update(id);
+                    await updatedDataController.UpdateAsync(id);
             }
 
             taskReportingController.CompleteTask();

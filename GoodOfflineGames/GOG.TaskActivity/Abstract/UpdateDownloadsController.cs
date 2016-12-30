@@ -42,20 +42,20 @@ namespace GOG.TaskActivities.Abstract
             scheduledDownloadTitle = System.Enum.GetName(typeof(ProductDownloadTypes), downloadType);
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask(
                 "Get sources for the type: {0}", 
                 scheduledDownloadTitle);
 
-            var downloadSources = await downloadSourcesController.GetDownloadSources();
+            var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync();
             taskReportingController.CompleteTask();
 
             foreach (var downloadSource in downloadSources)
             {
                 var key = downloadSource.Key;
 
-                ProductCore product = await accountProductsDataController.GetById(key);
+                ProductCore product = await accountProductsDataController.GetByIdAsync(key);
 
                 if (product == null)
                 {
@@ -64,25 +64,24 @@ namespace GOG.TaskActivities.Abstract
                     continue;
                 }
 
-                var productDownloads = await productDownloadsDataController.GetById(product.Id);
+                var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
                 if (productDownloads == null)
                 {
-                    productDownloads = new ProductDownloads();
-                    productDownloads.Id = product.Id;
-                    productDownloads.Title = product.Title;
-                    productDownloads.Downloads = new List<ProductDownloadEntry>();
+                    productDownloads = new ProductDownloads()
+                    {
+                        Id = product.Id,
+                        Title = product.Title,
+                        Downloads = new List<ProductDownloadEntry>()
+                    };
                 }
 
-                var productSourceAlreadyScheduled = false;
+                // purge existing downloads as we'll always be scheduling all files we need to download
+                // and don't want to carry over any previously scheduled files that might not be relevant anymore
+                // (e.g. files that were scheduled, but never downloaded and then removed from data files)
+                productDownloads.Downloads = new List<ProductDownloadEntry>();
 
                 foreach (var source in downloadSource.Value)
                 {
-                    // skip the source if we've already scheduled a download for same id
-                    foreach (var download in productDownloads.Downloads)
-                        if (download.SourceUri == source) productSourceAlreadyScheduled = true;
-
-                    if (productSourceAlreadyScheduled) continue;
-
                     var destinationDirectory = destinationController?.GetDirectory(source);
 
                     taskReportingController.StartTask(
@@ -90,14 +89,15 @@ namespace GOG.TaskActivities.Abstract
                         scheduledDownloadTitle,
                         product.Title);
 
-                    var scheduledDownloadEntry = new ProductDownloadEntry();
-                    scheduledDownloadEntry.Type = downloadType;
-                    scheduledDownloadEntry.SourceUri = source;
-                    scheduledDownloadEntry.Destination = destinationDirectory;
-
+                    var scheduledDownloadEntry = new ProductDownloadEntry()
+                    {
+                        Type = downloadType,
+                        SourceUri = source,
+                        Destination = destinationDirectory
+                    };
                     productDownloads.Downloads.Add(scheduledDownloadEntry);
 
-                    await productDownloadsDataController.Update(productDownloads);
+                    await productDownloadsDataController.UpdateAsync(productDownloads);
 
                     taskReportingController.CompleteTask();
                 }

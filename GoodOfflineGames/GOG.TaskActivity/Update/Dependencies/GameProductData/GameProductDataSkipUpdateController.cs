@@ -17,7 +17,7 @@ namespace GOG.TaskActivities.Update.Dependencies.GameProductData
 
         public async Task<bool> SkipUpdate(long id)
         {
-            var product = await productsDataController.GetById(id);
+            var product = await productsDataController.GetByIdAsync(id);
             return product == null || product.IsComingSoon;
         }
     }

@@ -78,13 +78,13 @@ namespace Controllers.Data
                 destinationController.GetFilename(index.ToString()));
         }
 
-        public async Task<Type> GetById(long id)
+        public async Task<Type> GetByIdAsync(long id)
         {
             switch (dataStoragePolicy)
             {
                 case DataStoragePolicy.IndexAndItems:
                     var dataUri = GetDataUri(id);
-                    return await serializedStorageController.DeserializePull<Type>(dataUri);
+                    return await serializedStorageController.DeserializePullAsync<Type>(dataUri);
                 case DataStoragePolicy.ItemsList:
                     return collectionController.Find(
                         dataItems,
@@ -95,15 +95,15 @@ namespace Controllers.Data
             return default(Type);
         }
 
-        public async Task Load()
+        public async Task LoadAsync()
         {
             switch (dataStoragePolicy)
             {
                 case DataStoragePolicy.IndexAndItems:
-                    dataIndexes = await serializedStorageController.DeserializePull<List<long>>(dataIndexesUri);
+                    dataIndexes = await serializedStorageController.DeserializePullAsync<List<long>>(dataIndexesUri);
                     break;
                 case DataStoragePolicy.ItemsList:
-                    dataItems = await serializedStorageController.DeserializePull<List<Type>>(dataItemsUri);
+                    dataItems = await serializedStorageController.DeserializePullAsync<List<Type>>(dataItemsUri);
                     break;
             }
 
@@ -114,20 +114,20 @@ namespace Controllers.Data
                 dataIndexes.Add(indexingController.GetIndex(item));
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             switch (dataStoragePolicy)
             {
                 case DataStoragePolicy.IndexAndItems:
-                    await serializedStorageController.SerializePush(dataIndexesUri, dataIndexes);
+                    await serializedStorageController.SerializePushAsync(dataIndexesUri, dataIndexes);
                     break;
                 case DataStoragePolicy.ItemsList:
-                    await serializedStorageController.SerializePush(dataItemsUri, dataItems);
+                    await serializedStorageController.SerializePushAsync(dataItemsUri, dataItems);
                     break;
             }
         }
 
-        public async Task Remove(params Type[] data)
+        public async Task RemoveAsync(params Type[] data)
         {
             foreach (var item in data)
             {
@@ -142,10 +142,10 @@ namespace Controllers.Data
                 }
             }
 
-            await Save();
+            await SaveAsync();
         }
 
-        public async Task Update(params Type[] data)
+        public async Task UpdateAsync(params Type[] data)
         {
             foreach (var item in data)
             {
@@ -157,7 +157,7 @@ namespace Controllers.Data
                 {
                     case DataStoragePolicy.IndexAndItems:
                         var dataUri = GetDataUri(index);
-                        await serializedStorageController.SerializePush(dataUri, item);
+                        await serializedStorageController.SerializePushAsync(dataUri, item);
                         break;
                     case DataStoragePolicy.ItemsList:
                         var updated = false;
@@ -172,7 +172,7 @@ namespace Controllers.Data
                 }
             }
 
-            await Save();
+            await SaveAsync();
         }
 
         public IEnumerable<long> EnumerateIds()

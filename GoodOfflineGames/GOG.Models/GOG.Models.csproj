@@ -50,6 +50,7 @@
     <Compile Include="Checksum.cs" />
     <Compile Include="ContentSystemCompatibility.cs" />
     <Compile Include="Currency.cs" />
+    <Compile Include="Custom\ProductRoutes.cs" />
     <Compile Include="Custom\ProductScreenshots.cs" />
     <Compile Include="Custom\ProductDownloadTypes.cs" />
     <Compile Include="Custom\ScheduledValidation.cs" />

@@ -16,7 +16,7 @@ namespace Controllers.Reporting
             this.taskReportingController = taskReportingController;
         }
 
-        public void ReportProgress(long value, long maxValue, LongToStringFormattingDelegate formattingDelegate = null)
+        public void ReportProgress(long value, long? maxValue, LongToStringFormattingDelegate formattingDelegate = null)
         {
             taskReportingController.ReportProgress(value, maxValue, bytesFormattingController.Format);
         }

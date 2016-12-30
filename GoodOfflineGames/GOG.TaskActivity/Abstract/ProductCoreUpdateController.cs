@@ -72,7 +72,7 @@ namespace GOG.TaskActivities.Abstract
             updateTypeDescription = typeof(UpdateType).Name;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             var updateProducts = new List<long>();
 
@@ -102,7 +102,7 @@ namespace GOG.TaskActivities.Abstract
 
             foreach (var id in updateProducts)
             {
-                var product = await listTypeDataController.GetById(id);
+                var product = await listTypeDataController.GetByIdAsync(id);
 
                 taskReportingController.StartTask(
                         "Update {0} {1}/{2}: {3}",
@@ -137,7 +137,7 @@ namespace GOG.TaskActivities.Abstract
                     connectionController?.Connect(data, product);
                     additionalDetailsController?.AddDetails(data, content);
 
-                    await updateTypeDataController.Update(data);
+                    await updateTypeDataController.UpdateAsync(data);
                 }
 
                 throttleController?.Throttle();

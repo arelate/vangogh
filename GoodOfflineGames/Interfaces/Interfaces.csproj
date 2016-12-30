@@ -60,6 +60,7 @@
     <Compile Include="Data\DataController.cs" />
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
+    <Compile Include="Routing\RoutingController.cs" />
     <Compile Include="Settings\Connection.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Throttle\PolitenessController.cs" />

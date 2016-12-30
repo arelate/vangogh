@@ -4,7 +4,7 @@ namespace Interfaces.TaskActivity
 {
     public interface IProcessTaskDelegate
     {
-        Task ProcessTask();
+        Task ProcessTaskAsync();
     }
 
     public interface ITaskActivityController:

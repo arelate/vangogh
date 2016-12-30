@@ -46,7 +46,7 @@ namespace GOG.TaskActivities.Update.PageResult
             this.dataController = dataController;
         }
 
-        public override async Task ProcessTask()
+        public override async Task ProcessTaskAsync()
         {
             taskReportingController.StartTask("Update products from " + Uris.Paths.GetUpdateUri(productType));
             var productsPageResults = await pageResultsController.GetPageResults();
@@ -56,7 +56,7 @@ namespace GOG.TaskActivities.Update.PageResult
             taskReportingController.CompleteTask();
 
             taskReportingController.StartTask("Update existing products");
-            await dataController.Update(products.ToArray());
+            await dataController.UpdateAsync(products.ToArray());
             taskReportingController.CompleteTask();
 
             taskReportingController.CompleteTask();

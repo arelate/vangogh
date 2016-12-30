@@ -13,6 +13,7 @@ namespace Controllers.RecycleBin
             IFileController fileController)
         {
             this.recycleBinUri = recycleBinUri;
+            this.fileController = fileController;
         }
 
         public void MoveToRecycleBin(string uri)
