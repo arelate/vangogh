@@ -11,15 +11,17 @@ namespace Controllers.Throttle
         private ITaskReportingController taskReportingController;
         private IFormattingController secondsFormattingController;
         private int delayMilliseconds; // default is 2 minutes
-
+        private long threshold;
 
         public ThrottleController(
             ITaskReportingController taskReportingController,
             IFormattingController secondsFormattingController,
-            int delayMilliseconds = 1000 * 60 * 2) 
+            long threshold,
+            int delayMilliseconds = 1000 * 60 * 2)
         {
             this.taskReportingController = taskReportingController;
             this.secondsFormattingController = secondsFormattingController;
+            this.threshold = threshold;
             this.delayMilliseconds = delayMilliseconds;
         }
 
@@ -30,6 +32,11 @@ namespace Controllers.Throttle
                 secondsFormattingController?.Format(delayMilliseconds / 1000));
             Thread.Sleep(delayMilliseconds);
             taskReportingController?.CompleteTask();
+        }
+
+        public long Threshold
+        {
+            get { return threshold; }
         }
     }
 }

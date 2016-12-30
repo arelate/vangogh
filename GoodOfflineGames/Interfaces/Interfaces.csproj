@@ -63,7 +63,7 @@
     <Compile Include="Routing\RoutingController.cs" />
     <Compile Include="Settings\Connection.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
-    <Compile Include="Throttle\PolitenessController.cs" />
+    <Compile Include="Throttle\ThrottleController.cs" />
     <Compile Include="ProductTypes\ProductTypes.cs" />
     <Compile Include="Reporting\DownloadReportingController.cs" />
     <Compile Include="Reporting\TaskReportingController.cs" />

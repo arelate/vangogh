@@ -74,7 +74,7 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTaskAsync()
         {
-            var updateProducts = new List<long>();
+            var updatedProducts = new List<long>();
 
             taskReportingController.StartTask("Enumerate missing data");
 
@@ -84,7 +84,7 @@ namespace GOG.TaskActivities.Abstract
                     await skipUpdateController.SkipUpdate(id)) continue;
 
                 if (!updateTypeDataController.ContainsId(id))
-                    updateProducts.Add(id);
+                    updatedProducts.Add(id);
             }
 
             taskReportingController.CompleteTask();
@@ -92,7 +92,7 @@ namespace GOG.TaskActivities.Abstract
             taskReportingController.StartTask("Enumerate required data updates");
 
             if (requiredUpdatesController != null)
-                updateProducts.AddRange(requiredUpdatesController.GetRequiredUpdates());
+                updatedProducts.AddRange(requiredUpdatesController.GetRequiredUpdates());
 
             taskReportingController.CompleteTask();
 
@@ -100,7 +100,7 @@ namespace GOG.TaskActivities.Abstract
 
             var currentProduct = 0;
 
-            foreach (var id in updateProducts)
+            foreach (var id in updatedProducts)
             {
                 var product = await listTypeDataController.GetByIdAsync(id);
 
@@ -108,7 +108,7 @@ namespace GOG.TaskActivities.Abstract
                         "Update {0} {1}/{2}: {3}",
                         updateTypeDescription,
                         ++currentProduct,
-                        updateProducts.Count,
+                        updatedProducts.Count,
                         product.Title);
 
                 var uri = string.Format(
@@ -140,7 +140,11 @@ namespace GOG.TaskActivities.Abstract
                     await updateTypeDataController.UpdateAsync(data);
                 }
 
-                throttleController?.Throttle();
+                // don't throttle if there are less elements than we've set throttling threshold to
+                // if throttle - do it for all iterations, but the very last one
+                if (updatedProducts.Count > throttleController?.Threshold &&
+                    id != updatedProducts[updatedProducts.Count - 1])
+                    throttleController?.Throttle();
 
                 taskReportingController.CompleteTask();
             }

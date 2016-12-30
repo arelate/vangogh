@@ -132,7 +132,7 @@ namespace GoodOfflineGames
             var throttleController = new ThrottleController(
                 taskReportingController,
                 secondsFormattingController,
-                //0);
+                20, // don't throttle if less than 20 items
                 2 * 60 * 1000);
 
             var imageUriController = new ImageUriController();

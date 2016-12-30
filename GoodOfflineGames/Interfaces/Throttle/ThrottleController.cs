@@ -5,8 +5,14 @@
         void Throttle();
     }
 
+    public interface IThresholdProperty
+    {
+        long Threshold { get; }
+    }
+
     public interface IThrottleController:
-        IThrottleDelegate
+        IThrottleDelegate,
+        IThresholdProperty
     {
         // ...
     }
