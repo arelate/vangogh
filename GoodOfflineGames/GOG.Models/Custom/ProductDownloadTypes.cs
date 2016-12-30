@@ -5,6 +5,7 @@
         Image,
         Screenshot,
         ProductFile,
+        Validation,
         Extra
     }
 }

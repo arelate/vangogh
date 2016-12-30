@@ -50,6 +50,7 @@
     <Compile Include="Download\Dependencies\ProductImages\AccountProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\Screenshots\ScreenshotsDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\Validation\ValidationDownloadSourcesController.cs" />
+    <Compile Include="Download\Validation\UpdateValidationDownloadsController.cs" />
     <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
     <Compile Include="Abstract\UpdateDownloadsController.cs" />
     <Compile Include="Download\Processing\ProcessScheduledDownloadsController.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
     <Compile Include="Update\Wishlisted\WishlistedUpdateController.cs" />
     <Compile Include="Validation\ProcessValidationController.cs" />
-    <Compile Include="Validation\ValidationFilesDownloadController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj">

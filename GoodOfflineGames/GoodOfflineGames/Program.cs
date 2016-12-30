@@ -53,10 +53,11 @@ using GOG.TaskActivities.Update.Screenshots;
 using GOG.TaskActivities.Download.Dependencies.ProductImages;
 using GOG.TaskActivities.Download.Dependencies.Screenshots;
 using GOG.TaskActivities.Download.Dependencies.ProductFiles;
-//using GOG.TaskActivities.Download.Dependencies.Validation;
+using GOG.TaskActivities.Download.Dependencies.Validation;
 using GOG.TaskActivities.Download.ProductImages;
 using GOG.TaskActivities.Download.Screenshots;
 using GOG.TaskActivities.Download.ProductFiles;
+using GOG.TaskActivities.Download.Validation;
 using GOG.TaskActivities.Download.Processing;
 
 using GOG.TaskActivities.Validation;
@@ -257,13 +258,6 @@ namespace GoodOfflineGames
                 collectionController,
                 productRoutesDestinationController);
 
-            var scheduledValidationsDataController = new DataController<ScheduledValidation>(
-                serializedStorageController,
-                DataStoragePolicy.ItemsList,
-                productCoreIndexingController,
-                collectionController,
-                scheduledValidationsDestinationController);
-
             var lastKnownValidDataController = new DataController<long>(
                 serializedStorageController,
                 DataStoragePolicy.ItemsList,
@@ -319,7 +313,6 @@ namespace GoodOfflineGames
                 scheduledScreenshotsUpdatesDataController,
                 productDownloadsDataController,
                 productRoutesDataController,
-                scheduledValidationsDataController,
                 lastKnownValidDataController);
 
             #endregion
@@ -496,11 +489,11 @@ namespace GoodOfflineGames
 
             var validationUriResolutionController = new ValidationUriResolutionController();
 
-            //var validationDownloadSourcesController = new ValidationDownloadSourcesController(
-            //    updatedDataController,
-            //    productDownloadsDataController,
-            //    productRoutesDataController,
-            //    validationUriResolutionController);
+            var validationDownloadSourcesController = new ValidationDownloadSourcesController(
+                updatedDataController,
+                productDownloadsDataController,
+                productRoutesDataController,
+                validationUriResolutionController);
 
             // schedule download controllers
 
@@ -543,11 +536,15 @@ namespace GoodOfflineGames
 
             // downloads processing
 
-            var processScheduledDownloadsController = new ProcessScheduledDownloadsController(
+            var imagesFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
+                new ProductDownloadTypes[4] {
+                    ProductDownloadTypes.Image,
+                    ProductDownloadTypes.Screenshot,
+                    ProductDownloadTypes.ProductFile,
+                    ProductDownloadTypes.Extra},
                 updatedDataController,
                 productDownloadsDataController,
                 productRoutesDataController,
-                scheduledValidationsDataController,
                 networkController,
                 downloadController,
                 productFilesDestinationController,
@@ -555,11 +552,23 @@ namespace GoodOfflineGames
 
             // validation controllers
 
-            var validationDataDownloadController = new ValidationDataDownloadController(
-                validationUriResolutionController,
+            var updateValidationDownloadsController = new UpdateValidationDownloadsController(
+                ProductDownloadTypes.Validation,
+                validationDownloadSourcesController,
                 validationDestinationController,
+                productDownloadsDataController,
+                accountProductsDataController,
+                taskReportingController);
+
+            var validationProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
+                new ProductDownloadTypes[1] {
+                    ProductDownloadTypes.Validation},
+                updatedDataController,
+                productDownloadsDataController,
+                productRoutesDataController,
                 networkController,
                 downloadController,
+                productFilesDestinationController,
                 taskReportingController);
 
             var byteToStringConversionController = new BytesToStringConvertionController();
@@ -575,19 +584,13 @@ namespace GoodOfflineGames
                 byteToStringConversionController,
                 validationReportingController);
 
-            var validationFilesDownloadController = new ValidationFilesDownloadController(
+            var processValidationController = new ProcessValidationController(
+                productFilesDestinationController,
+                validationController,
                 updatedDataController,
                 productDownloadsDataController,
                 productRoutesDataController,
-                validationDataDownloadController,
-                taskReportingController);
-
-            var processValidationController = new ProcessValidationController(
-                gogUriDestinationController,
-                validationController,
-                updatedDataController,
                 lastKnownValidDataController,
-                scheduledValidationsDataController,
                 taskReportingController);
 
             #endregion
@@ -596,8 +599,11 @@ namespace GoodOfflineGames
 
             var taskActivityControllers = new List<ITaskActivityController>()
             {
+                // load initial data
                 loadDataController,
+                // authorize
                 authorizationController,
+                // data updates
                 productsUpdateController,
                 accountProductsUpdateController,
                 newUpdatedAccountProductsController,
@@ -606,16 +612,19 @@ namespace GoodOfflineGames
                 apiProductUpdateController,
                 gameDetailsUpdateController,
                 screenshotUpdateController,
-
+                // schedule downloads
                 updateProductsImagesDownloadsController,
                 updateAccountProductsImagesDownloadsController,
                 updateScreenshotsDownloadsController,
                 updateProductFilesDownloadsController,
                 updateProductExtrasDownloadsController,
-
-                processScheduledDownloadsController,
-
-                validationFilesDownloadController,
+                // actually download images, files
+                imagesFilesProcessScheduledDownloadsController,
+                // schedule validation downloads
+                updateValidationDownloadsController,
+                // actually download validation
+                validationProcessScheduledDownloadsController,
+                // process validation
                 processValidationController
             };
 

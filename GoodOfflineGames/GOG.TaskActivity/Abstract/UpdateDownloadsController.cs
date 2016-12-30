@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.Reporting;
 using Interfaces.DownloadSources;
@@ -75,10 +76,12 @@ namespace GOG.TaskActivities.Abstract
                     };
                 }
 
-                // purge existing downloads as we'll always be scheduling all files we need to download
+                // purge existing downloads for this download type as we'll always be scheduling all files we need to download
                 // and don't want to carry over any previously scheduled files that might not be relevant anymore
                 // (e.g. files that were scheduled, but never downloaded and then removed from data files)
-                productDownloads.Downloads = new List<ProductDownloadEntry>();
+                var existingDownloadsOfType = productDownloads.Downloads.FindAll(d => d.Type == downloadType).ToArray();
+                foreach (var download in existingDownloadsOfType)
+                    productDownloads.Downloads.Remove(download);
 
                 foreach (var source in downloadSource.Value)
                 {

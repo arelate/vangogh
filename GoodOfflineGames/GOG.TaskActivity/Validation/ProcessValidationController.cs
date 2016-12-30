@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
 
@@ -18,15 +19,17 @@ namespace GOG.TaskActivities.Validation
         private IDestinationController destinationController;
         private IValidationController validationController;
         private IDataController<long> updatedDataController;
+        private IDataController<ProductDownloads> productDownloadsDataController;
+        private IDataController<ProductRoutes> productRoutesDataController;
         private IDataController<long> lastKnownValidDataController;
-        private IDataController<ScheduledValidation> scheduledValidationDataController;
 
         public ProcessValidationController(
             IDestinationController destinationController,
             IValidationController validationController,
             IDataController<long> updatedDataController,
+            IDataController<ProductDownloads> productDownloadsDataController,
+            IDataController<ProductRoutes> productRoutesDataController,
             IDataController<long> lastKnownValidDataController,
-            IDataController<ScheduledValidation> scheduledValidationDataController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
@@ -34,7 +37,8 @@ namespace GOG.TaskActivities.Validation
             this.validationController = validationController;
 
             this.updatedDataController = updatedDataController;
-            this.scheduledValidationDataController = scheduledValidationDataController;
+            this.productDownloadsDataController = productDownloadsDataController;
+            this.productRoutesDataController = productRoutesDataController;
             this.lastKnownValidDataController = lastKnownValidDataController;
         }
 
@@ -42,58 +46,72 @@ namespace GOG.TaskActivities.Validation
         {
             taskReportingController.StartTask("Validate product files");
 
-            var scheduledValidationIds = scheduledValidationDataController.EnumerateIds().ToArray();
             var counter = 0;
 
-            foreach (var id in scheduledValidationIds)
+            var updatedProducts = updatedDataController.EnumerateIds();
+
+            foreach (var id in updatedProducts)
             {
                 var productIsValid = true;
 
-                var scheduledValidation = await scheduledValidationDataController.GetByIdAsync(id);
+                var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
+                if (productDownloads == null) continue;
 
-                taskReportingController.StartTask("Validate product {0}/{1}: {2}", 
-                    ++counter, 
-                    scheduledValidationIds.Length, 
-                    scheduledValidation.Title);
+                var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+                if (productRoutes == null) continue;
 
-                foreach (var file in scheduledValidation.Files)
+                taskReportingController.StartTask("Validate product {0}/{1}: {2}",
+                    ++counter,
+                    updatedProducts.Count(),
+                    productDownloads.Title);
+
+                foreach (var download in productDownloads.Downloads)
                 {
+                    if (download.Type != ProductDownloadTypes.ProductFile)
+                        continue;
+
+                    var resolvedUri = string.Empty;
+                    foreach (var route in productRoutes.Routes)
+                        if (route.Source == download.SourceUri)
+                        {
+                            resolvedUri = route.Destination;
+                            break;
+                        }
+
+                    // use directory from source and file from resolved URI
+                    var localFile = Path.Combine(
+                        destinationController.GetDirectory(download.SourceUri),
+                        destinationController.GetFilename(resolvedUri));
+
                     try
                     {
-                        taskReportingController.StartTask("Validate product file: {0}", file);
-                        await validationController.Validate(file);
+                        taskReportingController.StartTask("Validate product file: {0}", localFile);
+                        await validationController.Validate(localFile);
                         productIsValid &= true;
+                        taskReportingController.CompleteTask();
                     }
                     catch (Exception ex)
                     {
                         taskReportingController.ReportFailure(ex.Message);
                         productIsValid &= false;
                     }
-                    finally
-                    {
-                        taskReportingController.CompleteTask();
-                    }
                 }
 
-                taskReportingController.StartTask("Remove scheduled validation for product: {0}", scheduledValidation.Title);
-                await scheduledValidationDataController.RemoveAsync(scheduledValidation);
                 taskReportingController.CompleteTask();
 
                 if (productIsValid)
                 {
-                    taskReportingController.StartTask("Congratulations, all product files are valid! removing product from updates: {0}", scheduledValidation.Title);
+                    taskReportingController.StartTask("Congratulations, all product files are valid! removing product from updates: {0}", productDownloads.Title);
                     await lastKnownValidDataController.UpdateAsync(id);
                     await updatedDataController.RemoveAsync(id);
                     taskReportingController.CompleteTask();
                 }
                 else
                 {
-                    taskReportingController.StartTask("Unfortunately, some product files failed validation, updating last known valid state: {0}", scheduledValidation.Title);
+                    taskReportingController.StartTask("Unfortunately, some product files failed validation, updating last known valid state: {0}", productDownloads.Title);
                     await lastKnownValidDataController.RemoveAsync(id);
                     taskReportingController.CompleteTask();
                 }
-
-                taskReportingController.CompleteTask();
             }
 
             taskReportingController.CompleteTask();

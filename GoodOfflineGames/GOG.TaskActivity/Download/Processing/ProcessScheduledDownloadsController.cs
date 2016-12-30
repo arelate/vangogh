@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using System.IO;
 
 using Interfaces.Reporting;
 using Interfaces.Download;
@@ -19,29 +18,29 @@ namespace GOG.TaskActivities.Download.Processing
 {
     public class ProcessScheduledDownloadsController : TaskActivityController
     {
+        private ProductDownloadTypes[] downloadTypesFilter;
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<ProductRoutes> productRoutesDataController;
-        private IDataController<ScheduledValidation> scheduledValidationsDataController;
         private INetworkController networkController;
         private IDownloadController downloadController;
         private IDestinationController destinationController;
 
         public ProcessScheduledDownloadsController(
+            ProductDownloadTypes[] downloadTypesFilter,
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<ProductRoutes> productRoutesDataController,
-            IDataController<ScheduledValidation> scheduledValidationsDataController,
             INetworkController networkController,
             IDownloadController downloadController,
             IDestinationController destinationController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
+            this.downloadTypesFilter = downloadTypesFilter;
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.productRoutesDataController = productRoutesDataController;
-            this.scheduledValidationsDataController = scheduledValidationsDataController;
             this.networkController = networkController;
             this.downloadController = downloadController;
             this.destinationController = destinationController;
@@ -82,6 +81,8 @@ namespace GOG.TaskActivities.Download.Processing
                 {
                     var entry = downloadEntries[ii];
 
+                    if (!downloadTypesFilter.Contains(entry.Type)) continue;
+
                     taskReportingController.StartTask(
                         "Download entry {0}/{1}: {2}",
                         ii + 1,
@@ -104,6 +105,7 @@ namespace GOG.TaskActivities.Download.Processing
                                 {
                                     route.Destination = resolvedUri;
                                     existingRouteUpdated = true;
+                                    break;
                                 }
 
                             if (!existingRouteUpdated)
@@ -111,7 +113,6 @@ namespace GOG.TaskActivities.Download.Processing
                                 {
                                     Source = entry.SourceUri,
                                     Destination = resolvedUri
-
                                 });
 
                             await productRoutesDataController.UpdateAsync(productRoutes);
@@ -126,40 +127,12 @@ namespace GOG.TaskActivities.Download.Processing
 
                     taskReportingController.CompleteTask();
 
-                    // schedule validation for downloaded file
-                    if (entry.Type == ProductDownloadTypes.ProductFile)
-                    {
-                        taskReportingController.StartTask("Schedule validation for downloaded file");
+                    //taskReportingController.StartTask("Remove successfully downloaded scheduled entry");
 
-                        var scheduledValidation = await scheduledValidationsDataController.GetByIdAsync(id);
-                        if (scheduledValidation == null)
-                        {
-                            scheduledValidation = new ScheduledValidation()
-                            {
-                                Id = productDownloads.Id,
-                                Title = productDownloads.Title,
-                                Files = new List<string>()
-                            };
-                        }
+                    //productDownloads.Downloads.Remove(entry);
+                    //await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                        var filePath = Path.Combine(entry.Destination,
-                            destinationController.GetFilename(resolvedUri));
-
-                        if (!scheduledValidation.Files.Contains(filePath))
-                        {
-                            scheduledValidation.Files.Add(filePath);
-                            await scheduledValidationsDataController.UpdateAsync(scheduledValidation);
-                        }
-
-                        taskReportingController.CompleteTask();
-                    }
-
-                    taskReportingController.StartTask("Remove successfully downloaded scheduled entry");
-
-                    productDownloads.Downloads.Remove(entry);
-                    await productDownloadsDataController.UpdateAsync(productDownloads);
-
-                    taskReportingController.CompleteTask();
+                    //taskReportingController.CompleteTask();
                 }
             }
 
