@@ -14,13 +14,14 @@ namespace GOG.TaskActivities.Download.Screenshots
     public class UpdateScreenshotsDownloadsController : UpdateDownloadsController
     {
         public UpdateScreenshotsDownloadsController(
+            ProductDownloadTypes downloadType,
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             ITaskReportingController taskReportingController) :
             base(
-                ProductDownloadTypes.Screenshot,
+                downloadType,
                 downloadSourcesController,
                 destinationController,
                 productDownloadsDataController,

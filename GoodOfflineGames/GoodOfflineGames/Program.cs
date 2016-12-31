@@ -504,6 +504,7 @@ namespace GoodOfflineGames
             // schedule download controllers
 
             var updateProductsImagesDownloadsController = new UpdateImagesDownloadsController(
+                ProductDownloadTypes.Image,
                 productsImagesDownloadSourcesController,
                 imagesDestinationController,
                 productDownloadsDataController,
@@ -511,6 +512,7 @@ namespace GoodOfflineGames
                 taskReportingController);
 
             var updateAccountProductsImagesDownloadsController = new UpdateImagesDownloadsController(
+                ProductDownloadTypes.Image,
                 accountProductsImagesDownloadSourcesController,
                 imagesDestinationController,
                 productDownloadsDataController,
@@ -518,6 +520,7 @@ namespace GoodOfflineGames
                 taskReportingController);
 
             var updateScreenshotsDownloadsController = new UpdateScreenshotsDownloadsController(
+                ProductDownloadTypes.Screenshot,
                 screenshotsDownloadSourcesController,
                 screenshotsDestinationController,
                 productDownloadsDataController,

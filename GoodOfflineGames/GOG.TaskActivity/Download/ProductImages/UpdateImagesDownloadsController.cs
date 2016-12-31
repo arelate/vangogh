@@ -14,13 +14,14 @@ namespace GOG.TaskActivities.Download.ProductImages
     public class UpdateImagesDownloadsController : UpdateDownloadsController
     {
         public UpdateImagesDownloadsController(
+            ProductDownloadTypes downloadType,
             IDownloadSourcesController downloadSourcesController,
             IDestinationController destinationController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             ITaskReportingController taskReportingController) :
             base(
-                ProductDownloadTypes.Image,
+                downloadType,
                 downloadSourcesController, 
                 destinationController,
                 productDownloadsDataController,
