@@ -597,37 +597,36 @@ namespace GoodOfflineGames
 
             #region TACs Execution
 
-            var taskActivityControllers = new List<ITaskActivityController>()
-            {
-                // load initial data
-                loadDataController,
-                // authorize
-                authorizationController,
-                //// data updates
-                //productsUpdateController,
-                //accountProductsUpdateController,
-                //newUpdatedAccountProductsController,
-                //wishlistedUpdateController,
-                //// product/account product dependent data updates
-                //gameProductDataUpdateController,
-                //apiProductUpdateController,
-                //gameDetailsUpdateController,
-                //screenshotUpdateController,
-                //// schedule downloads
-                //updateProductsImagesDownloadsController,
-                //updateAccountProductsImagesDownloadsController,
-                //updateScreenshotsDownloadsController,
-                //updateProductFilesDownloadsController,
-                //updateProductExtrasDownloadsController,
-                // actually download images, files
-                //imagesFilesProcessScheduledDownloadsController,
-                // schedule validation downloads
-                updateValidationDownloadsController,
-                // actually download validation
-                validationProcessScheduledDownloadsController,
-                // process validation
-                processValidationController
-            };
+            var taskActivityControllers = new List<ITaskActivityController>();
+
+            // load initial data
+            taskActivityControllers.Add(loadDataController);
+            // authorize
+            taskActivityControllers.Add(authorizationController);
+            // data updates
+            taskActivityControllers.Add(productsUpdateController);
+            taskActivityControllers.Add(accountProductsUpdateController);
+            taskActivityControllers.Add(newUpdatedAccountProductsController);
+            taskActivityControllers.Add(wishlistedUpdateController);
+            // product/account product dependent data updates
+            taskActivityControllers.Add(gameProductDataUpdateController);
+            taskActivityControllers.Add(apiProductUpdateController);
+            taskActivityControllers.Add(gameDetailsUpdateController);
+            taskActivityControllers.Add(screenshotUpdateController);
+            // schedule downloads
+            taskActivityControllers.Add(updateProductsImagesDownloadsController);
+            taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
+            taskActivityControllers.Add(updateScreenshotsDownloadsController);
+            taskActivityControllers.Add(updateProductFilesDownloadsController);
+            taskActivityControllers.Add(updateProductExtrasDownloadsController);
+            // actually download images, files
+            taskActivityControllers.Add(imagesFilesProcessScheduledDownloadsController);
+            // schedule validation downloads
+            taskActivityControllers.Add(updateValidationDownloadsController);
+            // actually download validation
+            taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+            // process validation
+            taskActivityControllers.Add(processValidationController);
 
             foreach (var taskActivityController in taskActivityControllers)
                 try
