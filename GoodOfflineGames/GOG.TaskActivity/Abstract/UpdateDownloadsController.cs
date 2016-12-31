@@ -8,9 +8,9 @@ using Interfaces.Destination;
 using Interfaces.Data;
 
 using Models.ProductCore;
+using Models.ProductDownloads;
 
 using GOG.Models;
-using GOG.Models.Custom;
 
 namespace GOG.TaskActivities.Abstract
 {

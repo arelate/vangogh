@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Interfaces.DownloadSources;
 using Interfaces.UriResolution;
 using Interfaces.Data;
+using Interfaces.Routing;
 
-using GOG.Models.Custom;
+using Models.ProductDownloads;
 
 namespace GOG.TaskActivities.Download.Dependencies.Validation
 {
@@ -14,8 +15,8 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
     {
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDataController<ProductRoutes> productRoutesDataController;
         private IUriResolutionController uriResolutionController;
+        private IRoutingController routingController;
 
         private readonly List<string> extensionsWhitelist = new List<string>(4) {
             ".exe", // Windows
@@ -27,12 +28,12 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
         public ValidationDownloadSourcesController(
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<ProductRoutes> productRoutesDataController,
+            IRoutingController routingController,
             IUriResolutionController uriResolutionController)
         {
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
-            this.productRoutesDataController = productRoutesDataController;
+            this.routingController = routingController;
             this.uriResolutionController = uriResolutionController;
         }
 
@@ -45,9 +46,6 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
-                var productRoutes = await productRoutesDataController.GetByIdAsync(id);
-                if (productRoutes == null) continue;
-
                 foreach (var downloadEntry in productDownloads.Downloads)
                 {
                     // only product files are eligible for validation
@@ -55,14 +53,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                         continue;
 
                     // trace route for the product file
-                    var resolvedUri = string.Empty;
-
-                    foreach (var route in productRoutes.Routes)
-                        if (route.Source == downloadEntry.SourceUri)
-                        {
-                            resolvedUri = route.Destination;
-                            break;
-                        }
+                    var resolvedUri = await routingController.TraceRouteAsync(id, downloadEntry.SourceUri);
 
                     // only executables are eligible for validation
                     if (!extensionsWhitelist.Contains(Path.GetExtension(resolvedUri)))

@@ -3,8 +3,9 @@ using Interfaces.Reporting;
 using Interfaces.Destination;
 using Interfaces.Data;
 
+using Models.ProductDownloads;
+
 using GOG.Models;
-using GOG.Models.Custom;
 
 using GOG.TaskActivities.Abstract;
 

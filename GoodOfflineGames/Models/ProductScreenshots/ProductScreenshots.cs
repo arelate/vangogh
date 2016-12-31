@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using Models.ProductCore;
-
-namespace GOG.Models.Custom
+namespace Models.ProductScreenshots
 {
     [DataContract]
-    public class ProductScreenshots: ProductCore
+    public class ProductScreenshots: ProductCore.ProductCore
     {
         [DataMember(Name = "uris")]
         public List<string> Uris { get; set; }

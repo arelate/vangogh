@@ -7,7 +7,7 @@ using Interfaces.ImageUri;
 using Interfaces.Data;
 using Interfaces.Reporting;
 
-using GOG.Models.Custom;
+using Models.ProductScreenshots;
 
 namespace GOG.TaskActivities.Download.Dependencies.Screenshots
 {

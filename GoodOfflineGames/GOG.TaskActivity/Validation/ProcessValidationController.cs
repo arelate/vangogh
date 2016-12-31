@@ -7,10 +7,11 @@ using Interfaces.Reporting;
 using Interfaces.Validation;
 using Interfaces.Destination;
 using Interfaces.Data;
+using Interfaces.Routing;
+
+using Models.ProductDownloads;
 
 using GOG.TaskActivities.Abstract;
-
-using GOG.Models.Custom;
 
 namespace GOG.TaskActivities.Validation
 {
@@ -20,7 +21,7 @@ namespace GOG.TaskActivities.Validation
         private IValidationController validationController;
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDataController<ProductRoutes> productRoutesDataController;
+        private IRoutingController routingController;
         private IDataController<long> lastKnownValidDataController;
 
         public ProcessValidationController(
@@ -28,7 +29,7 @@ namespace GOG.TaskActivities.Validation
             IValidationController validationController,
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<ProductRoutes> productRoutesDataController,
+            IRoutingController routingController,
             IDataController<long> lastKnownValidDataController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
@@ -38,7 +39,7 @@ namespace GOG.TaskActivities.Validation
 
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
-            this.productRoutesDataController = productRoutesDataController;
+            this.routingController = routingController;
             this.lastKnownValidDataController = lastKnownValidDataController;
         }
 
@@ -57,9 +58,6 @@ namespace GOG.TaskActivities.Validation
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
-                var productRoutes = await productRoutesDataController.GetByIdAsync(id);
-                if (productRoutes == null) continue;
-
                 taskReportingController.StartTask("Validate product {0}/{1}: {2}",
                     ++counter,
                     updatedProducts.Count(),
@@ -70,13 +68,7 @@ namespace GOG.TaskActivities.Validation
                     if (download.Type != ProductDownloadTypes.ProductFile)
                         continue;
 
-                    var resolvedUri = string.Empty;
-                    foreach (var route in productRoutes.Routes)
-                        if (route.Source == download.SourceUri)
-                        {
-                            resolvedUri = route.Destination;
-                            break;
-                        }
+                    var resolvedUri = await routingController.TraceRouteAsync(id, download.SourceUri);
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
@@ -86,7 +78,7 @@ namespace GOG.TaskActivities.Validation
                     try
                     {
                         taskReportingController.StartTask("Validate product file: {0}", localFile);
-                        await validationController.Validate(localFile);
+                        await validationController.ValidateAsync(localFile);
                         productIsValid &= true;
                         taskReportingController.CompleteTask();
                     }

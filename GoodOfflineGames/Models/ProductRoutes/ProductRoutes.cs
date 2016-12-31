@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using Models.ProductCore;
-
-namespace GOG.Models.Custom
+namespace Models.ProductRoutes
 {
     [DataContract]
-    public class ProductRoutes: ProductCore
+    public class ProductRoutes: ProductCore.ProductCore
     {
         [DataMember(Name = "routes")]
         public List<ProductRoutesEntry> Routes { get; set; }

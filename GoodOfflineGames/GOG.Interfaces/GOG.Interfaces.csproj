@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorization\AuthorizationController.cs" />
-    <Compile Include="Legacy\ProductFilesDownloadController.cs" />
     <Compile Include="PageResults\PageResultsController.cs" />
     <Compile Include="Extraction\PageResultsExtractionController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

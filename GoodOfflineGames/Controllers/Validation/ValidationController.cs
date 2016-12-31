@@ -38,14 +38,13 @@ namespace Controllers.Validation
             this.byteToStringConversionController = byteToStringConversionController;
             this.validationReportingController = validationReportingController;
 
-            validationXml = new XmlDocument();
-            validationXml.PreserveWhitespace = false;
+            validationXml = new XmlDocument()  { PreserveWhitespace = false };
 
             md5CryptoServiceProvider = new MD5CryptoServiceProvider();
             md5CryptoServiceProvider.Initialize();
         }
 
-        public async Task Validate(string uri)
+        public async Task ValidateAsync(string uri)
         {
             if (string.IsNullOrEmpty(uri))
                 throw new ArgumentNullException("File location is invalid");
@@ -125,7 +124,7 @@ namespace Controllers.Validation
                         ExpectedMD5 = expectedMd5
                     };
 
-                    await ValidateChunk(fileStream, chunk);
+                    await ValidateChunkAsync(fileStream, chunk);
 
                     validationReportingController?.ReportProgress(length, expectedSize);
                 }
@@ -134,7 +133,7 @@ namespace Controllers.Validation
             }
         }
 
-        public async Task ValidateChunk(System.IO.Stream fileStream, IValidationChunk chunk)
+        public async Task ValidateChunkAsync(System.IO.Stream fileStream, IValidationChunk chunk)
         {
             if (!fileStream.CanSeek)
                 throw new Exception("Unable to seek in the file stream");

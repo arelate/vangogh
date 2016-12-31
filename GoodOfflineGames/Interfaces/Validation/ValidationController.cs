@@ -14,12 +14,12 @@ namespace Interfaces.Validation
 
     public interface IValidateChunkDelegate
     {
-        Task ValidateChunk(System.IO.Stream fileStream, IValidationChunk chunk);
+        Task ValidateChunkAsync(System.IO.Stream fileStream, IValidationChunk chunk);
     }
 
     public interface IValidateDelegate
     {
-        Task Validate(string uri);
+        Task ValidateAsync(string uri);
     }
 
     public interface IValidationController:

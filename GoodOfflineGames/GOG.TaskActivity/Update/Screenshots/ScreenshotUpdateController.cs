@@ -11,7 +11,7 @@ using Interfaces.ProductTypes;
 using Models.Uris;
 
 using GOG.Models;
-using GOG.Models.Custom;
+using Models.ProductScreenshots;
 
 using GOG.TaskActivities.Abstract;
 

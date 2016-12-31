@@ -9,8 +9,9 @@ using Interfaces.Download;
 using Interfaces.Data;
 using Interfaces.Destination;
 using Interfaces.Network;
+using Interfaces.Routing;
 
-using GOG.Models.Custom;
+using Models.ProductDownloads;
 
 using GOG.TaskActivities.Abstract;
 
@@ -18,29 +19,29 @@ namespace GOG.TaskActivities.Download.Processing
 {
     public class ProcessScheduledDownloadsController : TaskActivityController
     {
-        private ProductDownloadTypes[] downloadTypesFilter;
+        private ProductDownloadTypes downloadType;
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDataController<ProductRoutes> productRoutesDataController;
+        private IRoutingController routingController;
         private INetworkController networkController;
         private IDownloadController downloadController;
         private IDestinationController destinationController;
 
         public ProcessScheduledDownloadsController(
-            ProductDownloadTypes[] downloadTypesFilter,
+            ProductDownloadTypes downloadType,
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<ProductRoutes> productRoutesDataController,
+            IRoutingController routingController,
             INetworkController networkController,
             IDownloadController downloadController,
             IDestinationController destinationController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
-            this.downloadTypesFilter = downloadTypesFilter;
+            this.downloadType = downloadType;
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
-            this.productRoutesDataController = productRoutesDataController;
+            this.routingController = routingController;
             this.networkController = networkController;
             this.downloadController = downloadController;
             this.destinationController = destinationController;
@@ -57,17 +58,6 @@ namespace GOG.TaskActivities.Download.Processing
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
-                var productRoutes = await productRoutesDataController.GetByIdAsync(id);
-                if (productRoutes == null)
-                {
-                    productRoutes = new ProductRoutes()
-                    {
-                        Id = productDownloads.Id,
-                        Title = productDownloads.Title,
-                        Routes = new List<ProductRoutesEntry>()
-                    };
-                }
-
                 taskReportingController.StartTask(
                         "Process downloads for product {0}/{1}: {2}",
                         ++counter,
@@ -81,7 +71,7 @@ namespace GOG.TaskActivities.Download.Processing
                 {
                     var entry = downloadEntries[ii];
 
-                    if (!downloadTypesFilter.Contains(entry.Type)) continue;
+                    if (downloadType != entry.Type) continue;
 
                     taskReportingController.StartTask(
                         "Download entry {0}/{1}: {2}",
@@ -98,25 +88,11 @@ namespace GOG.TaskActivities.Download.Processing
                             resolvedUri = response.RequestMessage.RequestUri.ToString();
 
                             if (entry.Type == ProductDownloadTypes.ProductFile)
-                            {
-                                var existingRouteUpdated = false;
-                                foreach (var route in productRoutes.Routes)
-                                    if (route.Source == entry.SourceUri)
-                                    {
-                                        route.Destination = resolvedUri;
-                                        existingRouteUpdated = true;
-                                        break;
-                                    }
-
-                                if (!existingRouteUpdated)
-                                    productRoutes.Routes.Add(new ProductRoutesEntry()
-                                    {
-                                        Source = entry.SourceUri,
-                                        Destination = resolvedUri
-                                    });
-
-                                await productRoutesDataController.UpdateAsync(productRoutes);
-                            }
+                                await routingController.UpdateRouteAsync(
+                                    productDownloads.Id, 
+                                    productDownloads.Title, 
+                                    entry.SourceUri, 
+                                    resolvedUri);
 
                             await downloadController.DownloadFileAsync(response, entry.Destination);
                         }

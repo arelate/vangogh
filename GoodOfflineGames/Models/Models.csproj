@@ -43,6 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProductCore\ProductCore.cs" />
+    <Compile Include="ProductDownloads\ProductDownloads.cs" />
+    <Compile Include="ProductDownloads\ProductDownloadTypes.cs" />
+    <Compile Include="ProductRoutes\ProductRoutes.cs" />
+    <Compile Include="ProductScreenshots\ProductScreenshots.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryParameters\QueryParameters.cs" />
     <Compile Include="Separators\Separators.cs" />

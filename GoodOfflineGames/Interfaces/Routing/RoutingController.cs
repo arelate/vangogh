@@ -2,19 +2,19 @@
 
 namespace Interfaces.Routing
 {
-    public interface IAddRouteDelegate
+    public interface IUpdateRouteDelegate
     {
-        Task AddRoute(string source, string destination);
+        Task UpdateRouteAsync(long id, string title, string source, string destination);
     }
 
-    public interface IGetDestinationDelegate
+    public interface ITraceRouteDelegate
     {
-        Task<string> GetDestination(string source);
+        Task<string> TraceRouteAsync(long id, string source);
     }
 
     public interface IRoutingController:
-        IGetDestinationDelegate,
-        IAddRouteDelegate
+        IUpdateRouteDelegate,
+        ITraceRouteDelegate
     {
         // ...
     }

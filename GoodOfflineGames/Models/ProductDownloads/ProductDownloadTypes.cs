@@ -1,4 +1,4 @@
-﻿namespace GOG.Models.Custom
+﻿namespace Models.ProductDownloads
 {
     public enum ProductDownloadTypes
     {
