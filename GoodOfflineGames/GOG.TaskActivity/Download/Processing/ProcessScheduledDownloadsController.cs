@@ -128,12 +128,18 @@ namespace GOG.TaskActivities.Download.Processing
 
                     taskReportingController.CompleteTask();
 
-                    //taskReportingController.StartTask("Remove successfully downloaded scheduled entry");
+                    // there is no value in trying to redownload images/screenshots - so remove them on success
+                    // we won't be removing anything else as it might be used in the later steps
+                    if (entry.Type == ProductDownloadTypes.Image ||
+                        entry.Type == ProductDownloadTypes.Screenshot)
+                    {
+                        taskReportingController.StartTask("Remove successfully downloaded scheduled entry");
 
-                    //productDownloads.Downloads.Remove(entry);
-                    //await productDownloadsDataController.UpdateAsync(productDownloads);
+                        productDownloads.Downloads.Remove(entry);
+                        await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                    //taskReportingController.CompleteTask();
+                        taskReportingController.CompleteTask();
+                    }
                 }
             }
 

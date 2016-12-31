@@ -132,7 +132,7 @@ namespace GoodOfflineGames
             var throttleController = new ThrottleController(
                 taskReportingController,
                 secondsFormattingController,
-                20, // don't throttle if less than 20 items
+                150, // don't throttle if less than N items
                 2 * 60 * 1000);
 
             var imageUriController = new ImageUriController();
@@ -603,23 +603,24 @@ namespace GoodOfflineGames
                 loadDataController,
                 // authorize
                 authorizationController,
-                // data updates
+                //// data updates
                 //productsUpdateController,
                 //accountProductsUpdateController,
                 //newUpdatedAccountProductsController,
                 //wishlistedUpdateController,
+                //// product/account product dependent data updates
                 //gameProductDataUpdateController,
                 //apiProductUpdateController,
                 //gameDetailsUpdateController,
                 //screenshotUpdateController,
-                // schedule downloads
-                updateProductsImagesDownloadsController,
-                updateAccountProductsImagesDownloadsController,
-                updateScreenshotsDownloadsController,
-                updateProductFilesDownloadsController,
-                updateProductExtrasDownloadsController,
+                //// schedule downloads
+                //updateProductsImagesDownloadsController,
+                //updateAccountProductsImagesDownloadsController,
+                //updateScreenshotsDownloadsController,
+                //updateProductFilesDownloadsController,
+                //updateProductExtrasDownloadsController,
                 // actually download images, files
-                imagesFilesProcessScheduledDownloadsController,
+                //imagesFilesProcessScheduledDownloadsController,
                 // schedule validation downloads
                 updateValidationDownloadsController,
                 // actually download validation

@@ -39,6 +39,7 @@ namespace Controllers.Validation
             this.validationReportingController = validationReportingController;
 
             validationXml = new XmlDocument();
+            validationXml.PreserveWhitespace = false;
 
             md5CryptoServiceProvider = new MD5CryptoServiceProvider();
             md5CryptoServiceProvider.Initialize();
