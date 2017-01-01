@@ -8,6 +8,7 @@ using Interfaces.Validation;
 using Interfaces.Destination;
 using Interfaces.Data;
 using Interfaces.Routing;
+using Interfaces.Eligibility;
 
 using Models.ProductDownloads;
 
@@ -22,6 +23,7 @@ namespace GOG.TaskActivities.Validation
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IRoutingController routingController;
+        private IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate;
         private IDataController<long> lastKnownValidDataController;
 
         public ProcessValidationController(
@@ -30,6 +32,7 @@ namespace GOG.TaskActivities.Validation
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IRoutingController routingController,
+            IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate,
             IDataController<long> lastKnownValidDataController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
@@ -40,6 +43,7 @@ namespace GOG.TaskActivities.Validation
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.routingController = routingController;
+            this.validationEligibilityDelegate = validationEligibilityDelegate;
             this.lastKnownValidDataController = lastKnownValidDataController;
         }
 
@@ -65,7 +69,7 @@ namespace GOG.TaskActivities.Validation
 
                 foreach (var download in productDownloads.Downloads)
                 {
-                    if (download.Type != ProductDownloadTypes.ProductFile)
+                    if ((bool) !validationEligibilityDelegate?.IsEligible(download))
                         continue;
 
                     var resolvedUri = await routingController.TraceRouteAsync(id, download.SourceUri);

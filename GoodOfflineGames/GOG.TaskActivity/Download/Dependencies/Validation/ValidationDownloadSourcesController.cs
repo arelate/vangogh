@@ -6,6 +6,7 @@ using Interfaces.DownloadSources;
 using Interfaces.UriResolution;
 using Interfaces.Data;
 using Interfaces.Routing;
+using Interfaces.Eligibility;
 
 using Models.ProductDownloads;
 
@@ -15,8 +16,9 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
     {
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
-        private IUriResolutionController uriResolutionController;
         private IRoutingController routingController;
+        private IEligibilityDelegate<ProductDownloadEntry> entryValidationEligibilityDelegate;
+        private IUriResolutionController uriResolutionController;
 
         private readonly List<string> extensionsWhitelist = new List<string>(4) {
             ".exe", // Windows
@@ -29,6 +31,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IRoutingController routingController,
+            IEligibilityDelegate<ProductDownloadEntry> entryValidationEligibilityDelegate,
             IUriResolutionController uriResolutionController)
         {
             this.updatedDataController = updatedDataController;
@@ -49,7 +52,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                 foreach (var downloadEntry in productDownloads.Downloads)
                 {
                     // only product files are eligible for validation
-                    if (downloadEntry.Type != ProductDownloadTypes.ProductFile)
+                    if ((bool) !entryValidationEligibilityDelegate?.IsEligible(downloadEntry))
                         continue;
 
                     // trace route for the product file

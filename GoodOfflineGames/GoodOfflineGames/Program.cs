@@ -24,6 +24,7 @@ using Controllers.Destination.Data;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
+using Controllers.Eligibility;
 using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
@@ -495,10 +496,15 @@ namespace GoodOfflineGames
 
             var routingController = new RoutingController(productRoutesDataController);
 
+            var validationEligibilityController = new ValidationEligibilityController();
+            var updateRouteEligibilityController = new UpdateRouteEligibilityController();
+            var removeEntryEligibilityController = new RemoveEntryEligibilityController();
+
             var validationDownloadSourcesController = new ValidationDownloadSourcesController(
                 updatedDataController,
                 productDownloadsDataController,
                 routingController,
+                validationEligibilityController,
                 validationUriResolutionController);
 
             // schedule download controllers
@@ -553,6 +559,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
+                null, // updateRouteEligibilityController
+                removeEntryEligibilityController, // removeEntryEligibilityController
                 taskReportingController);
 
             var screenshotsProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -563,6 +571,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
+                null, // updateRouteEligibilityController
+                removeEntryEligibilityController, // removeEntryEligibilityController
                 taskReportingController);
 
             var productFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -573,6 +583,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
+                updateRouteEligibilityController, // updateRouteEligibilityController
+                null, // removeEntryEligibilityController
                 taskReportingController);
 
             var extrasProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -583,6 +595,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
+                updateRouteEligibilityController, // updateRouteEligibilityController
+                null, // removeEntryEligibilityController
                 taskReportingController);
 
             // validation controllers
@@ -603,6 +617,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
+                null, // updateRouteEligibilityController
+                null, // removeEntryEligibilityController
                 taskReportingController);
 
             var byteToStringConversionController = new BytesToStringConvertionController();
@@ -624,6 +640,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 productDownloadsDataController,
                 routingController,
+                validationEligibilityController,
                 lastKnownValidDataController,
                 taskReportingController);
 
