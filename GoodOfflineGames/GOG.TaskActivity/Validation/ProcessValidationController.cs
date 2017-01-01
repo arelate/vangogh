@@ -69,7 +69,7 @@ namespace GOG.TaskActivities.Validation
 
                 foreach (var download in productDownloads.Downloads)
                 {
-                    if ((bool) !validationEligibilityDelegate?.IsEligible(download))
+                    if (!validationEligibilityDelegate.IsEligible(download))
                         continue;
 
                     var resolvedUri = await routingController.TraceRouteAsync(id, download.SourceUri);

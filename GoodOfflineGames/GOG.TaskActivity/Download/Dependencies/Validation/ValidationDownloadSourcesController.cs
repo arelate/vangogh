@@ -31,13 +31,14 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IRoutingController routingController,
-            IEligibilityDelegate<ProductDownloadEntry> entryValidationEligibilityDelegate,
-            IUriResolutionController uriResolutionController)
+            IUriResolutionController uriResolutionController,
+            IEligibilityDelegate<ProductDownloadEntry> entryValidationEligibilityDelegate)
         {
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.routingController = routingController;
             this.uriResolutionController = uriResolutionController;
+            this.entryValidationEligibilityDelegate = entryValidationEligibilityDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
@@ -52,7 +53,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                 foreach (var downloadEntry in productDownloads.Downloads)
                 {
                     // only product files are eligible for validation
-                    if ((bool) !entryValidationEligibilityDelegate?.IsEligible(downloadEntry))
+                    if (!entryValidationEligibilityDelegate.IsEligible(downloadEntry))
                         continue;
 
                     // trace route for the product file

@@ -504,8 +504,8 @@ namespace GoodOfflineGames
                 updatedDataController,
                 productDownloadsDataController,
                 routingController,
-                validationEligibilityController,
-                validationUriResolutionController);
+                validationUriResolutionController,
+                validationEligibilityController);
 
             // schedule download controllers
 
@@ -559,8 +559,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
-                null, // updateRouteEligibilityController
-                removeEntryEligibilityController, // removeEntryEligibilityController
+                updateRouteEligibilityController,
+                removeEntryEligibilityController,
                 taskReportingController);
 
             var screenshotsProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -571,8 +571,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
-                null, // updateRouteEligibilityController
-                removeEntryEligibilityController, // removeEntryEligibilityController
+                updateRouteEligibilityController,
+                removeEntryEligibilityController,
                 taskReportingController);
 
             var productFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -583,8 +583,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
-                updateRouteEligibilityController, // updateRouteEligibilityController
-                null, // removeEntryEligibilityController
+                updateRouteEligibilityController,
+                removeEntryEligibilityController,
                 taskReportingController);
 
             var extrasProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -595,8 +595,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
-                updateRouteEligibilityController, // updateRouteEligibilityController
-                null, // removeEntryEligibilityController
+                updateRouteEligibilityController,
+                removeEntryEligibilityController,
                 taskReportingController);
 
             // validation controllers
@@ -617,8 +617,8 @@ namespace GoodOfflineGames
                 networkController,
                 downloadController,
                 productFilesDestinationController,
-                null, // updateRouteEligibilityController
-                null, // removeEntryEligibilityController
+                updateRouteEligibilityController,
+                removeEntryEligibilityController,
                 taskReportingController);
 
             var byteToStringConversionController = new BytesToStringConvertionController();
@@ -654,6 +654,7 @@ namespace GoodOfflineGames
 
             // load initial data
             taskActivityControllers.Add(loadDataController);
+
             // authorize
             taskActivityControllers.Add(authorizationController);
 
@@ -661,32 +662,34 @@ namespace GoodOfflineGames
 
             #region Data Updates Task Activities
 
-            // data updates
-            taskActivityControllers.Add(productsUpdateController);
-            taskActivityControllers.Add(accountProductsUpdateController);
-            taskActivityControllers.Add(newUpdatedAccountProductsController);
-            taskActivityControllers.Add(wishlistedUpdateController);
-            // product/account product dependent data updates
-            taskActivityControllers.Add(gameProductDataUpdateController);
-            taskActivityControllers.Add(apiProductUpdateController);
-            taskActivityControllers.Add(gameDetailsUpdateController);
-            taskActivityControllers.Add(screenshotUpdateController);
+            //// data updates
+            //taskActivityControllers.Add(productsUpdateController);
+            //taskActivityControllers.Add(accountProductsUpdateController);
+            //taskActivityControllers.Add(newUpdatedAccountProductsController);
+            //taskActivityControllers.Add(wishlistedUpdateController);
+
+            //// product/account product dependent data updates
+            //taskActivityControllers.Add(gameProductDataUpdateController);
+            //taskActivityControllers.Add(apiProductUpdateController);
+            //taskActivityControllers.Add(gameDetailsUpdateController);
+            //taskActivityControllers.Add(screenshotUpdateController);
 
             #endregion
 
             #region Download Task Activities
 
-            // schedule downloads
-            taskActivityControllers.Add(updateProductsImagesDownloadsController);
-            taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
-            taskActivityControllers.Add(updateScreenshotsDownloadsController);
-            taskActivityControllers.Add(updateProductFilesDownloadsController);
-            taskActivityControllers.Add(updateProductExtrasDownloadsController);
-            // actually download images, screenshots, product files, extras
-            taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
-            taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
-            taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
-            taskActivityControllers.Add(extrasProcessScheduledDownloadsController);
+            //// schedule downloads
+            //taskActivityControllers.Add(updateProductsImagesDownloadsController);
+            //taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
+            //taskActivityControllers.Add(updateScreenshotsDownloadsController);
+            //taskActivityControllers.Add(updateProductFilesDownloadsController);
+            //taskActivityControllers.Add(updateProductExtrasDownloadsController);
+
+            //// actually download images, screenshots, product files, extras
+            //taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
+            //taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
+            //taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
+            //taskActivityControllers.Add(extrasProcessScheduledDownloadsController);
 
             #endregion
 
@@ -694,8 +697,10 @@ namespace GoodOfflineGames
 
             // schedule validation downloads
             taskActivityControllers.Add(updateValidationDownloadsController);
+
             // actually download validation
             taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+
             // process validation
             taskActivityControllers.Add(processValidationController);
 

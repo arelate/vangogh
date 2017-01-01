@@ -91,7 +91,7 @@ namespace GOG.TaskActivities.Download.Processing
                         {
                             resolvedUri = response.RequestMessage.RequestUri.ToString();
 
-                            if ((bool) updateRouteEligibilityDelegate?.IsEligible(entry))
+                            if (updateRouteEligibilityDelegate.IsEligible(entry))
                                 await routingController.UpdateRouteAsync(
                                     productDownloads.Id,
                                     productDownloads.Title,
@@ -110,7 +110,7 @@ namespace GOG.TaskActivities.Download.Processing
 
                     // there is no value in trying to redownload images/screenshots - so remove them on success
                     // we won't be removing anything else as it might be used in the later steps
-                    if ((bool) removeEntryEligibilityDelegate?.IsEligible(entry))
+                    if (removeEntryEligibilityDelegate.IsEligible(entry))
                     {
                         taskReportingController.StartTask("Remove successfully downloaded scheduled entry");
 
