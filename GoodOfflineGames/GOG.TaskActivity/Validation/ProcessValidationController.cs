@@ -20,31 +20,34 @@ namespace GOG.TaskActivities.Validation
     {
         private IDestinationController destinationController;
         private IValidationController validationController;
-        private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
+        private IDataController<long> updatedDataController;
+        private IDataController<long> lastKnownValidDataController;
+        private IDataController<long> scheduledCleanupDataController;
         private IRoutingController routingController;
         private IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate;
-        private IDataController<long> lastKnownValidDataController;
 
         public ProcessValidationController(
             IDestinationController destinationController,
             IValidationController validationController,
-            IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
+            IDataController<long> updatedDataController,
+            IDataController<long> lastKnownValidDataController,
+            IDataController<long> scheduledCleanupDataController,
             IRoutingController routingController,
             IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate,
-            IDataController<long> lastKnownValidDataController,
             ITaskReportingController taskReportingController) :
             base(taskReportingController)
         {
             this.destinationController = destinationController;
             this.validationController = validationController;
+            this.productDownloadsDataController = productDownloadsDataController;
 
             this.updatedDataController = updatedDataController;
-            this.productDownloadsDataController = productDownloadsDataController;
+            this.lastKnownValidDataController = lastKnownValidDataController;
+            this.scheduledCleanupDataController = scheduledCleanupDataController;
             this.routingController = routingController;
             this.validationEligibilityDelegate = validationEligibilityDelegate;
-            this.lastKnownValidDataController = lastKnownValidDataController;
         }
 
         public override async Task ProcessTaskAsync()
@@ -97,15 +100,10 @@ namespace GOG.TaskActivities.Validation
 
                 if (productIsValid)
                 {
-                    taskReportingController.StartTask("Congratulations, all product files are valid! removing product from updates: {0}", productDownloads.Title);
+                    taskReportingController.StartTask("Congratulations, all product files are valid! removing product from updates and scheduling cleanup: {0}", productDownloads.Title);
                     await lastKnownValidDataController.UpdateAsync(id);
                     await updatedDataController.RemoveAsync(id);
-                    taskReportingController.CompleteTask();
-                }
-                else
-                {
-                    taskReportingController.StartTask("Unfortunately, some product files failed validation, updating last known valid state: {0}", productDownloads.Title);
-                    await lastKnownValidDataController.RemoveAsync(id);
+                    await scheduledCleanupDataController.UpdateAsync(id);
                     taskReportingController.CompleteTask();
                 }
             }

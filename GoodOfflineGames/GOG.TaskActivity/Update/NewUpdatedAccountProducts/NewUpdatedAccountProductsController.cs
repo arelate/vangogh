@@ -10,14 +10,17 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
     public class NewUpdatedAccountProductsController: TaskActivityController
     {
         private IDataController<long> updatedDataController;
+        private IDataController<long> lastKnownValidDataController;
         private IDataController<AccountProduct> accountProductsDataController;
 
         public NewUpdatedAccountProductsController(
             IDataController<long> updatedDataController,
+            IDataController<long> lastKnownValidDataController,
             IDataController<AccountProduct> accountProductsDataController,
             ITaskReportingController taskReportingController): base(taskReportingController)
         {
             this.updatedDataController = updatedDataController;
+            this.lastKnownValidDataController = lastKnownValidDataController;
             this.accountProductsDataController = accountProductsDataController;
         }
 
@@ -33,7 +36,12 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
 
                 if (accountProduct.IsNew ||
                     accountProduct.Updates > 0)
+                {
                     await updatedDataController.UpdateAsync(id);
+
+                    // since we known the product was updated - remove last known valid state
+                    await lastKnownValidDataController.RemoveAsync(id);
+                }
             }
 
             taskReportingController.CompleteTask();

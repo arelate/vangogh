@@ -17,12 +17,11 @@ namespace Controllers.Routing
             this.productRoutesDataController = productRoutesDataController;
         }
 
-        public async Task<string> TraceRouteAsync(long id, string source)
+        private string TraceProductRoute(List<ProductRoutesEntry> productRoutes, string source)
         {
-            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
             if (productRoutes == null) return string.Empty;
 
-            foreach (var route in productRoutes.Routes)
+            foreach (var route in productRoutes)
             {
                 if (route.Source == source)
                     return route.Destination;
@@ -30,6 +29,25 @@ namespace Controllers.Routing
 
             return string.Empty;
         }
+
+        public async Task<string> TraceRouteAsync(long id, string source)
+        {
+            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+
+            return TraceProductRoute(productRoutes.Routes, source);
+        }
+
+        public async Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources)
+        {
+            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+
+            var destination = new List<string>();
+
+            foreach (var source in sources)
+                destination.Add(TraceProductRoute(productRoutes.Routes, source));
+
+            return destination;
+        } 
 
         public async Task UpdateRouteAsync(long id, string title, string source, string destination)
         {

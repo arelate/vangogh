@@ -1,20 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Interfaces.Routing
 {
-    public interface IUpdateRouteDelegate
+    public interface IUpdateRouteAsyncDelegate
     {
         Task UpdateRouteAsync(long id, string title, string source, string destination);
     }
 
-    public interface ITraceRouteDelegate
+    public interface ITraceRouteAsyncDelegate
     {
         Task<string> TraceRouteAsync(long id, string source);
     }
 
+    public interface ITraceRoutesAsyncDelegate
+    {
+        Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources);
+    }
+
     public interface IRoutingController:
-        IUpdateRouteDelegate,
-        ITraceRouteDelegate
+        IUpdateRouteAsyncDelegate,
+        ITraceRouteAsyncDelegate,
+        ITraceRoutesAsyncDelegate
     {
         // ...
     }

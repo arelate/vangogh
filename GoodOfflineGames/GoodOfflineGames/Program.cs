@@ -60,6 +60,7 @@ using GOG.TaskActivities.Download.Screenshots;
 using GOG.TaskActivities.Download.ProductFiles;
 using GOG.TaskActivities.Download.Validation;
 using GOG.TaskActivities.Download.Processing;
+using GOG.TaskActivities.Cleanup;
 
 using GOG.TaskActivities.Validation;
 
@@ -181,6 +182,7 @@ namespace GoodOfflineGames
             var scheduledScreenshotsUpdatesDestinationController = new ScheduledScreenshotsUpdatesDestinationController();
             var scheduledValidationsDestinationController = new ScheduledValidationsDestinationController();
             var lastKnownValidDestinationController = new LastKnownValidDestinationController();
+            var scheduledCleanupDestinationController = new ScheduledCleanupDestinationController();
 
             var productsDataController = new DataController<Product>(
                 serializedStorageController,
@@ -270,6 +272,13 @@ namespace GoodOfflineGames
                 collectionController,
                 lastKnownValidDestinationController);
 
+            var scheduledCleanupDataController = new DataController<long>(
+                serializedStorageController,
+                DataStoragePolicy.ItemsList,
+                passthroughIndexingController,
+                collectionController,
+                scheduledCleanupDestinationController);
+
             #endregion
 
             #region Settings: Load, Validation
@@ -318,7 +327,8 @@ namespace GoodOfflineGames
                 scheduledScreenshotsUpdatesDataController,
                 productDownloadsDataController,
                 productRoutesDataController,
-                lastKnownValidDataController);
+                lastKnownValidDataController,
+                scheduledCleanupDataController);
 
             #endregion
 
@@ -386,6 +396,7 @@ namespace GoodOfflineGames
 
             var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
                 updatedDataController,
+                lastKnownValidDataController,
                 accountProductsDataController,
                 taskReportingController);
 
@@ -637,11 +648,23 @@ namespace GoodOfflineGames
             var processValidationController = new ProcessValidationController(
                 productFilesDestinationController,
                 validationController,
-                updatedDataController,
                 productDownloadsDataController,
+                updatedDataController,
+                lastKnownValidDataController,
+                scheduledCleanupDataController,
                 routingController,
                 validationEligibilityController,
-                lastKnownValidDataController,
+                taskReportingController);
+
+            #endregion
+
+            #region Cleanup
+
+            var processCleanupController = new ProcessCleanupController(
+                scheduledCleanupDataController,
+                gameDetailsDataController,
+                routingController,
+                productFilesDestinationController,
                 taskReportingController);
 
             #endregion
@@ -678,14 +701,14 @@ namespace GoodOfflineGames
 
             #region Download Task Activities
 
-            //// schedule downloads
+            // schedule downloads
             //taskActivityControllers.Add(updateProductsImagesDownloadsController);
             //taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
             //taskActivityControllers.Add(updateScreenshotsDownloadsController);
             //taskActivityControllers.Add(updateProductFilesDownloadsController);
             //taskActivityControllers.Add(updateProductExtrasDownloadsController);
 
-            //// actually download images, screenshots, product files, extras
+            // actually download images, screenshots, product files, extras
             //taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
             //taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
             //taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
@@ -696,13 +719,16 @@ namespace GoodOfflineGames
             #region Validation Task Activities
 
             // schedule validation downloads
-            taskActivityControllers.Add(updateValidationDownloadsController);
+            //taskActivityControllers.Add(updateValidationDownloadsController);
 
             // actually download validation
-            taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+            //taskActivityControllers.Add(validationProcessScheduledDownloadsController);
 
             // process validation
-            taskActivityControllers.Add(processValidationController);
+            //taskActivityControllers.Add(processValidationController);
+
+            // cleanup
+            taskActivityControllers.Add(processCleanupController);
 
             #endregion
 

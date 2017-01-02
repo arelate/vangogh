@@ -54,6 +54,7 @@
     <Compile Include="Destination\Data\LastKnownValidDestinationController.cs" />
     <Compile Include="Destination\Data\ProductDownloadsDestinationController.cs" />
     <Compile Include="Destination\Data\ProductRoutesDestinationController.cs" />
+    <Compile Include="Destination\Data\ScheduledCleanupDestinationController.cs" />
     <Compile Include="Destination\Data\ScheduledScreenshotsUpdatesDestinationController.cs" />
     <Compile Include="Destination\Data\ScheduledValidationsDestinationController.cs" />
     <Compile Include="Destination\Data\ScreenshotsDestinationController.cs" />
