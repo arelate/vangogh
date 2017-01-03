@@ -696,7 +696,7 @@ namespace GoodOfflineGames
             // product/account product dependent data updates
             //taskActivityControllers.Add(gameProductDataUpdateController);
             //taskActivityControllers.Add(apiProductUpdateController);
-            taskActivityControllers.Add(gameDetailsUpdateController);
+            //taskActivityControllers.Add(gameDetailsUpdateController);
             //taskActivityControllers.Add(screenshotUpdateController);
 
             #endregion
@@ -707,22 +707,22 @@ namespace GoodOfflineGames
             //taskActivityControllers.Add(updateProductsImagesDownloadsController);
             //taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
             //taskActivityControllers.Add(updateScreenshotsDownloadsController);
-            taskActivityControllers.Add(updateProductFilesDownloadsController);
+            //taskActivityControllers.Add(updateProductFilesDownloadsController);
 
             ////actually download images, screenshots, product files, extras
             //taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
             //taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
-            taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
+            //taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
 
             #endregion
 
             #region Validation Task Activities
 
             //// schedule validation downloads
-            taskActivityControllers.Add(updateValidationDownloadsController);
+            //taskActivityControllers.Add(updateValidationDownloadsController);
 
             //// actually download validation
-            taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+            //taskActivityControllers.Add(validationProcessScheduledDownloadsController);
 
             //// process validation
             taskActivityControllers.Add(processValidationController);

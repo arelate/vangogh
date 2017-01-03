@@ -23,19 +23,35 @@ namespace Models.Settings
     [DataContract]
     public class UpdateProperties : IUpdateProperties
     {
-        [DataMember(Name = "everything")]
-        public bool Everything { get; set; }
+        [DataMember(Name = "products")]
+        public bool Products { get; set; }
+        [DataMember(Name = "accountProducts")]
+        public bool AccountProducts { get; set; }
+        [DataMember(Name = "newUpdatedAccountProducts")]
+        public bool NewUpdatedAccountProducts { get; set; }
+        [DataMember(Name = "wishlist")]
+        public bool Wishlist { get; set; }
+        [DataMember(Name = "gameProductData")]
+        public bool GameProductData { get; set; }
+        [DataMember(Name = "apiProducts")]
+        public bool ApiProducts { get; set; }
+        [DataMember(Name = "gameDetails")]
+        public bool GameDetails { get; set; }
+        [DataMember(Name = "Screenshots")]
+        public bool Screenshots { get; set; }
     }
 
     [DataContract]
     public class DownloadProperties : IDownloadProperties
     {
-        [DataMember(Name = "images")]
-        public bool Images { get; set; }
+        [DataMember(Name = "productImages")]
+        public bool ProductImages { get; set; }
+        [DataMember(Name = "accountProductsImages")]
+        public bool AccountProductsImages { get; set; }        
         [DataMember(Name = "screenshots")]
         public bool Screenshots { get; set; }
-        [DataMember(Name = "files")]
-        public bool Files { get; set; }
+        [DataMember(Name = "productFiles")]
+        public bool ProductFiles { get; set; }
         [DataMember(Name = "langugages")]
         public string[] Languages { get; set; }
         [DataMember(Name = "operatingSystems")]
@@ -45,15 +61,17 @@ namespace Models.Settings
     [DataContract]
     public class ValidationProperties : IValidationProperties
     {
-        [DataMember(Name = "afterDownload")]
-        public bool AfterDownload { get; set; }
+        [DataMember(Name = "updated")]
+        public bool Updated { get; set; }
     }
 
     [DataContract]
     public class CleanupProperties : ICleanupProperties
     {
-        [DataMember(Name = "afterDownload")]
-        public bool AfterDownload { get; set; }
+        [DataMember(Name = "directories")]
+        public bool Directories { get; set; }
+        [DataMember(Name = "files")]
+        public bool Files { get; set; }        
     }
 
     [DataContract]

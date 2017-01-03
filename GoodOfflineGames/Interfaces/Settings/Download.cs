@@ -1,18 +1,18 @@
 ﻿namespace Interfaces.Settings
 {
-    public interface IImagesProperty
+    public interface IProductImagesProperty
     {
-        bool Images { get; set; }
+        bool ProductImages { get; set; }
     }
 
-    public interface IScreenshotsProperty
+    public interface IAccountProductsImagesProperty
     {
-        bool Screenshots { get; set; }
+        bool AccountProductsImages {get; set; }
     }
 
-    public interface IFilesProperty
+    public interface IProductFilesProperty
     {
-        bool Files { get; set; }
+        bool ProductFiles { get; set; }
     }
 
     public interface ILanguagesProperty
@@ -26,9 +26,10 @@
     }
 
     public interface IDownloadProperties:
-        IImagesProperty,
+        IProductImagesProperty,
+        IAccountProductsImagesProperty,
         IScreenshotsProperty,
-        IFilesProperty,
+        IProductFilesProperty,
         ILanguagesProperty,
         IOperatingSystemsProperty
     {

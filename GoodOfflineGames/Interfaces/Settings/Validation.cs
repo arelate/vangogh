@@ -1,12 +1,12 @@
 ﻿namespace Interfaces.Settings
 {
-    public interface IAfterDownload
+    public interface IUpdatedProperty
     {
-        bool AfterDownload { get; set; }
+        bool Updated { get; set; }
     }
 
     public interface IValidationProperties:
-        IAfterDownload
+        IUpdatedProperty
     {
         // ...
     }

@@ -1,25 +1,34 @@
 ﻿{
   "connection": {
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14931"
+    "userAgent": ""
   },
   "authentication": {
     "username": "",
     "password": ""
   },
   "update": {
-    "everything": false
+    "products": true,
+	"accountProducts": true,
+	"newUpdatedAccountProducts": true,
+	"wishlist": true,
+	"gameProductData": true,
+	"apiProducts": true,
+	"gameDetails": true,
+	"screenshots": true
   },
   "download": {
-    "images": true,
-    "screenshots": true,
-    "files": true,
+    "productsImages": true,
+	"accountProductsImages": true,
+	"screenshots": true,
+    "productFiles": true,
     "languages": [ "en" ],
     "operatingSystems": [ "Windows", "Mac" ]
   },
   "validation": {
-    "afterDownload": true
+	"updated": true
   },
   "cleanup": {
-    "afterDownload": true
+    "directories": true,
+	"files": true
   }
 }
