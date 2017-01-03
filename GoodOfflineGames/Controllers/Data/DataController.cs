@@ -138,7 +138,7 @@ namespace Controllers.Data
                 {
                     dataIndexes.Remove(index);
                     var dataUri = GetDataUri(index);
-                    recycleBinController?.MoveToRecycleBin(dataUri);
+                    recycleBinController?.MoveFileToRecycleBin(dataUri);
                 }
             }
 

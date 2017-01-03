@@ -1,12 +1,18 @@
 ﻿namespace Interfaces.RecycleBin
 {
-    public interface IMoveToRecycleBinDelegate
+    public interface IMoveFileToRecycleBinDelegate
     {
-        void MoveToRecycleBin(string uri);
+        void MoveFileToRecycleBin(string uri);
+    }
+
+    public interface IMoveDirectoryToRecycleBinDelegate
+    {
+        void MoveDirectoryToRecycleBin(string uri);
     }
 
     public interface IRecycleBinController:
-        IMoveToRecycleBinDelegate
+        IMoveFileToRecycleBinDelegate,
+        IMoveDirectoryToRecycleBinDelegate
     {
         // ...
     }

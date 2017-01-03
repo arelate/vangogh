@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\ProductCoreUpdateController.cs" />
-    <Compile Include="Cleanup\ProcessCleanupController.cs" />
+    <Compile Include="Cleanup\DirectoryCleanupController.cs" />
+    <Compile Include="Cleanup\FilesCleanupController.cs" />
     <Compile Include="Download\Dependencies\ProductFiles\ProductDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductFiles\ProductFilesDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductFiles\ProductExtrasDownloadSourcesController.cs" />

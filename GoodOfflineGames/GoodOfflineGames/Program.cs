@@ -40,6 +40,7 @@ using GOG.Models;
 
 using GOG.Controllers.PageResults;
 using GOG.Controllers.Extraction;
+using GOG.Controllers.Enumeration;
 
 using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
@@ -84,12 +85,13 @@ namespace GoodOfflineGames
 
             var streamController = new StreamController();
             var fileController = new FileController();
+            var directoryController = new DirectoryController();
 
             var recycleBinController = new RecycleBinController(
                 recycleBinUri,
-                fileController);
+                fileController,
+                directoryController);
 
-            var directoryController = new DirectoryController();
             var storageController = new StorageController(
                 streamController,
                 fileController);
@@ -656,16 +658,33 @@ namespace GoodOfflineGames
                 validationEligibilityController,
                 taskReportingController);
 
-            #endregion
-
             #region Cleanup
 
-            var processCleanupController = new ProcessCleanupController(
-                scheduledCleanupDataController,
+            var gameDetailsDirectoryEnumerationController = new GameDetailsDirectoryEnumerationController(
+                gameDetailsDataController, 
+                productFilesDestinationController);
+
+            var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
                 gameDetailsDataController,
                 routingController,
+                productFilesDestinationController);
+
+            var directoryCleanupController = new DirectoryCleanupController(
+                gameDetailsDataController,
+                gameDetailsDirectoryEnumerationController,
                 productFilesDestinationController,
+                directoryController,
+                recycleBinController,
                 taskReportingController);
+
+            var filesCleanupController = new FilesCleanupController(
+                scheduledCleanupDataController,
+                gameDetailsFilesEnumerationController,
+                gameDetailsDirectoryEnumerationController,
+                directoryController,
+                taskReportingController);
+
+            #endregion
 
             #endregion
 
@@ -673,13 +692,13 @@ namespace GoodOfflineGames
 
             var taskActivityControllers = new List<ITaskActivityController>();
 
-            #region Initialization Task Activieis (always performed)
+            #region Initialization Task Activities (always performed)
 
             // load initial data
             taskActivityControllers.Add(loadDataController);
 
             // authorize
-            taskActivityControllers.Add(authorizationController);
+            //taskActivityControllers.Add(authorizationController);
 
             #endregion
 
@@ -728,7 +747,11 @@ namespace GoodOfflineGames
             //taskActivityControllers.Add(processValidationController);
 
             // cleanup
-            taskActivityControllers.Add(processCleanupController);
+
+            // directories
+            //taskActivityControllers.Add(directoryCleanupController);
+            // files
+            taskActivityControllers.Add(filesCleanupController);
 
             #endregion
 

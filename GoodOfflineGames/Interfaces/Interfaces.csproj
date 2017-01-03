@@ -48,6 +48,7 @@
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
     <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Eligibility\ElegibilityDelegate.cs" />
+    <Compile Include="Enumeration\EnumerationController.cs" />
     <Compile Include="Filtering\FilterDelegate.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Collection\CollectionController.cs" />

@@ -9,15 +9,22 @@ namespace Interfaces.Directory
         void Create(string uri);
     }
 
-    public interface IGetFilesDelegate
+    public interface IEnumerateFilesDelegate
     {
-        IEnumerable<string> GetFiles(string uri);
+        IEnumerable<string> EnumerateFiles(string uri);
+    }
+
+    public interface IEnumerateDirectoriesDelegate
+    {
+        IEnumerable<string> EnumerateDirectories(string uri);
     }
 
     public interface IDirectoryController :
         ICreateDelegate,
         IExistsDelegate,
-        IGetFilesDelegate
+        IEnumerateFilesDelegate,
+        IEnumerateDirectoriesDelegate,
+        IMoveDelegate
     {
         // ...
     }

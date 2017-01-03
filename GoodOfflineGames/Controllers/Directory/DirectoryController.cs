@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
 
 using Interfaces.Directory;
 
@@ -16,9 +18,24 @@ namespace Controllers.Directory
             System.IO.Directory.CreateDirectory(uri);
         }
 
-        public IEnumerable<string> GetFiles(string uri)
+        public IEnumerable<string> EnumerateFiles(string uri)
         {
             return System.IO.Directory.EnumerateFiles(uri);
+        }
+
+        public IEnumerable<string> EnumerateDirectories(string uri)
+        {
+            return System.IO.Directory.EnumerateDirectories(uri);
+        }
+
+        public void Move(string fromUri, string toUri)
+        {
+            var destination = Path.Combine(toUri, fromUri);
+            if (!Exists(Path.GetDirectoryName(destination)))
+                Create(Path.GetDirectoryName(destination));
+            System.IO.Directory.Move(
+                fromUri, 
+                destination);
         }
     }
 }

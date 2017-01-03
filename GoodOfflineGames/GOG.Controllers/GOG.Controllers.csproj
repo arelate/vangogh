@@ -42,6 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorization\AuthorizationController.cs" />
+    <Compile Include="Enumeration\GameDetailsFileEnumerationController.cs" />
+    <Compile Include="Enumeration\GameDetailsDirectoryEnumerationController.cs" />
+    <Compile Include="Enumeration\GameDetailsManualUrlEnumerationController.cs" />
     <Compile Include="PageResults\AccountProductsPageResultController.cs" />
     <Compile Include="PageResults\PageResultController.cs" />
     <Compile Include="PageResults\ProductsPageResultController.cs" />
