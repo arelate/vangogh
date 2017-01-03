@@ -44,9 +44,7 @@
     <Compile Include="Abstract\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />
     <Compile Include="Cleanup\FilesCleanupController.cs" />
-    <Compile Include="Download\Dependencies\ProductFiles\ProductDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductFiles\ProductFilesDownloadSourcesController.cs" />
-    <Compile Include="Download\Dependencies\ProductFiles\ProductExtrasDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductImages\ImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductImages\ProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\ProductImages\AccountProductsImagesDownloadSourcesController.cs" />

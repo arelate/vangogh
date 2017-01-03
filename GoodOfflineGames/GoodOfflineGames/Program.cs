@@ -495,19 +495,31 @@ namespace GoodOfflineGames
                 screenshotUriController,
                 taskReportingController);
 
-            var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
-                updatedDataController,
-                gameDetailsDataController,
-                settings.Download.Languages,
-                settings.Download.OperatingSystems);
+            var routingController = new RoutingController(productRoutesDataController);
 
-            var productExtrasDownloadSourcesController = new ProductExtrasDownloadSourcesController(
-                updatedDataController,
+            var gameDetailsManualUrlsEnumerationController = new GameDetailsManualUrlEnumerationController(
+                settings.Download.Languages,
+                settings.Download.OperatingSystems,
                 gameDetailsDataController);
 
-            var validationUriResolutionController = new ValidationUriResolutionController();
+            var gameDetailsDirectoryEnumerationController = new GameDetailsDirectoryEnumerationController(
+                settings.Download.Languages,
+                settings.Download.OperatingSystems,
+                gameDetailsDataController,
+                productFilesDestinationController);
 
-            var routingController = new RoutingController(productRoutesDataController);
+            var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
+                settings.Download.Languages,
+                settings.Download.OperatingSystems,
+                gameDetailsDataController,
+                routingController,
+                productFilesDestinationController);
+
+            var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
+                updatedDataController,
+                gameDetailsManualUrlsEnumerationController);
+
+            var validationUriResolutionController = new ValidationUriResolutionController();
 
             var validationEligibilityController = new ValidationEligibilityController();
             var updateRouteEligibilityController = new UpdateRouteEligibilityController();
@@ -554,14 +566,6 @@ namespace GoodOfflineGames
                 accountProductsDataController,
                 taskReportingController);
 
-            var updateProductExtrasDownloadsController = new UpdateFilesDownloadsController(
-                ProductDownloadTypes.Extra,
-                productExtrasDownloadSourcesController,
-                productFilesDestinationController,
-                productDownloadsDataController,
-                accountProductsDataController,
-                taskReportingController);
-
             // downloads processing
 
             var imagesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
@@ -590,18 +594,6 @@ namespace GoodOfflineGames
 
             var productFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.ProductFile,
-                updatedDataController,
-                productDownloadsDataController,
-                routingController,
-                networkController,
-                downloadController,
-                productFilesDestinationController,
-                updateRouteEligibilityController,
-                removeEntryEligibilityController,
-                taskReportingController);
-
-            var extrasProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
-                ProductDownloadTypes.Extra,
                 updatedDataController,
                 productDownloadsDataController,
                 routingController,
@@ -660,15 +652,6 @@ namespace GoodOfflineGames
 
             #region Cleanup
 
-            var gameDetailsDirectoryEnumerationController = new GameDetailsDirectoryEnumerationController(
-                gameDetailsDataController, 
-                productFilesDestinationController);
-
-            var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
-                gameDetailsDataController,
-                routingController,
-                productFilesDestinationController);
-
             var directoryCleanupController = new DirectoryCleanupController(
                 gameDetailsDataController,
                 gameDetailsDirectoryEnumerationController,
@@ -697,58 +680,58 @@ namespace GoodOfflineGames
             // load initial data
             taskActivityControllers.Add(loadDataController);
 
-            // authorize
-            //taskActivityControllers.Add(authorizationController);
+            //// authorize
+            taskActivityControllers.Add(authorizationController);
 
             #endregion
 
             #region Data Updates Task Activities
 
-            //// data updates
+            // data updates
             //taskActivityControllers.Add(productsUpdateController);
             //taskActivityControllers.Add(accountProductsUpdateController);
             //taskActivityControllers.Add(newUpdatedAccountProductsController);
             //taskActivityControllers.Add(wishlistedUpdateController);
 
-            //// product/account product dependent data updates
+            // product/account product dependent data updates
             //taskActivityControllers.Add(gameProductDataUpdateController);
             //taskActivityControllers.Add(apiProductUpdateController);
-            //taskActivityControllers.Add(gameDetailsUpdateController);
+            taskActivityControllers.Add(gameDetailsUpdateController);
             //taskActivityControllers.Add(screenshotUpdateController);
 
             #endregion
 
             #region Download Task Activities
 
-            // schedule downloads
+            //// schedule downloads
             //taskActivityControllers.Add(updateProductsImagesDownloadsController);
             //taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
             //taskActivityControllers.Add(updateScreenshotsDownloadsController);
-            //taskActivityControllers.Add(updateProductFilesDownloadsController);
-            //taskActivityControllers.Add(updateProductExtrasDownloadsController);
+            taskActivityControllers.Add(updateProductFilesDownloadsController);
 
-            // actually download images, screenshots, product files, extras
+            ////actually download images, screenshots, product files, extras
             //taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
             //taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
-            //taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
-            //taskActivityControllers.Add(extrasProcessScheduledDownloadsController);
+            taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
 
             #endregion
 
             #region Validation Task Activities
 
-            // schedule validation downloads
-            //taskActivityControllers.Add(updateValidationDownloadsController);
+            //// schedule validation downloads
+            taskActivityControllers.Add(updateValidationDownloadsController);
 
-            // actually download validation
-            //taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+            //// actually download validation
+            taskActivityControllers.Add(validationProcessScheduledDownloadsController);
 
-            // process validation
-            //taskActivityControllers.Add(processValidationController);
+            //// process validation
+            taskActivityControllers.Add(processValidationController);
 
-            // cleanup
+            #endregion
 
-            // directories
+            #region Cleanup Task Activities
+
+            //// directories
             //taskActivityControllers.Add(directoryCleanupController);
             // files
             taskActivityControllers.Add(filesCleanupController);

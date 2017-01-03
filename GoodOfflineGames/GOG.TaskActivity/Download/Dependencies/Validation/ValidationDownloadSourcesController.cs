@@ -57,16 +57,17 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                         continue;
 
                     // trace route for the product file
-                    var resolvedUri = await routingController.TraceRouteAsync(id, downloadEntry.SourceUri);
+                    var resolvedUriString = await routingController.TraceRouteAsync(id, downloadEntry.SourceUri);
 
                     // only executables are eligible for validation
-                    if (!extensionsWhitelist.Contains(Path.GetExtension(resolvedUri)))
+                    var resolvedUri = new System.Uri(resolvedUriString);
+                    if (!extensionsWhitelist.Contains(Path.GetExtension(resolvedUri.LocalPath)))
                         continue;
 
                     if (!validationSources.ContainsKey(id))
                         validationSources.Add(id, new List<string>());
 
-                    validationSources[id].Add(uriResolutionController.ResolveUri(resolvedUri));
+                    validationSources[id].Add(uriResolutionController.ResolveUri(resolvedUriString));
                 }
             }
 

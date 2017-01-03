@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.Data;
 using Interfaces.Enumeration;
@@ -10,13 +11,19 @@ using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsManualUrlEnumerationController: IEnumerateDelegate<string>
+    public class GameDetailsManualUrlEnumerationController : IEnumerateDelegate<string>
     {
+        private string[] languages;
+        private string[] operatingSystems;
         private IDataController<GameDetails> gameDetailsDataController;
 
         public GameDetailsManualUrlEnumerationController(
+            string[] languages,
+            string[] operatingSystems,
             IDataController<GameDetails> gameDetailsDataController)
         {
+            this.languages = languages;
+            this.operatingSystems = operatingSystems;
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
@@ -31,9 +38,14 @@ namespace GOG.Controllers.Enumeration
             if (gameDetails.LanguageDownloads != null)
                 foreach (var download in gameDetails.LanguageDownloads)
                 {
-                    if (download.Windows != null) gameDetailsDownloadEntries.AddRange(download.Windows);
-                    if (download.Mac != null) gameDetailsDownloadEntries.AddRange(download.Mac);
-                    if (download.Linux != null) gameDetailsDownloadEntries.AddRange(download.Linux);
+                    if (!languages.Contains(download.Language)) continue;
+
+                    if (operatingSystems.Contains("Windows") && download.Windows != null)
+                        gameDetailsDownloadEntries.AddRange(download.Windows);
+                    if (operatingSystems.Contains("Mac") && download.Mac != null)
+                        gameDetailsDownloadEntries.AddRange(download.Mac);
+                    if (operatingSystems.Contains("Linux") && download.Linux != null)
+                        gameDetailsDownloadEntries.AddRange(download.Linux);
                 }
 
             if (gameDetails.Extras != null)

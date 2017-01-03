@@ -39,9 +39,11 @@ namespace Controllers.Routing
 
         public async Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources)
         {
-            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
-
             var destination = new List<string>();
+
+            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+            if (productRoutes == null)
+                return destination;
 
             foreach (var source in sources)
                 destination.Add(TraceProductRoute(productRoutes.Routes, source));

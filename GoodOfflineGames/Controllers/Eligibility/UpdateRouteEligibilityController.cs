@@ -8,8 +8,8 @@ namespace Controllers.Eligibility
     {
         public bool IsEligible(ProductDownloadEntry item)
         {
-            return (item.Type == ProductDownloadTypes.ProductFile ||
-                item.Type == ProductDownloadTypes.Extra);
+
+            return item.Type == ProductDownloadTypes.ProductFile;
         }
     }
 }

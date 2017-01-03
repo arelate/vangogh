@@ -27,6 +27,7 @@ namespace Models.Settings
         public bool Everything { get; set; }
     }
 
+    [DataContract]
     public class DownloadProperties : IDownloadProperties
     {
         [DataMember(Name = "images")]
@@ -41,12 +42,14 @@ namespace Models.Settings
         public string[] OperatingSystems { get; set; }
     }
 
+    [DataContract]
     public class ValidationProperties : IValidationProperties
     {
         [DataMember(Name = "afterDownload")]
         public bool AfterDownload { get; set; }
     }
 
+    [DataContract]
     public class CleanupProperties : ICleanupProperties
     {
         [DataMember(Name = "afterDownload")]

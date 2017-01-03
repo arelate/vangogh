@@ -16,10 +16,15 @@ namespace GOG.Controllers.Enumeration
         private IRoutingController routingController;
 
         public GameDetailsFileEnumerationController(
+            string[] languages,
+            string[] operatingSystems,
             IDataController<GameDetails> gameDetailsDataController,
             IRoutingController routingController,
-            IDestinationController destinationController):
-            base(gameDetailsDataController)
+            IDestinationController destinationController) :
+            base(
+                languages,
+                operatingSystems,
+                gameDetailsDataController)
         {
             this.destinationController = destinationController;
             this.routingController = routingController;
@@ -32,7 +37,12 @@ namespace GOG.Controllers.Enumeration
             var gameDetailsManualUrls = await base.EnumerateAsync(id);
             var gameDetailsResolvedUris = await routingController.TraceRoutesAsync(id, gameDetailsManualUrls);
 
-            for (var ii=0; ii< gameDetailsResolvedUris.Count; ii++)
+            // that means that routes information is incomplete and 
+            // it's not possible to map manualUrls to resolvedUrls
+            if (gameDetailsManualUrls.Count != gameDetailsResolvedUris.Count)
+                return gameDetailsFiles;
+
+            for (var ii = 0; ii < gameDetailsResolvedUris.Count; ii++)
             {
                 // since we don't download all languages and operating systems 
                 // we don't have routes for each and every gameDetails uri

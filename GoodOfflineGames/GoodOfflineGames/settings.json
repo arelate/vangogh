@@ -14,7 +14,7 @@
     "screenshots": true,
     "files": true,
     "languages": [ "en" ],
-    "operatingSystems": [ "Windows" ]
+    "operatingSystems": [ "Windows", "Mac" ]
   },
   "validation": {
     "afterDownload": true

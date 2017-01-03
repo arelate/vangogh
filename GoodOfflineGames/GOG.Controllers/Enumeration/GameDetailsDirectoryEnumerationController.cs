@@ -13,9 +13,14 @@ namespace GOG.Controllers.Enumeration
         private IDestinationController destinationController;
 
         public GameDetailsDirectoryEnumerationController(
+            string[] languages,
+            string[] operatingSystems,
             IDataController<GameDetails> gameDetailsDataController,
             IDestinationController destinationController):
-            base(gameDetailsDataController)
+            base(
+                languages,
+                operatingSystems,
+                gameDetailsDataController)
         {
             this.destinationController = destinationController;
         }

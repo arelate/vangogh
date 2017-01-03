@@ -1,61 +1,43 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
+using Interfaces.DownloadSources;
 using Interfaces.Data;
-
-using GOG.Models;
+using Interfaces.Enumeration;
 
 namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
 {
-    public class ProductFilesDownloadSourcesController : ProductDownloadSourcesController
+    public class ProductFilesDownloadSourcesController : IDownloadSourcesController
     {
-        private string[] languages;
-        private string[] operatingSystems;
+        private IDataController<long> updatedDataController;
+        private IEnumerateDelegate<string> gameDetailsManualUrlEnumerationController;
 
         public ProductFilesDownloadSourcesController(
             IDataController<long> updatedDataController,
-            IDataController<GameDetails> gameDetailsDataController,
-            string[] languages,
-            string[] operatingSystems):
-            base(
-                updatedDataController,
-                gameDetailsDataController)
+            IEnumerateDelegate<string> gameDetailsManualUrlEnumerationController)
         {
-            this.languages = languages;
-            this.operatingSystems = operatingSystems;
+            this.updatedDataController = updatedDataController;
+            this.gameDetailsManualUrlEnumerationController = gameDetailsManualUrlEnumerationController;
         }
 
-        internal override List<string> GetDownloadSources(GameDetails gameDetails)
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            var downloadSources = new List<string>();
+            var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 
-            foreach (var languageDownload in gameDetails.LanguageDownloads)
+            foreach (var id in updatedDataController.EnumerateIds())
             {
-                if (!languages.Contains(languageDownload.Language)) continue;
+                var manualUrls = await gameDetailsManualUrlEnumerationController.EnumerateAsync(id);
 
-                if (languageDownload.Windows != null &&
-                    operatingSystems.Contains("Windows"))
-                {
-                    foreach (var windowsDownloadEntry in languageDownload.Windows)
-                        downloadSources.Add(windowsDownloadEntry.ManualUrl);
-                }
+                if (!gameDetailsDownloadSources.ContainsKey(id))
+                    gameDetailsDownloadSources.Add(id, new List<string>());
 
-                if (languageDownload.Mac != null &&
-                    operatingSystems.Contains("Mac"))
-                {
-                    foreach (var macDownloadEntry in languageDownload.Mac)
-                        downloadSources.Add(macDownloadEntry.ManualUrl);
-                }
-
-                if (languageDownload.Linux != null &&
-                    operatingSystems.Contains("Linux"))
-                {
-                    foreach (var linuxDownloadEntry in languageDownload.Linux)
-                        downloadSources.Add(linuxDownloadEntry.ManualUrl);
-                }
+                foreach (var url in manualUrls)
+                    if (!gameDetailsDownloadSources[id].Contains(url))
+                        gameDetailsDownloadSources[id].Add(url);
             }
 
-            return downloadSources;
+            return gameDetailsDownloadSources;
         }
     }
 }
