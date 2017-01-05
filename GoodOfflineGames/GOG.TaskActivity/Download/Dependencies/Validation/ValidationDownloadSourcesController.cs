@@ -17,28 +17,24 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IRoutingController routingController;
-        private IEligibilityDelegate<ProductDownloadEntry> entryValidationEligibilityDelegate;
+        private IEligibilityDelegate<ProductDownloadEntry> downloadEntryValidationEligibilityDelegate;
+        private IEligibilityDelegate<string> fileValidationEligibilityDelegate;
         private IUriResolutionController uriResolutionController;
-
-        private readonly List<string> extensionsWhitelist = new List<string>(4) {
-            ".exe", // Windows
-            ".bin", // Windows
-            ".dmg", // Mac
-            ".sh" // Linux
-        };
 
         public ValidationDownloadSourcesController(
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IRoutingController routingController,
             IUriResolutionController uriResolutionController,
-            IEligibilityDelegate<ProductDownloadEntry> entryValidationEligibilityDelegate)
+            IEligibilityDelegate<ProductDownloadEntry> downloadEntryValidationEligibilityDelegate,
+            IEligibilityDelegate<string> fileValidationEligibilityDelegate)
         {
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.routingController = routingController;
             this.uriResolutionController = uriResolutionController;
-            this.entryValidationEligibilityDelegate = entryValidationEligibilityDelegate;
+            this.downloadEntryValidationEligibilityDelegate = downloadEntryValidationEligibilityDelegate;
+            this.fileValidationEligibilityDelegate = fileValidationEligibilityDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
@@ -53,21 +49,19 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                 foreach (var downloadEntry in productDownloads.Downloads)
                 {
                     // only product files are eligible for validation
-                    if (!entryValidationEligibilityDelegate.IsEligible(downloadEntry))
+                    if (!downloadEntryValidationEligibilityDelegate.IsEligible(downloadEntry))
                         continue;
 
                     // trace route for the product file
-                    var resolvedUriString = await routingController.TraceRouteAsync(id, downloadEntry.SourceUri);
+                    var resolvedUri = await routingController.TraceRouteAsync(id, downloadEntry.SourceUri);
 
-                    // only executables are eligible for validation
-                    var resolvedUri = new System.Uri(resolvedUriString);
-                    if (!extensionsWhitelist.Contains(Path.GetExtension(resolvedUri.LocalPath)))
+                    if (!fileValidationEligibilityDelegate.IsEligible(resolvedUri))
                         continue;
 
                     if (!validationSources.ContainsKey(id))
                         validationSources.Add(id, new List<string>());
 
-                    validationSources[id].Add(uriResolutionController.ResolveUri(resolvedUriString));
+                    validationSources[id].Add(uriResolutionController.ResolveUri(resolvedUri));
                 }
             }
 

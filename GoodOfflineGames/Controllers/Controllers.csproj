@@ -69,6 +69,7 @@
     <Compile Include="Destination\ValidationDestinationController.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Download\DownloadController.cs" />
+    <Compile Include="Eligibility\FileValidationEligibilityController.cs" />
     <Compile Include="Eligibility\RemoveEntryEligibilityController.cs" />
     <Compile Include="Eligibility\UpdateRouteEligibilityController.cs" />
     <Compile Include="Extraction\LoginIdExtractionController.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
     <Compile Include="UriResolution\ValidationUriResolutionController.cs" />
-    <Compile Include="Eligibility\ValidationEligibilityController.cs" />
+    <Compile Include="Eligibility\DownloadEntryValidationEligibilityController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
   </ItemGroup>
   <ItemGroup>

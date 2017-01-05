@@ -4,7 +4,7 @@ using Models.ProductDownloads;
 
 namespace Controllers.Eligibility
 {
-    public class ValidationEligibilityController : IEligibilityDelegate<ProductDownloadEntry>
+    public class DownloadEntryValidationEligibilityController : IEligibilityDelegate<ProductDownloadEntry>
     {
         public bool IsEligible(ProductDownloadEntry item)
         {

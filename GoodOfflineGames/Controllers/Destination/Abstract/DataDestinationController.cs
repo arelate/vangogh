@@ -7,7 +7,7 @@ namespace Controllers.Destination
     {
         public virtual string GetDirectory(string source)
         {
-            return "_data";
+            return "data";
         }
 
         public virtual string GetFilename(string source)

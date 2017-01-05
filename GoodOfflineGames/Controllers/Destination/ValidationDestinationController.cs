@@ -12,7 +12,7 @@ namespace Controllers.Destination
 
         public string GetDirectory(string source)
         {
-            return "_md5";
+            return "md5";
         }
 
         public string GetFilename(string source)

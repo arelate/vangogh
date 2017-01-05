@@ -80,7 +80,7 @@ namespace GoodOfflineGames
         {
             #region Foundation Controllers
 
-            string recycleBinUri = "_recycleBin";
+            string recycleBinUri = "recycleBin";
             string productFilesDestination = "productFiles";
 
             var streamController = new StreamController();
@@ -305,7 +305,8 @@ namespace GoodOfflineGames
             consoleController.WriteLine(string.Empty);
 
             // set user agent string used for network requests
-            networkController.UserAgent = settings.Connection.UserAgent;
+            if (!string.IsNullOrEmpty(settings.Connection.UserAgent))
+                networkController.UserAgent = settings.Connection.UserAgent;
 
             #endregion
 
@@ -521,16 +522,18 @@ namespace GoodOfflineGames
 
             var validationUriResolutionController = new ValidationUriResolutionController();
 
-            var validationEligibilityController = new ValidationEligibilityController();
+            var downloadEntryValidationEligibilityController = new DownloadEntryValidationEligibilityController();
             var updateRouteEligibilityController = new UpdateRouteEligibilityController();
             var removeEntryEligibilityController = new RemoveEntryEligibilityController();
+            var fileValidationEligibilityController = new FileValidationEligibilityController();
 
             var validationDownloadSourcesController = new ValidationDownloadSourcesController(
                 updatedDataController,
                 productDownloadsDataController,
                 routingController,
                 validationUriResolutionController,
-                validationEligibilityController);
+                downloadEntryValidationEligibilityController,
+                fileValidationEligibilityController);
 
             // schedule download controllers
 
@@ -629,7 +632,7 @@ namespace GoodOfflineGames
             var byteToStringConversionController = new BytesToStringConvertionController();
 
             var validationReportingController = new ValidationReportingController(
-                bytesFormattingController, 
+                bytesFormattingController,
                 taskReportingController);
 
             var validationController = new ValidationController(
@@ -647,7 +650,7 @@ namespace GoodOfflineGames
                 lastKnownValidDataController,
                 scheduledCleanupDataController,
                 routingController,
-                validationEligibilityController,
+                downloadEntryValidationEligibilityController,
                 taskReportingController);
 
             #region Cleanup
@@ -665,6 +668,9 @@ namespace GoodOfflineGames
                 gameDetailsFilesEnumerationController,
                 gameDetailsDirectoryEnumerationController,
                 directoryController,
+                fileValidationEligibilityController,
+                validationDestinationController,
+                recycleBinController,
                 taskReportingController);
 
             #endregion
@@ -673,68 +679,87 @@ namespace GoodOfflineGames
 
             #region TACs Execution
 
-            var taskActivityControllers = new List<ITaskActivityController>();
-
             #region Initialization Task Activities (always performed)
 
-            // load initial data
-            taskActivityControllers.Add(loadDataController);
-
-            //// authorize
-            taskActivityControllers.Add(authorizationController);
+            var taskActivityControllers = new List<ITaskActivityController>
+            {
+                // load initial data
+                loadDataController,
+                // authorize
+                authorizationController
+            };
 
             #endregion
 
             #region Data Updates Task Activities
 
             // data updates
-            //taskActivityControllers.Add(productsUpdateController);
-            //taskActivityControllers.Add(accountProductsUpdateController);
-            //taskActivityControllers.Add(newUpdatedAccountProductsController);
-            //taskActivityControllers.Add(wishlistedUpdateController);
+            if (settings.Update.Products)
+                taskActivityControllers.Add(productsUpdateController);
+            if (settings.Update.AccountProducts)
+                taskActivityControllers.Add(accountProductsUpdateController);
+            if (settings.Update.NewUpdatedAccountProducts)
+                taskActivityControllers.Add(newUpdatedAccountProductsController);
+            if (settings.Update.Wishlist)
+                taskActivityControllers.Add(wishlistedUpdateController);
 
             // product/account product dependent data updates
-            //taskActivityControllers.Add(gameProductDataUpdateController);
-            //taskActivityControllers.Add(apiProductUpdateController);
-            //taskActivityControllers.Add(gameDetailsUpdateController);
-            //taskActivityControllers.Add(screenshotUpdateController);
+            if (settings.Update.GameProductData)
+                taskActivityControllers.Add(gameProductDataUpdateController);
+            if (settings.Update.ApiProducts)
+                taskActivityControllers.Add(apiProductUpdateController);
+            if (settings.Update.GameDetails)
+                taskActivityControllers.Add(gameDetailsUpdateController);
+            if (settings.Update.Screenshots)
+                taskActivityControllers.Add(screenshotUpdateController);
 
             #endregion
 
             #region Download Task Activities
 
-            //// schedule downloads
-            //taskActivityControllers.Add(updateProductsImagesDownloadsController);
-            //taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
-            //taskActivityControllers.Add(updateScreenshotsDownloadsController);
-            //taskActivityControllers.Add(updateProductFilesDownloadsController);
+            // schedule downloads
+            if (settings.Download.ProductsImages)
+                taskActivityControllers.Add(updateProductsImagesDownloadsController);
+            if (settings.Download.AccountProductsImages)
+                taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
+            if (settings.Download.Screenshots)
+                taskActivityControllers.Add(updateScreenshotsDownloadsController);
+            if (settings.Download.ProductsFiles)
+                taskActivityControllers.Add(updateProductFilesDownloadsController);
 
-            ////actually download images, screenshots, product files, extras
-            //taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
-            //taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
-            //taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
+            //actually download images, screenshots, product files, extras
+            if (settings.Download.ProductsImages ||
+                settings.Download.AccountProductsImages)
+                taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
+            if (settings.Download.Screenshots)
+                taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
+            if (settings.Download.ProductsFiles)
+                taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
 
             #endregion
 
             #region Validation Task Activities
 
-            //// schedule validation downloads
-            //taskActivityControllers.Add(updateValidationDownloadsController);
-
-            //// actually download validation
-            //taskActivityControllers.Add(validationProcessScheduledDownloadsController);
-
-            //// process validation
-            taskActivityControllers.Add(processValidationController);
+            if (settings.Validation.Updated)
+            {
+                // schedule validation downloads
+                taskActivityControllers.Add(updateValidationDownloadsController);
+                // actually download validation
+                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+                // process validation
+                taskActivityControllers.Add(processValidationController);
+            }
 
             #endregion
 
             #region Cleanup Task Activities
 
-            //// directories
-            //taskActivityControllers.Add(directoryCleanupController);
-            // files
-            taskActivityControllers.Add(filesCleanupController);
+            // cleanup directories
+            if (settings.Cleanup.Directories)
+                taskActivityControllers.Add(directoryCleanupController);
+            // cleanup files
+            if (settings.Cleanup.Files)
+                taskActivityControllers.Add(filesCleanupController);
 
             #endregion
 

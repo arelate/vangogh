@@ -6,7 +6,7 @@ namespace Controllers.Destination
     {
         public override string GetDirectory(string source)
         {
-            return "_images";
+            return "images";
         }
     }
 }

@@ -20,7 +20,7 @@
     "productsImages": true,
 	"accountProductsImages": true,
 	"screenshots": true,
-    "productFiles": true,
+    "productsFiles": true,
     "languages": [ "en" ],
     "operatingSystems": [ "Windows", "Mac" ]
   },

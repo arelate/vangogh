@@ -38,7 +38,12 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
                 if (productCore == null) continue;
 
                 var imageSources = new List<string>() { imageUriController.ExpandUri(GetImageUri(productCore)) };
-                productImageSources.Add(productCore.Id, imageSources);
+
+                if (!productImageSources.ContainsKey(id))
+                    productImageSources.Add(id, new List<string>());
+
+                foreach (var source in imageSources)
+                    productImageSources[id].Add(source);
             }
 
             return productImageSources;

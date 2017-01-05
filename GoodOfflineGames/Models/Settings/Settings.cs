@@ -37,22 +37,22 @@ namespace Models.Settings
         public bool ApiProducts { get; set; }
         [DataMember(Name = "gameDetails")]
         public bool GameDetails { get; set; }
-        [DataMember(Name = "Screenshots")]
+        [DataMember(Name = "screenshots")]
         public bool Screenshots { get; set; }
     }
 
     [DataContract]
     public class DownloadProperties : IDownloadProperties
     {
-        [DataMember(Name = "productImages")]
-        public bool ProductImages { get; set; }
+        [DataMember(Name = "productsImages")]
+        public bool ProductsImages { get; set; }
         [DataMember(Name = "accountProductsImages")]
         public bool AccountProductsImages { get; set; }        
         [DataMember(Name = "screenshots")]
         public bool Screenshots { get; set; }
-        [DataMember(Name = "productFiles")]
-        public bool ProductFiles { get; set; }
-        [DataMember(Name = "langugages")]
+        [DataMember(Name = "productsFiles")]
+        public bool ProductsFiles { get; set; }
+        [DataMember(Name = "languages")]
         public string[] Languages { get; set; }
         [DataMember(Name = "operatingSystems")]
         public string[] OperatingSystems { get; set; }

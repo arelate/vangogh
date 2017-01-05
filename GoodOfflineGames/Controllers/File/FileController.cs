@@ -14,7 +14,14 @@ namespace Controllers.File
 
         public void Move(string fromUri, string toUri)
         {
-            System.IO.File.Move(fromUri, toUri);
+            if (!Exists(fromUri)) return;
+
+            var destinationUri = Path.Combine(toUri, fromUri);
+            var destinationDirectory = Path.GetDirectoryName(destinationUri);
+            if (!System.IO.Directory.Exists(destinationDirectory))
+                System.IO.Directory.CreateDirectory(destinationDirectory);
+
+            System.IO.File.Move(fromUri, destinationUri);
         }
 
         public long GetSize(string uri)
