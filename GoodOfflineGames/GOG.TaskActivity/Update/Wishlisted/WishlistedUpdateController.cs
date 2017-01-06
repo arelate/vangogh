@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Interfaces.Reporting;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Serialization;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using Models.Uris;
 
@@ -26,8 +25,11 @@ namespace GOG.TaskActivities.Update.Wishlisted
             IExtractionController gogDataExtractionController,
             ISerializationController<string> serializationController,
             IDataController<long> wishlistedDataController,
-            ITaskReportingController taskReportingController):
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController):
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.networkController = networkController;
             this.gogDataExtractionController = gogDataExtractionController;
@@ -37,40 +39,39 @@ namespace GOG.TaskActivities.Update.Wishlisted
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask("Request wishlist content");
-            var wishlistedContent = await networkController.Get(Uris.Paths.Account.Wishlist);
-            taskReportingController.CompleteTask();
+            var updateWishlistTask = taskStatusController.Create(taskStatus, "Update wishlisted products");
 
-            taskReportingController.StartTask("Extract wishlist data");
+            var requestContentTask = taskStatusController.Create(updateWishlistTask, "Request wishlist content");
+            var wishlistedContent = await networkController.Get(Uris.Paths.Account.Wishlist);
+            taskStatusController.Complete(requestContentTask);
+
+            var extractTask = taskStatusController.Create(updateWishlistTask, "Extract wishlist data");
             var wishlistedGogDataCollection = gogDataExtractionController.ExtractMultiple(wishlistedContent);
             if (wishlistedGogDataCollection == null)
             {
-                taskReportingController.ReportFailure("Extracted wishlist data is null.");
+                taskStatusController.ReportFailure("Extracted wishlist data is null.");
                 return;
             }
             if (wishlistedGogDataCollection.Count() == 0)
             {
-                taskReportingController.ReportFailure("Extracted wishlist data is empty.");
+                taskStatusController.ReportFailure("Extracted wishlist data is empty.");
                 return;
             }
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(extractTask);
 
-            taskReportingController.StartTask("Deserialize wishlist data");
-
+            var deserializeDataTask = taskStatusController.Create(updateWishlistTask, "Deserialize wishlist data");
             var wishlistedGogData = wishlistedGogDataCollection.First();
             var wishlistedProductPageResult = serializationController.Deserialize<Models.ProductsPageResult>(wishlistedGogData);
 
             if (wishlistedProductPageResult == null ||
                 wishlistedProductPageResult.Products == null)
             {
-                taskReportingController.ReportFailure("Failed to deserialize wishlist data");
+                taskStatusController.ReportFailure("Failed to deserialize wishlist data");
                 return;
             }
+            taskStatusController.Complete(deserializeDataTask);
 
-            taskReportingController.CompleteTask();
-
-            taskReportingController.StartTask("Save wishlist data");
-
+            var saveDataTask = taskStatusController.Create(updateWishlistTask, "Save wishlist data");
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
@@ -78,8 +79,9 @@ namespace GOG.TaskActivities.Update.Wishlisted
 
                 await wishlistedDataController.UpdateAsync(product.Id);
             }
+            taskStatusController.Complete(saveDataTask);
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(updateWishlistTask);
         }
     }
 }

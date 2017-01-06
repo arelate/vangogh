@@ -20,7 +20,7 @@ namespace Controllers.Stream
                 System.IO.Directory.CreateDirectory(directoryName);
             }
 
-            return new FileStream(uri, FileMode.Create, FileAccess.Write, FileShare.Read);
+            return new FileStream(uri, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
         }
     }
 }

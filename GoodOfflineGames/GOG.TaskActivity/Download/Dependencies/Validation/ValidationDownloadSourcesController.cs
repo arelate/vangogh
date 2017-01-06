@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -41,7 +42,9 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
         {
             var validationSources = new Dictionary<long, IList<string>>();
 
-            foreach (var id in updatedDataController.EnumerateIds())
+            var updated = updatedDataController.EnumerateIds().ToArray();
+
+            foreach (var id in updated)
             {
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;

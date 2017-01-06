@@ -2,7 +2,8 @@
 
 using Interfaces.RequestPage;
 using Interfaces.Serialization;
-using Interfaces.Reporting;
+using Interfaces.TaskStatus;
+using Interfaces.ProductTypes;
 
 using GOG.Models;
 
@@ -11,17 +12,17 @@ namespace GOG.Controllers.PageResults
     public class ProductsPageResultController : PageResultsController<ProductsPageResult>
     {
         public ProductsPageResultController(
+            ProductTypes productType,
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
-            string uri,
-            IDictionary<string, string> parameters,
-            IReportProgressDelegate reportProgressDelegate) : 
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) : 
             base(
+                productType,
                 requestPageController, 
                 serializationController, 
-                uri, 
-                parameters,
-                reportProgressDelegate)
+                taskStatus,
+                taskStatusController)
         {
             // ...
         }

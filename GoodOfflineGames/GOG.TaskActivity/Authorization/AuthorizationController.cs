@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Reporting;
 using Interfaces.Settings;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Console;
 using Interfaces.Serialization;
 using Interfaces.PropertiesValidation;
+using Interfaces.TaskStatus;
 
 using GOG.Interfaces.Authorization;
 
@@ -38,8 +38,11 @@ namespace GOG.TaskActivities.Authorization
             IConsoleController consoleController,
             IAuthenticationProperties authenticateProperties,
             IAuthenticationPropertiesValidationController  authenticationPropertiesValidationController,
-            ITaskReportingController taskReportingController) :
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.authenticateProperties = authenticateProperties;
             this.authenticationPropertiesValidationController = authenticationPropertiesValidationController;
@@ -54,7 +57,7 @@ namespace GOG.TaskActivities.Authorization
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask("Authorization on GOG.com");
+            var authorizationTask = taskStatusController.Create(taskStatus, "Authorization on GOG.com");
 
             authorizationController = new Controllers.Authorization.AuthorizationController(
                 authenticationPropertiesValidationController,
@@ -68,7 +71,7 @@ namespace GOG.TaskActivities.Authorization
 
             await authorizationController.Authorize(authenticateProperties);
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(authorizationTask);
         }
     }
 }

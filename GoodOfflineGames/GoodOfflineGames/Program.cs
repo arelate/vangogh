@@ -31,6 +31,7 @@ using Controllers.SerializedStorage;
 using Controllers.Indexing;
 using Controllers.RecycleBin;
 using Controllers.Routing;
+using Controllers.TaskStatus;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
@@ -72,6 +73,8 @@ using Models.ProductRoutes;
 using Models.ProductScreenshots;
 using Models.ProductDownloads;
 
+using Models.TaskStatus;
+
 namespace GoodOfflineGames
 {
     class Program
@@ -99,8 +102,8 @@ namespace GoodOfflineGames
 
             var consoleController = new ConsoleController();
 
-            var taskReportingController = new TaskReportingController(
-                consoleController);
+            //var taskReportingController = new TaskReportingController(
+            //    consoleController);
 
             var cookiesController = new CookiesController(
                 storageController,
@@ -138,8 +141,6 @@ namespace GoodOfflineGames
             var collectionController = new CollectionController();
 
             var throttleController = new ThrottleController(
-                taskReportingController,
-                secondsFormattingController,
                 150, // don't throttle if less than N items
                 2 * 60 * 1000);
 
@@ -312,13 +313,19 @@ namespace GoodOfflineGames
 
             #region Task Activity Controllers
 
-            // Create and add all task activity controllers
-            // Task activities are encapsulated set of activity - so no data can be passed around!
+            var applicationTaskStatus = new TaskStatus() { Title = "GoodOfflineGames" };
+
+            var taskStatusViewController = new TaskStatusViewController(
+                applicationTaskStatus,
+                consoleController);
+
+            var taskStatusController = new TaskStatusController(taskStatusViewController);
 
             #region Load
 
             var loadDataController = new LoadDataController(
-                taskReportingController,
+                applicationTaskStatus,
+                taskStatusController,
                 productsDataController,
                 accountProductsDataController,
                 gameDetailsDataController,
@@ -349,18 +356,19 @@ namespace GoodOfflineGames
                 consoleController,
                 settings.Authentication,
                 authenticationPropertiesValidationController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             #endregion
 
             #region Update.PageResults
 
             var productsPageResultsController = new ProductsPageResultController(
+                ProductTypes.Product,
                 requestPageController,
                 serializationController,
-                Uris.Paths.GetUpdateUri(ProductTypes.Product),
-                QueryParameters.GetQueryParameters(ProductTypes.Product),
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var productsExtractionController = new ProductsExtractionController();
 
@@ -372,14 +380,15 @@ namespace GoodOfflineGames
                     productsExtractionController,
                     requestPageController,
                     productsDataController,
-                    taskReportingController);
+                    applicationTaskStatus,
+                    taskStatusController);
 
             var accountProductsPageResultsController = new AccountProductsPageResultController(
+                ProductTypes.AccountProduct,
                 requestPageController,
                 serializationController,
-                Uris.Paths.GetUpdateUri(ProductTypes.AccountProduct),
-                QueryParameters.GetQueryParameters(ProductTypes.AccountProduct),
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var accountProductsExtractionController = new AccountProductsExtractionController();
 
@@ -391,7 +400,8 @@ namespace GoodOfflineGames
                     accountProductsExtractionController,
                     requestPageController,
                     accountProductsDataController,
-                    taskReportingController);
+                    applicationTaskStatus,
+                    taskStatusController);
 
             #endregion
 
@@ -401,7 +411,8 @@ namespace GoodOfflineGames
                 updatedDataController,
                 lastKnownValidDataController,
                 accountProductsDataController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             #endregion
 
@@ -763,7 +774,10 @@ namespace GoodOfflineGames
 
             #endregion
 
+
+
             foreach (var taskActivityController in taskActivityControllers)
+            {
                 try
                 {
                     taskActivityController.ProcessTaskAsync().Wait();
@@ -779,6 +793,7 @@ namespace GoodOfflineGames
                     taskReportingController.ReportFailure(string.Join(", ", errorMessages));
                     break;
                 }
+            }
 
             consoleController.WriteLine("Press ENTER to continue...");
             consoleController.ReadLine();

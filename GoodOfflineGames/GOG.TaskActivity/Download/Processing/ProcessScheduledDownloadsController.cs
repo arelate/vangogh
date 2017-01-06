@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -56,10 +57,12 @@ namespace GOG.TaskActivities.Download.Processing
         public override async Task ProcessTaskAsync()
         {
             var counter = 0;
-            var total = updatedDataController.Count();
+            var updated = updatedDataController.EnumerateIds().ToArray();
+            var total = updated.Length;
 
             taskReportingController.StartTask("Process updated downloads");
-            foreach (var id in updatedDataController.EnumerateIds())
+
+            foreach (var id in updated)
             {
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;

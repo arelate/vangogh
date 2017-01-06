@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Interfaces.Reporting;
+
+using Interfaces.TaskStatus;
 using Interfaces.Data;
 
 using GOG.TaskActivities.Abstract;
@@ -17,7 +18,11 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
             IDataController<long> updatedDataController,
             IDataController<long> lastKnownValidDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            ITaskReportingController taskReportingController): base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController): 
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.updatedDataController = updatedDataController;
             this.lastKnownValidDataController = lastKnownValidDataController;
@@ -26,7 +31,7 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask("Process new or updated account products");
+            var getUpdatedTask = taskStatusController.Create(taskStatus, "Get new or updated account products");
 
             foreach (var id in accountProductsDataController.EnumerateIds())
             {
@@ -44,7 +49,7 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
                 }
             }
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(getUpdatedTask);
         }
     }
 }

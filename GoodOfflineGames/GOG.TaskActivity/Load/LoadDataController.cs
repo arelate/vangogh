@@ -2,6 +2,7 @@
 
 using Interfaces.Reporting;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using GOG.TaskActivities.Abstract;
 
@@ -12,20 +13,23 @@ namespace GOG.TaskActivities.Load
         private ILoadDelegate[] loadDelegates;
 
         public LoadDataController(
-            ITaskReportingController taskReportingController,
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController,
+            //ITaskReportingController taskReportingController,
             params ILoadDelegate[] loadDelegates): 
-            base(taskReportingController)
-
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.loadDelegates = loadDelegates;
         }
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask("Load existing data");
+            var loadDataTask = taskStatusController.Create(taskStatus, "Load existing data");
             foreach (var loadDelegate in loadDelegates)
                 await loadDelegate.LoadAsync();
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(loadDataTask);
         }
     }
 }
