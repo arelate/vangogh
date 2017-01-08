@@ -59,7 +59,12 @@ namespace GOG.Controllers.PageResults
                 var response = await requestPageController.RequestPage(uri, parameters, currentPage);
                 pageResult = serializationController.Deserialize<T>(response);
 
-                taskStatusController.UpdateProgress(getPagesTask, currentPage, pageResult.TotalPages);
+                taskStatusController.UpdateProgress(
+                    getPagesTask, 
+                    currentPage, 
+                    pageResult.TotalPages, 
+                    uri, 
+                    "page(s)");
 
                 pageResults.Add(pageResult);
 

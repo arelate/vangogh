@@ -54,18 +54,39 @@ namespace Controllers.TaskStatus
             taskStatusViewController.CreateView();
         }
 
-        public void UpdateProgress(ITaskStatus taskStatus, long current, long total, string unit = "")
+        public void UpdateProgress(ITaskStatus taskStatus, long current, long total, string target, string unit = "")
         {
             ReleaseAssertTaskStatusNotNull(taskStatus);
 
             if (taskStatus.Progress == null)
                 taskStatus.Progress = new TaskProgress();
 
+            taskStatus.Progress.Target = target;
             taskStatus.Progress.Current = current;
             taskStatus.Progress.Total = total;
             taskStatus.Progress.Unit = unit;
 
             taskStatusViewController.CreateView();
+        }
+
+        public void Fail(ITaskStatus taskStatus, string failureMessage, params object[] data)
+        {
+            ReleaseAssertTaskStatusNotNull(taskStatus);
+
+            if (taskStatus.Failures == null)
+                taskStatus.Failures = new List<string>();
+
+            taskStatus.Failures.Add(string.Format(failureMessage, data));
+        }
+
+        public void Warn(ITaskStatus taskStatus, string warningMessage, params object[] data)
+        {
+            ReleaseAssertTaskStatusNotNull(taskStatus);
+
+            if (taskStatus.Warnings == null)
+                taskStatus.Warnings = new List<string>();
+
+            taskStatus.Warnings.Add(string.Format(warningMessage, data));
         }
     }
 }

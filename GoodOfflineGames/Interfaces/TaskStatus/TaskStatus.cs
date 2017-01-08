@@ -28,9 +28,24 @@ namespace Interfaces.TaskStatus
         DateTime Completed { get; set; }
     }
 
+    public interface IWarningsProperty
+    {
+        IList<string> Warnings { get; set; }
+    }
+
+    public interface IFailuresProperty
+    {
+        IList<string> Failures { get; set; }
+    }
+
     public interface IUnitProperty
     {
         string Unit { get; set; }
+    }
+
+    public interface ITargetProperty
+    {
+        string Target { get; set; }
     }
 
     public interface ICurrentProperty
@@ -44,6 +59,7 @@ namespace Interfaces.TaskStatus
     }
 
     public interface ITaskProgress:
+        ITargetProperty,
         ICurrentProperty,
         ITotalProperty,
         IUnitProperty
@@ -62,7 +78,9 @@ namespace Interfaces.TaskStatus
         IChildTasksProperty,
         IProgressProperty,
         IStartedProperty,
-        ICompletedProperty
+        ICompletedProperty,
+        IWarningsProperty,
+        IFailuresProperty
     {
         // ...
     }

@@ -49,12 +49,12 @@ namespace GOG.TaskActivities.Update.Wishlisted
             var wishlistedGogDataCollection = gogDataExtractionController.ExtractMultiple(wishlistedContent);
             if (wishlistedGogDataCollection == null)
             {
-                taskStatusController.ReportFailure("Extracted wishlist data is null.");
+                taskStatusController.Fail(extractTask, "Extracted wishlist data is null.");
                 return;
             }
             if (wishlistedGogDataCollection.Count() == 0)
             {
-                taskStatusController.ReportFailure("Extracted wishlist data is empty.");
+                taskStatusController.Fail(extractTask, "Extracted wishlist data is empty.");
                 return;
             }
             taskStatusController.Complete(extractTask);
@@ -66,7 +66,7 @@ namespace GOG.TaskActivities.Update.Wishlisted
             if (wishlistedProductPageResult == null ||
                 wishlistedProductPageResult.Products == null)
             {
-                taskStatusController.ReportFailure("Failed to deserialize wishlist data");
+                taskStatusController.Fail(deserializeDataTask, "Failed to deserialize wishlist data");
                 return;
             }
             taskStatusController.Complete(deserializeDataTask);

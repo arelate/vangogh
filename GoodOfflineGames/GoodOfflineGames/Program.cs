@@ -423,7 +423,8 @@ namespace GoodOfflineGames
                 gogDataExtractionController,
                 serializationController,
                 wishlistedDataController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             #endregion
 
@@ -457,7 +458,8 @@ namespace GoodOfflineGames
                 gameProductDataUpdateUriController,
                 gameProductDataSkipUpdateController,
                 gameProductDataDecodingController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var apiProductUpdateController = new ApiProductUpdateController(
                 apiProductsDataController,
@@ -465,7 +467,8 @@ namespace GoodOfflineGames
                 networkController,
                 serializationController,
                 productUpdateUriController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var gameDetailsUpdateController = new GameDetailsUpdateController(
                 gameDetailsDataController,
@@ -477,7 +480,8 @@ namespace GoodOfflineGames
                 gameDetailsRequiredUpdatesController,
                 gameDetailsConnectionController,
                 gameDetailsDownloadDetailsController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             #endregion
 
@@ -487,7 +491,8 @@ namespace GoodOfflineGames
                 productsDataController,
                 networkController,
                 screenshotExtractionController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             // dependencies for download controllers
 
@@ -505,7 +510,8 @@ namespace GoodOfflineGames
                 scheduledScreenshotsUpdatesDataController,
                 screenshotsDataController,
                 screenshotUriController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var routingController = new RoutingController(productRoutesDataController);
 

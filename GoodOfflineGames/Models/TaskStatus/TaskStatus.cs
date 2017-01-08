@@ -21,11 +21,17 @@ namespace Models.TaskStatus
         public DateTime Completed { get; set; }
         [DataMember(Name = "childTasks")]
         public IList<ITaskStatus> ChildTasks { get; set; }
+        [DataMember(Name = "warnings")]
+        public IList<string> Warnings { get; set; }
+        [DataMember(Name = "failures")]
+        public IList<string> Failures { get; set; }
     }
 
     [DataContract]
     public class TaskProgress: ITaskProgress
     {
+        [DataMember(Name = "target")]
+        public string Target { get; set; }
         [DataMember(Name = "current")]
         public long Current { get; set; }
         [DataMember(Name = "total")]

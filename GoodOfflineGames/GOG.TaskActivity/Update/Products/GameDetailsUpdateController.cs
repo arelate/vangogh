@@ -1,12 +1,11 @@
-﻿using Interfaces.Reporting;
-using Interfaces.ProductTypes;
-using Interfaces.Collection;
+﻿using Interfaces.ProductTypes;
 using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
 using Interfaces.AdditionalDetails;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using GOG.Models;
 
@@ -26,7 +25,8 @@ namespace GOG.TaskActivities.Update.Products
             IRequiredUpdatesController requiredUpdatesController,
             IConnectionController connectionController,
             IAdditionalDetailsController additionalDetailsController,
-            ITaskReportingController taskReportingController) :
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
             base(
                 ProductTypes.GameDetails,
                 gameDetailsDataController,
@@ -40,7 +40,8 @@ namespace GOG.TaskActivities.Update.Products
                 null, // dataDecodingController
                 connectionController,
                 additionalDetailsController,
-                taskReportingController)
+                taskStatus,
+                taskStatusController)
         {
             // ...
         }

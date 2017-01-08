@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Reporting;
 using Interfaces.ProductTypes;
 using Interfaces.Network;
 using Interfaces.Serialization;
@@ -9,6 +8,7 @@ using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
 using Interfaces.AdditionalDetails;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using Models.Uris;
 using Models.ProductCore;
@@ -51,8 +51,11 @@ namespace GOG.TaskActivities.Abstract
             IDataDecodingController dataDecodingController,
             IConnectionController connectionController,
             IAdditionalDetailsController additionalDetailsController,
-            ITaskReportingController taskReportingController) :
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.updateTypeDataController = updateTypeDataController;
             this.listTypeDataController = listTypeDataController;
@@ -76,7 +79,7 @@ namespace GOG.TaskActivities.Abstract
         {
             var updatedProducts = new List<long>();
 
-            taskReportingController.StartTask("Enumerate missing data");
+            var dataEnumerationTask = taskStatusController.Create(taskStatus, "Enumerate missing data");
 
             foreach (var id in listTypeDataController.EnumerateIds())
             {
@@ -87,16 +90,16 @@ namespace GOG.TaskActivities.Abstract
                     updatedProducts.Add(id);
             }
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(dataEnumerationTask);
 
-            taskReportingController.StartTask("Enumerate required data updates");
+            var dataUpdateTask = taskStatusController.Create(taskStatus, "Enumerate required data updates");
 
             if (requiredUpdatesController != null)
                 updatedProducts.AddRange(requiredUpdatesController.GetRequiredUpdates());
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(dataUpdateTask);
 
-            taskReportingController.StartTask("Getting updates for data type: " + updateTypeDescription);
+            var getUpdatesTask = taskStatusController.Create(taskStatus, "Getting updates for data type: " + updateTypeDescription);
 
             var currentProduct = 0;
 
@@ -104,12 +107,12 @@ namespace GOG.TaskActivities.Abstract
             {
                 var product = await listTypeDataController.GetByIdAsync(id);
 
-                taskReportingController.StartTask(
-                        "Update {0} {1}/{2}: {3}",
-                        updateTypeDescription,
-                        ++currentProduct,
-                        updatedProducts.Count,
-                        product.Title);
+                taskStatusController.UpdateProgress(
+                    getUpdatesTask,
+                    ++currentProduct,
+                    updatedProducts.Count,
+                    product.Title,
+                    "product(s)");
 
                 var uri = string.Format(
                     Uris.Paths.GetUpdateUri(updateProductType),
@@ -123,10 +126,9 @@ namespace GOG.TaskActivities.Abstract
 
                 if (content == null)
                 {
-                    taskReportingController.ReportWarning(
-                        string.Format(
+                    taskStatusController.Warn(getUpdatesTask,
                             "Product {0} doesn't have valid associated data of type: " + updateTypeDescription,
-                            product.Title));
+                            product.Title);
                     continue;
                 }
 
@@ -145,11 +147,9 @@ namespace GOG.TaskActivities.Abstract
                 if (updatedProducts.Count > throttleController?.Threshold &&
                     id != updatedProducts[updatedProducts.Count - 1])
                     throttleController?.Throttle();
-
-                taskReportingController.CompleteTask();
             }
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(getUpdatesTask);
         }
     }
 }

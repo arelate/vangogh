@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Interfaces.TaskStatus
+﻿namespace Interfaces.TaskStatus
 {
     public interface ICreateDelegate
     {
@@ -16,15 +10,27 @@ namespace Interfaces.TaskStatus
         void Complete(ITaskStatus taskStatus);
     }
 
-    public interface IUpdateProgress
+    public interface IUpdateProgressDelegate
     {
-        void UpdateProgress(ITaskStatus taskStatus, long current, long total, string unit = "");
+        void UpdateProgress(ITaskStatus taskStatus, long current, long total, string target, string unit = "");
+    }
+
+    public interface IFailDelegate
+    {
+        void Fail(ITaskStatus taskStatus, string failureMessage, params object[] data);
+    }
+
+    public interface IWarnDelegate
+    {
+        void Warn(ITaskStatus taskStatus, string warningMessage, params object[] data);
     }
 
     public interface ITaskStatusController:
         ICreateDelegate,
         ICompleteDelegate,
-        IUpdateProgress
+        IUpdateProgressDelegate,
+        IFailDelegate,
+        IWarnDelegate
     {
         // ...
     }

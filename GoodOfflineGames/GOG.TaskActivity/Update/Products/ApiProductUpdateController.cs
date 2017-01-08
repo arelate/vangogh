@@ -1,12 +1,9 @@
-﻿using Interfaces.Reporting;
-using Interfaces.Storage;
-using Interfaces.ProductTypes;
-using Interfaces.Collection;
+﻿using Interfaces.ProductTypes;
 using Interfaces.Network;
 using Interfaces.Serialization;
-using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using GOG.Models;
 
@@ -22,7 +19,8 @@ namespace GOG.TaskActivities.Update.Products
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IUpdateUriController updateUriController,
-            ITaskReportingController taskReportingController) :
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
             base(
                 ProductTypes.ApiProduct,
                 apiProductDataController,
@@ -36,7 +34,8 @@ namespace GOG.TaskActivities.Update.Products
                 null, // dataDecodingController
                 null, // connectionController
                 null, // additionalDetailsController
-                taskReportingController)
+                taskStatus,
+                taskStatusController)
         {
             // ...
         }

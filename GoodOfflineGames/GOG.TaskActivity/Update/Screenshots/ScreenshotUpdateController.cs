@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Reporting;
-using Interfaces.Collection;
 using Interfaces.Extraction;
 using Interfaces.Network;
 using Interfaces.Data;
 using Interfaces.ProductTypes;
+using Interfaces.TaskStatus;
 
 using Models.Uris;
 
@@ -31,8 +30,11 @@ namespace GOG.TaskActivities.Update.Screenshots
             IDataController<Product> productsDataController,
             INetworkController networkController,
             IExtractionController screenshotExtractionController,
-            ITaskReportingController taskReportingController) :
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.screenshotsDataController = screenshotsDataController;
             this.scheduledScreenshotsUpdatesDataController = scheduledScreenshotsUpdatesDataController;
@@ -43,9 +45,9 @@ namespace GOG.TaskActivities.Update.Screenshots
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask("Update all products missing screenshots");
+            var updateAllTask = taskStatusController.Create(taskStatus, "Update all products missing screenshots");
 
-            taskReportingController.StartTask("Get a list of updates for product screenshots");
+            var getUpdatesListTask = taskStatusController.Create(updateAllTask, "Get a list of updates for product screenshots");
 
             var productsMissingScreenshots = new List<long>();
 
@@ -53,26 +55,29 @@ namespace GOG.TaskActivities.Update.Screenshots
                 if (!screenshotsDataController.ContainsId(id))
                     productsMissingScreenshots.Add(id);
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(getUpdatesListTask);
 
             var counter = 0;
+
+            var updateProductsScreenshotsTask = taskStatusController.Create(updateAllTask, "Update products screenshots");
 
             foreach (var id in productsMissingScreenshots)
             {
                 var product = await productsDataController.GetByIdAsync(id);
 
-                taskReportingController.StartTask(
-                        "Update product screenshots {0}/{1}: {2}",
-                        ++counter,
-                        productsMissingScreenshots.Count,
-                        product.Title);
+                taskStatusController.UpdateProgress(
+                    updateProductsScreenshotsTask, 
+                    ++counter, 
+                    productsMissingScreenshots.Count,
+                    product.Title,
+                    "product(s)");
 
-                taskReportingController.StartTask("Request product page containing screenshots information");
+                var requestProductPageTask = taskStatusController.Create(updateProductsScreenshotsTask, "Request product page containing screenshots information");
                 var productPageUri = string.Format(Uris.Paths.GetUpdateUri(ProductTypes.Screenshot), product.Url);
                 var productPageContent = await networkController.Get(productPageUri);
-                taskReportingController.CompleteTask();
+                taskStatusController.Complete(requestProductPageTask);
 
-                taskReportingController.StartTask("Exract screenshots from the page");
+                var extractScreenshotsTask = taskStatusController.Create(updateProductsScreenshotsTask, "Exract screenshots from the page");
                 var extractedProductScreenshots = screenshotExtractionController.ExtractMultiple(productPageContent);
 
                 if (extractedProductScreenshots == null) continue;
@@ -82,20 +87,20 @@ namespace GOG.TaskActivities.Update.Screenshots
                     Id = product.Id,
                     Uris = new List<string>(extractedProductScreenshots)
                 };
-                taskReportingController.CompleteTask();
+                taskStatusController.Complete(extractScreenshotsTask);
 
-                taskReportingController.StartTask("Update product screenshots");
+                var updateProductScreenshotsTask = taskStatusController.Create(updateProductsScreenshotsTask, "Update product screenshots");
                 await screenshotsDataController.UpdateAsync(productScreenshots);
-                taskReportingController.CompleteTask();
+                taskStatusController.Complete(updateProductScreenshotsTask);
 
-                taskReportingController.StartTask("Schedule screenshot files update");
+                var scheduleScreenshotUpdateTask = taskStatusController.Create(updateProductsScreenshotsTask, "Schedule screenshot files update");
                 await scheduledScreenshotsUpdatesDataController.UpdateAsync(product.Id);
-                taskReportingController.CompleteTask();
-
-                taskReportingController.CompleteTask();
+                taskStatusController.Complete(scheduleScreenshotUpdateTask);
             }
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(updateProductsScreenshotsTask);
+
+            taskStatusController.Complete(updateAllTask);
         }
     }
 }
