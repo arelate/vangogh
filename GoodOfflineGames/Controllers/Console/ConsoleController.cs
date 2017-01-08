@@ -1,4 +1,5 @@
-﻿using Interfaces.Console;
+﻿using System;
+using Interfaces.Console;
 
 namespace Controllers.Console
 {
@@ -60,7 +61,11 @@ namespace Controllers.Console
         public void WriteLine(string message, MessageType messageType = MessageType.Default, params object[] data)
         {
             System.Console.ForegroundColor = GetColorByMessageType(messageType);
-            System.Console.WriteLine(message, data);
+            if (data != null &&
+                data.Length > 0)
+                System.Console.WriteLine(message, data);
+            else
+                System.Console.WriteLine(message);
         }
 
         private System.ConsoleColor GetColorByMessageType(MessageType messageType)
@@ -79,6 +84,11 @@ namespace Controllers.Console
                 default:
                     return System.ConsoleColor.White;
             }
+        }
+
+        public void Clear()
+        {
+            System.Console.Clear();
         }
     }
 }

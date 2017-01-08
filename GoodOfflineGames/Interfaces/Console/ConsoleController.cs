@@ -9,6 +9,11 @@
         Default
     }
 
+    public interface IClearDelegate
+    {
+        void Clear();
+    }
+
     public interface IReadDelegate
     {
         string Read();
@@ -35,6 +40,7 @@
     }
 
     public interface IConsoleController :
+        IClearDelegate,
         IReadDelegate,
         IReadLineDelegate,
         IInputPasswordDelegate,
