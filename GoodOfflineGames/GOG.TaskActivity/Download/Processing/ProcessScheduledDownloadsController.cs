@@ -3,13 +3,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using Interfaces.Reporting;
 using Interfaces.Download;
 using Interfaces.Data;
 using Interfaces.Destination;
 using Interfaces.Network;
 using Interfaces.Routing;
 using Interfaces.Eligibility;
+using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
 
@@ -39,8 +39,11 @@ namespace GOG.TaskActivities.Download.Processing
             IDestinationController destinationController,
             IEligibilityDelegate<ProductDownloadEntry> updateRouteEligibilityDelegate,
             IEligibilityDelegate<ProductDownloadEntry> removeEntryEligibilityDelegate,
-            ITaskReportingController taskReportingController) :
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.downloadType = downloadType;
             this.updatedDataController = updatedDataController;
@@ -60,31 +63,35 @@ namespace GOG.TaskActivities.Download.Processing
             var updated = updatedDataController.EnumerateIds().ToArray();
             var total = updated.Length;
 
-            taskReportingController.StartTask("Process updated downloads");
+            var processAllDownloadsTask = taskStatusController.Create(taskStatus, "Process updated downloads");
+
+            var processProductDownloadsTask = taskStatusController.Create(processAllDownloadsTask, "Process downloads for product");
 
             foreach (var id in updated)
             {
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
-                taskReportingController.StartTask(
-                        "Process downloads for product {0}/{1}: {2}",
-                        ++counter,
-                        total,
-                        productDownloads.Title);
+                taskStatusController.UpdateProgress(
+                    processProductDownloadsTask,
+                    ++counter,
+                    total,
+                    productDownloads.Title);
 
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(d => d.Type == downloadType).ToArray();
+
+                var processDownloadEntriesTask = taskStatusController.Create(processProductDownloadsTask, "Download entry");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
                     var entry = downloadEntries[ii];
 
-                    taskReportingController.StartTask(
-                        "Download entry {0}/{1}: {2}",
+                    taskStatusController.UpdateProgress(
+                        processDownloadEntriesTask,
                         ii + 1,
                         downloadEntries.Length,
-                        Enum.GetName(typeof(ProductDownloadTypes), entry.Type));
+                        entry.SourceUri);
 
                     var resolvedUri = string.Empty;
 
@@ -106,26 +113,29 @@ namespace GOG.TaskActivities.Download.Processing
                     }
                     catch (Exception ex)
                     {
-                        taskReportingController.ReportWarning(ex.Message);
+                        taskStatusController.Warn(processDownloadEntriesTask, ex.Message);
                     }
 
-                    taskReportingController.CompleteTask();
 
                     // there is no value in trying to redownload images/screenshots - so remove them on success
                     // we won't be removing anything else as it might be used in the later steps
                     if (removeEntryEligibilityDelegate.IsEligible(entry))
                     {
-                        taskReportingController.StartTask("Remove successfully downloaded scheduled entry");
+                        var removeEntryTask = taskStatusController.Create(processDownloadEntriesTask, "Remove successfully downloaded scheduled entry");
 
                         productDownloads.Downloads.Remove(entry);
                         await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                        taskReportingController.CompleteTask();
+                        taskStatusController.Complete(removeEntryTask);
                     }
+
+                    taskStatusController.Complete(processDownloadEntriesTask);
                 }
             }
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(processProductDownloadsTask);
+
+            taskStatusController.Complete(processAllDownloadsTask);
         }
     }
 }

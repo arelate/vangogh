@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 
-using Interfaces.Reporting;
 using Interfaces.DownloadSources;
 using Interfaces.Destination;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using Models.ProductCore;
 using Models.ProductDownloads;
@@ -31,8 +30,11 @@ namespace GOG.TaskActivities.Abstract
             IDestinationController destinationController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            ITaskReportingController taskReportingController) :
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.downloadType = downloadType;
             this.downloadSourcesController = downloadSourcesController;
@@ -45,25 +47,44 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask(
-                "Get sources for the type: {0}", 
-                scheduledDownloadTitle);
+            var updateAllTask = taskStatusController.Create(
+                taskStatus,
+                string.Format(
+                    "Update downloads for the type: {0}",
+                    scheduledDownloadTitle));
+
+            var getSourcesTask = taskStatusController.Create(
+                updateAllTask,
+                string.Format(
+                    "Get download sources",
+                    scheduledDownloadTitle));
 
             var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync();
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(getSourcesTask);
+
+            var counter = 0;
+            var updateProductDownloadsTask = taskStatusController.Create(updateAllTask, "Update downloads for product");
 
             foreach (var downloadSource in downloadSources)
             {
-                var key = downloadSource.Key;
+                var id = downloadSource.Key;
 
-                ProductCore product = await accountProductsDataController.GetByIdAsync(key);
+                ProductCore product = await accountProductsDataController.GetByIdAsync(id);
 
                 if (product == null)
                 {
-                    taskReportingController.ReportWarning(
-                        "Downloads are scheduled for the product/account product that doesn't exist");
+                    taskStatusController.Warn(
+                        updateProductDownloadsTask,
+                        "Downloads are scheduled for the product/account product that doesn't exist: {0}",
+                        id);
                     continue;
                 }
+
+                taskStatusController.UpdateProgress(
+                    updateProductDownloadsTask, 
+                    ++counter, 
+                    downloadSources.Count, 
+                    product.Title);
 
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
                 if (productDownloads == null)
@@ -87,10 +108,9 @@ namespace GOG.TaskActivities.Abstract
                 {
                     var destinationDirectory = destinationController?.GetDirectory(source);
 
-                    taskReportingController.StartTask(
-                        "Schedule new downloads for: {0}, {1}",
-                        scheduledDownloadTitle,
-                        product.Title);
+                    var scheduleDownloadsTask = taskStatusController.Create(
+                        updateProductDownloadsTask,
+                        "Schedule new downloads");
 
                     var scheduledDownloadEntry = new ProductDownloadEntry()
                     {
@@ -102,9 +122,12 @@ namespace GOG.TaskActivities.Abstract
 
                     await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                    taskReportingController.CompleteTask();
+                    taskStatusController.Complete(scheduleDownloadsTask);
                 }
             }
+
+            taskStatusController.Complete(updateProductDownloadsTask);
+            taskStatusController.Complete(updateAllTask);
         }
     }
 }

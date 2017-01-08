@@ -9,7 +9,7 @@ using Interfaces.Destination;
 using Interfaces.File;
 using Interfaces.Conversion;
 using Interfaces.Stream;
-using Interfaces.Reporting;
+using Interfaces.TaskStatus;
 
 using Models.ValidationChunk;
 
@@ -23,20 +23,20 @@ namespace Controllers.Validation
         private IStreamController streamController;
         private XmlDocument validationXml;
         private IConversionController<byte[], string> byteToStringConversionController;
-        private IReportProgressDelegate validationReportingController;
+        private ITaskStatusController taskStatusController;
 
         public ValidationController(
             IDestinationController validationDestinationController,
             IFileController fileController,
             IStreamController streamController,
             IConversionController<byte[], string> byteToStringConversionController,
-            IReportProgressDelegate validationReportingController)
+            ITaskStatusController taskStatusController)
         {
             this.validationDestinationController = validationDestinationController;
             this.fileController = fileController;
             this.streamController = streamController;
             this.byteToStringConversionController = byteToStringConversionController;
-            this.validationReportingController = validationReportingController;
+            this.taskStatusController = taskStatusController;
 
             validationXml = new XmlDocument()  { PreserveWhitespace = false };
 
@@ -44,7 +44,7 @@ namespace Controllers.Validation
             md5CryptoServiceProvider.Initialize();
         }
 
-        public async Task ValidateAsync(string uri)
+        public async Task ValidateAsync(string uri, ITaskStatus taskStatus)
         {
             if (string.IsNullOrEmpty(uri))
                 throw new ArgumentNullException("File location is invalid");
@@ -126,10 +126,10 @@ namespace Controllers.Validation
 
                     await ValidateChunkAsync(fileStream, chunk);
 
-                    validationReportingController?.ReportProgress(length, expectedSize);
+                    taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri);
                 }
 
-                validationReportingController?.ReportProgress(expectedSize, expectedSize);
+                taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri);
             }
         }
 

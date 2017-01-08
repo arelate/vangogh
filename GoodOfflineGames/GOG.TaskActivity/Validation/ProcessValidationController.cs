@@ -3,12 +3,12 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
 
-using Interfaces.Reporting;
 using Interfaces.Validation;
 using Interfaces.Destination;
 using Interfaces.Data;
 using Interfaces.Routing;
 using Interfaces.Eligibility;
+using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
 
@@ -36,8 +36,11 @@ namespace GOG.TaskActivities.Validation
             IDataController<long> scheduledCleanupDataController,
             IRoutingController routingController,
             IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate,
-            ITaskReportingController taskReportingController) :
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.destinationController = destinationController;
             this.validationController = validationController;
@@ -52,11 +55,13 @@ namespace GOG.TaskActivities.Validation
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask("Validate product files");
+            var validateAllTask = taskStatusController.Create(taskStatus, "Validate all updated products files");
 
             var counter = 0;
 
             var updatedProducts = updatedDataController.EnumerateIds().ToArray();
+
+            var validateProductTask = taskStatusController.Create(validateAllTask, "Validate updated product");
 
             foreach (var id in updatedProducts)
             {
@@ -65,7 +70,7 @@ namespace GOG.TaskActivities.Validation
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
-                taskReportingController.StartTask("Validate product {0}/{1}: {2}",
+                taskStatusController.UpdateProgress(validateProductTask,
                     ++counter,
                     updatedProducts.Count(),
                     productDownloads.Title);
@@ -84,31 +89,34 @@ namespace GOG.TaskActivities.Validation
 
                     try
                     {
-                        taskReportingController.StartTask("Validate product file: {0}", localFile);
-                        await validationController.ValidateAsync(localFile);
+                        var validateFileTask = taskStatusController.Create(
+                            validateProductTask, 
+                            string.Format(
+                                "Validate product file: {0}", 
+                                localFile));
+                        await validationController.ValidateAsync(localFile, validateFileTask);
                         productIsValid &= true;
-                        taskReportingController.CompleteTask();
+                        taskStatusController.Complete(validateFileTask);
                     }
                     catch (Exception ex)
                     {
-                        taskReportingController.ReportFailure(ex.Message);
+                        taskStatusController.Fail(validateProductTask, ex.Message);
                         productIsValid &= false;
                     }
                 }
 
-                taskReportingController.CompleteTask();
-
                 if (productIsValid)
                 {
-                    taskReportingController.StartTask("Congratulations, all product files are valid! removing product from updates and scheduling cleanup: {0}", productDownloads.Title);
+                    var removeUpdateTask = taskStatusController.Create(validateProductTask, "All product files are valid. Remove product from updates and scheduling cleanup");
                     await lastKnownValidDataController.UpdateAsync(id);
                     await updatedDataController.RemoveAsync(id);
                     await scheduledCleanupDataController.UpdateAsync(id);
-                    taskReportingController.CompleteTask();
+                    taskStatusController.Complete(removeUpdateTask);
                 }
             }
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(validateProductTask);
+            taskStatusController.Complete(validateAllTask);
         }
     }
 }

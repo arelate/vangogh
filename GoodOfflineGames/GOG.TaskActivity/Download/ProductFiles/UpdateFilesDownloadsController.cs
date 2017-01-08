@@ -1,7 +1,7 @@
 ﻿using Interfaces.DownloadSources;
-using Interfaces.Reporting;
 using Interfaces.Destination;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
 
@@ -19,14 +19,16 @@ namespace GOG.TaskActivities.Download.ProductFiles
             IDestinationController destinationController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            ITaskReportingController taskReportingController) :
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController) :
             base (
                 productDownloadType,
                 downloadSourcesController,
                 destinationController,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskReportingController)
+                taskStatus,
+                taskStatusController)
         {
             // ...
         }

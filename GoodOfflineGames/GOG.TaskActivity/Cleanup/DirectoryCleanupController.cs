@@ -7,7 +7,7 @@ using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.Destination;
 using Interfaces.RecycleBin;
-using Interfaces.Reporting;
+using Interfaces.TaskStatus;
 
 using GOG.Models;
 
@@ -29,8 +29,11 @@ namespace GOG.TaskActivities.Cleanup
             IDestinationController destinationController,
             IDirectoryController directoryController,
             IRecycleBinController recycleBinController,
-            ITaskReportingController taskReportingController):
-            base(taskReportingController)
+            ITaskStatus taskStatus,
+            ITaskStatusController taskStatusController):
+            base(
+                taskStatus,
+                taskStatusController)
         {
             this.gameDetailsDataController = gameDetailsDataController;
             this.directoryEnumerationController = directoryEnumerationController;
@@ -41,7 +44,9 @@ namespace GOG.TaskActivities.Cleanup
 
         public override async Task ProcessTaskAsync()
         {
-            taskReportingController.StartTask("Enumerate expected product files directories");
+            var cleanupDirectoriesTask = taskStatusController.Create(taskStatus, "Cleanup product directories");
+
+            var enumerateExpectedDirectoriesTask = taskStatusController.Create(cleanupDirectoriesTask, "Enumerate expected product files directories");
 
             var gameDetailsIds = gameDetailsDataController.EnumerateIds();
             var expectedDirectories = new List<string>(gameDetailsIds.Count());
@@ -49,16 +54,16 @@ namespace GOG.TaskActivities.Cleanup
             foreach (var id in gameDetailsIds)
                 expectedDirectories.AddRange(await directoryEnumerationController.EnumerateAsync(id));
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(enumerateExpectedDirectoriesTask);
 
-            taskReportingController.StartTask("Enumerate actual product files directories");
+            var enumerateActualDirectoriesTask = taskStatusController.Create(cleanupDirectoriesTask, "Enumerate actual product files directories");
 
             var rootDirectory = destinationController.GetDirectory(string.Empty);
             var actualDirectories = directoryController.EnumerateDirectories(rootDirectory);
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(enumerateActualDirectoriesTask);
 
-            taskReportingController.StartTask("Enumerate unexpected product files directories");
+            var enumerateUnexpectedDirectoriesTask = taskStatusController.Create(cleanupDirectoriesTask, "Enumerate unexpected product files directories");
 
             var unexpectedDirectories = new List<string>();
 
@@ -66,21 +71,24 @@ namespace GOG.TaskActivities.Cleanup
                 if (!expectedDirectories.Contains(directory))
                     unexpectedDirectories.Add(directory);
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(enumerateUnexpectedDirectoriesTask);
 
-            taskReportingController.StartTask("Cleaning up unexpected directories");
+            var cleanupUnexpectedDirectoriesTask = taskStatusController.Create(cleanupDirectoriesTask, "Clean up unexpected directories");
+            var counter = 0;
 
             foreach (var directory in unexpectedDirectories)
             {
-                taskReportingController.StartTask(
-                    string.Format(
-                        "Moving {0} to recycle bin",
-                        directory));
+                taskStatusController.UpdateProgress(
+                    cleanupUnexpectedDirectoriesTask,
+                    counter++,
+                    unexpectedDirectories.Count,
+                    directory);
                 recycleBinController.MoveDirectoryToRecycleBin(directory);
-                taskReportingController.CompleteTask();
             }
 
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(cleanupUnexpectedDirectoriesTask);
+
+            taskStatusController.Complete(cleanupDirectoriesTask);
         }
     }
 }

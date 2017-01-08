@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using Interfaces.TaskStatus;
+
 namespace Interfaces.Validation
 {
     public interface IValidateFilenameDelegate
@@ -19,7 +21,7 @@ namespace Interfaces.Validation
 
     public interface IValidateDelegate
     {
-        Task ValidateAsync(string uri);
+        Task ValidateAsync(string uri, ITaskStatus taskStatus);
     }
 
     public interface IValidationController:

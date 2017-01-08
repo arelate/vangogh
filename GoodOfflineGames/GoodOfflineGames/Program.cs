@@ -284,26 +284,32 @@ namespace GoodOfflineGames
 
             #endregion
 
+            var applicationTaskStatus = new TaskStatus() { Title = "GoodOfflineGames" };
+
+            var taskStatusViewController = new TaskStatusViewController(
+                applicationTaskStatus,
+                consoleController);
+
+            var taskStatusController = new TaskStatusController(taskStatusViewController);
+
             #region Settings: Load, Validation
 
             var settingsController = new SettingsController(
                 storageController,
                 serializationController);
 
-            taskReportingController.StartTask("Load settings");
+            var loadSettingsTask = taskStatusController.Create(applicationTaskStatus, "Load settings");
             var settings = settingsController.Load().Result;
-            taskReportingController.CompleteTask();
-            consoleController.WriteLine(string.Empty);
 
-            taskReportingController.StartTask("Validate settings");
+            var validateSettingsTask = taskStatusController.Create(loadSettingsTask, "Validate settings");
 
-            taskReportingController.StartTask("Validate download settings");
+            var validateDownloadSettingsTask = taskStatusController.Create(validateSettingsTask, "Validate download settings");
             var downloadPropertiesValidationController = new DownloadPropertiesValidationController(languageController);
             settings.Download = downloadPropertiesValidationController.ValidateProperties(settings.Download) as Models.Settings.DownloadProperties;
-            taskReportingController.CompleteTask();
+            taskStatusController.Complete(validateDownloadSettingsTask);
 
-            taskReportingController.CompleteTask();
-            consoleController.WriteLine(string.Empty);
+            taskStatusController.Complete(validateSettingsTask);
+            taskStatusController.Complete(loadSettingsTask);
 
             // set user agent string used for network requests
             if (!string.IsNullOrEmpty(settings.Connection.UserAgent))
@@ -312,14 +318,6 @@ namespace GoodOfflineGames
             #endregion
 
             #region Task Activity Controllers
-
-            var applicationTaskStatus = new TaskStatus() { Title = "GoodOfflineGames" };
-
-            var taskStatusViewController = new TaskStatusViewController(
-                applicationTaskStatus,
-                consoleController);
-
-            var taskStatusController = new TaskStatusController(taskStatusViewController);
 
             #region Load
 
@@ -560,7 +558,8 @@ namespace GoodOfflineGames
                 imagesDestinationController,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var updateAccountProductsImagesDownloadsController = new UpdateImagesDownloadsController(
                 ProductDownloadTypes.Image,
@@ -568,7 +567,8 @@ namespace GoodOfflineGames
                 imagesDestinationController,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var updateScreenshotsDownloadsController = new UpdateScreenshotsDownloadsController(
                 ProductDownloadTypes.Screenshot,
@@ -576,7 +576,8 @@ namespace GoodOfflineGames
                 screenshotsDestinationController,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var updateProductFilesDownloadsController = new UpdateFilesDownloadsController(
                 ProductDownloadTypes.ProductFile,
@@ -584,7 +585,8 @@ namespace GoodOfflineGames
                 productFilesDestinationController,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             // downloads processing
 
@@ -598,7 +600,8 @@ namespace GoodOfflineGames
                 productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var screenshotsProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.Screenshot,
@@ -610,7 +613,8 @@ namespace GoodOfflineGames
                 productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var productFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.ProductFile,
@@ -622,7 +626,8 @@ namespace GoodOfflineGames
                 productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             // validation controllers
 
@@ -632,7 +637,8 @@ namespace GoodOfflineGames
                 validationDestinationController,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var validationProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.Validation,
@@ -644,20 +650,17 @@ namespace GoodOfflineGames
                 productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var byteToStringConversionController = new BytesToStringConvertionController();
-
-            var validationReportingController = new ValidationReportingController(
-                bytesFormattingController,
-                taskReportingController);
 
             var validationController = new ValidationController(
                 validationDestinationController,
                 fileController,
                 streamController,
                 byteToStringConversionController,
-                validationReportingController);
+                taskStatusController);
 
             var processValidationController = new ProcessValidationController(
                 productFilesDestinationController,
@@ -668,7 +671,8 @@ namespace GoodOfflineGames
                 scheduledCleanupDataController,
                 routingController,
                 downloadEntryValidationEligibilityController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             #region Cleanup
 
@@ -678,17 +682,20 @@ namespace GoodOfflineGames
                 productFilesDestinationController,
                 directoryController,
                 recycleBinController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             var filesCleanupController = new FilesCleanupController(
                 scheduledCleanupDataController,
+                accountProductsDataController,
                 gameDetailsFilesEnumerationController,
                 gameDetailsDirectoryEnumerationController,
                 directoryController,
                 fileValidationEligibilityController,
                 validationDestinationController,
                 recycleBinController,
-                taskReportingController);
+                applicationTaskStatus,
+                taskStatusController);
 
             #endregion
 
@@ -796,7 +803,7 @@ namespace GoodOfflineGames
                     foreach (var innerException in ex.InnerExceptions)
                         errorMessages.Add(innerException.Message);
 
-                    taskReportingController.ReportFailure(string.Join(", ", errorMessages));
+                    taskStatusController.Fail(applicationTaskStatus, string.Join(", ", errorMessages));
                     break;
                 }
             }
