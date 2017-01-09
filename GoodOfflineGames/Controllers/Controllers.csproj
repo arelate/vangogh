@@ -95,7 +95,6 @@
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Formatting\BytesFormattingController.cs" />
     <Compile Include="Console\ConsoleController.cs" />
-    <Compile Include="Reporting\DownloadReportingController.cs" />
     <Compile Include="RequestPage\RequestPageController.cs" />
     <Compile Include="Stream\StreamController.cs" />
     <Compile Include="Serialization\JSONController.cs" />

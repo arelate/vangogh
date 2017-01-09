@@ -92,7 +92,7 @@ namespace GOG.TaskActivities.Validation
                         var validateFileTask = taskStatusController.Create(
                             validateProductTask, 
                             string.Format(
-                                "Validate product file: {0}", 
+                                "Validate product file", 
                                 localFile));
                         await validationController.ValidateAsync(localFile, validateFileTask);
                         productIsValid &= true;

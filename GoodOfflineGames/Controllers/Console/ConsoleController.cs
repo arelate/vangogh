@@ -82,7 +82,7 @@ namespace Controllers.Console
                     return System.ConsoleColor.Gray;
                 case MessageType.Default:
                 default:
-                    return System.ConsoleColor.White;
+                    return System.ConsoleColor.Gray;
             }
         }
 

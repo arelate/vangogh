@@ -105,6 +105,19 @@ namespace GoodOfflineGames
             //var taskReportingController = new TaskReportingController(
             //    consoleController);
 
+            var bytesFormattingController = new BytesFormattingController();
+            var secondsFormattingController = new SecondsFormattingController();
+
+            var applicationTaskStatus = new TaskStatus() { Title = "Welcome to GoodOfflineGames" };
+
+            var taskStatusViewController = new TaskStatusViewController(
+                applicationTaskStatus,
+                bytesFormattingController,
+                secondsFormattingController,
+                consoleController);
+
+            var taskStatusController = new TaskStatusController(taskStatusViewController);
+
             var cookiesController = new CookiesController(
                 storageController,
                 serializationController);
@@ -114,17 +127,11 @@ namespace GoodOfflineGames
                 cookiesController,
                 uriController);
 
-            var bytesFormattingController = new BytesFormattingController();
-            var secondsFormattingController = new SecondsFormattingController();
-            var downloadReportingController = new DownloadReportingController(
-                bytesFormattingController,
-                secondsFormattingController,
-                consoleController);
             var downloadController = new DownloadController(
                 networkController,
                 streamController,
                 fileController,
-                downloadReportingController);
+                taskStatusController);
 
             var requestPageController = new RequestPageController(
                 networkController);
@@ -283,14 +290,6 @@ namespace GoodOfflineGames
                 scheduledCleanupDestinationController);
 
             #endregion
-
-            var applicationTaskStatus = new TaskStatus() { Title = "GoodOfflineGames" };
-
-            var taskStatusViewController = new TaskStatusViewController(
-                applicationTaskStatus,
-                consoleController);
-
-            var taskStatusController = new TaskStatusController(taskStatusViewController);
 
             #region Settings: Load, Validation
 

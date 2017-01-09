@@ -61,12 +61,6 @@ namespace GOG.Controllers.Authorization
             var userDataString = await networkController.Get(Uris.Paths.Authentication.UserData);
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
 
-            if (userData.IsLoggedIn)
-            {
-                consoleController.WriteLine("User {0} is already logged in.", MessageType.Success, userData.Username);
-                consoleController.WriteLine("Delete gog_* cookies if you want to reset current GOG.com session.", MessageType.Warning);
-            }
-
             return userData.IsLoggedIn;
         }
 

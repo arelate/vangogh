@@ -6,7 +6,7 @@ using System.Net.Http;
 using Interfaces.Download;
 using Interfaces.Network;
 using Interfaces.Stream;
-using Interfaces.Reporting;
+using Interfaces.TaskStatus;
 using Interfaces.File;
 
 namespace Controllers.Download
@@ -15,23 +15,23 @@ namespace Controllers.Download
     {
         private INetworkController networkController;
         private IStreamController streamController;
-        private IDownloadReportingController downloadReportingController;
         private IFileController fileController;
+        private ITaskStatusController taskStatusController;
 
         public DownloadController(
             INetworkController networkController,
             IStreamController streamController,
             IFileController fileController,
-            IDownloadReportingController downloadReportingController)
+            ITaskStatusController taskStatusController)
         {
             this.networkController = networkController;
             this.streamController = streamController;
             this.fileController = fileController;
 
-            this.downloadReportingController = downloadReportingController;
+            this.taskStatusController = taskStatusController;
         }
 
-        public async Task DownloadFileAsync(HttpResponseMessage response, string destination)
+        public async Task DownloadFileAsync(HttpResponseMessage response, string destination, ITaskStatus taskStatus)
         {
             response.EnsureSuccessStatusCode();
 
@@ -48,8 +48,6 @@ namespace Controllers.Download
                 fileController.GetSize(fullPath) == response.Content.Headers.ContentLength)
                 return;
 
-            downloadReportingController?.StartTask(string.Empty);
-
             using (var writeableStream = streamController.OpenWritable(fullPath))
             using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
@@ -57,11 +55,14 @@ namespace Controllers.Download
                 {
                     totalBytesRead += bytesRead;
                     await writeableStream.WriteAsync(buffer, 0, bytesRead);
-                    downloadReportingController?.ReportProgress(totalBytesRead, response.Content.Headers.ContentLength);
+                    taskStatusController.UpdateProgress(
+                        taskStatus, 
+                        totalBytesRead, 
+                        (long) response.Content.Headers.ContentLength,
+                        filename,
+                        "byte(s)");
                 }
             }
-
-            downloadReportingController?.CompleteTask();
         }
     }
 }

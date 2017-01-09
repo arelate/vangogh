@@ -126,7 +126,7 @@ namespace Controllers.Validation
 
                     await ValidateChunkAsync(fileStream, chunk);
 
-                    taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri);
+                    taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri, "byte(s)");
                 }
 
                 taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri);

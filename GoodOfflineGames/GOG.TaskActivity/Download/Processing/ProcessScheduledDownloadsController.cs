@@ -81,7 +81,7 @@ namespace GOG.TaskActivities.Download.Processing
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(d => d.Type == downloadType).ToArray();
 
-                var processDownloadEntriesTask = taskStatusController.Create(processProductDownloadsTask, "Download entry");
+                var processDownloadEntriesTask = taskStatusController.Create(processProductDownloadsTask, "Download product entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -94,6 +94,8 @@ namespace GOG.TaskActivities.Download.Processing
                         entry.SourceUri);
 
                     var resolvedUri = string.Empty;
+
+                    var downloadEntryTask = taskStatusController.Create(processDownloadEntriesTask, "Download entry");
 
                     try
                     {
@@ -108,7 +110,7 @@ namespace GOG.TaskActivities.Download.Processing
                                     entry.SourceUri,
                                     resolvedUri);
 
-                            await downloadController.DownloadFileAsync(response, entry.Destination);
+                            await downloadController.DownloadFileAsync(response, entry.Destination, downloadEntryTask);
                         }
                     }
                     catch (Exception ex)
@@ -116,6 +118,7 @@ namespace GOG.TaskActivities.Download.Processing
                         taskStatusController.Warn(processDownloadEntriesTask, ex.Message);
                     }
 
+                    taskStatusController.Complete(downloadEntryTask);
 
                     // there is no value in trying to redownload images/screenshots - so remove them on success
                     // we won't be removing anything else as it might be used in the later steps
