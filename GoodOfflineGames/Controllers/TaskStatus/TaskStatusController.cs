@@ -48,6 +48,9 @@ namespace Controllers.TaskStatus
         {
             ReleaseAssertTaskStatusNotNull(taskStatus);
 
+            if (taskStatus.Complete)
+                throw new InvalidOperationException("Task status is already complete.");
+
             taskStatus.Complete = true;
             taskStatus.Completed = DateTime.UtcNow;
 
@@ -57,6 +60,9 @@ namespace Controllers.TaskStatus
         public void UpdateProgress(ITaskStatus taskStatus, long current, long total, string target, string unit = "")
         {
             ReleaseAssertTaskStatusNotNull(taskStatus);
+
+            if (taskStatus.Complete)
+                throw new InvalidOperationException("Cannot update completed task status.");
 
             if (taskStatus.Progress == null)
                 taskStatus.Progress = new TaskProgress();

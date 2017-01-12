@@ -57,7 +57,7 @@ namespace GOG.TaskActivities.Authorization
 
         public override async Task ProcessTaskAsync()
         {
-            var authorizationTask = taskStatusController.Create(taskStatus, "Authorization on GOG.com");
+            var authorizationTask = taskStatusController.Create(taskStatus, "Authorize on GOG.com");
 
             authorizationController = new Controllers.Authorization.AuthorizationController(
                 authenticationPropertiesValidationController,

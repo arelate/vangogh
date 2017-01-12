@@ -115,10 +115,12 @@ namespace GOG.TaskActivities.Download.Processing
                     }
                     catch (Exception ex)
                     {
-                        taskStatusController.Warn(processDownloadEntriesTask, ex.Message);
+                        taskStatusController.Warn(downloadEntryTask, ex.Message);
                     }
-
-                    taskStatusController.Complete(downloadEntryTask);
+                    finally
+                    {
+                        taskStatusController.Complete(downloadEntryTask);
+                    }
 
                     // there is no value in trying to redownload images/screenshots - so remove them on success
                     // we won't be removing anything else as it might be used in the later steps
@@ -131,9 +133,9 @@ namespace GOG.TaskActivities.Download.Processing
 
                         taskStatusController.Complete(removeEntryTask);
                     }
-
-                    taskStatusController.Complete(processDownloadEntriesTask);
                 }
+
+                taskStatusController.Complete(processDownloadEntriesTask);
             }
 
             taskStatusController.Complete(processProductDownloadsTask);

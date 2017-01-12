@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.DownloadSources;
 using Interfaces.ImageUri;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using Models.ProductCore;
 
@@ -26,7 +27,7 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductImages
             this.imageUriController = imageUriController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(ITaskStatus taskStatus)
         {
             var productImageSources = new Dictionary<long, IList<string>>();
 

@@ -14,6 +14,11 @@
         void Clear();
     }
 
+    public interface ISetCursorPositionDelegate
+    {
+        void SetCursorPosition(int left, int top);
+    }
+
     public interface IReadDelegate
     {
         string Read();
@@ -41,6 +46,7 @@
 
     public interface IConsoleController :
         IClearDelegate,
+        ISetCursorPositionDelegate,
         IReadDelegate,
         IReadLineDelegate,
         IInputPasswordDelegate,

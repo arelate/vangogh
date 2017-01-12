@@ -29,6 +29,7 @@ using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Indexing;
+using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
 using Controllers.TaskStatus;
@@ -101,9 +102,7 @@ namespace GoodOfflineGames
             var serializationController = new JSONStringController();
 
             var consoleController = new ConsoleController();
-
-            //var taskReportingController = new TaskReportingController(
-            //    consoleController);
+            var consolePresentationController = new ConsolePresentationController(consoleController);
 
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();
@@ -114,7 +113,7 @@ namespace GoodOfflineGames
                 applicationTaskStatus,
                 bytesFormattingController,
                 secondsFormattingController,
-                consoleController);
+                consolePresentationController);
 
             var taskStatusController = new TaskStatusController(taskStatusViewController);
 
@@ -364,7 +363,6 @@ namespace GoodOfflineGames
                 ProductTypes.Product,
                 requestPageController,
                 serializationController,
-                applicationTaskStatus,
                 taskStatusController);
 
             var productsExtractionController = new ProductsExtractionController();
@@ -384,7 +382,6 @@ namespace GoodOfflineGames
                 ProductTypes.AccountProduct,
                 requestPageController,
                 serializationController,
-                applicationTaskStatus,
                 taskStatusController);
 
             var accountProductsExtractionController = new AccountProductsExtractionController();
@@ -507,7 +504,6 @@ namespace GoodOfflineGames
                 scheduledScreenshotsUpdatesDataController,
                 screenshotsDataController,
                 screenshotUriController,
-                applicationTaskStatus,
                 taskStatusController);
 
             var routingController = new RoutingController(productRoutesDataController);
@@ -786,8 +782,6 @@ namespace GoodOfflineGames
 
             #endregion
 
-
-
             foreach (var taskActivityController in taskActivityControllers)
             {
                 try
@@ -807,7 +801,7 @@ namespace GoodOfflineGames
                 }
             }
 
-            consoleController.WriteLine("Press ENTER to continue...");
+            consolePresentationController.Present(new string[3] { "All GoodOfflineGames tasks are complete.", "", "Press ENTER to close the window..." });
             consoleController.ReadLine();
 
             #endregion

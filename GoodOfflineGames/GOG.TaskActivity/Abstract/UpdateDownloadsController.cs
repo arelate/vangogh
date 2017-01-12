@@ -59,7 +59,7 @@ namespace GOG.TaskActivities.Abstract
                     "Get download sources",
                     scheduledDownloadTitle));
 
-            var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync();
+            var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync(getSourcesTask);
             taskStatusController.Complete(getSourcesTask);
 
             var counter = 0;

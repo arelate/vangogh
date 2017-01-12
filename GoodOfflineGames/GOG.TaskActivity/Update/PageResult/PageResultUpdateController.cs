@@ -51,19 +51,23 @@ namespace GOG.TaskActivities.Update.PageResult
 
         public override async Task ProcessTaskAsync()
         {
-            var updateProductsTask = taskStatusController.Create(taskStatus, "Update products from " + Uris.Paths.GetUpdateUri(productType));
+            var updateAllProductsTask = taskStatusController.Create(taskStatus, "Update all products information");
 
-            var productsPageResults = await pageResultsController.GetPageResults();
+            var updateProductsTask = taskStatusController.Create(updateAllProductsTask, "Update products from the site");
 
-            var extractTask = taskStatusController.Create(updateProductsTask, "Extract product data");
+            var productsPageResults = await pageResultsController.GetPageResults(updateProductsTask);
+
+            var extractTask = taskStatusController.Create(updateAllProductsTask, "Extract product data");
             var products = pageResultsExtractingController.Extract(productsPageResults);
             taskStatusController.Complete(extractTask);
 
-            var updateTask = taskStatusController.Create(updateProductsTask, "Update existing products");
+            var updateTask = taskStatusController.Create(updateAllProductsTask, "Update existing products");
             await dataController.UpdateAsync(products.ToArray());
             taskStatusController.Complete(updateTask);
 
             taskStatusController.Complete(updateProductsTask);
+
+            taskStatusController.Complete(updateAllProductsTask);
         }
     }
 }

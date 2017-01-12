@@ -16,24 +16,21 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
         private IDataController<long> scheduledScreenshotsUpdatesDataController;
         private IDataController<ProductScreenshots> screenshotsDataController;
         private IImageUriController screenshotUriController;
-        private ITaskStatus taskStatus;
         private ITaskStatusController taskStatusController;
 
         public ScreenshotsDownloadSourcesController(
             IDataController<long> scheduledScreenshotsUpdatesDataController,
             IDataController<ProductScreenshots> screenshotsDataController,
             IImageUriController screenshotUriController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController)
         {
             this.scheduledScreenshotsUpdatesDataController = scheduledScreenshotsUpdatesDataController;
             this.screenshotsDataController = screenshotsDataController;
             this.screenshotUriController = screenshotUriController;
-            this.taskStatus = taskStatus;
             this.taskStatusController = taskStatusController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(ITaskStatus taskStatus)
         {
             var processUpdatesTask = taskStatusController.Create(taskStatus, "Process scheduled screenshot updates");
 
@@ -61,11 +58,13 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
                     screenshotsSources[id].Add(screenshotUriController.ExpandUri(uri));
             }
 
-            taskStatusController.Complete(processUpdatesTask);
+            taskStatusController.Complete(processProductUpdateTask);
 
-            var clearUpdatesTask = taskStatusController.Create(taskStatus, "Clear scheduled screenshot updates");
+            var clearUpdatesTask = taskStatusController.Create(processUpdatesTask, "Clear scheduled screenshot updates");
             await scheduledScreenshotsUpdatesDataController.RemoveAsync(scheduledScreenshotsUpdatesDataController.EnumerateIds().ToArray());
             taskStatusController.Complete(clearUpdatesTask);
+
+            taskStatusController.Complete(processUpdatesTask);
 
             return screenshotsSources;
         }

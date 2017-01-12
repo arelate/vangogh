@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.DownloadSources;
 using Interfaces.Data;
 using Interfaces.Enumeration;
+using Interfaces.TaskStatus;
 
 namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
 {
@@ -21,7 +22,7 @@ namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
             this.gameDetailsManualUrlEnumerationController = gameDetailsManualUrlEnumerationController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(ITaskStatus taskStatus)
         {
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 

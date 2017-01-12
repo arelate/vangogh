@@ -8,6 +8,7 @@ using Interfaces.UriResolution;
 using Interfaces.Data;
 using Interfaces.Routing;
 using Interfaces.Eligibility;
+using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
 
@@ -38,7 +39,7 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
             this.fileValidationEligibilityDelegate = fileValidationEligibilityDelegate;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(ITaskStatus taskStatus)
         {
             var validationSources = new Dictionary<long, IList<string>>();
 

@@ -15,13 +15,11 @@ namespace GOG.Controllers.PageResults
             ProductTypes productType,
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) : 
             base(
                 productType,
                 requestPageController, 
                 serializationController, 
-                taskStatus,
                 taskStatusController)
         {
             // ...

@@ -60,6 +60,7 @@
     <Compile Include="Language\LanguageController.cs" />
     <Compile Include="DataStoragePolicy\DataStoragePolicy.cs" />
     <Compile Include="Data\DataController.cs" />
+    <Compile Include="Presentation\PresentationController.cs" />
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="Routing\RoutingController.cs" />

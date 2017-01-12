@@ -90,5 +90,10 @@ namespace Controllers.Console
         {
             System.Console.Clear();
         }
+
+        public void SetCursorPosition(int left, int top)
+        {
+            System.Console.SetCursorPosition(left, top);
+        }
     }
 }

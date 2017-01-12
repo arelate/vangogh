@@ -77,9 +77,11 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTaskAsync()
         {
+            var updateAllProductsTask = taskStatusController.Create(taskStatus, "Update details on individual products");
+
             var updatedProducts = new List<long>();
 
-            var dataEnumerationTask = taskStatusController.Create(taskStatus, "Enumerate missing data");
+            var dataEnumerationTask = taskStatusController.Create(updateAllProductsTask, "Enumerate missing data");
 
             foreach (var id in listTypeDataController.EnumerateIds())
             {
@@ -92,14 +94,14 @@ namespace GOG.TaskActivities.Abstract
 
             taskStatusController.Complete(dataEnumerationTask);
 
-            var dataUpdateTask = taskStatusController.Create(taskStatus, "Enumerate required data updates");
+            var dataUpdateTask = taskStatusController.Create(updateAllProductsTask, "Enumerate required data updates");
 
             if (requiredUpdatesController != null)
                 updatedProducts.AddRange(requiredUpdatesController.GetRequiredUpdates());
 
             taskStatusController.Complete(dataUpdateTask);
 
-            var getUpdatesTask = taskStatusController.Create(taskStatus, "Getting updates for data type: " + updateTypeDescription);
+            var getUpdatesTask = taskStatusController.Create(updateAllProductsTask, "Getting updates for data type: " + updateTypeDescription);
 
             var currentProduct = 0;
 
@@ -150,6 +152,8 @@ namespace GOG.TaskActivities.Abstract
             }
 
             taskStatusController.Complete(getUpdatesTask);
+
+            taskStatusController.Complete(updateAllProductsTask);
         }
     }
 }

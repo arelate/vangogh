@@ -20,14 +20,12 @@ namespace GOG.Controllers.PageResults
         private ProductTypes productType;
         private IRequestPageController requestPageController;
         private ISerializationController<string> serializationController;
-        private ITaskStatus taskStatus;
         private ITaskStatusController taskStatusController;
 
         public PageResultsController(
             ProductTypes productType,
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController)
         {
             this.productType = productType;
@@ -35,11 +33,10 @@ namespace GOG.Controllers.PageResults
             this.requestPageController = requestPageController;
             this.serializationController = serializationController;
 
-            this.taskStatus = taskStatus;
             this.taskStatusController = taskStatusController;
         }
 
-        public async Task<IList<T>> GetPageResults()
+        public async Task<IList<T>> GetPageResults(ITaskStatus taskStatus)
         {
             var pageResults = new List<T>();
             var currentPage = 1;
