@@ -7,12 +7,15 @@ using Interfaces.TaskStatus;
 using Interfaces.Formatting;
 using Interfaces.Presentation;
 
+using Models.Units;
+using Models.ViewModels;
+
 namespace Controllers.TaskStatus
 {
     public class TaskStatusViewController : ITaskStatusViewController
     {
         private ITaskStatus taskStatus;
-        private IPresentationController<string> consolePresentationController;
+        private IPresentationController<Tuple<string, string[]>> consolePresentationController;
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
 
@@ -22,18 +25,28 @@ namespace Controllers.TaskStatus
         private const int throttleMilliseconds = 100;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
-        private const string taskStatusProgressViewTemplate = ": {0}: {1:P1}, {2} of {3}";
-        private const string taskStatusProgressETAViewTemplate = ", ETA: {0}";
-        private const string warningsTemplate = ". Warning(s): {0}.";
-        private const string failuresTemplate = ". Failures(s): {0}.";
+        private const string progressTemplate = ": %c{0}%c: {1:P1}, {2} of {3}";
+        private readonly string[] progressColors = new string[] { "white", "default" };
+        private const string progressETATemplate = ", ETA: %c{0}%c";
+        private readonly string[] progressETAColors = new string[] { "white", "default" };
+
+        private const string childTasksTemplate = ". %c{0}%c child task(s) complete.";
+        private readonly string[] childTasksColors = new string[] { "white", "default" };
+
+        private const string warningsTemplate = ". %cWarning(s): {0}%c.";
+        private readonly string[] warningsColors = new string[] { "red", "default" };
+        private const string failuresTemplate = ". %cFailures(s): {0}%c.";
+        private readonly string[] failuresColors = new string[] { "yellow", "default" };
+
         private const int showETAThreshold = 2;
         private const char childPrefix = '>';
+        private const char childPrefixSeparator = ' ';
 
         public TaskStatusViewController(
             ITaskStatus taskStatus,
             IFormattingController bytesFormattingController,
             IFormattingController secondsFormattingController,
-            IPresentationController<string> consolePresentationController)
+            IPresentationController<Tuple<string, string[]>> consolePresentationController)
         {
             this.taskStatus = taskStatus;
 
@@ -50,7 +63,7 @@ namespace Controllers.TaskStatus
         {
             if ((DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
 
-            var views = new List<string>();
+            var viewModels = new List<TaskStatusViewModel>();
 
             taskStatusQueue.Clear();
             taskStatusLevelsQueue.Clear();
@@ -61,17 +74,17 @@ namespace Controllers.TaskStatus
             {
                 var currentTaskStatus = taskStatusQueue.Dequeue();
                 var currentLevel = taskStatusLevelsQueue.Dequeue();
-                var taskStatusView = GetTaskStatusView(currentTaskStatus);
+                var taskStatusViewModel = GetViewModel(currentTaskStatus);
 
-                if (!string.IsNullOrEmpty(taskStatusView))
+                if (taskStatusViewModel != null)
                 {
                     if (currentLevel > 0)
-                    {
-                        taskStatusView = " " + taskStatusView;
-                        taskStatusView = taskStatusView.PadLeft(taskStatusView.Length + currentLevel, childPrefix);
-                    }
+                        taskStatusViewModel.Text =
+                            string.Empty.PadLeft(currentLevel, childPrefix) +
+                            childPrefixSeparator +
+                            taskStatusViewModel.Text;
 
-                    views.Add(taskStatusView);
+                    viewModels.Add(taskStatusViewModel);
                 }
 
                 if (currentTaskStatus.ChildTasks != null)
@@ -82,16 +95,27 @@ namespace Controllers.TaskStatus
                     }
             }
 
-            consolePresentationController.Present(views);
+            consolePresentationController.Present(GetTuples(viewModels));
 
             lastReportedTimestamp = DateTime.UtcNow;
         }
 
-        private string GetTaskStatusView(ITaskStatus taskStatus)
+        private IEnumerable<Tuple<string, string[]>> GetTuples(IEnumerable<TaskStatusViewModel> taskStatusViewModels)
         {
-            var taskStatusView = new StringBuilder();
+            foreach (var taskStatusViewModel in taskStatusViewModels)
+            {
+                yield return new Tuple<string, string[]>(
+                    taskStatusViewModel.Text, 
+                    taskStatusViewModel.Colors);
+            }
+        }
 
-            if (taskStatus.Complete) return taskStatusView.ToString();
+        private TaskStatusViewModel GetViewModel(ITaskStatus taskStatus)
+        {
+            var taskStatusText = new StringBuilder();
+            var colors = new List<string>();
+
+            if (taskStatus.Complete) return null;
 
             // list completed children
             var completedChildTasksCount = 0;
@@ -100,7 +124,7 @@ namespace Controllers.TaskStatus
                     if (task.Complete)
                         completedChildTasksCount++;
 
-            taskStatusView.Append(taskStatus.Title);
+            taskStatusText.Append(taskStatus.Title);
 
             if (taskStatus.Progress != null)
             {
@@ -109,21 +133,22 @@ namespace Controllers.TaskStatus
                 var currentFormatted = taskStatus.Progress.Current.ToString();
                 var totalFormatted = taskStatus.Progress.Total.ToString();
 
-                if (taskStatus.Progress.Unit == "byte(s)")
+                if (taskStatus.Progress.Unit == DataUnits.Bytes)
                 {
                     currentFormatted = bytesFormattingController.Format(taskStatus.Progress.Current);
                     totalFormatted = bytesFormattingController.Format(taskStatus.Progress.Total);
                 }
 
-                taskStatusView.Append(string.Format(
-                    taskStatusProgressViewTemplate,
+                taskStatusText.Append(string.Format(
+                    progressTemplate,
                     taskStatus.Progress.Target,
                     percentage,
                     currentFormatted,
                     totalFormatted));
+                colors.AddRange(progressColors);
 
                 // show ETA only for bytes, downloads, validation
-                if (taskStatus.Progress.Unit == "byte(s)")
+                if (taskStatus.Progress.Unit == DataUnits.Bytes)
                 {
                     var elapsed = DateTime.UtcNow - taskStatus.Started;
                     var unitsPerSecond = taskStatus.Progress.Current / elapsed.TotalSeconds;
@@ -131,26 +156,42 @@ namespace Controllers.TaskStatus
 
                     if (remainingSeconds > showETAThreshold)
                     {
-                        taskStatusView.Append(string.Format(
-                            taskStatusProgressETAViewTemplate,
+                        taskStatusText.Append(string.Format(
+                            progressETATemplate,
                             secondsFormattingController.Format(
                                 (long)remainingSeconds)));
+                        colors.AddRange(progressETAColors);
                     }
                 }
             }
 
             if (completedChildTasksCount > 0)
-                taskStatusView.Append(string.Format(". {0} child task(s) complete.", completedChildTasksCount));
+            {
+                taskStatusText.Append(string.Format(childTasksTemplate, completedChildTasksCount));
+                colors.AddRange(childTasksColors);
+            }
 
             if (taskStatus.Warnings != null &&
                 taskStatus.Warnings.Count > 0)
-                taskStatusView.Append(string.Format(warningsTemplate, taskStatus.Warnings.Count));
+            {
+                taskStatusText.Append(string.Format(warningsTemplate, taskStatus.Warnings.Count));
+                colors.AddRange(warningsColors);
+            }
 
             if (taskStatus.Failures != null &&
                 taskStatus.Failures.Count > 0)
-                taskStatusView.Append(string.Format(failuresTemplate, taskStatus.Failures.Count));
+            {
+                taskStatusText.Append(string.Format(failuresTemplate, taskStatus.Failures.Count));
+                colors.AddRange(failuresColors);
+            }
 
-            return taskStatusView.ToString();
+            var taskStatusViewModel = new TaskStatusViewModel()
+            {
+                Text = taskStatusText.ToString(),
+                Colors = colors.ToArray()
+            };
+
+            return taskStatusViewModel;
         }
     }
 }

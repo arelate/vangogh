@@ -12,6 +12,7 @@ using Interfaces.TaskStatus;
 
 using Models.Uris;
 using Models.ProductCore;
+using Models.Units;
 
 namespace GOG.TaskActivities.Abstract
 {
@@ -114,7 +115,7 @@ namespace GOG.TaskActivities.Abstract
                     ++currentProduct,
                     updatedProducts.Count,
                     product.Title,
-                    "product(s)");
+                    ProductUnits.Products);
 
                 var uri = string.Format(
                     Uris.Paths.GetUpdateUri(updateProductType),

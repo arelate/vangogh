@@ -8,6 +8,7 @@ using Interfaces.ProductTypes;
 
 using Models.Uris;
 using Models.QueryParameters;
+using Models.Units;
 
 using GOG.Interfaces.PageResults;
 
@@ -61,7 +62,7 @@ namespace GOG.Controllers.PageResults
                     currentPage, 
                     pageResult.TotalPages, 
                     uri, 
-                    "page(s)");
+                    PageUnits.Pages);
 
                 pageResults.Add(pageResult);
 

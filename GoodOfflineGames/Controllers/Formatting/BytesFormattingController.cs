@@ -1,13 +1,21 @@
-﻿namespace Controllers.Formatting
+﻿using Models.Units;
+
+namespace Controllers.Formatting
 {
     public class BytesFormattingController : FormattingController
     {
         public BytesFormattingController()
         {
             relativeOrders = new long[] { 1024, 1024, 1024, 1024, 1 };
-            orderTitles = new string[] { "TB", "GB", "MB", "KB", "bytes" };
+            orderTitles = new string[] {
+                DataUnits.Terabytes,
+                DataUnits.Gigabytes,
+                DataUnits.Megabytes,
+                DataUnits.Kilobytes,
+                DataUnits.Bytes
+            };
             format = "{0:0.0} {1}";
-            zero = "zero bytes";
+            zero = DataUnits.Zero;
         }
     }
 }

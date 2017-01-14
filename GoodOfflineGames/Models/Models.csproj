@@ -52,8 +52,13 @@
     <Compile Include="QueryParameters\QueryParameters.cs" />
     <Compile Include="Separators\Separators.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Units\DataUnits.cs" />
+    <Compile Include="Units\PageUnits.cs" />
+    <Compile Include="Units\ProductUnits.cs" />
+    <Compile Include="Units\TimeUnits.cs" />
     <Compile Include="Uris\Uris.cs" />
     <Compile Include="ValidationChunk\ValidationChunk.cs" />
+    <Compile Include="ViewModels\TaskStatusViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

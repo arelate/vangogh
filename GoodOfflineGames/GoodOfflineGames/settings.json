@@ -24,11 +24,10 @@
     "languages": [ "en" ],
     "operatingSystems": [ "Windows", "Mac" ]
   },
-  "validation": {
-	"updated": true
-  },
+  "validation": true,
   "cleanup": {
     "directories": true,
 	"files": true
-  }
+  },
+  "log": true
 }

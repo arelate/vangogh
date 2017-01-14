@@ -73,6 +73,18 @@ namespace Controllers.Console
             OutputMessage(System.Console.WriteLine, message, colors, data);
         }
 
+        private ConsoleColor ParseColor(string color)
+        {
+            var consoleColor = DefaultColor;
+            Enum.TryParse(color, true, out consoleColor);
+
+            if (consoleColor == ConsoleColor.Black &&
+                color.ToLower() != "black")
+                consoleColor = DefaultColor; 
+
+            return consoleColor;
+        }
+
         private void OutputMessage(Action<string> consoleOutput, string message, string[] colors = null, params object[] data)
         {
             System.Console.ForegroundColor = DefaultColor;
@@ -90,7 +102,7 @@ namespace Controllers.Console
 
             var computedColors = new List<ConsoleColor>() { DefaultColor };
             foreach (var color in colors)
-                computedColors.Add((ConsoleColor)Enum.Parse(typeof(ConsoleColor), color, true));
+                computedColors.Add(ParseColor(color));
 
             var formattedMessageParts = formattedMessage.Split(
                 new string[1] { Separators.ConsoleColor }, 

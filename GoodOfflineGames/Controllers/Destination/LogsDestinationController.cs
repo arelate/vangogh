@@ -9,7 +9,7 @@ namespace Controllers.Destination
 
         public string GetDirectory(string source)
         {
-            return System.IO.Directory.GetCurrentDirectory();
+            return "logs";
         }
 
         public string GetFilename(string source)

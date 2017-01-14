@@ -5,9 +5,11 @@ using System.Linq;
 using Interfaces.Console;
 using Interfaces.Presentation;
 
+using Models.ViewModels;
+
 namespace Controllers.Presentation
 {
-    public class ConsolePresentationController : IPresentationController<string>
+    public class ConsolePresentationController : IPresentationController<Tuple<string, string[]>>
     {
         private IConsoleController consoleController;
         private int[] previousViewsLengths;
@@ -19,7 +21,7 @@ namespace Controllers.Presentation
             previousViewsLengths = new int[0];
         }
 
-        public void Present(IEnumerable<string> views)
+        public void Present(IEnumerable<Tuple<string, string[]>> views)
         {
             consoleController.SetCursorPosition(0, 0);
 
@@ -28,17 +30,19 @@ namespace Controllers.Presentation
             var currentViewsLength = new int[viewsLength];
             for (var ii = 0; ii < viewsLength; ii++)
             {
-                currentViewsLength[ii] = views.ElementAt(ii).Length;
+                var viewText = views.ElementAt(ii).Item1;
+                currentViewsLength[ii] = viewText.Length;
             }
 
             for (var ii = 0; ii < viewsLength; ii++)
             {
-                var view = views.ElementAt(ii);
+                var viewText = views.ElementAt(ii).Item1;
+                var viewColors = views.ElementAt(ii).Item2;
 
                 if (ii < previousViewsLengths.Length)
-                    view = view.PadRight(previousViewsLengths[ii]);
+                    viewText = viewText.PadRight(previousViewsLengths[ii]);
 
-                consoleController.WriteLine(view);
+                consoleController.WriteLine(viewText, viewColors);
             }
 
             if (previousViewsLengths.Length > currentViewsLength.Length)

@@ -12,6 +12,7 @@ using Interfaces.Stream;
 using Interfaces.TaskStatus;
 
 using Models.ValidationChunk;
+using Models.Units;
 
 namespace Controllers.Validation
 {
@@ -126,7 +127,12 @@ namespace Controllers.Validation
 
                     await ValidateChunkAsync(fileStream, chunk);
 
-                    taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri, "byte(s)");
+                    taskStatusController.UpdateProgress(
+                        taskStatus, 
+                        length, 
+                        expectedSize, 
+                        uri, 
+                        DataUnits.Bytes);
                 }
 
                 taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri);

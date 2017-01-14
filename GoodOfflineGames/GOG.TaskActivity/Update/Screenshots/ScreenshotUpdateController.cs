@@ -8,9 +8,10 @@ using Interfaces.ProductTypes;
 using Interfaces.TaskStatus;
 
 using Models.Uris;
+using Models.ProductScreenshots;
+using Models.Units;
 
 using GOG.Models;
-using Models.ProductScreenshots;
 
 using GOG.TaskActivities.Abstract;
 
@@ -70,7 +71,7 @@ namespace GOG.TaskActivities.Update.Screenshots
                     ++counter, 
                     productsMissingScreenshots.Count,
                     product.Title,
-                    "product(s)");
+                    ProductUnits.Products);
 
                 var requestProductPageTask = taskStatusController.Create(updateProductsScreenshotsTask, "Request product page containing screenshots information");
                 var productPageUri = string.Format(Uris.Paths.GetUpdateUri(ProductTypes.Screenshot), product.Url);

@@ -9,6 +9,8 @@ using Interfaces.Stream;
 using Interfaces.TaskStatus;
 using Interfaces.File;
 
+using Models.Units;
+
 namespace Controllers.Download
 {
     public class DownloadController : IDownloadController
@@ -60,7 +62,7 @@ namespace Controllers.Download
                         totalBytesRead, 
                         (long) response.Content.Headers.ContentLength,
                         filename,
-                        "byte(s)");
+                        DataUnits.Bytes);
                 }
             }
         }

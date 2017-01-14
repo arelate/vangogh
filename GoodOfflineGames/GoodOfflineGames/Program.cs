@@ -67,9 +67,6 @@ using GOG.TaskActivities.Logging;
 
 using GOG.TaskActivities.Validation;
 
-using Models.Uris;
-using Models.QueryParameters;
-
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
 using Models.ProductDownloads;
@@ -102,6 +99,8 @@ namespace GoodOfflineGames
             var serializationController = new JSONStringController();
 
             var consoleController = new ConsoleController();
+            //consoleController.WriteLine("%cThis is %cc%co%cl%co%cr%ce%cd %ctext", 
+                //new string[] { "default", "red", "orange", "yellow", "green", "blue", "purple", "white", "default"});
 
             var consolePresentationController = new ConsolePresentationController(consoleController);
 
@@ -823,7 +822,14 @@ namespace GoodOfflineGames
                 }
             }
 
-            consolePresentationController.Present(new string[3] { "All GoodOfflineGames tasks are complete.", "", "Press ENTER to close the window..." });
+            var defaultColor = new string[] { " default" };
+
+            consolePresentationController.Present(
+                new List<Tuple<string, string[]>> {
+                    Tuple.Create("%cAll GoodOfflineGames tasks are complete.", new string[] { "white" }),
+                    Tuple.Create("", defaultColor),
+                    Tuple.Create("%cPress ENTER to close the window...", defaultColor)
+                });
             consoleController.ReadLine();
 
             #endregion
