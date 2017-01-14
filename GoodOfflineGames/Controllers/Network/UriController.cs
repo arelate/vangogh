@@ -18,7 +18,7 @@ namespace Controllers.Network
             {
                 parametersStrings.Add(
                     Uri.EscapeDataString(key) +
-                    Separators.KeyValueSeparator +
+                    Separators.KeyValue +
                     Uri.EscapeDataString(parameters[key]));
             }
 

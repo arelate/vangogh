@@ -117,7 +117,7 @@ namespace GOG.Controllers.Authorization
 
             while (securityCode.Length != 4)
             {
-                consoleController.WriteLine(securityCodeHasBeenSent, MessageType.Default, usernamePassword.Username);
+                consoleController.WriteLine(securityCodeHasBeenSent, null, usernamePassword.Username);
                 securityCode = consoleController.ReadLine();
             }
 

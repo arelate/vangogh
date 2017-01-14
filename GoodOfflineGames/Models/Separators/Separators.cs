@@ -7,6 +7,7 @@
         public const string QueryString = "?";
         public const string QueryStringParameters = "&";
         // common
-        public const string KeyValueSeparator = "=";
+        public const string KeyValue = "=";
+        public const string ConsoleColor = "%c";
     }
 }

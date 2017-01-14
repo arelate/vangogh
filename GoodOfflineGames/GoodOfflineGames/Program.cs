@@ -12,7 +12,6 @@ using Controllers.Serialization;
 using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
-using Controllers.Reporting;
 using Controllers.Settings;
 using Controllers.RequestPage;
 using Controllers.Throttle;
@@ -103,6 +102,7 @@ namespace GoodOfflineGames
             var serializationController = new JSONStringController();
 
             var consoleController = new ConsoleController();
+
             var consolePresentationController = new ConsolePresentationController(consoleController);
 
             var bytesFormattingController = new BytesFormattingController();

@@ -1,14 +1,5 @@
 ﻿namespace Interfaces.Console
 {
-    public enum MessageType
-    {
-        Error,
-        Warning,
-        Success,
-        Progress,
-        Default
-    }
-
     public interface IClearDelegate
     {
         void Clear();
@@ -36,12 +27,17 @@
 
     public interface IWriteDelegate
     {
-        void Write(string message, MessageType messageType = MessageType.Default, params object[] data);
+        void Write(string message, string[] colors = null, params object[] data);
     }
 
     public interface IWriteLineDelegate
     {
-        void WriteLine(string message, MessageType messageType = MessageType.Default, params object[] data);
+        void WriteLine(string message, string[] colors = null, params object[] data);
+    }
+
+    public interface IDefaultColorProperty
+    {
+        System.ConsoleColor DefaultColor { get; set; }
     }
 
     public interface IConsoleController :
@@ -51,7 +47,8 @@
         IReadLineDelegate,
         IInputPasswordDelegate,
         IWriteDelegate,
-        IWriteLineDelegate
+        IWriteLineDelegate,
+        IDefaultColorProperty
     {
         // ...
     }

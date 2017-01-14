@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Network;
 using Interfaces.RequestPage;
-using Interfaces.Reporting;
 
 namespace Controllers.RequestPage
 {

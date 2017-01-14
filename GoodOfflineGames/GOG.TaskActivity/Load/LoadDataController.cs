@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Reporting;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
@@ -15,7 +14,6 @@ namespace GOG.TaskActivities.Load
         public LoadDataController(
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController,
-            //ITaskReportingController taskReportingController,
             params ILoadDelegate[] loadDelegates): 
             base(
                 taskStatus,

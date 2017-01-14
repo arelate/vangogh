@@ -71,8 +71,6 @@
     <Compile Include="TaskStatus\TaskStatusViewController.cs" />
     <Compile Include="Throttle\ThrottleController.cs" />
     <Compile Include="ProductTypes\ProductTypes.cs" />
-    <Compile Include="Reporting\DownloadReportingController.cs" />
-    <Compile Include="Reporting\TaskReportingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestPage\RequestPageController.cs" />
     <Compile Include="Serialization\SerializationController.cs" />

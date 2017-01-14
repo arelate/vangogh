@@ -1,10 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using Interfaces.Console;
+
+using Models.Separators;
 
 namespace Controllers.Console
 {
     public class ConsoleController : IConsoleController
     {
+        public ConsoleController()
+        {
+            DefaultColor = ConsoleColor.Gray;
+        }
+
+        public ConsoleColor DefaultColor { get; set; }
+
         public string Read()
         {
             return System.Console.Read().ToString();
@@ -52,38 +63,49 @@ namespace Controllers.Console
             return password;
         }
 
-        public void Write(string message, MessageType messageType = MessageType.Default, params object[] data)
+        public void Write(string message, string[] colors = null, params object[] data)
         {
-            System.Console.ForegroundColor = GetColorByMessageType(messageType);
-            System.Console.Write(message, data);
+            OutputMessage(System.Console.Write, message, colors, data);
         }
 
-        public void WriteLine(string message, MessageType messageType = MessageType.Default, params object[] data)
+        public void WriteLine(string message, string[] colors = null, params object[] data)
         {
-            System.Console.ForegroundColor = GetColorByMessageType(messageType);
-            if (data != null &&
-                data.Length > 0)
-                System.Console.WriteLine(message, data);
-            else
-                System.Console.WriteLine(message);
+            OutputMessage(System.Console.WriteLine, message, colors, data);
         }
 
-        private System.ConsoleColor GetColorByMessageType(MessageType messageType)
+        private void OutputMessage(Action<string> consoleOutput, string message, string[] colors = null, params object[] data)
         {
-            switch (messageType)
+            System.Console.ForegroundColor = DefaultColor;
+
+            var formattedMessage =
+                (data != null && data.Length > 0) ?
+                string.Format(message, data) :
+                message;
+
+            if (colors == null)
             {
-                case MessageType.Error:
-                    return System.ConsoleColor.Red;
-                case MessageType.Warning:
-                    return System.ConsoleColor.Yellow;
-                case MessageType.Success:
-                    return System.ConsoleColor.Green;
-                case MessageType.Progress:
-                    return System.ConsoleColor.Gray;
-                case MessageType.Default:
-                default:
-                    return System.ConsoleColor.Gray;
+                consoleOutput(formattedMessage);
+                return;
             }
+
+            var computedColors = new List<ConsoleColor>() { DefaultColor };
+            foreach (var color in colors)
+                computedColors.Add((ConsoleColor)Enum.Parse(typeof(ConsoleColor), color, true));
+
+            var formattedMessageParts = formattedMessage.Split(
+                new string[1] { Separators.ConsoleColor }, 
+                StringSplitOptions.None);
+
+            if (formattedMessageParts.Length > computedColors.Count)
+                throw new FormatException("Number of colors is less than required to format the message");
+
+            for (var ii=0; ii<formattedMessageParts.Length; ii++)
+            {
+                System.Console.ForegroundColor = computedColors[ii];
+                System.Console.Write(formattedMessageParts[ii]);
+            }
+
+            consoleOutput(string.Empty);
         }
 
         public void Clear()

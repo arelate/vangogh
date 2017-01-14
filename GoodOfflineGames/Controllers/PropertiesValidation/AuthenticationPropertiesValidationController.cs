@@ -26,7 +26,7 @@ namespace Controllers.PropertiesValidation
 
             if (string.IsNullOrEmpty(authenticationProperties?.Password))
             {
-                consoleController.WriteLine("Please enter password for {0}:", MessageType.Default, authenticationProperties.Username);
+                consoleController.WriteLine("Please enter password for {0}:", null, authenticationProperties.Username);
                 authenticationProperties.Password = consoleController.InputPassword();
             }
 
