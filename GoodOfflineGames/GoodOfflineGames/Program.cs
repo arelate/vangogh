@@ -64,6 +64,7 @@ using GOG.TaskActivities.Download.ProductFiles;
 using GOG.TaskActivities.Download.Validation;
 using GOG.TaskActivities.Download.Processing;
 using GOG.TaskActivities.Cleanup;
+using GOG.TaskActivities.Logging;
 
 using GOG.TaskActivities.Validation;
 
@@ -568,7 +569,7 @@ namespace GoodOfflineGames
             var updateScreenshotsDownloadsController = new UpdateScreenshotsDownloadsController(
                 ProductDownloadTypes.Screenshot,
                 screenshotsDownloadSourcesController,
-                screenshotsDestinationController,
+                screenshotsFilesDestinationController,
                 productDownloadsDataController,
                 accountProductsDataController,
                 applicationTaskStatus,
@@ -694,6 +695,18 @@ namespace GoodOfflineGames
 
             #endregion
 
+            #region Logging
+
+            var logDestinationController = new LogsDestinationController();
+
+            var logController = new LogController(
+                logDestinationController,
+                serializedStorageController,
+                applicationTaskStatus,
+                taskStatusController);
+
+            #endregion
+
             #endregion
 
             #region TACs Execution
@@ -759,7 +772,7 @@ namespace GoodOfflineGames
 
             #region Validation Task Activities
 
-            if (settings.Validation.Updated)
+            if (settings.Validation)
             {
                 // schedule validation downloads
                 taskActivityControllers.Add(updateValidationDownloadsController);
@@ -779,6 +792,15 @@ namespace GoodOfflineGames
             // cleanup files
             if (settings.Cleanup.Files)
                 taskActivityControllers.Add(filesCleanupController);
+
+            #endregion
+
+            #region Logging Task Activities
+
+            if (settings.Log)
+            {
+                taskActivityControllers.Add(logController);
+            }
 
             #endregion
 

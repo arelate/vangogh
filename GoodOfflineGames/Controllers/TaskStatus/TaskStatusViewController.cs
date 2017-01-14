@@ -27,7 +27,7 @@ namespace Controllers.TaskStatus
         private const string warningsTemplate = ". Warning(s): {0}.";
         private const string failuresTemplate = ". Failures(s): {0}.";
         private const int showETAThreshold = 2;
-        private const char childPrefix = '-';
+        private const char childPrefix = '>';
 
         public TaskStatusViewController(
             ITaskStatus taskStatus,
@@ -62,8 +62,17 @@ namespace Controllers.TaskStatus
                 var currentTaskStatus = taskStatusQueue.Dequeue();
                 var currentLevel = taskStatusLevelsQueue.Dequeue();
                 var taskStatusView = GetTaskStatusView(currentTaskStatus);
+
                 if (!string.IsNullOrEmpty(taskStatusView))
-                    views.Add(taskStatusView.PadLeft(taskStatusView.Length + currentLevel, childPrefix));
+                {
+                    if (currentLevel > 0)
+                    {
+                        taskStatusView = " " + taskStatusView;
+                        taskStatusView = taskStatusView.PadLeft(taskStatusView.Length + currentLevel, childPrefix);
+                    }
+
+                    views.Add(taskStatusView);
+                }
 
                 if (currentTaskStatus.ChildTasks != null)
                     foreach (var childTaskStatus in currentTaskStatus.ChildTasks)
@@ -76,7 +85,6 @@ namespace Controllers.TaskStatus
             consolePresentationController.Present(views);
 
             lastReportedTimestamp = DateTime.UtcNow;
-            //System.Threading.Thread.Sleep(500);
         }
 
         private string GetTaskStatusView(ITaskStatus taskStatus)

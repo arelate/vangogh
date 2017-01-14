@@ -59,13 +59,6 @@ namespace Models.Settings
     }
 
     [DataContract]
-    public class ValidationProperties : IValidationProperties
-    {
-        [DataMember(Name = "updated")]
-        public bool Updated { get; set; }
-    }
-
-    [DataContract]
     public class CleanupProperties : ICleanupProperties
     {
         [DataMember(Name = "directories")]
@@ -90,9 +83,12 @@ namespace Models.Settings
         public DownloadProperties Download { get; set; }
 
         [DataMember(Name = "validation")]
-        public ValidationProperties Validation { get; set; }
+        public bool Validation { get; set; }
 
         [DataMember(Name = "cleanup")]
         public CleanupProperties Cleanup { get; set; }
+
+        [DataMember(Name = "log")]
+        public bool Log { get; set; }
     }
 }

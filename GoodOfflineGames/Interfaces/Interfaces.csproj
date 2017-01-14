@@ -81,7 +81,6 @@
     <Compile Include="Settings\Download.cs" />
     <Compile Include="Settings\SettingsController.cs" />
     <Compile Include="Settings\Update.cs" />
-    <Compile Include="Settings\Validation.cs" />
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Stream\StreamController.cs" />
     <Compile Include="Network\NetworkController.cs" />

@@ -49,6 +49,7 @@
     <Compile Include="Destination\Abstract\ImagesScreenshotsDestinationController.cs" />
     <Compile Include="Destination\Abstract\DataDestinationController.cs" />
     <Compile Include="Destination\Data\AccountProductDestinationController.cs" />
+    <Compile Include="Destination\Data\ApiProductsDestinationController - Copy.cs" />
     <Compile Include="Destination\Data\GameProductDataDestinationController - Copy.cs" />
     <Compile Include="Destination\Data\GameDetailsDestinationController.cs" />
     <Compile Include="Destination\Data\LastKnownValidDestinationController.cs" />
@@ -60,9 +61,9 @@
     <Compile Include="Destination\Data\ScreenshotsDestinationController.cs" />
     <Compile Include="Destination\Data\UpdatedDestinationController.cs" />
     <Compile Include="Destination\Data\WishlistedDestinationController.cs" />
+    <Compile Include="Destination\LogsDestinationController.cs" />
     <Compile Include="Destination\ProductFilesDestinationController.cs" />
     <Compile Include="Destination\Data\ProductsDestinationController.cs" />
-    <Compile Include="Destination\Data\ApiProductsDestinationController.cs" />
     <Compile Include="Destination\ScreenshotsFilesDestinationController.cs" />
     <Compile Include="Destination\ImagesDestinationController.cs" />
     <Compile Include="Destination\GOGUriDestinationController.cs" />
