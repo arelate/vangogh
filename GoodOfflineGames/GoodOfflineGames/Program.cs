@@ -97,6 +97,14 @@ namespace GoodOfflineGames
                 fileController);
             var serializationController = new JSONStringController();
 
+            var javaScriptPrefix = "var data=";
+            var jsonToJavaScriptConversionController = new JSONToJavaScriptConvetsionController(javaScriptPrefix);
+
+            var serializedStorageController = new SerializedStorageController(
+                storageController,
+                serializationController,
+                jsonToJavaScriptConversionController);
+
             var consoleController = new ConsoleController();
 
             var consolePresentationController = new ConsolePresentationController(consoleController);
@@ -163,14 +171,6 @@ namespace GoodOfflineGames
             #region Data Controllers
 
             // Data controllers for products, game details, game product data, etc.
-
-            var javaScriptPrefix = "var data=";
-            var jsonToJavaScriptConversionController = new JSONToJavaScriptConvetsionController(javaScriptPrefix);
-
-            var serializedStorageController = new SerializedStorageController(
-                storageController,
-                serializationController,
-                jsonToJavaScriptConversionController);
 
             var productCoreIndexingController = new ProductCoreIndexingController();
             var passthroughIndexingController = new PassthroughIndexingController();
