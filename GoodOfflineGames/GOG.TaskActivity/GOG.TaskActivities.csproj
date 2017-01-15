@@ -51,7 +51,6 @@
     <Compile Include="Download\Dependencies\Screenshots\ScreenshotsDownloadSourcesController.cs" />
     <Compile Include="Download\Dependencies\Validation\ValidationDownloadSourcesController.cs" />
     <Compile Include="Download\Validation\UpdateValidationDownloadsController.cs" />
-    <Compile Include="Logging\LogController.cs" />
     <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
     <Compile Include="Abstract\UpdateDownloadsController.cs" />
     <Compile Include="Download\Processing\ProcessScheduledDownloadsController.cs" />

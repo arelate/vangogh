@@ -13,9 +13,9 @@ namespace Interfaces.TaskStatus
         string Title { get; set; }
     }
 
-    public interface IChildTasksProperty
+    public interface IChildrenProperty
     {
-        IList<ITaskStatus> ChildTasks { get; set; }
+        IList<ITaskStatus> Children { get; set; }
     }
 
     public interface IStartedProperty
@@ -75,7 +75,7 @@ namespace Interfaces.TaskStatus
     public interface ITaskStatus :
         ICompleteProperty,
         ITitleProperty,
-        IChildTasksProperty,
+        IChildrenProperty,
         IProgressProperty,
         IStartedProperty,
         ICompletedProperty,

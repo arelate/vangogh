@@ -63,7 +63,6 @@ using GOG.TaskActivities.Download.ProductFiles;
 using GOG.TaskActivities.Download.Validation;
 using GOG.TaskActivities.Download.Processing;
 using GOG.TaskActivities.Cleanup;
-using GOG.TaskActivities.Logging;
 
 using GOG.TaskActivities.Validation;
 
@@ -99,8 +98,6 @@ namespace GoodOfflineGames
             var serializationController = new JSONStringController();
 
             var consoleController = new ConsoleController();
-            //consoleController.WriteLine("%cThis is %cc%co%cl%co%cr%ce%cd %ctext", 
-                //new string[] { "default", "red", "orange", "yellow", "green", "blue", "purple", "white", "default"});
 
             var consolePresentationController = new ConsolePresentationController(consoleController);
 
@@ -694,18 +691,6 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Logging
-
-            var logDestinationController = new LogsDestinationController();
-
-            var logController = new LogController(
-                logDestinationController,
-                serializedStorageController,
-                applicationTaskStatus,
-                taskStatusController);
-
-            #endregion
-
             #endregion
 
             #region TACs Execution
@@ -794,15 +779,6 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Logging Task Activities
-
-            if (settings.Log)
-            {
-                taskActivityControllers.Add(logController);
-            }
-
-            #endregion
-
             foreach (var taskActivityController in taskActivityControllers)
             {
                 try
@@ -821,6 +797,28 @@ namespace GoodOfflineGames
                     break;
                 }
             }
+
+            taskStatusController.Complete(applicationTaskStatus);
+
+            #region Save log 
+
+            if (settings.Log)
+            {
+                var logDestinationController = new LogsDestinationController();
+
+                var uri = System.IO.Path.Combine(
+                logDestinationController.GetDirectory(string.Empty),
+                logDestinationController.GetFilename(DateTime.UtcNow.ToFileTimeUtc().ToString()));
+
+                consolePresentationController.Present(new List<Tuple<string, string[]>>
+                {
+                    Tuple.Create(string.Format("Save log to {0}", uri), new string[] { "white" })
+                });
+
+                serializedStorageController.SerializePushAsync(uri, applicationTaskStatus).Wait();
+            }
+
+            #endregion
 
             var defaultColor = new string[] { " default" };
 

@@ -7,6 +7,8 @@ using Interfaces.TaskStatus;
 namespace Models.TaskStatus
 {
     [DataContract]
+    [KnownType(typeof(TaskStatus))]
+    [KnownType(typeof(TaskProgress))]
     public class TaskStatus: ITaskStatus
     {
         [DataMember(Name = "complete")]
@@ -19,8 +21,8 @@ namespace Models.TaskStatus
         public DateTime Started { get; set; }
         [DataMember(Name = "completed")]
         public DateTime Completed { get; set; }
-        [DataMember(Name = "childTasks")]
-        public IList<ITaskStatus> ChildTasks { get; set; }
+        [DataMember(Name = "children")]
+        public IList<ITaskStatus> Children { get; set; }
         [DataMember(Name = "warnings")]
         public IList<string> Warnings { get; set; }
         [DataMember(Name = "failures")]

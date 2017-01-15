@@ -55,13 +55,11 @@ namespace GOG.TaskActivities.Validation
 
         public override async Task ProcessTaskAsync()
         {
-            var validateAllTask = taskStatusController.Create(taskStatus, "Validate all updated products files");
+            var validateProductFilesTask = taskStatusController.Create(taskStatus, "Validate updated products files");
 
             var counter = 0;
 
             var updatedProducts = updatedDataController.EnumerateIds().ToArray();
-
-            var validateProductTask = taskStatusController.Create(validateAllTask, "Validate updated product");
 
             foreach (var id in updatedProducts)
             {
@@ -70,7 +68,7 @@ namespace GOG.TaskActivities.Validation
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
-                taskStatusController.UpdateProgress(validateProductTask,
+                taskStatusController.UpdateProgress(validateProductFilesTask,
                     ++counter,
                     updatedProducts.Count(),
                     productDownloads.Title);
@@ -87,27 +85,33 @@ namespace GOG.TaskActivities.Validation
                         destinationController.GetDirectory(download.SourceUri),
                         destinationController.GetFilename(resolvedUri));
 
+                    var validateFileTask = taskStatusController.Create(
+                        validateProductFilesTask,
+                        string.Format(
+                            "Validate product file",
+                            localFile));
+
                     try
                     {
-                        var validateFileTask = taskStatusController.Create(
-                            validateProductTask, 
-                            string.Format(
-                                "Validate product file", 
-                                localFile));
                         await validationController.ValidateAsync(localFile, validateFileTask);
                         productIsValid &= true;
-                        taskStatusController.Complete(validateFileTask);
                     }
                     catch (Exception ex)
                     {
-                        taskStatusController.Fail(validateProductTask, ex.Message);
+                        taskStatusController.Fail(validateProductFilesTask, ex.Message);
                         productIsValid &= false;
+                    }
+                    finally
+                    {
+                        taskStatusController.Complete(validateFileTask);
                     }
                 }
 
                 if (productIsValid)
                 {
-                    var removeUpdateTask = taskStatusController.Create(validateProductTask, "All product files are valid. Remove product from updates and scheduling cleanup");
+                    var removeUpdateTask = taskStatusController.Create(
+                        validateProductFilesTask, 
+                        "All product files are valid. Clear product update flag and schedule cleanup");
                     await lastKnownValidDataController.UpdateAsync(id);
                     await updatedDataController.RemoveAsync(id);
                     await scheduledCleanupDataController.UpdateAsync(id);
@@ -115,8 +119,7 @@ namespace GOG.TaskActivities.Validation
                 }
             }
 
-            taskStatusController.Complete(validateProductTask);
-            taskStatusController.Complete(validateAllTask);
+            taskStatusController.Complete(validateProductFilesTask);
         }
     }
 }

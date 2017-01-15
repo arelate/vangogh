@@ -78,11 +78,11 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTaskAsync()
         {
-            var updateAllProductsTask = taskStatusController.Create(taskStatus, "Update details on individual products");
+            var updateProductsTask = taskStatusController.Create(taskStatus, "Update products type: " + updateTypeDescription);
 
             var updatedProducts = new List<long>();
 
-            var dataEnumerationTask = taskStatusController.Create(updateAllProductsTask, "Enumerate missing data");
+            var dataEnumerationTask = taskStatusController.Create(updateProductsTask, "Enumerate missing data");
 
             foreach (var id in listTypeDataController.EnumerateIds())
             {
@@ -95,14 +95,12 @@ namespace GOG.TaskActivities.Abstract
 
             taskStatusController.Complete(dataEnumerationTask);
 
-            var dataUpdateTask = taskStatusController.Create(updateAllProductsTask, "Enumerate required data updates");
+            var dataUpdateTask = taskStatusController.Create(updateProductsTask, "Enumerate required data updates");
 
             if (requiredUpdatesController != null)
                 updatedProducts.AddRange(requiredUpdatesController.GetRequiredUpdates());
 
             taskStatusController.Complete(dataUpdateTask);
-
-            var getUpdatesTask = taskStatusController.Create(updateAllProductsTask, "Getting updates for data type: " + updateTypeDescription);
 
             var currentProduct = 0;
 
@@ -111,7 +109,7 @@ namespace GOG.TaskActivities.Abstract
                 var product = await listTypeDataController.GetByIdAsync(id);
 
                 taskStatusController.UpdateProgress(
-                    getUpdatesTask,
+                    updateProductsTask,
                     ++currentProduct,
                     updatedProducts.Count,
                     product.Title,
@@ -129,7 +127,7 @@ namespace GOG.TaskActivities.Abstract
 
                 if (content == null)
                 {
-                    taskStatusController.Warn(getUpdatesTask,
+                    taskStatusController.Warn(updateProductsTask,
                             "Product {0} doesn't have valid associated data of type: " + updateTypeDescription,
                             product.Title);
                     continue;
@@ -152,9 +150,7 @@ namespace GOG.TaskActivities.Abstract
                     throttleController?.Throttle();
             }
 
-            taskStatusController.Complete(getUpdatesTask);
-
-            taskStatusController.Complete(updateAllProductsTask);
+            taskStatusController.Complete(updateProductsTask);
         }
     }
 }

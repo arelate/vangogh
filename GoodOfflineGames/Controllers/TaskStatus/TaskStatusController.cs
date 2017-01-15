@@ -30,14 +30,14 @@ namespace Controllers.TaskStatus
         {
             ReleaseAssertTaskStatusNotNull(taskStatus);
 
-            if (taskStatus.ChildTasks == null)
-                taskStatus.ChildTasks = new List<ITaskStatus>();
+            if (taskStatus.Children == null)
+                taskStatus.Children = new List<ITaskStatus>();
 
             var childTaskStatus = new Models.TaskStatus.TaskStatus() {
                 Title = title,
                 Started = DateTime.UtcNow
             };
-            taskStatus.ChildTasks.Add(childTaskStatus);
+            taskStatus.Children.Add(childTaskStatus);
 
             taskStatusViewController.CreateView();
 

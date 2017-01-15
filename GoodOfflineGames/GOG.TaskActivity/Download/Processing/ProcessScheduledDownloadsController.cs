@@ -63,9 +63,7 @@ namespace GOG.TaskActivities.Download.Processing
             var updated = updatedDataController.EnumerateIds().ToArray();
             var total = updated.Length;
 
-            var processAllDownloadsTask = taskStatusController.Create(taskStatus, "Process updated downloads");
-
-            var processProductDownloadsTask = taskStatusController.Create(processAllDownloadsTask, "Process downloads for product");
+            var processDownloadsTask = taskStatusController.Create(taskStatus, "Process updated downloads");
 
             foreach (var id in updated)
             {
@@ -73,7 +71,7 @@ namespace GOG.TaskActivities.Download.Processing
                 if (productDownloads == null) continue;
 
                 taskStatusController.UpdateProgress(
-                    processProductDownloadsTask,
+                    processDownloadsTask,
                     ++counter,
                     total,
                     productDownloads.Title);
@@ -81,7 +79,7 @@ namespace GOG.TaskActivities.Download.Processing
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(d => d.Type == downloadType).ToArray();
 
-                var processDownloadEntriesTask = taskStatusController.Create(processProductDownloadsTask, "Download product entries");
+                var processDownloadEntriesTask = taskStatusController.Create(processDownloadsTask, "Download product entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -138,9 +136,7 @@ namespace GOG.TaskActivities.Download.Processing
                 taskStatusController.Complete(processDownloadEntriesTask);
             }
 
-            taskStatusController.Complete(processProductDownloadsTask);
-
-            taskStatusController.Complete(processAllDownloadsTask);
+            taskStatusController.Complete(processDownloadsTask);
         }
     }
 }

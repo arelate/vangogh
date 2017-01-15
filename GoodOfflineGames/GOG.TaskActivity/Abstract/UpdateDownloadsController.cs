@@ -47,14 +47,14 @@ namespace GOG.TaskActivities.Abstract
 
         public override async Task ProcessTaskAsync()
         {
-            var updateAllTask = taskStatusController.Create(
+            var updateDownloadsTask = taskStatusController.Create(
                 taskStatus,
                 string.Format(
                     "Update downloads for the type: {0}",
                     scheduledDownloadTitle));
 
             var getSourcesTask = taskStatusController.Create(
-                updateAllTask,
+                updateDownloadsTask,
                 string.Format(
                     "Get download sources",
                     scheduledDownloadTitle));
@@ -63,7 +63,6 @@ namespace GOG.TaskActivities.Abstract
             taskStatusController.Complete(getSourcesTask);
 
             var counter = 0;
-            var updateProductDownloadsTask = taskStatusController.Create(updateAllTask, "Update downloads for product");
 
             foreach (var downloadSource in downloadSources)
             {
@@ -74,14 +73,14 @@ namespace GOG.TaskActivities.Abstract
                 if (product == null)
                 {
                     taskStatusController.Warn(
-                        updateProductDownloadsTask,
+                        updateDownloadsTask,
                         "Downloads are scheduled for the product/account product that doesn't exist: {0}",
                         id);
                     continue;
                 }
 
                 taskStatusController.UpdateProgress(
-                    updateProductDownloadsTask, 
+                    updateDownloadsTask, 
                     ++counter, 
                     downloadSources.Count, 
                     product.Title);
@@ -109,7 +108,7 @@ namespace GOG.TaskActivities.Abstract
                     var destinationDirectory = destinationController?.GetDirectory(source);
 
                     var scheduleDownloadsTask = taskStatusController.Create(
-                        updateProductDownloadsTask,
+                        updateDownloadsTask,
                         "Schedule new downloads");
 
                     var scheduledDownloadEntry = new ProductDownloadEntry()
@@ -126,8 +125,7 @@ namespace GOG.TaskActivities.Abstract
                 }
             }
 
-            taskStatusController.Complete(updateProductDownloadsTask);
-            taskStatusController.Complete(updateAllTask);
+            taskStatusController.Complete(updateDownloadsTask);
         }
     }
 }
