@@ -21,7 +21,7 @@ namespace Controllers.TaskStatus
 
         private Queue<ITaskStatus> taskStatusQueue;
 
-        private const int throttleMilliseconds = 1000;
+        private const int throttleMilliseconds = 100;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
         private const string suffix = ". ";

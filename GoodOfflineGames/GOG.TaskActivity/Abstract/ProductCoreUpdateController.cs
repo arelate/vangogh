@@ -147,7 +147,7 @@ namespace GOG.TaskActivities.Abstract
                 // if throttle - do it for all iterations, but the very last one
                 if (updatedProducts.Count > throttleController?.Threshold &&
                     id != updatedProducts[updatedProducts.Count - 1])
-                    throttleController?.Throttle();
+                    throttleController?.Throttle(updateProductsTask);
             }
 
             taskStatusController.Complete(updateProductsTask);

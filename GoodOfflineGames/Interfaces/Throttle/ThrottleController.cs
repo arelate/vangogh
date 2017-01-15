@@ -1,8 +1,10 @@
-﻿namespace Interfaces.Throttle
+﻿using Interfaces.TaskStatus;
+
+namespace Interfaces.Throttle
 {
     public interface IThrottleDelegate
     {
-        void Throttle();
+        void Throttle(ITaskStatus taskStatus);
     }
 
     public interface IThresholdProperty

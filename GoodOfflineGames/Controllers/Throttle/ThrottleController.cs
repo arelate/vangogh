@@ -1,25 +1,45 @@
 ﻿using System.Threading;
 
 using Interfaces.Throttle;
+using Interfaces.TaskStatus;
+using Interfaces.Formatting;
+
+using Models.Units;
 
 namespace Controllers.Throttle
 {
     public class ThrottleController : IThrottleController
     {
-        private int delayMilliseconds; // default is 2 minutes
+        private ITaskStatusController taskStatusController;
+        IFormattingController secondsFormattingController;
+        private int delaySeconds;
         private long threshold;
 
         public ThrottleController(
+            ITaskStatusController taskStatusController,
+            IFormattingController secondsFormattingController,
             long threshold,
-            int delayMilliseconds = 1000 * 60 * 2)
+            int delaySeconds = 60 * 2)
         {
+            this.taskStatusController = taskStatusController;
+            this.secondsFormattingController = secondsFormattingController;
             this.threshold = threshold;
-            this.delayMilliseconds = delayMilliseconds;
+            this.delaySeconds = delaySeconds;
         }
 
-        public void Throttle()
+        public void Throttle(ITaskStatus taskStatus)
         {
-            Thread.Sleep(delayMilliseconds);
+            var throttleTask = taskStatusController.Create(
+                taskStatus,
+                string.Format(
+                    "Wait {0} before next iteration",
+                    secondsFormattingController.Format(delaySeconds)));
+            for (var ii = 0; ii < delaySeconds; ii++)
+            {
+                Thread.Sleep(1000);
+                taskStatusController.UpdateProgress(throttleTask, ii + 1, delaySeconds, "Countdown", TimeUnits.Seconds);
+            }
+            taskStatusController.Complete(throttleTask);
         }
 
         public long Threshold
