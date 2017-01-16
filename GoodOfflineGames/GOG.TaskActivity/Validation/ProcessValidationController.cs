@@ -98,7 +98,7 @@ namespace GOG.TaskActivities.Validation
                     }
                     catch (Exception ex)
                     {
-                        taskStatusController.Fail(validateProductFilesTask, ex.Message);
+                        taskStatusController.Fail(validateProductFilesTask, localFile + ": " + ex.Message);
                         productIsValid &= false;
                     }
                     finally
@@ -110,12 +110,20 @@ namespace GOG.TaskActivities.Validation
                 if (productIsValid)
                 {
                     var removeUpdateTask = taskStatusController.Create(
-                        validateProductFilesTask, 
+                        validateProductFilesTask,
                         "All product files are valid. Clear product update flag and schedule cleanup");
                     await lastKnownValidDataController.UpdateAsync(id);
                     await updatedDataController.RemoveAsync(id);
                     await scheduledCleanupDataController.UpdateAsync(id);
                     taskStatusController.Complete(removeUpdateTask);
+                }
+                else
+                {
+                    var removeKnownValidTask = taskStatusController.Create(
+                        validateProductFilesTask,
+                        "Product files might not be valid. Remove them from known valid");
+                    await lastKnownValidDataController.RemoveAsync(id);
+                    taskStatusController.Complete(removeKnownValidTask);
                 }
             }
 
