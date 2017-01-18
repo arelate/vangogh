@@ -59,6 +59,9 @@ namespace GOG.TaskActivities.Download.Dependencies.Validation
                     // trace route for the product file
                     var resolvedUri = await routingController.TraceRouteAsync(id, downloadEntry.SourceUri);
 
+                    if (string.IsNullOrEmpty(resolvedUri))
+                        continue;
+
                     if (!fileValidationEligibilityDelegate.IsEligible(resolvedUri))
                         continue;
 

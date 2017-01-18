@@ -21,9 +21,6 @@ namespace Controllers.TaskStatus
 
         private Queue<ITaskStatus> taskStatusQueue;
 
-        private const int throttleMilliseconds = 100;
-        private DateTime lastReportedTimestamp = DateTime.MinValue;
-
         private const string suffix = ". ";
 
         private const string progressTargetTemplate = "%c{0}%c";
@@ -59,9 +56,8 @@ namespace Controllers.TaskStatus
             taskStatusQueue = new Queue<ITaskStatus>();
         }
 
-        public void CreateView()
+        public void CreateView(bool overrideThrottling = false)
         {
-            if ((DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
 
             var viewModels = new List<TaskStatusViewModel>();
 
@@ -82,9 +78,9 @@ namespace Controllers.TaskStatus
                     taskStatusQueue.Enqueue(childTaskStatus);
             }
 
-            consolePresentationController.Present(GetTuples(viewModels));
+            consolePresentationController.Present(GetTuples(viewModels), overrideThrottling);
 
-            lastReportedTimestamp = DateTime.UtcNow;
+            //lastReportedTimestamp = DateTime.UtcNow;
         }
 
         private IEnumerable<Tuple<string, string[]>> GetTuples(IEnumerable<TaskStatusViewModel> taskStatusViewModels)

@@ -34,6 +34,9 @@ namespace Controllers.Routing
         {
             var productRoutes = await productRoutesDataController.GetByIdAsync(id);
 
+            if (productRoutes == null)
+                return string.Empty;
+
             return TraceProductRoute(productRoutes.Routes, source);
         }
 

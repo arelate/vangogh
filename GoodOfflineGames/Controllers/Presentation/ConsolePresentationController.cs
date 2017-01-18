@@ -12,6 +12,9 @@ namespace Controllers.Presentation
         private IConsoleController consoleController;
         private int[] previousViewsLengths;
 
+        private const int throttleMilliseconds = 250;
+        private DateTime lastReportedTimestamp = DateTime.MinValue;
+
         public ConsolePresentationController(
             IConsoleController consoleController)
         {
@@ -19,41 +22,46 @@ namespace Controllers.Presentation
             previousViewsLengths = new int[0];
         }
 
-        public void Present(IEnumerable<Tuple<string, string[]>> viewModels)
+        private int PresentLine(int line, string content, string[] colors)
         {
+            var currentLength = content.Length;
+            var paddedContent = content;
+
+            if (previousViewsLengths.Length > line)
+                if (currentLength < previousViewsLengths[line])
+                    paddedContent = content.PadRight(previousViewsLengths[line]);
+
+            consoleController.WriteLine(paddedContent, colors);
+
+            return currentLength;
+        }
+
+        public void Present(IEnumerable<Tuple<string, string[]>> viewModels, bool overrideThrottling = false)
+        {
+            if (!overrideThrottling && 
+                (DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
+
             consoleController.SetCursorPosition(0, 0);
 
             var viewsModelsLength = viewModels.Count();
             var currentViewsLengths = new int[viewsModelsLength];
 
             for (var ii = 0; ii < viewsModelsLength; ii++)
-                currentViewsLengths[ii] = viewModels.ElementAt(ii).Item1.Length;
+                currentViewsLengths[ii] = 
+                    PresentLine(
+                        ii, 
+                        viewModels.ElementAt(ii).Item1, 
+                        viewModels.ElementAt(ii).Item2);
 
-            var viewLengthChanged = currentViewsLengths.Length != previousViewsLengths.Length;
-
-            if (!viewLengthChanged)
-            {
-                for (var ii = 0; ii < viewsModelsLength; ii++)
-                    viewLengthChanged |= currentViewsLengths[ii] != previousViewsLengths[ii];
-            }
-
-            if (viewLengthChanged)
-            {
-                consoleController.Write(string.Empty.PadLeft(System.Console.WindowWidth * System.Console.WindowHeight, ' '));
-                consoleController.SetCursorPosition(0, 0);
-            }
-
-            for (var ii = 0; ii < viewsModelsLength; ii++)
-            {
-                var viewModelText = viewModels.ElementAt(ii).Item1;
-                var viewModelColors = viewModels.ElementAt(ii).Item2;
-
-                consoleController.WriteLine(viewModelText, viewModelColors);
-            }
+            if (previousViewsLengths.Length > viewsModelsLength)
+                for (var ii = viewsModelsLength; ii < previousViewsLengths.Length; ii++)
+                    consoleController.WriteLine(string.Empty.PadRight(previousViewsLengths[ii]));
 
             previousViewsLengths = currentViewsLengths;
 
-            consoleController.SetCursorPosition(0, 0);
+            //consoleController.SetCursorPosition(0, 0);
+
+            lastReportedTimestamp = DateTime.UtcNow;
         }
     }
 }

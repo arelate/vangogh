@@ -8,7 +8,7 @@ namespace Interfaces.TaskStatus
 {
     public interface ICreateViewDelegate
     {
-        void CreateView();
+        void CreateView(bool overrideThrottling = false);
     }
 
     public interface ITaskStatusViewController:

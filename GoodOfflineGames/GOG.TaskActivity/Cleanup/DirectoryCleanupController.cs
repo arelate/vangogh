@@ -49,10 +49,15 @@ namespace GOG.TaskActivities.Cleanup
             var enumerateExpectedDirectoriesTask = taskStatusController.Create(cleanupDirectoriesTask, "Enumerate expected product files directories");
 
             var gameDetailsIds = gameDetailsDataController.EnumerateIds();
-            var expectedDirectories = new List<string>(gameDetailsIds.Count());
+            var gameDetailsIdsCount = gameDetailsIds.Count();
+            var expectedDirectories = new List<string>(gameDetailsIdsCount);
+            var counter = 0;
 
             foreach (var id in gameDetailsIds)
+            {
+                taskStatusController.UpdateProgress(enumerateExpectedDirectoriesTask, ++counter, gameDetailsIdsCount, id.ToString());
                 expectedDirectories.AddRange(await directoryEnumerationController.EnumerateAsync(id));
+            }
 
             taskStatusController.Complete(enumerateExpectedDirectoriesTask);
 
@@ -74,7 +79,7 @@ namespace GOG.TaskActivities.Cleanup
             taskStatusController.Complete(enumerateUnexpectedDirectoriesTask);
 
             var cleanupUnexpectedDirectoriesTask = taskStatusController.Create(cleanupDirectoriesTask, "Clean up unexpected directories");
-            var counter = 0;
+            counter = 0;
 
             foreach (var directory in unexpectedDirectories)
             {

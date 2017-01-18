@@ -786,7 +786,8 @@ namespace GoodOfflineGames
                 try
                 {
                     taskActivityController.ProcessTaskAsync().Wait();
-                    consoleController.WriteLine(string.Empty);
+                    taskStatusViewController.CreateView(true);
+                    //consoleController.WriteLine(string.Empty);
                 }
                 catch (AggregateException ex)
                 {
@@ -801,24 +802,25 @@ namespace GoodOfflineGames
             }
 
             taskStatusController.Complete(applicationTaskStatus);
+            taskStatusViewController.CreateView(true);
 
             #region Save log 
 
-            if (settings.Log)
-            {
-                var logDestinationController = new LogsDestinationController();
+            //if (settings.Log)
+            //{
+            //    var logDestinationController = new LogsDestinationController();
 
-                var uri = System.IO.Path.Combine(
-                logDestinationController.GetDirectory(string.Empty),
-                logDestinationController.GetFilename(DateTime.UtcNow.ToFileTimeUtc().ToString()));
+            //    var uri = System.IO.Path.Combine(
+            //    logDestinationController.GetDirectory(string.Empty),
+            //    logDestinationController.GetFilename(DateTime.UtcNow.ToFileTimeUtc().ToString()));
 
-                consolePresentationController.Present(new List<Tuple<string, string[]>>
-                {
-                    Tuple.Create(string.Format("Save log to {0}", uri), new string[] { "white" })
-                });
+            //    consolePresentationController.Present(new List<Tuple<string, string[]>>
+            //    {
+            //        Tuple.Create(string.Format("Save log to {0}", uri), new string[] { "white" })
+            //    });
 
-                serializedStorageController.SerializePushAsync(uri, applicationTaskStatus).Wait();
-            }
+            //    serializedStorageController.SerializePushAsync(uri, applicationTaskStatus).Wait();
+            //}
 
             #endregion
 
@@ -829,7 +831,7 @@ namespace GoodOfflineGames
                     Tuple.Create("%cAll GoodOfflineGames tasks are complete.", new string[] { "white" }),
                     Tuple.Create("", defaultColor),
                     Tuple.Create("%cPress ENTER to close the window...", defaultColor)
-                });
+                }, true);
             consoleController.ReadLine();
 
             #endregion
