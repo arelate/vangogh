@@ -28,6 +28,7 @@ using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Indexing;
+using Controllers.Measurement;
 using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
@@ -106,8 +107,13 @@ namespace GoodOfflineGames
                 jsonToJavaScriptConversionController);
 
             var consoleController = new ConsoleController();
+            var formattedStringMeasurementController = new FormattedStringMeasurementController();
 
-            var consolePresentationController = new ConsolePresentationController(consoleController);
+            Console.WriteLine(formattedStringMeasurementController.Measure("this is %csentence%c."));
+
+            var consolePresentationController = new ConsolePresentationController(
+                formattedStringMeasurementController,
+                consoleController);
 
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();

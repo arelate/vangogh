@@ -3,23 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Interfaces.Console;
+using Interfaces.Measurement;
 using Interfaces.Presentation;
 
 namespace Controllers.Presentation
 {
     public class ConsolePresentationController : IPresentationController<Tuple<string, string[]>>
     {
+        private IMeasurementController<string> formattedStringMeasurementController;
         private IConsoleController consoleController;
-        private int[] previousViewsLengths;
+
+        private int[] logicalPreviousLengths;
+        private int[] physicalPreviousLengths;
 
         private const int throttleMilliseconds = 250;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
         public ConsolePresentationController(
+            IMeasurementController<string> formattedStringMeasurementController,
             IConsoleController consoleController)
         {
+            this.formattedStringMeasurementController = formattedStringMeasurementController;
             this.consoleController = consoleController;
-            previousViewsLengths = new int[0];
+
+            logicalPreviousLengths = new int[0];
+            physicalPreviousLengths = new int[0];
         }
 
         private int PresentLine(int line, string content, string[] colors)
@@ -27,9 +35,9 @@ namespace Controllers.Presentation
             var currentLength = content.Length;
             var paddedContent = content;
 
-            if (previousViewsLengths.Length > line)
-                if (currentLength < previousViewsLengths[line])
-                    paddedContent = content.PadRight(previousViewsLengths[line]);
+            if (logicalPreviousLengths.Length > line)
+                if (currentLength < logicalPreviousLengths[line])
+                    paddedContent = content.PadRight(logicalPreviousLengths[line]);
 
             consoleController.WriteLine(paddedContent, colors);
 
@@ -53,11 +61,11 @@ namespace Controllers.Presentation
                         viewModels.ElementAt(ii).Item1, 
                         viewModels.ElementAt(ii).Item2);
 
-            if (previousViewsLengths.Length > viewsModelsLength)
-                for (var ii = viewsModelsLength; ii < previousViewsLengths.Length; ii++)
-                    consoleController.WriteLine(string.Empty.PadRight(previousViewsLengths[ii]));
+            if (logicalPreviousLengths.Length > viewsModelsLength)
+                for (var ii = viewsModelsLength; ii < logicalPreviousLengths.Length; ii++)
+                    consoleController.WriteLine(string.Empty.PadRight(logicalPreviousLengths[ii]));
 
-            previousViewsLengths = currentViewsLengths;
+            logicalPreviousLengths = currentViewsLengths;
 
             //consoleController.SetCursorPosition(0, 0);
 
