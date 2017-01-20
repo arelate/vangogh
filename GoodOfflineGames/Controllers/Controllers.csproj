@@ -81,6 +81,7 @@
     <Compile Include="File\FileController.cs" />
     <Compile Include="Indexing\PassthroughIndexingController.cs" />
     <Compile Include="Indexing\ProductCoreIndexingController.cs" />
+    <Compile Include="LineBreaking\LineBreakingController.cs" />
     <Compile Include="Measurement\FormattedStringMeasurementController.cs" />
     <Compile Include="Presentation\ConsolePresentationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />

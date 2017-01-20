@@ -105,7 +105,7 @@ namespace Controllers.Console
                 computedColors.Add(ParseColor(color));
 
             var formattedMessageParts = formattedMessage.Split(
-                new string[1] { Separators.ConsoleColor }, 
+                new string[1] { Separators.ColorFormatting }, 
                 StringSplitOptions.None);
 
             if (formattedMessageParts.Length > computedColors.Count)

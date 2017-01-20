@@ -4,6 +4,7 @@ using System.Linq;
 
 using Interfaces.Console;
 using Interfaces.Measurement;
+using Interfaces.LineBreaking;
 using Interfaces.Presentation;
 
 namespace Controllers.Presentation
@@ -11,6 +12,7 @@ namespace Controllers.Presentation
     public class ConsolePresentationController : IPresentationController<Tuple<string, string[]>>
     {
         private IMeasurementController<string> formattedStringMeasurementController;
+        private ILineBreakingController lineBreakingController;
         private IConsoleController consoleController;
 
         private int[] logicalPreviousLengths;
@@ -21,16 +23,18 @@ namespace Controllers.Presentation
 
         public ConsolePresentationController(
             IMeasurementController<string> formattedStringMeasurementController,
+            ILineBreakingController lineBreakingController,
             IConsoleController consoleController)
         {
             this.formattedStringMeasurementController = formattedStringMeasurementController;
+            this.lineBreakingController = lineBreakingController;
             this.consoleController = consoleController;
 
             logicalPreviousLengths = new int[0];
             physicalPreviousLengths = new int[0];
         }
 
-        private int PresentLine(int line, string content, string[] colors)
+        private int PresentLogicalLine(int line, string content, string[] colors)
         {
             var currentLength = content.Length;
             var paddedContent = content;
@@ -56,7 +60,7 @@ namespace Controllers.Presentation
 
             for (var ii = 0; ii < viewsModelsLength; ii++)
                 currentViewsLengths[ii] = 
-                    PresentLine(
+                    PresentLogicalLine(
                         ii, 
                         viewModels.ElementAt(ii).Item1, 
                         viewModels.ElementAt(ii).Item2);

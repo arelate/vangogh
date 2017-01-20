@@ -8,6 +8,6 @@
         public const string QueryStringParameters = "&";
         // common
         public const string KeyValue = "=";
-        public const string ConsoleColor = "%c";
+        public const string ColorFormatting = "%c";
     }
 }

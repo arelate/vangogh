@@ -15,7 +15,7 @@ namespace Controllers.Measurement
     {
         public long Measure(string data)
         {
-            return data.Length - Regex.Matches(data, Separators.ConsoleColor).Count * Separators.ConsoleColor.Length;
+            return data.Length - Regex.Matches(data, Separators.ColorFormatting).Count * Separators.ColorFormatting.Length;
         }
     }
 }
