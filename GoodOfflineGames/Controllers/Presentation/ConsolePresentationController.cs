@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Linq;
 
 using Interfaces.Console;
 using Interfaces.Measurement;
 using Interfaces.LineBreaking;
 using Interfaces.Presentation;
+
+using Models.Separators;
 
 namespace Controllers.Presentation
 {
@@ -15,10 +18,9 @@ namespace Controllers.Presentation
         private ILineBreakingController lineBreakingController;
         private IConsoleController consoleController;
 
-        private int[] logicalPreviousLengths;
-        private int[] physicalPreviousLengths;
+        private IList<int> previousScreenLinesLengths;
 
-        private const int throttleMilliseconds = 250;
+        private const int throttleMilliseconds = 200;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
         public ConsolePresentationController(
@@ -30,22 +32,47 @@ namespace Controllers.Presentation
             this.lineBreakingController = lineBreakingController;
             this.consoleController = consoleController;
 
-            logicalPreviousLengths = new int[0];
-            physicalPreviousLengths = new int[0];
+            previousScreenLinesLengths = new List<int>();
+            consoleController.CursorVisible = false;
         }
 
-        private int PresentLogicalLine(int line, string content, string[] colors)
+        private int PresentLine(int line, string content, string[] colors)
         {
-            var currentLength = content.Length;
+            var currentLength = formattedStringMeasurementController.Measure(content);
+            var previousLineLength = previousScreenLinesLengths.ElementAtOrDefault(line);
             var paddedContent = content;
 
-            if (logicalPreviousLengths.Length > line)
-                if (currentLength < logicalPreviousLengths[line])
-                    paddedContent = content.PadRight(logicalPreviousLengths[line]);
+            consoleController.SetCursorPosition(0, line);
 
-            consoleController.WriteLine(paddedContent, colors);
+            if (previousLineLength > currentLength)
+                paddedContent = content.PadRight(consoleController.WindowWidth);
+
+            consoleController.Write(paddedContent, colors);
 
             return currentLength;
+        }
+
+        private void PresentViewModel(string text, string[] colors, ref int currentScreenLine, IList<int> currentLinesLengths)
+        {
+            var lines = lineBreakingController.BreakLines(text, consoleController.WindowWidth);
+            var consumedColors = 0;
+
+            foreach (var line in lines)
+            {
+                var requiredColors = Regex.Matches(line, Separators.ColorFormatting).Count;
+                var lineColors = new List<string>();
+                for (var cc = consumedColors; cc < consumedColors + requiredColors; cc++)
+                    lineColors.Add(colors.ElementAtOrDefault(cc));
+
+                consumedColors += requiredColors;
+
+                var currentLineLength = PresentLine(
+                        currentScreenLine++,
+                        line,
+                        lineColors.ToArray());
+
+                currentLinesLengths.Add(currentLineLength);
+            }
         }
 
         public void Present(IEnumerable<Tuple<string, string[]>> viewModels, bool overrideThrottling = false)
@@ -53,25 +80,33 @@ namespace Controllers.Presentation
             if (!overrideThrottling && 
                 (DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
 
-            consoleController.SetCursorPosition(0, 0);
-
             var viewsModelsLength = viewModels.Count();
-            var currentViewsLengths = new int[viewsModelsLength];
+            var currentLinesLengths = new List<int>();
+            var currentScreenLine = 0;
 
             for (var ii = 0; ii < viewsModelsLength; ii++)
-                currentViewsLengths[ii] = 
-                    PresentLogicalLine(
-                        ii, 
-                        viewModels.ElementAt(ii).Item1, 
-                        viewModels.ElementAt(ii).Item2);
+            {
+                var text = viewModels.ElementAt(ii).Item1;
+                var colors = viewModels.ElementAt(ii).Item2;
 
-            if (logicalPreviousLengths.Length > viewsModelsLength)
-                for (var ii = viewsModelsLength; ii < logicalPreviousLengths.Length; ii++)
-                    consoleController.WriteLine(string.Empty.PadRight(logicalPreviousLengths[ii]));
+                PresentViewModel(
+                    text, 
+                    colors, 
+                    ref currentScreenLine, 
+                    currentLinesLengths);
+            }
 
-            logicalPreviousLengths = currentViewsLengths;
+            var previousLinesCount = previousScreenLinesLengths.Count();
+            if (previousLinesCount >= currentScreenLine)
+            {
+                for (var pp = currentScreenLine; pp < previousLinesCount; pp++)
+                {
+                    consoleController.SetCursorPosition(0, currentScreenLine++);
+                    consoleController.Write(string.Empty.PadRight(consoleController.WindowWidth));
+                }
+            }
 
-            //consoleController.SetCursorPosition(0, 0);
+            previousScreenLinesLengths = currentLinesLengths;
 
             lastReportedTimestamp = DateTime.UtcNow;
         }

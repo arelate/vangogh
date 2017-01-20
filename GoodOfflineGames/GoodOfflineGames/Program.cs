@@ -111,12 +111,9 @@ namespace GoodOfflineGames
             var formattedStringMeasurementController = new FormattedStringMeasurementController();
             var lineBreakingController = new LineBreakingController(formattedStringMeasurementController);
 
-            var test = "The impala (Aepyceros melampus) is a medium-sized antelope in eastern and southern Africa. First described by German zoologist Hinrich Lichtenstein in 1812, it reaches 70–92 centimetres (28–36 inches) at the shoulder, weighs 40–76 kilograms (88–168 pounds), and has a glossy, reddish brown coat.";
-
-            var lines = lineBreakingController.BreakLines(test, 80);
-
             var consolePresentationController = new ConsolePresentationController(
                 formattedStringMeasurementController,
+                lineBreakingController,
                 consoleController);
 
             var bytesFormattingController = new BytesFormattingController();

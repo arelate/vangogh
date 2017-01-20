@@ -8,7 +8,7 @@ namespace Interfaces.Measurement
 {
     public interface IMeasureDelegate<T>
     {
-        long Measure(T data);
+        int Measure(T data);
     }
 
     public interface IMeasurementController<T>:

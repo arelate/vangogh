@@ -40,7 +40,7 @@ namespace Controllers.LineBreaking
                     {
                         contentLines.Add(currentLine.ToString());
                         currentLine.Clear();
-                        counter = 0;
+                        counter = 1;
                     }
 
                     currentLine.Append(letter);

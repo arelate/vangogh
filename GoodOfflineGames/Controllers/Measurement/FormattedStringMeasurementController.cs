@@ -13,7 +13,7 @@ namespace Controllers.Measurement
 {
     public class FormattedStringMeasurementController : IMeasurementController<string>
     {
-        public long Measure(string data)
+        public int Measure(string data)
         {
             return data.Length - Regex.Matches(data, Separators.ColorFormatting).Count * Separators.ColorFormatting.Length;
         }

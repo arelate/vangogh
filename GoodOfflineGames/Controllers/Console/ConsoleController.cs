@@ -16,6 +16,35 @@ namespace Controllers.Console
 
         public ConsoleColor DefaultColor { get; set; }
 
+        public bool CursorVisible
+        {
+            get
+            {
+                return System.Console.CursorVisible;
+            }
+
+            set
+            {
+                System.Console.CursorVisible = value;
+            }
+        }
+
+        public int WindowWidth
+        {
+            get
+            {
+                return System.Console.WindowWidth;
+            }
+        }
+
+        public int WindowHeight
+        {
+            get
+            {
+                return System.Console.WindowHeight;
+            }
+        }
+
         public string Read()
         {
             return System.Console.Read().ToString();
@@ -65,12 +94,12 @@ namespace Controllers.Console
 
         public void Write(string message, string[] colors = null, params object[] data)
         {
-            OutputMessage(System.Console.Write, message, colors, data);
+            OutputFormattedMessage(System.Console.Write, message, colors, data);
         }
 
         public void WriteLine(string message, string[] colors = null, params object[] data)
         {
-            OutputMessage(System.Console.WriteLine, message, colors, data);
+            OutputFormattedMessage(System.Console.WriteLine, message, colors, data);
         }
 
         private ConsoleColor ParseColor(string color)
@@ -85,7 +114,7 @@ namespace Controllers.Console
             return consoleColor;
         }
 
-        private void OutputMessage(Action<string> consoleOutput, string message, string[] colors = null, params object[] data)
+        private void OutputFormattedMessage(Action<string> consoleOutput, string message, string[] colors = null, params object[] data)
         {
             System.Console.ForegroundColor = DefaultColor;
 

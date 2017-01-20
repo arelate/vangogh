@@ -12,6 +12,7 @@ using Interfaces.Eligibility;
 using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
+using Models.Separators;
 
 using GOG.TaskActivities.Abstract;
 
@@ -85,11 +86,15 @@ namespace GOG.TaskActivities.Download.Processing
                 {
                     var entry = downloadEntries[ii];
 
+                    var sanitizedUri = entry.SourceUri;
+                    if (sanitizedUri.Contains(Separators.QueryString))
+                        sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString));
+
                     taskStatusController.UpdateProgress(
                         processDownloadEntriesTask,
                         ii + 1,
                         downloadEntries.Length,
-                        entry.SourceUri);
+                        sanitizedUri);
 
                     var resolvedUri = string.Empty;
 

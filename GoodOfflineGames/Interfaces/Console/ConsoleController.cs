@@ -40,6 +40,21 @@
         System.ConsoleColor DefaultColor { get; set; }
     }
 
+    public interface ICursorVisibleProperty
+    {
+        bool CursorVisible { get; set; }
+    }
+
+    public interface IWindowWidthProperty
+    {
+        int WindowWidth { get; }
+    }
+
+    public interface IWindowHeightProperty
+    {
+        int WindowHeight { get; }
+    }
+
     public interface IConsoleController :
         IClearDelegate,
         ISetCursorPositionDelegate,
@@ -48,7 +63,10 @@
         IInputPasswordDelegate,
         IWriteDelegate,
         IWriteLineDelegate,
-        IDefaultColorProperty
+        IDefaultColorProperty,
+        ICursorVisibleProperty,
+        IWindowWidthProperty,
+        IWindowHeightProperty
     {
         // ...
     }
