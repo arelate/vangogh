@@ -52,6 +52,8 @@ namespace Models.Settings
         public bool Screenshots { get; set; }
         [DataMember(Name = "productsFiles")]
         public bool ProductsFiles { get; set; }
+        [DataMember(Name = "validation")]
+        public bool Validation { get; set; }
         [DataMember(Name = "languages")]
         public string[] Languages { get; set; }
         [DataMember(Name = "operatingSystems")]

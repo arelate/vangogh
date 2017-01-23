@@ -98,7 +98,11 @@ namespace GOG.TaskActivities.Validation
                     }
                     catch (Exception ex)
                     {
-                        taskStatusController.Fail(validateProductFilesTask, localFile + ": " + ex.Message);
+                        taskStatusController.Fail(validateProductFilesTask, 
+                            string.Format(
+                                "{0}: {1}", 
+                                localFile, 
+                                ex.Message));
                         productIsValid &= false;
                     }
                     finally

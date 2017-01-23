@@ -45,7 +45,7 @@ namespace Controllers.Presentation
             consoleController.SetCursorPosition(0, line);
 
             if (previousLineLength > currentLength)
-                paddedContent = content.PadRight(consoleController.WindowWidth);
+                paddedContent = content.PadRight(content.Length + previousLineLength - currentLength);
 
             consoleController.Write(paddedContent, colors);
 

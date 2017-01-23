@@ -118,7 +118,11 @@ namespace GOG.TaskActivities.Download.Processing
                     }
                     catch (Exception ex)
                     {
-                        taskStatusController.Warn(downloadEntryTask, ex.Message);
+                        taskStatusController.Warn(downloadEntryTask, 
+                            string.Format(
+                                "{0}: {1}", 
+                                resolvedUri, 
+                                ex.Message));
                     }
                     finally
                     {

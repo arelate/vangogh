@@ -761,16 +761,18 @@ namespace GoodOfflineGames
             if (settings.Download.ProductsFiles)
                 taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
 
+            // validation downloads should follow productFiles download processing, because they use timed CDN key
+            if (settings.Download.Validation)
+                taskActivityControllers.Add(updateValidationDownloadsController);
+            if (settings.Download.Validation)
+                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+
             #endregion
 
             #region Validation Task Activities
 
             if (settings.Validation)
             {
-                // schedule validation downloads
-                taskActivityControllers.Add(updateValidationDownloadsController);
-                // actually download validation
-                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
                 // process validation
                 taskActivityControllers.Add(processValidationController);
             }
@@ -813,21 +815,21 @@ namespace GoodOfflineGames
 
             #region Save log 
 
-            //if (settings.Log)
-            //{
-            //    var logDestinationController = new LogsDestinationController();
+            if (settings.Log)
+            {
+                var logDestinationController = new LogsDestinationController();
 
-            //    var uri = System.IO.Path.Combine(
-            //    logDestinationController.GetDirectory(string.Empty),
-            //    logDestinationController.GetFilename(DateTime.UtcNow.ToFileTimeUtc().ToString()));
+                var uri = System.IO.Path.Combine(
+                logDestinationController.GetDirectory(string.Empty),
+                logDestinationController.GetFilename(DateTime.UtcNow.ToFileTimeUtc().ToString()));
 
-            //    consolePresentationController.Present(new List<Tuple<string, string[]>>
-            //    {
-            //        Tuple.Create(string.Format("Save log to {0}", uri), new string[] { "white" })
-            //    });
+                consolePresentationController.Present(new List<Tuple<string, string[]>>
+                {
+                    Tuple.Create(string.Format("Save log to {0}", uri), new string[] { "white" })
+                });
 
-            //    serializedStorageController.SerializePushAsync(uri, applicationTaskStatus).Wait();
-            //}
+                serializedStorageController.SerializePushAsync(uri, applicationTaskStatus).Wait();
+            }
 
             #endregion
 
