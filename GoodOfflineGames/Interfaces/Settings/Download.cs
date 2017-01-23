@@ -15,11 +15,6 @@
         bool ProductsFiles { get; set; }
     }
 
-    public interface IValidationProperty
-    {
-        bool Validation { get; set; }
-    }
-
     public interface ILanguagesProperty
     {
         string[] Languages { get; set; }
@@ -36,8 +31,7 @@
         IScreenshotsProperty,
         IProductsFilesProperty,
         ILanguagesProperty,
-        IOperatingSystemsProperty,
-        IValidationProperty
+        IOperatingSystemsProperty
     {
         // ...
     }

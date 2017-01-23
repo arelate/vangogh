@@ -761,21 +761,17 @@ namespace GoodOfflineGames
             if (settings.Download.ProductsFiles)
                 taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
 
-            // validation downloads should follow productFiles download processing, because they use timed CDN key
-            if (settings.Download.Validation)
-                taskActivityControllers.Add(updateValidationDownloadsController);
-            if (settings.Download.Validation)
-                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
-
             #endregion
 
             #region Validation Task Activities
 
-            if (settings.Validation)
-            {
-                // process validation
+            // validation downloads should follow productFiles download processing, because they use timed CDN key
+            if (settings.Validation.Download)
+                taskActivityControllers.Add(updateValidationDownloadsController);
+            if (settings.Validation.Download)
+                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
+            if (settings.Validation.ValidateUpdated)
                 taskActivityControllers.Add(processValidationController);
-            }
 
             #endregion
 

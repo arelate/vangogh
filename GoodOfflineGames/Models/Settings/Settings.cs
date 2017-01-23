@@ -52,12 +52,19 @@ namespace Models.Settings
         public bool Screenshots { get; set; }
         [DataMember(Name = "productsFiles")]
         public bool ProductsFiles { get; set; }
-        [DataMember(Name = "validation")]
-        public bool Validation { get; set; }
         [DataMember(Name = "languages")]
         public string[] Languages { get; set; }
         [DataMember(Name = "operatingSystems")]
         public string[] OperatingSystems { get; set; }
+    }
+
+    [DataContract]
+    public class ValidationProperties: IValidationProperties
+    {
+        [DataMember(Name = "download")]
+        public bool Download { get; set; }
+        [DataMember(Name = "validateUpdated")]
+        public bool ValidateUpdated { get; set; }
     }
 
     [DataContract]
@@ -85,7 +92,7 @@ namespace Models.Settings
         public DownloadProperties Download { get; set; }
 
         [DataMember(Name = "validation")]
-        public bool Validation { get; set; }
+        public ValidationProperties Validation { get; set; }
 
         [DataMember(Name = "cleanup")]
         public CleanupProperties Cleanup { get; set; }

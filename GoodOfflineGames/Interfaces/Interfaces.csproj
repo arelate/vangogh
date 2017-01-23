@@ -68,6 +68,7 @@
     <Compile Include="Routing\RoutingController.cs" />
     <Compile Include="Settings\Connection.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
+    <Compile Include="Settings\Validation.cs" />
     <Compile Include="TaskStatus\TaskStatus.cs" />
     <Compile Include="TaskStatus\TaskStatusController.cs" />
     <Compile Include="TaskStatus\TaskStatusViewController.cs" />
