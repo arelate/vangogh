@@ -12,7 +12,7 @@ using Models.Separators;
 
 namespace Controllers.Presentation
 {
-    public class ConsolePresentationController : IPresentationController<Tuple<string, string[]>>
+    public class PresentationController : IPresentationController<Tuple<string, string[]>>
     {
         private IMeasurementController<string> formattedStringMeasurementController;
         private ILineBreakingController lineBreakingController;
@@ -23,7 +23,7 @@ namespace Controllers.Presentation
         private const int throttleMilliseconds = 200;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
-        public ConsolePresentationController(
+        public PresentationController(
             IMeasurementController<string> formattedStringMeasurementController,
             ILineBreakingController lineBreakingController,
             IConsoleController consoleController)
@@ -73,6 +73,8 @@ namespace Controllers.Presentation
 
                 currentLinesLengths.Add(currentLineLength);
             }
+
+            consoleController.ResetFormatting();
         }
 
         public void Present(IEnumerable<Tuple<string, string[]>> viewModels, bool overrideThrottling = false)

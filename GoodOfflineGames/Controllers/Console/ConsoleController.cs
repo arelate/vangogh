@@ -12,37 +12,25 @@ namespace Controllers.Console
         public ConsoleController()
         {
             DefaultColor = ConsoleColor.Gray;
+            ResetFormatting();
         }
 
         public ConsoleColor DefaultColor { get; set; }
 
         public bool CursorVisible
         {
-            get
-            {
-                return System.Console.CursorVisible;
-            }
-
-            set
-            {
-                System.Console.CursorVisible = value;
-            }
+            get { return System.Console.CursorVisible; }
+            set { System.Console.CursorVisible = value; }
         }
 
         public int WindowWidth
         {
-            get
-            {
-                return System.Console.WindowWidth;
-            }
+            get { return System.Console.WindowWidth; }
         }
 
         public int WindowHeight
         {
-            get
-            {
-                return System.Console.WindowHeight;
-            }
+            get { return System.Console.WindowHeight; }
         }
 
         public string Read()
@@ -57,23 +45,23 @@ namespace Controllers.Console
 
         public string InputPassword()
         {
-            System.ConsoleKeyInfo key;
+            ConsoleKeyInfo key;
             string password = string.Empty;
-            while ((key = System.Console.ReadKey(true)).Key != System.ConsoleKey.Enter)
+            while ((key = System.Console.ReadKey(true)).Key != ConsoleKey.Enter)
             {
                 string output = string.Empty;
                 bool passwordIncrement = false;
 
                 switch (key.Key)
                 {
-                    case System.ConsoleKey.Backspace:
+                    case ConsoleKey.Backspace:
                         if (password.Length > 0)
                             password = password.Substring(0, password.Length - 1);
                         break;
-                    case System.ConsoleKey.UpArrow:
-                    case System.ConsoleKey.DownArrow:
-                    case System.ConsoleKey.LeftArrow:
-                    case System.ConsoleKey.RightArrow:
+                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.RightArrow:
                         continue;
                     default:
                         password += key.KeyChar;
@@ -100,6 +88,7 @@ namespace Controllers.Console
         public void WriteLine(string message, string[] colors = null, params object[] data)
         {
             OutputFormattedMessage(System.Console.WriteLine, message, colors, data);
+            ResetFormatting();
         }
 
         private ConsoleColor ParseColor(string color)
@@ -109,15 +98,18 @@ namespace Controllers.Console
 
             if (consoleColor == ConsoleColor.Black &&
                 color.ToLower() != "black")
-                consoleColor = DefaultColor; 
+                consoleColor = DefaultColor;
 
             return consoleColor;
         }
 
-        private void OutputFormattedMessage(Action<string> consoleOutput, string message, string[] colors = null, params object[] data)
+        public void ResetFormatting()
         {
             System.Console.ForegroundColor = DefaultColor;
+        }
 
+        private void OutputFormattedMessage(Action<string> consoleOutput, string message, string[] colors = null, params object[] data)
+        {
             var formattedMessage =
                 (data != null && data.Length > 0) ?
                 string.Format(message, data) :
@@ -134,15 +126,16 @@ namespace Controllers.Console
                 computedColors.Add(ParseColor(color));
 
             var formattedMessageParts = formattedMessage.Split(
-                new string[1] { Separators.ColorFormatting }, 
+                new string[1] { Separators.ColorFormatting },
                 StringSplitOptions.None);
 
             if (formattedMessageParts.Length > computedColors.Count)
                 throw new FormatException("Number of colors is less than required to format the message");
 
-            for (var ii=0; ii<formattedMessageParts.Length; ii++)
+            for (var ii = 0; ii < formattedMessageParts.Length; ii++)
             {
-                System.Console.ForegroundColor = computedColors[ii];
+                // only set requested colors, not DefaultColor that was set earlier
+                if (ii > 0) System.Console.ForegroundColor = computedColors[ii];
                 System.Console.Write(formattedMessageParts[ii]);
             }
 

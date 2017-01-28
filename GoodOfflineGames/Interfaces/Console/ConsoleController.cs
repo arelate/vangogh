@@ -40,6 +40,11 @@
         System.ConsoleColor DefaultColor { get; set; }
     }
 
+    public interface IResetFormattingDelegate
+    {
+        void ResetFormatting();
+    }
+
     public interface ICursorVisibleProperty
     {
         bool CursorVisible { get; set; }
@@ -61,6 +66,7 @@
         IReadDelegate,
         IReadLineDelegate,
         IInputPasswordDelegate,
+        IResetFormattingDelegate,
         IWriteDelegate,
         IWriteLineDelegate,
         IDefaultColorProperty,

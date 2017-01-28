@@ -111,7 +111,7 @@ namespace GoodOfflineGames
             var formattedStringMeasurementController = new FormattedStringMeasurementController();
             var lineBreakingController = new LineBreakingController(formattedStringMeasurementController);
 
-            var consolePresentationController = new ConsolePresentationController(
+            var presentationController = new PresentationController(
                 formattedStringMeasurementController,
                 lineBreakingController,
                 consoleController);
@@ -125,7 +125,7 @@ namespace GoodOfflineGames
                 applicationTaskStatus,
                 bytesFormattingController,
                 secondsFormattingController,
-                consolePresentationController);
+                presentationController);
 
             var taskStatusController = new TaskStatusController(taskStatusViewController);
 
@@ -819,7 +819,7 @@ namespace GoodOfflineGames
                 logDestinationController.GetDirectory(string.Empty),
                 logDestinationController.GetFilename(DateTime.UtcNow.ToFileTimeUtc().ToString()));
 
-                consolePresentationController.Present(new List<Tuple<string, string[]>>
+                presentationController.Present(new List<Tuple<string, string[]>>
                 {
                     Tuple.Create(string.Format("Save log to {0}", uri), new string[] { "white" })
                 });
@@ -831,7 +831,7 @@ namespace GoodOfflineGames
 
             var defaultColor = new string[] { " default" };
 
-            consolePresentationController.Present(
+            presentationController.Present(
                 new List<Tuple<string, string[]>> {
                     Tuple.Create("%cAll GoodOfflineGames tasks are complete.", new string[] { "white" }),
                     Tuple.Create("", defaultColor),
