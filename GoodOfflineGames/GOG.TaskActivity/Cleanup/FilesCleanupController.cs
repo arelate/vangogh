@@ -89,13 +89,16 @@ namespace GOG.TaskActivities.Cleanup
                 foreach (var directory in productDirectories)
                     actualFiles.AddRange(directoryController.EnumerateFiles(directory));
 
-                var cleanupProductFilesTask = taskStatusController.Create(cleanupAllFilesTask, "Move product files to recycle bin");
 
                 var unexpectedFiles = new List<string>();
 
                 foreach (var file in actualFiles)
                     if (!expectedFiles.Contains(file))
                         unexpectedFiles.Add(file);
+
+                if (unexpectedFiles.Count == 0) continue;
+
+                var cleanupProductFilesTask = taskStatusController.Create(cleanupAllFilesTask, "Move product files to recycle bin");
 
                 var productFilesCounter = 0;
 
