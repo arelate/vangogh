@@ -2,10 +2,10 @@
 using System.Text;
 using System.Collections.Generic;
 
-using Interfaces.Console;
 using Interfaces.TaskStatus;
 using Interfaces.Formatting;
 using Interfaces.Presentation;
+using Interfaces.Tree;
 
 using Models.Units;
 using Models.ViewModels;
@@ -15,11 +15,10 @@ namespace Controllers.TaskStatus
     public class TaskStatusViewController : ITaskStatusViewController
     {
         private ITaskStatus applicationTaskStatus;
-        private IPresentationController<Tuple<string, string[]>> consolePresentationController;
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
-
-        private Queue<ITaskStatus> taskStatusQueue;
+        private ITreeToListController<ITaskStatus> taskStatusTreeToListController;
+        private IPresentationController<Tuple<string, string[]>> consolePresentationController;
 
         private const string suffix = ". ";
 
@@ -44,6 +43,7 @@ namespace Controllers.TaskStatus
             ITaskStatus applicationTaskStatus,
             IFormattingController bytesFormattingController,
             IFormattingController secondsFormattingController,
+            ITreeToListController<ITaskStatus> taskStatusTreeToListController,
             IPresentationController<Tuple<string, string[]>> consolePresentationController)
         {
             this.applicationTaskStatus = applicationTaskStatus;
@@ -51,36 +51,25 @@ namespace Controllers.TaskStatus
             this.bytesFormattingController = bytesFormattingController;
             this.secondsFormattingController = secondsFormattingController;
 
-            this.consolePresentationController = consolePresentationController;
+            this.taskStatusTreeToListController = taskStatusTreeToListController;
 
-            taskStatusQueue = new Queue<ITaskStatus>();
+            this.consolePresentationController = consolePresentationController;
         }
 
         public void CreateView(bool overrideThrottling = false)
         {
-
             var viewModels = new List<TaskStatusViewModel>();
 
-            taskStatusQueue.Clear();
-            taskStatusQueue.Enqueue(applicationTaskStatus);
+            var taskStatusList = taskStatusTreeToListController.ToList(applicationTaskStatus);
 
-            while (taskStatusQueue.Count > 0)
+            foreach (var taskStatus in taskStatusList)
             {
-                var currentTaskStatus = taskStatusQueue.Dequeue();
-                var taskStatusViewModel = GetViewModel(currentTaskStatus);
-
+                var taskStatusViewModel = GetViewModel(taskStatus);
                 if (taskStatusViewModel != null)
                     viewModels.Add(taskStatusViewModel);
-
-                if (currentTaskStatus.Children == null) continue;
-
-                foreach (var childTaskStatus in currentTaskStatus.Children)
-                    taskStatusQueue.Enqueue(childTaskStatus);
             }
 
             consolePresentationController.Present(GetTuples(viewModels), overrideThrottling);
-
-            //lastReportedTimestamp = DateTime.UtcNow;
         }
 
         private IEnumerable<Tuple<string, string[]>> GetTuples(IEnumerable<TaskStatusViewModel> taskStatusViewModels)

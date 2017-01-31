@@ -119,12 +119,15 @@ namespace GoodOfflineGames
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();
 
+            var taskStatusTreeToListController = new TaskStatusTreeToListController();
+
             var applicationTaskStatus = new TaskStatus() { Title = "Welcome to GoodOfflineGames" };
 
             var taskStatusViewController = new TaskStatusViewController(
                 applicationTaskStatus,
                 bytesFormattingController,
                 secondsFormattingController,
+                taskStatusTreeToListController,
                 presentationController);
 
             var taskStatusController = new TaskStatusController(taskStatusViewController);
@@ -175,13 +178,11 @@ namespace GoodOfflineGames
             var screenshotsFilesDestinationController = new ScreenshotsFilesDestinationController();
             var validationDestinationController = new ValidationDestinationController();
 
-            var taskStatusTreeToListController = new TaskStatusTreeToListController();
+            //var latestStatus = serializedStorageController.DeserializePullAsync<TaskStatus>("log-latest.js").Result;
 
-            var latestStatus = serializedStorageController.DeserializePullAsync<TaskStatus>("log-latest.js").Result;
+            //var statusList = taskStatusTreeToListController.ToList(latestStatus);
 
-            var statusList = taskStatusTreeToListController.ToList(latestStatus);
-
-            return;
+            //return;
             
 
             #endregion
