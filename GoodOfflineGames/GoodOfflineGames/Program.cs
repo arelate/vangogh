@@ -175,6 +175,15 @@ namespace GoodOfflineGames
             var screenshotsFilesDestinationController = new ScreenshotsFilesDestinationController();
             var validationDestinationController = new ValidationDestinationController();
 
+            var taskStatusTreeToListController = new TaskStatusTreeToListController();
+
+            var latestStatus = serializedStorageController.DeserializePullAsync<TaskStatus>("log-latest.js").Result;
+
+            var statusList = taskStatusTreeToListController.ToList(latestStatus);
+
+            return;
+            
+
             #endregion
 
             #region Data Controllers

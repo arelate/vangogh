@@ -93,6 +93,7 @@
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="PropertiesValidation\AuthenticationPropertiesValidationController.cs" />
     <Compile Include="TaskStatus\TaskStatusController.cs" />
+    <Compile Include="TaskStatus\TaskStatusTreeToListController.cs" />
     <Compile Include="TaskStatus\TaskStatusViewController.cs" />
     <Compile Include="Throttle\ThrottleController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />

@@ -18,7 +18,7 @@ namespace Models.TaskStatus
         [DataMember(Name = "progress")]
         public ITaskProgress Progress { get; set; }
         [DataMember(Name = "started")]
-        public DateTime Started { get; set; }
+        public DateTime Started { get; set; } = DateTime.UtcNow;
         [DataMember(Name = "completed")]
         public DateTime Completed { get; set; }
         [DataMember(Name = "children")]

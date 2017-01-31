@@ -88,6 +88,7 @@
     <Compile Include="Extraction\ExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
     <Compile Include="TaskActivity\TaskActivityController.cs" />
+    <Compile Include="Tree\TreeToListController.cs" />
     <Compile Include="UpdateDependencies\ConnectionController.cs" />
     <Compile Include="UpdateDependencies\DataProcessingController.cs" />
     <Compile Include="UpdateDependencies\RequiredUpdatesController.cs" />
