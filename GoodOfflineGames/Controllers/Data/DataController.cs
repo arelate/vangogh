@@ -20,7 +20,10 @@ namespace Controllers.Data
         private IIndexingController indexingController;
         private ICollectionController collectionController;
 
-        private IDestinationController destinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetFilenameDelegate getFilenameDelegate;
+
+        //private IDestinationController destinationController;
         private IRecycleBinController recycleBinController;
 
         private ISerializedStorageController serializedStorageController;
@@ -41,7 +44,9 @@ namespace Controllers.Data
             DataStoragePolicy dataStoragePolicy,
             IIndexingController indexingController,
             ICollectionController collectionController,
-            IDestinationController destinationController,
+            //IDestinationController destinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
             IRecycleBinController recycleBinController = null)
         {
             this.dataStoragePolicy = dataStoragePolicy;
@@ -50,15 +55,18 @@ namespace Controllers.Data
 
             this.serializedStorageController = serializedStorageController;
 
-            this.destinationController = destinationController;
-            destinationDirectory = destinationController.GetDirectory(string.Empty);
+            //this.destinationController = destinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
+            this.getFilenameDelegate = getFilenameDelegate;
+
+            destinationDirectory = getDirectoryDelegate.GetDirectory(string.Empty);
             dataIndexesUri = Path.Combine(destinationDirectory, dataIndexesFilename);
 
             this.recycleBinController = recycleBinController;
 
             if (this.dataStoragePolicy == DataStoragePolicy.ItemsList)
                 dataItemsUri = Path.Combine(destinationDirectory,
-                    destinationController.GetFilename(string.Empty));
+                    getFilenameDelegate.GetFilename(string.Empty));
 
             dataItems = null;
             dataIndexes = null;
@@ -75,7 +83,7 @@ namespace Controllers.Data
         {
             return Path.Combine(
                 destinationDirectory,
-                destinationController.GetFilename(index.ToString()));
+                getFilenameDelegate.GetFilename(index.ToString()));
         }
 
         public async Task<Type> GetByIdAsync(long id)

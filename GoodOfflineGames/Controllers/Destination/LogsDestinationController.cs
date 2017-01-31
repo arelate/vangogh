@@ -5,7 +5,8 @@ namespace Controllers.Destination
 {
     public class LogsDestinationController : IDestinationController
     {
-        private const string logFilenameTemplate = "log-latest.js";
+        private const string logFilenameTemplate = "log-{0}.js";
+        private const string logTimestampFormat = "yyyyMMdd-HHmmss";
 
         public string GetDirectory(string source)
         {
@@ -14,7 +15,10 @@ namespace Controllers.Destination
 
         public string GetFilename(string source)
         {
-            return string.Format(logFilenameTemplate, source);
+            return
+                string.Format(
+                    logFilenameTemplate,
+                    DateTime.Now.ToString(logTimestampFormat));
         }
     }
 }
