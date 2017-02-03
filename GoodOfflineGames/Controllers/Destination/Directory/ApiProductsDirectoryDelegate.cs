@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Controllers.Destination.Data
+namespace Controllers.Destination.Directory
 {
-    public class ApiProductsDestinationController: DataDestinationController
+    public class ApiProductsDirectoryDelegate: DataDirectoryDelegate
     {
         public override string GetDirectory(string source)
         {

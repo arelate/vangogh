@@ -1,14 +1,14 @@
 ﻿using System.IO;
 
-namespace Controllers.Destination.Data
+namespace Controllers.Destination.Directory
 {
-    public class GameProductDataDestinationController : DataDestinationController
+    public class GameDetailsDirectoryDelegate: DataDirectoryDelegate
     {
         public override string GetDirectory(string source)
         {
             return Path.Combine(
                 base.GetDirectory(source),
-                "gameProductData");
+                "gameDetails");
         }
     }
 }

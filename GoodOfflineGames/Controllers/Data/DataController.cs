@@ -3,27 +3,23 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Data;
-using Interfaces.DataStoragePolicy;
 using Interfaces.Collection;
 using Interfaces.Indexing;
 using Interfaces.Destination;
 using Interfaces.RecycleBin;
 
 using Interfaces.SerializedStorage;
-using System;
 
 namespace Controllers.Data
 {
     public class DataController<Type> : IDataController<Type>
     {
-        private DataStoragePolicy dataStoragePolicy;
         private IIndexingController indexingController;
         private ICollectionController collectionController;
 
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
 
-        //private IDestinationController destinationController;
         private IRecycleBinController recycleBinController;
 
         private ISerializedStorageController serializedStorageController;
@@ -36,20 +32,14 @@ namespace Controllers.Data
         private const string dataIndexesFilename = "indexes.json";
         private string dataIndexesUri;
 
-        private string dataItemsUri;
-
         public DataController(
             ISerializedStorageController serializedStorageController,
-
-            DataStoragePolicy dataStoragePolicy,
             IIndexingController indexingController,
             ICollectionController collectionController,
-            //IDestinationController destinationController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IRecycleBinController recycleBinController = null)
         {
-            this.dataStoragePolicy = dataStoragePolicy;
             this.indexingController = indexingController;
             this.collectionController = collectionController;
 
@@ -63,10 +53,6 @@ namespace Controllers.Data
             dataIndexesUri = Path.Combine(destinationDirectory, dataIndexesFilename);
 
             this.recycleBinController = recycleBinController;
-
-            if (this.dataStoragePolicy == DataStoragePolicy.ItemsList)
-                dataItemsUri = Path.Combine(destinationDirectory,
-                    getFilenameDelegate.GetFilename(string.Empty));
 
             dataItems = null;
             dataIndexes = null;
@@ -88,32 +74,32 @@ namespace Controllers.Data
 
         public async Task<Type> GetByIdAsync(long id)
         {
-            switch (dataStoragePolicy)
-            {
-                case DataStoragePolicy.IndexAndItems:
+            //switch (dataStoragePolicy)
+            //{
+                //case DataStoragePolicy.IndexAndItems:
                     var dataUri = GetDataUri(id);
                     return await serializedStorageController.DeserializePullAsync<Type>(dataUri);
-                case DataStoragePolicy.ItemsList:
-                    return collectionController.Find(
-                        dataItems,
-                        p =>
-                            indexingController.GetIndex(p) == id);
-            }
+                //case DataStoragePolicy.ItemsList:
+                //    return collectionController.Find(
+                //        dataItems,
+                //        p =>
+                //            indexingController.GetIndex(p) == id);
+            //}
 
-            return default(Type);
+            //return default(Type);
         }
 
         public async Task LoadAsync()
         {
-            switch (dataStoragePolicy)
-            {
-                case DataStoragePolicy.IndexAndItems:
+            //switch (dataStoragePolicy)
+            //{
+            //    case DataStoragePolicy.IndexAndItems:
                     dataIndexes = await serializedStorageController.DeserializePullAsync<List<long>>(dataIndexesUri);
-                    break;
-                case DataStoragePolicy.ItemsList:
-                    dataItems = await serializedStorageController.DeserializePullAsync<List<Type>>(dataItemsUri);
-                    break;
-            }
+            //        break;
+            //    case DataStoragePolicy.ItemsList:
+            //        dataItems = await serializedStorageController.DeserializePullAsync<List<Type>>(dataItemsUri);
+            //        break;
+            //}
 
             if (dataIndexes == null) dataIndexes = new List<long>();
             if (dataItems == null) dataItems = new List<Type>();
@@ -124,15 +110,15 @@ namespace Controllers.Data
 
         public async Task SaveAsync()
         {
-            switch (dataStoragePolicy)
-            {
-                case DataStoragePolicy.IndexAndItems:
+            //switch (dataStoragePolicy)
+            //{
+            //    case DataStoragePolicy.IndexAndItems:
                     await serializedStorageController.SerializePushAsync(dataIndexesUri, dataIndexes);
-                    break;
-                case DataStoragePolicy.ItemsList:
-                    await serializedStorageController.SerializePushAsync(dataItemsUri, dataItems);
-                    break;
-            }
+                //    break;
+                //case DataStoragePolicy.ItemsList:
+                //    await serializedStorageController.SerializePushAsync(dataItemsUri, dataItems);
+                //    break;
+            //}
         }
 
         public async Task RemoveAsync(params Type[] data)
@@ -161,23 +147,23 @@ namespace Controllers.Data
                 if (!dataIndexes.Contains(index))
                     dataIndexes.Add(index);
 
-                switch (dataStoragePolicy)
-                {
-                    case DataStoragePolicy.IndexAndItems:
+                //switch (dataStoragePolicy)
+                //{
+                //    case DataStoragePolicy.IndexAndItems:
                         var dataUri = GetDataUri(index);
                         await serializedStorageController.SerializePushAsync(dataUri, item);
                         break;
-                    case DataStoragePolicy.ItemsList:
-                        var updated = false;
-                        for (var ii = 0; ii < dataItems.Count; ii++)
-                            if (indexingController.GetIndex(dataItems[ii]) == index)
-                            {
-                                dataItems[ii] = item;
-                                updated = true;
-                            }
-                        if (!updated) dataItems.Add(item);
-                        break;
-                }
+                //    case DataStoragePolicy.ItemsList:
+                //        var updated = false;
+                //        for (var ii = 0; ii < dataItems.Count; ii++)
+                //            if (indexingController.GetIndex(dataItems[ii]) == index)
+                //            {
+                //                dataItems[ii] = item;
+                //                updated = true;
+                //            }
+                //        if (!updated) dataItems.Add(item);
+                //        break;
+                //}
             }
 
             await SaveAsync();

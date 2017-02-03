@@ -19,7 +19,11 @@ using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.LineBreaking;
 using Controllers.UriResolution;
+
 using Controllers.Destination;
+using Controllers.Destination.Directory;
+using Controllers.Destination.Filename;
+
 using Controllers.Destination.Data;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
@@ -37,7 +41,6 @@ using Controllers.TaskStatus;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
-using Interfaces.DataStoragePolicy;
 
 using GOG.Models;
 
@@ -178,17 +181,13 @@ namespace GoodOfflineGames
             var screenshotsFilesDestinationController = new ScreenshotsFilesDestinationController();
             var validationDestinationController = new ValidationDestinationController();
 
-            var stamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-
-            return;
-
+            //var stamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            
             //var latestStatus = serializedStorageController.DeserializePullAsync<TaskStatus>("log-latest.js").Result;
-
             //var statusList = taskStatusTreeToListController.ToList(latestStatus);
 
             //return;
             
-
             #endregion
 
             #region Data Controllers
@@ -198,12 +197,20 @@ namespace GoodOfflineGames
             var productCoreIndexingController = new ProductCoreIndexingController();
             var passthroughIndexingController = new PassthroughIndexingController();
 
-            var productsDestinationController = new ProductsDestinationController();
-            var accountProductsDestinationController = new AccountProductDestinationController();
-            var gameDetailsDestinationController = new GameDetailsDestinationController();
+            var productsDirectoryDelegate = new ProductsDirectoryDelegate();
+            var accountProductsDirectoryDelegate = new AccountProductsDirectoryDelegate();
+            var gameDetailsDirectoryDelegate = new GameDetailsDirectoryDelegate();
+            var gameProductDataDirectoryDelegate = new GameProductDataDirectoryDelegate();
+            var apiProductsDirectoryDelegate = new ApiProductsDirectoryDelegate();
+
+            var dataFilenameDelegate = new DataFilenameDelegate();
+
+            //var productsDestinationController = new ProductsDestinationController();
+            //var accountProductsDestinationController = new AccountProductDestinationController();
+            //var gameDetailsDestinationController = new GameDetailsDestinationController();
             var screenshotsDestinationController = new ScreenshotsDestinationController();
-            var apiProductsDestinationController = new ApiProductsDestinationController();
-            var gameProductDataDestinationController = new GameProductDataDestinationController();
+            //var apiProductsDestinationController = new ApiProductsDestinationController();
+            //var gameProductDataDestinationController = new GameProductDataDestinationController();
             var wishlistedDestinationController = new WishlistedDestinationController();
             var updatedDestinationController = new UpdatedDestinationController();
             var productDownloadsDestinationController = new ProductDownloadsDestinationController();
@@ -215,69 +222,69 @@ namespace GoodOfflineGames
 
             var productsDataController = new DataController<Product>(
                 serializedStorageController,
-                DataStoragePolicy.ItemsList,
                 productCoreIndexingController,
                 collectionController,
-                productsDestinationController);
+                productsDirectoryDelegate,
+                dataFilenameDelegate);
 
             var accountProductsDataController = new DataController<AccountProduct>(
                 serializedStorageController,
-                DataStoragePolicy.ItemsList,
                 productCoreIndexingController,
                 collectionController,
-                accountProductsDestinationController);
+                accountProductsDirectoryDelegate,
+                dataFilenameDelegate);
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 serializedStorageController,
-                DataStoragePolicy.IndexAndItems,
                 productCoreIndexingController,
                 collectionController,
-                gameDetailsDestinationController,
+                gameDetailsDirectoryDelegate,
+                dataFilenameDelegate,
                 recycleBinController);
 
             var gameProductDataController = new DataController<GameProductData>(
                 serializedStorageController,
-                DataStoragePolicy.IndexAndItems,
                 productCoreIndexingController,
                 collectionController,
-                gameProductDataDestinationController,
+                gameProductDataDirectoryDelegate,
+                dataFilenameDelegate,
                 recycleBinController);
 
-            var wishlistedDataController = new DataController<long>(
-                serializedStorageController,
-                DataStoragePolicy.ItemsList,
-                passthroughIndexingController,
-                collectionController,
-                wishlistedDestinationController);
+            //var wishlistedDataController = new DataController<long>(
+            //    serializedStorageController,
+            //    DataStoragePolicy.ItemsList,
+            //    passthroughIndexingController,
+            //    collectionController,
+            //    wishlistedDestinationController);
 
-            var updatedDataController = new DataController<long>(
-                serializedStorageController,
-                DataStoragePolicy.ItemsList,
-                passthroughIndexingController,
-                collectionController,
-                updatedDestinationController);
+            //var updatedDataController = new DataController<long>(
+            //    serializedStorageController,
+            //    DataStoragePolicy.ItemsList,
+            //    passthroughIndexingController,
+            //    collectionController,
+            //    updatedDestinationController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
                 serializedStorageController,
-                DataStoragePolicy.IndexAndItems,
                 productCoreIndexingController,
                 collectionController,
-                apiProductsDestinationController,
+                apiProductsDirectoryDelegate,
+                dataFilenameDelegate,
                 recycleBinController);
 
-            var scheduledScreenshotsUpdatesDataController = new DataController<long>(
-                serializedStorageController,
-                DataStoragePolicy.ItemsList,
-                passthroughIndexingController,
-                collectionController,
-                scheduledScreenshotsUpdatesDestinationController);
+            //var scheduledScreenshotsUpdatesDataController = new DataController<long>(
+            //    serializedStorageController,
+            //    DataStoragePolicy.ItemsList,
+            //    passthroughIndexingController,
+            //    collectionController,
+            //    scheduledScreenshotsUpdatesDestinationController);
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 serializedStorageController,
-                DataStoragePolicy.IndexAndItems,
                 productCoreIndexingController,
                 collectionController,
                 screenshotsDestinationController,
+                dataFilenameDelegate,
                 recycleBinController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
@@ -294,19 +301,19 @@ namespace GoodOfflineGames
                 collectionController,
                 productRoutesDestinationController);
 
-            var lastKnownValidDataController = new DataController<long>(
-                serializedStorageController,
-                DataStoragePolicy.ItemsList,
-                passthroughIndexingController,
-                collectionController,
-                lastKnownValidDestinationController);
+            //var lastKnownValidDataController = new DataController<long>(
+            //    serializedStorageController,
+            //    DataStoragePolicy.ItemsList,
+            //    passthroughIndexingController,
+            //    collectionController,
+            //    lastKnownValidDestinationController);
 
-            var scheduledCleanupDataController = new DataController<long>(
-                serializedStorageController,
-                DataStoragePolicy.ItemsList,
-                passthroughIndexingController,
-                collectionController,
-                scheduledCleanupDestinationController);
+            //var scheduledCleanupDataController = new DataController<long>(
+            //    serializedStorageController,
+            //    DataStoragePolicy.ItemsList,
+            //    passthroughIndexingController,
+            //    collectionController,
+            //    scheduledCleanupDestinationController);
 
             #endregion
 

@@ -58,7 +58,6 @@
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="Indexing\IndexingController.cs" />
     <Compile Include="Language\LanguageController.cs" />
-    <Compile Include="DataStoragePolicy\DataStoragePolicy.cs" />
     <Compile Include="Data\DataController.cs" />
     <Compile Include="LineBreaking\LineBreakingController.cs" />
     <Compile Include="Measurement\MeasurementController.cs" />
