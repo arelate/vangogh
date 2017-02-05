@@ -57,6 +57,68 @@ namespace GOG.TaskActivities.Cleanup
             this.recycleBinController = recycleBinController;
         }
 
+        private async Task RemoveScheduledCleanupEntry(long id, ITaskStatus taskStatus)
+        {
+            var removeScheduledCleanupEntry = taskStatusController.Create(taskStatus, "Remove scheduled cleanup entry");
+            await scheduledCleanupDataController.RemoveAsync(id);
+            taskStatusController.Complete(removeScheduledCleanupEntry);
+        }
+
+        private async Task<IList<string>> GetUnexpectedFiles(long id)
+        {
+            var productDirectories = await directoryEnumerationController.EnumerateAsync(id);
+
+            var expectedFiles = await filesEnumerationController.EnumerateAsync(id);
+
+            var actualFiles = new List<string>();
+            foreach (var directory in productDirectories)
+                actualFiles.AddRange(directoryController.EnumerateFiles(directory));
+
+            var unexpectedFiles = new List<string>();
+
+            foreach (var file in actualFiles)
+                if (!expectedFiles.Contains(file))
+                    unexpectedFiles.Add(file);
+
+            return unexpectedFiles;
+        }
+
+        private async Task MoveUnexpectedFilesToRecycleBin(long id, IList<string> unexpectedFiles, ITaskStatus taskStatus)
+        {
+            var cleanupProductFilesTask = taskStatusController.Create(taskStatus, "Move product files to recycle bin");
+
+            var productFilesCounter = 0;
+
+            foreach (var file in unexpectedFiles)
+            {
+                taskStatusController.UpdateProgress(
+                    cleanupProductFilesTask,
+                    ++productFilesCounter,
+                    unexpectedFiles.Count,
+                    file);
+
+                recycleBinController.MoveFileToRecycleBin(file);
+
+                if (fileValidationEligibilityController.IsEligible(file))
+                {
+                    var validationFile = Path.Combine(
+                        getDirectoryDelegate.GetDirectory(),
+                        getFilenameDelegate.GetFilename(file));
+
+                    var deleteValidationFileTask = taskStatusController.Create(
+                        cleanupProductFilesTask,
+                        string.Format(
+                            "Move validation file to recycle bin: {0}",
+                            validationFile));
+                    recycleBinController.MoveFileToRecycleBin(validationFile);
+                    taskStatusController.Complete(deleteValidationFileTask);
+                }
+            }
+
+            await RemoveScheduledCleanupEntry(id, cleanupProductFilesTask);
+            taskStatusController.Complete(cleanupProductFilesTask);
+        }
+
         public async override Task ProcessTaskAsync()
         {
             var cleanupAllFilesTask = taskStatusController.Create(taskStatus, "Clean up older versions of the products files");
@@ -76,63 +138,24 @@ namespace GOG.TaskActivities.Cleanup
                         string.Format(
                             "Account product doesn't exist: {0}",
                             id));
+                    continue;
                 }
-                else
+
+                taskStatusController.UpdateProgress(
+                    cleanupProductTask,
+                    counter++,
+                    scheduledCleanupIds.Count(),
+                    accountProduct.Title);
+
+                var unexpectedFiles = await GetUnexpectedFiles(id);
+
+                if (unexpectedFiles.Count == 0)
                 {
-                    taskStatusController.UpdateProgress(
-                        cleanupProductTask,
-                        counter++,
-                        scheduledCleanupIds.Count(),
-                        accountProduct.Title);
-                }
+                    await RemoveScheduledCleanupEntry(id, cleanupAllFilesTask);
+                    continue;
+                };
 
-                var productDirectories = await directoryEnumerationController.EnumerateAsync(id);
-                var expectedFiles = await filesEnumerationController.EnumerateAsync(id);
-
-                var actualFiles = new List<string>();
-                foreach (var directory in productDirectories)
-                    actualFiles.AddRange(directoryController.EnumerateFiles(directory));
-
-
-                var unexpectedFiles = new List<string>();
-
-                foreach (var file in actualFiles)
-                    if (!expectedFiles.Contains(file))
-                        unexpectedFiles.Add(file);
-
-                if (unexpectedFiles.Count == 0) continue;
-
-                var cleanupProductFilesTask = taskStatusController.Create(cleanupAllFilesTask, "Move product files to recycle bin");
-
-                var productFilesCounter = 0;
-
-                foreach (var file in unexpectedFiles)
-                {
-                    taskStatusController.UpdateProgress(
-                        cleanupProductFilesTask,
-                        ++productFilesCounter,
-                        unexpectedFiles.Count,
-                        file);
-
-                    recycleBinController.MoveFileToRecycleBin(file);
-
-                    if (fileValidationEligibilityController.IsEligible(file))
-                    {
-                        var validationFile = Path.Combine(
-                            getDirectoryDelegate.GetDirectory(),
-                            getFilenameDelegate.GetFilename(file));
-
-                        var deleteValidationFileTask = taskStatusController.Create(
-                            cleanupProductFilesTask,
-                            string.Format(
-                                "Move validation file to recycle bin: {0}", 
-                                validationFile));
-                        recycleBinController.MoveFileToRecycleBin(validationFile);
-                        taskStatusController.Complete(deleteValidationFileTask);
-                    }
-                }
-
-                taskStatusController.Complete(cleanupProductFilesTask);
+                await MoveUnexpectedFilesToRecycleBin(id, unexpectedFiles, cleanupAllFilesTask);
             }
 
             taskStatusController.Complete(cleanupAllFilesTask);

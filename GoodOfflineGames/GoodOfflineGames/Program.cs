@@ -83,8 +83,6 @@ namespace GoodOfflineGames
         {
             #region Foundation Controllers
 
-            //string productFilesDestination = "productFiles";
-
             var streamController = new StreamController();
             var fileController = new FileController();
             var directoryController = new DirectoryController();
@@ -181,13 +179,8 @@ namespace GoodOfflineGames
             var productDownloadsDirectoryDelegate = new FixedDirectoryDelegate("productDownloads", dataDirectoryDelegate);
             var productRoutesDirectoryDelegate = new FixedDirectoryDelegate("productRoutes", dataDirectoryDelegate);
             var productScreenshotsDirectoryDelegate = new FixedDirectoryDelegate("productScreenshots", dataDirectoryDelegate);
+
             var recycleBinDirectoryDelegate = new FixedDirectoryDelegate("recycleBin");
-
-            var recycleBinController = new RecycleBinController(
-                recycleBinDirectoryDelegate,
-                fileController,
-                directoryController);
-
             var imagesDirectoryDelegate = new FixedDirectoryDelegate("images");
             var logsDirectoryDelegate = new FixedDirectoryDelegate("logs");
             var validationDirectoryDelegate = new FixedDirectoryDelegate("md5");
@@ -295,6 +288,11 @@ namespace GoodOfflineGames
                 serializedStorageController);
 
             // data controllers
+
+            var recycleBinController = new RecycleBinController(
+                recycleBinDirectoryDelegate,
+                fileController,
+                directoryController);
 
             var productsDataController = new DataController<Product>(
                 productsIndexDataController,
