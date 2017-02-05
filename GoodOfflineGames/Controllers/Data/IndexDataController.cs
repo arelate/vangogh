@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 using Interfaces.Data;
 using Interfaces.Collection;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
+using Interfaces.Destination.Filename;
 using Interfaces.SerializedStorage;
 
 

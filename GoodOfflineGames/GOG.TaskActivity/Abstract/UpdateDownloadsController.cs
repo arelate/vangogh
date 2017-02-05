@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.DownloadSources;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 

@@ -1,4 +1,4 @@
-﻿namespace Controllers.Destination
+﻿namespace Controllers.Destination.Filename
 {
     public class ValidationFilenameDelegate : UriFilenameDelegate
     {

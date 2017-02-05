@@ -44,7 +44,8 @@
     <Compile Include="AdditionalDetails\AdditionalDetailsController.cs" />
     <Compile Include="Conversion\ConversionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />
-    <Compile Include="Destination\DestinationController.cs" />
+    <Compile Include="Destination\GetFilenameDelegate.cs" />
+    <Compile Include="Destination\GetDirectoryDelegate.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
     <Compile Include="Download\DownloadController.cs" />
     <Compile Include="Eligibility\ElegibilityDelegate.cs" />

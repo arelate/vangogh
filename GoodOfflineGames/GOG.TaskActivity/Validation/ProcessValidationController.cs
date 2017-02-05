@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using System.Linq;
 
 using Interfaces.Validation;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
+using Interfaces.Destination.Filename;
 using Interfaces.Data;
 using Interfaces.Routing;
 using Interfaces.Eligibility;

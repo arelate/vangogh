@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 
-using Interfaces.Destination;
+using Interfaces.Destination.Filename;
 
 using Models.Separators;
 
-namespace Controllers.Destination
+namespace Controllers.Destination.Filename
 {
     public class UriFilenameDelegate : IGetFilenameDelegate
     {

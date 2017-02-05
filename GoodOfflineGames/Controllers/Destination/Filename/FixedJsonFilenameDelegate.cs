@@ -1,13 +1,13 @@
-﻿using Interfaces.Destination;
+﻿using Interfaces.Destination.Filename;
 
-namespace Controllers.Destination
+namespace Controllers.Destination.Filename
 {
-    public class FixedFilenameDelegate : IGetFilenameDelegate
+    public class FixedJsonFilenameDelegate : IGetFilenameDelegate
     {
         private string extension = ".json";
         private string filename;
 
-        public FixedFilenameDelegate(string filename)
+        public FixedJsonFilenameDelegate(string filename)
         {
             this.filename = filename;
         }

@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using System.IO;
 
 using Interfaces.Data;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
+using Interfaces.Destination.Filename;
 using Interfaces.Routing;
 
 using GOG.Models;

@@ -1,7 +1,7 @@
 ﻿using System;
-using Interfaces.Destination;
+using Interfaces.Destination.Filename;
 
-namespace Controllers.Destination
+namespace Controllers.Destination.Filename
 {
     public class LogFilenameDelegate : IGetFilenameDelegate
     {

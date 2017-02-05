@@ -1,10 +1,10 @@
 ﻿using System;
 
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
 
 using Models.Separators;
 
-namespace Controllers.Destination
+namespace Controllers.Destination.Directory
 {
     public class UriDirectoryDelegate : IGetDirectoryDelegate
     {

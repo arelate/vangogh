@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
 
-namespace Controllers.Destination
+namespace Controllers.Destination.Directory
 {
     public class FixedDirectoryDelegate : IGetDirectoryDelegate
     {

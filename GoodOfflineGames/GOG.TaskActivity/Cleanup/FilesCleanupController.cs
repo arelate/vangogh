@@ -7,7 +7,8 @@ using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.Directory;
 using Interfaces.Eligibility;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
+using Interfaces.Destination.Filename;
 using Interfaces.RecycleBin;
 using Interfaces.TaskStatus;
 

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Data;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
 
 using GOG.Models;
 

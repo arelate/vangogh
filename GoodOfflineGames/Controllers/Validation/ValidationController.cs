@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Security.Cryptography;
 
 using Interfaces.Validation;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
+using Interfaces.Destination.Filename;
 using Interfaces.File;
 using Interfaces.Conversion;
 using Interfaces.Stream;

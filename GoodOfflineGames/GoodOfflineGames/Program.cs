@@ -20,7 +20,8 @@ using Controllers.Formatting;
 using Controllers.LineBreaking;
 using Controllers.UriResolution;
 
-using Controllers.Destination;
+using Controllers.Destination.Directory;
+using Controllers.Destination.Filename;
 
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
@@ -93,13 +94,9 @@ namespace GoodOfflineGames
                 fileController);
             var serializationController = new JSONStringController();
 
-            //var javaScriptPrefix = "var data=";
-            //var jsonToJavaScriptConversionController = new JSONToJavaScriptConvetsionController(javaScriptPrefix);
-
             var serializedStorageController = new SerializedStorageController(
                 storageController,
                 serializationController);
-                //jsonToJavaScriptConversionController);
 
             var consoleController = new ConsoleController();
             var formattedStringMeasurementController = new FormattedStringMeasurementController();
@@ -159,17 +156,10 @@ namespace GoodOfflineGames
                 taskStatusController,
                 secondsFormattingController,
                 200, // don't throttle if less than N items
-                2 * 60);
+                2 * 60); // 2 minutes
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
-
-            //var stamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-
-            //var latestStatus = serializedStorageController.DeserializePullAsync<TaskStatus>("log-latest.js").Result;
-            //var statusList = taskStatusTreeToListController.ToList(latestStatus);
-
-            //return;
 
             #endregion
 
@@ -208,17 +198,17 @@ namespace GoodOfflineGames
 
             // filenames
 
-            var indexFilenameDelegate = new FixedFilenameDelegate("index");
+            var indexFilenameDelegate = new FixedJsonFilenameDelegate("index");
 
-            var wishlistedFilenameDelegate = new FixedFilenameDelegate("wishlisted");
-            var updatedFilenameDelegate = new FixedFilenameDelegate("updated");
-            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("scheduledScreenshotsUpdates");
-            var scheduledCleanupFilenameDelegate = new FixedFilenameDelegate("scheduledCleanup");
-            var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("scheduledRepair");
-            var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("lastKnownValid");
+            var wishlistedFilenameDelegate = new FixedJsonFilenameDelegate("wishlisted");
+            var updatedFilenameDelegate = new FixedJsonFilenameDelegate("updated");
+            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedJsonFilenameDelegate("scheduledScreenshotsUpdates");
+            var scheduledCleanupFilenameDelegate = new FixedJsonFilenameDelegate("scheduledCleanup");
+            var scheduledRepairFilenameDelegate = new FixedJsonFilenameDelegate("scheduledRepair");
+            var lastKnownValidFilenameDelegate = new FixedJsonFilenameDelegate("lastKnownValid");
 
             var uriFilenameDelegate = new UriFilenameDelegate();
-            var dataFilenameDelegate = new FixedFilenameDelegate(string.Empty);
+            var dataFilenameDelegate = new FixedJsonFilenameDelegate(string.Empty);
             var logsFilenameDelegate = new LogFilenameDelegate();
             var validationFilenameDelegate = new ValidationFilenameDelegate();
 

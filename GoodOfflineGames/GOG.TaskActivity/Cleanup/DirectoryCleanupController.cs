@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.Directory;
 using Interfaces.Data;
 using Interfaces.Enumeration;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
 using Interfaces.RecycleBin;
 using Interfaces.TaskStatus;
 

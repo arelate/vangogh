@@ -1,7 +1,7 @@
 ﻿using Interfaces.RecycleBin;
 using Interfaces.File;
 using Interfaces.Directory;
-using Interfaces.Destination;
+using Interfaces.Destination.Directory;
 
 namespace Controllers.RecycleBin
 {
