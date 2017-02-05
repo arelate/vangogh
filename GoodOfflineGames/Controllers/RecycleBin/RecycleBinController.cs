@@ -1,33 +1,34 @@
 ﻿using Interfaces.RecycleBin;
 using Interfaces.File;
 using Interfaces.Directory;
+using Interfaces.Destination;
 
 namespace Controllers.RecycleBin
 {
     public class RecycleBinController : IRecycleBinController
     {
-        private string recycleBinUri;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IFileController fileController;
         private IDirectoryController directoryController;
 
         public RecycleBinController(
-            string recycleBinUri,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
             IDirectoryController directoryController)
         {
-            this.recycleBinUri = recycleBinUri;
+            this.getDirectoryDelegate = getDirectoryDelegate;
             this.fileController = fileController;
             this.directoryController = directoryController;
         }
 
         public void MoveFileToRecycleBin(string uri)
         {
-            fileController.Move(uri, recycleBinUri);
+            fileController.Move(uri, getDirectoryDelegate.GetDirectory());
         }
 
         public void MoveDirectoryToRecycleBin(string uri)
         {
-            directoryController.Move(uri, recycleBinUri);
+            directoryController.Move(uri, getDirectoryDelegate.GetDirectory());
         }
     }
 }

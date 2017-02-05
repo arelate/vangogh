@@ -7,13 +7,14 @@ using Interfaces.Collection;
 using Interfaces.Indexing;
 using Interfaces.Destination;
 using Interfaces.RecycleBin;
-
 using Interfaces.SerializedStorage;
 
 namespace Controllers.Data
 {
     public class DataController<Type> : IDataController<Type>
     {
+        private IDataController<long> indexDataController;
+
         private IIndexingController indexingController;
         private ICollectionController collectionController;
 
@@ -24,15 +25,10 @@ namespace Controllers.Data
 
         private ISerializedStorageController serializedStorageController;
 
-        private IList<Type> dataItems;
-        private IList<long> dataIndexes;
-
-        private string destinationDirectory;
-
-        private const string dataIndexesFilename = "indexes.json";
-        private string dataIndexesUri;
+        private IList<Type> items;
 
         public DataController(
+            IDataController<long> indexDataController,
             ISerializedStorageController serializedStorageController,
             IIndexingController indexingController,
             ICollectionController collectionController,
@@ -45,94 +41,52 @@ namespace Controllers.Data
 
             this.serializedStorageController = serializedStorageController;
 
-            //this.destinationController = destinationController;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
 
-            destinationDirectory = getDirectoryDelegate.GetDirectory(string.Empty);
-            dataIndexesUri = Path.Combine(destinationDirectory, dataIndexesFilename);
-
             this.recycleBinController = recycleBinController;
-
-            dataItems = null;
-            dataIndexes = null;
         }
 
         public bool Contains(Type data)
         {
             if (data == null) return true;
             var index = indexingController.GetIndex(data);
-            return dataIndexes.Contains(index);
+            return indexDataController.Contains(index);
         }
 
-        private string GetDataUri(long index)
+        private string GetItemUri(long id)
         {
             return Path.Combine(
-                destinationDirectory,
-                getFilenameDelegate.GetFilename(index.ToString()));
+                getDirectoryDelegate.GetDirectory(),
+                getFilenameDelegate.GetFilename(id.ToString()));
         }
 
         public async Task<Type> GetByIdAsync(long id)
         {
-            //switch (dataStoragePolicy)
-            //{
-                //case DataStoragePolicy.IndexAndItems:
-                    var dataUri = GetDataUri(id);
-                    return await serializedStorageController.DeserializePullAsync<Type>(dataUri);
-                //case DataStoragePolicy.ItemsList:
-                //    return collectionController.Find(
-                //        dataItems,
-                //        p =>
-                //            indexingController.GetIndex(p) == id);
-            //}
-
-            //return default(Type);
+            return await serializedStorageController.DeserializePullAsync<Type>(GetItemUri(id));
         }
 
         public async Task LoadAsync()
         {
-            //switch (dataStoragePolicy)
-            //{
-            //    case DataStoragePolicy.IndexAndItems:
-                    dataIndexes = await serializedStorageController.DeserializePullAsync<List<long>>(dataIndexesUri);
-            //        break;
-            //    case DataStoragePolicy.ItemsList:
-            //        dataItems = await serializedStorageController.DeserializePullAsync<List<Type>>(dataItemsUri);
-            //        break;
-            //}
-
-            if (dataIndexes == null) dataIndexes = new List<long>();
-            if (dataItems == null) dataItems = new List<Type>();
-
-            foreach (var item in dataItems)
-                dataIndexes.Add(indexingController.GetIndex(item));
+            await indexDataController.LoadAsync();
         }
 
         public async Task SaveAsync()
         {
-            //switch (dataStoragePolicy)
-            //{
-            //    case DataStoragePolicy.IndexAndItems:
-                    await serializedStorageController.SerializePushAsync(dataIndexesUri, dataIndexes);
-                //    break;
-                //case DataStoragePolicy.ItemsList:
-                //    await serializedStorageController.SerializePushAsync(dataItemsUri, dataItems);
-                //    break;
-            //}
+            await indexDataController.SaveAsync();
         }
 
         public async Task RemoveAsync(params Type[] data)
         {
             foreach (var item in data)
             {
-                if (dataItems.Contains(item)) dataItems.Remove(item);
+                if (items.Contains(item)) items.Remove(item);
 
                 var index = indexingController.GetIndex(item);
-                if (dataIndexes.Contains(index))
+                if (indexDataController.Contains(index))
                 {
-                    dataIndexes.Remove(index);
-                    var dataUri = GetDataUri(index);
-                    recycleBinController?.MoveFileToRecycleBin(dataUri);
+                    await indexDataController.RemoveAsync(index);
+                    recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
                 }
             }
 
@@ -144,26 +98,13 @@ namespace Controllers.Data
             foreach (var item in data)
             {
                 var index = indexingController.GetIndex(item);
-                if (!dataIndexes.Contains(index))
-                    dataIndexes.Add(index);
 
-                //switch (dataStoragePolicy)
-                //{
-                //    case DataStoragePolicy.IndexAndItems:
-                        var dataUri = GetDataUri(index);
-                        await serializedStorageController.SerializePushAsync(dataUri, item);
-                        break;
-                //    case DataStoragePolicy.ItemsList:
-                //        var updated = false;
-                //        for (var ii = 0; ii < dataItems.Count; ii++)
-                //            if (indexingController.GetIndex(dataItems[ii]) == index)
-                //            {
-                //                dataItems[ii] = item;
-                //                updated = true;
-                //            }
-                //        if (!updated) dataItems.Add(item);
-                //        break;
-                //}
+                if (!indexDataController.Contains(index))
+                    await indexDataController.UpdateAsync(index);
+
+                await serializedStorageController.SerializePushAsync(
+                    GetItemUri(index), 
+                    item);
             }
 
             await SaveAsync();
@@ -171,17 +112,17 @@ namespace Controllers.Data
 
         public IEnumerable<long> EnumerateIds()
         {
-            return dataIndexes;
+            return indexDataController.EnumerateIds();
         }
 
         public int Count()
         {
-            return dataIndexes.Count;
+            return indexDataController.Count();
         }
 
         public bool ContainsId(long id)
         {
-            return dataIndexes.Contains(id);
+            return indexDataController.Contains(id);
         }
     }
 }

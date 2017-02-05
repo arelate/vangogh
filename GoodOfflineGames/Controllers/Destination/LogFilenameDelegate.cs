@@ -3,17 +3,12 @@ using Interfaces.Destination;
 
 namespace Controllers.Destination
 {
-    public class LogsDestinationController : IDestinationController
+    public class LogFilenameDelegate : IGetFilenameDelegate
     {
         private const string logFilenameTemplate = "log-{0}.js";
         private const string logTimestampFormat = "yyyyMMdd-HHmmss";
 
-        public string GetDirectory(string source)
-        {
-            return "logs";
-        }
-
-        public string GetFilename(string source)
+        public string GetFilename(string source = null)
         {
             return
                 string.Format(

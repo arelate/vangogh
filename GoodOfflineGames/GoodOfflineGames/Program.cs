@@ -21,10 +21,7 @@ using Controllers.LineBreaking;
 using Controllers.UriResolution;
 
 using Controllers.Destination;
-using Controllers.Destination.Directory;
-using Controllers.Destination.Filename;
 
-using Controllers.Destination.Data;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
@@ -85,17 +82,11 @@ namespace GoodOfflineGames
         {
             #region Foundation Controllers
 
-            string recycleBinUri = "recycleBin";
-            string productFilesDestination = "productFiles";
+            //string productFilesDestination = "productFiles";
 
             var streamController = new StreamController();
             var fileController = new FileController();
             var directoryController = new DirectoryController();
-
-            var recycleBinController = new RecycleBinController(
-                recycleBinUri,
-                fileController,
-                directoryController);
 
             var storageController = new StorageController(
                 streamController,
@@ -173,21 +164,13 @@ namespace GoodOfflineGames
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
 
-            var gogUriDestinationController = new GOGUriDestinationController();
-            var productFilesDestinationController = new ProductFilesDestinationController(
-                productFilesDestination,
-                gogUriDestinationController);
-            var imagesDestinationController = new ImagesDestinationController();
-            var screenshotsFilesDestinationController = new ScreenshotsFilesDestinationController();
-            var validationDestinationController = new ValidationDestinationController();
-
             //var stamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-            
+
             //var latestStatus = serializedStorageController.DeserializePullAsync<TaskStatus>("log-latest.js").Result;
             //var statusList = taskStatusTreeToListController.ToList(latestStatus);
 
             //return;
-            
+
             #endregion
 
             #region Data Controllers
@@ -195,32 +178,134 @@ namespace GoodOfflineGames
             // Data controllers for products, game details, game product data, etc.
 
             var productCoreIndexingController = new ProductCoreIndexingController();
-            var passthroughIndexingController = new PassthroughIndexingController();
 
-            var productsDirectoryDelegate = new ProductsDirectoryDelegate();
-            var accountProductsDirectoryDelegate = new AccountProductsDirectoryDelegate();
-            var gameDetailsDirectoryDelegate = new GameDetailsDirectoryDelegate();
-            var gameProductDataDirectoryDelegate = new GameProductDataDirectoryDelegate();
-            var apiProductsDirectoryDelegate = new ApiProductsDirectoryDelegate();
+            // directories
 
-            var dataFilenameDelegate = new DataFilenameDelegate();
+            var dataDirectoryDelegate = new FixedDirectoryDelegate("data");
 
-            //var productsDestinationController = new ProductsDestinationController();
-            //var accountProductsDestinationController = new AccountProductDestinationController();
-            //var gameDetailsDestinationController = new GameDetailsDestinationController();
-            var screenshotsDestinationController = new ScreenshotsDestinationController();
-            //var apiProductsDestinationController = new ApiProductsDestinationController();
-            //var gameProductDataDestinationController = new GameProductDataDestinationController();
-            var wishlistedDestinationController = new WishlistedDestinationController();
-            var updatedDestinationController = new UpdatedDestinationController();
-            var productDownloadsDestinationController = new ProductDownloadsDestinationController();
-            var productRoutesDestinationController = new ProductRoutesDestinationController();
-            var scheduledScreenshotsUpdatesDestinationController = new ScheduledScreenshotsUpdatesDestinationController();
-            var scheduledValidationsDestinationController = new ScheduledValidationsDestinationController();
-            var lastKnownValidDestinationController = new LastKnownValidDestinationController();
-            var scheduledCleanupDestinationController = new ScheduledCleanupDestinationController();
+            var accountProductsDirectoryDelegate = new FixedDirectoryDelegate("data\\accountProducts");
+            var apiProductsDirectoryDelegate = new FixedDirectoryDelegate("data\\apiProducts");
+            var gameDetailsDirectoryDelegate = new FixedDirectoryDelegate("data\\gameDetails");
+            var gameProductDataDirectoryDelegate = new FixedDirectoryDelegate("data\\gameProductData");
+            var productsDirectoryDelegate = new FixedDirectoryDelegate("data\\products");
+            var productDownloadsDirectoryDelegate = new FixedDirectoryDelegate("data\\productDownloads");
+            var productRoutesDirectoryDelegate = new FixedDirectoryDelegate("data\\productRoutes");
+            var productScreenshotsDirectoryDelegate = new FixedDirectoryDelegate("data\\productScreenshots");
+            var recycleBinDirectoryDelegate = new FixedDirectoryDelegate("recycleBin");
+
+            var recycleBinController = new RecycleBinController(
+                recycleBinDirectoryDelegate,
+                fileController,
+                directoryController);
+
+            var imagesDirectoryDelegate = new FixedDirectoryDelegate("images");
+            var logsDirectoryDelegate = new FixedDirectoryDelegate("logs");
+            var validationDirectoryDelegate = new FixedDirectoryDelegate("md5");
+            var productFilesDirectoryDelegate = new FixedDirectoryDelegate("productFiles");
+            var screenshotsDirectoryDelegate = new FixedDirectoryDelegate("screenshots");
+
+            // filenames
+
+            var indexFilenameDelegate = new FixedFilenameDelegate("index");
+
+            var wishlistedFilenameDelegate = new FixedFilenameDelegate("data\\wishlisted");
+            var updatedFilenameDelegate = new FixedFilenameDelegate("data\\updated");
+            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("data\\scheduledScreenshotsUpdates");
+            var scheduledCleanupFilenameDelegate = new FixedFilenameDelegate("data\\scheduledCleanup");
+            var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("data\\scheduledRepair");
+            var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("data\\lastKnownValid");
+
+            var uriFilenameDelegate = new UriFilenameDelegate();
+            var dataFilenameDelegate = new FixedFilenameDelegate(string.Empty);
+            var logsFilenameDelegate = new LogFilenameDelegate();
+            var validationFilenameDelegate = new ValidationFilenameDelegate();
+
+            // index filenames
+
+            var productsIndexDataController = new IndexDataController(
+                collectionController,
+                productsDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            var accountProductsIndexDataController = new IndexDataController(
+                collectionController,
+                accountProductsDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            var gameDetailsIndexDataController = new IndexDataController(
+                collectionController,
+                gameDetailsDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            var gameProductDataIndexDataController = new IndexDataController(
+                collectionController,
+                gameProductDataDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            var apiProductsIndexDataController = new IndexDataController(
+                collectionController,
+                apiProductsDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            var productScreenshotsIndexDataController = new IndexDataController(
+                collectionController,
+                productScreenshotsDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            var productDownloadsIndexDataController = new IndexDataController(
+                collectionController,
+                productDownloadsDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            var productRoutesIndexDataController = new IndexDataController(
+                collectionController,
+                productRoutesDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController);
+
+            // index data controllers that are data controllers
+
+            var wishlistedDataController = new IndexDataController(
+                collectionController,
+                dataDirectoryDelegate,
+                wishlistedFilenameDelegate,
+                serializedStorageController);
+
+            var updatedDataController = new IndexDataController(
+                collectionController,
+                dataDirectoryDelegate,
+                updatedFilenameDelegate,
+                serializedStorageController);
+
+            var scheduledScreenshotsUpdatesDataController = new IndexDataController(
+                collectionController,
+                dataDirectoryDelegate,
+                scheduledScreenshotsUpdatesFilenameDelegate,
+                serializedStorageController);
+
+            var lastKnownValidDataController = new IndexDataController(
+                collectionController,
+                dataDirectoryDelegate,
+                lastKnownValidFilenameDelegate,
+                serializedStorageController);
+
+            var scheduledCleanupDataController = new IndexDataController(
+                collectionController,
+                dataDirectoryDelegate,
+                scheduledCleanupFilenameDelegate,
+                serializedStorageController);
+
+            // data controllers
 
             var productsDataController = new DataController<Product>(
+                productsIndexDataController,
                 serializedStorageController,
                 productCoreIndexingController,
                 collectionController,
@@ -228,6 +313,7 @@ namespace GoodOfflineGames
                 dataFilenameDelegate);
 
             var accountProductsDataController = new DataController<AccountProduct>(
+                accountProductsIndexDataController,
                 serializedStorageController,
                 productCoreIndexingController,
                 collectionController,
@@ -235,6 +321,7 @@ namespace GoodOfflineGames
                 dataFilenameDelegate);
 
             var gameDetailsDataController = new DataController<GameDetails>(
+                gameDetailsIndexDataController,
                 serializedStorageController,
                 productCoreIndexingController,
                 collectionController,
@@ -243,6 +330,7 @@ namespace GoodOfflineGames
                 recycleBinController);
 
             var gameProductDataController = new DataController<GameProductData>(
+                gameProductDataIndexDataController,
                 serializedStorageController,
                 productCoreIndexingController,
                 collectionController,
@@ -250,21 +338,8 @@ namespace GoodOfflineGames
                 dataFilenameDelegate,
                 recycleBinController);
 
-            //var wishlistedDataController = new DataController<long>(
-            //    serializedStorageController,
-            //    DataStoragePolicy.ItemsList,
-            //    passthroughIndexingController,
-            //    collectionController,
-            //    wishlistedDestinationController);
-
-            //var updatedDataController = new DataController<long>(
-            //    serializedStorageController,
-            //    DataStoragePolicy.ItemsList,
-            //    passthroughIndexingController,
-            //    collectionController,
-            //    updatedDestinationController);
-
             var apiProductsDataController = new DataController<ApiProduct>(
+                apiProductsIndexDataController,
                 serializedStorageController,
                 productCoreIndexingController,
                 collectionController,
@@ -272,48 +347,32 @@ namespace GoodOfflineGames
                 dataFilenameDelegate,
                 recycleBinController);
 
-            //var scheduledScreenshotsUpdatesDataController = new DataController<long>(
-            //    serializedStorageController,
-            //    DataStoragePolicy.ItemsList,
-            //    passthroughIndexingController,
-            //    collectionController,
-            //    scheduledScreenshotsUpdatesDestinationController);
-
             var screenshotsDataController = new DataController<ProductScreenshots>(
+                productScreenshotsIndexDataController,
                 serializedStorageController,
                 productCoreIndexingController,
                 collectionController,
-                screenshotsDestinationController,
+                productScreenshotsDirectoryDelegate,
                 dataFilenameDelegate,
                 recycleBinController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
+                productDownloadsIndexDataController,
                 serializedStorageController,
-                DataStoragePolicy.IndexAndItems,
                 productCoreIndexingController,
                 collectionController,
-                productDownloadsDestinationController);
+                productDownloadsDirectoryDelegate,
+                dataFilenameDelegate,
+                recycleBinController);
 
             var productRoutesDataController = new DataController<ProductRoutes>(
+                productRoutesIndexDataController,
                 serializedStorageController,
-                DataStoragePolicy.IndexAndItems,
                 productCoreIndexingController,
                 collectionController,
-                productRoutesDestinationController);
-
-            //var lastKnownValidDataController = new DataController<long>(
-            //    serializedStorageController,
-            //    DataStoragePolicy.ItemsList,
-            //    passthroughIndexingController,
-            //    collectionController,
-            //    lastKnownValidDestinationController);
-
-            //var scheduledCleanupDataController = new DataController<long>(
-            //    serializedStorageController,
-            //    DataStoragePolicy.ItemsList,
-            //    passthroughIndexingController,
-            //    collectionController,
-            //    scheduledCleanupDestinationController);
+                productRoutesDirectoryDelegate,
+                dataFilenameDelegate,
+                recycleBinController);
 
             #endregion
 
@@ -834,11 +893,9 @@ namespace GoodOfflineGames
 
             if (settings.Log)
             {
-                var logDestinationController = new LogsDestinationController();
-
                 var uri = System.IO.Path.Combine(
-                logDestinationController.GetDirectory(string.Empty),
-                logDestinationController.GetFilename(DateTime.UtcNow.ToFileTimeUtc().ToString()));
+                    logsDirectoryDelegate.GetDirectory(),
+                    logsFilenameDelegate.GetFilename());
 
                 presentationController.Present(new List<Tuple<string, string[]>>
                 {

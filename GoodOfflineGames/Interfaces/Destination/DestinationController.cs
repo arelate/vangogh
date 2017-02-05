@@ -2,12 +2,12 @@
 {
     public interface IGetDirectoryDelegate
     {
-        string GetDirectory(string source);
+        string GetDirectory(string source = null);
     }
 
     public interface IGetFilenameDelegate
     {
-        string GetFilename(string source);
+        string GetFilename(string source = null);
     }
 
     public interface IDestinationController:
