@@ -11,31 +11,31 @@ namespace Controllers.SerializedStorage
     {
         private IStorageController<string> storageController;
         private ISerializationController<string> serializarionController;
-        private IConversionController<string, string> stringConversionController;
+        //private IConversionController<string, string> stringConversionController;
 
         public SerializedStorageController(
             IStorageController<string> storageController,
-            ISerializationController<string> serializarionController,
-            IConversionController<string, string> stringConversionController)
+            ISerializationController<string> serializarionController)
+            //IConversionController<string, string> stringConversionController)
         {
             this.storageController = storageController;
             this.serializarionController = serializarionController;
-            this.stringConversionController = stringConversionController;
+            //this.stringConversionController = stringConversionController;
         }
 
         public async Task<T> DeserializePullAsync<T>(string uri)
         {
             var serializedData = await storageController.Pull(uri);
-            if (stringConversionController != null)
-                serializedData = stringConversionController.Convert(serializedData);
+            //if (stringConversionController != null)
+            //    serializedData = stringConversionController.Convert(serializedData);
             return serializarionController.Deserialize<T>(serializedData);
         }
 
         public async Task SerializePushAsync<T>(string uri, T data)
         {
             var serializedData = serializarionController.Serialize(data);
-            if (stringConversionController != null)
-                serializedData = stringConversionController.Convert(serializedData);
+            //if (stringConversionController != null)
+            //    serializedData = stringConversionController.Convert(serializedData);
             await storageController.Push(uri, serializedData);
         }
     }

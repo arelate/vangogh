@@ -5,7 +5,7 @@ namespace Controllers.Destination
 {
     public class LogFilenameDelegate : IGetFilenameDelegate
     {
-        private const string logFilenameTemplate = "log-{0}.js";
+        private const string logFilenameTemplate = "log-{0}.json";
         private const string logTimestampFormat = "yyyyMMdd-HHmmss";
 
         public string GetFilename(string source = null)

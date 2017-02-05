@@ -93,13 +93,13 @@ namespace GoodOfflineGames
                 fileController);
             var serializationController = new JSONStringController();
 
-            var javaScriptPrefix = "var data=";
-            var jsonToJavaScriptConversionController = new JSONToJavaScriptConvetsionController(javaScriptPrefix);
+            //var javaScriptPrefix = "var data=";
+            //var jsonToJavaScriptConversionController = new JSONToJavaScriptConvetsionController(javaScriptPrefix);
 
             var serializedStorageController = new SerializedStorageController(
                 storageController,
-                serializationController,
-                jsonToJavaScriptConversionController);
+                serializationController);
+                //jsonToJavaScriptConversionController);
 
             var consoleController = new ConsoleController();
             var formattedStringMeasurementController = new FormattedStringMeasurementController();
@@ -183,14 +183,14 @@ namespace GoodOfflineGames
 
             var dataDirectoryDelegate = new FixedDirectoryDelegate("data");
 
-            var accountProductsDirectoryDelegate = new FixedDirectoryDelegate("data\\accountProducts");
-            var apiProductsDirectoryDelegate = new FixedDirectoryDelegate("data\\apiProducts");
-            var gameDetailsDirectoryDelegate = new FixedDirectoryDelegate("data\\gameDetails");
-            var gameProductDataDirectoryDelegate = new FixedDirectoryDelegate("data\\gameProductData");
-            var productsDirectoryDelegate = new FixedDirectoryDelegate("data\\products");
-            var productDownloadsDirectoryDelegate = new FixedDirectoryDelegate("data\\productDownloads");
-            var productRoutesDirectoryDelegate = new FixedDirectoryDelegate("data\\productRoutes");
-            var productScreenshotsDirectoryDelegate = new FixedDirectoryDelegate("data\\productScreenshots");
+            var accountProductsDirectoryDelegate = new FixedDirectoryDelegate("accountProducts", dataDirectoryDelegate);
+            var apiProductsDirectoryDelegate = new FixedDirectoryDelegate("apiProducts", dataDirectoryDelegate);
+            var gameDetailsDirectoryDelegate = new FixedDirectoryDelegate("gameDetails", dataDirectoryDelegate);
+            var gameProductDataDirectoryDelegate = new FixedDirectoryDelegate("gameProductData", dataDirectoryDelegate);
+            var productsDirectoryDelegate = new FixedDirectoryDelegate("products", dataDirectoryDelegate);
+            var productDownloadsDirectoryDelegate = new FixedDirectoryDelegate("productDownloads", dataDirectoryDelegate);
+            var productRoutesDirectoryDelegate = new FixedDirectoryDelegate("productRoutes", dataDirectoryDelegate);
+            var productScreenshotsDirectoryDelegate = new FixedDirectoryDelegate("productScreenshots", dataDirectoryDelegate);
             var recycleBinDirectoryDelegate = new FixedDirectoryDelegate("recycleBin");
 
             var recycleBinController = new RecycleBinController(
@@ -210,12 +210,12 @@ namespace GoodOfflineGames
 
             var indexFilenameDelegate = new FixedFilenameDelegate("index");
 
-            var wishlistedFilenameDelegate = new FixedFilenameDelegate("data\\wishlisted");
-            var updatedFilenameDelegate = new FixedFilenameDelegate("data\\updated");
-            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("data\\scheduledScreenshotsUpdates");
-            var scheduledCleanupFilenameDelegate = new FixedFilenameDelegate("data\\scheduledCleanup");
-            var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("data\\scheduledRepair");
-            var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("data\\lastKnownValid");
+            var wishlistedFilenameDelegate = new FixedFilenameDelegate("wishlisted");
+            var updatedFilenameDelegate = new FixedFilenameDelegate("updated");
+            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("scheduledScreenshotsUpdates");
+            var scheduledCleanupFilenameDelegate = new FixedFilenameDelegate("scheduledCleanup");
+            var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("scheduledRepair");
+            var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("lastKnownValid");
 
             var uriFilenameDelegate = new UriFilenameDelegate();
             var dataFilenameDelegate = new FixedFilenameDelegate(string.Empty);
@@ -874,7 +874,6 @@ namespace GoodOfflineGames
                 {
                     taskActivityController.ProcessTaskAsync().Wait();
                     taskStatusViewController.CreateView(true);
-                    //consoleController.WriteLine(string.Empty);
                 }
                 catch (AggregateException ex)
                 {

@@ -25,8 +25,6 @@ namespace Controllers.Data
 
         private ISerializedStorageController serializedStorageController;
 
-        private IList<Type> items;
-
         public DataController(
             IDataController<long> indexDataController,
             ISerializedStorageController serializedStorageController,
@@ -36,10 +34,12 @@ namespace Controllers.Data
             IGetFilenameDelegate getFilenameDelegate,
             IRecycleBinController recycleBinController = null)
         {
-            this.indexingController = indexingController;
-            this.collectionController = collectionController;
+            this.indexDataController = indexDataController;
 
             this.serializedStorageController = serializedStorageController;
+
+            this.indexingController = indexingController;
+            this.collectionController = collectionController;
 
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
@@ -80,8 +80,6 @@ namespace Controllers.Data
         {
             foreach (var item in data)
             {
-                if (items.Contains(item)) items.Remove(item);
-
                 var index = indexingController.GetIndex(item);
                 if (indexDataController.Contains(index))
                 {

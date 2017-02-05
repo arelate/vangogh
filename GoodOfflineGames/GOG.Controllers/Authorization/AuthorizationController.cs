@@ -17,8 +17,6 @@ namespace GOG.Controllers.Authorization
 {
     public class AuthorizationController : IAuthorizationController
     {
-        //private const string authorizingOnGOG = "Authorizing {0} on GOG.com...";
-        //private const string successfullyAuthorizedOnGOG = "Successfully authorized {0} on GOG.com.";
         private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
         private const string recaptchaDetected = "Login page contains reCAPTCHA.\n" +
             "Please login in the browser, then export the galaxy-login-* cookies into ./cookies.json\n" +
