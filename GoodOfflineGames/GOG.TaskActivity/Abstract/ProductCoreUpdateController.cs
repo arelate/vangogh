@@ -140,7 +140,7 @@ namespace GOG.TaskActivities.Abstract
                     connectionController?.Connect(data, product);
                     additionalDetailsController?.AddDetails(data, content);
 
-                    await updateTypeDataController.UpdateAsync(data);
+                    await updateTypeDataController.AddAsync(updateProductsTask, data);
                 }
 
                 // don't throttle if there are less elements than we've set throttling threshold to

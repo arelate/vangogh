@@ -90,12 +90,12 @@ namespace GOG.TaskActivities.Update.Screenshots
                 };
                 taskStatusController.Complete(extractScreenshotsTask);
 
-                var updateProductScreenshotsTask = taskStatusController.Create(updateProductsScreenshotsTask, "Update product screenshots");
-                await screenshotsDataController.UpdateAsync(productScreenshots);
+                var updateProductScreenshotsTask = taskStatusController.Create(updateProductsScreenshotsTask, "Add product screenshots");
+                await screenshotsDataController.AddAsync(updateProductScreenshotsTask, productScreenshots);
                 taskStatusController.Complete(updateProductScreenshotsTask);
 
                 var scheduleScreenshotUpdateTask = taskStatusController.Create(updateProductsScreenshotsTask, "Schedule screenshot files update");
-                await scheduledScreenshotsUpdatesDataController.UpdateAsync(product.Id);
+                await scheduledScreenshotsUpdatesDataController.AddAsync(scheduleScreenshotUpdateTask, product.Id);
                 taskStatusController.Complete(scheduleScreenshotUpdateTask);
             }
 

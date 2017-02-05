@@ -61,7 +61,9 @@ namespace GOG.TaskActivities.Download.Dependencies.Screenshots
             taskStatusController.Complete(processProductUpdateTask);
 
             var clearUpdatesTask = taskStatusController.Create(processUpdatesTask, "Clear scheduled screenshot updates");
-            await scheduledScreenshotsUpdatesDataController.RemoveAsync(scheduledScreenshotsUpdatesDataController.EnumerateIds().ToArray());
+            await scheduledScreenshotsUpdatesDataController.RemoveAsync(
+                clearUpdatesTask,
+                scheduledScreenshotsUpdatesDataController.EnumerateIds().ToArray());
             taskStatusController.Complete(clearUpdatesTask);
 
             taskStatusController.Complete(processUpdatesTask);

@@ -5,16 +5,18 @@ namespace Controllers.Destination.Filename
     public class FixedJsonFilenameDelegate : IGetFilenameDelegate
     {
         private string extension = ".json";
-        private string filename;
+        private string fixedFilename;
 
-        public FixedJsonFilenameDelegate(string filename)
+        public FixedJsonFilenameDelegate(string fixedFilename)
         {
-            this.filename = filename;
+            this.fixedFilename = fixedFilename;
         }
 
         public string GetFilename(string source = null)
         {
-            return filename + extension;
+            return string.IsNullOrEmpty(fixedFilename) ?
+                source + extension :
+                fixedFilename + extension;
         }
     }
 }

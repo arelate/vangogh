@@ -60,7 +60,7 @@ namespace GOG.TaskActivities.Cleanup
         private async Task RemoveScheduledCleanupEntry(long id, ITaskStatus taskStatus)
         {
             var removeScheduledCleanupEntry = taskStatusController.Create(taskStatus, "Remove scheduled cleanup entry");
-            await scheduledCleanupDataController.RemoveAsync(id);
+            await scheduledCleanupDataController.RemoveAsync(taskStatus, id);
             taskStatusController.Complete(removeScheduledCleanupEntry);
         }
 

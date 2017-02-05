@@ -42,10 +42,10 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
                 if (accountProduct.IsNew ||
                     accountProduct.Updates > 0)
                 {
-                    await updatedDataController.UpdateAsync(id);
+                    await updatedDataController.AddAsync(getUpdatedTask, id);
 
                     // since we known the product was updated - remove last known valid state
-                    await lastKnownValidDataController.RemoveAsync(id);
+                    await lastKnownValidDataController.RemoveAsync(getUpdatedTask, id);
                 }
             }
 

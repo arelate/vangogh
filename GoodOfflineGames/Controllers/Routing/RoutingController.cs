@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.Routing;
 using Interfaces.Data;
+using Interfaces.TaskStatus;
 
 using Models.ProductRoutes;
 
@@ -54,7 +55,7 @@ namespace Controllers.Routing
             return destination;
         } 
 
-        public async Task UpdateRouteAsync(long id, string title, string source, string destination)
+        public async Task UpdateRouteAsync(long id, string title, string source, string destination, ITaskStatus taskStatus)
         {
             var productRoutes = await productRoutesDataController.GetByIdAsync(id);
             if (productRoutes == null)
@@ -83,7 +84,7 @@ namespace Controllers.Routing
                     Destination = destination
                 });
 
-            await productRoutesDataController.UpdateAsync(productRoutes);
+            await productRoutesDataController.ModifyAsync(taskStatus, productRoutes);
         }
     }
 }

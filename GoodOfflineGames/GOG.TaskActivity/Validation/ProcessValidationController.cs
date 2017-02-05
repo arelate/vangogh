@@ -120,9 +120,9 @@ namespace GOG.TaskActivities.Validation
                     var removeUpdateTask = taskStatusController.Create(
                         validateProductFilesTask,
                         "All product files are valid. Clear product update flag and schedule cleanup");
-                    await lastKnownValidDataController.UpdateAsync(id);
-                    await updatedDataController.RemoveAsync(id);
-                    await scheduledCleanupDataController.UpdateAsync(id);
+                    await lastKnownValidDataController.AddAsync(removeUpdateTask, id);
+                    await updatedDataController.RemoveAsync(removeUpdateTask, id);
+                    await scheduledCleanupDataController.AddAsync(removeUpdateTask, id);
                     taskStatusController.Complete(removeUpdateTask);
                 }
                 else
@@ -130,7 +130,7 @@ namespace GOG.TaskActivities.Validation
                     var removeKnownValidTask = taskStatusController.Create(
                         validateProductFilesTask,
                         "Product files might not be valid. Remove them from known valid");
-                    await lastKnownValidDataController.RemoveAsync(id);
+                    await lastKnownValidDataController.RemoveAsync(removeKnownValidTask, id);
                     taskStatusController.Complete(removeKnownValidTask);
                 }
             }

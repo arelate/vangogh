@@ -107,7 +107,8 @@ namespace GOG.TaskActivities.Download.Processing
                                     productDownloads.Id,
                                     productDownloads.Title,
                                     entry.SourceUri,
-                                    resolvedUri);
+                                    resolvedUri,
+                                    downloadEntryTask);
 
                             await downloadController.DownloadFileAsync(response, entry.Destination, downloadEntryTask);
                         }
@@ -129,10 +130,12 @@ namespace GOG.TaskActivities.Download.Processing
                     // we won't be removing anything else as it might be used in the later steps
                     if (removeEntryEligibilityDelegate.IsEligible(entry))
                     {
-                        var removeEntryTask = taskStatusController.Create(processDownloadEntriesTask, "Remove successfully downloaded scheduled entry");
+                        var removeEntryTask = taskStatusController.Create(
+                            processDownloadEntriesTask, 
+                            "Remove successfully downloaded scheduled entry");
 
                         productDownloads.Downloads.Remove(entry);
-                        await productDownloadsDataController.UpdateAsync(productDownloads);
+                        await productDownloadsDataController.ModifyAsync(removeEntryTask, productDownloads);
 
                         taskStatusController.Complete(removeEntryTask);
                     }

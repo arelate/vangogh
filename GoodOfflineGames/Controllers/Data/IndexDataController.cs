@@ -8,7 +8,7 @@ using Interfaces.Collection;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.SerializedStorage;
-
+using Interfaces.TaskStatus;
 
 namespace Controllers.Data
 {
@@ -20,6 +20,7 @@ namespace Controllers.Data
         private IGetFilenameDelegate getFilenameDelegate;
 
         private ISerializedStorageController serializedStorageController;
+        private ITaskStatusController taskStatusController;
 
         private IList<long> indexes;
 
@@ -27,7 +28,8 @@ namespace Controllers.Data
             ICollectionController collectionController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            ISerializedStorageController serializedStorageController)
+            ISerializedStorageController serializedStorageController,
+            ITaskStatusController taskStatusController)
         {
             this.collectionController = collectionController;
 
@@ -35,6 +37,8 @@ namespace Controllers.Data
             this.getFilenameDelegate = getFilenameDelegate;
 
             this.serializedStorageController = serializedStorageController;
+
+            this.taskStatusController = taskStatusController;
         }
 
         public bool Contains(long data)
@@ -72,11 +76,6 @@ namespace Controllers.Data
             if (indexes == null) indexes = new List<long>();
         }
 
-        public Task RemoveAsync(params long[] data)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task SaveAsync()
         {
             var indexUri = Path.Combine(
@@ -86,13 +85,27 @@ namespace Controllers.Data
             await serializedStorageController.SerializePushAsync(indexUri, indexes);
         }
 
-        public async Task UpdateAsync(params long[] data)
+        public async Task RemoveAsync(ITaskStatus taskStatus, params long[] data)
+        {
+            foreach (var item in data)
+                if (indexes.Contains(item))
+                    indexes.Remove(item);
+
+            await SaveAsync();
+        }
+
+        public async Task AddAsync(ITaskStatus taskStatus, params long[] data)
         {
             foreach (var index in data)
                 if (!indexes.Contains(index))
                     indexes.Add(index);
 
             await SaveAsync();
+        }
+
+        public Task ModifyAsync(ITaskStatus taskStatus, params long[] data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

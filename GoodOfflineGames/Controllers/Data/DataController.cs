@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,12 +10,15 @@ using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.RecycleBin;
 using Interfaces.SerializedStorage;
+using Interfaces.TaskStatus;
 
 namespace Controllers.Data
 {
     public class DataController<Type> : IDataController<Type>
     {
         private IDataController<long> indexDataController;
+
+        private ISerializedStorageController serializedStorageController;
 
         private IIndexingController indexingController;
         private ICollectionController collectionController;
@@ -24,7 +28,7 @@ namespace Controllers.Data
 
         private IRecycleBinController recycleBinController;
 
-        private ISerializedStorageController serializedStorageController;
+        private ITaskStatusController taskStatusController;
 
         public DataController(
             IDataController<long> indexDataController,
@@ -33,7 +37,8 @@ namespace Controllers.Data
             ICollectionController collectionController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            IRecycleBinController recycleBinController = null)
+            IRecycleBinController recycleBinController,
+            ITaskStatusController taskStatusController)
         {
             this.indexDataController = indexDataController;
 
@@ -46,6 +51,8 @@ namespace Controllers.Data
             this.getFilenameDelegate = getFilenameDelegate;
 
             this.recycleBinController = recycleBinController;
+
+            this.taskStatusController = taskStatusController;
         }
 
         public bool Contains(Type data)
@@ -72,41 +79,79 @@ namespace Controllers.Data
             await indexDataController.LoadAsync();
         }
 
-        public async Task SaveAsync()
+        public Task SaveAsync()
         {
-            await indexDataController.SaveAsync();
+            throw new System.NotImplementedException();
         }
 
-        public async Task RemoveAsync(params Type[] data)
+        private async Task Map(ITaskStatus taskStatus, string taskMessage, Func<long, Type, Task> itemAction, params Type[] data)
         {
+            var task = taskStatusController.Create(taskStatus, taskMessage);
+            var counter = 0;
+
             foreach (var item in data)
             {
                 var index = indexingController.GetIndex(item);
-                if (indexDataController.Contains(index))
+
+                taskStatusController.UpdateProgress(
+                    task,
+                    ++counter,
+                    data.Length,
+                    index.ToString());
+
+                // do this for every item
+                await itemAction(index, item);
+            }
+
+            taskStatusController.Complete(task);
+        }
+
+        public async Task AddAsync(ITaskStatus taskStatus, params Type[] data)
+        {
+            await Map(
+                taskStatus,
+                "Add data items",
+                async (index, item) =>
                 {
-                    await indexDataController.RemoveAsync(index);
-                    recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
-                }
-            }
-
-            await SaveAsync();
+                    if (!indexDataController.Contains(index))
+                    {
+                        await indexDataController.AddAsync(taskStatus, index);
+                        await serializedStorageController.SerializePushAsync(
+                            GetItemUri(index),
+                            item);
+                    }
+                },
+                data);
         }
 
-        public async Task UpdateAsync(params Type[] data)
+        public async Task RemoveAsync(ITaskStatus taskStatus, params Type[] data)
         {
-            foreach (var item in data)
-            {
-                var index = indexingController.GetIndex(item);
+            await Map(
+                taskStatus,
+                "Remove data items",
+                async (index, item) =>
+                {
+                    if (indexDataController.Contains(index))
+                    {
+                        await indexDataController.RemoveAsync(taskStatus, index);
+                        recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
+                    }
+                },
+                data);
+        }
 
-                if (!indexDataController.Contains(index))
-                    await indexDataController.UpdateAsync(index);
-
-                await serializedStorageController.SerializePushAsync(
-                    GetItemUri(index), 
-                    item);
-            }
-
-            await SaveAsync();
+        public async Task ModifyAsync(ITaskStatus taskStatus, params Type[] data)
+        {
+            await Map(
+                taskStatus,
+                "Modify data items",
+                async (index, item) =>
+                {
+                    if (indexDataController.Contains(index))
+                        await RemoveAsync(taskStatus, data);
+                    await AddAsync(taskStatus, data);
+                },
+                data);
         }
 
         public IEnumerable<long> EnumerateIds()

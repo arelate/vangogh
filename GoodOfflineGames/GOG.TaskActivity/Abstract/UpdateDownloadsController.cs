@@ -119,7 +119,7 @@ namespace GOG.TaskActivities.Abstract
                     };
                     productDownloads.Downloads.Add(scheduledDownloadEntry);
 
-                    await productDownloadsDataController.UpdateAsync(productDownloads);
+                    await productDownloadsDataController.ModifyAsync(scheduleDownloadsTask, productDownloads);
 
                     taskStatusController.Complete(scheduleDownloadsTask);
                 }

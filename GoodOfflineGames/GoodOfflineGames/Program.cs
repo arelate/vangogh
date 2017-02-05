@@ -19,10 +19,8 @@ using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.LineBreaking;
 using Controllers.UriResolution;
-
 using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
-
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
@@ -211,49 +209,57 @@ namespace GoodOfflineGames
                 collectionController,
                 productsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var accountProductsIndexDataController = new IndexDataController(
                 collectionController,
                 accountProductsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var gameDetailsIndexDataController = new IndexDataController(
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var gameProductDataIndexDataController = new IndexDataController(
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var apiProductsIndexDataController = new IndexDataController(
                 collectionController,
                 apiProductsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var productScreenshotsIndexDataController = new IndexDataController(
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var productDownloadsIndexDataController = new IndexDataController(
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var productRoutesIndexDataController = new IndexDataController(
                 collectionController,
                 productRoutesDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             // index data controllers that are data controllers
 
@@ -261,31 +267,36 @@ namespace GoodOfflineGames
                 collectionController,
                 dataDirectoryDelegate,
                 wishlistedFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var updatedDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var scheduledScreenshotsUpdatesDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 scheduledScreenshotsUpdatesFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var lastKnownValidDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 lastKnownValidFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             var scheduledCleanupDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 scheduledCleanupFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                taskStatusController);
 
             // data controllers
 
@@ -300,7 +311,9 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 productsDirectoryDelegate,
-                dataFilenameDelegate);
+                dataFilenameDelegate,
+                recycleBinController,
+                taskStatusController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
                 accountProductsIndexDataController,
@@ -308,7 +321,9 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 accountProductsDirectoryDelegate,
-                dataFilenameDelegate);
+                dataFilenameDelegate,
+                recycleBinController,
+                taskStatusController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 gameDetailsIndexDataController,
@@ -317,7 +332,8 @@ namespace GoodOfflineGames
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 dataFilenameDelegate,
-                recycleBinController);
+                recycleBinController,
+                taskStatusController);
 
             var gameProductDataController = new DataController<GameProductData>(
                 gameProductDataIndexDataController,
@@ -326,7 +342,8 @@ namespace GoodOfflineGames
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 dataFilenameDelegate,
-                recycleBinController);
+                recycleBinController,
+                taskStatusController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
                 apiProductsIndexDataController,
@@ -335,7 +352,8 @@ namespace GoodOfflineGames
                 collectionController,
                 apiProductsDirectoryDelegate,
                 dataFilenameDelegate,
-                recycleBinController);
+                recycleBinController,
+                taskStatusController);
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 productScreenshotsIndexDataController,
@@ -344,7 +362,8 @@ namespace GoodOfflineGames
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 dataFilenameDelegate,
-                recycleBinController);
+                recycleBinController,
+                taskStatusController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
                 productDownloadsIndexDataController,
@@ -353,7 +372,8 @@ namespace GoodOfflineGames
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 dataFilenameDelegate,
-                recycleBinController);
+                recycleBinController,
+                taskStatusController);
 
             var productRoutesDataController = new DataController<ProductRoutes>(
                 productRoutesIndexDataController,
@@ -362,7 +382,8 @@ namespace GoodOfflineGames
                 collectionController,
                 productRoutesDirectoryDelegate,
                 dataFilenameDelegate,
-                recycleBinController);
+                recycleBinController,
+                taskStatusController);
 
             #endregion
 

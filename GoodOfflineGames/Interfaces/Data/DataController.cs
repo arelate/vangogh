@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.TaskStatus;
+
 namespace Interfaces.Data
 {
     public interface ILoadDelegate
@@ -23,14 +25,19 @@ namespace Interfaces.Data
         IEnumerable<long> EnumerateIds();
     }
 
-    public interface IUpdateDelegate<Type>
+    public interface IAddDelegate<Type>
     {
-        Task UpdateAsync(params Type[] data);
+        Task AddAsync(ITaskStatus taskStatus, params Type[] data);
+    }
+
+    public interface IModifyDelegate<Type>
+    {
+        Task ModifyAsync(ITaskStatus taskStatus, params Type[] data);
     }
 
     public interface IRemoveDelegate<Type>
     {
-        Task RemoveAsync(params Type[] data);
+        Task RemoveAsync(ITaskStatus taskStatus, params Type[] data);
     }
 
     public interface IContainsDelegate<Type>
@@ -54,8 +61,9 @@ namespace Interfaces.Data
         IEnumerateIdsDelegate,
         ICountDelegate,
         IGetByIdDelegate<Type>,
-        IUpdateDelegate<Type>,
+        IAddDelegate<Type>,
         IRemoveDelegate<Type>,
+        IModifyDelegate<Type>,
         IContainsDelegate<Type>,
         IContainsIdDelegate
     {
