@@ -12,7 +12,8 @@ namespace GOG.Controllers.Enumeration
 {
     public class GameDetailsFileEnumerationController : GameDetailsManualUrlEnumerationController
     {
-        private IDestinationController destinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetFilenameDelegate getFilenameDelegate;
         private IRoutingController routingController;
 
         public GameDetailsFileEnumerationController(
@@ -20,13 +21,15 @@ namespace GOG.Controllers.Enumeration
             string[] operatingSystems,
             IDataController<GameDetails> gameDetailsDataController,
             IRoutingController routingController,
-            IDestinationController destinationController) :
+            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate) :
             base(
                 languages,
                 operatingSystems,
                 gameDetailsDataController)
         {
-            this.destinationController = destinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
+            this.getFilenameDelegate = getFilenameDelegate;
             this.routingController = routingController;
         }
 
@@ -51,8 +54,8 @@ namespace GOG.Controllers.Enumeration
                     continue;
 
                 var localFileUri = Path.Combine(
-                    destinationController.GetDirectory(gameDetailsManualUrls[ii]),
-                    destinationController.GetFilename(gameDetailsResolvedUris[ii]));
+                    getDirectoryDelegate.GetDirectory(gameDetailsManualUrls[ii]),
+                    getFilenameDelegate.GetFilename(gameDetailsResolvedUris[ii]));
 
                 gameDetailsFiles.Add(localFileUri);
             }

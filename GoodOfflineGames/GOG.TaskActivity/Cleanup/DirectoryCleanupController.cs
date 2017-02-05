@@ -19,14 +19,14 @@ namespace GOG.TaskActivities.Cleanup
     {
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<string> directoryEnumerationController;
-        private IDestinationController destinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IRecycleBinController recycleBinController;
         private IDirectoryController directoryController;
 
         public DirectoryCleanupController(
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<string> directoryEnumerationController,
-            IDestinationController destinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IDirectoryController directoryController,
             IRecycleBinController recycleBinController,
             ITaskStatus taskStatus,
@@ -37,7 +37,7 @@ namespace GOG.TaskActivities.Cleanup
         {
             this.gameDetailsDataController = gameDetailsDataController;
             this.directoryEnumerationController = directoryEnumerationController;
-            this.destinationController = destinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
             this.recycleBinController = recycleBinController;
             this.directoryController = directoryController;
         }
@@ -63,7 +63,7 @@ namespace GOG.TaskActivities.Cleanup
 
             var enumerateActualDirectoriesTask = taskStatusController.Create(cleanupDirectoriesTask, "Enumerate actual product files directories");
 
-            var rootDirectory = destinationController.GetDirectory(string.Empty);
+            var rootDirectory = getDirectoryDelegate.GetDirectory();
             var actualDirectories = directoryController.EnumerateDirectories(rootDirectory);
 
             taskStatusController.Complete(enumerateActualDirectoriesTask);

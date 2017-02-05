@@ -25,7 +25,8 @@ namespace GOG.TaskActivities.Cleanup
         private IEnumerateDelegate<string> directoryEnumerationController;
         private IDirectoryController directoryController;
         private IEligibilityDelegate<string> fileValidationEligibilityController;
-        private IDestinationController validationDestinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetFilenameDelegate getFilenameDelegate;
         private IRecycleBinController recycleBinController;
 
         public FilesCleanupController(
@@ -35,7 +36,8 @@ namespace GOG.TaskActivities.Cleanup
             IEnumerateDelegate<string> directoryEnumerationController,
             IDirectoryController directoryController,
             IEligibilityDelegate<string> fileValidationEligibilityController,
-            IDestinationController validationDestinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
             IRecycleBinController recycleBinController,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
@@ -49,7 +51,8 @@ namespace GOG.TaskActivities.Cleanup
             this.directoryEnumerationController = directoryEnumerationController;
             this.directoryController = directoryController;
             this.fileValidationEligibilityController = fileValidationEligibilityController;
-            this.validationDestinationController = validationDestinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
+            this.getFilenameDelegate = getFilenameDelegate;
             this.recycleBinController = recycleBinController;
         }
 
@@ -115,8 +118,8 @@ namespace GOG.TaskActivities.Cleanup
                     if (fileValidationEligibilityController.IsEligible(file))
                     {
                         var validationFile = Path.Combine(
-                            validationDestinationController.GetDirectory(file),
-                            validationDestinationController.GetFilename(file));
+                            getDirectoryDelegate.GetDirectory(),
+                            getFilenameDelegate.GetFilename(file));
 
                         var deleteValidationFileTask = taskStatusController.Create(
                             cleanupProductFilesTask,

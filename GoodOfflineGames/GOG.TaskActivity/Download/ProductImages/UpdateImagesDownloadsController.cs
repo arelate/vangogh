@@ -16,7 +16,7 @@ namespace GOG.TaskActivities.Download.ProductImages
         public UpdateImagesDownloadsController(
             ProductDownloadTypes downloadType,
             IDownloadSourcesController downloadSourcesController,
-            IDestinationController destinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             ITaskStatus taskStatus,
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.Download.ProductImages
             base(
                 downloadType,
                 downloadSourcesController,
-                destinationController,
+                getDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 taskStatus,

@@ -16,7 +16,7 @@ namespace GOG.TaskActivities.Download.Screenshots
         public UpdateScreenshotsDownloadsController(
             ProductDownloadTypes downloadType,
             IDownloadSourcesController downloadSourcesController,
-            IDestinationController destinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             ITaskStatus taskStatus,
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.Download.Screenshots
             base(
                 downloadType,
                 downloadSourcesController,
-                destinationController,
+                getDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 taskStatus,

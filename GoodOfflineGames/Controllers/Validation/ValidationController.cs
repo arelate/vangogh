@@ -20,7 +20,8 @@ namespace Controllers.Validation
     public class ValidationController : IValidationController
     {
         private MD5CryptoServiceProvider md5CryptoServiceProvider;
-        private IDestinationController validationDestinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetFilenameDelegate getFilenameDelegate;
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
@@ -28,13 +29,15 @@ namespace Controllers.Validation
         private ITaskStatusController taskStatusController;
 
         public ValidationController(
-            IDestinationController validationDestinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
             IFileController fileController,
             IStreamController streamController,
             IConversionController<byte[], string> byteToStringConversionController,
             ITaskStatusController taskStatusController)
         {
-            this.validationDestinationController = validationDestinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
+            this.getFilenameDelegate = getFilenameDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
             this.byteToStringConversionController = byteToStringConversionController;
@@ -52,8 +55,8 @@ namespace Controllers.Validation
                 throw new ArgumentNullException("File location is invalid");
 
             var validationFilename = Path.Combine(
-                validationDestinationController.GetDirectory(uri),
-                validationDestinationController.GetFilename(uri));
+                getDirectoryDelegate.GetDirectory(),
+                getFilenameDelegate.GetFilename(uri));
 
             if (!fileController.Exists(validationFilename))
                 return;

@@ -10,19 +10,19 @@ namespace GOG.Controllers.Enumeration
 {
     public class GameDetailsDirectoryEnumerationController: GameDetailsManualUrlEnumerationController
     {
-        private IDestinationController destinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
 
         public GameDetailsDirectoryEnumerationController(
             string[] languages,
             string[] operatingSystems,
             IDataController<GameDetails> gameDetailsDataController,
-            IDestinationController destinationController):
+            IGetDirectoryDelegate getDirectoryDelegate):
             base(
                 languages,
                 operatingSystems,
                 gameDetailsDataController)
         {
-            this.destinationController = destinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
         }
 
         public override async Task<IList<string>> EnumerateAsync(long id)
@@ -33,7 +33,7 @@ namespace GOG.Controllers.Enumeration
 
             foreach (var manualUrl in gameDetailsManualUrls)
             {
-                var directory = destinationController.GetDirectory(manualUrl);
+                var directory = getDirectoryDelegate.GetDirectory(manualUrl);
 
                 if (!gameDetailsDirectories.Contains(directory))
                     gameDetailsDirectories.Add(directory);

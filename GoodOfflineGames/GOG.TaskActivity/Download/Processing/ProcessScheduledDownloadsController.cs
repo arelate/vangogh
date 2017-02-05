@@ -26,7 +26,6 @@ namespace GOG.TaskActivities.Download.Processing
         private IRoutingController routingController;
         private INetworkController networkController;
         private IDownloadController downloadController;
-        private IDestinationController destinationController;
         private IEligibilityDelegate<ProductDownloadEntry> updateRouteEligibilityDelegate;
         private IEligibilityDelegate<ProductDownloadEntry> removeEntryEligibilityDelegate;
 
@@ -37,7 +36,6 @@ namespace GOG.TaskActivities.Download.Processing
             IRoutingController routingController,
             INetworkController networkController,
             IDownloadController downloadController,
-            IDestinationController destinationController,
             IEligibilityDelegate<ProductDownloadEntry> updateRouteEligibilityDelegate,
             IEligibilityDelegate<ProductDownloadEntry> removeEntryEligibilityDelegate,
             ITaskStatus taskStatus,
@@ -52,7 +50,6 @@ namespace GOG.TaskActivities.Download.Processing
             this.routingController = routingController;
             this.networkController = networkController;
             this.downloadController = downloadController;
-            this.destinationController = destinationController;
 
             this.updateRouteEligibilityDelegate = updateRouteEligibilityDelegate;
             this.removeEntryEligibilityDelegate = removeEntryEligibilityDelegate;

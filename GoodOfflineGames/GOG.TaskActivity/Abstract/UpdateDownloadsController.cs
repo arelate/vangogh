@@ -18,7 +18,7 @@ namespace GOG.TaskActivities.Abstract
         private ProductDownloadTypes downloadType;
 
         private IDownloadSourcesController downloadSourcesController;
-        private IDestinationController destinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<AccountProduct> accountProductsDataController;
 
@@ -27,7 +27,7 @@ namespace GOG.TaskActivities.Abstract
         public UpdateDownloadsController(
             ProductDownloadTypes downloadType,
             IDownloadSourcesController downloadSourcesController,
-            IDestinationController destinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             ITaskStatus taskStatus,
@@ -38,7 +38,7 @@ namespace GOG.TaskActivities.Abstract
         {
             this.downloadType = downloadType;
             this.downloadSourcesController = downloadSourcesController;
-            this.destinationController = destinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
 
@@ -105,7 +105,7 @@ namespace GOG.TaskActivities.Abstract
 
                 foreach (var source in downloadSource.Value)
                 {
-                    var destinationDirectory = destinationController?.GetDirectory(source);
+                    var destinationDirectory = getDirectoryDelegate?.GetDirectory(source);
 
                     var scheduleDownloadsTask = taskStatusController.Create(
                         updateDownloadsTask,

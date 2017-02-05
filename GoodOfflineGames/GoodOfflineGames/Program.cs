@@ -204,6 +204,8 @@ namespace GoodOfflineGames
             var productFilesDirectoryDelegate = new FixedDirectoryDelegate("productFiles");
             var screenshotsDirectoryDelegate = new FixedDirectoryDelegate("screenshots");
 
+            var uriDirectoryDelegate = new UriDirectoryDelegate();
+
             // filenames
 
             var indexFilenameDelegate = new FixedFilenameDelegate("index");
@@ -603,14 +605,15 @@ namespace GoodOfflineGames
                 settings.Download.Languages,
                 settings.Download.OperatingSystems,
                 gameDetailsDataController,
-                productFilesDestinationController);
+                uriDirectoryDelegate);
 
             var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
                 settings.Download.Languages,
                 settings.Download.OperatingSystems,
                 gameDetailsDataController,
                 routingController,
-                productFilesDestinationController);
+                uriDirectoryDelegate,
+                uriFilenameDelegate);
 
             var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
                 updatedDataController,
@@ -636,7 +639,7 @@ namespace GoodOfflineGames
             var updateProductsImagesDownloadsController = new UpdateImagesDownloadsController(
                 ProductDownloadTypes.Image,
                 productsImagesDownloadSourcesController,
-                imagesDestinationController,
+                imagesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 applicationTaskStatus,
@@ -645,7 +648,7 @@ namespace GoodOfflineGames
             var updateAccountProductsImagesDownloadsController = new UpdateImagesDownloadsController(
                 ProductDownloadTypes.Image,
                 accountProductsImagesDownloadSourcesController,
-                imagesDestinationController,
+                imagesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 applicationTaskStatus,
@@ -654,7 +657,7 @@ namespace GoodOfflineGames
             var updateScreenshotsDownloadsController = new UpdateScreenshotsDownloadsController(
                 ProductDownloadTypes.Screenshot,
                 screenshotsDownloadSourcesController,
-                screenshotsFilesDestinationController,
+                screenshotsDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 applicationTaskStatus,
@@ -663,7 +666,7 @@ namespace GoodOfflineGames
             var updateProductFilesDownloadsController = new UpdateFilesDownloadsController(
                 ProductDownloadTypes.ProductFile,
                 productFilesDownloadSourcesController,
-                productFilesDestinationController,
+                productFilesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 applicationTaskStatus,
@@ -678,7 +681,6 @@ namespace GoodOfflineGames
                 routingController,
                 networkController,
                 downloadController,
-                productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
                 applicationTaskStatus,
@@ -691,7 +693,6 @@ namespace GoodOfflineGames
                 routingController,
                 networkController,
                 downloadController,
-                productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
                 applicationTaskStatus,
@@ -704,7 +705,6 @@ namespace GoodOfflineGames
                 routingController,
                 networkController,
                 downloadController,
-                productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
                 applicationTaskStatus,
@@ -715,7 +715,7 @@ namespace GoodOfflineGames
             var updateValidationDownloadsController = new UpdateValidationDownloadsController(
                 ProductDownloadTypes.Validation,
                 validationDownloadSourcesController,
-                validationDestinationController,
+                validationDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 applicationTaskStatus,
@@ -728,7 +728,6 @@ namespace GoodOfflineGames
                 routingController,
                 networkController,
                 downloadController,
-                productFilesDestinationController,
                 updateRouteEligibilityController,
                 removeEntryEligibilityController,
                 applicationTaskStatus,
@@ -737,14 +736,16 @@ namespace GoodOfflineGames
             var byteToStringConversionController = new BytesToStringConvertionController();
 
             var validationController = new ValidationController(
-                validationDestinationController,
+                validationDirectoryDelegate,
+                validationFilenameDelegate,
                 fileController,
                 streamController,
                 byteToStringConversionController,
                 taskStatusController);
 
             var processValidationController = new ProcessValidationController(
-                productFilesDestinationController,
+                uriDirectoryDelegate,
+                uriFilenameDelegate,
                 validationController,
                 productDownloadsDataController,
                 updatedDataController,
@@ -760,7 +761,7 @@ namespace GoodOfflineGames
             var directoryCleanupController = new DirectoryCleanupController(
                 gameDetailsDataController,
                 gameDetailsDirectoryEnumerationController,
-                productFilesDestinationController,
+                productFilesDirectoryDelegate,
                 directoryController,
                 recycleBinController,
                 applicationTaskStatus,
@@ -773,7 +774,8 @@ namespace GoodOfflineGames
                 gameDetailsDirectoryEnumerationController,
                 directoryController,
                 fileValidationEligibilityController,
-                validationDestinationController,
+                validationDirectoryDelegate,
+                uriFilenameDelegate,
                 recycleBinController,
                 applicationTaskStatus,
                 taskStatusController);

@@ -18,7 +18,8 @@ namespace GOG.TaskActivities.Validation
 {
     public class ProcessValidationController : TaskActivityController
     {
-        private IDestinationController destinationController;
+        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetFilenameDelegate getFilenameDelegate;
         private IValidationController validationController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<long> updatedDataController;
@@ -28,7 +29,8 @@ namespace GOG.TaskActivities.Validation
         private IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate;
 
         public ProcessValidationController(
-            IDestinationController destinationController,
+            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
             IValidationController validationController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<long> updatedDataController,
@@ -42,7 +44,8 @@ namespace GOG.TaskActivities.Validation
                 taskStatus,
                 taskStatusController)
         {
-            this.destinationController = destinationController;
+            this.getDirectoryDelegate = getDirectoryDelegate;
+            this.getFilenameDelegate = getFilenameDelegate;
             this.validationController = validationController;
             this.productDownloadsDataController = productDownloadsDataController;
 
@@ -82,8 +85,8 @@ namespace GOG.TaskActivities.Validation
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
-                        destinationController.GetDirectory(download.SourceUri),
-                        destinationController.GetFilename(resolvedUri));
+                        getDirectoryDelegate.GetDirectory(download.SourceUri),
+                        getFilenameDelegate.GetFilename(resolvedUri));
 
                     var validateFileTask = taskStatusController.Create(
                         validateProductFilesTask,
