@@ -7,8 +7,6 @@ using Models.ProductDownloads;
 
 using GOG.Models;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Download.Screenshots
 {
     public class UpdateScreenshotsDownloadsController : UpdateDownloadsController

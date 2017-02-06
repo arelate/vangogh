@@ -7,8 +7,6 @@ using Models.ProductDownloads;
 
 using GOG.Models;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Download.Validation
 {
     public class UpdateValidationDownloadsController: UpdateDownloadsController

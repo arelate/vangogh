@@ -10,8 +10,6 @@ using Interfaces.TaskStatus;
 
 using GOG.Interfaces.Authorization;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Authorization
 {
     public class AuthorizationController : TaskActivityController

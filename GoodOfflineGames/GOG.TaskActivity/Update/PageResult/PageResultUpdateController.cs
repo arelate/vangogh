@@ -6,13 +6,10 @@ using Interfaces.ProductTypes;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
-using Models.Uris;
 using Models.ProductCore;
 
 using GOG.Interfaces.PageResults;
 using GOG.Interfaces.Extraction;
-
-using GOG.TaskActivities.Abstract;
 
 namespace GOG.TaskActivities.Update.PageResult
 {

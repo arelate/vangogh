@@ -13,8 +13,6 @@ using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Validation
 {
     public class ProcessValidationController : TaskActivityController

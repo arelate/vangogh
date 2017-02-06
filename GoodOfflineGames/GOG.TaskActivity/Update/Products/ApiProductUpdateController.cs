@@ -7,8 +7,6 @@ using Interfaces.TaskStatus;
 
 using GOG.Models;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Update.Products
 {
     public class ApiProductUpdateController : ProductCoreUpdateController<ApiProduct, Product>

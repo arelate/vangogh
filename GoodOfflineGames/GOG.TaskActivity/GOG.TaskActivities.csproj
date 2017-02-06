@@ -41,18 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\ProductCoreUpdateController.cs" />
+    <Compile Include="Update\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />
     <Compile Include="Cleanup\FilesCleanupController.cs" />
-    <Compile Include="Download\Dependencies\ProductFiles\ProductFilesDownloadSourcesController.cs" />
-    <Compile Include="Download\Dependencies\ProductImages\ImagesDownloadSourcesController.cs" />
-    <Compile Include="Download\Dependencies\ProductImages\ProductsImagesDownloadSourcesController.cs" />
-    <Compile Include="Download\Dependencies\ProductImages\AccountProductsImagesDownloadSourcesController.cs" />
-    <Compile Include="Download\Dependencies\Screenshots\ScreenshotsDownloadSourcesController.cs" />
-    <Compile Include="Download\Dependencies\Validation\ValidationDownloadSourcesController.cs" />
+    <Compile Include="Download\Sources\ProductFilesDownloadSourcesController.cs" />
+    <Compile Include="Download\Sources\ImagesDownloadSourcesController.cs" />
+    <Compile Include="Download\Sources\ProductsImagesDownloadSourcesController.cs" />
+    <Compile Include="Download\Sources\AccountProductsImagesDownloadSourcesController.cs" />
+    <Compile Include="Download\Sources\ScreenshotsDownloadSourcesController.cs" />
+    <Compile Include="Download\Sources\ValidationDownloadSourcesController.cs" />
     <Compile Include="Download\Validation\UpdateValidationDownloadsController.cs" />
     <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
-    <Compile Include="Abstract\UpdateDownloadsController.cs" />
+    <Compile Include="Download\UpdateDownloadsController.cs" />
     <Compile Include="Download\Processing\ProcessScheduledDownloadsController.cs" />
     <Compile Include="Download\ProductFiles\UpdateFilesDownloadsController.cs" />
     <Compile Include="Download\ProductImages\UpdateImagesDownloadsController.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="Update\Products\ApiProductUpdateController.cs" />
     <Compile Include="Update\Products\GameDetailsUpdateController.cs" />
     <Compile Include="Update\Products\GameProductDataUpdateController.cs" />
-    <Compile Include="Abstract\TaskActivityController.cs" />
+    <Compile Include="TaskActivityController.cs" />
     <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
     <Compile Include="Update\Wishlisted\WishlistedUpdateController.cs" />
     <Compile Include="Validation\ProcessValidationController.cs" />

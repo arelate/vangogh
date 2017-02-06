@@ -3,7 +3,6 @@
 using Interfaces.TaskStatus;
 using Interfaces.Data;
 
-using GOG.TaskActivities.Abstract;
 using GOG.Models;
 
 namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts

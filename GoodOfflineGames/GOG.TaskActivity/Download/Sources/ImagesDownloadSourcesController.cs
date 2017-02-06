@@ -8,7 +8,7 @@ using Interfaces.TaskStatus;
 
 using Models.ProductCore;
 
-namespace GOG.TaskActivities.Download.Dependencies.ProductImages
+namespace GOG.TaskActivities.Download.Sources
 {
     public abstract class ProductCoreImagesDownloadSourcesController<T> : IDownloadSourcesController 
         where T: ProductCore

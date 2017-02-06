@@ -14,8 +14,6 @@ using Interfaces.TaskStatus;
 
 using GOG.Models;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Cleanup
 {
     public class FilesCleanupController : TaskActivityController

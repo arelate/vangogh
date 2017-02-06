@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.TaskActivity;
 using Interfaces.TaskStatus;
 
-namespace GOG.TaskActivities.Abstract
+namespace GOG.TaskActivities
 {
     public abstract class TaskActivityController: ITaskActivityController
     {

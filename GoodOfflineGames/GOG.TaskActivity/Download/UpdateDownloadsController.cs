@@ -11,7 +11,7 @@ using Models.ProductDownloads;
 
 using GOG.Models;
 
-namespace GOG.TaskActivities.Abstract
+namespace GOG.TaskActivities.Download
 {
     public abstract class UpdateDownloadsController : TaskActivityController
     {

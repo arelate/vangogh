@@ -12,7 +12,7 @@ using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
 
-namespace GOG.TaskActivities.Download.Dependencies.Validation
+namespace GOG.TaskActivities.Download.Sources
 {
     public class ValidationDownloadSourcesController : IDownloadSourcesController
     {

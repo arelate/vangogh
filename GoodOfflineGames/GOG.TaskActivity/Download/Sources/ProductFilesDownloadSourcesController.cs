@@ -7,7 +7,7 @@ using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.TaskStatus;
 
-namespace GOG.TaskActivities.Download.Dependencies.ProductFiles
+namespace GOG.TaskActivities.Download.Sources
 {
     public class ProductFilesDownloadSourcesController : IDownloadSourcesController
     {

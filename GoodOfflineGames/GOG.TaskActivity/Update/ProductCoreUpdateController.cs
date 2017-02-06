@@ -14,7 +14,7 @@ using Models.Uris;
 using Models.ProductCore;
 using Models.Units;
 
-namespace GOG.TaskActivities.Abstract
+namespace GOG.TaskActivities.Update
 {
     public abstract class ProductCoreUpdateController<UpdateType, ListType> :
         TaskActivityController

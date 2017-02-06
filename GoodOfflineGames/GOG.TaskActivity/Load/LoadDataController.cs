@@ -3,8 +3,6 @@
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Load
 {
     public class LoadDataController: TaskActivityController

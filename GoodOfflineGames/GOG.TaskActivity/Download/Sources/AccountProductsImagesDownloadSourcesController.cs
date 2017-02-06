@@ -3,7 +3,7 @@ using Interfaces.Data;
 
 using GOG.Models;
 
-namespace GOG.TaskActivities.Download.Dependencies.ProductImages
+namespace GOG.TaskActivities.Download.Sources
 {
     public class AccountProductsImagesDownloadSourcesController : ProductCoreImagesDownloadSourcesController<AccountProduct>
     {

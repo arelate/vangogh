@@ -9,8 +9,6 @@ using Interfaces.TaskStatus;
 
 using Models.Uris;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Update.Wishlisted
 {
     public class WishlistedUpdateController: TaskActivityController

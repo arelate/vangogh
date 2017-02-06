@@ -9,7 +9,7 @@ using Interfaces.TaskStatus;
 
 using Models.ProductScreenshots;
 
-namespace GOG.TaskActivities.Download.Dependencies.Screenshots
+namespace GOG.TaskActivities.Download.Sources
 {
     public class ScreenshotsDownloadSourcesController : IDownloadSourcesController
     {

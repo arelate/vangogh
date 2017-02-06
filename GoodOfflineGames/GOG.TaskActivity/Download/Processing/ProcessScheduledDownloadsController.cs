@@ -13,8 +13,6 @@ using Interfaces.TaskStatus;
 using Models.ProductDownloads;
 using Models.Separators;
 
-using GOG.TaskActivities.Abstract;
-
 namespace GOG.TaskActivities.Download.Processing
 {
     public class ProcessScheduledDownloadsController : TaskActivityController
