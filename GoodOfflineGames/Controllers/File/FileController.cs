@@ -5,7 +5,7 @@ using Interfaces.File;
 
 namespace Controllers.File
 {
-    public class FileController: IFileController
+    public class FileController : IFileController
     {
         public bool Exists(string uri)
         {
@@ -20,6 +20,9 @@ namespace Controllers.File
             var destinationDirectory = Path.GetDirectoryName(destinationUri);
             if (!System.IO.Directory.Exists(destinationDirectory))
                 System.IO.Directory.CreateDirectory(destinationDirectory);
+
+            if (Exists(destinationUri))
+                System.IO.File.Delete(destinationUri);
 
             System.IO.File.Move(fromUri, destinationUri);
         }

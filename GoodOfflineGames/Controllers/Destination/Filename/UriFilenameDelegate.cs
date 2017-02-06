@@ -24,6 +24,7 @@ namespace Controllers.Destination.Filename
                 new string[] { Separators.UriPart },
                 StringSplitOptions.RemoveEmptyEntries);
 
+            // filename is the last uri part
             var filenameWithQueryString = uriParts[uriParts.Length - 1];
 
             if (!filenameWithQueryString.Contains(Separators.QueryString))
@@ -33,7 +34,8 @@ namespace Controllers.Destination.Filename
                 new string[] { Separators.QueryString },
                 StringSplitOptions.RemoveEmptyEntries);
 
-            return filenameParts[filenameParts.Length - 1];
+            // filename without querystring is the first uri part
+            return filenameParts[0];
         }
     }
 }

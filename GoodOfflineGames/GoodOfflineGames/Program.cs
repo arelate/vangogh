@@ -179,10 +179,10 @@ namespace GoodOfflineGames
             var imagesDirectoryDelegate = new FixedDirectoryDelegate("images");
             var logsDirectoryDelegate = new FixedDirectoryDelegate("logs");
             var validationDirectoryDelegate = new FixedDirectoryDelegate("md5");
-            var productFilesDirectoryDelegate = new FixedDirectoryDelegate("productFiles");
+            var productFilesBaseDirectoryDelegate = new FixedDirectoryDelegate("productFiles");
             var screenshotsDirectoryDelegate = new FixedDirectoryDelegate("screenshots");
 
-            var uriDirectoryDelegate = new UriDirectoryDelegate();
+            var productFilesDirectoryDelegate = new UriDirectoryDelegate(productFilesBaseDirectoryDelegate);
 
             // filenames
 
@@ -574,6 +574,8 @@ namespace GoodOfflineGames
 
             #endregion
 
+            #region Update.Screenshots
+
             var screenshotUpdateController = new ScreenshotUpdateController(
                 screenshotsDataController,
                 scheduledScreenshotsUpdatesDataController,
@@ -582,6 +584,10 @@ namespace GoodOfflineGames
                 screenshotExtractionController,
                 applicationTaskStatus,
                 taskStatusController);
+
+            #endregion
+
+
 
             // dependencies for download controllers
 
@@ -612,14 +618,14 @@ namespace GoodOfflineGames
                 settings.Download.Languages,
                 settings.Download.OperatingSystems,
                 gameDetailsDataController,
-                uriDirectoryDelegate);
+                productFilesDirectoryDelegate);
 
             var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
                 settings.Download.Languages,
                 settings.Download.OperatingSystems,
                 gameDetailsDataController,
                 routingController,
-                uriDirectoryDelegate,
+                productFilesDirectoryDelegate,
                 uriFilenameDelegate);
 
             var productFilesDownloadSourcesController = new ProductFilesDownloadSourcesController(
@@ -751,7 +757,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var processValidationController = new ProcessValidationController(
-                uriDirectoryDelegate,
+                productFilesDirectoryDelegate,
                 uriFilenameDelegate,
                 validationController,
                 productDownloadsDataController,
