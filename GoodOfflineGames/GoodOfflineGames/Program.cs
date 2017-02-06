@@ -186,17 +186,18 @@ namespace GoodOfflineGames
 
             // filenames
 
-            var indexFilenameDelegate = new FixedJsonFilenameDelegate("index");
+            var jsonFilenameDelegate = new JsonFilenameDelegate();
 
-            var wishlistedFilenameDelegate = new FixedJsonFilenameDelegate("wishlisted");
-            var updatedFilenameDelegate = new FixedJsonFilenameDelegate("updated");
-            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedJsonFilenameDelegate("scheduledScreenshotsUpdates");
-            var scheduledCleanupFilenameDelegate = new FixedJsonFilenameDelegate("scheduledCleanup");
-            var scheduledRepairFilenameDelegate = new FixedJsonFilenameDelegate("scheduledRepair");
-            var lastKnownValidFilenameDelegate = new FixedJsonFilenameDelegate("lastKnownValid");
+            var indexFilenameDelegate = new FixedFilenameDelegate("index", jsonFilenameDelegate);
+
+            var wishlistedFilenameDelegate = new FixedFilenameDelegate("wishlisted", jsonFilenameDelegate);
+            var updatedFilenameDelegate = new FixedFilenameDelegate("updated", jsonFilenameDelegate);
+            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("scheduledScreenshotsUpdates", jsonFilenameDelegate);
+            var scheduledCleanupFilenameDelegate = new FixedFilenameDelegate("scheduledCleanup", jsonFilenameDelegate);
+            var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("scheduledRepair", jsonFilenameDelegate);
+            var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("lastKnownValid", jsonFilenameDelegate);
 
             var uriFilenameDelegate = new UriFilenameDelegate();
-            var dataFilenameDelegate = new FixedJsonFilenameDelegate(string.Empty);
             var logsFilenameDelegate = new LogFilenameDelegate();
             var validationFilenameDelegate = new ValidationFilenameDelegate();
 
@@ -308,7 +309,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 productsDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 
@@ -318,7 +319,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 accountProductsDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 
@@ -328,7 +329,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 gameDetailsDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 
@@ -338,7 +339,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 gameProductDataDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 
@@ -348,7 +349,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 apiProductsDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 
@@ -358,7 +359,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 productScreenshotsDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 
@@ -368,7 +369,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 productDownloadsDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 
@@ -378,7 +379,7 @@ namespace GoodOfflineGames
                 productCoreIndexingController,
                 collectionController,
                 productRoutesDirectoryDelegate,
-                dataFilenameDelegate,
+                jsonFilenameDelegate,
                 recycleBinController,
                 taskStatusController);
 

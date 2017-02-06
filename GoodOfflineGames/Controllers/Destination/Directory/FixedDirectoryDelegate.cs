@@ -21,10 +21,7 @@ namespace Controllers.Destination.Directory
 
         public string GetDirectory(string relativeDirectory = null)
         {
-            if (string.IsNullOrEmpty(relativeDirectory))
-                return baseDirectory;
-
-            return Path.Combine(baseDirectory, relativeDirectory);
+            return baseDirectory;
         }
     }
 }
