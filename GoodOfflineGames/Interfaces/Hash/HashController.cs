@@ -1,18 +1,26 @@
-﻿namespace Interfaces.Hash
+﻿using System.Threading.Tasks;
+
+namespace Interfaces.Hash
 {
-    public interface IComputeHashDelegate<Input, Output>
+    public interface IGetHashDelegate<Input, Output>
     {
-        Output ComputeHash(Input data);
+        Output GetHash(Input data);
     }
 
-    public interface IHashController<Input, Output>:
-        IComputeHashDelegate<Input, Output>
+    public interface ISetHashDelegate<Input1, Input2>
+    {
+        Task SetHashAsync(Input1 data, Input2 hash);
+    }
+
+    public interface IBytesToStringHashController:
+        IGetHashDelegate<byte[], string>
     {
         // ...
     }
 
-    public interface IBytesToStringHashController:
-        IHashController<byte[], string>
+    public interface IHashTrackingController:
+        IGetHashDelegate<string, string>,
+        ISetHashDelegate<string, string>
     {
         // ...
     }

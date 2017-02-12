@@ -65,6 +65,7 @@
     <Compile Include="Extraction\GOGDataExtractionController.cs" />
     <Compile Include="Extraction\ValueAttributeExtractionController.cs" />
     <Compile Include="File\FileController.cs" />
+    <Compile Include="Hash\HashTrackingController.cs" />
     <Compile Include="Hash\StringMd5HashController.cs" />
     <Compile Include="Indexing\ProductCoreIndexingController.cs" />
     <Compile Include="LineBreaking\LineBreakingController.cs" />

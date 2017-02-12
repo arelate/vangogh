@@ -88,7 +88,20 @@ namespace GoodOfflineGames
                 fileController);
             var serializationController = new JSONStringController();
 
+            var jsonFilenameDelegate = new JsonFilenameDelegate();
+            var uriHashesFilenameDelegate = new FixedFilenameDelegate("hashes", jsonFilenameDelegate);
+
+            var hashTrackingController = new HashTrackingController(
+                uriHashesFilenameDelegate, 
+                serializationController, 
+                storageController);
+
+            var bytesToStringConversionController = new BytesToStringConvertionController();
+            var md5HashController = new BytesToStringMd5HashController(bytesToStringConversionController);
+
             var serializedStorageController = new SerializedStorageController(
+                hashTrackingController,
+                md5HashController,
                 storageController,
                 serializationController);
 
@@ -186,8 +199,6 @@ namespace GoodOfflineGames
             var productFilesDirectoryDelegate = new UriDirectoryDelegate(productFilesBaseDirectoryDelegate);
 
             // filenames
-
-            var jsonFilenameDelegate = new JsonFilenameDelegate();
 
             var indexFilenameDelegate = new FixedFilenameDelegate("index", jsonFilenameDelegate);
 
@@ -418,6 +429,7 @@ namespace GoodOfflineGames
             var loadDataController = new LoadDataController(
                 applicationTaskStatus,
                 taskStatusController,
+                hashTrackingController,
                 productsDataController,
                 accountProductsDataController,
                 gameDetailsDataController,
@@ -746,10 +758,6 @@ namespace GoodOfflineGames
                 removeEntryEligibilityController,
                 applicationTaskStatus,
                 taskStatusController);
-
-            var bytesToStringConversionController = new BytesToStringConvertionController();
-
-            var md5HashController = new BytesToStringMd5HashController(bytesToStringConversionController);
 
             var validationController = new ValidationController(
                 validationDirectoryDelegate,

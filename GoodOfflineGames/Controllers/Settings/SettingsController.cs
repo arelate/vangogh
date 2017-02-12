@@ -24,7 +24,7 @@ namespace Controllers.Settings
             string filename = "settings.json";
             Models.Settings.Settings settings = null;
 
-            var settingsContent = await storageController.Pull(filename);
+            var settingsContent = await storageController.PullAsync(filename);
             settings = serializationController.Deserialize<Models.Settings.Settings>(settingsContent);
 
             return settings;

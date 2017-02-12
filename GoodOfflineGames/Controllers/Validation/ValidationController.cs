@@ -149,7 +149,7 @@ namespace Controllers.Validation
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
-            var computedMD5 = bytesToStringHasController.ComputeHash(buffer);
+            var computedMD5 = bytesToStringHasController.GetHash(buffer);
 
             if (computedMD5 != chunk.ExpectedMD5)
                 throw new Exception(

@@ -20,7 +20,7 @@ namespace Controllers.Storage
             this.fileController = fileController;
         }
 
-        public async Task Push(
+        public async Task PushAsync(
             string uri,
             string data)
         {
@@ -32,7 +32,7 @@ namespace Controllers.Storage
             semaphoreSlim.Release();
         }
 
-        public async Task<string> Pull(string uri)
+        public async Task<string> PullAsync(string uri)
         {
             var semaphoreSlim = new System.Threading.SemaphoreSlim(1, 1);
             await semaphoreSlim.WaitAsync();

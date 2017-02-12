@@ -16,7 +16,7 @@ namespace Controllers.Hash
             this.byteToStringConversionController = byteToStringConversionController;
         }
 
-        public string ComputeHash(byte[] data)
+        public string GetHash(byte[] data)
         {
             if (data == null)
                 return string.Empty;

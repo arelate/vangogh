@@ -48,7 +48,7 @@ namespace Controllers.Cookies
         {
             if (cookies.Count == 0)
             {
-                var cookiesContent = await storageController.Pull(cookiesFilename);
+                var cookiesContent = await storageController.PullAsync(cookiesFilename);
                 cookies = serializationController.Deserialize<Dictionary<string, string>>(cookiesContent);
                 if (cookies == null) cookies = new Dictionary<string, string>();
             }
@@ -87,7 +87,7 @@ namespace Controllers.Cookies
             if (somethingChanged)
             {
                 var cookiesContent = serializationController.Serialize(cookies);
-                await storageController.Push(cookiesFilename, cookiesContent);
+                await storageController.PushAsync(cookiesFilename, cookiesContent);
             }
         }
     }
