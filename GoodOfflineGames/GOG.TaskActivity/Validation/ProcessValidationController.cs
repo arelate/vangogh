@@ -118,9 +118,9 @@ namespace GOG.TaskActivities.Validation
                     var removeUpdateTask = taskStatusController.Create(
                         validateProductFilesTask,
                         "All product files are valid. Clear product update flag and schedule cleanup");
-                    await lastKnownValidDataController.AddAsync(removeUpdateTask, id);
+                    await lastKnownValidDataController.UpdateAsync(removeUpdateTask, id);
                     await updatedDataController.RemoveAsync(removeUpdateTask, id);
-                    await scheduledCleanupDataController.AddAsync(removeUpdateTask, id);
+                    await scheduledCleanupDataController.UpdateAsync(removeUpdateTask, id);
                     taskStatusController.Complete(removeUpdateTask);
                 }
                 else

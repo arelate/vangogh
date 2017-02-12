@@ -85,27 +85,65 @@ namespace Controllers.Data
             await serializedStorageController.SerializePushAsync(indexUri, indexes);
         }
 
+        private async Task Map(ITaskStatus taskStatus, string taskMessage, Func<long, bool> itemAction, params long[] data)
+        {
+            var task = taskStatusController.Create(taskStatus, taskMessage);
+            var counter = 0;
+            var dataChanged = false;
+
+            foreach (var item in data)
+            {
+                taskStatusController.UpdateProgress(
+                    task,
+                    ++counter,
+                    data.Length,
+                    item.ToString());
+
+                // do this for every item
+                if (itemAction(item)) dataChanged = true;
+            }
+
+            if (dataChanged)
+            {
+                var saveDataTask = taskStatusController.Create(task, "Save modified index");
+                await SaveAsync();
+                taskStatusController.Complete(saveDataTask);
+            }
+
+            taskStatusController.Complete(task);
+        }
+
         public async Task RemoveAsync(ITaskStatus taskStatus, params long[] data)
         {
-            foreach (var item in data)
-                if (indexes.Contains(item))
-                    indexes.Remove(item);
-
-            await SaveAsync();
+            await Map(
+                taskStatus,
+                "Remove index item(s)",
+                (item) =>
+                {
+                    if (indexes.Contains(item))
+                    {
+                        indexes.Remove(item);
+                        return true;
+                    }
+                    return false;
+                },
+                data);
         }
 
-        public async Task AddAsync(ITaskStatus taskStatus, params long[] data)
+        public async Task UpdateAsync(ITaskStatus taskStatus, params long[] data)
         {
-            foreach (var index in data)
-                if (!indexes.Contains(index))
-                    indexes.Add(index);
-
-            await SaveAsync();
-        }
-
-        public Task ModifyAsync(ITaskStatus taskStatus, params long[] data)
-        {
-            throw new NotImplementedException();
+            await Map(
+                taskStatus,
+                "Update index item(s)",
+                (item) => {
+                    if (!indexes.Contains(item))
+                    {
+                        indexes.Add(item);
+                        return true;
+                    }
+                    return false;
+                },
+                data);
         }
     }
 }

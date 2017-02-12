@@ -133,7 +133,7 @@ namespace GOG.TaskActivities.Download.Processing
                             "Remove successfully downloaded scheduled entry");
 
                         productDownloads.Downloads.Remove(entry);
-                        await productDownloadsDataController.ModifyAsync(removeEntryTask, productDownloads);
+                        await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);
 
                         taskStatusController.Complete(removeEntryTask);
                     }

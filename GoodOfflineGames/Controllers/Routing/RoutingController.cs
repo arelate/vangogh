@@ -84,7 +84,7 @@ namespace Controllers.Routing
                     Destination = destination
                 });
 
-            await productRoutesDataController.ModifyAsync(taskStatus, productRoutes);
+            await productRoutesDataController.UpdateAsync(taskStatus, productRoutes);
         }
     }
 }

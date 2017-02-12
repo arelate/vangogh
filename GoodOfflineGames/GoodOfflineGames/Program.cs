@@ -34,6 +34,7 @@ using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
 using Controllers.TaskStatus;
+using Controllers.Hash;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
@@ -746,14 +747,16 @@ namespace GoodOfflineGames
                 applicationTaskStatus,
                 taskStatusController);
 
-            var byteToStringConversionController = new BytesToStringConvertionController();
+            var bytesToStringConversionController = new BytesToStringConvertionController();
+
+            var md5HashController = new BytesToStringMd5HashController(bytesToStringConversionController);
 
             var validationController = new ValidationController(
                 validationDirectoryDelegate,
                 validationFilenameDelegate,
                 fileController,
                 streamController,
-                byteToStringConversionController,
+                md5HashController,
                 taskStatusController);
 
             var processValidationController = new ProcessValidationController(

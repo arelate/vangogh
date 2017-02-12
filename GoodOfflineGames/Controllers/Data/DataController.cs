@@ -81,7 +81,7 @@ namespace Controllers.Data
 
         public Task SaveAsync()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private async Task Map(ITaskStatus taskStatus, string taskMessage, Func<long, Type, Task> itemAction, params Type[] data)
@@ -106,20 +106,17 @@ namespace Controllers.Data
             taskStatusController.Complete(task);
         }
 
-        public async Task AddAsync(ITaskStatus taskStatus, params Type[] data)
+        public async Task UpdateAsync(ITaskStatus taskStatus, params Type[] data)
         {
             await Map(
                 taskStatus,
-                "Add data items",
+                "Update data item(s)",
                 async (index, item) =>
                 {
-                    if (!indexDataController.Contains(index))
-                    {
-                        await indexDataController.AddAsync(taskStatus, index);
-                        await serializedStorageController.SerializePushAsync(
-                            GetItemUri(index),
-                            item);
-                    }
+                    await indexDataController.UpdateAsync(taskStatus, index);
+                    await serializedStorageController.SerializePushAsync(
+                        GetItemUri(index),
+                        item);
                 },
                 data);
         }
@@ -128,28 +125,13 @@ namespace Controllers.Data
         {
             await Map(
                 taskStatus,
-                "Remove data items",
+                "Remove data item(s)",
                 async (index, item) =>
                 {
-                    if (indexDataController.Contains(index))
-                    {
-                        await indexDataController.RemoveAsync(taskStatus, index);
-                        recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
-                    }
-                },
-                data);
-        }
+                    await indexDataController.RemoveAsync(taskStatus, index);
 
-        public async Task ModifyAsync(ITaskStatus taskStatus, params Type[] data)
-        {
-            await Map(
-                taskStatus,
-                "Modify data items",
-                async (index, item) =>
-                {
                     if (indexDataController.Contains(index))
-                        await RemoveAsync(taskStatus, data);
-                    await AddAsync(taskStatus, data);
+                        recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
                 },
                 data);
         }

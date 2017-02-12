@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.TaskStatus;
 using Interfaces.Data;
@@ -32,8 +33,17 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
         {
             var getUpdatedTask = taskStatusController.Create(taskStatus, "Get new or updated account products");
 
-            foreach (var id in accountProductsDataController.EnumerateIds())
+            var accountProductIds = accountProductsDataController.EnumerateIds().ToArray();
+            var counter = 0;
+
+            foreach (var id in accountProductIds)
             {
+                taskStatusController.UpdateProgress(
+                    getUpdatedTask,
+                    ++counter,
+                    accountProductIds.Length,
+                    id.ToString());
+
                 if (updatedDataController.Contains(id)) continue;
 
                 var accountProduct = await accountProductsDataController.GetByIdAsync(id);
@@ -41,7 +51,7 @@ namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
                 if (accountProduct.IsNew ||
                     accountProduct.Updates > 0)
                 {
-                    await updatedDataController.AddAsync(getUpdatedTask, id);
+                    await updatedDataController.UpdateAsync(getUpdatedTask, id);
 
                     // since we known the product was updated - remove last known valid state
                     await lastKnownValidDataController.RemoveAsync(getUpdatedTask, id);

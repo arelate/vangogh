@@ -73,7 +73,7 @@ namespace GOG.TaskActivities.Update.Wishlisted
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                await wishlistedDataController.AddAsync(saveDataTask, product.Id);
+                await wishlistedDataController.UpdateAsync(saveDataTask, product.Id);
             }
             taskStatusController.Complete(saveDataTask);
 

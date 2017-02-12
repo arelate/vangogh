@@ -25,15 +25,20 @@ namespace Interfaces.Data
         IEnumerable<long> EnumerateIds();
     }
 
-    public interface IAddDelegate<Type>
+    public interface IUpdateDelegate<Type>
     {
-        Task AddAsync(ITaskStatus taskStatus, params Type[] data);
+        Task UpdateAsync(ITaskStatus taskStatus, params Type[] data);
     }
 
-    public interface IModifyDelegate<Type>
-    {
-        Task ModifyAsync(ITaskStatus taskStatus, params Type[] data);
-    }
+    //public interface IAddDelegate<Type>
+    //{
+    //    Task AddAsync(ITaskStatus taskStatus, params Type[] data);
+    //}
+
+    //public interface IModifyDelegate<Type>
+    //{
+    //    Task ModifyAsync(ITaskStatus taskStatus, params Type[] data);
+    //}
 
     public interface IRemoveDelegate<Type>
     {
@@ -61,9 +66,8 @@ namespace Interfaces.Data
         IEnumerateIdsDelegate,
         ICountDelegate,
         IGetByIdDelegate<Type>,
-        IAddDelegate<Type>,
+        IUpdateDelegate<Type>,
         IRemoveDelegate<Type>,
-        IModifyDelegate<Type>,
         IContainsDelegate<Type>,
         IContainsIdDelegate
     {

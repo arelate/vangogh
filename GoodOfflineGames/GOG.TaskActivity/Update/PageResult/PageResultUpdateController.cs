@@ -57,7 +57,7 @@ namespace GOG.TaskActivities.Update.PageResult
             taskStatusController.Complete(extractTask);
 
             var updateTask = taskStatusController.Create(updateAllProductsTask, "Add new products");
-            await dataController.AddAsync(updateTask, products.ToArray());
+            await dataController.UpdateAsync(updateTask, products.ToArray());
             taskStatusController.Complete(updateTask);
 
             taskStatusController.Complete(updateAllProductsTask);

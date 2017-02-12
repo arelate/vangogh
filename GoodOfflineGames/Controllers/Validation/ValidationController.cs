@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
-using System.Security.Cryptography;
 
 using Interfaces.Validation;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.File;
-using Interfaces.Conversion;
 using Interfaces.Stream;
+using Interfaces.Hash;
 using Interfaces.TaskStatus;
 
 using Models.ValidationChunk;
@@ -19,13 +18,12 @@ namespace Controllers.Validation
 {
     public class ValidationController : IValidationController
     {
-        private MD5CryptoServiceProvider md5CryptoServiceProvider;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
-        private IConversionController<byte[], string> byteToStringConversionController;
+        private IBytesToStringHashController bytesToStringHasController;
         private ITaskStatusController taskStatusController;
 
         public ValidationController(
@@ -33,20 +31,17 @@ namespace Controllers.Validation
             IGetFilenameDelegate getFilenameDelegate,
             IFileController fileController,
             IStreamController streamController,
-            IConversionController<byte[], string> byteToStringConversionController,
+            IBytesToStringHashController bytesToStringHasController,
             ITaskStatusController taskStatusController)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
-            this.byteToStringConversionController = byteToStringConversionController;
+            this.bytesToStringHasController = bytesToStringHasController;
             this.taskStatusController = taskStatusController;
 
             validationXml = new XmlDocument()  { PreserveWhitespace = false };
-
-            md5CryptoServiceProvider = new MD5CryptoServiceProvider();
-            md5CryptoServiceProvider.Initialize();
         }
 
         public async Task ValidateAsync(string uri, ITaskStatus taskStatus)
@@ -154,12 +149,7 @@ namespace Controllers.Validation
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
-            md5CryptoServiceProvider.Initialize();
-            md5CryptoServiceProvider.TransformFinalBlock(buffer, 0, length);
-
-            byte[] hash = md5CryptoServiceProvider.Hash;
-
-            var computedMD5 = byteToStringConversionController.Convert(hash);
+            var computedMD5 = bytesToStringHasController.ComputeHash(buffer);
 
             if (computedMD5 != chunk.ExpectedMD5)
                 throw new Exception(
