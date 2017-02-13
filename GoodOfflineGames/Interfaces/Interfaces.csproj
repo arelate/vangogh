@@ -51,6 +51,7 @@
     <Compile Include="Eligibility\ElegibilityDelegate.cs" />
     <Compile Include="Enumeration\EnumerationController.cs" />
     <Compile Include="Filtering\FilterDelegate.cs" />
+    <Compile Include="ForEachAsync\ForEachAsyncDelegate.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Console\ConsoleController.cs" />

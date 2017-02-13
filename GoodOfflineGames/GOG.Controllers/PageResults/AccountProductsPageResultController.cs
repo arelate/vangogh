@@ -2,6 +2,7 @@
 using Interfaces.Serialization;
 using Interfaces.TaskStatus;
 using Interfaces.ProductTypes;
+using Interfaces.ForEachAsync;
 
 using GOG.Models;
 
@@ -13,11 +14,13 @@ namespace GOG.Controllers.PageResults
             ProductTypes productType,
             IRequestPageController requestPageController,
             ISerializationController<string> serializationController,
+            IForEachAsyncDelegate forEachAsyncDelegate,
             ITaskStatusController taskStatusController) : 
             base(
                 productType,
                 requestPageController, 
-                serializationController, 
+                serializationController,
+                forEachAsyncDelegate,
                 taskStatusController)
         {
             // ...
