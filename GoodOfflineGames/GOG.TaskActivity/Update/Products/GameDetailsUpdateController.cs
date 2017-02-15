@@ -34,7 +34,6 @@ namespace GOG.TaskActivities.Update.Products
                 throttleController,
                 updateUriController,
                 requiredUpdatesController,
-                null, // skipUpdateController
                 null, // dataDecodingController
                 connectionController,
                 additionalDetailsController,

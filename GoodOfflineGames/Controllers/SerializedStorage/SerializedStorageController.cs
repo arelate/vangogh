@@ -13,16 +13,13 @@ namespace Controllers.SerializedStorage
         private IStorageController<string> storageController;
         private ISerializationController<string> serializarionController;
         private IHashTrackingController hashTrackingController;
-        private IBytesToStringHashController bytesToStringHashController;
 
         public SerializedStorageController(
             IHashTrackingController hashTrackingController,
-            IBytesToStringHashController bytesToStringHashController,
             IStorageController<string> storageController,
             ISerializationController<string> serializarionController)
         {
             this.hashTrackingController = hashTrackingController;
-            this.bytesToStringHashController = bytesToStringHashController;
             this.storageController = storageController;
             this.serializarionController = serializarionController;
         }
@@ -31,7 +28,7 @@ namespace Controllers.SerializedStorage
         {
             var serializedData = await storageController.PullAsync(uri);
 
-            var hash = bytesToStringHashController.GetHash(Encoding.UTF8.GetBytes(serializedData));
+            var hash = serializedData.GetHashCode();
             await hashTrackingController.SetHashAsync(uri, hash);
 
             return serializarionController.Deserialize<T>(serializedData);
@@ -41,7 +38,7 @@ namespace Controllers.SerializedStorage
         {
             var serializedData = serializarionController.Serialize(data);
 
-            var hash = bytesToStringHashController.GetHash(Encoding.UTF8.GetBytes(serializedData));
+            var hash = serializedData.GetHashCode();
             var lastKnownHash = hashTrackingController.GetHash(uri);
 
             // data has not changed, no need to write to storage

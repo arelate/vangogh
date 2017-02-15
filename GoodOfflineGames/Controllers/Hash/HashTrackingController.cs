@@ -22,7 +22,7 @@ namespace Controllers.Hash
 
         private ISerializationController<string> serializationController;
         private IStorageController<string> storageController;
-        private IDictionary<string, string> uriHashes;
+        private IDictionary<string, int> uriHashes;
 
         public HashTrackingController(
             IGetFilenameDelegate getFilenameDelegate,
@@ -36,20 +36,23 @@ namespace Controllers.Hash
             this.serializationController = serializationController;
             this.storageController = storageController;
 
-            uriHashes = new Dictionary<string, string>();
+            uriHashes = new Dictionary<string, int>();
         }
 
-        public string GetHash(string uri)
+        public int GetHash(string uri)
         {
             return (uriHashes.ContainsKey(uri)) ?
                 uriHashes[uri] :
-                string.Empty;
+                int.MinValue;
         }
 
         public async Task LoadAsync()
         {
             var serializedData = await storageController.PullAsync(uriHashesFilename);
-            uriHashes = serializationController.Deserialize<Dictionary<string, string>>(serializedData);
+            uriHashes = serializationController.Deserialize<Dictionary<string, int>>(serializedData);
+
+            if (uriHashes == null)
+                uriHashes = new Dictionary<string, int>();
         }
 
         public async Task SaveAsync()
@@ -58,7 +61,7 @@ namespace Controllers.Hash
             await storageController.PushAsync(uriHashesFilename, serialiedData);
         }
 
-        public async Task SetHashAsync(string uri, string hash)
+        public async Task SetHashAsync(string uri, int hash)
         {
             if (uriHashes.ContainsKey(uri) &&
                 uriHashes[uri] == hash) return;

@@ -4,6 +4,7 @@ using System.Linq;
 using Interfaces.RequestPage;
 using Interfaces.ProductTypes;
 using Interfaces.Data;
+using Interfaces.Collection;
 using Interfaces.TaskStatus;
 
 using Models.ProductCore;
@@ -25,12 +26,15 @@ namespace GOG.TaskActivities.Update.PageResult
         private IRequestPageController requestPageController;
         private IDataController<Type> dataController;
 
+        private ICollectionProcessingController<Type> collectionProcessingController;
+
         public PageResultUpdateController(
             ProductTypes productType,
             IPageResultsController<PageType> pageResultsController,
             IPageResultsExtractionController<PageType, Type> pageResultsExtractingController,
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
+            ICollectionProcessingController<Type> collectionProcessingController,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base(
@@ -44,6 +48,8 @@ namespace GOG.TaskActivities.Update.PageResult
 
             this.requestPageController = requestPageController;
             this.dataController = dataController;
+
+            this.collectionProcessingController = collectionProcessingController;
         }
 
         public override async Task ProcessTaskAsync()
@@ -59,6 +65,13 @@ namespace GOG.TaskActivities.Update.PageResult
             var updateTask = taskStatusController.Create(updateAllProductsTask, "Update products");
             await dataController.UpdateAsync(updateTask, products.ToArray());
             taskStatusController.Complete(updateTask);
+
+            var processingTask = taskStatusController.Create(updateAllProductsTask, "Post-processing products");
+
+            if (collectionProcessingController != null)
+                await collectionProcessingController.Process(products, processingTask);
+
+            taskStatusController.Complete(processingTask);
 
             taskStatusController.Complete(updateAllProductsTask);
         }

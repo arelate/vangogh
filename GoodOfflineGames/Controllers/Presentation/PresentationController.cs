@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Threading;
 
 using Interfaces.Console;
 using Interfaces.Measurement;
@@ -23,6 +24,8 @@ namespace Controllers.Presentation
         private const int throttleMilliseconds = 200;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
+        private SemaphoreSlim semaphoreSlim;
+
         public PresentationController(
             IMeasurementController<string> formattedStringMeasurementController,
             ILineBreakingController lineBreakingController,
@@ -34,6 +37,8 @@ namespace Controllers.Presentation
 
             previousScreenLinesLengths = new List<int>();
             consoleController.CursorVisible = false;
+
+            semaphoreSlim = new SemaphoreSlim(0, 1);
         }
 
         private int PresentLine(int line, string content, string[] colors)
@@ -54,6 +59,7 @@ namespace Controllers.Presentation
 
         private void PresentViewModel(string text, string[] colors, ref int currentScreenLine, IList<int> currentLinesLengths)
         {
+
             var lines = lineBreakingController.BreakLines(text, consoleController.WindowWidth);
             var consumedColors = 0;
 
@@ -81,6 +87,8 @@ namespace Controllers.Presentation
         {
             if (!overrideThrottling && 
                 (DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
+
+            semaphoreSlim.WaitAsync();
 
             var viewsModelsLength = viewModels.Count();
             var currentLinesLengths = new List<int>();
@@ -111,6 +119,8 @@ namespace Controllers.Presentation
             previousScreenLinesLengths = currentLinesLengths;
 
             lastReportedTimestamp = DateTime.UtcNow;
+
+            semaphoreSlim.Release();
         }
     }
 }

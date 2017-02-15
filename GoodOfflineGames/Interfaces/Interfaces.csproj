@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdditionalDetails\AdditionalDetailsController.cs" />
+    <Compile Include="Collection\CollectionProcessing.cs" />
     <Compile Include="Conversion\ConversionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Destination\GetFilenameDelegate.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="UpdateDependencies\ConnectionController.cs" />
     <Compile Include="UpdateDependencies\DataProcessingController.cs" />
     <Compile Include="UpdateDependencies\RequiredUpdatesController.cs" />
-    <Compile Include="UpdateDependencies\SkipUpdateController.cs" />
     <Compile Include="UpdateDependencies\UpdateUriController.cs" />
     <Compile Include="UriResolution\UriResolutionController.cs" />
     <Compile Include="Validation\ValidationChunk.cs" />

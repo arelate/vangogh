@@ -17,7 +17,6 @@ namespace GOG.TaskActivities.Update.Products
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IUpdateUriController updateUriController,
-            ISkipUpdateController skipUpdateController,
             IDataDecodingController dataDecodingController,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController):
@@ -30,7 +29,6 @@ namespace GOG.TaskActivities.Update.Products
                 null, // throttleController
                 updateUriController,
                 null, // requiredUpdatesController
-                skipUpdateController,
                 dataDecodingController,
                 null, // connectionController
                 null, // additionalDetailsController

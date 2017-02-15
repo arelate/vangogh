@@ -19,8 +19,8 @@ namespace Interfaces.Hash
     }
 
     public interface IHashTrackingController:
-        IGetHashDelegate<string, string>,
-        ISetHashDelegate<string, string>
+        IGetHashDelegate<string, int>,
+        ISetHashDelegate<string, int>
     {
         // ...
     }

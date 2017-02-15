@@ -93,8 +93,8 @@ namespace GoodOfflineGames
             var uriHashesFilenameDelegate = new FixedFilenameDelegate("hashes", jsonFilenameDelegate);
 
             var hashTrackingController = new HashTrackingController(
-                uriHashesFilenameDelegate, 
-                serializationController, 
+                uriHashesFilenameDelegate,
+                serializationController,
                 storageController);
 
             var bytesToStringConversionController = new BytesToStringConvertionController();
@@ -102,7 +102,6 @@ namespace GoodOfflineGames
 
             var serializedStorageController = new SerializedStorageController(
                 hashTrackingController,
-                md5HashController,
                 storageController,
                 serializationController);
 
@@ -487,6 +486,7 @@ namespace GoodOfflineGames
                     productsExtractionController,
                     requestPageController,
                     productsDataController,
+                    null, /* collectionProcessingController */
                     applicationTaskStatus,
                     taskStatusController);
 
@@ -499,6 +499,15 @@ namespace GoodOfflineGames
 
             var accountProductsExtractionController = new AccountProductsExtractionController();
 
+            var newUpdatedCollectionProcessingController = new NewUpdatedCollectionProcessingController(
+                collectionController,
+                updatedDataController,
+                lastKnownValidDataController,
+                taskStatusController);
+
+            if (!settings.Update.NewUpdatedAccountProducts)
+                newUpdatedCollectionProcessingController = null;
+
             var accountProductsUpdateController = new PageResultUpdateController<
                 AccountProductsPageResult,
                 AccountProduct>(
@@ -507,19 +516,9 @@ namespace GoodOfflineGames
                     accountProductsExtractionController,
                     requestPageController,
                     accountProductsDataController,
+                    newUpdatedCollectionProcessingController,
                     applicationTaskStatus,
                     taskStatusController);
-
-            #endregion
-
-            #region Update.NewUpdatedAccountProducts
-
-            var newUpdatedAccountProductsController = new NewUpdatedAccountProductsController(
-                updatedDataController,
-                lastKnownValidDataController,
-                accountProductsDataController,
-                applicationTaskStatus,
-                taskStatusController);
 
             #endregion
 
@@ -542,8 +541,6 @@ namespace GoodOfflineGames
             var productUpdateUriController = new ProductUpdateUriController();
 
             var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
-            var gameProductDataSkipUpdateController = new GameProductDataSkipUpdateController(
-                productsDataController);
             var gameProductDataDecodingController = new GameProductDataDecodingController(
                 gogDataExtractionController,
                 serializationController);
@@ -563,7 +560,6 @@ namespace GoodOfflineGames
                 networkController,
                 serializationController,
                 gameProductDataUpdateUriController,
-                gameProductDataSkipUpdateController,
                 gameProductDataDecodingController,
                 applicationTaskStatus,
                 taskStatusController);
@@ -834,8 +830,6 @@ namespace GoodOfflineGames
                 taskActivityControllers.Add(productsUpdateController);
             if (settings.Update.AccountProducts)
                 taskActivityControllers.Add(accountProductsUpdateController);
-            if (settings.Update.NewUpdatedAccountProducts)
-                taskActivityControllers.Add(newUpdatedAccountProductsController);
             if (settings.Update.Wishlist)
                 taskActivityControllers.Add(wishlistedUpdateController);
 

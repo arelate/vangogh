@@ -30,7 +30,6 @@ namespace GOG.TaskActivities.Update
 
         private IUpdateUriController updateUriController;
         private IRequiredUpdatesController requiredUpdatesController;
-        private ISkipUpdateController skipUpdateController;
         private IDataDecodingController dataDecodingController;
         private IConnectionController connectionController;
         private IAdditionalDetailsController additionalDetailsController;
@@ -48,7 +47,6 @@ namespace GOG.TaskActivities.Update
             IThrottleController throttleController,
             IUpdateUriController updateUriController,
             IRequiredUpdatesController requiredUpdatesController,
-            ISkipUpdateController skipUpdateController,
             IDataDecodingController dataDecodingController,
             IConnectionController connectionController,
             IAdditionalDetailsController additionalDetailsController,
@@ -67,7 +65,6 @@ namespace GOG.TaskActivities.Update
 
             this.updateUriController = updateUriController;
             this.requiredUpdatesController = requiredUpdatesController;
-            this.skipUpdateController = skipUpdateController;
             this.dataDecodingController = dataDecodingController;
             this.connectionController = connectionController;
             this.additionalDetailsController = additionalDetailsController;
@@ -86,9 +83,6 @@ namespace GOG.TaskActivities.Update
 
             foreach (var id in listTypeDataController.EnumerateIds())
             {
-                if (skipUpdateController != null &&
-                    await skipUpdateController.SkipUpdate(id)) continue;
-
                 if (!updateTypeDataController.ContainsId(id))
                     updatedProducts.Add(id);
             }
