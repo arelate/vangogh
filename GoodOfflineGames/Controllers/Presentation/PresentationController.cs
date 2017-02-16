@@ -24,8 +24,6 @@ namespace Controllers.Presentation
         private const int throttleMilliseconds = 200;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
-        private SemaphoreSlim semaphoreSlim;
-
         public PresentationController(
             IMeasurementController<string> formattedStringMeasurementController,
             ILineBreakingController lineBreakingController,
@@ -37,8 +35,6 @@ namespace Controllers.Presentation
 
             previousScreenLinesLengths = new List<int>();
             consoleController.CursorVisible = false;
-
-            semaphoreSlim = new SemaphoreSlim(0, 1);
         }
 
         private int PresentLine(int line, string content, string[] colors)
@@ -88,8 +84,6 @@ namespace Controllers.Presentation
             if (!overrideThrottling && 
                 (DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
 
-            semaphoreSlim.WaitAsync();
-
             var viewsModelsLength = viewModels.Count();
             var currentLinesLengths = new List<int>();
             var currentScreenLine = 0;
@@ -119,8 +113,6 @@ namespace Controllers.Presentation
             previousScreenLinesLengths = currentLinesLengths;
 
             lastReportedTimestamp = DateTime.UtcNow;
-
-            semaphoreSlim.Release();
         }
     }
 }

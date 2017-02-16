@@ -469,11 +469,10 @@ namespace GoodOfflineGames
 
             var forEachAsyncDelegate = new ForEachAsyncDelegate();
 
-            var productsPageResultsController = new ProductsPageResultController(
+            var productsPageResultsController = new PageResultsController<ProductsPageResult>(
                 ProductTypes.Product,
                 requestPageController,
                 serializationController,
-                forEachAsyncDelegate,
                 taskStatusController);
 
             var productsExtractionController = new ProductsExtractionController();
@@ -490,11 +489,10 @@ namespace GoodOfflineGames
                     applicationTaskStatus,
                     taskStatusController);
 
-            var accountProductsPageResultsController = new AccountProductsPageResultController(
+            var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
                 ProductTypes.AccountProduct,
                 requestPageController,
                 serializationController,
-                forEachAsyncDelegate,
                 taskStatusController);
 
             var accountProductsExtractionController = new AccountProductsExtractionController();
