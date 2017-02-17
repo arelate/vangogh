@@ -98,7 +98,6 @@
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
-    <Compile Include="UriResolution\ValidationUriResolutionController.cs" />
     <Compile Include="Eligibility\DownloadEntryValidationEligibilityController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
   </ItemGroup>

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.DownloadSources;
-using Interfaces.UriResolution;
+using Interfaces.Destination.Filename;
 using Interfaces.Data;
 using Interfaces.Routing;
 using Interfaces.Eligibility;
@@ -21,20 +21,25 @@ namespace GOG.TaskActivities.Download.Sources
         private IRoutingController routingController;
         private IEligibilityDelegate<ProductDownloadEntry> downloadEntryValidationEligibilityDelegate;
         private IEligibilityDelegate<string> fileValidationEligibilityDelegate;
-        private IUriResolutionController uriResolutionController;
+        private IGetFilenameDelegate getDownloadFilenameDelegate;
+        private IGetFilenameDelegate getValidationFilenameDelegate;
 
         public ValidationDownloadSourcesController(
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IRoutingController routingController,
-            IUriResolutionController uriResolutionController,
+            IGetFilenameDelegate getDownloadFilenameDelegate,
+            IGetFilenameDelegate getValidationFilenameDelegate,
             IEligibilityDelegate<ProductDownloadEntry> downloadEntryValidationEligibilityDelegate,
             IEligibilityDelegate<string> fileValidationEligibilityDelegate)
         {
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.routingController = routingController;
-            this.uriResolutionController = uriResolutionController;
+
+            this.getDownloadFilenameDelegate = getDownloadFilenameDelegate;
+            this.getValidationFilenameDelegate = getValidationFilenameDelegate;
+
             this.downloadEntryValidationEligibilityDelegate = downloadEntryValidationEligibilityDelegate;
             this.fileValidationEligibilityDelegate = fileValidationEligibilityDelegate;
         }
@@ -68,7 +73,14 @@ namespace GOG.TaskActivities.Download.Sources
                     if (!validationSources.ContainsKey(id))
                         validationSources.Add(id, new List<string>());
 
-                    validationSources[id].Add(uriResolutionController.ResolveUri(resolvedUri));
+                    // compute validation filename
+
+                    var resolvedUriFilename = getDownloadFilenameDelegate.GetFilename(resolvedUri);
+                    var validationFilename = getValidationFilenameDelegate.GetFilename(resolvedUriFilename);
+
+                    var validationUri = resolvedUri.Replace(resolvedUriFilename, validationFilename);
+
+                    validationSources[id].Add(validationUri);
                 }
             }
 

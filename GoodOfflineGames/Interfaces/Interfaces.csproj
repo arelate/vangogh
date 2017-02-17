@@ -96,7 +96,6 @@
     <Compile Include="UpdateDependencies\DataProcessingController.cs" />
     <Compile Include="UpdateDependencies\RequiredUpdatesController.cs" />
     <Compile Include="UpdateDependencies\UpdateUriController.cs" />
-    <Compile Include="UriResolution\UriResolutionController.cs" />
     <Compile Include="Validation\ValidationChunk.cs" />
     <Compile Include="Validation\ValidationController.cs" />
     <Compile Include="Validation\ValidationDataDownloadController.cs" />

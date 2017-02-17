@@ -18,7 +18,6 @@ using Controllers.Throttle;
 using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.LineBreaking;
-using Controllers.UriResolution;
 using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
 using Controllers.Cookies;
@@ -644,7 +643,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 gameDetailsManualUrlsEnumerationController);
 
-            var validationUriResolutionController = new ValidationUriResolutionController();
+            //var validationUriResolutionController = new ValidationUriResolutionController();
 
             var downloadEntryValidationEligibilityController = new DownloadEntryValidationEligibilityController();
             var updateRouteEligibilityController = new UpdateRouteEligibilityController();
@@ -655,7 +654,8 @@ namespace GoodOfflineGames
                 updatedDataController,
                 productDownloadsDataController,
                 routingController,
-                validationUriResolutionController,
+                uriFilenameDelegate,
+                validationFilenameDelegate,
                 downloadEntryValidationEligibilityController,
                 fileValidationEligibilityController);
 
