@@ -6,7 +6,6 @@ using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
-using Interfaces.AdditionalDetails;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 

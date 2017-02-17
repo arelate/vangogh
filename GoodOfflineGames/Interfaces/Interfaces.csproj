@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdditionalDetails\AdditionalDetailsController.cs" />
+    <Compile Include="UpdateDependencies\AdditionalDetailsController.cs" />
     <Compile Include="Collection\CollectionProcessing.cs" />
     <Compile Include="Conversion\ConversionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />

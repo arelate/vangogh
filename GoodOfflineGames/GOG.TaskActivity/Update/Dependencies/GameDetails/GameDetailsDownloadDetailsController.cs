@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-using Interfaces.AdditionalDetails;
+using Interfaces.UpdateDependencies;
 using Interfaces.Serialization;
 using Interfaces.Language;
 
