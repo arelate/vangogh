@@ -124,7 +124,7 @@ namespace GOG.TaskActivities.Cleanup
             var cleanupProductTask = taskStatusController.Create(cleanupAllFilesTask, "Clean up product files");
             var counter = 0;
 
-            var scheduledCleanupIds = scheduledCleanupDataController.EnumerateIds();
+            var scheduledCleanupIds = scheduledCleanupDataController.EnumerateIds().ToArray();
 
             foreach (var id in scheduledCleanupIds)
             {

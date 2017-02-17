@@ -18,13 +18,18 @@ namespace Controllers.Destination.Directory
 
         public string GetDirectory(string source = null)
         {
-            var uriParts = source.Split(
-                new string[] { Separators.UriPart },
-                StringSplitOptions.RemoveEmptyEntries);
+            var directory = string.Empty;
 
-            var directory = uriParts.Length >= 2 ?
-                uriParts[uriParts.Length - 2] :
-                source;
+            if (!string.IsNullOrEmpty(source))
+            {
+                var uriParts = source.Split(
+                    new string[] { Separators.UriPart },
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                directory = uriParts.Length >= 2 ?
+                    uriParts[uriParts.Length - 2] :
+                    source;
+            }
 
             return (string.IsNullOrEmpty(baseDirectory)) ?
                 directory :
