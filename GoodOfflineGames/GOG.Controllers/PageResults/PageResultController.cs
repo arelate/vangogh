@@ -5,6 +5,7 @@ using Interfaces.RequestPage;
 using Interfaces.Serialization;
 using Interfaces.TaskStatus;
 using Interfaces.ProductTypes;
+using Interfaces.Hash;
 
 using Models.Uris;
 using Models.QueryParameters;
@@ -20,6 +21,7 @@ namespace GOG.Controllers.PageResults
     {
         private ProductTypes productType;
         private IRequestPageController requestPageController;
+        private IHashTrackingController hashTrackingController;
         private ISerializationController<string> serializationController;
         private ITaskStatusController taskStatusController;
 
@@ -29,12 +31,14 @@ namespace GOG.Controllers.PageResults
         public PageResultsController(
             ProductTypes productType,
             IRequestPageController requestPageController,
+            IHashTrackingController hashTrackingController,
             ISerializationController<string> serializationController,
             ITaskStatusController taskStatusController)
         {
             this.productType = productType;
 
             this.requestPageController = requestPageController;
+            this.hashTrackingController = hashTrackingController;
             this.serializationController = serializationController;
 
             this.taskStatusController = taskStatusController;
@@ -50,8 +54,6 @@ namespace GOG.Controllers.PageResults
             var totalPages = 1;
             T pageResult = null;
 
-
-
             var getPagesTask = taskStatusController.Create(
                 taskStatus,
                 string.Format(
@@ -65,8 +67,6 @@ namespace GOG.Controllers.PageResults
                     requestParameters, 
                     currentPage);
 
-                pageResult = serializationController.Deserialize<T>(response);
-
                 taskStatusController.UpdateProgress(
                     getPagesTask,
                     currentPage,
@@ -74,9 +74,20 @@ namespace GOG.Controllers.PageResults
                     requestUri,
                     PageUnits.Pages);
 
+                var requestHash = hashTrackingController.GetHash(requestUri + currentPage);
+                var responseHash = response.GetHashCode();
+
+                pageResult = serializationController.Deserialize<T>(response);
+
                 if (pageResult == null) continue;
 
                 totalPages = pageResult.TotalPages;
+
+                if (responseHash == requestHash) continue;
+
+                var setHashTask = taskStatusController.Create(getPagesTask, "Set response hash");
+                await hashTrackingController.SetHashAsync(requestUri + currentPage, responseHash);
+                taskStatusController.Complete(setHashTask);
 
                 pageResults.Add(pageResult);
 

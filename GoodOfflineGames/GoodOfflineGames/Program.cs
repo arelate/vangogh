@@ -468,6 +468,7 @@ namespace GoodOfflineGames
             var productsPageResultsController = new PageResultsController<ProductsPageResult>(
                 ProductTypes.Product,
                 requestPageController,
+                hashTrackingController,
                 serializationController,
                 taskStatusController);
 
@@ -488,6 +489,7 @@ namespace GoodOfflineGames
             var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
                 ProductTypes.AccountProduct,
                 requestPageController,
+                hashTrackingController,
                 serializationController,
                 taskStatusController);
 
