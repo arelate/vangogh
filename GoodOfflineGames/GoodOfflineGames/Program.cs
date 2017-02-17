@@ -34,7 +34,6 @@ using Controllers.RecycleBin;
 using Controllers.Routing;
 using Controllers.TaskStatus;
 using Controllers.Hash;
-using Controllers.ForEachAsync;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
@@ -465,8 +464,6 @@ namespace GoodOfflineGames
             #endregion
 
             #region Update.PageResults
-
-            var forEachAsyncDelegate = new ForEachAsyncDelegate();
 
             var productsPageResultsController = new PageResultsController<ProductsPageResult>(
                 ProductTypes.Product,
