@@ -25,12 +25,12 @@ namespace GOG.TaskActivities.Update
         private IDataController<ListType> listTypeDataController;
         private IDataController<long> updatedDataController;
 
-        private INetworkController networkController;
+        //private INetworkController networkController;
+        private IGetDelegate getDelegate;
         private IThrottleController throttleController;
         private ISerializationController<string> serializationController;
 
         private IUpdateUriController updateUriController;
-        private IDataDecodingController dataDecodingController;
         private IConnectionController connectionController;
         private IAdditionalDetailsController additionalDetailsController;
 
@@ -43,11 +43,10 @@ namespace GOG.TaskActivities.Update
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
-            INetworkController networkController,
+            IGetDelegate getDelegate,
             ISerializationController<string> serializationController,
             IThrottleController throttleController,
             IUpdateUriController updateUriController,
-            IDataDecodingController dataDecodingController,
             IConnectionController connectionController,
             IAdditionalDetailsController additionalDetailsController,
             ITaskStatus taskStatus,
@@ -60,12 +59,11 @@ namespace GOG.TaskActivities.Update
             this.listTypeDataController = listTypeDataController;
             this.updatedDataController = updatedDataController;
 
-            this.networkController = networkController;
+            this.getDelegate = getDelegate;
             this.serializationController = serializationController;
             this.throttleController = throttleController;
 
             this.updateUriController = updateUriController;
-            this.dataDecodingController = dataDecodingController;
             this.connectionController = connectionController;
             this.additionalDetailsController = additionalDetailsController;
 
@@ -112,11 +110,7 @@ namespace GOG.TaskActivities.Update
                     Uris.Paths.GetUpdateUri(updateProductType),
                     updateUriController.GetUpdateUri(product));
 
-                var rawResponse = await networkController.Get(uri);
-
-                var content = dataDecodingController != null ?
-                    dataDecodingController.DecodeData(rawResponse) :
-                    rawResponse;
+                var content = await getDelegate.Get(uri);
 
                 if (content == null)
                 {

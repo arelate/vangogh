@@ -15,10 +15,9 @@ namespace GOG.TaskActivities.Update.Products
             IDataController<GameProductData> gameProductDataController,
             IDataController<Product> productsDataController,
             IDataController<long> updatedDataController,
-            INetworkController networkController,
+            IGetDelegate getDelegate,
             ISerializationController<string> serializationController,
             IUpdateUriController updateUriController,
-            IDataDecodingController dataDecodingController,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController):
             base(
@@ -26,11 +25,10 @@ namespace GOG.TaskActivities.Update.Products
                 gameProductDataController,
                 productsDataController,
                 updatedDataController,
-                networkController,
+                getDelegate,
                 serializationController,
                 null, // throttleController
                 updateUriController,
-                dataDecodingController,
                 null, // connectionController
                 null, // additionalDetailsController
                 taskStatus,

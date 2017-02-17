@@ -538,7 +538,8 @@ namespace GoodOfflineGames
             var productUpdateUriController = new ProductUpdateUriController();
 
             var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
-            var gameProductDataDecodingController = new GameProductDataDecodingController(
+
+            var getGOGDataDelegate = new GetGOGDataDelegate(networkController,
                 gogDataExtractionController,
                 serializationController);
 
@@ -553,10 +554,9 @@ namespace GoodOfflineGames
                 gameProductDataController,
                 productsDataController,
                 updatedDataController,
-                networkController,
+                getGOGDataDelegate,
                 serializationController,
                 gameProductDataUpdateUriController,
-                gameProductDataDecodingController,
                 applicationTaskStatus,
                 taskStatusController);
 
