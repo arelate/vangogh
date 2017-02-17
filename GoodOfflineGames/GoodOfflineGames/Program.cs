@@ -542,8 +542,6 @@ namespace GoodOfflineGames
                 gogDataExtractionController,
                 serializationController);
 
-            var gameDetailsRequiredUpdatesController = new GameDetailsRequiredUpdatesController(
-                updatedDataController);
             var gameDetailsConnectionController = new GameDetailsConnectionController();
             var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
                 serializationController,
@@ -554,6 +552,7 @@ namespace GoodOfflineGames
             var gameProductDataUpdateController = new GameProductDataUpdateController(
                 gameProductDataController,
                 productsDataController,
+                updatedDataController,
                 networkController,
                 serializationController,
                 gameProductDataUpdateUriController,
@@ -564,6 +563,7 @@ namespace GoodOfflineGames
             var apiProductUpdateController = new ApiProductUpdateController(
                 apiProductsDataController,
                 productsDataController,
+                updatedDataController,
                 networkController,
                 serializationController,
                 productUpdateUriController,
@@ -573,11 +573,11 @@ namespace GoodOfflineGames
             var gameDetailsUpdateController = new GameDetailsUpdateController(
                 gameDetailsDataController,
                 accountProductsDataController,
+                updatedDataController,
                 networkController,
                 serializationController,
                 throttleController,
                 productUpdateUriController,
-                gameDetailsRequiredUpdatesController,
                 gameDetailsConnectionController,
                 gameDetailsDownloadDetailsController,
                 applicationTaskStatus,

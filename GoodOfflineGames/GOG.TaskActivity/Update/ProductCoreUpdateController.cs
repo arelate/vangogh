@@ -23,13 +23,13 @@ namespace GOG.TaskActivities.Update
     {
         private IDataController<UpdateType> updateTypeDataController;
         private IDataController<ListType> listTypeDataController;
+        private IDataController<long> updatedDataController;
 
         private INetworkController networkController;
         private IThrottleController throttleController;
         private ISerializationController<string> serializationController;
 
         private IUpdateUriController updateUriController;
-        private IRequiredUpdatesController requiredUpdatesController;
         private IDataDecodingController dataDecodingController;
         private IConnectionController connectionController;
         private IAdditionalDetailsController additionalDetailsController;
@@ -42,11 +42,11 @@ namespace GOG.TaskActivities.Update
             ProductTypes updateProductType,
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
+            IDataController<long> updatedDataController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IThrottleController throttleController,
             IUpdateUriController updateUriController,
-            IRequiredUpdatesController requiredUpdatesController,
             IDataDecodingController dataDecodingController,
             IConnectionController connectionController,
             IAdditionalDetailsController additionalDetailsController,
@@ -58,13 +58,13 @@ namespace GOG.TaskActivities.Update
         {
             this.updateTypeDataController = updateTypeDataController;
             this.listTypeDataController = listTypeDataController;
+            this.updatedDataController = updatedDataController;
 
             this.networkController = networkController;
             this.serializationController = serializationController;
             this.throttleController = throttleController;
 
             this.updateUriController = updateUriController;
-            this.requiredUpdatesController = requiredUpdatesController;
             this.dataDecodingController = dataDecodingController;
             this.connectionController = connectionController;
             this.additionalDetailsController = additionalDetailsController;
@@ -79,7 +79,7 @@ namespace GOG.TaskActivities.Update
 
             var updatedProducts = new List<long>();
 
-            var dataEnumerationTask = taskStatusController.Create(updateProductsTask, "Enumerate missing data");
+            var missingDataEnumerationTask = taskStatusController.Create(updateProductsTask, "Enumerate missing data");
 
             foreach (var id in listTypeDataController.EnumerateIds())
             {
@@ -87,14 +87,13 @@ namespace GOG.TaskActivities.Update
                     updatedProducts.Add(id);
             }
 
-            taskStatusController.Complete(dataEnumerationTask);
+            taskStatusController.Complete(missingDataEnumerationTask);
 
-            var dataUpdateTask = taskStatusController.Create(updateProductsTask, "Enumerate required data updates");
+            var addUpdatedTask = taskStatusController.Create(updateProductsTask, "Enumerate required data updates");
 
-            if (requiredUpdatesController != null)
-                updatedProducts.AddRange(requiredUpdatesController.GetRequiredUpdates());
+            updatedProducts.AddRange(updatedDataController.EnumerateIds());
 
-            taskStatusController.Complete(dataUpdateTask);
+            taskStatusController.Complete(addUpdatedTask);
 
             var currentProduct = 0;
 
