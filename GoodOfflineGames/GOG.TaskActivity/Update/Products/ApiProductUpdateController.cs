@@ -15,7 +15,7 @@ namespace GOG.TaskActivities.Update.Products
             IDataController<ApiProduct> apiProductDataController,
             IDataController<Product> productsDataController,
             IDataController<long> updatedDataController,
-            IGetDelegate getDelegate,
+            IGetDeserializedDelegate<ApiProduct> getApiProductDelegate,
             ISerializationController<string> serializationController,
             IUpdateUriController updateUriController,
             ITaskStatus taskStatus,
@@ -25,7 +25,7 @@ namespace GOG.TaskActivities.Update.Products
                 apiProductDataController,
                 productsDataController,
                 updatedDataController,
-                getDelegate,
+                getApiProductDelegate,
                 serializationController,
                 null, // throttleController
                 updateUriController,

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Extraction;
 using Interfaces.Serialization;
 using Interfaces.Network;
 
-namespace GOG.TaskActivities.Update.Dependencies.GameProductData
+namespace GOG.TaskActivities.Update.Dependencies
 {
-    public class GetGOGDataDelegate : IGetDelegate
+    public class GetGOGDataDelegate<T> : IGetDeserializedDelegate<T>
     {
         private INetworkController networkController;
         private IExtractionController gogDataExtractionController;
@@ -26,23 +24,21 @@ namespace GOG.TaskActivities.Update.Dependencies.GameProductData
             this.serializationController = serializationController;
         }
 
-        public async Task<string> Get(string uri, IDictionary<string, string> parameters = null)
+        public async Task<T> GetDeserialized(string uri, IDictionary<string, string> parameters = null)
         {
             var response = await networkController.Get(uri, parameters);
 
-            var gogDataCollection = gogDataExtractionController.ExtractMultiple(response);
+            var dataCollection = gogDataExtractionController.ExtractMultiple(response);
 
-            if (gogDataCollection == null)
-                return null;
+            if (dataCollection == null)
+                return default(T);
 
-            var content = gogDataCollection.First();
+            var content = dataCollection.First();
 
-            var gogData = serializationController.Deserialize<Models.GOGData>(content);
-            if (gogData == null) return string.Empty;
+            var gogData = serializationController.Deserialize<T>(content);
+            return gogData;
 
-            var gameProductData = gogData.GameProductData;
-
-            return serializationController.Serialize(gameProductData);
+            //var gameProductData = gogData.GameProductData;
         }
     }
 }

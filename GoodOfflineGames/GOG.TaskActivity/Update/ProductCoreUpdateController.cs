@@ -25,7 +25,8 @@ namespace GOG.TaskActivities.Update
         private IDataController<long> updatedDataController;
 
         //private INetworkController networkController;
-        private IGetDelegate getDelegate;
+        //private IGetDelegate getDelegate;
+        private IGetDeserializedDelegate<UpdateType> getDataDelegate;
         private IThrottleController throttleController;
         private ISerializationController<string> serializationController;
 
@@ -42,7 +43,7 @@ namespace GOG.TaskActivities.Update
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
-            IGetDelegate getDelegate,
+            IGetDeserializedDelegate<UpdateType> getDataDelegate,
             ISerializationController<string> serializationController,
             IThrottleController throttleController,
             IUpdateUriController updateUriController,
@@ -58,7 +59,8 @@ namespace GOG.TaskActivities.Update
             this.listTypeDataController = listTypeDataController;
             this.updatedDataController = updatedDataController;
 
-            this.getDelegate = getDelegate;
+            //this.getDelegate = getDelegate;
+            this.getDataDelegate = getDataDelegate;
             this.serializationController = serializationController;
             this.throttleController = throttleController;
 
@@ -109,22 +111,23 @@ namespace GOG.TaskActivities.Update
                     Uris.Paths.GetUpdateUri(updateProductType),
                     updateUriController.GetUpdateUri(product));
 
-                var content = await getDelegate.Get(uri);
+                //var content = await getDelegate.Get(uri);
+                var data = await getDataDelegate.GetDeserialized(uri);
 
-                if (content == null)
-                {
-                    taskStatusController.Warn(updateProductsTask,
-                            "Product {0} doesn't have valid associated data of type: " + updateTypeDescription,
-                            product.Title);
-                    continue;
-                }
+                //if (content == null)
+                //{
+                //    taskStatusController.Warn(updateProductsTask,
+                //            "Product {0} doesn't have valid associated data of type: " + updateTypeDescription,
+                //            product.Title);
+                //    continue;
+                //}
 
-                var data = serializationController.Deserialize<UpdateType>(content);
+                //var data = serializationController.Deserialize<UpdateType>(content);
 
                 if (data != null)
                 {
                     connectionController?.Connect(data, product);
-                    additionalDetailsController?.AddDetails(data, content);
+                    //additionalDetailsController?.AddDetails(data, content);
 
                     await updateTypeDataController.UpdateAsync(updateProductsTask, data);
                 }

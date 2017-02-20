@@ -9,6 +9,11 @@ namespace Interfaces.Network
         Task<string> Get(string uri, IDictionary<string, string> parameters = null);
     }
 
+    public interface IGetDeserializedDelegate<T>
+    {
+        Task<T> GetDeserialized(string uri, IDictionary<string, string> parameters = null);
+    }
+
     public interface IGetResponseDelegate
     {
         Task<HttpResponseMessage> GetResponse(HttpMethod method, string uri, HttpContent content = null);
