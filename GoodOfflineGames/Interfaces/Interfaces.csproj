@@ -90,7 +90,7 @@
     <Compile Include="Network\UriController.cs" />
     <Compile Include="TaskActivity\TaskActivityController.cs" />
     <Compile Include="Tree\TreeToListController.cs" />
-    <Compile Include="UpdateDependencies\ConnectionController.cs" />
+    <Compile Include="Connection\ConnectDelegate.cs" />
     <Compile Include="UpdateDependencies\UpdateUriController.cs" />
     <Compile Include="Validation\ValidationChunk.cs" />
     <Compile Include="Validation\ValidationController.cs" />

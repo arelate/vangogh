@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.ProductTypes;
 using Interfaces.Network;
-using Interfaces.Serialization;
+using Interfaces.Connection;
 using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
 using Interfaces.Data;
@@ -28,7 +28,7 @@ namespace GOG.TaskActivities.Update
         private IThrottleController throttleController;
 
         private IUpdateUriController updateUriController;
-        private IConnectionController connectionController;
+        private IConnectDelegate<UpdateType, ListType> connectDelegate;
         private IAdditionalDetailsController additionalDetailsController;
 
         private ProductTypes updateProductType;
@@ -43,7 +43,7 @@ namespace GOG.TaskActivities.Update
             IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
             IThrottleController throttleController,
             IUpdateUriController updateUriController,
-            IConnectionController connectionController,
+            IConnectDelegate<UpdateType, ListType> connectDelegate,
             IAdditionalDetailsController additionalDetailsController,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
@@ -59,7 +59,7 @@ namespace GOG.TaskActivities.Update
             this.throttleController = throttleController;
 
             this.updateUriController = updateUriController;
-            this.connectionController = connectionController;
+            this.connectDelegate = connectDelegate;
             this.additionalDetailsController = additionalDetailsController;
 
             this.updateProductType = updateProductType;
@@ -109,7 +109,7 @@ namespace GOG.TaskActivities.Update
 
                 if (data != null)
                 {
-                    connectionController?.Connect(data, product);
+                    connectDelegate?.Connect(data, product);
                     //additionalDetailsController?.AddDetails(data, content);
 
                     await updateTypeDataController.UpdateAsync(updateProductsTask, data);

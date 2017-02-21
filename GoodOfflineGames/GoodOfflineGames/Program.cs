@@ -44,6 +44,7 @@ using GOG.Controllers.PageResults;
 using GOG.Controllers.Extraction;
 using GOG.Controllers.Enumeration;
 using GOG.Controllers.Network;
+using GOG.Controllers.Connection;
 
 using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
@@ -548,7 +549,8 @@ namespace GoodOfflineGames
 
             var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
 
-            var gameDetailsConnectionController = new GameDetailsConnectionController();
+            var gameDetailsAccountProductConnectDelegate = new GameDetailsAccountProductConnectDelegate();
+
             var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
                 serializationController,
                 languageController);
@@ -588,7 +590,7 @@ namespace GoodOfflineGames
                 getGameDetailsDelegate,
                 throttleController,
                 productUpdateUriController,
-                gameDetailsConnectionController,
+                gameDetailsAccountProductConnectDelegate,
                 gameDetailsDownloadDetailsController,
                 applicationTaskStatus,
                 taskStatusController);
