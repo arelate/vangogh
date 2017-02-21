@@ -483,7 +483,6 @@ namespace GoodOfflineGames
                     productsExtractionController,
                     requestPageController,
                     productsDataController,
-                    null, /* collectionProcessingController */
                     applicationTaskStatus,
                     taskStatusController);
 
@@ -513,9 +512,9 @@ namespace GoodOfflineGames
                     accountProductsExtractionController,
                     requestPageController,
                     accountProductsDataController,
-                    newUpdatedCollectionProcessingController,
                     applicationTaskStatus,
-                    taskStatusController);
+                    taskStatusController,
+                    newUpdatedCollectionProcessingController);
 
             #endregion
 
@@ -547,9 +546,6 @@ namespace GoodOfflineGames
             var productIdUpdateUriDelegate = new ProductIdUpdateUriDelegate();
             var productUrlUpdateUriDelegate = new ProductUrlUpdateUriDelegate();
             var accountProductIdUpdateUriDelegate = new AccountProductIdUpdateUriDelegate();
-
-            //var productUpdateUriController = new ProductUpdateUriController();
-            //var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
 
             var gameDetailsAccountProductConnectDelegate = new GameDetailsAccountProductConnectDelegate();
 

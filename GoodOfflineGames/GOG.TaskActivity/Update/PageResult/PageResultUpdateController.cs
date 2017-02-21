@@ -34,9 +34,9 @@ namespace GOG.TaskActivities.Update.PageResult
             IPageResultsExtractionController<PageType, Type> pageResultsExtractingController,
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
-            ICollectionProcessingController<Type> collectionProcessingController,
             ITaskStatus taskStatus,
-            ITaskStatusController taskStatusController) :
+            ITaskStatusController taskStatusController,
+            ICollectionProcessingController<Type> collectionProcessingController = null) :
             base(
                 taskStatus,
                 taskStatusController)
