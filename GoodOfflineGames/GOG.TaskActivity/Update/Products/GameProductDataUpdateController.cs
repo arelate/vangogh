@@ -1,7 +1,7 @@
 ﻿using Interfaces.ProductTypes;
 using Interfaces.Network;
 using Interfaces.Serialization;
-using Interfaces.UpdateDependencies;
+using Interfaces.UpdateUri;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
@@ -16,7 +16,7 @@ namespace GOG.TaskActivities.Update.Products
             IDataController<Product> productsDataController,
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<GameProductData> getGameProductDataDelegate,
-            IUpdateUriController updateUriController,
+            IGetUpdateUriDelegate<Product> getProductUpdateUriDelegate,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController):
             base(
@@ -26,7 +26,7 @@ namespace GOG.TaskActivities.Update.Products
                 updatedDataController,
                 getGameProductDataDelegate,
                 null, // throttleController
-                updateUriController,
+                getProductUpdateUriDelegate,
                 null, // connectionController
                 null, // additionalDetailsController
                 taskStatus,

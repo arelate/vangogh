@@ -6,6 +6,7 @@ using Interfaces.Network;
 using Interfaces.Connection;
 using Interfaces.Throttle;
 using Interfaces.UpdateDependencies;
+using Interfaces.UpdateUri;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
@@ -27,7 +28,7 @@ namespace GOG.TaskActivities.Update
         private IGetDeserializedDelegate<UpdateType> getDeserializedDelegate;
         private IThrottleController throttleController;
 
-        private IUpdateUriController updateUriController;
+        private IGetUpdateUriDelegate<ListType> getUpdateUriDelegate;
         private IConnectDelegate<UpdateType, ListType> connectDelegate;
         private IAdditionalDetailsController additionalDetailsController;
 
@@ -42,7 +43,7 @@ namespace GOG.TaskActivities.Update
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
             IThrottleController throttleController,
-            IUpdateUriController updateUriController,
+            IGetUpdateUriDelegate<ListType> getUpdateUriDelegate,
             IConnectDelegate<UpdateType, ListType> connectDelegate,
             IAdditionalDetailsController additionalDetailsController,
             ITaskStatus taskStatus,
@@ -58,7 +59,7 @@ namespace GOG.TaskActivities.Update
             this.getDeserializedDelegate = getDeserializedDelegate;
             this.throttleController = throttleController;
 
-            this.updateUriController = updateUriController;
+            this.getUpdateUriDelegate = getUpdateUriDelegate;
             this.connectDelegate = connectDelegate;
             this.additionalDetailsController = additionalDetailsController;
 
@@ -82,7 +83,7 @@ namespace GOG.TaskActivities.Update
 
             taskStatusController.Complete(missingDataEnumerationTask);
 
-            var addUpdatedTask = taskStatusController.Create(updateProductsTask, "Enumerate required data updates");
+            var addUpdatedTask = taskStatusController.Create(updateProductsTask, "Add updated or new products");
 
             updatedProducts.AddRange(updatedDataController.EnumerateIds());
 
@@ -103,7 +104,7 @@ namespace GOG.TaskActivities.Update
 
                 var uri = string.Format(
                     Uris.Paths.GetUpdateUri(updateProductType),
-                    updateUriController.GetUpdateUri(product));
+                    getUpdateUriDelegate.GetUpdateUri(product));
 
                 var data = await getDeserializedDelegate.GetDeserialized(uri);
 

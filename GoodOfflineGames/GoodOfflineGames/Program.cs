@@ -45,15 +45,14 @@ using GOG.Controllers.Extraction;
 using GOG.Controllers.Enumeration;
 using GOG.Controllers.Network;
 using GOG.Controllers.Connection;
+using GOG.Controllers.UpdateUri;
 
 using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlisted;
-using GOG.TaskActivities.Update.Dependencies.Product;
 using GOG.TaskActivities.Update.Dependencies.GameDetails;
-using GOG.TaskActivities.Update.Dependencies.GameProductData;
 using GOG.TaskActivities.Update.Products;
 using GOG.TaskActivities.Update.Screenshots;
 using GOG.TaskActivities.Download.Sources;
@@ -545,9 +544,12 @@ namespace GoodOfflineGames
             var getGameProductDataDeserializedDelegate = new GetGameProductDataDeserializedDelegate(
                 getGOGDataDelegate);
 
-            var productUpdateUriController = new ProductUpdateUriController();
+            var productIdUpdateUriDelegate = new ProductIdUpdateUriDelegate();
+            var productUrlUpdateUriDelegate = new ProductUrlUpdateUriDelegate();
+            var accountProductIdUpdateUriDelegate = new AccountProductIdUpdateUriDelegate();
 
-            var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
+            //var productUpdateUriController = new ProductUpdateUriController();
+            //var gameProductDataUpdateUriController = new GameProductDataUpdateUriController();
 
             var gameDetailsAccountProductConnectDelegate = new GameDetailsAccountProductConnectDelegate();
 
@@ -562,7 +564,7 @@ namespace GoodOfflineGames
                 productsDataController,
                 updatedDataController,
                 getGameProductDataDeserializedDelegate,
-                gameProductDataUpdateUriController,
+                productUrlUpdateUriDelegate,
                 applicationTaskStatus,
                 taskStatusController);
 
@@ -575,7 +577,7 @@ namespace GoodOfflineGames
                 productsDataController,
                 updatedDataController,
                 getApriProductDelegate,
-                productUpdateUriController,
+                productIdUpdateUriDelegate,
                 applicationTaskStatus,
                 taskStatusController);
 
@@ -589,7 +591,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 getGameDetailsDelegate,
                 throttleController,
-                productUpdateUriController,
+                accountProductIdUpdateUriDelegate,
                 gameDetailsAccountProductConnectDelegate,
                 gameDetailsDownloadDetailsController,
                 applicationTaskStatus,
@@ -609,8 +611,6 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             #endregion
-
-
 
             // dependencies for download controllers
 

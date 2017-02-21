@@ -1,11 +1,12 @@
 ﻿using Interfaces.ProductTypes;
 using Interfaces.Network;
-using Interfaces.Serialization;
-using Interfaces.UpdateDependencies;
+using Interfaces.UpdateUri;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
 using GOG.Models;
+
+using Models.ProductCore;
 
 namespace GOG.TaskActivities.Update.Products
 {
@@ -16,7 +17,7 @@ namespace GOG.TaskActivities.Update.Products
             IDataController<Product> productsDataController,
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<ApiProduct> getApiProductDelegate,
-            IUpdateUriController updateUriController,
+            IGetUpdateUriDelegate<Product> getProductUpdateUriDelegate,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base(
@@ -26,7 +27,7 @@ namespace GOG.TaskActivities.Update.Products
                 updatedDataController,
                 getApiProductDelegate,
                 null, // throttleController
-                updateUriController,
+                getProductUpdateUriDelegate,
                 null, // connectionController
                 null, // additionalDetailsController
                 taskStatus,

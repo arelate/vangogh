@@ -1,7 +1,7 @@
 ﻿using Interfaces.ProductTypes;
 using Interfaces.Network;
-using Interfaces.Serialization;
 using Interfaces.Throttle;
+using Interfaces.UpdateUri;
 using Interfaces.UpdateDependencies;
 using Interfaces.Connection;
 using Interfaces.Data;
@@ -19,7 +19,7 @@ namespace GOG.TaskActivities.Update.Products
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<GameDetails> getGameDetailsDelegate,
             IThrottleController throttleController,
-            IUpdateUriController updateUriController,
+            IGetUpdateUriDelegate<AccountProduct> getAccountProductUpdateUriDelegate,
             IConnectDelegate<GameDetails, AccountProduct> accountProductGameDetailsConnectDelegate,
             IAdditionalDetailsController additionalDetailsController,
             ITaskStatus taskStatus,
@@ -31,7 +31,7 @@ namespace GOG.TaskActivities.Update.Products
                 updatedDataController,
                 getGameDetailsDelegate,
                 throttleController,
-                updateUriController,
+                getAccountProductUpdateUriDelegate,
                 accountProductGameDetailsConnectDelegate,
                 additionalDetailsController,
                 taskStatus,

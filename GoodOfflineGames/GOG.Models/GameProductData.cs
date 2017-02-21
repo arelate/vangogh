@@ -82,7 +82,7 @@ namespace GOG.Models
         [DataMember(Name = "image")]
         public string Image { get; set; }
         [DataMember(Name = "url")]
-        public string url { get; set; }
+        public string Url { get; set; }
         [DataMember(Name = "supportUrl")]
         public string SupportUrl { get; set; }
         [DataMember(Name = "forumUrl")]
