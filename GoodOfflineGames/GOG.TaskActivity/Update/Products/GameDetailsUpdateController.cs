@@ -21,7 +21,6 @@ namespace GOG.TaskActivities.Update.Products
             IThrottleController throttleController,
             IGetUpdateUriDelegate<AccountProduct> getAccountProductUpdateUriDelegate,
             IConnectDelegate<GameDetails, AccountProduct> accountProductGameDetailsConnectDelegate,
-            IAdditionalDetailsController additionalDetailsController,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base(
@@ -30,12 +29,11 @@ namespace GOG.TaskActivities.Update.Products
                 accountProductsDataController,
                 updatedDataController,
                 getGameDetailsDelegate,
-                throttleController,
                 getAccountProductUpdateUriDelegate,
-                accountProductGameDetailsConnectDelegate,
-                additionalDetailsController,
                 taskStatus,
-                taskStatusController)
+                taskStatusController,
+                throttleController,
+                accountProductGameDetailsConnectDelegate)
         {
             // ...
         }

@@ -5,7 +5,6 @@ using Interfaces.ProductTypes;
 using Interfaces.Network;
 using Interfaces.Connection;
 using Interfaces.Throttle;
-using Interfaces.UpdateDependencies;
 using Interfaces.UpdateUri;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
@@ -30,7 +29,6 @@ namespace GOG.TaskActivities.Update
 
         private IGetUpdateUriDelegate<ListType> getUpdateUriDelegate;
         private IConnectDelegate<UpdateType, ListType> connectDelegate;
-        private IAdditionalDetailsController additionalDetailsController;
 
         private ProductTypes updateProductType;
 
@@ -42,12 +40,11 @@ namespace GOG.TaskActivities.Update
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
-            IThrottleController throttleController,
             IGetUpdateUriDelegate<ListType> getUpdateUriDelegate,
-            IConnectDelegate<UpdateType, ListType> connectDelegate,
-            IAdditionalDetailsController additionalDetailsController,
             ITaskStatus taskStatus,
-            ITaskStatusController taskStatusController) :
+            ITaskStatusController taskStatusController,
+            IThrottleController throttleController = null,
+            IConnectDelegate<UpdateType, ListType> connectDelegate = null) :
             base(
                 taskStatus,
                 taskStatusController)
@@ -61,7 +58,6 @@ namespace GOG.TaskActivities.Update
 
             this.getUpdateUriDelegate = getUpdateUriDelegate;
             this.connectDelegate = connectDelegate;
-            this.additionalDetailsController = additionalDetailsController;
 
             this.updateProductType = updateProductType;
             updateTypeDescription = typeof(UpdateType).Name;
@@ -111,8 +107,6 @@ namespace GOG.TaskActivities.Update
                 if (data != null)
                 {
                     connectDelegate?.Connect(data, product);
-                    //additionalDetailsController?.AddDetails(data, content);
-
                     await updateTypeDataController.UpdateAsync(updateProductsTask, data);
                 }
 

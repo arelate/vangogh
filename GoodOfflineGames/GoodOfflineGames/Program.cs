@@ -593,7 +593,6 @@ namespace GoodOfflineGames
                 throttleController,
                 accountProductIdUpdateUriDelegate,
                 gameDetailsAccountProductConnectDelegate,
-                gameDetailsDownloadDetailsController,
                 applicationTaskStatus,
                 taskStatusController);
 

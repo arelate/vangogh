@@ -26,10 +26,7 @@ namespace GOG.TaskActivities.Update.Products
                 productsDataController,
                 updatedDataController,
                 getApiProductDelegate,
-                null, // throttleController
                 getProductUpdateUriDelegate,
-                null, // connectionController
-                null, // additionalDetailsController
                 taskStatus,
                 taskStatusController)
         {
