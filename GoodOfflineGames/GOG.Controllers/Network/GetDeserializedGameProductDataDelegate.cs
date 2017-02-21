@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Network;
 using GOG.Models;
 
-namespace GOG.TaskActivities.Update.Dependencies.GameProductData
+namespace GOG.Controllers.Network
 {
     public class GetGameProductDataDeserializedDelegate: IGetDeserializedDelegate<Models.GameProductData>
     {

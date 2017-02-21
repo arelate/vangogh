@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Update\Dependencies\GameProductData\GetGameProductDataDeserializedDelegate.cs" />
     <Compile Include="Update\NewUpdatedAccountProducts\NewUpdatedCollectionProcessingController.cs" />
     <Compile Include="Update\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />
