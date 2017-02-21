@@ -6,27 +6,27 @@ using Interfaces.Extraction;
 using Interfaces.Serialization;
 using Interfaces.Network;
 
-namespace GOG.TaskActivities.Update.Dependencies
+namespace GOG.Controllers.Network
 {
-    public class GetGOGDataDelegate<T> : IGetDeserializedDelegate<T>
+    public class GetDeserializedGOGDataDelegate<T> : IGetDeserializedDelegate<T>
     {
-        private INetworkController networkController;
+        private IGetDelegate getDelegate;
         private IExtractionController gogDataExtractionController;
         private ISerializationController<string> serializationController;
 
-        public GetGOGDataDelegate(
-            INetworkController networkController,
+        public GetDeserializedGOGDataDelegate(
+            IGetDelegate getDelegate,
             IExtractionController gogDataExtractionController,
             ISerializationController<string> serializationController)
         {
-            this.networkController = networkController;
+            this.getDelegate = getDelegate;
             this.gogDataExtractionController = gogDataExtractionController;
             this.serializationController = serializationController;
         }
 
         public async Task<T> GetDeserialized(string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await networkController.Get(uri, parameters);
+            var response = await getDelegate.Get(uri, parameters);
 
             var dataCollection = gogDataExtractionController.ExtractMultiple(response);
 
@@ -37,8 +37,6 @@ namespace GOG.TaskActivities.Update.Dependencies
 
             var gogData = serializationController.Deserialize<T>(content);
             return gogData;
-
-            //var gameProductData = gogData.GameProductData;
         }
     }
 }

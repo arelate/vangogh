@@ -24,11 +24,8 @@ namespace GOG.TaskActivities.Update
         private IDataController<ListType> listTypeDataController;
         private IDataController<long> updatedDataController;
 
-        //private INetworkController networkController;
-        //private IGetDelegate getDelegate;
-        private IGetDeserializedDelegate<UpdateType> getDataDelegate;
+        private IGetDeserializedDelegate<UpdateType> getDeserializedDelegate;
         private IThrottleController throttleController;
-        private ISerializationController<string> serializationController;
 
         private IUpdateUriController updateUriController;
         private IConnectionController connectionController;
@@ -43,8 +40,7 @@ namespace GOG.TaskActivities.Update
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
-            IGetDeserializedDelegate<UpdateType> getDataDelegate,
-            ISerializationController<string> serializationController,
+            IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
             IThrottleController throttleController,
             IUpdateUriController updateUriController,
             IConnectionController connectionController,
@@ -59,9 +55,7 @@ namespace GOG.TaskActivities.Update
             this.listTypeDataController = listTypeDataController;
             this.updatedDataController = updatedDataController;
 
-            //this.getDelegate = getDelegate;
-            this.getDataDelegate = getDataDelegate;
-            this.serializationController = serializationController;
+            this.getDeserializedDelegate = getDeserializedDelegate;
             this.throttleController = throttleController;
 
             this.updateUriController = updateUriController;
@@ -111,18 +105,7 @@ namespace GOG.TaskActivities.Update
                     Uris.Paths.GetUpdateUri(updateProductType),
                     updateUriController.GetUpdateUri(product));
 
-                //var content = await getDelegate.Get(uri);
-                var data = await getDataDelegate.GetDeserialized(uri);
-
-                //if (content == null)
-                //{
-                //    taskStatusController.Warn(updateProductsTask,
-                //            "Product {0} doesn't have valid associated data of type: " + updateTypeDescription,
-                //            product.Title);
-                //    continue;
-                //}
-
-                //var data = serializationController.Deserialize<UpdateType>(content);
+                var data = await getDeserializedDelegate.GetDeserialized(uri);
 
                 if (data != null)
                 {

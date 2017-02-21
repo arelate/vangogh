@@ -43,13 +43,13 @@ using GOG.Models;
 using GOG.Controllers.PageResults;
 using GOG.Controllers.Extraction;
 using GOG.Controllers.Enumeration;
+using GOG.Controllers.Network;
 
 using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlisted;
-using GOG.TaskActivities.Update.Dependencies;
 using GOG.TaskActivities.Update.Dependencies.Product;
 using GOG.TaskActivities.Update.Dependencies.GameDetails;
 using GOG.TaskActivities.Update.Dependencies.GameProductData;
@@ -521,15 +521,12 @@ namespace GoodOfflineGames
 
             #region Update.Wishlisted
 
-            var getProductsPageResultDelegate = new GetGOGDataDelegate<ProductsPageResult>(networkController,
+            var getProductsPageResultDelegate = new GetDeserializedGOGDataDelegate<ProductsPageResult>(networkController,
                 gogDataExtractionController,
                 serializationController);
 
             var wishlistedUpdateController = new WishlistedUpdateController(
                 getProductsPageResultDelegate,
-                //networkController,
-                //gogDataExtractionController,
-                //serializationController,
                 wishlistedDataController,
                 applicationTaskStatus,
                 taskStatusController);
@@ -540,7 +537,7 @@ namespace GoodOfflineGames
 
             // dependencies for update controllers
 
-            var getGOGDataDelegate = new GetGOGDataDelegate<GOGData>(networkController,
+            var getGOGDataDelegate = new GetDeserializedGOGDataDelegate<GOGData>(networkController,
                 gogDataExtractionController,
                 serializationController);
 
@@ -563,14 +560,12 @@ namespace GoodOfflineGames
                 productsDataController,
                 updatedDataController,
                 getGameProductDataDeserializedDelegate,
-                serializationController,
                 gameProductDataUpdateUriController,
                 applicationTaskStatus,
                 taskStatusController);
 
-            var getApriProductDelegate = new GetGOGDataDelegate<ApiProduct>(
+            var getApriProductDelegate = new GetDeserializedGOGModelDelegate<ApiProduct>(
                 networkController, 
-                gogDataExtractionController, 
                 serializationController);
 
             var apiProductUpdateController = new ApiProductUpdateController(
@@ -578,14 +573,12 @@ namespace GoodOfflineGames
                 productsDataController,
                 updatedDataController,
                 getApriProductDelegate,
-                serializationController,
                 productUpdateUriController,
                 applicationTaskStatus,
                 taskStatusController);
 
-            var getGameDetailsDelegate = new GetGOGDataDelegate<GameDetails>(
+            var getGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
                 networkController,
-                gogDataExtractionController,
                 serializationController);
 
             var gameDetailsUpdateController = new GameDetailsUpdateController(
@@ -593,7 +586,6 @@ namespace GoodOfflineGames
                 accountProductsDataController,
                 updatedDataController,
                 getGameDetailsDelegate,
-                serializationController,
                 throttleController,
                 productUpdateUriController,
                 gameDetailsConnectionController,

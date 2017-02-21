@@ -45,6 +45,8 @@
     <Compile Include="Enumeration\GameDetailsFileEnumerationController.cs" />
     <Compile Include="Enumeration\GameDetailsDirectoryEnumerationController.cs" />
     <Compile Include="Enumeration\GameDetailsManualUrlEnumerationController.cs" />
+    <Compile Include="Network\GetDeserializedGOGModelDelegate.cs" />
+    <Compile Include="Network\GetDeserializedGOGDataDelegate.cs" />
     <Compile Include="PageResults\PageResultController.cs" />
     <Compile Include="Extraction\AccountProductsExtractionController.cs" />
     <Compile Include="Extraction\ProductsExtractingController.cs" />
