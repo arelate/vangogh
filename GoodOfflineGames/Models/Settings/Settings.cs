@@ -27,8 +27,6 @@ namespace Models.Settings
         public bool Products { get; set; }
         [DataMember(Name = "accountProducts")]
         public bool AccountProducts { get; set; }
-        [DataMember(Name = "newUpdatedAccountProducts")]
-        public bool NewUpdatedAccountProducts { get; set; }
         [DataMember(Name = "wishlist")]
         public bool Wishlist { get; set; }
         [DataMember(Name = "gameProductData")]

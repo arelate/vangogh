@@ -501,9 +501,6 @@ namespace GoodOfflineGames
                 lastKnownValidDataController,
                 taskStatusController);
 
-            if (!settings.Update.NewUpdatedAccountProducts)
-                newUpdatedCollectionProcessingController = null;
-
             var accountProductsUpdateController = new PageResultUpdateController<
                 AccountProductsPageResult,
                 AccountProduct>(

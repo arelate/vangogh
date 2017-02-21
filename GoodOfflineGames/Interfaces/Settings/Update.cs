@@ -10,11 +10,6 @@
         bool AccountProducts { get; set; }
     }
 
-    public interface INewUpdatedAccountProductsProperty
-    {
-        bool NewUpdatedAccountProducts { get; set; }
-    }
-
     public interface IWishlistProperty
     {
         bool Wishlist { get; set; }
@@ -43,7 +38,6 @@
     public interface IUpdateProperties:
         IProductsProperty,
         IAccountProductsProperty,
-        INewUpdatedAccountProductsProperty,
         IWishlistProperty,
         IGameProductDataProperty,
         IApiProductsProperty,
