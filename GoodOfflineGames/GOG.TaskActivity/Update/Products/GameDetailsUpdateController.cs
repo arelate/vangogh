@@ -2,7 +2,6 @@
 using Interfaces.Network;
 using Interfaces.Throttle;
 using Interfaces.UpdateUri;
-using Interfaces.UpdateDependencies;
 using Interfaces.Connection;
 using Interfaces.Data;
 using Interfaces.TaskStatus;

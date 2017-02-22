@@ -52,7 +52,6 @@ using GOG.TaskActivities.Load;
 using GOG.TaskActivities.Update.PageResult;
 using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlisted;
-using GOG.TaskActivities.Update.Dependencies.GameDetails;
 using GOG.TaskActivities.Update.Products;
 using GOG.TaskActivities.Update.Screenshots;
 using GOG.TaskActivities.Download.Sources;
@@ -546,10 +545,6 @@ namespace GoodOfflineGames
 
             var gameDetailsAccountProductConnectDelegate = new GameDetailsAccountProductConnectDelegate();
 
-            var gameDetailsDownloadDetailsController = new GameDetailsDownloadDetailsController(
-                serializationController,
-                languageController);
-
             // product update controllers
 
             var gameProductDataUpdateController = new GameProductDataUpdateController(
@@ -574,9 +569,14 @@ namespace GoodOfflineGames
                 applicationTaskStatus,
                 taskStatusController);
 
-            var getGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
-                networkController,
+            var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
+                networkController, 
                 serializationController);
+
+            var getGameDetailsDelegate = new GetDeserializedGameDetailsDelegate(
+                networkController,
+                serializationController,
+                languageController);
 
             var gameDetailsUpdateController = new GameDetailsUpdateController(
                 gameDetailsDataController,

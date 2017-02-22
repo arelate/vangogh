@@ -6,7 +6,7 @@ using GOG.Models;
 
 namespace GOG.Controllers.Network
 {
-    public class GetGameProductDataDeserializedDelegate: IGetDeserializedDelegate<Models.GameProductData>
+    public class GetGameProductDataDeserializedDelegate: IGetDeserializedDelegate<GameProductData>
     {
         private IGetDeserializedDelegate<GOGData> gogDataGetDeserializedDelegate;
 
@@ -16,7 +16,7 @@ namespace GOG.Controllers.Network
             this.gogDataGetDeserializedDelegate = gogDataGetDeserializedDelegate;
         }
 
-        public async Task<Models.GameProductData> GetDeserialized(string uri, IDictionary<string, string> parameters = null)
+        public async Task<GameProductData> GetDeserialized(string uri, IDictionary<string, string> parameters = null)
         {
             var gogData = await gogDataGetDeserializedDelegate.GetDeserialized(uri, parameters);
             return gogData.GameProductData;

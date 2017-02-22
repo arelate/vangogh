@@ -1,31 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
-using Interfaces.UpdateDependencies;
+using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Language;
 
-namespace GOG.TaskActivities.Update.Dependencies.GameDetails
+using GOG.Models;
+
+namespace GOG.Controllers.Network
 {
-    public class GameDetailsDownloadDetailsController : IAdditionalDetailsController
+    public class GetDeserializedGameDetailsDelegate : IGetDeserializedDelegate<GameDetails>
     {
+        private IGetDelegate getDelegate;
+        private ISerializationController<string> serializationController;
+        private ILanguageController languageController;
+
+        public GetDeserializedGameDetailsDelegate(
+            IGetDelegate getDelegate,
+            ISerializationController<string> serializationController,
+            ILanguageController languageController)
+        {
+            this.getDelegate = getDelegate;
+            this.serializationController = serializationController;
+            this.languageController = languageController;
+        }
+
         private const string downloadsStart = "[[";
         private const string downloadsEnd = "]]";
         private const string nullString = "null";
         private const string emptyString = "";
 
-        private ISerializationController<string> serializationController;
-        private ILanguageController languageController;
-
-        public GameDetailsDownloadDetailsController(
-            ISerializationController<string> serializationController,
-            ILanguageController languageController)
-        {
-            this.serializationController = serializationController;
-            this.languageController = languageController;
-        }
 
         private bool ContainsLanguageDownloads(string input)
         {
@@ -107,10 +114,12 @@ namespace GOG.TaskActivities.Update.Dependencies.GameDetails
             return osDownloads;
         }
 
-        public void AddDetails<Type>(Type element, string data)
+        public async Task<GameDetails> GetDeserialized(string uri, IDictionary<string, string> parameters = null)
         {
-            var gameDetails = element as Models.GameDetails;
-            if (gameDetails == null) return;
+            var data = await getDelegate.Get(uri, parameters);
+            var gameDetails = serializationController.Deserialize<GameDetails>(data);
+
+            if (gameDetails == null) return null;
 
             var downloadStrings = new List<string>();
             var gameDetailsLanguageDownloads = new List<Models.OperatingSystemsDownloads>();
@@ -148,6 +157,8 @@ namespace GOG.TaskActivities.Update.Dependencies.GameDetails
             }
 
             gameDetails.LanguageDownloads = gameDetailsLanguageDownloads.ToArray();
+
+            throw new NotImplementedException();
         }
     }
 }
