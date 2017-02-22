@@ -18,9 +18,9 @@ namespace GOG.TaskActivities.Authorization
         private IUriController uriController;
         private INetworkController networkController;
         private ISerializationController<string> serializationController;
-        private IExtractionController loginTokenExtractionController;
-        private IExtractionController loginIdExtractionController;
-        private IExtractionController loginUsernameExtractionController;
+        private IStringExtractionController loginTokenExtractionController;
+        private IStringExtractionController loginIdExtractionController;
+        private IStringExtractionController loginUsernameExtractionController;
         private IConsoleController consoleController;
         private IAuthenticationProperties authenticateProperties;
         private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
@@ -30,9 +30,9 @@ namespace GOG.TaskActivities.Authorization
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IExtractionController loginTokenExtractionController,
-            IExtractionController loginIdExtractionController,
-            IExtractionController loginUsernameExtractionController,
+            IStringExtractionController loginTokenExtractionController,
+            IStringExtractionController loginIdExtractionController,
+            IStringExtractionController loginUsernameExtractionController,
             IConsoleController consoleController,
             IAuthenticationProperties authenticateProperties,
             IAuthenticationPropertiesValidationController  authenticationPropertiesValidationController,

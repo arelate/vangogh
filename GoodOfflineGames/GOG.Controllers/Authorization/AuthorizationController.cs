@@ -28,9 +28,9 @@ namespace GOG.Controllers.Authorization
         private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
         private IUriController uriController;
         private INetworkController networkController;
-        private IExtractionController loginTokenExtractionController;
-        private IExtractionController loginIdExtractionController;
-        private IExtractionController loginUsernameExtractionController;
+        private IStringExtractionController loginTokenExtractionController;
+        private IStringExtractionController loginIdExtractionController;
+        private IStringExtractionController loginUsernameExtractionController;
         private IConsoleController consoleController;
         private ISerializationController<string> serializationController;
 
@@ -39,9 +39,9 @@ namespace GOG.Controllers.Authorization
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IExtractionController loginTokenExtractionController,
-            IExtractionController loginIdExtractionController,
-            IExtractionController loginUsernameExtractionController,
+            IStringExtractionController loginTokenExtractionController,
+            IStringExtractionController loginIdExtractionController,
+            IStringExtractionController loginUsernameExtractionController,
             IConsoleController consoleController)
         {
             this.authenticationPropertiesValidationController = authenticationPropertiesValidationController;

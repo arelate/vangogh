@@ -7,7 +7,7 @@ namespace Interfaces.Extraction
         IEnumerable<Output> ExtractMultiple(Input data);
     }
 
-    public interface IExtractionController:
+    public interface IStringExtractionController:
         IExtractMultipleDelegate<string, string>
     {
         // ...

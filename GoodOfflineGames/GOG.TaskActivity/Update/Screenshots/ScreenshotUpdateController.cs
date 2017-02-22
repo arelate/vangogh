@@ -21,14 +21,14 @@ namespace GOG.TaskActivities.Update.Screenshots
         private IDataController<long> scheduledScreenshotsUpdatesDataController;
         private IDataController<Product> productsDataController;
         private INetworkController networkController;
-        private IExtractionController screenshotExtractionController;
+        private IStringExtractionController screenshotExtractionController;
 
         public ScreenshotUpdateController(
             IDataController<ProductScreenshots> screenshotsDataController,
             IDataController<long> scheduledScreenshotsUpdatesDataController,
             IDataController<Product> productsDataController,
             INetworkController networkController,
-            IExtractionController screenshotExtractionController,
+            IStringExtractionController screenshotExtractionController,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base(

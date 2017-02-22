@@ -59,7 +59,7 @@ namespace GOG.TaskActivities.Update.PageResult
             var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
 
             var extractTask = taskStatusController.Create(updateAllProductsTask, "Extract product data");
-            var products = pageResultsExtractingController.Extract(productsPageResults);
+            var products = pageResultsExtractingController.ExtractMultiple(productsPageResults);
             taskStatusController.Complete(extractTask);
 
             var updateTask = taskStatusController.Create(updateAllProductsTask, "Update products");

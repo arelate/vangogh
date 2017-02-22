@@ -6,7 +6,7 @@ using Models.Separators;
 
 namespace Controllers.Extraction
 {
-    public class GameDetailsDownloadsExtractionController : IExtractionController
+    public class GameDetailsDownloadsExtractionController : IStringExtractionController
     {
         public IEnumerable<string> ExtractMultiple(string data)
         {

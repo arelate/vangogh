@@ -11,12 +11,12 @@ namespace GOG.Controllers.Network
     public class GetDeserializedGOGDataDelegate<T> : IGetDeserializedDelegate<T>
     {
         private IGetDelegate getDelegate;
-        private IExtractionController gogDataExtractionController;
+        private IStringExtractionController gogDataExtractionController;
         private ISerializationController<string> serializationController;
 
         public GetDeserializedGOGDataDelegate(
             IGetDelegate getDelegate,
-            IExtractionController gogDataExtractionController,
+            IStringExtractionController gogDataExtractionController,
             ISerializationController<string> serializationController)
         {
             this.getDelegate = getDelegate;

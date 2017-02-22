@@ -9,7 +9,7 @@ using Interfaces.Extraction;
 
 namespace Controllers.Extraction
 {
-    public class ScreenshotExtractionController : IExtractionController
+    public class ScreenshotExtractionController : IStringExtractionController
     {
         private const string attributePrefix = "data-src=\"";
         private Regex regex = new Regex(attributePrefix + "\\S*\"");

@@ -585,6 +585,10 @@ namespace GoodOfflineGames
 
             var sanitizationController = new SanitizationController();
 
+            var operatingSystemsDownloadsExtractionController = new OperatingSystemsDownloadsExtractionController(
+                sanitizationController,
+                languageController);
+
             var getGameDetailsDelegate = new GetDeserializedGameDetailsDelegate(
                 networkController,
                 serializationController,
@@ -592,7 +596,8 @@ namespace GoodOfflineGames
                 languageDownloadsContainmentController,
                 gameDetailsLanguagesExtractionController,
                 gameDetailsDownloadsExtractionController,
-                sanitizationController);
+                sanitizationController,
+                operatingSystemsDownloadsExtractionController);
 
             var gameDetailsUpdateController = new GameDetailsUpdateController(
                 gameDetailsDataController,

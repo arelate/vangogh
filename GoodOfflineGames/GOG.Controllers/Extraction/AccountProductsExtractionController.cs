@@ -8,7 +8,7 @@ namespace GOG.Controllers.Extraction
 {
     public class AccountProductsExtractionController : IPageResultsExtractionController<AccountProductsPageResult, AccountProduct>
     {
-        public IList<AccountProduct> Extract(IList<AccountProductsPageResult> pageResults)
+        public IEnumerable<AccountProduct> ExtractMultiple(IList<AccountProductsPageResult> pageResults)
         {
             var products = new List<AccountProduct>();
 

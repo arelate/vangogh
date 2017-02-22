@@ -5,7 +5,7 @@ using Interfaces.Extraction;
 
 namespace Controllers.Extraction
 {
-    public abstract class ValueAttributeExtractionController: IExtractionController
+    public abstract class ValueAttributeExtractionController: IStringExtractionController
     {
         internal string pattern;
 

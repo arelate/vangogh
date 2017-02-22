@@ -5,7 +5,7 @@ using Interfaces.Extraction;
 
 namespace Controllers.Extraction
 {
-    public class GOGDataExtractionController : IExtractionController
+    public class GOGDataExtractionController : IStringExtractionController
     {
         private const string gogDataPrefix = "var gogData = ";
         private Regex regex = new Regex(gogDataPrefix + "(.*)");

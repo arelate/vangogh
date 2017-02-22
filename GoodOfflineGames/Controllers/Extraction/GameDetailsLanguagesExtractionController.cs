@@ -8,7 +8,7 @@ using Interfaces.Extraction;
 
 namespace Controllers.Extraction
 {
-    public class GameDetailsLanguagesExtractionController : IExtractionController
+    public class GameDetailsLanguagesExtractionController : IStringExtractionController
     {
         public IEnumerable<string> ExtractMultiple(string data)
         {
