@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Interfaces.Network;
 using Interfaces.Serialization;
 using Interfaces.Language;
+using Interfaces.Containment;
+using Interfaces.Extraction;
+using Interfaces.Sanitization;
 
 using GOG.Models;
 
@@ -18,80 +21,38 @@ namespace GOG.Controllers.Network
         private ISerializationController<string> serializationController;
         private ILanguageController languageController;
 
+        private IContainmentController<string> languageDownloadsContainmentController;
+        private IExtractionController languagesExtractionController;
+        private IExtractionController downloadsExtractionController;
+        private ISanitizationController sanitizationController;
+
         public GetDeserializedGameDetailsDelegate(
             IGetDelegate getDelegate,
             ISerializationController<string> serializationController,
-            ILanguageController languageController)
+            ILanguageController languageController,
+            IContainmentController<string> languageDownloadsContainmentController,
+            IExtractionController languagesExtractionController,
+            IExtractionController downloadsExtractionController,
+            ISanitizationController sanitizationController)
         {
             this.getDelegate = getDelegate;
             this.serializationController = serializationController;
             this.languageController = languageController;
+
+            this.languageDownloadsContainmentController = languageDownloadsContainmentController;
+            this.languagesExtractionController = languagesExtractionController;
+            this.downloadsExtractionController = downloadsExtractionController;
+            this.sanitizationController = sanitizationController;
         }
 
-        private const string downloadsStart = "[[";
-        private const string downloadsEnd = "]]";
-        private const string nullString = "null";
-        private const string emptyString = "";
-
-
-        private bool ContainsLanguageDownloads(string input)
-        {
-            return input.Contains(downloadsStart) &&
-                input.Contains(downloadsEnd);
-        }
-
-        private string ExtractSingle(string input)
-        {
-            // downloads are double array and so far nothing else in the game details data is
-            // so we'll leverage this fact to extract actual content
-
-            string result = string.Empty;
-
-            int fromIndex = input.IndexOf(downloadsStart),
-                toIndex = input.IndexOf(downloadsEnd);
-
-            if (fromIndex < toIndex)
-                result = input.Substring(
-                    fromIndex,
-                    toIndex - fromIndex + downloadsEnd.Length);
-
-            return result;
-        }
-
-        private string SanitizeSingle(string inputString, string sanitizedValue)
-        {
-            return inputString.Replace(sanitizedValue, nullString);
-        }
-
-        private string SanitizeMultiple(string inputString, IEnumerable<string> sanitizedValues)
-        {
-            foreach (var sanitizedValue in sanitizedValues)
-                inputString = inputString.Replace(sanitizedValue, emptyString);
-
-            return inputString;
-        }
-
-        public IEnumerable<string> ExtractMultiple(string data)
-        {
-            const string languagePattern = @"\[""[\w\\ ]*"",";
-            var regex = new Regex(languagePattern);
-
-            var match = regex.Match(data);
-            while (match.Success)
-            {
-                yield return match.Value.Substring(1);
-                match = match.NextMatch();
-            }
-        }
-
-        public List<Models.OperatingSystemsDownloads> ExtractLanguageDownloads(
-            Models.OperatingSystemsDownloads[][] downloads,
+        public List<OperatingSystemsDownloads> ExtractLanguageDownloads(
+            OperatingSystemsDownloads[][] downloads,
             IEnumerable<string> languages)
         {
             if (downloads?.Length != languages?.Count())
                 throw new InvalidOperationException("Extracted different number of downloads and languages.");
 
-            var osDownloads = new List<Models.OperatingSystemsDownloads>();
+            var osDownloads = new List<OperatingSystemsDownloads>();
 
             for (var ii = 0; ii < languages.Count(); ii++)
             {
@@ -99,8 +60,9 @@ namespace GOG.Controllers.Network
                 if (download == null)
                     throw new InvalidOperationException("Extracted downloads doesn't contain expected element");
 
-                var language = SanitizeMultiple(
+                var language = sanitizationController.SanitizeMultiple(
                     languages.ElementAt(ii),
+                    string.Empty,
                     new string[2] { "\"", "," });
 
                 language = Regex.Unescape(language);
@@ -122,30 +84,36 @@ namespace GOG.Controllers.Network
             if (gameDetails == null) return null;
 
             var downloadStrings = new List<string>();
-            var gameDetailsLanguageDownloads = new List<Models.OperatingSystemsDownloads>();
+            var gameDetailsLanguageDownloads = new List<OperatingSystemsDownloads>();
 
-            while (ContainsLanguageDownloads(data))
+            var nullString = "null";
+
+            while (languageDownloadsContainmentController.Contained(data))
             {
-                var downloadString = ExtractSingle(data);
+                var extractedDownloadStrings = downloadsExtractionController.ExtractMultiple(data);
+                var downloadString = extractedDownloadStrings.First();
+
                 downloadStrings.Add(downloadString);
 
                 // ...and sanitize it from original string
-                data = SanitizeSingle(data, downloadString);
+                data = sanitizationController.SanitizeMultiple(data, nullString, downloadString);
             }
 
             foreach (var downloadString in downloadStrings)
             {
-
-                var languages = ExtractMultiple(downloadString);
+                var languages = languagesExtractionController.ExtractMultiple(downloadString);
                 if (languages == null)
                     throw new InvalidOperationException("Download string doesn't seem to contain any languages.");
 
                 // ... and sanitize lanugage strings from downloads
-                var sanitizedDownloadsString = SanitizeMultiple(downloadString, languages);
+                var sanitizedDownloadsString = sanitizationController.SanitizeMultiple(
+                    downloadString, 
+                    string.Empty, 
+                    languages.ToArray());
 
                 // now it should be safe to deserialize langugage downloads
                 var downloads =
-                    serializationController.Deserialize<Models.OperatingSystemsDownloads[][]>(
+                    serializationController.Deserialize<OperatingSystemsDownloads[][]>(
                     sanitizedDownloadsString);
 
                 // and convert GOG multidimensional array of downloads to linear list
@@ -158,7 +126,7 @@ namespace GOG.Controllers.Network
 
             gameDetails.LanguageDownloads = gameDetailsLanguageDownloads.ToArray();
 
-            throw new NotImplementedException();
+            return gameDetails;
         }
     }
 }

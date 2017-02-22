@@ -34,6 +34,8 @@ using Controllers.RecycleBin;
 using Controllers.Routing;
 using Controllers.TaskStatus;
 using Controllers.Hash;
+using Controllers.Containment;
+using Controllers.Sanitization;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
@@ -573,10 +575,24 @@ namespace GoodOfflineGames
                 networkController, 
                 serializationController);
 
+            var languageDownloadsContainmentController = new StringContainmentController(
+                collectionController,
+                Models.Separators.Separators.GameDetailsDownloadsStart,
+                Models.Separators.Separators.GameDetailsDownloadsEnd);
+
+            var gameDetailsLanguagesExtractionController = new GameDetailsLanguagesExtractionController();
+            var gameDetailsDownloadsExtractionController = new GameDetailsDownloadsExtractionController();
+
+            var sanitizationController = new SanitizationController();
+
             var getGameDetailsDelegate = new GetDeserializedGameDetailsDelegate(
                 networkController,
                 serializationController,
-                languageController);
+                languageController,
+                languageDownloadsContainmentController,
+                gameDetailsLanguagesExtractionController,
+                gameDetailsDownloadsExtractionController,
+                sanitizationController);
 
             var gameDetailsUpdateController = new GameDetailsUpdateController(
                 gameDetailsDataController,

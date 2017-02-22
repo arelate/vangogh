@@ -8,26 +8,33 @@
   },
   "update": {
     "products": true,
-	"accountProducts": true,
-	"newUpdatedAccountProducts": true,
-	"wishlist": true,
-	"gameProductData": true,
-	"apiProducts": true,
-	"gameDetails": true,
-	"screenshots": true
+    "accountProducts": true,
+    "wishlist": true,
+    "gameProductData": true,
+    "apiProducts": true,
+    "gameDetails": true,
+    "screenshots": false
   },
   "download": {
-    "productsImages": true,
-	"accountProductsImages": true,
-	"screenshots": true,
-    "productsFiles": true,
-    "languages": [ "en" ],
-    "operatingSystems": [ "Windows", "Mac" ]
+    "productsImages": false,
+    "accountProductsImages": false,
+    "screenshots": false,
+    "productsFiles": false,
+    "languages": [
+      "en"
+    ],
+    "operatingSystems": [
+      "Windows",
+      "Mac"
+    ]
   },
-  "validation": true,
+  "validation": {
+    "download": false,
+    "validateUpdated": false
+  },
   "cleanup": {
-    "directories": true,
-	"files": true
+    "directories": false,
+    "files": false
   },
-  "log": true
+  "log": false
 }

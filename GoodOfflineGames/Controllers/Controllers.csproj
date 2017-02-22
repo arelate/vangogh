@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collection\CollectionController.cs" />
+    <Compile Include="Containment\StringContainmentDelegate.cs" />
     <Compile Include="Conversion\BytesToStringConversionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Data\IndexDataController.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Eligibility\FileValidationEligibilityController.cs" />
     <Compile Include="Eligibility\RemoveEntryEligibilityController.cs" />
     <Compile Include="Eligibility\UpdateRouteEligibilityController.cs" />
+    <Compile Include="Extraction\GameDetailsDownloadsExtractionController.cs" />
+    <Compile Include="Extraction\GameDetailsLanguagesExtractionController.cs" />
     <Compile Include="Extraction\LoginIdExtractionController.cs" />
     <Compile Include="Extraction\LoginUsernameExtractionController.cs" />
     <Compile Include="Extraction\ScreenshotExtractionController.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="Presentation\PresentationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="Routing\RoutingController.cs" />
+    <Compile Include="Sanitization\SanitizationController.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Data\DataController.cs" />
     <Compile Include="PropertiesValidation\DownloadPropertiesValidationController.cs" />

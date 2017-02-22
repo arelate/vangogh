@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collection\CollectionProcessing.cs" />
+    <Compile Include="Containment\ContainmentController.cs" />
     <Compile Include="Conversion\ConversionController.cs" />
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Destination\GetFilenameDelegate.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="Routing\RoutingController.cs" />
+    <Compile Include="Sanitization\SanitizationController.cs" />
     <Compile Include="Settings\Connection.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Settings\Validation.cs" />
