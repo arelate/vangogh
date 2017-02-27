@@ -5,7 +5,7 @@ namespace Interfaces.Collection
 {
     public interface IMapDelegate
     {
-        void Map<T>(IEnumerable<T> collection, Predicate<T> map);
+        void Map<T>(IEnumerable<T> collection, Action<T> map);
     }
 
     public interface IReduceDelegate

@@ -15,7 +15,7 @@ namespace Controllers.Collection
             return default(T);
         }
 
-        public void Map<T>(IEnumerable<T> collection, Predicate<T> map)
+        public void Map<T>(IEnumerable<T> collection, Action<T> map)
         {
             if (collection == null) return;
 
