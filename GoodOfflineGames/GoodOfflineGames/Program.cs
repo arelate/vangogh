@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-//using W
-
 using Controllers.Stream;
 using Controllers.Storage;
 using Controllers.File;
 using Controllers.Directory;
 using Controllers.Network;
-using Controllers.Download;
+using Controllers.FileDownload;
 using Controllers.Language;
 using Controllers.Serialization;
 using Controllers.Extraction;
@@ -50,6 +48,7 @@ using GOG.Controllers.Enumeration;
 using GOG.Controllers.Network;
 using GOG.Controllers.Connection;
 using GOG.Controllers.UpdateUri;
+using GOG.Controllers.FileDownload;
 
 using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
@@ -141,7 +140,7 @@ namespace GoodOfflineGames
                 cookiesController,
                 uriController);
 
-            var downloadController = new DownloadController(
+            var fileDownloadController = new FileDownloadController(
                 networkController,
                 streamController,
                 fileController,
@@ -561,7 +560,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var getApriProductDelegate = new GetDeserializedGOGModelDelegate<ApiProduct>(
-                networkController, 
+                networkController,
                 serializationController);
 
             var apiProductUpdateController = new ApiProductUpdateController(
@@ -574,7 +573,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
-                networkController, 
+                networkController,
                 serializationController);
 
             var languageDownloadsContainmentController = new StringContainmentController(
@@ -670,11 +669,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 gameDetailsManualUrlsEnumerationController);
 
-            //var validationUriResolutionController = new ValidationUriResolutionController();
-
             var downloadEntryValidationEligibilityController = new DownloadEntryValidationEligibilityController();
-            var updateRouteEligibilityController = new UpdateRouteEligibilityController();
-            var removeEntryEligibilityController = new RemoveEntryEligibilityController();
             var fileValidationEligibilityController = new FileValidationEligibilityController();
 
             var validationDownloadSourcesController = new ValidationDownloadSourcesController(
@@ -730,11 +725,7 @@ namespace GoodOfflineGames
                 ProductDownloadTypes.Image,
                 updatedDataController,
                 productDownloadsDataController,
-                routingController,
-                networkController,
-                downloadController,
-                updateRouteEligibilityController,
-                removeEntryEligibilityController,
+                fileDownloadController,
                 applicationTaskStatus,
                 taskStatusController);
 
@@ -742,23 +733,17 @@ namespace GoodOfflineGames
                 ProductDownloadTypes.Screenshot,
                 updatedDataController,
                 productDownloadsDataController,
-                routingController,
-                networkController,
-                downloadController,
-                updateRouteEligibilityController,
-                removeEntryEligibilityController,
+                fileDownloadController,
                 applicationTaskStatus,
                 taskStatusController);
+
+            var gameDetailsDownloadFromSourceDelegate = new GameDetailsDownloadFromSourceDelegate();
 
             var productFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.ProductFile,
                 updatedDataController,
                 productDownloadsDataController,
-                routingController,
-                networkController,
-                downloadController,
-                updateRouteEligibilityController,
-                removeEntryEligibilityController,
+                gameDetailsDownloadFromSourceDelegate,
                 applicationTaskStatus,
                 taskStatusController);
 
@@ -773,15 +758,13 @@ namespace GoodOfflineGames
                 applicationTaskStatus,
                 taskStatusController);
 
+            var validationDownloadFromSourceDelegate = new ValidationDownloadFromSourceDelegate();
+
             var validationProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.Validation,
                 updatedDataController,
                 productDownloadsDataController,
-                routingController,
-                networkController,
-                downloadController,
-                updateRouteEligibilityController,
-                removeEntryEligibilityController,
+                validationDownloadFromSourceDelegate,
                 applicationTaskStatus,
                 taskStatusController);
 

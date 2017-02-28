@@ -48,7 +48,7 @@
     <Compile Include="Destination\GetFilenameDelegate.cs" />
     <Compile Include="Destination\GetDirectoryDelegate.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
-    <Compile Include="Download\DownloadController.cs" />
+    <Compile Include="FileDownload\FileDownloadController.cs" />
     <Compile Include="Eligibility\ElegibilityDelegate.cs" />
     <Compile Include="Enumeration\EnumerationController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />

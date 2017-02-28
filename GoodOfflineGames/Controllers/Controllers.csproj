@@ -55,7 +55,7 @@
     <Compile Include="Destination\Filename\UriFilenameDelegate.cs" />
     <Compile Include="Destination\Filename\ValidationFilenameDelegate.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
-    <Compile Include="Download\DownloadController.cs" />
+    <Compile Include="FileDownload\FileDownloadController.cs" />
     <Compile Include="Eligibility\FileValidationEligibilityController.cs" />
     <Compile Include="Eligibility\RemoveEntryEligibilityController.cs" />
     <Compile Include="Eligibility\UpdateRouteEligibilityController.cs" />

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Interfaces.Download;
+using Interfaces.FileDownload;
 using Interfaces.Data;
-using Interfaces.Network;
-using Interfaces.Routing;
-using Interfaces.Eligibility;
 using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
@@ -20,21 +15,13 @@ namespace GOG.TaskActivities.Download.Processing
         private ProductDownloadTypes downloadType;
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
-        private IRoutingController routingController;
-        private INetworkController networkController;
-        private IDownloadController downloadController;
-        private IEligibilityDelegate<ProductDownloadEntry> updateRouteEligibilityDelegate;
-        private IEligibilityDelegate<ProductDownloadEntry> removeEntryEligibilityDelegate;
+        private IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate;
 
         public ProcessScheduledDownloadsController(
             ProductDownloadTypes downloadType,
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
-            IRoutingController routingController,
-            INetworkController networkController,
-            IDownloadController downloadController,
-            IEligibilityDelegate<ProductDownloadEntry> updateRouteEligibilityDelegate,
-            IEligibilityDelegate<ProductDownloadEntry> removeEntryEligibilityDelegate,
+            IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base(
@@ -44,12 +31,7 @@ namespace GOG.TaskActivities.Download.Processing
             this.downloadType = downloadType;
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
-            this.routingController = routingController;
-            this.networkController = networkController;
-            this.downloadController = downloadController;
-
-            this.updateRouteEligibilityDelegate = updateRouteEligibilityDelegate;
-            this.removeEntryEligibilityDelegate = removeEntryEligibilityDelegate;
+            this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
         }
 
         public override async Task ProcessTaskAsync()
@@ -90,53 +72,19 @@ namespace GOG.TaskActivities.Download.Processing
                         downloadEntries.Length,
                         sanitizedUri);
 
-                    var resolvedUri = string.Empty;
+                    await downloadFileFromSourceDelegate.DownloadFileFromSourceAsync(
+                        sanitizedUri,
+                        entry.Destination,
+                        processDownloadEntriesTask);
 
-                    var downloadEntryTask = taskStatusController.Create(processDownloadEntriesTask, "Download entry");
+                    var removeEntryTask = taskStatusController.Create(
+                        processDownloadEntriesTask,
+                        "Remove successfully downloaded scheduled entry");
 
-                    try
-                    {
-                        using (var response = await networkController.GetResponse(HttpMethod.Get, entry.SourceUri))
-                        {
-                            resolvedUri = response.RequestMessage.RequestUri.ToString();
+                    productDownloads.Downloads.Remove(entry);
+                    await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);
 
-                            if (updateRouteEligibilityDelegate.IsEligible(entry))
-                                await routingController.UpdateRouteAsync(
-                                    productDownloads.Id,
-                                    productDownloads.Title,
-                                    entry.SourceUri,
-                                    resolvedUri,
-                                    downloadEntryTask);
-
-                            await downloadController.DownloadFileAsync(response, entry.Destination, downloadEntryTask);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        taskStatusController.Warn(downloadEntryTask, 
-                            string.Format(
-                                "{0}: {1}", 
-                                resolvedUri, 
-                                ex.Message));
-                    }
-                    finally
-                    {
-                        taskStatusController.Complete(downloadEntryTask);
-                    }
-
-                    // there is no value in trying to redownload images/screenshots - so remove them on success
-                    // we won't be removing anything else as it might be used in the later steps
-                    if (removeEntryEligibilityDelegate.IsEligible(entry))
-                    {
-                        var removeEntryTask = taskStatusController.Create(
-                            processDownloadEntriesTask, 
-                            "Remove successfully downloaded scheduled entry");
-
-                        productDownloads.Downloads.Remove(entry);
-                        await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);
-
-                        taskStatusController.Complete(removeEntryTask);
-                    }
+                    taskStatusController.Complete(removeEntryTask);
                 }
 
                 taskStatusController.Complete(processDownloadEntriesTask);
