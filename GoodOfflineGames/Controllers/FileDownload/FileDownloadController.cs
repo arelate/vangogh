@@ -76,19 +76,9 @@ namespace Controllers.FileDownload
             }
         }
 
-        //resolvedUri = response.RequestMessage.RequestUri.ToString();
-        //if (updateRouteEligibilityDelegate.IsEligible(entry))
-        //    await routingController.UpdateRouteAsync(
-        //        productDownloads.Id,
-        //        productDownloads.Title,
-        //        entry.SourceUri,
-        //        resolvedUri,
-        //        downloadEntryTask);
-
         public async Task DownloadFileFromSourceAsync(string sourceUri, string destination, ITaskStatus taskStatus)
         {
             var downloadEntryTask = taskStatusController.Create(taskStatus, "Download entry");
-
             try
             {
                 using (var response = await networkController.GetResponse(HttpMethod.Get, sourceUri))

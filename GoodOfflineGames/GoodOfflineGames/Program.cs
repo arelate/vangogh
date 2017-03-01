@@ -737,7 +737,7 @@ namespace GoodOfflineGames
                 applicationTaskStatus,
                 taskStatusController);
 
-            var gameDetailsDownloadFromSourceDelegate = new GameDetailsDownloadFromSourceDelegate();
+            var gameDetailsDownloadFromSourceDelegate = new ManualUrlDownloadFromSourceDelegate();
 
             var productFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.ProductFile,
