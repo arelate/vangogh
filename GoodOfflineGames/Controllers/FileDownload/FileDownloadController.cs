@@ -76,12 +76,12 @@ namespace Controllers.FileDownload
             }
         }
 
-        public async Task DownloadFileFromSourceAsync(string sourceUri, string destination, ITaskStatus taskStatus)
+        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, ITaskStatus taskStatus)
         {
             var downloadEntryTask = taskStatusController.Create(taskStatus, "Download entry");
             try
             {
-                using (var response = await networkController.GetResponse(HttpMethod.Get, sourceUri))
+                using (var response = await networkController.GetResponse(HttpMethod.Head, sourceUri))
                     await DownloadFileFromResponseAsync(response, destination, downloadEntryTask);
             }
             catch (Exception ex)

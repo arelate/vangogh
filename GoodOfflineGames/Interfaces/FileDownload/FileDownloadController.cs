@@ -12,7 +12,12 @@ namespace Interfaces.FileDownload
 
     public interface IDownloadFileFromSourceDelegate
     {
-        Task DownloadFileFromSourceAsync(string sourceUri, string destination, ITaskStatus taskStatus);
+        Task DownloadFileFromSourceAsync(
+            long id,
+            string title,
+            string sourceUri, 
+            string destination, 
+            ITaskStatus taskStatus);
     }
 
     public interface IFileDownloadController:

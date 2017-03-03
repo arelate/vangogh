@@ -73,6 +73,8 @@ namespace GOG.TaskActivities.Download.Processing
                         sanitizedUri);
 
                     await downloadFileFromSourceDelegate.DownloadFileFromSourceAsync(
+                        id,
+                        productDownloads.Title,
                         sanitizedUri,
                         entry.Destination,
                         processDownloadEntriesTask);

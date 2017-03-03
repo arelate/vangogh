@@ -11,7 +11,7 @@ namespace GOG.Controllers.FileDownload
 {
     public class ValidationDownloadFromSourceDelegate: IDownloadFileFromSourceDelegate
     {
-        public Task DownloadFileFromSourceAsync(string sourceUri, string destination, ITaskStatus taskStatus)
+        public Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, ITaskStatus taskStatus)
         {
             throw new NotImplementedException();
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Interfaces.FileDownload;
@@ -30,18 +31,25 @@ namespace GOG.Controllers.FileDownload
             this.taskStatusController = taskStatusController;
         }
 
-        //resolvedUri = response.RequestMessage.RequestUri.ToString();
-        //if (updateRouteEligibilityDelegate.IsEligible(entry))
-        //    await routingController.UpdateRouteAsync(
-        //        productDownloads.Id,
-        //        productDownloads.Title,
-        //        entry.SourceUri,
-        //        resolvedUri,
-        //        downloadEntryTask);
-
-        public Task DownloadFileFromSourceAsync(string sourceUri, string destination, ITaskStatus taskStatus)
+        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, ITaskStatus taskStatus)
         {
-            throw new NotImplementedException();
+            var downloadTask = taskStatusController.Create(taskStatus, "Download manual url");
+
+            using (var response = await networkController.GetResponse(HttpMethod.Head, sourceUri))
+            {
+                var resolvedUri = response.RequestMessage.RequestUri.ToString();
+
+                await routingController.UpdateRouteAsync(
+                    id,
+                    title,
+                    sourceUri,
+                    resolvedUri,
+                    downloadTask);
+
+                await fileDownloadController.DownloadFileFromResponseAsync(response, destination, downloadTask);
+            }
+
+            taskStatusController.Complete(downloadTask);
         }
     }
 }

@@ -57,6 +57,8 @@ namespace GOG.Controllers.Authorization
         public async Task<bool> IsAuthorized()
         {
             var userDataString = await networkController.Get(Uris.Paths.Authentication.UserData);
+            if (string.IsNullOrEmpty(userDataString)) return false;
+
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
 
             return userData.IsLoggedIn;
