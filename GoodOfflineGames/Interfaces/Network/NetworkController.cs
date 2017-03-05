@@ -14,9 +14,9 @@ namespace Interfaces.Network
         Task<T> GetDeserialized(string uri, IDictionary<string, string> parameters = null);
     }
 
-    public interface IGetResponseDelegate
+    public interface IRequestResponseDelegate
     {
-        Task<HttpResponseMessage> GetResponse(HttpMethod method, string uri, HttpContent content = null);
+        Task<HttpResponseMessage> RequestResponse(HttpMethod method, string uri, HttpContent content = null);
     }
 
     public interface IPostDelegate
@@ -26,7 +26,7 @@ namespace Interfaces.Network
 
     public interface INetworkController :
         IGetDelegate,
-        IGetResponseDelegate,
+        IRequestResponseDelegate,
         IPostDelegate
     {
         // ... 

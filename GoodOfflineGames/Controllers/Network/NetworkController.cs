@@ -73,7 +73,7 @@ namespace Controllers.Network
         {
             string uri = uriController.ConcatenateUri(baseUri, parameters);
 
-            using (var response = await GetResponse(HttpMethod.Get, uri))
+            using (var response = await RequestResponse(HttpMethod.Get, uri))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -85,7 +85,7 @@ namespace Controllers.Network
             }
         }
 
-        public async Task<HttpResponseMessage> GetResponse(HttpMethod method, string uri, HttpContent content = null)
+        public async Task<HttpResponseMessage> RequestResponse(HttpMethod method, string uri, HttpContent content = null)
         {
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(cookieHeader, await cookiesController.GetCookieHeader());
@@ -105,7 +105,7 @@ namespace Controllers.Network
             if (data == null) data = string.Empty;
             var content = new StringContent(data, Encoding.UTF8, postMediaType);
 
-            using (var response = await GetResponse(HttpMethod.Post, uri, content))
+            using (var response = await RequestResponse(HttpMethod.Post, uri, content))
             {
                 response.EnsureSuccessStatusCode();
 

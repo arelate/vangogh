@@ -35,7 +35,7 @@ namespace GOG.Controllers.FileDownload
         {
             var downloadTask = taskStatusController.Create(taskStatus, "Download manual url");
 
-            using (var response = await networkController.GetResponse(HttpMethod.Head, sourceUri))
+            using (var response = await networkController.RequestResponse(HttpMethod.Head, sourceUri))
             {
                 var resolvedUri = response.RequestMessage.RequestUri.ToString();
 
