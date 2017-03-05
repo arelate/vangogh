@@ -3,6 +3,7 @@ using System.Linq;
 
 using GOG.Interfaces.Authorization;
 
+using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Console;

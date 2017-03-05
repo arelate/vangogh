@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Settings;
+using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Console;

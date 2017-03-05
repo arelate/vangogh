@@ -25,14 +25,6 @@ namespace GOG.TaskActivities.Validation
         private IDataController<long> scheduledCleanupDataController;
         private IRoutingController routingController;
 
-        //private readonly List<string> extensionsWhitelist = new List<string>(4) {
-        //    ".exe", // Windows
-        //    ".bin", // Windows
-        //    ".dmg", // Mac
-        //    ".pkg", // Mac
-        //    ".sh" // Linux
-        //};
-
         public ProcessValidationController(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,

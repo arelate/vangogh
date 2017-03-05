@@ -22,6 +22,14 @@ namespace Models.Uris
             public const string Api = Protocols.Https + "api." + GOGcom;
         }
 
+        public static class Extensions
+        {
+            public static class Validation
+            {
+                public const string ValidationExtension = ".xml";
+            }
+        }
+
         public static class Paths
         {
             public static class Authentication

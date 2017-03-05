@@ -55,6 +55,7 @@
     <Compile Include="Destination\Filename\UriFilenameDelegate.cs" />
     <Compile Include="Destination\Filename\ValidationFilenameDelegate.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
+    <Compile Include="Expectation\ValidationExpectedDelegate.cs" />
     <Compile Include="Extraction\SessionUriExtractionController.cs" />
     <Compile Include="FileDownload\FileDownloadController.cs" />
     <Compile Include="Extraction\GameDetailsDownloadsExtractionController.cs" />
@@ -98,7 +99,8 @@
     <Compile Include="Settings\SettingsController.cs" />
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
-    <Compile Include="Network\UriController.cs" />
+    <Compile Include="Uri\UriController.cs" />
+    <Compile Include="Uri\ValidationUriController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
   </ItemGroup>
   <ItemGroup>

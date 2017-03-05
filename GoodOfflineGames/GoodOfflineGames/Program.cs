@@ -5,6 +5,7 @@ using Controllers.Stream;
 using Controllers.Storage;
 using Controllers.File;
 using Controllers.Directory;
+using Controllers.Uri;
 using Controllers.Network;
 using Controllers.FileDownload;
 using Controllers.Language;
@@ -36,6 +37,7 @@ using Controllers.Hash;
 using Controllers.Containment;
 using Controllers.Sanitization;
 using Controllers.Session;
+using Controllers.Expectation;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
@@ -758,7 +760,16 @@ namespace GoodOfflineGames
                 applicationTaskStatus,
                 taskStatusController);
 
-            var validationDownloadFromSourceDelegate = new ValidationDownloadFromSourceDelegate();
+            var validationExpectedDelegate = new ValidationExpectedDelegate();
+            var validationUriController = new ValidationUriController(uriController);
+
+            var validationDownloadFromSourceDelegate = new ValidationDownloadFromSourceDelegate(
+                routingController, 
+                sessionController,
+                validationExpectedDelegate,
+                validationUriController,
+                fileDownloadController, 
+                taskStatusController);
 
             var validationProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
                 ProductDownloadTypes.Validation,

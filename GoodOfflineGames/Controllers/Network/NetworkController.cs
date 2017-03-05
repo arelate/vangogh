@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 
+using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Cookies;
 using Interfaces.Settings;
@@ -71,7 +72,7 @@ namespace Controllers.Network
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
-            string uri = uriController.ConcatenateUri(baseUri, parameters);
+            string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
             using (var response = await RequestResponse(HttpMethod.Get, uri))
             {
@@ -100,7 +101,7 @@ namespace Controllers.Network
             IDictionary<string, string> parameters = null,
             string data = null)
         {
-            string uri = uriController.ConcatenateUri(baseUri, parameters);
+            string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
             if (data == null) data = string.Empty;
             var content = new StringContent(data, Encoding.UTF8, postMediaType);
