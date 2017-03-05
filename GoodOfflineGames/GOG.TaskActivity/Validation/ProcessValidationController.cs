@@ -8,7 +8,6 @@ using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Data;
 using Interfaces.Routing;
-using Interfaces.Eligibility;
 using Interfaces.TaskStatus;
 
 using Models.ProductDownloads;
@@ -25,7 +24,14 @@ namespace GOG.TaskActivities.Validation
         private IDataController<long> lastKnownValidDataController;
         private IDataController<long> scheduledCleanupDataController;
         private IRoutingController routingController;
-        private IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate;
+
+        //private readonly List<string> extensionsWhitelist = new List<string>(4) {
+        //    ".exe", // Windows
+        //    ".bin", // Windows
+        //    ".dmg", // Mac
+        //    ".pkg", // Mac
+        //    ".sh" // Linux
+        //};
 
         public ProcessValidationController(
             IGetDirectoryDelegate getDirectoryDelegate,
@@ -36,7 +42,6 @@ namespace GOG.TaskActivities.Validation
             IDataController<long> lastKnownValidDataController,
             IDataController<long> scheduledCleanupDataController,
             IRoutingController routingController,
-            IEligibilityDelegate<ProductDownloadEntry> validationEligibilityDelegate,
             ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base(
@@ -52,7 +57,6 @@ namespace GOG.TaskActivities.Validation
             this.lastKnownValidDataController = lastKnownValidDataController;
             this.scheduledCleanupDataController = scheduledCleanupDataController;
             this.routingController = routingController;
-            this.validationEligibilityDelegate = validationEligibilityDelegate;
         }
 
         public override async Task ProcessTaskAsync()
@@ -77,9 +81,6 @@ namespace GOG.TaskActivities.Validation
 
                 foreach (var download in productDownloads.Downloads)
                 {
-                    if (!validationEligibilityDelegate.IsEligible(download))
-                        continue;
-
                     var resolvedUri = await routingController.TraceRouteAsync(id, download.SourceUri);
 
                     // use directory from source and file from resolved URI

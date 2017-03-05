@@ -49,7 +49,6 @@
     <Compile Include="Destination\GetDirectoryDelegate.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
     <Compile Include="FileDownload\FileDownloadController.cs" />
-    <Compile Include="Eligibility\ElegibilityDelegate.cs" />
     <Compile Include="Enumeration\EnumerationController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Collection\CollectionController.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="Routing\RoutingController.cs" />
     <Compile Include="Sanitization\SanitizationController.cs" />
+    <Compile Include="Session\SessionController.cs" />
     <Compile Include="Settings\Connection.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Settings\Validation.cs" />
@@ -97,9 +97,7 @@
     <Compile Include="Validation\ValidationController.cs" />
     <Compile Include="Validation\ValidationDataDownloadController.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Session\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

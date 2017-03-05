@@ -27,8 +27,8 @@ namespace Controllers.TaskStatus
 
         private const string progressTemplate = "{0:P1}, {1} of {2}";
 
-        private const string progressETATemplate = "ETA: %c{0}%c";
-        private readonly string[] progressETAColors = new string[] { "white", "default" };
+        private const string progressETATemplate = "ETA: %c{0}%c, avg. speed: %c{1}/s%c";
+        private readonly string[] progressETAColors = new string[] { "white", "default", "white", "default" };
 
         private const string childTasksTemplate = "%c{0}%c child task(s) complete";
         private readonly string[] childTasksColors = new string[] { "white", "default" };
@@ -200,12 +200,14 @@ namespace Controllers.TaskStatus
         {
             var elapsed = DateTime.UtcNow - started;
             var unitsPerSecond = current / elapsed.TotalSeconds;
+            var speed = bytesFormattingController.Format((long) unitsPerSecond);
             var remainingSeconds = (total - current) / unitsPerSecond;
 
             GetViewModelComponentWithSuffix(
                 stringBuilder,
                 progressETATemplate,
-                secondsFormattingController.Format((long)remainingSeconds));
+                secondsFormattingController.Format((long)remainingSeconds),
+                speed);
 
             colors.AddRange(progressETAColors);
         }

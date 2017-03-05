@@ -55,10 +55,8 @@
     <Compile Include="Destination\Filename\UriFilenameDelegate.cs" />
     <Compile Include="Destination\Filename\ValidationFilenameDelegate.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
+    <Compile Include="Extraction\SessionUriExtractionController.cs" />
     <Compile Include="FileDownload\FileDownloadController.cs" />
-    <Compile Include="Eligibility\FileValidationEligibilityController.cs" />
-    <Compile Include="Eligibility\RemoveEntryEligibilityController.cs" />
-    <Compile Include="Eligibility\UpdateRouteEligibilityController.cs" />
     <Compile Include="Extraction\GameDetailsDownloadsExtractionController.cs" />
     <Compile Include="Extraction\GameDetailsLanguagesExtractionController.cs" />
     <Compile Include="Extraction\LoginIdExtractionController.cs" />
@@ -82,6 +80,7 @@
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="PropertiesValidation\AuthenticationPropertiesValidationController.cs" />
+    <Compile Include="Session\SessionController.cs" />
     <Compile Include="TaskStatus\TaskStatusController.cs" />
     <Compile Include="TaskStatus\TaskStatusTreeToListController.cs" />
     <Compile Include="TaskStatus\TaskStatusViewController.cs" />
@@ -100,7 +99,6 @@
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="Network\UriController.cs" />
-    <Compile Include="Eligibility\DownloadEntryValidationEligibilityController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
   </ItemGroup>
   <ItemGroup>

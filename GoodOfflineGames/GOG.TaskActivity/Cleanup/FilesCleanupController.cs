@@ -6,7 +6,6 @@ using System.Linq;
 using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.Directory;
-using Interfaces.Eligibility;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.RecycleBin;
@@ -23,7 +22,6 @@ namespace GOG.TaskActivities.Cleanup
         private IEnumerateDelegate<string> filesEnumerationController;
         private IEnumerateDelegate<string> directoryEnumerationController;
         private IDirectoryController directoryController;
-        private IEligibilityDelegate<string> fileValidationEligibilityController;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IRecycleBinController recycleBinController;
@@ -34,7 +32,6 @@ namespace GOG.TaskActivities.Cleanup
             IEnumerateDelegate<string> filesEnumerationController,
             IEnumerateDelegate<string> directoryEnumerationController,
             IDirectoryController directoryController,
-            IEligibilityDelegate<string> fileValidationEligibilityController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IRecycleBinController recycleBinController,
@@ -49,7 +46,6 @@ namespace GOG.TaskActivities.Cleanup
             this.filesEnumerationController = filesEnumerationController;
             this.directoryEnumerationController = directoryEnumerationController;
             this.directoryController = directoryController;
-            this.fileValidationEligibilityController = fileValidationEligibilityController;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.recycleBinController = recycleBinController;
@@ -97,20 +93,17 @@ namespace GOG.TaskActivities.Cleanup
 
                 recycleBinController.MoveFileToRecycleBin(file);
 
-                if (fileValidationEligibilityController.IsEligible(file))
-                {
-                    var validationFile = Path.Combine(
-                        getDirectoryDelegate.GetDirectory(),
-                        getFilenameDelegate.GetFilename(file));
+                var validationFile = Path.Combine(
+                    getDirectoryDelegate.GetDirectory(),
+                    getFilenameDelegate.GetFilename(file));
 
-                    var deleteValidationFileTask = taskStatusController.Create(
-                        cleanupProductFilesTask,
-                        string.Format(
-                            "Move validation file to recycle bin: {0}",
-                            validationFile));
-                    recycleBinController.MoveFileToRecycleBin(validationFile);
-                    taskStatusController.Complete(deleteValidationFileTask);
-                }
+                var deleteValidationFileTask = taskStatusController.Create(
+                    cleanupProductFilesTask,
+                    string.Format(
+                        "Move validation file to recycle bin: {0}",
+                        validationFile));
+                recycleBinController.MoveFileToRecycleBin(validationFile);
+                taskStatusController.Complete(deleteValidationFileTask);
             }
 
             await RemoveScheduledCleanupEntry(id, cleanupProductFilesTask);

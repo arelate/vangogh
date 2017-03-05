@@ -45,12 +45,11 @@
     <Compile Include="Update\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />
     <Compile Include="Cleanup\FilesCleanupController.cs" />
-    <Compile Include="Download\Sources\ProductFilesDownloadSourcesController.cs" />
+    <Compile Include="Download\Sources\ManualUrlDownloadSourcesController.cs" />
     <Compile Include="Download\Sources\ImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Sources\ProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Sources\AccountProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Sources\ScreenshotsDownloadSourcesController.cs" />
-    <Compile Include="Download\Sources\ValidationDownloadSourcesController.cs" />
     <Compile Include="Download\Validation\UpdateValidationDownloadsController.cs" />
     <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
     <Compile Include="Download\UpdateDownloadsController.cs" />
