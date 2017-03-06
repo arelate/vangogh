@@ -7,10 +7,10 @@ using Interfaces.Validation;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Data;
+using Interfaces.Enumeration;
+using Interfaces.Expectation;
 using Interfaces.Routing;
 using Interfaces.TaskStatus;
-
-using Models.ProductDownloads;
 
 namespace GOG.TaskActivities.Validation
 {
@@ -19,7 +19,8 @@ namespace GOG.TaskActivities.Validation
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IValidationController validationController;
-        private IDataController<ProductDownloads> productDownloadsDataController;
+        private IEnumerateDelegate<string> gameDetailsManualUrlsEnumerationController;
+        private IExpectedDelegate<string> validationExpectedDelegate;
         private IDataController<long> updatedDataController;
         private IDataController<long> lastKnownValidDataController;
         private IDataController<long> scheduledCleanupDataController;
@@ -29,7 +30,8 @@ namespace GOG.TaskActivities.Validation
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IValidationController validationController,
-            IDataController<ProductDownloads> productDownloadsDataController,
+            IEnumerateDelegate<string> gameDetailsManualUrlsEnumerationController,
+            IExpectedDelegate<string> validationExpectedDelegate,
             IDataController<long> updatedDataController,
             IDataController<long> lastKnownValidDataController,
             IDataController<long> scheduledCleanupDataController,
@@ -43,7 +45,8 @@ namespace GOG.TaskActivities.Validation
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.validationController = validationController;
-            this.productDownloadsDataController = productDownloadsDataController;
+            this.gameDetailsManualUrlsEnumerationController = gameDetailsManualUrlsEnumerationController;
+            this.validationExpectedDelegate = validationExpectedDelegate;
 
             this.updatedDataController = updatedDataController;
             this.lastKnownValidDataController = lastKnownValidDataController;
@@ -63,21 +66,23 @@ namespace GOG.TaskActivities.Validation
             {
                 var productIsValid = true;
 
-                var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
-                if (productDownloads == null) continue;
+                var manualUrls = await gameDetailsManualUrlsEnumerationController.EnumerateAsync(id);
 
                 taskStatusController.UpdateProgress(validateProductFilesTask,
                     ++counter,
                     updatedProducts.Count(),
-                    productDownloads.Title);
+                    id.ToString());
 
-                foreach (var download in productDownloads.Downloads)
+                foreach (var manualUrl in manualUrls)
                 {
-                    var resolvedUri = await routingController.TraceRouteAsync(id, download.SourceUri);
+                    var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl);
+
+                    if (!validationExpectedDelegate.Expected(resolvedUri))
+                        continue;
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
-                        getDirectoryDelegate.GetDirectory(download.SourceUri),
+                        getDirectoryDelegate.GetDirectory(manualUrl),
                         getFilenameDelegate.GetFilename(resolvedUri));
 
                     var validateFileTask = taskStatusController.Create(
