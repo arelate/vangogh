@@ -24,6 +24,9 @@ namespace Controllers.Presentation
         private const int throttleMilliseconds = 200;
         private DateTime lastReportedTimestamp = DateTime.MinValue;
 
+        private int previousWindowWidth;
+        private int previousWindowHeight;
+
         public PresentationController(
             IMeasurementController<string> formattedStringMeasurementController,
             ILineBreakingController lineBreakingController,
@@ -35,6 +38,9 @@ namespace Controllers.Presentation
 
             previousScreenLinesLengths = new List<int>();
             consoleController.CursorVisible = false;
+
+            previousWindowWidth = consoleController.WindowWidth;
+            previousWindowHeight = consoleController.WindowHeight;
         }
 
         private int PresentLine(int line, string content, string[] colors)
@@ -55,7 +61,6 @@ namespace Controllers.Presentation
 
         private void PresentViewModel(string text, string[] colors, ref int currentScreenLine, IList<int> currentLinesLengths)
         {
-
             var lines = lineBreakingController.BreakLines(text, consoleController.WindowWidth);
             var consumedColors = 0;
 
@@ -84,6 +89,10 @@ namespace Controllers.Presentation
             if (!overrideThrottling && 
                 (DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
 
+            if (previousWindowWidth != consoleController.WindowWidth ||
+                previousWindowHeight != consoleController.WindowHeight)
+                consoleController.Clear();
+
             var viewsModelsLength = viewModels.Count();
             var currentLinesLengths = new List<int>();
             var currentScreenLine = 0;
@@ -111,6 +120,9 @@ namespace Controllers.Presentation
             }
 
             previousScreenLinesLengths = currentLinesLengths;
+
+            previousWindowWidth = consoleController.WindowWidth;
+            previousWindowHeight = consoleController.WindowHeight;
 
             lastReportedTimestamp = DateTime.UtcNow;
         }

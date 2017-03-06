@@ -59,17 +59,17 @@ namespace GOG.TaskActivities.Update.PageResult
             var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
 
             var extractTask = taskStatusController.Create(updateAllProductsTask, "Extract product data");
-            var products = pageResultsExtractingController.ExtractMultiple(productsPageResults);
+            var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
             taskStatusController.Complete(extractTask);
 
             var updateTask = taskStatusController.Create(updateAllProductsTask, "Update products");
-            await dataController.UpdateAsync(updateTask, products.ToArray());
+            await dataController.UpdateAsync(updateTask, newProducts.ToArray());
             taskStatusController.Complete(updateTask);
 
             var processingTask = taskStatusController.Create(updateAllProductsTask, "Post-processing products");
 
             if (collectionProcessingController != null)
-                await collectionProcessingController.Process(products, processingTask);
+                await collectionProcessingController.Process(newProducts, processingTask);
 
             taskStatusController.Complete(processingTask);
 
