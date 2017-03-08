@@ -13,7 +13,7 @@ using Models.Units;
 
 using GOG.Models;
 
-namespace GOG.TaskActivities.Update.Screenshots
+namespace GOG.TaskActivities.Update
 {
     public class ScreenshotUpdateController : TaskActivityController
     {

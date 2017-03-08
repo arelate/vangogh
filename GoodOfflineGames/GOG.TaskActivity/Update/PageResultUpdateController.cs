@@ -12,7 +12,7 @@ using Models.ProductCore;
 using GOG.Interfaces.PageResults;
 using GOG.Interfaces.Extraction;
 
-namespace GOG.TaskActivities.Update.PageResult
+namespace GOG.TaskActivities.Update
 {
     public class PageResultUpdateController<PageType, Type> : TaskActivityController
         where PageType : Models.PageResult

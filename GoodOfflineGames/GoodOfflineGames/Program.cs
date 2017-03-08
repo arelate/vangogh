@@ -52,16 +52,12 @@ using GOG.Controllers.Connection;
 using GOG.Controllers.UpdateUri;
 using GOG.Controllers.FileDownload;
 using GOG.Controllers.Collection;
+using GOG.Controllers.DownloadSources;
 
 using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
 using GOG.TaskActivities.Update;
-using GOG.TaskActivities.Update.PageResult;
-using GOG.TaskActivities.Update.Wishlisted;
-using GOG.TaskActivities.Update.Screenshots;
 using GOG.TaskActivities.Download;
-using GOG.TaskActivities.Download.Sources;
-using GOG.TaskActivities.Download.Processing;
 using GOG.TaskActivities.Cleanup;
 
 using GOG.TaskActivities.Validation;

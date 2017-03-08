@@ -44,20 +44,15 @@
     <Compile Include="Update\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />
     <Compile Include="Cleanup\FilesCleanupController.cs" />
-    <Compile Include="Download\Sources\ManualUrlDownloadSourcesController.cs" />
-    <Compile Include="Download\Sources\ImagesDownloadSourcesController.cs" />
-    <Compile Include="Download\Sources\ProductsImagesDownloadSourcesController.cs" />
-    <Compile Include="Download\Sources\AccountProductsImagesDownloadSourcesController.cs" />
-    <Compile Include="Download\Sources\ScreenshotsDownloadSourcesController.cs" />
-    <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
+    <Compile Include="Update\PageResultUpdateController.cs" />
     <Compile Include="Download\UpdateDownloadsController.cs" />
-    <Compile Include="Download\Processing\ProcessScheduledDownloadsController.cs" />
+    <Compile Include="Download\ProcessScheduledDownloadsController.cs" />
     <Compile Include="Load\LoadDataController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authorization\AuthorizationController.cs" />
     <Compile Include="TaskActivityController.cs" />
-    <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
-    <Compile Include="Update\Wishlisted\WishlistedUpdateController.cs" />
+    <Compile Include="Update\ScreenshotUpdateController.cs" />
+    <Compile Include="Update\WishlistedUpdateController.cs" />
     <Compile Include="Validation\ProcessValidationController.cs" />
   </ItemGroup>
   <ItemGroup>

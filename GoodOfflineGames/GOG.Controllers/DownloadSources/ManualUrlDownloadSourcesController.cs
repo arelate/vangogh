@@ -6,7 +6,7 @@ using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.TaskStatus;
 
-namespace GOG.TaskActivities.Download.Sources
+namespace GOG.Controllers.DownloadSources
 {
     public class ManualUrlDownloadSourcesController : IDownloadSourcesController
     {

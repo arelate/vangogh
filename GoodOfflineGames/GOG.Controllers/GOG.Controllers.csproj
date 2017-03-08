@@ -44,6 +44,11 @@
     <Compile Include="Authorization\AuthorizationController.cs" />
     <Compile Include="Collection\NewUpdatedCollectionProcessingController.cs" />
     <Compile Include="Connection\GameDetailsAccountProductConnectDelegate.cs" />
+    <Compile Include="DownloadSources\AccountProductsImagesDownloadSourcesController.cs" />
+    <Compile Include="DownloadSources\ImagesDownloadSourcesController.cs" />
+    <Compile Include="DownloadSources\ManualUrlDownloadSourcesController.cs" />
+    <Compile Include="DownloadSources\ProductsImagesDownloadSourcesController.cs" />
+    <Compile Include="DownloadSources\ScreenshotsDownloadSourcesController.cs" />
     <Compile Include="Enumeration\GameDetailsFileEnumerationController.cs" />
     <Compile Include="Enumeration\GameDetailsDirectoryEnumerationController.cs" />
     <Compile Include="Enumeration\GameDetailsManualUrlEnumerationController.cs" />

@@ -1,5 +1,7 @@
 Backend:
 
+- GetUpdateUri doesn't have any interface - move to a controller
+
 - settings loading as taskActivity?
 
 - stop and resume - make a session plan based on settings and remove taskActivities upon completion. Ask to reset session if one exists already when starting
