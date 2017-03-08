@@ -15,7 +15,7 @@ using Models.Units;
 
 namespace GOG.TaskActivities.Update
 {
-    public abstract class ProductCoreUpdateController<UpdateType, ListType> :
+    public class ProductCoreUpdateController<UpdateType, ListType> :
         TaskActivityController
         where ListType : ProductCore
         where UpdateType : ProductCore

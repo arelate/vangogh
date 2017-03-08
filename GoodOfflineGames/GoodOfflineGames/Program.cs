@@ -51,13 +51,13 @@ using GOG.Controllers.Network;
 using GOG.Controllers.Connection;
 using GOG.Controllers.UpdateUri;
 using GOG.Controllers.FileDownload;
+using GOG.Controllers.Collection;
 
 using GOG.TaskActivities.Authorization;
 using GOG.TaskActivities.Load;
+using GOG.TaskActivities.Update;
 using GOG.TaskActivities.Update.PageResult;
-using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlisted;
-using GOG.TaskActivities.Update.Products;
 using GOG.TaskActivities.Update.Screenshots;
 using GOG.TaskActivities.Download;
 using GOG.TaskActivities.Download.Sources;
@@ -544,7 +544,8 @@ namespace GoodOfflineGames
 
             // product update controllers
 
-            var gameProductDataUpdateController = new GameProductDataUpdateController(
+            var gameProductDataUpdateController = new ProductCoreUpdateController<GameProductData, Product>(
+                ProductTypes.GameProductData,
                 gameProductDataController,
                 productsDataController,
                 updatedDataController,
@@ -556,7 +557,8 @@ namespace GoodOfflineGames
                 networkController,
                 serializationController);
 
-            var apiProductUpdateController = new ApiProductUpdateController(
+            var apiProductUpdateController = new ProductCoreUpdateController<ApiProduct, Product>(
+                ProductTypes.AccountProduct,
                 apiProductsDataController,
                 productsDataController,
                 updatedDataController,
@@ -592,15 +594,16 @@ namespace GoodOfflineGames
                 sanitizationController,
                 operatingSystemsDownloadsExtractionController);
 
-            var gameDetailsUpdateController = new GameDetailsUpdateController(
+            var gameDetailsUpdateController = new ProductCoreUpdateController<GameDetails, AccountProduct>(
+                ProductTypes.GameDetails,
                 gameDetailsDataController,
                 accountProductsDataController,
                 updatedDataController,
                 getGameDetailsDelegate,
-                throttleController,
                 accountProductIdUpdateUriDelegate,
-                gameDetailsAccountProductConnectDelegate,
-                taskStatusController);
+                taskStatusController,
+                throttleController,
+                gameDetailsAccountProductConnectDelegate);
 
             #endregion
 

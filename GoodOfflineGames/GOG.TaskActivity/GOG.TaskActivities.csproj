@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Update\NewUpdatedAccountProducts\NewUpdatedCollectionProcessingController.cs" />
     <Compile Include="Update\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />
     <Compile Include="Cleanup\FilesCleanupController.cs" />
@@ -56,9 +55,6 @@
     <Compile Include="Load\LoadDataController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authorization\AuthorizationController.cs" />
-    <Compile Include="Update\Products\ApiProductUpdateController.cs" />
-    <Compile Include="Update\Products\GameDetailsUpdateController.cs" />
-    <Compile Include="Update\Products\GameProductDataUpdateController.cs" />
     <Compile Include="TaskActivityController.cs" />
     <Compile Include="Update\Screenshots\ScreenshotUpdateController.cs" />
     <Compile Include="Update\Wishlisted\WishlistedUpdateController.cs" />

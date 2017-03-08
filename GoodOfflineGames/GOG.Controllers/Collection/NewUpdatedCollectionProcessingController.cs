@@ -8,7 +8,7 @@ using Interfaces.TaskStatus;
 
 using GOG.Models;
 
-namespace GOG.TaskActivities.Update.NewUpdatedAccountProducts
+namespace GOG.Controllers.Collection
 {
     public class NewUpdatedCollectionProcessingController : ICollectionProcessingController<AccountProduct>
     {
