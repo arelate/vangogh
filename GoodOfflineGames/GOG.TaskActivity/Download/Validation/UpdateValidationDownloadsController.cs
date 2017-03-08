@@ -17,14 +17,12 @@ namespace GOG.TaskActivities.Download.Validation
             IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base(productDownloadType,
                 downloadSourcesController,
                 getDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatus,
                 taskStatusController)
         {
             // ...

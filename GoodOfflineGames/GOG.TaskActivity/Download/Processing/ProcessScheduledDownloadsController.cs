@@ -22,11 +22,8 @@ namespace GOG.TaskActivities.Download.Processing
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.downloadType = downloadType;
             this.updatedDataController = updatedDataController;
@@ -34,7 +31,7 @@ namespace GOG.TaskActivities.Download.Processing
             this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var counter = 0;
             var updated = updatedDataController.EnumerateIds().ToArray();

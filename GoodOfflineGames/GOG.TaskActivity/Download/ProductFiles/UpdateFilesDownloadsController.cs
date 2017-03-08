@@ -17,7 +17,6 @@ namespace GOG.TaskActivities.Download.ProductFiles
             IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
             base (
                 productDownloadType,
@@ -25,7 +24,6 @@ namespace GOG.TaskActivities.Download.ProductFiles
                 getDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatus,
                 taskStatusController)
         {
             // ...

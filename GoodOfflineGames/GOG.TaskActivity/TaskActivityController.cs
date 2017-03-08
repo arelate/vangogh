@@ -8,18 +8,15 @@ namespace GOG.TaskActivities
 {
     public abstract class TaskActivityController: ITaskActivityController
     {
-        protected ITaskStatus taskStatus;
         protected ITaskStatusController taskStatusController;
 
         public TaskActivityController(
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController)
         {
-            this.taskStatus = taskStatus;
             this.taskStatusController = taskStatusController;
         }
 
-        public virtual Task ProcessTaskAsync()
+        public virtual Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             throw new NotImplementedException();
         }

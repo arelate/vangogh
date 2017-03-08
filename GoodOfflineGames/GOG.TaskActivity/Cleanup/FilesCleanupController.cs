@@ -35,11 +35,8 @@ namespace GOG.TaskActivities.Cleanup
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IRecycleBinController recycleBinController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.scheduledCleanupDataController = scheduledCleanupDataController;
             this.accountProductsDataController = accountProductsDataController;
@@ -110,7 +107,7 @@ namespace GOG.TaskActivities.Cleanup
             taskStatusController.Complete(cleanupProductFilesTask);
         }
 
-        public async override Task ProcessTaskAsync()
+        public async override Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var cleanupAllFilesTask = taskStatusController.Create(taskStatus, "Clean up older versions of the products files");
 

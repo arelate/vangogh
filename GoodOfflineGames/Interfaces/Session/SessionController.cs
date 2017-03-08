@@ -2,11 +2,6 @@
 
 namespace Interfaces.Session
 {
-    public interface ISessionProperty
-    {
-        string Session { get; }
-    }
-
     public interface IGetUriSansSessionDelegate
     {
         string GetUriSansSession(string sessionUri);
@@ -14,11 +9,10 @@ namespace Interfaces.Session
 
     public interface ICreateSessionDelegate
     {
-        Task CreateSession(string manualUri);
+        Task<string> CreateSession(string manualUri);
     }
 
     public interface ISessionController :
-        ISessionProperty,
         ICreateSessionDelegate,
         IGetUriSansSessionDelegate
     {

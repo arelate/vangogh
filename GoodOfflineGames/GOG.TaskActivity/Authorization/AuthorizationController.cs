@@ -37,11 +37,8 @@ namespace GOG.TaskActivities.Authorization
             IConsoleController consoleController,
             IAuthenticationProperties authenticateProperties,
             IAuthenticationPropertiesValidationController  authenticationPropertiesValidationController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.authenticateProperties = authenticateProperties;
             this.authenticationPropertiesValidationController = authenticationPropertiesValidationController;
@@ -54,7 +51,7 @@ namespace GOG.TaskActivities.Authorization
             this.consoleController = consoleController;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var authorizationTask = taskStatusController.Create(taskStatus, "Authorize on GOG.com");
 

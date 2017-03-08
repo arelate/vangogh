@@ -10,17 +10,14 @@ namespace GOG.TaskActivities.Load
         private ILoadDelegate[] loadDelegates;
 
         public LoadDataController(
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController,
             params ILoadDelegate[] loadDelegates): 
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.loadDelegates = loadDelegates;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var loadDataTask = taskStatusController.Create(taskStatus, "Load existing data");
             foreach (var loadDelegate in loadDelegates)

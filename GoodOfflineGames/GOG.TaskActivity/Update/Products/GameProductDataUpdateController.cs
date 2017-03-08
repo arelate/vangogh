@@ -17,7 +17,6 @@ namespace GOG.TaskActivities.Update.Products
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<GameProductData> getGameProductDataDelegate,
             IGetUpdateUriDelegate<Product> getProductUpdateUriDelegate,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController):
             base(
                 ProductTypes.GameProductData,
@@ -26,7 +25,6 @@ namespace GOG.TaskActivities.Update.Products
                 updatedDataController,
                 getGameProductDataDelegate,
                 getProductUpdateUriDelegate,
-                taskStatus,
                 taskStatusController)
         {
             // ...

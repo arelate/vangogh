@@ -36,11 +36,8 @@ namespace GOG.TaskActivities.Validation
             IDataController<long> lastKnownValidDataController,
             IDataController<long> scheduledCleanupDataController,
             IRoutingController routingController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
@@ -54,7 +51,7 @@ namespace GOG.TaskActivities.Validation
             this.routingController = routingController;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var validateProductFilesTask = taskStatusController.Create(taskStatus, "Validate updated products files");
 

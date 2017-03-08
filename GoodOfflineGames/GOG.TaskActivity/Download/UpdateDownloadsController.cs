@@ -30,11 +30,8 @@ namespace GOG.TaskActivities.Download
             IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.downloadType = downloadType;
             this.downloadSourcesController = downloadSourcesController;
@@ -45,7 +42,7 @@ namespace GOG.TaskActivities.Download
             scheduledDownloadTitle = System.Enum.GetName(typeof(ProductDownloadTypes), downloadType);
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var updateDownloadsTask = taskStatusController.Create(
                 taskStatus,

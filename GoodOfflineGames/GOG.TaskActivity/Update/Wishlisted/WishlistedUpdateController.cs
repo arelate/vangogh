@@ -16,17 +16,14 @@ namespace GOG.TaskActivities.Update.Wishlisted
         public WishlistedUpdateController(
             IGetDeserializedDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.getProductsPageResultDelegate = getProductsPageResultDelegate;
             this.wishlistedDataController = wishlistedDataController;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var updateWishlistTask = taskStatusController.Create(taskStatus, "Update wishlisted products");
 

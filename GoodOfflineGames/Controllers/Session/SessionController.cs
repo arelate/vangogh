@@ -15,6 +15,7 @@ namespace Controllers.Session
     {
         private IRequestResponseDelegate requestResponseDelegate;
         private IStringExtractionController sessionUriExtractionController;
+        private string currentSession;
 
         public SessionController(
             IRequestResponseDelegate requestResponseDelegate,
@@ -24,12 +25,14 @@ namespace Controllers.Session
             this.sessionUriExtractionController = sessionUriExtractionController;
         }
 
-        public string Session { get; private set; }
+        //public string Session { get; private set; }
 
-        public async Task CreateSession(string manualUri)
+        public async Task<string> CreateSession(string manualUri)
         {
             using (var response = await requestResponseDelegate.RequestResponse(HttpMethod.Head, manualUri))
                 GetUriSansSession(response.RequestMessage.RequestUri.ToString());
+
+            return currentSession;
         }
 
         public string GetUriSansSession(string sessionUri)
@@ -40,7 +43,7 @@ namespace Controllers.Session
             // then pass through the original uri assuming this is not sessioned uri
             if (uriParts == null || uriParts.Length < 2) return sessionUri;
 
-            Session = uriParts[1];
+            currentSession = uriParts[1];
             return uriParts[0];
         }
     }

@@ -27,11 +27,8 @@ namespace GOG.TaskActivities.Cleanup
             IGetDirectoryDelegate getDirectoryDelegate,
             IDirectoryController directoryController,
             IRecycleBinController recycleBinController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController):
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.gameDetailsDataController = gameDetailsDataController;
             this.directoryEnumerationController = directoryEnumerationController;
@@ -40,7 +37,7 @@ namespace GOG.TaskActivities.Cleanup
             this.directoryController = directoryController;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var cleanupDirectoriesTask = taskStatusController.Create(taskStatus, "Cleanup product directories");
 

@@ -41,13 +41,10 @@ namespace GOG.TaskActivities.Update
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
             IGetUpdateUriDelegate<ListType> getUpdateUriDelegate,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController,
             IThrottleController throttleController = null,
             IConnectDelegate<UpdateType, ListType> connectDelegate = null) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.updateTypeDataController = updateTypeDataController;
             this.listTypeDataController = listTypeDataController;
@@ -63,7 +60,7 @@ namespace GOG.TaskActivities.Update
             updateTypeDescription = typeof(UpdateType).Name;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var updateProductsTask = taskStatusController.Create(taskStatus, "Update products type: " + updateTypeDescription);
 
@@ -90,6 +87,7 @@ namespace GOG.TaskActivities.Update
             foreach (var id in updatedProducts)
             {
                 var product = await listTypeDataController.GetByIdAsync(id);
+                if (product == null) continue;
 
                 taskStatusController.UpdateProgress(
                     updateProductsTask,

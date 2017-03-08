@@ -34,12 +34,9 @@ namespace GOG.TaskActivities.Update.PageResult
             IPageResultsExtractionController<PageType, Type> pageResultsExtractingController,
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController,
             ICollectionProcessingController<Type> collectionProcessingController = null) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.productType = productType;
 
@@ -52,7 +49,7 @@ namespace GOG.TaskActivities.Update.PageResult
             this.collectionProcessingController = collectionProcessingController;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var updateAllProductsTask = taskStatusController.Create(taskStatus, "Update products information");
 

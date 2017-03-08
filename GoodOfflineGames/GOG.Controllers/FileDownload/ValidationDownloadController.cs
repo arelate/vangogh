@@ -56,20 +56,22 @@ namespace GOG.Controllers.FileDownload
             }
 
             // only download validation files for uris are expected to produce validation
-            if (!validationExpectedForUriDelegate.Expected(resolvedUri)) return;
+            // but close download validation files task and don't return earlier
+            if (validationExpectedForUriDelegate.Expected(resolvedUri))
+            {
+                var session = await sessionController.CreateSession(sourceUri);
 
-            await sessionController.CreateSession(sourceUri);
+                var validationUri = uriController.ConcatenateUriWithParameters(
+                    resolvedUri,
+                    new string[] { session });
 
-            var validationUri = uriController.ConcatenateUriWithParameters(
-                resolvedUri,
-                new string[] { sessionController.Session });
-
-            await fileDownloadController.DownloadFileFromSourceAsync(
-                id,
-                title,
-                validationUri,
-                destination,
-                downloadValidationFileTask);
+                await fileDownloadController.DownloadFileFromSourceAsync(
+                    id,
+                    title,
+                    validationUri,
+                    destination,
+                    downloadValidationFileTask);
+            }
 
             taskStatusController.Complete(downloadValidationFileTask);
         }

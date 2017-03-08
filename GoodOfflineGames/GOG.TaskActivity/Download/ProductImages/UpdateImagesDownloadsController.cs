@@ -25,7 +25,6 @@ namespace GOG.TaskActivities.Download.ProductImages
                 getDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatus,
                 taskStatusController)
         {
             // ...

@@ -29,11 +29,8 @@ namespace GOG.TaskActivities.Update.Screenshots
             IDataController<Product> productsDataController,
             INetworkController networkController,
             IStringExtractionController screenshotExtractionController,
-            ITaskStatus taskStatus,
             ITaskStatusController taskStatusController) :
-            base(
-                taskStatus,
-                taskStatusController)
+            base(taskStatusController)
         {
             this.screenshotsDataController = screenshotsDataController;
             this.scheduledScreenshotsUpdatesDataController = scheduledScreenshotsUpdatesDataController;
@@ -42,7 +39,7 @@ namespace GOG.TaskActivities.Update.Screenshots
             this.screenshotExtractionController = screenshotExtractionController;
         }
 
-        public override async Task ProcessTaskAsync()
+        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var updateAllTask = taskStatusController.Create(taskStatus, "Update all products missing screenshots");
 
