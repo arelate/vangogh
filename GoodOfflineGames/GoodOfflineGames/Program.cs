@@ -59,11 +59,8 @@ using GOG.TaskActivities.Update.NewUpdatedAccountProducts;
 using GOG.TaskActivities.Update.Wishlisted;
 using GOG.TaskActivities.Update.Products;
 using GOG.TaskActivities.Update.Screenshots;
+using GOG.TaskActivities.Download;
 using GOG.TaskActivities.Download.Sources;
-using GOG.TaskActivities.Download.ProductImages;
-using GOG.TaskActivities.Download.Screenshots;
-using GOG.TaskActivities.Download.ProductFiles;
-using GOG.TaskActivities.Download.Validation;
 using GOG.TaskActivities.Download.Processing;
 using GOG.TaskActivities.Cleanup;
 
@@ -666,25 +663,23 @@ namespace GoodOfflineGames
 
             // schedule download controllers
 
-            var updateProductsImagesDownloadsController = new UpdateImagesDownloadsController(
+            var updateProductsImagesDownloadsController = new UpdateDownloadsController(
                 ProductDownloadTypes.Image,
                 productsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                applicationTaskStatus,
                 taskStatusController);
 
-            var updateAccountProductsImagesDownloadsController = new UpdateImagesDownloadsController(
+            var updateAccountProductsImagesDownloadsController = new UpdateDownloadsController(
                 ProductDownloadTypes.Image,
                 accountProductsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                applicationTaskStatus,
                 taskStatusController);
 
-            var updateScreenshotsDownloadsController = new UpdateScreenshotsDownloadsController(
+            var updateScreenshotsDownloadsController = new UpdateDownloadsController(
                 ProductDownloadTypes.Screenshot,
                 screenshotsDownloadSourcesController,
                 screenshotsDirectoryDelegate,
@@ -692,7 +687,7 @@ namespace GoodOfflineGames
                 accountProductsDataController,
                 taskStatusController);
 
-            var updateProductFilesDownloadsController = new UpdateFilesDownloadsController(
+            var updateProductFilesDownloadsController = new UpdateDownloadsController(
                 ProductDownloadTypes.ProductFile,
                 manualUrlDownloadSourcesController,
                 productFilesDirectoryDelegate,
@@ -737,7 +732,7 @@ namespace GoodOfflineGames
 
             // validation controllers
 
-            var updateValidationDownloadsController = new UpdateValidationDownloadsController(
+            var updateValidationDownloadsController = new UpdateDownloadsController(
                 ProductDownloadTypes.Validation,
                 manualUrlDownloadSourcesController,
                 validationDirectoryDelegate,

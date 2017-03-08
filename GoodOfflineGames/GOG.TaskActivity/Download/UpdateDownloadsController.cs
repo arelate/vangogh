@@ -13,7 +13,7 @@ using GOG.Models;
 
 namespace GOG.TaskActivities.Download
 {
-    public abstract class UpdateDownloadsController : TaskActivityController
+    public class UpdateDownloadsController : TaskActivityController
     {
         private ProductDownloadTypes downloadType;
 

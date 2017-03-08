@@ -50,13 +50,9 @@
     <Compile Include="Download\Sources\ProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Sources\AccountProductsImagesDownloadSourcesController.cs" />
     <Compile Include="Download\Sources\ScreenshotsDownloadSourcesController.cs" />
-    <Compile Include="Download\Validation\UpdateValidationDownloadsController.cs" />
     <Compile Include="Update\PageResult\PageResultUpdateController.cs" />
     <Compile Include="Download\UpdateDownloadsController.cs" />
     <Compile Include="Download\Processing\ProcessScheduledDownloadsController.cs" />
-    <Compile Include="Download\ProductFiles\UpdateFilesDownloadsController.cs" />
-    <Compile Include="Download\ProductImages\UpdateImagesDownloadsController.cs" />
-    <Compile Include="Download\Screenshots\UpdateScreenshotsDownloadsController.cs" />
     <Compile Include="Load\LoadDataController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authorization\AuthorizationController.cs" />
