@@ -99,6 +99,7 @@
     <Compile Include="Settings\SettingsController.cs" />
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
+    <Compile Include="UpdateUri\ProductTypesGetUpdateUriDelegate.cs" />
     <Compile Include="Uri\UriController.cs" />
     <Compile Include="Uri\ValidationUriController.cs" />
     <Compile Include="Validation\ValidationController.cs" />

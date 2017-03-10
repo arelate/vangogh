@@ -6,6 +6,7 @@ using Interfaces.Network;
 using Interfaces.Data;
 using Interfaces.ProductTypes;
 using Interfaces.TaskStatus;
+using Interfaces.UpdateUri;
 
 using Models.Uris;
 using Models.ProductScreenshots;
@@ -17,6 +18,7 @@ namespace GOG.TaskActivities.Update
 {
     public class ScreenshotUpdateController : TaskActivityController
     {
+        private IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate;
         private IDataController<ProductScreenshots> screenshotsDataController;
         private IDataController<long> scheduledScreenshotsUpdatesDataController;
         private IDataController<Product> productsDataController;
@@ -24,6 +26,7 @@ namespace GOG.TaskActivities.Update
         private IStringExtractionController screenshotExtractionController;
 
         public ScreenshotUpdateController(
+            IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
             IDataController<long> scheduledScreenshotsUpdatesDataController,
             IDataController<Product> productsDataController,
@@ -32,6 +35,7 @@ namespace GOG.TaskActivities.Update
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
         {
+            this.productTypesGetUpdateUriDelegate = productTypesGetUpdateUriDelegate;
             this.screenshotsDataController = screenshotsDataController;
             this.scheduledScreenshotsUpdatesDataController = scheduledScreenshotsUpdatesDataController;
             this.productsDataController = productsDataController;
@@ -69,7 +73,7 @@ namespace GOG.TaskActivities.Update
                     ProductUnits.Products);
 
                 var requestProductPageTask = taskStatusController.Create(updateProductsScreenshotsTask, "Request product page containing screenshots information");
-                var productPageUri = string.Format(Uris.Paths.GetUpdateUri(ProductTypes.Screenshot), product.Url);
+                var productPageUri = string.Format(productTypesGetUpdateUriDelegate.GetUpdateUri(ProductTypes.Screenshot), product.Url);
                 var productPageContent = await networkController.Get(productPageUri);
                 taskStatusController.Complete(requestProductPageTask);
 

@@ -38,6 +38,7 @@ using Controllers.Containment;
 using Controllers.Sanitization;
 using Controllers.Session;
 using Controllers.Expectation;
+using Controllers.UpdateUri;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
@@ -461,8 +462,11 @@ namespace GoodOfflineGames
 
             #region Update.PageResults
 
+            var productTypesGetUpdateUriDelegate = new ProductTypesGetUpdateUriDelegate();
+
             var productsPageResultsController = new PageResultsController<ProductsPageResult>(
                 ProductTypes.Product,
+                productTypesGetUpdateUriDelegate,
                 requestPageController,
                 hashTrackingController,
                 serializationController,
@@ -482,6 +486,7 @@ namespace GoodOfflineGames
 
             var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
                 ProductTypes.AccountProduct,
+                productTypesGetUpdateUriDelegate,
                 requestPageController,
                 hashTrackingController,
                 serializationController,
@@ -542,6 +547,7 @@ namespace GoodOfflineGames
 
             var gameProductDataUpdateController = new ProductCoreUpdateController<GameProductData, Product>(
                 ProductTypes.GameProductData,
+                productTypesGetUpdateUriDelegate,
                 gameProductDataController,
                 productsDataController,
                 updatedDataController,
@@ -555,6 +561,7 @@ namespace GoodOfflineGames
 
             var apiProductUpdateController = new ProductCoreUpdateController<ApiProduct, Product>(
                 ProductTypes.AccountProduct,
+                productTypesGetUpdateUriDelegate,
                 apiProductsDataController,
                 productsDataController,
                 updatedDataController,
@@ -592,6 +599,7 @@ namespace GoodOfflineGames
 
             var gameDetailsUpdateController = new ProductCoreUpdateController<GameDetails, AccountProduct>(
                 ProductTypes.GameDetails,
+                productTypesGetUpdateUriDelegate,
                 gameDetailsDataController,
                 accountProductsDataController,
                 updatedDataController,
@@ -606,6 +614,7 @@ namespace GoodOfflineGames
             #region Update.Screenshots
 
             var screenshotUpdateController = new ScreenshotUpdateController(
+                productTypesGetUpdateUriDelegate,
                 screenshotsDataController,
                 scheduledScreenshotsUpdatesDataController,
                 productsDataController,

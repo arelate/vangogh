@@ -1,6 +1,4 @@
-﻿using Interfaces.ProductTypes;
-
-namespace Models.Uris
+﻿namespace Models.Uris
 {
     public static class Uris
     {
@@ -79,26 +77,6 @@ namespace Models.Uris
             public static class ProductFiles
             {
                 public const string FullUriTemplate = Roots.Website + "{0}";
-            }
-
-            public static string GetUpdateUri(ProductTypes productType)
-            {
-                switch (productType)
-                {
-                    case ProductTypes.Product:
-                        return Games.AjaxFiltered;
-                    case ProductTypes.AccountProduct:
-                        return Account.GetFilteredProducts;
-                    case ProductTypes.Screenshot: // screenshots use the same page as game product data
-                    case ProductTypes.GameProductData:
-                        return GameProductData.ProductTemplate;
-                    case ProductTypes.ApiProduct:
-                        return Api.ProductTemplate;
-                    case ProductTypes.GameDetails:
-                        return Account.GameDetailsTemplate;
-                    default:
-                        throw new System.NotImplementedException();
-                }
             }
         }
     }

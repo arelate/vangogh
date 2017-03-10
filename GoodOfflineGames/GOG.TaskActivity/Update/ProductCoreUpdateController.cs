@@ -9,7 +9,6 @@ using Interfaces.UpdateUri;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
-using Models.Uris;
 using Models.ProductCore;
 using Models.Units;
 
@@ -31,11 +30,13 @@ namespace GOG.TaskActivities.Update
         private IConnectDelegate<UpdateType, ListType> connectDelegate;
 
         private ProductTypes updateProductType;
+        private IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate;
 
         private string updateTypeDescription;
 
         public ProductCoreUpdateController(
             ProductTypes updateProductType,
+            IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate,
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
@@ -57,6 +58,7 @@ namespace GOG.TaskActivities.Update
             this.connectDelegate = connectDelegate;
 
             this.updateProductType = updateProductType;
+            this.productTypesGetUpdateUriDelegate = productTypesGetUpdateUriDelegate;
             updateTypeDescription = typeof(UpdateType).Name;
         }
 
@@ -97,7 +99,7 @@ namespace GOG.TaskActivities.Update
                     ProductUnits.Products);
 
                 var uri = string.Format(
-                    Uris.Paths.GetUpdateUri(updateProductType),
+                    productTypesGetUpdateUriDelegate.GetUpdateUri(updateProductType),
                     getUpdateUriDelegate.GetUpdateUri(product));
 
                 var data = await getDeserializedDelegate.GetDeserialized(uri);
