@@ -12,7 +12,7 @@ using Interfaces.TaskStatus;
 using Models.ProductCore;
 using Models.Units;
 
-namespace GOG.TaskActivities.Update
+namespace GOG.TaskActivities.UpdateData
 {
     public class ProductCoreUpdateController<UpdateType, ListType> :
         TaskActivityController

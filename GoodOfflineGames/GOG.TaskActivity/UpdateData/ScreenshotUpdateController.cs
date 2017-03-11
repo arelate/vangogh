@@ -14,7 +14,7 @@ using Models.Units;
 
 using GOG.Models;
 
-namespace GOG.TaskActivities.Update
+namespace GOG.TaskActivities.UpdateData
 {
     public class ScreenshotUpdateController : TaskActivityController
     {

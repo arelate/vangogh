@@ -1,33 +1,40 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Storage;
-using Interfaces.Serialization;
+using Interfaces.Data;
 using Interfaces.Settings;
+using Interfaces.SerializedStorage;
 
 namespace Controllers.Settings
 {
-    public class SettingsController : ISettingsController<Models.Settings.Settings>
+    public class SettingsController : ILoadDelegate, ISettingsProperty
     {
-        private IStorageController<string> storageController;
-        private ISerializationController<string> serializationController;
+        private string filename;
+        private ISerializedStorageController serializedStorageController;
+
+        public ISettings Settings { get; private set; }
 
         public SettingsController(
-            IStorageController<string> storageController,
-            ISerializationController<string> serializationController)
+            string filename,
+            ISerializedStorageController serializedStorageController)
         {
-            this.storageController = storageController;
-            this.serializationController = serializationController;
+            this.filename = filename;
+            this.serializedStorageController = serializedStorageController;
         }
 
-        public async Task<Models.Settings.Settings> Load()
+        public async Task LoadAsync()
         {
-            string filename = "settings.json";
-            Models.Settings.Settings settings = null;
+            Settings = await serializedStorageController.DeserializePullAsync<Models.Settings.Settings>(filename);
 
-            var settingsContent = await storageController.PullAsync(filename);
-            settings = serializationController.Deserialize<Models.Settings.Settings>(settingsContent);
+            // set defaults
 
-            return settings;
+            if (Settings == null) Settings = new Models.Settings.Settings();
+
+            if (Settings.UpdateData == null) Settings.UpdateData = new string[0];
+            if (Settings.UpdateDownloads == null) Settings.UpdateDownloads = new string[0];
+            if (Settings.DownloadsLanguages == null) Settings.DownloadsLanguages = new string[0];
+            if (Settings.DownloadsOperatingSystems == null) Settings.DownloadsOperatingSystems = new string[0];
+            if (Settings.ProcessDownloads == null) Settings.ProcessDownloads = new string[0];
+            if (Settings.Cleanup == null) Settings.Cleanup = new string[0];
         }
     }
 }

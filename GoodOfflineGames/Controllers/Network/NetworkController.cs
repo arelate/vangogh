@@ -2,17 +2,15 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 
 using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Cookies;
-using Interfaces.Settings;
 
 namespace Controllers.Network
 {
-    public sealed class NetworkController : INetworkController, IUserAgentProperty
+    public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
         private ICookiesController cookiesController;
@@ -20,29 +18,9 @@ namespace Controllers.Network
         const string postMediaType = "application/x-www-form-urlencoded";
         const string acceptHeaderContent = "text/html, application/xhtml+xml, image/jxr, */*";
 
-        const string userAgentHeader = "User-Agent";
         const string setCookieHeader = "Set-Cookie";
         const string cookieHeader = "Cookie";
         const string acceptHeader = "Accept";
-
-        const string defaultUserAgentString = "Mozilla/5.0 (iPad; CPU OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1";
-        private string userAgent;
-
-        public string UserAgent
-        {
-            get { return userAgent; }
-            set
-            {
-                userAgent = value;
-
-                if (string.IsNullOrEmpty(userAgent))
-                    userAgent = defaultUserAgentString;
-
-                if (client.DefaultRequestHeaders.Contains(userAgentHeader))
-                    client.DefaultRequestHeaders.Remove(userAgentHeader);
-                client.DefaultRequestHeaders.Add(userAgentHeader, userAgent);
-            }
-        }
 
         public NetworkController(
             ICookiesController cookiesController,
@@ -60,7 +38,7 @@ namespace Controllers.Network
             this.uriController = uriController;
         }
 
-        private async Task SetCookies(HttpResponseMessage response)
+        public async Task SetCookies(HttpResponseMessage response)
         {
             IEnumerable<string> responseCookies = new List<string>();
             response.Headers.TryGetValues(setCookieHeader, out responseCookies);
@@ -95,7 +73,6 @@ namespace Controllers.Network
             return await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
         }
 
-        // TODO: FormUrlEncodedContent
         public async Task<string> Post(
             string baseUri,
             IDictionary<string, string> parameters = null,

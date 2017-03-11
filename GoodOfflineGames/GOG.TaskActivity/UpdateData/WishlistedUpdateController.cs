@@ -6,7 +6,7 @@ using Interfaces.TaskStatus;
 
 using Models.Uris;
 
-namespace GOG.TaskActivities.Update
+namespace GOG.TaskActivities.UpdateData
 {
     public class WishlistedUpdateController : TaskActivityController
     {

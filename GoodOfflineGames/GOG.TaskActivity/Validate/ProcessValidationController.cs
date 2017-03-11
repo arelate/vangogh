@@ -12,7 +12,7 @@ using Interfaces.Expectation;
 using Interfaces.Routing;
 using Interfaces.TaskStatus;
 
-namespace GOG.TaskActivities.Validation
+namespace GOG.TaskActivities.Validate
 {
     public class ProcessValidationController : TaskActivityController
     {

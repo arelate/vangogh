@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Controllers.Stream;
@@ -54,14 +55,17 @@ using GOG.Controllers.UpdateUri;
 using GOG.Controllers.FileDownload;
 using GOG.Controllers.Collection;
 using GOG.Controllers.DownloadSources;
+using GOG.Controllers.Authorization;
 
-using GOG.TaskActivities.Authorization;
+using GOG.TaskActivities.LoadSettings;
+using GOG.TaskActivities.ValidateSettings;
+using GOG.TaskActivities.Authorize;
 using GOG.TaskActivities.Load;
-using GOG.TaskActivities.Update;
-using GOG.TaskActivities.Download;
+using GOG.TaskActivities.UpdateData;
+using GOG.TaskActivities.UpdateDownloads;
+using GOG.TaskActivities.ProcessDownloads;
 using GOG.TaskActivities.Cleanup;
-
-using GOG.TaskActivities.Validation;
+using GOG.TaskActivities.Validate;
 
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
@@ -397,25 +401,16 @@ namespace GoodOfflineGames
             #region Settings: Load, Validation
 
             var settingsController = new SettingsController(
-                storageController,
-                serializationController);
+                "settings.json", 
+                serializedStorageController);
 
-            var loadSettingsTask = taskStatusController.Create(applicationTaskStatus, "Load settings");
-            var settings = settingsController.Load().Result;
+            var loadSettingsTaskActivity = new LoadSettingsController(
+                settingsController,
+                taskStatusController);
 
-            var validateSettingsTask = taskStatusController.Create(loadSettingsTask, "Validate settings");
+            loadSettingsTaskActivity.ProcessTaskAsync(applicationTaskStatus).Wait();
 
-            var validateDownloadSettingsTask = taskStatusController.Create(validateSettingsTask, "Validate download settings");
-            var downloadPropertiesValidationController = new DownloadPropertiesValidationController(languageController);
-            settings.Download = downloadPropertiesValidationController.ValidateProperties(settings.Download) as Models.Settings.DownloadProperties;
-            taskStatusController.Complete(validateDownloadSettingsTask);
-
-            taskStatusController.Complete(validateSettingsTask);
-            taskStatusController.Complete(loadSettingsTask);
-
-            // set user agent string used for network requests
-            if (!string.IsNullOrEmpty(settings.Connection.UserAgent))
-                networkController.UserAgent = settings.Connection.UserAgent;
+            var settings = settingsController.Settings;
 
             #endregion
 
@@ -444,18 +439,22 @@ namespace GoodOfflineGames
 
             #region Authorization
 
-            var authenticationPropertiesValidationController = new AuthenticationPropertiesValidationController(consoleController);
+            var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(consoleController);
 
             var authorizationController = new AuthorizationController(
+                usernamePasswordValidationDelegate,
                 uriController,
                 networkController,
                 serializationController,
                 loginTokenExtractionController,
                 loginIdExtractionController,
                 loginUsernameExtractionController,
-                consoleController,
-                settings.Authentication,
-                authenticationPropertiesValidationController,
+                consoleController);
+
+            var authorizeController = new AuthorizeController(
+                settings.Username,
+                settings.Password,
+                authorizationController,
                 taskStatusController);
 
             #endregion
@@ -645,19 +644,19 @@ namespace GoodOfflineGames
             var routingController = new RoutingController(productRoutesDataController);
 
             var gameDetailsManualUrlsEnumerationController = new GameDetailsManualUrlEnumerationController(
-                settings.Download.Languages,
-                settings.Download.OperatingSystems,
+                settings.DownloadsLanguages,
+                settings.DownloadsOperatingSystems,
                 gameDetailsDataController);
 
             var gameDetailsDirectoryEnumerationController = new GameDetailsDirectoryEnumerationController(
-                settings.Download.Languages,
-                settings.Download.OperatingSystems,
+                settings.DownloadsLanguages,
+                settings.DownloadsOperatingSystems,
                 gameDetailsDataController,
                 productFilesDirectoryDelegate);
 
             var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
-                settings.Download.Languages,
-                settings.Download.OperatingSystems,
+                settings.DownloadsLanguages,
+                settings.DownloadsOperatingSystems,
                 gameDetailsDataController,
                 routingController,
                 productFilesDirectoryDelegate,
@@ -705,14 +704,14 @@ namespace GoodOfflineGames
 
             // downloads processing
 
-            var imagesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
+            var imagesProcessScheduledDownloadsController = new ProcessDownloadsController(
                 ProductDownloadTypes.Image,
                 updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
                 taskStatusController);
 
-            var screenshotsProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
+            var screenshotsProcessScheduledDownloadsController = new ProcessDownloadsController(
                 ProductDownloadTypes.Screenshot,
                 updatedDataController,
                 productDownloadsDataController,
@@ -721,7 +720,7 @@ namespace GoodOfflineGames
 
             var sesionUriExtractionController = new SessionUriExtractionController();
             var sessionController = new SessionController(
-                networkController, 
+                networkController,
                 sesionUriExtractionController);
 
             var manualUrlDownloadFromSourceDelegate = new ManualUrlDownloadFromSourceDelegate(
@@ -731,7 +730,7 @@ namespace GoodOfflineGames
                 fileDownloadController,
                 taskStatusController);
 
-            var productFilesProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
+            var productFilesProcessScheduledDownloadsController = new ProcessDownloadsController(
                 ProductDownloadTypes.ProductFile,
                 updatedDataController,
                 productDownloadsDataController,
@@ -752,14 +751,14 @@ namespace GoodOfflineGames
             var validationUriController = new ValidationUriController(uriController);
 
             var validationDownloadFromSourceDelegate = new ValidationDownloadFromSourceDelegate(
-                routingController, 
+                routingController,
                 sessionController,
                 validationExpectedDelegate,
                 validationUriController,
-                fileDownloadController, 
+                fileDownloadController,
                 taskStatusController);
 
-            var validationProcessScheduledDownloadsController = new ProcessScheduledDownloadsController(
+            var validationProcessScheduledDownloadsController = new ProcessDownloadsController(
                 ProductDownloadTypes.Validation,
                 updatedDataController,
                 productDownloadsDataController,
@@ -778,7 +777,7 @@ namespace GoodOfflineGames
                 productFilesDirectoryDelegate,
                 uriFilenameDelegate,
                 validationController,
-                gameDetailsManualUrlsEnumerationController, 
+                gameDetailsManualUrlsEnumerationController,
                 validationExpectedDelegate,
                 updatedDataController,
                 lastKnownValidDataController,
@@ -820,7 +819,7 @@ namespace GoodOfflineGames
                 // load initial data
                 loadDataController,
                 // authorize
-                authorizationController
+                authorizeController
             };
 
             #endregion
@@ -828,21 +827,21 @@ namespace GoodOfflineGames
             #region Data Updates Task Activities
 
             // data updates
-            if (settings.Update.Products)
+            if (settings.UpdateData.Contains("products"))
                 taskActivityControllers.Add(productsUpdateController);
-            if (settings.Update.AccountProducts)
+            if (settings.UpdateData.Contains("accountProducts"))
                 taskActivityControllers.Add(accountProductsUpdateController);
-            if (settings.Update.Wishlist)
+            if (settings.UpdateData.Contains("wishlist"))
                 taskActivityControllers.Add(wishlistedUpdateController);
 
             // product/account product dependent data updates
-            if (settings.Update.GameProductData)
+            if (settings.UpdateData.Contains("gameProductData"))
                 taskActivityControllers.Add(gameProductDataUpdateController);
-            if (settings.Update.ApiProducts)
+            if (settings.UpdateData.Contains("apiProducts"))
                 taskActivityControllers.Add(apiProductUpdateController);
-            if (settings.Update.GameDetails)
+            if (settings.UpdateData.Contains("gameDetails"))
                 taskActivityControllers.Add(gameDetailsUpdateController);
-            if (settings.Update.Screenshots)
+            if (settings.UpdateData.Contains("screenshots"))
                 taskActivityControllers.Add(screenshotUpdateController);
 
             #endregion
@@ -850,34 +849,35 @@ namespace GoodOfflineGames
             #region Download Task Activities
 
             // schedule downloads
-            if (settings.Download.ProductsImages)
+            if (settings.UpdateDownloads.Contains("productsImages"))
                 taskActivityControllers.Add(updateProductsImagesDownloadsController);
-            if (settings.Download.AccountProductsImages)
+            if (settings.UpdateDownloads.Contains("accountProductsImages"))
                 taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
-            if (settings.Download.Screenshots)
+            if (settings.UpdateDownloads.Contains("screenshots"))
                 taskActivityControllers.Add(updateScreenshotsDownloadsController);
-            if (settings.Download.ProductsFiles)
+            if (settings.UpdateDownloads.Contains("productsFiles"))
                 taskActivityControllers.Add(updateProductFilesDownloadsController);
+            if (settings.UpdateDownloads.Contains("validationFiles"))
+                taskActivityControllers.Add(updateValidationDownloadsController);
 
             //actually download images, screenshots, product files, extras
-            if (settings.Download.ProductsImages ||
-                settings.Download.AccountProductsImages)
+            if (settings.ProcessDownloads.Contains("productsImages") ||
+                settings.ProcessDownloads.Contains("accountProductsImages"))
                 taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
-            if (settings.Download.Screenshots)
+            if (settings.ProcessDownloads.Contains("screenshots"))
                 taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
-            if (settings.Download.ProductsFiles)
+            if (settings.ProcessDownloads.Contains("productsFiles"))
                 taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
+            if (settings.UpdateDownloads.Contains("validationFiles"))
+                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
 
             #endregion
 
             #region Validation Task Activities
 
             // validation downloads should follow productFiles download processing, because they use timed CDN key
-            if (settings.Validation.Download)
-                taskActivityControllers.Add(updateValidationDownloadsController);
-            if (settings.Validation.Download)
-                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
-            if (settings.Validation.ValidateUpdated)
+
+            if (settings.Validate)
                 taskActivityControllers.Add(processValidationController);
 
             #endregion
@@ -885,10 +885,10 @@ namespace GoodOfflineGames
             #region Cleanup Task Activities
 
             // cleanup directories
-            if (settings.Cleanup.Directories)
+            if (settings.Cleanup.Contains("directories"))
                 taskActivityControllers.Add(directoryCleanupController);
             // cleanup files
-            if (settings.Cleanup.Files)
+            if (settings.Cleanup.Contains("files"))
                 taskActivityControllers.Add(filesCleanupController);
 
             #endregion
@@ -915,9 +915,9 @@ namespace GoodOfflineGames
             taskStatusController.Complete(applicationTaskStatus);
             taskStatusViewController.CreateView(true);
 
-            #region Save log 
+            #region Save diagnostics log
 
-            if (settings.Log)
+            if (settings.DiagnosticsLog)
             {
                 var uri = System.IO.Path.Combine(
                     logsDirectoryDelegate.GetDirectory(),

@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Settings;
-
 namespace GOG.Interfaces.Authorization
 {
     public interface IAuthorizeDelegate
     {
-        Task Authorize(IAuthenticationProperties usernamePassword);
+        Task Authorize(string username, string password);
     }
 
     public interface IIsAuthorizedDelegate

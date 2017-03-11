@@ -7,7 +7,6 @@ using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Console;
-using Interfaces.Settings;
 using Interfaces.Serialization;
 using Interfaces.PropertiesValidation;
 
@@ -26,7 +25,7 @@ namespace GOG.Controllers.Authorization
 
         private const string recaptchaUri = "https://www.google.com/recaptcha";
 
-        private IAuthenticationPropertiesValidationController authenticationPropertiesValidationController;
+        private IValidatePropertiesDelegate<string> usernamePasswordValidationDelegate;
         private IUriController uriController;
         private INetworkController networkController;
         private IStringExtractionController loginTokenExtractionController;
@@ -36,7 +35,7 @@ namespace GOG.Controllers.Authorization
         private ISerializationController<string> serializationController;
 
         public AuthorizationController(
-            IAuthenticationPropertiesValidationController authenticationPropertiesValidationController,
+            IValidatePropertiesDelegate<string> usernamePasswordValidationDelegate,
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
@@ -45,7 +44,7 @@ namespace GOG.Controllers.Authorization
             IStringExtractionController loginUsernameExtractionController,
             IConsoleController consoleController)
         {
-            this.authenticationPropertiesValidationController = authenticationPropertiesValidationController;
+            this.usernamePasswordValidationDelegate = usernamePasswordValidationDelegate;
             this.uriController = uriController;
             this.networkController = networkController;
             this.loginTokenExtractionController = loginTokenExtractionController;
@@ -65,7 +64,7 @@ namespace GOG.Controllers.Authorization
             return userData.IsLoggedIn;
         }
 
-        public async Task Authorize(IAuthenticationProperties usernamePassword)
+        public async Task Authorize(string username, string password)
         {
             if (await IsAuthorized()) return;
 
@@ -88,18 +87,18 @@ namespace GOG.Controllers.Authorization
                 QueryParameters.LoginAuthenticate["login[id]"] = loginId;
                 loginUri = Uris.Paths.Authentication.Login;
 
-                usernamePassword.Username = loginUsernameExtractionController.ExtractMultiple(authResponse).First();
+                username = loginUsernameExtractionController.ExtractMultiple(authResponse).First();
             }
             else
             {
                 QueryParameters.LoginAuthenticate.Remove("login[id]");
-                QueryParameters.LoginAuthenticate["login[username]"] = usernamePassword.Username;
+                QueryParameters.LoginAuthenticate["login[username]"] = username;
                 loginUri = Uris.Paths.Authentication.LoginCheck;
             }
 
-            usernamePassword = authenticationPropertiesValidationController.ValidateProperties(usernamePassword);
+            var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(username, password);
 
-            QueryParameters.LoginAuthenticate["login[password]"] = usernamePassword.Password;
+            QueryParameters.LoginAuthenticate["login[password]"] = usernamePassword[1];
             QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
 
             string loginData = uriController.ConcatenateQueryParameters(QueryParameters.LoginAuthenticate);
@@ -118,7 +117,7 @@ namespace GOG.Controllers.Authorization
 
             while (securityCode.Length != 4)
             {
-                consoleController.WriteLine(securityCodeHasBeenSent, null, usernamePassword.Username);
+                consoleController.WriteLine(securityCodeHasBeenSent, null, usernamePassword[0]);
                 securityCode = consoleController.ReadLine();
             }
 

@@ -1,40 +1,13 @@
 ﻿{
-  "connection": {
-    "userAgent": ""
-  },
-  "authentication": {
-    "username": "",
-    "password": ""
-  },
-  "update": {
-    "products": true,
-    "accountProducts": true,
-    "wishlist": true,
-    "gameProductData": true,
-    "apiProducts": true,
-    "gameDetails": true,
-    "screenshots": false
-  },
-  "download": {
-    "productsImages": false,
-    "accountProductsImages": false,
-    "screenshots": false,
-    "productsFiles": false,
-    "languages": [
-      "en"
-    ],
-    "operatingSystems": [
-      "Windows",
-      "Mac"
-    ]
-  },
-  "validation": {
-    "download": false,
-    "validateUpdated": false
-  },
-  "cleanup": {
-    "directories": false,
-    "files": false
-  },
-  "log": false
+	"continueExistingSession": true,
+	"username": "",
+	"password": "",
+	"updateData":	[ "products", "accountProducts", "wishlist", "gameProductData", "apiProducts", "gameDetails", "screenshots" ],
+	"downloadsLanguages": [ "en" ],
+	"downloadsOperatingSystems": [ "Windows", "Mac" ],
+	"updateDownloads": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles", "validationFiles" ],
+	"processDownloads": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles", "validationFiles" ],
+	"validate": true,
+	"cleanup": [ "directories", "files" ],
+	"diagnosticsLog": true
 }

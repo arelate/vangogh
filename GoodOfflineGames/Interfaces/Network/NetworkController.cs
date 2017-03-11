@@ -24,10 +24,16 @@ namespace Interfaces.Network
         Task<string> Post(string uri, IDictionary<string, string> parameters = null, string data = null);
     }
 
+    public interface ISetCookiesDelegate
+    {
+        Task SetCookies(HttpResponseMessage response);
+    }
+
     public interface INetworkController :
         IGetDelegate,
         IRequestResponseDelegate,
-        IPostDelegate
+        IPostDelegate,
+        ISetCookiesDelegate
     {
         // ... 
     }

@@ -8,16 +8,16 @@ using Interfaces.TaskStatus;
 using Models.ProductDownloads;
 using Models.Separators;
 
-namespace GOG.TaskActivities.Download
+namespace GOG.TaskActivities.ProcessDownloads
 {
-    public class ProcessScheduledDownloadsController : TaskActivityController
+    public class ProcessDownloadsController : TaskActivityController
     {
         private ProductDownloadTypes downloadType;
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate;
 
-        public ProcessScheduledDownloadsController(
+        public ProcessDownloadsController(
             ProductDownloadTypes downloadType,
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
