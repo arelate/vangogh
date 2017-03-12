@@ -36,6 +36,8 @@ namespace Controllers.Presentation
             this.lineBreakingController = lineBreakingController;
             this.consoleController = consoleController;
 
+            consoleController.Clear();
+
             previousScreenLinesLengths = new List<int>();
             consoleController.CursorVisible = false;
 
