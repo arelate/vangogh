@@ -19,6 +19,7 @@ namespace Controllers.Hash
     {
         private IGetFilenameDelegate getFilenameDelegate;
         private string uriHashesFilename;
+        private bool dataLoaded;
 
         private ISerializationController<string> serializationController;
         private IStorageController<string> storageController;
@@ -37,6 +38,7 @@ namespace Controllers.Hash
             this.storageController = storageController;
 
             uriHashes = new Dictionary<string, int>();
+            dataLoaded = false;
         }
 
         public int GetHash(string uri)
@@ -57,10 +59,15 @@ namespace Controllers.Hash
 
             if (uriHashes == null)
                 uriHashes = new Dictionary<string, int>();
+
+            dataLoaded = true;
         }
 
         public async Task SaveAsync()
         {
+            if (!dataLoaded)
+                throw new InvalidOperationException("Saving hashes without loading them first would overwrite existing data");
+
             var serialiedData = serializationController.Serialize(uriHashes);
             await storageController.PushAsync(uriHashesFilename, serialiedData);
         }

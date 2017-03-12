@@ -439,6 +439,8 @@ namespace GoodOfflineGames
 
             var loadDataController = new LoadDataController(
                 taskStatusController,
+                // hash tracking should be first data controller to be loaded 
+                // as all serialized storage operations go through it and might overwrite data on disk
                 hashTrackingController,
                 settingsController,
                 activityParametersController,
