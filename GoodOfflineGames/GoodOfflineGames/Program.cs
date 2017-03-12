@@ -66,6 +66,7 @@ using GOG.TaskActivities.UpdateDownloads;
 using GOG.TaskActivities.ProcessDownloads;
 using GOG.TaskActivities.Cleanup;
 using GOG.TaskActivities.Validate;
+using GOG.TaskActivities.LogTaskStatus;
 
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
@@ -400,8 +401,10 @@ namespace GoodOfflineGames
 
             #region Settings: Load, Validation
 
+            var settingsFilenameDelegate = new FixedFilenameDelegate("settings", jsonFilenameDelegate);
+
             var settingsController = new SettingsController(
-                "settings.json", 
+                settingsFilenameDelegate,
                 serializedStorageController);
 
             var loadSettingsTaskActivity = new LoadSettingsController(
@@ -410,7 +413,16 @@ namespace GoodOfflineGames
 
             loadSettingsTaskActivity.ProcessTaskAsync(applicationTaskStatus).Wait();
 
-            var settings = settingsController.Settings;
+            var downloadsLanguagesValidationDelegate = new DownloadsLanguagesValidationDelegate(languageController);
+            var downloadsOperatingSystemsValidationDelegate = new DownloadsOperatingSystemsValidationDelegate();
+
+            var validateSettingsTaskActivity = new ValidateSettingsController(
+                settingsController,
+                downloadsLanguagesValidationDelegate,
+                downloadsOperatingSystemsValidationDelegate,
+                taskStatusController);
+
+            validateSettingsTaskActivity.ProcessTaskAsync(applicationTaskStatus).Wait();
 
             #endregion
 
@@ -452,8 +464,7 @@ namespace GoodOfflineGames
                 consoleController);
 
             var authorizeController = new AuthorizeController(
-                settings.Username,
-                settings.Password,
+                settingsController,
                 authorizationController,
                 taskStatusController);
 
@@ -644,19 +655,16 @@ namespace GoodOfflineGames
             var routingController = new RoutingController(productRoutesDataController);
 
             var gameDetailsManualUrlsEnumerationController = new GameDetailsManualUrlEnumerationController(
-                settings.DownloadsLanguages,
-                settings.DownloadsOperatingSystems,
+                settingsController,
                 gameDetailsDataController);
 
             var gameDetailsDirectoryEnumerationController = new GameDetailsDirectoryEnumerationController(
-                settings.DownloadsLanguages,
-                settings.DownloadsOperatingSystems,
+                settingsController,
                 gameDetailsDataController,
                 productFilesDirectoryDelegate);
 
             var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
-                settings.DownloadsLanguages,
-                settings.DownloadsOperatingSystems,
+                settingsController,
                 gameDetailsDataController,
                 routingController,
                 productFilesDirectoryDelegate,
@@ -808,6 +816,16 @@ namespace GoodOfflineGames
 
             #endregion
 
+            #region Log Task Status 
+
+            var logTaskStatusController = new LogTaskStatusController(
+                logsDirectoryDelegate,
+                logsFilenameDelegate,
+                serializedStorageController,
+                taskStatusController);
+
+            #endregion
+
             #endregion
 
             #region TACs Execution
@@ -824,72 +842,52 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Data Updates Task Activities
+            #region Task Activities Groups
 
-            // data updates
-            if (settings.UpdateData.Contains("products"))
-                taskActivityControllers.Add(productsUpdateController);
-            if (settings.UpdateData.Contains("accountProducts"))
-                taskActivityControllers.Add(accountProductsUpdateController);
-            if (settings.UpdateData.Contains("wishlist"))
-                taskActivityControllers.Add(wishlistedUpdateController);
+            var updateDataTaskActivities = new Dictionary<string, ITaskActivityController>()
+            {
+                { "products", productsUpdateController },
+                { "accountProducts", accountProductsUpdateController },
+                { "wishlist", wishlistedUpdateController },
+                { "gameProductData", gameProductDataUpdateController },
+                { "apiProducts",  apiProductUpdateController },
+                { "gameDetails", gameDetailsUpdateController },
+                { "screenshots", screenshotUpdateController }
+            };
 
-            // product/account product dependent data updates
-            if (settings.UpdateData.Contains("gameProductData"))
-                taskActivityControllers.Add(gameProductDataUpdateController);
-            if (settings.UpdateData.Contains("apiProducts"))
-                taskActivityControllers.Add(apiProductUpdateController);
-            if (settings.UpdateData.Contains("gameDetails"))
-                taskActivityControllers.Add(gameDetailsUpdateController);
-            if (settings.UpdateData.Contains("screenshots"))
-                taskActivityControllers.Add(screenshotUpdateController);
+            var updateDownloadsTaskActivities = new Dictionary<string, ITaskActivityController>()
+            {
+                { "productsImages", updateProductsImagesDownloadsController },
+                { "accountProductsImages", updateAccountProductsImagesDownloadsController },
+                { "screenshots", updateScreenshotsDownloadsController },
+                { "productsFiles", updateProductFilesDownloadsController },
+                { "validationFiles", updateValidationDownloadsController }
+            };
 
-            #endregion
+            var processDownloadsTaskActivities = new Dictionary<string, ITaskActivityController>()
+            {
+                { "productsImages", imagesProcessScheduledDownloadsController },
+                { "accountProductsImages", imagesProcessScheduledDownloadsController },
+                { "screenshots", screenshotsProcessScheduledDownloadsController },
+                { "productsFiles", productFilesProcessScheduledDownloadsController },
+                { "validationFiles",validationProcessScheduledDownloadsController }
+            };
 
-            #region Download Task Activities
+            var validateTaskActivities = new Dictionary<string, ITaskActivityController>()
+            {
+                { "productFiles", processValidationController }
+            };
 
-            // schedule downloads
-            if (settings.UpdateDownloads.Contains("productsImages"))
-                taskActivityControllers.Add(updateProductsImagesDownloadsController);
-            if (settings.UpdateDownloads.Contains("accountProductsImages"))
-                taskActivityControllers.Add(updateAccountProductsImagesDownloadsController);
-            if (settings.UpdateDownloads.Contains("screenshots"))
-                taskActivityControllers.Add(updateScreenshotsDownloadsController);
-            if (settings.UpdateDownloads.Contains("productsFiles"))
-                taskActivityControllers.Add(updateProductFilesDownloadsController);
-            if (settings.UpdateDownloads.Contains("validationFiles"))
-                taskActivityControllers.Add(updateValidationDownloadsController);
+            var cleanupTaskActivities = new Dictionary<string, ITaskActivityController>()
+            {
+                { "directories", directoryCleanupController },
+                { "files", filesCleanupController }
+            };
 
-            //actually download images, screenshots, product files, extras
-            if (settings.ProcessDownloads.Contains("productsImages") ||
-                settings.ProcessDownloads.Contains("accountProductsImages"))
-                taskActivityControllers.Add(imagesProcessScheduledDownloadsController);
-            if (settings.ProcessDownloads.Contains("screenshots"))
-                taskActivityControllers.Add(screenshotsProcessScheduledDownloadsController);
-            if (settings.ProcessDownloads.Contains("productsFiles"))
-                taskActivityControllers.Add(productFilesProcessScheduledDownloadsController);
-            if (settings.UpdateDownloads.Contains("validationFiles"))
-                taskActivityControllers.Add(validationProcessScheduledDownloadsController);
-
-            #endregion
-
-            #region Validation Task Activities
-
-            // validation downloads should follow productFiles download processing, because they use timed CDN key
-
-            if (settings.Validate)
-                taskActivityControllers.Add(processValidationController);
-
-            #endregion
-
-            #region Cleanup Task Activities
-
-            // cleanup directories
-            if (settings.Cleanup.Contains("directories"))
-                taskActivityControllers.Add(directoryCleanupController);
-            // cleanup files
-            if (settings.Cleanup.Contains("files"))
-                taskActivityControllers.Add(filesCleanupController);
+            var logTaskStatusTaskActivities = new Dictionary<string, ITaskActivityController>()
+            {
+                {  "logTaskStatus", logTaskStatusController }
+            };
 
             #endregion
 
@@ -911,27 +909,6 @@ namespace GoodOfflineGames
                     break;
                 }
             }
-
-            taskStatusController.Complete(applicationTaskStatus);
-            taskStatusViewController.CreateView(true);
-
-            #region Save diagnostics log
-
-            if (settings.DiagnosticsLog)
-            {
-                var uri = System.IO.Path.Combine(
-                    logsDirectoryDelegate.GetDirectory(),
-                    logsFilenameDelegate.GetFilename());
-
-                presentationController.Present(new List<Tuple<string, string[]>>
-                {
-                    Tuple.Create(string.Format("Save log to {0}", uri), new string[] { "white" })
-                });
-
-                serializedStorageController.SerializePushAsync(uri, applicationTaskStatus).Wait();
-            }
-
-            #endregion
 
             var defaultColor = new string[] { " default" };
 

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoadSettings\LoadSettingsController.cs" />
+    <Compile Include="LogTaskStatus\LogTaskStatusController.cs" />
     <Compile Include="UpdateData\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />
     <Compile Include="Cleanup\FilesCleanupController.cs" />

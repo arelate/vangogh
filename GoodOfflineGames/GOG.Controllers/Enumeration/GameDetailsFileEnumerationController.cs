@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.IO;
 
 using Interfaces.Data;
+using Interfaces.Settings;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Routing;
@@ -18,15 +19,13 @@ namespace GOG.Controllers.Enumeration
         private IRoutingController routingController;
 
         public GameDetailsFileEnumerationController(
-            string[] languages,
-            string[] operatingSystems,
+            ISettingsProperty settingsProperty,
             IDataController<GameDetails> gameDetailsDataController,
             IRoutingController routingController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate) :
             base(
-                languages,
-                operatingSystems,
+                settingsProperty,
                 gameDetailsDataController)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Data;
+using Interfaces.Settings;
 using Interfaces.Destination.Directory;
 
 using GOG.Models;
@@ -13,13 +14,11 @@ namespace GOG.Controllers.Enumeration
         private IGetDirectoryDelegate getDirectoryDelegate;
 
         public GameDetailsDirectoryEnumerationController(
-            string[] languages,
-            string[] operatingSystems,
+            ISettingsProperty settingsProperty,
             IDataController<GameDetails> gameDetailsDataController,
             IGetDirectoryDelegate getDirectoryDelegate):
             base(
-                languages,
-                operatingSystems,
+                settingsProperty,
                 gameDetailsDataController)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;

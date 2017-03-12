@@ -4,6 +4,7 @@ using System.Linq;
 
 using Interfaces.Data;
 using Interfaces.Enumeration;
+using Interfaces.Settings;
 
 using Models.Uris;
 
@@ -13,23 +14,26 @@ namespace GOG.Controllers.Enumeration
 {
     public class GameDetailsManualUrlEnumerationController : IEnumerateDelegate<string>
     {
-        private string[] languages;
-        private string[] operatingSystems;
+        private ISettingsProperty settingsProperty;
         private IDataController<GameDetails> gameDetailsDataController;
 
         public GameDetailsManualUrlEnumerationController(
-            string[] languages,
-            string[] operatingSystems,
+            ISettingsProperty settingsProperty,
             IDataController<GameDetails> gameDetailsDataController)
         {
-            this.languages = languages;
-            this.operatingSystems = operatingSystems;
+            this.settingsProperty = settingsProperty;
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
         private IList<string> Enumerate(GameDetails gameDetails)
         {
             var gameDetailsManualUrls = new List<string>();
+
+            if (settingsProperty == null ||
+                settingsProperty.Settings == null ||
+                settingsProperty.Settings.DownloadsLanguages == null ||
+                settingsProperty.Settings.DownloadsOperatingSystems == null)
+                return gameDetailsManualUrls;
 
             if (gameDetails == null) return gameDetailsManualUrls;
 
@@ -38,13 +42,13 @@ namespace GOG.Controllers.Enumeration
             if (gameDetails.LanguageDownloads != null)
                 foreach (var download in gameDetails.LanguageDownloads)
                 {
-                    if (!languages.Contains(download.Language)) continue;
+                    if (!settingsProperty.Settings.DownloadsLanguages.Contains(download.Language)) continue;
 
-                    if (operatingSystems.Contains("Windows") && download.Windows != null)
+                    if (settingsProperty.Settings.DownloadsOperatingSystems.Contains("Windows") && download.Windows != null)
                         gameDetailsDownloadEntries.AddRange(download.Windows);
-                    if (operatingSystems.Contains("Mac") && download.Mac != null)
+                    if (settingsProperty.Settings.DownloadsOperatingSystems.Contains("Mac") && download.Mac != null)
                         gameDetailsDownloadEntries.AddRange(download.Mac);
-                    if (operatingSystems.Contains("Linux") && download.Linux != null)
+                    if (settingsProperty.Settings.DownloadsOperatingSystems.Contains("Linux") && download.Linux != null)
                         gameDetailsDownloadEntries.AddRange(download.Linux);
                 }
 

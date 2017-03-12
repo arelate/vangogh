@@ -1,13 +1,6 @@
 ﻿{
-	"continueExistingSession": true,
 	"username": "",
 	"password": "",
-	"updateData":	[ "products", "accountProducts", "wishlist", "gameProductData", "apiProducts", "gameDetails", "screenshots" ],
 	"downloadsLanguages": [ "en" ],
-	"downloadsOperatingSystems": [ "Windows", "Mac" ],
-	"updateDownloads": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles", "validationFiles" ],
-	"processDownloads": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles", "validationFiles" ],
-	"validate": true,
-	"cleanup": [ "directories", "files" ],
-	"diagnosticsLog": true
+	"downloadsOperatingSystems": [ "Windows", "Mac" ]
 }

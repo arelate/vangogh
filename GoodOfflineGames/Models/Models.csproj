@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityParameters\ActivityParameters.cs" />
     <Compile Include="TaskStatus\TaskStatus.cs" />
     <Compile Include="ProductCore\ProductCore.cs" />
     <Compile Include="ProductDownloads\ProductDownloads.cs" />

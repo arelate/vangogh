@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Interfaces.TaskStatus;
 using Interfaces.Settings;
@@ -10,17 +6,17 @@ using Interfaces.PropertiesValidation;
 
 namespace GOG.TaskActivities.ValidateSettings
 {
-    public class ValidateSettingsController: TaskActivityController
+    public class ValidateSettingsController : TaskActivityController
     {
         private ISettingsProperty settingsProperty;
         private IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate;
         private IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate;
 
         public ValidateSettingsController(
-            ITaskStatusController taskStatusController,
             ISettingsProperty settingsProperty,
             IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate,
-            IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate) :
+            IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate,
+            ITaskStatusController taskStatusController) :
             base(taskStatusController)
         {
             this.settingsProperty = settingsProperty;
