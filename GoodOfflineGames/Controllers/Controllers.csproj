@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityParameters\ActivityParametersController.cs" />
     <Compile Include="Collection\CollectionController.cs" />
     <Compile Include="Containment\StringContainmentDelegate.cs" />
     <Compile Include="Conversion\BytesToStringConversionController.cs" />

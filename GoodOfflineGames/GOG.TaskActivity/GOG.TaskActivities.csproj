@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoadSettings\LoadSettingsController.cs" />
+    <Compile Include="ProcessActivityParameters\ProcessActivityParametersController.cs" />
     <Compile Include="LogTaskStatus\LogTaskStatusController.cs" />
     <Compile Include="UpdateData\ProductCoreUpdateController.cs" />
     <Compile Include="Cleanup\DirectoryCleanupController.cs" />

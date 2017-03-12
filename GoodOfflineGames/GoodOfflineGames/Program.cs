@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using Controllers.Stream;
@@ -15,6 +14,7 @@ using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Settings;
+using Controllers.ActivityParameters;
 using Controllers.RequestPage;
 using Controllers.Throttle;
 using Controllers.ImageUri;
@@ -57,16 +57,16 @@ using GOG.Controllers.Collection;
 using GOG.Controllers.DownloadSources;
 using GOG.Controllers.Authorization;
 
-using GOG.TaskActivities.LoadSettings;
+using GOG.TaskActivities.Load;
 using GOG.TaskActivities.ValidateSettings;
 using GOG.TaskActivities.Authorize;
-using GOG.TaskActivities.Load;
 using GOG.TaskActivities.UpdateData;
 using GOG.TaskActivities.UpdateDownloads;
 using GOG.TaskActivities.ProcessDownloads;
 using GOG.TaskActivities.Cleanup;
 using GOG.TaskActivities.Validate;
 using GOG.TaskActivities.LogTaskStatus;
+using GOG.TaskActivities.ActivityParameters;
 
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
@@ -407,12 +407,6 @@ namespace GoodOfflineGames
                 settingsFilenameDelegate,
                 serializedStorageController);
 
-            var loadSettingsTaskActivity = new LoadSettingsController(
-                settingsController,
-                taskStatusController);
-
-            loadSettingsTaskActivity.ProcessTaskAsync(applicationTaskStatus).Wait();
-
             var downloadsLanguagesValidationDelegate = new DownloadsLanguagesValidationDelegate(languageController);
             var downloadsOperatingSystemsValidationDelegate = new DownloadsOperatingSystemsValidationDelegate();
 
@@ -422,7 +416,15 @@ namespace GoodOfflineGames
                 downloadsOperatingSystemsValidationDelegate,
                 taskStatusController);
 
-            validateSettingsTaskActivity.ProcessTaskAsync(applicationTaskStatus).Wait();
+            #endregion
+
+            #region Activity Parameters 
+
+            var activityParametersFilenameDelegate = new FixedFilenameDelegate("activityParameters", jsonFilenameDelegate);
+
+            var activityParametersController = new ActivityParametersController(
+                activityParametersFilenameDelegate,
+                serializedStorageController);
 
             #endregion
 
@@ -432,6 +434,8 @@ namespace GoodOfflineGames
 
             var loadDataController = new LoadDataController(
                 taskStatusController,
+                settingsController,
+                activityParametersController,
                 hashTrackingController,
                 productsDataController,
                 accountProductsDataController,
@@ -828,23 +832,9 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region TACs Execution
+            #region Task Activities Parameters
 
-            #region Initialization Task Activities (always performed)
-
-            var taskActivityControllers = new List<ITaskActivityController>
-            {
-                // load initial data
-                loadDataController,
-                // authorize
-                authorizeController
-            };
-
-            #endregion
-
-            #region Task Activities Groups
-
-            var updateDataTaskActivities = new Dictionary<string, ITaskActivityController>()
+            var updateDataActivityParameters = new Dictionary<string, ITaskActivityController>()
             {
                 { "products", productsUpdateController },
                 { "accountProducts", accountProductsUpdateController },
@@ -855,7 +845,7 @@ namespace GoodOfflineGames
                 { "screenshots", screenshotUpdateController }
             };
 
-            var updateDownloadsTaskActivities = new Dictionary<string, ITaskActivityController>()
+            var updateDownloadsActivityParameters = new Dictionary<string, ITaskActivityController>()
             {
                 { "productsImages", updateProductsImagesDownloadsController },
                 { "accountProductsImages", updateAccountProductsImagesDownloadsController },
@@ -864,7 +854,7 @@ namespace GoodOfflineGames
                 { "validationFiles", updateValidationDownloadsController }
             };
 
-            var processDownloadsTaskActivities = new Dictionary<string, ITaskActivityController>()
+            var processDownloadsActivityParameters = new Dictionary<string, ITaskActivityController>()
             {
                 { "productsImages", imagesProcessScheduledDownloadsController },
                 { "accountProductsImages", imagesProcessScheduledDownloadsController },
@@ -873,20 +863,51 @@ namespace GoodOfflineGames
                 { "validationFiles",validationProcessScheduledDownloadsController }
             };
 
-            var validateTaskActivities = new Dictionary<string, ITaskActivityController>()
+            var validateActivityParameters = new Dictionary<string, ITaskActivityController>()
             {
                 { "productFiles", processValidationController }
             };
 
-            var cleanupTaskActivities = new Dictionary<string, ITaskActivityController>()
+            var cleanupActivityParameters = new Dictionary<string, ITaskActivityController>()
             {
                 { "directories", directoryCleanupController },
                 { "files", filesCleanupController }
             };
 
-            var logTaskStatusTaskActivities = new Dictionary<string, ITaskActivityController>()
+            var logTaskStatusActivityParameters = new Dictionary<string, ITaskActivityController>()
             {
                 {  "logTaskStatus", logTaskStatusController }
+            };
+
+            var activityParametersTaskActivities = new Dictionary<string, Dictionary<string, ITaskActivityController>>()
+            {
+                { "updateData", updateDataActivityParameters },
+                { "updateDownloads", updateDownloadsActivityParameters },
+                { "processDownloads", processDownloadsActivityParameters },
+                { "validate", validateActivityParameters },
+                { "cleanup", cleanupActivityParameters },
+                { "logTaskStatus", logTaskStatusActivityParameters }
+            };
+
+            var processActivityParametersController = new ProcessActivityParametersController(
+                activityParametersController,
+                activityParametersTaskActivities,
+                taskStatusController);
+
+            #endregion
+
+            #region Initialization Task Activities (always performed)
+
+            var taskActivityControllers = new List<ITaskActivityController>
+            {
+                // load initial data
+                loadDataController,
+                // validate settings
+                validateSettingsTaskActivity,
+                // authorize
+                authorizeController,
+                //  activity parameters
+                processActivityParametersController
             };
 
             #endregion
@@ -919,8 +940,6 @@ namespace GoodOfflineGames
                     Tuple.Create("%cPress ENTER to close the window...", defaultColor)
                 }, true);
             consoleController.ReadLine();
-
-            #endregion
         }
     }
 }

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityParameters\ActivityParameters.cs" />
     <Compile Include="Collection\CollectionProcessing.cs" />
     <Compile Include="Containment\ContainmentController.cs" />
     <Compile Include="Conversion\ConversionController.cs" />

@@ -2,19 +2,17 @@
 
 using Interfaces.Data;
 using Interfaces.Destination.Filename;
-using Interfaces.Settings;
 using Interfaces.SerializedStorage;
+using Interfaces.ActivityParameters;
 
-namespace Controllers.Settings
+namespace Controllers.ActivityParameters
 {
-    public class SettingsController : ILoadDelegate, ISettingsProperty
+    public class ActivityParametersController : ILoadDelegate, IActivityParametersProperty
     {
         private IGetFilenameDelegate getFilenameDelegate;
         private ISerializedStorageController serializedStorageController;
 
-        public ISettings Settings { get; private set; }
-
-        public SettingsController(
+        public ActivityParametersController(
             IGetFilenameDelegate getFilenameDelegate,
             ISerializedStorageController serializedStorageController)
         {
@@ -22,21 +20,18 @@ namespace Controllers.Settings
             this.serializedStorageController = serializedStorageController;
         }
 
+        public IActivityParameters[] ActivityParameters { get; private set; }
+
         public async Task LoadAsync()
         {
-            Settings = await serializedStorageController.DeserializePullAsync<
-                Models.Settings.Settings>(
+            ActivityParameters = await serializedStorageController.DeserializePullAsync<
+                Models.ActivityParameters.ActivityParameters[]>(
                 getFilenameDelegate.GetFilename());
 
             // set defaults
 
-            if (Settings == null) Settings =
-                new Models.Settings.Settings();
-
-            if (Settings.DownloadsLanguages == null)
-                Settings.DownloadsLanguages = new string[0];
-            if (Settings.DownloadsOperatingSystems == null)
-                Settings.DownloadsOperatingSystems = new string[0];
+            if (ActivityParameters == null)
+                ActivityParameters = new Models.ActivityParameters.ActivityParameters[0];
         }
     }
 }
