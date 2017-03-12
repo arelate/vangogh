@@ -64,6 +64,7 @@
     <Compile Include="Data\DataController.cs" />
     <Compile Include="LineBreaking\LineBreakingController.cs" />
     <Compile Include="Measurement\MeasurementController.cs" />
+    <Compile Include="Naming\NamingDelegate.cs" />
     <Compile Include="Presentation\PresentationController.cs" />
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />

@@ -72,6 +72,7 @@
     <Compile Include="Indexing\ProductCoreIndexingController.cs" />
     <Compile Include="LineBreaking\LineBreakingController.cs" />
     <Compile Include="Measurement\FormattedStringMeasurementController.cs" />
+    <Compile Include="Naming\ActivityParametersNameDelegate.cs" />
     <Compile Include="Presentation\PresentationController.cs" />
     <Compile Include="PropertiesValidation\DownloadsOperatingSystemsValidationController.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />

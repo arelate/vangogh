@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Using
+
+using System;
 using System.Collections.Generic;
 
 using Controllers.Stream;
@@ -40,6 +42,7 @@ using Controllers.Sanitization;
 using Controllers.Session;
 using Controllers.Expectation;
 using Controllers.UpdateUri;
+using Controllers.Naming;
 
 using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
@@ -73,6 +76,8 @@ using Models.ProductScreenshots;
 using Models.ProductDownloads;
 
 using Models.TaskStatus;
+
+#endregion
 
 namespace GoodOfflineGames
 {
@@ -834,63 +839,58 @@ namespace GoodOfflineGames
 
             #region Task Activities Parameters
 
-            var updateDataActivityParameters = new Dictionary<string, ITaskActivityController>()
-            {
-                { "products", productsUpdateController },
-                { "accountProducts", accountProductsUpdateController },
-                { "wishlist", wishlistedUpdateController },
-                { "gameProductData", gameProductDataUpdateController },
-                { "apiProducts",  apiProductUpdateController },
-                { "gameDetails", gameDetailsUpdateController },
-                { "screenshots", screenshotUpdateController }
-            };
+            var activityParametersNameDelegate = new ActivityParametersNameDelegate();
 
-            var updateDownloadsActivityParameters = new Dictionary<string, ITaskActivityController>()
+            // convert strings to controller that concatenates
+            var activityParametersTaskActivities = new Dictionary<string, ITaskActivityController>()
             {
-                { "productsImages", updateProductsImagesDownloadsController },
-                { "accountProductsImages", updateAccountProductsImagesDownloadsController },
-                { "screenshots", updateScreenshotsDownloadsController },
-                { "productsFiles", updateProductFilesDownloadsController },
-                { "validationFiles", updateValidationDownloadsController }
-            };
-
-            var processDownloadsActivityParameters = new Dictionary<string, ITaskActivityController>()
-            {
-                { "productsImages", imagesProcessScheduledDownloadsController },
-                { "accountProductsImages", imagesProcessScheduledDownloadsController },
-                { "screenshots", screenshotsProcessScheduledDownloadsController },
-                { "productsFiles", productFilesProcessScheduledDownloadsController },
-                { "validationFiles",validationProcessScheduledDownloadsController }
-            };
-
-            var validateActivityParameters = new Dictionary<string, ITaskActivityController>()
-            {
-                { "productFiles", processValidationController }
-            };
-
-            var cleanupActivityParameters = new Dictionary<string, ITaskActivityController>()
-            {
-                { "directories", directoryCleanupController },
-                { "files", filesCleanupController }
-            };
-
-            var logTaskStatusActivityParameters = new Dictionary<string, ITaskActivityController>()
-            {
-                {  "logTaskStatus", logTaskStatusController }
-            };
-
-            var activityParametersTaskActivities = new Dictionary<string, Dictionary<string, ITaskActivityController>>()
-            {
-                { "updateData", updateDataActivityParameters },
-                { "updateDownloads", updateDownloadsActivityParameters },
-                { "processDownloads", processDownloadsActivityParameters },
-                { "validate", validateActivityParameters },
-                { "cleanup", cleanupActivityParameters },
-                { "logTaskStatus", logTaskStatusActivityParameters }
+                { activityParametersNameDelegate.GetName("updateData", "products"),
+                    productsUpdateController },
+                { activityParametersNameDelegate.GetName("updateData", "accountProducts"),
+                    accountProductsUpdateController },
+                { activityParametersNameDelegate.GetName("updateData","wishlist"),
+                    wishlistedUpdateController },
+                { activityParametersNameDelegate.GetName("updateData","gameProductData"),
+                    gameProductDataUpdateController },
+                { activityParametersNameDelegate.GetName("updateData","apiProducts"),
+                    apiProductUpdateController },
+                { activityParametersNameDelegate.GetName("updateData","gameDetails"),
+                    gameDetailsUpdateController },
+                { activityParametersNameDelegate.GetName("updateData","screenshots"),
+                    screenshotUpdateController },
+                { activityParametersNameDelegate.GetName("updateDownloads","productsImages"),
+                    updateProductsImagesDownloadsController },
+                { activityParametersNameDelegate.GetName("updateDownloads","accountProductsImages"),
+                    updateAccountProductsImagesDownloadsController },
+                { activityParametersNameDelegate.GetName("updateDownloads","screenshots"),
+                    updateScreenshotsDownloadsController },
+                { activityParametersNameDelegate.GetName("updateDownloads","productsFiles"),
+                    updateProductFilesDownloadsController },
+                { activityParametersNameDelegate.GetName("updateDownloads","validationFiles"),
+                    updateValidationDownloadsController },
+                { activityParametersNameDelegate.GetName("processDownloads","productsImages"),
+                    imagesProcessScheduledDownloadsController },
+                { activityParametersNameDelegate.GetName("processDownloads","accountProductsImages"),
+                    imagesProcessScheduledDownloadsController },
+                { activityParametersNameDelegate.GetName("processDownloads","screenshots"),
+                    screenshotsProcessScheduledDownloadsController },
+                { activityParametersNameDelegate.GetName("processDownloads","productsFiles"),
+                    productFilesProcessScheduledDownloadsController },
+                { activityParametersNameDelegate.GetName("processDownloads","validationFiles"),
+                    validationProcessScheduledDownloadsController },
+                { activityParametersNameDelegate.GetName("validate","productFiles"),
+                    processValidationController },
+                { activityParametersNameDelegate.GetName("cleanup","directories"),
+                    directoryCleanupController },
+                { activityParametersNameDelegate.GetName("cleanup","files"),
+                    filesCleanupController },
+                { activityParametersNameDelegate.GetName("logTaskStatus","true"),
+                    logTaskStatusController }
             };
 
             var processActivityParametersController = new ProcessActivityParametersController(
                 activityParametersController,
+                activityParametersNameDelegate,
                 activityParametersTaskActivities,
                 taskStatusController);
 

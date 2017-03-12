@@ -12,5 +12,7 @@
         // GameDetails downloads
         public const string GameDetailsDownloadsStart = "[[";
         public const string GameDetailsDownloadsEnd = "]]";
+        // activity parameters
+        public const string ActivityParameters = "-";
     }
 }
