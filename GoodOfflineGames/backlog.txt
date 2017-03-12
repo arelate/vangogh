@@ -1,6 +1,4 @@
-Backend:W
-
-- settings loading as taskActivity? It should be possible to break Program.cs dependency on settings with taskActivity manager that would decide what taskActivity to run next if at all
+Backend
 
 - stop and resume - make a session plan based on settings and remove taskActivities upon completion. Ask to reset session if one exists already when starting
 

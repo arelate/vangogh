@@ -26,17 +26,20 @@ namespace GOG.TaskActivities.ValidateSettings
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
-            var validateSettingsTask = taskStatusController.Create(taskStatus, "Validate settings");
+            await Task.Run(() =>
+            {
+                var validateSettingsTask = taskStatusController.Create(taskStatus, "Validate settings");
 
-            var validateDownloadsLanguagesTask = taskStatusController.Create(validateSettingsTask, "Validate downloads languages");
-            settingsProperty.Settings.DownloadsLanguages = downloadsLanguagesValidationDelegate.ValidateProperties(settingsProperty.Settings.DownloadsLanguages);
-            taskStatusController.Complete(validateDownloadsLanguagesTask);
+                var validateDownloadsLanguagesTask = taskStatusController.Create(validateSettingsTask, "Validate downloads languages");
+                settingsProperty.Settings.DownloadsLanguages = downloadsLanguagesValidationDelegate.ValidateProperties(settingsProperty.Settings.DownloadsLanguages);
+                taskStatusController.Complete(validateDownloadsLanguagesTask);
 
-            var validateDownloadsOperatingSystemsTask = taskStatusController.Create(validateSettingsTask, "Validate downloads operating systems");
-            settingsProperty.Settings.DownloadsOperatingSystems = downloadsOperatingSystemsValidationDelegate.ValidateProperties(settingsProperty.Settings.DownloadsOperatingSystems);
-            taskStatusController.Complete(validateDownloadsOperatingSystemsTask);
+                var validateDownloadsOperatingSystemsTask = taskStatusController.Create(validateSettingsTask, "Validate downloads operating systems");
+                settingsProperty.Settings.DownloadsOperatingSystems = downloadsOperatingSystemsValidationDelegate.ValidateProperties(settingsProperty.Settings.DownloadsOperatingSystems);
+                taskStatusController.Complete(validateDownloadsOperatingSystemsTask);
 
-            taskStatusController.Complete(validateSettingsTask);
+                taskStatusController.Complete(validateSettingsTask);
+            });
         }
     }
 }
