@@ -48,6 +48,10 @@ namespace Controllers.Hash
 
         public async Task LoadAsync()
         {
+            if (uriHashes != null &&
+                uriHashes.Count > 0)
+                throw new InvalidOperationException("Loading hashes when there is data already would lead to overwrite of the existing data");
+
             var serializedData = await storageController.PullAsync(uriHashesFilename);
             uriHashes = serializationController.Deserialize<Dictionary<string, int>>(serializedData);
 

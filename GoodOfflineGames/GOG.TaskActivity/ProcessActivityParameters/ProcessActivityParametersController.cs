@@ -32,27 +32,42 @@ namespace GOG.TaskActivities.ActivityParameters
                 activityParametersProperty.ActivityParameters == null)
                 return;
 
-            var expectedActivityParameters = new List<string>();
+            var requestedActivityParameters = new List<string>();
             foreach (var activityParameter in activityParametersProperty.ActivityParameters)
             {
                 if (activityParameter == null) continue;
                 foreach (var parameter in activityParameter.Parameters)
                 {
                     if (parameter == null) continue;
-                    expectedActivityParameters.Add(
+                    requestedActivityParameters.Add(
                         activityParametersNameDelegate.GetName(
                             activityParameter.Activity,
                             parameter));
                 }
             }
 
+            // flight plan is the intersection between what we've been requested to do with activityParameters.json
+            // and what we actually can do with activityParameters taskActivities
+            var flightPlan = new List<string>();
             foreach (var activityParametersTaskActivity in activityParametersTaskActivities)
             {
                 var activityParameters = activityParametersTaskActivity.Key;
                 var taskActivity = activityParametersTaskActivity.Value;
-                if (expectedActivityParameters.Contains(activityParameters))
-                    await taskActivity.ProcessTaskAsync(taskStatus);
+                if (requestedActivityParameters.Contains(activityParameters))
+                    flightPlan.Add(activityParameters);
             }
+
+            foreach (var taskActivityName in flightPlan)
+            {
+                if (!activityParametersTaskActivities.ContainsKey(taskActivityName))
+                    continue;
+
+                var taskActivity = activityParametersTaskActivities[taskActivityName];
+                if (taskActivity == null) continue;
+
+                await taskActivity.ProcessTaskAsync(taskStatus);
+            }
+
         }
     }
 }

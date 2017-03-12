@@ -439,9 +439,9 @@ namespace GoodOfflineGames
 
             var loadDataController = new LoadDataController(
                 taskStatusController,
+                hashTrackingController,
                 settingsController,
                 activityParametersController,
-                hashTrackingController,
                 productsDataController,
                 accountProductsDataController,
                 gameDetailsDataController,

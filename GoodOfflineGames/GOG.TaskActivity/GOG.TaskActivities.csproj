@@ -49,7 +49,7 @@
     <Compile Include="UpdateData\PageResultUpdateController.cs" />
     <Compile Include="UpdateDownloads\UpdateDownloadsController.cs" />
     <Compile Include="ProcessDownloads\ProcessDownloadsController.cs" />
-    <Compile Include="Load\LoadDataController.cs" />
+    <Compile Include="LoadData\LoadDataController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authorize\AuthorizeController.cs" />
     <Compile Include="TaskActivityController.cs" />
