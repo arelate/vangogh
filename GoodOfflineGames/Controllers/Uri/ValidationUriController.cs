@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Interfaces.Uri;
 
@@ -29,12 +30,12 @@ namespace Controllers.Uri
 
         public string ConcatenateUriWithKeyValueParameters(string baseUri, IDictionary<string, string> parameters)
         {
-            return uriController.ConcatenateUriWithKeyValueParameters(GetValidationUri(baseUri), parameters);
+            throw new NotImplementedException();
         }
 
         public string ConcatenateUriWithParameters(string baseUri, params string[] parameters)
         {
-            return uriController.ConcatenateUriWithParameters(GetValidationUri(baseUri), parameters);
+            throw new NotImplementedException();
         }
     }
 }

@@ -7,7 +7,7 @@ using Models.ActivityParameters;
 
 namespace Controllers.QueryParameters
 {
-    public class ProductGetQueryParametersDelegate : IGetQueryParametersDelegate<string>
+    public class ProductParameterGetQueryParametersDelegate : IGetQueryParametersDelegate<string>
     {
         public IDictionary<string, string> GetQueryParameters(string productParameter)
         {

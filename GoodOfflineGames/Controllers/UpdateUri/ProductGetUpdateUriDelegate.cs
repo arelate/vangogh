@@ -7,7 +7,7 @@ using Models.ActivityParameters;
 
 namespace Controllers.UpdateUri
 {
-    public class ProductGetUpdateUriDelegate : IGetUpdateUriDelegate<string>
+    public class ProductParameterUpdateUriDelegate : IGetUpdateUriDelegate<string>
     {
         public string GetUpdateUri(string productParameter)
         {

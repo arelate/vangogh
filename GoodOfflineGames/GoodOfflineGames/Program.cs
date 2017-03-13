@@ -484,13 +484,13 @@ namespace GoodOfflineGames
 
             #region Update.PageResults
 
-            var productGetUpdateUriDelegate = new ProductGetUpdateUriDelegate();
-            var productGetQueryParametersDelegate = new ProductGetQueryParametersDelegate();
+            var productParameterGetUpdateUriDelegate = new ProductParameterUpdateUriDelegate();
+            var productParameterGetQueryParametersDelegate = new ProductParameterGetQueryParametersDelegate();
 
             var productsPageResultsController = new PageResultsController<ProductsPageResult>(
                 Parameters.Products,
-                productGetUpdateUriDelegate,
-                productGetQueryParametersDelegate,
+                productParameterGetUpdateUriDelegate,
+                productParameterGetQueryParametersDelegate,
                 requestPageController,
                 hashTrackingController,
                 serializationController,
@@ -508,8 +508,8 @@ namespace GoodOfflineGames
 
             var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
                 Parameters.AccountProducts,
-                productGetUpdateUriDelegate,
-                productGetQueryParametersDelegate,
+                productParameterGetUpdateUriDelegate,
+                productParameterGetQueryParametersDelegate,
                 requestPageController,
                 hashTrackingController,
                 serializationController,
@@ -568,7 +568,7 @@ namespace GoodOfflineGames
 
             var gameProductDataUpdateController = new ProductCoreUpdateController<GameProductData, Product>(
                 Parameters.GameProductData,
-                productGetUpdateUriDelegate,
+                productParameterGetUpdateUriDelegate,
                 gameProductDataController,
                 productsDataController,
                 updatedDataController,
@@ -582,7 +582,7 @@ namespace GoodOfflineGames
 
             var apiProductUpdateController = new ProductCoreUpdateController<ApiProduct, Product>(
                 Parameters.AccountProducts,
-                productGetUpdateUriDelegate,
+                productParameterGetUpdateUriDelegate,
                 apiProductsDataController,
                 productsDataController,
                 updatedDataController,
@@ -620,7 +620,7 @@ namespace GoodOfflineGames
 
             var gameDetailsUpdateController = new ProductCoreUpdateController<GameDetails, AccountProduct>(
                 Parameters.GameDetails,
-                productGetUpdateUriDelegate,
+                productParameterGetUpdateUriDelegate,
                 gameDetailsDataController,
                 accountProductsDataController,
                 updatedDataController,
@@ -635,7 +635,7 @@ namespace GoodOfflineGames
             #region Update.Screenshots
 
             var screenshotUpdateController = new ScreenshotUpdateController(
-                productGetUpdateUriDelegate,
+                productParameterGetUpdateUriDelegate,
                 screenshotsDataController,
                 scheduledScreenshotsUpdatesDataController,
                 productsDataController,
