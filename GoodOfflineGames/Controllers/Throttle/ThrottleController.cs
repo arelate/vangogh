@@ -31,9 +31,7 @@ namespace Controllers.Throttle
         {
             var throttleTask = taskStatusController.Create(
                 taskStatus,
-                string.Format(
-                    "Wait {0} before next iteration",
-                    secondsFormattingController.Format(delaySeconds)));
+                $"Wait {secondsFormattingController.Format(delaySeconds)} before next iteration");
             for (var ii = 0; ii < delaySeconds; ii++)
             {
                 Thread.Sleep(1000);

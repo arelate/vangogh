@@ -17,12 +17,12 @@
 
     public interface IFailDelegate
     {
-        void Fail(ITaskStatus taskStatus, string failureMessage, params object[] data);
+        void Fail(ITaskStatus taskStatus, string failureMessage);
     }
 
     public interface IWarnDelegate
     {
-        void Warn(ITaskStatus taskStatus, string warningMessage, params object[] data);
+        void Warn(ITaskStatus taskStatus, string warningMessage);
     }
 
     public interface ITaskStatusController:

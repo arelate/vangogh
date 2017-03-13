@@ -53,8 +53,7 @@ namespace Controllers.FileDownload
             {
                 taskStatusController.Warn(
                     taskStatus, 
-                    "File resolved to the path {0} already exists and matches response size - won't be redownloading it again", 
-                    fullPath);
+                    $"File resolved to the path {fullPath} already exists and matches response size - won't be redownloading it again");
 
                 return;
             }
@@ -86,11 +85,7 @@ namespace Controllers.FileDownload
             }
             catch (Exception ex)
             {
-                taskStatusController.Warn(downloadEntryTask,
-                    string.Format(
-                        "{0}: {1}",
-                        sourceUri,
-                        ex.Message));
+                taskStatusController.Warn(downloadEntryTask, $"{sourceUri}: {ex.Message}");
             }
             finally
             {

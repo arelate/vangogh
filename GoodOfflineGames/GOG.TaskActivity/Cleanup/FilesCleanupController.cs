@@ -96,9 +96,7 @@ namespace GOG.TaskActivities.Cleanup
 
                 var deleteValidationFileTask = taskStatusController.Create(
                     cleanupProductFilesTask,
-                    string.Format(
-                        "Move validation file to recycle bin: {0}",
-                        validationFile));
+                    $"Move validation file to recycle bin: {validationFile}");
                 recycleBinController.MoveFileToRecycleBin(validationFile);
                 taskStatusController.Complete(deleteValidationFileTask);
             }
@@ -123,9 +121,7 @@ namespace GOG.TaskActivities.Cleanup
                 {
                     taskStatusController.Warn(
                         cleanupProductTask,
-                        string.Format(
-                            "Account product doesn't exist: {0}",
-                            id));
+                        $"Account product doesn't exist: {id}");
                     continue;
                 }
 

@@ -152,11 +152,7 @@ namespace Controllers.Validation
             var computedMD5 = bytesToStringHasController.GetHash(buffer);
 
             if (computedMD5 != chunk.ExpectedMD5)
-                throw new Exception(
-                    string.Format(
-                        "Chunk {0}-{1} failed validation",
-                        chunk.From,
-                        chunk.To));
+                throw new Exception($"Chunk {chunk.From}-{chunk.To} failed validation");
         }
 
         public void ValidateFilename(string uri, string expectedFilename)

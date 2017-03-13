@@ -48,10 +48,7 @@ namespace GOG.Controllers.FileDownload
             {
                 taskStatusController.Warn(
                     downloadValidationFileTask,
-                    "Would not try to get validation file for manual url {0} that has not been routed properly for product {1}: {2}",
-                    sourceUri,
-                    id,
-                    title);
+                    $"Skipping validation file for manual url {sourceUri} because product {id}: {title} has no available routes");
                 return;
             }
 

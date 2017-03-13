@@ -59,11 +59,7 @@ namespace GOG.Controllers.PageResults
             var totalPages = 1;
             T pageResult = null;
 
-            var getPagesTask = taskStatusController.Create(
-                taskStatus,
-                string.Format(
-                    "Get all pages for {0}",
-                    productParameter));
+            var getPagesTask = taskStatusController.Create(taskStatus, $"Get all pages for {productParameter}");
 
             do
             {

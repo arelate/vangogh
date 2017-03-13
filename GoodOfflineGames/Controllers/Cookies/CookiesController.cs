@@ -53,11 +53,10 @@ namespace Controllers.Cookies
                 if (cookies == null) cookies = new Dictionary<string, string>();
             }
 
-            const string template = "{0}={1}; ";
             var cookieHeaderBuilder = new System.Text.StringBuilder();
 
             foreach (var nameValue in cookies)
-                cookieHeaderBuilder.Append(string.Format(template, nameValue.Key, nameValue.Value));
+                cookieHeaderBuilder.Append($"{nameValue.Key}={nameValue.Value}");
 
             return cookieHeaderBuilder.ToString();
         }

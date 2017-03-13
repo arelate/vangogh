@@ -75,24 +75,24 @@ namespace Controllers.TaskStatus
             taskStatusViewController.CreateView();
         }
 
-        public void Fail(ITaskStatus taskStatus, string failureMessage, params object[] data)
+        public void Fail(ITaskStatus taskStatus, string failureMessage)
         {
             ReleaseAssertTaskStatusNotNull(taskStatus);
 
             if (taskStatus.Failures == null)
                 taskStatus.Failures = new List<string>();
 
-            taskStatus.Failures.Add(string.Format(failureMessage, data));
+            taskStatus.Failures.Add(failureMessage);
         }
 
-        public void Warn(ITaskStatus taskStatus, string warningMessage, params object[] data)
+        public void Warn(ITaskStatus taskStatus, string warningMessage)
         {
             ReleaseAssertTaskStatusNotNull(taskStatus);
 
             if (taskStatus.Warnings == null)
                 taskStatus.Warnings = new List<string>();
 
-            taskStatus.Warnings.Add(string.Format(warningMessage, data));
+            taskStatus.Warnings.Add(warningMessage);
         }
     }
 }

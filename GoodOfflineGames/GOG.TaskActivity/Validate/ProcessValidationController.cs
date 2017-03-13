@@ -84,9 +84,7 @@ namespace GOG.TaskActivities.Validate
 
                     var validateFileTask = taskStatusController.Create(
                         validateProductFilesTask,
-                        string.Format(
-                            "Validate product file",
-                            localFile));
+                        $"Validate product file {localFile}");
 
                     try
                     {
@@ -95,11 +93,8 @@ namespace GOG.TaskActivities.Validate
                     }
                     catch (Exception ex)
                     {
-                        taskStatusController.Fail(validateProductFilesTask, 
-                            string.Format(
-                                "{0}: {1}", 
-                                localFile, 
-                                ex.Message));
+                        taskStatusController.Fail(validateProductFilesTask,
+                            $"{localFile}: {ex.Message}");
                         productIsValid &= false;
                     }
                     finally
