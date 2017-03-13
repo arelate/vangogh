@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.ProductTypes;
 using Interfaces.Network;
 using Interfaces.Connection;
 using Interfaces.Throttle;
 using Interfaces.UpdateUri;
+using Interfaces.UpdateIdentity;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
@@ -26,22 +26,22 @@ namespace GOG.TaskActivities.UpdateData
         private IGetDeserializedDelegate<UpdateType> getDeserializedDelegate;
         private IThrottleController throttleController;
 
-        private IGetUpdateUriDelegate<ListType> getUpdateUriDelegate;
+        private IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate;
         private IConnectDelegate<UpdateType, ListType> connectDelegate;
 
-        private ProductTypes updateProductType;
-        private IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate;
+        private string updateProductParameter;
+        private IGetUpdateUriDelegate<string> getUpdateUriDelegate;
 
         private string updateTypeDescription;
 
         public ProductCoreUpdateController(
-            ProductTypes updateProductType,
-            IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate,
+            string updateProductParameter,
+            IGetUpdateUriDelegate<string> getUpdateUriDelegate,
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
-            IGetUpdateUriDelegate<ListType> getUpdateUriDelegate,
+            IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate,
             ITaskStatusController taskStatusController,
             IThrottleController throttleController = null,
             IConnectDelegate<UpdateType, ListType> connectDelegate = null) :
@@ -54,11 +54,11 @@ namespace GOG.TaskActivities.UpdateData
             this.getDeserializedDelegate = getDeserializedDelegate;
             this.throttleController = throttleController;
 
-            this.getUpdateUriDelegate = getUpdateUriDelegate;
+            this.getUpdateIdentityDelegate = getUpdateIdentityDelegate;
             this.connectDelegate = connectDelegate;
 
-            this.updateProductType = updateProductType;
-            this.productTypesGetUpdateUriDelegate = productTypesGetUpdateUriDelegate;
+            this.updateProductParameter = updateProductParameter;
+            this.getUpdateUriDelegate = getUpdateUriDelegate;
             updateTypeDescription = typeof(UpdateType).Name;
         }
 
@@ -99,8 +99,8 @@ namespace GOG.TaskActivities.UpdateData
                     ProductUnits.Products);
 
                 var uri = string.Format(
-                    productTypesGetUpdateUriDelegate.GetUpdateUri(updateProductType),
-                    getUpdateUriDelegate.GetUpdateUri(product));
+                    getUpdateUriDelegate.GetUpdateUri(updateProductParameter),
+                    getUpdateIdentityDelegate.GetUpdateIdentity(product));
 
                 var data = await getDeserializedDelegate.GetDeserialized(uri);
 

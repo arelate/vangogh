@@ -2,7 +2,6 @@
 using System.Linq;
 
 using Interfaces.RequestPage;
-using Interfaces.ProductTypes;
 using Interfaces.Data;
 using Interfaces.Collection;
 using Interfaces.TaskStatus;
@@ -18,7 +17,7 @@ namespace GOG.TaskActivities.UpdateData
         where PageType : Models.PageResult
         where Type : ProductCore
     {
-        private ProductTypes productType;
+        private string productParameter;
 
         private IPageResultsController<PageType> pageResultsController;
         private IPageResultsExtractionController<PageType, Type> pageResultsExtractingController;
@@ -29,7 +28,7 @@ namespace GOG.TaskActivities.UpdateData
         private ICollectionProcessingController<Type> collectionProcessingController;
 
         public PageResultUpdateController(
-            ProductTypes productType,
+            string productParameter,
             IPageResultsController<PageType> pageResultsController,
             IPageResultsExtractionController<PageType, Type> pageResultsExtractingController,
             IRequestPageController requestPageController,
@@ -38,7 +37,7 @@ namespace GOG.TaskActivities.UpdateData
             ICollectionProcessingController<Type> collectionProcessingController = null) :
             base(taskStatusController)
         {
-            this.productType = productType;
+            this.productParameter = productParameter;
 
             this.pageResultsController = pageResultsController;
             this.pageResultsExtractingController = pageResultsExtractingController;

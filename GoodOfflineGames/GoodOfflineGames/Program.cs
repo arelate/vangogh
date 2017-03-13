@@ -43,8 +43,8 @@ using Controllers.Session;
 using Controllers.Expectation;
 using Controllers.UpdateUri;
 using Controllers.Naming;
+using Controllers.QueryParameters;
 
-using Interfaces.ProductTypes;
 using Interfaces.TaskActivity;
 
 using GOG.Models;
@@ -54,7 +54,7 @@ using GOG.Controllers.Extraction;
 using GOG.Controllers.Enumeration;
 using GOG.Controllers.Network;
 using GOG.Controllers.Connection;
-using GOG.Controllers.UpdateUri;
+using GOG.Controllers.UpdateIdentity;
 using GOG.Controllers.FileDownload;
 using GOG.Controllers.Collection;
 using GOG.Controllers.DownloadSources;
@@ -76,6 +76,7 @@ using Models.ProductScreenshots;
 using Models.ProductDownloads;
 
 using Models.TaskStatus;
+using Models.ActivityParameters;
 
 #endregion
 
@@ -483,11 +484,13 @@ namespace GoodOfflineGames
 
             #region Update.PageResults
 
-            var productTypesGetUpdateUriDelegate = new ProductTypesGetUpdateUriDelegate();
+            var productGetUpdateUriDelegate = new ProductGetUpdateUriDelegate();
+            var productGetQueryParametersDelegate = new ProductGetQueryParametersDelegate();
 
             var productsPageResultsController = new PageResultsController<ProductsPageResult>(
-                ProductTypes.Product,
-                productTypesGetUpdateUriDelegate,
+                Parameters.Products,
+                productGetUpdateUriDelegate,
+                productGetQueryParametersDelegate,
                 requestPageController,
                 hashTrackingController,
                 serializationController,
@@ -495,10 +498,8 @@ namespace GoodOfflineGames
 
             var productsExtractionController = new ProductsExtractionController();
 
-            var productsUpdateController = new PageResultUpdateController<
-                ProductsPageResult,
-                Product>(
-                    ProductTypes.Product,
+            var productsUpdateController = new PageResultUpdateController<ProductsPageResult,Product>(
+                    Parameters.Products,
                     productsPageResultsController,
                     productsExtractionController,
                     requestPageController,
@@ -506,8 +507,9 @@ namespace GoodOfflineGames
                     taskStatusController);
 
             var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
-                ProductTypes.AccountProduct,
-                productTypesGetUpdateUriDelegate,
+                Parameters.AccountProducts,
+                productGetUpdateUriDelegate,
+                productGetQueryParametersDelegate,
                 requestPageController,
                 hashTrackingController,
                 serializationController,
@@ -521,10 +523,8 @@ namespace GoodOfflineGames
                 lastKnownValidDataController,
                 taskStatusController);
 
-            var accountProductsUpdateController = new PageResultUpdateController<
-                AccountProductsPageResult,
-                AccountProduct>(
-                    ProductTypes.AccountProduct,
+            var accountProductsUpdateController = new PageResultUpdateController<AccountProductsPageResult, AccountProduct>(
+                    Parameters.AccountProducts,
                     accountProductsPageResultsController,
                     accountProductsExtractionController,
                     requestPageController,
@@ -558,22 +558,22 @@ namespace GoodOfflineGames
             var getGameProductDataDeserializedDelegate = new GetGameProductDataDeserializedDelegate(
                 getGOGDataDelegate);
 
-            var productIdUpdateUriDelegate = new ProductIdUpdateUriDelegate();
-            var productUrlUpdateUriDelegate = new ProductUrlUpdateUriDelegate();
-            var accountProductIdUpdateUriDelegate = new AccountProductIdUpdateUriDelegate();
+            var productGetUpdateIdentityDelegate = new ProductGetUpdateIdentityDelegate();
+            var productUrlGetUpdateIdentityDelegate = new ProductUrlGetUpdateIdentityDelegate();
+            var accountProductGetUpdateIdentityDelegate = new AccountProductGetUpdateIdentityDelegate();
 
             var gameDetailsAccountProductConnectDelegate = new GameDetailsAccountProductConnectDelegate();
 
             // product update controllers
 
             var gameProductDataUpdateController = new ProductCoreUpdateController<GameProductData, Product>(
-                ProductTypes.GameProductData,
-                productTypesGetUpdateUriDelegate,
+                Parameters.GameProductData,
+                productGetUpdateUriDelegate,
                 gameProductDataController,
                 productsDataController,
                 updatedDataController,
                 getGameProductDataDeserializedDelegate,
-                productUrlUpdateUriDelegate,
+                productUrlGetUpdateIdentityDelegate,
                 taskStatusController);
 
             var getApriProductDelegate = new GetDeserializedGOGModelDelegate<ApiProduct>(
@@ -581,13 +581,13 @@ namespace GoodOfflineGames
                 serializationController);
 
             var apiProductUpdateController = new ProductCoreUpdateController<ApiProduct, Product>(
-                ProductTypes.AccountProduct,
-                productTypesGetUpdateUriDelegate,
+                Parameters.AccountProducts,
+                productGetUpdateUriDelegate,
                 apiProductsDataController,
                 productsDataController,
                 updatedDataController,
                 getApriProductDelegate,
-                productIdUpdateUriDelegate,
+                productGetUpdateIdentityDelegate,
                 taskStatusController);
 
             var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
@@ -619,13 +619,13 @@ namespace GoodOfflineGames
                 operatingSystemsDownloadsExtractionController);
 
             var gameDetailsUpdateController = new ProductCoreUpdateController<GameDetails, AccountProduct>(
-                ProductTypes.GameDetails,
-                productTypesGetUpdateUriDelegate,
+                Parameters.GameDetails,
+                productGetUpdateUriDelegate,
                 gameDetailsDataController,
                 accountProductsDataController,
                 updatedDataController,
                 getGameDetailsDelegate,
-                accountProductIdUpdateUriDelegate,
+                accountProductGetUpdateIdentityDelegate,
                 taskStatusController,
                 throttleController,
                 gameDetailsAccountProductConnectDelegate);
@@ -635,7 +635,7 @@ namespace GoodOfflineGames
             #region Update.Screenshots
 
             var screenshotUpdateController = new ScreenshotUpdateController(
-                productTypesGetUpdateUriDelegate,
+                productGetUpdateUriDelegate,
                 screenshotsDataController,
                 scheduledScreenshotsUpdatesDataController,
                 productsDataController,
@@ -690,7 +690,7 @@ namespace GoodOfflineGames
             // schedule download controllers
 
             var updateProductsImagesDownloadsController = new UpdateDownloadsController(
-                ProductDownloadTypes.Image,
+                Parameters.ProductsImages,
                 productsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
                 productDownloadsDataController,
@@ -698,7 +698,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var updateAccountProductsImagesDownloadsController = new UpdateDownloadsController(
-                ProductDownloadTypes.Image,
+                Parameters.AccountProductsImages,
                 accountProductsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
                 productDownloadsDataController,
@@ -706,7 +706,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var updateScreenshotsDownloadsController = new UpdateDownloadsController(
-                ProductDownloadTypes.Screenshot,
+                Parameters.Screenshots,
                 screenshotsDownloadSourcesController,
                 screenshotsDirectoryDelegate,
                 productDownloadsDataController,
@@ -714,7 +714,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var updateProductFilesDownloadsController = new UpdateDownloadsController(
-                ProductDownloadTypes.ProductFile,
+                Parameters.ProductsFiles,
                 manualUrlDownloadSourcesController,
                 productFilesDirectoryDelegate,
                 productDownloadsDataController,
@@ -723,15 +723,22 @@ namespace GoodOfflineGames
 
             // downloads processing
 
-            var imagesProcessScheduledDownloadsController = new ProcessDownloadsController(
-                ProductDownloadTypes.Image,
+            var productsImagesProcessScheduledDownloadsController = new ProcessDownloadsController(
+                Parameters.ProductsImages,
+                updatedDataController,
+                productDownloadsDataController,
+                fileDownloadController,
+                taskStatusController);
+
+            var accountProductsImagesProcessScheduledDownloadsController = new ProcessDownloadsController(
+                Parameters.AccountProductsImages,
                 updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
                 taskStatusController);
 
             var screenshotsProcessScheduledDownloadsController = new ProcessDownloadsController(
-                ProductDownloadTypes.Screenshot,
+                Parameters.Screenshots,
                 updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
@@ -750,7 +757,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var productFilesProcessScheduledDownloadsController = new ProcessDownloadsController(
-                ProductDownloadTypes.ProductFile,
+                Parameters.ProductsFiles,
                 updatedDataController,
                 productDownloadsDataController,
                 manualUrlDownloadFromSourceDelegate,
@@ -759,7 +766,7 @@ namespace GoodOfflineGames
             // validation controllers
 
             var updateValidationDownloadsController = new UpdateDownloadsController(
-                ProductDownloadTypes.Validation,
+                Parameters.ValidationFiles,
                 manualUrlDownloadSourcesController,
                 validationDirectoryDelegate,
                 productDownloadsDataController,
@@ -778,7 +785,7 @@ namespace GoodOfflineGames
                 taskStatusController);
 
             var validationProcessScheduledDownloadsController = new ProcessDownloadsController(
-                ProductDownloadTypes.Validation,
+                Parameters.ValidationFiles,
                 updatedDataController,
                 productDownloadsDataController,
                 validationDownloadFromSourceDelegate,
@@ -829,7 +836,7 @@ namespace GoodOfflineGames
 
             #region Log Task Status 
 
-            var logTaskStatusController = new LogTaskStatusController(
+            var reportController = new ReportController(
                 logsDirectoryDelegate,
                 logsFilenameDelegate,
                 serializedStorageController,
@@ -843,51 +850,92 @@ namespace GoodOfflineGames
 
             var activityParametersNameDelegate = new ActivityParametersNameDelegate();
 
-            // convert strings to controller that concatenates
             var activityParametersTaskActivities = new Dictionary<string, ITaskActivityController>()
             {
-                { activityParametersNameDelegate.GetName("updateData", "products"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateData,
+                    Parameters.Products),
                     productsUpdateController },
-                { activityParametersNameDelegate.GetName("updateData", "accountProducts"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateData,
+                    Parameters.AccountProducts),
                     accountProductsUpdateController },
-                { activityParametersNameDelegate.GetName("updateData","wishlist"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateData,
+                    Parameters.Wishlist),
                     wishlistedUpdateController },
-                { activityParametersNameDelegate.GetName("updateData","gameProductData"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateData,
+                    Parameters.GameProductData),
                     gameProductDataUpdateController },
-                { activityParametersNameDelegate.GetName("updateData","apiProducts"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateData,
+                    Parameters.ApiProducts),
                     apiProductUpdateController },
-                { activityParametersNameDelegate.GetName("updateData","gameDetails"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateData,
+                    Parameters.GameDetails),
                     gameDetailsUpdateController },
-                { activityParametersNameDelegate.GetName("updateData","screenshots"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateData,
+                    Parameters.Screenshots),
                     screenshotUpdateController },
-                { activityParametersNameDelegate.GetName("updateDownloads","productsImages"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateDownloads,
+                    Parameters.ProductsImages),
                     updateProductsImagesDownloadsController },
-                { activityParametersNameDelegate.GetName("updateDownloads","accountProductsImages"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateDownloads,
+                    Parameters.AccountProductsImages),
                     updateAccountProductsImagesDownloadsController },
-                { activityParametersNameDelegate.GetName("updateDownloads","screenshots"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateDownloads,
+                    Parameters.Screenshots),
                     updateScreenshotsDownloadsController },
-                { activityParametersNameDelegate.GetName("updateDownloads","productsFiles"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateDownloads,
+                    Parameters.ProductsFiles),
                     updateProductFilesDownloadsController },
-                { activityParametersNameDelegate.GetName("updateDownloads","validationFiles"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.UpdateDownloads,
+                    Parameters.ValidationFiles),
                     updateValidationDownloadsController },
-                { activityParametersNameDelegate.GetName("processDownloads","productsImages"),
-                    imagesProcessScheduledDownloadsController },
-                { activityParametersNameDelegate.GetName("processDownloads","accountProductsImages"),
-                    imagesProcessScheduledDownloadsController },
-                { activityParametersNameDelegate.GetName("processDownloads","screenshots"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.ProcessDownloads,
+                    Parameters.ProductsImages),
+                    productsImagesProcessScheduledDownloadsController },
+                { activityParametersNameDelegate.GetName(
+                    Activities.ProcessDownloads,
+                    Parameters.AccountProductsImages),
+                    accountProductsImagesProcessScheduledDownloadsController },
+                { activityParametersNameDelegate.GetName(
+                    Activities.ProcessDownloads,
+                    Parameters.Screenshots),
                     screenshotsProcessScheduledDownloadsController },
-                { activityParametersNameDelegate.GetName("processDownloads","productsFiles"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.ProcessDownloads,
+                    Parameters.ProductsFiles),
                     productFilesProcessScheduledDownloadsController },
-                { activityParametersNameDelegate.GetName("processDownloads","validationFiles"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.ProcessDownloads,
+                    Parameters.ValidationFiles),
                     validationProcessScheduledDownloadsController },
-                { activityParametersNameDelegate.GetName("validate","productFiles"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.Validate,
+                    Parameters.ProductsFiles),
                     processValidationController },
-                { activityParametersNameDelegate.GetName("cleanup","directories"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.Cleanup,
+                    Parameters.Directories),
                     directoryCleanupController },
-                { activityParametersNameDelegate.GetName("cleanup","files"),
+                { activityParametersNameDelegate.GetName(
+                    Activities.Cleanup,
+                    Parameters.Files),
                     filesCleanupController },
-                { activityParametersNameDelegate.GetName("logTaskStatus","true"),
-                    logTaskStatusController }
+                { activityParametersNameDelegate.GetName(
+                    Activities.Report,
+                    Parameters.TaskStatus),
+                    reportController }
             };
 
             var processActivityParametersController = new ProcessActivityParametersController(

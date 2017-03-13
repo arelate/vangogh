@@ -13,8 +13,8 @@ namespace Models.ProductDownloads
     [DataContract]
     public class ProductDownloadEntry
     {
-        [DataMember(Name = "type")]
-        public ProductDownloadTypes Type { get; set; }
+        [DataMember(Name = "downloadParameter")]
+        public string DownloadParameter { get; set; }
         [DataMember(Name = "sourceUri")]
         public string SourceUri { get; set; }
         [DataMember(Name = "destination")]

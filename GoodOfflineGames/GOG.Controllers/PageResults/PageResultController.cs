@@ -4,12 +4,10 @@ using System.Threading.Tasks;
 using Interfaces.RequestPage;
 using Interfaces.Serialization;
 using Interfaces.TaskStatus;
-using Interfaces.ProductTypes;
 using Interfaces.UpdateUri;
 using Interfaces.Hash;
+using Interfaces.QueryParameters;
 
-using Models.Uris;
-using Models.QueryParameters;
 using Models.Units;
 
 using GOG.Interfaces.PageResults;
@@ -20,8 +18,9 @@ namespace GOG.Controllers.PageResults
 {
     public class PageResultsController<T> : IPageResultsController<T> where T : PageResult
     {
-        private ProductTypes productType;
-        private IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate;
+        private string productParameter;
+        private IGetUpdateUriDelegate<string> getUpdateUriDelegate;
+        private IGetQueryParametersDelegate<string> getQueryParametersDelegate;
         private IRequestPageController requestPageController;
         private IHashTrackingController hashTrackingController;
         private ISerializationController<string> serializationController;
@@ -31,15 +30,17 @@ namespace GOG.Controllers.PageResults
         private IDictionary<string, string> requestParameters;
 
         public PageResultsController(
-            ProductTypes productType,
-            IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate,
+            string productParameter,
+            IGetUpdateUriDelegate<string> getUpdateUriDelegate,
+            IGetQueryParametersDelegate<string> getQueryParametersDelegate,
             IRequestPageController requestPageController,
             IHashTrackingController hashTrackingController,
             ISerializationController<string> serializationController,
             ITaskStatusController taskStatusController)
         {
-            this.productType = productType;
-            this.productTypesGetUpdateUriDelegate = productTypesGetUpdateUriDelegate;
+            this.productParameter = productParameter;
+            this.getUpdateUriDelegate = getUpdateUriDelegate;
+            this.getQueryParametersDelegate = getQueryParametersDelegate;
 
             this.requestPageController = requestPageController;
             this.hashTrackingController = hashTrackingController;
@@ -47,8 +48,8 @@ namespace GOG.Controllers.PageResults
 
             this.taskStatusController = taskStatusController;
 
-            requestUri = productTypesGetUpdateUriDelegate.GetUpdateUri(productType);
-            requestParameters = QueryParameters.GetQueryParameters(productType);
+            requestUri = getUpdateUriDelegate.GetUpdateUri(productParameter);
+            requestParameters = getQueryParametersDelegate.GetQueryParameters(productParameter);
         }
 
         public async Task<IList<T>> GetPageResults(ITaskStatus taskStatus)
@@ -62,7 +63,7 @@ namespace GOG.Controllers.PageResults
                 taskStatus,
                 string.Format(
                     "Get all pages for {0}",
-                    productType.ToString()));
+                    productParameter));
 
             do
             {

@@ -63,9 +63,9 @@
     <Compile Include="Extraction\AccountProductsExtractionController.cs" />
     <Compile Include="Extraction\ProductsExtractingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpdateUri\AccountProductIdUpdateUriDelegate.cs" />
-    <Compile Include="UpdateUri\ProductUrlUpdateUriDelegate.cs" />
-    <Compile Include="UpdateUri\ProductIdUpdateUriDelegate.cs" />
+    <Compile Include="UpdateIdentity\AccountProductGetUpdateIdentityDelegate.cs" />
+    <Compile Include="UpdateIdentity\ProductUrlGetUpdateIdentityDelegate.cs" />
+    <Compile Include="UpdateIdentity\ProductGetUpdateIdentityDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">

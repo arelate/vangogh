@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 using Interfaces.Extraction;
 using Interfaces.Network;
 using Interfaces.Data;
-using Interfaces.ProductTypes;
 using Interfaces.TaskStatus;
 using Interfaces.UpdateUri;
 
-using Models.Uris;
 using Models.ProductScreenshots;
 using Models.Units;
+using Models.ActivityParameters;
 
 using GOG.Models;
 
@@ -18,7 +17,7 @@ namespace GOG.TaskActivities.UpdateData
 {
     public class ScreenshotUpdateController : TaskActivityController
     {
-        private IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate;
+        private IGetUpdateUriDelegate<string> getUpdateUriDelegate;
         private IDataController<ProductScreenshots> screenshotsDataController;
         private IDataController<long> scheduledScreenshotsUpdatesDataController;
         private IDataController<Product> productsDataController;
@@ -26,7 +25,7 @@ namespace GOG.TaskActivities.UpdateData
         private IStringExtractionController screenshotExtractionController;
 
         public ScreenshotUpdateController(
-            IGetUpdateUriDelegate<ProductTypes> productTypesGetUpdateUriDelegate,
+            IGetUpdateUriDelegate<string> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
             IDataController<long> scheduledScreenshotsUpdatesDataController,
             IDataController<Product> productsDataController,
@@ -35,7 +34,7 @@ namespace GOG.TaskActivities.UpdateData
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
         {
-            this.productTypesGetUpdateUriDelegate = productTypesGetUpdateUriDelegate;
+            this.getUpdateUriDelegate = getUpdateUriDelegate;
             this.screenshotsDataController = screenshotsDataController;
             this.scheduledScreenshotsUpdatesDataController = scheduledScreenshotsUpdatesDataController;
             this.productsDataController = productsDataController;
@@ -73,7 +72,7 @@ namespace GOG.TaskActivities.UpdateData
                     ProductUnits.Products);
 
                 var requestProductPageTask = taskStatusController.Create(updateProductsScreenshotsTask, "Request product page containing screenshots information");
-                var productPageUri = string.Format(productTypesGetUpdateUriDelegate.GetUpdateUri(ProductTypes.Screenshot), product.Url);
+                var productPageUri = string.Format(getUpdateUriDelegate.GetUpdateUri(Parameters.Screenshots), product.Url);
                 var productPageContent = await networkController.Get(productPageUri);
                 taskStatusController.Complete(requestProductPageTask);
 

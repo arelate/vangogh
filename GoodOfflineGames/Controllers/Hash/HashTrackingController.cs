@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Hash;
@@ -52,7 +50,8 @@ namespace Controllers.Hash
         {
             if (uriHashes != null &&
                 uriHashes.Count > 0)
-                throw new InvalidOperationException("Loading hashes when there is data already would lead to overwrite of the existing data");
+                throw new InvalidOperationException(
+                    "Loading hashes when there is data already would lead to overwrite of the existing data");
 
             var serializedData = await storageController.PullAsync(uriHashesFilename);
             uriHashes = serializationController.Deserialize<Dictionary<string, int>>(serializedData);
@@ -66,7 +65,8 @@ namespace Controllers.Hash
         public async Task SaveAsync()
         {
             if (!dataLoaded)
-                throw new InvalidOperationException("Saving hashes without loading them first would overwrite existing data");
+                throw new InvalidOperationException(
+                    "Saving hashes without loading them first would overwrite existing data");
 
             var serialiedData = serializationController.Serialize(uriHashes);
             await storageController.PushAsync(uriHashesFilename, serialiedData);

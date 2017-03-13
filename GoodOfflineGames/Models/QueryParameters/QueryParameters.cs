@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Interfaces.ProductTypes;
-
 namespace Models.QueryParameters
 {
     public static class SortBy
@@ -58,18 +56,5 @@ namespace Models.QueryParameters
             { "second_step_authentication[send]", "" },
             { "second_step_authentication[_token]", "" }
         };
-
-        public static Dictionary<string, string> GetQueryParameters(ProductTypes productType)
-        {
-            switch (productType)
-            {
-                case ProductTypes.Product:
-                    return GamesAjaxFiltered;
-                case ProductTypes.AccountProduct:
-                    return AccountGetFilteredProducts;
-                default:
-                    throw new System.NotImplementedException();
-            }
-        }
     }
 }

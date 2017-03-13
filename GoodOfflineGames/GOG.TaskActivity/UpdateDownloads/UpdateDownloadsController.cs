@@ -15,7 +15,7 @@ namespace GOG.TaskActivities.UpdateDownloads
 {
     public class UpdateDownloadsController : TaskActivityController
     {
-        private ProductDownloadTypes downloadType;
+        private string downloadParameter;
 
         private IDownloadSourcesController downloadSourcesController;
         private IGetDirectoryDelegate getDirectoryDelegate;
@@ -25,7 +25,7 @@ namespace GOG.TaskActivities.UpdateDownloads
         private string scheduledDownloadTitle;
 
         public UpdateDownloadsController(
-            ProductDownloadTypes downloadType,
+            string downloadParameter,
             IDownloadSourcesController downloadSourcesController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
@@ -33,13 +33,11 @@ namespace GOG.TaskActivities.UpdateDownloads
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
         {
-            this.downloadType = downloadType;
+            this.downloadParameter = downloadParameter;
             this.downloadSourcesController = downloadSourcesController;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
-
-            scheduledDownloadTitle = System.Enum.GetName(typeof(ProductDownloadTypes), downloadType);
         }
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
@@ -96,7 +94,7 @@ namespace GOG.TaskActivities.UpdateDownloads
                 // purge existing downloads for this download type as we'll always be scheduling all files we need to download
                 // and don't want to carry over any previously scheduled files that might not be relevant anymore
                 // (e.g. files that were scheduled, but never downloaded and then removed from data files)
-                var existingDownloadsOfType = productDownloads.Downloads.FindAll(d => d.Type == downloadType).ToArray();
+                var existingDownloadsOfType = productDownloads.Downloads.FindAll(d => d.DownloadParameter == downloadParameter).ToArray();
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
@@ -110,7 +108,7 @@ namespace GOG.TaskActivities.UpdateDownloads
 
                     var scheduledDownloadEntry = new ProductDownloadEntry()
                     {
-                        Type = downloadType,
+                        DownloadParameter = downloadParameter,
                         SourceUri = source,
                         Destination = destinationDirectory
                     };

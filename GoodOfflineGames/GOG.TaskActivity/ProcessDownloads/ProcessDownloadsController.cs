@@ -12,20 +12,20 @@ namespace GOG.TaskActivities.ProcessDownloads
 {
     public class ProcessDownloadsController : TaskActivityController
     {
-        private ProductDownloadTypes downloadType;
+        private string downloadParameter;
         private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate;
 
         public ProcessDownloadsController(
-            ProductDownloadTypes downloadType,
+            string downloadParameter,
             IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate,
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
         {
-            this.downloadType = downloadType;
+            this.downloadParameter = downloadParameter;
             this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
@@ -51,7 +51,7 @@ namespace GOG.TaskActivities.ProcessDownloads
                     productDownloads.Title);
 
                 // we'll need to remove successfully downloaded files, copying collection
-                var downloadEntries = productDownloads.Downloads.FindAll(d => d.Type == downloadType).ToArray();
+                var downloadEntries = productDownloads.Downloads.FindAll(d => d.DownloadParameter == downloadParameter).ToArray();
 
                 var processDownloadEntriesTask = taskStatusController.Create(processDownloadsTask, "Download product entries");
 

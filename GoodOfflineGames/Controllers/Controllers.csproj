@@ -75,6 +75,7 @@
     <Compile Include="Naming\ActivityParametersNameDelegate.cs" />
     <Compile Include="Presentation\PresentationController.cs" />
     <Compile Include="PropertiesValidation\DownloadsOperatingSystemsValidationController.cs" />
+    <Compile Include="QueryParameters\ProductGetQueryParametersDelegate.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
     <Compile Include="Routing\RoutingController.cs" />
     <Compile Include="Sanitization\SanitizationController.cs" />
@@ -102,7 +103,7 @@
     <Compile Include="Settings\SettingsController.cs" />
     <Compile Include="Storage\StorageController.cs" />
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
-    <Compile Include="UpdateUri\ProductTypesGetUpdateUriDelegate.cs" />
+    <Compile Include="UpdateUri\ProductGetUpdateUriDelegate.cs" />
     <Compile Include="Uri\UriController.cs" />
     <Compile Include="Uri\ValidationUriController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
