@@ -22,8 +22,6 @@ namespace GOG.TaskActivities.UpdateDownloads
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<AccountProduct> accountProductsDataController;
 
-        private string scheduledDownloadTitle;
-
         public UpdateDownloadsController(
             string downloadParameter,
             IDownloadSourcesController downloadSourcesController,
@@ -44,15 +42,11 @@ namespace GOG.TaskActivities.UpdateDownloads
         {
             var updateDownloadsTask = taskStatusController.Create(
                 taskStatus,
-                string.Format(
-                    "Update downloads for the type: {0}",
-                    scheduledDownloadTitle));
+                $"Update {downloadParameter} downloads");
 
             var getSourcesTask = taskStatusController.Create(
                 updateDownloadsTask,
-                string.Format(
-                    "Get download sources",
-                    scheduledDownloadTitle));
+                $"Get {downloadParameter} download sources");
 
             var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync(getSourcesTask);
             taskStatusController.Complete(getSourcesTask);
@@ -69,8 +63,7 @@ namespace GOG.TaskActivities.UpdateDownloads
                 {
                     taskStatusController.Warn(
                         updateDownloadsTask,
-                        "Downloads are scheduled for the product/account product that doesn't exist: {0}",
-                        id);
+                        $"Downloads are scheduled for the product/account product {id} that doesn't exist");
                     continue;
                 }
 

@@ -98,9 +98,12 @@ namespace GOG.TaskActivities.UpdateData
                     product.Title,
                     ProductUnits.Products);
 
+                var updateIdentity = getUpdateIdentityDelegate.GetUpdateIdentity(product);
+                if (string.IsNullOrEmpty(updateIdentity)) continue;
+
                 var uri = string.Format(
                     getUpdateUriDelegate.GetUpdateUri(updateProductParameter),
-                    getUpdateIdentityDelegate.GetUpdateIdentity(product));
+                    updateIdentity);
 
                 var data = await getDeserializedDelegate.GetDeserialized(uri);
 

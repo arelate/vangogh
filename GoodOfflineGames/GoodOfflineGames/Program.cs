@@ -581,7 +581,7 @@ namespace GoodOfflineGames
                 serializationController);
 
             var apiProductUpdateController = new ProductCoreUpdateController<ApiProduct, Product>(
-                Parameters.AccountProducts,
+                Parameters.ApiProducts,
                 productParameterGetUpdateUriDelegate,
                 apiProductsDataController,
                 productsDataController,
