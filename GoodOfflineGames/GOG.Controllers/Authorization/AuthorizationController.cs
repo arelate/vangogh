@@ -92,12 +92,12 @@ namespace GOG.Controllers.Authorization
             else
             {
                 QueryParameters.LoginAuthenticate.Remove("login[id]");
-                QueryParameters.LoginAuthenticate["login[username]"] = username;
                 loginUri = Uris.Paths.Authentication.LoginCheck;
             }
 
             var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(username, password);
 
+            QueryParameters.LoginAuthenticate["login[username]"] = usernamePassword[0];
             QueryParameters.LoginAuthenticate["login[password]"] = usernamePassword[1];
             QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
 

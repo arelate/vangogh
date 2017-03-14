@@ -1,12 +1,10 @@
 Backend
 
-- move from string.Format to brackets
-
 - stop and resume - make a session plan based on settings and remove taskActivities upon completion. Ask to reset session if one exists already when starting
 
 - break lines and present information better in presentation controllers, e.g. progress on separate lines
 
-- actually implement templating for the output, perhaps use format like [color:any message]
+- actually implement templating for the output, perhaps change to format like [color:any message]
 
 - wrap download activities in try/catch
 
