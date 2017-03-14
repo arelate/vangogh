@@ -56,7 +56,7 @@ namespace Controllers.Cookies
             var cookieHeaderBuilder = new System.Text.StringBuilder();
 
             foreach (var nameValue in cookies)
-                cookieHeaderBuilder.Append($"{nameValue.Key}={nameValue.Value}");
+                cookieHeaderBuilder.Append($"{nameValue.Key}={nameValue.Value}; ");
 
             return cookieHeaderBuilder.ToString();
         }

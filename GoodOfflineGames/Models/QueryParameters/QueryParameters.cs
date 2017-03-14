@@ -35,7 +35,8 @@ namespace Models.QueryParameters
             { "client_id", "46755278331571209" },
             { "redirect_uri", Uris.Uris.Paths.Authentication.OnLoginSuccess},
             { "response_type", "code" },
-            { "layout", "default" }
+            { "layout", "default" },
+            { "brand", "gog" }
         };
 
         public static Dictionary<string, string> LoginAuthenticate = new Dictionary<string, string>()
