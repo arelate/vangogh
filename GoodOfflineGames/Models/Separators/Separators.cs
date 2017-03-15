@@ -8,7 +8,6 @@
         public const string QueryStringParameters = "&";
         // common
         public const string KeyValue = "=";
-        public const string ColorFormatting = "%c";
         // GameDetails downloads
         public const string GameDetailsDownloadsStart = "[[";
         public const string GameDetailsDownloadsEnd = "]]";

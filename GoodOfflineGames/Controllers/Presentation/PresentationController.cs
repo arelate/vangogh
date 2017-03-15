@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
-using System.Threading;
 
 using Interfaces.Console;
-using Interfaces.Measurement;
 using Interfaces.LineBreaking;
 using Interfaces.Presentation;
-
-using Models.Separators;
 
 namespace Controllers.Presentation
 {
     public class PresentationController : IPresentationController<string>
     {
-        private IMeasurementController<string> formattedStringMeasurementController;
         private ILineBreakingController lineBreakingController;
         private IConsoleController consoleController;
 
@@ -28,11 +22,9 @@ namespace Controllers.Presentation
         private int previousWindowHeight;
 
         public PresentationController(
-            IMeasurementController<string> formattedStringMeasurementController,
             ILineBreakingController lineBreakingController,
             IConsoleController consoleController)
         {
-            this.formattedStringMeasurementController = formattedStringMeasurementController;
             this.lineBreakingController = lineBreakingController;
             this.consoleController = consoleController;
 
@@ -45,9 +37,9 @@ namespace Controllers.Presentation
             previousWindowHeight = consoleController.WindowHeight;
         }
 
-        private int PresentLine(int line, string content, string[] colors)
+        private int PresentLine(int line, string content)
         {
-            var currentLength = formattedStringMeasurementController.Measure(content);
+            var currentLength = content.Length;
             var previousLineLength = previousScreenLinesLengths.ElementAtOrDefault(line);
             var paddedContent = content;
 
@@ -56,34 +48,23 @@ namespace Controllers.Presentation
             if (previousLineLength > currentLength)
                 paddedContent = content.PadRight(content.Length + previousLineLength - currentLength);
 
-            consoleController.Write(paddedContent, colors);
+            consoleController.Write(paddedContent);
 
             return currentLength;
         }
 
-        private void PresentViewModel(string text, string[] colors, ref int currentScreenLine, IList<int> currentLinesLengths)
+        private void PresentViewModel(string text, ref int currentScreenLine, IList<int> currentLinesLengths)
         {
             var lines = lineBreakingController.BreakLines(text, consoleController.WindowWidth);
-            //var consumedColors = 0;
 
             foreach (var line in lines)
             {
-                //var requiredColors = Regex.Matches(line, Separators.ColorFormatting).Count;
-                //var lineColors = new List<string>();
-                //for (var cc = consumedColors; cc < consumedColors + requiredColors; cc++)
-                //    lineColors.Add(colors.ElementAtOrDefault(cc));
-
-                //consumedColors += requiredColors;
-
                 var currentLineLength = PresentLine(
                         currentScreenLine++,
-                        line,
-                        null);//lineColors.ToArray());
+                        line);
 
                 currentLinesLengths.Add(currentLineLength);
             }
-
-            consoleController.ResetFormatting();
         }
 
         public void Present(IEnumerable<string> views, bool overrideThrottling = false)
@@ -95,29 +76,23 @@ namespace Controllers.Presentation
                 previousWindowHeight != consoleController.WindowHeight)
                 consoleController.Clear();
 
-            var viewsModelsLength = views.Count();
             var currentLinesLengths = new List<int>();
             var currentScreenLine = 0;
 
-            for (var ii = 0; ii < viewsModelsLength; ii++)
-            {
-                var text = views.ElementAt(ii);
-                //var colors = views.ElementAt(ii).Item2;
-
+            foreach (var view in views)
                 PresentViewModel(
-                    text, 
-                    null, 
+                    view, 
                     ref currentScreenLine, 
                     currentLinesLengths);
-            }
 
+            // erase previous lines that might be left on the screen
             var previousLinesCount = previousScreenLinesLengths.Count();
             if (previousLinesCount >= currentScreenLine)
             {
                 for (var pp = currentScreenLine; pp < previousLinesCount; pp++)
                 {
                     consoleController.SetCursorPosition(0, currentScreenLine++);
-                    consoleController.Write(string.Empty.PadRight(consoleController.WindowWidth));
+                    consoleController.Write(string.Empty.PadRight(previousScreenLinesLengths[pp]));
                 }
             }
 

@@ -19,7 +19,7 @@ namespace Controllers.ViewModel
             public const string ProgressPercent = "progressPercent";
             public const string ProgressCurrent = "progressCurrent";
             public const string ProgressTotal = "progressTotal";
-            public const string ContainsETA = "containsETA";
+            public const string ContainsETA = "containsEta";
             public const string RemainingTime = "remainingTime";
             public const string AverageUnitsPerSecond = "averageUnitsPerSecond";
         }

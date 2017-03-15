@@ -137,12 +137,10 @@ namespace Controllers.Template
                     if (conditionalParts.Length >= 3)
                         conditionFail = conditionalParts[2];
 
-                    if (!viewModel.ContainsKey(condition))
-                        return GetContentByTitle(conditionFail);
-
-                    return string.IsNullOrEmpty(condition) ?
-                        GetContentByTitle(conditionFail) :
-                        GetContentByTitle(conditionPass);
+                    return (viewModel.ContainsKey(condition) &&
+                        !string.IsNullOrEmpty(viewModel[condition])) ?
+                        GetContentByTitle(conditionPass) :
+                        GetContentByTitle(conditionFail);
                 });
         }
     }

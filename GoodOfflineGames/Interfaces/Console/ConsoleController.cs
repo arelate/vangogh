@@ -27,22 +27,12 @@
 
     public interface IWriteDelegate
     {
-        void Write(string message, string[] colors = null, params object[] data);
+        void Write(string message, params object[] data);
     }
 
     public interface IWriteLineDelegate
     {
-        void WriteLine(string message, string[] colors = null, params object[] data);
-    }
-
-    public interface IDefaultColorProperty
-    {
-        System.ConsoleColor DefaultColor { get; set; }
-    }
-
-    public interface IResetFormattingDelegate
-    {
-        void ResetFormatting();
+        void WriteLine(string message, params object[] data);
     }
 
     public interface ICursorVisibleProperty
@@ -66,10 +56,8 @@
         IReadDelegate,
         IReadLineDelegate,
         IInputPasswordDelegate,
-        IResetFormattingDelegate,
         IWriteDelegate,
         IWriteLineDelegate,
-        IDefaultColorProperty,
         ICursorVisibleProperty,
         IWindowWidthProperty,
         IWindowHeightProperty

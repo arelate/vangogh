@@ -9,14 +9,6 @@ namespace Controllers.Console
 {
     public class ConsoleController : IConsoleController
     {
-        public ConsoleController()
-        {
-            DefaultColor = ConsoleColor.Gray;
-            ResetFormatting();
-        }
-
-        public ConsoleColor DefaultColor { get; set; }
-
         public bool CursorVisible
         {
             get { return System.Console.CursorVisible; }
@@ -80,66 +72,24 @@ namespace Controllers.Console
             return password;
         }
 
-        public void Write(string message, string[] colors = null, params object[] data)
+        public void Write(string message, params object[] data)
         {
-            OutputFormattedMessage(System.Console.Write, message, colors, data);
+            OutputFormattedMessage(System.Console.Write, message, data);
         }
 
-        public void WriteLine(string message, string[] colors = null, params object[] data)
+        public void WriteLine(string message, params object[] data)
         {
-            OutputFormattedMessage(System.Console.WriteLine, message, colors, data);
-            ResetFormatting();
+            OutputFormattedMessage(System.Console.WriteLine, message, data);
         }
 
-        private ConsoleColor ParseColor(string color)
-        {
-            var consoleColor = DefaultColor;
-            Enum.TryParse(color, true, out consoleColor);
-
-            if (consoleColor == ConsoleColor.Black &&
-                color.ToLower() != "black")
-                consoleColor = DefaultColor;
-
-            return consoleColor;
-        }
-
-        public void ResetFormatting()
-        {
-            System.Console.ForegroundColor = DefaultColor;
-        }
-
-        private void OutputFormattedMessage(Action<string> consoleOutput, string message, string[] colors = null, params object[] data)
+        private void OutputFormattedMessage(Action<string> consoleOutput, string message, params object[] data)
         {
             var formattedMessage =
                 (data != null && data.Length > 0) ?
                 string.Format(message, data) :
                 message;
 
-            if (colors == null)
-            {
-                consoleOutput(formattedMessage);
-                return;
-            }
-
-            var computedColors = new List<ConsoleColor>() { DefaultColor };
-            foreach (var color in colors)
-                computedColors.Add(ParseColor(color));
-
-            var formattedMessageParts = formattedMessage.Split(
-                new string[1] { Separators.ColorFormatting },
-                StringSplitOptions.None);
-
-            if (formattedMessageParts.Length > computedColors.Count)
-                throw new FormatException("Number of colors is less than required to format the message");
-
-            for (var ii = 0; ii < formattedMessageParts.Length; ii++)
-            {
-                // only set requested colors, not DefaultColor that was set earlier
-                if (ii > 0) System.Console.ForegroundColor = computedColors[ii];
-                System.Console.Write(formattedMessageParts[ii]);
-            }
-
-            consoleOutput(string.Empty);
+            consoleOutput(formattedMessage);
         }
 
         public void Clear()

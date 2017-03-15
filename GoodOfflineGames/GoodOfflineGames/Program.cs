@@ -31,7 +31,6 @@ using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Indexing;
-using Controllers.Measurement;
 using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
@@ -118,11 +117,9 @@ namespace GoodOfflineGames
                 serializationController);
 
             var consoleController = new ConsoleController();
-            var formattedStringMeasurementController = new FormattedStringMeasurementController();
-            var lineBreakingController = new LineBreakingController(formattedStringMeasurementController);
+            var lineBreakingController = new LineBreakingController();
 
             var presentationController = new PresentationController(
-                formattedStringMeasurementController,
                 lineBreakingController,
                 consoleController);
 
