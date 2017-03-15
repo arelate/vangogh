@@ -53,7 +53,7 @@ namespace GOG.TaskActivities.Validate
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
-            var validateProductFilesTask = taskStatusController.Create(taskStatus, "Validate updated products files");
+            var validateProductFilesTask = taskStatusController.Create(taskStatus, "Validate products files");
 
             var counter = 0;
 
@@ -84,7 +84,7 @@ namespace GOG.TaskActivities.Validate
 
                     var validateFileTask = taskStatusController.Create(
                         validateProductFilesTask,
-                        $"Validate product file {localFile}");
+                        "Validate product file");
 
                     try
                     {

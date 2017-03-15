@@ -88,8 +88,8 @@
     <Compile Include="PropertiesValidation\UsernamePasswordValidationController.cs" />
     <Compile Include="Session\SessionController.cs" />
     <Compile Include="TaskStatus\TaskStatusController.cs" />
-    <Compile Include="TaskStatus\TaskStatusTreeToListController.cs" />
-    <Compile Include="TaskStatus\TaskStatusViewController.cs" />
+    <Compile Include="Tree\TaskStatusTreeToListController.cs" />
+    <Compile Include="ViewController\TaskStatusAppViewController.cs" />
     <Compile Include="Template\TemplateController.cs" />
     <Compile Include="Throttle\ThrottleController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="Uri\UriController.cs" />
     <Compile Include="Uri\ValidationUriController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
-    <Compile Include="ViewModel\TaskStatusGetViewModelDelegate.cs" />
+    <Compile Include="ViewModel\TaskStatusAppViewModelDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

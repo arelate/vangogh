@@ -46,6 +46,8 @@ using Controllers.Naming;
 using Controllers.QueryParameters;
 using Controllers.Template;
 using Controllers.ViewModel;
+using Controllers.Tree;
+using Controllers.ViewController;
 
 using Interfaces.TaskActivity;
 
@@ -65,13 +67,13 @@ using GOG.Controllers.Authorization;
 using GOG.TaskActivities.Load;
 using GOG.TaskActivities.ValidateSettings;
 using GOG.TaskActivities.Authorize;
+using GOG.TaskActivities.ActivityParameters;
 using GOG.TaskActivities.UpdateData;
 using GOG.TaskActivities.UpdateDownloads;
 using GOG.TaskActivities.ProcessDownloads;
 using GOG.TaskActivities.Cleanup;
 using GOG.TaskActivities.Validate;
 using GOG.TaskActivities.LogTaskStatus;
-using GOG.TaskActivities.ActivityParameters;
 
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
@@ -138,25 +140,27 @@ namespace GoodOfflineGames
             var reportTemplateFilenameDelegate = new FixedFilenameDelegate("report", jsonFilenameDelegate);
 
             var appTemplateController = new TemplateController(
+                "taskStatus",
                 templatesDirectoryDelegate, 
                 appTemplateFilenameDelegate, 
                 serializedStorageController, 
                 collectionController);
 
-            var reportTemplateController = new TemplateController(
-                templatesDirectoryDelegate,
-                reportTemplateFilenameDelegate,
-                serializedStorageController,
-                collectionController);
+            //var reportTemplateController = new TemplateController(
+            //    "taskStatus",
+            //    templatesDirectoryDelegate,
+            //    reportTemplateFilenameDelegate,
+            //    serializedStorageController,
+            //    collectionController);
 
-            var taskStatusViewModelDelegate = new TaskStatusGetViewModelDelegate(
+            var taskStatusAppViewModelDelegate = new TaskStatusAppViewModelDelegate(
                 bytesFormattingController, 
                 secondsFormattingController);
 
-            var taskStatusViewController = new TaskStatusViewController(
+            var taskStatusViewController = new TaskStatusAppViewController(
                 applicationTaskStatus,
                 appTemplateController,
-                taskStatusViewModelDelegate,
+                taskStatusAppViewModelDelegate,
                 taskStatusTreeToListController,
                 presentationController);
 
@@ -466,7 +470,7 @@ namespace GoodOfflineGames
                 // as all serialized storage operations go through it and might overwrite data on disk
                 hashTrackingController,
                 appTemplateController,
-                reportTemplateController,
+                //reportTemplateController,
                 settingsController,
                 activityParametersController,
                 productsDataController,

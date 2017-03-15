@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Interfaces.Tree;
 using Interfaces.TaskStatus;
 
-namespace Controllers.TaskStatus
+namespace Controllers.Tree
 {
     public class TaskStatusTreeToListController : ITreeToListController<ITaskStatus>
     {

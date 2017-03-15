@@ -30,16 +30,20 @@ namespace Controllers.Template
         private const string subTemplate = subTemplatePrefix + anyCharactersExpression + subTemplateSuffix;
 
         public TemplateController(
+            string primaryTemplateTitle,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializedStorageController serializedStorageController,
             ICollectionController collectionController)
         {
+            this.PrimaryTemplate = primaryTemplateTitle;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.serializedStorageController = serializedStorageController;
             this.collectionController = collectionController;
         }
+
+        public string PrimaryTemplate { get; private set; }
 
         public string Bind(string templateTitle, IDictionary<string, string> viewModel)
         {

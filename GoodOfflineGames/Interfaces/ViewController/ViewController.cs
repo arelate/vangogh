@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interfaces.TaskStatus
+namespace Interfaces.ViewController
 {
     public interface ICreateViewDelegate
     {
         void CreateView(bool overrideThrottling = false);
     }
 
-    public interface ITaskStatusViewController:
+    public interface IViewController:
         ICreateViewDelegate
     {
         // ...

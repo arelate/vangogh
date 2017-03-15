@@ -1,5 +1,7 @@
 Backend
 
+- review output in processValidationController
+
 - break lines and present information better in presentation controllers, e.g. progress on separate lines
 
 - actually implement templating for the output, perhaps change to format like [color:any message]

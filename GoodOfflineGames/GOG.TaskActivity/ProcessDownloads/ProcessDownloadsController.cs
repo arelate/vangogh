@@ -37,7 +37,8 @@ namespace GOG.TaskActivities.ProcessDownloads
             var updated = updatedDataController.EnumerateIds().ToArray();
             var total = updated.Length;
 
-            var processDownloadsTask = taskStatusController.Create(taskStatus, "Process updated downloads");
+            var processDownloadsTask = taskStatusController.Create(taskStatus, 
+                $"Process updated {downloadParameter} downloads");
 
             foreach (var id in updated)
             {
@@ -51,9 +52,12 @@ namespace GOG.TaskActivities.ProcessDownloads
                     productDownloads.Title);
 
                 // we'll need to remove successfully downloaded files, copying collection
-                var downloadEntries = productDownloads.Downloads.FindAll(d => d.DownloadParameter == downloadParameter).ToArray();
+                var downloadEntries = productDownloads.Downloads.FindAll(
+                    d => 
+                    d.DownloadParameter == downloadParameter).ToArray();
 
-                var processDownloadEntriesTask = taskStatusController.Create(processDownloadsTask, "Download product entries");
+                var processDownloadEntriesTask = taskStatusController.Create(processDownloadsTask, 
+                    $"Download {downloadParameter} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -78,7 +82,7 @@ namespace GOG.TaskActivities.ProcessDownloads
 
                     var removeEntryTask = taskStatusController.Create(
                         processDownloadEntriesTask,
-                        "Remove successfully downloaded scheduled entry");
+                        $"Remove scheduled {downloadParameter} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);

@@ -4,6 +4,11 @@ using Interfaces.Data;
 
 namespace Interfaces.Template
 {
+    public interface IPrimaryTemplateProperty
+    {
+        string PrimaryTemplate { get; }
+    }
+
     public interface IResolveSubTemplatesDelegate
     {
         string ResolveSubTemplates(string templateContent);
@@ -25,6 +30,7 @@ namespace Interfaces.Template
     }
 
     public interface ITemplateController:
+        IPrimaryTemplateProperty, 
         IResolveSubTemplatesDelegate,
         IGetContentByTitleDelegate,
         IBindDelegate,

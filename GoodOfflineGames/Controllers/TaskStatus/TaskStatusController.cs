@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.TaskStatus;
+using Interfaces.ViewController;
 
 using Models.TaskStatus;
 
@@ -12,10 +13,10 @@ namespace Controllers.TaskStatus
 {
     public class TaskStatusController : ITaskStatusController
     {
-        private ITaskStatusViewController taskStatusViewController;
+        private IViewController taskStatusViewController;
 
         public TaskStatusController(
-            ITaskStatusViewController taskStatusViewController)
+            IViewController taskStatusViewController)
         {
             this.taskStatusViewController = taskStatusViewController;
         }
