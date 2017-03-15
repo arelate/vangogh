@@ -43,6 +43,11 @@ namespace GOG.Controllers.FileDownload
             {
                 var resolvedUri = response.RequestMessage.RequestUri.ToString();
 
+                // GOG.com quirk
+                // When resolving ManualUrl from GameDetails we get CDN Uri with the session key.
+                // Storing this key is pointless - it expries after some time and needs to be updated.
+                // So here we filter our this session key and store direct file Uri
+
                 var uriSansSession = sessionController.GetUriSansSession(resolvedUri);
 
                 await routingController.UpdateRouteAsync(

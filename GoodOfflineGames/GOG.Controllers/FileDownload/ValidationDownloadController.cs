@@ -56,6 +56,12 @@ namespace GOG.Controllers.FileDownload
             // but close download validation files task and don't return earlier
             if (validationExpectedForUriDelegate.Expected(resolvedUri))
             {
+                // GOG.com quirk
+                // Note: See ManualUrlDownloadFromSourceDelegate for session key explaination
+                // Validation files are constructed from direct file Uri to GOG CDN
+                // and since those Uris 1) don't contain session key 2) would have contained outdated key
+                // we request new session key again. The network operation uses HEAD request, so should be light
+
                 var session = await sessionController.CreateSession(sourceUri);
 
                 var validationUri = uriController.ConcatenateUriWithParameters(

@@ -53,6 +53,19 @@ namespace GOG.Controllers.Network
 
         public async Task<GameDetails> GetDeserialized(string uri, IDictionary<string, string> parameters = null)
         {
+            // GOG.com quirk
+            // GameDetails as sent by GOG.com servers have an intersting data structure for downloads:
+            // it's represented as an array, where first element is a string with the language,
+            // followed by actual download details, something like:
+            // [ "English", { // download1 }, { // download2 } ]
+            // Which of course is not a problem for JavaScript, but is a significant problem for
+            // deserializing into strongly typed C# data structures. This wrapped encapsulated normal network requests,
+            // data transformation and desearialization in a sinlge package. To process downloads we do the following:
+            // - if response contains language downloads, signified by [[
+            // - extract actual language information and remove it from the string
+            // - deserialize downloads into OperatingSystemsDownloads collection
+            // - assign languages, since we know we should have as many downloads array as languages
+
             var data = await getDelegate.Get(uri, parameters);
             var gameDetails = serializationController.Deserialize<GameDetails>(data);
 

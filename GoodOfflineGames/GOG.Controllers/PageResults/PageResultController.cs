@@ -54,6 +54,18 @@ namespace GOG.Controllers.PageResults
 
         public async Task<IList<T>> GetPageResults(ITaskStatus taskStatus)
         {
+            // GOG.com quirk
+            // Products, AccountProducts use server-side paginated results, similar to Wikipedia.
+            // This class encapsulates requesting sequence of pages up to the total number of pages.
+            // Additionally page requests are filtered using hashes, so if response has the same hash
+            // we would not deserialize it again - no point passing around same data.
+            // Please note that ealier app versions also used heuristic optimization when
+            // some page was unchanged - stop requesting next pages. This leads to stale data as GOG.com 
+            // changes information all the time updating Products and AccountProducts. It's especially
+            // important for AccountProducts as GOG.com can set Updates information on any AccountProduct. 
+            // Updated is used for driving updated.json - that in turn is used for all subsequent operations 
+            // as an optimization - we don't process all products all the time, just updated
+
             var pageResults = new List<T>();
             var currentPage = 1;
             var totalPages = 1;
