@@ -50,19 +50,19 @@ namespace GOG.TaskActivities.UpdateData
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
-            var updateAllProductsTask = taskStatusController.Create(taskStatus, "Update products information");
+            var updateAllProductsTask = taskStatusController.Create(taskStatus, $"Update {productParameter} data");
 
             var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
 
-            var extractTask = taskStatusController.Create(updateAllProductsTask, "Extract product data");
+            var extractTask = taskStatusController.Create(updateAllProductsTask, $"Extract {productParameter} data");
             var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
             taskStatusController.Complete(extractTask);
 
-            var updateTask = taskStatusController.Create(updateAllProductsTask, "Update products");
+            var updateTask = taskStatusController.Create(updateAllProductsTask, $"Update {productParameter}");
             await dataController.UpdateAsync(updateTask, newProducts.ToArray());
             taskStatusController.Complete(updateTask);
 
-            var processingTask = taskStatusController.Create(updateAllProductsTask, "Post-processing products");
+            var processingTask = taskStatusController.Create(updateAllProductsTask, $"Post-processing {productParameter}");
 
             if (collectionProcessingController != null)
                 await collectionProcessingController.Process(newProducts, processingTask);
