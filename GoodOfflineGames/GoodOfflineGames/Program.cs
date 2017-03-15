@@ -45,6 +45,7 @@ using Controllers.UpdateUri;
 using Controllers.Naming;
 using Controllers.QueryParameters;
 using Controllers.Template;
+using Controllers.ViewModel;
 
 using Interfaces.TaskActivity;
 
@@ -150,11 +151,14 @@ namespace GoodOfflineGames
                 serializedStorageController,
                 collectionController);
 
+            var taskStatusViewModelDelegate = new TaskStatusGetViewModelDelegate(
+                bytesFormattingController, 
+                secondsFormattingController);
+
             var taskStatusViewController = new TaskStatusViewController(
                 applicationTaskStatus,
                 appTemplateController,
-                bytesFormattingController,
-                secondsFormattingController,
+                taskStatusViewModelDelegate,
                 taskStatusTreeToListController,
                 presentationController);
 

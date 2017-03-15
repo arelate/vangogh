@@ -109,6 +109,7 @@
     <Compile Include="Uri\UriController.cs" />
     <Compile Include="Uri\ValidationUriController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
+    <Compile Include="ViewModel\TaskStatusGetViewModelDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

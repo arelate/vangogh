@@ -96,6 +96,7 @@
     <Compile Include="Validation\ValidationChunk.cs" />
     <Compile Include="Validation\ValidationController.cs" />
     <Compile Include="Validation\ValidationDataDownloadController.cs" />
+    <Compile Include="ViewModel\ViewModelController.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
