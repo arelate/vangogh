@@ -13,7 +13,7 @@ using Models.Separators;
 
 namespace Controllers.Presentation
 {
-    public class PresentationController : IPresentationController<Tuple<string, string[]>>
+    public class PresentationController : IPresentationController<string>
     {
         private IMeasurementController<string> formattedStringMeasurementController;
         private ILineBreakingController lineBreakingController;
@@ -64,21 +64,21 @@ namespace Controllers.Presentation
         private void PresentViewModel(string text, string[] colors, ref int currentScreenLine, IList<int> currentLinesLengths)
         {
             var lines = lineBreakingController.BreakLines(text, consoleController.WindowWidth);
-            var consumedColors = 0;
+            //var consumedColors = 0;
 
             foreach (var line in lines)
             {
-                var requiredColors = Regex.Matches(line, Separators.ColorFormatting).Count;
-                var lineColors = new List<string>();
-                for (var cc = consumedColors; cc < consumedColors + requiredColors; cc++)
-                    lineColors.Add(colors.ElementAtOrDefault(cc));
+                //var requiredColors = Regex.Matches(line, Separators.ColorFormatting).Count;
+                //var lineColors = new List<string>();
+                //for (var cc = consumedColors; cc < consumedColors + requiredColors; cc++)
+                //    lineColors.Add(colors.ElementAtOrDefault(cc));
 
-                consumedColors += requiredColors;
+                //consumedColors += requiredColors;
 
                 var currentLineLength = PresentLine(
                         currentScreenLine++,
                         line,
-                        lineColors.ToArray());
+                        null);//lineColors.ToArray());
 
                 currentLinesLengths.Add(currentLineLength);
             }
@@ -86,7 +86,7 @@ namespace Controllers.Presentation
             consoleController.ResetFormatting();
         }
 
-        public void Present(IEnumerable<Tuple<string, string[]>> viewModels, bool overrideThrottling = false)
+        public void Present(IEnumerable<string> views, bool overrideThrottling = false)
         {
             if (!overrideThrottling && 
                 (DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
@@ -95,18 +95,18 @@ namespace Controllers.Presentation
                 previousWindowHeight != consoleController.WindowHeight)
                 consoleController.Clear();
 
-            var viewsModelsLength = viewModels.Count();
+            var viewsModelsLength = views.Count();
             var currentLinesLengths = new List<int>();
             var currentScreenLine = 0;
 
             for (var ii = 0; ii < viewsModelsLength; ii++)
             {
-                var text = viewModels.ElementAt(ii).Item1;
-                var colors = viewModels.ElementAt(ii).Item2;
+                var text = views.ElementAt(ii);
+                //var colors = views.ElementAt(ii).Item2;
 
                 PresentViewModel(
                     text, 
-                    colors, 
+                    null, 
                     ref currentScreenLine, 
                     currentLinesLengths);
             }

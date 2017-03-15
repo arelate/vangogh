@@ -44,6 +44,7 @@ using Controllers.Expectation;
 using Controllers.UpdateUri;
 using Controllers.Naming;
 using Controllers.QueryParameters;
+using Controllers.Template;
 
 using Interfaces.TaskActivity;
 
@@ -70,6 +71,8 @@ using GOG.TaskActivities.Cleanup;
 using GOG.TaskActivities.Validate;
 using GOG.TaskActivities.LogTaskStatus;
 using GOG.TaskActivities.ActivityParameters;
+
+using GOG.TaskActivities.Template;
 
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
@@ -125,18 +128,39 @@ namespace GoodOfflineGames
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();
 
+            var collectionController = new CollectionController();
+
             var taskStatusTreeToListController = new TaskStatusTreeToListController();
 
             var applicationTaskStatus = new TaskStatus() { Title = "Welcome to GoodOfflineGames" };
 
+            var templatesDirectoryDelegate = new FixedDirectoryDelegate("templates");
+            var appTemplateFilenameDelegate = new FixedFilenameDelegate("app", jsonFilenameDelegate);
+            var reportTemplateFilenameDelegate = new FixedFilenameDelegate("report", jsonFilenameDelegate);
+
+            var appTemplateController = new TemplateController(
+                templatesDirectoryDelegate, 
+                appTemplateFilenameDelegate, 
+                serializedStorageController, 
+                collectionController);
+
+            var reportTemplateController = new TemplateController(
+                templatesDirectoryDelegate,
+                reportTemplateFilenameDelegate,
+                serializedStorageController,
+                collectionController);
+
             var taskStatusViewController = new TaskStatusViewController(
                 applicationTaskStatus,
+                appTemplateController,
                 bytesFormattingController,
                 secondsFormattingController,
                 taskStatusTreeToListController,
                 presentationController);
 
             var taskStatusController = new TaskStatusController(taskStatusViewController);
+
+            var testTemplateController = new TestTemplateController(appTemplateController, taskStatusController);
 
             var cookiesController = new CookiesController(
                 storageController,
@@ -164,8 +188,6 @@ namespace GoodOfflineGames
 
             var gogDataExtractionController = new GOGDataExtractionController();
             var screenshotExtractionController = new ScreenshotExtractionController();
-
-            var collectionController = new CollectionController();
 
             var throttleController = new ThrottleController(
                 taskStatusController,
@@ -443,6 +465,8 @@ namespace GoodOfflineGames
                 // hash tracking should be first data controller to be loaded 
                 // as all serialized storage operations go through it and might overwrite data on disk
                 hashTrackingController,
+                appTemplateController,
+                reportTemplateController,
                 settingsController,
                 activityParametersController,
                 productsDataController,
@@ -952,6 +976,8 @@ namespace GoodOfflineGames
             {
                 // load initial data
                 loadDataController,
+
+                testTemplateController,
                 // validate settings
                 validateSettingsTaskActivity,
                 // authorize
@@ -984,11 +1010,10 @@ namespace GoodOfflineGames
             var defaultColor = new string[] { " default" };
 
             presentationController.Present(
-                new List<Tuple<string, string[]>> {
-                    Tuple.Create("%cAll GoodOfflineGames tasks are complete.", new string[] { "white" }),
-                    Tuple.Create("", defaultColor),
-                    Tuple.Create("%cPress ENTER to close the window...", defaultColor)
-                }, true);
+                new List<string> {
+                    "All GoodOfflineGames tasks are complete.",
+                    "",
+                    "Press ENTER to close the window..."}, true);
             consoleController.ReadLine();
         }
     }

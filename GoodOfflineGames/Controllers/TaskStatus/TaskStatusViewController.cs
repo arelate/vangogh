@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 
 using Interfaces.TaskStatus;
 using Interfaces.Formatting;
 using Interfaces.Presentation;
 using Interfaces.Tree;
+using Interfaces.Template;
 
 using Models.Units;
-using Models.ViewModels;
 
 namespace Controllers.TaskStatus
 {
@@ -17,36 +16,21 @@ namespace Controllers.TaskStatus
         private ITaskStatus applicationTaskStatus;
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
+        private ITemplateController templateController;
         private ITreeToListController<ITaskStatus> taskStatusTreeToListController;
-        private IPresentationController<Tuple<string, string[]>> consolePresentationController;
-
-        private const string suffix = ". ";
-
-        private const string progressTargetTemplate = "%c{0}%c";
-        private readonly string[] progressTargetColors = new string[] { "white", "default" };
-
-        private const string progressTemplate = "{0:P1}, {1} of {2}";
-
-        private const string progressETATemplate = "ETA: %c{0}%c, avg. speed: %c{1}/s%c";
-        private readonly string[] progressETAColors = new string[] { "white", "default", "white", "default" };
-
-        private const string childTasksTemplate = "%c{0}%c child task(s) complete";
-        private readonly string[] childTasksColors = new string[] { "white", "default" };
-
-        private const string warningsTemplate = "%cWarning(s): {0}%c";
-        private readonly string[] warningsColors = new string[] { "yellow", "default" };
-
-        private const string failuresTemplate = "%cFailures(s): {0}%c";
-        private readonly string[] failuresColors = new string[] { "red", "default" };
+        private IPresentationController<string> consolePresentationController;
 
         public TaskStatusViewController(
             ITaskStatus applicationTaskStatus,
+            ITemplateController templateController,
             IFormattingController bytesFormattingController,
             IFormattingController secondsFormattingController,
             ITreeToListController<ITaskStatus> taskStatusTreeToListController,
-            IPresentationController<Tuple<string, string[]>> consolePresentationController)
+            IPresentationController<string> consolePresentationController)
         {
             this.applicationTaskStatus = applicationTaskStatus;
+
+            this.templateController = templateController;
 
             this.bytesFormattingController = bytesFormattingController;
             this.secondsFormattingController = secondsFormattingController;
@@ -58,186 +42,61 @@ namespace Controllers.TaskStatus
 
         public void CreateView(bool overrideThrottling = false)
         {
-            var viewModels = new List<TaskStatusViewModel>();
+            var views = new List<string>();
 
             var taskStatusList = taskStatusTreeToListController.ToList(applicationTaskStatus);
 
             foreach (var taskStatus in taskStatusList)
             {
-                var taskStatusViewModel = GetViewModel(taskStatus);
-                if (taskStatusViewModel != null)
-                    viewModels.Add(taskStatusViewModel);
+                var viewModel = GetViewModel(taskStatus);
+                if (viewModel != null)
+                {
+                    var view = templateController.Bind("taskStatus", viewModel);
+                    views.Add(view);
+                }
             }
 
-            consolePresentationController.Present(GetTuples(viewModels), overrideThrottling);
+            consolePresentationController.Present(views, overrideThrottling);
         }
 
-        private IEnumerable<Tuple<string, string[]>> GetTuples(IEnumerable<TaskStatusViewModel> taskStatusViewModels)
+        public IDictionary<string, string> GetViewModel(ITaskStatus taskStatus)
         {
-            foreach (var taskStatusViewModel in taskStatusViewModels)
-            {
-                yield return new Tuple<string, string[]>(
-                    taskStatusViewModel.Text,
-                    taskStatusViewModel.Colors);
-            }
-        }
-
-        private TaskStatusViewModel GetViewModel(ITaskStatus taskStatus)
-        {
-            var taskStatusStringBuilder = new StringBuilder();
-            var taskStatusColors = new List<string>();
-
             if (taskStatus.Complete) return null;
 
-            // list completed children
-            var completedChildTasksCount = 0;
-            if (taskStatus.Children != null)
-                foreach (var task in taskStatus.Children)
-                    if (task.Complete) ++completedChildTasksCount;
+            var viewModel = new Dictionary<string, string>();
 
-            AppendTitle(
-                taskStatusStringBuilder, 
-                taskStatusColors, 
-                taskStatus.Title);
+            viewModel.Add("title", taskStatus.Title);
 
             if (taskStatus.Progress != null)
             {
-                AppendProgressTarget(
-                    taskStatusStringBuilder,
-                    taskStatusColors,
-                    taskStatus.Progress.Target);
+                viewModel.Add("containsProgress", "true");
+                viewModel.Add("progressTarget", taskStatus.Progress.Target);
+                viewModel.Add("progressPercent", string.Format("{0:P1}", (double)taskStatus.Progress.Current / taskStatus.Progress.Total));
 
-                AppendProgressCompletion(
-                    taskStatusStringBuilder,
-                    taskStatusColors,
-                    taskStatus.Progress.Current,
-                    taskStatus.Progress.Total,
-                    taskStatus.Progress.Unit);
+                var currentFormatted = taskStatus.Progress.Current.ToString();
+                var totalFormatted = taskStatus.Progress.Total.ToString();
 
-                // show ETA only for bytes, downloads, validation
                 if (taskStatus.Progress.Unit == DataUnits.Bytes)
-                    AppendProgressETA(
-                        taskStatusStringBuilder,
-                        taskStatusColors,
-                        taskStatus.Started,
-                        taskStatus.Progress.Current,
-                        taskStatus.Progress.Total,
-                        taskStatus.Progress.Unit);
+                {
+                    viewModel.Add("containsEta", "true");
+
+                    currentFormatted = bytesFormattingController.Format(taskStatus.Progress.Current);
+                    totalFormatted = bytesFormattingController.Format(taskStatus.Progress.Total);
+
+                    var elapsed = DateTime.UtcNow - taskStatus.Started;
+                    var unitsPerSecond = taskStatus.Progress.Current / elapsed.TotalSeconds;
+                    var speed = bytesFormattingController.Format((long)unitsPerSecond);
+                    var remainingTime = secondsFormattingController.Format((long)((taskStatus.Progress.Total - taskStatus.Progress.Current) / unitsPerSecond));
+
+                    viewModel.Add("remainingTime", remainingTime);
+                    viewModel.Add("averageUnitsPerSecond", speed);
+                }
+
+                viewModel.Add("progressCurrent", currentFormatted);
+                viewModel.Add("progressTotal", totalFormatted);
             }
 
-            if (completedChildTasksCount > 0)
-                AppendCompletedChildTasks(
-                    taskStatusStringBuilder,
-                    taskStatusColors,
-                    completedChildTasksCount);
-
-            if (taskStatus.Warnings != null &&
-                taskStatus.Warnings.Count > 0)
-                AppendWarnings(
-                    taskStatusStringBuilder,
-                    taskStatusColors,
-                    taskStatus.Warnings.Count);
-
-            if (taskStatus.Failures != null &&
-                taskStatus.Failures.Count > 0)
-                AppendFailures(
-                    taskStatusStringBuilder,
-                    taskStatusColors,
-                    taskStatus.Failures.Count);
-
-            var taskStatusViewModel = new TaskStatusViewModel()
-            {
-                Text = taskStatusStringBuilder.ToString(),
-                Colors = taskStatusColors.ToArray()
-            };
-
-            return taskStatusViewModel;
-        }
-
-        private void GetViewModelComponentWithSuffix(StringBuilder stringBuilder, string template, params string[] data)
-        {
-            stringBuilder.AppendFormat(template, data);
-            stringBuilder.Append(suffix);
-        }
-
-        private void AppendTitle(StringBuilder stringBuilder, List<string> colors, string title)
-        {
-            GetViewModelComponentWithSuffix(stringBuilder, title, new string[0]);
-        }
-
-        private void AppendProgressTarget(StringBuilder stringBuilder, List<string> colors, string target)
-        {
-            GetViewModelComponentWithSuffix(
-                stringBuilder,
-                progressTargetTemplate,
-                target);
-
-            colors.AddRange(progressTargetColors);
-        }
-
-        private void AppendProgressCompletion(StringBuilder stringBuilder, List<string> colors, long current, long total, string unit)
-        {
-            var percentage = (double)current / total;
-
-            var currentFormatted = current.ToString();
-            var totalFormatted = total.ToString();
-
-            if (unit == DataUnits.Bytes)
-            {
-                currentFormatted = bytesFormattingController.Format(current);
-                totalFormatted = bytesFormattingController.Format(total);
-            }
-
-            stringBuilder.AppendFormat(
-                progressTemplate,
-                percentage,
-                currentFormatted,
-                totalFormatted);
-            stringBuilder.Append(suffix);
-        }
-
-        private void AppendProgressETA(StringBuilder stringBuilder, List<string> colors, DateTime started, long current, long total, string unit)
-        {
-            var elapsed = DateTime.UtcNow - started;
-            var unitsPerSecond = current / elapsed.TotalSeconds;
-            var speed = bytesFormattingController.Format((long) unitsPerSecond);
-            var remainingSeconds = (total - current) / unitsPerSecond;
-
-            GetViewModelComponentWithSuffix(
-                stringBuilder,
-                progressETATemplate,
-                secondsFormattingController.Format((long)remainingSeconds),
-                speed);
-
-            colors.AddRange(progressETAColors);
-        }
-
-        private void AppendCompletedChildTasks(StringBuilder stringBuilder, List<string> colors, int completedChildTasksCount)
-        {
-            GetViewModelComponentWithSuffix(
-                stringBuilder,
-                childTasksTemplate,
-                completedChildTasksCount.ToString());
-
-            colors.AddRange(childTasksColors);
-        }
-
-        private void AppendWarnings(StringBuilder stringBuilder, List<string> colors, int warningsCount)
-        {
-            GetViewModelComponentWithSuffix(
-                stringBuilder,
-                warningsTemplate,
-                warningsCount.ToString());
-            colors.AddRange(warningsColors);
-        }
-
-        private void AppendFailures(StringBuilder stringBuilder, List<string> colors, int failuresCount)
-        {
-            GetViewModelComponentWithSuffix(
-                stringBuilder,
-                failuresTemplate,
-                failuresCount.ToString());
-            colors.AddRange(failuresColors);
+            return viewModel;
         }
     }
 }

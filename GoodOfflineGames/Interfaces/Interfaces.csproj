@@ -77,6 +77,8 @@
     <Compile Include="TaskStatus\TaskStatus.cs" />
     <Compile Include="TaskStatus\TaskStatusController.cs" />
     <Compile Include="TaskStatus\TaskStatusViewController.cs" />
+    <Compile Include="Template\Template.cs" />
+    <Compile Include="Template\TemplateController.cs" />
     <Compile Include="Throttle\ThrottleController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestPage\RequestPageController.cs" />

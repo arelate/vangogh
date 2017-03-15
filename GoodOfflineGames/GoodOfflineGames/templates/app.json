@@ -1,0 +1,22 @@
+﻿[
+	{
+		"title": "taskStatus",
+		"content": "{{title}}<containsProgress?progress> "
+	},
+	{
+		"title": "title",
+		"content": "{title}"
+	},
+	{
+		"title": "progress",
+		"content": ". {{target}}. Progress: {progressPercent}, {progressCurrent} of {progressTotal}<containsEta?eta>"
+	},
+	{
+		"title": "eta",
+		"content": ". ETA: {remainingTime}, avg. speed: {averageUnitsPerSecond}/s"
+	},
+	{
+		"title": "target",
+		"content": "{progressTarget}"
+	}
+]

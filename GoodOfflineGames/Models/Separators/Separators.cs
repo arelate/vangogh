@@ -14,5 +14,8 @@
         public const string GameDetailsDownloadsEnd = "]]";
         // activity parameters
         public const string ActivityParameters = "-";
+        // template
+        public const string TemplatePrefix = "{";
+        public const string TemplateSuffix = "}";
     }
 }

@@ -74,6 +74,7 @@
     <Compile Include="Measurement\FormattedStringMeasurementController.cs" />
     <Compile Include="Naming\ActivityParametersNameDelegate.cs" />
     <Compile Include="Presentation\PresentationController.cs" />
+    <Compile Include="Presentation\PresentationControllerEx.cs" />
     <Compile Include="PropertiesValidation\DownloadsOperatingSystemsValidationController.cs" />
     <Compile Include="QueryParameters\ProductGetQueryParametersDelegate.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="TaskStatus\TaskStatusController.cs" />
     <Compile Include="TaskStatus\TaskStatusTreeToListController.cs" />
     <Compile Include="TaskStatus\TaskStatusViewController.cs" />
+    <Compile Include="Template\TemplateController.cs" />
     <Compile Include="Throttle\ThrottleController.cs" />
     <Compile Include="Formatting\FormattingController.cs" />
     <Compile Include="Formatting\BytesFormattingController.cs" />

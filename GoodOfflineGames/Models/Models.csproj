@@ -54,6 +54,7 @@
     <Compile Include="QueryParameters\QueryParameters.cs" />
     <Compile Include="Separators\Separators.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Template\Template.cs" />
     <Compile Include="Units\DataUnits.cs" />
     <Compile Include="Units\PageUnits.cs" />
     <Compile Include="Units\ProductUnits.cs" />
