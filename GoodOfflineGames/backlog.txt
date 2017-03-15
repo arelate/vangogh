@@ -1,7 +1,5 @@
 Backend
 
-- add warnings / fails to the templates
-
 - wrap download activities in try/catch
 
 - output log in plain text human readable format (and as a taskActivity again and dated)

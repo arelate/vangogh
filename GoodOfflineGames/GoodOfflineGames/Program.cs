@@ -138,9 +138,9 @@ namespace GoodOfflineGames
 
             var appTemplateController = new TemplateController(
                 "taskStatus",
-                templatesDirectoryDelegate, 
-                appTemplateFilenameDelegate, 
-                serializedStorageController, 
+                templatesDirectoryDelegate,
+                appTemplateFilenameDelegate,
+                serializedStorageController,
                 collectionController);
 
             //var reportTemplateController = new TemplateController(
@@ -151,7 +151,7 @@ namespace GoodOfflineGames
             //    collectionController);
 
             var taskStatusAppViewModelDelegate = new TaskStatusAppViewModelDelegate(
-                bytesFormattingController, 
+                bytesFormattingController,
                 secondsFormattingController);
 
             var taskStatusViewController = new TaskStatusAppViewController(
@@ -523,7 +523,7 @@ namespace GoodOfflineGames
 
             var productsExtractionController = new ProductsExtractionController();
 
-            var productsUpdateController = new PageResultUpdateController<ProductsPageResult,Product>(
+            var productsUpdateController = new PageResultUpdateController<ProductsPageResult, Product>(
                     Parameters.Products,
                     productsPageResultsController,
                     productsExtractionController,
@@ -859,7 +859,7 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Log Task Status 
+            #region Report Task Status 
 
             var reportController = new ReportController(
                 logsDirectoryDelegate,
@@ -1002,13 +1002,12 @@ namespace GoodOfflineGames
                         errorMessages.Add(innerException.Message);
 
                     taskStatusController.Fail(applicationTaskStatus, string.Join(", ", errorMessages));
-                    break;
                 }
             }
 
             presentationController.Present(
-                new string[] 
-                    {"All GoodOfflineGames tasks are complete.\n\nPress ENTER to close the window..."}, 
+                new string[]
+                    {"All GoodOfflineGames tasks are complete.\n\nPress ENTER to close the window..."},
                 true);
 
             consoleController.ReadLine();

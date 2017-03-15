@@ -22,6 +22,10 @@ namespace Controllers.ViewModel
             public const string ContainsETA = "containsEta";
             public const string RemainingTime = "remainingTime";
             public const string AverageUnitsPerSecond = "averageUnitsPerSecond";
+            public const string ContainsFailures = "containsFailures";
+            public const string FailuresCount = "failuresCount";
+            public const string ContainsWarnings = "containsWarnings";
+            public const string WarningsCount = "warningsCount";
         }
 
         private IFormattingController bytesFormattingController;
@@ -50,7 +54,11 @@ namespace Controllers.ViewModel
                 { TaskStatusAppViewModelSchema.ProgressTotal, "" },
                 { TaskStatusAppViewModelSchema.ContainsETA, "" },
                 { TaskStatusAppViewModelSchema.RemainingTime, "" },
-                { TaskStatusAppViewModelSchema.AverageUnitsPerSecond, "" }
+                { TaskStatusAppViewModelSchema.AverageUnitsPerSecond, "" },
+                { TaskStatusAppViewModelSchema.ContainsFailures, ""},
+                { TaskStatusAppViewModelSchema.FailuresCount, ""},
+                { TaskStatusAppViewModelSchema.ContainsWarnings, ""},
+                { TaskStatusAppViewModelSchema.WarningsCount, ""}
             };
 
             viewModel[TaskStatusAppViewModelSchema.Title] = taskStatus.Title;
@@ -85,6 +93,18 @@ namespace Controllers.ViewModel
 
                 viewModel[TaskStatusAppViewModelSchema.ProgressCurrent] = currentFormatted;
                 viewModel[TaskStatusAppViewModelSchema.ProgressTotal] = totalFormatted;
+            }
+
+            if (taskStatus.Failures != null && taskStatus.Failures.Count > 0)
+            {
+                viewModel[TaskStatusAppViewModelSchema.ContainsFailures] = "true";
+                viewModel[TaskStatusAppViewModelSchema.FailuresCount] = taskStatus.Failures.Count.ToString();
+            }
+
+            if (taskStatus.Warnings != null && taskStatus.Warnings.Count > 0)
+            {
+                viewModel[TaskStatusAppViewModelSchema.ContainsWarnings] = "true";
+                viewModel[TaskStatusAppViewModelSchema.WarningsCount] = taskStatus.Warnings.Count.ToString();
             }
 
             return viewModel;

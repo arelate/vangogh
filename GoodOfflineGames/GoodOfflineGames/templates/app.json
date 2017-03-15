@@ -1,7 +1,7 @@
 ﻿[
 	{
 		"title": "taskStatus",
-		"content": "{{title}}<containsProgress?progress> "
+		"content": "{{title}}<containsProgress?progress><containsFailures?failures><containsWarnings?warnings>"
 	},
 	{
 		"title": "title",
@@ -18,5 +18,13 @@
 	{
 		"title": "target",
 		"content": ": {progressTarget}"
+	},
+	{
+		"title": "failures",
+		"content": ". Failures: {failuresCount}"
+	},
+	{
+		"title": "warnings",
+		"content": ". Warnings: {warningsCount}"
 	}
 ]
