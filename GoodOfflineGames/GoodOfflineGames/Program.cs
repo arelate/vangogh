@@ -1006,13 +1006,11 @@ namespace GoodOfflineGames
                 }
             }
 
-            var defaultColor = new string[] { " default" };
-
             presentationController.Present(
-                new List<string> {
-                    "All GoodOfflineGames tasks are complete.",
-                    "",
-                    "Press ENTER to close the window..."}, true);
+                new string[] 
+                    {"All GoodOfflineGames tasks are complete.\n\nPress ENTER to close the window..."}, 
+                true);
+
             consoleController.ReadLine();
         }
     }

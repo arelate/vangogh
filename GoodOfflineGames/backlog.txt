@@ -1,15 +1,12 @@
 Backend
 
+- add warnings / fails to the templates
+
 - wrap download activities in try/catch
 
-- mark all GOG specific things as /* GOG.com CUSTOM */
-
 - output log in plain text human readable format (and as a taskActivity again and dated)
-	- provide summary - all failures, warnings, bytes transferred, etc.
-	- transform taskStatusPresentationController to abstract same code for console presentation and log presentation
-	- add Log entries to taskStatus to log additional debug information
-	- convert taskStatusTree to list
-	- then item by item list of taskStatus human readable presentation start, complete, duration, child tasks, etc
+
+- add Log entries to taskStatus to log additional debug information?
 
 - repair controller?
 	- validate full file and return validation results with all failing chunks and specific validation problems
@@ -17,10 +14,6 @@ Backend
 	- refactor download controller to download range
 
 - serve data and frontend files via http
-
-- make directories configurable
-
-- add settings section "special" to set all to update, and future web frontend tasks
 
 - current task activities are monolithic - consider breaking them apart somehow for testability
 
