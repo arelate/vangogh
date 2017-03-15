@@ -73,8 +73,6 @@ using GOG.TaskActivities.Validate;
 using GOG.TaskActivities.LogTaskStatus;
 using GOG.TaskActivities.ActivityParameters;
 
-using GOG.TaskActivities.Template;
-
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
 using Models.ProductDownloads;
@@ -163,8 +161,6 @@ namespace GoodOfflineGames
                 presentationController);
 
             var taskStatusController = new TaskStatusController(taskStatusViewController);
-
-            var testTemplateController = new TestTemplateController(appTemplateController, taskStatusController);
 
             var cookiesController = new CookiesController(
                 storageController,
@@ -980,8 +976,6 @@ namespace GoodOfflineGames
             {
                 // load initial data
                 loadDataController,
-
-                testTemplateController,
                 // validate settings
                 validateSettingsTaskActivity,
                 // authorize
