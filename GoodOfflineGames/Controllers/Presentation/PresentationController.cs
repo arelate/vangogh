@@ -76,10 +76,14 @@ namespace Controllers.Presentation
                 previousWindowHeight != consoleController.WindowHeight)
                 consoleController.Clear();
 
+            var wrappedViews = new List<string>();
+            foreach (var view in views)
+                wrappedViews.AddRange(view.Split(new string[] { "\n" }, StringSplitOptions.None));
+
             var currentLinesLengths = new List<int>();
             var currentScreenLine = 0;
 
-            foreach (var view in views)
+            foreach (var view in wrappedViews)
                 PresentViewModel(
                     view, 
                     ref currentScreenLine, 
