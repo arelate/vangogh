@@ -11,6 +11,19 @@ namespace Controllers.ViewModel
 {
     public class TaskStatusAppViewModelDelegate : IGetViewModelDelegate<ITaskStatus>
     {
+        private static class TaskStatusAppViewModelSchema
+        {
+            public const string Title = "title";
+            public const string ContainsProgress = "containsProgress";
+            public const string ProgressTarget = "progressTarget";
+            public const string ProgressPercent = "progressPercent";
+            public const string ProgressCurrent = "progressCurrent";
+            public const string ProgressTotal = "progressTotal";
+            public const string ContainsETA = "containsETA";
+            public const string RemainingTime = "remainingTime";
+            public const string AverageUnitsPerSecond = "averageUnitsPerSecond";
+        }
+
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
 
@@ -29,34 +42,34 @@ namespace Controllers.ViewModel
             // viewmodel schemas
             var viewModel = new Dictionary<string, string>()
             {
-                { "title", "" },
-                { "containsProgress", "" },
-                { "progressTarget", "" },
-                { "progressPercent", "" },
-                { "progressCurrent", "" },
-                { "progressTotal", "" },
-                { "containsEta", "" },
-                { "remainingTime", "" },
-                { "averageUnitsPerSecond", "" }
+                { TaskStatusAppViewModelSchema.Title, "" },
+                { TaskStatusAppViewModelSchema.ContainsProgress, "" },
+                { TaskStatusAppViewModelSchema.ProgressTarget, "" },
+                { TaskStatusAppViewModelSchema.ProgressPercent, "" },
+                { TaskStatusAppViewModelSchema.ProgressCurrent, "" },
+                { TaskStatusAppViewModelSchema.ProgressTotal, "" },
+                { TaskStatusAppViewModelSchema.ContainsETA, "" },
+                { TaskStatusAppViewModelSchema.RemainingTime, "" },
+                { TaskStatusAppViewModelSchema.AverageUnitsPerSecond, "" }
             };
 
-            viewModel["title"] = taskStatus.Title;
+            viewModel[TaskStatusAppViewModelSchema.Title] = taskStatus.Title;
 
             if (taskStatus.Progress != null)
             {
                 var current = taskStatus.Progress.Current;
                 var total = taskStatus.Progress.Total;
 
-                viewModel["containsProgress"] = "true";
-                viewModel["progressTarget"] = taskStatus.Progress.Target;
-                viewModel["progressPercent"] = string.Format("{0:P1}", (double)current / total);
+                viewModel[TaskStatusAppViewModelSchema.ContainsProgress] = "true";
+                viewModel[TaskStatusAppViewModelSchema.ProgressTarget] = taskStatus.Progress.Target;
+                viewModel[TaskStatusAppViewModelSchema.ProgressPercent] = string.Format("{0:P1}", (double)current / total);
 
                 var currentFormatted = current.ToString();
                 var totalFormatted = total.ToString();
 
                 if (taskStatus.Progress.Unit == DataUnits.Bytes)
                 {
-                    viewModel.Add("containsEta", "true");
+                    viewModel[TaskStatusAppViewModelSchema.ContainsETA] = "true";
 
                     currentFormatted = bytesFormattingController.Format(current);
                     totalFormatted = bytesFormattingController.Format(total);
@@ -66,12 +79,12 @@ namespace Controllers.ViewModel
                     var speed = bytesFormattingController.Format((long)unitsPerSecond);
                     var remainingTime = secondsFormattingController.Format((long)((total - current) / unitsPerSecond));
 
-                    viewModel.Add("remainingTime", remainingTime);
-                    viewModel.Add("averageUnitsPerSecond", speed);
+                    viewModel[TaskStatusAppViewModelSchema.RemainingTime] = remainingTime;
+                    viewModel[TaskStatusAppViewModelSchema.AverageUnitsPerSecond] = speed;
                 }
 
-                viewModel.Add("progressCurrent", currentFormatted);
-                viewModel.Add("progressTotal", totalFormatted);
+                viewModel[TaskStatusAppViewModelSchema.ProgressCurrent] = currentFormatted;
+                viewModel[TaskStatusAppViewModelSchema.ProgressTotal] = totalFormatted;
             }
 
             return viewModel;
