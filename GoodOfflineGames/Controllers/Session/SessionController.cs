@@ -30,7 +30,10 @@ namespace Controllers.Session
         public async Task<string> CreateSession(string manualUri)
         {
             using (var response = await requestResponseDelegate.RequestResponse(HttpMethod.Head, manualUri))
+            {
+                response.EnsureSuccessStatusCode();
                 GetUriSansSession(response.RequestMessage.RequestUri.ToString());
+            }
 
             return currentSession;
         }

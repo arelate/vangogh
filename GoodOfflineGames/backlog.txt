@@ -1,5 +1,9 @@
 Backend
 
+- guard product files and validation files download with the throttleController
+
+- make hashes more resilient to crashes
+
 - add Log entries to taskStatus to log additional debug information like inputs, processed, etc.?
 
 - repair controller?

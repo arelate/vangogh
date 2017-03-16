@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Interfaces.Routing;
@@ -62,7 +63,21 @@ namespace GOG.Controllers.FileDownload
                 // and since those Uris 1) don't contain session key 2) would have contained outdated key
                 // we request new session key again. The network operation uses HEAD request, so should be light
 
-                var session = await sessionController.CreateSession(sourceUri);
+                var session = string.Empty;
+
+                try
+                {
+                    session = await sessionController.CreateSession(sourceUri);
+                }
+                catch (HttpRequestException ex)
+                {
+                    taskStatusController.Fail(
+                        downloadValidationFileTask,
+                        $"Failed to create session for {sourceUri} for " +
+                        $"product {id}: {title}, message: {ex.Message}");
+                    taskStatusController.Complete(downloadValidationFileTask);
+                    return;
+                }
 
                 var validationUri = uriController.ConcatenateUriWithParameters(
                     resolvedUri,

@@ -41,6 +41,20 @@ namespace GOG.Controllers.FileDownload
 
             using (var response = await networkController.RequestResponse(HttpMethod.Get, sourceUri))
             {
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                }
+                catch (HttpRequestException ex)
+                {
+                    taskStatusController.Fail(
+                        downloadTask,
+                        $"Failed to get successful response for {sourceUri} for " +
+                        $"product {id}: {title}, message: {ex.Message}");
+                    taskStatusController.Complete(downloadTask);
+                    return;
+                }
+
                 var resolvedUri = response.RequestMessage.RequestUri.ToString();
 
                 // GOG.com quirk
