@@ -68,12 +68,22 @@ namespace GOG.Controllers.FileDownload
                     resolvedUri,
                     new string[] { session });
 
-                await fileDownloadController.DownloadFileFromSourceAsync(
-                    id,
-                    title,
-                    validationUri,
-                    destination,
-                    downloadValidationFileTask);
+                try
+                {
+                    await fileDownloadController.DownloadFileFromSourceAsync(
+                        id,
+                        title,
+                        validationUri,
+                        destination,
+                        downloadValidationFileTask);
+                }
+                catch (Exception ex)
+                {
+                    taskStatusController.Fail(
+                        downloadValidationFileTask,
+                        $"Couldn't download validation {sourceUri}, resolved as {resolvedUri} " +
+                        $"to {destination} for product {id}: {title}, error message: {ex.Message}");
+                }
             }
 
             taskStatusController.Complete(downloadValidationFileTask);

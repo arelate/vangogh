@@ -57,7 +57,20 @@ namespace GOG.Controllers.FileDownload
                     uriSansSession,
                     downloadTask);
 
-                await fileDownloadController.DownloadFileFromResponseAsync(response, destination, downloadTask);
+                try
+                {
+                    await fileDownloadController.DownloadFileFromResponseAsync(
+                        response, 
+                        destination, 
+                        downloadTask);
+                }
+                catch (Exception ex)
+                {
+                    taskStatusController.Fail(
+                        downloadTask, 
+                        $"Couldn't download {sourceUri}, resolved as {resolvedUri} to {destination} " +
+                        $"for product {id}: {title}, error message: {ex.Message}");
+                }
             }
 
             taskStatusController.Complete(downloadTask);

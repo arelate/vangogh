@@ -91,13 +91,13 @@ namespace GOG.TaskActivities.UpdateDownloads
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
+                var scheduleDownloadsTask = taskStatusController.Create(
+                    updateDownloadsTask,
+                    "Schedule new downloads");
+
                 foreach (var source in downloadSource.Value)
                 {
                     var destinationDirectory = getDirectoryDelegate?.GetDirectory(source);
-
-                    var scheduleDownloadsTask = taskStatusController.Create(
-                        updateDownloadsTask,
-                        "Schedule new downloads");
 
                     var scheduledDownloadEntry = new ProductDownloadEntry()
                     {
@@ -107,10 +107,11 @@ namespace GOG.TaskActivities.UpdateDownloads
                     };
                     productDownloads.Downloads.Add(scheduledDownloadEntry);
 
-                    await productDownloadsDataController.UpdateAsync(scheduleDownloadsTask, productDownloads);
-
-                    taskStatusController.Complete(scheduleDownloadsTask);
                 }
+
+                await productDownloadsDataController.UpdateAsync(scheduleDownloadsTask, productDownloads);
+
+                taskStatusController.Complete(scheduleDownloadsTask);
             }
 
             taskStatusController.Complete(updateDownloadsTask);

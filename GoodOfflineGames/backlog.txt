@@ -1,10 +1,6 @@
 Backend
 
-- wrap download activities in try/catch
-
-- report taskStatus log in plain text human readable format
-
-- add Log entries to taskStatus to log additional debug information?
+- add Log entries to taskStatus to log additional debug information like inputs, processed, etc.?
 
 - repair controller?
 	- validate full file and return validation results with all failing chunks and specific validation problems
