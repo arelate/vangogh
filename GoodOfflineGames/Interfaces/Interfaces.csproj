@@ -90,7 +90,7 @@
     <Compile Include="UpdateIdentity\GetUpdateIdentity.cs" />
     <Compile Include="Uri\UriController.cs" />
     <Compile Include="TaskActivity\TaskActivityController.cs" />
-    <Compile Include="Tree\TreeToListController.cs" />
+    <Compile Include="Tree\TreeToEnumerableController.cs" />
     <Compile Include="Connection\ConnectDelegate.cs" />
     <Compile Include="UpdateUri\GetUpdateUriDelegate.cs" />
     <Compile Include="Validation\ValidationChunk.cs" />

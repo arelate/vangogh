@@ -9,35 +9,33 @@ using Interfaces.ViewController;
 
 namespace Controllers.ViewController
 {
-    public class TaskStatusAppViewController : IViewController
+    public class TaskStatusViewController : IViewController
     {
-        private ITaskStatus applicationTaskStatus;
+        private ITaskStatus appTaskStatus;
         private ITemplateController templateController;
         private IGetViewModelDelegate<ITaskStatus> taskStatusViewModelDelegate;
-        private ITreeToListController<ITaskStatus> taskStatusTreeToListController;
-        private IPresentationController<string> consolePresentationController;
+        private ITreeToEnumerableController<ITaskStatus> taskStatusTreeToEnumerableController;
+        private IPresentationController<string> presentationController;
 
-        public TaskStatusAppViewController(
-            ITaskStatus applicationTaskStatus,
+        public TaskStatusViewController(
+            ITaskStatus appTaskStatus,
             ITemplateController templateController,
             IGetViewModelDelegate<ITaskStatus> taskStatusViewModelDelegate,
-            ITreeToListController<ITaskStatus> taskStatusTreeToListController,
-            IPresentationController<string> consolePresentationController)
+            ITreeToEnumerableController<ITaskStatus> taskStatusTreeToEnumerableController,
+            IPresentationController<string> presentationController)
         {
-            this.applicationTaskStatus = applicationTaskStatus;
+            this.appTaskStatus = appTaskStatus;
             this.templateController = templateController;
             this.taskStatusViewModelDelegate = taskStatusViewModelDelegate;
-            this.taskStatusTreeToListController = taskStatusTreeToListController;
-            this.consolePresentationController = consolePresentationController;
+            this.taskStatusTreeToEnumerableController = taskStatusTreeToEnumerableController;
+            this.presentationController = presentationController;
         }
 
-        public void CreateView(bool overrideThrottling = false)
+        public void PresentViews()
         {
             var views = new List<string>();
 
-            var taskStatusList = taskStatusTreeToListController.ToList(applicationTaskStatus);
-
-            foreach (var taskStatus in taskStatusList)
+            foreach (var taskStatus in taskStatusTreeToEnumerableController.ToEnumerable(appTaskStatus))
             {
                 var viewModel = taskStatusViewModelDelegate.GetViewModel(taskStatus);
                 if (viewModel != null)
@@ -49,7 +47,7 @@ namespace Controllers.ViewController
                 }
             }
 
-            consolePresentationController.Present(views, overrideThrottling);
+            presentationController.Present(views);
         }
     }
 }

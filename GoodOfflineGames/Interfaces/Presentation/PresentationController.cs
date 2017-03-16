@@ -4,7 +4,7 @@ namespace Interfaces.Presentation
 {
     public interface IPresentDelegate<T>
     {
-        void Present(IEnumerable<T> views, bool overrideThrottling = false);
+        void Present(IEnumerable<T> views);
     }
 
     public interface IPresentationController<T> :

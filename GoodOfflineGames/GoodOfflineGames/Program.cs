@@ -119,7 +119,7 @@ namespace GoodOfflineGames
             var consoleController = new ConsoleController();
             var lineBreakingController = new LineBreakingController();
 
-            var presentationController = new PresentationController(
+            var presentationController = new ConsolePresentationController(
                 lineBreakingController,
                 consoleController);
 
@@ -128,7 +128,7 @@ namespace GoodOfflineGames
 
             var collectionController = new CollectionController();
 
-            var taskStatusTreeToListController = new TaskStatusTreeToListController();
+            var taskStatusTreeToEnumerableController = new TaskStatusTreeToEnumerableController();
 
             var applicationTaskStatus = new TaskStatus() { Title = "Welcome to GoodOfflineGames" };
 
@@ -143,25 +143,36 @@ namespace GoodOfflineGames
                 serializedStorageController,
                 collectionController);
 
-            //var reportTemplateController = new TemplateController(
-            //    "taskStatus",
-            //    templatesDirectoryDelegate,
-            //    reportTemplateFilenameDelegate,
-            //    serializedStorageController,
-            //    collectionController);
+            var reportTemplateController = new TemplateController(
+                "taskStatus",
+                templatesDirectoryDelegate,
+                reportTemplateFilenameDelegate,
+                serializedStorageController,
+                collectionController);
 
             var taskStatusAppViewModelDelegate = new TaskStatusAppViewModelDelegate(
                 bytesFormattingController,
                 secondsFormattingController);
 
-            var taskStatusViewController = new TaskStatusAppViewController(
+            var taskStatusReportViewModelDelegate = new TaskStatusReportViewModelDelegate(
+                bytesFormattingController,
+                secondsFormattingController);
+
+            var taskStatusAppViewController = new TaskStatusViewController(
                 applicationTaskStatus,
                 appTemplateController,
                 taskStatusAppViewModelDelegate,
-                taskStatusTreeToListController,
+                taskStatusTreeToEnumerableController,
                 presentationController);
 
-            var taskStatusController = new TaskStatusController(taskStatusViewController);
+            var taskStatusReportViewController = new TaskStatusViewController(
+                applicationTaskStatus,
+                reportTemplateController,
+                taskStatusReportViewModelDelegate,
+                taskStatusTreeToEnumerableController,
+                presentationController);
+
+            var taskStatusAppController = new TaskStatusController(taskStatusAppViewController);
 
             var cookiesController = new CookiesController(
                 storageController,
@@ -176,7 +187,7 @@ namespace GoodOfflineGames
                 networkController,
                 streamController,
                 fileController,
-                taskStatusController);
+                taskStatusAppController);
 
             var requestPageController = new RequestPageController(
                 networkController);
@@ -191,7 +202,7 @@ namespace GoodOfflineGames
             var screenshotExtractionController = new ScreenshotExtractionController();
 
             var throttleController = new ThrottleController(
-                taskStatusController,
+                taskStatusAppController,
                 secondsFormattingController,
                 200, // don't throttle if less than N items
                 2 * 60); // 2 minutes
@@ -222,7 +233,7 @@ namespace GoodOfflineGames
 
             var recycleBinDirectoryDelegate = new FixedDirectoryDelegate("recycleBin");
             var imagesDirectoryDelegate = new FixedDirectoryDelegate("images");
-            var logsDirectoryDelegate = new FixedDirectoryDelegate("logs");
+            var reportsDirectoryDelegate = new FixedDirectoryDelegate("reports");
             var validationDirectoryDelegate = new FixedDirectoryDelegate("md5");
             var productFilesBaseDirectoryDelegate = new FixedDirectoryDelegate("productFiles");
             var screenshotsDirectoryDelegate = new FixedDirectoryDelegate("screenshots");
@@ -241,7 +252,7 @@ namespace GoodOfflineGames
             var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("lastKnownValid", jsonFilenameDelegate);
 
             var uriFilenameDelegate = new UriFilenameDelegate();
-            var logsFilenameDelegate = new LogFilenameDelegate();
+            var reportsFilenameDelegate = new ReportsFilenameDelegate();
             var validationFilenameDelegate = new ValidationFilenameDelegate();
 
             // index filenames
@@ -251,56 +262,56 @@ namespace GoodOfflineGames
                 productsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var accountProductsIndexDataController = new IndexDataController(
                 collectionController,
                 accountProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var gameDetailsIndexDataController = new IndexDataController(
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var gameProductDataIndexDataController = new IndexDataController(
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var apiProductsIndexDataController = new IndexDataController(
                 collectionController,
                 apiProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var productScreenshotsIndexDataController = new IndexDataController(
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var productDownloadsIndexDataController = new IndexDataController(
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var productRoutesIndexDataController = new IndexDataController(
                 collectionController,
                 productRoutesDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             // index data controllers that are data controllers
 
@@ -309,35 +320,35 @@ namespace GoodOfflineGames
                 dataDirectoryDelegate,
                 wishlistedFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var updatedDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var scheduledScreenshotsUpdatesDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 scheduledScreenshotsUpdatesFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var lastKnownValidDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 lastKnownValidFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             var scheduledCleanupDataController = new IndexDataController(
                 collectionController,
                 dataDirectoryDelegate,
                 scheduledCleanupFilenameDelegate,
                 serializedStorageController,
-                taskStatusController);
+                taskStatusAppController);
 
             // data controllers
 
@@ -354,7 +365,7 @@ namespace GoodOfflineGames
                 productsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
                 accountProductsIndexDataController,
@@ -364,7 +375,7 @@ namespace GoodOfflineGames
                 accountProductsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 gameDetailsIndexDataController,
@@ -374,7 +385,7 @@ namespace GoodOfflineGames
                 gameDetailsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var gameProductDataController = new DataController<GameProductData>(
                 gameProductDataIndexDataController,
@@ -384,7 +395,7 @@ namespace GoodOfflineGames
                 gameProductDataDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
                 apiProductsIndexDataController,
@@ -394,7 +405,7 @@ namespace GoodOfflineGames
                 apiProductsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 productScreenshotsIndexDataController,
@@ -404,7 +415,7 @@ namespace GoodOfflineGames
                 productScreenshotsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
                 productDownloadsIndexDataController,
@@ -414,7 +425,7 @@ namespace GoodOfflineGames
                 productDownloadsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var productRoutesDataController = new DataController<ProductRoutes>(
                 productRoutesIndexDataController,
@@ -424,7 +435,7 @@ namespace GoodOfflineGames
                 productRoutesDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             #endregion
 
@@ -443,7 +454,7 @@ namespace GoodOfflineGames
                 settingsController,
                 downloadsLanguagesValidationDelegate,
                 downloadsOperatingSystemsValidationDelegate,
-                taskStatusController);
+                taskStatusAppController);
 
             #endregion
 
@@ -462,12 +473,12 @@ namespace GoodOfflineGames
             #region Load
 
             var loadDataController = new LoadDataController(
-                taskStatusController,
+                taskStatusAppController,
                 // hash tracking should be first data controller to be loaded 
                 // as all serialized storage operations go through it and might overwrite data on disk
                 hashTrackingController,
                 appTemplateController,
-                //reportTemplateController,
+                reportTemplateController,
                 settingsController,
                 activityParametersController,
                 productsDataController,
@@ -503,7 +514,7 @@ namespace GoodOfflineGames
             var authorizeController = new AuthorizeController(
                 settingsController,
                 authorizationController,
-                taskStatusController);
+                taskStatusAppController);
 
             #endregion
 
@@ -519,7 +530,7 @@ namespace GoodOfflineGames
                 requestPageController,
                 hashTrackingController,
                 serializationController,
-                taskStatusController);
+                taskStatusAppController);
 
             var productsExtractionController = new ProductsExtractionController();
 
@@ -529,7 +540,7 @@ namespace GoodOfflineGames
                     productsExtractionController,
                     requestPageController,
                     productsDataController,
-                    taskStatusController);
+                    taskStatusAppController);
 
             var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
                 Parameters.AccountProducts,
@@ -538,7 +549,7 @@ namespace GoodOfflineGames
                 requestPageController,
                 hashTrackingController,
                 serializationController,
-                taskStatusController);
+                taskStatusAppController);
 
             var accountProductsExtractionController = new AccountProductsExtractionController();
 
@@ -546,7 +557,7 @@ namespace GoodOfflineGames
                 collectionController,
                 updatedDataController,
                 lastKnownValidDataController,
-                taskStatusController);
+                taskStatusAppController);
 
             var accountProductsUpdateController = new PageResultUpdateController<AccountProductsPageResult, AccountProduct>(
                     Parameters.AccountProducts,
@@ -554,7 +565,7 @@ namespace GoodOfflineGames
                     accountProductsExtractionController,
                     requestPageController,
                     accountProductsDataController,
-                    taskStatusController,
+                    taskStatusAppController,
                     newUpdatedCollectionProcessingController);
 
             #endregion
@@ -568,7 +579,7 @@ namespace GoodOfflineGames
             var wishlistedUpdateController = new WishlistedUpdateController(
                 getProductsPageResultDelegate,
                 wishlistedDataController,
-                taskStatusController);
+                taskStatusAppController);
 
             #endregion
 
@@ -599,7 +610,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 getGameProductDataDeserializedDelegate,
                 productUrlGetUpdateIdentityDelegate,
-                taskStatusController);
+                taskStatusAppController);
 
             var getApriProductDelegate = new GetDeserializedGOGModelDelegate<ApiProduct>(
                 networkController,
@@ -613,7 +624,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 getApriProductDelegate,
                 productGetUpdateIdentityDelegate,
-                taskStatusController);
+                taskStatusAppController);
 
             var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
                 networkController,
@@ -651,7 +662,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 getGameDetailsDelegate,
                 accountProductGetUpdateIdentityDelegate,
-                taskStatusController,
+                taskStatusAppController,
                 throttleController,
                 gameDetailsAccountProductConnectDelegate);
 
@@ -666,7 +677,7 @@ namespace GoodOfflineGames
                 productsDataController,
                 networkController,
                 screenshotExtractionController,
-                taskStatusController);
+                taskStatusAppController);
 
             #endregion
 
@@ -686,7 +697,7 @@ namespace GoodOfflineGames
                 scheduledScreenshotsUpdatesDataController,
                 screenshotsDataController,
                 screenshotUriController,
-                taskStatusController);
+                taskStatusAppController);
 
             var routingController = new RoutingController(productRoutesDataController);
 
@@ -720,7 +731,7 @@ namespace GoodOfflineGames
                 imagesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatusController);
+                taskStatusAppController);
 
             var updateAccountProductsImagesDownloadsController = new UpdateDownloadsController(
                 Parameters.AccountProductsImages,
@@ -728,7 +739,7 @@ namespace GoodOfflineGames
                 imagesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatusController);
+                taskStatusAppController);
 
             var updateScreenshotsDownloadsController = new UpdateDownloadsController(
                 Parameters.Screenshots,
@@ -736,7 +747,7 @@ namespace GoodOfflineGames
                 screenshotsDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatusController);
+                taskStatusAppController);
 
             var updateProductFilesDownloadsController = new UpdateDownloadsController(
                 Parameters.ProductsFiles,
@@ -744,7 +755,7 @@ namespace GoodOfflineGames
                 productFilesDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatusController);
+                taskStatusAppController);
 
             // downloads processing
 
@@ -753,21 +764,21 @@ namespace GoodOfflineGames
                 updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
-                taskStatusController);
+                taskStatusAppController);
 
             var accountProductsImagesProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.AccountProductsImages,
                 updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
-                taskStatusController);
+                taskStatusAppController);
 
             var screenshotsProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.Screenshots,
                 updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
-                taskStatusController);
+                taskStatusAppController);
 
             var sesionUriExtractionController = new SessionUriExtractionController();
             var sessionController = new SessionController(
@@ -779,14 +790,14 @@ namespace GoodOfflineGames
                 sessionController,
                 routingController,
                 fileDownloadController,
-                taskStatusController);
+                taskStatusAppController);
 
             var productFilesProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.ProductsFiles,
                 updatedDataController,
                 productDownloadsDataController,
                 manualUrlDownloadFromSourceDelegate,
-                taskStatusController);
+                taskStatusAppController);
 
             // validation controllers
 
@@ -796,7 +807,7 @@ namespace GoodOfflineGames
                 validationDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
-                taskStatusController);
+                taskStatusAppController);
 
             var validationExpectedDelegate = new ValidationExpectedDelegate();
             var validationUriController = new ValidationUriController(uriController);
@@ -807,14 +818,14 @@ namespace GoodOfflineGames
                 validationExpectedDelegate,
                 validationUriController,
                 fileDownloadController,
-                taskStatusController);
+                taskStatusAppController);
 
             var validationProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.ValidationFiles,
                 updatedDataController,
                 productDownloadsDataController,
                 validationDownloadFromSourceDelegate,
-                taskStatusController);
+                taskStatusAppController);
 
             var validationController = new ValidationController(
                 validationDirectoryDelegate,
@@ -822,7 +833,7 @@ namespace GoodOfflineGames
                 fileController,
                 streamController,
                 md5HashController,
-                taskStatusController);
+                taskStatusAppController);
 
             var processValidationController = new ProcessValidationController(
                 productFilesDirectoryDelegate,
@@ -834,7 +845,7 @@ namespace GoodOfflineGames
                 lastKnownValidDataController,
                 scheduledCleanupDataController,
                 routingController,
-                taskStatusController);
+                taskStatusAppController);
 
             #region Cleanup
 
@@ -844,7 +855,7 @@ namespace GoodOfflineGames
                 productFilesDirectoryDelegate,
                 directoryController,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             var filesCleanupController = new FilesCleanupController(
                 scheduledCleanupDataController,
@@ -855,17 +866,15 @@ namespace GoodOfflineGames
                 validationDirectoryDelegate,
                 uriFilenameDelegate,
                 recycleBinController,
-                taskStatusController);
+                taskStatusAppController);
 
             #endregion
 
             #region Report Task Status 
 
             var reportController = new ReportController(
-                logsDirectoryDelegate,
-                logsFilenameDelegate,
-                serializedStorageController,
-                taskStatusController);
+                taskStatusAppViewController,
+                taskStatusAppController);
 
             #endregion
 
@@ -967,7 +976,7 @@ namespace GoodOfflineGames
                 activityParametersController,
                 activityParametersNameDelegate,
                 activityParametersTaskActivities,
-                taskStatusController);
+                taskStatusAppController);
 
             #endregion
 
@@ -992,7 +1001,6 @@ namespace GoodOfflineGames
                 try
                 {
                     taskActivityController.ProcessTaskAsync(applicationTaskStatus).Wait();
-                    taskStatusViewController.CreateView(true);
                 }
                 catch (AggregateException ex)
                 {
@@ -1001,14 +1009,13 @@ namespace GoodOfflineGames
                     foreach (var innerException in ex.InnerExceptions)
                         errorMessages.Add(innerException.Message);
 
-                    taskStatusController.Fail(applicationTaskStatus, string.Join(", ", errorMessages));
+                    taskStatusAppController.Fail(applicationTaskStatus, string.Join(", ", errorMessages));
                 }
             }
 
             presentationController.Present(
                 new string[]
-                    {"All GoodOfflineGames tasks are complete.\n\nPress ENTER to close the window..."},
-                true);
+                    {"All GoodOfflineGames tasks are complete.\n\nPress ENTER to close the window..."});
 
             consoleController.ReadLine();
         }

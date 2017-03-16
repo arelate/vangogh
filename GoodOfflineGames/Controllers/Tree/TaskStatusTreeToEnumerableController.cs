@@ -6,13 +6,11 @@ using Interfaces.TaskStatus;
 
 namespace Controllers.Tree
 {
-    public class TaskStatusTreeToListController : ITreeToListController<ITaskStatus>
+    public class TaskStatusTreeToEnumerableController : ITreeToEnumerableController<ITaskStatus>
     {
-        public IList<ITaskStatus> ToList(ITaskStatus taskStatus)
+        public IEnumerable<ITaskStatus> ToEnumerable(ITaskStatus taskStatus)
         {
-            var taskStatusList = new List<ITaskStatus>();
-
-            if (taskStatus == null) return taskStatusList;
+            if (taskStatus == null) yield break;
 
             var taskStatusQueue = new Queue<ITaskStatus>();
             taskStatusQueue.Enqueue(taskStatus);
@@ -22,15 +20,13 @@ namespace Controllers.Tree
                 var currentTaskStatus = taskStatusQueue.Dequeue();
                 if (currentTaskStatus == null) continue;
 
-                taskStatusList.Add(currentTaskStatus);
+                yield return currentTaskStatus;
 
                 if (currentTaskStatus.Children == null) continue;
 
                 foreach (var child in currentTaskStatus.Children)
                     taskStatusQueue.Enqueue(child);
             }
-
-            return taskStatusList;
         }
     }
 }

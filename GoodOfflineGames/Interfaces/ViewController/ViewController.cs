@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Interfaces.ViewController
 {
-    public interface ICreateViewDelegate
+    public interface IPresentViewsDelegate
     {
-        void CreateView(bool overrideThrottling = false);
+        void PresentViews();
     }
 
     public interface IViewController:
-        ICreateViewDelegate
+        IPresentViewsDelegate
     {
         // ...
     }

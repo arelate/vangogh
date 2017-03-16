@@ -8,20 +8,17 @@ using Interfaces.Presentation;
 
 namespace Controllers.Presentation
 {
-    public class PresentationController : IPresentationController<string>
+    public class ConsolePresentationController : IPresentationController<string>
     {
         private ILineBreakingController lineBreakingController;
         private IConsoleController consoleController;
 
         private IList<int> previousScreenLinesLengths;
 
-        private const int throttleMilliseconds = 200;
-        private DateTime lastReportedTimestamp = DateTime.MinValue;
-
         private int previousWindowWidth;
         private int previousWindowHeight;
 
-        public PresentationController(
+        public ConsolePresentationController(
             ILineBreakingController lineBreakingController,
             IConsoleController consoleController)
         {
@@ -67,11 +64,8 @@ namespace Controllers.Presentation
             }
         }
 
-        public void Present(IEnumerable<string> views, bool overrideThrottling = false)
+        public void Present(IEnumerable<string> views)
         {
-            if (!overrideThrottling && 
-                (DateTime.UtcNow - lastReportedTimestamp).TotalMilliseconds < throttleMilliseconds) return;
-
             if (previousWindowWidth != consoleController.WindowWidth ||
                 previousWindowHeight != consoleController.WindowHeight)
                 consoleController.Clear();
@@ -104,8 +98,6 @@ namespace Controllers.Presentation
 
             previousWindowWidth = consoleController.WindowWidth;
             previousWindowHeight = consoleController.WindowHeight;
-
-            lastReportedTimestamp = DateTime.UtcNow;
         }
     }
 }

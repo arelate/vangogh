@@ -2,7 +2,7 @@ Backend
 
 - wrap download activities in try/catch
 
-- output log in plain text human readable format (and as a taskActivity again and dated)
+- report taskStatus log in plain text human readable format
 
 - add Log entries to taskStatus to log additional debug information?
 

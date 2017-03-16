@@ -14,6 +14,8 @@ namespace Controllers.TaskStatus
     public class TaskStatusController : ITaskStatusController
     {
         private IViewController taskStatusViewController;
+        private DateTime lastPresentedProgress = DateTime.MinValue;
+        private int presentProgressThreshold = 200; //ms
 
         public TaskStatusController(
             IViewController taskStatusViewController)
@@ -40,7 +42,7 @@ namespace Controllers.TaskStatus
             };
             taskStatus.Children.Add(childTaskStatus);
 
-            taskStatusViewController.CreateView();
+            taskStatusViewController.PresentViews();
 
             return childTaskStatus;
         }
@@ -55,7 +57,7 @@ namespace Controllers.TaskStatus
             taskStatus.Complete = true;
             taskStatus.Completed = DateTime.UtcNow;
 
-            taskStatusViewController.CreateView();
+            taskStatusViewController.PresentViews();
         }
 
         public void UpdateProgress(ITaskStatus taskStatus, long current, long total, string target, string unit = "")
@@ -73,7 +75,14 @@ namespace Controllers.TaskStatus
             taskStatus.Progress.Total = total;
             taskStatus.Progress.Unit = unit;
 
-            taskStatusViewController.CreateView();
+            var presentView = current == total ||
+                (DateTime.Now - lastPresentedProgress).TotalMilliseconds > presentProgressThreshold;
+
+            if (presentView)
+            {
+                taskStatusViewController.PresentViews();
+                lastPresentedProgress = DateTime.Now;
+            }
         }
 
         public void Fail(ITaskStatus taskStatus, string failureMessage)

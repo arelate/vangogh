@@ -86,7 +86,7 @@
     <Compile Include="PropertiesValidation\UsernamePasswordValidationController.cs" />
     <Compile Include="Session\SessionController.cs" />
     <Compile Include="TaskStatus\TaskStatusController.cs" />
-    <Compile Include="Tree\TaskStatusTreeToListController.cs" />
+    <Compile Include="Tree\TaskStatusTreeToEnumerableController.cs" />
     <Compile Include="ViewController\TaskStatusAppViewController.cs" />
     <Compile Include="Template\TemplateController.cs" />
     <Compile Include="Throttle\ThrottleController.cs" />
@@ -107,6 +107,7 @@
     <Compile Include="Uri\UriController.cs" />
     <Compile Include="Uri\ValidationUriController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
+    <Compile Include="ViewModel\TaskStatusReportViewModelDelegate.cs" />
     <Compile Include="ViewModel\TaskStatusAppViewModelDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
