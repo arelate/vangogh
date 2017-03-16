@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.TaskStatus;
 using Interfaces.Presentation;
@@ -31,23 +32,29 @@ namespace Controllers.ViewController
             this.presentationController = presentationController;
         }
 
-        public void PresentViews()
+        private IEnumerable<string> CreateViews()
         {
-            var views = new List<string>();
-
             foreach (var taskStatus in taskStatusTreeToEnumerableController.ToEnumerable(appTaskStatus))
             {
                 var viewModel = taskStatusViewModelDelegate.GetViewModel(taskStatus);
                 if (viewModel != null)
                 {
                     var view = templateController.Bind(
-                        templateController.PrimaryTemplate, 
+                        templateController.PrimaryTemplate,
                         viewModel);
-                    views.Add(view);
+                    yield return view;
                 }
             }
+        }
 
-            presentationController.Present(views);
+        public void PresentViews()
+        {
+            presentationController.Present(CreateViews());
+        }
+
+        public async Task PresentViewsAsync()
+        {
+            await presentationController.PresentAsync(CreateViews());
         }
     }
 }

@@ -38,6 +38,7 @@ namespace GOG.TaskActivities.LogTaskStatus
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
+            await taskStatusViewController.PresentViewsAsync();
             //var uri = System.IO.Path.Combine(
             //    logsDirectoryDelegate.GetDirectory(),
             //    logsFilenameDelegate.GetFilename());

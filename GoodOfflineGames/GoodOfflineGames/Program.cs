@@ -119,9 +119,11 @@ namespace GoodOfflineGames
             var consoleController = new ConsoleController();
             var lineBreakingController = new LineBreakingController();
 
-            var presentationController = new ConsolePresentationController(
+            var consolePresentationController = new ConsolePresentationController(
                 lineBreakingController,
                 consoleController);
+
+            var filePresentationController = new FilePresentationController();
 
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();
@@ -163,14 +165,14 @@ namespace GoodOfflineGames
                 appTemplateController,
                 taskStatusAppViewModelDelegate,
                 taskStatusTreeToEnumerableController,
-                presentationController);
+                consolePresentationController);
 
             var taskStatusReportViewController = new TaskStatusViewController(
                 applicationTaskStatus,
                 reportTemplateController,
                 taskStatusReportViewModelDelegate,
                 taskStatusTreeToEnumerableController,
-                presentationController);
+                filePresentationController);
 
             var taskStatusAppController = new TaskStatusController(taskStatusAppViewController);
 
@@ -873,7 +875,7 @@ namespace GoodOfflineGames
             #region Report Task Status 
 
             var reportController = new ReportController(
-                taskStatusAppViewController,
+                taskStatusReportViewController,
                 taskStatusAppController);
 
             #endregion
@@ -1013,7 +1015,7 @@ namespace GoodOfflineGames
                 }
             }
 
-            presentationController.Present(
+            consolePresentationController.Present(
                 new string[]
                     {"All GoodOfflineGames tasks are complete.\n\nPress ENTER to close the window..."});
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Interfaces.ViewController
 {
@@ -11,8 +7,14 @@ namespace Interfaces.ViewController
         void PresentViews();
     }
 
+    public interface IPresentViewsAsyncDelegate
+    {
+        Task PresentViewsAsync();
+    }
+
     public interface IViewController:
-        IPresentViewsDelegate
+        IPresentViewsDelegate,
+        IPresentViewsAsyncDelegate
     {
         // ...
     }
