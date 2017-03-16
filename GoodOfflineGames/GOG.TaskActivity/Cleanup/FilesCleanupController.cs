@@ -142,6 +142,8 @@ namespace GOG.TaskActivities.Cleanup
                 await MoveUnexpectedFilesToRecycleBin(id, unexpectedFiles, cleanupAllFilesTask);
             }
 
+            taskStatusController.Complete(cleanupProductTask);
+
             taskStatusController.Complete(cleanupAllFilesTask);
         }
     }

@@ -13,19 +13,19 @@ namespace Controllers.ViewModel
     {
         private static class TaskStatusReportViewModelSchema
         {
-            //public const string Title = "title";
-            //public const string ContainsProgress = "containsProgress";
-            //public const string ProgressTarget = "progressTarget";
-            //public const string ProgressPercent = "progressPercent";
-            //public const string ProgressCurrent = "progressCurrent";
-            //public const string ProgressTotal = "progressTotal";
-            //public const string ContainsETA = "containsEta";
-            //public const string RemainingTime = "remainingTime";
-            //public const string AverageUnitsPerSecond = "averageUnitsPerSecond";
-            //public const string ContainsFailures = "containsFailures";
-            //public const string FailuresCount = "failuresCount";
-            //public const string ContainsWarnings = "containsWarnings";
-            //public const string WarningsCount = "warningsCount";
+            public const string Complete = "complete";
+            public const string Title = "title";
+            public const string Started = "started";
+            public const string Duration = "duration";
+            public const string Result = "result";
+            public const string ContainsProgress = "containsProgress";
+            public const string ProgressTarget = "progressTarget";
+            public const string ProgressCurrent = "progressCurrent";
+            public const string ProgressTotal = "progressTotal";
+            public const string ContainsFailures = "containsFailures";
+            public const string Failures = "failures";
+            public const string ContainsWarnings = "containsWarnings";
+            public const string Warnings = "warnings";
         }
 
         private IFormattingController bytesFormattingController;
@@ -42,68 +42,70 @@ namespace Controllers.ViewModel
         public IDictionary<string, string> GetViewModel(ITaskStatus taskStatus)
         {
             // viewmodel schemas
-            var viewModel = new Dictionary<string, string>();
-            //{
-            //    { TaskStatusReportViewModelSchema.Title, "" },
-            //    { TaskStatusReportViewModelSchema.ContainsProgress, "" },
-            //    { TaskStatusReportViewModelSchema.ProgressTarget, "" },
-            //    { TaskStatusReportViewModelSchema.ProgressPercent, "" },
-            //    { TaskStatusReportViewModelSchema.ProgressCurrent, "" },
-            //    { TaskStatusReportViewModelSchema.ProgressTotal, "" },
-            //    { TaskStatusReportViewModelSchema.ContainsETA, "" },
-            //    { TaskStatusReportViewModelSchema.RemainingTime, "" },
-            //    { TaskStatusReportViewModelSchema.AverageUnitsPerSecond, "" },
-            //    { TaskStatusReportViewModelSchema.ContainsFailures, ""},
-            //    { TaskStatusReportViewModelSchema.FailuresCount, ""},
-            //    { TaskStatusReportViewModelSchema.ContainsWarnings, ""},
-            //    { TaskStatusReportViewModelSchema.WarningsCount, ""}
-            //};
+            var viewModel = new Dictionary<string, string>()
+            {
+                { TaskStatusReportViewModelSchema.Title, "" },
+                { TaskStatusReportViewModelSchema.Complete, "" },
+                { TaskStatusReportViewModelSchema.Started, "" },
+                { TaskStatusReportViewModelSchema.Duration, "" },
+                { TaskStatusReportViewModelSchema.Result, "" },
+                { TaskStatusReportViewModelSchema.ContainsProgress, "" },
+                { TaskStatusReportViewModelSchema.ProgressTarget, "" },
+                { TaskStatusReportViewModelSchema.ProgressCurrent, "" },
+                { TaskStatusReportViewModelSchema.ProgressTotal, "" },
+                { TaskStatusReportViewModelSchema.ContainsFailures, ""},
+                { TaskStatusReportViewModelSchema.Failures, ""},
+                { TaskStatusReportViewModelSchema.ContainsWarnings, ""},
+                { TaskStatusReportViewModelSchema.Warnings, ""}
+            };
 
-            //viewModel[TaskStatusReportViewModelSchema.Title] = taskStatus.Title;
+            viewModel[TaskStatusReportViewModelSchema.Title] = taskStatus.Title;
+            viewModel[TaskStatusReportViewModelSchema.Complete] = taskStatus.Complete ? "true" : "";
+            viewModel[TaskStatusReportViewModelSchema.Started] = taskStatus.Started.ToLocalTime().ToString();
+            viewModel[TaskStatusReportViewModelSchema.Duration] =
+                taskStatus.Complete ?
+                secondsFormattingController.Format((taskStatus.Completed - taskStatus.Started).Seconds) :
+                "";
 
-            //if (taskStatus.Progress != null)
-            //{
-            //    var current = taskStatus.Progress.Current;
-            //    var total = taskStatus.Progress.Total;
+            var results = new List<string>();
+            if (taskStatus.Failures != null && taskStatus.Failures.Count > 0) results.Add("Failure(s)");
+            if (taskStatus.Warnings != null && taskStatus.Warnings.Count > 0) results.Add("Warning(s)");
+            var result = string.Join(",", results);
+            if (string.IsNullOrEmpty(result)) result = "Success";
+            viewModel[TaskStatusReportViewModelSchema.Result] = result;
 
-            //    viewModel[TaskStatusReportViewModelSchema.ContainsProgress] = "true";
-            //    viewModel[TaskStatusReportViewModelSchema.ProgressTarget] = taskStatus.Progress.Target;
-            //    viewModel[TaskStatusReportViewModelSchema.ProgressPercent] = string.Format("{0:P1}", (double)current / total);
+            if (taskStatus.Progress != null)
+            {
+                var current = taskStatus.Progress.Current;
+                var total = taskStatus.Progress.Total;
 
-            //    var currentFormatted = current.ToString();
-            //    var totalFormatted = total.ToString();
+                viewModel[TaskStatusReportViewModelSchema.ContainsProgress] = "true";
+                viewModel[TaskStatusReportViewModelSchema.ProgressTarget] = taskStatus.Progress.Target;
 
-            //    if (taskStatus.Progress.Unit == DataUnits.Bytes)
-            //    {
-            //        viewModel[TaskStatusReportViewModelSchema.ContainsETA] = "true";
+                var currentFormatted = current.ToString();
+                var totalFormatted = total.ToString();
 
-            //        currentFormatted = bytesFormattingController.Format(current);
-            //        totalFormatted = bytesFormattingController.Format(total);
+                if (taskStatus.Progress.Unit == DataUnits.Bytes)
+                {
+                    currentFormatted = bytesFormattingController.Format(current);
+                    totalFormatted = bytesFormattingController.Format(total);
+                }
 
-            //        var elapsed = DateTime.UtcNow - taskStatus.Started;
-            //        var unitsPerSecond = current / elapsed.TotalSeconds;
-            //        var speed = bytesFormattingController.Format((long)unitsPerSecond);
-            //        var remainingTime = secondsFormattingController.Format((long)((total - current) / unitsPerSecond));
+                viewModel[TaskStatusReportViewModelSchema.ProgressCurrent] = currentFormatted;
+                viewModel[TaskStatusReportViewModelSchema.ProgressTotal] = totalFormatted;
+            }
 
-            //        viewModel[TaskStatusReportViewModelSchema.RemainingTime] = remainingTime;
-            //        viewModel[TaskStatusReportViewModelSchema.AverageUnitsPerSecond] = speed;
-            //    }
+            if (taskStatus.Failures != null && taskStatus.Failures.Count > 0)
+            {
+                viewModel[TaskStatusReportViewModelSchema.ContainsFailures] = "true";
+                viewModel[TaskStatusReportViewModelSchema.Failures] = string.Join("; ", taskStatus.Failures);
+            }
 
-            //    viewModel[TaskStatusReportViewModelSchema.ProgressCurrent] = currentFormatted;
-            //    viewModel[TaskStatusReportViewModelSchema.ProgressTotal] = totalFormatted;
-            //}
-
-            //if (taskStatus.Failures != null && taskStatus.Failures.Count > 0)
-            //{
-            //    viewModel[TaskStatusReportViewModelSchema.ContainsFailures] = "true";
-            //    viewModel[TaskStatusReportViewModelSchema.FailuresCount] = taskStatus.Failures.Count.ToString();
-            //}
-
-            //if (taskStatus.Warnings != null && taskStatus.Warnings.Count > 0)
-            //{
-            //    viewModel[TaskStatusReportViewModelSchema.ContainsWarnings] = "true";
-            //    viewModel[TaskStatusReportViewModelSchema.WarningsCount] = taskStatus.Warnings.Count.ToString();
-            //}
+            if (taskStatus.Warnings != null && taskStatus.Warnings.Count > 0)
+            {
+                viewModel[TaskStatusReportViewModelSchema.ContainsWarnings] = "true";
+                viewModel[TaskStatusReportViewModelSchema.Warnings] = string.Join("; ", taskStatus.Warnings);
+            }
 
             return viewModel;
         }

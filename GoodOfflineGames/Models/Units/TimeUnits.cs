@@ -7,6 +7,6 @@
         public static string Hours = "hour(s)";
         public static string Minutes = "minute(s)";
         public static string Seconds = "second(s)";
-        public static string Zero = "(almost done)";
+        public static string Zero = "(zero)";
     }
 }

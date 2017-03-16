@@ -123,8 +123,6 @@ namespace GoodOfflineGames
                 lineBreakingController,
                 consoleController);
 
-            var filePresentationController = new FilePresentationController();
-
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();
 
@@ -166,13 +164,6 @@ namespace GoodOfflineGames
                 taskStatusAppViewModelDelegate,
                 taskStatusTreeToEnumerableController,
                 consolePresentationController);
-
-            var taskStatusReportViewController = new TaskStatusViewController(
-                applicationTaskStatus,
-                reportTemplateController,
-                taskStatusReportViewModelDelegate,
-                taskStatusTreeToEnumerableController,
-                filePresentationController);
 
             var taskStatusAppController = new TaskStatusController(taskStatusAppViewController);
 
@@ -235,7 +226,7 @@ namespace GoodOfflineGames
 
             var recycleBinDirectoryDelegate = new FixedDirectoryDelegate("recycleBin");
             var imagesDirectoryDelegate = new FixedDirectoryDelegate("images");
-            var reportsDirectoryDelegate = new FixedDirectoryDelegate("reports");
+            var reportDirectoryDelegate = new FixedDirectoryDelegate("reports");
             var validationDirectoryDelegate = new FixedDirectoryDelegate("md5");
             var productFilesBaseDirectoryDelegate = new FixedDirectoryDelegate("productFiles");
             var screenshotsDirectoryDelegate = new FixedDirectoryDelegate("screenshots");
@@ -254,7 +245,7 @@ namespace GoodOfflineGames
             var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("lastKnownValid", jsonFilenameDelegate);
 
             var uriFilenameDelegate = new UriFilenameDelegate();
-            var reportsFilenameDelegate = new ReportsFilenameDelegate();
+            var reportFilenameDelegate = new ReportFilenameDelegate();
             var validationFilenameDelegate = new ValidationFilenameDelegate();
 
             // index filenames
@@ -873,6 +864,18 @@ namespace GoodOfflineGames
             #endregion
 
             #region Report Task Status 
+
+            var reportFilePresentationController = new FilePresentationController(
+                reportDirectoryDelegate,
+                reportFilenameDelegate,
+                streamController);
+
+            var taskStatusReportViewController = new TaskStatusViewController(
+                applicationTaskStatus,
+                reportTemplateController,
+                taskStatusReportViewModelDelegate,
+                taskStatusTreeToEnumerableController,
+                reportFilePresentationController);
 
             var reportController = new ReportController(
                 taskStatusReportViewController,

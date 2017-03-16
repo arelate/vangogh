@@ -12,20 +12,22 @@ namespace Controllers.Tree
         {
             if (taskStatus == null) yield break;
 
-            var taskStatusQueue = new Queue<ITaskStatus>();
-            taskStatusQueue.Enqueue(taskStatus);
+            var taskStatusQueue = new List<ITaskStatus>();
+
+            taskStatusQueue.Insert(0, taskStatus);
 
             while (taskStatusQueue.Count > 0)
             {
-                var currentTaskStatus = taskStatusQueue.Dequeue();
+                var currentTaskStatus = taskStatusQueue[0];
+                taskStatusQueue.RemoveAt(0);
+
                 if (currentTaskStatus == null) continue;
 
                 yield return currentTaskStatus;
 
                 if (currentTaskStatus.Children == null) continue;
 
-                foreach (var child in currentTaskStatus.Children)
-                    taskStatusQueue.Enqueue(child);
+                taskStatusQueue.InsertRange(0, currentTaskStatus.Children);
             }
         }
     }

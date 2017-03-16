@@ -3,7 +3,7 @@ using Interfaces.Destination.Filename;
 
 namespace Controllers.Destination.Filename
 {
-    public class ReportsFilenameDelegate : IGetFilenameDelegate
+    public class ReportFilenameDelegate : IGetFilenameDelegate
     {
         private const string reportTimestampFormat = "yyyyMMdd-HHmmss";
 

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Interfaces.Network;
 using Interfaces.Data;
@@ -36,11 +37,15 @@ namespace GOG.TaskActivities.UpdateData
 
             var saveDataTask = taskStatusController.Create(updateWishlistTask, "Add new wishlisted products");
 
+            var wishlistedIds = new List<long>();
+
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                await wishlistedDataController.UpdateAsync(saveDataTask, product.Id);
+                wishlistedIds.Add(product.Id);
             }
+
+            await wishlistedDataController.UpdateAsync(saveDataTask, wishlistedIds.ToArray());
 
             taskStatusController.Complete(saveDataTask);
 

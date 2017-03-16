@@ -1,1 +1,26 @@
-﻿[]
+﻿[
+	{
+		"title": "taskStatus",
+		"content": "{started} <complete?complete>{{title}}<containsProgress?progress><containsFailures?failures><containsWarnings?warnings>"
+	},
+	{
+		"title": "title",
+		"content": "{title}"
+	},
+	{
+		"title": "complete",
+		"content": "[{result}] "
+	},
+	{
+		"title": "progress",
+		"content": ". {progressTarget}: {progressCurrent} of {progressTotal}"
+	},
+	{
+		"title": "failures",
+		"content": ". [Failure(s)]: {failures}"
+	},
+	{
+		"title": "warnings",
+		"content": ". [Warning(s)]: {warnings}"
+	}
+]

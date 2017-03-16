@@ -50,7 +50,7 @@
     <Compile Include="Data\IndexDataController.cs" />
     <Compile Include="Destination\Filename\JsonFilenameDelegate.cs" />
     <Compile Include="Destination\Filename\FixedFilenameDelegate.cs" />
-    <Compile Include="Destination\Filename\LogFilenameDelegate.cs" />
+    <Compile Include="Destination\Filename\ReportFilenameDelegate.cs" />
     <Compile Include="Destination\Directory\FixedDirectoryDelegate.cs" />
     <Compile Include="Destination\Directory\UriDirectoryDelegate.cs" />
     <Compile Include="Destination\Filename\UriFilenameDelegate.cs" />
