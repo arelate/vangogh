@@ -57,6 +57,9 @@ namespace Controllers.Routing
 
         public async Task UpdateRouteAsync(long id, string title, string source, string destination, ITaskStatus taskStatus)
         {
+            if (source == destination)
+                throw new System.ArgumentException("Destination cannot be the same as source");
+
             var productRoutes = await productRoutesDataController.GetByIdAsync(id);
             if (productRoutes == null)
             {

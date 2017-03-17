@@ -1,10 +1,14 @@
 Backend
 
-- guard product files and validation files download with the throttleController
+- enforce file cleanup to skip current product if number of resolved files is less than number of manualUrls
+
+- guard product files and validation files download with the throttleController, or better yet introduce rate limiter based on URL and time between requests add it to networkController so that it's transparent for the users
 
 - make hashes more resilient to crashes
 
 - add Log entries to taskStatus to log additional debug information like inputs, processed, etc.?
+
+- log existing files download attempts
 
 - repair controller?
 	- validate full file and return validation results with all failing chunks and specific validation problems

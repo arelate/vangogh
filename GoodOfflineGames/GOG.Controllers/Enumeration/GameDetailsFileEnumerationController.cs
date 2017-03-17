@@ -43,7 +43,7 @@ namespace GOG.Controllers.Enumeration
             // that means that routes information is incomplete and 
             // it's not possible to map manualUrls to resolvedUrls
             if (gameDetailsManualUrls.Count != gameDetailsResolvedUris.Count)
-                return gameDetailsFiles;
+                throw new System.ArgumentException($"Product {id} resolvedUris count doesn't match manualUrls count");
 
             for (var ii = 0; ii < gameDetailsResolvedUris.Count; ii++)
             {
@@ -59,6 +59,9 @@ namespace GOG.Controllers.Enumeration
 
                 gameDetailsFiles.Add(localFileUri);
             }
+
+            if (gameDetailsManualUrls.Count != gameDetailsFiles.Count)
+                throw new System.ArgumentException($"Product {id} files count doesn't match manualUrls count");
 
             return gameDetailsFiles;
         }

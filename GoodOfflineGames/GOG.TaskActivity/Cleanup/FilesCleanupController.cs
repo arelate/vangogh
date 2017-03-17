@@ -55,11 +55,20 @@ namespace GOG.TaskActivities.Cleanup
             taskStatusController.Complete(removeScheduledCleanupEntry);
         }
 
-        private async Task<IList<string>> GetUnexpectedFiles(long id)
+        private async Task<IList<string>> GetUnexpectedFiles(long id, ITaskStatus taskStatus)
         {
             var productDirectories = await directoryEnumerationController.EnumerateAsync(id);
+            IList<string> expectedFiles = new List<string>();
 
-            var expectedFiles = await filesEnumerationController.EnumerateAsync(id);
+            try
+            {
+                expectedFiles = await filesEnumerationController.EnumerateAsync(id);
+            }
+            catch (System.ArgumentException ex)
+            {
+                taskStatusController.Fail(taskStatus, $"Failed to get unexpected files for product {id}, message: {ex.Message}");
+                return expectedFiles;
+            }
 
             var actualFiles = new List<string>();
             foreach (var directory in productDirectories)
@@ -131,7 +140,7 @@ namespace GOG.TaskActivities.Cleanup
                     scheduledCleanupIds.Count(),
                     accountProduct.Title);
 
-                var unexpectedFiles = await GetUnexpectedFiles(id);
+                var unexpectedFiles = await GetUnexpectedFiles(id, cleanupProductTask);
 
                 if (unexpectedFiles.Count == 0)
                 {
