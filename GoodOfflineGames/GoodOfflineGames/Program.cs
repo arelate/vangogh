@@ -722,6 +722,7 @@ namespace GoodOfflineGames
                 Parameters.ProductsImages,
                 productsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
+                fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
                 taskStatusAppController);
@@ -730,6 +731,7 @@ namespace GoodOfflineGames
                 Parameters.AccountProductsImages,
                 accountProductsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
+                fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
                 taskStatusAppController);
@@ -738,6 +740,7 @@ namespace GoodOfflineGames
                 Parameters.Screenshots,
                 screenshotsDownloadSourcesController,
                 screenshotsDirectoryDelegate,
+                fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
                 taskStatusAppController);
@@ -746,6 +749,7 @@ namespace GoodOfflineGames
                 Parameters.ProductsFiles,
                 manualUrlDownloadSourcesController,
                 productFilesDirectoryDelegate,
+                fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
                 taskStatusAppController);
@@ -798,6 +802,7 @@ namespace GoodOfflineGames
                 Parameters.ValidationFiles,
                 manualUrlDownloadSourcesController,
                 validationDirectoryDelegate,
+                fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
                 taskStatusAppController);

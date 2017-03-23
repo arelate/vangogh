@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
 
 using Interfaces.DownloadSources;
 using Interfaces.Destination.Directory;
+using Interfaces.Destination.Filename;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
+using Interfaces.File;
 
 using Models.ProductCore;
 using Models.ProductDownloads;
@@ -19,6 +22,7 @@ namespace GOG.TaskActivities.UpdateDownloads
 
         private IDownloadSourcesController downloadSourcesController;
         private IGetDirectoryDelegate getDirectoryDelegate;
+        private IFileController fileController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<AccountProduct> accountProductsDataController;
 
@@ -26,6 +30,7 @@ namespace GOG.TaskActivities.UpdateDownloads
             string downloadParameter,
             IDownloadSourcesController downloadSourcesController,
             IGetDirectoryDelegate getDirectoryDelegate,
+            IFileController fileController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             ITaskStatusController taskStatusController) :
@@ -34,6 +39,7 @@ namespace GOG.TaskActivities.UpdateDownloads
             this.downloadParameter = downloadParameter;
             this.downloadSourcesController = downloadSourcesController;
             this.getDirectoryDelegate = getDirectoryDelegate;
+            this.fileController = fileController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
         }
@@ -105,8 +111,17 @@ namespace GOG.TaskActivities.UpdateDownloads
                         SourceUri = source,
                         Destination = destinationDirectory
                     };
-                    productDownloads.Downloads.Add(scheduledDownloadEntry);
 
+                    var destinationUri = Path.Combine(
+                        destinationDirectory,
+                        Path.GetFileName(source));
+
+                    // we won't schedule downloads for the already existing files
+                    // we won't be able to resolve filename for productFiles, but that should cut off 
+                    // number of images we constantly try to redownload
+                    if (fileController.Exists(destinationUri)) continue;
+
+                    productDownloads.Downloads.Add(scheduledDownloadEntry);
                 }
 
                 await productDownloadsDataController.UpdateAsync(scheduleDownloadsTask, productDownloads);
