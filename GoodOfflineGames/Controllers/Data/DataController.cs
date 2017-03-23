@@ -84,54 +84,69 @@ namespace Controllers.Data
             throw new NotImplementedException();
         }
 
-        private async Task Map(ITaskStatus taskStatus, string taskMessage, Func<long, Type, Task> itemAction, params Type[] data)
+        private async Task MapItemsAndIndexes(
+            ITaskStatus taskStatus, 
+            string taskMessage, 
+            Func<long, Type, Task> itemAction, 
+            Func<long[], Task> indexAction,
+            params Type[] data)
         {
-            var task = taskStatusController.Create(taskStatus, taskMessage);
+            var mapTask = taskStatusController.Create(taskStatus, taskMessage);
             var counter = 0;
+            var indexes = new List<long>();
 
             foreach (var item in data)
             {
                 var index = indexingController.GetIndex(item);
+                indexes.Add(index);
 
                 taskStatusController.UpdateProgress(
-                    task,
+                    mapTask,
                     ++counter,
                     data.Length,
                     index.ToString());
 
-                // do this for every item
                 await itemAction(index, item);
             }
 
-            taskStatusController.Complete(task);
+            var updateIndexTask = taskStatusController.Create(mapTask, "Update indexes");
+            await indexAction(indexes.ToArray());
+            taskStatusController.Complete(updateIndexTask);
+
+            taskStatusController.Complete(mapTask);
         }
 
         public async Task UpdateAsync(ITaskStatus taskStatus, params Type[] data)
         {
-            await Map(
+            await MapItemsAndIndexes(
                 taskStatus,
                 "Update data item(s)",
                 async (index, item) =>
                 {
-                    await indexDataController.UpdateAsync(taskStatus, index);
                     await serializedStorageController.SerializePushAsync(
                         GetItemUri(index),
                         item);
+                },
+                async (indexes) => 
+                {
+                    await indexDataController.UpdateAsync(taskStatus, indexes);
                 },
                 data);
         }
 
         public async Task RemoveAsync(ITaskStatus taskStatus, params Type[] data)
         {
-            await Map(
+            await MapItemsAndIndexes(
                 taskStatus,
                 "Remove data item(s)",
                 async (index, item) =>
                 {
-                    await indexDataController.RemoveAsync(taskStatus, index);
-
                     if (indexDataController.Contains(index))
                         recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
+                },
+                async (indexes) =>
+                {
+                    await indexDataController.RemoveAsync(taskStatus, indexes);
                 },
                 data);
         }
