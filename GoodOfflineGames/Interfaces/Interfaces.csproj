@@ -48,6 +48,7 @@
     <Compile Include="Cookies\CookiesController.cs" />
     <Compile Include="Destination\GetFilenameDelegate.cs" />
     <Compile Include="Destination\GetDirectoryDelegate.cs" />
+    <Compile Include="Destination\GetUriDelegate.cs" />
     <Compile Include="DownloadSources\DownloadSourcesController.cs" />
     <Compile Include="Expectation\ExpectedDelegate.cs" />
     <Compile Include="FileDownload\FileDownloadController.cs" />

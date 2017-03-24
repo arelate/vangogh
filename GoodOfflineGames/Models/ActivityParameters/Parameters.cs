@@ -15,7 +15,6 @@
         public const string ProductsImages = "productsImages";
         public const string AccountProductsImages = "accountProductsImages";
         public const string ProductsFiles = "productsFiles";
-        public const string ValidationFiles = "validationFiles";
 
         // Activity: Cleanup
         public const string Directories = "directories";

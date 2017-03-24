@@ -141,8 +141,11 @@ namespace Controllers.Data
                 "Remove data item(s)",
                 async (index, item) =>
                 {
-                    if (indexDataController.Contains(index))
-                        recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
+                    await Task.Run(() =>
+                    {
+                        if (indexDataController.Contains(index))
+                            recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
+                    });
                 },
                 async (indexes) =>
                 {

@@ -6,32 +6,36 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using Interfaces.FileDownload;
-using Interfaces.Session;
+using Interfaces.Extraction;
 using Interfaces.Routing;
 using Interfaces.TaskStatus;
 using Interfaces.Network;
+using Interfaces.Expectation;
 
 namespace GOG.Controllers.FileDownload
 {
     public class ManualUrlDownloadFromSourceDelegate : IDownloadFileFromSourceDelegate
     {
         private INetworkController networkController;
-        private ISessionController sessionController;
+        private IStringExtractionController uriSansSessionExtractionController;
         private IRoutingController routingController;
         private IFileDownloadController fileDownloadController;
         private ITaskStatusController taskStatusController;
+        private IDownloadFileFromSourceDelegate validationDownloadFileFromSourceDelegate;
 
         public ManualUrlDownloadFromSourceDelegate(
             INetworkController networkController,
-            ISessionController sessionController,
+            IStringExtractionController uriSansSessionExtractionController,
             IRoutingController routingController,
             IFileDownloadController fileDownloadController,
+            IDownloadFileFromSourceDelegate validationDownloadFileFromSourceDelegate,
             ITaskStatusController taskStatusController)
         {
             this.networkController = networkController;
-            this.sessionController = sessionController;
+            this.uriSansSessionExtractionController = uriSansSessionExtractionController;
             this.routingController = routingController;
             this.fileDownloadController = fileDownloadController;
+            this.validationDownloadFileFromSourceDelegate = validationDownloadFileFromSourceDelegate;
             this.taskStatusController = taskStatusController;
         }
 
@@ -62,7 +66,7 @@ namespace GOG.Controllers.FileDownload
                 // Storing this key is pointless - it expries after some time and needs to be updated.
                 // So here we filter our this session key and store direct file Uri
 
-                var uriSansSession = sessionController.GetUriSansSession(resolvedUri);
+                var uriSansSession = uriSansSessionExtractionController.ExtractMultiple(resolvedUri).First();
 
                 await routingController.UpdateRouteAsync(
                     id,
@@ -85,6 +89,20 @@ namespace GOG.Controllers.FileDownload
                         $"Couldn't download {sourceUri}, resolved as {resolvedUri} to {destination} " +
                         $"for product {id}: {title}, error message: {ex.Message}");
                 }
+
+                // GOG.com quirk
+                // Supplementary download is a secondary download to a primary driven by download scheduling
+                // The example is validation file - while we can use the same pipeline, we would be
+                // largerly duplicating all the work to establish the session, compute the name etc.
+                // While the only difference validation files have - is additional extension.
+                // So instead we'll do a supplementary download using primary download information
+
+                validationDownloadFileFromSourceDelegate?.DownloadFileFromSourceAsync(
+                    id, 
+                    title, 
+                    resolvedUri,
+                    destination, 
+                    downloadTask);
             }
 
             taskStatusController.Complete(downloadTask);

@@ -55,9 +55,9 @@
     <Compile Include="Destination\Directory\UriDirectoryDelegate.cs" />
     <Compile Include="Destination\Filename\UriFilenameDelegate.cs" />
     <Compile Include="Destination\Filename\ValidationFilenameDelegate.cs" />
+    <Compile Include="Destination\Uri\ValidationUriDelegate.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Expectation\ValidationExpectedDelegate.cs" />
-    <Compile Include="Extraction\SessionUriExtractionController.cs" />
     <Compile Include="FileDownload\FileDownloadController.cs" />
     <Compile Include="Extraction\GameDetailsDownloadsExtractionController.cs" />
     <Compile Include="Extraction\GameDetailsLanguagesExtractionController.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="ImageUri\ImageUriController.cs" />
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="PropertiesValidation\UsernamePasswordValidationController.cs" />
-    <Compile Include="Session\SessionController.cs" />
+    <Compile Include="Extraction\UriSansSessionExtractionController.cs" />
     <Compile Include="TaskStatus\TaskStatusController.cs" />
     <Compile Include="Tree\TaskStatusTreeToEnumerableController.cs" />
     <Compile Include="ViewController\TaskStatusAppViewController.cs" />
@@ -106,7 +106,6 @@
     <Compile Include="Extraction\LoginTokenExtractionController.cs" />
     <Compile Include="UpdateUri\ProductGetUpdateUriDelegate.cs" />
     <Compile Include="Uri\UriController.cs" />
-    <Compile Include="Uri\ValidationUriController.cs" />
     <Compile Include="Validation\ValidationController.cs" />
     <Compile Include="ViewModel\TaskStatusReportViewModelDelegate.cs" />
     <Compile Include="ViewModel\TaskStatusAppViewModelDelegate.cs" />

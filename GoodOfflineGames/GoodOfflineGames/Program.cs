@@ -24,6 +24,7 @@ using Controllers.Formatting;
 using Controllers.LineBreaking;
 using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
+using Controllers.Destination.Uri;
 using Controllers.Cookies;
 using Controllers.PropertiesValidation;
 using Controllers.Validation;
@@ -38,7 +39,6 @@ using Controllers.TaskStatus;
 using Controllers.Hash;
 using Controllers.Containment;
 using Controllers.Sanitization;
-using Controllers.Session;
 using Controllers.Expectation;
 using Controllers.UpdateUri;
 using Controllers.Naming;
@@ -710,7 +710,7 @@ namespace GoodOfflineGames
                 productFilesDirectoryDelegate,
                 uriFilenameDelegate);
 
-            // product files and validation files are driven through gameDetails manual urls
+            // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
             var manualUrlDownloadSourcesController = new ManualUrlDownloadSourcesController(
                 updatedDataController,
@@ -777,16 +777,29 @@ namespace GoodOfflineGames
                 fileDownloadController,
                 taskStatusAppController);
 
-            var sesionUriExtractionController = new SessionUriExtractionController();
-            var sessionController = new SessionController(
-                networkController,
-                sesionUriExtractionController);
+            var uriSansSessionExtractionController = new UriSansSessionExtractionController();
+
+            var validationExpectedDelegate = new ValidationExpectedDelegate();
+            var validationUriDelegate = new ValidationUriDelegate(
+                validationFilenameDelegate, 
+                uriSansSessionExtractionController);
+
+            var validationDownloadFileFromSourceDelegate = new ValidationDownloadFileFromSourceDelegate(
+                uriSansSessionExtractionController,
+                validationExpectedDelegate,
+                validationDirectoryDelegate,
+                validationFilenameDelegate,
+                validationUriDelegate,
+                fileController,
+                fileDownloadController,
+                taskStatusAppController);
 
             var manualUrlDownloadFromSourceDelegate = new ManualUrlDownloadFromSourceDelegate(
                 networkController,
-                sessionController,
+                uriSansSessionExtractionController,
                 routingController,
                 fileDownloadController,
+                validationDownloadFileFromSourceDelegate,
                 taskStatusAppController);
 
             var productFilesProcessScheduledDownloadsController = new ProcessDownloadsController(
@@ -797,33 +810,6 @@ namespace GoodOfflineGames
                 taskStatusAppController);
 
             // validation controllers
-
-            var updateValidationDownloadsController = new UpdateDownloadsController(
-                Parameters.ValidationFiles,
-                manualUrlDownloadSourcesController,
-                validationDirectoryDelegate,
-                fileController,
-                productDownloadsDataController,
-                accountProductsDataController,
-                taskStatusAppController);
-
-            var validationExpectedDelegate = new ValidationExpectedDelegate();
-            var validationUriController = new ValidationUriController(uriController);
-
-            var validationDownloadFromSourceDelegate = new ValidationDownloadFromSourceDelegate(
-                routingController,
-                sessionController,
-                validationExpectedDelegate,
-                validationUriController,
-                fileDownloadController,
-                taskStatusAppController);
-
-            var validationProcessScheduledDownloadsController = new ProcessDownloadsController(
-                Parameters.ValidationFiles,
-                updatedDataController,
-                productDownloadsDataController,
-                validationDownloadFromSourceDelegate,
-                taskStatusAppController);
 
             var validationController = new ValidationController(
                 validationDirectoryDelegate,
@@ -941,10 +927,6 @@ namespace GoodOfflineGames
                     Parameters.ProductsFiles),
                     updateProductFilesDownloadsController },
                 { activityParametersNameDelegate.GetName(
-                    Activities.UpdateDownloads,
-                    Parameters.ValidationFiles),
-                    updateValidationDownloadsController },
-                { activityParametersNameDelegate.GetName(
                     Activities.ProcessDownloads,
                     Parameters.ProductsImages),
                     productsImagesProcessScheduledDownloadsController },
@@ -960,10 +942,6 @@ namespace GoodOfflineGames
                     Activities.ProcessDownloads,
                     Parameters.ProductsFiles),
                     productFilesProcessScheduledDownloadsController },
-                { activityParametersNameDelegate.GetName(
-                    Activities.ProcessDownloads,
-                    Parameters.ValidationFiles),
-                    validationProcessScheduledDownloadsController },
                 { activityParametersNameDelegate.GetName(
                     Activities.Validate,
                     Parameters.ProductsFiles),
