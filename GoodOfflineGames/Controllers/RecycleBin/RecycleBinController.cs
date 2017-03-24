@@ -21,14 +21,14 @@ namespace Controllers.RecycleBin
             this.directoryController = directoryController;
         }
 
-        public void MoveFileToRecycleBin(string uri)
+        public void MoveToRecycleBin(string uri)
         {
             fileController.Move(uri, getDirectoryDelegate.GetDirectory());
         }
 
-        public void MoveDirectoryToRecycleBin(string uri)
-        {
-            directoryController.Move(uri, getDirectoryDelegate.GetDirectory());
-        }
+        //public void MoveDirectoryToRecycleBin(string uri)
+        //{
+        //    directoryController.Move(uri, getDirectoryDelegate.GetDirectory());
+        //}
     }
 }

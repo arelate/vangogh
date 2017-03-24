@@ -11,12 +11,12 @@ using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsManualUrlEnumerationController : IEnumerateDelegate<GameDetails>
+    public class GameDetailsManualUrlEnumerateDelegate : IEnumerateDelegate<GameDetails>
     {
         private ISettingsProperty settingsProperty;
         private IDataController<GameDetails> gameDetailsDataController;
 
-        public GameDetailsManualUrlEnumerationController(
+        public GameDetailsManualUrlEnumerateDelegate(
             ISettingsProperty settingsProperty,
             IDataController<GameDetails> gameDetailsDataController)
         {

@@ -84,7 +84,7 @@ namespace GOG.TaskActivities.Cleanup
                     counter++,
                     unexpectedDirectories.Count,
                     directory);
-                recycleBinController.MoveDirectoryToRecycleBin(directory);
+                //recycleBinController.MoveDirectoryToRecycleBin(directory);
             }
 
             taskStatusController.Complete(cleanupUnexpectedDirectoriesTask);

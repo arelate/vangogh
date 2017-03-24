@@ -10,12 +10,12 @@ using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsDirectoryEnumerationController: IEnumerateDelegate<GameDetails>
+    public class GameDetailsDirectoryEnumerateDelegate: IEnumerateDelegate<GameDetails>
     {
         private IEnumerateDelegate<GameDetails> manualUrlEnumerateDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
 
-        public GameDetailsDirectoryEnumerationController(
+        public GameDetailsDirectoryEnumerateDelegate(
             IEnumerateDelegate<GameDetails> manualUrlEnumerateDelegate,
             IGetDirectoryDelegate getDirectoryDelegate)
         {

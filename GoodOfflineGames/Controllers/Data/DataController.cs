@@ -144,7 +144,7 @@ namespace Controllers.Data
                     await Task.Run(() =>
                     {
                         if (indexDataController.Contains(index))
-                            recycleBinController?.MoveFileToRecycleBin(GetItemUri(index));
+                            recycleBinController.MoveToRecycleBin(GetItemUri(index));
                     });
                 },
                 async (indexes) =>

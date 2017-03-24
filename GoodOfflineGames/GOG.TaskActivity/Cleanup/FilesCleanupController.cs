@@ -101,7 +101,7 @@ namespace GOG.TaskActivities.Cleanup
                     unexpectedFiles.Count,
                     file);
 
-                recycleBinController.MoveFileToRecycleBin(file);
+                recycleBinController.MoveToRecycleBin(file);
 
                 var validationFile = Path.Combine(
                     getDirectoryDelegate.GetDirectory(),
@@ -110,7 +110,7 @@ namespace GOG.TaskActivities.Cleanup
                 var deleteValidationFileTask = taskStatusController.Create(
                     cleanupProductFilesTask,
                     $"Move validation file to recycle bin: {validationFile}");
-                recycleBinController.MoveFileToRecycleBin(validationFile);
+                recycleBinController.MoveToRecycleBin(validationFile);
                 taskStatusController.Complete(deleteValidationFileTask);
             }
 

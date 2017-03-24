@@ -13,14 +13,14 @@ using System;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsFileEnumerationController : IEnumerateAsyncDelegate<GameDetails>
+    public class GameDetailsFileEnumerateDelegate : IEnumerateAsyncDelegate<GameDetails>
     {
         private IEnumerateDelegate<GameDetails> manualUrlEnumerationDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IRoutingController routingController;
 
-        public GameDetailsFileEnumerationController(
+        public GameDetailsFileEnumerateDelegate(
             IEnumerateDelegate<GameDetails> manualUrlEnumerationDelegate,
             IRoutingController routingController,
             IGetDirectoryDelegate getDirectoryDelegate,

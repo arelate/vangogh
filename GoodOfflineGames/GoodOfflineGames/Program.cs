@@ -47,6 +47,7 @@ using Controllers.Template;
 using Controllers.ViewModel;
 using Controllers.Tree;
 using Controllers.ViewController;
+using Controllers.Enumeration;
 
 using Interfaces.TaskActivity;
 
@@ -694,16 +695,16 @@ namespace GoodOfflineGames
 
             var routingController = new RoutingController(productRoutesDataController);
 
-            var gameDetailsManualUrlsEnumerationController = new GameDetailsManualUrlEnumerationController(
+            var gameDetailsManualUrlsEnumerateDelegate = new GameDetailsManualUrlEnumerateDelegate(
                 settingsController,
                 gameDetailsDataController);
 
-            var gameDetailsDirectoryEnumerationController = new GameDetailsDirectoryEnumerationController(
-                gameDetailsManualUrlsEnumerationController,
+            var gameDetailsDirectoryEnumerateDelegate = new GameDetailsDirectoryEnumerateDelegate(
+                gameDetailsManualUrlsEnumerateDelegate,
                 productFilesDirectoryDelegate);
 
-            var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
-                gameDetailsManualUrlsEnumerationController,
+            var gameDetailsFilesEnumerateDelegate = new GameDetailsFileEnumerateDelegate(
+                gameDetailsManualUrlsEnumerateDelegate,
                 routingController,
                 productFilesDirectoryDelegate,
                 uriFilenameDelegate);
@@ -713,7 +714,7 @@ namespace GoodOfflineGames
             var manualUrlDownloadSourcesController = new ManualUrlDownloadSourcesController(
                 updatedDataController,
                 gameDetailsDataController,
-                gameDetailsManualUrlsEnumerationController);
+                gameDetailsManualUrlsEnumerateDelegate);
 
             // schedule download controllers
 
@@ -823,7 +824,7 @@ namespace GoodOfflineGames
                 uriFilenameDelegate,
                 validationController,
                 gameDetailsDataController,
-                gameDetailsManualUrlsEnumerationController,
+                gameDetailsManualUrlsEnumerateDelegate,
                 validationExpectedDelegate,
                 updatedDataController,
                 lastKnownValidDataController,
@@ -833,23 +834,41 @@ namespace GoodOfflineGames
 
             #region Cleanup
 
-            var directoryCleanupController = new DirectoryCleanupController(
-                gameDetailsDataController,
-                gameDetailsDirectoryEnumerationController,
-                productFilesDirectoryDelegate,
-                directoryController,
-                recycleBinController,
-                taskStatusAppController);
+            //var directoryCleanupController = new DirectoryCleanupController(
+            //    gameDetailsDataController,
+            //    gameDetailsDirectoryEnumerateDelegate,
+            //    productFilesDirectoryDelegate,
+            //    directoryController,
+            //    recycleBinController,
+            //    taskStatusAppController);
 
             var filesCleanupController = new FilesCleanupController(
                 scheduledCleanupDataController,
                 accountProductsDataController,
                 gameDetailsDataController,
-                gameDetailsFilesEnumerationController,
-                gameDetailsDirectoryEnumerationController,
+                gameDetailsFilesEnumerateDelegate,
+                gameDetailsDirectoryEnumerateDelegate,
                 directoryController,
                 validationDirectoryDelegate,
                 uriFilenameDelegate,
+                recycleBinController,
+                taskStatusAppController);
+
+            var gameDetailsDirectoriesEnumerateDelegate = new GameDetailsDirectoriesEnumerateDelegate(
+                gameDetailsDataController, 
+                gameDetailsDirectoryEnumerateDelegate, 
+                taskStatusAppController);
+
+            var productFilesDirectoriesEnumerateDelegate = new ProductFilesDirectoriesEnumerateDelegate(
+                productFilesBaseDirectoryDelegate, 
+                directoryController);
+
+            var directoryFilesEnumerateDelegate = new DirectoryFilesEnumerateDelegate(directoryController);
+
+            var directoryCleanupController = new CleanupController(
+                gameDetailsDirectoriesEnumerateDelegate, // expected items
+                productFilesDirectoriesEnumerateDelegate, // actual items
+                directoryFilesEnumerateDelegate, // detailed items
                 recycleBinController,
                 taskStatusAppController);
 

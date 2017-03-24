@@ -57,6 +57,8 @@
     <Compile Include="Destination\Filename\ValidationFilenameDelegate.cs" />
     <Compile Include="Destination\Uri\ValidationUriDelegate.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
+    <Compile Include="Enumeration\DirectoryFilesEnumerateDelegate.cs" />
+    <Compile Include="Enumeration\ProductFilesDirectoriesEnumerateDelegate.cs" />
     <Compile Include="Expectation\ValidationExpectedDelegate.cs" />
     <Compile Include="FileDownload\FileDownloadController.cs" />
     <Compile Include="Extraction\GameDetailsDownloadsExtractionController.cs" />
