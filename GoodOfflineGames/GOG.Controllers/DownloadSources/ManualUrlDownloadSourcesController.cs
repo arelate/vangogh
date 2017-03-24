@@ -22,6 +22,7 @@ namespace GOG.Controllers.DownloadSources
             IEnumerateDelegate<GameDetails> gameDetailsManualUrlEnumerationController)
         {
             this.updatedDataController = updatedDataController;
+            this.gameDetailsDataController = gameDetailsDataController;
             this.gameDetailsManualUrlEnumerationController = gameDetailsManualUrlEnumerationController;
         }
 

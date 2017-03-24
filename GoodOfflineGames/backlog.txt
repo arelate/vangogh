@@ -4,17 +4,11 @@ Backend
 
 - Change validation controller to use file, validationFile
 
-- As part of the change implement enumeration explicitly on top of game details, not Id
-
 - check if validation files are moved to recycleBin
 
 - guard product files and validation files download with the throttleController, or better yet introduce rate limiter based on URL and time between requests add it to networkController so that it's transparent for the users
 
 - make hashes more resilient to crashes
-
-- add Log entries to taskStatus to log additional debug information like inputs, processed, etc.?
-
-- log existing files download attempts
 
 - log changelog for updated
 

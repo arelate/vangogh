@@ -1,7 +1,7 @@
 ﻿[
 	{
 		"title": "taskStatus",
-		"content": "{started} <complete?complete>{{title}}<containsProgress?progress><containsFailures?failures><containsWarnings?warnings>"
+		"content": "{started} <complete?complete>{{title}}<containsProgress?progress><containsFailures?failures><containsWarnings?warnings><containsInformation?information>"
 	},
 	{
 		"title": "title",
@@ -22,5 +22,9 @@
 	{
 		"title": "warnings",
 		"content": ". [Warning(s)]: {warnings}"
+	},
+	{
+		"title": "information",
+		"content": ". [Info]: {information}"
 	}
 ]

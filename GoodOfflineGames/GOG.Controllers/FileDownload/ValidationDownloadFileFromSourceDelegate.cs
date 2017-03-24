@@ -61,7 +61,7 @@ namespace GOG.Controllers.FileDownload
 
             if (fileController.Exists(destinationUri))
             {
-                // TODO: Log this
+                taskStatusController.Inform(taskStatus, "Validation file already exists, will not be redownloading");
                 return;
             }
 

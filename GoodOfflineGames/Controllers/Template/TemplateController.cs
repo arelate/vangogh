@@ -48,6 +48,7 @@ namespace Controllers.Template
         public string Bind(string templateTitle, IDictionary<string, string> viewModel)
         {
             var templateContent = GetContentByTitle(templateTitle);
+
             var resolvedConditionalsTemplateContent = ResolveConditionals(templateContent, viewModel);
             var resolvedTemplateContent = ResolveSubTemplates(resolvedConditionalsTemplateContent);
 

@@ -25,12 +25,18 @@
         void Warn(ITaskStatus taskStatus, string warningMessage);
     }
 
+    public interface IInformDelegate
+    {
+        void Inform(ITaskStatus taskStatus, string informationMessage);
+    }
+
     public interface ITaskStatusController:
         ICreateDelegate,
         ICompleteDelegate,
         IUpdateProgressDelegate,
         IFailDelegate,
-        IWarnDelegate
+        IWarnDelegate,
+        IInformDelegate
     {
         // ...
     }

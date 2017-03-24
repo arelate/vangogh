@@ -38,6 +38,11 @@ namespace Interfaces.TaskStatus
         IList<string> Failures { get; set; }
     }
 
+    public interface IInformationProperty
+    {
+        IList<string> Information { get; set; }
+    }
+
     public interface IUnitProperty
     {
         string Unit { get; set; }
@@ -80,7 +85,8 @@ namespace Interfaces.TaskStatus
         IStartedProperty,
         ICompletedProperty,
         IWarningsProperty,
-        IFailuresProperty
+        IFailuresProperty,
+        IInformationProperty
     {
         // ...
     }

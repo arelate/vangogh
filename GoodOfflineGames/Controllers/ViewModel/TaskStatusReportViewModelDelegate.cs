@@ -26,6 +26,8 @@ namespace Controllers.ViewModel
             public const string Failures = "failures";
             public const string ContainsWarnings = "containsWarnings";
             public const string Warnings = "warnings";
+            public const string ContainsInformation = "containsInformation";
+            public const string Information = "information";
         }
 
         private IFormattingController bytesFormattingController;
@@ -56,7 +58,9 @@ namespace Controllers.ViewModel
                 { TaskStatusReportViewModelSchema.ContainsFailures, ""},
                 { TaskStatusReportViewModelSchema.Failures, ""},
                 { TaskStatusReportViewModelSchema.ContainsWarnings, ""},
-                { TaskStatusReportViewModelSchema.Warnings, ""}
+                { TaskStatusReportViewModelSchema.Warnings, ""},
+                { TaskStatusReportViewModelSchema.ContainsInformation, ""},
+                { TaskStatusReportViewModelSchema.Information, ""}
             };
 
             viewModel[TaskStatusReportViewModelSchema.Title] = taskStatus.Title;
@@ -105,6 +109,12 @@ namespace Controllers.ViewModel
             {
                 viewModel[TaskStatusReportViewModelSchema.ContainsWarnings] = "true";
                 viewModel[TaskStatusReportViewModelSchema.Warnings] = string.Join("; ", taskStatus.Warnings);
+            }
+
+            if (taskStatus.Information != null && taskStatus.Information.Count > 0)
+            {
+                viewModel[TaskStatusReportViewModelSchema.ContainsInformation] = "true";
+                viewModel[TaskStatusReportViewModelSchema.Information] = string.Join("; ", taskStatus.Information);
             }
 
             return viewModel;

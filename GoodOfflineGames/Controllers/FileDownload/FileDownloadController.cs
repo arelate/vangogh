@@ -51,10 +51,9 @@ namespace Controllers.FileDownload
             if (fileController.Exists(fullPath) &&
                 fileController.GetSize(fullPath) == response.Content.Headers.ContentLength)
             {
-                taskStatusController.Warn(
+                taskStatusController.Inform(
                     taskStatus, 
-                    $"File resolved to the path {fullPath} already exists and matches response size - won't be redownloading it again");
-
+                    $"File {fullPath} already exists and matches response size, will not be redownloading");
                 return;
             }
 

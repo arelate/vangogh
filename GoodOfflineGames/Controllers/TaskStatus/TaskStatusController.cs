@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Interfaces.TaskStatus;
 using Interfaces.ViewController;
@@ -103,6 +100,16 @@ namespace Controllers.TaskStatus
                 taskStatus.Warnings = new List<string>();
 
             taskStatus.Warnings.Add(warningMessage);
+        }
+
+        public void Inform(ITaskStatus taskStatus, string informationMessage)
+        {
+            ReleaseAssertTaskStatusNotNull(taskStatus);
+
+            if (taskStatus.Information == null)
+                taskStatus.Information = new List<string>();
+
+            taskStatus.Information.Add(informationMessage);
         }
     }
 }
