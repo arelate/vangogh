@@ -64,7 +64,8 @@ namespace GOG.TaskActivities.UpdateData
 
             var processingTask = taskStatusController.Create(updateAllProductsTask, $"Post-processing {productParameter}");
 
-            await dataRefinementController?.RefineData(newProducts, processingTask);
+            if (dataRefinementController != null)
+                await dataRefinementController.RefineData(newProducts, processingTask);
 
             taskStatusController.Complete(processingTask);
 
