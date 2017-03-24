@@ -3,7 +3,7 @@ using System.Linq;
 
 using Interfaces.RequestPage;
 using Interfaces.Data;
-using Interfaces.Collection;
+using Interfaces.DataRefinement;
 using Interfaces.TaskStatus;
 
 using Models.ProductCore;
@@ -25,7 +25,7 @@ namespace GOG.TaskActivities.UpdateData
         private IRequestPageController requestPageController;
         private IDataController<Type> dataController;
 
-        private ICollectionProcessingController<Type> collectionProcessingController;
+        private IDataRefinementController<Type> dataRefinementController;
 
         public PageResultUpdateController(
             string productParameter,
@@ -34,7 +34,7 @@ namespace GOG.TaskActivities.UpdateData
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
             ITaskStatusController taskStatusController,
-            ICollectionProcessingController<Type> collectionProcessingController = null) :
+            IDataRefinementController<Type> dataRefinementController = null) :
             base(taskStatusController)
         {
             this.productParameter = productParameter;
@@ -45,7 +45,7 @@ namespace GOG.TaskActivities.UpdateData
             this.requestPageController = requestPageController;
             this.dataController = dataController;
 
-            this.collectionProcessingController = collectionProcessingController;
+            this.dataRefinementController = dataRefinementController;
         }
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
@@ -64,8 +64,7 @@ namespace GOG.TaskActivities.UpdateData
 
             var processingTask = taskStatusController.Create(updateAllProductsTask, $"Post-processing {productParameter}");
 
-            if (collectionProcessingController != null)
-                await collectionProcessingController.Process(newProducts, processingTask);
+            await dataRefinementController?.RefineData(newProducts, processingTask);
 
             taskStatusController.Complete(processingTask);
 

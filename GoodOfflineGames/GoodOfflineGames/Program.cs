@@ -59,7 +59,7 @@ using GOG.Controllers.Network;
 using GOG.Controllers.Connection;
 using GOG.Controllers.UpdateIdentity;
 using GOG.Controllers.FileDownload;
-using GOG.Controllers.Collection;
+using GOG.Controllers.DataRefinement;
 using GOG.Controllers.DownloadSources;
 using GOG.Controllers.Authorization;
 
@@ -546,7 +546,7 @@ namespace GoodOfflineGames
 
             var accountProductsExtractionController = new AccountProductsExtractionController();
 
-            var newUpdatedCollectionProcessingController = new NewUpdatedCollectionProcessingController(
+            var newUpdatedDataRefinementController = new NewUpdatedDataRefinementController(
                 collectionController,
                 updatedDataController,
                 lastKnownValidDataController,
@@ -559,7 +559,7 @@ namespace GoodOfflineGames
                     requestPageController,
                     accountProductsDataController,
                     taskStatusAppController,
-                    newUpdatedCollectionProcessingController);
+                    newUpdatedDataRefinementController);
 
             #endregion
 

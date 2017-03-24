@@ -1,14 +1,10 @@
 Backend
 
-- images download don't even schedule if file exists (doesn't apply to files)
-
 - Modify cleanup controller to use same wireframe logic - enumerate, find difference, move to recycle bin
 
 - As part of the change implement enumeration explicitly on top of game details, not Id
 
 - Review validation download logic to try and simplify similar to newUpdated from account, esp. Given that it has session - good chance to deprecate session controller as well
-
-- also don't schedule download if validation file exists
 
 - check if validation files are moved to recycleBin
 
