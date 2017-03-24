@@ -12,6 +12,8 @@ using Interfaces.Expectation;
 using Interfaces.Routing;
 using Interfaces.TaskStatus;
 
+using GOG.Models;
+
 namespace GOG.TaskActivities.Validate
 {
     public class ProcessValidationController : TaskActivityController
@@ -19,7 +21,8 @@ namespace GOG.TaskActivities.Validate
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IValidationController validationController;
-        private IEnumerateDelegate<string> gameDetailsManualUrlsEnumerationController;
+        private IDataController<GameDetails> gameDetailsDataController;
+        private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
         private IExpectedDelegate<string> validationExpectedDelegate;
         private IDataController<long> updatedDataController;
         private IDataController<long> lastKnownValidDataController;
@@ -30,7 +33,8 @@ namespace GOG.TaskActivities.Validate
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IValidationController validationController,
-            IEnumerateDelegate<string> gameDetailsManualUrlsEnumerationController,
+            IDataController<GameDetails> gameDetailsDataController,
+            IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
             IExpectedDelegate<string> validationExpectedDelegate,
             IDataController<long> updatedDataController,
             IDataController<long> lastKnownValidDataController,
@@ -42,7 +46,8 @@ namespace GOG.TaskActivities.Validate
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.validationController = validationController;
-            this.gameDetailsManualUrlsEnumerationController = gameDetailsManualUrlsEnumerationController;
+            this.gameDetailsDataController = gameDetailsDataController;
+            this.manualUrlsEnumerationController = manualUrlsEnumerationController;
             this.validationExpectedDelegate = validationExpectedDelegate;
 
             this.updatedDataController = updatedDataController;
@@ -63,7 +68,9 @@ namespace GOG.TaskActivities.Validate
             {
                 var productIsValid = true;
 
-                var manualUrls = await gameDetailsManualUrlsEnumerationController.EnumerateAsync(id);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+
+                var manualUrls = manualUrlsEnumerationController.Enumerate(gameDetails);
 
                 taskStatusController.UpdateProgress(validateProductFilesTask,
                     ++counter,

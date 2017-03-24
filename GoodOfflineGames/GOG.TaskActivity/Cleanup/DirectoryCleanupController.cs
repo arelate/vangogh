@@ -16,14 +16,14 @@ namespace GOG.TaskActivities.Cleanup
     public class DirectoryCleanupController: TaskActivityController
     {
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateDelegate<string> directoryEnumerationController;
+        private IEnumerateDelegate<GameDetails> directoryEnumerationController;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IRecycleBinController recycleBinController;
         private IDirectoryController directoryController;
 
         public DirectoryCleanupController(
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateDelegate<string> directoryEnumerationController,
+            IEnumerateDelegate<GameDetails> directoryEnumerationController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IDirectoryController directoryController,
             IRecycleBinController recycleBinController,
@@ -50,8 +50,9 @@ namespace GOG.TaskActivities.Cleanup
 
             foreach (var id in gameDetailsIds)
             {
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
                 taskStatusController.UpdateProgress(enumerateExpectedDirectoriesTask, ++counter, gameDetailsIdsCount, id.ToString());
-                expectedDirectories.AddRange(await directoryEnumerationController.EnumerateAsync(id));
+                expectedDirectories.AddRange(directoryEnumerationController.Enumerate(gameDetails));
             }
 
             taskStatusController.Complete(enumerateExpectedDirectoriesTask);

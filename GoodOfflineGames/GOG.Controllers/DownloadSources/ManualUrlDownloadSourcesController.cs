@@ -6,16 +6,20 @@ using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.TaskStatus;
 
+using GOG.Models;
+
 namespace GOG.Controllers.DownloadSources
 {
     public class ManualUrlDownloadSourcesController : IDownloadSourcesController
     {
         private IDataController<long> updatedDataController;
-        private IEnumerateDelegate<string> gameDetailsManualUrlEnumerationController;
+        private IDataController<GameDetails> gameDetailsDataController;
+        private IEnumerateDelegate<GameDetails> gameDetailsManualUrlEnumerationController;
 
         public ManualUrlDownloadSourcesController(
             IDataController<long> updatedDataController,
-            IEnumerateDelegate<string> gameDetailsManualUrlEnumerationController)
+            IDataController<GameDetails> gameDetailsDataController,
+            IEnumerateDelegate<GameDetails> gameDetailsManualUrlEnumerationController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsManualUrlEnumerationController = gameDetailsManualUrlEnumerationController;
@@ -27,14 +31,16 @@ namespace GOG.Controllers.DownloadSources
 
             foreach (var id in updatedDataController.EnumerateIds())
             {
-                var manualUrls = await gameDetailsManualUrlEnumerationController.EnumerateAsync(id);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
                 if (!gameDetailsDownloadSources.ContainsKey(id))
                     gameDetailsDownloadSources.Add(id, new List<string>());
 
-                foreach (var url in manualUrls)
-                    if (!gameDetailsDownloadSources[id].Contains(url))
-                        gameDetailsDownloadSources[id].Add(url);
+                foreach (var manualUrl in gameDetailsManualUrlEnumerationController.Enumerate(gameDetails))
+                {
+                    if (!gameDetailsDownloadSources[id].Contains(manualUrl))
+                        gameDetailsDownloadSources[id].Add(manualUrl);
+                }
             }
 
             return gameDetailsDownloadSources;

@@ -2,11 +2,9 @@ Backend
 
 - Modify cleanup controller to use same wireframe logic - enumerate, find difference, move to recycle bin
 
-- convert session controller to extract controller
+- Change validation controller to use file, validationFile
 
 - As part of the change implement enumeration explicitly on top of game details, not Id
-
-- Review validation download logic to try and simplify similar to newUpdated from account, esp. Given that it has session - good chance to deprecate session controller as well
 
 - check if validation files are moved to recycleBin
 

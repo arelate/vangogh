@@ -4,41 +4,39 @@ using System.Threading.Tasks;
 using Interfaces.Data;
 using Interfaces.Settings;
 using Interfaces.Destination.Directory;
+using Interfaces.Enumeration;
 
 using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsDirectoryEnumerationController: GameDetailsManualUrlEnumerationController
+    public class GameDetailsDirectoryEnumerationController: IEnumerateDelegate<GameDetails>
     {
+        private IEnumerateDelegate<GameDetails> manualUrlEnumerateDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
 
         public GameDetailsDirectoryEnumerationController(
-            ISettingsProperty settingsProperty,
-            IDataController<GameDetails> gameDetailsDataController,
-            IGetDirectoryDelegate getDirectoryDelegate):
-            base(
-                settingsProperty,
-                gameDetailsDataController)
+            IEnumerateDelegate<GameDetails> manualUrlEnumerateDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate)
         {
+            this.manualUrlEnumerateDelegate = manualUrlEnumerateDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
         }
 
-        public override async Task<IList<string>> EnumerateAsync(long id)
+        public IEnumerable<string> Enumerate(GameDetails gameDetails)
         {
             var gameDetailsDirectories = new List<string>();
 
-            var gameDetailsManualUrls = await base.EnumerateAsync(id);
-
-            foreach (var manualUrl in gameDetailsManualUrls)
+            foreach (var manualUrl in manualUrlEnumerateDelegate.Enumerate(gameDetails))
             {
                 var directory = getDirectoryDelegate.GetDirectory(manualUrl);
 
                 if (!gameDetailsDirectories.Contains(directory))
+                {
                     gameDetailsDirectories.Add(directory);
+                    yield return directory;
+                }
             }
-
-            return gameDetailsDirectories;
         }
     }
 }

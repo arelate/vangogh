@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
 
 using Interfaces.Data;
@@ -12,7 +11,7 @@ using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsManualUrlEnumerationController : IEnumerateDelegate<string>
+    public class GameDetailsManualUrlEnumerationController : IEnumerateDelegate<GameDetails>
     {
         private ISettingsProperty settingsProperty;
         private IDataController<GameDetails> gameDetailsDataController;
@@ -25,17 +24,20 @@ namespace GOG.Controllers.Enumeration
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
-        private IList<string> Enumerate(GameDetails gameDetails)
+        public virtual IEnumerable<string> Enumerate(GameDetails gameDetails)
         {
-            var gameDetailsManualUrls = new List<string>();
+            //var gameDetailsManualUrls = new List<string>();
 
             if (settingsProperty == null ||
                 settingsProperty.Settings == null ||
                 settingsProperty.Settings.DownloadsLanguages == null ||
                 settingsProperty.Settings.DownloadsOperatingSystems == null)
-                return gameDetailsManualUrls;
+                //return gameDetailsManualUrls;
+                yield break;
 
-            if (gameDetails == null) return gameDetailsManualUrls;
+
+            if (gameDetails == null) //return gameDetailsManualUrls;
+                yield break;
 
             var gameDetailsDownloadEntries = new List<DownloadEntry>();
 
@@ -58,21 +60,14 @@ namespace GOG.Controllers.Enumeration
             foreach (var downloadEntry in gameDetailsDownloadEntries)
             {
                 var absoluteUri = string.Format(Uris.Paths.ProductFiles.FullUriTemplate, downloadEntry.ManualUrl);
-                gameDetailsManualUrls.Add(absoluteUri);
+                yield return absoluteUri;
             }
 
             // last but not least - recursively add DLCs
             if (gameDetails.DLCs != null)
                 foreach (var dlc in gameDetails.DLCs)
-                    gameDetailsManualUrls.AddRange(Enumerate(dlc));
-
-            return gameDetailsManualUrls;
-        }
-
-        public async virtual Task<IList<string>> EnumerateAsync(long id)
-        {
-            var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
-            return Enumerate(gameDetails);
+                    foreach (var dlcManualUrl in Enumerate(dlc))
+                        yield return dlcManualUrl;
         }
     }
 }

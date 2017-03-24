@@ -699,13 +699,11 @@ namespace GoodOfflineGames
                 gameDetailsDataController);
 
             var gameDetailsDirectoryEnumerationController = new GameDetailsDirectoryEnumerationController(
-                settingsController,
-                gameDetailsDataController,
+                gameDetailsManualUrlsEnumerationController,
                 productFilesDirectoryDelegate);
 
             var gameDetailsFilesEnumerationController = new GameDetailsFileEnumerationController(
-                settingsController,
-                gameDetailsDataController,
+                gameDetailsManualUrlsEnumerationController,
                 routingController,
                 productFilesDirectoryDelegate,
                 uriFilenameDelegate);
@@ -714,6 +712,7 @@ namespace GoodOfflineGames
             // so this sources enumerates all manual urls for all updated game details
             var manualUrlDownloadSourcesController = new ManualUrlDownloadSourcesController(
                 updatedDataController,
+                gameDetailsDataController,
                 gameDetailsManualUrlsEnumerationController);
 
             // schedule download controllers
@@ -823,6 +822,7 @@ namespace GoodOfflineGames
                 productFilesDirectoryDelegate,
                 uriFilenameDelegate,
                 validationController,
+                gameDetailsDataController,
                 gameDetailsManualUrlsEnumerationController,
                 validationExpectedDelegate,
                 updatedDataController,
@@ -844,6 +844,7 @@ namespace GoodOfflineGames
             var filesCleanupController = new FilesCleanupController(
                 scheduledCleanupDataController,
                 accountProductsDataController,
+                gameDetailsDataController,
                 gameDetailsFilesEnumerationController,
                 gameDetailsDirectoryEnumerationController,
                 directoryController,

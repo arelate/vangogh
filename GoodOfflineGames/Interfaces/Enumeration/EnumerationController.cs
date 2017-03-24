@@ -8,6 +8,11 @@ namespace Interfaces.Enumeration
 {
     public interface IEnumerateDelegate<Type>
     {
-        Task<IList<Type>> EnumerateAsync(long id); 
+        IEnumerable<string> Enumerate(Type item); 
+    }
+
+    public interface IEnumerateAsyncDelegate<Type>
+    {
+        Task<IList<string>> EnumerateAsync(Type item);
     }
 }

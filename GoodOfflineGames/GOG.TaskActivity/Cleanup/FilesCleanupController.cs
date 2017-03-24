@@ -19,8 +19,9 @@ namespace GOG.TaskActivities.Cleanup
     {
         private IDataController<long> scheduledCleanupDataController;
         private IDataController<AccountProduct> accountProductsDataController;
-        private IEnumerateDelegate<string> filesEnumerationController;
-        private IEnumerateDelegate<string> directoryEnumerationController;
+        private IDataController<GameDetails> gameDetailsDataController;
+        private IEnumerateAsyncDelegate<GameDetails> filesEnumerationController;
+        private IEnumerateDelegate<GameDetails> directoryEnumerationController;
         private IDirectoryController directoryController;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
@@ -29,8 +30,9 @@ namespace GOG.TaskActivities.Cleanup
         public FilesCleanupController(
             IDataController<long> scheduledCleanupDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            IEnumerateDelegate<string> filesEnumerationController,
-            IEnumerateDelegate<string> directoryEnumerationController,
+            IDataController<GameDetails> gameDetailsDataController,
+            IEnumerateAsyncDelegate<GameDetails> filesEnumerationController,
+            IEnumerateDelegate<GameDetails> directoryEnumerationController,
             IDirectoryController directoryController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
@@ -40,6 +42,7 @@ namespace GOG.TaskActivities.Cleanup
         {
             this.scheduledCleanupDataController = scheduledCleanupDataController;
             this.accountProductsDataController = accountProductsDataController;
+            this.gameDetailsDataController = gameDetailsDataController;
             this.filesEnumerationController = filesEnumerationController;
             this.directoryEnumerationController = directoryEnumerationController;
             this.directoryController = directoryController;
@@ -57,12 +60,13 @@ namespace GOG.TaskActivities.Cleanup
 
         private async Task<IList<string>> GetUnexpectedFiles(long id, ITaskStatus taskStatus)
         {
-            var productDirectories = await directoryEnumerationController.EnumerateAsync(id);
+            var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+            var productDirectories = directoryEnumerationController.Enumerate(gameDetails);
             IList<string> expectedFiles = new List<string>();
 
             try
             {
-                expectedFiles = await filesEnumerationController.EnumerateAsync(id);
+                expectedFiles = await filesEnumerationController.EnumerateAsync(gameDetails);
             }
             catch (System.ArgumentException ex)
             {
