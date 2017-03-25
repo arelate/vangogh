@@ -841,7 +841,8 @@ namespace GoodOfflineGames
 
             var productFilesDirectoriesEnumerateDelegate = new ProductFilesDirectoriesEnumerateDelegate(
                 productFilesBaseDirectoryDelegate, 
-                directoryController);
+                directoryController,
+                taskStatusAppController);
 
             var directoryFilesEnumerateDelegate = new DirectoryFilesEnumerateDelegate(directoryController);
 
@@ -858,11 +859,26 @@ namespace GoodOfflineGames
                 directoryController,
                 taskStatusAppController);
 
+            var updatedGameDetailsManualUrlFilesEnumerateDelegate = new UpdatedGameDetailsManualUrlFilesEnumerateDelegate(
+                updatedDataController, 
+                gameDetailsDataController, 
+                gameDetailsFilesEnumerateDelegate, 
+                taskStatusAppController);
+
+            var updatedProductFilesEnumerateDelegate = new UpdatedProductFilesEnumerateDelegate(
+                updatedDataController, 
+                gameDetailsDataController, 
+                gameDetailsDirectoryEnumerateDelegate, 
+                directoryController, 
+                taskStatusAppController);
+
+            var passthroughEnumerateDelegate = new PassthroughEnumerateDelegate();
+
             var fileCleanupController = new CleanupController(
-                null, // expected items
-                null, // actual items
-                null, // detailed items
-                null, // supplementary items
+                updatedGameDetailsManualUrlFilesEnumerateDelegate, // expected items (files for updated gameDetails)
+                updatedProductFilesEnumerateDelegate, // actual items (updated product files)
+                passthroughEnumerateDelegate, // detailed items (passthrough)
+                validationFileEnumerateDelegate, // supplementary items (validation files)
                 recycleBinController,
                 directoryController,
                 taskStatusAppController);

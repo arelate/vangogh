@@ -49,10 +49,12 @@
     <Compile Include="DownloadSources\ManualUrlDownloadSourcesController.cs" />
     <Compile Include="DownloadSources\ProductsImagesDownloadSourcesController.cs" />
     <Compile Include="DownloadSources\ScreenshotsDownloadSourcesController.cs" />
-    <Compile Include="Enumeration\GameDetailsFileEnumerationController.cs" />
-    <Compile Include="Enumeration\GameDetailsDirectoryEnumerationController.cs" />
-    <Compile Include="Enumeration\GameDetailsManualUrlEnumerationController.cs" />
+    <Compile Include="Enumeration\GameDetailsFileEnumerateDelegate.cs" />
+    <Compile Include="Enumeration\GameDetailsDirectoryEnumerateDelegate.cs" />
+    <Compile Include="Enumeration\GameDetailsManualUrlEnumerateDelegate.cs" />
     <Compile Include="Enumeration\GameDetailsDirectoriesEnumerateDelegate.cs" />
+    <Compile Include="Enumeration\UpdatedGameDetailsManualUrlFilesEnumerateDelegate.cs" />
+    <Compile Include="Enumeration\UpdatedProductFilesEnumerateDelegate.cs" />
     <Compile Include="Extraction\OperatingSystemsDownloadsExtractionController.cs" />
     <Compile Include="FileDownload\ManualUrlDownloadFromSourceDelegate.cs" />
     <Compile Include="FileDownload\ValidationDownloadFileFromSourceDelegate.cs" />

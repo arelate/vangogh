@@ -58,6 +58,7 @@
     <Compile Include="Destination\Uri\ValidationUriDelegate.cs" />
     <Compile Include="Directory\DirectoryController.cs" />
     <Compile Include="Enumeration\DirectoryFilesEnumerateDelegate.cs" />
+    <Compile Include="Enumeration\PassthroughEnumerateDelegate.cs" />
     <Compile Include="Enumeration\ProductFilesDirectoriesEnumerateDelegate.cs" />
     <Compile Include="Enumeration\ValidationFileEnumerateDelegate.cs" />
     <Compile Include="Expectation\ValidationExpectedDelegate.cs" />

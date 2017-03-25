@@ -13,7 +13,7 @@ namespace GOG.TaskActivities.Cleanup
     public class CleanupController : TaskActivityController
     {
         private IEnumerateAsyncDelegate expectedItemsEnumarateDelegate;
-        private IEnumerateDelegate actualItemsEnumerateDelegate;
+        private IEnumerateAsyncDelegate actualItemsEnumerateDelegate;
         private IEnumerateDelegate<string> itemsDetailsEnumerateDelegate;
         private IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate;
         private IRecycleBinController recycleBinController;
@@ -21,7 +21,7 @@ namespace GOG.TaskActivities.Cleanup
 
         public CleanupController(
             IEnumerateAsyncDelegate expectedItemsEnumarateDelegate,
-            IEnumerateDelegate actualItemsEnumerateDelegate,
+            IEnumerateAsyncDelegate actualItemsEnumerateDelegate,
             IEnumerateDelegate<string> itemsDetailsEnumerateDelegate,
             IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate,
             IRecycleBinController recycleBinController,
@@ -40,7 +40,7 @@ namespace GOG.TaskActivities.Cleanup
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
             var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAsync(taskStatus);
-            var actualItems = actualItemsEnumerateDelegate.Enumerate(taskStatus);
+            var actualItems = await actualItemsEnumerateDelegate.EnumerateAsync(taskStatus);
 
             var unexpectedItems = actualItems.Except(expectedItems);
             var cleanupItems = new List<string>();

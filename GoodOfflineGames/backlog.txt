@@ -2,8 +2,6 @@ Backend
 
 - Modify cleanup controller to use same wireframe logic - enumerate, find difference, move to recycle bin
 
-- directory cleanup detailing should add validation files as well?
-
 - whenever we compute validation file name - use validation file enumeration delegate 
 
 - implement updated cleanup as a separate final taskActivity and deprecate scheduledCleanup, validation controller should only mark repairs, not clear updated

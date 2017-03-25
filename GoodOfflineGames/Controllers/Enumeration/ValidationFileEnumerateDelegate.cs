@@ -22,7 +22,7 @@ namespace Controllers.Enumeration
 
         public IEnumerable<string> Enumerate(string uri)
         {
-            return new string[1] {
+            return new string[] {
                 Path.Combine(
                     validationDirectoryDelegate.GetDirectory(),
                     validationFilenameDelegate.GetFilename(
