@@ -15,18 +15,15 @@ namespace GOG.Controllers.DataRefinement
     {
         private ICollectionController collectionController;
         private IDataController<long> updatedDataController;
-        private IDataController<long> lastKnownValidDataController;
         private ITaskStatusController taskStatusController;
 
         public NewUpdatedDataRefinementController(
             ICollectionController collectionController,
             IDataController<long> updatedDataController,
-            IDataController<long> lastKnownValidDataController,
             ITaskStatusController taskStatusController)
         {
             this.collectionController = collectionController;
             this.updatedDataController = updatedDataController;
-            this.lastKnownValidDataController = lastKnownValidDataController;
             this.taskStatusController = taskStatusController;
         }
 
@@ -56,8 +53,6 @@ namespace GOG.Controllers.DataRefinement
             var updatedIds = newUpdatedAccountProducts.Select(ap => ap.Id).ToArray();
 
             await updatedDataController.UpdateAsync(extractNewUpdatedTask, updatedIds);
-
-            await lastKnownValidDataController.RemoveAsync(extractNewUpdatedTask, updatedIds);
 
             taskStatusController.Complete(extractNewUpdatedTask);
         }

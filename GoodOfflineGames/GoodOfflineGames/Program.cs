@@ -242,7 +242,6 @@ namespace GoodOfflineGames
             var updatedFilenameDelegate = new FixedFilenameDelegate("updated", jsonFilenameDelegate);
             var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("scheduledScreenshotsUpdates", jsonFilenameDelegate);
             var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("scheduledRepair", jsonFilenameDelegate);
-            var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("lastKnownValid", jsonFilenameDelegate);
 
             var uriFilenameDelegate = new UriFilenameDelegate();
             var reportFilenameDelegate = new ReportFilenameDelegate();
@@ -326,13 +325,6 @@ namespace GoodOfflineGames
                 collectionController,
                 dataDirectoryDelegate,
                 scheduledScreenshotsUpdatesFilenameDelegate,
-                serializedStorageController,
-                taskStatusAppController);
-
-            var lastKnownValidDataController = new IndexDataController(
-                collectionController,
-                dataDirectoryDelegate,
-                lastKnownValidFilenameDelegate,
                 serializedStorageController,
                 taskStatusAppController);
 
@@ -477,8 +469,7 @@ namespace GoodOfflineGames
                 updatedDataController,
                 scheduledScreenshotsUpdatesDataController,
                 productDownloadsDataController,
-                productRoutesDataController,
-                lastKnownValidDataController);
+                productRoutesDataController);
 
             #endregion
 
@@ -541,7 +532,6 @@ namespace GoodOfflineGames
             var newUpdatedDataRefinementController = new NewUpdatedDataRefinementController(
                 collectionController,
                 updatedDataController,
-                lastKnownValidDataController,
                 taskStatusAppController);
 
             var accountProductsUpdateController = new PageResultUpdateController<AccountProductsPageResult, AccountProduct>(
@@ -818,7 +808,6 @@ namespace GoodOfflineGames
                 gameDetailsManualUrlsEnumerateDelegate,
                 validationExpectedDelegate,
                 updatedDataController,
-                lastKnownValidDataController,
                 routingController,
                 taskStatusAppController);
 

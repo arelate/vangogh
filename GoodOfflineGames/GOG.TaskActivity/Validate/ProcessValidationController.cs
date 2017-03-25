@@ -25,7 +25,6 @@ namespace GOG.TaskActivities.Validate
         private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
         private IExpectedDelegate<string> validationExpectedDelegate;
         private IDataController<long> updatedDataController;
-        private IDataController<long> lastKnownValidDataController;
         private IRoutingController routingController;
 
         public ProcessValidationController(
@@ -36,7 +35,6 @@ namespace GOG.TaskActivities.Validate
             IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
             IExpectedDelegate<string> validationExpectedDelegate,
             IDataController<long> updatedDataController,
-            IDataController<long> lastKnownValidDataController,
             IRoutingController routingController,
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
@@ -49,7 +47,6 @@ namespace GOG.TaskActivities.Validate
             this.validationExpectedDelegate = validationExpectedDelegate;
 
             this.updatedDataController = updatedDataController;
-            this.lastKnownValidDataController = lastKnownValidDataController;
             this.routingController = routingController;
         }
 
@@ -107,22 +104,8 @@ namespace GOG.TaskActivities.Validate
                     }
                 }
 
-                if (productIsValid)
-                {
-                    var removeUpdateTask = taskStatusController.Create(
-                        validateProductFilesTask,
-                        "All product files are valid. Clear product update flag and schedule cleanup");
-                    await lastKnownValidDataController.UpdateAsync(removeUpdateTask, id);
-                    taskStatusController.Complete(removeUpdateTask);
-                }
-                else
-                {
-                    var removeKnownValidTask = taskStatusController.Create(
-                        validateProductFilesTask,
-                        "Product files might not be valid. Remove them from known valid");
-                    await lastKnownValidDataController.RemoveAsync(removeKnownValidTask, id);
-                    taskStatusController.Complete(removeKnownValidTask);
-                }
+                // TODO: Save validation report
+
             }
 
             taskStatusController.Complete(validateProductFilesTask);

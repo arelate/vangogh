@@ -39,10 +39,10 @@ namespace Controllers.SerializedStorage
             var serializedData = serializarionController.Serialize(data);
 
             var hash = serializedData.GetHashCode();
-            var lastKnownHash = hashTrackingController.GetHash(uri);
+            var existingHash = hashTrackingController.GetHash(uri);
 
             // data has not changed, no need to write to storage
-            if (hash == lastKnownHash) return;
+            if (hash == existingHash) return;
 
             await hashTrackingController.SetHashAsync(uri, hash);
             await storageController.PushAsync(uri, serializedData);
