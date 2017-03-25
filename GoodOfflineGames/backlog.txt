@@ -1,9 +1,5 @@
 Backend
 
-- whenever we compute validation file name - use validation file enumeration delegate 
-
-- validation controller should only mark repairs, not clear updated
-
 - guard product files and validation files download with the throttleController, or better yet introduce rate limiter based on URL and time between requests add it to networkController so that it's transparent for the users
 
 - make hashes more resilient to crashes

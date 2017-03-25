@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 using Interfaces.Extraction;
 using Interfaces.Expectation;
+using Interfaces.Enumeration;
 using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
 using Interfaces.Destination.Uri;
 using Interfaces.File;
 using Interfaces.FileDownload;
@@ -18,9 +18,9 @@ namespace GOG.Controllers.FileDownload
     {
         private IStringExtractionController uriSansSessionExtractionController;
         private IExpectedDelegate<string> validationExpectedForUriDelegate;
-        private IGetDirectoryDelegate getValidationDirectoryDelegate;
-        private IGetFilenameDelegate getValidationFilenameDelegate;
-        private IGetUriDelegate getValidationUriDelegate;
+        private IEnumerateDelegate<string> validationFileEnumerateDelegate;
+        private IGetDirectoryDelegate validationDirectoryDelegate;
+        private IGetUriDelegate validationUriDelegate;
         private IFileController fileController;
         private IFileDownloadController fileDownloadController;
         private ITaskStatusController taskStatusController;
@@ -28,18 +28,18 @@ namespace GOG.Controllers.FileDownload
         public ValidationDownloadFileFromSourceDelegate(
             IStringExtractionController uriSansSessionExtractionController,
             IExpectedDelegate<string> validationExpectedForUriDelegate,
-            IGetDirectoryDelegate getValidationDirectoryDelegate,
-            IGetFilenameDelegate getValidationFilenameDelegate,
-            IGetUriDelegate getValidationUriDelegate,
+            IEnumerateDelegate<string> validationFileEnumerateDelegate,
+            IGetDirectoryDelegate validationDirectoryDelegate,
+            IGetUriDelegate validationUriDelegate,
             IFileController fileController,
             IFileDownloadController fileDownloadController,
             ITaskStatusController taskStatusController)
         {
             this.uriSansSessionExtractionController = uriSansSessionExtractionController;
             this.validationExpectedForUriDelegate = validationExpectedForUriDelegate;
-            this.getValidationDirectoryDelegate = getValidationDirectoryDelegate;
-            this.getValidationFilenameDelegate = getValidationFilenameDelegate;
-            this.getValidationUriDelegate = getValidationUriDelegate;
+            this.validationFileEnumerateDelegate = validationFileEnumerateDelegate;
+            this.validationDirectoryDelegate = validationDirectoryDelegate;
+            this.validationUriDelegate = validationUriDelegate;
             this.fileController = fileController;
             this.fileDownloadController = fileDownloadController;
             this.taskStatusController = taskStatusController;
@@ -50,12 +50,8 @@ namespace GOG.Controllers.FileDownload
             if (string.IsNullOrEmpty(sourceUri)) return;
 
             var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).First();
-            var validationDirectory = getValidationDirectoryDelegate.GetDirectory();
-
-            var destinationUri = Path.Combine(
-                validationDirectory,
-                getValidationFilenameDelegate.GetFilename(Path.GetFileName(sourceUriSansSession)));
-
+            var destinationUri = validationFileEnumerateDelegate.Enumerate(sourceUriSansSession).First();
+            
             // return early if validation is not expected for this file
             if (!validationExpectedForUriDelegate.Expected(sourceUriSansSession)) return;
 
@@ -65,15 +61,15 @@ namespace GOG.Controllers.FileDownload
                 return;
             }
 
-            var validationSourceUri = getValidationUriDelegate.GetUri(sourceUri);
+            var validationSourceUri = validationUriDelegate.GetUri(sourceUri);
 
             var downloadValidationFileTask = taskStatusController.Create(taskStatus, "Download validation file");
 
             await fileDownloadController.DownloadFileFromSourceAsync(
-                id, 
-                title, 
-                validationSourceUri, 
-                validationDirectory, 
+                id,
+                title,
+                validationSourceUri,
+                validationDirectoryDelegate.GetDirectory(),
                 downloadValidationFileTask);
 
             taskStatusController.Complete(downloadValidationFileTask);
