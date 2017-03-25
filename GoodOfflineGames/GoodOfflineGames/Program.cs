@@ -761,15 +761,20 @@ namespace GoodOfflineGames
             var uriSansSessionExtractionController = new UriSansSessionExtractionController();
 
             var validationExpectedDelegate = new ValidationExpectedDelegate();
+
             var validationUriDelegate = new ValidationUriDelegate(
                 validationFilenameDelegate,
                 uriSansSessionExtractionController);
 
+            var validationFileEnumerateDelegate = new ValidationFileEnumerateDelegate(
+                validationDirectoryDelegate,
+                validationFilenameDelegate);
+
             var validationDownloadFileFromSourceDelegate = new ValidationDownloadFileFromSourceDelegate(
                 uriSansSessionExtractionController,
                 validationExpectedDelegate,
+                validationFileEnumerateDelegate,
                 validationDirectoryDelegate,
-                validationFilenameDelegate,
                 validationUriDelegate,
                 fileController,
                 fileDownloadController,
@@ -824,10 +829,6 @@ namespace GoodOfflineGames
                 taskStatusAppController);
 
             var directoryFilesEnumerateDelegate = new DirectoryFilesEnumerateDelegate(directoryController);
-
-            var validationFileEnumerateDelegate = new ValidationFileEnumerateDelegate(
-                validationDirectoryDelegate,
-                validationFilenameDelegate);
 
             var directoryCleanupController = new CleanupController(
                 gameDetailsDirectoriesEnumerateDelegate, // expected items (directories for gameDetails)

@@ -2,8 +2,6 @@ Backend
 
 - guard product files and validation files download with the throttleController, or better yet introduce rate limiter based on URL and time between requests add it to networkController so that it's transparent for the users
 
-- make hashes more resilient to crashes
-
 - Change validation controller to use file, validationFile
 
 - introduce validation reports with full details on validation for the file
