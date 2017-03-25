@@ -9,6 +9,11 @@ namespace Interfaces.Directory
         void Create(string uri);
     }
 
+    public interface IDeleteDelegate
+    {
+        void Delete(string uri);
+    }
+
     public interface IEnumerateFilesDelegate
     {
         IEnumerable<string> EnumerateFiles(string uri);
@@ -21,6 +26,7 @@ namespace Interfaces.Directory
 
     public interface IDirectoryController :
         ICreateDelegate,
+        IDeleteDelegate,
         IExistsDelegate,
         IEnumerateFilesDelegate,
         IEnumerateDirectoriesDelegate,

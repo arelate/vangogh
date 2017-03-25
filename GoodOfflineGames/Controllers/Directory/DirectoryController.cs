@@ -18,6 +18,11 @@ namespace Controllers.Directory
             System.IO.Directory.CreateDirectory(uri);
         }
 
+        public void Delete(string uri)
+        {
+            System.IO.Directory.Delete(uri, true);
+        }
+
         public IEnumerable<string> EnumerateFiles(string uri)
         {
             return System.IO.Directory.EnumerateFiles(uri);

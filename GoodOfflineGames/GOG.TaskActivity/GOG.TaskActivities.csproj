@@ -45,8 +45,6 @@
     <Compile Include="ProcessActivityParameters\ProcessActivityParametersController.cs" />
     <Compile Include="Report\ReportController.cs" />
     <Compile Include="UpdateData\ProductCoreUpdateController.cs" />
-    <Compile Include="Cleanup\DirectoryCleanupController.cs" />
-    <Compile Include="Cleanup\FilesCleanupController.cs" />
     <Compile Include="UpdateData\PageResultUpdateController.cs" />
     <Compile Include="UpdateDownloads\UpdateDownloadsController.cs" />
     <Compile Include="ProcessDownloads\ProcessDownloadsController.cs" />
