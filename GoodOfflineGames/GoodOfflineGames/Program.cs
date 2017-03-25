@@ -241,7 +241,6 @@ namespace GoodOfflineGames
             var wishlistedFilenameDelegate = new FixedFilenameDelegate("wishlisted", jsonFilenameDelegate);
             var updatedFilenameDelegate = new FixedFilenameDelegate("updated", jsonFilenameDelegate);
             var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("scheduledScreenshotsUpdates", jsonFilenameDelegate);
-            //var scheduledCleanupFilenameDelegate = new FixedFilenameDelegate("scheduledCleanup", jsonFilenameDelegate);
             var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("scheduledRepair", jsonFilenameDelegate);
             var lastKnownValidFilenameDelegate = new FixedFilenameDelegate("lastKnownValid", jsonFilenameDelegate);
 
@@ -336,13 +335,6 @@ namespace GoodOfflineGames
                 lastKnownValidFilenameDelegate,
                 serializedStorageController,
                 taskStatusAppController);
-
-            //var scheduledCleanupDataController = new IndexDataController(
-            //    collectionController,
-            //    dataDirectoryDelegate,
-            //    scheduledCleanupFilenameDelegate,
-            //    serializedStorageController,
-            //    taskStatusAppController);
 
             // data controllers
 
@@ -487,7 +479,6 @@ namespace GoodOfflineGames
                 productDownloadsDataController,
                 productRoutesDataController,
                 lastKnownValidDataController);
-                //scheduledCleanupDataController);
 
             #endregion
 
@@ -781,7 +772,7 @@ namespace GoodOfflineGames
 
             var validationExpectedDelegate = new ValidationExpectedDelegate();
             var validationUriDelegate = new ValidationUriDelegate(
-                validationFilenameDelegate, 
+                validationFilenameDelegate,
                 uriSansSessionExtractionController);
 
             var validationDownloadFileFromSourceDelegate = new ValidationDownloadFileFromSourceDelegate(
@@ -828,26 +819,25 @@ namespace GoodOfflineGames
                 validationExpectedDelegate,
                 updatedDataController,
                 lastKnownValidDataController,
-                //scheduledCleanupDataController,
                 routingController,
                 taskStatusAppController);
 
             #region Cleanup
 
             var gameDetailsDirectoriesEnumerateDelegate = new GameDetailsDirectoriesEnumerateDelegate(
-                gameDetailsDataController, 
-                gameDetailsDirectoryEnumerateDelegate, 
+                gameDetailsDataController,
+                gameDetailsDirectoryEnumerateDelegate,
                 taskStatusAppController);
 
             var productFilesDirectoriesEnumerateDelegate = new ProductFilesDirectoriesEnumerateDelegate(
-                productFilesBaseDirectoryDelegate, 
+                productFilesBaseDirectoryDelegate,
                 directoryController,
                 taskStatusAppController);
 
             var directoryFilesEnumerateDelegate = new DirectoryFilesEnumerateDelegate(directoryController);
 
             var validationFileEnumerateDelegate = new ValidationFileEnumerateDelegate(
-                validationDirectoryDelegate, 
+                validationDirectoryDelegate,
                 validationFilenameDelegate);
 
             var directoryCleanupController = new CleanupController(
@@ -860,16 +850,16 @@ namespace GoodOfflineGames
                 taskStatusAppController);
 
             var updatedGameDetailsManualUrlFilesEnumerateDelegate = new UpdatedGameDetailsManualUrlFilesEnumerateDelegate(
-                updatedDataController, 
-                gameDetailsDataController, 
-                gameDetailsFilesEnumerateDelegate, 
+                updatedDataController,
+                gameDetailsDataController,
+                gameDetailsFilesEnumerateDelegate,
                 taskStatusAppController);
 
             var updatedProductFilesEnumerateDelegate = new UpdatedProductFilesEnumerateDelegate(
-                updatedDataController, 
-                gameDetailsDataController, 
-                gameDetailsDirectoryEnumerateDelegate, 
-                directoryController, 
+                updatedDataController,
+                gameDetailsDataController,
+                gameDetailsDirectoryEnumerateDelegate,
+                directoryController,
                 taskStatusAppController);
 
             var passthroughEnumerateDelegate = new PassthroughEnumerateDelegate();
@@ -881,6 +871,10 @@ namespace GoodOfflineGames
                 validationFileEnumerateDelegate, // supplementary items (validation files)
                 recycleBinController,
                 directoryController,
+                taskStatusAppController);
+
+            var cleanupUpdatedController = new CleanupUpdatedController(
+                updatedDataController,
                 taskStatusAppController);
 
             #endregion
@@ -985,6 +979,10 @@ namespace GoodOfflineGames
                     Activities.Cleanup,
                     Parameters.Files),
                     fileCleanupController },
+                { activityParametersNameDelegate.GetName(
+                    Activities.Cleanup,
+                    Parameters.Updated),
+                    cleanupUpdatedController },
                 { activityParametersNameDelegate.GetName(
                     Activities.Report,
                     Parameters.TaskStatus),

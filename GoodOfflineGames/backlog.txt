@@ -1,12 +1,8 @@
 Backend
 
-- Modify cleanup controller to use same wireframe logic - enumerate, find difference, move to recycle bin
-
 - whenever we compute validation file name - use validation file enumeration delegate 
 
-- implement updated cleanup as a separate final taskActivity and deprecate scheduledCleanup, validation controller should only mark repairs, not clear updated
-
-- check if validation files are moved to recycleBin
+- validation controller should only mark repairs, not clear updated
 
 - guard product files and validation files download with the throttleController, or better yet introduce rate limiter based on URL and time between requests add it to networkController so that it's transparent for the users
 

@@ -26,7 +26,6 @@ namespace GOG.TaskActivities.Validate
         private IExpectedDelegate<string> validationExpectedDelegate;
         private IDataController<long> updatedDataController;
         private IDataController<long> lastKnownValidDataController;
-        //private IDataController<long> scheduledCleanupDataController;
         private IRoutingController routingController;
 
         public ProcessValidationController(
@@ -38,7 +37,6 @@ namespace GOG.TaskActivities.Validate
             IExpectedDelegate<string> validationExpectedDelegate,
             IDataController<long> updatedDataController,
             IDataController<long> lastKnownValidDataController,
-            //IDataController<long> scheduledCleanupDataController,
             IRoutingController routingController,
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
@@ -52,7 +50,6 @@ namespace GOG.TaskActivities.Validate
 
             this.updatedDataController = updatedDataController;
             this.lastKnownValidDataController = lastKnownValidDataController;
-            //this.scheduledCleanupDataController = scheduledCleanupDataController;
             this.routingController = routingController;
         }
 
@@ -116,8 +113,6 @@ namespace GOG.TaskActivities.Validate
                         validateProductFilesTask,
                         "All product files are valid. Clear product update flag and schedule cleanup");
                     await lastKnownValidDataController.UpdateAsync(removeUpdateTask, id);
-                    //await updatedDataController.RemoveAsync(removeUpdateTask, id);
-                    //await scheduledCleanupDataController.UpdateAsync(removeUpdateTask, id);
                     taskStatusController.Complete(removeUpdateTask);
                 }
                 else

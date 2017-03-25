@@ -19,6 +19,7 @@
         // Activity: Cleanup
         public const string Directories = "directories";
         public const string Files = "files";
+        public const string Updated = "updated";
 
         // Activity: Report
         public const string TaskStatus = "taskStatus";

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cleanup\CleanupController.cs" />
+    <Compile Include="Cleanup\CleanupUpdatedControllet.cs" />
     <Compile Include="ProcessActivityParameters\ProcessActivityParametersController.cs" />
     <Compile Include="Report\ReportController.cs" />
     <Compile Include="UpdateData\ProductCoreUpdateController.cs" />

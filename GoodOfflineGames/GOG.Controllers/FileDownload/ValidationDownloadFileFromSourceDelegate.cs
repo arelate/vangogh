@@ -77,8 +77,6 @@ namespace GOG.Controllers.FileDownload
                 downloadValidationFileTask);
 
             taskStatusController.Complete(downloadValidationFileTask);
-
-            throw new NotImplementedException();
         }
     }
 }
