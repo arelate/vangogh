@@ -53,8 +53,15 @@ namespace Controllers.Hash
                 throw new InvalidOperationException(
                     "Loading hashes when there is data already would lead to overwrite of the existing data");
 
-            var serializedData = await storageController.PullAsync(uriHashesFilename);
-            uriHashes = serializationController.Deserialize<Dictionary<string, int>>(serializedData);
+            try
+            {
+                var serializedData = await storageController.PullAsync(uriHashesFilename);
+                uriHashes = serializationController.Deserialize<Dictionary<string, int>>(serializedData);
+            }
+            catch
+            {
+                uriHashes = null;
+            }
 
             if (uriHashes == null)
                 uriHashes = new Dictionary<string, int>();
