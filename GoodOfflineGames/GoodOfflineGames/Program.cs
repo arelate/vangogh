@@ -240,8 +240,6 @@ namespace GoodOfflineGames
 
             var wishlistedFilenameDelegate = new FixedFilenameDelegate("wishlisted", jsonFilenameDelegate);
             var updatedFilenameDelegate = new FixedFilenameDelegate("updated", jsonFilenameDelegate);
-            var scheduledScreenshotsUpdatesFilenameDelegate = new FixedFilenameDelegate("scheduledScreenshotsUpdates", jsonFilenameDelegate);
-            var scheduledRepairFilenameDelegate = new FixedFilenameDelegate("scheduledRepair", jsonFilenameDelegate);
 
             var uriFilenameDelegate = new UriFilenameDelegate();
             var reportFilenameDelegate = new ReportFilenameDelegate();
@@ -318,13 +316,6 @@ namespace GoodOfflineGames
                 collectionController,
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
-                serializedStorageController,
-                taskStatusAppController);
-
-            var scheduledScreenshotsUpdatesDataController = new IndexDataController(
-                collectionController,
-                dataDirectoryDelegate,
-                scheduledScreenshotsUpdatesFilenameDelegate,
                 serializedStorageController,
                 taskStatusAppController);
 
@@ -467,7 +458,6 @@ namespace GoodOfflineGames
                 apiProductsDataController,
                 wishlistedDataController,
                 updatedDataController,
-                scheduledScreenshotsUpdatesDataController,
                 productDownloadsDataController,
                 productRoutesDataController);
 
@@ -648,7 +638,6 @@ namespace GoodOfflineGames
             var screenshotUpdateController = new ScreenshotUpdateController(
                 productParameterGetUpdateUriDelegate,
                 screenshotsDataController,
-                scheduledScreenshotsUpdatesDataController,
                 productsDataController,
                 networkController,
                 screenshotExtractionController,
@@ -669,7 +658,7 @@ namespace GoodOfflineGames
                 imageUriController);
 
             var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
-                scheduledScreenshotsUpdatesDataController,
+                updatedDataController,
                 screenshotsDataController,
                 screenshotUriController,
                 taskStatusAppController);

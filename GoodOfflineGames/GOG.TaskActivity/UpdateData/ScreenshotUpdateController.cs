@@ -19,7 +19,6 @@ namespace GOG.TaskActivities.UpdateData
     {
         private IGetUpdateUriDelegate<string> getUpdateUriDelegate;
         private IDataController<ProductScreenshots> screenshotsDataController;
-        private IDataController<long> scheduledScreenshotsUpdatesDataController;
         private IDataController<Product> productsDataController;
         private INetworkController networkController;
         private IStringExtractionController screenshotExtractionController;
@@ -27,7 +26,6 @@ namespace GOG.TaskActivities.UpdateData
         public ScreenshotUpdateController(
             IGetUpdateUriDelegate<string> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
-            IDataController<long> scheduledScreenshotsUpdatesDataController,
             IDataController<Product> productsDataController,
             INetworkController networkController,
             IStringExtractionController screenshotExtractionController,
@@ -36,7 +34,6 @@ namespace GOG.TaskActivities.UpdateData
         {
             this.getUpdateUriDelegate = getUpdateUriDelegate;
             this.screenshotsDataController = screenshotsDataController;
-            this.scheduledScreenshotsUpdatesDataController = scheduledScreenshotsUpdatesDataController;
             this.productsDataController = productsDataController;
             this.networkController = networkController;
             this.screenshotExtractionController = screenshotExtractionController;
@@ -91,10 +88,6 @@ namespace GOG.TaskActivities.UpdateData
                 var updateProductScreenshotsTask = taskStatusController.Create(updateProductsScreenshotsTask, "Add product screenshots");
                 await screenshotsDataController.UpdateAsync(updateProductScreenshotsTask, productScreenshots);
                 taskStatusController.Complete(updateProductScreenshotsTask);
-
-                var scheduleScreenshotUpdateTask = taskStatusController.Create(updateProductsScreenshotsTask, "Schedule screenshot files update");
-                await scheduledScreenshotsUpdatesDataController.UpdateAsync(scheduleScreenshotUpdateTask, product.Id);
-                taskStatusController.Complete(scheduleScreenshotUpdateTask);
             }
 
             taskStatusController.Complete(updateProductsScreenshotsTask);
