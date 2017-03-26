@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.FileDownload;
@@ -13,41 +14,40 @@ namespace GOG.TaskActivities.ProcessDownloads
     public class ProcessDownloadsController : TaskActivityController
     {
         private string downloadParameter;
-        private IDataController<long> updatedDataController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate;
 
         public ProcessDownloadsController(
             string downloadParameter,
-            IDataController<long> updatedDataController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate,
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
         {
             this.downloadParameter = downloadParameter;
-            this.updatedDataController = updatedDataController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
         }
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
         {
-            var counter = 0;
-            var updated = updatedDataController.EnumerateIds().ToArray();
-            var total = updated.Length;
+            var current = 0;
+            var productDownloadsData = productDownloadsDataController.EnumerateIds();
+            var total = productDownloadsDataController.Count();
 
             var processDownloadsTask = taskStatusController.Create(taskStatus, 
                 $"Process updated {downloadParameter} downloads");
 
-            foreach (var id in updated)
+            var emptyProductDownloads = new List<ProductDownloads>();
+
+            foreach (var id in productDownloadsData)
             {
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
                 taskStatusController.UpdateProgress(
                     processDownloadsTask,
-                    ++counter,
+                    ++current,
                     total,
                     productDownloads.Title);
 
@@ -90,8 +90,16 @@ namespace GOG.TaskActivities.ProcessDownloads
                     taskStatusController.Complete(removeEntryTask);
                 }
 
+                // if there are no scheduled downloads left - mark file for removal
+                if (productDownloads.Downloads.Count == 0)
+                    emptyProductDownloads.Add(productDownloads);
+
                 taskStatusController.Complete(processDownloadEntriesTask);
             }
+
+            var clearEmptyDownloadsTask = taskStatusController.Create(processDownloadsTask, "Clear empty downloads");
+            await productDownloadsDataController.RemoveAsync(clearEmptyDownloadsTask, emptyProductDownloads.ToArray());
+            taskStatusController.Complete(clearEmptyDownloadsTask);
 
             taskStatusController.Complete(processDownloadsTask);
         }

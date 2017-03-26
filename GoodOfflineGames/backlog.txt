@@ -1,6 +1,6 @@
 Backend
 
-- check if newUpdated should also add products that didn't exist to updated
+- revamp screenshots update pipeline to be driven from existing data, not special scheduledScreenshotsUpdate - this is slower, but we'll mitigate by making this optional in release and documenting how to enable this. On the positive side this should precise, data-driven and not special code 
 
 - guard product files and validation files download with the throttleController, or better yet introduce rate limiter based on URL and time between requests add it to networkController so that it's transparent for the users
 

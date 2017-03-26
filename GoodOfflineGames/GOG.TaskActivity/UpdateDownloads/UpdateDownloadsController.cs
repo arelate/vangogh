@@ -25,6 +25,7 @@ namespace GOG.TaskActivities.UpdateDownloads
         private IFileController fileController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<AccountProduct> accountProductsDataController;
+        private IDataController<Product> productsDataController;
 
         public UpdateDownloadsController(
             string downloadParameter,
@@ -33,6 +34,7 @@ namespace GOG.TaskActivities.UpdateDownloads
             IFileController fileController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
+            IDataController<Product> productsDataController,
             ITaskStatusController taskStatusController) :
             base(taskStatusController)
         {
@@ -42,6 +44,7 @@ namespace GOG.TaskActivities.UpdateDownloads
             this.fileController = fileController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
+            this.productsDataController = productsDataController;
         }
 
         public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
@@ -61,16 +64,25 @@ namespace GOG.TaskActivities.UpdateDownloads
 
             foreach (var downloadSource in downloadSources)
             {
+                // don't perform expensive updates if there are no actual sources
+                if (downloadSource.Value != null &&
+                    downloadSource.Value.Count == 0) continue;
+
                 var id = downloadSource.Key;
 
-                ProductCore product = await accountProductsDataController.GetByIdAsync(id);
+                ProductCore product = await productsDataController.GetByIdAsync(id);
 
                 if (product == null)
                 {
-                    taskStatusController.Warn(
-                        updateDownloadsTask,
-                        $"Downloads are scheduled for the product/account product {id} that doesn't exist");
-                    continue;
+                    product = await accountProductsDataController.GetByIdAsync(id);
+
+                    if (product == null)
+                    {
+                        taskStatusController.Warn(
+                            updateDownloadsTask,
+                            $"Downloads are scheduled for the product/account product {id} that doesn't exist");
+                        continue;
+                    }
                 }
 
                 taskStatusController.UpdateProgress(

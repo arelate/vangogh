@@ -661,6 +661,8 @@ namespace GoodOfflineGames
             var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
                 screenshotsDataController,
                 screenshotUriController,
+                screenshotsDirectoryDelegate,
+                fileController,
                 taskStatusAppController);
 
             var routingController = new RoutingController(productRoutesDataController);
@@ -695,6 +697,7 @@ namespace GoodOfflineGames
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
+                productsDataController,
                 taskStatusAppController);
 
             var updateAccountProductsImagesDownloadsController = new UpdateDownloadsController(
@@ -704,6 +707,7 @@ namespace GoodOfflineGames
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
+                productsDataController,
                 taskStatusAppController);
 
             var updateScreenshotsDownloadsController = new UpdateDownloadsController(
@@ -713,6 +717,7 @@ namespace GoodOfflineGames
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
+                productsDataController,
                 taskStatusAppController);
 
             var updateProductFilesDownloadsController = new UpdateDownloadsController(
@@ -722,27 +727,25 @@ namespace GoodOfflineGames
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
+                productsDataController,
                 taskStatusAppController);
 
             // downloads processing
 
             var productsImagesProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.ProductsImages,
-                updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
                 taskStatusAppController);
 
             var accountProductsImagesProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.AccountProductsImages,
-                updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
                 taskStatusAppController);
 
             var screenshotsProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.Screenshots,
-                updatedDataController,
                 productDownloadsDataController,
                 fileDownloadController,
                 taskStatusAppController);
@@ -779,7 +782,6 @@ namespace GoodOfflineGames
 
             var productFilesProcessScheduledDownloadsController = new ProcessDownloadsController(
                 Parameters.ProductsFiles,
-                updatedDataController,
                 productDownloadsDataController,
                 manualUrlDownloadFromSourceDelegate,
                 taskStatusAppController);
@@ -820,6 +822,7 @@ namespace GoodOfflineGames
             var directoryFilesEnumerateDelegate = new DirectoryFilesEnumerateDelegate(directoryController);
 
             var directoryCleanupController = new CleanupController(
+                Parameters.Directories,
                 gameDetailsDirectoriesEnumerateDelegate, // expected items (directories for gameDetails)
                 productFilesDirectoriesEnumerateDelegate, // actual items (directories in productFiles)
                 directoryFilesEnumerateDelegate, // detailed items (files in directory)
@@ -844,6 +847,7 @@ namespace GoodOfflineGames
             var passthroughEnumerateDelegate = new PassthroughEnumerateDelegate();
 
             var fileCleanupController = new CleanupController(
+                Parameters.Files,
                 updatedGameDetailsManualUrlFilesEnumerateDelegate, // expected items (files for updated gameDetails)
                 updatedProductFilesEnumerateDelegate, // actual items (updated product files)
                 passthroughEnumerateDelegate, // detailed items (passthrough)

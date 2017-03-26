@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
 
 using Interfaces.DownloadSources;
 using Interfaces.ImageUri;
 using Interfaces.Data;
 using Interfaces.TaskStatus;
+using Interfaces.Destination.Directory;
+using Interfaces.Destination.Filename;
+using Interfaces.File;
 
 using Models.ProductScreenshots;
 
@@ -14,22 +18,27 @@ namespace GOG.Controllers.DownloadSources
     {
         private IDataController<ProductScreenshots> screenshotsDataController;
         private IImageUriController screenshotUriController;
+        private IGetDirectoryDelegate screenshotsDirectoryDelegate;
+        private IFileController fileController;
         private ITaskStatusController taskStatusController;
 
         public ScreenshotsDownloadSourcesController(
             IDataController<ProductScreenshots> screenshotsDataController,
             IImageUriController screenshotUriController,
-
+            IGetDirectoryDelegate screenshotsDirectoryDelegate,
+            IFileController fileController,
             ITaskStatusController taskStatusController)
         {
             this.screenshotsDataController = screenshotsDataController;
             this.screenshotUriController = screenshotUriController;
+            this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
+            this.fileController = fileController;
             this.taskStatusController = taskStatusController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(ITaskStatus taskStatus)
         {
-            var processUpdatesTask = taskStatusController.Create(taskStatus, "Process screenshot updates");
+            var processUpdatesTask = taskStatusController.Create(taskStatus, "Process screenshots updates");
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
             var current = 0;
@@ -53,10 +62,22 @@ namespace GOG.Controllers.DownloadSources
                     total,
                     productScreenshots.Title);
 
-                screenshotsSources.Add(id, new List<string>());
+                var currentProductScreenshotSources = new List<string>();
 
                 foreach (var uri in productScreenshots.Uris)
-                    screenshotsSources[id].Add(screenshotUriController.ExpandUri(uri));
+                {
+                    var sourceUri = screenshotUriController.ExpandUri(uri);
+                    var destinationUri = Path.Combine(
+                        screenshotsDirectoryDelegate.GetDirectory(),
+                        Path.GetFileName(sourceUri));
+
+                    if (fileController.Exists(destinationUri)) continue;
+
+                    currentProductScreenshotSources.Add(sourceUri);
+                }
+
+                if (currentProductScreenshotSources.Count > 0)
+                    screenshotsSources.Add(id, currentProductScreenshotSources);
             }
 
             taskStatusController.Complete(processProductsScreenshotsTask);

@@ -81,6 +81,7 @@ namespace GOG.TaskActivities.UpdateData
                 var productScreenshots = new ProductScreenshots()
                 {
                     Id = product.Id,
+                    Title = product.Title,
                     Uris = new List<string>(extractedProductScreenshots)
                 };
                 taskStatusController.Complete(extractScreenshotsTask);
