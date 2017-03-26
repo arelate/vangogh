@@ -659,7 +659,6 @@ namespace GoodOfflineGames
                 imageUriController);
 
             var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
-                updatedDataController,
                 screenshotsDataController,
                 screenshotUriController,
                 taskStatusAppController);

@@ -12,19 +12,16 @@ namespace GOG.Controllers.DownloadSources
 {
     public class ScreenshotsDownloadSourcesController : IDownloadSourcesController
     {
-        private IDataController<long> updatedDataController;
         private IDataController<ProductScreenshots> screenshotsDataController;
         private IImageUriController screenshotUriController;
         private ITaskStatusController taskStatusController;
 
         public ScreenshotsDownloadSourcesController(
-            IDataController<long> updatedDataController,
             IDataController<ProductScreenshots> screenshotsDataController,
             IImageUriController screenshotUriController,
 
             ITaskStatusController taskStatusController)
         {
-            this.updatedDataController = updatedDataController;
             this.screenshotsDataController = screenshotsDataController;
             this.screenshotUriController = screenshotUriController;
             this.taskStatusController = taskStatusController;
@@ -36,17 +33,17 @@ namespace GOG.Controllers.DownloadSources
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
             var current = 0;
-            var total = updatedDataController.Count();
+            var total = screenshotsDataController.Count();
 
-            var processUpdatedProductsScreenshotsTask = taskStatusController.Create(processUpdatesTask, "Process updated product screenshots");
+            var processProductsScreenshotsTask = taskStatusController.Create(processUpdatesTask, "Process product screenshots");
 
-            foreach (var id in updatedDataController.EnumerateIds())
+            foreach (var id in screenshotsDataController.EnumerateIds())
             {
                 var productScreenshots = await screenshotsDataController.GetByIdAsync(id);
 
                 if (productScreenshots == null)
                 {
-                    taskStatusController.Warn(processUpdatedProductsScreenshotsTask, $"Product {id} doesn't have screenshots");
+                    taskStatusController.Warn(processProductsScreenshotsTask, $"Product {id} doesn't have screenshots");
                     continue;
                 }
 
@@ -62,7 +59,7 @@ namespace GOG.Controllers.DownloadSources
                     screenshotsSources[id].Add(screenshotUriController.ExpandUri(uri));
             }
 
-            taskStatusController.Complete(processUpdatedProductsScreenshotsTask);
+            taskStatusController.Complete(processProductsScreenshotsTask);
             taskStatusController.Complete(processUpdatesTask);
 
             return screenshotsSources;
