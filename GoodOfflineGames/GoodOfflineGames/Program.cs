@@ -520,6 +520,7 @@ namespace GoodOfflineGames
             var accountProductsExtractionController = new AccountProductsExtractionController();
 
             var newUpdatedDataRefinementController = new NewUpdatedDataRefinementController(
+                accountProductsDataController,
                 collectionController,
                 updatedDataController,
                 taskStatusAppController);

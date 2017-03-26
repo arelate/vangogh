@@ -58,16 +58,14 @@ namespace GOG.TaskActivities.UpdateData
             var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
             taskStatusController.Complete(extractTask);
 
+            var refineDataTask = taskStatusController.Create(updateAllProductsTask, $"Refining {productParameter}");
+            if (dataRefinementController != null)
+                await dataRefinementController.RefineData(newProducts, refineDataTask);
+            taskStatusController.Complete(refineDataTask);
+
             var updateTask = taskStatusController.Create(updateAllProductsTask, $"Update {productParameter}");
             await dataController.UpdateAsync(updateTask, newProducts.ToArray());
             taskStatusController.Complete(updateTask);
-
-            var processingTask = taskStatusController.Create(updateAllProductsTask, $"Post-processing {productParameter}");
-
-            if (dataRefinementController != null)
-                await dataRefinementController.RefineData(newProducts, processingTask);
-
-            taskStatusController.Complete(processingTask);
 
             taskStatusController.Complete(updateAllProductsTask);
         }

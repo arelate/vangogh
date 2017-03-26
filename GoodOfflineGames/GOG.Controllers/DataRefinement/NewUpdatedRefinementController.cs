@@ -13,15 +13,18 @@ namespace GOG.Controllers.DataRefinement
 {
     public class NewUpdatedDataRefinementController : IDataRefinementController<AccountProduct>
     {
+        private IDataController<AccountProduct> accountProductsDataController;
         private ICollectionController collectionController;
         private IDataController<long> updatedDataController;
         private ITaskStatusController taskStatusController;
 
         public NewUpdatedDataRefinementController(
+            IDataController<AccountProduct> accountProductsDataController,
             ICollectionController collectionController,
             IDataController<long> updatedDataController,
             ITaskStatusController taskStatusController)
         {
+            this.accountProductsDataController = accountProductsDataController;
             this.collectionController = collectionController;
             this.updatedDataController = updatedDataController;
             this.taskStatusController = taskStatusController;
@@ -41,6 +44,7 @@ namespace GOG.Controllers.DataRefinement
             // collection processing as the last step of AccountProducts update. There are several benefits
             // to this approach - since AccountProducts is filtering our results that have same hash
             // as previous version we normally don't process a lot of AccountProducts here.
+            // Additionally we set products that don't exist in current collection as updated
 
             var extractNewUpdatedTask = taskStatusController.Create(taskStatus, "Extract new and updated products");
 
@@ -53,6 +57,15 @@ namespace GOG.Controllers.DataRefinement
             var updatedIds = newUpdatedAccountProducts.Select(ap => ap.Id).ToArray();
 
             await updatedDataController.UpdateAsync(extractNewUpdatedTask, updatedIds);
+
+            var addPreviouslyUnknownDataTask = taskStatusController.Create(taskStatus, "Add previously unknown products as updated");
+
+            var knownAccountProducts = accountProductsDataController.EnumerateIds();
+            var unknownAccountProducts = accountProducts.Select(ap => ap.Id).Except(knownAccountProducts);
+
+            await updatedDataController.UpdateAsync(addPreviouslyUnknownDataTask, unknownAccountProducts.ToArray());
+
+            taskStatusController.Complete(addPreviouslyUnknownDataTask);
 
             taskStatusController.Complete(extractNewUpdatedTask);
         }
