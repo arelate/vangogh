@@ -7,6 +7,10 @@ using System.Net.Http;
 using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Cookies;
+using Interfaces.RequestRate;
+using Interfaces.TaskStatus;
+
+using Models.Network;
 
 namespace Controllers.Network
 {
@@ -15,16 +19,12 @@ namespace Controllers.Network
         private HttpClient client;
         private ICookiesController cookiesController;
         private IUriController uriController;
-        const string postMediaType = "application/x-www-form-urlencoded";
-        const string acceptHeaderContent = "text/html, application/xhtml+xml, image/jxr, */*";
-
-        const string setCookieHeader = "Set-Cookie";
-        const string cookieHeader = "Cookie";
-        const string acceptHeader = "Accept";
+        private IRequestRateController requestRateController;
 
         public NetworkController(
             ICookiesController cookiesController,
-            IUriController uriController)
+            IUriController uriController,
+            IRequestRateController requestRateController)
         {
             var httpHandler = new HttpClientHandler()
             {
@@ -36,27 +36,21 @@ namespace Controllers.Network
 
             this.cookiesController = cookiesController;
             this.uriController = uriController;
-        }
-
-        public async Task SetCookies(HttpResponseMessage response)
-        {
-            IEnumerable<string> responseCookies = new List<string>();
-            response.Headers.TryGetValues(setCookieHeader, out responseCookies);
-
-            await cookiesController.SetCookies(responseCookies);
+            this.requestRateController = requestRateController;
         }
 
         public async Task<string> Get(
+            ITaskStatus taskStatus,
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
             string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
-            using (var response = await RequestResponse(HttpMethod.Get, uri))
+            using (var response = await RequestResponse(taskStatus, HttpMethod.Get, uri))
             {
                 response.EnsureSuccessStatusCode();
 
-                await SetCookies(response);
+                await cookiesController.SetCookies(response);
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -64,16 +58,21 @@ namespace Controllers.Network
             }
         }
 
-        public async Task<HttpResponseMessage> RequestResponse(HttpMethod method, string uri, HttpContent content = null)
+        public async Task<HttpResponseMessage> RequestResponse(
+            ITaskStatus taskStatus,
+            HttpMethod method, 
+            string uri, 
+            HttpContent content = null)
         {
             var requestMessage = new HttpRequestMessage(method, uri);
-            requestMessage.Headers.Add(cookieHeader, await cookiesController.GetCookieHeader());
-            requestMessage.Headers.Add(acceptHeader, acceptHeaderContent);
+            requestMessage.Headers.Add(Headers.Cookie, await cookiesController.GetCookieHeader());
+            requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
             if (content != null) requestMessage.Content = content;
             return await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
         }
 
         public async Task<string> Post(
+            ITaskStatus taskStatus,
             string baseUri,
             IDictionary<string, string> parameters = null,
             string data = null)
@@ -81,13 +80,13 @@ namespace Controllers.Network
             string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
             if (data == null) data = string.Empty;
-            var content = new StringContent(data, Encoding.UTF8, postMediaType);
+            var content = new StringContent(data, Encoding.UTF8, HeaderDefaultValues.ContentType);
 
-            using (var response = await RequestResponse(HttpMethod.Post, uri, content))
+            using (var response = await RequestResponse(taskStatus, HttpMethod.Post, uri, content))
             {
                 response.EnsureSuccessStatusCode();
 
-                await SetCookies(response);
+                await cookiesController.SetCookies(response);
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))

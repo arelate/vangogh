@@ -31,7 +31,8 @@ namespace GOG.TaskActivities.Authorize
             {
                 await authorizationController.Authorize(
                     settingsProperty.Settings.Username,
-                    settingsProperty.Settings.Password);
+                    settingsProperty.Settings.Password,
+                    authorizationTask);
             }
 
             taskStatusController.Complete(authorizationTask);

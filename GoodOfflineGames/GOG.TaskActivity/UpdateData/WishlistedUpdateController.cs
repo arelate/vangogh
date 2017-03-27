@@ -31,6 +31,7 @@ namespace GOG.TaskActivities.UpdateData
             var requestContentTask = taskStatusController.Create(updateWishlistTask, "Request wishlist content");
 
             var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserialized(
+                requestContentTask,
                 Uris.Paths.Account.Wishlist);
 
             taskStatusController.Complete(requestContentTask);

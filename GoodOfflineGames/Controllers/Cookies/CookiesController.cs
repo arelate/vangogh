@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 using Interfaces.Cookies;
 using Interfaces.Storage;
 using Interfaces.Serialization;
+
+using Models.Network;
 
 namespace Controllers.Cookies
 {
@@ -88,6 +91,14 @@ namespace Controllers.Cookies
                 var cookiesContent = serializationController.Serialize(cookies);
                 await storageController.PushAsync(cookiesFilename, cookiesContent);
             }
+        }
+
+        public async Task SetCookies(HttpResponseMessage response)
+        {
+            IEnumerable<string> responseCookies = new List<string>();
+            response.Headers.TryGetValues(Headers.SetCookie, out responseCookies);
+
+            await SetCookies(responseCookies);
         }
     }
 }

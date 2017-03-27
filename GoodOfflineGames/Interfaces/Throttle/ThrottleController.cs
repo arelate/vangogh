@@ -7,14 +7,8 @@ namespace Interfaces.Throttle
         void Throttle(ITaskStatus taskStatus);
     }
 
-    public interface IThresholdProperty
-    {
-        long Threshold { get; }
-    }
-
     public interface IThrottleController:
-        IThrottleDelegate,
-        IThresholdProperty
+        IThrottleDelegate
     {
         // ...
     }

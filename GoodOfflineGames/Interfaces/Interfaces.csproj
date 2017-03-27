@@ -70,6 +70,7 @@
     <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
     <Compile Include="QueryParameters\GetQueryParametersDelegate.cs" />
     <Compile Include="RecycleBin\RecycleBinController.cs" />
+    <Compile Include="RequestRate\RequestRateController.cs" />
     <Compile Include="Routing\RoutingController.cs" />
     <Compile Include="Sanitization\SanitizationController.cs" />
     <Compile Include="Session\SessionController.cs" />

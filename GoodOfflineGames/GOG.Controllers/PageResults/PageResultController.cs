@@ -78,7 +78,8 @@ namespace GOG.Controllers.PageResults
                 var response = await requestPageController.RequestPage(
                     requestUri, 
                     requestParameters, 
-                    currentPage);
+                    currentPage,
+                    getPagesTask);
 
                 taskStatusController.UpdateProgress(
                     getPagesTask,

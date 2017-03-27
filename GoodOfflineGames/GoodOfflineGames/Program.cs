@@ -19,6 +19,7 @@ using Controllers.Settings;
 using Controllers.ActivityParameters;
 using Controllers.RequestPage;
 using Controllers.Throttle;
+using Controllers.RequestRate;
 using Controllers.ImageUri;
 using Controllers.Formatting;
 using Controllers.LineBreaking;
@@ -172,10 +173,20 @@ namespace GoodOfflineGames
                 storageController,
                 serializationController);
 
+            var throttleController = new ThrottleController(
+                taskStatusAppController,
+                secondsFormattingController,
+                2 * 60); // 2 minutes
+
+            var requestRateController = new RequestRateController(
+                throttleController,
+                new string[] { }); // this would be gameDetails and GOG.com productFiles CDN prefixes
+
             var uriController = new UriController();
             var networkController = new NetworkController(
                 cookiesController,
-                uriController);
+                uriController,
+                requestRateController);
 
             var fileDownloadController = new FileDownloadController(
                 networkController,
@@ -194,12 +205,6 @@ namespace GoodOfflineGames
 
             var gogDataExtractionController = new GOGDataExtractionController();
             var screenshotExtractionController = new ScreenshotExtractionController();
-
-            var throttleController = new ThrottleController(
-                taskStatusAppController,
-                secondsFormattingController,
-                200, // don't throttle if less than N items
-                2 * 60); // 2 minutes
 
             var imageUriController = new ImageUriController();
             var screenshotUriController = new ScreenshotUriController();
@@ -629,7 +634,6 @@ namespace GoodOfflineGames
                 getGameDetailsDelegate,
                 accountProductGetUpdateIdentityDelegate,
                 taskStatusAppController,
-                throttleController,
                 gameDetailsAccountProductConnectDelegate);
 
             #endregion

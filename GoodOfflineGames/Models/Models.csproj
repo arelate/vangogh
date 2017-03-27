@@ -45,6 +45,7 @@
     <Compile Include="ActivityParameters\Activities.cs" />
     <Compile Include="ActivityParameters\ActivityParameters.cs" />
     <Compile Include="ActivityParameters\Parameters.cs" />
+    <Compile Include="Network\Headers.cs" />
     <Compile Include="TaskStatus\TaskStatus.cs" />
     <Compile Include="ProductCore\ProductCore.cs" />
     <Compile Include="ProductDownloads\ProductDownloads.cs" />

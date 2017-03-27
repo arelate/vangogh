@@ -9,6 +9,7 @@ using Interfaces.Extraction;
 using Interfaces.Console;
 using Interfaces.Serialization;
 using Interfaces.PropertiesValidation;
+using Interfaces.TaskStatus;
 
 using Models.Uris;
 using Models.QueryParameters;
@@ -54,9 +55,9 @@ namespace GOG.Controllers.Authorization
             this.serializationController = serializationController;
         }
 
-        public async Task<bool> IsAuthorized()
+        public async Task<bool> IsAuthorized(ITaskStatus taskStatus)
         {
-            var userDataString = await networkController.Get(Uris.Paths.Authentication.UserData);
+            var userDataString = await networkController.Get(taskStatus, Uris.Paths.Authentication.UserData);
             if (string.IsNullOrEmpty(userDataString)) return false;
 
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
@@ -64,7 +65,7 @@ namespace GOG.Controllers.Authorization
             return userData.IsLoggedIn;
         }
 
-        public async Task Authorize(string username, string password)
+        public async Task Authorize(string username, string password, ITaskStatus taskStatus)
         {
             // GOG.com quirk
             // Since cookies support introduction - it's expected that users need to authorize rarely.
@@ -74,10 +75,13 @@ namespace GOG.Controllers.Authorization
             // - We can also detect CAPTCHA and inform users what to do - this is typical for sales periods
             //   where it seems GOG.com tries to limit automated tools impact on the site
 
-            if (await IsAuthorized()) return;
+            if (await IsAuthorized(taskStatus)) return;
 
             // request authorization token
-            string authResponse = await networkController.Get(Uris.Paths.Authentication.Auth, QueryParameters.Authenticate);
+            string authResponse = await networkController.Get(
+                taskStatus, 
+                Uris.Paths.Authentication.Auth, 
+                QueryParameters.Authenticate);
 
             if (authResponse.Contains(recaptchaUri))
             {
@@ -111,7 +115,7 @@ namespace GOG.Controllers.Authorization
 
             string loginData = uriController.ConcatenateQueryParameters(QueryParameters.LoginAuthenticate);
 
-            var loginCheckResult = await networkController.Post(loginUri, null, loginData);
+            var loginCheckResult = await networkController.Post(taskStatus, loginUri, null, loginData);
 
             // login attempt was successful
             if (loginCheckResult.Contains("gogData"))
@@ -139,7 +143,7 @@ namespace GOG.Controllers.Authorization
 
             string twoStepData = uriController.ConcatenateQueryParameters(QueryParameters.TwoStepAuthenticate);
 
-            var twoStepLoginCheckResult = await networkController.Post(Uris.Paths.Authentication.TwoStep, null, twoStepData);
+            var twoStepLoginCheckResult = await networkController.Post(taskStatus, Uris.Paths.Authentication.TwoStep, null, twoStepData);
 
             if (twoStepLoginCheckResult.Contains("gogData"))
                 return;
@@ -147,9 +151,9 @@ namespace GOG.Controllers.Authorization
             throw new System.Security.SecurityException(failedToAuthenticate);
         }
 
-        public async Task Deauthorize()
+        public async Task Deauthorize(ITaskStatus taskStatus)
         {
-            await networkController.Get(Uris.Paths.Authentication.Logout);
+            await networkController.Get(taskStatus, Uris.Paths.Authentication.Logout);
         }
     }
 }

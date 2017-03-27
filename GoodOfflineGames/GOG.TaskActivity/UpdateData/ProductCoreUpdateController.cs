@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Network;
 using Interfaces.Connection;
-using Interfaces.Throttle;
 using Interfaces.UpdateUri;
 using Interfaces.UpdateIdentity;
 using Interfaces.Data;
@@ -24,7 +23,6 @@ namespace GOG.TaskActivities.UpdateData
         private IDataController<long> updatedDataController;
 
         private IGetDeserializedDelegate<UpdateType> getDeserializedDelegate;
-        private IThrottleController throttleController;
 
         private IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate;
         private IConnectDelegate<UpdateType, ListType> connectDelegate;
@@ -43,7 +41,6 @@ namespace GOG.TaskActivities.UpdateData
             IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate,
             ITaskStatusController taskStatusController,
-            IThrottleController throttleController = null,
             IConnectDelegate<UpdateType, ListType> connectDelegate = null) :
             base(taskStatusController)
         {
@@ -52,7 +49,6 @@ namespace GOG.TaskActivities.UpdateData
             this.updatedDataController = updatedDataController;
 
             this.getDeserializedDelegate = getDeserializedDelegate;
-            this.throttleController = throttleController;
 
             this.getUpdateIdentityDelegate = getUpdateIdentityDelegate;
             this.connectDelegate = connectDelegate;
@@ -105,19 +101,13 @@ namespace GOG.TaskActivities.UpdateData
                     getUpdateUriDelegate.GetUpdateUri(updateProductParameter),
                     updateIdentity);
 
-                var data = await getDeserializedDelegate.GetDeserialized(uri);
+                var data = await getDeserializedDelegate.GetDeserialized(updateProductsTask, uri);
 
                 if (data != null)
                 {
                     connectDelegate?.Connect(data, product);
                     await updateTypeDataController.UpdateAsync(updateProductsTask, data);
                 }
-
-                // don't throttle if there are less elements than we've set throttling threshold to
-                // if throttle - do it for all iterations, but the very last one
-                if (updatedProducts.Count > throttleController?.Threshold &&
-                    id != updatedProducts[updatedProducts.Count - 1])
-                    throttleController?.Throttle(updateProductsTask);
             }
 
             taskStatusController.Complete(updateProductsTask);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Interfaces.Cookies
 {
@@ -23,10 +24,16 @@ namespace Interfaces.Cookies
         Task SetCookies(IEnumerable<string> setCookieHeader);
     }
 
+    public interface ISetCookiesFromResponseDelegate
+    {
+        Task SetCookies(HttpResponseMessage response);
+    }
+
     public interface ICookiesController:
         IGetNameDelegate,
         IGetCookieHeader,
-        ISetCookiesDelegate
+        ISetCookiesDelegate,
+        ISetCookiesFromResponseDelegate
     {
         // ...
     }

@@ -13,17 +13,14 @@ namespace Controllers.Throttle
         private ITaskStatusController taskStatusController;
         IFormattingController secondsFormattingController;
         private int delaySeconds;
-        private long threshold;
 
         public ThrottleController(
             ITaskStatusController taskStatusController,
             IFormattingController secondsFormattingController,
-            long threshold,
-            int delaySeconds = 60 * 2)
+            int delaySeconds)
         {
             this.taskStatusController = taskStatusController;
             this.secondsFormattingController = secondsFormattingController;
-            this.threshold = threshold;
             this.delaySeconds = delaySeconds;
         }
 
@@ -38,11 +35,6 @@ namespace Controllers.Throttle
                 taskStatusController.UpdateProgress(throttleTask, ii + 1, delaySeconds, "Countdown", TimeUnits.Seconds);
             }
             taskStatusController.Complete(throttleTask);
-        }
-
-        public long Threshold
-        {
-            get { return threshold; }
         }
     }
 }
