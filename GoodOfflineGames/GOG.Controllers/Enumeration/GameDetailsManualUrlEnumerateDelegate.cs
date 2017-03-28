@@ -32,11 +32,9 @@ namespace GOG.Controllers.Enumeration
                 settingsProperty.Settings == null ||
                 settingsProperty.Settings.DownloadsLanguages == null ||
                 settingsProperty.Settings.DownloadsOperatingSystems == null)
-                //return gameDetailsManualUrls;
                 yield break;
 
-
-            if (gameDetails == null) //return gameDetailsManualUrls;
+            if (gameDetails == null)
                 yield break;
 
             var gameDetailsDownloadEntries = new List<DownloadEntry>();
@@ -59,7 +57,7 @@ namespace GOG.Controllers.Enumeration
 
             foreach (var downloadEntry in gameDetailsDownloadEntries)
             {
-                var absoluteUri = string.Format(Uris.Paths.ProductFiles.FullUriTemplate, downloadEntry.ManualUrl);
+                var absoluteUri = string.Format(Uris.Paths.ProductFiles.ManualUrlRequestTemplate, downloadEntry.ManualUrl);
                 yield return absoluteUri;
             }
 

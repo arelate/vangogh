@@ -25,7 +25,7 @@ namespace Controllers.Throttle
         {
             var throttleTask = taskStatusController.Create(
                 taskStatus,
-                $"Wait {secondsFormattingController.Format(delaySeconds)} before next iteration");
+                $"Sleeping {secondsFormattingController.Format(delaySeconds)} before next operation");
 
             for (var ii = 0; ii < delaySeconds; ii++)
             {

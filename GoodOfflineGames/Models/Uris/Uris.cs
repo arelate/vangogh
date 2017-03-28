@@ -18,6 +18,7 @@
             public const string Login = Protocols.Https + "login." + GOGcom;
             public const string Auth = Protocols.Https + "auth." + GOGcom;
             public const string Api = Protocols.Https + "api." + GOGcom;
+            public const string CDN = Protocols.Https + "cdn." + GOGcom;
         }
 
         public static class Extensions
@@ -50,7 +51,8 @@
             {
                 private const string AccountRoot = Roots.Website + "/account";
                 public const string GetFilteredProducts = AccountRoot + "/getFilteredProducts";
-                public const string GameDetailsTemplate = AccountRoot + "/gameDetails/{0}.json";
+                public const string GameDetails = AccountRoot + "/gameDetails";
+                public const string GameDetailsRequestTemplate = GameDetails + "/{0}.json";
                 public const string Wishlist = AccountRoot + "/wishlist";
             }
 
@@ -76,7 +78,9 @@
 
             public static class ProductFiles
             {
-                public const string FullUriTemplate = Roots.Website + "{0}";
+                public const string ManualUrlDownlink = Roots.Website + "/downlink";
+                public const string ManualUrlRequestTemplate = Roots.Website + "{0}";
+                public const string ManualUrlCDNSecure = Roots.CDN + "/secure";
             }
         }
     }

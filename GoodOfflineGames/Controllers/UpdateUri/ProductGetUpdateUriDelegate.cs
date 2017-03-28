@@ -23,7 +23,7 @@ namespace Controllers.UpdateUri
                 case Parameters.ApiProducts:
                     return Uris.Paths.Api.ProductTemplate;
                 case Parameters.GameDetails:
-                    return Uris.Paths.Account.GameDetailsTemplate;
+                    return Uris.Paths.Account.GameDetailsRequestTemplate;
                 default:
                     throw new NotImplementedException();
             }

@@ -179,7 +179,13 @@ namespace GoodOfflineGames
 
             var requestRateController = new RequestRateController(
                 throttleController,
-                new string[] { }); // this would be gameDetails and GOG.com productFiles CDN prefixes
+                collectionController,
+                taskStatusAppController,
+                new string[] {
+                    Models.Uris.Uris.Paths.Account.GameDetails, // gameDetails requests
+                    Models.Uris.Uris.Paths.ProductFiles.ManualUrlDownlink, // manualUrls from gameDetails requests
+                    Models.Uris.Uris.Paths.ProductFiles.ManualUrlCDNSecure // resolved manualUrls and validation files requests
+                });
 
             var uriController = new UriController();
             var networkController = new NetworkController(

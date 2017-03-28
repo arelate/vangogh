@@ -48,8 +48,6 @@ namespace Controllers.Network
 
             using (var response = await RequestResponse(taskStatus, HttpMethod.Get, uri))
             {
-                response.EnsureSuccessStatusCode();
-
                 await cookiesController.SetCookies(response);
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
@@ -64,11 +62,17 @@ namespace Controllers.Network
             string uri, 
             HttpContent content = null)
         {
+            requestRateController.EnforceRequestRate(uri, taskStatus);
+
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Cookie, await cookiesController.GetCookieHeader());
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
             if (content != null) requestMessage.Content = content;
-            return await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+            var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            return response;
         }
 
         public async Task<string> Post(
@@ -84,7 +88,6 @@ namespace Controllers.Network
 
             using (var response = await RequestResponse(taskStatus, HttpMethod.Post, uri, content))
             {
-                response.EnsureSuccessStatusCode();
 
                 await cookiesController.SetCookies(response);
 

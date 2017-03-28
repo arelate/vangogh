@@ -43,21 +43,23 @@ namespace GOG.Controllers.FileDownload
         {
             var downloadTask = taskStatusController.Create(taskStatus, "Download game details manual url");
 
-            using (var response = await networkController.RequestResponse(downloadTask, HttpMethod.Get, sourceUri))
+            HttpResponseMessage response;
+            try
             {
-                try
-                {
-                    response.EnsureSuccessStatusCode();
-                }
-                catch (HttpRequestException ex)
-                {
-                    taskStatusController.Fail(
-                        downloadTask,
-                        $"Failed to get successful response for {sourceUri} for " +
-                        $"product {id}: {title}, message: {ex.Message}");
-                    taskStatusController.Complete(downloadTask);
-                    return;
-                }
+                response = await networkController.RequestResponse(downloadTask, HttpMethod.Get, sourceUri);
+            }
+            catch (HttpRequestException ex)
+            {
+                taskStatusController.Fail(
+                    downloadTask,
+                    $"Failed to get successful response for {sourceUri} for " +
+                    $"product {id}: {title}, message: {ex.Message}");
+                taskStatusController.Complete(downloadTask);
+                return;
+            }
+
+            using (response)
+            {
 
                 var resolvedUri = response.RequestMessage.RequestUri.ToString();
 
