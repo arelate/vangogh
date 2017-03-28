@@ -66,7 +66,7 @@ namespace GOG.Controllers.FileDownload
                 // Storing this key is pointless - it expries after some time and needs to be updated.
                 // So here we filter our this session key and store direct file Uri
 
-                var uriSansSession = uriSansSessionExtractionController.ExtractMultiple(resolvedUri).First();
+                var uriSansSession = uriSansSessionExtractionController.ExtractMultiple(resolvedUri).Single();
 
                 await routingController.UpdateRouteAsync(
                     id,

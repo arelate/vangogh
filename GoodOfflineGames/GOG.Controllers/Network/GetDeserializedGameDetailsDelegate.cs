@@ -80,7 +80,7 @@ namespace GOG.Controllers.Network
             while (languageDownloadsContainmentController.Contained(data))
             {
                 var extractedDownloadStrings = downloadsExtractionController.ExtractMultiple(data);
-                var downloadString = extractedDownloadStrings.First();
+                var downloadString = extractedDownloadStrings.Single();
 
                 downloadStrings.Add(downloadString);
 

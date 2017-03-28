@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Tree;
@@ -16,7 +17,7 @@ namespace Controllers.Tree
 
             taskStatusQueue.Insert(0, taskStatus);
 
-            while (taskStatusQueue.Count > 0)
+            while (taskStatusQueue.Any())
             {
                 var currentTaskStatus = taskStatusQueue[0];
                 taskStatusQueue.RemoveAt(0);

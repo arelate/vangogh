@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -49,7 +50,7 @@ namespace Controllers.Hash
         public async Task LoadAsync()
         {
             if (uriHashes != null &&
-                uriHashes.Count > 0)
+                uriHashes.Any())
                 throw new InvalidOperationException(
                     "Loading hashes when there is data already would lead to overwrite of the existing data");
 

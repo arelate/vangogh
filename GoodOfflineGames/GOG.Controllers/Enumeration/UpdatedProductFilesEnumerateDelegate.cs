@@ -40,7 +40,7 @@ namespace GOG.Controllers.Enumeration
             var enumerateUpdatedProductFilesTask = taskStatusController.Create(taskStatus, "Enumerate updated productFiles");
 
             var updatedIds = updatedDataController.EnumerateIds();
-            var updatedIdsCount = updatedIds.Count();
+            var updatedIdsCount = updatedDataController.Count();
             var current = 0;
 
             var updatedProductFiles = new List<string>();

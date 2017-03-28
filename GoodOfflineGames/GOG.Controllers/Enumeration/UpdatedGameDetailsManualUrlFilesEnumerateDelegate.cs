@@ -36,7 +36,7 @@ namespace GOG.Controllers.Enumeration
             var enumerateUpdateGameDetailsFilesTask = taskStatusController.Create(taskStatus, "Enumerate updated gameDetails files");
 
             var updatedIds = updatedDataController.EnumerateIds();
-            var updatedIdsCount = updatedIds.Count();
+            var updatedIdsCount = updatedDataController.Count();
             var current = 0;
 
             var gameDetailsFiles = new List<string>();

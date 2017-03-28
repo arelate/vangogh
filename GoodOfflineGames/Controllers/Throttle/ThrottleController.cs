@@ -12,28 +12,27 @@ namespace Controllers.Throttle
     {
         private ITaskStatusController taskStatusController;
         IFormattingController secondsFormattingController;
-        private int delaySeconds;
 
         public ThrottleController(
             ITaskStatusController taskStatusController,
-            IFormattingController secondsFormattingController,
-            int delaySeconds)
+            IFormattingController secondsFormattingController)
         {
             this.taskStatusController = taskStatusController;
             this.secondsFormattingController = secondsFormattingController;
-            this.delaySeconds = delaySeconds;
         }
 
-        public void Throttle(ITaskStatus taskStatus)
+        public void Throttle(int delaySeconds, ITaskStatus taskStatus)
         {
             var throttleTask = taskStatusController.Create(
                 taskStatus,
                 $"Wait {secondsFormattingController.Format(delaySeconds)} before next iteration");
+
             for (var ii = 0; ii < delaySeconds; ii++)
             {
                 Thread.Sleep(1000);
                 taskStatusController.UpdateProgress(throttleTask, ii + 1, delaySeconds, "Countdown", TimeUnits.Seconds);
             }
+
             taskStatusController.Complete(throttleTask);
         }
     }

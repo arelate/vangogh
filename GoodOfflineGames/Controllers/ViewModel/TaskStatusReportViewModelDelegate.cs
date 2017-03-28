@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.ViewModel;
@@ -72,8 +73,8 @@ namespace Controllers.ViewModel
                 "";
 
             var results = new List<string>();
-            if (taskStatus.Failures != null && taskStatus.Failures.Count > 0) results.Add("Failure(s)");
-            if (taskStatus.Warnings != null && taskStatus.Warnings.Count > 0) results.Add("Warning(s)");
+            if (taskStatus.Failures != null && taskStatus.Failures.Any()) results.Add("Failure(s)");
+            if (taskStatus.Warnings != null && taskStatus.Warnings.Any()) results.Add("Warning(s)");
             var result = string.Join(",", results);
             if (string.IsNullOrEmpty(result)) result = "Success";
             viewModel[TaskStatusReportViewModelSchema.Result] = result;
@@ -99,19 +100,19 @@ namespace Controllers.ViewModel
                 viewModel[TaskStatusReportViewModelSchema.ProgressTotal] = totalFormatted;
             }
 
-            if (taskStatus.Failures != null && taskStatus.Failures.Count > 0)
+            if (taskStatus.Failures != null && taskStatus.Failures.Any())
             {
                 viewModel[TaskStatusReportViewModelSchema.ContainsFailures] = "true";
                 viewModel[TaskStatusReportViewModelSchema.Failures] = string.Join("; ", taskStatus.Failures);
             }
 
-            if (taskStatus.Warnings != null && taskStatus.Warnings.Count > 0)
+            if (taskStatus.Warnings != null && taskStatus.Warnings.Any())
             {
                 viewModel[TaskStatusReportViewModelSchema.ContainsWarnings] = "true";
                 viewModel[TaskStatusReportViewModelSchema.Warnings] = string.Join("; ", taskStatus.Warnings);
             }
 
-            if (taskStatus.Information != null && taskStatus.Information.Count > 0)
+            if (taskStatus.Information != null && taskStatus.Information.Any())
             {
                 viewModel[TaskStatusReportViewModelSchema.ContainsInformation] = "true";
                 viewModel[TaskStatusReportViewModelSchema.Information] = string.Join("; ", taskStatus.Information);

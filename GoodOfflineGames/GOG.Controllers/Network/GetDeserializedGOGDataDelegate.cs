@@ -34,7 +34,7 @@ namespace GOG.Controllers.Network
             if (dataCollection == null)
                 return default(T);
 
-            var content = dataCollection.First();
+            var content = dataCollection.Single();
 
             var gogData = serializationController.Deserialize<T>(content);
             return gogData;

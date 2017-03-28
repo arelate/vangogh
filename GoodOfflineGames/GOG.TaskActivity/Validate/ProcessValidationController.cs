@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Linq;
 
 using Interfaces.Validation;
 using Interfaces.Destination.Directory;
@@ -56,9 +55,10 @@ namespace GOG.TaskActivities.Validate
 
             var counter = 0;
 
-            var updatedProducts = updatedDataController.EnumerateIds().ToArray();
+            var updated = updatedDataController.EnumerateIds();
+            var updatedCount = updatedDataController.Count();
 
-            foreach (var id in updatedProducts)
+            foreach (var id in updated)
             {
                 var productIsValid = true;
 
@@ -68,7 +68,7 @@ namespace GOG.TaskActivities.Validate
 
                 taskStatusController.UpdateProgress(validateProductFilesTask,
                     ++counter,
-                    updatedProducts.Count(),
+                    updatedCount,
                     id.ToString());
 
                 foreach (var manualUrl in manualUrls)

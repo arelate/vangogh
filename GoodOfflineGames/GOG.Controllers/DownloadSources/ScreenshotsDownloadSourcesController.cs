@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 
 using Interfaces.DownloadSources;
 using Interfaces.ImageUri;
@@ -76,7 +77,7 @@ namespace GOG.Controllers.DownloadSources
                     currentProductScreenshotSources.Add(sourceUri);
                 }
 
-                if (currentProductScreenshotSources.Count > 0)
+                if (currentProductScreenshotSources.Any())
                     screenshotsSources.Add(id, currentProductScreenshotSources);
             }
 

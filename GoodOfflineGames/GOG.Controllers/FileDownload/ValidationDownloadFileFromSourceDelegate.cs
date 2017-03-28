@@ -47,8 +47,8 @@ namespace GOG.Controllers.FileDownload
         {
             if (string.IsNullOrEmpty(sourceUri)) return;
 
-            var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).First();
-            var destinationUri = validationFileEnumerateDelegate.Enumerate(sourceUriSansSession).First();
+            var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).Single();
+            var destinationUri = validationFileEnumerateDelegate.Enumerate(sourceUriSansSession).Single();
             
             // return early if validation is not expected for this file
             if (!validationExpectedForUriDelegate.Expected(sourceUriSansSession)) return;

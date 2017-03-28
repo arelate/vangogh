@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.ViewModel;
@@ -95,13 +96,13 @@ namespace Controllers.ViewModel
                 viewModel[TaskStatusAppViewModelSchema.ProgressTotal] = totalFormatted;
             }
 
-            if (taskStatus.Failures != null && taskStatus.Failures.Count > 0)
+            if (taskStatus.Failures != null && taskStatus.Failures.Any())
             {
                 viewModel[TaskStatusAppViewModelSchema.ContainsFailures] = "true";
                 viewModel[TaskStatusAppViewModelSchema.FailuresCount] = taskStatus.Failures.Count.ToString();
             }
 
-            if (taskStatus.Warnings != null && taskStatus.Warnings.Count > 0)
+            if (taskStatus.Warnings != null && taskStatus.Warnings.Any())
             {
                 viewModel[TaskStatusAppViewModelSchema.ContainsWarnings] = "true";
                 viewModel[TaskStatusAppViewModelSchema.WarningsCount] = taskStatus.Warnings.Count.ToString();

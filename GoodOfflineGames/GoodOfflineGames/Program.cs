@@ -175,8 +175,7 @@ namespace GoodOfflineGames
 
             var throttleController = new ThrottleController(
                 taskStatusAppController,
-                secondsFormattingController,
-                2 * 60); // 2 minutes
+                secondsFormattingController);
 
             var requestRateController = new RequestRateController(
                 throttleController,

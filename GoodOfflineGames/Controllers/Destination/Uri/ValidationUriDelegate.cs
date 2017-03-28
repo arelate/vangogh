@@ -22,7 +22,7 @@ namespace Controllers.Destination.Uri
 
         public string GetUri(string sourceUri)
         {
-            var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).First();
+            var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).Single();
             var sourceFilename = Path.GetFileName(sourceUriSansSession);
             var validationFilename = getValidationFilenameDelegate.GetFilename(sourceFilename);
 

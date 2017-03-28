@@ -32,7 +32,7 @@ namespace GOG.Controllers.Enumeration
             var directories = new List<string>();
             var current = 0;
             var gameDetailsIds = gameDetailsDataController.EnumerateIds();
-            var gameDetailsCount = gameDetailsIds.Count();
+            var gameDetailsCount = gameDetailsDataController.Count();
 
             foreach (var id in gameDetailsIds)
             {
