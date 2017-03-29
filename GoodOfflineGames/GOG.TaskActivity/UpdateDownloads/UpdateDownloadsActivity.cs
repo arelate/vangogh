@@ -14,9 +14,9 @@ using Models.ProductDownloads;
 
 using GOG.Models;
 
-namespace GOG.TaskActivities.UpdateDownloads
+namespace GOG.Activities.UpdateDownloads
 {
-    public class UpdateDownloadsActivity : TaskActivityController
+    public class UpdateDownloadsActivity : Activity
     {
         private string downloadParameter;
 
@@ -47,7 +47,7 @@ namespace GOG.TaskActivities.UpdateDownloads
             this.productsDataController = productsDataController;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var updateDownloadsTask = taskStatusController.Create(
                 taskStatus,

@@ -8,9 +8,9 @@ using Interfaces.Enumeration;
 using Interfaces.Directory;
 using Interfaces.RecycleBin;
 
-namespace GOG.TaskActivities.Cleanup
+namespace GOG.Activities.Cleanup
 {
-    public class CleanupActivity : TaskActivityController
+    public class CleanupActivity : Activity
     {
         private string cleanupParameter;
         private IEnumerateAsyncDelegate expectedItemsEnumarateDelegate;
@@ -40,7 +40,7 @@ namespace GOG.TaskActivities.Cleanup
             this.directoryController = directoryController;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var cleanupTask = taskStatusController.Create(taskStatus, $"Cleanup {cleanupParameter}");
 

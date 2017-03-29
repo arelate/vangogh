@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodOfflineGames.exe", "GoodOfflineGames\GoodOfflineGames.exe.csproj", "{295EC7DA-7404-499C-ABBD-3429145A04D5}"
 EndProject
@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.Models", "GOG.Models\GO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.Controllers", "GOG.Controllers\GOG.Controllers.csproj", "{129AD02F-45FB-44CA-BE10-D256900066DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.TaskActivities", "GOG.TaskActivity\GOG.TaskActivities.csproj", "{9052EDDA-E63B-4EB0-9560-3738CE0F7D8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.Activities", "GOG.TaskActivity\GOG.Activities.csproj", "{9052EDDA-E63B-4EB0-9560-3738CE0F7D8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

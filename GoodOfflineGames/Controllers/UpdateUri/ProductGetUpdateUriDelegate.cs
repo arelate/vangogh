@@ -3,7 +3,7 @@
 using Interfaces.UpdateUri;
 
 using Models.Uris;
-using Models.ActivityParameters;
+using Models.FlightPlan;
 
 namespace Controllers.UpdateUri
 {

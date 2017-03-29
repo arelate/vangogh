@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.QueryParameters;
 
-using Models.ActivityParameters;
+using Models.FlightPlan;
 
 namespace Controllers.QueryParameters
 {

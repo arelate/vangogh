@@ -7,9 +7,9 @@ using Interfaces.TaskStatus;
 
 using Models.Uris;
 
-namespace GOG.TaskActivities.UpdateData
+namespace GOG.Activities.UpdateData
 {
-    public class WishlistedUpdateActivity : TaskActivityController
+    public class WishlistedUpdateActivity : Activity
     {
         private IGetDeserializedDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
         private IDataController<long> wishlistedDataController;
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.UpdateData
             this.wishlistedDataController = wishlistedDataController;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var updateWishlistTask = taskStatusController.Create(taskStatus, "Update wishlisted products");
 

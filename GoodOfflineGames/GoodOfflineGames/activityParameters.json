@@ -1,8 +1,0 @@
-﻿[
-	{ "activity": "updateData", "parameters": [ "products", "accountProducts", "wishlist", "gameProductData", "apiProducts", "gameDetails", "screenshots" ]},
-	{ "activity": "updateDownloads", "parameters": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles" ] },
-	{ "activity": "processDownloads", "parameters": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles" ] },
-	{ "activity": "validate", "parameters": [ "productsFiles" ]},
-	{ "activity": "cleanup", "parameters": [ "directories", "files", "updated" ]},
-	{ "activity": "logTaskStatus", "parameters": [ "true" ] }
-]

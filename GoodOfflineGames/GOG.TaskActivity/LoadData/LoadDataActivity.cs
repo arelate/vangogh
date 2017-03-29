@@ -3,9 +3,9 @@
 using Interfaces.Data;
 using Interfaces.TaskStatus;
 
-namespace GOG.TaskActivities.Load
+namespace GOG.Activities.Load
 {
-    public class LoadDataActivity: TaskActivityController
+    public class LoadDataActivity: Activity
     {
         private ILoadDelegate[] loadDelegates;
 
@@ -17,7 +17,7 @@ namespace GOG.TaskActivities.Load
             this.loadDelegates = loadDelegates;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var loadDataTask = taskStatusController.Create(taskStatus, "Load existing data");
             for (var ii = 0; ii < loadDelegates.Length; ii++)

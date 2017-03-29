@@ -12,7 +12,7 @@
         public const string GameDetailsDownloadsStart = "[[";
         public const string GameDetailsDownloadsEnd = "]]";
         // activity parameters
-        public const string ActivityParameters = "-";
+        public const string FlightPlan = "-";
         // template
         public const string TemplatePrefix = "{";
         public const string TemplateSuffix = "}";

@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using Interfaces.TaskActivity;
+using Interfaces.Activity;
 using Interfaces.TaskStatus;
 
-namespace GOG.TaskActivities
+namespace GOG.Activities
 {
-    public abstract class TaskActivityController: ITaskActivityController
+    public abstract class Activity: IActivity
     {
         protected ITaskStatusController taskStatusController;
 
-        public TaskActivityController(
+        public Activity(
             ITaskStatusController taskStatusController)
         {
             this.taskStatusController = taskStatusController;
         }
 
-        public virtual Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public virtual Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             throw new NotImplementedException();
         }

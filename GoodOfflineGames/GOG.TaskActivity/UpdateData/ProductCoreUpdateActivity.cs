@@ -11,10 +11,10 @@ using Interfaces.TaskStatus;
 using Models.ProductCore;
 using Models.Units;
 
-namespace GOG.TaskActivities.UpdateData
+namespace GOG.Activities.UpdateData
 {
     public class ProductCoreUpdateActivity<UpdateType, ListType> :
-        TaskActivityController
+        Activity
         where ListType : ProductCore
         where UpdateType : ProductCore
     {
@@ -58,7 +58,7 @@ namespace GOG.TaskActivities.UpdateData
             updateTypeDescription = typeof(UpdateType).Name;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var updateProductsTask = taskStatusController.Create(taskStatus, "Update products type: " + updateTypeDescription);
 

@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityParameters\ActivityParameters.cs" />
+    <Compile Include="FlightPlan\FlightPlan.cs" />
     <Compile Include="DataRefinement\DataRefinementController.cs" />
     <Compile Include="Containment\ContainmentController.cs" />
     <Compile Include="Conversion\ConversionController.cs" />

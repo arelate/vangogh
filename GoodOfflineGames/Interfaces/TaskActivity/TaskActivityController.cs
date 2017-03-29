@@ -2,15 +2,15 @@
 
 using Interfaces.TaskStatus;
 
-namespace Interfaces.TaskActivity
+namespace Interfaces.Activity
 {
-    public interface IProcessTaskDelegate
+    public interface IProcessActivityDelegate
     {
-        Task ProcessTaskAsync(ITaskStatus taskStatus);
+        Task ProcessActivityAsync(ITaskStatus taskStatus);
     }
 
-    public interface ITaskActivityController:
-        IProcessTaskDelegate
+    public interface IActivity:
+        IProcessActivityDelegate
     {
         // ...
     }

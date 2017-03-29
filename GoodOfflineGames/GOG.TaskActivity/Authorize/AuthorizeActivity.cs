@@ -5,9 +5,9 @@ using Interfaces.TaskStatus;
 
 using GOG.Interfaces.Authorization;
 
-namespace GOG.TaskActivities.Authorize
+namespace GOG.Activities.Authorize
 {
-    public class AuthorizeActivity : TaskActivityController
+    public class AuthorizeActivity : Activity
     {
         private ISettingsProperty settingsProperty;
         private IAuthorizationController authorizationController;
@@ -22,7 +22,7 @@ namespace GOG.TaskActivities.Authorize
             this.authorizationController = authorizationController;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var authorizationTask = taskStatusController.Create(taskStatus, "Authorize on GOG.com");
 

@@ -11,9 +11,9 @@ using Models.ProductCore;
 using GOG.Interfaces.PageResults;
 using GOG.Interfaces.Extraction;
 
-namespace GOG.TaskActivities.UpdateData
+namespace GOG.Activities.UpdateData
 {
-    public class PageResultUpdateActivity<PageType, Type> : TaskActivityController
+    public class PageResultUpdateActivity<PageType, Type> : Activity
         where PageType : Models.PageResult
         where Type : ProductCore
     {
@@ -48,7 +48,7 @@ namespace GOG.TaskActivities.UpdateData
             this.dataRefinementController = dataRefinementController;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var updateAllProductsTask = taskStatusController.Create(taskStatus, $"Update {productParameter} data");
 

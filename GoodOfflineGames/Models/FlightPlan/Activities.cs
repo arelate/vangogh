@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.ActivityParameters
+namespace Models.FlightPlan
 {
     public static class Activities
     {

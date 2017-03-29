@@ -68,7 +68,7 @@ namespace GOG.Controllers.Authorization
         public async Task Authorize(string username, string password, ITaskStatus taskStatus)
         {
             // GOG.com quirk
-            // Since cookies support introduction - it's expected that users need to authorize rarely.
+            // Since introducing cookies support - it's expected that users need to authorize rarely.
             // Still, Authorization controller should support current authorization methods on GOG.com:
             // - Username (e-mail) and Password
             // - Two factor authentication

@@ -10,9 +10,9 @@ using Interfaces.Destination.Filename;
 using Interfaces.SerializedStorage;
 using Interfaces.ViewController;
 
-namespace GOG.TaskActivities.LogTaskStatus
+namespace GOG.Activities.LogTaskStatus
 {
-    public class ReportActivity: TaskActivityController
+    public class ReportActivity: Activity
     {
         private IViewController taskStatusViewController;
 
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.LogTaskStatus
             this.taskStatusViewController = taskStatusViewController;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var reportTask = taskStatusController.Create(taskStatus, "Presenting report on application task status");
             await taskStatusViewController.PresentViewsAsync();

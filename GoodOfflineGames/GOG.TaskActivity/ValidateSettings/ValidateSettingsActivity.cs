@@ -4,9 +4,9 @@ using Interfaces.TaskStatus;
 using Interfaces.Settings;
 using Interfaces.PropertiesValidation;
 
-namespace GOG.TaskActivities.ValidateSettings
+namespace GOG.Activities.ValidateSettings
 {
-    public class ValidateSettingsActivity : TaskActivityController
+    public class ValidateSettingsActivity : Activity
     {
         private ISettingsProperty settingsProperty;
         private IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate;
@@ -24,7 +24,7 @@ namespace GOG.TaskActivities.ValidateSettings
             this.downloadsOperatingSystemsValidationDelegate = downloadsOperatingSystemsValidationDelegate;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             await Task.Run(() =>
             {

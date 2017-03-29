@@ -16,7 +16,7 @@ using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Settings;
-using Controllers.ActivityParameters;
+using Controllers.FlightPlan;
 using Controllers.RequestPage;
 using Controllers.Throttle;
 using Controllers.RequestRate;
@@ -50,7 +50,7 @@ using Controllers.Tree;
 using Controllers.ViewController;
 using Controllers.Enumeration;
 
-using Interfaces.TaskActivity;
+using Interfaces.Activity;
 
 using GOG.Models;
 
@@ -65,23 +65,23 @@ using GOG.Controllers.DataRefinement;
 using GOG.Controllers.DownloadSources;
 using GOG.Controllers.Authorization;
 
-using GOG.TaskActivities.Load;
-using GOG.TaskActivities.ValidateSettings;
-using GOG.TaskActivities.Authorize;
-using GOG.TaskActivities.ActivityParameters;
-using GOG.TaskActivities.UpdateData;
-using GOG.TaskActivities.UpdateDownloads;
-using GOG.TaskActivities.Download;
-using GOG.TaskActivities.Cleanup;
-using GOG.TaskActivities.Validate;
-using GOG.TaskActivities.LogTaskStatus;
+using GOG.Activities.Load;
+using GOG.Activities.ValidateSettings;
+using GOG.Activities.Authorize;
+using GOG.Activities.Flight;
+using GOG.Activities.UpdateData;
+using GOG.Activities.UpdateDownloads;
+using GOG.Activities.Download;
+using GOG.Activities.Cleanup;
+using GOG.Activities.Validate;
+using GOG.Activities.LogTaskStatus;
 
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
 using Models.ProductDownloads;
 
 using Models.TaskStatus;
-using Models.ActivityParameters;
+using Models.FlightPlan;
 
 #endregion
 
@@ -439,15 +439,15 @@ namespace GoodOfflineGames
 
             #region Activity Parameters 
 
-            var activityParametersFilenameDelegate = new FixedFilenameDelegate("activityParameters", jsonFilenameDelegate);
+            var flightPlanFilenameDelegate = new FixedFilenameDelegate("flightPlan", jsonFilenameDelegate);
 
-            var activityParametersController = new ActivityParametersController(
-                activityParametersFilenameDelegate,
+            var flightPlanController = new FlightPlanController(
+                flightPlanFilenameDelegate,
                 serializedStorageController);
 
             #endregion
 
-            #region Task Activity Controllers
+            #region Activities
 
             #region Load
 
@@ -459,7 +459,7 @@ namespace GoodOfflineGames
                 appTemplateController,
                 reportTemplateController,
                 settingsController,
-                activityParametersController,
+                flightPlanController,
                 productsDataController,
                 accountProductsDataController,
                 gameDetailsDataController,
@@ -895,103 +895,103 @@ namespace GoodOfflineGames
 
             #region Task Activities Parameters
 
-            var activityParametersNameDelegate = new ActivityParametersNameDelegate();
+            var nameDelegate = new NameDelegate();
 
-            var activityParametersTaskActivities = new Dictionary<string, ITaskActivityController>()
+            var flightActivities = new Dictionary<string, IActivity>()
             {
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateData,
                     Parameters.Products),
                     productsUpdateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateData,
                     Parameters.AccountProducts),
                     accountProductsUpdateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateData,
                     Parameters.Wishlist),
                     wishlistedUpdateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateData,
                     Parameters.GameProductData),
                     gameProductDataUpdateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateData,
                     Parameters.ApiProducts),
                     apiProductUpdateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateData,
                     Parameters.GameDetails),
                     gameDetailsUpdateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateData,
                     Parameters.Screenshots),
                     screenshotUpdateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateDownloads,
                     Parameters.ProductsImages),
                     updateProductsImagesDownloadsActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateDownloads,
                     Parameters.AccountProductsImages),
                     updateAccountProductsImagesDownloadsActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateDownloads,
                     Parameters.Screenshots),
                     updateScreenshotsDownloadsActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.UpdateDownloads,
                     Parameters.ProductsFiles),
                     updateProductFilesDownloadsActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.ProcessDownloads,
                     Parameters.ProductsImages),
                     productsImagesDownloadActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.ProcessDownloads,
                     Parameters.AccountProductsImages),
                     accountProductsImagesDownloadActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.ProcessDownloads,
                     Parameters.Screenshots),
                     screenshotsDownloadActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.ProcessDownloads,
                     Parameters.ProductsFiles),
                     productFilesDownloadActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.Validate,
                     Parameters.ProductsFiles),
                     validateActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.Cleanup,
                     Parameters.Directories),
                     directoryCleanupActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.Cleanup,
                     Parameters.Files),
                     fileCleanupActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.Cleanup,
                     Parameters.Updated),
                     cleanupUpdatedActivity },
-                { activityParametersNameDelegate.GetName(
+                { nameDelegate.GetName(
                     Activities.Report,
                     Parameters.TaskStatus),
                     reportActivity }
             };
 
-            var processActivityParametersActivity = new ProcessActivityParametersActivity(
-                activityParametersController,
-                activityParametersNameDelegate,
-                activityParametersTaskActivities,
+            var flightActivity = new FlightActivity(
+                flightPlanController,
+                nameDelegate,
+                flightActivities,
                 taskStatusAppController);
 
             #endregion
 
             #region Initialization Task Activities (always performed)
 
-            var activities = new List<ITaskActivityController>
+            var activities = new List<IActivity>
             {
                 // load initial data
                 loadDataActivity,
@@ -999,8 +999,8 @@ namespace GoodOfflineGames
                 validateSettingsActivity,
                 // authorize
                 authorizeActivity,
-                //  activity parameters
-                processActivityParametersActivity
+                //  flight plan
+                flightActivity
             };
 
             #endregion
@@ -1009,7 +1009,7 @@ namespace GoodOfflineGames
             {
                 try
                 {
-                    activity.ProcessTaskAsync(applicationTaskStatus).Wait();
+                    activity.ProcessActivityAsync(applicationTaskStatus).Wait();
                 }
                 catch (AggregateException ex)
                 {

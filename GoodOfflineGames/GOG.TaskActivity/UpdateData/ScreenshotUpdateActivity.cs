@@ -9,13 +9,13 @@ using Interfaces.UpdateUri;
 
 using Models.ProductScreenshots;
 using Models.Units;
-using Models.ActivityParameters;
+using Models.FlightPlan;
 
 using GOG.Models;
 
-namespace GOG.TaskActivities.UpdateData
+namespace GOG.Activities.UpdateData
 {
-    public class ScreenshotUpdateActivity : TaskActivityController
+    public class ScreenshotUpdateActivity : Activity
     {
         private IGetUpdateUriDelegate<string> getUpdateUriDelegate;
         private IDataController<ProductScreenshots> screenshotsDataController;
@@ -39,7 +39,7 @@ namespace GOG.TaskActivities.UpdateData
             this.screenshotExtractionController = screenshotExtractionController;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var updateAllTask = taskStatusController.Create(taskStatus, "Update all products missing screenshots");
 

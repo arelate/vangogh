@@ -1,4 +1,4 @@
-﻿namespace Models.ActivityParameters
+﻿namespace Models.FlightPlan
 {
     public static class Parameters
     {

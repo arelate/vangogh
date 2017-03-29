@@ -9,9 +9,9 @@ using Interfaces.TaskStatus;
 using Models.ProductDownloads;
 using Models.Separators;
 
-namespace GOG.TaskActivities.Download
+namespace GOG.Activities.Download
 {
-    public class DownloadActivity : TaskActivityController
+    public class DownloadActivity : Activity
     {
         private string downloadParameter;
         private IDataController<ProductDownloads> productDownloadsDataController;
@@ -29,7 +29,7 @@ namespace GOG.TaskActivities.Download
             this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
         }
 
-        public override async Task ProcessTaskAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
         {
             var current = 0;
             var productDownloadsData = productDownloadsDataController.EnumerateIds();

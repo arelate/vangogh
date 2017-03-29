@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="activityParameters.json">
+    <Content Include="flightPlan.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="settings.json">
@@ -110,9 +110,9 @@
       <Project>{864ca735-6c74-4cfc-a5e4-387b2c3225e3}</Project>
       <Name>GOG.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GOG.TaskActivity\GOG.TaskActivities.csproj">
+    <ProjectReference Include="..\GOG.TaskActivity\GOG.Activities.csproj">
       <Project>{9052edda-e63b-4eb0-9560-3738ce0f7d8e}</Project>
-      <Name>GOG.TaskActivities</Name>
+      <Name>GOG.Activities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{4b835730-ad7f-4c9f-a390-6d3fa72e52f4}</Project>
