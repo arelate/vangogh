@@ -18,8 +18,8 @@ namespace Controllers.Validation
 {
     public class ValidationController : IValidationController
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
+        //private IGetDirectoryDelegate getDirectoryDelegate;
+        //private IGetFilenameDelegate getFilenameDelegate;
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
@@ -27,15 +27,15 @@ namespace Controllers.Validation
         private IStatusController statusController;
 
         public ValidationController(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate,
+            //IGetDirectoryDelegate getDirectoryDelegate,
+            //IGetFilenameDelegate getFilenameDelegate,
             IFileController fileController,
             IStreamController streamController,
             IBytesToStringHashController bytesToStringHasController,
             IStatusController statusController)
         {
-            this.getDirectoryDelegate = getDirectoryDelegate;
-            this.getFilenameDelegate = getFilenameDelegate;
+            //this.getDirectoryDelegate = getDirectoryDelegate;
+            //this.getFilenameDelegate = getFilenameDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
             this.bytesToStringHasController = bytesToStringHasController;
@@ -44,19 +44,19 @@ namespace Controllers.Validation
             validationXml = new XmlDocument()  { PreserveWhitespace = false };
         }
 
-        public async Task ValidateAsync(string uri, IStatus status)
+        public async Task ValidateAsync(string uri, string validationUri, IStatus status)
         {
             if (string.IsNullOrEmpty(uri))
                 throw new ArgumentNullException("File location is invalid");
 
-            var validationFilename = Path.Combine(
-                getDirectoryDelegate.GetDirectory(),
-                getFilenameDelegate.GetFilename(uri));
+            //var validationFilename = Path.Combine(
+            //    getDirectoryDelegate.GetDirectory(),
+            //    getFilenameDelegate.GetFilename(uri));
 
-            if (!fileController.Exists(validationFilename))
-                return;
+            //if (!fileController.Exists(validationFilename))
+            //    return;
 
-            validationXml.Load(validationFilename);
+            validationXml.Load(validationUri);
 
             var fileElement = validationXml.GetElementsByTagName("file");
             if (fileElement == null ||

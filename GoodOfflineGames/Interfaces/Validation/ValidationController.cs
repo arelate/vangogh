@@ -21,7 +21,7 @@ namespace Interfaces.Validation
 
     public interface IValidateDelegate
     {
-        Task ValidateAsync(string uri, IStatus status);
+        Task ValidateAsync(string uri, string validationUri, IStatus status);
     }
 
     public interface IValidationController:

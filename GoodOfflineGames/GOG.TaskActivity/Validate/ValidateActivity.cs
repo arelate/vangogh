@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Validation;
@@ -17,8 +18,9 @@ namespace GOG.Activities.Validate
 {
     public class ValidateActivity : Activity
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
+        private IGetDirectoryDelegate productFileDirectoryDelegate;
+        private IGetFilenameDelegate productFileFilenameDelegate;
+        private IEnumerateDelegate<string> validationFileEnumerateDelegate;
         private IValidationController validationController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
@@ -27,8 +29,9 @@ namespace GOG.Activities.Validate
         private IRoutingController routingController;
 
         public ValidateActivity(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate,
+            IGetDirectoryDelegate productFileDirectoryDelegate,
+            IGetFilenameDelegate productFileFilenameDelegate,
+            IEnumerateDelegate<string> validationFileEnumerateDelegate,
             IValidationController validationController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
@@ -38,8 +41,9 @@ namespace GOG.Activities.Validate
             IStatusController statusController) :
             base(statusController)
         {
-            this.getDirectoryDelegate = getDirectoryDelegate;
-            this.getFilenameDelegate = getFilenameDelegate;
+            this.productFileDirectoryDelegate = productFileDirectoryDelegate;
+            this.productFileFilenameDelegate = productFileFilenameDelegate;
+            this.validationFileEnumerateDelegate = validationFileEnumerateDelegate;
             this.validationController = validationController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.manualUrlsEnumerationController = manualUrlsEnumerationController;
@@ -80,8 +84,10 @@ namespace GOG.Activities.Validate
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
-                        getDirectoryDelegate.GetDirectory(manualUrl),
-                        getFilenameDelegate.GetFilename(resolvedUri));
+                        productFileDirectoryDelegate.GetDirectory(manualUrl),
+                        productFileFilenameDelegate.GetFilename(resolvedUri));
+
+                    var validationFile = validationFileEnumerateDelegate.Enumerate(localFile).Single();
 
                     var validateFileTask = statusController.Create(
                         validateProductFilesTask,
@@ -89,7 +95,7 @@ namespace GOG.Activities.Validate
 
                     try
                     {
-                        await validationController.ValidateAsync(localFile, validateFileTask);
+                        await validationController.ValidateAsync(localFile, validationFile, validateFileTask);
                         productIsValid &= true;
                     }
                     catch (Exception ex)

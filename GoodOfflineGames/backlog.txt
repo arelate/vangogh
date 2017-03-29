@@ -1,12 +1,5 @@
 Backend
 
-- rename taskStatus -> status
-
-- put new taskStatus in network to good use and perhaps log actual requests for debug purposes
-- definitely use taskStatus in authorization controller to log status of authorization without exposing any sensitive data
-
-- Change validation controller to use file, validationFile
-
 - introduce validation reports with full details on validation for the file
 
 - repair controller?
