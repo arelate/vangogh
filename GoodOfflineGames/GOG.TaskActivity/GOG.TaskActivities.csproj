@@ -41,21 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cleanup\CleanupController.cs" />
-    <Compile Include="Cleanup\CleanupUpdatedControllet.cs" />
-    <Compile Include="ProcessActivityParameters\ProcessActivityParametersController.cs" />
-    <Compile Include="Report\ReportController.cs" />
-    <Compile Include="UpdateData\ProductCoreUpdateController.cs" />
-    <Compile Include="UpdateData\PageResultUpdateController.cs" />
-    <Compile Include="UpdateDownloads\UpdateDownloadsController.cs" />
-    <Compile Include="ProcessDownloads\ProcessDownloadsController.cs" />
-    <Compile Include="LoadData\LoadDataController.cs" />
+    <Compile Include="Cleanup\CleanupActivity.cs" />
+    <Compile Include="Cleanup\CleanupUpdatedActivity.cs" />
+    <Compile Include="ProcessActivityParameters\ProcessActivityParametersActivity.cs" />
+    <Compile Include="Report\ReportActivity.cs" />
+    <Compile Include="UpdateData\ProductCoreUpdateActivity.cs" />
+    <Compile Include="UpdateData\PageResultUpdateActivity.cs" />
+    <Compile Include="UpdateDownloads\UpdateDownloadsActivity.cs" />
+    <Compile Include="Download\DownloadActivity.cs" />
+    <Compile Include="LoadData\LoadDataActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Authorize\AuthorizeController.cs" />
+    <Compile Include="Authorize\AuthorizeActivity.cs" />
     <Compile Include="TaskActivityController.cs" />
-    <Compile Include="UpdateData\ScreenshotUpdateController.cs" />
-    <Compile Include="UpdateData\WishlistedUpdateController.cs" />
-    <Compile Include="ValidateSettings\ValidateSettingsController.cs" />
+    <Compile Include="UpdateData\ScreenshotUpdateActivity.cs" />
+    <Compile Include="UpdateData\WishlistedUpdateActivity.cs" />
+    <Compile Include="ValidateSettings\ValidateSettingsActivity.cs" />
     <Compile Include="Validate\ProcessValidationController.cs" />
   </ItemGroup>
   <ItemGroup>

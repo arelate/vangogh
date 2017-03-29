@@ -12,11 +12,11 @@ using Interfaces.ViewController;
 
 namespace GOG.TaskActivities.LogTaskStatus
 {
-    public class ReportController: TaskActivityController
+    public class ReportActivity: TaskActivityController
     {
         private IViewController taskStatusViewController;
 
-        public ReportController(
+        public ReportActivity(
             IViewController taskStatusViewController,
             ITaskStatusController taskStatusController):
             base(taskStatusController)

@@ -6,11 +6,11 @@ using Interfaces.TaskStatus;
 
 namespace GOG.TaskActivities.Cleanup
 {
-    public class CleanupUpdatedController : TaskActivityController
+    public class CleanupUpdatedActivity : TaskActivityController
     {
         private IDataController<long> updatedDataController;
 
-        public CleanupUpdatedController(
+        public CleanupUpdatedActivity(
             IDataController<long> updatedDataController,
             ITaskStatusController taskStatusController): 
             base(taskStatusController)

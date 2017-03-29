@@ -15,7 +15,7 @@ using GOG.Models;
 
 namespace GOG.TaskActivities.Validate
 {
-    public class ProcessValidationController : TaskActivityController
+    public class ValidateActivity : TaskActivityController
     {
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
@@ -26,7 +26,7 @@ namespace GOG.TaskActivities.Validate
         private IDataController<long> updatedDataController;
         private IRoutingController routingController;
 
-        public ProcessValidationController(
+        public ValidateActivity(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IValidationController validationController,

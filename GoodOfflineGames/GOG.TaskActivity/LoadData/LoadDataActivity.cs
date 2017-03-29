@@ -5,11 +5,11 @@ using Interfaces.TaskStatus;
 
 namespace GOG.TaskActivities.Load
 {
-    public class LoadDataController: TaskActivityController
+    public class LoadDataActivity: TaskActivityController
     {
         private ILoadDelegate[] loadDelegates;
 
-        public LoadDataController(
+        public LoadDataActivity(
             ITaskStatusController taskStatusController,
             params ILoadDelegate[] loadDelegates): 
             base(taskStatusController)
