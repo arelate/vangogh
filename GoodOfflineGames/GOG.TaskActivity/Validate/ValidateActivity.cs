@@ -8,7 +8,6 @@ using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Data;
 using Interfaces.Enumeration;
-using Interfaces.Expectation;
 using Interfaces.Routing;
 using Interfaces.Status;
 
@@ -24,7 +23,6 @@ namespace GOG.Activities.Validate
         private IValidationController validationController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
-        private IExpectedDelegate<string> validationExpectedDelegate;
         private IDataController<long> updatedDataController;
         private IRoutingController routingController;
 
@@ -35,7 +33,6 @@ namespace GOG.Activities.Validate
             IValidationController validationController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
-            IExpectedDelegate<string> validationExpectedDelegate,
             IDataController<long> updatedDataController,
             IRoutingController routingController,
             IStatusController statusController) :
@@ -47,7 +44,6 @@ namespace GOG.Activities.Validate
             this.validationController = validationController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.manualUrlsEnumerationController = manualUrlsEnumerationController;
-            this.validationExpectedDelegate = validationExpectedDelegate;
 
             this.updatedDataController = updatedDataController;
             this.routingController = routingController;
@@ -78,9 +74,6 @@ namespace GOG.Activities.Validate
                 foreach (var manualUrl in manualUrls)
                 {
                     var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl);
-
-                    if (!validationExpectedDelegate.Expected(resolvedUri))
-                        continue;
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(

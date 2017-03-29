@@ -4,19 +4,19 @@ using Interfaces.Status;
 
 namespace Interfaces.Validation
 {
-    public interface IValidateFilenameDelegate
+    public interface IVerifyFilenameDelegate
     {
-        void ValidateFilename(string uri, string expectedFilename);
+        void VerifyFilename(string uri, string expectedFilename);
     }
 
-    public interface IValidateSizeDelegate
+    public interface IVerifySizeDelegate
     {
-        void ValidateSize(string uri, long expectedSize);
+        void VerifySize(string uri, long expectedSize);
     }
 
-    public interface IValidateChunkDelegate
+    public interface IVerifyChunkDelegate
     {
-        Task ValidateChunkAsync(System.IO.Stream fileStream, IValidationChunk chunk);
+        Task VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5);
     }
 
     public interface IValidateDelegate
@@ -25,9 +25,9 @@ namespace Interfaces.Validation
     }
 
     public interface IValidationController:
-        IValidateFilenameDelegate,
-        IValidateSizeDelegate,
-        IValidateChunkDelegate,
+        IVerifyFilenameDelegate,
+        IVerifySizeDelegate,
+        IVerifyChunkDelegate,
         IValidateDelegate
     {
         // ...

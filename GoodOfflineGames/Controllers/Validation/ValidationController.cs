@@ -4,22 +4,19 @@ using System.IO;
 using System.Xml;
 
 using Interfaces.Validation;
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
 using Interfaces.File;
 using Interfaces.Stream;
 using Interfaces.Hash;
 using Interfaces.Status;
+using Interfaces.Expectation;
 
-using Models.ValidationChunk;
 using Models.Units;
 
 namespace Controllers.Validation
 {
     public class ValidationController : IValidationController
     {
-        //private IGetDirectoryDelegate getDirectoryDelegate;
-        //private IGetFilenameDelegate getFilenameDelegate;
+        private IExpectedDelegate<string> validationExpectedDelegate;
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
@@ -27,15 +24,13 @@ namespace Controllers.Validation
         private IStatusController statusController;
 
         public ValidationController(
-            //IGetDirectoryDelegate getDirectoryDelegate,
-            //IGetFilenameDelegate getFilenameDelegate,
+            IExpectedDelegate<string> validationExpectedDelegate,
             IFileController fileController,
             IStreamController streamController,
             IBytesToStringHashController bytesToStringHasController,
             IStatusController statusController)
         {
-            //this.getDirectoryDelegate = getDirectoryDelegate;
-            //this.getFilenameDelegate = getFilenameDelegate;
+            this.validationExpectedDelegate = validationExpectedDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
             this.bytesToStringHasController = bytesToStringHasController;
@@ -44,17 +39,13 @@ namespace Controllers.Validation
             validationXml = new XmlDocument()  { PreserveWhitespace = false };
         }
 
-        public async Task ValidateAsync(string uri, string validationUri, IStatus status)
+        public async Task ValidateAsync(string localFileUri, string validationUri, IStatus status)
         {
-            if (string.IsNullOrEmpty(uri))
+            if (string.IsNullOrEmpty(localFileUri))
                 throw new ArgumentNullException("File location is invalid");
 
-            //var validationFilename = Path.Combine(
-            //    getDirectoryDelegate.GetDirectory(),
-            //    getFilenameDelegate.GetFilename(uri));
-
-            //if (!fileController.Exists(validationFilename))
-            //    return;
+            if (!validationExpectedDelegate.Expected(localFileUri))
+                return;
 
             validationXml.Load(validationUri);
 
@@ -96,11 +87,11 @@ namespace Controllers.Validation
                 throw new OverflowException("Validation XML 'file' element attribute contain data that cannot be processed");
             }
 
-            ValidateFilename(uri, expectedName);
+            VerifyFilename(localFileUri, expectedName);
 
-            ValidateSize(uri, expectedSize);
+            VerifySize(localFileUri, expectedSize);
 
-            using (var fileStream = streamController.OpenReadable(uri))
+            using (var fileStream = streamController.OpenReadable(localFileUri))
             {
                 long length = 0;
 
@@ -117,51 +108,44 @@ namespace Controllers.Validation
                     length += (to - from);
                     expectedMd5 = chunkElement.FirstChild.Value;
 
-                    var chunk = new ValidationChunk()
-                    {
-                        From = from,
-                        To = to,
-                        ExpectedMD5 = expectedMd5
-                    };
-
-                    await ValidateChunkAsync(fileStream, chunk);
+                    await VerifyChunkAsync(fileStream, from, to, expectedMd5);
 
                     statusController.UpdateProgress(
                         status, 
                         length, 
-                        expectedSize, 
-                        uri, 
+                        expectedSize,
+                        localFileUri, 
                         DataUnits.Bytes);
                 }
 
-                statusController.UpdateProgress(status, length, expectedSize, uri);
+                statusController.UpdateProgress(status, length, expectedSize, localFileUri);
             }
         }
 
-        public async Task ValidateChunkAsync(System.IO.Stream fileStream, IValidationChunk chunk)
+        public async Task VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5)
         {
             if (!fileStream.CanSeek)
                 throw new Exception("Unable to seek in the file stream");
 
-            fileStream.Seek(chunk.From, SeekOrigin.Begin);
+            fileStream.Seek(from, SeekOrigin.Begin);
 
-            var length = (int)(chunk.To - chunk.From + 1);
+            var length = (int)(to - from + 1);
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
-            var computedMD5 = bytesToStringHasController.GetHash(buffer);
+            var computedMd5 = bytesToStringHasController.GetHash(buffer);
 
-            if (computedMD5 != chunk.ExpectedMD5)
-                throw new Exception($"Chunk {chunk.From}-{chunk.To} failed validation");
+            if (computedMd5 != expectedMd5)
+                throw new Exception($"Chunk {from}-{to} failed validation");
         }
 
-        public void ValidateFilename(string uri, string expectedFilename)
+        public void VerifyFilename(string uri, string expectedFilename)
         {
             if (Path.GetFileName(uri) != expectedFilename)
                 throw new Exception("Filename doesn't match expected value");
         }
 
-        public void ValidateSize(string uri, long expectedSize)
+        public void VerifySize(string uri, long expectedSize)
         {
             if (fileController.GetSize(uri) != expectedSize)
                 throw new Exception("File size doesn't match expected size");

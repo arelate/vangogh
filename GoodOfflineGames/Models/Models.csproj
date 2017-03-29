@@ -61,7 +61,6 @@
     <Compile Include="Units\ProductUnits.cs" />
     <Compile Include="Units\TimeUnits.cs" />
     <Compile Include="Uris\Uris.cs" />
-    <Compile Include="ValidationChunk\ValidationChunk.cs" />
     <Compile Include="ViewModels\TaskStatusViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +68,9 @@
       <Project>{4b835730-ad7f-4c9f-a390-6d3fa72e52f4}</Project>
       <Name>Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ValidationReport\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -798,8 +798,7 @@ namespace GoodOfflineGames
             // validation controllers
 
             var validationController = new ValidationController(
-                //validationDirectoryDelegate,
-                //validationFilenameDelegate,
+                validationExpectedDelegate,
                 fileController,
                 streamController,
                 md5HashController,
@@ -812,7 +811,6 @@ namespace GoodOfflineGames
                 validationController,
                 gameDetailsDataController,
                 gameDetailsManualUrlsEnumerateDelegate,
-                validationExpectedDelegate,
                 updatedDataController,
                 routingController,
                 statusController);

@@ -95,12 +95,12 @@
     <Compile Include="Tree\TreeToEnumerableController.cs" />
     <Compile Include="Connection\ConnectDelegate.cs" />
     <Compile Include="UpdateUri\GetUpdateUriDelegate.cs" />
-    <Compile Include="Validation\ValidationChunk.cs" />
     <Compile Include="Validation\ValidationController.cs" />
-    <Compile Include="Validation\ValidationDataDownloadController.cs" />
     <Compile Include="ViewModel\ViewModelController.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ValidationReport\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
