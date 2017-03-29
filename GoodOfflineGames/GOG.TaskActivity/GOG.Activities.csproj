@@ -52,7 +52,7 @@
     <Compile Include="LoadData\LoadDataActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authorize\AuthorizeActivity.cs" />
-    <Compile Include="TaskActivityController.cs" />
+    <Compile Include="Activity.cs" />
     <Compile Include="UpdateData\ScreenshotUpdateActivity.cs" />
     <Compile Include="UpdateData\WishlistedUpdateActivity.cs" />
     <Compile Include="ValidateSettings\ValidateSettingsActivity.cs" />

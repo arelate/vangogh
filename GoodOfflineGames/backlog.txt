@@ -2,10 +2,7 @@ Backend
 
 - introduce validation reports with full details on validation for the file
 
-- repair controller?
-	- validate full file and return validation results with all failing chunks and specific validation problems
-	- consolidate validation report and schedule repair
-	- refactor download controller to download range
+- repair controller
 
 - serve data and frontend files via http
 
