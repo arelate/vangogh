@@ -4,31 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.SerializedStorage;
 using Interfaces.ViewController;
 
-namespace GOG.Activities.LogTaskStatus
+namespace GOG.Activities.Report
 {
     public class ReportActivity: Activity
     {
-        private IViewController taskStatusViewController;
+        private IViewController statusViewController;
 
         public ReportActivity(
-            IViewController taskStatusViewController,
-            ITaskStatusController taskStatusController):
-            base(taskStatusController)
+            IViewController statusViewController,
+            IStatusController statusController):
+            base(statusController)
         {
-            this.taskStatusViewController = taskStatusViewController;
+            this.statusViewController = statusViewController;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var reportTask = taskStatusController.Create(taskStatus, "Presenting report on application task status");
-            await taskStatusViewController.PresentViewsAsync();
-            taskStatusController.Complete(reportTask);
+            var reportTask = statusController.Create(status, "Presenting report on application task status");
+            await statusViewController.PresentViewsAsync();
+            statusController.Complete(reportTask);
         }
 
     }

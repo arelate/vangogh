@@ -3,16 +3,16 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.ViewModel;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Formatting;
 
 using Models.Units;
 
 namespace Controllers.ViewModel
 {
-    public class TaskStatusReportViewModelDelegate : IGetViewModelDelegate<ITaskStatus>
+    public class StatusReportViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
-        private static class TaskStatusReportViewModelSchema
+        private static class statusReportViewModelSchema
         {
             public const string Complete = "complete";
             public const string Title = "title";
@@ -34,7 +34,7 @@ namespace Controllers.ViewModel
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
 
-        public TaskStatusReportViewModelDelegate(
+        public StatusReportViewModelDelegate(
             IFormattingController bytesFormattingController,
             IFormattingController secondsFormattingController)
         {
@@ -42,80 +42,80 @@ namespace Controllers.ViewModel
             this.secondsFormattingController = secondsFormattingController;
         }
 
-        public IDictionary<string, string> GetViewModel(ITaskStatus taskStatus)
+        public IDictionary<string, string> GetViewModel(IStatus status)
         {
             // viewmodel schemas
             var viewModel = new Dictionary<string, string>()
             {
-                { TaskStatusReportViewModelSchema.Title, "" },
-                { TaskStatusReportViewModelSchema.Complete, "" },
-                { TaskStatusReportViewModelSchema.Started, "" },
-                { TaskStatusReportViewModelSchema.Duration, "" },
-                { TaskStatusReportViewModelSchema.Result, "" },
-                { TaskStatusReportViewModelSchema.ContainsProgress, "" },
-                { TaskStatusReportViewModelSchema.ProgressTarget, "" },
-                { TaskStatusReportViewModelSchema.ProgressCurrent, "" },
-                { TaskStatusReportViewModelSchema.ProgressTotal, "" },
-                { TaskStatusReportViewModelSchema.ContainsFailures, ""},
-                { TaskStatusReportViewModelSchema.Failures, ""},
-                { TaskStatusReportViewModelSchema.ContainsWarnings, ""},
-                { TaskStatusReportViewModelSchema.Warnings, ""},
-                { TaskStatusReportViewModelSchema.ContainsInformation, ""},
-                { TaskStatusReportViewModelSchema.Information, ""}
+                { statusReportViewModelSchema.Title, "" },
+                { statusReportViewModelSchema.Complete, "" },
+                { statusReportViewModelSchema.Started, "" },
+                { statusReportViewModelSchema.Duration, "" },
+                { statusReportViewModelSchema.Result, "" },
+                { statusReportViewModelSchema.ContainsProgress, "" },
+                { statusReportViewModelSchema.ProgressTarget, "" },
+                { statusReportViewModelSchema.ProgressCurrent, "" },
+                { statusReportViewModelSchema.ProgressTotal, "" },
+                { statusReportViewModelSchema.ContainsFailures, ""},
+                { statusReportViewModelSchema.Failures, ""},
+                { statusReportViewModelSchema.ContainsWarnings, ""},
+                { statusReportViewModelSchema.Warnings, ""},
+                { statusReportViewModelSchema.ContainsInformation, ""},
+                { statusReportViewModelSchema.Information, ""}
             };
 
-            viewModel[TaskStatusReportViewModelSchema.Title] = taskStatus.Title;
-            viewModel[TaskStatusReportViewModelSchema.Complete] = taskStatus.Complete ? "true" : "";
-            viewModel[TaskStatusReportViewModelSchema.Started] = taskStatus.Started.ToLocalTime().ToString();
-            viewModel[TaskStatusReportViewModelSchema.Duration] =
-                taskStatus.Complete ?
-                secondsFormattingController.Format((taskStatus.Completed - taskStatus.Started).Seconds) :
+            viewModel[statusReportViewModelSchema.Title] = status.Title;
+            viewModel[statusReportViewModelSchema.Complete] = status.Complete ? "true" : "";
+            viewModel[statusReportViewModelSchema.Started] = status.Started.ToLocalTime().ToString();
+            viewModel[statusReportViewModelSchema.Duration] =
+                status.Complete ?
+                secondsFormattingController.Format((status.Completed - status.Started).Seconds) :
                 "";
 
             var results = new List<string>();
-            if (taskStatus.Failures != null && taskStatus.Failures.Any()) results.Add("Failure(s)");
-            if (taskStatus.Warnings != null && taskStatus.Warnings.Any()) results.Add("Warning(s)");
+            if (status.Failures != null && status.Failures.Any()) results.Add("Failure(s)");
+            if (status.Warnings != null && status.Warnings.Any()) results.Add("Warning(s)");
             var result = string.Join(",", results);
             if (string.IsNullOrEmpty(result)) result = "Success";
-            viewModel[TaskStatusReportViewModelSchema.Result] = result;
+            viewModel[statusReportViewModelSchema.Result] = result;
 
-            if (taskStatus.Progress != null)
+            if (status.Progress != null)
             {
-                var current = taskStatus.Progress.Current;
-                var total = taskStatus.Progress.Total;
+                var current = status.Progress.Current;
+                var total = status.Progress.Total;
 
-                viewModel[TaskStatusReportViewModelSchema.ContainsProgress] = "true";
-                viewModel[TaskStatusReportViewModelSchema.ProgressTarget] = taskStatus.Progress.Target;
+                viewModel[statusReportViewModelSchema.ContainsProgress] = "true";
+                viewModel[statusReportViewModelSchema.ProgressTarget] = status.Progress.Target;
 
                 var currentFormatted = current.ToString();
                 var totalFormatted = total.ToString();
 
-                if (taskStatus.Progress.Unit == DataUnits.Bytes)
+                if (status.Progress.Unit == DataUnits.Bytes)
                 {
                     currentFormatted = bytesFormattingController.Format(current);
                     totalFormatted = bytesFormattingController.Format(total);
                 }
 
-                viewModel[TaskStatusReportViewModelSchema.ProgressCurrent] = currentFormatted;
-                viewModel[TaskStatusReportViewModelSchema.ProgressTotal] = totalFormatted;
+                viewModel[statusReportViewModelSchema.ProgressCurrent] = currentFormatted;
+                viewModel[statusReportViewModelSchema.ProgressTotal] = totalFormatted;
             }
 
-            if (taskStatus.Failures != null && taskStatus.Failures.Any())
+            if (status.Failures != null && status.Failures.Any())
             {
-                viewModel[TaskStatusReportViewModelSchema.ContainsFailures] = "true";
-                viewModel[TaskStatusReportViewModelSchema.Failures] = string.Join("; ", taskStatus.Failures);
+                viewModel[statusReportViewModelSchema.ContainsFailures] = "true";
+                viewModel[statusReportViewModelSchema.Failures] = string.Join("; ", status.Failures);
             }
 
-            if (taskStatus.Warnings != null && taskStatus.Warnings.Any())
+            if (status.Warnings != null && status.Warnings.Any())
             {
-                viewModel[TaskStatusReportViewModelSchema.ContainsWarnings] = "true";
-                viewModel[TaskStatusReportViewModelSchema.Warnings] = string.Join("; ", taskStatus.Warnings);
+                viewModel[statusReportViewModelSchema.ContainsWarnings] = "true";
+                viewModel[statusReportViewModelSchema.Warnings] = string.Join("; ", status.Warnings);
             }
 
-            if (taskStatus.Information != null && taskStatus.Information.Any())
+            if (status.Information != null && status.Information.Any())
             {
-                viewModel[TaskStatusReportViewModelSchema.ContainsInformation] = "true";
-                viewModel[TaskStatusReportViewModelSchema.Information] = string.Join("; ", taskStatus.Information);
+                viewModel[statusReportViewModelSchema.ContainsInformation] = "true";
+                viewModel[statusReportViewModelSchema.Information] = string.Join("; ", status.Information);
             }
 
             return viewModel;

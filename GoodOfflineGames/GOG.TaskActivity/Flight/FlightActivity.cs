@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Activity;
 using Interfaces.FlightPlan;
 using Interfaces.Naming;
@@ -18,15 +18,15 @@ namespace GOG.Activities.Flight
             IFlightPlanProperty flightPlanProperty,
             IGetNameDelegate nameDelegate,
             IDictionary<string, IActivity> flightActivities,
-            ITaskStatusController taskStatusController) :
-            base(taskStatusController)
+            IStatusController statusController) :
+            base(statusController)
         {
             this.flightPlanProperty = flightPlanProperty;
             this.nameDelegate = nameDelegate;
             this.flightActivities = flightActivities;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             if (flightPlanProperty == null ||
                 flightPlanProperty.FlightPlan == null)
@@ -56,12 +56,12 @@ namespace GOG.Activities.Flight
                     flightPlan.Add(parameters);
             }
 
-            var flightingTask = taskStatusController.Create(taskStatus, "Process flightPlan.json");
+            var flightingTask = statusController.Create(status, "Process flightPlan.json");
             var current = 0;
 
             foreach (var activityName in flightPlan)
             {
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     flightingTask, 
                     ++current, 
                     flightPlan.Count,
@@ -73,10 +73,10 @@ namespace GOG.Activities.Flight
                 var activity = flightActivities[activityName];
                 if (activity == null) continue;
 
-                await activity.ProcessActivityAsync(taskStatus);
+                await activity.ProcessActivityAsync(status);
             }
 
-            taskStatusController.Complete(flightingTask);
+            statusController.Complete(flightingTask);
         }
     }
 }

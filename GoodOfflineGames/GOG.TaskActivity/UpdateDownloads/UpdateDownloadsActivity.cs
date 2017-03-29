@@ -6,7 +6,7 @@ using Interfaces.DownloadSources;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.File;
 
 using Models.ProductCore;
@@ -35,8 +35,8 @@ namespace GOG.Activities.UpdateDownloads
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
-            ITaskStatusController taskStatusController) :
-            base(taskStatusController)
+            IStatusController statusController) :
+            base(statusController)
         {
             this.downloadParameter = downloadParameter;
             this.downloadSourcesController = downloadSourcesController;
@@ -47,18 +47,18 @@ namespace GOG.Activities.UpdateDownloads
             this.productsDataController = productsDataController;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateDownloadsTask = taskStatusController.Create(
-                taskStatus,
+            var updateDownloadsTask = statusController.Create(
+                status,
                 $"Update {downloadParameter} downloads");
 
-            var getSourcesTask = taskStatusController.Create(
+            var getSourcesTask = statusController.Create(
                 updateDownloadsTask,
                 $"Get {downloadParameter} download sources");
 
             var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync(getSourcesTask);
-            taskStatusController.Complete(getSourcesTask);
+            statusController.Complete(getSourcesTask);
 
             var counter = 0;
 
@@ -78,14 +78,14 @@ namespace GOG.Activities.UpdateDownloads
 
                     if (product == null)
                     {
-                        taskStatusController.Warn(
+                        statusController.Warn(
                             updateDownloadsTask,
                             $"Downloads are scheduled for the product/account product {id} that doesn't exist");
                         continue;
                     }
                 }
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     updateDownloadsTask, 
                     ++counter, 
                     downloadSources.Count, 
@@ -109,7 +109,7 @@ namespace GOG.Activities.UpdateDownloads
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
-                var scheduleDownloadsTask = taskStatusController.Create(
+                var scheduleDownloadsTask = statusController.Create(
                     updateDownloadsTask,
                     "Schedule new downloads");
 
@@ -138,10 +138,10 @@ namespace GOG.Activities.UpdateDownloads
 
                 await productDownloadsDataController.UpdateAsync(scheduleDownloadsTask, productDownloads);
 
-                taskStatusController.Complete(scheduleDownloadsTask);
+                statusController.Complete(scheduleDownloadsTask);
             }
 
-            taskStatusController.Complete(updateDownloadsTask);
+            statusController.Complete(updateDownloadsTask);
         }
     }
 }

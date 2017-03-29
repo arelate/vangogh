@@ -4,7 +4,7 @@ using System.Linq;
 using Interfaces.RequestPage;
 using Interfaces.Data;
 using Interfaces.DataRefinement;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Models.ProductCore;
 
@@ -33,9 +33,9 @@ namespace GOG.Activities.UpdateData
             IPageResultsExtractionController<PageType, Type> pageResultsExtractingController,
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
-            ITaskStatusController taskStatusController,
+            IStatusController statusController,
             IDataRefinementController<Type> dataRefinementController = null) :
-            base(taskStatusController)
+            base(statusController)
         {
             this.productParameter = productParameter;
 
@@ -48,26 +48,26 @@ namespace GOG.Activities.UpdateData
             this.dataRefinementController = dataRefinementController;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateAllProductsTask = taskStatusController.Create(taskStatus, $"Update {productParameter} data");
+            var updateAllProductsTask = statusController.Create(status, $"Update {productParameter} data");
 
             var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
 
-            var extractTask = taskStatusController.Create(updateAllProductsTask, $"Extract {productParameter} data");
+            var extractTask = statusController.Create(updateAllProductsTask, $"Extract {productParameter} data");
             var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
-            taskStatusController.Complete(extractTask);
+            statusController.Complete(extractTask);
 
-            var refineDataTask = taskStatusController.Create(updateAllProductsTask, $"Refining {productParameter}");
+            var refineDataTask = statusController.Create(updateAllProductsTask, $"Refining {productParameter}");
             if (dataRefinementController != null)
                 await dataRefinementController.RefineData(newProducts, refineDataTask);
-            taskStatusController.Complete(refineDataTask);
+            statusController.Complete(refineDataTask);
 
-            var updateTask = taskStatusController.Create(updateAllProductsTask, $"Update {productParameter}");
+            var updateTask = statusController.Create(updateAllProductsTask, $"Update {productParameter}");
             await dataController.UpdateAsync(updateTask, newProducts.ToArray());
-            taskStatusController.Complete(updateTask);
+            statusController.Complete(updateTask);
 
-            taskStatusController.Complete(updateAllProductsTask);
+            statusController.Complete(updateAllProductsTask);
         }
     }
 }

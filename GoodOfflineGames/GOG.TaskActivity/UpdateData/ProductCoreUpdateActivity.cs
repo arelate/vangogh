@@ -6,7 +6,7 @@ using Interfaces.Connection;
 using Interfaces.UpdateUri;
 using Interfaces.UpdateIdentity;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Models.ProductCore;
 using Models.Units;
@@ -40,9 +40,9 @@ namespace GOG.Activities.UpdateData
             IDataController<long> updatedDataController,
             IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate,
-            ITaskStatusController taskStatusController,
+            IStatusController statusController,
             IConnectDelegate<UpdateType, ListType> connectDelegate = null) :
-            base(taskStatusController)
+            base(statusController)
         {
             this.updateTypeDataController = updateTypeDataController;
             this.listTypeDataController = listTypeDataController;
@@ -58,13 +58,13 @@ namespace GOG.Activities.UpdateData
             updateTypeDescription = typeof(UpdateType).Name;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateProductsTask = taskStatusController.Create(taskStatus, "Update products type: " + updateTypeDescription);
+            var updateProductsTask = statusController.Create(status, "Update products type: " + updateTypeDescription);
 
             var updatedProducts = new List<long>();
 
-            var missingDataEnumerationTask = taskStatusController.Create(updateProductsTask, "Enumerate missing data");
+            var missingDataEnumerationTask = statusController.Create(updateProductsTask, "Enumerate missing data");
 
             foreach (var id in listTypeDataController.EnumerateIds())
             {
@@ -72,13 +72,13 @@ namespace GOG.Activities.UpdateData
                     updatedProducts.Add(id);
             }
 
-            taskStatusController.Complete(missingDataEnumerationTask);
+            statusController.Complete(missingDataEnumerationTask);
 
-            var addUpdatedTask = taskStatusController.Create(updateProductsTask, "Add updated or new products");
+            var addUpdatedTask = statusController.Create(updateProductsTask, "Add updated or new products");
 
             updatedProducts.AddRange(updatedDataController.EnumerateIds());
 
-            taskStatusController.Complete(addUpdatedTask);
+            statusController.Complete(addUpdatedTask);
 
             var currentProduct = 0;
 
@@ -87,7 +87,7 @@ namespace GOG.Activities.UpdateData
                 var product = await listTypeDataController.GetByIdAsync(id);
                 if (product == null) continue;
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     updateProductsTask,
                     ++currentProduct,
                     updatedProducts.Count,
@@ -110,7 +110,7 @@ namespace GOG.Activities.UpdateData
                 }
             }
 
-            taskStatusController.Complete(updateProductsTask);
+            statusController.Complete(updateProductsTask);
         }
     }
 }

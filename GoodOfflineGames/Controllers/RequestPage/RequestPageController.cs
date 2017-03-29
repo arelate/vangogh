@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Network;
 using Interfaces.RequestPage;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Controllers.RequestPage
 {
@@ -23,14 +23,14 @@ namespace Controllers.RequestPage
             string uri,
             IDictionary<string, string> parameters,
             int page,
-            ITaskStatus taskStatus)
+            IStatus status)
         {
             if (!parameters.Keys.Contains(pageQueryParameter))
                 parameters.Add(pageQueryParameter, page.ToString());
 
             parameters[pageQueryParameter] = page.ToString();
 
-            var pageResponse = await networkController.Get(taskStatus, uri, parameters);
+            var pageResponse = await networkController.Get(status, uri, parameters);
 
             return pageResponse;
         }

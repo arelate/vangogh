@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Interfaces.Validation
 {
@@ -21,7 +21,7 @@ namespace Interfaces.Validation
 
     public interface IValidateDelegate
     {
-        Task ValidateAsync(string uri, ITaskStatus taskStatus);
+        Task ValidateAsync(string uri, IStatus status);
     }
 
     public interface IValidationController:

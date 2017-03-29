@@ -2,27 +2,27 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
-namespace Models.TaskStatus
+namespace Models.Status
 {
     [DataContract]
-    [KnownType(typeof(TaskStatus))]
-    [KnownType(typeof(TaskProgress))]
-    public class TaskStatus: ITaskStatus
+    [KnownType(typeof(Status))]
+    [KnownType(typeof(StatusProgress))]
+    public class Status: IStatus
     {
         [DataMember(Name = "complete")]
         public bool Complete { get; set; }
         [DataMember(Name = "title")]
         public string Title { get; set; }
         [DataMember(Name = "progress")]
-        public ITaskProgress Progress { get; set; }
+        public IStatusProgress Progress { get; set; }
         [DataMember(Name = "started")]
         public DateTime Started { get; set; } = DateTime.UtcNow;
         [DataMember(Name = "completed")]
         public DateTime Completed { get; set; }
         [DataMember(Name = "children")]
-        public IList<ITaskStatus> Children { get; set; }
+        public IList<IStatus> Children { get; set; }
         [DataMember(Name = "warnings")]
         public IList<string> Warnings { get; set; }
         [DataMember(Name = "failures")]
@@ -32,7 +32,7 @@ namespace Models.TaskStatus
     }
 
     [DataContract]
-    public class TaskProgress: ITaskProgress
+    public class StatusProgress: IStatusProgress
     {
         [DataMember(Name = "target")]
         public string Target { get; set; }

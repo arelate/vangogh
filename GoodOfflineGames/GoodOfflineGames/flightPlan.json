@@ -4,5 +4,5 @@
 	{ "activity": "processDownloads", "parameters": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles" ] },
 	{ "activity": "validate", "parameters": [ "productsFiles" ]},
 	{ "activity": "cleanup", "parameters": [ "directories", "files", "updated" ]},
-	{ "activity": "logTaskStatus", "parameters": [ "true" ] }
+	{ "activity": "report", "parameters": [ "status" ] }
 ]

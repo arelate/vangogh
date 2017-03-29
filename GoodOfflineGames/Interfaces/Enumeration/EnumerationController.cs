@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Interfaces.Enumeration
 {
@@ -15,7 +15,7 @@ namespace Interfaces.Enumeration
 
     public interface IEnumerateDelegate
     {
-        IEnumerable<string> Enumerate(ITaskStatus taskStatus);
+        IEnumerable<string> Enumerate(IStatus status);
     }
 
     public interface IEnumerateAsyncDelegate<Type>
@@ -25,6 +25,6 @@ namespace Interfaces.Enumeration
 
     public interface IEnumerateAsyncDelegate
     {
-        Task<IList<string>> EnumerateAsync(ITaskStatus taskStatus);
+        Task<IList<string>> EnumerateAsync(IStatus status);
     }
 }

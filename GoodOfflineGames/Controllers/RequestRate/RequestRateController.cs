@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using Interfaces.RequestRate;
 using Interfaces.Throttle;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Collection;
 
 namespace Controllers.RequestRate
@@ -13,7 +13,7 @@ namespace Controllers.RequestRate
     {
         private IThrottleController throttleController;
         private ICollectionController collectionController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
         private Dictionary<string, DateTime> lastRequestToUriPrefix;
         private string[] uriPrefixes;
         private const int requestIntervalSeconds = 2 * 60;
@@ -21,12 +21,12 @@ namespace Controllers.RequestRate
         public RequestRateController(
             IThrottleController throttleController,
             ICollectionController collectionController,
-            ITaskStatusController taskStatusController,
+            IStatusController statusController,
             params string[] uriPrefixes)
         {
             this.throttleController = throttleController;
             this.collectionController = collectionController;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
 
             this.uriPrefixes = uriPrefixes;
@@ -38,7 +38,7 @@ namespace Controllers.RequestRate
                         DateTime.UtcNow - TimeSpan.FromSeconds(requestIntervalSeconds));
         }
 
-        public void EnforceRequestRate(string uri, ITaskStatus taskStatus)
+        public void EnforceRequestRate(string uri, IStatus status)
         {
             var prefix = collectionController.Reduce(uriPrefixes, p => uri.StartsWith(p)).SingleOrDefault();
             if (string.IsNullOrEmpty(prefix)) return;
@@ -47,9 +47,9 @@ namespace Controllers.RequestRate
             var elapsed = (int) (now - lastRequestToUriPrefix[prefix]).TotalSeconds;
             if (elapsed < requestIntervalSeconds)
             {
-                var limitRateTask = taskStatusController.Create(taskStatus, "Limit request rate to avoid temporary server block");
-                throttleController.Throttle(requestIntervalSeconds - elapsed, taskStatus);
-                taskStatusController.Complete(limitRateTask);
+                var limitRateTask = statusController.Create(status, "Limit request rate to avoid temporary server block");
+                throttleController.Throttle(requestIntervalSeconds - elapsed, status);
+                statusController.Complete(limitRateTask);
             }
 
             lastRequestToUriPrefix[prefix] = now;

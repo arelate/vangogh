@@ -1,10 +1,10 @@
-﻿using Interfaces.TaskStatus;
+﻿using Interfaces.Status;
 
 namespace Interfaces.RequestRate
 {
     public interface IEnforceRequestRateDelegate
     {
-        void EnforceRequestRate(string uri, ITaskStatus taskStatus);
+        void EnforceRequestRate(string uri, IStatus status);
     }
 
     public interface IRequestRateController:

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Interfaces.Routing
 {
     public interface IUpdateRouteAsyncDelegate
     {
-        Task UpdateRouteAsync(long id, string title, string source, string destination, ITaskStatus taskStatus);
+        Task UpdateRouteAsync(long id, string title, string source, string destination, IStatus status);
     }
 
     public interface ITraceRouteAsyncDelegate

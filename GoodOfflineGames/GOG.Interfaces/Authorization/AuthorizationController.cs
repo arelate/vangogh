@@ -1,22 +1,22 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace GOG.Interfaces.Authorization
 {
     public interface IAuthorizeDelegate
     {
-        Task Authorize(string username, string password, ITaskStatus taskStatus);
+        Task Authorize(string username, string password, IStatus status);
     }
 
     public interface IIsAuthorizedDelegate
     {
-        Task<bool> IsAuthorized(ITaskStatus taskStatus);
+        Task<bool> IsAuthorized(IStatus status);
     }
 
     public interface IDeauthorizeDelegate
     {
-        Task Deauthorize(ITaskStatus taskStatus);
+        Task Deauthorize(IStatus status);
     }
 
     public interface IAuthorizationController:

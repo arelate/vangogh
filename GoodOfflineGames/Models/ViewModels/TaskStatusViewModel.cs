@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.ViewModels
 {
-    public class TaskStatusViewModel
+    public class statusViewModel
     {
         public string Text { get; set; }
         public string[] Colors { get; set; }

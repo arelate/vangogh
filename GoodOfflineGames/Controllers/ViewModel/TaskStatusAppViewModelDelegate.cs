@@ -3,16 +3,16 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.ViewModel;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Formatting;
 
 using Models.Units;
 
 namespace Controllers.ViewModel
 {
-    public class TaskStatusAppViewModelDelegate : IGetViewModelDelegate<ITaskStatus>
+    public class StatusAppViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
-        private static class TaskStatusAppViewModelSchema
+        private static class statusAppViewModelSchema
         {
             public const string Title = "title";
             public const string ContainsProgress = "containsProgress";
@@ -32,7 +32,7 @@ namespace Controllers.ViewModel
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
 
-        public TaskStatusAppViewModelDelegate(
+        public StatusAppViewModelDelegate(
             IFormattingController bytesFormattingController,
             IFormattingController secondsFormattingController)
         {
@@ -40,72 +40,72 @@ namespace Controllers.ViewModel
             this.secondsFormattingController = secondsFormattingController;
         }
 
-        public IDictionary<string, string> GetViewModel(ITaskStatus taskStatus)
+        public IDictionary<string, string> GetViewModel(IStatus status)
         {
-            if (taskStatus.Complete) return null;
+            if (status.Complete) return null;
 
             // viewmodel schemas
             var viewModel = new Dictionary<string, string>()
             {
-                { TaskStatusAppViewModelSchema.Title, "" },
-                { TaskStatusAppViewModelSchema.ContainsProgress, "" },
-                { TaskStatusAppViewModelSchema.ProgressTarget, "" },
-                { TaskStatusAppViewModelSchema.ProgressPercent, "" },
-                { TaskStatusAppViewModelSchema.ProgressCurrent, "" },
-                { TaskStatusAppViewModelSchema.ProgressTotal, "" },
-                { TaskStatusAppViewModelSchema.ContainsETA, "" },
-                { TaskStatusAppViewModelSchema.RemainingTime, "" },
-                { TaskStatusAppViewModelSchema.AverageUnitsPerSecond, "" },
-                { TaskStatusAppViewModelSchema.ContainsFailures, ""},
-                { TaskStatusAppViewModelSchema.FailuresCount, ""},
-                { TaskStatusAppViewModelSchema.ContainsWarnings, ""},
-                { TaskStatusAppViewModelSchema.WarningsCount, ""}
+                { statusAppViewModelSchema.Title, "" },
+                { statusAppViewModelSchema.ContainsProgress, "" },
+                { statusAppViewModelSchema.ProgressTarget, "" },
+                { statusAppViewModelSchema.ProgressPercent, "" },
+                { statusAppViewModelSchema.ProgressCurrent, "" },
+                { statusAppViewModelSchema.ProgressTotal, "" },
+                { statusAppViewModelSchema.ContainsETA, "" },
+                { statusAppViewModelSchema.RemainingTime, "" },
+                { statusAppViewModelSchema.AverageUnitsPerSecond, "" },
+                { statusAppViewModelSchema.ContainsFailures, ""},
+                { statusAppViewModelSchema.FailuresCount, ""},
+                { statusAppViewModelSchema.ContainsWarnings, ""},
+                { statusAppViewModelSchema.WarningsCount, ""}
             };
 
-            viewModel[TaskStatusAppViewModelSchema.Title] = taskStatus.Title;
+            viewModel[statusAppViewModelSchema.Title] = status.Title;
 
-            if (taskStatus.Progress != null)
+            if (status.Progress != null)
             {
-                var current = taskStatus.Progress.Current;
-                var total = taskStatus.Progress.Total;
+                var current = status.Progress.Current;
+                var total = status.Progress.Total;
 
-                viewModel[TaskStatusAppViewModelSchema.ContainsProgress] = "true";
-                viewModel[TaskStatusAppViewModelSchema.ProgressTarget] = taskStatus.Progress.Target;
-                viewModel[TaskStatusAppViewModelSchema.ProgressPercent] = string.Format("{0:P1}", (double)current / total);
+                viewModel[statusAppViewModelSchema.ContainsProgress] = "true";
+                viewModel[statusAppViewModelSchema.ProgressTarget] = status.Progress.Target;
+                viewModel[statusAppViewModelSchema.ProgressPercent] = string.Format("{0:P1}", (double)current / total);
 
                 var currentFormatted = current.ToString();
                 var totalFormatted = total.ToString();
 
-                if (taskStatus.Progress.Unit == DataUnits.Bytes)
+                if (status.Progress.Unit == DataUnits.Bytes)
                 {
-                    viewModel[TaskStatusAppViewModelSchema.ContainsETA] = "true";
+                    viewModel[statusAppViewModelSchema.ContainsETA] = "true";
 
                     currentFormatted = bytesFormattingController.Format(current);
                     totalFormatted = bytesFormattingController.Format(total);
 
-                    var elapsed = DateTime.UtcNow - taskStatus.Started;
+                    var elapsed = DateTime.UtcNow - status.Started;
                     var unitsPerSecond = current / elapsed.TotalSeconds;
                     var speed = bytesFormattingController.Format((long)unitsPerSecond);
                     var remainingTime = secondsFormattingController.Format((long)((total - current) / unitsPerSecond));
 
-                    viewModel[TaskStatusAppViewModelSchema.RemainingTime] = remainingTime;
-                    viewModel[TaskStatusAppViewModelSchema.AverageUnitsPerSecond] = speed;
+                    viewModel[statusAppViewModelSchema.RemainingTime] = remainingTime;
+                    viewModel[statusAppViewModelSchema.AverageUnitsPerSecond] = speed;
                 }
 
-                viewModel[TaskStatusAppViewModelSchema.ProgressCurrent] = currentFormatted;
-                viewModel[TaskStatusAppViewModelSchema.ProgressTotal] = totalFormatted;
+                viewModel[statusAppViewModelSchema.ProgressCurrent] = currentFormatted;
+                viewModel[statusAppViewModelSchema.ProgressTotal] = totalFormatted;
             }
 
-            if (taskStatus.Failures != null && taskStatus.Failures.Any())
+            if (status.Failures != null && status.Failures.Any())
             {
-                viewModel[TaskStatusAppViewModelSchema.ContainsFailures] = "true";
-                viewModel[TaskStatusAppViewModelSchema.FailuresCount] = taskStatus.Failures.Count.ToString();
+                viewModel[statusAppViewModelSchema.ContainsFailures] = "true";
+                viewModel[statusAppViewModelSchema.FailuresCount] = status.Failures.Count.ToString();
             }
 
-            if (taskStatus.Warnings != null && taskStatus.Warnings.Any())
+            if (status.Warnings != null && status.Warnings.Any())
             {
-                viewModel[TaskStatusAppViewModelSchema.ContainsWarnings] = "true";
-                viewModel[TaskStatusAppViewModelSchema.WarningsCount] = taskStatus.Warnings.Count.ToString();
+                viewModel[statusAppViewModelSchema.ContainsWarnings] = "true";
+                viewModel[statusAppViewModelSchema.WarningsCount] = status.Warnings.Count.ToString();
             }
 
             return viewModel;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.Network;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Models.Uris;
 
@@ -17,26 +17,26 @@ namespace GOG.Activities.UpdateData
         public WishlistedUpdateActivity(
             IGetDeserializedDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,
-            ITaskStatusController taskStatusController) :
-            base(taskStatusController)
+            IStatusController statusController) :
+            base(statusController)
         {
             this.getProductsPageResultDelegate = getProductsPageResultDelegate;
             this.wishlistedDataController = wishlistedDataController;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateWishlistTask = taskStatusController.Create(taskStatus, "Update wishlisted products");
+            var updateWishlistTask = statusController.Create(status, "Update wishlisted products");
 
-            var requestContentTask = taskStatusController.Create(updateWishlistTask, "Request wishlist content");
+            var requestContentTask = statusController.Create(updateWishlistTask, "Request wishlist content");
 
             var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserialized(
                 requestContentTask,
                 Uris.Paths.Account.Wishlist);
 
-            taskStatusController.Complete(requestContentTask);
+            statusController.Complete(requestContentTask);
 
-            var saveDataTask = taskStatusController.Create(updateWishlistTask, "Add new wishlisted products");
+            var saveDataTask = statusController.Create(updateWishlistTask, "Add new wishlisted products");
 
             var wishlistedIds = new List<long>();
 
@@ -48,9 +48,9 @@ namespace GOG.Activities.UpdateData
 
             await wishlistedDataController.UpdateAsync(saveDataTask, wishlistedIds.ToArray());
 
-            taskStatusController.Complete(saveDataTask);
+            statusController.Complete(saveDataTask);
 
-            taskStatusController.Complete(updateWishlistTask);
+            statusController.Complete(updateWishlistTask);
         }
     }
 }

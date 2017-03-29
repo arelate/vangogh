@@ -6,7 +6,7 @@ using System.Linq;
 using Interfaces.DownloadSources;
 using Interfaces.ImageUri;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.File;
@@ -21,31 +21,31 @@ namespace GOG.Controllers.DownloadSources
         private IImageUriController screenshotUriController;
         private IGetDirectoryDelegate screenshotsDirectoryDelegate;
         private IFileController fileController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public ScreenshotsDownloadSourcesController(
             IDataController<ProductScreenshots> screenshotsDataController,
             IImageUriController screenshotUriController,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
             IFileController fileController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.screenshotsDataController = screenshotsDataController;
             this.screenshotUriController = screenshotUriController;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
             this.fileController = fileController;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(ITaskStatus taskStatus)
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
         {
-            var processUpdatesTask = taskStatusController.Create(taskStatus, "Process screenshots updates");
+            var processUpdatesTask = statusController.Create(status, "Process screenshots updates");
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
             var current = 0;
             var total = screenshotsDataController.Count();
 
-            var processProductsScreenshotsTask = taskStatusController.Create(processUpdatesTask, "Process product screenshots");
+            var processProductsScreenshotsTask = statusController.Create(processUpdatesTask, "Process product screenshots");
 
             foreach (var id in screenshotsDataController.EnumerateIds())
             {
@@ -53,11 +53,11 @@ namespace GOG.Controllers.DownloadSources
 
                 if (productScreenshots == null)
                 {
-                    taskStatusController.Warn(processProductsScreenshotsTask, $"Product {id} doesn't have screenshots");
+                    statusController.Warn(processProductsScreenshotsTask, $"Product {id} doesn't have screenshots");
                     continue;
                 }
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     processUpdatesTask, 
                     ++current, 
                     total,
@@ -81,8 +81,8 @@ namespace GOG.Controllers.DownloadSources
                     screenshotsSources.Add(id, currentProductScreenshotSources);
             }
 
-            taskStatusController.Complete(processProductsScreenshotsTask);
-            taskStatusController.Complete(processUpdatesTask);
+            statusController.Complete(processProductsScreenshotsTask);
+            statusController.Complete(processUpdatesTask);
 
             return screenshotsSources;
         }

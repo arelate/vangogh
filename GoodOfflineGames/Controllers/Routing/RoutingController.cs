@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.Routing;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Models.ProductRoutes;
 
@@ -55,7 +55,7 @@ namespace Controllers.Routing
             return destination;
         } 
 
-        public async Task UpdateRouteAsync(long id, string title, string source, string destination, ITaskStatus taskStatus)
+        public async Task UpdateRouteAsync(long id, string title, string source, string destination, IStatus status)
         {
             if (source == destination)
                 throw new System.ArgumentException("Destination cannot be the same as source");
@@ -87,7 +87,7 @@ namespace Controllers.Routing
                     Destination = destination
                 });
 
-            await productRoutesDataController.UpdateAsync(taskStatus, productRoutes);
+            await productRoutesDataController.UpdateAsync(status, productRoutes);
         }
     }
 }

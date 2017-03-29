@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Network;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using GOG.Models;
 
@@ -18,9 +18,9 @@ namespace GOG.Controllers.Network
             this.gogDataGetDeserializedDelegate = gogDataGetDeserializedDelegate;
         }
 
-        public async Task<GameProductData> GetDeserialized(ITaskStatus taskStatus, string uri, IDictionary<string, string> parameters = null)
+        public async Task<GameProductData> GetDeserialized(IStatus status, string uri, IDictionary<string, string> parameters = null)
         {
-            var gogData = await gogDataGetDeserializedDelegate.GetDeserialized(taskStatus, uri, parameters);
+            var gogData = await gogDataGetDeserializedDelegate.GetDeserialized(status, uri, parameters);
             return gogData.GameProductData;
         }
     }

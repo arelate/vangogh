@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.RequestPage;
 using Interfaces.Serialization;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.UpdateUri;
 using Interfaces.Hash;
 using Interfaces.QueryParameters;
@@ -24,7 +24,7 @@ namespace GOG.Controllers.PageResults
         private IRequestPageController requestPageController;
         private IHashTrackingController hashTrackingController;
         private ISerializationController<string> serializationController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         private string requestUri;
         private IDictionary<string, string> requestParameters;
@@ -36,7 +36,7 @@ namespace GOG.Controllers.PageResults
             IRequestPageController requestPageController,
             IHashTrackingController hashTrackingController,
             ISerializationController<string> serializationController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.productParameter = productParameter;
             this.getUpdateUriDelegate = getUpdateUriDelegate;
@@ -46,13 +46,13 @@ namespace GOG.Controllers.PageResults
             this.hashTrackingController = hashTrackingController;
             this.serializationController = serializationController;
 
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
 
             requestUri = getUpdateUriDelegate.GetUpdateUri(productParameter);
             requestParameters = getQueryParametersDelegate.GetQueryParameters(productParameter);
         }
 
-        public async Task<IList<T>> GetPageResults(ITaskStatus taskStatus)
+        public async Task<IList<T>> GetPageResults(IStatus status)
         {
             // GOG.com quirk
             // Products, AccountProducts use server-side paginated results, similar to Wikipedia.
@@ -71,7 +71,7 @@ namespace GOG.Controllers.PageResults
             var totalPages = 1;
             T pageResult = null;
 
-            var getPagesTask = taskStatusController.Create(taskStatus, $"Get all pages for {productParameter}");
+            var getPagesTask = statusController.Create(status, $"Get all pages for {productParameter}");
 
             do
             {
@@ -81,7 +81,7 @@ namespace GOG.Controllers.PageResults
                     currentPage,
                     getPagesTask);
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     getPagesTask,
                     currentPage,
                     totalPages,
@@ -99,15 +99,15 @@ namespace GOG.Controllers.PageResults
 
                 if (responseHash == requestHash) continue;
 
-                var setHashTask = taskStatusController.Create(getPagesTask, "Set response hash");
+                var setHashTask = statusController.Create(getPagesTask, "Set response hash");
                 await hashTrackingController.SetHashAsync(requestUri + currentPage, responseHash);
-                taskStatusController.Complete(setHashTask);
+                statusController.Complete(setHashTask);
 
                 pageResults.Add(pageResult);
 
             } while (++currentPage <= totalPages);
 
-            taskStatusController.Complete(getPagesTask);
+            statusController.Complete(getPagesTask);
 
             return pageResults;
         }

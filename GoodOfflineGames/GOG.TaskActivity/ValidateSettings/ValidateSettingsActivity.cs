@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Settings;
 using Interfaces.PropertiesValidation;
 
@@ -16,37 +16,37 @@ namespace GOG.Activities.ValidateSettings
             ISettingsProperty settingsProperty,
             IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate,
             IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate,
-            ITaskStatusController taskStatusController) :
-            base(taskStatusController)
+            IStatusController statusController) :
+            base(statusController)
         {
             this.settingsProperty = settingsProperty;
             this.downloadsLanguagesValidationDelegate = downloadsLanguagesValidationDelegate;
             this.downloadsOperatingSystemsValidationDelegate = downloadsOperatingSystemsValidationDelegate;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             await Task.Run(() =>
             {
-                var validateSettingsTask = taskStatusController.Create(taskStatus, "Validate settings");
+                var validateSettingsTask = statusController.Create(status, "Validate settings");
 
-                var validateDownloadsLanguagesTask = taskStatusController.Create(
+                var validateDownloadsLanguagesTask = statusController.Create(
                     validateSettingsTask, 
                     "Validate downloads languages");
                 settingsProperty.Settings.DownloadsLanguages = 
                     downloadsLanguagesValidationDelegate.ValidateProperties(
                         settingsProperty.Settings.DownloadsLanguages);
-                taskStatusController.Complete(validateDownloadsLanguagesTask);
+                statusController.Complete(validateDownloadsLanguagesTask);
 
-                var validateDownloadsOperatingSystemsTask = taskStatusController.Create(
+                var validateDownloadsOperatingSystemsTask = statusController.Create(
                     validateSettingsTask, 
                     "Validate downloads operating systems");
                 settingsProperty.Settings.DownloadsOperatingSystems = 
                     downloadsOperatingSystemsValidationDelegate.ValidateProperties(
                         settingsProperty.Settings.DownloadsOperatingSystems);
-                taskStatusController.Complete(validateDownloadsOperatingSystemsTask);
+                statusController.Complete(validateDownloadsOperatingSystemsTask);
 
-                taskStatusController.Complete(validateSettingsTask);
+                statusController.Complete(validateSettingsTask);
             });
         }
     }

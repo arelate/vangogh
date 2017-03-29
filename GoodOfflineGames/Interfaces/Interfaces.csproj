@@ -76,8 +76,8 @@
     <Compile Include="Session\SessionController.cs" />
     <Compile Include="SerializedStorage\SerializedStorageController.cs" />
     <Compile Include="Settings\Settings.cs" />
-    <Compile Include="TaskStatus\TaskStatus.cs" />
-    <Compile Include="TaskStatus\TaskStatusController.cs" />
+    <Compile Include="Status\Status.cs" />
+    <Compile Include="Status\StatusController.cs" />
     <Compile Include="ViewController\ViewController.cs" />
     <Compile Include="Template\Template.cs" />
     <Compile Include="Template\TemplateController.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="Extraction\ExtractionController.cs" />
     <Compile Include="UpdateIdentity\GetUpdateIdentity.cs" />
     <Compile Include="Uri\UriController.cs" />
-    <Compile Include="TaskActivity\TaskActivityController.cs" />
+    <Compile Include="Activity\Activity.cs" />
     <Compile Include="Tree\TreeToEnumerableController.cs" />
     <Compile Include="Connection\ConnectDelegate.cs" />
     <Compile Include="UpdateUri\GetUpdateUriDelegate.cs" />

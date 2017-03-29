@@ -8,7 +8,7 @@ using Interfaces.Destination.Directory;
 using Interfaces.Destination.Uri;
 using Interfaces.File;
 using Interfaces.FileDownload;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace GOG.Controllers.FileDownload
 {
@@ -21,7 +21,7 @@ namespace GOG.Controllers.FileDownload
         private IGetUriDelegate validationUriDelegate;
         private IFileController fileController;
         private IFileDownloadController fileDownloadController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public ValidationDownloadFileFromSourceDelegate(
             IStringExtractionController uriSansSessionExtractionController,
@@ -31,7 +31,7 @@ namespace GOG.Controllers.FileDownload
             IGetUriDelegate validationUriDelegate,
             IFileController fileController,
             IFileDownloadController fileDownloadController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.uriSansSessionExtractionController = uriSansSessionExtractionController;
             this.validationExpectedForUriDelegate = validationExpectedForUriDelegate;
@@ -40,10 +40,10 @@ namespace GOG.Controllers.FileDownload
             this.validationUriDelegate = validationUriDelegate;
             this.fileController = fileController;
             this.fileDownloadController = fileDownloadController;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, ITaskStatus taskStatus)
+        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, IStatus status)
         {
             if (string.IsNullOrEmpty(sourceUri)) return;
 
@@ -55,13 +55,13 @@ namespace GOG.Controllers.FileDownload
 
             if (fileController.Exists(destinationUri))
             {
-                taskStatusController.Inform(taskStatus, "Validation file already exists, will not be redownloading");
+                statusController.Inform(status, "Validation file already exists, will not be redownloading");
                 return;
             }
 
             var validationSourceUri = validationUriDelegate.GetUri(sourceUri);
 
-            var downloadValidationFileTask = taskStatusController.Create(taskStatus, "Download validation file");
+            var downloadValidationFileTask = statusController.Create(status, "Download validation file");
 
             await fileDownloadController.DownloadFileFromSourceAsync(
                 id,
@@ -70,7 +70,7 @@ namespace GOG.Controllers.FileDownload
                 validationDirectoryDelegate.GetDirectory(),
                 downloadValidationFileTask);
 
-            taskStatusController.Complete(downloadValidationFileTask);
+            statusController.Complete(downloadValidationFileTask);
         }
     }
 }

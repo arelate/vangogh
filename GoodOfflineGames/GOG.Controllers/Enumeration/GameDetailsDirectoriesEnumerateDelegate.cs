@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Enumeration;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using GOG.Models;
 
@@ -14,21 +14,21 @@ namespace GOG.Controllers.Enumeration
     {
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public GameDetailsDirectoriesEnumerateDelegate(
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.gameDetailsDataController = gameDetailsDataController;
             this.gameDetailsDirectoryEnumerateDelegate = gameDetailsDirectoryEnumerateDelegate;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task<IList<string>> EnumerateAsync(ITaskStatus taskStatus)
+        public async Task<IList<string>> EnumerateAsync(IStatus status)
         {
-            var enumerateGameDetailsDirectoriesTask = taskStatusController.Create(taskStatus, "Enumerate gameDetails directories");
+            var enumerateGameDetailsDirectoriesTask = statusController.Create(status, "Enumerate gameDetails directories");
             var directories = new List<string>();
             var current = 0;
             var gameDetailsIds = gameDetailsDataController.EnumerateIds();
@@ -38,7 +38,7 @@ namespace GOG.Controllers.Enumeration
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     enumerateGameDetailsDirectoriesTask,
                     ++current,
                     gameDetailsCount,
@@ -47,7 +47,7 @@ namespace GOG.Controllers.Enumeration
                 directories.AddRange(gameDetailsDirectoryEnumerateDelegate.Enumerate(gameDetails));
             }
 
-            taskStatusController.Complete(enumerateGameDetailsDirectoriesTask);
+            statusController.Complete(enumerateGameDetailsDirectoriesTask);
 
             return directories;
         }

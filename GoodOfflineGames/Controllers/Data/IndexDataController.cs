@@ -8,7 +8,7 @@ using Interfaces.Collection;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.SerializedStorage;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Controllers.Data
 {
@@ -20,7 +20,7 @@ namespace Controllers.Data
         private IGetFilenameDelegate getFilenameDelegate;
 
         private ISerializedStorageController serializedStorageController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         private IList<long> indexes;
 
@@ -29,7 +29,7 @@ namespace Controllers.Data
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializedStorageController serializedStorageController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.collectionController = collectionController;
 
@@ -38,7 +38,7 @@ namespace Controllers.Data
 
             this.serializedStorageController = serializedStorageController;
 
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
         public bool Contains(long data)
@@ -85,15 +85,15 @@ namespace Controllers.Data
             await serializedStorageController.SerializePushAsync(indexUri, indexes);
         }
 
-        private async Task Map(ITaskStatus taskStatus, string taskMessage, Func<long, bool> itemAction, params long[] data)
+        private async Task Map(IStatus status, string taskMessage, Func<long, bool> itemAction, params long[] data)
         {
-            var task = taskStatusController.Create(taskStatus, taskMessage);
+            var task = statusController.Create(status, taskMessage);
             var counter = 0;
             var dataChanged = false;
 
             foreach (var item in data)
             {
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     task,
                     ++counter,
                     data.Length,
@@ -105,18 +105,18 @@ namespace Controllers.Data
 
             if (dataChanged)
             {
-                var saveDataTask = taskStatusController.Create(task, "Save modified index");
+                var saveDataTask = statusController.Create(task, "Save modified index");
                 await SaveAsync();
-                taskStatusController.Complete(saveDataTask);
+                statusController.Complete(saveDataTask);
             }
 
-            taskStatusController.Complete(task);
+            statusController.Complete(task);
         }
 
-        public async Task RemoveAsync(ITaskStatus taskStatus, params long[] data)
+        public async Task RemoveAsync(IStatus status, params long[] data)
         {
             await Map(
-                taskStatus,
+                status,
                 "Remove index item(s)",
                 (item) =>
                 {
@@ -130,10 +130,10 @@ namespace Controllers.Data
                 data);
         }
 
-        public async Task UpdateAsync(ITaskStatus taskStatus, params long[] data)
+        public async Task UpdateAsync(IStatus status, params long[] data)
         {
             await Map(
-                taskStatus,
+                status,
                 "Update index item(s)",
                 (item) => {
                     if (!indexes.Contains(item))

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Interfaces.FileDownload;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Models.ProductDownloads;
 using Models.Separators;
@@ -21,21 +21,21 @@ namespace GOG.Activities.Download
             string downloadParameter,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate,
-            ITaskStatusController taskStatusController) :
-            base(taskStatusController)
+            IStatusController statusController) :
+            base(statusController)
         {
             this.downloadParameter = downloadParameter;
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var current = 0;
             var productDownloadsData = productDownloadsDataController.EnumerateIds();
             var total = productDownloadsDataController.Count();
 
-            var processDownloadsTask = taskStatusController.Create(taskStatus, 
+            var processDownloadsTask = statusController.Create(status, 
                 $"Process updated {downloadParameter} downloads");
 
             var emptyProductDownloads = new List<ProductDownloads>();
@@ -45,7 +45,7 @@ namespace GOG.Activities.Download
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
                 if (productDownloads == null) continue;
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     processDownloadsTask,
                     ++current,
                     total,
@@ -56,7 +56,7 @@ namespace GOG.Activities.Download
                     d => 
                     d.DownloadParameter == downloadParameter).ToArray();
 
-                var processDownloadEntriesTask = taskStatusController.Create(processDownloadsTask, 
+                var processDownloadEntriesTask = statusController.Create(processDownloadsTask, 
                     $"Download {downloadParameter} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
@@ -67,7 +67,7 @@ namespace GOG.Activities.Download
                     if (sanitizedUri.Contains(Separators.QueryString))
                         sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString));
 
-                    taskStatusController.UpdateProgress(
+                    statusController.UpdateProgress(
                         processDownloadEntriesTask,
                         ii + 1,
                         downloadEntries.Length,
@@ -80,28 +80,28 @@ namespace GOG.Activities.Download
                         entry.Destination,
                         processDownloadEntriesTask);
 
-                    var removeEntryTask = taskStatusController.Create(
+                    var removeEntryTask = statusController.Create(
                         processDownloadEntriesTask,
                         $"Remove scheduled {downloadParameter} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);
 
-                    taskStatusController.Complete(removeEntryTask);
+                    statusController.Complete(removeEntryTask);
                 }
 
                 // if there are no scheduled downloads left - mark file for removal
                 if (productDownloads.Downloads.Count == 0)
                     emptyProductDownloads.Add(productDownloads);
 
-                taskStatusController.Complete(processDownloadEntriesTask);
+                statusController.Complete(processDownloadEntriesTask);
             }
 
-            var clearEmptyDownloadsTask = taskStatusController.Create(processDownloadsTask, "Clear empty downloads");
+            var clearEmptyDownloadsTask = statusController.Create(processDownloadsTask, "Clear empty downloads");
             await productDownloadsDataController.RemoveAsync(clearEmptyDownloadsTask, emptyProductDownloads.ToArray());
-            taskStatusController.Complete(clearEmptyDownloadsTask);
+            statusController.Complete(clearEmptyDownloadsTask);
 
-            taskStatusController.Complete(processDownloadsTask);
+            statusController.Complete(processDownloadsTask);
         }
     }
 }

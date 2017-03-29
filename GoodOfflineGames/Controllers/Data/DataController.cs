@@ -10,7 +10,7 @@ using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.RecycleBin;
 using Interfaces.SerializedStorage;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Controllers.Data
 {
@@ -28,7 +28,7 @@ namespace Controllers.Data
 
         private IRecycleBinController recycleBinController;
 
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public DataController(
             IDataController<long> indexDataController,
@@ -38,7 +38,7 @@ namespace Controllers.Data
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IRecycleBinController recycleBinController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.indexDataController = indexDataController;
 
@@ -52,7 +52,7 @@ namespace Controllers.Data
 
             this.recycleBinController = recycleBinController;
 
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
         public bool Contains(Type data)
@@ -85,13 +85,13 @@ namespace Controllers.Data
         }
 
         private async Task MapItemsAndIndexes(
-            ITaskStatus taskStatus, 
+            IStatus status, 
             string taskMessage, 
             Func<long, Type, Task> itemAction, 
             Func<long[], Task> indexAction,
             params Type[] data)
         {
-            var mapTask = taskStatusController.Create(taskStatus, taskMessage);
+            var mapTask = statusController.Create(status, taskMessage);
             var counter = 0;
             var indexes = new List<long>();
 
@@ -100,7 +100,7 @@ namespace Controllers.Data
                 var index = indexingController.GetIndex(item);
                 indexes.Add(index);
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     mapTask,
                     ++counter,
                     data.Length,
@@ -109,17 +109,17 @@ namespace Controllers.Data
                 await itemAction(index, item);
             }
 
-            var updateIndexTask = taskStatusController.Create(mapTask, "Update indexes");
+            var updateIndexTask = statusController.Create(mapTask, "Update indexes");
             await indexAction(indexes.ToArray());
-            taskStatusController.Complete(updateIndexTask);
+            statusController.Complete(updateIndexTask);
 
-            taskStatusController.Complete(mapTask);
+            statusController.Complete(mapTask);
         }
 
-        public async Task UpdateAsync(ITaskStatus taskStatus, params Type[] data)
+        public async Task UpdateAsync(IStatus status, params Type[] data)
         {
             await MapItemsAndIndexes(
-                taskStatus,
+                status,
                 "Update data item(s)",
                 async (index, item) =>
                 {
@@ -129,15 +129,15 @@ namespace Controllers.Data
                 },
                 async (indexes) => 
                 {
-                    await indexDataController.UpdateAsync(taskStatus, indexes);
+                    await indexDataController.UpdateAsync(status, indexes);
                 },
                 data);
         }
 
-        public async Task RemoveAsync(ITaskStatus taskStatus, params Type[] data)
+        public async Task RemoveAsync(IStatus status, params Type[] data)
         {
             await MapItemsAndIndexes(
-                taskStatus,
+                status,
                 "Remove data item(s)",
                 async (index, item) =>
                 {
@@ -149,7 +149,7 @@ namespace Controllers.Data
                 },
                 async (indexes) =>
                 {
-                    await indexDataController.RemoveAsync(taskStatus, indexes);
+                    await indexDataController.RemoveAsync(status, indexes);
                 },
                 data);
         }

@@ -46,7 +46,7 @@
     <Compile Include="FlightPlan\FlightPlan.cs" />
     <Compile Include="FlightPlan\Parameters.cs" />
     <Compile Include="Network\Headers.cs" />
-    <Compile Include="TaskStatus\TaskStatus.cs" />
+    <Compile Include="Status\Status.cs" />
     <Compile Include="ProductCore\ProductCore.cs" />
     <Compile Include="ProductDownloads\ProductDownloads.cs" />
     <Compile Include="ProductRoutes\ProductRoutes.cs" />

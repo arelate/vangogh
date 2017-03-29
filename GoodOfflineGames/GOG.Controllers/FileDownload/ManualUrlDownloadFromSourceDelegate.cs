@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Interfaces.FileDownload;
 using Interfaces.Extraction;
 using Interfaces.Routing;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Network;
 using Interfaces.Expectation;
 
@@ -20,7 +20,7 @@ namespace GOG.Controllers.FileDownload
         private IStringExtractionController uriSansSessionExtractionController;
         private IRoutingController routingController;
         private IFileDownloadController fileDownloadController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
         private IDownloadFileFromSourceDelegate validationDownloadFileFromSourceDelegate;
 
         public ManualUrlDownloadFromSourceDelegate(
@@ -29,19 +29,19 @@ namespace GOG.Controllers.FileDownload
             IRoutingController routingController,
             IFileDownloadController fileDownloadController,
             IDownloadFileFromSourceDelegate validationDownloadFileFromSourceDelegate,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.networkController = networkController;
             this.uriSansSessionExtractionController = uriSansSessionExtractionController;
             this.routingController = routingController;
             this.fileDownloadController = fileDownloadController;
             this.validationDownloadFileFromSourceDelegate = validationDownloadFileFromSourceDelegate;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, ITaskStatus taskStatus)
+        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, IStatus status)
         {
-            var downloadTask = taskStatusController.Create(taskStatus, "Download game details manual url");
+            var downloadTask = statusController.Create(status, "Download game details manual url");
 
             HttpResponseMessage response;
             try
@@ -50,11 +50,11 @@ namespace GOG.Controllers.FileDownload
             }
             catch (HttpRequestException ex)
             {
-                taskStatusController.Fail(
+                statusController.Fail(
                     downloadTask,
                     $"Failed to get successful response for {sourceUri} for " +
                     $"product {id}: {title}, message: {ex.Message}");
-                taskStatusController.Complete(downloadTask);
+                statusController.Complete(downloadTask);
                 return;
             }
 
@@ -86,7 +86,7 @@ namespace GOG.Controllers.FileDownload
                 }
                 catch (Exception ex)
                 {
-                    taskStatusController.Fail(
+                    statusController.Fail(
                         downloadTask, 
                         $"Couldn't download {sourceUri}, resolved as {resolvedUri} to {destination} " +
                         $"for product {id}: {title}, error message: {ex.Message}");
@@ -107,7 +107,7 @@ namespace GOG.Controllers.FileDownload
                     downloadTask);
             }
 
-            taskStatusController.Complete(downloadTask);
+            statusController.Complete(downloadTask);
         }
     }
 }

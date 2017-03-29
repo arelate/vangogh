@@ -3,32 +3,32 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Tree;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Controllers.Tree
 {
-    public class TaskStatusTreeToEnumerableController : ITreeToEnumerableController<ITaskStatus>
+    public class StatusTreeToEnumerableController : ITreeToEnumerableController<IStatus>
     {
-        public IEnumerable<ITaskStatus> ToEnumerable(ITaskStatus taskStatus)
+        public IEnumerable<IStatus> ToEnumerable(IStatus status)
         {
-            if (taskStatus == null) yield break;
+            if (status == null) yield break;
 
-            var taskStatusQueue = new List<ITaskStatus>();
+            var statusQueue = new List<IStatus>();
 
-            taskStatusQueue.Insert(0, taskStatus);
+            statusQueue.Insert(0, status);
 
-            while (taskStatusQueue.Any())
+            while (statusQueue.Any())
             {
-                var currentTaskStatus = taskStatusQueue[0];
-                taskStatusQueue.RemoveAt(0);
+                var currentstatus = statusQueue[0];
+                statusQueue.RemoveAt(0);
 
-                if (currentTaskStatus == null) continue;
+                if (currentstatus == null) continue;
 
-                yield return currentTaskStatus;
+                yield return currentstatus;
 
-                if (currentTaskStatus.Children == null) continue;
+                if (currentstatus.Children == null) continue;
 
-                taskStatusQueue.InsertRange(0, currentTaskStatus.Children);
+                statusQueue.InsertRange(0, currentstatus.Children);
             }
         }
     }

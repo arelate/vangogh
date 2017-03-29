@@ -1,10 +1,10 @@
-﻿using Interfaces.TaskStatus;
+﻿using Interfaces.Status;
 
 namespace Interfaces.Throttle
 {
     public interface IThrottleDelegate
     {
-        void Throttle(int seconds, ITaskStatus taskStatus);
+        void Throttle(int seconds, IStatus status);
     }
 
     public interface IThrottleController:

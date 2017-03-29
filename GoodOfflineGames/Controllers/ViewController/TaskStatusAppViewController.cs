@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Presentation;
 using Interfaces.Tree;
 using Interfaces.Template;
@@ -10,33 +10,33 @@ using Interfaces.ViewController;
 
 namespace Controllers.ViewController
 {
-    public class TaskStatusViewController : IViewController
+    public class StatusViewController : IViewController
     {
-        private ITaskStatus appTaskStatus;
+        private IStatus appstatus;
         private ITemplateController templateController;
-        private IGetViewModelDelegate<ITaskStatus> taskStatusViewModelDelegate;
-        private ITreeToEnumerableController<ITaskStatus> taskStatusTreeToEnumerableController;
+        private IGetViewModelDelegate<IStatus> statusViewModelDelegate;
+        private ITreeToEnumerableController<IStatus> statusTreeToEnumerableController;
         private IPresentationController<string> presentationController;
 
-        public TaskStatusViewController(
-            ITaskStatus appTaskStatus,
+        public StatusViewController(
+            IStatus appstatus,
             ITemplateController templateController,
-            IGetViewModelDelegate<ITaskStatus> taskStatusViewModelDelegate,
-            ITreeToEnumerableController<ITaskStatus> taskStatusTreeToEnumerableController,
+            IGetViewModelDelegate<IStatus> statusViewModelDelegate,
+            ITreeToEnumerableController<IStatus> statusTreeToEnumerableController,
             IPresentationController<string> presentationController)
         {
-            this.appTaskStatus = appTaskStatus;
+            this.appstatus = appstatus;
             this.templateController = templateController;
-            this.taskStatusViewModelDelegate = taskStatusViewModelDelegate;
-            this.taskStatusTreeToEnumerableController = taskStatusTreeToEnumerableController;
+            this.statusViewModelDelegate = statusViewModelDelegate;
+            this.statusTreeToEnumerableController = statusTreeToEnumerableController;
             this.presentationController = presentationController;
         }
 
         private IEnumerable<string> CreateViews()
         {
-            foreach (var taskStatus in taskStatusTreeToEnumerableController.ToEnumerable(appTaskStatus))
+            foreach (var status in statusTreeToEnumerableController.ToEnumerable(appstatus))
             {
-                var viewModel = taskStatusViewModelDelegate.GetViewModel(taskStatus);
+                var viewModel = statusViewModelDelegate.GetViewModel(status);
                 if (viewModel != null)
                 {
                     var view = templateController.Bind(

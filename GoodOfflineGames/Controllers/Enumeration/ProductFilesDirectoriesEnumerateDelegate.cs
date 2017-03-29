@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Enumeration;
 using Interfaces.Directory;
 using Interfaces.Destination.Directory;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Controllers.Enumeration
 {
@@ -12,21 +12,21 @@ namespace Controllers.Enumeration
     {
         private IGetDirectoryDelegate productFilesDirectoryDelegate;
         private IDirectoryController directoryController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public ProductFilesDirectoriesEnumerateDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate,
             IDirectoryController directoryController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.productFilesDirectoryDelegate = productFilesDirectoryDelegate;
             this.directoryController = directoryController;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task<IList<string>> EnumerateAsync(ITaskStatus taskStatus)
+        public async Task<IList<string>> EnumerateAsync(IStatus status)
         {
-            var enumerateProductFilesDirectoriesTask = taskStatusController.Create(taskStatus, "Enumerate productFiles directories");
+            var enumerateProductFilesDirectoriesTask = statusController.Create(status, "Enumerate productFiles directories");
 
             var directories = new List<string>();
 
@@ -36,7 +36,7 @@ namespace Controllers.Enumeration
                 directories.AddRange(directoryController.EnumerateDirectories(productFilesDirectory));
             });
 
-            taskStatusController.Complete(enumerateProductFilesDirectoriesTask);
+            statusController.Complete(enumerateProductFilesDirectoriesTask);
 
             return directories;
         }

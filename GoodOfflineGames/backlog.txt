@@ -1,9 +1,9 @@
 Backend
 
+- rename taskStatus -> status
+
 - put new taskStatus in network to good use and perhaps log actual requests for debug purposes
 - definitely use taskStatus in authorization controller to log status of authorization without exposing any sensitive data
-
-- guard product files and validation files download with the throttleController, or better yet introduce rate limiter based on URL and time between requests add it to networkController so that it's transparent for the users
 
 - Change validation controller to use file, validationFile
 

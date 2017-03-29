@@ -4,7 +4,7 @@ using System.Linq;
 
 using Interfaces.Collection;
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.DataRefinement;
 
 using GOG.Models;
@@ -16,21 +16,21 @@ namespace GOG.Controllers.DataRefinement
         private IDataController<AccountProduct> accountProductsDataController;
         private ICollectionController collectionController;
         private IDataController<long> updatedDataController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public NewUpdatedDataRefinementController(
             IDataController<AccountProduct> accountProductsDataController,
             ICollectionController collectionController,
             IDataController<long> updatedDataController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.accountProductsDataController = accountProductsDataController;
             this.collectionController = collectionController;
             this.updatedDataController = updatedDataController;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task RefineData(IEnumerable<AccountProduct> accountProducts, ITaskStatus taskStatus)
+        public async Task RefineData(IEnumerable<AccountProduct> accountProducts, IStatus status)
         {
             // GOG.com quirk
             // There are few ways to get new and updated products:
@@ -46,7 +46,7 @@ namespace GOG.Controllers.DataRefinement
             // as previous version we normally don't process a lot of AccountProducts here.
             // Additionally we set products that don't exist in current collection as updated
 
-            var extractNewUpdatedTask = taskStatusController.Create(taskStatus, "Extract new and updated products");
+            var extractNewUpdatedTask = statusController.Create(status, "Extract new and updated products");
 
             var newUpdatedAccountProducts = collectionController.Reduce(accountProducts,
                 ap =>
@@ -58,16 +58,16 @@ namespace GOG.Controllers.DataRefinement
 
             await updatedDataController.UpdateAsync(extractNewUpdatedTask, updatedIds);
 
-            var addPreviouslyUnknownDataTask = taskStatusController.Create(taskStatus, "Add previously unknown products as updated");
+            var addPreviouslyUnknownDataTask = statusController.Create(status, "Add previously unknown products as updated");
 
             var knownAccountProducts = accountProductsDataController.EnumerateIds();
             var unknownAccountProducts = accountProducts.Select(ap => ap.Id).Except(knownAccountProducts);
 
             await updatedDataController.UpdateAsync(addPreviouslyUnknownDataTask, unknownAccountProducts.ToArray());
 
-            taskStatusController.Complete(addPreviouslyUnknownDataTask);
+            statusController.Complete(addPreviouslyUnknownDataTask);
 
-            taskStatusController.Complete(extractNewUpdatedTask);
+            statusController.Complete(extractNewUpdatedTask);
         }
     }
 }

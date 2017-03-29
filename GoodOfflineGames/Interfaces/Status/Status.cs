@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Interfaces.TaskStatus
+namespace Interfaces.Status
 {
     public interface ICompleteProperty
     {
@@ -15,7 +15,7 @@ namespace Interfaces.TaskStatus
 
     public interface IChildrenProperty
     {
-        IList<ITaskStatus> Children { get; set; }
+        IList<IStatus> Children { get; set; }
     }
 
     public interface IStartedProperty
@@ -63,7 +63,7 @@ namespace Interfaces.TaskStatus
         long Total { get; set; }
     }
 
-    public interface ITaskProgress:
+    public interface IStatusProgress:
         ITargetProperty,
         ICurrentProperty,
         ITotalProperty,
@@ -74,10 +74,10 @@ namespace Interfaces.TaskStatus
 
     public interface IProgressProperty
     {
-        ITaskProgress Progress { get; set; }
+        IStatusProgress Progress { get; set; }
     }
 
-    public interface ITaskStatus :
+    public interface IStatus :
         ICompleteProperty,
         ITitleProperty,
         IChildrenProperty,

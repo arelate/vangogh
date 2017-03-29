@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Data;
 using Interfaces.Enumeration;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.Directory;
 
 using GOG.Models;
@@ -19,25 +19,25 @@ namespace GOG.Controllers.Enumeration
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
         private IDirectoryController directoryController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public UpdatedProductFilesEnumerateDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
             IDirectoryController directoryController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.gameDetailsDirectoryEnumerateDelegate = gameDetailsDirectoryEnumerateDelegate;
             this.directoryController = directoryController;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task<IList<string>> EnumerateAsync(ITaskStatus taskStatus)
+        public async Task<IList<string>> EnumerateAsync(IStatus status)
         {
-            var enumerateUpdatedProductFilesTask = taskStatusController.Create(taskStatus, "Enumerate updated productFiles");
+            var enumerateUpdatedProductFilesTask = statusController.Create(status, "Enumerate updated productFiles");
 
             var updatedIds = updatedDataController.EnumerateIds();
             var updatedIdsCount = updatedDataController.Count();
@@ -49,7 +49,7 @@ namespace GOG.Controllers.Enumeration
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     enumerateUpdatedProductFilesTask,
                     ++current,
                     updatedIdsCount,
@@ -62,7 +62,7 @@ namespace GOG.Controllers.Enumeration
                 }
             }
 
-            taskStatusController.Complete(enumerateUpdatedProductFilesTask);
+            statusController.Complete(enumerateUpdatedProductFilesTask);
 
             return updatedProductFiles;
         }

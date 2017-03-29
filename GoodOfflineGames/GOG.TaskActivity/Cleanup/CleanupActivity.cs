@@ -2,7 +2,7 @@
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Interfaces.Enumeration;
 using Interfaces.Directory;
@@ -28,8 +28,8 @@ namespace GOG.Activities.Cleanup
             IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate,
             IRecycleBinController recycleBinController,
             IDirectoryController directoryController,
-            ITaskStatusController taskStatusController) :
-            base(taskStatusController)
+            IStatusController statusController) :
+            base(statusController)
         {
             this.cleanupParameter = cleanupParameter;
             this.expectedItemsEnumarateDelegate = expectedItemsEnumarateDelegate;
@@ -40,12 +40,12 @@ namespace GOG.Activities.Cleanup
             this.directoryController = directoryController;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var cleanupTask = taskStatusController.Create(taskStatus, $"Cleanup {cleanupParameter}");
+            var cleanupTask = statusController.Create(status, $"Cleanup {cleanupParameter}");
 
-            var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAsync(taskStatus);
-            var actualItems = await actualItemsEnumerateDelegate.EnumerateAsync(taskStatus);
+            var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAsync(status);
+            var actualItems = await actualItemsEnumerateDelegate.EnumerateAsync(status);
 
             var unexpectedItems = actualItems.Except(expectedItems);
             var cleanupItems = new List<string>();
@@ -57,7 +57,7 @@ namespace GOG.Activities.Cleanup
                     cleanupItems.AddRange(supplementaryItemsEnumerateDelegate.Enumerate(detailedItem));
                 }
 
-            var moveToRecycleBinTask = taskStatusController.Create(taskStatus, "Move unexpected items to recycle bin");
+            var moveToRecycleBinTask = statusController.Create(status, "Move unexpected items to recycle bin");
 
             foreach (var item in cleanupItems)
                 recycleBinController.MoveToRecycleBin(item);
@@ -76,7 +76,7 @@ namespace GOG.Activities.Cleanup
             foreach (var directory in emptyDirectories)
                 directoryController.Delete(directory);
 
-            taskStatusController.Complete(moveToRecycleBinTask);
+            statusController.Complete(moveToRecycleBinTask);
         }
     }
 }

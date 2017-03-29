@@ -91,7 +91,7 @@
     <Compile Include="ImageUri\ScreenshotUriController.cs" />
     <Compile Include="PropertiesValidation\UsernamePasswordValidationController.cs" />
     <Compile Include="Extraction\UriSansSessionExtractionController.cs" />
-    <Compile Include="TaskStatus\TaskStatusController.cs" />
+    <Compile Include="Status\StatusController.cs" />
     <Compile Include="Tree\TaskStatusTreeToEnumerableController.cs" />
     <Compile Include="ViewController\TaskStatusAppViewController.cs" />
     <Compile Include="Template\TemplateController.cs" />

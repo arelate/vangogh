@@ -8,7 +8,7 @@ using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Cookies;
 using Interfaces.RequestRate;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Models.Network;
 
@@ -40,13 +40,13 @@ namespace Controllers.Network
         }
 
         public async Task<string> Get(
-            ITaskStatus taskStatus,
+            IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
             string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
-            using (var response = await RequestResponse(taskStatus, HttpMethod.Get, uri))
+            using (var response = await RequestResponse(status, HttpMethod.Get, uri))
             {
                 await cookiesController.SetCookies(response);
 
@@ -57,12 +57,12 @@ namespace Controllers.Network
         }
 
         public async Task<HttpResponseMessage> RequestResponse(
-            ITaskStatus taskStatus,
+            IStatus status,
             HttpMethod method, 
             string uri, 
             HttpContent content = null)
         {
-            requestRateController.EnforceRequestRate(uri, taskStatus);
+            requestRateController.EnforceRequestRate(uri, status);
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Cookie, await cookiesController.GetCookieHeader());
@@ -76,7 +76,7 @@ namespace Controllers.Network
         }
 
         public async Task<string> Post(
-            ITaskStatus taskStatus,
+            IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null,
             string data = null)
@@ -86,7 +86,7 @@ namespace Controllers.Network
             if (data == null) data = string.Empty;
             var content = new StringContent(data, Encoding.UTF8, HeaderDefaultValues.ContentType);
 
-            using (var response = await RequestResponse(taskStatus, HttpMethod.Post, uri, content))
+            using (var response = await RequestResponse(status, HttpMethod.Post, uri, content))
             {
 
                 await cookiesController.SetCookies(response);

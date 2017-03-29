@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace Interfaces.Data
 {
@@ -27,22 +27,22 @@ namespace Interfaces.Data
 
     public interface IUpdateDelegate<Type>
     {
-        Task UpdateAsync(ITaskStatus taskStatus, params Type[] data);
+        Task UpdateAsync(IStatus status, params Type[] data);
     }
 
     //public interface IAddDelegate<Type>
     //{
-    //    Task AddAsync(ITaskStatus taskStatus, params Type[] data);
+    //    Task AddAsync(Istatus status, params Type[] data);
     //}
 
     //public interface IModifyDelegate<Type>
     //{
-    //    Task ModifyAsync(ITaskStatus taskStatus, params Type[] data);
+    //    Task ModifyAsync(Istatus status, params Type[] data);
     //}
 
     public interface IRemoveDelegate<Type>
     {
-        Task RemoveAsync(ITaskStatus taskStatus, params Type[] data);
+        Task RemoveAsync(IStatus status, params Type[] data);
     }
 
     public interface IContainsDelegate<Type>

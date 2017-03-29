@@ -9,7 +9,7 @@ using Interfaces.Destination.Filename;
 using Interfaces.File;
 using Interfaces.Stream;
 using Interfaces.Hash;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using Models.ValidationChunk;
 using Models.Units;
@@ -24,7 +24,7 @@ namespace Controllers.Validation
         private IStreamController streamController;
         private XmlDocument validationXml;
         private IBytesToStringHashController bytesToStringHasController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public ValidationController(
             IGetDirectoryDelegate getDirectoryDelegate,
@@ -32,19 +32,19 @@ namespace Controllers.Validation
             IFileController fileController,
             IStreamController streamController,
             IBytesToStringHashController bytesToStringHasController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
             this.bytesToStringHasController = bytesToStringHasController;
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
 
             validationXml = new XmlDocument()  { PreserveWhitespace = false };
         }
 
-        public async Task ValidateAsync(string uri, ITaskStatus taskStatus)
+        public async Task ValidateAsync(string uri, IStatus status)
         {
             if (string.IsNullOrEmpty(uri))
                 throw new ArgumentNullException("File location is invalid");
@@ -126,15 +126,15 @@ namespace Controllers.Validation
 
                     await ValidateChunkAsync(fileStream, chunk);
 
-                    taskStatusController.UpdateProgress(
-                        taskStatus, 
+                    statusController.UpdateProgress(
+                        status, 
                         length, 
                         expectedSize, 
                         uri, 
                         DataUnits.Bytes);
                 }
 
-                taskStatusController.UpdateProgress(taskStatus, length, expectedSize, uri);
+                statusController.UpdateProgress(status, length, expectedSize, uri);
             }
         }
 

@@ -9,7 +9,7 @@ using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.Expectation;
 using Interfaces.Routing;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 using GOG.Models;
 
@@ -35,8 +35,8 @@ namespace GOG.Activities.Validate
             IExpectedDelegate<string> validationExpectedDelegate,
             IDataController<long> updatedDataController,
             IRoutingController routingController,
-            ITaskStatusController taskStatusController) :
-            base(taskStatusController)
+            IStatusController statusController) :
+            base(statusController)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
@@ -49,9 +49,9 @@ namespace GOG.Activities.Validate
             this.routingController = routingController;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var validateProductFilesTask = taskStatusController.Create(taskStatus, "Validate products files");
+            var validateProductFilesTask = statusController.Create(status, "Validate products files");
 
             var counter = 0;
 
@@ -66,7 +66,7 @@ namespace GOG.Activities.Validate
 
                 var manualUrls = manualUrlsEnumerationController.Enumerate(gameDetails);
 
-                taskStatusController.UpdateProgress(validateProductFilesTask,
+                statusController.UpdateProgress(validateProductFilesTask,
                     ++counter,
                     updatedCount,
                     id.ToString());
@@ -83,7 +83,7 @@ namespace GOG.Activities.Validate
                         getDirectoryDelegate.GetDirectory(manualUrl),
                         getFilenameDelegate.GetFilename(resolvedUri));
 
-                    var validateFileTask = taskStatusController.Create(
+                    var validateFileTask = statusController.Create(
                         validateProductFilesTask,
                         "Validate product file");
 
@@ -94,13 +94,13 @@ namespace GOG.Activities.Validate
                     }
                     catch (Exception ex)
                     {
-                        taskStatusController.Fail(validateProductFilesTask,
+                        statusController.Fail(validateProductFilesTask,
                             $"{localFile}: {ex.Message}");
                         productIsValid &= false;
                     }
                     finally
                     {
-                        taskStatusController.Complete(validateFileTask);
+                        statusController.Complete(validateFileTask);
                     }
                 }
 
@@ -108,7 +108,7 @@ namespace GOG.Activities.Validate
 
             }
 
-            taskStatusController.Complete(validateProductFilesTask);
+            statusController.Complete(validateProductFilesTask);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace GOG.Activities.Cleanup
 {
@@ -12,21 +12,21 @@ namespace GOG.Activities.Cleanup
 
         public CleanupUpdatedActivity(
             IDataController<long> updatedDataController,
-            ITaskStatusController taskStatusController): 
-            base(taskStatusController)
+            IStatusController statusController): 
+            base(statusController)
         {
             this.updatedDataController = updatedDataController;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var cleanupUpdatedTask = taskStatusController.Create(taskStatus, "Cleanup updated, close update cycle");
+            var cleanupUpdatedTask = statusController.Create(status, "Cleanup updated, close update cycle");
 
             await updatedDataController.RemoveAsync(
                 cleanupUpdatedTask, 
                 updatedDataController.EnumerateIds().ToArray());
 
-            taskStatusController.Complete(cleanupUpdatedTask);
+            statusController.Complete(cleanupUpdatedTask);
         }
     }
 }

@@ -8,7 +8,7 @@ using System;
 using Interfaces.FileDownload;
 using Interfaces.Network;
 using Interfaces.Stream;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 using Interfaces.File;
 
 using Models.Units;
@@ -20,22 +20,22 @@ namespace Controllers.FileDownload
         private INetworkController networkController;
         private IStreamController streamController;
         private IFileController fileController;
-        private ITaskStatusController taskStatusController;
+        private IStatusController statusController;
 
         public FileDownloadController(
             INetworkController networkController,
             IStreamController streamController,
             IFileController fileController,
-            ITaskStatusController taskStatusController)
+            IStatusController statusController)
         {
             this.networkController = networkController;
             this.streamController = streamController;
             this.fileController = fileController;
 
-            this.taskStatusController = taskStatusController;
+            this.statusController = statusController;
         }
 
-        public async Task DownloadFileFromResponseAsync(HttpResponseMessage response, string destination, ITaskStatus taskStatus)
+        public async Task DownloadFileFromResponseAsync(HttpResponseMessage response, string destination, IStatus status)
         {
             response.EnsureSuccessStatusCode();
 
@@ -51,8 +51,8 @@ namespace Controllers.FileDownload
             if (fileController.Exists(fullPath) &&
                 fileController.GetSize(fullPath) == response.Content.Headers.ContentLength)
             {
-                taskStatusController.Inform(
-                    taskStatus, 
+                statusController.Inform(
+                    status, 
                     $"File {fullPath} already exists and matches response size, will not be redownloading");
                 return;
             }
@@ -64,8 +64,8 @@ namespace Controllers.FileDownload
                 {
                     totalBytesRead += bytesRead;
                     await writeableStream.WriteAsync(buffer, 0, bytesRead);
-                    taskStatusController.UpdateProgress(
-                        taskStatus,
+                    statusController.UpdateProgress(
+                        status,
                         totalBytesRead,
                         (long)response.Content.Headers.ContentLength,
                         filename,
@@ -74,9 +74,9 @@ namespace Controllers.FileDownload
             }
         }
 
-        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, ITaskStatus taskStatus)
+        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, IStatus status)
         {
-            var downloadEntryTask = taskStatusController.Create(taskStatus, "Download entry");
+            var downloadEntryTask = statusController.Create(status, "Download entry");
             try
             {
                 using (var response = await networkController.RequestResponse(downloadEntryTask, HttpMethod.Get, sourceUri))
@@ -84,11 +84,11 @@ namespace Controllers.FileDownload
             }
             catch (Exception ex)
             {
-                taskStatusController.Warn(downloadEntryTask, $"{sourceUri}: {ex.Message}");
+                statusController.Warn(downloadEntryTask, $"{sourceUri}: {ex.Message}");
             }
             finally
             {
-                taskStatusController.Complete(downloadEntryTask);
+                statusController.Complete(downloadEntryTask);
             }
         }
     }

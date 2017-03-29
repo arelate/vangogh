@@ -22,6 +22,6 @@
         public const string Updated = "updated";
 
         // Activity: Report
-        public const string TaskStatus = "taskStatus";
+        public const string Status = "status";
     }
 }

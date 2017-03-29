@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Data;
-using Interfaces.TaskStatus;
+using Interfaces.Status;
 
 namespace GOG.Activities.Load
 {
@@ -10,26 +10,26 @@ namespace GOG.Activities.Load
         private ILoadDelegate[] loadDelegates;
 
         public LoadDataActivity(
-            ITaskStatusController taskStatusController,
+            IStatusController statusController,
             params ILoadDelegate[] loadDelegates): 
-            base(taskStatusController)
+            base(statusController)
         {
             this.loadDelegates = loadDelegates;
         }
 
-        public override async Task ProcessActivityAsync(ITaskStatus taskStatus)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
-            var loadDataTask = taskStatusController.Create(taskStatus, "Load existing data");
+            var loadDataTask = statusController.Create(status, "Load existing data");
             for (var ii = 0; ii < loadDelegates.Length; ii++)
             {
-                taskStatusController.UpdateProgress(
+                statusController.UpdateProgress(
                     loadDataTask, ii + 1,
                     loadDelegates.Length,
                     "Existing data");
 
                 await loadDelegates[ii].LoadAsync();
             }
-            taskStatusController.Complete(loadDataTask);
+            statusController.Complete(loadDataTask);
         }
     }
 }
