@@ -78,6 +78,7 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Status\Status.cs" />
     <Compile Include="Status\StatusController.cs" />
+    <Compile Include="ValidationResult\ValidationResult.cs" />
     <Compile Include="ViewController\ViewController.cs" />
     <Compile Include="Template\Template.cs" />
     <Compile Include="Template\TemplateController.cs" />

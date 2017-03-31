@@ -11,6 +11,8 @@ using Interfaces.Enumeration;
 using Interfaces.Routing;
 using Interfaces.Status;
 
+using Models.ValidationResult;
+
 using GOG.Models;
 
 namespace GOG.Activities.Validate
@@ -21,6 +23,7 @@ namespace GOG.Activities.Validate
         private IGetFilenameDelegate productFileFilenameDelegate;
         private IEnumerateDelegate<string> validationFileEnumerateDelegate;
         private IValidationController validationController;
+        private IDataController<ValidationResult> validationResultsDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
         private IDataController<long> updatedDataController;
@@ -31,6 +34,7 @@ namespace GOG.Activities.Validate
             IGetFilenameDelegate productFileFilenameDelegate,
             IEnumerateDelegate<string> validationFileEnumerateDelegate,
             IValidationController validationController,
+            IDataController<ValidationResult> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
             IDataController<long> updatedDataController,
@@ -42,6 +46,7 @@ namespace GOG.Activities.Validate
             this.productFileFilenameDelegate = productFileFilenameDelegate;
             this.validationFileEnumerateDelegate = validationFileEnumerateDelegate;
             this.validationController = validationController;
+            this.validationResultsDataController = validationResultsDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.manualUrlsEnumerationController = manualUrlsEnumerationController;
 
@@ -60,8 +65,6 @@ namespace GOG.Activities.Validate
 
             foreach (var id in updated)
             {
-                var productIsValid = true;
-
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
                 var manualUrls = manualUrlsEnumerationController.Enumerate(gameDetails);
@@ -70,6 +73,8 @@ namespace GOG.Activities.Validate
                     ++counter,
                     updatedCount,
                     id.ToString());
+
+                //var validationResult = new 
 
                 foreach (var manualUrl in manualUrls)
                 {
@@ -88,14 +93,12 @@ namespace GOG.Activities.Validate
 
                     try
                     {
-                        await validationController.ValidateAsync(localFile, validationFile, validateFileTask);
-                        productIsValid &= true;
+                        var fileValidation = await validationController.ValidateAsync(localFile, validationFile, validateFileTask);
                     }
                     catch (Exception ex)
                     {
                         statusController.Fail(validateProductFilesTask,
                             $"{localFile}: {ex.Message}");
-                        productIsValid &= false;
                     }
                     finally
                     {

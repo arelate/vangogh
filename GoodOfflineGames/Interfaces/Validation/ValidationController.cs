@@ -1,30 +1,49 @@
 ﻿using System.Threading.Tasks;
 
+using Interfaces.ValidationResult;
 using Interfaces.Status;
 
 namespace Interfaces.Validation
 {
+    public interface IVerifiyExpectedValidationDelegate
+    {
+        bool VerifyExpectedValidation(string uri);
+    }
+
+    public interface IVerifyValidationFileExistsDelegate
+    {
+        bool VerifyValidationFileExists(string uri);
+    }
+
+    public interface IVerifyProductFileExistsDelegate
+    {
+        bool VerifyProductFileExists(string uri);
+    }
+
     public interface IVerifyFilenameDelegate
     {
-        void VerifyFilename(string uri, string expectedFilename);
+        bool VerifyFilename(string uri, string expectedFilename);
     }
 
     public interface IVerifySizeDelegate
     {
-        void VerifySize(string uri, long expectedSize);
+        bool VerifySize(string uri, long expectedSize);
     }
 
     public interface IVerifyChunkDelegate
     {
-        Task VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5);
+        Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5);
     }
 
     public interface IValidateDelegate
     {
-        Task ValidateAsync(string uri, string validationUri, IStatus status);
+        Task<IFileValidation> ValidateAsync(string uri, string validationUri, IStatus status);
     }
 
     public interface IValidationController:
+        IVerifiyExpectedValidationDelegate,
+        IVerifyValidationFileExistsDelegate,
+        IVerifyProductFileExistsDelegate,
         IVerifyFilenameDelegate,
         IVerifySizeDelegate,
         IVerifyChunkDelegate,

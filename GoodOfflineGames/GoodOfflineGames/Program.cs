@@ -79,6 +79,7 @@ using GOG.Activities.Report;
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
 using Models.ProductDownloads;
+using Models.ValidationResult;
 
 using Models.Status;
 using Models.FlightPlan;
@@ -234,6 +235,7 @@ namespace GoodOfflineGames
             var productDownloadsDirectoryDelegate = new FixedDirectoryDelegate("productDownloads", dataDirectoryDelegate);
             var productRoutesDirectoryDelegate = new FixedDirectoryDelegate("productRoutes", dataDirectoryDelegate);
             var productScreenshotsDirectoryDelegate = new FixedDirectoryDelegate("productScreenshots", dataDirectoryDelegate);
+            var validationResultsDirectoryDelegate = new FixedDirectoryDelegate("validationResults", dataDirectoryDelegate);
 
             var recycleBinDirectoryDelegate = new FixedDirectoryDelegate("recycleBin");
             var imagesDirectoryDelegate = new FixedDirectoryDelegate("images");
@@ -309,6 +311,13 @@ namespace GoodOfflineGames
             var productRoutesIndexDataController = new IndexDataController(
                 collectionController,
                 productRoutesDirectoryDelegate,
+                indexFilenameDelegate,
+                serializedStorageController,
+                statusController);
+
+            var validationResultsIndexController = new IndexDataController(
+                collectionController,
+                validationDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
                 statusController);
@@ -416,6 +425,16 @@ namespace GoodOfflineGames
                 recycleBinController,
                 statusController);
 
+            var validationResultsDataController = new DataController<ValidationResult>(
+                validationResultsIndexController,
+                serializedStorageController,
+                productCoreIndexingController,
+                collectionController,
+                validationDirectoryDelegate,
+                jsonFilenameDelegate,
+                recycleBinController,
+                statusController);
+
             #endregion
 
             #region Settings: Load, Validation
@@ -469,7 +488,8 @@ namespace GoodOfflineGames
                 wishlistedDataController,
                 updatedDataController,
                 productDownloadsDataController,
-                productRoutesDataController);
+                productRoutesDataController,
+                validationResultsDataController);
 
             #endregion
 
@@ -809,6 +829,7 @@ namespace GoodOfflineGames
                 uriFilenameDelegate,
                 validationFileEnumerateDelegate,
                 validationController,
+                validationResultsDataController,
                 gameDetailsDataController,
                 gameDetailsManualUrlsEnumerateDelegate,
                 updatedDataController,
