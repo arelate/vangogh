@@ -67,7 +67,6 @@ namespace GOG.Activities.Validate
 
             foreach (var id in updated)
             {
-         
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
                 var validationResults = await validationResultsDataController.GetByIdAsync(id);
 

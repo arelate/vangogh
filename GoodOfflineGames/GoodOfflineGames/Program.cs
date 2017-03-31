@@ -185,7 +185,8 @@ namespace GoodOfflineGames
                 new string[] {
                     Models.Uris.Uris.Paths.Account.GameDetails, // gameDetails requests
                     Models.Uris.Uris.Paths.ProductFiles.ManualUrlDownlink, // manualUrls from gameDetails requests
-                    Models.Uris.Uris.Paths.ProductFiles.ManualUrlCDNSecure // resolved manualUrls and validation files requests
+                    Models.Uris.Uris.Paths.ProductFiles.ManualUrlCDNSecure, // resolved manualUrls and validation files requests
+                    Models.Uris.Uris.Roots.Api // API entries
                 });
 
             var uriController = new UriController();
