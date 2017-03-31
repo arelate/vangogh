@@ -17,6 +17,8 @@ namespace Controllers.RequestRate
         private Dictionary<string, DateTime> lastRequestToUriPrefix;
         private string[] uriPrefixes;
         private const int requestIntervalSeconds = 2 * 60;
+        private const int passthroughCount = 50; // don't throttle first N requests
+        private int rateLimitRequestsCount;
 
         public RequestRateController(
             IThrottleController throttleController,
@@ -28,6 +30,7 @@ namespace Controllers.RequestRate
             this.collectionController = collectionController;
             this.statusController = statusController;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
+            rateLimitRequestsCount = 0;
 
             this.uriPrefixes = uriPrefixes;
 
@@ -42,6 +45,9 @@ namespace Controllers.RequestRate
         {
             var prefix = collectionController.Reduce(uriPrefixes, p => uri.StartsWith(p)).SingleOrDefault();
             if (string.IsNullOrEmpty(prefix)) return;
+
+            // don't limit rate for the first N requests, even if they match rate limit prefix
+            if (++rateLimitRequestsCount <= passthroughCount) return;
 
             var now = DateTime.UtcNow;
             var elapsed = (int) (now - lastRequestToUriPrefix[prefix]).TotalSeconds;

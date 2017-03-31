@@ -15,8 +15,8 @@ namespace Controllers.Presentation
 
         private IList<int> previousScreenLinesLengths;
 
-        private int previousWindowWidth;
-        private int previousWindowHeight;
+        private const int clearIterationsCount = 100; // clear console every N presentations
+        private int presentationIteration = 0;
 
         public ConsolePresentationController(
             ILineBreakingController lineBreakingController,
@@ -29,9 +29,6 @@ namespace Controllers.Presentation
 
             previousScreenLinesLengths = new List<int>();
             consoleController.CursorVisible = false;
-
-            previousWindowWidth = consoleController.WindowWidth;
-            previousWindowHeight = consoleController.WindowHeight;
         }
 
         private int PresentLine(int line, string content)
@@ -66,10 +63,6 @@ namespace Controllers.Presentation
 
         public void Present(IEnumerable<string> views)
         {
-            if (previousWindowWidth != consoleController.WindowWidth ||
-                previousWindowHeight != consoleController.WindowHeight)
-                consoleController.Clear();
-
             var wrappedViews = new List<string>();
             foreach (var view in views)
                 wrappedViews.AddRange(view.Split(new string[] { "\n" }, StringSplitOptions.None));
@@ -95,9 +88,11 @@ namespace Controllers.Presentation
             }
 
             previousScreenLinesLengths = currentLinesLengths;
-
-            previousWindowWidth = consoleController.WindowWidth;
-            previousWindowHeight = consoleController.WindowHeight;
+            if (++presentationIteration == clearIterationsCount)
+            {
+                consoleController.Clear();
+                presentationIteration = 0;
+            }
         }
 
         public Task PresentAsync(IEnumerable<string> views)
