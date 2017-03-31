@@ -317,7 +317,7 @@ namespace GoodOfflineGames
 
             var validationResultsIndexController = new IndexDataController(
                 collectionController,
-                validationDirectoryDelegate,
+                validationResultsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedStorageController,
                 statusController);
@@ -430,7 +430,7 @@ namespace GoodOfflineGames
                 serializedStorageController,
                 productCoreIndexingController,
                 collectionController,
-                validationDirectoryDelegate,
+                validationResultsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
                 statusController);

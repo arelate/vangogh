@@ -2,6 +2,8 @@ Backend
 
 - introduce validation reports with full details on validation for the file
 
+- don't revalidate files if nothing changed
+
 - repair controller
 
 - serve data and frontend files via http
