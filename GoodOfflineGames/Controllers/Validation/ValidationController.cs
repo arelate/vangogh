@@ -69,7 +69,9 @@ namespace Controllers.Validation
 
             try
             {
-                validationXml.Load(validationUri);
+                using (var xmlStream = streamController.OpenReadable(validationUri))
+                    validationXml.Load(xmlStream);
+
                 fileValidation.ValidationFileIsValid = true;
             }
             catch
