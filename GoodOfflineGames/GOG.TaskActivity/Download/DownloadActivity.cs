@@ -32,13 +32,11 @@ namespace GOG.Activities.Download
         public override async Task ProcessActivityAsync(IStatus status)
         {
             var current = 0;
-            var productDownloadsData = productDownloadsDataController.EnumerateIds();
+            var productDownloadsData = productDownloadsDataController.EnumerateIds().ToArray();
             var total = productDownloadsDataController.Count();
 
             var processDownloadsTask = statusController.Create(status, 
                 $"Process updated {downloadParameter} downloads");
-
-            var emptyProductDownloads = new List<ProductDownloads>();
 
             foreach (var id in productDownloadsData)
             {
@@ -86,20 +84,19 @@ namespace GOG.Activities.Download
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);
-
                     statusController.Complete(removeEntryTask);
                 }
 
                 // if there are no scheduled downloads left - mark file for removal
                 if (productDownloads.Downloads.Count == 0)
-                    emptyProductDownloads.Add(productDownloads);
+                {
+                    var clearEmptyDownloadsTask = statusController.Create(processDownloadsTask, "Clear empty downloads");
+                    await productDownloadsDataController.RemoveAsync(clearEmptyDownloadsTask, productDownloads);
+                    statusController.Complete(clearEmptyDownloadsTask);
+                }
 
                 statusController.Complete(processDownloadEntriesTask);
             }
-
-            var clearEmptyDownloadsTask = statusController.Create(processDownloadsTask, "Clear empty downloads");
-            await productDownloadsDataController.RemoveAsync(clearEmptyDownloadsTask, emptyProductDownloads.ToArray());
-            statusController.Complete(clearEmptyDownloadsTask);
 
             statusController.Complete(processDownloadsTask);
         }

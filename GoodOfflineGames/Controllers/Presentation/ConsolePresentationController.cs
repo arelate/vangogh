@@ -63,6 +63,15 @@ namespace Controllers.Presentation
 
         public void Present(IEnumerable<string> views)
         {
+            if (views.Count() == 0) return;
+
+            if (++presentationIteration == clearIterationsCount)
+            {
+                previousScreenLinesLengths.Clear();
+                consoleController.Clear();
+                presentationIteration = 0;
+            }
+
             var wrappedViews = new List<string>();
             foreach (var view in views)
                 wrappedViews.AddRange(view.Split(new string[] { "\n" }, StringSplitOptions.None));
@@ -78,7 +87,8 @@ namespace Controllers.Presentation
 
             // erase previous lines that might be left on the screen
             var previousLinesCount = previousScreenLinesLengths.Count();
-            if (previousLinesCount >= currentScreenLine)
+            if (previousLinesCount > 0 &&
+                previousLinesCount >= currentScreenLine)
             {
                 for (var pp = currentScreenLine; pp < previousLinesCount; pp++)
                 {
@@ -88,11 +98,6 @@ namespace Controllers.Presentation
             }
 
             previousScreenLinesLengths = currentLinesLengths;
-            if (++presentationIteration == clearIterationsCount)
-            {
-                consoleController.Clear();
-                presentationIteration = 0;
-            }
         }
 
         public Task PresentAsync(IEnumerable<string> views)

@@ -16,8 +16,8 @@ namespace Controllers.RequestRate
         private IStatusController statusController;
         private Dictionary<string, DateTime> lastRequestToUriPrefix;
         private string[] uriPrefixes;
-        private const int requestIntervalSeconds = 2 * 60;
-        private const int passthroughCount = 50; // don't throttle first N requests
+        private const int requestIntervalSeconds = 30;
+        private const int passthroughCount = 100; // don't throttle first N requests
         private int rateLimitRequestsCount;
 
         public RequestRateController(

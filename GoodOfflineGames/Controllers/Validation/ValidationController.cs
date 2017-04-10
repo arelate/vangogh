@@ -63,6 +63,10 @@ namespace Controllers.Validation
             fileValidation.ValidationFileExists = VerifyValidationFileExists(validationUri);
             fileValidation.ProductFileExists = VerifyProductFileExists(productFileUri);
 
+            if (!fileValidation.ValidationFileExists ||
+                !fileValidation.ProductFileExists)
+                return fileValidation;
+
             try
             {
                 validationXml.Load(validationUri);

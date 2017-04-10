@@ -133,7 +133,7 @@ namespace GoodOfflineGames
 
             var statusTreeToEnumerableController = new StatusTreeToEnumerableController();
 
-            var applicationStatus = new Status() { Title = "Welcome to GoodOfflineGames" };
+            var applicationStatus = new Status() { Title = "Welcome to GoodOfflineGames\n" };
 
             var templatesDirectoryDelegate = new FixedDirectoryDelegate("templates");
             var appTemplateFilenameDelegate = new FixedFilenameDelegate("app", jsonFilenameDelegate);

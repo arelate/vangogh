@@ -77,6 +77,7 @@ namespace GOG.Activities.Cleanup
                 directoryController.Delete(directory);
 
             statusController.Complete(moveToRecycleBinTask);
+            statusController.Complete(cleanupTask);
         }
     }
 }
