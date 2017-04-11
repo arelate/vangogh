@@ -1,9 +1,5 @@
 Backend
 
-- convert solution to DNX and try on macOS
-	- port DNX changes to main solution (XML using stream)
-	- overwrite Github project to remove VS specific items and start a clean DNX, including VS Code files (launch, tasks)
-
 - fix authorization flow issues - two-factor auth doesn't seem to be detected
 
 - change functional controllers to work on product model type and have activities loop updates using those
