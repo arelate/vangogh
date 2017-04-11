@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Status;
@@ -73,7 +74,21 @@ namespace GOG.Activities.Flight
                 var activity = flightActivities[activityName];
                 if (activity == null) continue;
 
-                await activity.ProcessActivityAsync(status);
+                try
+                {
+                    await activity.ProcessActivityAsync(status);
+                }
+                catch (AggregateException ex)
+                {
+                    List<string> errorMessages = new List<string>();
+
+                    foreach (var innerException in ex.InnerExceptions)
+                        errorMessages.Add(innerException.Message);
+
+                    var combinedErrorMessages = string.Join(", ", errorMessages);
+
+                    statusController.Fail(status, combinedErrorMessages);
+                }
             }
 
             statusController.Complete(flightingTask);

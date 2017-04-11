@@ -1,137 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7E25C189-AC83-4E20-BA55-AE68C39B31A9}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Controllers</RootNamespace>
-    <AssemblyName>Controllers</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="FlightPlan\FlightPlanController.cs" />
-    <Compile Include="Collection\CollectionController.cs" />
-    <Compile Include="Containment\StringContainmentDelegate.cs" />
-    <Compile Include="Conversion\BytesToStringConversionController.cs" />
-    <Compile Include="Cookies\CookiesController.cs" />
-    <Compile Include="Data\IndexDataController.cs" />
-    <Compile Include="Destination\Filename\JsonFilenameDelegate.cs" />
-    <Compile Include="Destination\Filename\FixedFilenameDelegate.cs" />
-    <Compile Include="Destination\Filename\ReportFilenameDelegate.cs" />
-    <Compile Include="Destination\Directory\FixedDirectoryDelegate.cs" />
-    <Compile Include="Destination\Directory\UriDirectoryDelegate.cs" />
-    <Compile Include="Destination\Filename\UriFilenameDelegate.cs" />
-    <Compile Include="Destination\Filename\ValidationFilenameDelegate.cs" />
-    <Compile Include="Destination\Uri\ValidationUriDelegate.cs" />
-    <Compile Include="Directory\DirectoryController.cs" />
-    <Compile Include="Enumeration\DirectoryFilesEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\PassthroughEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\ProductFilesDirectoriesEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\ValidationFileEnumerateDelegate.cs" />
-    <Compile Include="Expectation\ValidationExpectedDelegate.cs" />
-    <Compile Include="FileDownload\FileDownloadController.cs" />
-    <Compile Include="Extraction\GameDetailsDownloadsExtractionController.cs" />
-    <Compile Include="Extraction\GameDetailsLanguagesExtractionController.cs" />
-    <Compile Include="Extraction\LoginIdExtractionController.cs" />
-    <Compile Include="Extraction\LoginUsernameExtractionController.cs" />
-    <Compile Include="Extraction\ScreenshotExtractionController.cs" />
-    <Compile Include="Extraction\GOGDataExtractionController.cs" />
-    <Compile Include="Extraction\ValueAttributeExtractionController.cs" />
-    <Compile Include="File\FileController.cs" />
-    <Compile Include="Hash\HashTrackingController.cs" />
-    <Compile Include="Hash\StringMd5HashController.cs" />
-    <Compile Include="Indexing\ProductCoreIndexingController.cs" />
-    <Compile Include="LineBreaking\LineBreakingController.cs" />
-    <Compile Include="Naming\NameDelegate.cs" />
-    <Compile Include="Presentation\ConsolePresentationController.cs" />
-    <Compile Include="Presentation\FilePresentationController.cs" />
-    <Compile Include="PropertiesValidation\DownloadsOperatingSystemsValidationController.cs" />
-    <Compile Include="QueryParameters\ProductGetQueryParametersDelegate.cs" />
-    <Compile Include="RecycleBin\RecycleBinController.cs" />
-    <Compile Include="RequestRate\RequestRateController.cs" />
-    <Compile Include="Routing\RoutingController.cs" />
-    <Compile Include="Sanitization\SanitizationController.cs" />
-    <Compile Include="SerializedStorage\SerializedStorageController.cs" />
-    <Compile Include="Data\DataController.cs" />
-    <Compile Include="PropertiesValidation\DownloadsLanguagesValidationController.cs" />
-    <Compile Include="ImageUri\ImageUriController.cs" />
-    <Compile Include="ImageUri\ScreenshotUriController.cs" />
-    <Compile Include="PropertiesValidation\UsernamePasswordValidationController.cs" />
-    <Compile Include="Extraction\UriSansSessionExtractionController.cs" />
-    <Compile Include="Status\StatusController.cs" />
-    <Compile Include="Tree\TaskStatusTreeToEnumerableController.cs" />
-    <Compile Include="ViewController\TaskStatusAppViewController.cs" />
-    <Compile Include="Template\TemplateController.cs" />
-    <Compile Include="Throttle\ThrottleController.cs" />
-    <Compile Include="Formatting\FormattingController.cs" />
-    <Compile Include="Formatting\BytesFormattingController.cs" />
-    <Compile Include="Console\ConsoleController.cs" />
-    <Compile Include="RequestPage\RequestPageController.cs" />
-    <Compile Include="Stream\StreamController.cs" />
-    <Compile Include="Serialization\JSONController.cs" />
-    <Compile Include="Language\LanguageController.cs" />
-    <Compile Include="Network\NetworkController.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Formatting\SecondsFormattingController.cs" />
-    <Compile Include="Settings\SettingsController.cs" />
-    <Compile Include="Storage\StorageController.cs" />
-    <Compile Include="Extraction\LoginTokenExtractionController.cs" />
-    <Compile Include="UpdateUri\ProductGetUpdateUriDelegate.cs" />
-    <Compile Include="Uri\UriController.cs" />
-    <Compile Include="Validation\ValidationController.cs" />
-    <Compile Include="ViewModel\TaskStatusReportViewModelDelegate.cs" />
-    <Compile Include="ViewModel\TaskStatusAppViewModelDelegate.cs" />
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
-      <Project>{4b835730-ad7f-4c9f-a390-6d3fa72e52f4}</Project>
-      <Name>Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Models\Models.csproj">
-      <Project>{03a2d07a-5c0f-4948-b710-7ea1cbd21986}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

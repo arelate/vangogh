@@ -1,111 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4B835730-AD7F-4C9F-A390-6D3FA72E52F4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Interfaces</RootNamespace>
-    <AssemblyName>Interfaces</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Folder Include="Activity\" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="FlightPlan\FlightPlan.cs" />
-    <Compile Include="DataRefinement\DataRefinementController.cs" />
-    <Compile Include="Containment\ContainmentController.cs" />
-    <Compile Include="Conversion\ConversionController.cs" />
-    <Compile Include="Cookies\CookiesController.cs" />
-    <Compile Include="Destination\GetFilenameDelegate.cs" />
-    <Compile Include="Destination\GetDirectoryDelegate.cs" />
-    <Compile Include="Destination\GetUriDelegate.cs" />
-    <Compile Include="DownloadSources\DownloadSourcesController.cs" />
-    <Compile Include="Expectation\ExpectedDelegate.cs" />
-    <Compile Include="FileDownload\FileDownloadController.cs" />
-    <Compile Include="Enumeration\EnumerationController.cs" />
-    <Compile Include="Formatting\FormattingController.cs" />
-    <Compile Include="Collection\CollectionController.cs" />
-    <Compile Include="Console\ConsoleController.cs" />
-    <Compile Include="Directory\DirectoryController.cs" />
-    <Compile Include="File\FileController.cs" />
-    <Compile Include="Hash\HashController.cs" />
-    <Compile Include="ImageUri\ImageUriController.cs" />
-    <Compile Include="Indexing\IndexingController.cs" />
-    <Compile Include="Language\LanguageController.cs" />
-    <Compile Include="Data\DataController.cs" />
-    <Compile Include="LineBreaking\LineBreakingController.cs" />
-    <Compile Include="Measurement\MeasurementController.cs" />
-    <Compile Include="Naming\NamingDelegate.cs" />
-    <Compile Include="Presentation\PresentationController.cs" />
-    <Compile Include="PropertiesValidation\PropertiesValidationController.cs" />
-    <Compile Include="QueryParameters\GetQueryParametersDelegate.cs" />
-    <Compile Include="RecycleBin\RecycleBinController.cs" />
-    <Compile Include="RequestRate\RequestRateController.cs" />
-    <Compile Include="Routing\RoutingController.cs" />
-    <Compile Include="Sanitization\SanitizationController.cs" />
-    <Compile Include="Session\SessionController.cs" />
-    <Compile Include="SerializedStorage\SerializedStorageController.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Status\Status.cs" />
-    <Compile Include="Status\StatusController.cs" />
-    <Compile Include="ValidationResult\ValidationResult.cs" />
-    <Compile Include="ViewController\ViewController.cs" />
-    <Compile Include="Template\Template.cs" />
-    <Compile Include="Template\TemplateController.cs" />
-    <Compile Include="Throttle\ThrottleController.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestPage\RequestPageController.cs" />
-    <Compile Include="Serialization\SerializationController.cs" />
-    <Compile Include="Storage\StorageController.cs" />
-    <Compile Include="Stream\StreamController.cs" />
-    <Compile Include="Network\NetworkController.cs" />
-    <Compile Include="Extraction\ExtractionController.cs" />
-    <Compile Include="UpdateIdentity\GetUpdateIdentity.cs" />
-    <Compile Include="Uri\UriController.cs" />
-    <Compile Include="Activity\Activity.cs" />
-    <Compile Include="Tree\TreeToEnumerableController.cs" />
-    <Compile Include="Connection\ConnectDelegate.cs" />
-    <Compile Include="UpdateUri\GetUpdateUriDelegate.cs" />
-    <Compile Include="Validation\ValidationController.cs" />
-    <Compile Include="ViewModel\ViewModelController.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

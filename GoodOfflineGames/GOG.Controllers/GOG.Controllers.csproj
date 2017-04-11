@@ -1,100 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{129AD02F-45FB-44CA-BE10-D256900066DA}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GOG.Controllers</RootNamespace>
-    <AssemblyName>GOG.Controllers</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj" />
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Authorization\AuthorizationController.cs" />
-    <Compile Include="DataRefinement\NewUpdatedRefinementController.cs" />
-    <Compile Include="Connection\GameDetailsAccountProductConnectDelegate.cs" />
-    <Compile Include="DownloadSources\AccountProductsImagesDownloadSourcesController.cs" />
-    <Compile Include="DownloadSources\ImagesDownloadSourcesController.cs" />
-    <Compile Include="DownloadSources\ManualUrlDownloadSourcesController.cs" />
-    <Compile Include="DownloadSources\ProductsImagesDownloadSourcesController.cs" />
-    <Compile Include="DownloadSources\ScreenshotsDownloadSourcesController.cs" />
-    <Compile Include="Enumeration\GameDetailsFileEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\GameDetailsDirectoryEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\GameDetailsManualUrlEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\GameDetailsDirectoriesEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\UpdatedGameDetailsManualUrlFilesEnumerateDelegate.cs" />
-    <Compile Include="Enumeration\UpdatedProductFilesEnumerateDelegate.cs" />
-    <Compile Include="Extraction\OperatingSystemsDownloadsExtractionController.cs" />
-    <Compile Include="FileDownload\ManualUrlDownloadFromSourceDelegate.cs" />
-    <Compile Include="FileDownload\ValidationDownloadFileFromSourceDelegate.cs" />
-    <Compile Include="Network\GetDeserializedGameDetailsDelegate.cs" />
-    <Compile Include="Network\GetDeserializedGOGModelDelegate.cs" />
-    <Compile Include="Network\GetDeserializedGOGDataDelegate.cs" />
-    <Compile Include="Network\GetDeserializedGameProductDataDelegate.cs" />
-    <Compile Include="PageResults\PageResultController.cs" />
-    <Compile Include="Extraction\AccountProductsExtractionController.cs" />
-    <Compile Include="Extraction\ProductsExtractingController.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpdateIdentity\AccountProductGetUpdateIdentityDelegate.cs" />
-    <Compile Include="UpdateIdentity\ProductUrlGetUpdateIdentityDelegate.cs" />
-    <Compile Include="UpdateIdentity\ProductGetUpdateIdentityDelegate.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj">
-      <Project>{60ba32af-cf00-4a69-816a-f90aba3d3f33}</Project>
-      <Name>GOG.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GOG.Models\GOG.Models.csproj">
-      <Project>{864ca735-6c74-4cfc-a5e4-387b2c3225e3}</Project>
-      <Name>GOG.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
-      <Project>{4b835730-ad7f-4c9f-a390-6d3fa72e52f4}</Project>
-      <Name>Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Models\Models.csproj">
-      <Project>{03a2d07a-5c0f-4948-b710-7ea1cbd21986}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

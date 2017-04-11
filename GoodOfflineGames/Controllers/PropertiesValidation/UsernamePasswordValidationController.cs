@@ -34,7 +34,7 @@ namespace Controllers.PropertiesValidation
 
             if (emptyPassword)
             {
-                consoleController.WriteLine("Please enter password for {0}:", null, usernamePassword[0]);
+                consoleController.WriteLine("Please enter password for {0}:", usernamePassword[0]);
                 usernamePassword[1] = consoleController.InputPassword();
             }
 
