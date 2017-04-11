@@ -1,0 +1,34 @@
+Backend
+
+- convert solution to DNX and try on macOS
+	- port DNX changes to main solution (XML using stream)
+	- overwrite Github project to remove VS specific items and start a clean DNX, including VS Code files (launch, tasks)
+
+- fix authorization flow issues - two-factor auth doesn't seem to be detected
+
+- change functional controllers to work on product model type and have activities loop updates using those
+
+- add status progress controller to calculate ETAs etc
+
+- update progress for move to recycle bin
+
+- in the activity cycle dump status json on fatal error
+
+- repair controller:
+	- enumerate validation reports
+	- create validationReportController to determine if product is valid, skip valid products
+	- introduce few ways to repair - chunks repair => patch, validationFileIsNotValid => try simple known fixes
+
+- serve data and frontend files via http or better yet websockets server
+
+- current task activities are monolithic - consider breaking them apart somehow for testability
+
+- unit tests
+
+Frontend:
+
+- es6 modules, fetch, promises, custom properties
+- move to a new data model with data controllers and dynamic data loading
+- Use notifications API on web client view on updates
+- motion
+- mobile layouts
