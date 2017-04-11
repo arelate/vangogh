@@ -196,23 +196,11 @@ FakesAssemblies/
 *.opt
 
 *.jpg
-
-GoodOfflineGames/GoodOfflineGames/gamedetails.js
-GoodOfflineGames/GoodOfflineGames/owned.js
-GoodOfflineGames/GoodOfflineGames/products.js
-GoodOfflineGames/GoodOfflineGames/productsdata.js
-GoodOfflineGames/GoodOfflineGames/updated.js
-GoodOfflineGames/GoodOfflineGames/wishlisted.js
-GoodOfflineGames/GoodOfflineGames/checked*.js
+*.png
 .DS_Store
-/GoodOfflineGames/GoodOfflineGames/productfiles.js
-/GoodOfflineGames/GoodOfflineGames/screenshots.js
-/GoodOfflineGames/GoodOfflineGames/_resource/selectionController.js
-/GoodOfflineGames/GoodOfflineGames/_resource/templateController.js
-/GoodOfflineGames/GoodOfflineGames/_resource/viewController.js
-/GoodOfflineGames/GoodOfflineGames/_resources/templateController.js
-/GoodOfflineGames/GoodOfflineGames/_resources/viewController.js
-/GoodOfflineGames/GoodOfflineGames/_resources/selectionController.js
-/GoodOfflineGames/GoodOfflineGames/_resources/changelogController.js
-/GoodOfflineGames/GoodOfflineGames/_resources/informationController.js
-/GoodOfflineGames/GoodOfflineGames/_resources/mnemonicsController.js
+
+# GoodOfflineGames.exe specific files
+hashes.json
+cookies.json
+
+
