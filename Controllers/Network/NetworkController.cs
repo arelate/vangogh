@@ -89,7 +89,6 @@ namespace Controllers.Network
 
             using (var response = await RequestResponse(status, HttpMethod.Post, uri, content))
             {
-
                 await cookiesController.SetCookies(response);
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
