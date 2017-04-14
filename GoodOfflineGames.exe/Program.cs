@@ -1,6 +1,7 @@
 ﻿#region Using
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 using Controllers.Stream;
@@ -92,6 +93,14 @@ namespace GoodOfflineGames
     {
         static void Main(string[] args)
         {
+            var workingDirectory = string.Empty;
+            if (args != null &&
+                args.Length > 0)
+                workingDirectory = args[0];
+
+            if (Directory.Exists(workingDirectory))
+                Directory.SetCurrentDirectory(workingDirectory);
+
             #region Foundation Controllers
 
             var streamController = new StreamController();
@@ -476,12 +485,10 @@ namespace GoodOfflineGames
 
             var loadDataActivity = new LoadDataActivity(
                 statusController,
-                // hash tracking should be first data controller to be loaded 
-                // as all serialized storage operations go through it and might overwrite data on disk
+                settingsController,
                 precomputedHashController,
                 appTemplateController,
                 reportTemplateController,
-                settingsController,
                 flightPlanController,
                 productsDataController,
                 accountProductsDataController,

@@ -24,13 +24,19 @@ namespace Interfaces.Directory
         IEnumerable<string> EnumerateDirectories(string uri);
     }
 
+    public interface ISetCurrentDirectory
+    {
+        void SetCurrentDirectory(string uri);
+    }
+
     public interface IDirectoryController :
         ICreateDelegate,
         IDeleteDelegate,
         IExistsDelegate,
         IEnumerateFilesDelegate,
         IEnumerateDirectoriesDelegate,
-        IMoveDelegate
+        IMoveDelegate,
+        ISetCurrentDirectory
     {
         // ...
     }

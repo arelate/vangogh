@@ -6,7 +6,7 @@ using Interfaces.Directory;
 
 namespace Controllers.Directory
 {
-    public class DirectoryController: IDirectoryController
+    public class DirectoryController : IDirectoryController
     {
         public bool Exists(string uri)
         {
@@ -39,8 +39,14 @@ namespace Controllers.Directory
             if (!Exists(Path.GetDirectoryName(destination)))
                 Create(Path.GetDirectoryName(destination));
             System.IO.Directory.Move(
-                fromUri, 
+                fromUri,
                 destination);
+        }
+
+        public void SetCurrentDirectory(string uri)
+        {
+            if (Exists(uri))
+                System.IO.Directory.SetCurrentDirectory(uri);
         }
     }
 }
