@@ -33,6 +33,7 @@ namespace Controllers.Network
             };
             client = new HttpClient(httpHandler);
             client.DefaultRequestHeaders.ExpectContinue = false;
+            client.DefaultRequestHeaders.Add(Headers.UserAgent, HeaderDefaultValues.UserAgent);
 
             this.cookiesController = cookiesController;
             this.uriController = uriController;
