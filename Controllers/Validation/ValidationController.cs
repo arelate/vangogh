@@ -23,20 +23,20 @@ namespace Controllers.Validation
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
-        private IBytesToStringHashController bytesToStringHasController;
+        private IBytesHashController bytesHashController;
         private IStatusController statusController;
 
         public ValidationController(
             IExpectedDelegate<string> validationExpectedDelegate,
             IFileController fileController,
             IStreamController streamController,
-            IBytesToStringHashController bytesToStringHasController,
+            IBytesHashController bytesHashController,
             IStatusController statusController)
         {
             this.validationExpectedDelegate = validationExpectedDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
-            this.bytesToStringHasController = bytesToStringHasController;
+            this.bytesHashController = bytesHashController;
             this.statusController = statusController;
 
             validationXml = new XmlDocument()  { PreserveWhitespace = false };
@@ -172,7 +172,7 @@ namespace Controllers.Validation
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
-            chunkValidation.ActualHash = bytesToStringHasController.GetHash(buffer);
+            chunkValidation.ActualHash = bytesHashController.GetHash(buffer);
 
             return chunkValidation;
         }

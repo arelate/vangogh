@@ -12,15 +12,18 @@ namespace Controllers.SerializedStorage
     {
         private IStorageController<string> storageController;
         private ISerializationController<string> serializarionController;
-        private IHashTrackingController hashTrackingController;
+        private IStringHashController stringHashController;
+        private IPrecomputedHashController precomputedHashController;
 
         public SerializedStorageController(
-            IHashTrackingController hashTrackingController,
+            IPrecomputedHashController precomputedHashController,
             IStorageController<string> storageController,
+            IStringHashController stringHashController,
             ISerializationController<string> serializarionController)
         {
-            this.hashTrackingController = hashTrackingController;
+            this.precomputedHashController = precomputedHashController;
             this.storageController = storageController;
+            this.stringHashController = stringHashController;
             this.serializarionController = serializarionController;
         }
 
@@ -28,8 +31,8 @@ namespace Controllers.SerializedStorage
         {
             var serializedData = await storageController.PullAsync(uri);
 
-            var hash = serializedData.GetHashCode();
-            await hashTrackingController.SetHashAsync(uri, hash);
+            //var hash = stringHashController.GetHash(serializedData);
+            //await precomputedHashController.SetHashAsync(uri, hash);
 
             return serializarionController.Deserialize<T>(serializedData);
         }
@@ -38,13 +41,13 @@ namespace Controllers.SerializedStorage
         {
             var serializedData = serializarionController.Serialize(data);
 
-            var hash = serializedData.GetHashCode();
-            var existingHash = hashTrackingController.GetHash(uri);
+            var hash = stringHashController.GetHash(serializedData);
+            var existingHash = precomputedHashController.GetHash(uri);
 
             // data has not changed, no need to write to storage
             if (hash == existingHash) return;
 
-            await hashTrackingController.SetHashAsync(uri, hash);
+            await precomputedHashController.SetHashAsync(uri, hash);
             await storageController.PushAsync(uri, serializedData);
         }
     }

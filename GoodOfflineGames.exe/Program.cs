@@ -106,17 +106,20 @@ namespace GoodOfflineGames
             var jsonFilenameDelegate = new JsonFilenameDelegate();
             var uriHashesFilenameDelegate = new FixedFilenameDelegate("hashes", jsonFilenameDelegate);
 
-            var hashTrackingController = new HashTrackingController(
+            var precomputedHashController = new PrecomputedHashController(
                 uriHashesFilenameDelegate,
                 serializationController,
                 storageController);
 
             var bytesToStringConversionController = new BytesToStringConvertionController();
-            var md5HashController = new BytesToStringMd5HashController(bytesToStringConversionController);
+            var bytesMd5Controller = new BytesMd5Controller(bytesToStringConversionController);
+            var stringToBytesConversionController = new StringToBytesConversionController();
+            var stringMd5Controller = new StringMd5Controller(stringToBytesConversionController, bytesMd5Controller);
 
             var serializedStorageController = new SerializedStorageController(
-                hashTrackingController,
+                precomputedHashController,
                 storageController,
+                stringMd5Controller,
                 serializationController);
 
             var consoleController = new ConsoleController();
@@ -475,7 +478,7 @@ namespace GoodOfflineGames
                 statusController,
                 // hash tracking should be first data controller to be loaded 
                 // as all serialized storage operations go through it and might overwrite data on disk
-                hashTrackingController,
+                precomputedHashController,
                 appTemplateController,
                 reportTemplateController,
                 settingsController,
@@ -525,7 +528,8 @@ namespace GoodOfflineGames
                 productParameterGetUpdateUriDelegate,
                 productParameterGetQueryParametersDelegate,
                 requestPageController,
-                hashTrackingController,
+                stringMd5Controller,
+                precomputedHashController,
                 serializationController,
                 statusController);
 
@@ -544,7 +548,8 @@ namespace GoodOfflineGames
                 productParameterGetUpdateUriDelegate,
                 productParameterGetQueryParametersDelegate,
                 requestPageController,
-                hashTrackingController,
+                stringMd5Controller,
+                precomputedHashController,
                 serializationController,
                 statusController);
 
@@ -822,7 +827,7 @@ namespace GoodOfflineGames
                 validationExpectedDelegate,
                 fileController,
                 streamController,
-                md5HashController,
+                bytesMd5Controller,
                 statusController);
 
             var validateActivity = new ValidateActivity(

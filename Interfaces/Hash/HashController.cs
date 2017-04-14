@@ -2,25 +2,31 @@
 
 namespace Interfaces.Hash
 {
-    public interface IGetHashDelegate<Input, Output>
+    public interface IGetHashDelegate<Type>
     {
-        Output GetHash(Input data);
+        string GetHash(Type data);
     }
 
-    public interface ISetHashDelegate<Input1, Input2>
+    public interface ISetHashAsyncDelegate<Type>
     {
-        Task SetHashAsync(Input1 data, Input2 hash);
+        Task SetHashAsync(Type data, string hash);
     }
 
-    public interface IBytesToStringHashController:
-        IGetHashDelegate<byte[], string>
+    public interface IBytesHashController:
+        IGetHashDelegate<byte[]>
     {
         // ...
     }
 
-    public interface IHashTrackingController:
-        IGetHashDelegate<string, int>,
-        ISetHashDelegate<string, int>
+    public interface IStringHashController:
+        IGetHashDelegate<string>
+    {
+        // ...
+    }
+
+    public interface IPrecomputedHashController:
+        IGetHashDelegate<string>,
+        ISetHashAsyncDelegate<string>
     {
         // ...
     }

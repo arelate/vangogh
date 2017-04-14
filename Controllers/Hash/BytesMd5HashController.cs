@@ -5,12 +5,12 @@ using Interfaces.Conversion;
 
 namespace Controllers.Hash
 {
-    public class BytesToStringMd5HashController : IBytesToStringHashController
+    public class BytesMd5Controller : IBytesHashController
     {
         private MD5 md5;
         private IConversionController<byte[], string> byteToStringConversionController;
 
-        public BytesToStringMd5HashController(IConversionController<byte[], string> byteToStringConversionController)
+        public BytesMd5Controller(IConversionController<byte[], string> byteToStringConversionController)
         {
             md5 = MD5.Create();
             this.byteToStringConversionController = byteToStringConversionController;

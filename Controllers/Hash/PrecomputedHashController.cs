@@ -11,8 +11,8 @@ using Interfaces.Storage;
 
 namespace Controllers.Hash
 {
-    public class HashTrackingController : 
-        IHashTrackingController, 
+    public class PrecomputedHashController : 
+        IPrecomputedHashController, 
         ILoadDelegate,
         ISaveDelegate
     {
@@ -22,9 +22,9 @@ namespace Controllers.Hash
 
         private ISerializationController<string> serializationController;
         private IStorageController<string> storageController;
-        private IDictionary<string, int> uriHashes;
+        private IDictionary<string, string> uriHashes;
 
-        public HashTrackingController(
+        public PrecomputedHashController(
             IGetFilenameDelegate getFilenameDelegate,
             ISerializationController<string> serializationController,
             IStorageController<string> storageController)
@@ -36,15 +36,15 @@ namespace Controllers.Hash
             this.serializationController = serializationController;
             this.storageController = storageController;
 
-            uriHashes = new Dictionary<string, int>();
+            uriHashes = new Dictionary<string, string>();
             dataLoaded = false;
         }
 
-        public int GetHash(string uri)
+        public string GetHash(string uri)
         {
             return (uriHashes.ContainsKey(uri)) ?
                 uriHashes[uri] :
-                int.MinValue;
+                string.Empty;
         }
 
         public async Task LoadAsync()
@@ -57,7 +57,7 @@ namespace Controllers.Hash
             try
             {
                 var serializedData = await storageController.PullAsync(uriHashesFilename);
-                uriHashes = serializationController.Deserialize<Dictionary<string, int>>(serializedData);
+                uriHashes = serializationController.Deserialize<Dictionary<string, string>>(serializedData);
             }
             catch
             {
@@ -65,7 +65,7 @@ namespace Controllers.Hash
             }
 
             if (uriHashes == null)
-                uriHashes = new Dictionary<string, int>();
+                uriHashes = new Dictionary<string, string>();
 
             dataLoaded = true;
         }
@@ -80,7 +80,7 @@ namespace Controllers.Hash
             await storageController.PushAsync(uriHashesFilename, serialiedData);
         }
 
-        public async Task SetHashAsync(string uri, int hash)
+        public async Task SetHashAsync(string uri, string hash)
         {
             if (uriHashes.ContainsKey(uri) &&
                 uriHashes[uri] == hash) return;

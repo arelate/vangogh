@@ -202,5 +202,7 @@ FakesAssemblies/
 # GoodOfflineGames.exe specific files
 hashes.json
 cookies.json
+data/products/*.*
+data/accountProducts/*.*
 
 
