@@ -12,7 +12,7 @@
     public static class HeaderDefaultValues
     {
         public const string Accept = "text/html, application/xhtml+xml, image/jxr, */*";
-        public const string ContentType = "application/x-www-form-urlencoded; charset=utf-8";
+        public const string ContentType = "application/x-www-form-urlencoded";
         public const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.16174";
     }
 }
