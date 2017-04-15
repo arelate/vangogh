@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.Extraction;
 using Interfaces.Network;
@@ -12,6 +13,8 @@ using Models.Units;
 using Models.FlightPlan;
 
 using GOG.Models;
+
+using Models.ProductCore;
 
 namespace GOG.Activities.UpdateData
 {
@@ -45,11 +48,8 @@ namespace GOG.Activities.UpdateData
 
             var getUpdatesListTask = statusController.Create(updateAllTask, "Get a list of updates for product screenshots");
 
-            var productsMissingScreenshots = new List<long>();
-
-            foreach (var id in productsDataController.EnumerateIds())
-                if (!screenshotsDataController.ContainsId(id))
-                    productsMissingScreenshots.Add(id);
+            var productsMissingScreenshots = productsDataController.EnumerateIds().Except(
+                screenshotsDataController.EnumerateIds());
 
             statusController.Complete(getUpdatesListTask);
 
@@ -61,10 +61,18 @@ namespace GOG.Activities.UpdateData
             {
                 var product = await productsDataController.GetByIdAsync(id);
 
+                if (product == null)
+                {
+                    statusController.Inform(
+                        updateProductsScreenshotsTask,
+                        $"Product {id} was not found as product or accountProduct, but marked as missing screenshots");
+                    continue;
+                }
+
                 statusController.UpdateProgress(
-                    updateProductsScreenshotsTask, 
-                    ++counter, 
-                    productsMissingScreenshots.Count,
+                    updateProductsScreenshotsTask,
+                    ++counter,
+                    productsMissingScreenshots.Count(),
                     product.Title,
                     ProductUnits.Products);
 
