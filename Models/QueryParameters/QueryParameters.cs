@@ -32,11 +32,12 @@ namespace Models.QueryParameters
 
         public static Dictionary<string, string> Authenticate = new Dictionary<string, string>()
         {
+            { "brand", "gog" },
             { "client_id", "46755278331571209" },
+            { "layout", "default" },
             { "redirect_uri", Uris.Uris.Paths.Authentication.OnLoginSuccess},
             { "response_type", "code" },
-            { "layout", "default" },
-            { "brand", "gog" }
+
         };
 
         public static Dictionary<string, string> LoginAuthenticate = new Dictionary<string, string>()

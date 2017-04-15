@@ -115,7 +115,7 @@ namespace GOG.Controllers.Authorization
 
             string loginData = uriController.ConcatenateQueryParameters(QueryParameters.LoginAuthenticate);
 
-            var loginCheckResult = await networkController.Post(status, loginUri, null, loginData);
+            var loginCheckResult = await networkController.Post(status, loginUri, null, loginData, Uris.Paths.Authentication.Auth);
 
             // login attempt was successful
             if (loginCheckResult.Contains("gogData"))

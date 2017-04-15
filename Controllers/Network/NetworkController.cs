@@ -80,8 +80,14 @@ namespace Controllers.Network
             IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null,
-            string data = null)
+            string data = null,
+            string referer = null)
         {
+            client.DefaultRequestHeaders.Add("Origin", new System.Uri(baseUri).Host);
+
+            if (!string.IsNullOrEmpty(referer))
+                client.DefaultRequestHeaders.Add("Referer", referer);
+
             string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
             if (data == null) data = string.Empty;

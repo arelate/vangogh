@@ -23,7 +23,7 @@ namespace Interfaces.Network
 
     public interface IPostDelegate
     {
-        Task<string> Post(IStatus status, string uri, IDictionary<string, string> parameters = null, string data = null);
+        Task<string> Post(IStatus status, string uri, IDictionary<string, string> parameters = null, string data = null, string referer = null);
     }
 
     public interface INetworkController :
