@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 
 using Interfaces.Uri;
@@ -26,10 +27,12 @@ namespace Controllers.Network
             IUriController uriController,
             IRequestRateController requestRateController)
         {
+            var cookieContainer = new CookieContainer();
             var httpHandler = new HttpClientHandler()
             {
-                UseCookies = false,
-                UseDefaultCredentials = false
+                //UseCookies = false,
+                UseDefaultCredentials = false,
+                CookieContainer = cookieContainer
             };
             client = new HttpClient(httpHandler);
             client.DefaultRequestHeaders.ExpectContinue = false;
@@ -66,7 +69,7 @@ namespace Controllers.Network
             requestRateController.EnforceRequestRate(uri, status);
 
             var requestMessage = new HttpRequestMessage(method, uri);
-            requestMessage.Headers.Add(Headers.Cookie, await cookiesController.GetCookieHeader());
+            //requestMessage.Headers.Add(Headers.Cookie, await cookiesController.GetCookieHeader());
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
             if (content != null) requestMessage.Content = content;
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);

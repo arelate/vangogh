@@ -29,9 +29,10 @@ namespace GOG.Controllers.Authorization
         private IValidatePropertiesDelegate<string> usernamePasswordValidationDelegate;
         private IUriController uriController;
         private INetworkController networkController;
-        private IStringExtractionController loginTokenExtractionController;
         private IStringExtractionController loginIdExtractionController;
         private IStringExtractionController loginUsernameExtractionController;
+        private IStringExtractionController loginTokenExtractionController;
+        private IStringExtractionController secondStepAuthenticationTokenExtractionController;
         private IConsoleController consoleController;
         private ISerializationController<string> serializationController;
 
@@ -40,27 +41,33 @@ namespace GOG.Controllers.Authorization
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IStringExtractionController loginTokenExtractionController,
             IStringExtractionController loginIdExtractionController,
             IStringExtractionController loginUsernameExtractionController,
+            IStringExtractionController loginTokenExtractionController,
+            IStringExtractionController secondStepAuthenticationTokenExtractionController,
             IConsoleController consoleController)
         {
             this.usernamePasswordValidationDelegate = usernamePasswordValidationDelegate;
             this.uriController = uriController;
             this.networkController = networkController;
-            this.loginTokenExtractionController = loginTokenExtractionController;
             this.loginIdExtractionController = loginIdExtractionController;
             this.loginUsernameExtractionController = loginUsernameExtractionController;
+            this.loginTokenExtractionController = loginTokenExtractionController;
+            this.secondStepAuthenticationTokenExtractionController = secondStepAuthenticationTokenExtractionController;
             this.consoleController = consoleController;
             this.serializationController = serializationController;
         }
 
         public async Task<bool> IsAuthorized(IStatus status)
         {
+            //var websiteContent = await networkController.Get(status, Uris.Roots.Website);
+
             var userDataString = await networkController.Get(status, Uris.Paths.Authentication.UserData);
             if (string.IsNullOrEmpty(userDataString)) return false;
 
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
+
+            //var menuGogcomAuthorize = await networkController.Get(status, "https://menu.gog.com/gogcom/authorize");
 
             return userData.IsLoggedIn;
         }
@@ -121,7 +128,7 @@ namespace GOG.Controllers.Authorization
             if (loginCheckResult.Contains("gogData"))
                 return;
 
-            if (!loginCheckResult.Contains("second_step_authentication_token_letter"))
+            if (!loginCheckResult.Contains("second_step"))
                 throw new System.Security.SecurityException(failedToAuthenticate);
 
             // 2FA is enabled for this user - ask for the code
@@ -129,23 +136,23 @@ namespace GOG.Controllers.Authorization
 
             while (securityCode.Length != 4)
             {
-                consoleController.WriteLine(securityCodeHasBeenSent, null, usernamePassword[0]);
+                consoleController.WriteLine(securityCodeHasBeenSent, usernamePassword[0]);
                 securityCode = consoleController.ReadLine();
             }
 
-            var twoStepToken = loginTokenExtractionController.ExtractMultiple(loginCheckResult).First();
+            var secondStepAuthenticationToken = secondStepAuthenticationTokenExtractionController.ExtractMultiple(loginCheckResult).First();
 
-            QueryParameters.TwoStepAuthenticate["second_step_authentication[token][letter_1]"] = securityCode[0].ToString();
-            QueryParameters.TwoStepAuthenticate["second_step_authentication[token][letter_2]"] = securityCode[1].ToString();
-            QueryParameters.TwoStepAuthenticate["second_step_authentication[token][letter_3]"] = securityCode[2].ToString();
-            QueryParameters.TwoStepAuthenticate["second_step_authentication[token][letter_4]"] = securityCode[3].ToString();
-            QueryParameters.TwoStepAuthenticate["second_step_authentication[_token]"] = twoStepToken;
+            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_1]"] = securityCode[0].ToString();
+            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_2]"] = securityCode[1].ToString();
+            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_3]"] = securityCode[2].ToString();
+            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_4]"] = securityCode[3].ToString();
+            QueryParameters.SecondStepAuthentication["second_step_authentication[_token]"] = secondStepAuthenticationToken;
 
-            string twoStepData = uriController.ConcatenateQueryParameters(QueryParameters.TwoStepAuthenticate);
+            string secondStepData = uriController.ConcatenateQueryParameters(QueryParameters.SecondStepAuthentication);
 
-            var twoStepLoginCheckResult = await networkController.Post(status, Uris.Paths.Authentication.TwoStep, null, twoStepData);
+            var secondStepLoginCheckResult = await networkController.Post(status, Uris.Paths.Authentication.TwoStep, null, secondStepData);
 
-            if (twoStepLoginCheckResult.Contains("gogData"))
+            if (secondStepLoginCheckResult.Contains("gogData"))
                 return;
 
             throw new System.Security.SecurityException(failedToAuthenticate);
