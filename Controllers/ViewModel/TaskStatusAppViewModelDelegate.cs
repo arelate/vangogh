@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Interfaces.ViewModel;
 using Interfaces.Status;
 using Interfaces.Formatting;
+using Interfaces.StatusProgress;
 
 using Models.Units;
 
@@ -12,7 +13,7 @@ namespace Controllers.ViewModel
 {
     public class StatusAppViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
-        private static class statusAppViewModelSchema
+        private static class StatusAppViewModelSchema
         {
             public const string Title = "title";
             public const string ContainsProgress = "containsProgress";
@@ -29,13 +30,16 @@ namespace Controllers.ViewModel
             public const string WarningsCount = "warningsCount";
         }
 
+        private IStatusProgressController statusProgressController;
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
 
         public StatusAppViewModelDelegate(
+            IStatusProgressController statusProgressController,
             IFormattingController bytesFormattingController,
             IFormattingController secondsFormattingController)
         {
+            this.statusProgressController = statusProgressController;
             this.bytesFormattingController = bytesFormattingController;
             this.secondsFormattingController = secondsFormattingController;
         }
@@ -47,65 +51,65 @@ namespace Controllers.ViewModel
             // viewmodel schemas
             var viewModel = new Dictionary<string, string>()
             {
-                { statusAppViewModelSchema.Title, "" },
-                { statusAppViewModelSchema.ContainsProgress, "" },
-                { statusAppViewModelSchema.ProgressTarget, "" },
-                { statusAppViewModelSchema.ProgressPercent, "" },
-                { statusAppViewModelSchema.ProgressCurrent, "" },
-                { statusAppViewModelSchema.ProgressTotal, "" },
-                { statusAppViewModelSchema.ContainsETA, "" },
-                { statusAppViewModelSchema.RemainingTime, "" },
-                { statusAppViewModelSchema.AverageUnitsPerSecond, "" },
-                { statusAppViewModelSchema.ContainsFailures, ""},
-                { statusAppViewModelSchema.FailuresCount, ""},
-                { statusAppViewModelSchema.ContainsWarnings, ""},
-                { statusAppViewModelSchema.WarningsCount, ""}
+                { StatusAppViewModelSchema.Title, "" },
+                { StatusAppViewModelSchema.ContainsProgress, "" },
+                { StatusAppViewModelSchema.ProgressTarget, "" },
+                { StatusAppViewModelSchema.ProgressPercent, "" },
+                { StatusAppViewModelSchema.ProgressCurrent, "" },
+                { StatusAppViewModelSchema.ProgressTotal, "" },
+                { StatusAppViewModelSchema.ContainsETA, "" },
+                { StatusAppViewModelSchema.RemainingTime, "" },
+                { StatusAppViewModelSchema.AverageUnitsPerSecond, "" },
+                { StatusAppViewModelSchema.ContainsFailures, ""},
+                { StatusAppViewModelSchema.FailuresCount, ""},
+                { StatusAppViewModelSchema.ContainsWarnings, ""},
+                { StatusAppViewModelSchema.WarningsCount, ""}
             };
 
-            viewModel[statusAppViewModelSchema.Title] = status.Title;
+            viewModel[StatusAppViewModelSchema.Title] = status.Title;
 
             if (status.Progress != null)
             {
                 var current = status.Progress.Current;
                 var total = status.Progress.Total;
 
-                viewModel[statusAppViewModelSchema.ContainsProgress] = "true";
-                viewModel[statusAppViewModelSchema.ProgressTarget] = status.Progress.Target;
-                viewModel[statusAppViewModelSchema.ProgressPercent] = string.Format("{0:P1}", (double)current / total);
+                viewModel[StatusAppViewModelSchema.ContainsProgress] = "true";
+                viewModel[StatusAppViewModelSchema.ProgressTarget] = status.Progress.Target;
+                viewModel[StatusAppViewModelSchema.ProgressPercent] = string.Format("{0:P1}", (double)current / total);
 
                 var currentFormatted = current.ToString();
                 var totalFormatted = total.ToString();
 
                 if (status.Progress.Unit == DataUnits.Bytes)
                 {
-                    viewModel[statusAppViewModelSchema.ContainsETA] = "true";
+                    viewModel[StatusAppViewModelSchema.ContainsETA] = "true";
 
                     currentFormatted = bytesFormattingController.Format(current);
                     totalFormatted = bytesFormattingController.Format(total);
 
-                    var elapsed = DateTime.UtcNow - status.Started;
-                    var unitsPerSecond = current / elapsed.TotalSeconds;
-                    var speed = bytesFormattingController.Format((long)unitsPerSecond);
-                    var remainingTime = secondsFormattingController.Format((long)((total - current) / unitsPerSecond));
+                    var remainingTimeAtSpeed = statusProgressController.GetRemainingTimeAtUnitsPerSecond(status);
 
-                    viewModel[statusAppViewModelSchema.RemainingTime] = remainingTime;
-                    viewModel[statusAppViewModelSchema.AverageUnitsPerSecond] = speed;
+                    var speed = bytesFormattingController.Format((long)remainingTimeAtSpeed.Item1);
+                    var remainingTime = secondsFormattingController.Format((long)((total - current) / remainingTimeAtSpeed.Item2));
+
+                    viewModel[StatusAppViewModelSchema.RemainingTime] = remainingTime;
+                    viewModel[StatusAppViewModelSchema.AverageUnitsPerSecond] = speed;
                 }
 
-                viewModel[statusAppViewModelSchema.ProgressCurrent] = currentFormatted;
-                viewModel[statusAppViewModelSchema.ProgressTotal] = totalFormatted;
+                viewModel[StatusAppViewModelSchema.ProgressCurrent] = currentFormatted;
+                viewModel[StatusAppViewModelSchema.ProgressTotal] = totalFormatted;
             }
 
             if (status.Failures != null && status.Failures.Any())
             {
-                viewModel[statusAppViewModelSchema.ContainsFailures] = "true";
-                viewModel[statusAppViewModelSchema.FailuresCount] = status.Failures.Count.ToString();
+                viewModel[StatusAppViewModelSchema.ContainsFailures] = "true";
+                viewModel[StatusAppViewModelSchema.FailuresCount] = status.Failures.Count.ToString();
             }
 
             if (status.Warnings != null && status.Warnings.Any())
             {
-                viewModel[statusAppViewModelSchema.ContainsWarnings] = "true";
-                viewModel[statusAppViewModelSchema.WarningsCount] = status.Warnings.Count.ToString();
+                viewModel[StatusAppViewModelSchema.ContainsWarnings] = "true";
+                viewModel[StatusAppViewModelSchema.WarningsCount] = status.Warnings.Count.ToString();
             }
 
             return viewModel;

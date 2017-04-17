@@ -38,6 +38,7 @@ using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
 using Controllers.Status;
+using Controllers.StatusProgress;
 using Controllers.Hash;
 using Controllers.Containment;
 using Controllers.Sanitization;
@@ -166,7 +167,10 @@ namespace GoodOfflineGames
                 serializedStorageController,
                 collectionController);
 
+            var statusProgressController = new StatusProgressController();
+
             var statusAppViewModelDelegate = new StatusAppViewModelDelegate(
+                statusProgressController,
                 bytesFormattingController,
                 secondsFormattingController);
 

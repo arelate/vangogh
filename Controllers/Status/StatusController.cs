@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using Interfaces.Status;
 using Interfaces.ViewController;
 
-using Models.Status;
-
 namespace Controllers.Status
 {
     public class StatusController : IStatusController
@@ -65,7 +63,7 @@ namespace Controllers.Status
                 throw new InvalidOperationException("Cannot update completed task status.");
 
             if (status.Progress == null)
-                status.Progress = new StatusProgress();
+                status.Progress = new Models.Status.StatusProgress();
 
             status.Progress.Target = target;
             status.Progress.Current = current;
