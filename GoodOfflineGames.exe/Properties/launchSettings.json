@@ -1,8 +1,7 @@
 {
   "profiles": {
     "GoodOfflineGames.exe": {
-      "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\bbrinza\\Desktop\\data\""
+      "commandName": "Project"
     }
   }
 }

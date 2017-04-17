@@ -1064,22 +1064,24 @@ namespace GoodOfflineGames
                 }
                 catch (AggregateException ex)
                 {
-                    List<string> errorMessages = new List<string>();
+                    var exceptionTreeToEnumerableController = new ExceptionTreeToEnumerableController();
 
-                    foreach (var innerException in ex.InnerExceptions)
+                    List<string> errorMessages = new List<string>();
+                    foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
                         errorMessages.Add(innerException.Message);
 
                     var combinedErrorMessages = string.Join(", ", errorMessages);
 
                     statusController.Fail(applicationStatus, combinedErrorMessages);
 
-                    // TODO: dump status json on critical failure and inform that there is fatal error
+                    var failureDumpUri = "failureDump.json";
+                    serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
 
                     consolePresentationController.Present(
                         new string[]
                             {"GoodOfflineGames.exe has encountered fatal error(s):\n" + 
                             combinedErrorMessages +
-                            "\nPlease refer to failureDump.json in /reports for further details."+
+                            $"\nPlease refer to {failureDumpUri} for further details."+
                             "\n\nPress ENTER to close the window..."});
 
                     consoleController.ReadLine();

@@ -4,8 +4,6 @@ Backend
 
 - change functional controllers to work on product model type and have activities loop updates using those
 
-- add status progress controller to calculate ETAs etc
-
 - in the activity cycle dump status json on fatal error
 
 - repair controller:

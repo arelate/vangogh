@@ -7,8 +7,14 @@ namespace Interfaces.Tree
         IEnumerable<T> ToEnumerable(T item);
     }
 
+    public interface IGetChildren<T>
+    {
+        IEnumerable<T> GetChildren(T item);
+    }
+
     public interface ITreeToEnumerableController<T>:
-        IToEnumerableDelegate<T>
+        IToEnumerableDelegate<T>,
+        IGetChildren<T>
     {
         // ...
     }

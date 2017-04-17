@@ -7,29 +7,11 @@ using Interfaces.Status;
 
 namespace Controllers.Tree
 {
-    public class StatusTreeToEnumerableController : ITreeToEnumerableController<IStatus>
+    public class StatusTreeToEnumerableController : TreeToEnumerableController<IStatus>
     {
-        public IEnumerable<IStatus> ToEnumerable(IStatus status)
+        public override IEnumerable<IStatus> GetChildren(IStatus item)
         {
-            if (status == null) yield break;
-
-            var statusQueue = new List<IStatus>();
-
-            statusQueue.Insert(0, status);
-
-            while (statusQueue.Any())
-            {
-                var currentstatus = statusQueue[0];
-                statusQueue.RemoveAt(0);
-
-                if (currentstatus == null) continue;
-
-                yield return currentstatus;
-
-                if (currentstatus.Children == null) continue;
-
-                statusQueue.InsertRange(0, currentstatus.Children);
-            }
+            return item != null ? item.Children : null;
         }
     }
 }
