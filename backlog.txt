@@ -8,8 +8,6 @@ Backend
 
 - add status progress controller to calculate ETAs etc
 
-- update progress for move to recycle bin
-
 - in the activity cycle dump status json on fatal error
 
 - repair controller:

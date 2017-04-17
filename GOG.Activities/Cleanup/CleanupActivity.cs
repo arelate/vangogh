@@ -58,9 +58,18 @@ namespace GOG.Activities.Cleanup
                 }
 
             var moveToRecycleBinTask = statusController.Create(status, "Move unexpected items to recycle bin");
+            var current = 0;
 
             foreach (var item in cleanupItems)
+            {
+                statusController.UpdateProgress(
+                    moveToRecycleBinTask,
+                    ++current,
+                    cleanupItems.Count,
+                    item);
+
                 recycleBinController.MoveToRecycleBin(item);
+            }
 
             // check if any of the directories are left empty and delete
             var emptyDirectories = new List<string>();
