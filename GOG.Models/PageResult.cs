@@ -1,9 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
+using GOG.Interfaces.Models;
+
 namespace GOG.Models
 {
     [DataContract()]
-    public abstract class PageResult
+    public abstract class PageResult: IPageResult
     {
         [DataMember(Name = "page")]
         public int Page { get; set; }

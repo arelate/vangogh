@@ -7,6 +7,7 @@ using Interfaces.Sanitization;
 using Interfaces.Language;
 
 using GOG.Interfaces.Extraction;
+using GOG.Interfaces.Models;
 using GOG.Models;
 
 namespace GOG.Controllers.Extraction
@@ -26,7 +27,7 @@ namespace GOG.Controllers.Extraction
 
         public IEnumerable<string> Languages { get; set; }
 
-        public IEnumerable<OperatingSystemsDownloads> ExtractMultiple(OperatingSystemsDownloads[][] downloads)
+        public IEnumerable<IOperatingSystemsDownloads> ExtractMultiple(IOperatingSystemsDownloads[][] downloads)
         {
             if (downloads?.Length != Languages?.Count())
                 throw new InvalidOperationException("Extracted different number of downloads and languages.");
@@ -49,7 +50,7 @@ namespace GOG.Controllers.Extraction
 
                 download.Language = languageCode;
 
-                osDownloads.Add(download);
+                osDownloads.Add(download as OperatingSystemsDownloads);
             }
 
             return osDownloads;

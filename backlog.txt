@@ -1,7 +1,5 @@
 Backend
 
-- cleanup dependency graph: there shouldn't be a reference from Interface to Models (e.g. GOG.Interface to GOG.Models)
-
 - persist cookies from session to session
 
 - change functional controllers to work on product model type and have activities loop updates using those

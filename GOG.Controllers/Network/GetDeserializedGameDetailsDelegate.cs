@@ -111,7 +111,7 @@ namespace GOG.Controllers.Network
                 var languageDownloads = operatingSystemsDownloadsExtractionController.ExtractMultiple(
                                     downloads);
 
-                gameDetailsLanguageDownloads.AddRange(languageDownloads);
+                gameDetailsLanguageDownloads.AddRange(languageDownloads as IEnumerable<OperatingSystemsDownloads>);
             }
 
             gameDetails.LanguageDownloads = gameDetailsLanguageDownloads.ToArray();

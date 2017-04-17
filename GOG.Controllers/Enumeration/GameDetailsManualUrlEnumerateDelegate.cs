@@ -7,6 +7,7 @@ using Interfaces.Settings;
 
 using Models.Uris;
 
+using GOG.Interfaces.Models;
 using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
@@ -37,7 +38,7 @@ namespace GOG.Controllers.Enumeration
             if (gameDetails == null)
                 yield break;
 
-            var gameDetailsDownloadEntries = new List<DownloadEntry>();
+            var gameDetailsDownloadEntries = new List<IDownloadEntry>();
 
             if (gameDetails.LanguageDownloads != null)
                 foreach (var download in gameDetails.LanguageDownloads)

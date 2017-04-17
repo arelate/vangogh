@@ -1,17 +1,19 @@
 ﻿using System.Runtime.Serialization;
 
+using GOG.Interfaces.Models;
+
 namespace GOG.Models
 {
     [DataContract]
-    public class OperatingSystemsDownloads
+    public class OperatingSystemsDownloads: IOperatingSystemsDownloads
     {
         [DataMember(Name = "language")]
         public string Language { get; set; }
         [DataMember(Name = "linux")]
-        public DownloadEntry[] Linux { get; set; }
+        public IDownloadEntry[] Linux { get; set; }
         [DataMember(Name = "mac")]
-        public DownloadEntry[] Mac { get; set; }
+        public IDownloadEntry[] Mac { get; set; }
         [DataMember(Name = "windows")]
-        public DownloadEntry[] Windows { get; set; }
+        public IDownloadEntry[] Windows { get; set; }
     }
 }

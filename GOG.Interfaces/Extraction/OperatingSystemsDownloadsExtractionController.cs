@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Extraction;
 
-using GOG.Models;
+using GOG.Interfaces.Models;
 
 namespace GOG.Interfaces.Extraction
 {
@@ -16,7 +16,7 @@ namespace GOG.Interfaces.Extraction
     }
 
     public interface IOperatingSystemsDownloadsExtractionController: 
-        IExtractMultipleDelegate<OperatingSystemsDownloads[][], OperatingSystemsDownloads>,
+        IExtractMultipleDelegate<IOperatingSystemsDownloads[][], IOperatingSystemsDownloads>,
         ILanguagesProperty
     {
         // ...

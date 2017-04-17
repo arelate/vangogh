@@ -1,9 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
+using GOG.Interfaces.Models;
+
 namespace GOG.Models
 {
     [DataContract]
-    public class DownloadEntry
+    public class DownloadEntry: IDownloadEntry
     {
         [DataMember(Name = "date")]
         public string Date { get; set; }
