@@ -7,6 +7,7 @@
         public const string Accept = "Accept";
         public const string ContentType = "Content-Type";
         public const string UserAgent = "User-Agent";
+        public const string Origin = "Origin";
     }
 
     public static class HeaderDefaultValues

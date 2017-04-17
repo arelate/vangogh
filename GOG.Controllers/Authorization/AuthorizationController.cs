@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 
 using GOG.Interfaces.Authorization;
 
 using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Extraction;
-using Interfaces.Console;
 using Interfaces.Serialization;
-using Interfaces.PropertiesValidation;
+using Interfaces.PropertyValidation;
 using Interfaces.Status;
 
 using Models.Uris;
@@ -19,57 +19,160 @@ namespace GOG.Controllers.Authorization
     public class AuthorizationController : IAuthorizationController
     {
         private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
+        private const string successfullyAuthorized = "Successfully authorized";
         private const string recaptchaDetected = "Login page contains reCAPTCHA.\n" +
             "Please login in the browser, then export the galaxy-login-* cookies into ./cookies.json\n" +
             "{INSTRUCTIONS}";
-        private const string securityCodeHasBeenSent = "Enter security code that has been sent to {0}:";
-
-        private const string recaptchaUri = "https://www.google.com/recaptcha";
+        private const string gogData = "gogData";
 
         private IValidatePropertiesDelegate<string> usernamePasswordValidationDelegate;
+        private IValidatePropertiesDelegate<string> securityCodeValidationDelegate;
         private IUriController uriController;
         private INetworkController networkController;
-        private IStringExtractionController loginIdExtractionController;
-        private IStringExtractionController loginUsernameExtractionController;
-        private IStringExtractionController loginTokenExtractionController;
-        private IStringExtractionController secondStepAuthenticationTokenExtractionController;
-        private IConsoleController consoleController;
         private ISerializationController<string> serializationController;
+        private IDictionary<string, IStringExtractionController> extractionControllers;
+        private IStatusController statusController;
 
         public AuthorizationController(
             IValidatePropertiesDelegate<string> usernamePasswordValidationDelegate,
+            IValidatePropertiesDelegate<string> securityCodeValidationDelegate,
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IStringExtractionController loginIdExtractionController,
-            IStringExtractionController loginUsernameExtractionController,
-            IStringExtractionController loginTokenExtractionController,
-            IStringExtractionController secondStepAuthenticationTokenExtractionController,
-            IConsoleController consoleController)
+            IDictionary<string, IStringExtractionController> extractionControllers,
+            IStatusController statusController)
         {
             this.usernamePasswordValidationDelegate = usernamePasswordValidationDelegate;
+            this.securityCodeValidationDelegate = securityCodeValidationDelegate;
             this.uriController = uriController;
             this.networkController = networkController;
-            this.loginIdExtractionController = loginIdExtractionController;
-            this.loginUsernameExtractionController = loginUsernameExtractionController;
-            this.loginTokenExtractionController = loginTokenExtractionController;
-            this.secondStepAuthenticationTokenExtractionController = secondStepAuthenticationTokenExtractionController;
-            this.consoleController = consoleController;
             this.serializationController = serializationController;
+            this.extractionControllers = extractionControllers;
+            this.statusController = statusController;
         }
 
         public async Task<bool> IsAuthorized(IStatus status)
         {
-            //var websiteContent = await networkController.Get(status, Uris.Roots.Website);
+            var getUserDataTask = statusController.Create(status, "Get userData.json");
 
-            var userDataString = await networkController.Get(status, Uris.Paths.Authentication.UserData);
+            var userDataString = await networkController.Get(getUserDataTask, Uris.Paths.Authentication.UserData);
             if (string.IsNullOrEmpty(userDataString)) return false;
 
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
 
-            //var menuGogcomAuthorize = await networkController.Get(status, "https://menu.gog.com/gogcom/authorize");
+            statusController.Complete(getUserDataTask);
 
             return userData.IsLoggedIn;
+        }
+
+        public async Task<string> GetAuthenticationTokenResponse(IStatus status)
+        {
+            var getAuthenticationTokenResponseTask = statusController.Create(status, "Get authorization token response");
+
+            // request authorization token
+            var authResponse = await networkController.Get(
+                status,
+                Uris.Paths.Authentication.Auth,
+                QueryParametersCollections.Authenticate);
+
+            statusController.Complete(getAuthenticationTokenResponseTask);
+
+            return authResponse;
+        }
+
+        public async Task<string> GetLoginCheckResponse(string authResponse, string username, string password, IStatus status)
+        {
+            var getLoginCheckResponseTask = statusController.Create(status, "Get login check result");
+
+            var loginToken = extractionControllers[
+                QueryParameters.LoginUnderscoreToken].ExtractMultiple(
+                authResponse).First();
+
+            // login using username / password or login id / password
+            var loginUri = string.Empty;
+            if (authResponse.Contains(QueryParameters.LoginId))
+            {
+                var loginId = extractionControllers[
+                    QueryParameters.LoginId].ExtractMultiple(
+                    authResponse).First();
+                QueryParametersCollections.LoginAuthenticate.Remove(QueryParameters.LoginUsername);
+                QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginId] = loginId;
+                loginUri = Uris.Paths.Authentication.Login;
+
+                username = extractionControllers[
+                    QueryParameters.LoginUsername].ExtractMultiple(
+                    authResponse).First();
+            }
+            else
+            {
+                QueryParametersCollections.LoginAuthenticate.Remove(QueryParameters.LoginId);
+                loginUri = Uris.Paths.Authentication.LoginCheck;
+            }
+
+            var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(username, password);
+
+            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = username;
+            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
+            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUnderscoreToken] = loginToken;
+
+            string loginData = uriController.ConcatenateQueryParameters(QueryParametersCollections.LoginAuthenticate);
+
+            var loginCheckResult = await networkController.Post(getLoginCheckResponseTask, loginUri, null, loginData);
+
+            statusController.Complete(getLoginCheckResponseTask);
+
+            return loginCheckResult;
+        }
+
+        public async Task<string> GetTwoStepLoginCheckResponse(string loginCheckResult, IStatus status)
+        {
+            var getTwoStepLoginCheckResponseTask = statusController.Create(status, "Get second step authentication result");
+
+            // 2FA is enabled for this user - ask for the code
+            var securityCode = securityCodeValidationDelegate.ValidateProperties(
+                new string[0]).First();
+
+            var secondStepAuthenticationToken = extractionControllers[
+                QueryParameters.SecondStepAuthenticationUnderscoreToken].ExtractMultiple(
+                loginCheckResult).First();
+
+            QueryParametersCollections.SecondStepAuthentication[
+                QueryParameters.SecondStepAuthenticationTokenLetter1] = securityCode[0].ToString();
+            QueryParametersCollections.SecondStepAuthentication[
+                QueryParameters.SecondStepAuthenticationTokenLetter2] = securityCode[1].ToString();
+            QueryParametersCollections.SecondStepAuthentication[
+                QueryParameters.SecondStepAuthenticationTokenLetter3] = securityCode[2].ToString();
+            QueryParametersCollections.SecondStepAuthentication[
+                QueryParameters.SecondStepAuthenticationTokenLetter4] = securityCode[3].ToString();
+            QueryParametersCollections.SecondStepAuthentication[
+                QueryParameters.SecondStepAuthenticationUnderscoreToken] = secondStepAuthenticationToken;
+
+            string secondStepData = uriController.ConcatenateQueryParameters(QueryParametersCollections.SecondStepAuthentication);
+
+            var secondStepLoginCheckResult = await networkController.Post(status, Uris.Paths.Authentication.TwoStep, null, secondStepData);
+
+            statusController.Complete(getTwoStepLoginCheckResponseTask);
+
+            return secondStepLoginCheckResult;
+        }
+
+        public void ThrowSecurityException(IStatus status, string message)
+        {
+            statusController.Fail(status, message);
+            statusController.Complete(status);
+            throw new System.Security.SecurityException(message);
+        }
+
+        public bool CheckAuthorizationSuccess(string response, IStatus status)
+        {
+            if (response.Contains(gogData))
+            {
+                statusController.Inform(status, successfullyAuthorized);
+                statusController.Complete(status);
+                return true;
+            }
+
+            return false;
         }
 
         public async Task Authorize(string username, string password, IStatus status)
@@ -82,85 +185,32 @@ namespace GOG.Controllers.Authorization
             // - We can also detect CAPTCHA and inform users what to do - this is typical for sales periods
             //   where it seems GOG.com tries to limit automated tools impact on the site
 
-            if (await IsAuthorized(status)) return;
+            var authorizeTask = statusController.Create(status, "Authorize on GOG.com");
 
-            // request authorization token
-            string authResponse = await networkController.Get(
-                status, 
-                Uris.Paths.Authentication.Auth, 
-                QueryParameters.Authenticate);
-
-            if (authResponse.Contains(recaptchaUri))
+            if (await IsAuthorized(status))
             {
-                throw new System.Security.SecurityException(recaptchaDetected);
-            }
-
-            string loginToken = loginTokenExtractionController.ExtractMultiple(authResponse).First();
-
-            // login using username / password or login id / password
-            var loginUri = string.Empty;
-            if (authResponse.Contains("login[id]"))
-            {
-                var loginId = loginIdExtractionController.ExtractMultiple(authResponse).First();
-                QueryParameters.LoginAuthenticate.Remove("login[username]");
-                QueryParameters.LoginAuthenticate["login[id]"] = loginId;
-                loginUri = Uris.Paths.Authentication.Login;
-
-                username = loginUsernameExtractionController.ExtractMultiple(authResponse).First();
-            }
-            else
-            {
-                QueryParameters.LoginAuthenticate.Remove("login[id]");
-                loginUri = Uris.Paths.Authentication.LoginCheck;
-            }
-
-            var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(username, password);
-
-            QueryParameters.LoginAuthenticate["login[username]"] = usernamePassword[0];
-            QueryParameters.LoginAuthenticate["login[password]"] = usernamePassword[1];
-            QueryParameters.LoginAuthenticate["login[_token]"] = loginToken;
-
-            string loginData = uriController.ConcatenateQueryParameters(QueryParameters.LoginAuthenticate);
-
-            var loginCheckResult = await networkController.Post(status, loginUri, null, loginData, Uris.Paths.Authentication.Auth);
-
-            // login attempt was successful
-            if (loginCheckResult.Contains("gogData"))
+                statusController.Inform(authorizeTask, "User has already been logged in");
+                statusController.Complete(authorizeTask);
                 return;
-
-            if (!loginCheckResult.Contains("second_step"))
-                throw new System.Security.SecurityException(failedToAuthenticate);
-
-            // 2FA is enabled for this user - ask for the code
-            var securityCode = string.Empty;
-
-            while (securityCode.Length != 4)
-            {
-                consoleController.WriteLine(securityCodeHasBeenSent, usernamePassword[0]);
-                securityCode = consoleController.ReadLine();
             }
 
-            var secondStepAuthenticationToken = secondStepAuthenticationTokenExtractionController.ExtractMultiple(loginCheckResult).First();
+            var authResponse = await GetAuthenticationTokenResponse(authorizeTask);
 
-            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_1]"] = securityCode[0].ToString();
-            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_2]"] = securityCode[1].ToString();
-            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_3]"] = securityCode[2].ToString();
-            QueryParameters.SecondStepAuthentication["second_step_authentication[token][letter_4]"] = securityCode[3].ToString();
-            QueryParameters.SecondStepAuthentication["second_step_authentication[_token]"] = secondStepAuthenticationToken;
+            if (authResponse.Contains(Uris.Roots.GoogleRecaptcha))
+                ThrowSecurityException(authorizeTask, recaptchaDetected);
 
-            string secondStepData = uriController.ConcatenateQueryParameters(QueryParameters.SecondStepAuthentication);
+            var loginCheckResponse = await GetLoginCheckResponse(authResponse, username, password, authorizeTask);
 
-            var secondStepLoginCheckResult = await networkController.Post(status, Uris.Paths.Authentication.TwoStep, null, secondStepData);
+            if (CheckAuthorizationSuccess(loginCheckResponse, authorizeTask)) return;
 
-            if (secondStepLoginCheckResult.Contains("gogData"))
-                return;
+            if (!loginCheckResponse.Contains(QueryParameters.SecondStepAuthenticationUnderscoreToken))
+                ThrowSecurityException(authorizeTask, failedToAuthenticate);
 
-            throw new System.Security.SecurityException(failedToAuthenticate);
-        }
+            var twoStepLoginCheckResponse = await GetTwoStepLoginCheckResponse(loginCheckResponse, authorizeTask);
 
-        public async Task Deauthorize(IStatus status)
-        {
-            await networkController.Get(status, Uris.Paths.Authentication.Logout);
+            if (CheckAuthorizationSuccess(twoStepLoginCheckResponse, authorizeTask)) return;
+
+            ThrowSecurityException(authorizeTask, failedToAuthenticate);
         }
     }
 }

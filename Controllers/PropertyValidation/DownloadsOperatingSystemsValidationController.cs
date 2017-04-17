@@ -1,8 +1,8 @@
-﻿using Interfaces.PropertiesValidation;
+﻿using Interfaces.PropertyValidation;
 using Interfaces.Settings;
 using Interfaces.Language;
 
-namespace Controllers.PropertiesValidation
+namespace Controllers.PropertyValidation
 {
     public class DownloadsOperatingSystemsValidationDelegate : IValidatePropertiesDelegate<string>
     {

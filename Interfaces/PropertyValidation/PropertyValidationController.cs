@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Interfaces.PropertiesValidation
+﻿namespace Interfaces.PropertyValidation
 {
     public interface IValidatePropertiesDelegate<Type>
     {

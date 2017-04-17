@@ -2,7 +2,7 @@
 
 using Interfaces.Status;
 using Interfaces.Settings;
-using Interfaces.PropertiesValidation;
+using Interfaces.PropertyValidation;
 
 namespace GOG.Activities.ValidateSettings
 {

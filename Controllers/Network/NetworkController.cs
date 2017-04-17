@@ -69,7 +69,6 @@ namespace Controllers.Network
             requestRateController.EnforceRequestRate(uri, status);
 
             var requestMessage = new HttpRequestMessage(method, uri);
-            //requestMessage.Headers.Add(Headers.Cookie, await cookiesController.GetCookieHeader());
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
             if (content != null) requestMessage.Content = content;
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
@@ -83,13 +82,10 @@ namespace Controllers.Network
             IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null,
-            string data = null,
-            string referer = null)
+            string data = null)
         {
-            client.DefaultRequestHeaders.Add("Origin", new System.Uri(baseUri).Host);
-
-            if (!string.IsNullOrEmpty(referer))
-                client.DefaultRequestHeaders.Add("Referer", referer);
+            //if (!client.DefaultRequestHeaders.Contains(Headers.Origin))
+            //    client.DefaultRequestHeaders.Add(Headers.Origin, string.Empty);
 
             string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 

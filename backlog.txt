@@ -2,7 +2,7 @@ Backend
 
 - cleanup dependency graph: there shouldn't be a reference from Interface to Models (e.g. GOG.Interface to GOG.Models)
 
-- fix authorization flow issues - two-factor auth doesn't seem to be detected
+- persist cookies from session to session
 
 - change functional controllers to work on product model type and have activities loop updates using those
 

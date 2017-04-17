@@ -19,6 +19,7 @@
             public const string Auth = Protocols.Https + "auth." + GOGcom;
             public const string Api = Protocols.Https + "api." + GOGcom;
             public const string CDN = Protocols.Https + "cdn." + GOGcom;
+            public const string GoogleRecaptcha = "https://www.google.com/recaptcha";
         }
 
         public static class Extensions

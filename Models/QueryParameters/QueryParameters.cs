@@ -13,49 +13,85 @@ namespace Models.QueryParameters
 
     public static class QueryParameters
     {
+        // AccountGetFilteredProducts
+        public static string HasHiddenProducts = "hasHiddenProducts";
+        public static string HiddenFlag = "hiddenFlag";
+        public static string IsUpdated = "isUpdated";
+        public static string MediaType = "mediaType";
+        public static string Page = "page";
+        public static string SortBy = Sort + "By";
+        // GamesAjaxFiltered
+        // mediaType
+        // page
+        public static string Sort = "sort";
+        // Authenticate
+        public static string ClientId = "client_id";
+        public static string RedirectUri = "redirect_uri";
+        public static string ResponseType = "response_type";
+        public static string Layout = "layout";
+        public static string Brand = "brand";
+        // LoginAuthenticate
+        private static string Login = "login";
+        private static string UnderscoreToken = "[_token]";
+        public static string LoginUsername = Login + "[username]";
+        public static string LoginPassword = Login + "[password]";
+        public static string LoginId = Login + "[id]";
+        public static string LoginUnderscoreToken = Login + UnderscoreToken;
+        // SecondStepAuthentication
+        private static string SecondStepAuthentication = "second_step_authentication";
+        private static string SecondStepAuthenticationToken = SecondStepAuthentication + "[token]";
+        public static string SecondStepAuthenticationTokenLetter1 = SecondStepAuthenticationToken + "[letter_1]";
+        public static string SecondStepAuthenticationTokenLetter2 = SecondStepAuthenticationToken + "[letter_2]";
+        public static string SecondStepAuthenticationTokenLetter3 = SecondStepAuthenticationToken + "[letter_3]";
+        public static string SecondStepAuthenticationTokenLetter4 = SecondStepAuthenticationToken + "[letter_4]";
+        //public static string SecondStepAuthenticationSend = SecondStepAuthentication + "[send]";
+        public static string SecondStepAuthenticationUnderscoreToken = SecondStepAuthentication + UnderscoreToken;
+    }
+
+    public static class QueryParametersCollections
+    {
         public static Dictionary<string, string> AccountGetFilteredProducts = new Dictionary<string, string>()
         {
-            { "hasHiddenProducts", "false" },
-            { "hiddenFlag", "0" },
-            { "isUpdated", "0" },
-            { "mediaType", "1" },
-            { "page", "1" },
-            { "sortBy", SortBy.DatePurchased }
+            { QueryParameters.HasHiddenProducts, "false" },
+            { QueryParameters.HiddenFlag, "0" },
+            { QueryParameters.IsUpdated, "0" },
+            { QueryParameters.MediaType, "1" },
+            { QueryParameters.Page, "1" },
+            { QueryParameters.SortBy, SortBy.DatePurchased }
         };
 
         public static Dictionary<string, string> GamesAjaxFiltered = new Dictionary<string, string>()
         {
-            { "mediaType", "game" },
-            { "page", "1" },
-            { "sort", SortBy.DateAdded }
+            { QueryParameters.MediaType, "game" },
+            { QueryParameters.Page, "1" },
+            { QueryParameters.Sort, SortBy.DateAdded }
         };
 
         public static Dictionary<string, string> Authenticate = new Dictionary<string, string>()
         {
-            { "client_id", "46755278331571209" },
-            { "redirect_uri", Uris.Uris.Paths.Authentication.OnLoginSuccess},
-            { "response_type", "code" },
-            { "layout", "default" },
-            { "brand", "gog" }
+            { QueryParameters.ClientId, "46755278331571209" },
+            { QueryParameters.RedirectUri, Uris.Uris.Paths.Authentication.OnLoginSuccess},
+            { QueryParameters.ResponseType, "code" },
+            { QueryParameters.Layout, "default" },
+            { QueryParameters.Brand, "gog" }
         };
 
         public static Dictionary<string, string> LoginAuthenticate = new Dictionary<string, string>()
         {
-            { "login[username]", "" },
-            { "login[password]", "" },
-            //{ "login[login]", "" },
-            { "login[id]", "" },
-            { "login[_token]", "" },
+            { QueryParameters.LoginUsername, string.Empty },
+            { QueryParameters.LoginPassword, string.Empty },
+            { QueryParameters.LoginId, string.Empty },
+            { QueryParameters.LoginUnderscoreToken, string.Empty },
         };
 
         public static Dictionary<string, string> SecondStepAuthentication = new Dictionary<string, string>()
         {
-            { "second_step_authentication[token][letter_1]", "" },
-            { "second_step_authentication[token][letter_2]", "" },
-            { "second_step_authentication[token][letter_3]", "" },
-            { "second_step_authentication[token][letter_4]", "" },
-            { "second_step_authentication[send]", "" },
-            { "second_step_authentication[_token]", "" }
+            { QueryParameters.SecondStepAuthenticationTokenLetter1, string.Empty },
+            { QueryParameters.SecondStepAuthenticationTokenLetter2, string.Empty },
+            { QueryParameters.SecondStepAuthenticationTokenLetter3, string.Empty },
+            { QueryParameters.SecondStepAuthenticationTokenLetter4, string.Empty },
+            //{ QueryParameters.SecondStepAuthenticationSend, string.Empty },
+            { QueryParameters.SecondStepAuthenticationUnderscoreToken, string.Empty }
         };
     }
 }

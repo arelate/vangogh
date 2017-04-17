@@ -14,15 +14,27 @@ namespace GOG.Interfaces.Authorization
         Task<bool> IsAuthorized(IStatus status);
     }
 
-    public interface IDeauthorizeDelegate
+    public interface IGetAuthenticationTokenResponseDelegate
     {
-        Task Deauthorize(IStatus status);
+        Task<string> GetAuthenticationTokenResponse(IStatus status);
+    }
+
+    public interface IGetLoginCheckResponseDelegate
+    {
+        Task<string> GetLoginCheckResponse(string authResponse, string username, string password, IStatus status);
+    }
+
+    public interface IGetTwoStepLoginCheckResponseDelegate
+    {
+        Task<string> GetTwoStepLoginCheckResponse(string loginCheckResult, IStatus status);
     }
 
     public interface IAuthorizationController:
         IIsAuthorizedDelegate,
-        IAuthorizeDelegate,
-        IDeauthorizeDelegate
+        IGetAuthenticationTokenResponseDelegate,
+        IGetLoginCheckResponseDelegate,
+        IGetTwoStepLoginCheckResponseDelegate,
+        IAuthorizeDelegate
     {
         // ...
     }

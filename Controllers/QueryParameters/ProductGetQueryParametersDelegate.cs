@@ -14,9 +14,9 @@ namespace Controllers.QueryParameters
             switch (productParameter)
             {
                 case Parameters.Products:
-                    return Models.QueryParameters.QueryParameters.GamesAjaxFiltered;
+                    return Models.QueryParameters.QueryParametersCollections.GamesAjaxFiltered;
                 case Parameters.AccountProducts:
-                    return Models.QueryParameters.QueryParameters.AccountGetFilteredProducts;
+                    return Models.QueryParameters.QueryParametersCollections.AccountGetFilteredProducts;
                 default:
                     throw new System.NotImplementedException();
             }

@@ -24,18 +24,15 @@ namespace GOG.Activities.Authorize
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var authorizationTask = statusController.Create(status, "Authorize on GOG.com");
-
             if (settingsProperty != null &&
                 settingsProperty.Settings != null)
             {
                 await authorizationController.Authorize(
                     settingsProperty.Settings.Username,
                     settingsProperty.Settings.Password,
-                    authorizationTask);
+                    status);
             }
-
-            statusController.Complete(authorizationTask);
+            else throw new System.ArgumentNullException("Settings are null");
         }
     }
 }

@@ -28,7 +28,7 @@ using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
 using Controllers.Destination.Uri;
 using Controllers.Cookies;
-using Controllers.PropertiesValidation;
+using Controllers.PropertyValidation;
 using Controllers.Validation;
 using Controllers.Conversion;
 using Controllers.Data;
@@ -52,6 +52,7 @@ using Controllers.ViewController;
 using Controllers.Enumeration;
 
 using Interfaces.Activity;
+using Interfaces.Extraction;
 
 using GOG.Models;
 
@@ -81,9 +82,9 @@ using Models.ProductRoutes;
 using Models.ProductScreenshots;
 using Models.ProductDownloads;
 using Models.ValidationResult;
-
 using Models.Status;
 using Models.FlightPlan;
+using Models.QueryParameters;
 
 #endregion
 
@@ -220,8 +221,8 @@ namespace GoodOfflineGames
 
             var loginIdExtractionController = new LoginIdExtractionController();
             var loginUsernameExtractionController = new LoginUsernameExtractionController();
-            var loginTokenExtractionController = new LoginTokenExtractionController();
-            var secondStepAuthenticationTokenExtractionController = new SecondStepAuthenticationTokenExtractionController();
+            var loginUnderscoreTokenExtractionController = new LoginTokenExtractionController();
+            var secondStepAuthenticationUnderscoreTokenExtractionController = new SecondStepAuthenticationTokenExtractionController();
 
             var gogDataExtractionController = new GOGDataExtractionController();
             var screenshotExtractionController = new ScreenshotExtractionController();
@@ -508,17 +509,28 @@ namespace GoodOfflineGames
             #region Authorization
 
             var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(consoleController);
+            var securityCodeValidationDelegate = new SecurityCodeValidationDelegate(consoleController);
+
+            var authorizationExtractionControllers = new Dictionary<string, IStringExtractionController>()
+            {
+                { QueryParameters.LoginId,
+                    loginIdExtractionController },
+                { QueryParameters.LoginUsername,
+                    loginUsernameExtractionController },
+                { QueryParameters.LoginUnderscoreToken,
+                    loginUnderscoreTokenExtractionController },
+                { QueryParameters.SecondStepAuthenticationUnderscoreToken,
+                    secondStepAuthenticationUnderscoreTokenExtractionController }
+            };
 
             var authorizationController = new AuthorizationController(
                 usernamePasswordValidationDelegate,
+                securityCodeValidationDelegate,
                 uriController,
                 networkController,
                 serializationController,
-                loginIdExtractionController,
-                loginUsernameExtractionController,
-                loginTokenExtractionController,
-                secondStepAuthenticationTokenExtractionController,
-                consoleController);
+                authorizationExtractionControllers,
+                statusController);
 
             var authorizeActivity = new AuthorizeActivity(
                 settingsController,

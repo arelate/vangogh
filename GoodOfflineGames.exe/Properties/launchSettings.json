@@ -2,7 +2,7 @@
   "profiles": {
     "GoodOfflineGames.exe": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\GOG.com"
+      "commandLineArgs": "\"C:\\Users\\bbrinza\\Desktop\\data\""
     }
   }
 }
