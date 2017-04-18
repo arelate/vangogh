@@ -68,6 +68,7 @@ using GOG.Controllers.FileDownload;
 using GOG.Controllers.DataRefinement;
 using GOG.Controllers.DownloadSources;
 using GOG.Controllers.Authorization;
+using GOG.Controllers.UpdateScreenshots;
 
 using GOG.Activities.Load;
 using GOG.Activities.ValidateSettings;
@@ -691,12 +692,17 @@ namespace GoodOfflineGames
 
             #region Update.Screenshots
 
-            var screenshotUpdateActivity = new ScreenshotUpdateActivity(
+            var updateProductScreenshotsDelegate = new UpdateProductScreenshotsDelegate(
                 productParameterGetUpdateUriDelegate,
                 screenshotsDataController,
-                productsDataController,
                 networkController,
                 screenshotExtractionController,
+                statusController);
+
+            var screenshotUpdateActivity = new ScreenshotUpdateActivity(
+                productsDataController,
+                productScreenshotsIndexDataController,
+                updateProductScreenshotsDelegate,
                 statusController);
 
             #endregion

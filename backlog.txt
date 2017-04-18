@@ -1,6 +1,5 @@
 Backend
 
-- persist cookies from session to session
 
 - change functional controllers to work on product model type and have activities loop updates using those
 
@@ -12,6 +11,8 @@ Backend
 - serve data and frontend files via http or better yet websockets server
 
 - current task activities are monolithic - consider breaking them apart somehow for testability
+
+- persist cookies from session to session
 
 - unit tests
 
