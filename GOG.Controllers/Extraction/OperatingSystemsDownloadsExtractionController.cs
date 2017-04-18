@@ -13,8 +13,7 @@ using GOG.Models;
 namespace GOG.Controllers.Extraction
 {
     public class OperatingSystemsDownloadsExtractionController : 
-        IExtractMultipleDelegate<OperatingSystemsDownloads[][], OperatingSystemsDownloads>,
-        ILanguagesProperty
+        IExtractMultipleDelegate<IEnumerable<string>, OperatingSystemsDownloads[][], OperatingSystemsDownloads>
     {
         private ISanitizationController sanitizationController;
         private ILanguageController languageController;
@@ -27,23 +26,21 @@ namespace GOG.Controllers.Extraction
             this.languageController = languageController;
         }
 
-        public IEnumerable<string> Languages { get; set; }
-
-        public IEnumerable<OperatingSystemsDownloads> ExtractMultiple(OperatingSystemsDownloads[][] downloads)
+        public IEnumerable<OperatingSystemsDownloads> ExtractMultiple(IEnumerable<string> languages, OperatingSystemsDownloads[][] downloads)
         {
-            if (downloads?.Length != Languages?.Count())
+            if (downloads?.Length != languages?.Count())
                 throw new InvalidOperationException("Extracted different number of downloads and languages.");
 
             var osDownloads = new List<OperatingSystemsDownloads>();
 
-            for (var ii = 0; ii < Languages.Count(); ii++)
+            for (var ii = 0; ii < languages.Count(); ii++)
             {
                 var download = downloads[ii]?[0];
                 if (download == null)
                     throw new InvalidOperationException("Extracted downloads doesn't contain expected element");
 
                 var language = sanitizationController.SanitizeMultiple(
-                    Languages.ElementAt(ii),
+                    languages.ElementAt(ii),
                     string.Empty,
                     new string[2] { "\"", "," });
 

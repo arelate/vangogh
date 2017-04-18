@@ -674,9 +674,7 @@ namespace GoodOfflineGames
                 gameDetailsLanguagesExtractionController,
                 gameDetailsDownloadsExtractionController,
                 sanitizationController,
-                operatingSystemsDownloadsExtractionController, // ILanguageProperty
-                operatingSystemsDownloadsExtractionController // IExtractMultipleDelegate
-                ); 
+                operatingSystemsDownloadsExtractionController); 
 
             var gameDetailsUpdateActivity = new ProductCoreUpdateActivity<GameDetails, AccountProduct>(
                 Parameters.GameDetails,

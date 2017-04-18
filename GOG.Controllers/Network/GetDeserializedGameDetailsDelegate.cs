@@ -28,8 +28,11 @@ namespace GOG.Controllers.Network
         private IStringExtractionController downloadsExtractionController;
         private ISanitizationController sanitizationController;
 
-        private ILanguagesProperty downloadLanguagesProperty;
-        private IExtractMultipleDelegate<OperatingSystemsDownloads[][], OperatingSystemsDownloads> operatingSystemsDownloadsExtractionController;
+        private IExtractMultipleDelegate<
+            IEnumerable<string>, 
+            OperatingSystemsDownloads[][], 
+            OperatingSystemsDownloads> 
+            operatingSystemsDownloadsExtractionController;
 
         public GetDeserializedGameDetailsDelegate(
             IGetDelegate getDelegate,
@@ -39,8 +42,7 @@ namespace GOG.Controllers.Network
             IStringExtractionController languagesExtractionController,
             IStringExtractionController downloadsExtractionController,
             ISanitizationController sanitizationController,
-            ILanguagesProperty downloadLanguagesProperty,
-            IExtractMultipleDelegate<OperatingSystemsDownloads[][], OperatingSystemsDownloads> operatingSystemsDownloadsExtractionController)
+            IExtractMultipleDelegate<IEnumerable<string>, OperatingSystemsDownloads[][], OperatingSystemsDownloads> operatingSystemsDownloadsExtractionController)
         {
             this.getDelegate = getDelegate;
             this.serializationController = serializationController;
@@ -51,7 +53,6 @@ namespace GOG.Controllers.Network
             this.downloadsExtractionController = downloadsExtractionController;
             this.sanitizationController = sanitizationController;
 
-            this.downloadLanguagesProperty = downloadLanguagesProperty;
             this.operatingSystemsDownloadsExtractionController = operatingSystemsDownloadsExtractionController;
         }
 
@@ -108,11 +109,10 @@ namespace GOG.Controllers.Network
                     serializationController.Deserialize<OperatingSystemsDownloads[][]>(
                     sanitizedDownloadsString);
 
-                // and convert GOG multidimensional array of downloads to linear list
-                downloadLanguagesProperty.Languages = languages;
-
+                // and convert GOG multidimensional array of downloads to linear list using extracted languages
                 var languageDownloads = operatingSystemsDownloadsExtractionController.ExtractMultiple(
-                                    downloads);
+                    languages,
+                    downloads);
 
                 gameDetailsLanguageDownloads.AddRange(languageDownloads);
             }
