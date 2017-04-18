@@ -9,7 +9,6 @@ using Interfaces.Data;
 using Interfaces.Status;
 
 using Models.ProductCore;
-using Models.Units;
 
 namespace GOG.Activities.UpdateData
 {
@@ -91,8 +90,7 @@ namespace GOG.Activities.UpdateData
                     updateProductsTask,
                     ++currentProduct,
                     updatedProducts.Count,
-                    product.Title,
-                    ProductUnits.Products);
+                    product.Title);
 
                 var updateIdentity = getUpdateIdentityDelegate.GetUpdateIdentity(product);
                 if (string.IsNullOrEmpty(updateIdentity)) continue;

@@ -6,8 +6,6 @@ using Interfaces.Status;
 
 using GOG.Interfaces.UpdateScreenshots;
 
-using Models.Units;
-
 using GOG.Models;
 
 namespace GOG.Activities.UpdateData
@@ -57,8 +55,7 @@ namespace GOG.Activities.UpdateData
                     updateProductsScreenshotsTask,
                     ++counter,
                     productsMissingScreenshots.Count(),
-                    product.Title,
-                    ProductUnits.Products);
+                    product.Title);
 
                 await updateProductScreenshotsDelegate.UpdateProductScreenshots(product, updateProductsScreenshotsTask);
 
