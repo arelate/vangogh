@@ -28,7 +28,8 @@ namespace GOG.Controllers.Network
         private IStringExtractionController downloadsExtractionController;
         private ISanitizationController sanitizationController;
 
-        private IOperatingSystemsDownloadsExtractionController operatingSystemsDownloadsExtractionController;
+        private ILanguagesProperty downloadLanguagesProperty;
+        private IExtractMultipleDelegate<OperatingSystemsDownloads[][], OperatingSystemsDownloads> operatingSystemsDownloadsExtractionController;
 
         public GetDeserializedGameDetailsDelegate(
             IGetDelegate getDelegate,
@@ -38,7 +39,8 @@ namespace GOG.Controllers.Network
             IStringExtractionController languagesExtractionController,
             IStringExtractionController downloadsExtractionController,
             ISanitizationController sanitizationController,
-            IOperatingSystemsDownloadsExtractionController operatingSystemsDownloadsExtractionController)
+            ILanguagesProperty downloadLanguagesProperty,
+            IExtractMultipleDelegate<OperatingSystemsDownloads[][], OperatingSystemsDownloads> operatingSystemsDownloadsExtractionController)
         {
             this.getDelegate = getDelegate;
             this.serializationController = serializationController;
@@ -49,6 +51,7 @@ namespace GOG.Controllers.Network
             this.downloadsExtractionController = downloadsExtractionController;
             this.sanitizationController = sanitizationController;
 
+            this.downloadLanguagesProperty = downloadLanguagesProperty;
             this.operatingSystemsDownloadsExtractionController = operatingSystemsDownloadsExtractionController;
         }
 
@@ -106,12 +109,12 @@ namespace GOG.Controllers.Network
                     sanitizedDownloadsString);
 
                 // and convert GOG multidimensional array of downloads to linear list
-                operatingSystemsDownloadsExtractionController.Languages = languages;
+                downloadLanguagesProperty.Languages = languages;
 
                 var languageDownloads = operatingSystemsDownloadsExtractionController.ExtractMultiple(
                                     downloads);
 
-                gameDetailsLanguageDownloads.AddRange(languageDownloads as IEnumerable<OperatingSystemsDownloads>);
+                gameDetailsLanguageDownloads.AddRange(languageDownloads);
             }
 
             gameDetails.LanguageDownloads = gameDetailsLanguageDownloads.ToArray();

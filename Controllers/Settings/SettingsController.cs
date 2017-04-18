@@ -10,7 +10,7 @@ using System;
 namespace Controllers.Settings
 {
     public class SettingsController : 
-        ILoadDelegate, 
+        ILoadAsyncDelegate, 
         ISettingsProperty,
         IGetDirectoryDelegate
     {

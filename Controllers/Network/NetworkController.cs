@@ -18,19 +18,18 @@ namespace Controllers.Network
     public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
-        private ICookiesController cookiesController;
+        private ICookieContainerSerializationController cookieContainerSerializationController;
         private IUriController uriController;
         private IRequestRateController requestRateController;
 
         public NetworkController(
-            ICookiesController cookiesController,
+            ref CookieContainer cookieContainer,
+            ICookieContainerSerializationController cookieContainerSerializationController,
             IUriController uriController,
             IRequestRateController requestRateController)
         {
-            var cookieContainer = new CookieContainer();
             var httpHandler = new HttpClientHandler()
             {
-                //UseCookies = false,
                 UseDefaultCredentials = false,
                 CookieContainer = cookieContainer
             };
@@ -38,7 +37,7 @@ namespace Controllers.Network
             client.DefaultRequestHeaders.ExpectContinue = false;
             client.DefaultRequestHeaders.Add(Headers.UserAgent, HeaderDefaultValues.UserAgent);
 
-            this.cookiesController = cookiesController;
+            this.cookieContainerSerializationController = cookieContainerSerializationController;
             this.uriController = uriController;
             this.requestRateController = requestRateController;
         }
@@ -52,8 +51,6 @@ namespace Controllers.Network
 
             using (var response = await RequestResponse(status, HttpMethod.Get, uri))
             {
-                await cookiesController.SetCookies(response);
-
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
                     return await reader.ReadToEndAsync();
@@ -75,6 +72,9 @@ namespace Controllers.Network
 
             response.EnsureSuccessStatusCode();
 
+            // TODO: unlock this when we can serialize / deserialize cookies
+            //await cookieContainerSerializationController.SaveAsync();
+
             return response;
         }
 
@@ -84,9 +84,6 @@ namespace Controllers.Network
             IDictionary<string, string> parameters = null,
             string data = null)
         {
-            //if (!client.DefaultRequestHeaders.Contains(Headers.Origin))
-            //    client.DefaultRequestHeaders.Add(Headers.Origin, string.Empty);
-
             string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
             if (data == null) data = string.Empty;
@@ -94,8 +91,6 @@ namespace Controllers.Network
 
             using (var response = await RequestResponse(status, HttpMethod.Post, uri, content))
             {
-                await cookiesController.SetCookies(response);
-
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
                     return await reader.ReadToEndAsync();

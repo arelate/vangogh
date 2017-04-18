@@ -34,7 +34,7 @@ namespace Interfaces.Template
         IResolveSubTemplatesDelegate,
         IGetContentByTitleDelegate,
         IBindDelegate,
-        ILoadDelegate
+        ILoadAsyncDelegate
     {
         // ...
     }

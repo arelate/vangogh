@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Collections.Generic;
 
 using Controllers.Stream;
@@ -179,10 +180,6 @@ namespace GoodOfflineGames
 
             var statusController = new StatusController(statusAppViewController);
 
-            var cookiesController = new CookiesController(
-                storageController,
-                serializationController);
-
             var throttleController = new ThrottleController(
                 statusController,
                 secondsFormattingController);
@@ -199,8 +196,18 @@ namespace GoodOfflineGames
                 });
 
             var uriController = new UriController();
+
+            var cookieContainer = new CookieContainer();
+            var cookiesFilenameDelegate = new FixedFilenameDelegate("cookies", jsonFilenameDelegate);
+
+            var cookieContainerSerializationController = new CookieContainerSerializationController(
+                ref cookieContainer,
+                cookiesFilenameDelegate,
+                storageController);
+
             var networkController = new NetworkController(
-                cookiesController,
+                ref cookieContainer,
+                cookieContainerSerializationController,
                 uriController,
                 requestRateController);
 
@@ -667,7 +674,9 @@ namespace GoodOfflineGames
                 gameDetailsLanguagesExtractionController,
                 gameDetailsDownloadsExtractionController,
                 sanitizationController,
-                operatingSystemsDownloadsExtractionController);
+                operatingSystemsDownloadsExtractionController, // ILanguageProperty
+                operatingSystemsDownloadsExtractionController // IExtractMultipleDelegate
+                ); 
 
             var gameDetailsUpdateActivity = new ProductCoreUpdateActivity<GameDetails, AccountProduct>(
                 Parameters.GameDetails,

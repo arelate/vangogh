@@ -13,8 +13,8 @@ namespace Controllers.Hash
 {
     public class PrecomputedHashController : 
         IPrecomputedHashController, 
-        ILoadDelegate,
-        ISaveDelegate
+        ILoadAsyncDelegate,
+        ISaveAsyncDelegate
     {
         private IGetFilenameDelegate getFilenameDelegate;
         private string uriHashesFilename;

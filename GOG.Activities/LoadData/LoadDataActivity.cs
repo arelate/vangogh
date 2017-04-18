@@ -7,11 +7,11 @@ namespace GOG.Activities.Load
 {
     public class LoadDataActivity: Activity
     {
-        private ILoadDelegate[] loadDelegates;
+        private ILoadAsyncDelegate[] loadDelegates;
 
         public LoadDataActivity(
             IStatusController statusController,
-            params ILoadDelegate[] loadDelegates): 
+            params ILoadAsyncDelegate[] loadDelegates): 
             base(statusController)
         {
             this.loadDelegates = loadDelegates;

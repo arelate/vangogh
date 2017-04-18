@@ -111,7 +111,7 @@ namespace GOG.Controllers.Authorization
 
             var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(username, password);
 
-            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = username;
+            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUnderscoreToken] = loginToken;
 

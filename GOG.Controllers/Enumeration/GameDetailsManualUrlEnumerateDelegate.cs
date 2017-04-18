@@ -27,8 +27,6 @@ namespace GOG.Controllers.Enumeration
 
         public virtual IEnumerable<string> Enumerate(GameDetails gameDetails)
         {
-            //var gameDetailsManualUrls = new List<string>();
-
             if (settingsProperty == null ||
                 settingsProperty.Settings == null ||
                 settingsProperty.Settings.DownloadsLanguages == null ||
@@ -38,7 +36,7 @@ namespace GOG.Controllers.Enumeration
             if (gameDetails == null)
                 yield break;
 
-            var gameDetailsDownloadEntries = new List<IDownloadEntry>();
+            var gameDetailsDownloadEntries = new List<DownloadEntry>();
 
             if (gameDetails.LanguageDownloads != null)
                 foreach (var download in gameDetails.LanguageDownloads)

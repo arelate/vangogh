@@ -7,7 +7,7 @@ using Interfaces.FlightPlan;
 
 namespace Controllers.FlightPlan
 {
-    public class FlightPlanController : ILoadDelegate, IFlightPlanProperty
+    public class FlightPlanController : ILoadAsyncDelegate, IFlightPlanProperty
     {
         private IGetFilenameDelegate getFilenameDelegate;
         private ISerializedStorageController serializedStorageController;

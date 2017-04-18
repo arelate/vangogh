@@ -5,17 +5,17 @@ using Interfaces.Status;
 
 namespace Interfaces.Data
 {
-    public interface ILoadDelegate
+    public interface ILoadAsyncDelegate
     {
         Task LoadAsync();
     }
 
-    public interface ISaveDelegate
+    public interface ISaveAsyncDelegate
     {
         Task SaveAsync();
     }
 
-    public interface IGetByIdDelegate<Type>
+    public interface IGetByIdAsyncDelegate<Type>
     {
         Task<Type> GetByIdAsync(long id);
     }
@@ -25,22 +25,11 @@ namespace Interfaces.Data
         IEnumerable<long> EnumerateIds();
     }
 
-    public interface IUpdateDelegate<Type>
+    public interface IUpdateAsyncDelegate<Type>
     {
         Task UpdateAsync(IStatus status, params Type[] data);
     }
-
-    //public interface IAddDelegate<Type>
-    //{
-    //    Task AddAsync(Istatus status, params Type[] data);
-    //}
-
-    //public interface IModifyDelegate<Type>
-    //{
-    //    Task ModifyAsync(Istatus status, params Type[] data);
-    //}
-
-    public interface IRemoveDelegate<Type>
+    public interface IRemoveAsyncDelegate<Type>
     {
         Task RemoveAsync(IStatus status, params Type[] data);
     }
@@ -61,13 +50,13 @@ namespace Interfaces.Data
     }
 
     public interface IDataController<Type>:
-        ILoadDelegate,
-        ISaveDelegate,
+        ILoadAsyncDelegate,
+        ISaveAsyncDelegate,
         IEnumerateIdsDelegate,
         ICountDelegate,
-        IGetByIdDelegate<Type>,
-        IUpdateDelegate<Type>,
-        IRemoveDelegate<Type>,
+        IGetByIdAsyncDelegate<Type>,
+        IUpdateAsyncDelegate<Type>,
+        IRemoveAsyncDelegate<Type>,
         IContainsDelegate<Type>,
         IContainsIdDelegate
     {

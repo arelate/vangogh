@@ -5,7 +5,7 @@ using GOG.Interfaces.Models;
 namespace GOG.Models
 {
     [DataContract]
-    public class DownloadEntry: IDownloadEntry
+    public class DownloadEntry
     {
         [DataMember(Name = "date")]
         public string Date { get; set; }
