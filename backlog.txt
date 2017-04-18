@@ -4,8 +4,6 @@ Backend
 
 - change functional controllers to work on product model type and have activities loop updates using those
 
-- in the activity cycle dump status json on fatal error
-
 - repair controller:
 	- enumerate validation reports
 	- create validationReportController to determine if product is valid, skip valid products

@@ -95,14 +95,6 @@ namespace GoodOfflineGames
     {
         static void Main(string[] args)
         {
-            var workingDirectory = string.Empty;
-            if (args != null &&
-                args.Length > 0)
-                workingDirectory = args[0];
-
-            if (Directory.Exists(workingDirectory))
-                Directory.SetCurrentDirectory(workingDirectory);
-
             #region Foundation Controllers
 
             var streamController = new StreamController();
@@ -149,7 +141,7 @@ namespace GoodOfflineGames
 
             var applicationStatus = new Status() { Title = "Welcome to GoodOfflineGames" };
 
-            var templatesDirectoryDelegate = new FixedDirectoryDelegate("templates");
+            var templatesDirectoryDelegate = new RelativeDirectoryDelegate("templates");
             var appTemplateFilenameDelegate = new FixedFilenameDelegate("app", jsonFilenameDelegate);
             var reportTemplateFilenameDelegate = new FixedFilenameDelegate("report", jsonFilenameDelegate);
 
@@ -244,24 +236,39 @@ namespace GoodOfflineGames
 
             // directories
 
-            var dataDirectoryDelegate = new FixedDirectoryDelegate("data");
+            var settingsFilenameDelegate = new FixedFilenameDelegate("settings", jsonFilenameDelegate);
 
-            var accountProductsDirectoryDelegate = new FixedDirectoryDelegate("accountProducts", dataDirectoryDelegate);
-            var apiProductsDirectoryDelegate = new FixedDirectoryDelegate("apiProducts", dataDirectoryDelegate);
-            var gameDetailsDirectoryDelegate = new FixedDirectoryDelegate("gameDetails", dataDirectoryDelegate);
-            var gameProductDataDirectoryDelegate = new FixedDirectoryDelegate("gameProductData", dataDirectoryDelegate);
-            var productsDirectoryDelegate = new FixedDirectoryDelegate("products", dataDirectoryDelegate);
-            var productDownloadsDirectoryDelegate = new FixedDirectoryDelegate("productDownloads", dataDirectoryDelegate);
-            var productRoutesDirectoryDelegate = new FixedDirectoryDelegate("productRoutes", dataDirectoryDelegate);
-            var productScreenshotsDirectoryDelegate = new FixedDirectoryDelegate("productScreenshots", dataDirectoryDelegate);
-            var validationResultsDirectoryDelegate = new FixedDirectoryDelegate("validationResults", dataDirectoryDelegate);
+            var settingsController = new SettingsController(
+                settingsFilenameDelegate,
+                serializedStorageController);
 
-            var recycleBinDirectoryDelegate = new FixedDirectoryDelegate("recycleBin");
-            var imagesDirectoryDelegate = new FixedDirectoryDelegate("images");
-            var reportDirectoryDelegate = new FixedDirectoryDelegate("reports");
-            var validationDirectoryDelegate = new FixedDirectoryDelegate("md5");
-            var productFilesBaseDirectoryDelegate = new FixedDirectoryDelegate("productFiles");
-            var screenshotsDirectoryDelegate = new FixedDirectoryDelegate("screenshots");
+            var downloadsLanguagesValidationDelegate = new DownloadsLanguagesValidationDelegate(languageController);
+            var downloadsOperatingSystemsValidationDelegate = new DownloadsOperatingSystemsValidationDelegate();
+
+            var validateSettingsActivity = new ValidateSettingsActivity(
+                settingsController,
+                downloadsLanguagesValidationDelegate,
+                downloadsOperatingSystemsValidationDelegate,
+                statusController);
+
+            var dataDirectoryDelegate = new SettingsDirectoryDelegate("data", settingsController);
+
+            var accountProductsDirectoryDelegate = new RelativeDirectoryDelegate("accountProducts", dataDirectoryDelegate);
+            var apiProductsDirectoryDelegate = new RelativeDirectoryDelegate("apiProducts", dataDirectoryDelegate);
+            var gameDetailsDirectoryDelegate = new RelativeDirectoryDelegate("gameDetails", dataDirectoryDelegate);
+            var gameProductDataDirectoryDelegate = new RelativeDirectoryDelegate("gameProductData", dataDirectoryDelegate);
+            var productsDirectoryDelegate = new RelativeDirectoryDelegate("products", dataDirectoryDelegate);
+            var productDownloadsDirectoryDelegate = new RelativeDirectoryDelegate("productDownloads", dataDirectoryDelegate);
+            var productRoutesDirectoryDelegate = new RelativeDirectoryDelegate("productRoutes", dataDirectoryDelegate);
+            var productScreenshotsDirectoryDelegate = new RelativeDirectoryDelegate("productScreenshots", dataDirectoryDelegate);
+            var validationResultsDirectoryDelegate = new RelativeDirectoryDelegate("validationResults", dataDirectoryDelegate);
+
+            var recycleBinDirectoryDelegate = new SettingsDirectoryDelegate("recycleBin", settingsController);
+            var imagesDirectoryDelegate = new SettingsDirectoryDelegate("images", settingsController);
+            var reportDirectoryDelegate = new SettingsDirectoryDelegate("reports", settingsController);
+            var validationDirectoryDelegate = new SettingsDirectoryDelegate("md5", settingsController);
+            var productFilesBaseDirectoryDelegate = new SettingsDirectoryDelegate("productFiles", settingsController);
+            var screenshotsDirectoryDelegate = new SettingsDirectoryDelegate("screenshots", settingsController);
 
             var productFilesDirectoryDelegate = new UriDirectoryDelegate(productFilesBaseDirectoryDelegate);
 
@@ -452,25 +459,6 @@ namespace GoodOfflineGames
                 validationResultsDirectoryDelegate,
                 jsonFilenameDelegate,
                 recycleBinController,
-                statusController);
-
-            #endregion
-
-            #region Settings: Load, Validation
-
-            var settingsFilenameDelegate = new FixedFilenameDelegate("settings", jsonFilenameDelegate);
-
-            var settingsController = new SettingsController(
-                settingsFilenameDelegate,
-                serializedStorageController);
-
-            var downloadsLanguagesValidationDelegate = new DownloadsLanguagesValidationDelegate(languageController);
-            var downloadsOperatingSystemsValidationDelegate = new DownloadsOperatingSystemsValidationDelegate();
-
-            var validateSettingsActivity = new ValidateSettingsActivity(
-                settingsController,
-                downloadsLanguagesValidationDelegate,
-                downloadsOperatingSystemsValidationDelegate,
                 statusController);
 
             #endregion

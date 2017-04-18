@@ -3,5 +3,13 @@
 	"password": "",
 	"downloadsLanguages": [ "en" ],
 	"downloadsOperatingSystems": [ "Windows", "Mac" ],
-	"workingDirectory": ""
+	"directories": [
+		{"Key": "data", "Value": "data"},
+		{"Key": "recycleBin", "Value": "recycleBin"},
+		{"Key": "images", "Value": "images"},
+		{"Key": "reports", "Value": "reports"},
+		{"Key": "md5", "Value": "md5"},
+		{"Key": "productFiles", "Value": "productFiles"},
+		{"Key": "screenshots", "Value": "screenshots"}	
+	]
 }

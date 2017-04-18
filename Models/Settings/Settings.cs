@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 using Interfaces.Settings;
 
@@ -15,5 +17,7 @@ namespace Models.Settings
         public string[] DownloadsLanguages { get; set; }
         [DataMember(Name = "downloadsOperatingSystems")]
         public string[] DownloadsOperatingSystems { get; set; }
+        [DataMember(Name = "directories")]
+        public IDictionary<string, string> Directories { get; set; }
     }
 }

@@ -1,13 +1,18 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Data;
+using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Settings;
 using Interfaces.SerializedStorage;
+using System;
 
 namespace Controllers.Settings
 {
-    public class SettingsController : ILoadDelegate, ISettingsProperty
+    public class SettingsController : 
+        ILoadDelegate, 
+        ISettingsProperty,
+        IGetDirectoryDelegate
     {
         private IGetFilenameDelegate getFilenameDelegate;
         private ISerializedStorageController serializedStorageController;
@@ -37,6 +42,17 @@ namespace Controllers.Settings
                 Settings.DownloadsLanguages = new string[0];
             if (Settings.DownloadsOperatingSystems == null)
                 Settings.DownloadsOperatingSystems = new string[0];
+        }
+
+        public string GetDirectory(string directory = null)
+        {
+            if (Settings.Directories == null ||
+                Settings.Directories.Count == 0) return string.Empty;
+
+            if (Settings.Directories.ContainsKey(directory))
+                return Settings.Directories[directory];
+
+            return string.Empty;
         }
     }
 }

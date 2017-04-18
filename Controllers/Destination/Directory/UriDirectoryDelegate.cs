@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using Interfaces.Destination.Directory;
 
@@ -8,12 +9,12 @@ namespace Controllers.Destination.Directory
 {
     public class UriDirectoryDelegate : IGetDirectoryDelegate
     {
-        private string baseDirectory;
+        private IGetDirectoryDelegate baseDirectoryDelegate;
+
 
         public UriDirectoryDelegate(IGetDirectoryDelegate baseDirectoryDelegate)
         {
-            if (baseDirectoryDelegate != null)
-                baseDirectory = baseDirectoryDelegate.GetDirectory();
+            this.baseDirectoryDelegate = baseDirectoryDelegate;
         }
 
         public string GetDirectory(string source = null)
@@ -31,9 +32,12 @@ namespace Controllers.Destination.Directory
                     source;
             }
 
-            return (string.IsNullOrEmpty(baseDirectory)) ?
-                directory :
-                System.IO.Path.Combine(baseDirectory, directory);
+            var baseDirectory = string.Empty;
+
+            if (baseDirectoryDelegate != null)
+                baseDirectory = baseDirectoryDelegate.GetDirectory();
+
+            return Path.Combine(baseDirectory, directory);
         }
     }
 }
