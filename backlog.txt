@@ -1,6 +1,5 @@
 Backend
 
-
 - change functional controllers to work on product model type and have activities loop updates using those
 
 - repair controller:

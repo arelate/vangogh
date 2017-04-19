@@ -42,7 +42,7 @@ namespace Controllers.Validation
             validationXml = new XmlDocument()  { PreserveWhitespace = false };
         }
 
-        public async Task<IFileValidation> ValidateAsync(string productFileUri, string validationUri, IStatus status)
+        public async Task<IFileValidationResult> ValidateAsync(string productFileUri, string validationUri, IStatus status)
         {
             var fileValidation = new FileValidation()
             {

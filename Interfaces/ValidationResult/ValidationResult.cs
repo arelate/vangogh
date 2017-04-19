@@ -29,7 +29,7 @@
         // ...
     }
 
-    public interface IFilenameDelegate
+    public interface IFilenameProperty
     {
         string Filename { get; set; }
     }
@@ -69,7 +69,8 @@
         IChunkValidation[] Chunks { get; set; }
     }
 
-    public interface IFileValidation:
+    public interface IFileValidationResult:
+        IFilenameProperty,
         IValidationExpectedProperty,
         IValidationFileExistsProperty,
         IValidationFileIsValidProperty,
@@ -83,6 +84,6 @@
 
     public interface IValidationResult
     {
-        IFileValidation[] Files { get; set; }
+        IFileValidationResult[] Files { get; set; }
     }
 }

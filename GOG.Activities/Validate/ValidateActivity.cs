@@ -104,7 +104,7 @@ namespace GOG.Activities.Validate
 
                 // ...
 
-                var fileValidationResults = new List<IFileValidation>(localFiles.Count);
+                var fileValidationResults = new List<IFileValidationResult>(localFiles.Count);
 
                 var validateFilesTask = statusController.Create(
                     validateProductsTask,

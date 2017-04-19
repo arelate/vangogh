@@ -19,7 +19,7 @@ namespace Models.ValidationResult
 
     [DataContract]
     [KnownType(typeof(ChunkValidation))]
-    public class FileValidation: IFileValidation
+    public class FileValidation: IFileValidationResult
     {
         [DataMember(Name = "filename")]
         public string Filename { get; set; }
@@ -44,6 +44,6 @@ namespace Models.ValidationResult
     public class ValidationResult: ProductCore.ProductCore, IValidationResult
     {
         [DataMember(Name = "files")]
-        public IFileValidation[] Files { get; set; }
+        public IFileValidationResult[] Files { get; set; }
     }
 }

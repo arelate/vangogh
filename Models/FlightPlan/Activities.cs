@@ -12,6 +12,7 @@ namespace Models.FlightPlan
         public const string UpdateDownloads = "updateDownloads";
         public const string ProcessDownloads = "processDownloads";
         public const string Validate = "validate";
+        public const string Repair = "repair";
         public const string Cleanup = "cleanup";
         public const string Report = "report";
     }

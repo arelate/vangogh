@@ -31,6 +31,7 @@ using Controllers.Destination.Uri;
 using Controllers.Cookies;
 using Controllers.PropertyValidation;
 using Controllers.Validation;
+using Controllers.ValidationResult;
 using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
@@ -77,6 +78,7 @@ using GOG.Activities.Flight;
 using GOG.Activities.UpdateData;
 using GOG.Activities.UpdateDownloads;
 using GOG.Activities.Download;
+using GOG.Activities.Repair;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
 using GOG.Activities.Report;
@@ -868,6 +870,17 @@ namespace GoodOfflineGames
                 routingController,
                 statusController);
 
+            #region Repair
+
+            var validationResultController = new ValidationResultController();
+
+            var repairActivity = new RepairActivity(
+                validationResultsDataController,
+                validationResultController,
+                statusController);
+
+            #endregion
+
             #region Cleanup
 
             var gameDetailsDirectoriesEnumerateDelegate = new GameDetailsDirectoriesEnumerateDelegate(
@@ -1016,6 +1029,10 @@ namespace GoodOfflineGames
                     Parameters.ProductsFiles),
                     validateActivity },
                 { nameDelegate.GetName(
+                    Activities.Repair,
+                    Parameters.ProductsFiles),
+                    repairActivity },
+                { nameDelegate.GetName(
                     Activities.Cleanup,
                     Parameters.Directories),
                     directoryCleanupActivity },
@@ -1050,7 +1067,7 @@ namespace GoodOfflineGames
                 // validate settings
                 validateSettingsActivity,
                 // authorize
-                authorizeActivity,
+                //authorizeActivity,
                 //  flight plan
                 flightActivity
             };

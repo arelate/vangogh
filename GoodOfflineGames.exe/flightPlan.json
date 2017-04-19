@@ -3,6 +3,7 @@
 	{ "activity": "updateDownloads", "parameters": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles" ] },
 	{ "activity": "processDownloads", "parameters": [ "productsImages", "accountProductsImages", "screenshots", "productsFiles" ] },
 	{ "activity": "validate", "parameters": [ "productsFiles" ]},
+	{ "activity": "repair", "parameters": [ "productsFiles" ]},
 	{ "activity": "cleanup", "parameters": [ "directories", "files", "updated" ]},
 	{ "activity": "report", "parameters": [ "status" ] }
 ]
