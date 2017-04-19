@@ -9,14 +9,14 @@ using Interfaces.Status;
 
 namespace GOG.Controllers.Network
 {
-    public class GetDeserializedGOGDataDelegate<T> : IGetDeserializedDelegate<T>
+    public class GetDeserializedGOGDataDelegate<T> : IGetDeserializedAsyncDelegate<T>
     {
-        private IGetDelegate getDelegate;
+        private IGetAsyncDelegate getDelegate;
         private IStringExtractionController gogDataExtractionController;
         private ISerializationController<string> serializationController;
 
         public GetDeserializedGOGDataDelegate(
-            IGetDelegate getDelegate,
+            IGetAsyncDelegate getDelegate,
             IStringExtractionController gogDataExtractionController,
             ISerializationController<string> serializationController)
         {
@@ -25,9 +25,9 @@ namespace GOG.Controllers.Network
             this.serializationController = serializationController;
         }
 
-        public async Task<T> GetDeserialized(IStatus status, string uri, IDictionary<string, string> parameters = null)
+        public async Task<T> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await getDelegate.Get(status, uri, parameters);
+            var response = await getDelegate.GetAsync(status, uri, parameters);
 
             var dataCollection = gogDataExtractionController.ExtractMultiple(response);
 

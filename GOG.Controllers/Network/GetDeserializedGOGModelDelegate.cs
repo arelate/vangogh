@@ -9,23 +9,23 @@ using Models.ProductCore;
 
 namespace GOG.Controllers.Network
 {
-    public class GetDeserializedGOGModelDelegate<T> : IGetDeserializedDelegate<T>
+    public class GetDeserializedGOGModelDelegate<T> : IGetDeserializedAsyncDelegate<T>
         where T : ProductCore
     {
-        private IGetDelegate getDelegate;
+        private IGetAsyncDelegate getDelegate;
         private ISerializationController<string> serializationController;
 
         public GetDeserializedGOGModelDelegate(
-            IGetDelegate getDelegate,
+            IGetAsyncDelegate getDelegate,
             ISerializationController<string> serializationController)
         {
             this.getDelegate = getDelegate;
             this.serializationController = serializationController;
         }
 
-        public async Task<T> GetDeserialized(IStatus status, string uri, IDictionary<string, string> parameters = null)
+        public async Task<T> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await getDelegate.Get(status, uri, parameters);
+            var response = await getDelegate.GetAsync(status, uri, parameters);
 
             if (response == null) return default(T);
 

@@ -9,9 +9,7 @@ Backend
 
 - serve data and frontend files via http or better yet websockets server
 
-- current task activities are monolithic - consider breaking them apart somehow for testability
-
-- persist cookies from session to session
+- persist cookies from session to session (.net core 2.0?)
 
 - unit tests
 

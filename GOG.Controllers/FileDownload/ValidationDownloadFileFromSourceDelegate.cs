@@ -12,7 +12,7 @@ using Interfaces.Status;
 
 namespace GOG.Controllers.FileDownload
 {
-    public class ValidationDownloadFileFromSourceDelegate : IDownloadFileFromSourceDelegate
+    public class ValidationDownloadFileFromSourceDelegate : IDownloadFileFromSourceAsyncDelegate
     {
         private IStringExtractionController uriSansSessionExtractionController;
         private IExpectedDelegate<string> validationExpectedForUriDelegate;

@@ -42,14 +42,14 @@ namespace Controllers.Network
             this.requestRateController = requestRateController;
         }
 
-        public async Task<string> Get(
+        public async Task<string> GetAsync(
             IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
             string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
-            using (var response = await RequestResponse(status, HttpMethod.Get, uri))
+            using (var response = await RequestResponseAsync(status, HttpMethod.Get, uri))
             {
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -57,7 +57,7 @@ namespace Controllers.Network
             }
         }
 
-        public async Task<HttpResponseMessage> RequestResponse(
+        public async Task<HttpResponseMessage> RequestResponseAsync(
             IStatus status,
             HttpMethod method, 
             string uri, 
@@ -78,7 +78,7 @@ namespace Controllers.Network
             return response;
         }
 
-        public async Task<string> Post(
+        public async Task<string> PostAsync(
             IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null,
@@ -89,7 +89,7 @@ namespace Controllers.Network
             if (data == null) data = string.Empty;
             var content = new StringContent(data, Encoding.UTF8, HeaderDefaultValues.ContentType);
 
-            using (var response = await RequestResponse(status, HttpMethod.Post, uri, content))
+            using (var response = await RequestResponseAsync(status, HttpMethod.Post, uri, content))
             {
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))

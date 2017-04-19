@@ -17,9 +17,9 @@ using GOG.Models;
 
 namespace GOG.Controllers.Network
 {
-    public class GetDeserializedGameDetailsDelegate : IGetDeserializedDelegate<GameDetails>
+    public class GetDeserializedGameDetailsDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {
-        private IGetDelegate getDelegate;
+        private IGetAsyncDelegate getDelegate;
         private ISerializationController<string> serializationController;
         private ILanguageController languageController;
 
@@ -35,7 +35,7 @@ namespace GOG.Controllers.Network
             operatingSystemsDownloadsExtractionController;
 
         public GetDeserializedGameDetailsDelegate(
-            IGetDelegate getDelegate,
+            IGetAsyncDelegate getDelegate,
             ISerializationController<string> serializationController,
             ILanguageController languageController,
             IContainmentController<string> languageDownloadsContainmentController,
@@ -56,7 +56,7 @@ namespace GOG.Controllers.Network
             this.operatingSystemsDownloadsExtractionController = operatingSystemsDownloadsExtractionController;
         }
 
-        public async Task<GameDetails> GetDeserialized(IStatus status, string uri, IDictionary<string, string> parameters = null)
+        public async Task<GameDetails> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
         {
             // GOG.com quirk
             // GameDetails as sent by GOG.com servers have an intersting data structure for downloads:
@@ -71,7 +71,7 @@ namespace GOG.Controllers.Network
             // - deserialize downloads into OperatingSystemsDownloads collection
             // - assign languages, since we know we should have as many downloads array as languages
 
-            var data = await getDelegate.Get(status, uri, parameters);
+            var data = await getDelegate.GetAsync(status, uri, parameters);
             var gameDetails = serializationController.Deserialize<GameDetails>(data);
 
             if (gameDetails == null) return null;

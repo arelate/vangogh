@@ -11,11 +11,11 @@ namespace GOG.Activities.UpdateData
 {
     public class WishlistedUpdateActivity : Activity
     {
-        private IGetDeserializedDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
+        private IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
         private IDataController<long> wishlistedDataController;
 
         public WishlistedUpdateActivity(
-            IGetDeserializedDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
+            IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,
             IStatusController statusController) :
             base(statusController)
@@ -30,7 +30,7 @@ namespace GOG.Activities.UpdateData
 
             var requestContentTask = statusController.Create(updateWishlistTask, "Request wishlist content");
 
-            var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserialized(
+            var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserializedAsync(
                 requestContentTask,
                 Uris.Paths.Account.Wishlist);
 

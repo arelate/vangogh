@@ -5,13 +5,13 @@ using Interfaces.Status;
 
 namespace Interfaces.RequestPage
 {
-    public interface IRequestPageDelegate
+    public interface IRequestPageAsyncDelegate
     {
-        Task<string> RequestPage(string uri, IDictionary<string, string> parameters, int page, IStatus status);
+        Task<string> RequestPageAsync(string uri, IDictionary<string, string> parameters, int page, IStatus status);
     }
 
     public interface IRequestPageController:
-        IRequestPageDelegate
+        IRequestPageAsyncDelegate
     {
         // ...
     }

@@ -8,19 +8,19 @@ using GOG.Models;
 
 namespace GOG.Controllers.Network
 {
-    public class GetGameProductDataDeserializedDelegate: IGetDeserializedDelegate<GameProductData>
+    public class GetGameProductDataDeserializedDelegate: IGetDeserializedAsyncDelegate<GameProductData>
     {
-        private IGetDeserializedDelegate<GOGData> gogDataGetDeserializedDelegate;
+        private IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate;
 
         public GetGameProductDataDeserializedDelegate(
-            IGetDeserializedDelegate<GOGData> gogDataGetDeserializedDelegate)
+            IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate)
         {
             this.gogDataGetDeserializedDelegate = gogDataGetDeserializedDelegate;
         }
 
-        public async Task<GameProductData> GetDeserialized(IStatus status, string uri, IDictionary<string, string> parameters = null)
+        public async Task<GameProductData> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
         {
-            var gogData = await gogDataGetDeserializedDelegate.GetDeserialized(status, uri, parameters);
+            var gogData = await gogDataGetDeserializedDelegate.GetDeserializedAsync(status, uri, parameters);
             return gogData.GameProductData;
         }
     }

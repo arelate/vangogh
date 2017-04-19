@@ -30,12 +30,12 @@ namespace Interfaces.Validation
         bool VerifySize(string uri, long expectedSize);
     }
 
-    public interface IVerifyChunkDelegate
+    public interface IVerifyChunkAsyncDelegate
     {
         Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5);
     }
 
-    public interface IValidateDelegate
+    public interface IValidateAsyncDelegate
     {
         Task<IFileValidationResult> ValidateAsync(string uri, string validationUri, IStatus status);
     }
@@ -46,8 +46,8 @@ namespace Interfaces.Validation
         IVerifyProductFileExistsDelegate,
         IVerifyFilenameDelegate,
         IVerifySizeDelegate,
-        IVerifyChunkDelegate,
-        IValidateDelegate
+        IVerifyChunkAsyncDelegate,
+        IValidateAsyncDelegate
     {
         // ...
     }

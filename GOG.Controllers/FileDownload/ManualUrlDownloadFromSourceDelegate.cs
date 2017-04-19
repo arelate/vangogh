@@ -14,21 +14,21 @@ using Interfaces.Expectation;
 
 namespace GOG.Controllers.FileDownload
 {
-    public class ManualUrlDownloadFromSourceDelegate : IDownloadFileFromSourceDelegate
+    public class ManualUrlDownloadFromSourceDelegate : IDownloadFileFromSourceAsyncDelegate
     {
         private INetworkController networkController;
         private IStringExtractionController uriSansSessionExtractionController;
         private IRoutingController routingController;
         private IFileDownloadController fileDownloadController;
         private IStatusController statusController;
-        private IDownloadFileFromSourceDelegate validationDownloadFileFromSourceDelegate;
+        private IDownloadFileFromSourceAsyncDelegate validationDownloadFileFromSourceDelegate;
 
         public ManualUrlDownloadFromSourceDelegate(
             INetworkController networkController,
             IStringExtractionController uriSansSessionExtractionController,
             IRoutingController routingController,
             IFileDownloadController fileDownloadController,
-            IDownloadFileFromSourceDelegate validationDownloadFileFromSourceDelegate,
+            IDownloadFileFromSourceAsyncDelegate validationDownloadFileFromSourceDelegate,
             IStatusController statusController)
         {
             this.networkController = networkController;
@@ -46,7 +46,7 @@ namespace GOG.Controllers.FileDownload
             HttpResponseMessage response;
             try
             {
-                response = await networkController.RequestResponse(downloadTask, HttpMethod.Get, sourceUri);
+                response = await networkController.RequestResponseAsync(downloadTask, HttpMethod.Get, sourceUri);
             }
             catch (HttpRequestException ex)
             {

@@ -78,7 +78,7 @@ namespace GOG.Controllers.PageResults
 
             do
             {
-                var response = await requestPageController.RequestPage(
+                var response = await requestPageController.RequestPageAsync(
                     requestUri, 
                     requestParameters, 
                     currentPage,

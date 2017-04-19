@@ -5,13 +5,13 @@ using Interfaces.Status;
 
 namespace Interfaces.DownloadSources
 {
-    public interface IGetDownloadSourcesDelegate
+    public interface IGetDownloadSourcesAsyncDelegate
     {
         Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status);
     }
 
     public interface IDownloadSourcesController :
-        IGetDownloadSourcesDelegate
+        IGetDownloadSourcesAsyncDelegate
     {
         // ...
     }

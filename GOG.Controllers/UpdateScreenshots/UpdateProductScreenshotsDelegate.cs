@@ -44,7 +44,7 @@ namespace GOG.Controllers.UpdateScreenshots
         {
             var requestProductPageTask = statusController.Create(status, "Request product page containing screenshots information");
             var productPageUri = string.Format(getUpdateUriDelegate.GetUpdateUri(Parameters.Screenshots), product.Url);
-            var productPageContent = await networkController.Get(requestProductPageTask, productPageUri);
+            var productPageContent = await networkController.GetAsync(requestProductPageTask, productPageUri);
             statusController.Complete(requestProductPageTask);
 
             var extractScreenshotsTask = statusController.Create(status, "Exract screenshots from the page");

@@ -4,13 +4,13 @@ using Interfaces.Status;
 
 namespace Interfaces.Activity
 {
-    public interface IProcessActivityDelegate
+    public interface IProcessActivityAsyncDelegate
     {
         Task ProcessActivityAsync(IStatus status);
     }
 
     public interface IActivity:
-        IProcessActivityDelegate
+        IProcessActivityAsyncDelegate
     {
         // ...
     }

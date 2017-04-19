@@ -15,12 +15,12 @@ namespace GOG.Activities.Download
     {
         private string downloadParameter;
         private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate;
+        private IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceDelegate;
 
         public DownloadActivity(
             string downloadParameter,
             IDataController<ProductDownloads> productDownloadsDataController,
-            IDownloadFileFromSourceDelegate downloadFileFromSourceDelegate,
+            IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceDelegate,
             IStatusController statusController) :
             base(statusController)
         {

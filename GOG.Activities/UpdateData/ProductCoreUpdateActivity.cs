@@ -21,7 +21,7 @@ namespace GOG.Activities.UpdateData
         private IDataController<ListType> listTypeDataController;
         private IDataController<long> updatedDataController;
 
-        private IGetDeserializedDelegate<UpdateType> getDeserializedDelegate;
+        private IGetDeserializedAsyncDelegate<UpdateType> getDeserializedDelegate;
 
         private IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate;
         private IConnectDelegate<UpdateType, ListType> connectDelegate;
@@ -37,7 +37,7 @@ namespace GOG.Activities.UpdateData
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
-            IGetDeserializedDelegate<UpdateType> getDeserializedDelegate,
+            IGetDeserializedAsyncDelegate<UpdateType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate,
             IStatusController statusController,
             IConnectDelegate<UpdateType, ListType> connectDelegate = null) :
@@ -99,7 +99,7 @@ namespace GOG.Activities.UpdateData
                     getUpdateUriDelegate.GetUpdateUri(updateProductParameter),
                     updateIdentity);
 
-                var data = await getDeserializedDelegate.GetDeserialized(updateProductsTask, uri);
+                var data = await getDeserializedDelegate.GetDeserializedAsync(updateProductsTask, uri);
 
                 if (data != null)
                 {

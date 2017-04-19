@@ -6,30 +6,30 @@ using Interfaces.Status;
 
 namespace Interfaces.Network
 {
-    public interface IGetDelegate
+    public interface IGetAsyncDelegate
     {
-        Task<string> Get(IStatus status, string uri, IDictionary<string, string> parameters = null);
+        Task<string> GetAsync(IStatus status, string uri, IDictionary<string, string> parameters = null);
     }
 
-    public interface IGetDeserializedDelegate<T>
+    public interface IGetDeserializedAsyncDelegate<T>
     {
-        Task<T> GetDeserialized(IStatus status, string uri, IDictionary<string, string> parameters = null);
+        Task<T> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null);
     }
 
-    public interface IRequestResponseDelegate
+    public interface IRequestResponseAsyncDelegate
     {
-        Task<HttpResponseMessage> RequestResponse(IStatus status, HttpMethod method, string uri, HttpContent content = null);
+        Task<HttpResponseMessage> RequestResponseAsync(IStatus status, HttpMethod method, string uri, HttpContent content = null);
     }
 
-    public interface IPostDelegate
+    public interface IPostAsyncDelegate
     {
-        Task<string> Post(IStatus status, string uri, IDictionary<string, string> parameters = null, string data = null);
+        Task<string> PostAsync(IStatus status, string uri, IDictionary<string, string> parameters = null, string data = null);
     }
 
     public interface INetworkController :
-        IGetDelegate,
-        IRequestResponseDelegate,
-        IPostDelegate
+        IGetAsyncDelegate,
+        IRequestResponseAsyncDelegate,
+        IPostAsyncDelegate
     {
         // ... 
     }

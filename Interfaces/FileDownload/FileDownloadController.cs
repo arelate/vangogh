@@ -5,12 +5,12 @@ using Interfaces.Status;
 
 namespace Interfaces.FileDownload
 {
-    public interface IDownloadFileFromResponseDelegate
+    public interface IDownloadFileFromResponseAsyncDelegate
     {
         Task DownloadFileFromResponseAsync(HttpResponseMessage response, string destination, IStatus status);
     }
 
-    public interface IDownloadFileFromSourceDelegate
+    public interface IDownloadFileFromSourceAsyncDelegate
     {
         Task DownloadFileFromSourceAsync(
             long id,
@@ -21,8 +21,8 @@ namespace Interfaces.FileDownload
     }
 
     public interface IFileDownloadController:
-        IDownloadFileFromResponseDelegate,
-        IDownloadFileFromSourceDelegate
+        IDownloadFileFromResponseAsyncDelegate,
+        IDownloadFileFromSourceAsyncDelegate
     {
         // ...
     }

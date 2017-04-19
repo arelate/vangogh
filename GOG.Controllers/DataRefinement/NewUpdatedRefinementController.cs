@@ -30,7 +30,7 @@ namespace GOG.Controllers.DataRefinement
             this.statusController = statusController;
         }
 
-        public async Task RefineData(IEnumerable<AccountProduct> accountProducts, IStatus status)
+        public async Task RefineDataAsync(IEnumerable<AccountProduct> accountProducts, IStatus status)
         {
             // GOG.com quirk
             // There are few ways to get new and updated products:

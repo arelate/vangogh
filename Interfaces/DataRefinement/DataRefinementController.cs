@@ -5,13 +5,13 @@ using Interfaces.Status;
 
 namespace Interfaces.DataRefinement
 {
-    public interface IRefineDataDelegate<T>
+    public interface IRefineDataAsyncDelegate<T>
     {
-        Task RefineData(IEnumerable<T> sourceCollection, IStatus status);
+        Task RefineDataAsync(IEnumerable<T> sourceCollection, IStatus status);
     }
 
     public interface IDataRefinementController<T>:
-        IRefineDataDelegate<T>
+        IRefineDataAsyncDelegate<T>
     {
         // ...
     }

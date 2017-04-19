@@ -60,7 +60,7 @@ namespace GOG.Activities.UpdateData
 
             var refineDataTask = statusController.Create(updateAllProductsTask, $"Refining {productParameter}");
             if (dataRefinementController != null)
-                await dataRefinementController.RefineData(newProducts, refineDataTask);
+                await dataRefinementController.RefineDataAsync(newProducts, refineDataTask);
             statusController.Complete(refineDataTask);
 
             var updateTask = statusController.Create(updateAllProductsTask, $"Update {productParameter}");

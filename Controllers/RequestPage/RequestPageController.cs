@@ -19,7 +19,7 @@ namespace Controllers.RequestPage
             this.networkController = networkController;
         }
 
-        public async Task<string> RequestPage(
+        public async Task<string> RequestPageAsync(
             string uri,
             IDictionary<string, string> parameters,
             int page,
@@ -30,7 +30,7 @@ namespace Controllers.RequestPage
 
             parameters[pageQueryParameter] = page.ToString();
 
-            var pageResponse = await networkController.Get(status, uri, parameters);
+            var pageResponse = await networkController.GetAsync(status, uri, parameters);
 
             return pageResponse;
         }
