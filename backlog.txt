@@ -2,10 +2,7 @@ Backend
 
 - change functional controllers to work on product model type and have activities loop updates using those
 
-- repair controller:
-	- enumerate validation reports
-	- create validationReportController to determine if product is valid, skip valid products
-	- introduce few ways to repair - chunks repair => patch, validationFileIsNotValid => try simple known fixes
+- introduce few ways to repair - chunks repair => patch, validationFileIsNotValid => try simple known fixes
 
 - serve data and frontend files via http or better yet websockets server
 

@@ -1067,7 +1067,7 @@ namespace GoodOfflineGames
                 // validate settings
                 validateSettingsActivity,
                 // authorize
-                //authorizeActivity,
+                authorizeActivity,
                 //  flight plan
                 flightActivity
             };
