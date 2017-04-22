@@ -1,5 +1,7 @@
 Backend
 
+- make directories settings more resilient to empty values
+
 - change functional controllers to work on product model type and have activities loop updates using those
 
 - introduce few ways to repair - chunks repair => patch, validationFileIsNotValid => try simple known fixes

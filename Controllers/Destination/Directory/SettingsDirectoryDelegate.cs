@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-
-using Interfaces.Destination.Directory;
+﻿using Interfaces.Destination.Directory;
 
 namespace Controllers.Destination.Directory
 {
@@ -21,11 +16,7 @@ namespace Controllers.Destination.Directory
         }
         public string GetDirectory(string source = null)
         {
-            if (source == null) source = string.Empty;
-
-            return Path.Combine(
-                settingsController.GetDirectory(directory),
-                source);
+            return settingsController.GetDirectory(directory);
         }
     }
 }

@@ -1,7 +1,8 @@
 {
   "profiles": {
     "GoodOfflineGames.exe": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "workingDirectory": "D:\\GOG.com"
     }
   }
 }
