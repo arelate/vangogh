@@ -2,13 +2,17 @@ Backend
 
 - make directories settings more resilient to empty values
 
+- protect critical data (hashes, indexes) with copy operation - don't write data over that can be interrupted
+
 - change functional controllers to work on product model type and have activities loop updates using those
 
 - introduce few ways to repair - chunks repair => patch, validationFileIsNotValid => try simple known fixes
 
 - serve data and frontend files via http or better yet websockets server
 
-- persist cookies from session to session (.net core 2.0?)
+- persist cookies from session to session (.net core 2.0?), or at least allow injecting cookies from the browser session
+
+- add data validation step that uses hashes and validates md5
 
 - unit tests
 

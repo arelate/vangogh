@@ -89,8 +89,8 @@ namespace Controllers.ViewModel
 
                     var remainingTimeAtSpeed = statusProgressController.GetRemainingTimeAtUnitsPerSecond(status);
 
-                    var speed = bytesFormattingController.Format((long)remainingTimeAtSpeed.Item1);
-                    var remainingTime = secondsFormattingController.Format((long)((total - current) / remainingTimeAtSpeed.Item2));
+                    var remainingTime = secondsFormattingController.Format(remainingTimeAtSpeed.Item1);
+                    var speed = bytesFormattingController.Format((long)remainingTimeAtSpeed.Item2);
 
                     viewModel[StatusAppViewModelSchema.RemainingTime] = remainingTime;
                     viewModel[StatusAppViewModelSchema.AverageUnitsPerSecond] = speed;
