@@ -1,18 +1,26 @@
 Backend
 
-- make directories settings more resilient to empty values
+- make directories settings more resilient to empty or invalid values
 
-- protect critical data (hashes, indexes) with copy operation - don't write data over that can be interrupted
+- consider transitioning to a full command line tool accepting command line parameters:
+	-- update-data, update-downloads, download, validate-files, validate-data, repair, cleanup
+	-- parameters can be product ids or no parameters (=all, updated)
+	-- for individual operations show output at the end
+	-- implement sync shortcut which is basically today's operation. Rename flightPlan.json to sync.json
 
 - change functional controllers to work on product model type and have activities loop updates using those
 
-- introduce few ways to repair - chunks repair => patch, validationFileIsNotValid => try simple known fixes
+- add more useful logging - e.g. what games were added as updated, inputs to certain operations, 
+
+- protect critical data (hashes, indexes) with copy operation - don't write data over as it could be interrupted, resulting in data loss, instead copy over (as OS atomic operation)
+
+- introduce repair controllers - chunks repair (download by chunk, validate by chunk); validationFileIsNotValid (see if XML can't be loaded and do simple text transforms for known issues)
 
 - serve data and frontend files via http or better yet websockets server
 
-- persist cookies from session to session (.net core 2.0?), or at least allow injecting cookies from the browser session
+- persist cookies from session to session (.net core 2.0?), or at least allow injecting cookies from the browser session (should be doable in .net core 1.1)
 
-- add data validation step that uses hashes and validates md5
+- add validate data operation that uses hashes and validates md5
 
 - unit tests
 
