@@ -12,6 +12,10 @@ Backend
 
 - add more useful logging - e.g. what games were added as updated, inputs to certain operations, 
 
+- log overall validation result
+
+- consider whitelists, blacklists for product operations
+
 - protect critical data (hashes, indexes) with copy operation - don't write data over as it could be interrupted, resulting in data loss, instead copy over (as OS atomic operation)
 
 - introduce repair controllers - chunks repair (download by chunk, validate by chunk); validationFileIsNotValid (see if XML can't be loaded and do simple text transforms for known issues)
