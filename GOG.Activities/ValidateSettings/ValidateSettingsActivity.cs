@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Interfaces.Status;
 using Interfaces.Settings;
@@ -11,17 +12,20 @@ namespace GOG.Activities.ValidateSettings
         private ISettingsProperty settingsProperty;
         private IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate;
         private IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate;
+        private IValidatePropertiesDelegate<IDictionary<string, string>> directoriesValidationDelegate;
 
         public ValidateSettingsActivity(
             ISettingsProperty settingsProperty,
             IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate,
             IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate,
+            IValidatePropertiesDelegate<IDictionary<string, string>> directoriesValidationDelegate,
             IStatusController statusController) :
             base(statusController)
         {
             this.settingsProperty = settingsProperty;
             this.downloadsLanguagesValidationDelegate = downloadsLanguagesValidationDelegate;
             this.downloadsOperatingSystemsValidationDelegate = downloadsOperatingSystemsValidationDelegate;
+            this.directoriesValidationDelegate = directoriesValidationDelegate;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
@@ -45,6 +49,13 @@ namespace GOG.Activities.ValidateSettings
                     downloadsOperatingSystemsValidationDelegate.ValidateProperties(
                         settingsProperty.Settings.DownloadsOperatingSystems);
                 statusController.Complete(validateDownloadsOperatingSystemsTask);
+
+                var validateDirectoriesTask = statusController.Create(
+                    validateSettingsTask,
+                    "Validate directories");
+                    directoriesValidationDelegate.ValidateProperties(
+                        settingsProperty.Settings.Directories);
+                statusController.Complete(validateDirectoriesTask);
 
                 statusController.Complete(validateSettingsTask);
             });
