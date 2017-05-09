@@ -254,11 +254,13 @@ namespace GoodOfflineGames
 
             var downloadsLanguagesValidationDelegate = new DownloadsLanguagesValidationDelegate(languageController);
             var downloadsOperatingSystemsValidationDelegate = new DownloadsOperatingSystemsValidationDelegate();
+            var directoriesValidationDelegate = new DirectoriesValidationDelegate();
 
             var validateSettingsActivity = new ValidateSettingsActivity(
                 settingsController,
                 downloadsLanguagesValidationDelegate,
                 downloadsOperatingSystemsValidationDelegate,
+                directoriesValidationDelegate,
                 statusController);
 
             var dataDirectoryDelegate = new SettingsDirectoryDelegate("data", settingsController);
