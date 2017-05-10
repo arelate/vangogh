@@ -854,11 +854,14 @@ namespace GoodOfflineGames
 
             // validation controllers
 
+            var validationResultController = new ValidationResultController();
+
             var validationController = new ValidationController(
                 validationExpectedDelegate,
                 fileController,
                 streamController,
                 bytesMd5Controller,
+                validationResultController,
                 statusController);
 
             var validateActivity = new ValidateActivity(
@@ -874,8 +877,6 @@ namespace GoodOfflineGames
                 statusController);
 
             #region Repair
-
-            var validationResultController = new ValidationResultController();
 
             var repairActivity = new RepairActivity(
                 validationResultsDataController,

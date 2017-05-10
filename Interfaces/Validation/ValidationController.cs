@@ -32,7 +32,7 @@ namespace Interfaces.Validation
 
     public interface IVerifyChunkAsyncDelegate
     {
-        Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5);
+        Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5, IStatus status);
     }
 
     public interface IValidateAsyncDelegate

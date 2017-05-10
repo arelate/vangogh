@@ -24,6 +24,7 @@ namespace Controllers.Validation
         private IStreamController streamController;
         private XmlDocument validationXml;
         private IBytesHashController bytesHashController;
+        private IValidationResultController validationResultController;
         private IStatusController statusController;
 
         public ValidationController(
@@ -31,15 +32,17 @@ namespace Controllers.Validation
             IFileController fileController,
             IStreamController streamController,
             IBytesHashController bytesHashController,
+            IValidationResultController validationResultController,
             IStatusController statusController)
         {
             this.validationExpectedDelegate = validationExpectedDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
             this.bytesHashController = bytesHashController;
+            this.validationResultController = validationResultController;
             this.statusController = statusController;
 
-            validationXml = new XmlDocument()  { PreserveWhitespace = false };
+            validationXml = new XmlDocument() { PreserveWhitespace = false };
         }
 
         public async Task<IFileValidationResult> ValidateAsync(string productFileUri, string validationUri, IStatus status)
@@ -136,13 +139,13 @@ namespace Controllers.Validation
                     length += (to - from);
                     expectedMd5 = chunkElement.FirstChild.Value;
 
-                    chunksValidation.Add(await VerifyChunkAsync(fileStream, from, to, expectedMd5));
+                    chunksValidation.Add(await VerifyChunkAsync(fileStream, from, to, expectedMd5, status));
 
                     statusController.UpdateProgress(
-                        status, 
-                        length, 
+                        status,
+                        length,
                         expectedSize,
-                        productFileUri, 
+                        productFileUri,
                         DataUnits.Bytes);
                 }
 
@@ -151,10 +154,13 @@ namespace Controllers.Validation
                 statusController.UpdateProgress(status, length, expectedSize, productFileUri);
             }
 
+            statusController.Inform(status, $"Validation result: {productFileUri} is valid: " +
+                $"{validationResultController.ProductFileIsValid(fileValidation)}");
+
             return fileValidation;
         }
 
-        public async Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5)
+        public async Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5, IStatus status)
         {
             if (!fileStream.CanSeek)
                 throw new Exception("Unable to seek in the file stream");
