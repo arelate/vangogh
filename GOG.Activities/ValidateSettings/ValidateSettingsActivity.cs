@@ -10,14 +10,14 @@ namespace GOG.Activities.ValidateSettings
     public class ValidateSettingsActivity : Activity
     {
         private ISettingsProperty settingsProperty;
-        private IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate;
-        private IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate;
+        private IValidatePropertiesDelegate<string[]> downloadsLanguagesValidationDelegate;
+        private IValidatePropertiesDelegate<string[]> downloadsOperatingSystemsValidationDelegate;
         private IValidatePropertiesDelegate<IDictionary<string, string>> directoriesValidationDelegate;
 
         public ValidateSettingsActivity(
             ISettingsProperty settingsProperty,
-            IValidatePropertiesDelegate<string> downloadsLanguagesValidationDelegate,
-            IValidatePropertiesDelegate<string> downloadsOperatingSystemsValidationDelegate,
+            IValidatePropertiesDelegate<string[]> downloadsLanguagesValidationDelegate,
+            IValidatePropertiesDelegate<string[]> downloadsOperatingSystemsValidationDelegate,
             IValidatePropertiesDelegate<IDictionary<string, string>> directoriesValidationDelegate,
             IStatusController statusController) :
             base(statusController)

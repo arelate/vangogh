@@ -2,6 +2,6 @@
 {
     public interface IValidatePropertiesDelegate<Type>
     {
-        Type[] ValidateProperties(params Type[] properties);
+        Type ValidateProperties(Type properties);
     }
 }

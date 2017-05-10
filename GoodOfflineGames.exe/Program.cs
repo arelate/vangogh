@@ -90,6 +90,7 @@ using Models.ValidationResult;
 using Models.Status;
 using Models.FlightPlan;
 using Models.QueryParameters;
+using Models.Directories;
 
 #endregion
 
@@ -263,24 +264,24 @@ namespace GoodOfflineGames
                 directoriesValidationDelegate,
                 statusController);
 
-            var dataDirectoryDelegate = new SettingsDirectoryDelegate("data", settingsController);
+            var dataDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Data, settingsController);
 
-            var accountProductsDirectoryDelegate = new RelativeDirectoryDelegate("accountProducts", dataDirectoryDelegate);
-            var apiProductsDirectoryDelegate = new RelativeDirectoryDelegate("apiProducts", dataDirectoryDelegate);
-            var gameDetailsDirectoryDelegate = new RelativeDirectoryDelegate("gameDetails", dataDirectoryDelegate);
-            var gameProductDataDirectoryDelegate = new RelativeDirectoryDelegate("gameProductData", dataDirectoryDelegate);
-            var productsDirectoryDelegate = new RelativeDirectoryDelegate("products", dataDirectoryDelegate);
-            var productDownloadsDirectoryDelegate = new RelativeDirectoryDelegate("productDownloads", dataDirectoryDelegate);
-            var productRoutesDirectoryDelegate = new RelativeDirectoryDelegate("productRoutes", dataDirectoryDelegate);
-            var productScreenshotsDirectoryDelegate = new RelativeDirectoryDelegate("productScreenshots", dataDirectoryDelegate);
-            var validationResultsDirectoryDelegate = new RelativeDirectoryDelegate("validationResults", dataDirectoryDelegate);
+            var accountProductsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.AccountProducts, dataDirectoryDelegate);
+            var apiProductsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ApiProducts, dataDirectoryDelegate);
+            var gameDetailsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.GameDetails, dataDirectoryDelegate);
+            var gameProductDataDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.GameProductData, dataDirectoryDelegate);
+            var productsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.Products, dataDirectoryDelegate);
+            var productDownloadsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ProductDownloads, dataDirectoryDelegate);
+            var productRoutesDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ProductRoutes, dataDirectoryDelegate);
+            var productScreenshotsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ProductScreenshots, dataDirectoryDelegate);
+            var validationResultsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ValidationResults, dataDirectoryDelegate);
 
-            var recycleBinDirectoryDelegate = new SettingsDirectoryDelegate("recycleBin", settingsController);
-            var imagesDirectoryDelegate = new SettingsDirectoryDelegate("images", settingsController);
-            var reportDirectoryDelegate = new SettingsDirectoryDelegate("reports", settingsController);
-            var validationDirectoryDelegate = new SettingsDirectoryDelegate("md5", settingsController);
-            var productFilesBaseDirectoryDelegate = new SettingsDirectoryDelegate("productFiles", settingsController);
-            var screenshotsDirectoryDelegate = new SettingsDirectoryDelegate("screenshots", settingsController);
+            var recycleBinDirectoryDelegate = new SettingsDirectoryDelegate(Directories.RecycleBin, settingsController);
+            var imagesDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Images, settingsController);
+            var reportDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Reports, settingsController);
+            var validationDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Md5, settingsController);
+            var productFilesBaseDirectoryDelegate = new SettingsDirectoryDelegate(Directories.ProductFiles, settingsController);
+            var screenshotsDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Screenshots, settingsController);
 
             var productFilesDirectoryDelegate = new UriDirectoryDelegate(productFilesBaseDirectoryDelegate);
 

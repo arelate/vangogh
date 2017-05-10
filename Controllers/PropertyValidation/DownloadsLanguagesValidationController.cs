@@ -3,7 +3,7 @@ using Interfaces.Language;
 
 namespace Controllers.PropertyValidation
 {
-    public class DownloadsLanguagesValidationDelegate : IValidatePropertiesDelegate<string>
+    public class DownloadsLanguagesValidationDelegate : IValidatePropertiesDelegate<string[]>
     {
         private ILanguageController languageController;
         private string[] defaultLanguages = new string[1] { "en" };
@@ -13,7 +13,7 @@ namespace Controllers.PropertyValidation
             this.languageController = languageController;
         }
 
-        public string[] ValidateProperties(params string[] downloadsLanguages)
+        public string[] ValidateProperties(string[] downloadsLanguages)
         {
             if (downloadsLanguages == null ||
                 downloadsLanguages.Length == 0)

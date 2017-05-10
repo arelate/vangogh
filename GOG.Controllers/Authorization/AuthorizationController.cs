@@ -25,7 +25,7 @@ namespace GOG.Controllers.Authorization
             "{INSTRUCTIONS}";
         private const string gogData = "gogData";
 
-        private IValidatePropertiesDelegate<string> usernamePasswordValidationDelegate;
+        private IValidatePropertiesDelegate<string[]> usernamePasswordValidationDelegate;
         private IValidatePropertiesDelegate<string> securityCodeValidationDelegate;
         private IUriController uriController;
         private INetworkController networkController;
@@ -34,7 +34,7 @@ namespace GOG.Controllers.Authorization
         private IStatusController statusController;
 
         public AuthorizationController(
-            IValidatePropertiesDelegate<string> usernamePasswordValidationDelegate,
+            IValidatePropertiesDelegate<string[]> usernamePasswordValidationDelegate,
             IValidatePropertiesDelegate<string> securityCodeValidationDelegate,
             IUriController uriController,
             INetworkController networkController,
@@ -109,7 +109,7 @@ namespace GOG.Controllers.Authorization
                 loginUri = Uris.Paths.Authentication.LoginCheck;
             }
 
-            var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(username, password);
+            var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(new string[] { username, password });
 
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
@@ -129,8 +129,7 @@ namespace GOG.Controllers.Authorization
             var getTwoStepLoginCheckResponseTask = statusController.Create(status, "Get second step authentication result");
 
             // 2FA is enabled for this user - ask for the code
-            var securityCode = securityCodeValidationDelegate.ValidateProperties(
-                new string[0]).First();
+            var securityCode = securityCodeValidationDelegate.ValidateProperties(null);
 
             var secondStepAuthenticationToken = extractionControllers[
                 QueryParameters.SecondStepAuthenticationUnderscoreToken].ExtractMultiple(

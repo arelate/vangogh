@@ -13,7 +13,7 @@ namespace Controllers.PropertyValidation
             this.consoleController = consoleController;
         }
 
-        public string[] ValidateProperties(params string[] properties)
+        public string ValidateProperties(string properties)
         {
             var securityCode = string.Empty;
             consoleController.Clear();
@@ -24,7 +24,7 @@ namespace Controllers.PropertyValidation
                 securityCode = consoleController.ReadLine();
             }
 
-            return new string[] { securityCode };
+            return securityCode;
         }
     }
 }

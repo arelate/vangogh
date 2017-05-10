@@ -4,7 +4,7 @@ using Interfaces.Console;
 
 namespace Controllers.PropertyValidation
 {
-    public class UsernamePasswordValidationDelegate : IValidatePropertiesDelegate<string>
+    public class UsernamePasswordValidationDelegate : IValidatePropertiesDelegate<string[]>
     {
         private IConsoleController consoleController;
 
@@ -13,7 +13,7 @@ namespace Controllers.PropertyValidation
             this.consoleController = consoleController;
         }
 
-        public string[] ValidateProperties(params string[] usernamePassword)
+        public string[] ValidateProperties(string[] usernamePassword)
         {
             if (usernamePassword == null ||
                 usernamePassword.Length < 2)

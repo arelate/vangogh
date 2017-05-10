@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Interfaces.Data;
 using Interfaces.Destination.Directory;
@@ -42,6 +43,8 @@ namespace Controllers.Settings
                 Settings.DownloadsLanguages = new string[0];
             if (Settings.DownloadsOperatingSystems == null)
                 Settings.DownloadsOperatingSystems = new string[0];
+            if (Settings.Directories == null)
+                Settings.Directories = new Dictionary<string, string>();
         }
 
         public string GetDirectory(string directory = null)

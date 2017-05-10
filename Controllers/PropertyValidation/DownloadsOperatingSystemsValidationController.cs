@@ -4,11 +4,11 @@ using Interfaces.Language;
 
 namespace Controllers.PropertyValidation
 {
-    public class DownloadsOperatingSystemsValidationDelegate : IValidatePropertiesDelegate<string>
+    public class DownloadsOperatingSystemsValidationDelegate : IValidatePropertiesDelegate<string[]>
     {
         private string[] defaultOperatingSystems = new string[1] { "Windows" };
 
-        public string[] ValidateProperties(params string[] downloadsOperatingSystems)
+        public string[] ValidateProperties(string[] downloadsOperatingSystems)
         {
             if (downloadsOperatingSystems == null ||
                 downloadsOperatingSystems.Length == 0)

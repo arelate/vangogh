@@ -8,7 +8,7 @@
             "preLaunchTask": "build",
             "program": "${workspaceRoot}/GoodOfflineGames.exe/bin/Debug/netcoreapp1.1/GoodOfflineGames.exe.dll",
             "args": [],
-            "cwd": "D:/GOG.com",
+            "cwd": ".",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },

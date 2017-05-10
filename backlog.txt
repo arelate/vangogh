@@ -1,7 +1,5 @@
 Backend
 
-- make directories settings more resilient to empty or invalid values
-
 - consider transitioning to a full command line tool accepting command line parameters:
 	-- update-data, update-downloads, download, validate-files, validate-data, repair, cleanup
 	-- parameters can be product ids or no parameters (=all, updated)
