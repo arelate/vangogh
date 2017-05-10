@@ -21,20 +21,20 @@ namespace Controllers.Hash
         private bool dataLoaded;
 
         private ISerializationController<string> serializationController;
-        private IStorageController<string> storageController;
+        private ITransactionalStorageController transactionalStorageController;
         private IDictionary<string, string> uriHashes;
 
         public PrecomputedHashController(
             IGetFilenameDelegate getFilenameDelegate,
             ISerializationController<string> serializationController,
-            IStorageController<string> storageController)
+            ITransactionalStorageController transactionalStorageController)
         {
             this.getFilenameDelegate = getFilenameDelegate;
 
             uriHashesFilename = getFilenameDelegate.GetFilename();
 
             this.serializationController = serializationController;
-            this.storageController = storageController;
+            this.transactionalStorageController = transactionalStorageController;
 
             uriHashes = new Dictionary<string, string>();
             dataLoaded = false;
@@ -56,7 +56,7 @@ namespace Controllers.Hash
 
             try
             {
-                var serializedData = await storageController.PullAsync(uriHashesFilename);
+                var serializedData = await transactionalStorageController.PullAsync(uriHashesFilename);
                 uriHashes = serializationController.Deserialize<Dictionary<string, string>>(serializedData);
             }
             catch
@@ -77,7 +77,7 @@ namespace Controllers.Hash
                     "Saving hashes without loading them first would overwrite existing data");
 
             var serialiedData = serializationController.Serialize(uriHashes);
-            await storageController.PushAsync(uriHashesFilename, serialiedData);
+            await transactionalStorageController.PushAsync(uriHashesFilename, serialiedData);
         }
 
         public async Task SetHashAsync(string uri, string hash)

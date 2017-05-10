@@ -1,4 +1,6 @@
-﻿using Interfaces.RecycleBin;
+﻿using System.IO;
+
+using Interfaces.RecycleBin;
 using Interfaces.File;
 using Interfaces.Directory;
 using Interfaces.Destination.Directory;
@@ -23,7 +25,10 @@ namespace Controllers.RecycleBin
 
         public void MoveToRecycleBin(string uri)
         {
-            fileController.Move(uri, getDirectoryDelegate.GetDirectory());
+            var recycleBinUri = Path.Combine(
+                getDirectoryDelegate.GetDirectory(),
+                uri);
+            fileController.Move(uri, recycleBinUri);
         }
 
         //public void MoveDirectoryToRecycleBin(string uri)

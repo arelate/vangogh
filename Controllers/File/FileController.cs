@@ -16,15 +16,15 @@ namespace Controllers.File
         {
             if (!Exists(fromUri)) return;
 
-            var destinationUri = Path.Combine(toUri, fromUri);
-            var destinationDirectory = Path.GetDirectoryName(destinationUri);
-            if (!System.IO.Directory.Exists(destinationDirectory))
-                System.IO.Directory.CreateDirectory(destinationDirectory);
+            //var destinationUri = Path.Combine(toUri, fromUri);
+            //var destinationDirectory = Path.GetDirectoryName(destinationUri);
+            //if (!System.IO.Directory.Exists(destinationDirectory))
+            //    System.IO.Directory.CreateDirectory(destinationDirectory);
 
-            if (Exists(destinationUri))
-                System.IO.File.Delete(destinationUri);
+            if (Exists(toUri))
+                System.IO.File.Delete(toUri);
 
-            System.IO.File.Move(fromUri, destinationUri);
+            System.IO.File.Move(fromUri, toUri);
         }
 
         public long GetSize(string uri)

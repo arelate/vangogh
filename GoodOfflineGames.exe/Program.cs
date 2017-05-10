@@ -109,6 +109,9 @@ namespace GoodOfflineGames
             var storageController = new StorageController(
                 streamController,
                 fileController);
+            var transactionalStorageController = new TransactionalStorageController(
+                storageController, 
+                fileController);
             var serializationController = new JSONStringController();
 
             var jsonFilenameDelegate = new JsonFilenameDelegate();
@@ -117,7 +120,7 @@ namespace GoodOfflineGames
             var precomputedHashController = new PrecomputedHashController(
                 uriHashesFilenameDelegate,
                 serializationController,
-                storageController);
+                transactionalStorageController);
 
             var bytesToStringConversionController = new BytesToStringConvertionController();
             var bytesMd5Controller = new BytesMd5Controller(bytesToStringConversionController);
@@ -127,6 +130,12 @@ namespace GoodOfflineGames
             var serializedStorageController = new SerializedStorageController(
                 precomputedHashController,
                 storageController,
+                stringMd5Controller,
+                serializationController);
+
+            var serializedTransactionalStorageController = new SerializedStorageController(
+                precomputedHashController,
+                transactionalStorageController,
                 stringMd5Controller,
                 serializationController);
 
@@ -302,63 +311,63 @@ namespace GoodOfflineGames
                 collectionController,
                 productsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var accountProductsIndexDataController = new IndexDataController(
                 collectionController,
                 accountProductsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var gameDetailsIndexDataController = new IndexDataController(
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var gameProductDataIndexDataController = new IndexDataController(
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var apiProductsIndexDataController = new IndexDataController(
                 collectionController,
                 apiProductsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var productScreenshotsIndexDataController = new IndexDataController(
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var productDownloadsIndexDataController = new IndexDataController(
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var productRoutesIndexDataController = new IndexDataController(
                 collectionController,
                 productRoutesDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             var validationResultsIndexController = new IndexDataController(
                 collectionController,
                 validationResultsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 statusController);
 
             // index data controllers that are data controllers

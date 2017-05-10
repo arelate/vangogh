@@ -12,7 +12,7 @@ namespace Interfaces.Storage
         Task PushAsync(string uri, Type data);
     }
 
-    public interface IStorageController<Type>:
+    public interface IStorageController<Type> :
         IPullAsyncDelegate<Type>,
         IPushAsyncDelegate<Type>
     {

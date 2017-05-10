@@ -24,19 +24,13 @@ namespace Controllers.Storage
             string uri,
             string data)
         {
-            var semaphoreSlim = new System.Threading.SemaphoreSlim(1, 1);
-            await semaphoreSlim.WaitAsync();
             using (var stream = streamController.OpenWritable(uri))
             using (StreamWriter writer = new StreamWriter(stream))
                 await writer.WriteLineAsync(data.ToString());
-            semaphoreSlim.Release();
         }
 
         public async Task<string> PullAsync(string uri)
         {
-            var semaphoreSlim = new System.Threading.SemaphoreSlim(1, 1);
-            await semaphoreSlim.WaitAsync();
-
             var data = string.Empty;
 
             if (fileController.Exists(uri))
@@ -46,8 +40,6 @@ namespace Controllers.Storage
                 using (StreamReader reader = new StreamReader(stream))
                     data = await reader.ReadToEndAsync();
             }
-
-            semaphoreSlim.Release();
 
             return data;
         }
