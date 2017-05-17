@@ -12,6 +12,7 @@
         public const string Screenshots = "screenshots";
 
         // Activity: UpdateDownloads, ProcessDownloads
+        public const string Data = "data";
         public const string ProductsImages = "productsImages";
         public const string AccountProductsImages = "accountProductsImages";
         public const string ProductsFiles = "productsFiles";

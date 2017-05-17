@@ -19,23 +19,23 @@ using GOG.Models;
 
 namespace GOG.Activities.Validate
 {
-    public class ValidateActivity : Activity
+    public class ValidateProductFilesActivity : Activity
     {
         private IGetDirectoryDelegate productFileDirectoryDelegate;
         private IGetFilenameDelegate productFileFilenameDelegate;
         private IEnumerateDelegate<string> validationFileEnumerateDelegate;
-        private IFileValidationController validationController;
+        private IFileValidationController fileValidationController;
         private IDataController<ValidationResult> validationResultsDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
         private IDataController<long> updatedDataController;
         private IRoutingController routingController;
 
-        public ValidateActivity(
+        public ValidateProductFilesActivity(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
             IEnumerateDelegate<string> validationFileEnumerateDelegate,
-            IFileValidationController validationController,
+            IFileValidationController fileValidationController,
             IDataController<ValidationResult> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
@@ -47,7 +47,7 @@ namespace GOG.Activities.Validate
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
             this.productFileFilenameDelegate = productFileFilenameDelegate;
             this.validationFileEnumerateDelegate = validationFileEnumerateDelegate;
-            this.validationController = validationController;
+            this.fileValidationController = fileValidationController;
             this.validationResultsDataController = validationResultsDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.manualUrlsEnumerationController = manualUrlsEnumerationController;
@@ -123,7 +123,7 @@ namespace GOG.Activities.Validate
 
                     try
                     {
-                        fileValidationResults.Add(await validationController.ValidateFileAsync(
+                        fileValidationResults.Add(await fileValidationController.ValidateFileAsync(
                             localFile,
                             validationFile,
                             validateFilesTask));

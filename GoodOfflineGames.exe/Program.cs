@@ -865,7 +865,7 @@ namespace GoodOfflineGames
 
             var validationResultController = new ValidationResultController();
 
-            var validationController = new ValidationController(
+            var productFileValidationController = new FileValidationController(
                 validationExpectedDelegate,
                 fileController,
                 streamController,
@@ -873,16 +873,19 @@ namespace GoodOfflineGames
                 validationResultController,
                 statusController);
 
-            var validateActivity = new ValidateActivity(
+            var validateProductFilesActivity = new ValidateProductFilesActivity(
                 productFilesDirectoryDelegate,
                 uriFilenameDelegate,
                 validationFileEnumerateDelegate,
-                validationController,
+                productFileValidationController,
                 validationResultsDataController,
                 gameDetailsDataController,
                 gameDetailsManualUrlsEnumerateDelegate,
                 updatedDataController,
                 routingController,
+                statusController);
+
+            var validateDataActivity = new ValidateDataActivity(
                 statusController);
 
             #region Repair
@@ -1040,7 +1043,11 @@ namespace GoodOfflineGames
                 { nameDelegate.GetName(
                     Activities.Validate,
                     Parameters.ProductsFiles),
-                    validateActivity },
+                    validateProductFilesActivity },
+                { nameDelegate.GetName(
+                    Activities.Validate,
+                    Parameters.Data),
+                    validateDataActivity },
                 { nameDelegate.GetName(
                     Activities.Repair,
                     Parameters.ProductsFiles),
