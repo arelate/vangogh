@@ -7,6 +7,11 @@ namespace Interfaces.Hash
         string GetHash(Type data);
     }
 
+    public interface IGetHashAsyncDelegate<Type>
+    {
+        Task<string> GetHashAsync(Type data);
+    }
+
     public interface ISetHashAsyncDelegate<Type>
     {
         Task SetHashAsync(Type data, string hash);
@@ -20,6 +25,12 @@ namespace Interfaces.Hash
 
     public interface IStringHashController:
         IGetHashDelegate<string>
+    {
+        // ...
+    }
+
+    public interface IFileHashController:
+        IGetHashAsyncDelegate<string>
     {
         // ...
     }

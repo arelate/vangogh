@@ -865,6 +865,12 @@ namespace GoodOfflineGames
 
             var validationResultController = new ValidationResultController();
 
+            var fileMd5Controller = new FileMd5Controller();
+
+            var dataFileValidateDelegate = new DataFileValidateDelegate(
+                fileMd5Controller, 
+                statusController);
+
             var productFileValidationController = new FileValidationController(
                 validationExpectedDelegate,
                 fileController,
@@ -886,6 +892,7 @@ namespace GoodOfflineGames
                 statusController);
 
             var validateDataActivity = new ValidateDataActivity(
+                dataFileValidateDelegate,
                 statusController);
 
             #region Repair

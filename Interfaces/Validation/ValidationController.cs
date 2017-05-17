@@ -35,9 +35,9 @@ namespace Interfaces.Validation
         Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5, IStatus status);
     }
 
-    public interface IValidateFileAsyncDelegate
+    public interface IValidateFileAsyncDelegate<T>
     {
-        Task<IFileValidationResult> ValidateFileAsync(string uri, string validationSource, IStatus status);
+        Task<T> ValidateFileAsync(string uri, string validationSource, IStatus status);
     }
 
     public interface IFileValidationController:
@@ -47,7 +47,7 @@ namespace Interfaces.Validation
         IVerifyFilenameDelegate,
         IVerifySizeDelegate,
         IVerifyChunkAsyncDelegate,
-        IValidateFileAsyncDelegate
+        IValidateFileAsyncDelegate<IFileValidationResult>
     {
         // ...
     }
