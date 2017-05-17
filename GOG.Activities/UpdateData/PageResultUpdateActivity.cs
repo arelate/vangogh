@@ -3,7 +3,7 @@ using System.Linq;
 
 using Interfaces.RequestPage;
 using Interfaces.Data;
-using Interfaces.DataRefinement;
+using Interfaces.NewUpdatedSelection;
 using Interfaces.Status;
 
 using Models.ProductCore;
@@ -25,7 +25,7 @@ namespace GOG.Activities.UpdateData
         private IRequestPageController requestPageController;
         private IDataController<Type> dataController;
 
-        private IDataRefinementController<Type> dataRefinementController;
+        private ISelectNewUpdatedDelegate<Type> selectNewUpdatedDelegate;
 
         public PageResultUpdateActivity(
             string productParameter,
@@ -34,7 +34,7 @@ namespace GOG.Activities.UpdateData
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
             IStatusController statusController,
-            IDataRefinementController<Type> dataRefinementController = null) :
+            ISelectNewUpdatedDelegate<Type> selectNewUpdatedDelegate = null) :
             base(statusController)
         {
             this.productParameter = productParameter;
@@ -45,7 +45,7 @@ namespace GOG.Activities.UpdateData
             this.requestPageController = requestPageController;
             this.dataController = dataController;
 
-            this.dataRefinementController = dataRefinementController;
+            this.selectNewUpdatedDelegate = selectNewUpdatedDelegate;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
@@ -58,10 +58,12 @@ namespace GOG.Activities.UpdateData
             var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
             statusController.Complete(extractTask);
 
-            var refineDataTask = statusController.Create(updateAllProductsTask, $"Refining {productParameter}");
-            if (dataRefinementController != null)
-                await dataRefinementController.RefineDataAsync(newProducts, refineDataTask);
-            statusController.Complete(refineDataTask);
+            if (selectNewUpdatedDelegate != null)
+            {
+                var refineDataTask = statusController.Create(updateAllProductsTask, $"Selecting new or updated {productParameter}");
+                await selectNewUpdatedDelegate.SelectNewUpdatedAsync(newProducts, refineDataTask);
+                statusController.Complete(refineDataTask);
+            }
 
             var updateTask = statusController.Create(updateAllProductsTask, $"Update {productParameter}");
             await dataController.UpdateAsync(updateTask, newProducts.ToArray());

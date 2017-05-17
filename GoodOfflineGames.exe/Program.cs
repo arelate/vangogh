@@ -590,7 +590,7 @@ namespace GoodOfflineGames
 
             var accountProductsExtractionController = new AccountProductsExtractionController();
 
-            var newUpdatedDataRefinementController = new NewUpdatedDataRefinementController(
+            var selectNewUpdatedDelegate = new SelectNewUpdatedDelegate(
                 accountProductsDataController,
                 collectionController,
                 updatedDataController,
@@ -603,7 +603,7 @@ namespace GoodOfflineGames
                     requestPageController,
                     accountProductsDataController,
                     statusController,
-                    newUpdatedDataRefinementController);
+                    selectNewUpdatedDelegate);
 
             #endregion
 

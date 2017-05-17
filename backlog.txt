@@ -6,9 +6,7 @@ Backend
 	-- for individual operations show output at the end
 	-- implement sync shortcut which is basically today's operation. Rename flightPlan.json to sync.json
 
-- change functional controllers to work on product model type and have activities loop updates using those
-
-- add more useful logging - e.g. what games were added as updated, inputs to certain operations, 
+- change functional controllers to work on product model type and have activities loop updates using those 
 
 - consider whitelists, blacklists for product operations
 

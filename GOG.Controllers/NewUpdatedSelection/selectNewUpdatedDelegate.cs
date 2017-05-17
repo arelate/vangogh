@@ -5,20 +5,20 @@ using System.Linq;
 using Interfaces.Collection;
 using Interfaces.Data;
 using Interfaces.Status;
-using Interfaces.DataRefinement;
+using Interfaces.NewUpdatedSelection;
 
 using GOG.Models;
 
 namespace GOG.Controllers.DataRefinement
 {
-    public class NewUpdatedDataRefinementController : IDataRefinementController<AccountProduct>
+    public class SelectNewUpdatedDelegate : ISelectNewUpdatedDelegate<AccountProduct>
     {
         private IDataController<AccountProduct> accountProductsDataController;
         private ICollectionController collectionController;
         private IDataController<long> updatedDataController;
         private IStatusController statusController;
 
-        public NewUpdatedDataRefinementController(
+        public SelectNewUpdatedDelegate(
             IDataController<AccountProduct> accountProductsDataController,
             ICollectionController collectionController,
             IDataController<long> updatedDataController,
@@ -30,7 +30,7 @@ namespace GOG.Controllers.DataRefinement
             this.statusController = statusController;
         }
 
-        public async Task RefineDataAsync(IEnumerable<AccountProduct> accountProducts, IStatus status)
+        public async Task SelectNewUpdatedAsync(IEnumerable<AccountProduct> accountProducts, IStatus status)
         {
             // GOG.com quirk
             // There are few ways to get new and updated products:
@@ -62,6 +62,13 @@ namespace GOG.Controllers.DataRefinement
 
             var knownAccountProducts = accountProductsDataController.EnumerateIds();
             var unknownAccountProducts = accountProducts.Select(ap => ap.Id).Except(knownAccountProducts);
+
+            if (unknownAccountProducts != null)
+                statusController.Inform(
+                    addPreviouslyUnknownDataTask, 
+                    "Selected the following new or updated products: " + string.Join(
+                        ",", 
+                        unknownAccountProducts));
 
             await updatedDataController.UpdateAsync(addPreviouslyUnknownDataTask, unknownAccountProducts.ToArray());
 
