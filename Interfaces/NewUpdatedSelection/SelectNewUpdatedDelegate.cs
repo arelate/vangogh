@@ -5,7 +5,7 @@ using Interfaces.Status;
 
 namespace Interfaces.NewUpdatedSelection
 {
-    public interface ISelectNewUpdatedDelegate<T>
+    public interface ISelectNewUpdatedAsyncDelegate<T>
     {
         Task SelectNewUpdatedAsync(IEnumerable<T> collection, IStatus status);
     }

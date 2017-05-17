@@ -17,7 +17,7 @@ using Models.ValidationResult;
 
 namespace Controllers.Validation
 {
-    public class ValidationController : IValidationController
+    public class ValidationController : IFileValidationController
     {
         private IExpectedDelegate<string> validationExpectedDelegate;
         private IFileController fileController;
@@ -45,7 +45,7 @@ namespace Controllers.Validation
             validationXml = new XmlDocument() { PreserveWhitespace = false };
         }
 
-        public async Task<IFileValidationResult> ValidateAsync(string productFileUri, string validationUri, IStatus status)
+        public async Task<IFileValidationResult> ValidateFileAsync(string productFileUri, string validationUri, IStatus status)
         {
             var fileValidation = new FileValidation()
             {

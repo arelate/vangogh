@@ -24,7 +24,7 @@ namespace GOG.Activities.Validate
         private IGetDirectoryDelegate productFileDirectoryDelegate;
         private IGetFilenameDelegate productFileFilenameDelegate;
         private IEnumerateDelegate<string> validationFileEnumerateDelegate;
-        private IValidationController validationController;
+        private IFileValidationController validationController;
         private IDataController<ValidationResult> validationResultsDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
@@ -35,7 +35,7 @@ namespace GOG.Activities.Validate
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
             IEnumerateDelegate<string> validationFileEnumerateDelegate,
-            IValidationController validationController,
+            IFileValidationController validationController,
             IDataController<ValidationResult> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
@@ -123,7 +123,7 @@ namespace GOG.Activities.Validate
 
                     try
                     {
-                        fileValidationResults.Add(await validationController.ValidateAsync(
+                        fileValidationResults.Add(await validationController.ValidateFileAsync(
                             localFile,
                             validationFile,
                             validateFilesTask));

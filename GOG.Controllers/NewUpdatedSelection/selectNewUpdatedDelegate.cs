@@ -13,7 +13,7 @@ using Models.Separators;
 
 namespace GOG.Controllers.DataRefinement
 {
-    public class SelectNewUpdatedDelegate : ISelectNewUpdatedDelegate<AccountProduct>
+    public class SelectNewUpdatedDelegate : ISelectNewUpdatedAsyncDelegate<AccountProduct>
     {
         private IDataController<AccountProduct> accountProductsDataController;
         private ICollectionController collectionController;

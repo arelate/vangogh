@@ -25,7 +25,7 @@ namespace GOG.Activities.UpdateData
         private IRequestPageController requestPageController;
         private IDataController<Type> dataController;
 
-        private ISelectNewUpdatedDelegate<Type> selectNewUpdatedDelegate;
+        private ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate;
 
         public PageResultUpdateActivity(
             string productParameter,
@@ -34,7 +34,7 @@ namespace GOG.Activities.UpdateData
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
             IStatusController statusController,
-            ISelectNewUpdatedDelegate<Type> selectNewUpdatedDelegate = null) :
+            ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate = null) :
             base(statusController)
         {
             this.productParameter = productParameter;
