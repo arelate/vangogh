@@ -8,11 +8,11 @@ Backend
 
 - change functional controllers to work on product model type and have activities loop updates using those 
 
-- consider whitelists, blacklists for product operations
-
 - introduce repair controllers - chunks repair (download by chunk, validate by chunk); validationFileIsNotValid (see if XML can't be loaded and do simple text transforms for known issues)
 
-- serve data and frontend files via http or better yet websockets server
+- [Backlog] consider whitelists, blacklists for product operations
+
+- [Backlog] serve data and frontend files via http or better yet websockets server
 
 - persist cookies from session to session (.net core 2.0?), or at least allow injecting cookies from the browser session (should be doable in .net core 1.1)
 

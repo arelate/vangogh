@@ -8,6 +8,7 @@
         public const string QueryStringParameters = "&";
         // common
         public const string KeyValue = "=";
+        public const string Comma = ",";
         // GameDetails downloads
         public const string GameDetailsDownloadsStart = "[[";
         public const string GameDetailsDownloadsEnd = "]]";

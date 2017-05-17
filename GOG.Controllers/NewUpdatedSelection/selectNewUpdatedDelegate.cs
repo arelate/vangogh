@@ -9,6 +9,8 @@ using Interfaces.NewUpdatedSelection;
 
 using GOG.Models;
 
+using Models.Separators;
+
 namespace GOG.Controllers.DataRefinement
 {
     public class SelectNewUpdatedDelegate : ISelectNewUpdatedDelegate<AccountProduct>
@@ -67,7 +69,7 @@ namespace GOG.Controllers.DataRefinement
                 statusController.Inform(
                     addPreviouslyUnknownDataTask, 
                     "Selected the following new or updated products: " + string.Join(
-                        ",", 
+                        Separators.Comma, 
                         unknownAccountProducts));
 
             await updatedDataController.UpdateAsync(addPreviouslyUnknownDataTask, unknownAccountProducts.ToArray());

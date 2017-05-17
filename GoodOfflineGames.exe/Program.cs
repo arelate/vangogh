@@ -1101,7 +1101,7 @@ namespace GoodOfflineGames
                     foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
                         errorMessages.Add(innerException.Message);
 
-                    var combinedErrorMessages = string.Join(", ", errorMessages);
+                    var combinedErrorMessages = string.Join(Models.Separators.Separators.Comma, errorMessages);
 
                     statusController.Fail(applicationStatus, combinedErrorMessages);
 
