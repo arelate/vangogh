@@ -18,7 +18,8 @@ namespace Controllers.File
 
             //var destinationUri = Path.Combine(toUri, fromUri);
             var destinationDirectory = Path.GetDirectoryName(toUri);
-            if (!System.IO.Directory.Exists(destinationDirectory))
+            if (!string.IsNullOrEmpty(destinationDirectory) &&
+                !System.IO.Directory.Exists(destinationDirectory))
                 System.IO.Directory.CreateDirectory(destinationDirectory);
 
             if (Exists(toUri))
