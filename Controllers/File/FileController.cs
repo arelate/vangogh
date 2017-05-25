@@ -17,9 +17,9 @@ namespace Controllers.File
             if (!Exists(fromUri)) return;
 
             //var destinationUri = Path.Combine(toUri, fromUri);
-            //var destinationDirectory = Path.GetDirectoryName(destinationUri);
-            //if (!System.IO.Directory.Exists(destinationDirectory))
-            //    System.IO.Directory.CreateDirectory(destinationDirectory);
+            var destinationDirectory = Path.GetDirectoryName(toUri);
+            if (!System.IO.Directory.Exists(destinationDirectory))
+                System.IO.Directory.CreateDirectory(destinationDirectory);
 
             if (Exists(toUri))
                 System.IO.File.Delete(toUri);
