@@ -16,7 +16,6 @@ namespace Controllers.File
         {
             if (!Exists(fromUri)) return;
 
-            //var destinationUri = Path.Combine(toUri, fromUri);
             var destinationDirectory = Path.GetDirectoryName(toUri);
             if (!string.IsNullOrEmpty(destinationDirectory) &&
                 !System.IO.Directory.Exists(destinationDirectory))

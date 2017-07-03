@@ -20,6 +20,11 @@ namespace Interfaces.Data
         Task<Type> GetByIdAsync(long id);
     }
 
+    public interface IEnumerateKeysDelegate<T>
+    {
+        IEnumerable<T> EnumerateKeys();
+    }
+    
     public interface IEnumerateIdsDelegate
     {
         IEnumerable<long> EnumerateIds();

@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using Interfaces.Data;
+
 namespace Interfaces.Hash
 {
     public interface IGetHashDelegate<Type>
@@ -37,7 +39,8 @@ namespace Interfaces.Hash
 
     public interface IPrecomputedHashController:
         IGetHashDelegate<string>,
-        ISetHashAsyncDelegate<string>
+        ISetHashAsyncDelegate<string>,
+        IEnumerateKeysDelegate<string>
     {
         // ...
     }

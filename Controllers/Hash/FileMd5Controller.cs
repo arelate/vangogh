@@ -4,14 +4,29 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Hash;
+using Interfaces.Storage;
 
 namespace Controllers.Hash
 {
     public class FileMd5Controller : IFileHashController
     {
-        public Task<string> GetHashAsync(string uri)
+        private IStorageController<string> storageController;
+        private IStringHashController stringHashController;
+
+        public FileMd5Controller(
+            IStorageController<string> storageController,
+            IStringHashController stringHashController)
         {
-            throw new NotImplementedException();
+            this.storageController = storageController;
+            this.stringHashController = stringHashController;
+        }
+
+        public async Task<string> GetHashAsync(string uri)
+        {
+            var fileContent = await storageController.PullAsync(uri);
+            var fileHash = stringHashController.GetHash(fileContent);
+
+            return fileHash;
         }
     }
 }

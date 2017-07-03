@@ -63,11 +63,14 @@ namespace Controllers.FileDownload
                 while ((bytesRead = await responseStream.ReadAsync(buffer, 0, bufferSize)) > 0)
                 {
                     totalBytesRead += bytesRead;
+                    var contentLength = response.Content.Headers.ContentLength != null ?
+                        (long) response.Content.Headers.ContentLength :
+                        totalBytesRead;
                     await writeableStream.WriteAsync(buffer, 0, bytesRead);
                     statusController.UpdateProgress(
                         status,
                         totalBytesRead,
-                        (long)response.Content.Headers.ContentLength,
+                        contentLength,
                         filename,
                         DataUnits.Bytes);
                 }

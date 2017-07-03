@@ -865,7 +865,9 @@ namespace GoodOfflineGames
 
             var validationResultController = new ValidationResultController();
 
-            var fileMd5Controller = new FileMd5Controller();
+            var fileMd5Controller = new FileMd5Controller(
+                storageController,
+                stringMd5Controller);
 
             var dataFileValidateDelegate = new DataFileValidateDelegate(
                 fileMd5Controller, 
@@ -892,6 +894,8 @@ namespace GoodOfflineGames
                 statusController);
 
             var validateDataActivity = new ValidateDataActivity(
+                precomputedHashController,
+                fileController,
                 dataFileValidateDelegate,
                 statusController);
 
@@ -1094,7 +1098,7 @@ namespace GoodOfflineGames
                 // validate settings
                 validateSettingsActivity,
                 // authorize
-                authorizeActivity,
+                //authorizeActivity,
                 //  flight plan
                 flightActivity
             };

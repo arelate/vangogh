@@ -40,6 +40,11 @@ namespace Controllers.Hash
             dataLoaded = false;
         }
 
+        public IEnumerable<string> EnumerateKeys()
+        {
+            return uriHashes.Keys;
+        }
+
         public string GetHash(string uri)
         {
             return (uriHashes.ContainsKey(uri)) ?
