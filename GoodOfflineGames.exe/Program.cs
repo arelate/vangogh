@@ -18,7 +18,6 @@ using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Settings;
-using Controllers.FlightPlan;
 using Controllers.RequestPage;
 using Controllers.Throttle;
 using Controllers.RequestRate;
@@ -46,7 +45,6 @@ using Controllers.Containment;
 using Controllers.Sanitization;
 using Controllers.Expectation;
 using Controllers.UpdateUri;
-using Controllers.Naming;
 using Controllers.QueryParameters;
 using Controllers.Template;
 using Controllers.ViewModel;
@@ -74,7 +72,6 @@ using GOG.Controllers.UpdateScreenshots;
 using GOG.Activities.Load;
 using GOG.Activities.ValidateSettings;
 using GOG.Activities.Authorize;
-using GOG.Activities.Flight;
 using GOG.Activities.UpdateData;
 using GOG.Activities.UpdateDownloads;
 using GOG.Activities.Download;
@@ -88,7 +85,7 @@ using Models.ProductScreenshots;
 using Models.ProductDownloads;
 using Models.ValidationResult;
 using Models.Status;
-using Models.FlightPlan;
+using Models.Activities;
 using Models.QueryParameters;
 using Models.Directories;
 
@@ -110,7 +107,7 @@ namespace GoodOfflineGames
                 streamController,
                 fileController);
             var transactionalStorageController = new TransactionalStorageController(
-                storageController, 
+                storageController,
                 fileController);
             var serializationController = new JSONStringController();
 
@@ -485,16 +482,6 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Activity Parameters 
-
-            var flightPlanFilenameDelegate = new FixedFilenameDelegate("flightPlan", jsonFilenameDelegate);
-
-            var flightPlanController = new FlightPlanController(
-                flightPlanFilenameDelegate,
-                serializedStorageController);
-
-            #endregion
-
             #region Activities
 
             #region Load
@@ -505,7 +492,6 @@ namespace GoodOfflineGames
                 precomputedHashController,
                 appTemplateController,
                 reportTemplateController,
-                flightPlanController,
                 productsDataController,
                 accountProductsDataController,
                 gameDetailsDataController,
@@ -559,7 +545,7 @@ namespace GoodOfflineGames
             var productParameterGetQueryParametersDelegate = new ProductParameterGetQueryParametersDelegate();
 
             var productsPageResultsController = new PageResultsController<ProductsPageResult>(
-                Parameters.Products,
+                Context.Products,
                 productParameterGetUpdateUriDelegate,
                 productParameterGetQueryParametersDelegate,
                 requestPageController,
@@ -571,7 +557,7 @@ namespace GoodOfflineGames
             var productsExtractionController = new ProductsExtractionController();
 
             var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
-                    Parameters.Products,
+                    Context.Products,
                     productsPageResultsController,
                     productsExtractionController,
                     requestPageController,
@@ -579,7 +565,7 @@ namespace GoodOfflineGames
                     statusController);
 
             var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
-                Parameters.AccountProducts,
+                Context.AccountProducts,
                 productParameterGetUpdateUriDelegate,
                 productParameterGetQueryParametersDelegate,
                 requestPageController,
@@ -597,7 +583,7 @@ namespace GoodOfflineGames
                 statusController);
 
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
-                    Parameters.AccountProducts,
+                    Context.AccountProducts,
                     accountProductsPageResultsController,
                     accountProductsExtractionController,
                     requestPageController,
@@ -640,7 +626,7 @@ namespace GoodOfflineGames
             // product update controllers
 
             var gameProductDataUpdateActivity = new ProductCoreUpdateActivity<GameProductData, Product>(
-                Parameters.GameProductData,
+                Context.GameProductData,
                 productParameterGetUpdateUriDelegate,
                 gameProductDataController,
                 productsDataController,
@@ -654,7 +640,7 @@ namespace GoodOfflineGames
                 serializationController);
 
             var apiProductUpdateActivity = new ProductCoreUpdateActivity<ApiProduct, Product>(
-                Parameters.ApiProducts,
+                Context.ApiProducts,
                 productParameterGetUpdateUriDelegate,
                 apiProductsDataController,
                 productsDataController,
@@ -689,10 +675,10 @@ namespace GoodOfflineGames
                 gameDetailsLanguagesExtractionController,
                 gameDetailsDownloadsExtractionController,
                 sanitizationController,
-                operatingSystemsDownloadsExtractionController); 
+                operatingSystemsDownloadsExtractionController);
 
             var gameDetailsUpdateActivity = new ProductCoreUpdateActivity<GameDetails, AccountProduct>(
-                Parameters.GameDetails,
+                Context.GameDetails,
                 productParameterGetUpdateUriDelegate,
                 gameDetailsDataController,
                 accountProductsDataController,
@@ -766,7 +752,7 @@ namespace GoodOfflineGames
             // schedule download controllers
 
             var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
-                Parameters.ProductsImages,
+                Context.ProductsImages,
                 productsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
                 fileController,
@@ -776,7 +762,7 @@ namespace GoodOfflineGames
                 statusController);
 
             var updateAccountProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
-                Parameters.AccountProductsImages,
+                Context.AccountProductsImages,
                 accountProductsImagesDownloadSourcesController,
                 imagesDirectoryDelegate,
                 fileController,
@@ -786,7 +772,7 @@ namespace GoodOfflineGames
                 statusController);
 
             var updateScreenshotsDownloadsActivity = new UpdateDownloadsActivity(
-                Parameters.Screenshots,
+                Context.Screenshots,
                 screenshotsDownloadSourcesController,
                 screenshotsDirectoryDelegate,
                 fileController,
@@ -796,7 +782,7 @@ namespace GoodOfflineGames
                 statusController);
 
             var updateProductFilesDownloadsActivity = new UpdateDownloadsActivity(
-                Parameters.ProductsFiles,
+                Context.ProductsFiles,
                 manualUrlDownloadSourcesController,
                 productFilesDirectoryDelegate,
                 fileController,
@@ -808,19 +794,19 @@ namespace GoodOfflineGames
             // downloads processing
 
             var productsImagesDownloadActivity = new DownloadActivity(
-                Parameters.ProductsImages,
+                Context.ProductsImages,
                 productDownloadsDataController,
                 fileDownloadController,
                 statusController);
 
             var accountProductsImagesDownloadActivity = new DownloadActivity(
-                Parameters.AccountProductsImages,
+                Context.AccountProductsImages,
                 productDownloadsDataController,
                 fileDownloadController,
                 statusController);
 
             var screenshotsDownloadActivity = new DownloadActivity(
-                Parameters.Screenshots,
+                Context.Screenshots,
                 productDownloadsDataController,
                 fileDownloadController,
                 statusController);
@@ -856,7 +842,7 @@ namespace GoodOfflineGames
                 statusController);
 
             var productFilesDownloadActivity = new DownloadActivity(
-                Parameters.ProductsFiles,
+                Context.ProductsFiles,
                 productDownloadsDataController,
                 manualUrlDownloadFromSourceDelegate,
                 statusController);
@@ -870,7 +856,7 @@ namespace GoodOfflineGames
                 stringMd5Controller);
 
             var dataFileValidateDelegate = new DataFileValidateDelegate(
-                fileMd5Controller, 
+                fileMd5Controller,
                 statusController);
 
             var productFileValidationController = new FileValidationController(
@@ -923,7 +909,7 @@ namespace GoodOfflineGames
             var directoryFilesEnumerateDelegate = new DirectoryFilesEnumerateDelegate(directoryController);
 
             var directoryCleanupActivity = new CleanupActivity(
-                Parameters.Directories,
+                Context.Directories,
                 gameDetailsDirectoriesEnumerateDelegate, // expected items (directories for gameDetails)
                 productFilesDirectoriesEnumerateDelegate, // actual items (directories in productFiles)
                 directoryFilesEnumerateDelegate, // detailed items (files in directory)
@@ -948,7 +934,7 @@ namespace GoodOfflineGames
             var passthroughEnumerateDelegate = new PassthroughEnumerateDelegate();
 
             var fileCleanupActivity = new CleanupActivity(
-                Parameters.Files,
+                Context.Files,
                 updatedGameDetailsManualUrlFilesEnumerateDelegate, // expected items (files for updated gameDetails)
                 updatedProductFilesEnumerateDelegate, // actual items (updated product files)
                 passthroughEnumerateDelegate, // detailed items (passthrough)
@@ -987,105 +973,32 @@ namespace GoodOfflineGames
 
             #region Task Activities Parameters
 
-            var nameDelegate = new NameDelegate();
-
-            var flightActivities = new Dictionary<string, IActivity>()
+            var builtinActivities = new Dictionary<string, IActivity>()
             {
-                { nameDelegate.GetName(
-                    Activities.UpdateData,
-                    Parameters.Products),
-                    productsUpdateActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateData,
-                    Parameters.AccountProducts),
-                    accountProductsUpdateActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateData,
-                    Parameters.Wishlist),
-                    wishlistedUpdateActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateData,
-                    Parameters.GameProductData),
-                    gameProductDataUpdateActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateData,
-                    Parameters.ApiProducts),
-                    apiProductUpdateActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateData,
-                    Parameters.GameDetails),
-                    gameDetailsUpdateActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateData,
-                    Parameters.Screenshots),
-                    screenshotUpdateActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateDownloads,
-                    Parameters.ProductsImages),
-                    updateProductsImagesDownloadsActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateDownloads,
-                    Parameters.AccountProductsImages),
-                    updateAccountProductsImagesDownloadsActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateDownloads,
-                    Parameters.Screenshots),
-                    updateScreenshotsDownloadsActivity },
-                { nameDelegate.GetName(
-                    Activities.UpdateDownloads,
-                    Parameters.ProductsFiles),
-                    updateProductFilesDownloadsActivity },
-                { nameDelegate.GetName(
-                    Activities.ProcessDownloads,
-                    Parameters.ProductsImages),
-                    productsImagesDownloadActivity },
-                { nameDelegate.GetName(
-                    Activities.ProcessDownloads,
-                    Parameters.AccountProductsImages),
-                    accountProductsImagesDownloadActivity },
-                { nameDelegate.GetName(
-                    Activities.ProcessDownloads,
-                    Parameters.Screenshots),
-                    screenshotsDownloadActivity },
-                { nameDelegate.GetName(
-                    Activities.ProcessDownloads,
-                    Parameters.ProductsFiles),
-                    productFilesDownloadActivity },
-                { nameDelegate.GetName(
-                    Activities.Validate,
-                    Parameters.ProductsFiles),
-                    validateProductFilesActivity },
-                { nameDelegate.GetName(
-                    Activities.Validate,
-                    Parameters.Data),
-                    validateDataActivity },
-                { nameDelegate.GetName(
-                    Activities.Repair,
-                    Parameters.ProductsFiles),
-                    repairActivity },
-                { nameDelegate.GetName(
-                    Activities.Cleanup,
-                    Parameters.Directories),
-                    directoryCleanupActivity },
-                { nameDelegate.GetName(
-                    Activities.Cleanup,
-                    Parameters.Files),
-                    fileCleanupActivity },
-                { nameDelegate.GetName(
-                    Activities.Cleanup,
-                    Parameters.Updated),
-                    cleanupUpdatedActivity },
-                { nameDelegate.GetName(
-                    Activities.Report,
-                    Parameters.Status),
-                    reportActivity }
+                { BuiltinActivities.UpdateData.Products, productsUpdateActivity },
+                { BuiltinActivities.UpdateData.AccountProducts, accountProductsUpdateActivity },
+                { BuiltinActivities.UpdateData.Wishlist, wishlistedUpdateActivity },
+                { BuiltinActivities.UpdateData.GameProductData, gameProductDataUpdateActivity },
+                { BuiltinActivities.UpdateData.ApiProducts, apiProductUpdateActivity },
+                { BuiltinActivities.UpdateData.GameDetails, gameDetailsUpdateActivity },
+                { BuiltinActivities.UpdateData.Screenshots, screenshotUpdateActivity },
+                { BuiltinActivities.UpdateDownloads.ProductsImages, updateProductsImagesDownloadsActivity },
+                { BuiltinActivities.UpdateDownloads.AccountProductsImages, updateAccountProductsImagesDownloadsActivity },
+                { BuiltinActivities.UpdateDownloads.Screenshots, updateScreenshotsDownloadsActivity },
+                { BuiltinActivities.UpdateDownloads.ProductsFiles, updateProductFilesDownloadsActivity },
+                { BuiltinActivities.Download.ProductsImages, productsImagesDownloadActivity },
+                { BuiltinActivities.Download.AccountProductsImages, accountProductsImagesDownloadActivity },
+                { BuiltinActivities.Download.Screenshots, screenshotsDownloadActivity },
+                { BuiltinActivities.Download.ProductsFiles, productFilesDownloadActivity },
+                { BuiltinActivities.Validate.ProductFiles, validateProductFilesActivity },
+                { BuiltinActivities.Validate.Data, validateDataActivity },
+                { BuiltinActivities.Repair.ProductsFiles, repairActivity },
+                { BuiltinActivities.Cleanup.Directories, directoryCleanupActivity },
+                { BuiltinActivities.Cleanup.Files, fileCleanupActivity },
+                { BuiltinActivities.Cleanup.Updated, cleanupUpdatedActivity }
             };
 
-            var flightActivity = new FlightActivity(
-                flightPlanController,
-                nameDelegate,
-                flightActivities,
-                statusController);
+            // TODO: define execution plan here
 
             #endregion
 
@@ -1098,9 +1011,11 @@ namespace GoodOfflineGames
                 // validate settings
                 validateSettingsActivity,
                 // authorize
-                //authorizeActivity,
+                authorizeActivity,
                 //  flight plan
-                flightActivity
+                //flightActivity
+                // report
+                reportActivity
             };
 
             #endregion
@@ -1128,7 +1043,7 @@ namespace GoodOfflineGames
 
                     consolePresentationController.Present(
                         new string[]
-                            {"GoodOfflineGames.exe has encountered fatal error(s):\n" + 
+                            {"GoodOfflineGames.exe has encountered fatal error(s):\n" +
                             combinedErrorMessages +
                             $"\nPlease refer to {failureDumpUri} for further details."+
                             "\n\nPress ENTER to close the window..."});

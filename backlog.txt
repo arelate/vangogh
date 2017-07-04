@@ -16,7 +16,7 @@ Backend
 
 - persist cookies from session to session (.net core 2.0?), or at least allow injecting cookies from the browser session (should be doable in .net core 1.1)
 
-- add validate data operation that uses hashes and validates md5
+- debug data validation - why stored file md5 doesn't match precomputed hash at push (encoding? special characters?)
 
 - unit tests
 

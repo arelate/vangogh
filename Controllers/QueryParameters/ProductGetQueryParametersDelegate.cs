@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.QueryParameters;
 
-using Models.FlightPlan;
+using Models.Activities;
 
 namespace Controllers.QueryParameters
 {
@@ -13,12 +13,12 @@ namespace Controllers.QueryParameters
         {
             switch (productParameter)
             {
-                case Parameters.Products:
+                case Context.Products:
                     return Models.QueryParameters.QueryParametersCollections.GamesAjaxFiltered;
-                case Parameters.AccountProducts:
+                case Context.AccountProducts:
                     return Models.QueryParameters.QueryParametersCollections.AccountGetFilteredProducts;
                 default:
-                    throw new System.NotImplementedException();
+                    throw new NotImplementedException();
             }
         }
     }

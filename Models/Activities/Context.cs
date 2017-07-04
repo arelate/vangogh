@@ -1,8 +1,11 @@
-﻿namespace Models.FlightPlan
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Models.Activities
 {
-    public static class Parameters
+    public static class Context
     {
-        // Activity: UpdateData
         public const string Products = "products";
         public const string AccountProducts = "accountProducts";
         public const string Wishlist = "wishlist";
@@ -10,19 +13,14 @@
         public const string ApiProducts = "apiProducts";
         public const string GameDetails = "gameDetails";
         public const string Screenshots = "screenshots";
-
-        // Activity: UpdateDownloads, ProcessDownloads
+        private const string ImagesSuffix = "Images";
+        public const string ProductsImages = Products + ImagesSuffix;
+        public const string AccountProductsImages = AccountProducts + ImagesSuffix;
+        private const string FilesSuffix = "Files";
+        public const string ProductsFiles = Products + FilesSuffix;
         public const string Data = "data";
-        public const string ProductsImages = "productsImages";
-        public const string AccountProductsImages = "accountProductsImages";
-        public const string ProductsFiles = "productsFiles";
-
-        // Activity: Cleanup
-        public const string Directories = "directories";
         public const string Files = "files";
+        public const string Directories = "directories";
         public const string Updated = "updated";
-
-        // Activity: Report
-        public const string Status = "status";
     }
 }

@@ -12,7 +12,7 @@ using Interfaces.Status;
 
 using GOG.Models;
 
-using Models.FlightPlan;
+using Models.Activities;
 using Models.ProductScreenshots;
 
 namespace GOG.Controllers.UpdateScreenshots
@@ -43,7 +43,7 @@ namespace GOG.Controllers.UpdateScreenshots
         public async Task UpdateProductScreenshots(Product product, IStatus status)
         {
             var requestProductPageTask = statusController.Create(status, "Request product page containing screenshots information");
-            var productPageUri = string.Format(getUpdateUriDelegate.GetUpdateUri(Parameters.Screenshots), product.Url);
+            var productPageUri = string.Format(getUpdateUriDelegate.GetUpdateUri(Context.Screenshots), product.Url);
             var productPageContent = await networkController.GetAsync(requestProductPageTask, productPageUri);
             statusController.Complete(requestProductPageTask);
 

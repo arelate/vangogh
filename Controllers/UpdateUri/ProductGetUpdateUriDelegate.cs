@@ -3,7 +3,7 @@
 using Interfaces.UpdateUri;
 
 using Models.Uris;
-using Models.FlightPlan;
+using Models.Activities;
 
 namespace Controllers.UpdateUri
 {
@@ -13,16 +13,16 @@ namespace Controllers.UpdateUri
         {
             switch (productParameter)
             {
-                case Parameters.Products:
+                case Context.Products:
                     return Uris.Paths.Games.AjaxFiltered;
-                case Parameters.AccountProducts:
+                case Context.AccountProducts:
                     return Uris.Paths.Account.GetFilteredProducts;
-                case Parameters.Screenshots: // screenshots use the same page as game product data
-                case Parameters.GameProductData:
+                case Context.Screenshots: // screenshots use the same page as game product data
+                case Context.GameProductData:
                     return Uris.Paths.GameProductData.ProductTemplate;
-                case Parameters.ApiProducts:
+                case Context.ApiProducts:
                     return Uris.Paths.Api.ProductTemplate;
-                case Parameters.GameDetails:
+                case Context.GameDetails:
                     return Uris.Paths.Account.GameDetailsRequestTemplate;
                 default:
                     throw new NotImplementedException();
