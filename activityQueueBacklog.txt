@@ -1,0 +1,22 @@
+app [command [parameters]]
+- command is built-in or alias
+- parameters are space separated (lets keep it simple for now, no quotes or escaping...)
+need: introduce concepts of alias, preReq and postReq (referring only to built-in activities - should enforce), parameters for the activityQueue pipeline. Perhaps activityDependency controller?
+- all are code only, (currently?) not user serviceable as there are some hard dependencies there which might leave application in very broken state if tampered with
+- perhaps would track user aliases on the backlog (if so that should be separate activity add-alias, remove-alias?), would be consistent with aliases in other systems
+need: help activity that outputs information about built-in commands, list of aliases and what they expand to, as well as list of pre- and postReqs
+activityQueue pipeline:
+- remove all fixed activities (auth, loadData, report) - all activities should be driven by the new pipeline
+- (while there are aliases) expand all the aliases in place of activity
+- (while there are preReqs) insert preReqs before activity
+- (while there are postReqs) insert postReqs after activity
+- the end result is a normalized queue of activities + parameters. 
+need: change Activity interface to accept a list of optional (string) parameters
+need: search-products, search-accountProducts, search-gameDetails, etc. + alias "search" (all together, each operation lists separate results)
+design alternatives:
+- (no - requires deserialization) use only text fields for search
+- (no - would hit too much of internal data) use serialized entry
+- (yes, and would be required for frontends as well) build search index with viewModels and new activity (update-searchIndex, should be postReq for many activities)
+- search outputs a list of productCore (id,title)
+- this might require to add Results to ActivityStatus - not sure if string, ProductCore yet (would be great to have the ProductCore)
+need: activityStatuses reported from the activityQueue should present clear results. Need to think more about how the queue affects result output - e.g. does it happen at the end (likely)? after every activity in the queue (not likely)? how this affects current results presentation, etc. - need to think of this through the context of aliases (e.g. search), doesn't make sense to show and remove intermediate information - would be great to collate end results in meaningful way
