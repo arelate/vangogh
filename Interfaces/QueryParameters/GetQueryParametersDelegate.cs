@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Interfaces.QueryParameters
 {
     public interface IGetQueryParametersDelegate<T>
     {
-        IDictionary<string, string> GetQueryParameters(string productParameter);
+        IDictionary<string, string> GetQueryParameters(T context);
     }
 }

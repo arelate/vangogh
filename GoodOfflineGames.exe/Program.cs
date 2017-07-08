@@ -1,7 +1,5 @@
 ﻿#region Using
 
-using System;
-using System.IO;
 using System.Net;
 using System.Collections.Generic;
 
@@ -54,6 +52,7 @@ using Controllers.Enumeration;
 
 using Interfaces.Activity;
 using Interfaces.Extraction;
+using Interfaces.ActivityDefinitions;
 
 using GOG.Models;
 
@@ -85,7 +84,6 @@ using Models.ProductScreenshots;
 using Models.ProductDownloads;
 using Models.ValidationResult;
 using Models.Status;
-using Models.Activities;
 using Models.QueryParameters;
 using Models.Directories;
 
@@ -482,7 +480,7 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Activities
+            #region Activity Controllers
 
             #region Load
 
@@ -506,7 +504,7 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Authorization
+            #region Authorize
 
             var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(consoleController);
             var securityCodeValidationDelegate = new SecurityCodeValidationDelegate(consoleController);
@@ -971,88 +969,76 @@ namespace GoodOfflineGames
 
             #endregion
 
-            #region Task Activities Parameters
+            #region Activity Context To Activity Controllers Mapping
 
-            var builtinActivities = new Dictionary<string, IActivity>()
+            var activityContextToActivityControllerMap = new Dictionary<(Activity, Context), IActivity>()
             {
-                { BuiltinActivities.UpdateData.Products, productsUpdateActivity },
-                { BuiltinActivities.UpdateData.AccountProducts, accountProductsUpdateActivity },
-                { BuiltinActivities.UpdateData.Wishlist, wishlistedUpdateActivity },
-                { BuiltinActivities.UpdateData.GameProductData, gameProductDataUpdateActivity },
-                { BuiltinActivities.UpdateData.ApiProducts, apiProductUpdateActivity },
-                { BuiltinActivities.UpdateData.GameDetails, gameDetailsUpdateActivity },
-                { BuiltinActivities.UpdateData.Screenshots, screenshotUpdateActivity },
-                { BuiltinActivities.UpdateDownloads.ProductsImages, updateProductsImagesDownloadsActivity },
-                { BuiltinActivities.UpdateDownloads.AccountProductsImages, updateAccountProductsImagesDownloadsActivity },
-                { BuiltinActivities.UpdateDownloads.Screenshots, updateScreenshotsDownloadsActivity },
-                { BuiltinActivities.UpdateDownloads.ProductsFiles, updateProductFilesDownloadsActivity },
-                { BuiltinActivities.Download.ProductsImages, productsImagesDownloadActivity },
-                { BuiltinActivities.Download.AccountProductsImages, accountProductsImagesDownloadActivity },
-                { BuiltinActivities.Download.Screenshots, screenshotsDownloadActivity },
-                { BuiltinActivities.Download.ProductsFiles, productFilesDownloadActivity },
-                { BuiltinActivities.Validate.ProductFiles, validateProductFilesActivity },
-                { BuiltinActivities.Validate.Data, validateDataActivity },
-                { BuiltinActivities.Repair.ProductsFiles, repairActivity },
-                { BuiltinActivities.Cleanup.Directories, directoryCleanupActivity },
-                { BuiltinActivities.Cleanup.Files, fileCleanupActivity },
-                { BuiltinActivities.Cleanup.Updated, cleanupUpdatedActivity }
-            };
-
-            // TODO: define execution plan here
-
-            #endregion
-
-            #region Initialization Task Activities (always performed)
-
-            var activities = new List<IActivity>
-            {
-                // load initial data
-                loadDataActivity,
-                // validate settings
-                validateSettingsActivity,
-                // authorize
-                authorizeActivity,
-                //  flight plan
-                //flightActivity
-                // report
-                reportActivity
+                { (Activity.Load, Context.Data), loadDataActivity },
+                { (Activity.Validate, Context.Settings), validateSettingsActivity },
+                { (Activity.Authorize, Context.None), authorizeActivity },
+                { (Activity.UpdateData, Context.Products), productsUpdateActivity },
+                { (Activity.UpdateData, Context.AccountProducts), accountProductsUpdateActivity },
+                { (Activity.UpdateData, Context.Wishlist), wishlistedUpdateActivity },
+                { (Activity.UpdateData, Context.GameProductData), gameProductDataUpdateActivity },
+                { (Activity.UpdateData, Context.ApiProducts), apiProductUpdateActivity },
+                { (Activity.UpdateData, Context.GameDetails), gameDetailsUpdateActivity },
+                { (Activity.UpdateData, Context.Screenshots), screenshotUpdateActivity },
+                { (Activity.UpdateDownloads, Context.ProductsImages), updateProductsImagesDownloadsActivity },
+                { (Activity.UpdateDownloads, Context.AccountProductsImages), updateAccountProductsImagesDownloadsActivity },
+                { (Activity.UpdateDownloads, Context.Screenshots), updateScreenshotsDownloadsActivity },
+                { (Activity.UpdateDownloads, Context.ProductsFiles), updateProductFilesDownloadsActivity },
+                { (Activity.Download, Context.ProductsImages), productsImagesDownloadActivity },
+                { (Activity.Download, Context.AccountProductsImages), accountProductsImagesDownloadActivity },
+                { (Activity.Download, Context.Screenshots), screenshotsDownloadActivity },
+                { (Activity.Download, Context.ProductsFiles), productFilesDownloadActivity },
+                { (Activity.Validate, Context.ProductsFiles), validateProductFilesActivity },
+                { (Activity.Validate, Context.Data), validateDataActivity },
+                { (Activity.Repair, Context.ProductsFiles), repairActivity },
+                { (Activity.Cleanup, Context.Directories), directoryCleanupActivity },
+                { (Activity.Cleanup, Context.Files), fileCleanupActivity },
+                { (Activity.Cleanup, Context.Updated), cleanupUpdatedActivity },
+                { (Activity.Report, Context.None), reportActivity }
             };
 
             #endregion
 
-            foreach (var activity in activities)
-            {
-                try
-                {
-                    activity.ProcessActivityAsync(applicationStatus).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    var exceptionTreeToEnumerableController = new ExceptionTreeToEnumerableController();
+            #region Core Activities Loop
 
-                    List<string> errorMessages = new List<string>();
-                    foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
-                        errorMessages.Add(innerException.Message);
+            //foreach (var activity in activities)
+            //{
+            //    try
+            //    {
+            //        activity.ProcessActivityAsync(applicationStatus).Wait();
+            //    }
+            //    catch (AggregateException ex)
+            //    {
+            //        var exceptionTreeToEnumerableController = new ExceptionTreeToEnumerableController();
 
-                    var combinedErrorMessages = string.Join(Models.Separators.Separators.Comma, errorMessages);
+            //        List<string> errorMessages = new List<string>();
+            //        foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
+            //            errorMessages.Add(innerException.Message);
 
-                    statusController.Fail(applicationStatus, combinedErrorMessages);
+            //        var combinedErrorMessages = string.Join(Models.Separators.Separators.Comma, errorMessages);
 
-                    var failureDumpUri = "failureDump.json";
-                    serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
+            //        statusController.Fail(applicationStatus, combinedErrorMessages);
 
-                    consolePresentationController.Present(
-                        new string[]
-                            {"GoodOfflineGames.exe has encountered fatal error(s):\n" +
-                            combinedErrorMessages +
-                            $"\nPlease refer to {failureDumpUri} for further details."+
-                            "\n\nPress ENTER to close the window..."});
+            //        var failureDumpUri = "failureDump.json";
+            //        serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
 
-                    consoleController.ReadLine();
+            //        consolePresentationController.Present(
+            //            new string[]
+            //                {"GoodOfflineGames.exe has encountered fatal error(s):\n" +
+            //                combinedErrorMessages +
+            //                $"\nPlease refer to {failureDumpUri} for further details."+
+            //                "\n\nPress ENTER to close the window..."});
 
-                    return;
-                }
-            }
+            //        consoleController.ReadLine();
+
+            //        return;
+            //    }
+            //}
+
+            #endregion
 
             consolePresentationController.Present(
                 new string[]

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GOG.Interfaces.UpdateScreenshots;
 
@@ -9,10 +7,10 @@ using Interfaces.Data;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Status;
+using Interfaces.ActivityDefinitions;
 
 using GOG.Models;
 
-using Models.Activities;
 using Models.ProductScreenshots;
 
 namespace GOG.Controllers.UpdateScreenshots
@@ -20,14 +18,14 @@ namespace GOG.Controllers.UpdateScreenshots
     public class UpdateProductScreenshotsDelegate : IUpdateScreenshotsDelegate<Product>
     {
 
-        private IGetUpdateUriDelegate<string> getUpdateUriDelegate;
+        private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
         private IDataController<ProductScreenshots> screenshotsDataController;
         private INetworkController networkController;
         private IStringExtractionController screenshotExtractionController;
 
         private IStatusController statusController;
         public UpdateProductScreenshotsDelegate(
-            IGetUpdateUriDelegate<string> getUpdateUriDelegate,
+            IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
             INetworkController networkController,
             IStringExtractionController screenshotExtractionController,

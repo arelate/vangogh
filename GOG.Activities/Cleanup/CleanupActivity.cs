@@ -7,12 +7,13 @@ using Interfaces.Status;
 using Interfaces.Enumeration;
 using Interfaces.Directory;
 using Interfaces.RecycleBin;
+using Interfaces.ActivityDefinitions;
 
 namespace GOG.Activities.Cleanup
 {
     public class CleanupActivity : Activity
     {
-        private string cleanupParameter;
+        private Context context;
         private IEnumerateAsyncDelegate expectedItemsEnumarateDelegate;
         private IEnumerateAsyncDelegate actualItemsEnumerateDelegate;
         private IEnumerateDelegate<string> itemsDetailsEnumerateDelegate;
@@ -21,7 +22,7 @@ namespace GOG.Activities.Cleanup
         private IDirectoryController directoryController;
 
         public CleanupActivity(
-            string cleanupParameter,
+            Context context,
             IEnumerateAsyncDelegate expectedItemsEnumarateDelegate,
             IEnumerateAsyncDelegate actualItemsEnumerateDelegate,
             IEnumerateDelegate<string> itemsDetailsEnumerateDelegate,
@@ -31,7 +32,7 @@ namespace GOG.Activities.Cleanup
             IStatusController statusController) :
             base(statusController)
         {
-            this.cleanupParameter = cleanupParameter;
+            this.context = context;
             this.expectedItemsEnumarateDelegate = expectedItemsEnumarateDelegate;
             this.actualItemsEnumerateDelegate = actualItemsEnumerateDelegate;
             this.itemsDetailsEnumerateDelegate = itemsDetailsEnumerateDelegate;
@@ -42,7 +43,7 @@ namespace GOG.Activities.Cleanup
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var cleanupTask = statusController.Create(status, $"Cleanup {cleanupParameter}");
+            var cleanupTask = statusController.Create(status, $"Cleanup {context}");
 
             var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAsync(status);
             var actualItems = await actualItemsEnumerateDelegate.EnumerateAsync(status);

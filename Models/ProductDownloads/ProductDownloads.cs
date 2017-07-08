@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using Interfaces.ActivityDefinitions;
+
 namespace Models.ProductDownloads
 {
     [DataContract]
@@ -13,8 +15,8 @@ namespace Models.ProductDownloads
     [DataContract]
     public class ProductDownloadEntry
     {
-        [DataMember(Name = "downloadParameter")]
-        public string DownloadParameter { get; set; }
+        [DataMember(Name = "context")]
+        public Context Context { get; set; }
         [DataMember(Name = "sourceUri")]
         public string SourceUri { get; set; }
         [DataMember(Name = "destination")]

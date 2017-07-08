@@ -1,17 +1,17 @@
 ﻿using System;
 
 using Interfaces.UpdateUri;
+using Interfaces.ActivityDefinitions;
 
 using Models.Uris;
-using Models.Activities;
 
 namespace Controllers.UpdateUri
 {
-    public class ProductParameterUpdateUriDelegate : IGetUpdateUriDelegate<string>
+    public class ProductParameterUpdateUriDelegate : IGetUpdateUriDelegate<Context>
     {
-        public string GetUpdateUri(string productParameter)
+        public string GetUpdateUri(Context context)
         {
-            switch (productParameter)
+            switch (context)
             {
                 case Context.Products:
                     return Uris.Paths.Games.AjaxFiltered;

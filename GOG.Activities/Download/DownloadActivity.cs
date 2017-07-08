@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.FileDownload;
 using Interfaces.Data;
 using Interfaces.Status;
+using Interfaces.ActivityDefinitions;
 
 using Models.ProductDownloads;
 using Models.Separators;
@@ -13,18 +14,18 @@ namespace GOG.Activities.Download
 {
     public class DownloadActivity : Activity
     {
-        private string downloadParameter;
+        private Context context;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceDelegate;
 
         public DownloadActivity(
-            string downloadParameter,
+            Context context,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceDelegate,
             IStatusController statusController) :
             base(statusController)
         {
-            this.downloadParameter = downloadParameter;
+            this.context = context;
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
         }
@@ -36,7 +37,7 @@ namespace GOG.Activities.Download
             var total = productDownloadsDataController.Count();
 
             var processDownloadsTask = statusController.Create(status, 
-                $"Process updated {downloadParameter} downloads");
+                $"Process updated {context} downloads");
 
             var emptyProductDownloads = new List<ProductDownloads>();
 
@@ -54,10 +55,10 @@ namespace GOG.Activities.Download
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(
                     d => 
-                    d.DownloadParameter == downloadParameter).ToArray();
+                    d.Context == context).ToArray();
 
                 var processDownloadEntriesTask = statusController.Create(processDownloadsTask, 
-                    $"Download {downloadParameter} entries");
+                    $"Download {context} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -82,7 +83,7 @@ namespace GOG.Activities.Download
 
                     var removeEntryTask = statusController.Create(
                         processDownloadEntriesTask,
-                        $"Remove scheduled {downloadParameter} downloaded entry");
+                        $"Remove scheduled {context} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);

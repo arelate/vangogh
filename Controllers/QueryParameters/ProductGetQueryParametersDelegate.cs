@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 
 using Interfaces.QueryParameters;
-
-using Models.Activities;
+using Interfaces.ActivityDefinitions;
 
 namespace Controllers.QueryParameters
 {
-    public class ProductParameterGetQueryParametersDelegate : IGetQueryParametersDelegate<string>
+    public class ProductParameterGetQueryParametersDelegate : IGetQueryParametersDelegate<Context>
     {
-        public IDictionary<string, string> GetQueryParameters(string productParameter)
+        public IDictionary<string, string> GetQueryParameters(Context context)
         {
-            switch (productParameter)
+            switch (context)
             {
                 case Context.Products:
                     return Models.QueryParameters.QueryParametersCollections.GamesAjaxFiltered;

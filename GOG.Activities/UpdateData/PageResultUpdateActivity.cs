@@ -5,6 +5,7 @@ using Interfaces.RequestPage;
 using Interfaces.Data;
 using Interfaces.NewUpdatedSelection;
 using Interfaces.Status;
+using Interfaces.ActivityDefinitions;
 
 using Models.ProductCore;
 
@@ -17,7 +18,7 @@ namespace GOG.Activities.UpdateData
         where PageType : Models.PageResult
         where Type : ProductCore
     {
-        private string productParameter;
+        private Context context;
 
         private IPageResultsController<PageType> pageResultsController;
         private IPageResultsExtractionController<PageType, Type> pageResultsExtractingController;
@@ -28,7 +29,7 @@ namespace GOG.Activities.UpdateData
         private ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate;
 
         public PageResultUpdateActivity(
-            string productParameter,
+            Context context,
             IPageResultsController<PageType> pageResultsController,
             IPageResultsExtractionController<PageType, Type> pageResultsExtractingController,
             IRequestPageController requestPageController,
@@ -37,7 +38,7 @@ namespace GOG.Activities.UpdateData
             ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate = null) :
             base(statusController)
         {
-            this.productParameter = productParameter;
+            this.context = context;
 
             this.pageResultsController = pageResultsController;
             this.pageResultsExtractingController = pageResultsExtractingController;
@@ -50,22 +51,22 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateAllProductsTask = statusController.Create(status, $"Update {productParameter} data");
+            var updateAllProductsTask = statusController.Create(status, $"Update {context} data");
 
             var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
 
-            var extractTask = statusController.Create(updateAllProductsTask, $"Extract {productParameter} data");
+            var extractTask = statusController.Create(updateAllProductsTask, $"Extract {context} data");
             var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
             statusController.Complete(extractTask);
 
             if (selectNewUpdatedDelegate != null)
             {
-                var refineDataTask = statusController.Create(updateAllProductsTask, $"Selecting new or updated {productParameter}");
+                var refineDataTask = statusController.Create(updateAllProductsTask, $"Selecting new or updated {context}");
                 await selectNewUpdatedDelegate.SelectNewUpdatedAsync(newProducts, refineDataTask);
                 statusController.Complete(refineDataTask);
             }
 
-            var updateTask = statusController.Create(updateAllProductsTask, $"Update {productParameter}");
+            var updateTask = statusController.Create(updateAllProductsTask, $"Update {context}");
             await dataController.UpdateAsync(updateTask, newProducts.ToArray());
             statusController.Complete(updateTask);
 

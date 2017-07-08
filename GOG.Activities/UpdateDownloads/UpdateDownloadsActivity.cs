@@ -4,10 +4,10 @@ using System.IO;
 
 using Interfaces.DownloadSources;
 using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
 using Interfaces.Data;
 using Interfaces.Status;
 using Interfaces.File;
+using Interfaces.ActivityDefinitions;
 
 using Models.ProductCore;
 using Models.ProductDownloads;
@@ -18,7 +18,7 @@ namespace GOG.Activities.UpdateDownloads
 {
     public class UpdateDownloadsActivity : Activity
     {
-        private string downloadParameter;
+        private Context context;
 
         private IDownloadSourcesController downloadSourcesController;
         private IGetDirectoryDelegate getDirectoryDelegate;
@@ -28,7 +28,7 @@ namespace GOG.Activities.UpdateDownloads
         private IDataController<Product> productsDataController;
 
         public UpdateDownloadsActivity(
-            string downloadParameter,
+            Context context,
             IDownloadSourcesController downloadSourcesController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
@@ -38,7 +38,7 @@ namespace GOG.Activities.UpdateDownloads
             IStatusController statusController) :
             base(statusController)
         {
-            this.downloadParameter = downloadParameter;
+            this.context = context;
             this.downloadSourcesController = downloadSourcesController;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.fileController = fileController;
@@ -51,11 +51,11 @@ namespace GOG.Activities.UpdateDownloads
         {
             var updateDownloadsTask = statusController.Create(
                 status,
-                $"Update {downloadParameter} downloads");
+                $"Update {context} downloads");
 
             var getSourcesTask = statusController.Create(
                 updateDownloadsTask,
-                $"Get {downloadParameter} download sources");
+                $"Get {context} download sources");
 
             var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync(getSourcesTask);
             statusController.Complete(getSourcesTask);
@@ -86,9 +86,9 @@ namespace GOG.Activities.UpdateDownloads
                 }
 
                 statusController.UpdateProgress(
-                    updateDownloadsTask, 
-                    ++counter, 
-                    downloadSources.Count, 
+                    updateDownloadsTask,
+                    ++counter,
+                    downloadSources.Count,
                     product.Title);
 
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
@@ -105,7 +105,8 @@ namespace GOG.Activities.UpdateDownloads
                 // purge existing downloads for this download type as we'll always be scheduling all files we need to download
                 // and don't want to carry over any previously scheduled files that might not be relevant anymore
                 // (e.g. files that were scheduled, but never downloaded and then removed from data files)
-                var existingDownloadsOfType = productDownloads.Downloads.FindAll(d => d.DownloadParameter == downloadParameter).ToArray();
+                var existingDownloadsOfType = productDownloads.Downloads.FindAll(
+                    d => d.Context == context).ToArray();
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
@@ -119,7 +120,7 @@ namespace GOG.Activities.UpdateDownloads
 
                     var scheduledDownloadEntry = new ProductDownloadEntry()
                     {
-                        DownloadParameter = downloadParameter,
+                        Context = context,
                         SourceUri = source,
                         Destination = destinationDirectory
                     };

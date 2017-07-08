@@ -1,23 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodOfflineGames.exe", "GoodOfflineGames.exe\GoodOfflineGames.exe.csproj", "{F58A9B39-0037-4517-8F46-4EE4BF681F1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodOfflineGames.exe", "GoodOfflineGames.exe\GoodOfflineGames.exe.csproj", "{F58A9B39-0037-4517-8F46-4EE4BF681F1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{8B4D3F24-F274-4604-8596-072FD748AEA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{8B4D3F24-F274-4604-8596-072FD748AEA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{F515F349-AFDF-40ED-8D3D-AD6412FAEAF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{F515F349-AFDF-40ED-8D3D-AD6412FAEAF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "Controllers\Controllers.csproj", "{FAEB0675-90E1-466D-B180-304D7DA444F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controllers", "Controllers\Controllers.csproj", "{FAEB0675-90E1-466D-B180-304D7DA444F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.Interfaces", "GOG.Interfaces\GOG.Interfaces.csproj", "{3B3EBB50-435A-40C0-91E5-F2E9CFCC8DDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Interfaces", "GOG.Interfaces\GOG.Interfaces.csproj", "{3B3EBB50-435A-40C0-91E5-F2E9CFCC8DDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.Models", "GOG.Models\GOG.Models.csproj", "{2EA478E2-1461-4AC1-87CC-C6761895ADA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Models", "GOG.Models\GOG.Models.csproj", "{2EA478E2-1461-4AC1-87CC-C6761895ADA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.Controllers", "GOG.Controllers\GOG.Controllers.csproj", "{0BC8D90C-1963-45CB-96C2-1798CD60DA7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Controllers", "GOG.Controllers\GOG.Controllers.csproj", "{0BC8D90C-1963-45CB-96C2-1798CD60DA7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOG.Activities", "GOG.Activities\GOG.Activities.csproj", "{A01E87C0-9E96-496E-AE7D-53A02327CDEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Activities", "GOG.Activities\GOG.Activities.csproj", "{A01E87C0-9E96-496E-AE7D-53A02327CDEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

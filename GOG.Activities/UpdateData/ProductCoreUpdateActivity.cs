@@ -7,6 +7,7 @@ using Interfaces.UpdateUri;
 using Interfaces.UpdateIdentity;
 using Interfaces.Data;
 using Interfaces.Status;
+using Interfaces.ActivityDefinitions;
 
 using Models.ProductCore;
 
@@ -26,14 +27,14 @@ namespace GOG.Activities.UpdateData
         private IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate;
         private IConnectDelegate<UpdateType, ListType> connectDelegate;
 
-        private string updateProductParameter;
-        private IGetUpdateUriDelegate<string> getUpdateUriDelegate;
+        private Context context;
+        private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
 
         private string updateTypeDescription;
 
         public ProductCoreUpdateActivity(
-            string updateProductParameter,
-            IGetUpdateUriDelegate<string> getUpdateUriDelegate,
+            Context context,
+            IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
             IDataController<UpdateType> updateTypeDataController,
             IDataController<ListType> listTypeDataController,
             IDataController<long> updatedDataController,
@@ -52,7 +53,7 @@ namespace GOG.Activities.UpdateData
             this.getUpdateIdentityDelegate = getUpdateIdentityDelegate;
             this.connectDelegate = connectDelegate;
 
-            this.updateProductParameter = updateProductParameter;
+            this.context = context;
             this.getUpdateUriDelegate = getUpdateUriDelegate;
             updateTypeDescription = typeof(UpdateType).Name;
         }
@@ -96,7 +97,7 @@ namespace GOG.Activities.UpdateData
                 if (string.IsNullOrEmpty(updateIdentity)) continue;
 
                 var uri = string.Format(
-                    getUpdateUriDelegate.GetUpdateUri(updateProductParameter),
+                    getUpdateUriDelegate.GetUpdateUri(context),
                     updateIdentity);
 
                 var data = await getDeserializedDelegate.GetDeserializedAsync(updateProductsTask, uri);
