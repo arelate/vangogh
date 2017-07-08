@@ -15,5 +15,7 @@
         // template
         public const string TemplatePrefix = "{";
         public const string TemplateSuffix = "}";
+        // activity-context
+        public const string ActivityContext = "-";
     }
 }

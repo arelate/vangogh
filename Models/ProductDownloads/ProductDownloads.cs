@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 namespace Models.ProductDownloads
 {

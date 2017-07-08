@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.FileDownload;
 using Interfaces.Data;
 using Interfaces.Status;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 using Models.ProductDownloads;
 using Models.Separators;

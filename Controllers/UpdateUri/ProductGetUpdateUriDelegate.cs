@@ -1,7 +1,7 @@
 ﻿using System;
 
 using Interfaces.UpdateUri;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 using Models.Uris;
 

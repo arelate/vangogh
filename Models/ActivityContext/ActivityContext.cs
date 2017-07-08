@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 
 using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
-namespace Models.ActivityContexts
+namespace Models.ActivityContext
 {
-    public static class ActivityContexts
+    public static class ActivityContext
     {
         public static Dictionary<Activity, Context[]> Whitelist = new Dictionary<Activity, Context[]>()
         {

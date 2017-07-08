@@ -7,7 +7,7 @@ using Interfaces.Destination.Directory;
 using Interfaces.Data;
 using Interfaces.Status;
 using Interfaces.File;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 using Models.ProductCore;
 using Models.ProductDownloads;

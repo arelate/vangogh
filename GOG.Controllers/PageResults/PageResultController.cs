@@ -7,7 +7,7 @@ using Interfaces.Status;
 using Interfaces.UpdateUri;
 using Interfaces.Hash;
 using Interfaces.QueryParameters;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 using Models.Units;
 

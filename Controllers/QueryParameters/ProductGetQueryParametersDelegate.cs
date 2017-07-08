@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using Interfaces.QueryParameters;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 namespace Controllers.QueryParameters
 {

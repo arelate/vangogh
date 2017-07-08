@@ -7,7 +7,7 @@ using Interfaces.Data;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Status;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 using GOG.Models;
 

@@ -7,7 +7,7 @@ using Interfaces.Status;
 using Interfaces.Enumeration;
 using Interfaces.Directory;
 using Interfaces.RecycleBin;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 namespace GOG.Activities.Cleanup
 {

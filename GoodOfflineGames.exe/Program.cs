@@ -49,10 +49,12 @@ using Controllers.ViewModel;
 using Controllers.Tree;
 using Controllers.ViewController;
 using Controllers.Enumeration;
+using Controllers.ActivityContext;
 
 using Interfaces.Activity;
 using Interfaces.Extraction;
 using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 using GOG.Models;
 
@@ -86,6 +88,7 @@ using Models.ValidationResult;
 using Models.Status;
 using Models.QueryParameters;
 using Models.Directories;
+using Models.ActivityContext;
 
 #endregion
 
@@ -999,6 +1002,8 @@ namespace GoodOfflineGames
                 { (Activity.Cleanup, Context.Updated), cleanupUpdatedActivity },
                 { (Activity.Report, Context.None), reportActivity }
             };
+
+            var activityContextController = new ActivityContextController(ActivityContext.Whitelist);
 
             #endregion
 

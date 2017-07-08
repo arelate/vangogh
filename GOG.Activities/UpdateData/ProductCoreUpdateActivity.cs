@@ -7,7 +7,7 @@ using Interfaces.UpdateUri;
 using Interfaces.UpdateIdentity;
 using Interfaces.Data;
 using Interfaces.Status;
-using Interfaces.ActivityDefinitions;
+using Interfaces.ContextDefinitions;
 
 using Models.ProductCore;
 
