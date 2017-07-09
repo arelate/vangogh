@@ -1,5 +1,6 @@
 ﻿#region Using
 
+using System;
 using System.Net;
 using System.Collections.Generic;
 
@@ -1005,43 +1006,54 @@ namespace GoodOfflineGames
 
             var activityContextController = new ActivityContextController(ActivityContext.Whitelist);
 
+            var activityContextQueue = activityContextController.CreateActivityContextQueue(args);
+            var commandLineParameters = activityContextController.GetParameters(args);
+
             #endregion
 
             #region Core Activities Loop
 
-            //foreach (var activity in activities)
-            //{
-            //    try
-            //    {
-            //        activity.ProcessActivityAsync(applicationStatus).Wait();
-            //    }
-            //    catch (AggregateException ex)
-            //    {
-            //        var exceptionTreeToEnumerableController = new ExceptionTreeToEnumerableController();
+            foreach (var activityContext in activityContextQueue)
+            {
+                if (!activityContextToActivityControllerMap.ContainsKey(activityContext))
+                {
+                    statusController.Warn(
+                        applicationStatus,
+                        $"{activityContext.Item1}-{activityContext.Item2} is not mapped to an Activity.");
+                }
 
-            //        List<string> errorMessages = new List<string>();
-            //        foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
-            //            errorMessages.Add(innerException.Message);
+                var activity = activityContextToActivityControllerMap[activityContext];
+                try
+                {
+                    activity.ProcessActivityAsync(applicationStatus).Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    var exceptionTreeToEnumerableController = new ExceptionTreeToEnumerableController();
 
-            //        var combinedErrorMessages = string.Join(Models.Separators.Separators.Comma, errorMessages);
+                    List<string> errorMessages = new List<string>();
+                    foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
+                        errorMessages.Add(innerException.Message);
 
-            //        statusController.Fail(applicationStatus, combinedErrorMessages);
+                    var combinedErrorMessages = string.Join(Models.Separators.Separators.Comma, errorMessages);
 
-            //        var failureDumpUri = "failureDump.json";
-            //        serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
+                    statusController.Fail(applicationStatus, combinedErrorMessages);
 
-            //        consolePresentationController.Present(
-            //            new string[]
-            //                {"GoodOfflineGames.exe has encountered fatal error(s):\n" +
-            //                combinedErrorMessages +
-            //                $"\nPlease refer to {failureDumpUri} for further details."+
-            //                "\n\nPress ENTER to close the window..."});
+                    var failureDumpUri = "failureDump.json";
+                    serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
 
-            //        consoleController.ReadLine();
+                    consolePresentationController.Present(
+                        new string[]
+                            {"GoodOfflineGames.exe has encountered fatal error(s):\n" +
+                                combinedErrorMessages +
+                                $"\nPlease refer to {failureDumpUri} for further details."+
+                                "\n\nPress ENTER to close the window..."});
 
-            //        return;
-            //    }
-            //}
+                    consoleController.ReadLine();
+
+                    return;
+                }
+            }
 
             #endregion
 

@@ -2,6 +2,7 @@
   "profiles": {
     "GoodOfflineGames.exe": {
       "commandName": "Project",
+      "commandLineArgs": "load-data 1207658748",
       "workingDirectory": "D:\\GOG.com"
     }
   }

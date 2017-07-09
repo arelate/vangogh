@@ -1,18 +1,32 @@
-﻿namespace Interfaces.ActivityContext
+﻿using System.Collections.Generic;
+
+namespace Interfaces.ActivityContext
 {
     public interface IIsWhitelistedDelegate
     {
-        bool IsWhitelisted(ActivityDefinitions.Activity activity, ContextDefinitions.Context context);
+        bool IsWhitelisted((ActivityDefinitions.Activity Activity, ContextDefinitions.Context Context) activityContext);
     }
 
-    public interface IParseDelegate
+    public interface IParseSingleDelegate
     {
-        (ActivityDefinitions.Activity, ContextDefinitions.Context) Parse(string activityContext);
+        (ActivityDefinitions.Activity, ContextDefinitions.Context) ParseSingle(string activityContext);
+    }
+
+    public interface ICreateActivityContextQueueDelegate
+    {
+        IEnumerable<(ActivityDefinitions.Activity, ContextDefinitions.Context)> CreateActivityContextQueue(string[] args);
+    }
+
+    public interface IGetParametersDelegate
+    {
+        IEnumerable<string> GetParameters(string[] args);
     }
 
     public interface IActivityContextController:
         IIsWhitelistedDelegate,
-        IParseDelegate
+        IParseSingleDelegate,
+        ICreateActivityContextQueueDelegate,
+        IGetParametersDelegate
     {
         // ...
     }

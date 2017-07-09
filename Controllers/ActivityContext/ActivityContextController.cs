@@ -19,13 +19,13 @@ namespace Controllers.ActivityContext
             this.activityContextWhitelist = activityContextWhitelist;
         }
 
-        public bool IsWhitelisted(Activity activity, Context context)
+        public bool IsWhitelisted((Activity Activity, Context Context) activityContext)
         {
-            if (!activityContextWhitelist.ContainsKey(activity)) return false;
-            return activityContextWhitelist[activity].Contains(context);
+            if (!activityContextWhitelist.ContainsKey(activityContext.Activity)) return false;
+            return activityContextWhitelist[activityContext.Activity].Contains(activityContext.Context);
         }
 
-        public (Activity, Context) Parse(string activityContext)
+        public (Activity, Context) ParseSingle(string activityContext)
         {
             if (string.IsNullOrEmpty(activityContext))
                 throw new ArgumentNullException("Cannot parse empty activity-context");
@@ -41,6 +41,30 @@ namespace Controllers.ActivityContext
                 context = (Context) Enum.Parse(typeof(Context), parts[1], true);
 
             return (activity, context);
+        }
+
+        public IEnumerable<(Activity, Context)> CreateActivityContextQueue(string[] args)
+        {
+            var activityContextQueue = new List<(Activity, Context)>();
+
+            if (args == null) return activityContextQueue;
+            if (args.Length < 1) return activityContextQueue;
+
+            var requestedActivityContext = args[0];
+            var activityContext = ParseSingle(requestedActivityContext);
+
+            if (IsWhitelisted(activityContext))
+                activityContextQueue.Add(activityContext);
+
+            return activityContextQueue;
+        }
+
+        public IEnumerable<string> GetParameters(string[] args)
+        {
+            if (args == null) return new string[0];
+            if (args.Length < 2) return new string[0];
+
+            return args.Skip(1);
         }
     }
 }
