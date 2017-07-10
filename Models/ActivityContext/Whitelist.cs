@@ -86,6 +86,13 @@ namespace Models.ActivityContext
                 {
                     Context.None
                 }
+            },
+            {
+                Activity.Help,
+                new Context[]
+                {
+                    Context.None
+                }
             }
         };
     }

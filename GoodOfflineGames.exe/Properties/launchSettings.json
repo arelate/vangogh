@@ -1,8 +1,7 @@
 {
   "profiles": {
     "GoodOfflineGames.exe": {
-      "commandName": "Project",
-      "commandLineArgs": "updateData 1207658748"
+      "commandName": "Project"
     }
   }
 }

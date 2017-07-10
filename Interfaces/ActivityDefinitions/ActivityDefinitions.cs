@@ -10,6 +10,7 @@
         Validate,
         Repair,
         Cleanup,
-        Report
+        Report,
+        Help
     }
 }

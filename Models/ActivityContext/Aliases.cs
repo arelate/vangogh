@@ -69,6 +69,13 @@ namespace Models.ActivityContext
                         (Activity.Cleanup, Context.Files),
                         (Activity.Cleanup, Context.Updated)
                     }
+                },
+                {
+                    "?",
+                    new (Activity, Context)[]
+                    {
+                        (Activity.Help, Context.None)
+                    }
                 }
             };
     }

@@ -71,6 +71,7 @@ using GOG.Controllers.DownloadSources;
 using GOG.Controllers.Authorization;
 using GOG.Controllers.UpdateScreenshots;
 
+using GOG.Activities.Help;
 using GOG.Activities.Load;
 using GOG.Activities.ValidateSettings;
 using GOG.Activities.Authorize;
@@ -951,6 +952,14 @@ namespace GoodOfflineGames
 
             #endregion
 
+            #region Help
+
+            var helpActivity = new HelpActivity(
+                consoleController, 
+                statusController);
+
+            #endregion
+
             #region Report Task Status 
 
             var reportFilePresentationController = new FilePresentationController(
@@ -1001,7 +1010,8 @@ namespace GoodOfflineGames
                 { (Activity.Cleanup, Context.Directories), directoryCleanupActivity },
                 { (Activity.Cleanup, Context.Files), fileCleanupActivity },
                 { (Activity.Cleanup, Context.Updated), cleanupUpdatedActivity },
-                { (Activity.Report, Context.None), reportActivity }
+                { (Activity.Report, Context.None), reportActivity },
+                { (Activity.Help, Context.None), helpActivity }
             };
 
             var aliasController = new AliasController(ActivityContext.Aliases);
@@ -1029,6 +1039,7 @@ namespace GoodOfflineGames
                     statusController.Warn(
                         applicationStatus,
                         activityContextController.ToString(activityContext) + " is not mapped to an Activity.");
+                    continue;
                 }
 
                 var activity = activityContextToActivityControllerMap[activityContext];

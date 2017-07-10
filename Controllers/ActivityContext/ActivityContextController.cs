@@ -53,10 +53,14 @@ namespace Controllers.ActivityContext
         {
             var activityContextQueue = new List<AC>();
 
-            if (args == null) return activityContextQueue;
-            if (args.Length < 1) return activityContextQueue;
+            // if nothing was requested - show help
+            if (args.Length < 1)
+            {
+                activityContextQueue.Add((Activity.Help, Context.None));
+                return activityContextQueue;
+            }
 
-            var requestedActivityContext = args[0];
+            var requestedActivityContext = args[0]; 
 
             // check if the requested operation is alias or known activity-context, expand alias as needed
 
