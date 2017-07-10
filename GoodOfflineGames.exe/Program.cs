@@ -26,7 +26,7 @@ using Controllers.LineBreaking;
 using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
 using Controllers.Destination.Uri;
-using Controllers.Cookies;
+//using Controllers.Cookies;
 using Controllers.PropertyValidation;
 using Controllers.Validation;
 using Controllers.ValidationResult;
@@ -212,14 +212,14 @@ namespace GoodOfflineGames
             var cookieContainer = new CookieContainer();
             var cookiesFilenameDelegate = new FixedFilenameDelegate("cookies", jsonFilenameDelegate);
 
-            var cookieContainerSerializationController = new CookieContainerSerializationController(
-                ref cookieContainer,
-                cookiesFilenameDelegate,
-                storageController);
+            //var cookieContainerSerializationController = new CookieContainerSerializationController(
+            //    ref cookieContainer,
+            //    cookiesFilenameDelegate,
+            //    storageController);
 
             var networkController = new NetworkController(
                 ref cookieContainer,
-                cookieContainerSerializationController,
+                //cookieContainerSerializationController,
                 uriController,
                 requestRateController);
 
@@ -1004,9 +1004,18 @@ namespace GoodOfflineGames
                 { (Activity.Report, Context.None), reportActivity }
             };
 
-            var activityContextController = new ActivityContextController(ActivityContext.Whitelist);
+            var aliasController = new AliasController(ActivityContext.Aliases);
+            var whitelistController = new WhitelistController(ActivityContext.Whitelist);
+            var prerequisitesController = new PrerequisiteController(ActivityContext.Prerequisites);
+            var supplementaryController = new SupplementaryController(ActivityContext.Supplementary);
 
-            var activityContextQueue = activityContextController.CreateActivityContextQueue(args);
+            var activityContextController = new ActivityContextController(
+                aliasController,
+                whitelistController,
+                prerequisitesController,
+                supplementaryController);
+
+            var activityContextQueue = activityContextController.GetQueue(args);
             var commandLineParameters = activityContextController.GetParameters(args);
 
             #endregion
@@ -1019,7 +1028,7 @@ namespace GoodOfflineGames
                 {
                     statusController.Warn(
                         applicationStatus,
-                        $"{activityContext.Item1}-{activityContext.Item2} is not mapped to an Activity.");
+                        activityContextController.ToString(activityContext) + " is not mapped to an Activity.");
                 }
 
                 var activity = activityContextToActivityControllerMap[activityContext];

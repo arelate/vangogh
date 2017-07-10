@@ -1,20 +1,22 @@
 ﻿using System.Collections.Generic;
 
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+
 namespace Interfaces.ActivityContext
 {
-    public interface IIsWhitelistedDelegate
-    {
-        bool IsWhitelisted((ActivityDefinitions.Activity Activity, ContextDefinitions.Context Context) activityContext);
-    }
-
     public interface IParseSingleDelegate
     {
-        (ActivityDefinitions.Activity, ContextDefinitions.Context) ParseSingle(string activityContext);
+        AC ParseSingle(string activityContext);
     }
 
-    public interface ICreateActivityContextQueueDelegate
+    public interface IToStringDelegate
     {
-        IEnumerable<(ActivityDefinitions.Activity, ContextDefinitions.Context)> CreateActivityContextQueue(string[] args);
+        string ToString(AC activityContext);
+    }
+
+    public interface IGetQueueDelegate
+    {
+        IEnumerable<AC> GetQueue(string[] args);
     }
 
     public interface IGetParametersDelegate
@@ -23,9 +25,9 @@ namespace Interfaces.ActivityContext
     }
 
     public interface IActivityContextController:
-        IIsWhitelistedDelegate,
         IParseSingleDelegate,
-        ICreateActivityContextQueueDelegate,
+        IToStringDelegate,
+        IGetQueueDelegate,
         IGetParametersDelegate
     {
         // ...

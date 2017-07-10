@@ -3,6 +3,7 @@
     public enum Context
     {
         None,
+        Any,
         Products,
         AccountProducts,
         Wishlist,

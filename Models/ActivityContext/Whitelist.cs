@@ -5,7 +5,7 @@ using Interfaces.ContextDefinitions;
 
 namespace Models.ActivityContext
 {
-    public static class ActivityContext
+    public static partial class ActivityContext
     {
         public static Dictionary<Activity, Context[]> Whitelist = new Dictionary<Activity, Context[]>()
         {

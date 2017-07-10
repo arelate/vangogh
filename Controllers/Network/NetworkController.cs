@@ -18,13 +18,13 @@ namespace Controllers.Network
     public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
-        private ICookieContainerSerializationController cookieContainerSerializationController;
+        //private ICookieContainerSerializationController cookieContainerSerializationController;
         private IUriController uriController;
         private IRequestRateController requestRateController;
 
         public NetworkController(
             ref CookieContainer cookieContainer,
-            ICookieContainerSerializationController cookieContainerSerializationController,
+            //ICookieContainerSerializationController cookieContainerSerializationController,
             IUriController uriController,
             IRequestRateController requestRateController)
         {
@@ -37,7 +37,7 @@ namespace Controllers.Network
             client.DefaultRequestHeaders.ExpectContinue = false;
             client.DefaultRequestHeaders.Add(Headers.UserAgent, HeaderDefaultValues.UserAgent);
 
-            this.cookieContainerSerializationController = cookieContainerSerializationController;
+            //this.cookieContainerSerializationController = cookieContainerSerializationController;
             this.uriController = uriController;
             this.requestRateController = requestRateController;
         }
