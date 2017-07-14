@@ -21,10 +21,13 @@ namespace Controllers.ActivityContext
         {
             var activityContextPrerequisites = new List<AC>();
 
-            if (prerequisites.ContainsKey(activityContext))
-                activityContextPrerequisites.AddRange(prerequisites[activityContext]);
+            // load generic first...
             if (prerequisites.ContainsKey((activityContext.Item1, Context.Any)))
                 activityContextPrerequisites.AddRange(prerequisites[(activityContext.Item1, Context.Any)]);
+
+            // ...specific last
+            if (prerequisites.ContainsKey(activityContext))
+                activityContextPrerequisites.AddRange(prerequisites[activityContext]);
 
             return activityContextPrerequisites;
         }
