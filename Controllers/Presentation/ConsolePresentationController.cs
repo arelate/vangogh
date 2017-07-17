@@ -25,8 +25,6 @@ namespace Controllers.Presentation
             this.lineBreakingController = lineBreakingController;
             this.consoleController = consoleController;
 
-            consoleController.Clear();
-
             previousScreenLinesLengths = new List<int>();
         }
 
@@ -63,13 +61,6 @@ namespace Controllers.Presentation
         public void Present(IEnumerable<string> views)
         {
             if (views.Count() == 0) return;
-
-            if (++presentationIteration == clearIterationsCount)
-            {
-                previousScreenLinesLengths.Clear();
-                consoleController.Clear();
-                presentationIteration = 0;
-            }
 
             var wrappedViews = new List<string>();
             foreach (var view in views)

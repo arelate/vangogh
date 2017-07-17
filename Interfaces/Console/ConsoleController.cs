@@ -1,10 +1,5 @@
 ﻿namespace Interfaces.Console
 {
-    public interface IClearDelegate
-    {
-        void Clear();
-    }
-
     public interface ISetCursorPositionDelegate
     {
         void SetCursorPosition(int left, int top);
@@ -46,7 +41,6 @@
     }
 
     public interface IConsoleController :
-        IClearDelegate,
         ISetCursorPositionDelegate,
         IReadDelegate,
         IReadLineDelegate,

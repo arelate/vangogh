@@ -86,11 +86,6 @@ namespace Controllers.Console
             consoleOutput(formattedMessage);
         }
 
-        public void Clear()
-        {
-            System.Console.Clear();
-        }
-
         public void SetCursorPosition(int left, int top)
         {
             System.Console.SetCursorPosition(left, top);

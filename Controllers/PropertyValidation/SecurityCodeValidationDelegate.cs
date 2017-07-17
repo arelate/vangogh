@@ -16,7 +16,6 @@ namespace Controllers.PropertyValidation
         public string ValidateProperties(string properties)
         {
             var securityCode = string.Empty;
-            consoleController.Clear();
 
             while (securityCode.Length != 4)
             {

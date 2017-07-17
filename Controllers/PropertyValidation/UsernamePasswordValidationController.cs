@@ -22,10 +22,6 @@ namespace Controllers.PropertyValidation
             var emptyUsername = string.IsNullOrEmpty(usernamePassword[0]);
             var emptyPassword = string.IsNullOrEmpty(usernamePassword[1]);
 
-            // clear console before we request username / password
-            if (emptyUsername || emptyPassword)
-                consoleController.Clear();
-
             if (emptyUsername)
             {
                 consoleController.WriteLine("Please enter your GOG.com username (email):");
@@ -37,10 +33,6 @@ namespace Controllers.PropertyValidation
                 consoleController.WriteLine("Please enter password for {0}:", usernamePassword[0]);
                 usernamePassword[1] = consoleController.InputPassword();
             }
-
-            // and also clear console after we request username / password
-            if (emptyUsername || emptyPassword)
-                consoleController.Clear();
 
             return usernamePassword;
         }
