@@ -35,11 +35,6 @@
         void WriteLine(string message, params object[] data);
     }
 
-    public interface ICursorVisibleProperty
-    {
-        bool CursorVisible { get; set; }
-    }
-
     public interface IWindowWidthProperty
     {
         int WindowWidth { get; }
@@ -58,7 +53,6 @@
         IInputPasswordDelegate,
         IWriteDelegate,
         IWriteLineDelegate,
-        ICursorVisibleProperty,
         IWindowWidthProperty,
         IWindowHeightProperty
     {

@@ -28,7 +28,6 @@ namespace Controllers.Presentation
             consoleController.Clear();
 
             previousScreenLinesLengths = new List<int>();
-            consoleController.CursorVisible = false;
         }
 
         private int PresentLine(int line, string content)

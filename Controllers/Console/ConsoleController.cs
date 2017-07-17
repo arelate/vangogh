@@ -9,12 +9,6 @@ namespace Controllers.Console
 {
     public class ConsoleController : IConsoleController
     {
-        public bool CursorVisible
-        {
-            get { return System.Console.CursorVisible; }
-            set { System.Console.CursorVisible = value; }
-        }
-
         public int WindowWidth
         {
             get { return System.Console.WindowWidth; }

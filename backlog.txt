@@ -1,10 +1,6 @@
 Backend
 
-- consider transitioning to a full command line tool accepting command line parameters:
-	-- update-data, update-downloads, download, validate-files, validate-data, repair, cleanup
-	-- parameters can be product ids or no parameters (=all, updated)
-	-- for individual operations show output at the end
-	-- implement sync shortcut which is basically today's operation. Rename flightPlan.json to sync.json
+- activityQueueBacklog.txt
 
 - change functional controllers to work on product model type and have activities loop updates using those 
 
