@@ -22,6 +22,8 @@ namespace Controllers.PropertyValidation
             var emptyUsername = string.IsNullOrEmpty(usernamePassword[0]);
             var emptyPassword = string.IsNullOrEmpty(usernamePassword[1]);
 
+            if (emptyUsername || emptyPassword) consoleController.WriteLine(string.Empty);
+
             if (emptyUsername)
             {
                 consoleController.WriteLine("Please enter your GOG.com username (email):");

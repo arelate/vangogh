@@ -69,7 +69,7 @@ namespace GOG.Controllers.DataRefinement
                 statusController.Inform(
                     addPreviouslyUnknownDataTask, 
                     "Selected the following new or updated products: " + string.Join(
-                        Separators.Comma, 
+                        Separators.Common.Comma, 
                         unknownAccountProducts));
 
             await updatedDataController.UpdateAsync(addPreviouslyUnknownDataTask, unknownAccountProducts.ToArray());

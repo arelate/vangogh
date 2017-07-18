@@ -13,7 +13,7 @@ namespace Interfaces.Cookies
 
     public interface IGetCookiesDelegate
     {
-        IEnumerable<Cookie> GetCookies();
+        IEnumerable<string> GetCookies();
     }
 
     public interface ICookieController:

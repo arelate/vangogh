@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Cookies\CookieSerializationController.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Folder Include="Activity\" />
   </ItemGroup>
 

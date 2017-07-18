@@ -2,20 +2,39 @@
 {
     public static class Separators
     {
+        public static class Common
+        {
+            public const string Space = " ";
+            public const string Equality = "=";
+            public const string Dot = ".";
+            public const string Comma = ",";
+            public const string SemiColon = ";";
+            public const string NewLine = "\n";
+            public const string Dash = "-";
+            public const string Ampersand = "&";
+            public const string QuestionMark = "?";
+            public const string LeftSquareBracket = "[";
+            public const string RightSquareBracket = "]";
+            public const string ForwardSlash = "/";
+            public const string LeftCurlyBracket = "{";
+            public const string RightCurlyBracket = "}";
+        }
+
         // query parameters
-        public const string UriPart = "/";
-        public const string QueryString = "?";
-        public const string QueryStringParameters = "&";
-        // common
-        public const string KeyValue = "=";
-        public const string Comma = ",";
+        public const string UriPart = Common.ForwardSlash;
+        public const string QueryString = Common.QuestionMark;
+        public const string QueryStringParameters = Common.Ampersand;
+        // key value
+        public const string KeyValue = Common.Equality;
         // GameDetails downloads
-        public const string GameDetailsDownloadsStart = "[[";
-        public const string GameDetailsDownloadsEnd = "]]";
+        public const string GameDetailsDownloadsStart = Common.LeftSquareBracket + Common.LeftSquareBracket;
+        public const string GameDetailsDownloadsEnd = Common.RightSquareBracket + Common.RightSquareBracket;
         // template
-        public const string TemplatePrefix = "{";
-        public const string TemplateSuffix = "}";
+        public const string TemplatePrefix = Common.LeftCurlyBracket;
+        public const string TemplateSuffix = Common.RightCurlyBracket;
         // activity-context
-        public const string ActivityContext = "-";
+        public const string ActivityContext = Common.Dash;
+        // headers
+        public const string Headers = Common.NewLine;
     }
 }

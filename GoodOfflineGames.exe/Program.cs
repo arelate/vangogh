@@ -26,7 +26,6 @@ using Controllers.LineBreaking;
 using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
 using Controllers.Destination.Uri;
-using Controllers.Parsing;
 using Controllers.Cookies;
 using Controllers.PropertyValidation;
 using Controllers.Validation;
@@ -211,19 +210,16 @@ namespace GoodOfflineGames
 
             var uriController = new UriController();
 
-            var cookieContainer = new CookieContainer();
             var cookiesFilenameDelegate = new FixedFilenameDelegate("cookies", jsonFilenameDelegate);
 
-            var cookieParsingController = new CookieParsingController();
-            var cookieSerializationController = new CookieSerializationController(
-                cookieParsingController);
-                //ref cookieContainer,
-                //cookiesFilenameDelegate,
-                //storageController);
+            var cookieSerializationController = new CookieSerializationController();
+            var cookieController = new CookieController(
+                cookieSerializationController,
+                serializedStorageController,
+                cookiesFilenameDelegate);
 
             var networkController = new NetworkController(
-                ref cookieContainer,
-                cookieSerializationController,
+                cookieController,
                 uriController,
                 requestRateController);
 
@@ -496,6 +492,7 @@ namespace GoodOfflineGames
                 statusController,
                 settingsController,
                 precomputedHashController,
+                cookieController,
                 appTemplateController,
                 reportTemplateController,
                 productsDataController,
@@ -1058,7 +1055,7 @@ namespace GoodOfflineGames
                     foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
                         errorMessages.Add(innerException.Message);
 
-                    var combinedErrorMessages = string.Join(Models.Separators.Separators.Comma, errorMessages);
+                    var combinedErrorMessages = string.Join(Models.Separators.Separators.Common.Comma, errorMessages);
 
                     statusController.Fail(applicationStatus, combinedErrorMessages);
 

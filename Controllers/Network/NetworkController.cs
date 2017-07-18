@@ -12,34 +12,33 @@ using Interfaces.RequestRate;
 using Interfaces.Status;
 
 using Models.Network;
+using System;
 
 namespace Controllers.Network
 {
     public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
-        private ICookieSerializationController cookieSerializationController;
+        private ICookieController cookieController;
         private IUriController uriController;
         private IRequestRateController requestRateController;
 
         public NetworkController(
-            ref CookieContainer cookieContainer,
-            ICookieSerializationController cookieSerializationController,
+            ICookieController cookieController,
             IUriController uriController,
             IRequestRateController requestRateController)
         {
+            this.cookieController = cookieController;
+            this.uriController = uriController;
+            this.requestRateController = requestRateController;
+
             var httpHandler = new HttpClientHandler()
             {
-                UseDefaultCredentials = false,
-                CookieContainer = cookieContainer
+                UseDefaultCredentials = false
             };
             client = new HttpClient(httpHandler);
             client.DefaultRequestHeaders.ExpectContinue = false;
             client.DefaultRequestHeaders.Add(Headers.UserAgent, HeaderDefaultValues.UserAgent);
-
-            this.cookieSerializationController = cookieSerializationController;
-            this.uriController = uriController;
-            this.requestRateController = requestRateController;
         }
 
         public async Task<string> GetAsync(
@@ -67,13 +66,17 @@ namespace Controllers.Network
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
+
+            foreach (var cookie in cookieController.GetCookies())
+                requestMessage.Headers.Add(Headers.Cookie, cookie);
+
             if (content != null) requestMessage.Content = content;
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
-            await cookieSerializationController.SetCookies(response.Headers.ToString());
-            await cookieSerializationController.SaveAsync();
+            await cookieController.SetCookies(response.Headers.GetValues(Headers.SetCookie));
+            await cookieController.SaveAsync();
 
             return response;
         }
