@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <StartupObject />
+    <ApplicationIcon />
+    <OutputTypeEx>exe</OutputTypeEx>
   </PropertyGroup>
 
   <ItemGroup>
