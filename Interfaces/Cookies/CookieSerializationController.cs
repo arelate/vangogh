@@ -16,7 +16,7 @@ namespace Interfaces.Cookies
         IEnumerable<Cookie> GetCookies();
     }
 
-    public interface ICookieContainerSerializationController:
+    public interface ICookieSerializationController:
         ISetCookiesDelegate,
         IGetCookiesDelegate,
         ILoadAsyncDelegate,

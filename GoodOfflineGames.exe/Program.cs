@@ -26,7 +26,8 @@ using Controllers.LineBreaking;
 using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
 using Controllers.Destination.Uri;
-//using Controllers.Cookies;
+using Controllers.Parsing;
+using Controllers.Cookies;
 using Controllers.PropertyValidation;
 using Controllers.Validation;
 using Controllers.ValidationResult;
@@ -213,14 +214,16 @@ namespace GoodOfflineGames
             var cookieContainer = new CookieContainer();
             var cookiesFilenameDelegate = new FixedFilenameDelegate("cookies", jsonFilenameDelegate);
 
-            //var cookieContainerSerializationController = new CookieContainerSerializationController(
-            //    ref cookieContainer,
-            //    cookiesFilenameDelegate,
-            //    storageController);
+            var cookieParsingController = new CookieParsingController();
+            var cookieSerializationController = new CookieSerializationController(
+                cookieParsingController);
+                //ref cookieContainer,
+                //cookiesFilenameDelegate,
+                //storageController);
 
             var networkController = new NetworkController(
                 ref cookieContainer,
-                //cookieContainerSerializationController,
+                cookieSerializationController,
                 uriController,
                 requestRateController);
 

@@ -18,13 +18,13 @@ namespace Controllers.Network
     public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
-        //private ICookieContainerSerializationController cookieContainerSerializationController;
+        private ICookieSerializationController cookieSerializationController;
         private IUriController uriController;
         private IRequestRateController requestRateController;
 
         public NetworkController(
             ref CookieContainer cookieContainer,
-            //ICookieContainerSerializationController cookieContainerSerializationController,
+            ICookieSerializationController cookieSerializationController,
             IUriController uriController,
             IRequestRateController requestRateController)
         {
@@ -37,7 +37,7 @@ namespace Controllers.Network
             client.DefaultRequestHeaders.ExpectContinue = false;
             client.DefaultRequestHeaders.Add(Headers.UserAgent, HeaderDefaultValues.UserAgent);
 
-            //this.cookieContainerSerializationController = cookieContainerSerializationController;
+            this.cookieSerializationController = cookieSerializationController;
             this.uriController = uriController;
             this.requestRateController = requestRateController;
         }
@@ -72,8 +72,8 @@ namespace Controllers.Network
 
             response.EnsureSuccessStatusCode();
 
-            // TODO: unlock this when we can serialize / deserialize cookies
-            //await cookieContainerSerializationController.SaveAsync();
+            await cookieSerializationController.SetCookies(response.Headers.ToString());
+            await cookieSerializationController.SaveAsync();
 
             return response;
         }
