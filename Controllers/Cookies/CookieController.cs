@@ -52,7 +52,6 @@ namespace Controllers.Cookies
 
         public async Task SetCookies(IEnumerable<string> cookies)
         {
-            // update persisted cookie - so that we store only one copy with the same name
             foreach (var cookie in cookies)
             {
                 var cookieName = cookie.Substring(0, cookie.IndexOf(Separators.Common.Equality));

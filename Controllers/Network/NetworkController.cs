@@ -76,7 +76,6 @@ namespace Controllers.Network
             response.EnsureSuccessStatusCode();
 
             await cookieController.SetCookies(response.Headers.GetValues(Headers.SetCookie));
-            await cookieController.SaveAsync();
 
             return response;
         }
