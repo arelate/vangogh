@@ -73,7 +73,8 @@ namespace Controllers.Network
 
             response.EnsureSuccessStatusCode();
 
-            await cookieController.SetCookies(response.Headers.GetValues(Headers.SetCookie));
+            if (response.Headers.Contains(Headers.SetCookie))
+                await cookieController.SetCookies(response.Headers.GetValues(Headers.SetCookie));
 
             return response;
         }
