@@ -58,17 +58,15 @@ namespace Controllers.Network
 
         public async Task<HttpResponseMessage> RequestResponseAsync(
             IStatus status,
-            HttpMethod method, 
-            string uri, 
+            HttpMethod method,
+            string uri,
             HttpContent content = null)
         {
             requestRateController.EnforceRequestRate(uri, status);
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
-
-            foreach (var cookie in cookieController.GetCookies())
-                requestMessage.Headers.Add(Headers.Cookie, cookie);
+            requestMessage.Headers.Add(Headers.Cookie, cookieController.GetCookiesString());
 
             if (content != null) requestMessage.Content = content;
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);

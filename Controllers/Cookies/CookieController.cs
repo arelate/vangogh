@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Cookies;
@@ -13,26 +15,25 @@ namespace Controllers.Cookies
 {
     public class CookieController : ICookieController
     {
-        //private IStrongTypeSerializationController<Cookie, string> cookieSerializationController;
         private ISerializedStorageController serializedStorageController;
         private IDictionary<string, string> storedCookies;
         private IGetFilenameDelegate getFilenameDelegate;
 
         public CookieController(
-            //IStrongTypeSerializationController<Cookie, string> cookieSerializationController,
             ISerializedStorageController serializedStorageController,
             IGetFilenameDelegate getFilenameDelegate)
         {
-            //this.cookieSerializationController = cookieSerializationController;
             this.serializedStorageController = serializedStorageController;
             this.getFilenameDelegate = getFilenameDelegate;
             this.storedCookies = new Dictionary<string, string>();
         }
 
-        public IEnumerable<string> GetCookies()
+        public string GetCookiesString()
         {
-            foreach (var cookie in storedCookies.Values)
-                yield return cookie;
+            var cookieStringBuilder = new StringBuilder();
+            foreach (var cookieNameValue in storedCookies)
+                cookieStringBuilder.AppendFormat("{0}={1};", cookieNameValue.Key, cookieNameValue.Value);
+            return cookieStringBuilder.ToString();
         }
 
         public async Task LoadAsync()
@@ -54,11 +55,19 @@ namespace Controllers.Cookies
         {
             foreach (var cookie in cookies)
             {
-                var cookieName = cookie.Substring(0, cookie.IndexOf(Separators.Common.Equality));
+                var cookieNameValue = cookie.Substring(0, cookie.IndexOf(Separators.Common.SemiColon));
+                var cookieNameValueParts = cookieNameValue.Split(
+                    new string[] { Separators.Common.Equality }, 
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                if (cookieNameValueParts.Length < 2) continue;
+
+                var cookieName = cookieNameValueParts[0];
+                var cookieValue = cookieNameValueParts[1];
 
                 if (storedCookies.ContainsKey(cookieName))
-                    storedCookies[cookieName] = cookie;
-                else storedCookies.Add(cookieName, cookie);
+                    storedCookies[cookieName] = cookieValue;
+                else storedCookies.Add(cookieName, cookieValue);
             }
 
             await SaveAsync();

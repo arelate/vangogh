@@ -212,9 +212,7 @@ namespace GoodOfflineGames
 
             var cookiesFilenameDelegate = new FixedFilenameDelegate("cookies", jsonFilenameDelegate);
 
-            var cookieSerializationController = new CookieSerializationController();
             var cookieController = new CookieController(
-                //cookieSerializationController,
                 serializedStorageController,
                 cookiesFilenameDelegate);
 
