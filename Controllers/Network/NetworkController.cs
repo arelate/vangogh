@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 
 using Interfaces.Uri;
@@ -12,7 +11,6 @@ using Interfaces.RequestRate;
 using Interfaces.Status;
 
 using Models.Network;
-using System;
 
 namespace Controllers.Network
 {

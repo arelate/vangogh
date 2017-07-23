@@ -16,13 +16,16 @@ namespace Controllers.Cookies
     public class CookieController : ICookieController
     {
         private ISerializedStorageController serializedStorageController;
+        private IStrongTypeSerializationController<(string, string), string> cookieSerializationController;
         private IDictionary<string, string> storedCookies;
         private IGetFilenameDelegate getFilenameDelegate;
 
         public CookieController(
+            IStrongTypeSerializationController<(string, string), string> cookieSerializationController,
             ISerializedStorageController serializedStorageController,
             IGetFilenameDelegate getFilenameDelegate)
         {
+            this.cookieSerializationController = cookieSerializationController;
             this.serializedStorageController = serializedStorageController;
             this.getFilenameDelegate = getFilenameDelegate;
             this.storedCookies = new Dictionary<string, string>();
@@ -30,10 +33,13 @@ namespace Controllers.Cookies
 
         public string GetCookiesString()
         {
-            var cookieStringBuilder = new StringBuilder();
-            foreach (var cookieNameValue in storedCookies)
-                cookieStringBuilder.AppendFormat("{0}={1};", cookieNameValue.Key, cookieNameValue.Value);
-            return cookieStringBuilder.ToString();
+            var cookies = new List<string>();
+            foreach (var cookieName in storedCookies.Keys)
+            {
+                var serializedCookie = cookieSerializationController.Serialize((cookieName, storedCookies[cookieName]));
+                cookies.Add(serializedCookie);
+            }
+            return string.Join(Separators.Common.SemiColon, cookies);
         }
 
         public async Task LoadAsync()
@@ -55,19 +61,11 @@ namespace Controllers.Cookies
         {
             foreach (var cookie in cookies)
             {
-                var cookieNameValue = cookie.Substring(0, cookie.IndexOf(Separators.Common.SemiColon));
-                var cookieNameValueParts = cookieNameValue.Split(
-                    new string[] { Separators.Common.Equality }, 
-                    StringSplitOptions.RemoveEmptyEntries);
+                var deserializedCookie = cookieSerializationController.Deserialize(cookie);
 
-                if (cookieNameValueParts.Length < 2) continue;
-
-                var cookieName = cookieNameValueParts[0];
-                var cookieValue = cookieNameValueParts[1];
-
-                if (storedCookies.ContainsKey(cookieName))
-                    storedCookies[cookieName] = cookieValue;
-                else storedCookies.Add(cookieName, cookieValue);
+                if (storedCookies.ContainsKey(deserializedCookie.Item1))
+                    storedCookies[deserializedCookie.Item1] = deserializedCookie.Item2;
+                else storedCookies.Add(deserializedCookie.Item1, deserializedCookie.Item2);
             }
 
             await SaveAsync();
