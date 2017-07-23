@@ -17,7 +17,7 @@ namespace GOG.Activities.Help
             this.consoleController = consoleController;
         }
 
-        public async override Task ProcessActivityAsync(IStatus status)
+        public async override Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             await base.ProcessActivityAsync(status);
         }

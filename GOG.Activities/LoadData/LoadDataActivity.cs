@@ -17,7 +17,7 @@ namespace GOG.Activities.Load
             this.loadDelegates = loadDelegates;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             var loadDataTask = statusController.Create(status, "Load existing data");
             for (var ii = 0; ii < loadDelegates.Length; ii++)

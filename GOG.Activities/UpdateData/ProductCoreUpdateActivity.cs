@@ -58,7 +58,7 @@ namespace GOG.Activities.UpdateData
             updateTypeDescription = typeof(UpdateType).Name;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             var updateProductsTask = statusController.Create(status, "Update products type: " + updateTypeDescription);
 

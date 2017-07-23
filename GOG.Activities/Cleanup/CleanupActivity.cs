@@ -41,7 +41,7 @@ namespace GOG.Activities.Cleanup
             this.directoryController = directoryController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             var cleanupTask = statusController.Create(status, $"Cleanup {context}");
 

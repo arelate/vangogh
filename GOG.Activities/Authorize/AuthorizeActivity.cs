@@ -22,7 +22,7 @@ namespace GOG.Activities.Authorize
             this.authorizationController = authorizationController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             if (settingsProperty != null &&
                 settingsProperty.Settings != null)

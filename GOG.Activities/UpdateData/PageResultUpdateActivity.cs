@@ -49,7 +49,7 @@ namespace GOG.Activities.UpdateData
             this.selectNewUpdatedDelegate = selectNewUpdatedDelegate;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             var updateAllProductsTask = statusController.Create(status, $"Update {context} data");
 

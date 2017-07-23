@@ -1,7 +1,7 @@
 ﻿#region Using
 
 using System;
-using System.Net;
+using System.Linq;
 using System.Collections.Generic;
 
 using Controllers.Stream;
@@ -1026,7 +1026,7 @@ namespace GoodOfflineGames
                 supplementaryController);
 
             var activityContextQueue = activityContextController.GetQueue(args);
-            var commandLineParameters = activityContextController.GetParameters(args);
+            var commandLineParameters = activityContextController.GetParameters(args).ToArray();
 
             #endregion
 
@@ -1045,7 +1045,7 @@ namespace GoodOfflineGames
                 var activity = activityContextToActivityControllerMap[activityContext];
                 try
                 {
-                    activity.ProcessActivityAsync(applicationStatus).Wait();
+                    activity.ProcessActivityAsync(applicationStatus, commandLineParameters).Wait();
                 }
                 catch (AggregateException ex)
                 {

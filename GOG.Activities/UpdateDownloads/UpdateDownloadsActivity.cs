@@ -47,7 +47,7 @@ namespace GOG.Activities.UpdateDownloads
             this.productsDataController = productsDataController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             var updateDownloadsTask = statusController.Create(
                 status,
