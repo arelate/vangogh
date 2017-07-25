@@ -75,7 +75,7 @@ namespace GOG.Controllers.PageResults
             var totalPages = 1;
             T pageResult = null;
 
-            var getPagesTask = statusController.Create(status, $"Get all pages for {context}");
+            var getPagesTask = statusController.Create(status, $"Request {context}");
 
             do
             {
@@ -103,7 +103,7 @@ namespace GOG.Controllers.PageResults
 
                 if (responseHash == requestHash) continue;
 
-                var setHashTask = statusController.Create(getPagesTask, "Set response hash");
+                var setHashTask = statusController.Create(getPagesTask, "Set hash");
                 await precomputedHashController.SetHashAsync(requestUri + currentPage, responseHash);
                 statusController.Complete(setHashTask);
 

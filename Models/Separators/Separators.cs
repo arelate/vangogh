@@ -18,6 +18,9 @@
             public const string ForwardSlash = "/";
             public const string LeftCurlyBracket = "{";
             public const string RightCurlyBracket = "}";
+            public const string MoreThan = ">";
+            public const string LessThan = "<";
+
         }
 
         // query parameters

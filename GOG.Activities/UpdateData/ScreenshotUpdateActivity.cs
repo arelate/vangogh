@@ -30,9 +30,9 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
-            var updateProductsScreenshotsTask = statusController.Create(status, "Update products screenshots");
+            var updateProductsScreenshotsTask = statusController.Create(status, "Update Screenshots");
 
-            var getUpdatesListTask = statusController.Create(updateProductsScreenshotsTask, "Get a list of updates for product screenshots");
+            var getUpdatesListTask = statusController.Create(updateProductsScreenshotsTask, "Get updates");
             var productsMissingScreenshots = productsDataController.EnumerateIds().Except(
                 screenshotsIndexDataController.EnumerateIds());
             statusController.Complete(getUpdatesListTask);

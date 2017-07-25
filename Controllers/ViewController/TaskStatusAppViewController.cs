@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Status;
@@ -7,6 +8,8 @@ using Interfaces.Tree;
 using Interfaces.Template;
 using Interfaces.ViewModel;
 using Interfaces.ViewController;
+
+using Models.Separators;
 
 namespace Controllers.ViewController
 {
@@ -17,6 +20,9 @@ namespace Controllers.ViewController
         private IGetViewModelDelegate<IStatus> statusViewModelDelegate;
         private ITreeToEnumerableController<IStatus> statusTreeToEnumerableController;
         private IPresentationController<string> presentationController;
+
+        private IList<string> viewParts;
+        private const string viewPartsSeparator = Separators.Common.Space + Separators.Common.MoreThan + Separators.Common.Space;
 
         public StatusViewController(
             IStatus status,
@@ -30,11 +36,13 @@ namespace Controllers.ViewController
             this.statusViewModelDelegate = statusViewModelDelegate;
             this.statusTreeToEnumerableController = statusTreeToEnumerableController;
             this.presentationController = presentationController;
+
+            this.viewParts = new List<string>();
         }
 
         public string RequestUpdatedView()
         {
-            var viewStringBuilder = new StringBuilder();
+            viewParts.Clear();
             foreach (var individualStatus in statusTreeToEnumerableController.ToEnumerable(status))
             {
                 var viewModel = statusViewModelDelegate.GetViewModel(individualStatus);
@@ -45,11 +53,11 @@ namespace Controllers.ViewController
                         viewModel);
                     if (!string.IsNullOrEmpty(view) &&
                         !string.IsNullOrWhiteSpace(view))
-                        viewStringBuilder.Append(view);
+                        viewParts.Add(view);
                 }
             }
 
-            return viewStringBuilder.ToString();
+            return string.Join(viewPartsSeparator, viewParts);
         }
 
         public void PostUpdateNotification()

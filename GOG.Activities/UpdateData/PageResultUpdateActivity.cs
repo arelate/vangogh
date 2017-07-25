@@ -51,22 +51,22 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
-            var updateAllProductsTask = statusController.Create(status, $"Update {context} data");
+            var updateAllProductsTask = statusController.Create(status, $"Update {context}");
 
             var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
 
-            var extractTask = statusController.Create(updateAllProductsTask, $"Extract {context} data");
+            var extractTask = statusController.Create(updateAllProductsTask, $"Extract {context}");
             var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
             statusController.Complete(extractTask);
 
             if (selectNewUpdatedDelegate != null)
             {
-                var refineDataTask = statusController.Create(updateAllProductsTask, $"Selecting new or updated {context}");
+                var refineDataTask = statusController.Create(updateAllProductsTask, $"Select new/updated {context}");
                 await selectNewUpdatedDelegate.SelectNewUpdatedAsync(newProducts, refineDataTask);
                 statusController.Complete(refineDataTask);
             }
 
-            var updateTask = statusController.Create(updateAllProductsTask, $"Update {context}");
+            var updateTask = statusController.Create(updateAllProductsTask, $"Save {context}");
             await dataController.UpdateAsync(updateTask, newProducts.ToArray());
             statusController.Complete(updateTask);
 

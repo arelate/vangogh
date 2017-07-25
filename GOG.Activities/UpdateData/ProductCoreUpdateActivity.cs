@@ -60,11 +60,11 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
-            var updateProductsTask = statusController.Create(status, "Update products type: " + updateTypeDescription);
+            var updateProductsTask = statusController.Create(status, $"Update {updateTypeDescription}");
 
             var updatedProducts = new List<long>();
 
-            var missingDataEnumerationTask = statusController.Create(updateProductsTask, "Enumerate missing data");
+            var missingDataEnumerationTask = statusController.Create(updateProductsTask, "Enumerate gaps");
 
             foreach (var id in listTypeDataController.EnumerateIds())
             {
@@ -74,7 +74,7 @@ namespace GOG.Activities.UpdateData
 
             statusController.Complete(missingDataEnumerationTask);
 
-            var addUpdatedTask = statusController.Create(updateProductsTask, "Add updated or new products");
+            var addUpdatedTask = statusController.Create(updateProductsTask, "Add new/updated");
 
             updatedProducts.AddRange(updatedDataController.EnumerateIds());
 

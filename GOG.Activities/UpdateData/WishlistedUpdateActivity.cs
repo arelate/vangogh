@@ -26,9 +26,9 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
-            var updateWishlistTask = statusController.Create(status, "Update wishlisted products");
+            var updateWishlistTask = statusController.Create(status, "Update Wishlisted");
 
-            var requestContentTask = statusController.Create(updateWishlistTask, "Request wishlist content");
+            var requestContentTask = statusController.Create(updateWishlistTask, "Request content");
 
             var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserializedAsync(
                 requestContentTask,
@@ -36,7 +36,7 @@ namespace GOG.Activities.UpdateData
 
             statusController.Complete(requestContentTask);
 
-            var saveDataTask = statusController.Create(updateWishlistTask, "Add new wishlisted products");
+            var saveDataTask = statusController.Create(updateWishlistTask, "Save");
 
             var wishlistedIds = new List<long>();
 
