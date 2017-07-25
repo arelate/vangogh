@@ -8,12 +8,10 @@ namespace Controllers.Status
 {
     public class StatusController : IStatusController
     {
-        private IViewController statusViewController;
-        private DateTime lastPresentedProgress = DateTime.MinValue;
-        private int presentProgressThreshold = 200; //ms
+        private IViewController<string> statusViewController;
 
         public StatusController(
-            IViewController statusViewController)
+            IViewController<string> statusViewController)
         {
             this.statusViewController = statusViewController;
         }
@@ -31,13 +29,14 @@ namespace Controllers.Status
             if (status.Children == null)
                 status.Children = new List<IStatus>();
 
-            var childStatus = new Models.Status.Status() {
+            var childStatus = new Models.Status.Status()
+            {
                 Title = title,
                 Started = DateTime.UtcNow
             };
             status.Children.Add(childStatus);
 
-            statusViewController.PresentViews();
+            statusViewController.PostUpdateNotification();
 
             return childStatus;
         }
@@ -52,7 +51,7 @@ namespace Controllers.Status
             status.Complete = true;
             status.Completed = DateTime.UtcNow;
 
-            statusViewController.PresentViews();
+            statusViewController.PostUpdateNotification();
         }
 
         public void UpdateProgress(IStatus status, long current, long total, string target, string unit = "")
@@ -70,14 +69,7 @@ namespace Controllers.Status
             status.Progress.Total = total;
             status.Progress.Unit = unit;
 
-            var presentView = current == total ||
-                (DateTime.Now - lastPresentedProgress).TotalMilliseconds > presentProgressThreshold;
-
-            if (presentView)
-            {
-                statusViewController.PresentViews();
-                lastPresentedProgress = DateTime.Now;
-            }
+            statusViewController.PostUpdateNotification();
         }
 
         public void Fail(IStatus status, string failureMessage)

@@ -2,19 +2,25 @@
 
 namespace Interfaces.ViewController
 {
-    public interface IPresentViewsDelegate
+    public interface IRequestUpdatedViewDelegate<T>
     {
-        void PresentViews();
+        T RequestUpdatedView();
     }
 
-    public interface IPresentViewsAsyncDelegate
+    public interface IPostUpdateNotificationDelegate
     {
-        Task PresentViewsAsync();
+        void PostUpdateNotification();
     }
 
-    public interface IViewController:
-        IPresentViewsDelegate,
-        IPresentViewsAsyncDelegate
+    public interface IPostUpdateNotificationAsyncDelegate
+    {
+        Task PostUpdateNotificationAsync();
+    }
+
+    public interface IViewController<T>:
+        IRequestUpdatedViewDelegate<T>,
+        IPostUpdateNotificationDelegate,
+        IPostUpdateNotificationAsyncDelegate
     {
         // ...
     }

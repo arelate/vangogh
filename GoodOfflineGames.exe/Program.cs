@@ -22,7 +22,6 @@ using Controllers.Throttle;
 using Controllers.RequestRate;
 using Controllers.ImageUri;
 using Controllers.Formatting;
-using Controllers.LineBreaking;
 using Controllers.Destination.Directory;
 using Controllers.Destination.Filename;
 using Controllers.Destination.Uri;
@@ -140,10 +139,10 @@ namespace GoodOfflineGames
                 serializationController);
 
             var consoleController = new ConsoleController();
-            var lineBreakingController = new LineBreakingController();
+            //var lineBreakingController = new LineBreakingController();
 
             var consolePresentationController = new ConsolePresentationController(
-                lineBreakingController,
+                //lineBreakingController,
                 consoleController);
 
             var bytesFormattingController = new BytesFormattingController();
@@ -153,7 +152,7 @@ namespace GoodOfflineGames
 
             var statusTreeToEnumerableController = new StatusTreeToEnumerableController();
 
-            var applicationStatus = new Status() { Title = "Welcome to GoodOfflineGames" };
+            var applicationStatus = new Status();
 
             var templatesDirectoryDelegate = new RelativeDirectoryDelegate("templates");
             var appTemplateFilenameDelegate = new FixedFilenameDelegate("app", jsonFilenameDelegate);
@@ -955,7 +954,7 @@ namespace GoodOfflineGames
             #region Help
 
             var helpActivity = new HelpActivity(
-                consoleController, 
+                consoleController,
                 statusController);
 
             #endregion
@@ -1063,11 +1062,10 @@ namespace GoodOfflineGames
                     serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
 
                     consolePresentationController.Present(
-                        new string[]
-                            {"GoodOfflineGames.exe has encountered fatal error(s):\n" +
+                                "GoodOfflineGames.exe has encountered fatal error(s): " +
                                 combinedErrorMessages +
-                                $"\nPlease refer to {failureDumpUri} for further details."+
-                                "\n\nPress ENTER to close the window..."});
+                                $". Please refer to {failureDumpUri} for further details. " +
+                                "Press ENTER to close the window...");
 
                     consoleController.ReadLine();
 
@@ -1077,10 +1075,9 @@ namespace GoodOfflineGames
 
             #endregion
 
-            consolePresentationController.Present(
-                new string[]
-                    {"All GoodOfflineGames tasks are complete.\n\nPress ENTER to close the window..."});
+            // TODO: Present session results
 
+            consolePresentationController.Present("All tasks are complete. Press ENTER to exit...");
             consoleController.ReadLine();
         }
     }

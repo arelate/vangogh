@@ -9,11 +9,11 @@
 	},
 	{
 		"title": "progress",
-		"content": "{{target}}\n> Progress: {progressPercent}, {progressCurrent} of {progressTotal}<containsEta?eta>"
+		"content": "{{target}}. [{progressPercent}, {progressCurrent}/{progressTotal}]<containsEta?eta>"
 	},
 	{
 		"title": "eta",
-		"content": ". ETA: {remainingTime}, avg. speed: {averageUnitsPerSecond}/s"
+		"content": ". ETA: {remainingTime}@{averageUnitsPerSecond}/s"
 	},
 	{
 		"title": "target",

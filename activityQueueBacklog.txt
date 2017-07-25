@@ -1,7 +1,5 @@
 need: help activity that outputs information about built-in commands, list of aliases and what they expand to, as well as list of pre- and postReqs
 
-need: change Activity interface to accept a list of optional (string) parameters
-
 need: search-products, search-accountProducts, search-gameDetails, etc. + alias "search" (all together, each operation lists separate results)
 
 design alternatives:

@@ -28,21 +28,20 @@ namespace Controllers.Presentation
             this.streamController = streamController;
         }
 
-        public void Present(IEnumerable<string> views)
+        public void Present(string view)
         {
             throw new NotImplementedException();
         }
 
-        public async Task PresentAsync(IEnumerable<string> views)
+        public async Task PresentAsync(string view)
         {
             var reportUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
             using (var reportStream = streamController.OpenWritable(reportUri))
-                using (var streamWriter = new StreamWriter(reportStream))
-                    foreach (var view in views)
-                        await streamWriter.WriteLineAsync(view);
+            using (var streamWriter = new StreamWriter(reportStream))
+                await streamWriter.WriteLineAsync(view);
         }
     }
 }

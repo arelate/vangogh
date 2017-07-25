@@ -86,9 +86,16 @@ namespace Controllers.Console
             consoleOutput(formattedMessage);
         }
 
-        public void SetCursorPosition(int left, int top)
+        public int CursorLeft
         {
-            System.Console.SetCursorPosition(left, top);
+            get { return System.Console.CursorLeft; }
+            set { System.Console.CursorLeft = value > 0 ? value : 0; }
+        }
+
+        public int CursorTop
+        {
+            get { return System.Console.CursorTop; }
+            set { System.Console.CursorTop = value > 0 ? value : 0; }
         }
     }
 }

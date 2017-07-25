@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Interfaces.Status;
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
-using Interfaces.SerializedStorage;
 using Interfaces.ViewController;
 
 namespace GOG.Activities.Report
 {
     public class ReportActivity: Activity
     {
-        private IViewController statusViewController;
+        private IViewController<string> statusViewController;
 
         public ReportActivity(
-            IViewController statusViewController,
+            IViewController<string> statusViewController,
             IStatusController statusController):
             base(statusController)
         {
@@ -27,7 +20,7 @@ namespace GOG.Activities.Report
         public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
         {
             var reportTask = statusController.Create(status, "Presenting report on application task status");
-            await statusViewController.PresentViewsAsync();
+            await statusViewController.PostUpdateNotificationAsync();
             statusController.Complete(reportTask);
         }
 

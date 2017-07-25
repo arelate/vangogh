@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Status;
@@ -10,51 +10,56 @@ using Interfaces.ViewController;
 
 namespace Controllers.ViewController
 {
-    public class StatusViewController : IViewController
+    public class StatusViewController : IViewController<string>
     {
-        private IStatus appstatus;
+        private IStatus status;
         private ITemplateController templateController;
         private IGetViewModelDelegate<IStatus> statusViewModelDelegate;
         private ITreeToEnumerableController<IStatus> statusTreeToEnumerableController;
         private IPresentationController<string> presentationController;
 
         public StatusViewController(
-            IStatus appstatus,
+            IStatus status,
             ITemplateController templateController,
             IGetViewModelDelegate<IStatus> statusViewModelDelegate,
             ITreeToEnumerableController<IStatus> statusTreeToEnumerableController,
             IPresentationController<string> presentationController)
         {
-            this.appstatus = appstatus;
+            this.status = status;
             this.templateController = templateController;
             this.statusViewModelDelegate = statusViewModelDelegate;
             this.statusTreeToEnumerableController = statusTreeToEnumerableController;
             this.presentationController = presentationController;
         }
 
-        private IEnumerable<string> CreateViews()
+        public string RequestUpdatedView()
         {
-            foreach (var status in statusTreeToEnumerableController.ToEnumerable(appstatus))
+            var viewStringBuilder = new StringBuilder();
+            foreach (var individualStatus in statusTreeToEnumerableController.ToEnumerable(status))
             {
-                var viewModel = statusViewModelDelegate.GetViewModel(status);
+                var viewModel = statusViewModelDelegate.GetViewModel(individualStatus);
                 if (viewModel != null)
                 {
                     var view = templateController.Bind(
                         templateController.PrimaryTemplate,
                         viewModel);
-                    yield return view;
+                    if (!string.IsNullOrEmpty(view) &&
+                        !string.IsNullOrWhiteSpace(view))
+                        viewStringBuilder.Append(view);
                 }
             }
+
+            return viewStringBuilder.ToString();
         }
 
-        public void PresentViews()
+        public void PostUpdateNotification()
         {
-            presentationController.Present(CreateViews());
+            presentationController.Present(RequestUpdatedView());
         }
 
-        public async Task PresentViewsAsync()
+        public async Task PostUpdateNotificationAsync()
         {
-            await presentationController.PresentAsync(CreateViews());
+            await presentationController.PresentAsync(RequestUpdatedView());
         }
     }
 }

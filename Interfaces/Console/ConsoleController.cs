@@ -1,8 +1,13 @@
 ﻿namespace Interfaces.Console
 {
-    public interface ISetCursorPositionDelegate
+    public interface ICursorLeftProperty
     {
-        void SetCursorPosition(int left, int top);
+        int CursorLeft { get; set; }
+    }
+
+    public interface ICursorTopProperty
+    {
+        int CursorTop { get; set; }
     }
 
     public interface IReadDelegate
@@ -41,14 +46,15 @@
     }
 
     public interface IConsoleController :
-        ISetCursorPositionDelegate,
+        ICursorLeftProperty,
+        ICursorTopProperty,
+        IWindowWidthProperty,
+        IWindowHeightProperty,
         IReadDelegate,
         IReadLineDelegate,
         IInputPasswordDelegate,
         IWriteDelegate,
-        IWriteLineDelegate,
-        IWindowWidthProperty,
-        IWindowHeightProperty
+        IWriteLineDelegate
     {
         // ...
     }
