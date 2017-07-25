@@ -29,6 +29,8 @@ namespace Models.Status
         public IList<string> Failures { get; set; }
         [DataMember(Name = "information")]
         public IList<string> Information { get; set; }
+        [DataMember(Name = "summaryResults")]
+        public IList<string> SummaryResults { get; set; }
     }
 
     [DataContract]

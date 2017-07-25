@@ -43,6 +43,11 @@ namespace Interfaces.Status
         IList<string> Information { get; set; }
     }
 
+    public interface ISummaryResultsProperty
+    {
+        IList<string> SummaryResults { get; set; }
+    }
+
     public interface IUnitProperty
     {
         string Unit { get; set; }
@@ -86,7 +91,8 @@ namespace Interfaces.Status
         ICompletedProperty,
         IWarningsProperty,
         IFailuresProperty,
-        IInformationProperty
+        IInformationProperty,
+        ISummaryResultsProperty
     {
         // ...
     }

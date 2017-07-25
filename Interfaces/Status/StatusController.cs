@@ -30,13 +30,19 @@
         void Inform(IStatus status, string informationMessage);
     }
 
+    public interface IAddSummaryResultsDelegate
+    {
+        void AddSummaryResults(IStatus status, params string[] summaryResults);
+    }
+
     public interface IStatusController:
         ICreateDelegate,
         ICompleteDelegate,
         IUpdateProgressDelegate,
         IFailDelegate,
         IWarnDelegate,
-        IInformDelegate
+        IInformDelegate,
+        IAddSummaryResultsDelegate
     {
         // ...
     }

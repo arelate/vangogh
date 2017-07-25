@@ -101,5 +101,18 @@ namespace Controllers.Status
 
             status.Information.Add(informationMessage);
         }
+
+        public void AddSummaryResults(IStatus status, params string[] summaryResults)
+        {
+            if (summaryResults == null) return;
+
+            AssertValidStatus(status);
+
+            if (status.SummaryResults == null)
+                status.SummaryResults = new List<string>();
+
+            foreach (var summaryResult in summaryResults)
+                status.SummaryResults.Add(summaryResult);
+        }
     }
 }
