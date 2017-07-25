@@ -951,9 +951,21 @@ namespace GoodOfflineGames
 
             #endregion
 
+            var aliasController = new AliasController(ActivityContext.Aliases);
+            var whitelistController = new WhitelistController(ActivityContext.Whitelist);
+            var prerequisitesController = new PrerequisiteController(ActivityContext.Prerequisites);
+            var supplementaryController = new SupplementaryController(ActivityContext.Supplementary);
+
+            var activityContextController = new ActivityContextController(
+                aliasController,
+                whitelistController,
+                prerequisitesController,
+                supplementaryController);
+
             #region Help
 
             var helpActivity = new HelpActivity(
+                activityContextController,
                 consoleController,
                 statusController);
 
@@ -1013,16 +1025,7 @@ namespace GoodOfflineGames
                 { (Activity.Help, Context.None), helpActivity }
             };
 
-            var aliasController = new AliasController(ActivityContext.Aliases);
-            var whitelistController = new WhitelistController(ActivityContext.Whitelist);
-            var prerequisitesController = new PrerequisiteController(ActivityContext.Prerequisites);
-            var supplementaryController = new SupplementaryController(ActivityContext.Supplementary);
 
-            var activityContextController = new ActivityContextController(
-                aliasController,
-                whitelistController,
-                prerequisitesController,
-                supplementaryController);
 
             var activityContextQueue = activityContextController.GetQueue(args);
             var commandLineParameters = activityContextController.GetParameters(args).ToArray();
@@ -1077,7 +1080,16 @@ namespace GoodOfflineGames
 
             // TODO: Present session results
 
-            consolePresentationController.Present("All tasks are complete. Press ENTER to exit...");
+            if (applicationStatus.SummaryResults != null)
+            {
+                foreach (var line in applicationStatus.SummaryResults)
+                    consolePresentationController.Present(string.Join(" ", applicationStatus.SummaryResults));
+            }
+            else
+            {
+                consolePresentationController.Present("All tasks are complete. Press ENTER to exit...");
+            }
+
             consoleController.ReadLine();
         }
     }

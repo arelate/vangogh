@@ -60,7 +60,7 @@ namespace Controllers.ActivityContext
                 return activityContextQueue;
             }
 
-            var requestedActivityContext = args[0]; 
+            var requestedActivityContext = args[0];
 
             // check if the requested operation is alias or known activity-context, expand alias as needed
 
@@ -105,10 +105,13 @@ namespace Controllers.ActivityContext
 
         public string ToString(AC activityContext)
         {
+            var activityString = activityContext.Item1.ToString();
+            var context = activityContext.Item2;
+
             return
-                activityContext.Item1.ToString() +
-                Separators.ActivityContext +
-                activityContext.Item2;
+                context != Context.None ?
+                activityString + Separators.ActivityContext + context :
+                activityString;
         }
     }
 }
