@@ -1,5 +1,7 @@
 Backend
 
+- investigate /user/data/games (from https://www.gog.com/forum/general/unofficial_gog_api_documentation/page2) and game_type == pack specifically
+
 - activityQueueBacklog.txt
 
 - change functional controllers to work on product model type and have activities loop updates using those 
