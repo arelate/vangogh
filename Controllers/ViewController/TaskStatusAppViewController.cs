@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,23 +14,23 @@ using Models.Separators;
 
 namespace Controllers.ViewController
 {
-    public class StatusViewController : IViewController<string>
+    public class StatusViewController : IViewController<string[]>
     {
         private IStatus status;
         private ITemplateController templateController;
         private IGetViewModelDelegate<IStatus> statusViewModelDelegate;
         private ITreeToEnumerableController<IStatus> statusTreeToEnumerableController;
-        private IPresentationController<string> presentationController;
+        private IPresentationController<string[]> presentationController;
 
         private IList<string> viewParts;
-        private const string viewPartsSeparator = Separators.Common.Space + Separators.Common.MoreThan + Separators.Common.Space;
+        //private const string viewPartsSeparator = Separators.Common.Space + Separators.Common.MoreThan + Separators.Common.Space;
 
         public StatusViewController(
             IStatus status,
             ITemplateController templateController,
             IGetViewModelDelegate<IStatus> statusViewModelDelegate,
             ITreeToEnumerableController<IStatus> statusTreeToEnumerableController,
-            IPresentationController<string> presentationController)
+            IPresentationController<string[]> presentationController)
         {
             this.status = status;
             this.templateController = templateController;
@@ -40,7 +41,7 @@ namespace Controllers.ViewController
             this.viewParts = new List<string>();
         }
 
-        public string RequestUpdatedView()
+        public string[] RequestUpdatedView()
         {
             viewParts.Clear();
             foreach (var individualStatus in statusTreeToEnumerableController.ToEnumerable(status))
@@ -57,7 +58,7 @@ namespace Controllers.ViewController
                 }
             }
 
-            return string.Join(viewPartsSeparator, viewParts);
+            return viewParts.ToArray();
         }
 
         public void PostUpdateNotification()

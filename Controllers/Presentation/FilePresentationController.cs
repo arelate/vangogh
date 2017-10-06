@@ -12,7 +12,7 @@ using Interfaces.Stream;
 
 namespace Controllers.Presentation
 {
-    public class FilePresentationController : IPresentationController<string>
+    public class FilePresentationController : IPresentationController<string[]>
     {
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
@@ -28,12 +28,12 @@ namespace Controllers.Presentation
             this.streamController = streamController;
         }
 
-        public void Present(string view)
+        public void Present(params string[] lines)
         {
             throw new NotImplementedException();
         }
 
-        public async Task PresentAsync(string view)
+        public async Task PresentAsync(params string[] lines)
         {
             var reportUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
@@ -41,7 +41,8 @@ namespace Controllers.Presentation
 
             using (var reportStream = streamController.OpenWritable(reportUri))
             using (var streamWriter = new StreamWriter(reportStream))
-                await streamWriter.WriteLineAsync(view);
+                foreach (var line in lines)
+                    await streamWriter.WriteLineAsync(line);
         }
     }
 }

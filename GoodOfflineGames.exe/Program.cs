@@ -33,6 +33,7 @@ using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Indexing;
+using Controllers.LineBreaking;
 using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
@@ -139,10 +140,10 @@ namespace GoodOfflineGames
                 serializationController);
 
             var consoleController = new ConsoleController();
-            //var lineBreakingController = new LineBreakingController();
+            var lineBreakingDelegate = new LineBreakingDelegate();
 
             var consolePresentationController = new ConsolePresentationController(
-                //lineBreakingController,
+                lineBreakingDelegate,
                 consoleController);
 
             var bytesFormattingController = new BytesFormattingController();
@@ -1067,7 +1068,7 @@ namespace GoodOfflineGames
                     consolePresentationController.Present(
                                 "GoodOfflineGames.exe has encountered fatal error(s): " +
                                 combinedErrorMessages +
-                                $". Please refer to {failureDumpUri} for further details. " +
+                                $".\nPlease refer to {failureDumpUri} for further details.\n" +
                                 "Press ENTER to close the window...");
 
                     consoleController.ReadLine();

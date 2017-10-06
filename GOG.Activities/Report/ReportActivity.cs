@@ -7,10 +7,10 @@ namespace GOG.Activities.Report
 {
     public class ReportActivity: Activity
     {
-        private IViewController<string> statusViewController;
+        private IViewController<string[]> statusViewController;
 
         public ReportActivity(
-            IViewController<string> statusViewController,
+            IViewController<string[]> statusViewController,
             IStatusController statusController):
             base(statusController)
         {

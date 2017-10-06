@@ -8,10 +8,10 @@ namespace Controllers.Status
 {
     public class StatusController : IStatusController
     {
-        private IViewController<string> statusViewController;
+        private IViewController<string[]> statusViewController;
 
         public StatusController(
-            IViewController<string> statusViewController)
+            IViewController<string[]> statusViewController)
         {
             this.statusViewController = statusViewController;
         }
