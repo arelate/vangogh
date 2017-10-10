@@ -24,7 +24,7 @@ namespace GOG.Activities.UpdateData
             this.wishlistedDataController = wishlistedDataController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var updateWishlistTask = statusController.Create(status, "Update Wishlisted");
 

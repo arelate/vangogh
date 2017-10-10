@@ -16,7 +16,7 @@ namespace GOG.Activities
             this.statusController = statusController;
         }
 
-        public virtual Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public virtual Task ProcessActivityAsync(IStatus status)
         {
             throw new NotImplementedException();
         }

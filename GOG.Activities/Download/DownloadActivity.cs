@@ -30,7 +30,7 @@ namespace GOG.Activities.Download
             this.downloadFileFromSourceDelegate = downloadFileFromSourceDelegate;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var current = 0;
             var productDownloadsData = productDownloadsDataController.EnumerateIds();

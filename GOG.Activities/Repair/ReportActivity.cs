@@ -25,7 +25,7 @@ namespace GOG.Activities.Repair
             this.validationResultController = validationResultController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var repairTask = statusController.Create(status, "Check validation results and attempting repair");
             var current = 0;

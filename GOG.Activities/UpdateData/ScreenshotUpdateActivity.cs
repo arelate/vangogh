@@ -28,7 +28,7 @@ namespace GOG.Activities.UpdateData
             this.updateProductScreenshotsDelegate = updateProductScreenshotsDelegate;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var updateProductsScreenshotsTask = statusController.Create(status, "Update Screenshots");
 

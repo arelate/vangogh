@@ -13,18 +13,13 @@ namespace Interfaces.Enumeration
         IEnumerable<string> Enumerate(Type item);
     }
 
-    public interface IEnumerateDelegate
-    {
-        IEnumerable<string> Enumerate(IStatus status);
-    }
-
     public interface IEnumerateAsyncDelegate<Type>
     {
-        Task<IList<string>> EnumerateAsync(Type item);
+        Task<IEnumerable<string>> EnumerateAsync(Type item);
     }
 
-    public interface IEnumerateAsyncDelegate
+    public interface IEnumerateAllAsyncDelegate
     {
-        Task<IList<string>> EnumerateAsync(IStatus status);
+        Task<IList<string>> EnumerateAllAsync(IStatus status);
     }
 }

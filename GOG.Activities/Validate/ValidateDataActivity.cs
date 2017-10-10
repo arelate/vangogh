@@ -29,7 +29,7 @@ namespace GOG.Activities.Validate
             this.fileValidateDelegate = fileValidateDelegate;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var validateDataTask = statusController.Create(status, "Validate data");
 

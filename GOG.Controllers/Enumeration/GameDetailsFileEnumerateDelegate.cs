@@ -32,7 +32,7 @@ namespace GOG.Controllers.Enumeration
             this.routingController = routingController;
         }
 
-        public async Task<IList<string>> EnumerateAsync(GameDetails gameDetails)
+        public async Task<IEnumerable<string>> EnumerateAsync(GameDetails gameDetails)
         {
             var gameDetailsFiles = new List<string>();
 

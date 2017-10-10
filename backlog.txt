@@ -1,5 +1,7 @@
 Backend
 
+- move updated enumeration to take command line parameters into account - in the future this will also be a central point for whitelists/blacklists
+
 - investigate /user/data/games (from https://www.gog.com/forum/general/unofficial_gog_api_documentation/page2) and game_type == pack specifically
 
 - activityQueueBacklog.txt
@@ -11,8 +13,6 @@ Backend
 - [Backlog] consider whitelists, blacklists for product operations
 
 - [Backlog] serve data and frontend files via http or better yet websockets server
-
-- persist cookies from session to session (.net core 2.0?), or at least allow injecting cookies from the browser session (should be doable in .net core 1.1)
 
 - debug data validation - why stored file md5 doesn't match precomputed hash at push (encoding? special characters?)
 

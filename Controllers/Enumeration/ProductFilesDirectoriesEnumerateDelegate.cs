@@ -8,13 +8,13 @@ using Interfaces.Status;
 
 namespace Controllers.Enumeration
 {
-    public class ProductFilesDirectoriesEnumerateDelegate : IEnumerateAsyncDelegate
+    public class ProductFilesDirectoriesEnumerateAllDelegate : IEnumerateAllAsyncDelegate
     {
         private IGetDirectoryDelegate productFilesDirectoryDelegate;
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
-        public ProductFilesDirectoriesEnumerateDelegate(
+        public ProductFilesDirectoriesEnumerateAllDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate,
             IDirectoryController directoryController,
             IStatusController statusController)
@@ -24,7 +24,7 @@ namespace Controllers.Enumeration
             this.statusController = statusController;
         }
 
-        public async Task<IList<string>> EnumerateAsync(IStatus status)
+        public async Task<IList<string>> EnumerateAllAsync(IStatus status)
         {
             var enumerateProductFilesDirectoriesTask = statusController.Create(status, "Enumerate productFiles directories");
 

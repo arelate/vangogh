@@ -56,7 +56,7 @@ namespace GOG.Activities.Validate
             this.routingController = routingController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var validateProductsTask = statusController.Create(status, "Validate products");
 

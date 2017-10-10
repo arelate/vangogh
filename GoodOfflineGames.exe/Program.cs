@@ -899,12 +899,12 @@ namespace GoodOfflineGames
 
             #region Cleanup
 
-            var gameDetailsDirectoriesEnumerateDelegate = new GameDetailsDirectoriesEnumerateDelegate(
+            var gameDetailsDirectoriesEnumerateAllDelegate = new GameDetailsDirectoriesEnumerateAllDelegate(
                 gameDetailsDataController,
                 gameDetailsDirectoryEnumerateDelegate,
                 statusController);
 
-            var productFilesDirectoriesEnumerateDelegate = new ProductFilesDirectoriesEnumerateDelegate(
+            var productFilesDirectoriesEnumerateAllDelegate = new ProductFilesDirectoriesEnumerateAllDelegate(
                 productFilesBaseDirectoryDelegate,
                 directoryController,
                 statusController);
@@ -913,21 +913,21 @@ namespace GoodOfflineGames
 
             var directoryCleanupActivity = new CleanupActivity(
                 Context.Directories,
-                gameDetailsDirectoriesEnumerateDelegate, // expected items (directories for gameDetails)
-                productFilesDirectoriesEnumerateDelegate, // actual items (directories in productFiles)
+                gameDetailsDirectoriesEnumerateAllDelegate, // expected items (directories for gameDetails)
+                productFilesDirectoriesEnumerateAllDelegate, // actual items (directories in productFiles)
                 directoryFilesEnumerateDelegate, // detailed items (files in directory)
                 validationFileEnumerateDelegate, // supplementary items (validation files)
                 recycleBinController,
                 directoryController,
                 statusController);
 
-            var updatedGameDetailsManualUrlFilesEnumerateDelegate = new UpdatedGameDetailsManualUrlFilesEnumerateDelegate(
+            var updatedGameDetailsManualUrlFilesEnumerateAllDelegate = new UpdatedGameDetailsManualUrlFilesEnumerateAllDelegate(
                 updatedDataController,
                 gameDetailsDataController,
                 gameDetailsFilesEnumerateDelegate,
                 statusController);
 
-            var updatedProductFilesEnumerateDelegate = new UpdatedProductFilesEnumerateDelegate(
+            var updatedProductFilesEnumerateAllDelegate = new UpdatedProductFilesEnumerateAllDelegate(
                 updatedDataController,
                 gameDetailsDataController,
                 gameDetailsDirectoryEnumerateDelegate,
@@ -938,8 +938,8 @@ namespace GoodOfflineGames
 
             var fileCleanupActivity = new CleanupActivity(
                 Context.Files,
-                updatedGameDetailsManualUrlFilesEnumerateDelegate, // expected items (files for updated gameDetails)
-                updatedProductFilesEnumerateDelegate, // actual items (updated product files)
+                updatedGameDetailsManualUrlFilesEnumerateAllDelegate, // expected items (files for updated gameDetails)
+                updatedProductFilesEnumerateAllDelegate, // actual items (updated product files)
                 passthroughEnumerateDelegate, // detailed items (passthrough)
                 validationFileEnumerateDelegate, // supplementary items (validation files)
                 recycleBinController,
@@ -1048,7 +1048,7 @@ namespace GoodOfflineGames
                 var activity = activityContextToActivityControllerMap[activityContext];
                 try
                 {
-                    activity.ProcessActivityAsync(applicationStatus, commandLineParameters).Wait();
+                    activity.ProcessActivityAsync(applicationStatus).Wait();
                 }
                 catch (AggregateException ex)
                 {

@@ -14,8 +14,8 @@ namespace GOG.Activities.Cleanup
     public class CleanupActivity : Activity
     {
         private Context context;
-        private IEnumerateAsyncDelegate expectedItemsEnumarateDelegate;
-        private IEnumerateAsyncDelegate actualItemsEnumerateDelegate;
+        private IEnumerateAllAsyncDelegate expectedItemsEnumarateDelegate;
+        private IEnumerateAllAsyncDelegate actualItemsEnumerateDelegate;
         private IEnumerateDelegate<string> itemsDetailsEnumerateDelegate;
         private IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate;
         private IRecycleBinController recycleBinController;
@@ -23,8 +23,8 @@ namespace GOG.Activities.Cleanup
 
         public CleanupActivity(
             Context context,
-            IEnumerateAsyncDelegate expectedItemsEnumarateDelegate,
-            IEnumerateAsyncDelegate actualItemsEnumerateDelegate,
+            IEnumerateAllAsyncDelegate expectedItemsEnumarateDelegate,
+            IEnumerateAllAsyncDelegate actualItemsEnumerateDelegate,
             IEnumerateDelegate<string> itemsDetailsEnumerateDelegate,
             IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate,
             IRecycleBinController recycleBinController,
@@ -41,12 +41,12 @@ namespace GOG.Activities.Cleanup
             this.directoryController = directoryController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             var cleanupTask = statusController.Create(status, $"Cleanup {context}");
 
-            var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAsync(status);
-            var actualItems = await actualItemsEnumerateDelegate.EnumerateAsync(status);
+            var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAllAsync(status);
+            var actualItems = await actualItemsEnumerateDelegate.EnumerateAllAsync(status);
 
             var unexpectedItems = actualItems.Except(expectedItems);
             var cleanupItems = new List<string>();

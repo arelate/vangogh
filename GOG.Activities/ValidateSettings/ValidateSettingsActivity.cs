@@ -28,7 +28,7 @@ namespace GOG.Activities.ValidateSettings
             this.directoriesValidationDelegate = directoriesValidationDelegate;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status, params string[] parameters)
+        public override async Task ProcessActivityAsync(IStatus status)
         {
             await Task.Run(() =>
             {

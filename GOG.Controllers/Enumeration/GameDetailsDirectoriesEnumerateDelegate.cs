@@ -10,13 +10,13 @@ using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsDirectoriesEnumerateDelegate : IEnumerateAsyncDelegate
+    public class GameDetailsDirectoriesEnumerateAllDelegate : IEnumerateAllAsyncDelegate
     {
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
         private IStatusController statusController;
 
-        public GameDetailsDirectoriesEnumerateDelegate(
+        public GameDetailsDirectoriesEnumerateAllDelegate(
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
             IStatusController statusController)
@@ -26,7 +26,7 @@ namespace GOG.Controllers.Enumeration
             this.statusController = statusController;
         }
 
-        public async Task<IList<string>> EnumerateAsync(IStatus status)
+        public async Task<IList<string>> EnumerateAllAsync(IStatus status)
         {
             var enumerateGameDetailsDirectoriesTask = statusController.Create(status, "Enumerate gameDetails directories");
             var directories = new List<string>();

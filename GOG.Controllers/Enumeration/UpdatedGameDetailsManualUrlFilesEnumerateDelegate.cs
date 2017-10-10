@@ -12,14 +12,14 @@ using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class UpdatedGameDetailsManualUrlFilesEnumerateDelegate : IEnumerateAsyncDelegate
+    public class UpdatedGameDetailsManualUrlFilesEnumerateAllDelegate : IEnumerateAllAsyncDelegate
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateAsyncDelegate<GameDetails> gameDetailsFilesEnumerateDelegate;
         private IStatusController statusController;
 
-        public UpdatedGameDetailsManualUrlFilesEnumerateDelegate(
+        public UpdatedGameDetailsManualUrlFilesEnumerateAllDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateAsyncDelegate<GameDetails> gameDetailsFilesEnumerateDelegate,
@@ -31,7 +31,7 @@ namespace GOG.Controllers.Enumeration
             this.statusController = statusController;
         }
 
-        public async Task<IList<string>> EnumerateAsync(IStatus status)
+        public async Task<IList<string>> EnumerateAllAsync(IStatus status)
         {
             var enumerateUpdateGameDetailsFilesTask = statusController.Create(status, "Enumerate updated gameDetails files");
 
