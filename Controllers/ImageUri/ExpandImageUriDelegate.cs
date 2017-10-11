@@ -4,9 +4,9 @@ using Models.Uris;
 
 namespace Controllers.ImageUri
 {
-    public class ImageUriController : IImageUriController
+    public class ExpandImageUriDelegate : IExpandImageUriDelegate
     {
-        public string ExpandUri(string partialUri)
+        public string ExpandImageUri(string partialUri)
         {
             return string.Format(Uris.Paths.Images.FullUriTemplate, partialUri);
         }

@@ -5,13 +5,14 @@ using System.Linq;
 using Interfaces.Collection;
 using Interfaces.Data;
 using Interfaces.Status;
-using Interfaces.NewUpdatedSelection;
+
+using GOG.Interfaces.NewUpdatedSelection;
 
 using GOG.Models;
 
 using Models.Separators;
 
-namespace GOG.Controllers.DataRefinement
+namespace GOG.Controllers.NewUpdatedSelection
 {
     public class SelectNewUpdatedDelegate : ISelectNewUpdatedAsyncDelegate<AccountProduct>
     {

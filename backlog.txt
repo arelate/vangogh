@@ -2,6 +2,11 @@ Backend
 
 - move updated enumeration to take command line parameters into account - in the future this will also be a central point for whitelists/blacklists
 
+- change clear updated from unconditional clearing to receipt based system. To clear updated we'll need successful completion of several activities since product was added as updated:
+-- need to track when product was added
+-- need to define this dependency system
+-- need to change clear updated model to check everything above
+
 - investigate /user/data/games (from https://www.gog.com/forum/general/unofficial_gog_api_documentation/page2) and game_type == pack specifically
 
 - activityQueueBacklog.txt

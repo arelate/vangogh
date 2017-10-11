@@ -10,21 +10,24 @@ using Models.ProductCore;
 
 namespace GOG.Controllers.DownloadSources
 {
-    public abstract class ProductCoreImagesDownloadSourcesController<T> : IDownloadSourcesController 
-        where T: ProductCore
+    public class ProductCoreImagesDownloadSourcesController<T> : IDownloadSourcesController
+        where T : ProductCore
     {
         private IDataController<T> dataController;
         private IDataController<long> updateDataController;
-        private IImageUriController imageUriController;
+        private IExpandImageUriDelegate expandImageUriDelegate;
+        private IGetImageUriDelegate<T> getImageUriDelegate;
 
         public ProductCoreImagesDownloadSourcesController(
             IDataController<long> updateDataController,
             IDataController<T> dataController,
-            IImageUriController imageUriController)
+            IExpandImageUriDelegate expandImageUriDelegate,
+            IGetImageUriDelegate<T> getImageUriDelegate)
         {
             this.updateDataController = updateDataController;
             this.dataController = dataController;
-            this.imageUriController = imageUriController;
+            this.expandImageUriDelegate = expandImageUriDelegate;
+            this.getImageUriDelegate = getImageUriDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
@@ -38,7 +41,9 @@ namespace GOG.Controllers.DownloadSources
                 // not all updated products can be found with all dataControllers
                 if (productCore == null) continue;
 
-                var imageSources = new List<string>() { imageUriController.ExpandUri(GetImageUri(productCore)) };
+                var imageSources = new List<string>() {
+                    expandImageUriDelegate.ExpandImageUri(
+                        getImageUriDelegate.GetImageUri(productCore)) };
 
                 if (!productImageSources.ContainsKey(id))
                     productImageSources.Add(id, new List<string>());
@@ -48,11 +53,6 @@ namespace GOG.Controllers.DownloadSources
             }
 
             return productImageSources;
-        }
-
-        internal virtual string GetImageUri(T productCore)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Status;
 
-namespace Interfaces.NewUpdatedSelection
+namespace GOG.Interfaces.NewUpdatedSelection
 {
     public interface ISelectNewUpdatedAsyncDelegate<T>
     {

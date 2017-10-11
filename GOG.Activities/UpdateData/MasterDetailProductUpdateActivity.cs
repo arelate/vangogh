@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Network;
@@ -13,40 +14,45 @@ using Models.ProductCore;
 
 namespace GOG.Activities.UpdateData
 {
-    public class ProductCoreUpdateActivity<UpdateType, ListType> :
+    public class MasterDetailProductUpdateActivity<MasterType, DetailType> :
         Activity
-        where ListType : ProductCore
-        where UpdateType : ProductCore
+        where MasterType : ProductCore
+        where DetailType : ProductCore
     {
-        private IDataController<UpdateType> updateTypeDataController;
-        private IDataController<ListType> listTypeDataController;
+        private IDataController<MasterType> masterDataController;
+        private IDataController<DetailType> detailDataController;
         private IDataController<long> updatedDataController;
 
-        private IGetDeserializedAsyncDelegate<UpdateType> getDeserializedDelegate;
+        private IEnumerateIdsDelegate userRequestedOrOtherEnumerateDelegate;
 
-        private IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate;
-        private IConnectDelegate<UpdateType, ListType> connectDelegate;
+        private IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
+
+        private IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate;
+        private IConnectDelegate<DetailType, MasterType> connectDelegate;
 
         private Context context;
         private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
 
         private string updateTypeDescription;
 
-        public ProductCoreUpdateActivity(
+        public MasterDetailProductUpdateActivity(
             Context context,
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
-            IDataController<UpdateType> updateTypeDataController,
-            IDataController<ListType> listTypeDataController,
+            IEnumerateIdsDelegate userRequestedOrOtherEnumerateDelegate,
+            IDataController<MasterType> masterDataController,
+            IDataController<DetailType> detailDataController,
             IDataController<long> updatedDataController,
-            IGetDeserializedAsyncDelegate<UpdateType> getDeserializedDelegate,
-            IGetUpdateIdentityDelegate<ListType> getUpdateIdentityDelegate,
+            IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate,
+            IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate,
             IStatusController statusController,
-            IConnectDelegate<UpdateType, ListType> connectDelegate = null) :
+            IConnectDelegate<DetailType, MasterType> connectDelegate = null) :
             base(statusController)
         {
-            this.updateTypeDataController = updateTypeDataController;
-            this.listTypeDataController = listTypeDataController;
+            this.masterDataController = masterDataController;
+            this.detailDataController = detailDataController;
             this.updatedDataController = updatedDataController;
+
+            this.userRequestedOrOtherEnumerateDelegate = userRequestedOrOtherEnumerateDelegate;
 
             this.getDeserializedDelegate = getDeserializedDelegate;
 
@@ -55,42 +61,29 @@ namespace GOG.Activities.UpdateData
 
             this.context = context;
             this.getUpdateUriDelegate = getUpdateUriDelegate;
-            updateTypeDescription = typeof(UpdateType).Name;
+            updateTypeDescription = typeof(DetailType).Name;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
             var updateProductsTask = statusController.Create(status, $"Update {updateTypeDescription}");
 
-            var updatedProducts = new List<long>();
-
-            var missingDataEnumerationTask = statusController.Create(updateProductsTask, "Enumerate gaps");
-
-            foreach (var id in listTypeDataController.EnumerateIds())
-            {
-                if (!updateTypeDataController.ContainsId(id))
-                    updatedProducts.Add(id);
-            }
-
-            statusController.Complete(missingDataEnumerationTask);
-
-            var addUpdatedTask = statusController.Create(updateProductsTask, "Add new/updated");
-
-            updatedProducts.AddRange(updatedDataController.EnumerateIds());
-
-            statusController.Complete(addUpdatedTask);
+            // We'll limit detail updates to user specified ids.
+            // if user didn't provide a list of ids - we'll use the details gaps 
+            // (ids that exist in master list, but not detail) and updated
+            var updatedProducts = userRequestedOrOtherEnumerateDelegate.EnumerateIds();
 
             var currentProduct = 0;
 
             foreach (var id in updatedProducts)
             {
-                var product = await listTypeDataController.GetByIdAsync(id);
+                var product = await masterDataController.GetByIdAsync(id);
                 if (product == null) continue;
 
                 statusController.UpdateProgress(
                     updateProductsTask,
                     ++currentProduct,
-                    updatedProducts.Count,
+                    updatedProducts.Count(),
                     product.Title);
 
                 var updateIdentity = getUpdateIdentityDelegate.GetUpdateIdentity(product);
@@ -105,7 +98,7 @@ namespace GOG.Activities.UpdateData
                 if (data != null)
                 {
                     connectDelegate?.Connect(data, product);
-                    await updateTypeDataController.UpdateAsync(updateProductsTask, data);
+                    await detailDataController.UpdateAsync(updateProductsTask, data);
                 }
             }
 

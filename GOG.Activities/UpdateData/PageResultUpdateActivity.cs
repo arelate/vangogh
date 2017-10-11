@@ -3,7 +3,6 @@ using System.Linq;
 
 using Interfaces.RequestPage;
 using Interfaces.Data;
-using Interfaces.NewUpdatedSelection;
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;
 
@@ -11,6 +10,7 @@ using Models.ProductCore;
 
 using GOG.Interfaces.PageResults;
 using GOG.Interfaces.Extraction;
+using GOG.Interfaces.NewUpdatedSelection;
 
 namespace GOG.Activities.UpdateData
 {

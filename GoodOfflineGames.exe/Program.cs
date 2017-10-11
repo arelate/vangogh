@@ -51,6 +51,7 @@ using Controllers.Tree;
 using Controllers.ViewController;
 using Controllers.Enumeration;
 using Controllers.ActivityContext;
+using Controllers.UserRequested;
 
 using Interfaces.Activity;
 using Interfaces.Extraction;
@@ -66,10 +67,11 @@ using GOG.Controllers.Network;
 using GOG.Controllers.Connection;
 using GOG.Controllers.UpdateIdentity;
 using GOG.Controllers.FileDownload;
-using GOG.Controllers.DataRefinement;
+using GOG.Controllers.NewUpdatedSelection;
 using GOG.Controllers.DownloadSources;
 using GOG.Controllers.Authorization;
 using GOG.Controllers.UpdateScreenshots;
+using GOG.Controllers.ImageUri;
 
 using GOG.Activities.Help;
 using GOG.Activities.Load;
@@ -242,8 +244,8 @@ namespace GoodOfflineGames
             var gogDataExtractionController = new GOGDataExtractionController();
             var screenshotExtractionController = new ScreenshotExtractionController();
 
-            var imageUriController = new ImageUriController();
-            var screenshotUriController = new ScreenshotUriController();
+            var expandImageUriDelegate = new ExpandImageUriDelegate();
+            var expandScreenshotUriDelegate = new ExpandScreenshotUriDelegate();
 
             #endregion
 
@@ -626,13 +628,25 @@ namespace GoodOfflineGames
 
             var gameDetailsAccountProductConnectDelegate = new GameDetailsAccountProductConnectDelegate();
 
+            var userRequestedController = new UserRequestedController(args);
+
             // product update controllers
 
-            var gameProductDataUpdateActivity = new ProductCoreUpdateActivity<GameProductData, Product>(
+            var gameProductDataEnumerateGapsDelegate = new MasterDetailsEnumerateGapsDelegate<Product, GameProductData>(
+                productsDataController,
+                gameProductDataController);
+
+            var userRequestedOrGameProductDataGapsEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
+                userRequestedController,
+                gameProductDataEnumerateGapsDelegate,
+                updatedDataController);
+
+            var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
                 Context.GameProductData,
                 productParameterGetUpdateUriDelegate,
-                gameProductDataController,
+                userRequestedOrGameProductDataGapsEnumerateDelegate,
                 productsDataController,
+                gameProductDataController,
                 updatedDataController,
                 getGameProductDataDeserializedDelegate,
                 productUrlGetUpdateIdentityDelegate,
@@ -642,11 +656,21 @@ namespace GoodOfflineGames
                 networkController,
                 serializationController);
 
-            var apiProductUpdateActivity = new ProductCoreUpdateActivity<ApiProduct, Product>(
+            var apiProductEnumerateGapsDelegate = new MasterDetailsEnumerateGapsDelegate<Product, ApiProduct>(
+                productsDataController,
+                apiProductsDataController);
+
+            var userRequestedOrApiProductGapsEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
+                userRequestedController,
+                apiProductEnumerateGapsDelegate,
+                updatedDataController);
+
+            var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
                 Context.ApiProducts,
                 productParameterGetUpdateUriDelegate,
-                apiProductsDataController,
+                userRequestedOrApiProductGapsEnumerateDelegate,
                 productsDataController,
+                apiProductsDataController,
                 updatedDataController,
                 getApriProductDelegate,
                 productGetUpdateIdentityDelegate,
@@ -680,11 +704,21 @@ namespace GoodOfflineGames
                 sanitizationController,
                 operatingSystemsDownloadsExtractionController);
 
-            var gameDetailsUpdateActivity = new ProductCoreUpdateActivity<GameDetails, AccountProduct>(
+            var gameDetailsEnumerateGapsDelegate = new MasterDetailsEnumerateGapsDelegate<AccountProduct, GameDetails>(
+                accountProductsDataController,
+                gameDetailsDataController);
+
+            var userRequestedOrGameDetailsGapsEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
+                userRequestedController,
+                gameDetailsEnumerateGapsDelegate,
+                updatedDataController);
+
+            var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
                 Context.GameDetails,
                 productParameterGetUpdateUriDelegate,
-                gameDetailsDataController,
+                userRequestedOrGameDetailsGapsEnumerateDelegate,
                 accountProductsDataController,
+                gameDetailsDataController,
                 updatedDataController,
                 getGameDetailsDelegate,
                 accountProductGetUpdateIdentityDelegate,
@@ -712,19 +746,24 @@ namespace GoodOfflineGames
 
             // dependencies for download controllers
 
-            var productsImagesDownloadSourcesController = new ProductsImagesDownloadSourcesController(
+            var productGetImageUriDelegate = new ProductGetImageUriDelegate();
+            var accountProductGetImageUriDelegate = new AccountProductGetImageUriDelegate();
+
+            var productsImagesDownloadSourcesController = new ProductCoreImagesDownloadSourcesController<Product>(
                 updatedDataController,
                 productsDataController,
-                imageUriController);
+                expandImageUriDelegate,
+                productGetImageUriDelegate);
 
-            var accountProductsImagesDownloadSourcesController = new AccountProductsImagesDownloadSourcesController(
+            var accountProductsImagesDownloadSourcesController = new ProductCoreImagesDownloadSourcesController<AccountProduct>(
                 updatedDataController,
                 accountProductsDataController,
-                imageUriController);
+                expandImageUriDelegate,
+                accountProductGetImageUriDelegate);
 
             var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
                 screenshotsDataController,
-                screenshotUriController,
+                expandScreenshotUriDelegate,
                 screenshotsDirectoryDelegate,
                 fileController,
                 statusController);

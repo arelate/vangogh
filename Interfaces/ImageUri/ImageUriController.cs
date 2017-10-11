@@ -1,13 +1,12 @@
 ﻿namespace Interfaces.ImageUri
 {
-    public interface IExpandUriDelegate
+    public interface IExpandImageUriDelegate
     {
-        string ExpandUri(string partialUri);
+        string ExpandImageUri(string partialUri);
     }
 
-    public interface IImageUriController:
-        IExpandUriDelegate
+    public interface IGetImageUriDelegate<Type>
     {
-        // ...
+        string GetImageUri(Type element);
     }
 }

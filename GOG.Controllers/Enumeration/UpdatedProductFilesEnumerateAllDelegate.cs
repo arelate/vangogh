@@ -13,7 +13,7 @@ using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class UpdatedProductFilesEnumerateAllDelegate : IEnumerateAllAsyncDelegate
+    public class UpdatedProductFilesEnumerateAllDelegate : IEnumerateAllAsyncDelegate<string>
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
@@ -35,7 +35,7 @@ namespace GOG.Controllers.Enumeration
             this.statusController = statusController;
         }
 
-        public async Task<IList<string>> EnumerateAllAsync(IStatus status)
+        public async Task<IEnumerable<string>> EnumerateAllAsync(IStatus status)
         {
             var enumerateUpdatedProductFilesTask = statusController.Create(status, "Enumerate updated productFiles");
 

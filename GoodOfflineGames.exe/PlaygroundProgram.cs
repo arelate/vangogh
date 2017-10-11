@@ -8,19 +8,11 @@ namespace GoodOfflineGames
     {
         static void Main(string[] args)
         {
-            var lineBreakingDelegate = new Controllers.LineBreaking.LineBreakingDelegate();
-            var consoleController = new Controllers.Console.ConsoleController();
-            var consolePresentationController = new Controllers.Presentation.ConsolePresentationController(lineBreakingDelegate, consoleController);
+            var userRequestedController = new Controllers.UserRequested.UserRequestedController("123", "1", "a");
 
-            consolePresentationController.Present(new string[] { "123", "45678", "90" });
-            //Console.ReadLine();
-
-            consolePresentationController.Present(new string[] { "123456", "7890" });
-
-            consolePresentationController.Present(new string[] { "123", "4567890" });
-
-
-
+            Console.WriteLine(userRequestedController.IsNullOrEmpty());
+            foreach (var id in userRequestedController.EnumerateIds())
+                Console.WriteLine(id);
 
             Console.ReadLine();
 

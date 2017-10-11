@@ -14,8 +14,8 @@ namespace GOG.Activities.Cleanup
     public class CleanupActivity : Activity
     {
         private Context context;
-        private IEnumerateAllAsyncDelegate expectedItemsEnumarateDelegate;
-        private IEnumerateAllAsyncDelegate actualItemsEnumerateDelegate;
+        private IEnumerateAllAsyncDelegate<string> expectedItemsEnumarateDelegate;
+        private IEnumerateAllAsyncDelegate<string> actualItemsEnumerateDelegate;
         private IEnumerateDelegate<string> itemsDetailsEnumerateDelegate;
         private IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate;
         private IRecycleBinController recycleBinController;
@@ -23,8 +23,8 @@ namespace GOG.Activities.Cleanup
 
         public CleanupActivity(
             Context context,
-            IEnumerateAllAsyncDelegate expectedItemsEnumarateDelegate,
-            IEnumerateAllAsyncDelegate actualItemsEnumerateDelegate,
+            IEnumerateAllAsyncDelegate<string> expectedItemsEnumarateDelegate,
+            IEnumerateAllAsyncDelegate<string> actualItemsEnumerateDelegate,
             IEnumerateDelegate<string> itemsDetailsEnumerateDelegate,
             IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate,
             IRecycleBinController recycleBinController,

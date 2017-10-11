@@ -18,20 +18,20 @@ namespace GOG.Controllers.DownloadSources
     public class ScreenshotsDownloadSourcesController : IDownloadSourcesController
     {
         private IDataController<ProductScreenshots> screenshotsDataController;
-        private IImageUriController screenshotUriController;
+        private IExpandImageUriDelegate expandScreenshotUriDelegate;
         private IGetDirectoryDelegate screenshotsDirectoryDelegate;
         private IFileController fileController;
         private IStatusController statusController;
 
         public ScreenshotsDownloadSourcesController(
             IDataController<ProductScreenshots> screenshotsDataController,
-            IImageUriController screenshotUriController,
+            IExpandImageUriDelegate expandScreenshotUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
             IFileController fileController,
             IStatusController statusController)
         {
             this.screenshotsDataController = screenshotsDataController;
-            this.screenshotUriController = screenshotUriController;
+            this.expandScreenshotUriDelegate = expandScreenshotUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
             this.fileController = fileController;
             this.statusController = statusController;
@@ -67,7 +67,7 @@ namespace GOG.Controllers.DownloadSources
 
                 foreach (var uri in productScreenshots.Uris)
                 {
-                    var sourceUri = screenshotUriController.ExpandUri(uri);
+                    var sourceUri = expandScreenshotUriDelegate.ExpandImageUri(uri);
                     var destinationUri = Path.Combine(
                         screenshotsDirectoryDelegate.GetDirectory(),
                         Path.GetFileName(sourceUri));
