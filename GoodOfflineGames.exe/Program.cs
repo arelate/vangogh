@@ -921,7 +921,7 @@ namespace GoodOfflineGames
                 validationResultsDataController,
                 gameDetailsDataController,
                 gameDetailsManualUrlsEnumerateDelegate,
-                updatedDataController,
+                userRequestedOrUpdatedEnumerateDelegate,
                 routingController,
                 statusController);
 
