@@ -636,7 +636,7 @@ namespace GoodOfflineGames
                 productsDataController,
                 gameProductDataController);
 
-            var userRequestedOrGameProductDataGapsEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
+            var userRequestedOrGameProductDataGapsAndUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
                 userRequestedController,
                 gameProductDataEnumerateGapsDelegate,
                 updatedDataController);
@@ -644,7 +644,7 @@ namespace GoodOfflineGames
             var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
                 Context.GameProductData,
                 productParameterGetUpdateUriDelegate,
-                userRequestedOrGameProductDataGapsEnumerateDelegate,
+                userRequestedOrGameProductDataGapsAndUpdatedEnumerateDelegate,
                 productsDataController,
                 gameProductDataController,
                 updatedDataController,
@@ -660,7 +660,7 @@ namespace GoodOfflineGames
                 productsDataController,
                 apiProductsDataController);
 
-            var userRequestedOrApiProductGapsEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
+            var userRequestedOrApiProductGapsAndUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
                 userRequestedController,
                 apiProductEnumerateGapsDelegate,
                 updatedDataController);
@@ -668,7 +668,7 @@ namespace GoodOfflineGames
             var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
                 Context.ApiProducts,
                 productParameterGetUpdateUriDelegate,
-                userRequestedOrApiProductGapsEnumerateDelegate,
+                userRequestedOrApiProductGapsAndUpdatedEnumerateDelegate,
                 productsDataController,
                 apiProductsDataController,
                 updatedDataController,
@@ -708,7 +708,7 @@ namespace GoodOfflineGames
                 accountProductsDataController,
                 gameDetailsDataController);
 
-            var userRequestedOrGameDetailsGapsEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
+            var userRequestedOrGameDetailsGapsAndUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
                 userRequestedController,
                 gameDetailsEnumerateGapsDelegate,
                 updatedDataController);
@@ -716,7 +716,7 @@ namespace GoodOfflineGames
             var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
                 Context.GameDetails,
                 productParameterGetUpdateUriDelegate,
-                userRequestedOrGameDetailsGapsEnumerateDelegate,
+                userRequestedOrGameDetailsGapsAndUpdatedEnumerateDelegate,
                 accountProductsDataController,
                 gameDetailsDataController,
                 updatedDataController,
@@ -749,14 +749,18 @@ namespace GoodOfflineGames
             var productGetImageUriDelegate = new ProductGetImageUriDelegate();
             var accountProductGetImageUriDelegate = new AccountProductGetImageUriDelegate();
 
+            var userRequestedOrUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
+                userRequestedController,
+                updatedDataController);
+
             var productsImagesDownloadSourcesController = new ProductCoreImagesDownloadSourcesController<Product>(
-                updatedDataController,
+                userRequestedOrUpdatedEnumerateDelegate,
                 productsDataController,
                 expandImageUriDelegate,
                 productGetImageUriDelegate);
 
             var accountProductsImagesDownloadSourcesController = new ProductCoreImagesDownloadSourcesController<AccountProduct>(
-                updatedDataController,
+                userRequestedOrUpdatedEnumerateDelegate,
                 accountProductsDataController,
                 expandImageUriDelegate,
                 accountProductGetImageUriDelegate);

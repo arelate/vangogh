@@ -71,11 +71,11 @@ namespace GOG.Activities.UpdateData
             // We'll limit detail updates to user specified ids.
             // if user didn't provide a list of ids - we'll use the details gaps 
             // (ids that exist in master list, but not detail) and updated
-            var updatedProducts = userRequestedOrOtherEnumerateDelegate.EnumerateIds();
+            var productsUpdateList = userRequestedOrOtherEnumerateDelegate.EnumerateIds();
 
             var currentProduct = 0;
 
-            foreach (var id in updatedProducts)
+            foreach (var id in productsUpdateList)
             {
                 var product = await masterDataController.GetByIdAsync(id);
                 if (product == null) continue;
@@ -83,7 +83,7 @@ namespace GOG.Activities.UpdateData
                 statusController.UpdateProgress(
                     updateProductsTask,
                     ++currentProduct,
-                    updatedProducts.Count(),
+                    productsUpdateList.Count(),
                     product.Title);
 
                 var updateIdentity = getUpdateIdentityDelegate.GetUpdateIdentity(product);

@@ -14,17 +14,17 @@ namespace GOG.Controllers.DownloadSources
         where T : ProductCore
     {
         private IDataController<T> dataController;
-        private IDataController<long> updateDataController;
+        private IEnumerateIdsDelegate productEnumerateDelegate;
         private IExpandImageUriDelegate expandImageUriDelegate;
         private IGetImageUriDelegate<T> getImageUriDelegate;
 
         public ProductCoreImagesDownloadSourcesController(
-            IDataController<long> updateDataController,
+            IEnumerateIdsDelegate productEnumerateDelegate,
             IDataController<T> dataController,
             IExpandImageUriDelegate expandImageUriDelegate,
             IGetImageUriDelegate<T> getImageUriDelegate)
         {
-            this.updateDataController = updateDataController;
+            this.productEnumerateDelegate = productEnumerateDelegate;
             this.dataController = dataController;
             this.expandImageUriDelegate = expandImageUriDelegate;
             this.getImageUriDelegate = getImageUriDelegate;
@@ -34,7 +34,7 @@ namespace GOG.Controllers.DownloadSources
         {
             var productImageSources = new Dictionary<long, IList<string>>();
 
-            foreach (var id in updateDataController.EnumerateIds())
+            foreach (var id in productEnumerateDelegate.EnumerateIds())
             {
                 var productCore = await dataController.GetByIdAsync(id);
 
