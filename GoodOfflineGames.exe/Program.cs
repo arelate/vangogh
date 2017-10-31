@@ -52,6 +52,7 @@ using Controllers.ViewController;
 using Controllers.Enumeration;
 using Controllers.ActivityContext;
 using Controllers.UserRequested;
+using Controllers.RequestData;
 
 using Interfaces.Activity;
 using Interfaces.Extraction;
@@ -514,8 +515,10 @@ namespace GoodOfflineGames
 
             #region Authorize
 
-            var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(consoleController);
-            var securityCodeValidationDelegate = new SecurityCodeValidationDelegate(consoleController);
+            var requestDataController = new RequestDataController(consoleController);
+
+            var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(requestDataController);
+            var securityCodeValidationDelegate = new SecurityCodeValidationDelegate(requestDataController);
 
             var authorizationExtractionControllers = new Dictionary<string, IStringExtractionController>()
             {
@@ -1011,7 +1014,6 @@ namespace GoodOfflineGames
 
             var helpActivity = new HelpActivity(
                 activityContextController,
-                consoleController,
                 statusController);
 
             #endregion
@@ -1039,6 +1041,7 @@ namespace GoodOfflineGames
             #region List
 
             var listUpdatedActivity = new ListUpdatedActivity(
+                updatedDataController,
                 accountProductsDataController, 
                 statusController);
 

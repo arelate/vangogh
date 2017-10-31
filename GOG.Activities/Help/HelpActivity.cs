@@ -12,16 +12,13 @@ namespace GOG.Activities.Help
     public class HelpActivity : Activity
     {
         private IActivityContextController activityContextController;
-        private IConsoleController consoleController;
 
         public HelpActivity(
             IActivityContextController activityContextController,
-            IConsoleController consoleController,
             IStatusController statusController) : 
             base(statusController)
         {
             this.activityContextController = activityContextController;
-            this.consoleController = consoleController;
         }
 
         public override Task ProcessActivityAsync(IStatus status)

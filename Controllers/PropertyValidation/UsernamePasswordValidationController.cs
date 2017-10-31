@@ -1,16 +1,15 @@
 ﻿using Interfaces.PropertyValidation;
-using Interfaces.Settings;
-using Interfaces.Console;
+using Interfaces.RequestData;
 
 namespace Controllers.PropertyValidation
 {
     public class UsernamePasswordValidationDelegate : IValidatePropertiesDelegate<string[]>
     {
-        private IConsoleController consoleController;
+        private IRequestDataController<string> requestDataController;
 
-        public UsernamePasswordValidationDelegate(IConsoleController consoleController)
+        public UsernamePasswordValidationDelegate(IRequestDataController<string> requestDataController)
         {
-            this.consoleController = consoleController;
+            this.requestDataController = requestDataController;
         }
 
         public string[] ValidateProperties(string[] usernamePassword)
@@ -22,19 +21,16 @@ namespace Controllers.PropertyValidation
             var emptyUsername = string.IsNullOrEmpty(usernamePassword[0]);
             var emptyPassword = string.IsNullOrEmpty(usernamePassword[1]);
 
-            if (emptyUsername || emptyPassword) consoleController.WriteLine(string.Empty);
-
             if (emptyUsername)
-            {
-                consoleController.WriteLine("Please enter your GOG.com username (email):");
-                usernamePassword[0] = consoleController.ReadLine();
-            }
+                usernamePassword[0] =
+                    requestDataController.RequestData("Please enter your GOG.com username (email):");
 
             if (emptyPassword)
-            {
-                consoleController.WriteLine("Please enter password for {0}:", usernamePassword[0]);
-                usernamePassword[1] = consoleController.InputPassword();
-            }
+                usernamePassword[1] =
+                    requestDataController.RequestPrivateData(
+                        string.Format(
+                            "Please enter password for {0}:", 
+                            usernamePassword[0]));
 
             return usernamePassword;
         }

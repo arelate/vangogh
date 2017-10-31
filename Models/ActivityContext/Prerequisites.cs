@@ -83,6 +83,13 @@ namespace Models.ActivityContext
                 {
                     (Activity.Authorize, Context.None)
                 }
+            },
+            {
+                (Activity.List, Context.Any),
+                new AC[]
+                {
+                    (Activity.Load, Context.Data)
+                }
             }
         };
     }

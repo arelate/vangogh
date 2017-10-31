@@ -1,16 +1,16 @@
 ﻿using Interfaces.PropertyValidation;
-using Interfaces.Console;
+using Interfaces.RequestData;
 
 namespace Controllers.PropertyValidation
 {
     public class SecurityCodeValidationDelegate : IValidatePropertiesDelegate<string>
     {
         private const string securityCodeHasBeenSent = "Enter four digits security code that has been sent to your email:";
-        private IConsoleController consoleController;
+        private IRequestDataController<string> requestDataController;
 
-        public SecurityCodeValidationDelegate(IConsoleController consoleController)
+        public SecurityCodeValidationDelegate(IRequestDataController<string> requestDataController)
         {
-            this.consoleController = consoleController;
+            this.requestDataController = requestDataController;
         }
 
         public string ValidateProperties(string properties)
@@ -18,10 +18,7 @@ namespace Controllers.PropertyValidation
             var securityCode = string.Empty;
 
             while (securityCode.Length != 4)
-            {
-                consoleController.WriteLine(securityCodeHasBeenSent);
-                securityCode = consoleController.ReadLine();
-            }
+                securityCode = requestDataController.RequestData(securityCodeHasBeenSent);
 
             return securityCode;
         }
