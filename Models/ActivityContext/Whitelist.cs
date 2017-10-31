@@ -88,6 +88,13 @@ namespace Models.ActivityContext
                 }
             },
             {
+                Activity.List,
+                new Context[]
+                {
+                    Context.Updated
+                }
+            },
+            {
                 Activity.Help,
                 new Context[]
                 {

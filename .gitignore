@@ -206,3 +206,6 @@ data/products/*.*
 data/accountProducts/*.*
 
 
+/GoodOfflineGames.exe/data
+/GoodOfflineGames.exe/reports
+/GoodOfflineGames.exe/failureDump.json

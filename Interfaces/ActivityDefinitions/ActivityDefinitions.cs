@@ -11,6 +11,7 @@
         Repair,
         Cleanup,
         Report,
+        List,
         Help
     }
 }

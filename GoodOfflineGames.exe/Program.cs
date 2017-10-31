@@ -84,6 +84,7 @@ using GOG.Activities.Repair;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
 using GOG.Activities.Report;
+using GOG.Activities.List;
 
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
@@ -1035,6 +1036,14 @@ namespace GoodOfflineGames
 
             #endregion
 
+            #region List
+
+            var listUpdatedActivity = new ListUpdatedActivity(
+                accountProductsDataController, 
+                statusController);
+
+            #endregion
+
             #endregion
 
             #region Activity Context To Activity Controllers Mapping
@@ -1066,6 +1075,7 @@ namespace GoodOfflineGames
                 { (Activity.Cleanup, Context.Files), fileCleanupActivity },
                 { (Activity.Cleanup, Context.Updated), cleanupUpdatedActivity },
                 { (Activity.Report, Context.None), reportActivity },
+                { (Activity.List, Context.Updated), listUpdatedActivity },
                 { (Activity.Help, Context.None), helpActivity }
             };
 
