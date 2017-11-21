@@ -3,9 +3,9 @@ using Interfaces.RequestData;
 
 namespace Interfaces.RequestPresent
 {
-    public interface IRequestPresentController<RequestType, PresentType>:
-        IPresentationController<PresentType>,
-        IRequestDataController<RequestType>
+    public interface IRequestPresentController<T>:
+        IPresentationController<T[]>,
+        IRequestDataController<T>
     {
         // ...
     }

@@ -18,9 +18,8 @@ namespace GoodOfflineGames
             consoleRequestPresentController.PresentNew("abc", "de", "fgh");
             consoleRequestPresentController.PresentAdditional("v", "uw", "xyz");
 
-            consoleRequestPresentController.PresentFragment("abc", "de", "fgh");
-
-            consoleRequestPresentController.PresentFragment("v", "uw", "xyz");
+            consoleRequestPresentController.PresentNew("abc", "de", "fgh");
+            consoleRequestPresentController.PresentNew("v", "uw", "xyz");
 
 
             Console.ReadLine();
