@@ -1,21 +1,32 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Interfaces.Presentation
 {
-    public interface IPresentDelegate<T>
+    public interface IInitializeNewPresentationDelegate
     {
-        void Present(T views);
+        void InitializeNewPresentation();
     }
 
-    public interface IPresentAsyncDelegate<T>
+    public interface IPresentNewDelegate<T>
     {
-        Task PresentAsync(T views);
+        void PresentNew(T data);
+    }
+
+    public interface IPresentStickyDelegate<T>
+    {
+        void PresentSticky(T data);
+    }
+
+    public interface IPresentAdditionalDelegate<T>
+    {
+        void PresentAdditional(T data);
     }
 
     public interface IPresentationController<T> :
-        IPresentDelegate<T>,
-        IPresentAsyncDelegate<T>
+        IInitializeNewPresentationDelegate,
+        IPresentNewDelegate<T>,
+        IPresentStickyDelegate<T>,
+        IPresentAdditionalDelegate<T>
     {
         // ...
     }

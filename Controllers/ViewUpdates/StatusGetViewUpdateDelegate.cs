@@ -1,47 +1,39 @@
 ﻿using System.Text;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using Interfaces.Status;
-using Interfaces.Presentation;
 using Interfaces.Tree;
 using Interfaces.Template;
 using Interfaces.ViewModel;
-using Interfaces.ViewController;
+using Interfaces.ViewUpdates;
 
-using Models.Separators;
-
-namespace Controllers.ViewController
+namespace Controllers.ViewUpdates
 {
-    public class StatusViewController : IViewController<string[]>
+    public class StatusGetViewUpdateDelegate : IGetViewUpdateDelegate<string[]>
     {
         private IStatus status;
         private ITemplateController templateController;
         private IGetViewModelDelegate<IStatus> statusViewModelDelegate;
         private ITreeToEnumerableController<IStatus> statusTreeToEnumerableController;
-        private IPresentationController<string[]> presentationController;
 
         private IList<string> viewParts;
-        //private const string viewPartsSeparator = Separators.Common.Space + Separators.Common.MoreThan + Separators.Common.Space;
 
-        public StatusViewController(
+        public StatusGetViewUpdateDelegate(
             IStatus status,
             ITemplateController templateController,
             IGetViewModelDelegate<IStatus> statusViewModelDelegate,
-            ITreeToEnumerableController<IStatus> statusTreeToEnumerableController,
-            IPresentationController<string[]> presentationController)
+            ITreeToEnumerableController<IStatus> statusTreeToEnumerableController)
         {
             this.status = status;
             this.templateController = templateController;
             this.statusViewModelDelegate = statusViewModelDelegate;
             this.statusTreeToEnumerableController = statusTreeToEnumerableController;
-            this.presentationController = presentationController;
 
             this.viewParts = new List<string>();
         }
 
-        public string[] RequestUpdatedView()
+        public string[] GetViewUpdate()
         {
             viewParts.Clear();
             foreach (var individualStatus in statusTreeToEnumerableController.ToEnumerable(status))
@@ -59,16 +51,6 @@ namespace Controllers.ViewController
             }
 
             return viewParts.ToArray();
-        }
-
-        public void PostUpdateNotification()
-        {
-            presentationController.Present(RequestUpdatedView());
-        }
-
-        public async Task PostUpdateNotificationAsync()
-        {
-            await presentationController.PresentAsync(RequestUpdatedView());
         }
     }
 }

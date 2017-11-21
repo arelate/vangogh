@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 
 using Interfaces.Status;
-using Interfaces.ViewController;
+using Interfaces.ViewUpdates;
 
 namespace Controllers.Status
 {
     public class StatusController : IStatusController
     {
-        private IViewController<string[]> statusViewController;
+        private IPostViewUpdateDelegate postViewUpdateDelegate;
 
-        public StatusController(
-            IViewController<string[]> statusViewController)
+        public StatusController(IPostViewUpdateDelegate postViewUpdateDelegate)
         {
-            this.statusViewController = statusViewController;
+            this.postViewUpdateDelegate = postViewUpdateDelegate;
         }
 
         private void AssertValidStatus(IStatus status)
@@ -36,7 +35,7 @@ namespace Controllers.Status
             };
             status.Children.Add(childStatus);
 
-            statusViewController.PostUpdateNotification();
+            postViewUpdateDelegate.PostViewUpdate();
 
             return childStatus;
         }
@@ -51,7 +50,7 @@ namespace Controllers.Status
             status.Complete = true;
             status.Completed = DateTime.UtcNow;
 
-            statusViewController.PostUpdateNotification();
+            postViewUpdateDelegate.PostViewUpdate();
         }
 
         public void UpdateProgress(IStatus status, long current, long total, string target, string unit = "")
@@ -69,7 +68,7 @@ namespace Controllers.Status
             status.Progress.Total = total;
             status.Progress.Unit = unit;
 
-            statusViewController.PostUpdateNotification();
+            postViewUpdateDelegate.PostViewUpdate();
         }
 
         public void Fail(IStatus status, string failureMessage)

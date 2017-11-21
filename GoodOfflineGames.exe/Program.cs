@@ -48,11 +48,12 @@ using Controllers.QueryParameters;
 using Controllers.Template;
 using Controllers.ViewModel;
 using Controllers.Tree;
-using Controllers.ViewController;
+using Controllers.ViewUpdates;
 using Controllers.Enumeration;
 using Controllers.ActivityContext;
 using Controllers.UserRequested;
 using Controllers.RequestData;
+using Controllers.RequestPresent;
 
 using Interfaces.Activity;
 using Interfaces.Extraction;
@@ -146,7 +147,7 @@ namespace GoodOfflineGames
             var consoleController = new ConsoleController();
             var lineBreakingDelegate = new LineBreakingDelegate();
 
-            var consolePresentationController = new ConsolePresentationController(
+            var consoleRequestPresentController = new ConsoleRequestPresentController(
                 lineBreakingDelegate,
                 consoleController);
 
@@ -188,14 +189,17 @@ namespace GoodOfflineGames
                 bytesFormattingController,
                 secondsFormattingController);
 
-            var statusAppViewController = new StatusViewController(
+            var statusGetViewUpdateDelegate = new StatusGetViewUpdateDelegate(
                 applicationStatus,
                 appTemplateController,
                 statusAppViewModelDelegate,
-                statusTreeToEnumerableController,
-                consolePresentationController);
+                statusTreeToEnumerableController);
 
-            var statusController = new StatusController(statusAppViewController);
+            var consoleStatusPostUpdateDelegate = new StatusPostUpdateDelegate(
+                statusGetViewUpdateDelegate,
+                consoleRequestPresentController);
+
+            var statusController = new StatusController(consoleStatusPostUpdateDelegate);
 
             var throttleController = new ThrottleController(
                 statusController,
@@ -1025,15 +1029,12 @@ namespace GoodOfflineGames
                 reportFilenameDelegate,
                 streamController);
 
-            var statusReportViewController = new StatusViewController(
-                applicationStatus,
-                reportTemplateController,
-                statusReportViewModelDelegate,
-                statusTreeToEnumerableController,
+            var fileStatusPostUpdateAsyncDelegate = new StatusPostUpdateAsyncDelegate(
+                statusGetViewUpdateDelegate,
                 reportFilePresentationController);
 
             var reportActivity = new ReportActivity(
-                statusReportViewController,
+                fileStatusPostUpdateAsyncDelegate,
                 statusController);
 
             #endregion
@@ -1042,7 +1043,7 @@ namespace GoodOfflineGames
 
             var listUpdatedActivity = new ListUpdatedActivity(
                 updatedDataController,
-                accountProductsDataController, 
+                accountProductsDataController,
                 statusController);
 
             #endregion
@@ -1121,11 +1122,11 @@ namespace GoodOfflineGames
                     var failureDumpUri = "failureDump.json";
                     serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
 
-                    consolePresentationController.Present(
-                                "GoodOfflineGames.exe has encountered fatal error(s): " +
-                                combinedErrorMessages +
-                                $".\nPlease refer to {failureDumpUri} for further details.\n" +
-                                "Press ENTER to close the window...");
+                    consoleRequestPresentController.PresentNew(
+                        "GoodOfflineGames.exe has encountered fatal error(s): " +
+                        combinedErrorMessages +
+                        $".\nPlease refer to {failureDumpUri} for further details.\n" +
+                        "Press ENTER to close the window...");
 
                     consoleController.ReadLine();
 
@@ -1140,11 +1141,11 @@ namespace GoodOfflineGames
             if (applicationStatus.SummaryResults != null)
             {
                 foreach (var line in applicationStatus.SummaryResults)
-                    consolePresentationController.Present(string.Join(" ", applicationStatus.SummaryResults));
+                    consoleRequestPresentController.PresentNew(string.Join(" ", applicationStatus.SummaryResults));
             }
             else
             {
-                consolePresentationController.Present("All tasks are complete. Press ENTER to exit...");
+                consoleRequestPresentController.PresentAdditional(string.Empty, "All tasks are complete. Press ENTER to exit...");
             }
 
             consoleController.ReadLine();

@@ -1,26 +1,26 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Status;
-using Interfaces.ViewController;
+using Interfaces.ViewUpdates;
 
 namespace GOG.Activities.Report
 {
     public class ReportActivity: Activity
     {
-        private IViewController<string[]> statusViewController;
+        private IPostViewUpdateAsyncDelegate postViewUpdateAsyncDelegate;
 
         public ReportActivity(
-            IViewController<string[]> statusViewController,
+            IPostViewUpdateAsyncDelegate postViewUpdateAsyncDelegate,
             IStatusController statusController):
             base(statusController)
         {
-            this.statusViewController = statusViewController;
+            this.postViewUpdateAsyncDelegate = postViewUpdateAsyncDelegate;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
             var reportTask = statusController.Create(status, "Presenting report on application task status");
-            await statusViewController.PostUpdateNotificationAsync();
+            await postViewUpdateAsyncDelegate.PostViewUpdateAsync();
             statusController.Complete(reportTask);
         }
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <StartupObject>GoodOfflineGames.Program</StartupObject>
+    <StartupObject>GoodOfflineGames.PlaygroundProgram</StartupObject>
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
   </PropertyGroup>

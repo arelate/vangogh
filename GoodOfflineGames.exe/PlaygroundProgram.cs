@@ -8,11 +8,20 @@ namespace GoodOfflineGames
     {
         static void Main(string[] args)
         {
-            var userRequestedController = new Controllers.UserRequested.UserRequestedController("123", "1", "a");
+            var consoleController = new Controllers.Console.ConsoleController();
+            var lineBreakingDelegate = new Controllers.LineBreaking.LineBreakingDelegate();
 
-            Console.WriteLine(userRequestedController.IsNullOrEmpty());
-            foreach (var id in userRequestedController.EnumerateIds())
-                Console.WriteLine(id);
+            var consoleRequestPresentController = new Controllers.RequestPresent.ConsoleRequestPresentController(
+                lineBreakingDelegate,
+                consoleController);
+
+            consoleRequestPresentController.PresentNew("abc", "de", "fgh");
+            consoleRequestPresentController.PresentAdditional("v", "uw", "xyz");
+
+            consoleRequestPresentController.PresentFragment("abc", "de", "fgh");
+
+            consoleRequestPresentController.PresentFragment("v", "uw", "xyz");
+
 
             Console.ReadLine();
 

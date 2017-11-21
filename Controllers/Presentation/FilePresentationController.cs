@@ -12,7 +12,7 @@ using Interfaces.Stream;
 
 namespace Controllers.Presentation
 {
-    public class FilePresentationController : IPresentationController<string[]>
+    public class FilePresentationController : IPresentAsyncDelegate<string[]>
     {
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
@@ -26,11 +26,6 @@ namespace Controllers.Presentation
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.streamController = streamController;
-        }
-
-        public void Present(params string[] lines)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task PresentAsync(params string[] lines)
