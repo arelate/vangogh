@@ -30,44 +30,7 @@ namespace Controllers.RequestPresent
             this.consoleController = consoleController;
         }
 
-        public void PresentAdditional(params string[] data)
-        {
-            //    fragmentBuffer.Clear();
-
-            //    // Break lines with \n and wrap given available console window width
-            //    var fragmentWrappedLines = lineBreakingDelegate.BreakLines(consoleController.WindowWidth, lines);
-
-            //    // To build the buffer, we'll pad each line with space to take care of different line lengths
-            //    foreach (var line in fragmentWrappedLines)
-            //        fragmentBuffer.Append(line.PadRight(consoleController.WindowWidth));
-
-            //    // Also remove some extra lines that the previous frame could have left
-            //    var previousFrameOverflow = remainingPreviousFrameLines - fragmentWrappedLines.Count();
-            //    if (previousFrameOverflow > 0)
-            //    {
-            //        remainingPreviousFrameLines -= fragmentWrappedLines.Count();
-            //        fragmentBuffer.Append(
-            //            string.Empty.PadRight(consoleController.WindowWidth * previousFrameOverflow));
-            //    }
-
-            //    //// We use content lines to determine frame overflow (lines that won't be overwritten by current frame)
-            //    //// We use frame lines to determine how much we need to move cursor back
-            //    //previousFragmentWrappedLines = fragmentWrappedLines.Count();
-            //    //previousFrameLines += fragmentBuffer.Length / consoleController.WindowWidth;
-
-            //    // Finally, just write the current frame buffer, no need to worry about line breaks or new lines:
-            //    // padded content length takes care of both
-            //    consoleController.Write(fragmentBuffer.ToString());
-
-            //    if (previousFrameOverflow > 0)
-            //    {
-            //        consoleController.CursorTop -= previousFrameOverflow;
-            //    }
-
-            throw new NotImplementedException();
-        }
-
-        public void PresentNew(params string[] data)
+        public void SetNewFrame()
         {
             //    // This assumes that all console presentation is controlled by the consolePresentationController.
             //    // Following previous frame that left cursor at the start of the new line after the output - move it back to 
@@ -81,16 +44,61 @@ namespace Controllers.RequestPresent
             //    //    previousFrameContentLines = 0;
             //    //}
 
-            //    if (savedCursorTopPosition > -1)
-            //    {
-            //        remainingPreviousFrameLines = consoleController.CursorTop - savedCursorTopPosition;
-            //        consoleController.CursorTop = savedCursorTopPosition;
-            //        consoleController.CursorLeft = 0;
+            if (savedCursorTopPosition > -1)
+            {
+                remainingPreviousFrameLines = consoleController.CursorTop - savedCursorTopPosition;
+                consoleController.CursorTop = savedCursorTopPosition;
+                consoleController.CursorLeft = 0;
+            }
+        }
+
+        public void PresentAdditional(params string[] data)
+        {
+            fragmentBuffer.Clear();
+
+            // Break lines with \n and wrap given available console window width
+            var fragmentWrappedLines = lineBreakingDelegate.BreakLines(consoleController.WindowWidth, data);
+
+            // To build the buffer, we'll pad each line with space to take care of different line lengths
+            foreach (var line in fragmentWrappedLines)
+                fragmentBuffer.Append(line.PadRight(consoleController.WindowWidth));
+
+            //    // Also remove some extra lines that the previous frame could have left
+            //        fragmentBuffer.Append(
+            //            string.Empty.PadRight(consoleController.WindowWidth * previousFrameOverflow));
             //    }
 
-            // this.PresentAdditional(data);
+            //    //// We use content lines to determine frame overflow (lines that won't be overwritten by current frame)
+            //    //// We use frame lines to determine how much we need to move cursor back
+            //    //previousFragmentWrappedLines = fragmentWrappedLines.Count();
+            //    //previousFrameLines += fragmentBuffer.Length / consoleController.WindowWidth;
 
-            throw new NotImplementedException();
+            // track remaining lines from the previous frame that are not overwritten by the new content
+            remainingPreviousFrameLines -= fragmentWrappedLines.Count();
+
+            // Write the current frame buffer, no need to worry about line breaks or new lines:
+            // padded content length takes care of both
+            consoleController.Write(fragmentBuffer.ToString());
+
+            if (remainingPreviousFrameLines > 0)
+            {
+                // erase remaining previous frame lines with the padded space
+                consoleController.Write(
+                     string.Empty.PadRight(consoleController.WindowWidth * remainingPreviousFrameLines));
+                // move cursor back so that next additional presentation will continue from the actual content
+                consoleController.CursorTop -= remainingPreviousFrameLines;
+                // we've erased all the lines already no need to track remainder
+                remainingPreviousFrameLines = 0;
+            }
+        }
+
+        public void PresentNew(params string[] data)
+        {
+            SetNewFrame();
+
+            savedCursorTopPosition = consoleController.CursorTop;
+
+            PresentAdditional(data);
         }
 
         public void PresentSticky(params string[] data)

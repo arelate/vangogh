@@ -2,6 +2,11 @@
 
 namespace Interfaces.Presentation
 {
+    public interface ISetNewFrameDelegate
+    {
+        void SetNewFrame();
+    }
+
     public interface IPresentNewDelegate<T>
     {
         void PresentNew(T data);
@@ -18,6 +23,7 @@ namespace Interfaces.Presentation
     }
 
     public interface IPresentationController<T> :
+        ISetNewFrameDelegate,
         IPresentNewDelegate<T>,
         IPresentStickyDelegate<T>,
         IPresentAdditionalDelegate<T>
