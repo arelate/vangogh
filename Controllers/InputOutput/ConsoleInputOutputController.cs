@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 
 using Interfaces.LineBreaking;
 using Interfaces.Console;
-using Interfaces.RequestPresent;
+using Interfaces.Output;
+using Interfaces.Input;
 
-namespace Controllers.RequestPresent
+namespace Controllers.InputOutput
 {
-    public class ConsoleRequestPresentController : IRequestPresentController<string>
+    public class ConsoleInputOutputController : 
+        IInputController<string>,
+        IOutputController<string[]>
     {
         private int savedCursorTopPosition = -1;
 
@@ -20,7 +23,7 @@ namespace Controllers.RequestPresent
         private ILineBreakingDelegate lineBreakingDelegate;
         private IConsoleController consoleController;
 
-        public ConsoleRequestPresentController(
+        public ConsoleInputOutputController(
             ILineBreakingDelegate lineBreakingDelegate,
             IConsoleController consoleController)
         {
@@ -30,7 +33,7 @@ namespace Controllers.RequestPresent
             this.consoleController = consoleController;
         }
 
-        public void SetNewFrame()
+        public void SetRefresh()
         {
             //    // This assumes that all console presentation is controlled by the consolePresentationController.
             //    // Following previous frame that left cursor at the start of the new line after the output - move it back to 
@@ -52,7 +55,7 @@ namespace Controllers.RequestPresent
             }
         }
 
-        public void PresentAdditional(params string[] data)
+        public void OutputContinuous(params string[] data)
         {
             fragmentBuffer.Clear();
 
@@ -92,26 +95,26 @@ namespace Controllers.RequestPresent
             }
         }
 
-        public void PresentNew(params string[] data)
+        public void OutputOnRefresh(params string[] data)
         {
-            SetNewFrame();
+            SetRefresh();
 
             savedCursorTopPosition = consoleController.CursorTop;
 
-            PresentAdditional(data);
+            OutputContinuous(data);
         }
 
-        public void PresentSticky(params string[] data)
+        public void OutputFixed(params string[] data)
         {
             throw new NotImplementedException();
         }
 
-        public string RequestData(string message)
+        public string RequestInput(string message)
         {
             throw new NotImplementedException();
         }
 
-        public string RequestPrivateData(string message)
+        public string RequestPrivateInput(string message)
         {
             throw new NotImplementedException();
         }

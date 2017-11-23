@@ -1,24 +1,24 @@
 ﻿using Interfaces.ViewUpdates;
-using Interfaces.Presentation;
+using Interfaces.Output;
 
 namespace Controllers.ViewUpdates
 {
     public class StatusPostUpdateDelegate : IPostViewUpdateDelegate
     {
         private IGetViewUpdateDelegate<string[]> getViewUpdateDelegate;
-        private IPresentNewDelegate<string[]> presentNewDelegate;
+        private IOutputOnRefreshDelegate<string[]> outputOnRefreshDelegate;
 
         public StatusPostUpdateDelegate(
             IGetViewUpdateDelegate<string[]> getViewUpdateDelegate,
-            IPresentNewDelegate<string[]> presentNewDelegate)
+            IOutputOnRefreshDelegate<string[]> outputOnRefreshDelegate)
         {
             this.getViewUpdateDelegate = getViewUpdateDelegate;
-            this.presentNewDelegate = presentNewDelegate;
+            this.outputOnRefreshDelegate = outputOnRefreshDelegate;
         }
 
         public void PostViewUpdate()
         {
-            presentNewDelegate.PresentNew(
+            outputOnRefreshDelegate.OutputOnRefresh(
                 getViewUpdateDelegate.GetViewUpdate());
         }
     }

@@ -11,16 +11,15 @@ namespace GoodOfflineGames
             var consoleController = new Controllers.Console.ConsoleController();
             var lineBreakingDelegate = new Controllers.LineBreaking.LineBreakingDelegate();
 
-            var consoleRequestPresentController = new Controllers.RequestPresent.ConsoleRequestPresentController(
+            var consoleIOController = new Controllers.InputOutput.ConsoleInputOutputController(
                 lineBreakingDelegate,
                 consoleController);
 
-            consoleRequestPresentController.PresentNew("abc", "de", "fgh");
-            consoleRequestPresentController.PresentAdditional("v", "uw", "xyz");
+            consoleIOController.OutputOnRefresh("abc", "de", "fgh");
+            consoleIOController.OutputContinuous("v", "uw", "xyz");
 
-            consoleRequestPresentController.PresentNew("abc", "de", "fgh");
-            consoleRequestPresentController.PresentNew("v", "uw", "xyz");
-
+            consoleIOController.OutputOnRefresh("abc", "de", "fgh");
+            consoleIOController.OutputOnRefresh("v", "uw", "xyz");
 
             Console.ReadLine();
 

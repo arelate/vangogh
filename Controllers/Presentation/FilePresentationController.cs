@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 
-using Interfaces.Presentation;
+using Interfaces.Output;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Stream;
 
 namespace Controllers.Presentation
 {
-    public class FilePresentationController : IPresentAsyncDelegate<string[]>
+    public class FilePresentationController : IOutputContinuousAsyncDelegate<string[]>
     {
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
@@ -28,7 +24,7 @@ namespace Controllers.Presentation
             this.streamController = streamController;
         }
 
-        public async Task PresentAsync(params string[] lines)
+        public async Task OutputContinuousAsync(params string[] lines)
         {
             var reportUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),

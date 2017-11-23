@@ -1,26 +1,26 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.ViewUpdates;
-using Interfaces.Presentation;
+using Interfaces.Output;
 
 namespace Controllers.ViewUpdates
 {
     public class StatusPostUpdateAsyncDelegate : IPostViewUpdateAsyncDelegate
     {
         private IGetViewUpdateDelegate<string[]> getViewUpdateDelegate;
-        private IPresentAsyncDelegate<string[]> presentAsyncDelegate;
+        private IOutputContinuousAsyncDelegate<string[]> outputContinuousAsync;
 
         public StatusPostUpdateAsyncDelegate(
             IGetViewUpdateDelegate<string[]> getViewUpdateDelegate,
-            IPresentAsyncDelegate<string[]> presentAsyncDelegate)
+            IOutputContinuousAsyncDelegate<string[]> outputContinuousAsync)
         {
             this.getViewUpdateDelegate = getViewUpdateDelegate;
-            this.presentAsyncDelegate = presentAsyncDelegate;
+            this.outputContinuousAsync = outputContinuousAsync;
         }
 
         public async Task PostViewUpdateAsync()
         {
-            await presentAsyncDelegate.PresentAsync(
+            await outputContinuousAsync.OutputContinuousAsync(
                 getViewUpdateDelegate.GetViewUpdate());
         }
     }

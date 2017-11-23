@@ -52,8 +52,7 @@ using Controllers.ViewUpdates;
 using Controllers.Enumeration;
 using Controllers.ActivityContext;
 using Controllers.UserRequested;
-using Controllers.RequestData;
-using Controllers.RequestPresent;
+using Controllers.InputOutput;
 
 using Interfaces.Activity;
 using Interfaces.Extraction;
@@ -147,7 +146,7 @@ namespace GoodOfflineGames
             var consoleController = new ConsoleController();
             var lineBreakingDelegate = new LineBreakingDelegate();
 
-            var consoleRequestPresentController = new ConsoleRequestPresentController(
+            var consoleInputOutputController = new ConsoleInputOutputController(
                 lineBreakingDelegate,
                 consoleController);
 
@@ -197,7 +196,7 @@ namespace GoodOfflineGames
 
             var consoleStatusPostUpdateDelegate = new StatusPostUpdateDelegate(
                 statusGetViewUpdateDelegate,
-                consoleRequestPresentController);
+                consoleInputOutputController);
 
             var statusController = new StatusController(consoleStatusPostUpdateDelegate);
 
@@ -519,10 +518,8 @@ namespace GoodOfflineGames
 
             #region Authorize
 
-            var requestDataController = new RequestDataController(consoleController);
-
-            var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(requestDataController);
-            var securityCodeValidationDelegate = new SecurityCodeValidationDelegate(requestDataController);
+            var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(consoleInputOutputController);
+            var securityCodeValidationDelegate = new SecurityCodeValidationDelegate(consoleInputOutputController);
 
             var authorizationExtractionControllers = new Dictionary<string, IStringExtractionController>()
             {
@@ -1122,7 +1119,7 @@ namespace GoodOfflineGames
                     var failureDumpUri = "failureDump.json";
                     serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
 
-                    consoleRequestPresentController.PresentNew(
+                    consoleInputOutputController.OutputOnRefresh(
                         "GoodOfflineGames.exe has encountered fatal error(s): " +
                         combinedErrorMessages +
                         $".\nPlease refer to {failureDumpUri} for further details.\n" +
@@ -1141,11 +1138,11 @@ namespace GoodOfflineGames
             if (applicationStatus.SummaryResults != null)
             {
                 foreach (var line in applicationStatus.SummaryResults)
-                    consoleRequestPresentController.PresentNew(string.Join(" ", applicationStatus.SummaryResults));
+                    consoleInputOutputController.OutputOnRefresh(string.Join(" ", applicationStatus.SummaryResults));
             }
             else
             {
-                consoleRequestPresentController.PresentAdditional(string.Empty, "All tasks are complete. Press ENTER to exit...");
+                consoleInputOutputController.OutputContinuous(string.Empty, "All tasks are complete. Press ENTER to exit...");
             }
 
             consoleController.ReadLine();

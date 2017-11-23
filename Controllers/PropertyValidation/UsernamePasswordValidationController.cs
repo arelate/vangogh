@@ -1,15 +1,15 @@
 ﻿using Interfaces.PropertyValidation;
-using Interfaces.RequestData;
+using Interfaces.Input;
 
 namespace Controllers.PropertyValidation
 {
     public class UsernamePasswordValidationDelegate : IValidatePropertiesDelegate<string[]>
     {
-        private IRequestDataController<string> requestDataController;
+        private IInputController<string> inputController;
 
-        public UsernamePasswordValidationDelegate(IRequestDataController<string> requestDataController)
+        public UsernamePasswordValidationDelegate(IInputController<string> inputController)
         {
-            this.requestDataController = requestDataController;
+            this.inputController = inputController;
         }
 
         public string[] ValidateProperties(string[] usernamePassword)
@@ -23,11 +23,11 @@ namespace Controllers.PropertyValidation
 
             if (emptyUsername)
                 usernamePassword[0] =
-                    requestDataController.RequestData("Please enter your GOG.com username (email):");
+                    inputController.RequestInput("Please enter your GOG.com username (email):");
 
             if (emptyPassword)
                 usernamePassword[1] =
-                    requestDataController.RequestPrivateData(
+                    inputController.RequestPrivateInput(
                         string.Format(
                             "Please enter password for {0}:", 
                             usernamePassword[0]));
