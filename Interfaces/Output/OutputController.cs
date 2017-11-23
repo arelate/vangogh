@@ -7,6 +7,11 @@ namespace Interfaces.Output
         void SetRefresh();
     }
 
+    public interface IClearContinuousLinesDelegate
+    {
+        void ClearContinuousLines(int lines);
+    }
+
     public interface IOutputOnRefreshDelegate<T>
     {
         void OutputOnRefresh(T data);
@@ -24,6 +29,7 @@ namespace Interfaces.Output
 
     public interface IOutputController<T> :
         ISetRefreshDelegate,
+        IClearContinuousLinesDelegate,
         IOutputOnRefreshDelegate<T>,
         IOutputFixedDelegate<T>,
         IOutputContinuousDelegate<T>
