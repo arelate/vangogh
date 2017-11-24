@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -102,7 +103,7 @@ namespace GoodOfflineGames
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             #region Foundation Controllers
 
@@ -1102,7 +1103,7 @@ namespace GoodOfflineGames
                 var activity = activityContextToActivityControllerMap[activityContext];
                 try
                 {
-                    activity.ProcessActivityAsync(applicationStatus).Wait();
+                    await activity.ProcessActivityAsync(applicationStatus);
                 }
                 catch (AggregateException ex)
                 {
@@ -1117,7 +1118,7 @@ namespace GoodOfflineGames
                     statusController.Fail(applicationStatus, combinedErrorMessages);
 
                     var failureDumpUri = "failureDump.json";
-                    serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus).Wait();
+                    await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus);
 
                     consoleInputOutputController.OutputOnRefresh(
                         "GoodOfflineGames.exe has encountered fatal error(s): " +

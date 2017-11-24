@@ -2,7 +2,7 @@
   "profiles": {
     "GoodOfflineGames.exe": {
       "commandName": "Project",
-      "commandLineArgs": "updateData-products"
+      "commandLineArgs": "updateData-accountProducts"
     }
   }
 }
