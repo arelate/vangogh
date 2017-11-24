@@ -18,8 +18,17 @@ namespace GoodOfflineGames
             consoleIOController.OutputOnRefresh("abc", "de", "fgh");
             consoleIOController.OutputContinuous("v", "uw", "xyz");
 
+            var name = consoleIOController.RequestInput("Enter some name:");
+
+            consoleIOController.OutputFixedOnRefresh("this is fixed content");
+
             consoleIOController.OutputOnRefresh("abc", "de", "fgh");
-            consoleIOController.OutputOnRefresh("v", "uw", "xyz");
+
+            consoleIOController.RequestPrivateInput(string.Format("Enter password for {0}", name));
+
+            consoleIOController.OutputFixedOnRefresh("and some more fixed content");
+
+            consoleIOController.OutputOnRefresh("v", "uw");
 
             Console.ReadLine();
 

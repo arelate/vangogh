@@ -29,7 +29,7 @@ namespace Controllers.Console
             return System.Console.ReadLine();
         }
 
-        public string InputPassword()
+        public string ReadLinePrivate()
         {
             ConsoleKeyInfo key;
             string password = string.Empty;
@@ -63,6 +63,8 @@ namespace Controllers.Console
                 if (passwordIncrement && password.Length > 0)
                     System.Console.Write(password[password.Length - 1]);
             }
+
+            System.Console.WriteLine(string.Empty);
             return password;
         }
 

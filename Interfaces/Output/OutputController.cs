@@ -17,9 +17,9 @@ namespace Interfaces.Output
         void OutputOnRefresh(T data);
     }
 
-    public interface IOutputFixedDelegate<T>
+    public interface IOutputFixedOnRefreshDelegate<T>
     {
-        void OutputFixed(T data);
+        void OutputFixedOnRefresh(T data);
     }
 
     public interface IOutputContinuousDelegate<T>
@@ -31,7 +31,7 @@ namespace Interfaces.Output
         ISetRefreshDelegate,
         IClearContinuousLinesDelegate,
         IOutputOnRefreshDelegate<T>,
-        IOutputFixedDelegate<T>,
+        IOutputFixedOnRefreshDelegate<T>,
         IOutputContinuousDelegate<T>
     {
         // ...

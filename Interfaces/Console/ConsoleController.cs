@@ -20,9 +20,9 @@
         string ReadLine();
     }
 
-    public interface IInputPasswordDelegate
+    public interface IReadLinePrivateDelegate
     {
-        string InputPassword();
+        string ReadLinePrivate();
     }
 
     public interface IWriteDelegate
@@ -52,7 +52,7 @@
         IWindowHeightProperty,
         IReadDelegate,
         IReadLineDelegate,
-        IInputPasswordDelegate,
+        IReadLinePrivateDelegate,
         IWriteDelegate,
         IWriteLineDelegate
     {
