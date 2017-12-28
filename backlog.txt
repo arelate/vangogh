@@ -1,5 +1,9 @@
 Backend
 
+- rename app to ghost
+
+- add statement (aka recipe) system to track meaningful actions per id
+
 - move updated enumeration to take command line parameters into account - in the future this will also be a central point for whitelists/blacklists
 
 - change clear updated from unconditional clearing to receipt based system. To clear updated we'll need successful completion of several activities since product was added as updated:
@@ -9,7 +13,20 @@ Backend
 
 - investigate /user/data/games (from https://www.gog.com/forum/general/unofficial_gog_api_documentation/page2) and game_type == pack specifically
 
-- activityQueueBacklog.txt
+- activityQueueBacklog:
+
+	need: help activity that outputs information about built-in commands, list of aliases and what they expand to, as well as list of pre- and postReqs
+
+	need: search-products, search-accountProducts, search-gameDetails, etc. + alias "search" (all together, each operation lists separate results)
+
+	design alternatives:
+	- (no - requires deserialization) use only text fields for search
+	- (no - would hit too much of internal data) use serialized entry
+	- (yes, and would be required for frontends as well) build search index with viewModels and new activity (update-searchIndex, should be postReq for many activities)
+	- search outputs a list of productCore (id,title)
+	- this might require to add Results to ActivityStatus - not sure if string, ProductCore yet (would be great to have the ProductCore)
+
+	need: activityStatuses reported from the activityQueue should present clear results. Need to think more about how the queue affects result output - e.g. does it happen at the end (likely)? after every activity in the queue (not likely)? how this affects current results presentation, etc. - need to think of this through the context of aliases (e.g. search), doesn't make sense to show and remove intermediate information - would be great to collate end results in meaningful way
 
 - change functional controllers to work on product model type and have activities loop updates using those 
 
