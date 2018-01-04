@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.RequestRate;
 using Interfaces.Throttle;
@@ -41,7 +42,7 @@ namespace Controllers.RequestRate
                         DateTime.UtcNow - TimeSpan.FromSeconds(requestIntervalSeconds));
         }
 
-        public void EnforceRequestRate(string uri, IStatus status)
+        public async Task EnforceRequestRateAsync(string uri, IStatus status)
         {
             var prefix = collectionController.Reduce(uriPrefixes, p => uri.StartsWith(p)).SingleOrDefault();
             if (string.IsNullOrEmpty(prefix)) return;
@@ -54,7 +55,7 @@ namespace Controllers.RequestRate
             if (elapsed < requestIntervalSeconds)
             {
                 var limitRateTask = statusController.Create(status, "Limit request rate to avoid temporary server block");
-                throttleController.Throttle(requestIntervalSeconds - elapsed, status);
+                await throttleController.ThrottleAsync(requestIntervalSeconds - elapsed, status);
                 statusController.Complete(limitRateTask);
             }
 

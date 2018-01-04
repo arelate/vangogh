@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 
+using Interfaces.Status;
+
 namespace Interfaces.ViewUpdates
 {
-    public interface IGetViewUpdateDelegate<T>
+    public interface IGetViewUpdateAsyncDelegate<T>
     {
-        T GetViewUpdate();
+        Task<T> GetViewUpdateAsync();
     }
 
     public interface IPostViewUpdateDelegate

@@ -22,7 +22,6 @@ namespace Controllers.Template
         private IGetFilenameDelegate getFilenameDelegate;
         private ISerializedStorageController serializedStorageController;
         private ICollectionController collectionController;
-        private IStatusController statusController;
 
         private const string anyCharactersExpression = "(.*?)";
         private const string templateValuePrefix = Separators.TemplatePrefix;
@@ -37,43 +36,57 @@ namespace Controllers.Template
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializedStorageController serializedStorageController,
-            ICollectionController collectionController,
-            IStatusController statusController)
+            ICollectionController collectionController)
         {
             this.PrimaryTemplate = primaryTemplateTitle;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.serializedStorageController = serializedStorageController;
             this.collectionController = collectionController;
-            this.statusController = statusController;
         }
 
         public string PrimaryTemplate { get; private set; }
 
-        public string Bind(string templateTitle, IDictionary<string, string> viewModel)
+        public bool DataAvailable
         {
-            var templateContent = GetContentByTitle(templateTitle);
+            get;
+            private set;
+        }
 
-            var resolvedConditionalsTemplateContent = ResolveConditionals(templateContent, viewModel);
-            var resolvedTemplateContent = ResolveSubTemplates(resolvedConditionalsTemplateContent);
+        public async Task<string> BindAsync(string templateTitle, IDictionary<string, string> viewModel, IStatus status)
+        {
+            if (!DataAvailable) await LoadAsync(status);
 
-            var view = FindAndReplace(
+            var templateContent = await GetContentByTitleAsync(templateTitle, status);
+
+            var resolvedConditionalsTemplateContent = await ResolveConditionalsAsync(templateContent, viewModel, status);
+            var resolvedTemplateContent = await ResolveSubTemplatesAsync(resolvedConditionalsTemplateContent, status);
+
+            var view = await FindAndReplace(
                 resolvedTemplateContent,
                 templateValue,
                 templateValuePrefix,
                 templateValueSuffix,
-                property =>
+                async (property, replacementStatus) =>
                 {
-                    if (!viewModel.ContainsKey(property))
-                        throw new InvalidDataException($"ViewModel doesn't contain {property} property");
-                    return viewModel[property];
-                });
+                    return await Task.Run(() =>
+                    {
+                        if (!viewModel.ContainsKey(property))
+                            throw new InvalidDataException($"ViewModel doesn't contain {property} property");
+                        return viewModel[property];
+                    });
+                },
+                status);
 
             return view;
         }
 
-        public string GetContentByTitle(string templateTitle)
+        private delegate Task<string> GetContentAsync(string input, IStatus status);
+
+        public async Task<string> GetContentByTitleAsync(string templateTitle, IStatus status)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             if (string.IsNullOrEmpty(templateTitle))
                 return string.Empty;
             var template = collectionController.Find(templates, t => t.Title == templateTitle);
@@ -82,25 +95,24 @@ namespace Controllers.Template
 
         public async Task LoadAsync(IStatus status = null)
         {
-            var loadStatus = statusController.Create(status, "Load templates");
-
             var templateUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
-            templates = await serializedStorageController.DeserializePullAsync<Models.Template.Template[]>(templateUri, loadStatus);
+            templates = await serializedStorageController.DeserializePullAsync<Models.Template.Template[]>(templateUri, status);
 
             if (templates == null)
                 templates = new Models.Template.Template[0];
 
-            statusController.Complete(loadStatus);
+            DataAvailable = true;
         }
 
-        private string FindAndReplace(string inputString,
+        private async Task<string> FindAndReplace(string inputString,
             string regexPattern,
             string matchPrefix,
             string matchSuffix,
-            Func<string, string> getReplacementContent)
+            GetContentAsync getReplacementContent,
+            IStatus status)
         {
             var regex = new Regex(regexPattern);
 
@@ -110,7 +122,7 @@ namespace Controllers.Template
                 var filteredMatch = match.Value.Substring(
                     matchPrefix.Length,
                     match.Length - matchPrefix.Length - matchSuffix.Length);
-                var replacementContent = getReplacementContent(filteredMatch);
+                var replacementContent = await getReplacementContent(filteredMatch, status);
 
                 inputString = inputString.Replace(match.Value, replacementContent);
             }
@@ -118,24 +130,27 @@ namespace Controllers.Template
             return inputString;
         }
 
-        public string ResolveSubTemplates(string templateContent)
+        public async Task<string> ResolveSubTemplatesAsync(string templateContent, IStatus status)
         {
-            return FindAndReplace(
+            if (!DataAvailable) await LoadAsync(status);
+
+            return await FindAndReplace(
                 templateContent,
                 subTemplate,
                 subTemplatePrefix,
                 subTemplateSuffix,
-                GetContentByTitle);
+                GetContentByTitleAsync,
+                status);
         }
 
-        public string ResolveConditionals(string templateContent, IDictionary<string, string> viewModel)
+        public async Task<string> ResolveConditionalsAsync(string templateContent, IDictionary<string, string> viewModel, IStatus status)
         {
-            return FindAndReplace(
+            return await FindAndReplace(
                 templateContent,
                 "<" + anyCharactersExpression + ">",
                 "<",
                 ">",
-                match =>
+                async (match, replacementStatus) =>
                 {
                     var conditionalParts = match.Split(new string[2] { "?", ":" }, StringSplitOptions.RemoveEmptyEntries);
                     if (conditionalParts.Length < 2)
@@ -149,9 +164,10 @@ namespace Controllers.Template
 
                     return (viewModel.ContainsKey(condition) &&
                         !string.IsNullOrEmpty(viewModel[condition])) ?
-                        GetContentByTitle(conditionPass) :
-                        GetContentByTitle(conditionFail);
-                });
+                        await GetContentByTitleAsync(conditionPass, replacementStatus) :
+                        await GetContentByTitleAsync(conditionFail, replacementStatus);
+                },
+                status);
         }
     }
 }

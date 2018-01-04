@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Status;
 using Interfaces.Tree;
@@ -10,7 +11,7 @@ using Interfaces.ViewUpdates;
 
 namespace Controllers.ViewUpdates
 {
-    public class StatusGetViewUpdateDelegate : IGetViewUpdateDelegate<string[]>
+    public class StatusGetViewUpdateDelegate : IGetViewUpdateAsyncDelegate<string[]>
     {
         private IStatus status;
         private ITemplateController templateController;
@@ -33,7 +34,7 @@ namespace Controllers.ViewUpdates
             this.viewParts = new List<string>();
         }
 
-        public string[] GetViewUpdate()
+        public async Task<string[]> GetViewUpdateAsync()
         {
             viewParts.Clear();
             foreach (var individualStatus in statusTreeToEnumerableController.ToEnumerable(status))
@@ -41,9 +42,11 @@ namespace Controllers.ViewUpdates
                 var viewModel = statusViewModelDelegate.GetViewModel(individualStatus);
                 if (viewModel != null)
                 {
-                    var view = templateController.Bind(
+                    var view = await templateController.BindAsync(
                         templateController.PrimaryTemplate,
-                        viewModel);
+                        viewModel,
+                        status);
+
                     if (!string.IsNullOrEmpty(view) &&
                         !string.IsNullOrWhiteSpace(view))
                         viewParts.Add(view);

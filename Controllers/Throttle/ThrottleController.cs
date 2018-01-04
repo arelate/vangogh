@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using System.Threading.Tasks;
 
 using Interfaces.Throttle;
 using Interfaces.Status;
@@ -21,7 +21,7 @@ namespace Controllers.Throttle
             this.secondsFormattingController = secondsFormattingController;
         }
 
-        public void Throttle(int delaySeconds, IStatus status)
+        public async Task ThrottleAsync(int delaySeconds, IStatus status)
         {
             var throttleTask = statusController.Create(
                 status,
@@ -29,8 +29,13 @@ namespace Controllers.Throttle
 
             for (var ii = 0; ii < delaySeconds; ii++)
             {
-                Thread.Sleep(1000);
-                statusController.UpdateProgress(throttleTask, ii + 1, delaySeconds, "Countdown", TimeUnits.Seconds);
+                await Task.Delay(1000);
+                statusController.UpdateProgress(
+                    throttleTask, 
+                    ii + 1, 
+                    delaySeconds, 
+                    "Countdown", 
+                    TimeUnits.Seconds);
             }
 
             statusController.Complete(throttleTask);

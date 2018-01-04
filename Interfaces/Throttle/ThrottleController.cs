@@ -1,14 +1,16 @@
-﻿using Interfaces.Status;
+﻿using System.Threading.Tasks;
+
+using Interfaces.Status;
 
 namespace Interfaces.Throttle
 {
-    public interface IThrottleDelegate
+    public interface IThrottleAsyncDelegate
     {
-        void Throttle(int seconds, IStatus status);
+        Task ThrottleAsync(int seconds, IStatus status);
     }
 
     public interface IThrottleController:
-        IThrottleDelegate
+        IThrottleAsyncDelegate
     {
         // ...
     }

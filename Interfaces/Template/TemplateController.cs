@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Data;
+using Interfaces.Status;
 
 namespace Interfaces.Template
 {
@@ -9,32 +11,33 @@ namespace Interfaces.Template
         string PrimaryTemplate { get; }
     }
 
-    public interface IResolveSubTemplatesDelegate
+    public interface IResolveSubTemplatesAsyncDelegate
     {
-        string ResolveSubTemplates(string templateContent);
+        Task<string> ResolveSubTemplatesAsync(string templateContent, IStatus status);
     }
 
-    public interface IResolveConditionalsDelegate
+    public interface IResolveConditionalsAsyncDelegate
     {
-        string ResolveConditionals(string templateContent, IDictionary<string, string> viewModel);
+        Task<string> ResolveConditionalsAsync(string templateContent, IDictionary<string, string> viewModel, IStatus status);
     }
 
-    public interface IGetContentByTitleDelegate
+    public interface IGetContentByTitleAsyncDelegate
     {
-        string GetContentByTitle(string templateTitle);
+        Task<string> GetContentByTitleAsync(string templateTitle, IStatus status);
     }
 
-    public interface IBindDelegate
+    public interface IBindAsyncDelegate
     {
-        string Bind(string templateTitle, IDictionary<string, string> viewModel);
+        Task<string> BindAsync(string templateTitle, IDictionary<string, string> viewModel, IStatus status);
     }
 
     public interface ITemplateController:
         IPrimaryTemplateProperty, 
-        IResolveSubTemplatesDelegate,
-        IGetContentByTitleDelegate,
-        IBindDelegate,
-        ILoadAsyncDelegate
+        IResolveSubTemplatesAsyncDelegate,
+        IGetContentByTitleAsyncDelegate,
+        IBindAsyncDelegate,
+        ILoadAsyncDelegate,
+        IDataAvailableDelegate
     {
         // ...
     }

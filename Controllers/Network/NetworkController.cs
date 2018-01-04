@@ -60,7 +60,7 @@ namespace Controllers.Network
             string uri,
             HttpContent content = null)
         {
-            requestRateController.EnforceRequestRate(uri, status);
+            await requestRateController.EnforceRequestRateAsync(uri, status);
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);

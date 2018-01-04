@@ -1,14 +1,16 @@
-﻿using Interfaces.Status;
+﻿using System.Threading.Tasks;
+
+using Interfaces.Status;
 
 namespace Interfaces.RequestRate
 {
-    public interface IEnforceRequestRateDelegate
+    public interface IEnforceRequestRateAsyncDelegate
     {
-        void EnforceRequestRate(string uri, IStatus status);
+        Task EnforceRequestRateAsync(string uri, IStatus status);
     }
 
     public interface IRequestRateController:
-        IEnforceRequestRateDelegate
+        IEnforceRequestRateAsyncDelegate
     {
         // ...
     }

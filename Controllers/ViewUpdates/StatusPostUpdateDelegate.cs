@@ -5,11 +5,11 @@ namespace Controllers.ViewUpdates
 {
     public class StatusPostViewUpdateDelegate : IPostViewUpdateDelegate
     {
-        private IGetViewUpdateDelegate<string[]> getViewUpdateDelegate;
+        private IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate;
         private IOutputOnRefreshDelegate<string[]> outputOnRefreshDelegate;
 
         public StatusPostViewUpdateDelegate(
-            IGetViewUpdateDelegate<string[]> getViewUpdateDelegate,
+            IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate,
             IOutputOnRefreshDelegate<string[]> outputOnRefreshDelegate)
         {
             this.getViewUpdateDelegate = getViewUpdateDelegate;
@@ -18,8 +18,9 @@ namespace Controllers.ViewUpdates
 
         public void PostViewUpdate()
         {
+            // TODO: fix this later
             outputOnRefreshDelegate.OutputOnRefresh(
-                getViewUpdateDelegate.GetViewUpdate());
+                getViewUpdateDelegate.GetViewUpdateAsync().Result);
         }
     }
 }

@@ -161,7 +161,7 @@ namespace Ghost.Console
 
             var statusTreeToEnumerableController = new StatusTreeToEnumerableController();
 
-            var applicationStatus = new Status();
+            var applicationStatus = new Status() { Title = "This ghost is the kind one." };
 
             var templatesDirectoryDelegate = new RelativeDirectoryDelegate("templates");
             var appTemplateFilenameDelegate = new FixedFilenameDelegate("app", jsonFilenameDelegate);
@@ -172,16 +172,14 @@ namespace Ghost.Console
                 templatesDirectoryDelegate,
                 appTemplateFilenameDelegate,
                 serializedStorageController,
-                collectionController,
-                statusController);
+                collectionController);
 
             var reportTemplateController = new TemplateController(
                 "status",
                 templatesDirectoryDelegate,
                 reportTemplateFilenameDelegate,
                 serializedStorageController,
-                collectionController,
-                statusController);
+                collectionController);
 
             var statusProgressController = new StatusProgressController();
 
