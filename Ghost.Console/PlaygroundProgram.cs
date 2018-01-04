@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoodOfflineGames
+namespace Ghost.Console
 {
     class PlaygroundProgram
     {
@@ -30,7 +30,7 @@ namespace GoodOfflineGames
 
             consoleIOController.OutputOnRefresh("v", "uw");
 
-            Console.ReadLine();
+            System.Console.ReadLine();
 
         }
     }

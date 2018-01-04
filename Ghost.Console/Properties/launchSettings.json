@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "GoodOfflineGames.exe": {
+    "ghost": {
       "commandName": "Project",
       "commandLineArgs": "updateData-accountProducts"
     }

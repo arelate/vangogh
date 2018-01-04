@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodOfflineGames.exe", "GoodOfflineGames.exe\GoodOfflineGames.exe.csproj", "{F58A9B39-0037-4517-8F46-4EE4BF681F1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ghost.Console", "Ghost.Console\Ghost.Console.csproj", "{F58A9B39-0037-4517-8F46-4EE4BF681F1D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{8B4D3F24-F274-4604-8596-072FD748AEA7}"
 EndProject
