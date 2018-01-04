@@ -3,12 +3,12 @@ using Interfaces.Output;
 
 namespace Controllers.ViewUpdates
 {
-    public class StatusPostUpdateDelegate : IPostViewUpdateDelegate
+    public class StatusPostViewUpdateDelegate : IPostViewUpdateDelegate
     {
         private IGetViewUpdateDelegate<string[]> getViewUpdateDelegate;
         private IOutputOnRefreshDelegate<string[]> outputOnRefreshDelegate;
 
-        public StatusPostUpdateDelegate(
+        public StatusPostViewUpdateDelegate(
             IGetViewUpdateDelegate<string[]> getViewUpdateDelegate,
             IOutputOnRefreshDelegate<string[]> outputOnRefreshDelegate)
         {

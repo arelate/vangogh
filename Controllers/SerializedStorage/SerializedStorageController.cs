@@ -5,6 +5,7 @@ using Interfaces.SerializedStorage;
 using Interfaces.Storage;
 using Interfaces.Serialization;
 using Interfaces.Hash;
+using Interfaces.Status;
 
 namespace Controllers.SerializedStorage
 {
@@ -14,20 +15,23 @@ namespace Controllers.SerializedStorage
         private ISerializationController<string> serializarionController;
         private IStringHashController stringHashController;
         private IPrecomputedHashController precomputedHashController;
+        private IStatusController statusController;
 
         public SerializedStorageController(
             IPrecomputedHashController precomputedHashController,
             IStorageController<string> storageController,
             IStringHashController stringHashController,
-            ISerializationController<string> serializarionController)
+            ISerializationController<string> serializarionController,
+            IStatusController statusController)
         {
             this.precomputedHashController = precomputedHashController;
             this.storageController = storageController;
             this.stringHashController = stringHashController;
             this.serializarionController = serializarionController;
+            this.statusController = statusController;
         }
 
-        public async Task<T> DeserializePullAsync<T>(string uri)
+        public async Task<T> DeserializePullAsync<T>(string uri, IStatus status)
         {
             var serializedData = await storageController.PullAsync(uri);
 
@@ -37,7 +41,7 @@ namespace Controllers.SerializedStorage
             return serializarionController.Deserialize<T>(serializedData);
         }
 
-        public async Task SerializePushAsync<T>(string uri, T data)
+        public async Task SerializePushAsync<T>(string uri, T data, IStatus status)
         {
             var serializedData = serializarionController.Serialize(data);
 
@@ -47,7 +51,7 @@ namespace Controllers.SerializedStorage
             // data has not changed, no need to write to storage
             if (hash == existingHash) return;
 
-            await precomputedHashController.SetHashAsync(uri, hash);
+            await precomputedHashController.SetHashAsync(uri, hash, status);
             await storageController.PushAsync(uri, serializedData);
         }
     }

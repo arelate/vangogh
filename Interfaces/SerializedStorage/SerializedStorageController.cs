@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
 
+using Interfaces.Status;
+
 namespace Interfaces.SerializedStorage
 {
     public interface ISerializePushAsyncDelegate
     {
-        Task SerializePushAsync<T>(string uri, T data);
+        Task SerializePushAsync<T>(string uri, T data, IStatus status);
     }
 
     public interface IDeserializePullAsyncDelegate
     {
-        Task<T> DeserializePullAsync<T>(string uri);
+        Task<T> DeserializePullAsync<T>(string uri, IStatus status);
     }
 
     public interface ISerializedStorageController:

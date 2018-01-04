@@ -12,12 +12,12 @@ namespace Interfaces.Routing
 
     public interface ITraceRouteAsyncDelegate
     {
-        Task<string> TraceRouteAsync(long id, string source);
+        Task<string> TraceRouteAsync(long id, string source, IStatus status);
     }
 
     public interface ITraceRoutesAsyncDelegate
     {
-        Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources);
+        Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources, IStatus status);
     }
 
     public interface IRoutingController:

@@ -1,5 +1,10 @@
 Backend
 
+
+- remove load data activity and load data on demand in data/index/other controllers
+
+- untangle post view updates mess - statusController should cause no circular dependencies for templateController
+
 - rename app to ghost
 
 - add statement (aka recipe) system to track meaningful actions per id

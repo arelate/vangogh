@@ -7,27 +7,27 @@ namespace Interfaces.Data
 {
     public interface ILoadAsyncDelegate
     {
-        Task LoadAsync();
+        Task LoadAsync(IStatus status);
     }
 
     public interface ISaveAsyncDelegate
     {
-        Task SaveAsync();
+        Task SaveAsync(IStatus status);
     }
 
     public interface IGetByIdAsyncDelegate<Type>
     {
-        Task<Type> GetByIdAsync(long id);
+        Task<Type> GetByIdAsync(long id, IStatus status);
     }
 
-    public interface IEnumerateKeysDelegate<T>
+    public interface IEnumerateKeysAsyncDelegate<T>
     {
-        IEnumerable<T> EnumerateKeys();
+        Task<IEnumerable<T>> EnumerateKeysAsync(IStatus status);
     }
     
-    public interface IEnumerateIdsDelegate
+    public interface IEnumerateIdsAsyncDelegate
     {
-        IEnumerable<long> EnumerateIds();
+        Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status);
     }
 
     public interface IUpdateAsyncDelegate<Type>
@@ -39,31 +39,37 @@ namespace Interfaces.Data
         Task RemoveAsync(IStatus status, params Type[] data);
     }
 
-    public interface IContainsDelegate<Type>
+    public interface IContainsAsyncDelegate<Type>
     {
-        bool Contains(Type data);
+        Task<bool> ContainsAsync(Type data, IStatus status);
     }
 
-    public interface IContainsIdDelegate
+    public interface IContainsIdAsyncDelegate
     {
-        bool ContainsId(long id);
+        Task<bool> ContainsIdAsync(long id, IStatus status);
     }
 
-    public interface ICountDelegate
+    public interface ICountAsyncDelegate
     {
-        int Count();
+        Task<int> CountAsync(IStatus status);
+    }
+
+    public interface IDataAvailableDelegate
+    {
+        bool DataAvailable { get; }
     }
 
     public interface IDataController<Type>:
+        IDataAvailableDelegate,
         ILoadAsyncDelegate,
         ISaveAsyncDelegate,
-        IEnumerateIdsDelegate,
-        ICountDelegate,
+        IEnumerateIdsAsyncDelegate,
+        ICountAsyncDelegate,
         IGetByIdAsyncDelegate<Type>,
         IUpdateAsyncDelegate<Type>,
         IRemoveAsyncDelegate<Type>,
-        IContainsDelegate<Type>,
-        IContainsIdDelegate
+        IContainsAsyncDelegate<Type>,
+        IContainsIdAsyncDelegate
     {
         // ...
     }

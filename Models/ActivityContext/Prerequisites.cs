@@ -14,14 +14,12 @@ namespace Models.ActivityContext
             {
                 (Activity.UpdateData, Context.Any),
                 new AC[] {
-                    (Activity.Load, Context.Data),
                     (Activity.Validate, Context.Settings)
                 }
             },
             {
                 (Activity.UpdateDownloads, Context.Any),
                 new AC[] {
-                    (Activity.Load, Context.Data),
                     (Activity.Validate, Context.Settings)
                 }
             },
@@ -29,7 +27,6 @@ namespace Models.ActivityContext
                 (Activity.Download, Context.Any),
                 new AC[]
                 {
-                    (Activity.Load, Context.Data),
                     (Activity.Validate, Context.Settings)
                 }
             },
@@ -37,7 +34,6 @@ namespace Models.ActivityContext
                 (Activity.Validate, Context.Any),
                 new AC[]
                 {
-                    (Activity.Load, Context.Data),
                     (Activity.Validate, Context.Settings)
                 }
             },
@@ -45,7 +41,6 @@ namespace Models.ActivityContext
                 (Activity.Repair, Context.Any),
                 new AC[]
                 {
-                    (Activity.Load, Context.Data),
                     (Activity.Validate, Context.Settings)
                 }
             },
@@ -82,13 +77,6 @@ namespace Models.ActivityContext
                 new AC[]
                 {
                     (Activity.Authorize, Context.None)
-                }
-            },
-            {
-                (Activity.List, Context.Any),
-                new AC[]
-                {
-                    (Activity.Load, Context.Data)
                 }
             }
         };

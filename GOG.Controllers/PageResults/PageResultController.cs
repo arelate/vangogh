@@ -104,7 +104,7 @@ namespace GOG.Controllers.PageResults
                 if (responseHash == requestHash) continue;
 
                 var setHashTask = statusController.Create(getPagesTask, "Set hash");
-                await precomputedHashController.SetHashAsync(requestUri + currentPage, responseHash);
+                await precomputedHashController.SetHashAsync(requestUri + currentPage, responseHash, setHashTask);
                 statusController.Complete(setHashTask);
 
                 pageResults.Add(pageResult);

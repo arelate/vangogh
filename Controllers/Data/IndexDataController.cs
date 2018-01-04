@@ -41,52 +41,80 @@ namespace Controllers.Data
             this.statusController = statusController;
         }
 
-        public bool Contains(long data)
+        public bool DataAvailable
         {
+            get;
+            private set;
+        }
+
+        public async Task<bool> ContainsAsync(long data, IStatus status)
+        {
+            if (!DataAvailable) await LoadAsync(status);
+
             return indexes.Contains(data);
         }
 
-        public bool ContainsId(long id)
+        public async Task<bool> ContainsIdAsync(long id, IStatus status)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             return indexes.Contains(id);
         }
 
-        public int Count()
+        public async Task<int> CountAsync(IStatus status)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             return indexes.Count;
         }
 
-        public IEnumerable<long> EnumerateIds()
+        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             return indexes;
         }
 
-        public Task<long> GetByIdAsync(long id)
+        public Task<long> GetByIdAsync(long id, IStatus status)
         {
             throw new NotImplementedException();
         }
 
-        public async Task LoadAsync()
+        public async Task LoadAsync(IStatus status)
         {
+            var loadStatus = statusController.Create(status, "Load index");
+
             var indexUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
-            indexes = await serializedStorageController.DeserializePullAsync<List<long>>(indexUri);
+            indexes = await serializedStorageController.DeserializePullAsync<List<long>>(indexUri, loadStatus);
             if (indexes == null) indexes = new List<long>();
+
+            DataAvailable = true;
+
+            statusController.Complete(loadStatus);
         }
 
-        public async Task SaveAsync()
+        public async Task SaveAsync(IStatus status)
         {
+            if (!DataAvailable) throw new InvalidOperationException("Cannot save data before it's available");
+
+            var saveStatus = statusController.Create(status, "Save index");
+
             var indexUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
-            await serializedStorageController.SerializePushAsync(indexUri, indexes);
+            await serializedStorageController.SerializePushAsync(indexUri, indexes, saveStatus);
+
+            statusController.Complete(saveStatus);
         }
 
         private async Task Map(IStatus status, string taskMessage, Func<long, bool> itemAction, params long[] data)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             var task = statusController.Create(status, taskMessage);
             var counter = 0;
             var dataChanged = false;
@@ -106,7 +134,7 @@ namespace Controllers.Data
             if (dataChanged)
             {
                 var saveDataTask = statusController.Create(task, "Save modified index");
-                await SaveAsync();
+                await SaveAsync(status);
                 statusController.Complete(saveDataTask);
             }
 
@@ -115,6 +143,8 @@ namespace Controllers.Data
 
         public async Task RemoveAsync(IStatus status, params long[] data)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             await Map(
                 status,
                 "Remove index item(s)",
@@ -132,6 +162,8 @@ namespace Controllers.Data
 
         public async Task UpdateAsync(IStatus status, params long[] data)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             await Map(
                 status,
                 "Update index item(s)",

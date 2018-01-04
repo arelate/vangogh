@@ -43,13 +43,13 @@ namespace GOG.Controllers.DownloadSources
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
             var current = 0;
-            var total = screenshotsDataController.Count();
+            var total = await screenshotsDataController.CountAsync(processUpdatesTask);
 
             var processProductsScreenshotsTask = statusController.Create(processUpdatesTask, "Process product screenshots");
 
-            foreach (var id in screenshotsDataController.EnumerateIds())
+            foreach (var id in await screenshotsDataController.EnumerateIdsAsync(processProductsScreenshotsTask))
             {
-                var productScreenshots = await screenshotsDataController.GetByIdAsync(id);
+                var productScreenshots = await screenshotsDataController.GetByIdAsync(id, processProductsScreenshotsTask);
 
                 if (productScreenshots == null)
                 {

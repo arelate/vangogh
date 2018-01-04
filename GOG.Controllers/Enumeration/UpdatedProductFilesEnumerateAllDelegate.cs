@@ -17,14 +17,14 @@ namespace GOG.Controllers.Enumeration
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
+        private IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
         public UpdatedProductFilesEnumerateAllDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
+            IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
             IDirectoryController directoryController,
             IStatusController statusController)
         {
@@ -39,15 +39,15 @@ namespace GOG.Controllers.Enumeration
         {
             var enumerateUpdatedProductFilesTask = statusController.Create(status, "Enumerate updated productFiles");
 
-            var updatedIds = updatedDataController.EnumerateIds();
-            var updatedIdsCount = updatedDataController.Count();
+            var updatedIds = await updatedDataController.EnumerateIdsAsync(enumerateUpdatedProductFilesTask);
+            var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdatedProductFilesTask);
             var current = 0;
 
             var updatedProductFiles = new List<string>();
 
             foreach (var id in updatedIds)
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateUpdatedProductFilesTask);
 
                 statusController.UpdateProgress(
                     enumerateUpdatedProductFilesTask,
@@ -55,7 +55,7 @@ namespace GOG.Controllers.Enumeration
                     updatedIdsCount,
                     gameDetails.Title);
 
-                var gameDetailsDirectories = gameDetailsDirectoryEnumerateDelegate.Enumerate(gameDetails);
+                var gameDetailsDirectories = await gameDetailsDirectoryEnumerateDelegate.EnumerateAsync(gameDetails, enumerateUpdatedProductFilesTask);
                 foreach (var gameDetailDirectory in gameDetailsDirectories)
                 {
                     updatedProductFiles.AddRange(directoryController.EnumerateFiles(gameDetailDirectory));

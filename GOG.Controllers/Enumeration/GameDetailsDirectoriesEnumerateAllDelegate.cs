@@ -13,12 +13,12 @@ namespace GOG.Controllers.Enumeration
     public class GameDetailsDirectoriesEnumerateAllDelegate : IEnumerateAllAsyncDelegate<string>
     {
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
+        private IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
         private IStatusController statusController;
 
         public GameDetailsDirectoriesEnumerateAllDelegate(
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
+            IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
             IStatusController statusController)
         {
             this.gameDetailsDataController = gameDetailsDataController;
@@ -31,12 +31,12 @@ namespace GOG.Controllers.Enumeration
             var enumerateGameDetailsDirectoriesTask = statusController.Create(status, "Enumerate gameDetails directories");
             var directories = new List<string>();
             var current = 0;
-            var gameDetailsIds = gameDetailsDataController.EnumerateIds();
-            var gameDetailsCount = gameDetailsDataController.Count();
+            var gameDetailsIds = await gameDetailsDataController.EnumerateIdsAsync(enumerateGameDetailsDirectoriesTask);
+            var gameDetailsCount = await gameDetailsDataController.CountAsync(enumerateGameDetailsDirectoriesTask);
 
             foreach (var id in gameDetailsIds)
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateGameDetailsDirectoriesTask);
 
                 statusController.UpdateProgress(
                     enumerateGameDetailsDirectoriesTask,
@@ -44,7 +44,10 @@ namespace GOG.Controllers.Enumeration
                     gameDetailsCount,
                     gameDetails.Title);
 
-                directories.AddRange(gameDetailsDirectoryEnumerateDelegate.Enumerate(gameDetails));
+                directories.AddRange(
+                    await gameDetailsDirectoryEnumerateDelegate.EnumerateAsync(
+                        gameDetails, 
+                        enumerateGameDetailsDirectoriesTask));
             }
 
             statusController.Complete(enumerateGameDetailsDirectoriesTask);

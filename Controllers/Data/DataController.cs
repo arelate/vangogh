@@ -55,11 +55,17 @@ namespace Controllers.Data
             this.statusController = statusController;
         }
 
-        public bool Contains(Type data)
+        public bool DataAvailable
+        {
+            get { return true; } // dataController doesn't hold any state, always reads from disk, so the data is always available
+        }
+
+        public async Task<bool> ContainsAsync(Type data, IStatus status)
         {
             if (data == null) return true;
+
             var index = indexingController.GetIndex(data);
-            return indexDataController.Contains(index);
+            return await indexDataController.ContainsAsync(index, status);
         }
 
         private string GetItemUri(long id)
@@ -69,25 +75,29 @@ namespace Controllers.Data
                 getFilenameDelegate.GetFilename(id.ToString()));
         }
 
-        public async Task<Type> GetByIdAsync(long id)
+        public async Task<Type> GetByIdAsync(long id, IStatus status)
         {
-            return await serializedStorageController.DeserializePullAsync<Type>(GetItemUri(id));
+            return await serializedStorageController.DeserializePullAsync<Type>(GetItemUri(id), status);
         }
 
-        public async Task LoadAsync()
+        public async Task LoadAsync(IStatus status)
         {
-            await indexDataController.LoadAsync();
+            var loadStatus = statusController.Create(status, "Load data");
+
+            await indexDataController.LoadAsync(loadStatus);
+
+            statusController.Complete(loadStatus);
         }
 
-        public Task SaveAsync()
+        public Task SaveAsync(IStatus status = null)
         {
             throw new NotImplementedException();
         }
 
         private async Task MapItemsAndIndexes(
-            IStatus status, 
-            string taskMessage, 
-            Func<long, Type, Task> itemAction, 
+            IStatus status,
+            string taskMessage,
+            Func<long, Type, Task> itemAction,
             Func<long[], Task> indexAction,
             params Type[] data)
         {
@@ -125,9 +135,10 @@ namespace Controllers.Data
                 {
                     await serializedStorageController.SerializePushAsync(
                         GetItemUri(index),
-                        item);
+                        item,
+                        status);
                 },
-                async (indexes) => 
+                async (indexes) =>
                 {
                     await indexDataController.UpdateAsync(status, indexes);
                 },
@@ -141,11 +152,8 @@ namespace Controllers.Data
                 "Remove data item(s)",
                 async (index, item) =>
                 {
-                    await Task.Run(() =>
-                    {
-                        if (indexDataController.Contains(index))
-                            recycleBinController.MoveToRecycleBin(GetItemUri(index));
-                    });
+                    if (await indexDataController.ContainsAsync(index, status))
+                        recycleBinController.MoveToRecycleBin(GetItemUri(index));
                 },
                 async (indexes) =>
                 {
@@ -154,19 +162,19 @@ namespace Controllers.Data
                 data);
         }
 
-        public IEnumerable<long> EnumerateIds()
+        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
         {
-            return indexDataController.EnumerateIds();
+            return await indexDataController.EnumerateIdsAsync(status);
         }
 
-        public int Count()
+        public async Task<int> CountAsync(IStatus status)
         {
-            return indexDataController.Count();
+            return await indexDataController.CountAsync(status);
         }
 
-        public bool ContainsId(long id)
+        public async Task<bool> ContainsIdAsync(long id, IStatus status)
         {
-            return indexDataController.Contains(id);
+            return await indexDataController.ContainsAsync(id, status);
         }
     }
 }

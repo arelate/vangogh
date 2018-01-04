@@ -1,53 +1,56 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.Settings;
+using Interfaces.Status;
 
 using Models.Uris;
 
-using GOG.Interfaces.Models;
 using GOG.Models;
 
 namespace GOG.Controllers.Enumeration
 {
-    public class GameDetailsManualUrlEnumerateDelegate : IEnumerateDelegate<GameDetails>
+    public class GameDetailsManualUrlEnumerateDelegate : IEnumerateAsyncDelegate<GameDetails>
     {
-        private ISettingsProperty settingsProperty;
+        private IGetSettingsAsyncDelegate getSettingsAsyncDelegate;
         private IDataController<GameDetails> gameDetailsDataController;
 
         public GameDetailsManualUrlEnumerateDelegate(
-            ISettingsProperty settingsProperty,
+            IGetSettingsAsyncDelegate getSettingsAsyncDelegate,
             IDataController<GameDetails> gameDetailsDataController)
         {
-            this.settingsProperty = settingsProperty;
+            this.getSettingsAsyncDelegate = getSettingsAsyncDelegate;
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
-        public virtual IEnumerable<string> Enumerate(GameDetails gameDetails)
+        public async Task<IEnumerable<string>> EnumerateAsync(GameDetails gameDetails, IStatus status)
         {
-            if (settingsProperty == null ||
-                settingsProperty.Settings == null ||
-                settingsProperty.Settings.DownloadsLanguages == null ||
-                settingsProperty.Settings.DownloadsOperatingSystems == null)
-                yield break;
+            var settings = await getSettingsAsyncDelegate.GetSettingsAsync(status);
 
-            if (gameDetails == null)
-                yield break;
+            if (settings == null ||
+                settings.DownloadsLanguages == null ||
+                settings.DownloadsOperatingSystems == null)
+                throw new System.InvalidOperationException("Cannot enumerate game details without settings (even default).");
+
+            var manualUrls = new List<string>();
+
+            if (gameDetails == null) return manualUrls;
 
             var gameDetailsDownloadEntries = new List<DownloadEntry>();
 
             if (gameDetails.LanguageDownloads != null)
                 foreach (var download in gameDetails.LanguageDownloads)
                 {
-                    if (!settingsProperty.Settings.DownloadsLanguages.Contains(download.Language)) continue;
+                    if (!settings.DownloadsLanguages.Contains(download.Language)) continue;
 
-                    if (settingsProperty.Settings.DownloadsOperatingSystems.Contains("Windows") && download.Windows != null)
+                    if (settings.DownloadsOperatingSystems.Contains("Windows") && download.Windows != null)
                         gameDetailsDownloadEntries.AddRange(download.Windows);
-                    if (settingsProperty.Settings.DownloadsOperatingSystems.Contains("Mac") && download.Mac != null)
+                    if (settings.DownloadsOperatingSystems.Contains("Mac") && download.Mac != null)
                         gameDetailsDownloadEntries.AddRange(download.Mac);
-                    if (settingsProperty.Settings.DownloadsOperatingSystems.Contains("Linux") && download.Linux != null)
+                    if (settings.DownloadsOperatingSystems.Contains("Linux") && download.Linux != null)
                         gameDetailsDownloadEntries.AddRange(download.Linux);
                 }
 
@@ -57,14 +60,16 @@ namespace GOG.Controllers.Enumeration
             foreach (var downloadEntry in gameDetailsDownloadEntries)
             {
                 var absoluteUri = string.Format(Uris.Paths.ProductFiles.ManualUrlRequestTemplate, downloadEntry.ManualUrl);
-                yield return absoluteUri;
+                manualUrls.Add(absoluteUri);
             }
 
             // last but not least - recursively add DLCs
             if (gameDetails.DLCs != null)
                 foreach (var dlc in gameDetails.DLCs)
-                    foreach (var dlcManualUrl in Enumerate(dlc))
-                        yield return dlcManualUrl;
+                    manualUrls.AddRange(await EnumerateAsync(dlc, status));
+
+            return manualUrls;
         }
+
     }
 }

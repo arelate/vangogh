@@ -14,35 +14,49 @@ namespace GOG.Controllers.DownloadSources
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateDelegate<GameDetails> gameDetailsManualUrlEnumerationController;
+        private IEnumerateAsyncDelegate<GameDetails> gameDetailsManualUrlEnumerationController;
+        private IStatusController statusController;
 
         public ManualUrlDownloadSourcesController(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateDelegate<GameDetails> gameDetailsManualUrlEnumerationController)
+            IEnumerateAsyncDelegate<GameDetails> gameDetailsManualUrlEnumerationController,
+            IStatusController statusController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.gameDetailsManualUrlEnumerationController = gameDetailsManualUrlEnumerationController;
+            this.statusController = statusController;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
         {
-            var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
+            var getDownloadSourcesStatus = statusController.Create(status, "Get download sources");
 
-            foreach (var id in updatedDataController.EnumerateIds())
+            var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
+            var current = 0;
+
+            foreach (var id in await updatedDataController.EnumerateIdsAsync(getDownloadSourcesStatus))
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+                statusController.UpdateProgress(
+                    getDownloadSourcesStatus,
+                    ++current,
+                    await updatedDataController.CountAsync(getDownloadSourcesStatus),
+                    id.ToString());
+
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, getDownloadSourcesStatus);
 
                 if (!gameDetailsDownloadSources.ContainsKey(id))
                     gameDetailsDownloadSources.Add(id, new List<string>());
 
-                foreach (var manualUrl in gameDetailsManualUrlEnumerationController.Enumerate(gameDetails))
+                foreach (var manualUrl in await gameDetailsManualUrlEnumerationController.EnumerateAsync(gameDetails, status))
                 {
                     if (!gameDetailsDownloadSources[id].Contains(manualUrl))
                         gameDetailsDownloadSources[id].Add(manualUrl);
                 }
             }
+
+            statusController.Complete(getDownloadSourcesStatus);
 
             return gameDetailsDownloadSources;
         }

@@ -17,13 +17,6 @@ namespace Models.ActivityContext
                 }
             },
             {
-                Activity.Load,
-                new Context[]
-                {
-                    Context.Data
-                }
-            },
-            {
                 Activity.UpdateData,
                 new Context[] {
                     Context.Products,

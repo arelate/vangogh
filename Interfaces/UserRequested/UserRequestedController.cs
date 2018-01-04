@@ -13,7 +13,7 @@ namespace Interfaces.UserRequested
 
     public interface IUserRequestedController:
         IIsNullOrEmptyDelegate,
-        IEnumerateIdsDelegate
+        IEnumerateIdsAsyncDelegate
     {
         // ...
     }

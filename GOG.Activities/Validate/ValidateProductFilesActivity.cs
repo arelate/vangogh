@@ -27,8 +27,8 @@ namespace GOG.Activities.Validate
         private IFileValidationController fileValidationController;
         private IDataController<ValidationResult> validationResultsDataController;
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateDelegate<GameDetails> manualUrlsEnumerationController;
-        private IEnumerateIdsDelegate productEnumerateDelegate;
+        private IEnumerateAsyncDelegate<GameDetails> manualUrlsEnumerationController;
+        private IEnumerateIdsAsyncDelegate productEnumerateDelegate;
         private IRoutingController routingController;
 
         public ValidateProductFilesActivity(
@@ -38,8 +38,8 @@ namespace GOG.Activities.Validate
             IFileValidationController fileValidationController,
             IDataController<ValidationResult> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateDelegate<GameDetails> manualUrlsEnumerationController,
-            IEnumerateIdsDelegate productEnumerateDelegate,
+            IEnumerateAsyncDelegate<GameDetails> manualUrlsEnumerationController,
+            IEnumerateIdsAsyncDelegate productEnumerateDelegate,
             IRoutingController routingController,
             IStatusController statusController) :
             base(statusController)
@@ -58,17 +58,17 @@ namespace GOG.Activities.Validate
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var validateProductsTask = statusController.Create(status, "Validate products");
+            var validateProductsStatus = statusController.Create(status, "Validate products");
 
             var current = 0;
 
-            var validateProductsList = productEnumerateDelegate.EnumerateIds();
+            var validateProductsList = await productEnumerateDelegate.EnumerateIdsAsync(validateProductsStatus);
             var validateProductsCount = validateProductsList.Count();
 
             foreach (var id in validateProductsList)
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
-                var validationResults = await validationResultsDataController.GetByIdAsync(id);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, validateProductsStatus);
+                var validationResults = await validationResultsDataController.GetByIdAsync(id, validateProductsStatus);
 
                 if (validationResults == null)
                     validationResults = new ValidationResult()
@@ -77,17 +77,17 @@ namespace GOG.Activities.Validate
                         Title = gameDetails.Title
                     };
 
-                statusController.UpdateProgress(validateProductsTask,
+                statusController.UpdateProgress(validateProductsStatus,
                     ++current,
                     validateProductsCount,
                     gameDetails.Title);
 
                 var localFiles = new List<string>();
 
-                var getLocalFilesTask = statusController.Create(validateProductsTask, "Enumerate local product files");
-                foreach (var manualUrl in manualUrlsEnumerationController.Enumerate(gameDetails))
+                var getLocalFilesTask = statusController.Create(validateProductsStatus, "Enumerate local product files");
+                foreach (var manualUrl in await manualUrlsEnumerationController.EnumerateAsync(gameDetails, getLocalFilesTask))
                 {
-                    var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl);
+                    var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl, getLocalFilesTask);
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
@@ -107,7 +107,7 @@ namespace GOG.Activities.Validate
                 var fileValidationResults = new List<IFileValidationResult>(localFiles.Count);
 
                 var validateFilesTask = statusController.Create(
-                    validateProductsTask,
+                    validateProductsStatus,
                     "Validate product files");
 
                 var currentFile = 0;
@@ -130,7 +130,7 @@ namespace GOG.Activities.Validate
                     }
                     catch (Exception ex)
                     {
-                        statusController.Fail(validateProductsTask,
+                        statusController.Fail(validateProductsStatus,
                             $"{localFile}: {ex.Message}");
                     }
                 }
@@ -139,12 +139,12 @@ namespace GOG.Activities.Validate
 
                 validationResults.Files = fileValidationResults.ToArray();
 
-                var updateValidationResultsTask = statusController.Create(validateProductsTask, "Update validation results");
-                await validationResultsDataController.UpdateAsync(validateProductsTask, validationResults);
+                var updateValidationResultsTask = statusController.Create(validateProductsStatus, "Update validation results");
+                await validationResultsDataController.UpdateAsync(validateProductsStatus, validationResults);
                 statusController.Complete(updateValidationResultsTask);
             }
 
-            statusController.Complete(validateProductsTask);
+            statusController.Complete(validateProductsStatus);
         }
     }
 }

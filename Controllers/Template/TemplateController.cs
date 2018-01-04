@@ -9,6 +9,7 @@ using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.SerializedStorage;
 using Interfaces.Collection;
+using Interfaces.Status;
 
 using Models.Separators;
 
@@ -21,6 +22,8 @@ namespace Controllers.Template
         private IGetFilenameDelegate getFilenameDelegate;
         private ISerializedStorageController serializedStorageController;
         private ICollectionController collectionController;
+        private IStatusController statusController;
+
         private const string anyCharactersExpression = "(.*?)";
         private const string templateValuePrefix = Separators.TemplatePrefix;
         private const string templateValueSuffix = Separators.TemplateSuffix;
@@ -34,13 +37,15 @@ namespace Controllers.Template
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializedStorageController serializedStorageController,
-            ICollectionController collectionController)
+            ICollectionController collectionController,
+            IStatusController statusController)
         {
             this.PrimaryTemplate = primaryTemplateTitle;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.serializedStorageController = serializedStorageController;
             this.collectionController = collectionController;
+            this.statusController = statusController;
         }
 
         public string PrimaryTemplate { get; private set; }
@@ -75,16 +80,20 @@ namespace Controllers.Template
             return (template != null) ? template.Content : string.Empty;
         }
 
-        public async Task LoadAsync()
+        public async Task LoadAsync(IStatus status = null)
         {
+            var loadStatus = statusController.Create(status, "Load templates");
+
             var templateUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
-            templates = await serializedStorageController.DeserializePullAsync<Models.Template.Template[]>(templateUri);
+            templates = await serializedStorageController.DeserializePullAsync<Models.Template.Template[]>(templateUri, loadStatus);
 
             if (templates == null)
                 templates = new Models.Template.Template[0];
+
+            statusController.Complete(loadStatus);
         }
 
         private string FindAndReplace(string inputString,

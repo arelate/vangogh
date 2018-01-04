@@ -35,6 +35,12 @@
         void AddSummaryResults(IStatus status, params string[] summaryResults);
     }
 
+    public delegate void StatusChangedNotificationDelegate();
+
+    public interface IStatusChangedNotifictionEvent {
+        event StatusChangedNotificationDelegate StatusChangedNotification;
+    }
+
     public interface IStatusController:
         ICreateDelegate,
         ICompleteDelegate,
@@ -42,7 +48,8 @@
         IFailDelegate,
         IWarnDelegate,
         IInformDelegate,
-        IAddSummaryResultsDelegate
+        IAddSummaryResultsDelegate,
+        IStatusChangedNotifictionEvent
     {
         // ...
     }

@@ -33,15 +33,15 @@ namespace GOG.Activities.UpdateData
             var updateProductsScreenshotsTask = statusController.Create(status, "Update Screenshots");
 
             var getUpdatesListTask = statusController.Create(updateProductsScreenshotsTask, "Get updates");
-            var productsMissingScreenshots = productsDataController.EnumerateIds().Except(
-                screenshotsIndexDataController.EnumerateIds());
+            var productsMissingScreenshots = (await productsDataController.EnumerateIdsAsync(getUpdatesListTask)).Except(
+                await screenshotsIndexDataController.EnumerateIdsAsync(getUpdatesListTask));
             statusController.Complete(getUpdatesListTask);
 
             var counter = 0;
 
             foreach (var id in productsMissingScreenshots)
             {
-                var product = await productsDataController.GetByIdAsync(id);
+                var product = await productsDataController.GetByIdAsync(id, updateProductsScreenshotsTask);
 
                 if (product == null)
                 {

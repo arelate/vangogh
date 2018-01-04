@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Data;
+using Interfaces.Status;
 
 namespace Interfaces.Hash
 {
@@ -16,7 +17,7 @@ namespace Interfaces.Hash
 
     public interface ISetHashAsyncDelegate<Type>
     {
-        Task SetHashAsync(Type data, string hash);
+        Task SetHashAsync(Type data, string hash, IStatus status);
     }
 
     public interface IBytesHashController:
@@ -40,7 +41,10 @@ namespace Interfaces.Hash
     public interface IPrecomputedHashController:
         IGetHashDelegate<string>,
         ISetHashAsyncDelegate<string>,
-        IEnumerateKeysDelegate<string>
+        IEnumerateKeysAsyncDelegate<string>,
+        ILoadAsyncDelegate,
+        ISaveAsyncDelegate,
+        IDataAvailableDelegate
     {
         // ...
     }

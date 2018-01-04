@@ -15,7 +15,7 @@ namespace Interfaces.Enumeration
 
     public interface IEnumerateAsyncDelegate<Type>
     {
-        Task<IEnumerable<string>> EnumerateAsync(Type item);
+        Task<IEnumerable<string>> EnumerateAsync(Type item, IStatus status);
     }
 
     public interface IEnumerateAllAsyncDelegate<Type>

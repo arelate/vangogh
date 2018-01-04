@@ -23,7 +23,7 @@ namespace GOG.Activities.UpdateData
         private IDataController<DetailType> detailDataController;
         private IDataController<long> updatedDataController;
 
-        private IEnumerateIdsDelegate userRequestedOrOtherEnumerateDelegate;
+        private IEnumerateIdsAsyncDelegate userRequestedOrOtherEnumerateDelegate;
 
         private IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
 
@@ -38,7 +38,7 @@ namespace GOG.Activities.UpdateData
         public MasterDetailProductUpdateActivity(
             Context context,
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
-            IEnumerateIdsDelegate userRequestedOrOtherEnumerateDelegate,
+            IEnumerateIdsAsyncDelegate userRequestedOrOtherEnumerateDelegate,
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,
             IDataController<long> updatedDataController,
@@ -71,13 +71,13 @@ namespace GOG.Activities.UpdateData
             // We'll limit detail updates to user specified ids.
             // if user didn't provide a list of ids - we'll use the details gaps 
             // (ids that exist in master list, but not detail) and updated
-            var productsUpdateList = userRequestedOrOtherEnumerateDelegate.EnumerateIds();
+            var productsUpdateList = await userRequestedOrOtherEnumerateDelegate.EnumerateIdsAsync(updateProductsTask);
 
             var currentProduct = 0;
 
             foreach (var id in productsUpdateList)
             {
-                var product = await masterDataController.GetByIdAsync(id);
+                var product = await masterDataController.GetByIdAsync(id, updateProductsTask);
                 if (product == null) continue;
 
                 statusController.UpdateProgress(

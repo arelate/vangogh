@@ -3,7 +3,6 @@
     public enum Activity
     {
         Authorize,
-        Load,
         UpdateData,
         UpdateDownloads,
         Download,

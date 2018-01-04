@@ -33,7 +33,7 @@ namespace GOG.Activities.Validate
         {
             var validateDataTask = statusController.Create(status, "Validate data");
 
-            var dataFiles = precomputedHashController.EnumerateKeys();
+            var dataFiles = await precomputedHashController.EnumerateKeysAsync(validateDataTask);
             var dataFilesCount = dataFiles.Count();
             var current = 0;
 

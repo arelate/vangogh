@@ -64,7 +64,7 @@ namespace Controllers.Network
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
-            requestMessage.Headers.Add(Headers.Cookie, cookieController.GetCookiesString());
+            requestMessage.Headers.Add(Headers.Cookie, await cookieController.GetCookiesStringAsync(status));
 
             if (content != null) requestMessage.Content = content;
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
@@ -72,7 +72,7 @@ namespace Controllers.Network
             response.EnsureSuccessStatusCode();
 
             if (response.Headers.Contains(Headers.SetCookie))
-                await cookieController.SetCookies(response.Headers.GetValues(Headers.SetCookie));
+                await cookieController.SetCookiesAsync(response.Headers.GetValues(Headers.SetCookie), status);
 
             return response;
         }

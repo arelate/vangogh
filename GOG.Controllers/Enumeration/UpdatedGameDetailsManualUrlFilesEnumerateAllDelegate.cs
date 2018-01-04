@@ -35,15 +35,15 @@ namespace GOG.Controllers.Enumeration
         {
             var enumerateUpdateGameDetailsFilesTask = statusController.Create(status, "Enumerate updated gameDetails files");
 
-            var updatedIds = updatedDataController.EnumerateIds();
-            var updatedIdsCount = updatedDataController.Count();
+            var updatedIds = await updatedDataController.EnumerateIdsAsync(enumerateUpdateGameDetailsFilesTask);
+            var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdateGameDetailsFilesTask);
             var current = 0;
 
             var gameDetailsFiles = new List<string>();
 
             foreach (var id in updatedIds)
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateUpdateGameDetailsFilesTask);
 
                 statusController.UpdateProgress(
                     enumerateUpdateGameDetailsFilesTask,
@@ -51,7 +51,10 @@ namespace GOG.Controllers.Enumeration
                     updatedIdsCount,
                     gameDetails.Title);
 
-                gameDetailsFiles.AddRange(await gameDetailsFilesEnumerateDelegate.EnumerateAsync(gameDetails));
+                gameDetailsFiles.AddRange(
+                    await gameDetailsFilesEnumerateDelegate.EnumerateAsync(
+                        gameDetails, 
+                        enumerateUpdateGameDetailsFilesTask));
             }
 
             statusController.Complete(enumerateUpdateGameDetailsFilesTask);

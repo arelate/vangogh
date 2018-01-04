@@ -9,27 +9,27 @@ namespace GOG.Activities.Authorize
 {
     public class AuthorizeActivity : Activity
     {
-        private ISettingsProperty settingsProperty;
+        private IGetSettingsAsyncDelegate getSettingsAsyncDelegate;
         private IAuthorizationController authorizationController;
 
         public AuthorizeActivity(
-            ISettingsProperty settingsProperty,
+            IGetSettingsAsyncDelegate getSettingsAsyncDelegate,
             IAuthorizationController authorizationController,
             IStatusController statusController) :
             base(statusController)
         {
-            this.settingsProperty = settingsProperty;
+            this.getSettingsAsyncDelegate = getSettingsAsyncDelegate;
             this.authorizationController = authorizationController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            if (settingsProperty != null &&
-                settingsProperty.Settings != null)
+            var settings = await getSettingsAsyncDelegate.GetSettingsAsync(status);
+            if (settings != null)
             {
                 await authorizationController.Authorize(
-                    settingsProperty.Settings.Username,
-                    settingsProperty.Settings.Password,
+                    settings.Username,
+                    settings.Password,
                     status);
             }
             else throw new System.ArgumentNullException("Settings are null");

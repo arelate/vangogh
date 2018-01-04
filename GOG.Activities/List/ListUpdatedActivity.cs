@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Data;
 using Interfaces.Status;
+using Interfaces.Console;
 
 using GOG.Models;
 
@@ -13,36 +14,41 @@ namespace GOG.Activities.List
         IDataController<long> updatedDataController;
         IDataController<AccountProduct> accountProductsDataController;
 
+        IConsoleController consoleController; // temp. while we wait clarity on summary results
+
         public ListUpdatedActivity(
             IDataController<long> updatedDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            IStatusController statusController) :
+            IStatusController statusController,
+            IConsoleController consoleController) :
             base(statusController)
         {
             this.updatedDataController = updatedDataController;
             this.accountProductsDataController = accountProductsDataController;
+
+            this.consoleController = consoleController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
             var listUpdatedStatus = statusController.Create(status, "List updated account products");
             var current = 0;
-            var updatedAccountProducts = new Dictionary<string, string>();
+            var count = await updatedDataController.CountAsync(listUpdatedStatus);
+            var updatedAccountProducts = new Dictionary<long, string>();
 
-            foreach (var updatedId in updatedDataController.EnumerateIds())
+            foreach (var updatedId in await updatedDataController.EnumerateIdsAsync(listUpdatedStatus))
             {
-                var updatedIdString = updatedId.ToString();
                 statusController.UpdateProgress(
                     listUpdatedStatus,
                     ++current,
-                    updatedDataController.Count(),
-                    updatedIdString);
+                    count,
+                    updatedId.ToString());
 
                 updatedAccountProducts.Add(
-                    updatedIdString,
+                    updatedId,
                     "(Account product not found)");
 
-                var accountProduct = await accountProductsDataController.GetByIdAsync(updatedId);
+                var accountProduct = await accountProductsDataController.GetByIdAsync(updatedId, listUpdatedStatus);
                 if (accountProduct == null)
                 {
                     statusController.Warn(
@@ -51,9 +57,10 @@ namespace GOG.Activities.List
                     continue;
                 }
 
-                updatedAccountProducts[updatedIdString] = accountProduct.Title;
+                updatedAccountProducts[updatedId] = accountProduct.Title;
 
-                // TODO: add table formatting controller
+
+                // TODO: add updated viewModel formatting controller
                 // TODO: figure out how to add and post summaries for the activity like this one using consolePresentationController
             }
 

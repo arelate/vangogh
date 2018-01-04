@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 using Interfaces.Data;
+using Interfaces.Status;
 
 using Models.ProductCore;
 
 namespace Controllers.Data
 {
     public class MasterDetailsEnumerateGapsDelegate<MasterType, DetailType>:
-        IEnumerateIdsDelegate
+        IEnumerateIdsAsyncDelegate
         where MasterType: ProductCore
         where DetailType: ProductCore
     {
@@ -24,11 +26,15 @@ namespace Controllers.Data
             this.detailDataController = detailDataController;
         }
 
-        public IEnumerable<long> EnumerateIds()
+        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
         {
-            foreach (var id in masterDataController.EnumerateIds())
-                if (!detailDataController.ContainsId(id))
-                    yield return id;
+            var gaps = new List<long>();
+
+            foreach (var id in await masterDataController.EnumerateIdsAsync(status))
+                if (!await detailDataController.ContainsIdAsync(id, status))
+                    gaps.Add(id);
+
+            return gaps;
         }
     }
 }

@@ -10,9 +10,4 @@ namespace Interfaces.Settings
         string[] DownloadsOperatingSystems { get; set; }
         IDictionary<string, string> Directories { get; set; }
     }
-
-    public interface ISettingsProperty
-    {
-        ISettings Settings { get; }
-    }
 }

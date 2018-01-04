@@ -70,11 +70,11 @@ namespace GOG.Activities.UpdateDownloads
 
                 var id = downloadSource.Key;
 
-                ProductCore product = await productsDataController.GetByIdAsync(id);
+                ProductCore product = await productsDataController.GetByIdAsync(id, updateDownloadsTask);
 
                 if (product == null)
                 {
-                    product = await accountProductsDataController.GetByIdAsync(id);
+                    product = await accountProductsDataController.GetByIdAsync(id, updateDownloadsTask);
 
                     if (product == null)
                     {
@@ -91,7 +91,7 @@ namespace GOG.Activities.UpdateDownloads
                     downloadSources.Count,
                     product.Title);
 
-                var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
+                var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id, updateDownloadsTask);
                 if (productDownloads == null)
                 {
                     productDownloads = new ProductDownloads()

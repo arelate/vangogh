@@ -7,6 +7,7 @@ using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Routing;
 using Interfaces.Enumeration;
+using Interfaces.Status;
 
 using GOG.Models;
 using System;
@@ -15,35 +16,46 @@ namespace GOG.Controllers.Enumeration
 {
     public class GameDetailsFileEnumerateDelegate : IEnumerateAsyncDelegate<GameDetails>
     {
-        private IEnumerateDelegate<GameDetails> manualUrlEnumerationDelegate;
+        private IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerationDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IRoutingController routingController;
+        private IStatusController statusController;
 
         public GameDetailsFileEnumerateDelegate(
-            IEnumerateDelegate<GameDetails> manualUrlEnumerationDelegate,
+            IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerationDelegate,
             IRoutingController routingController,
             IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate)
+            IGetFilenameDelegate getFilenameDelegate,
+            IStatusController statusController)
         {
             this.manualUrlEnumerationDelegate = manualUrlEnumerationDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.routingController = routingController;
+            this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> EnumerateAsync(GameDetails gameDetails)
+        public async Task<IEnumerable<string>> EnumerateAsync(GameDetails gameDetails, IStatus status)
         {
+            var enumerateGameDetailsFilesStatus = statusController.Create(status, "Enumerate game details files");
+
             var gameDetailsFiles = new List<string>();
 
-            var gameDetailsManualUrls = manualUrlEnumerationDelegate.Enumerate(gameDetails);
+            var gameDetailsManualUrls = await manualUrlEnumerationDelegate.EnumerateAsync(gameDetails, status);
             var gameDetailsManualUrlsCount = gameDetailsManualUrls.Count();
-            var gameDetailsResolvedUris = await routingController.TraceRoutesAsync(gameDetails.Id, gameDetailsManualUrls);
+            var gameDetailsResolvedUris = await routingController.TraceRoutesAsync(
+                gameDetails.Id, 
+                gameDetailsManualUrls, 
+                enumerateGameDetailsFilesStatus);
 
             // that means that routes information is incomplete and 
             // it's not possible to map manualUrls to resolvedUrls
             if (gameDetailsManualUrlsCount != gameDetailsResolvedUris.Count)
+            {
+                statusController.Complete(enumerateGameDetailsFilesStatus);
                 throw new ArgumentException($"Product {gameDetails.Id} resolvedUris count doesn't match manualUrls count");
+            }
 
             for (var ii = 0; ii < gameDetailsResolvedUris.Count; ii++)
             {
@@ -59,6 +71,8 @@ namespace GOG.Controllers.Enumeration
 
                 gameDetailsFiles.Add(localFileUri);
             }
+
+            statusController.Complete(enumerateGameDetailsFilesStatus);
 
             if (gameDetailsManualUrlsCount != gameDetailsFiles.Count)
                 throw new ArgumentException($"Product {gameDetails.Id} files count doesn't match manualUrls count");

@@ -8,12 +8,7 @@ namespace Controllers.Status
 {
     public class StatusController : IStatusController
     {
-        private IPostViewUpdateDelegate postViewUpdateDelegate;
-
-        public StatusController(IPostViewUpdateDelegate postViewUpdateDelegate)
-        {
-            this.postViewUpdateDelegate = postViewUpdateDelegate;
-        }
+        public event StatusChangedNotificationDelegate StatusChangedNotification;
 
         private void AssertValidStatus(IStatus status)
         {
@@ -35,7 +30,7 @@ namespace Controllers.Status
             };
             status.Children.Add(childStatus);
 
-            postViewUpdateDelegate.PostViewUpdate();
+            StatusChangedNotification?.Invoke();
 
             return childStatus;
         }
@@ -50,7 +45,7 @@ namespace Controllers.Status
             status.Complete = true;
             status.Completed = DateTime.UtcNow;
 
-            postViewUpdateDelegate.PostViewUpdate();
+            StatusChangedNotification?.Invoke();
         }
 
         public void UpdateProgress(IStatus status, long current, long total, string target, string unit = "")
@@ -68,7 +63,7 @@ namespace Controllers.Status
             status.Progress.Total = total;
             status.Progress.Unit = unit;
 
-            postViewUpdateDelegate.PostViewUpdate();
+            StatusChangedNotification?.Invoke();
         }
 
         public void Fail(IStatus status, string failureMessage)

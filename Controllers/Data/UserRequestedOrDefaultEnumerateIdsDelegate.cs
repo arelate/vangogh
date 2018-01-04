@@ -1,33 +1,34 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Data;
 using Interfaces.UserRequested;
+using Interfaces.Status;
 
 namespace Controllers.Data
 {
-    public class UserRequestedOrDefaultEnumerateIdsDelegate : IEnumerateIdsDelegate
+    public class UserRequestedOrDefaultEnumerateIdsDelegate : IEnumerateIdsAsyncDelegate
     {
         private IUserRequestedController userRequestedController;
-        private IEnumerateIdsDelegate[] otherEnumerateDelegates;
+        private IEnumerateIdsAsyncDelegate[] otherEnumerateDelegates;
 
         public UserRequestedOrDefaultEnumerateIdsDelegate(
             IUserRequestedController userRequestedController,
-            params IEnumerateIdsDelegate[] otherEnumerateDelegates)
+            params IEnumerateIdsAsyncDelegate[] otherEnumerateDelegates)
         {
             this.userRequestedController = userRequestedController;
             this.otherEnumerateDelegates = otherEnumerateDelegates;
         }
 
-        public IEnumerable<long> EnumerateIds()
+        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
         {
-            return userRequestedController.IsNullOrEmpty() ?
-                    otherEnumerateDelegates.SelectMany(
-                        enumerableDelegate =>
-                        enumerableDelegate.EnumerateIds()) :
-                    userRequestedController.EnumerateIds();
+            if (!userRequestedController.IsNullOrEmpty()) return await userRequestedController.EnumerateIdsAsync(status);
+
+            var otherIds = new List<long>();
+            foreach (var enumerableDelegate in otherEnumerateDelegates)
+                otherIds.AddRange(await enumerableDelegate.EnumerateIdsAsync(status));
+
+            return otherIds;
         }
     }
 }

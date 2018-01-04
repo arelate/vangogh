@@ -32,18 +32,18 @@ namespace GOG.Activities.Download
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var current = 0;
-            var productDownloadsData = productDownloadsDataController.EnumerateIds();
-            var total = productDownloadsDataController.Count();
-
-            var processDownloadsTask = statusController.Create(status, 
+            var processDownloadsTask = statusController.Create(status,
                 $"Process updated {context} downloads");
+
+            var current = 0;
+            var productDownloadsData = await productDownloadsDataController.EnumerateIdsAsync(processDownloadsTask);
+            var total = await productDownloadsDataController.CountAsync(processDownloadsTask);
 
             var emptyProductDownloads = new List<ProductDownloads>();
 
             foreach (var id in productDownloadsData)
             {
-                var productDownloads = await productDownloadsDataController.GetByIdAsync(id);
+                var productDownloads = await productDownloadsDataController.GetByIdAsync(id, processDownloadsTask);
                 if (productDownloads == null) continue;
 
                 statusController.UpdateProgress(
@@ -54,10 +54,10 @@ namespace GOG.Activities.Download
 
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(
-                    d => 
+                    d =>
                     d.Context == context).ToArray();
 
-                var processDownloadEntriesTask = statusController.Create(processDownloadsTask, 
+                var processDownloadEntriesTask = statusController.Create(processDownloadsTask,
                     $"Download {context} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)

@@ -63,7 +63,7 @@ namespace GOG.Controllers.NewUpdatedSelection
 
             var addPreviouslyUnknownDataTask = statusController.Create(status, "Add previously unknown products as updated");
 
-            var knownAccountProducts = accountProductsDataController.EnumerateIds();
+            var knownAccountProducts = await accountProductsDataController.EnumerateIdsAsync(addPreviouslyUnknownDataTask);
             var unknownAccountProducts = accountProducts.Select(ap => ap.Id).Except(knownAccountProducts);
 
             if (unknownAccountProducts != null)

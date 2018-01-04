@@ -8,17 +8,14 @@ using Interfaces.Data;
 using Interfaces.Destination.Filename;
 using Interfaces.Serialization;
 using Interfaces.Storage;
+using Interfaces.Status;
 
 namespace Controllers.Hash
 {
-    public class PrecomputedHashController : 
-        IPrecomputedHashController, 
-        ILoadAsyncDelegate,
-        ISaveAsyncDelegate
+    public class PrecomputedHashController : IPrecomputedHashController
     {
         private IGetFilenameDelegate getFilenameDelegate;
         private string uriHashesFilename;
-        private bool dataLoaded;
 
         private ISerializationController<string> serializationController;
         private ITransactionalStorageController transactionalStorageController;
@@ -37,22 +34,31 @@ namespace Controllers.Hash
             this.transactionalStorageController = transactionalStorageController;
 
             uriHashes = new Dictionary<string, string>();
-            dataLoaded = false;
         }
 
-        public IEnumerable<string> EnumerateKeys()
+        public async Task<IEnumerable<string>> EnumerateKeysAsync(IStatus status)
         {
+            if (!DataAvailable) await LoadAsync(status);
+
             return uriHashes.Keys;
         }
 
         public string GetHash(string uri)
         {
+            if (!DataAvailable) LoadAsync().Wait();
+
             return (uriHashes.ContainsKey(uri)) ?
                 uriHashes[uri] :
                 string.Empty;
         }
 
-        public async Task LoadAsync()
+        public bool DataAvailable
+        {
+            get;
+            private set;
+        }
+
+        public async Task LoadAsync(IStatus status = null)
         {
             if (uriHashes != null &&
                 uriHashes.Any())
@@ -72,12 +78,12 @@ namespace Controllers.Hash
             if (uriHashes == null)
                 uriHashes = new Dictionary<string, string>();
 
-            dataLoaded = true;
+            DataAvailable = true;
         }
 
-        public async Task SaveAsync()
+        public async Task SaveAsync(IStatus status = null)
         {
-            if (!dataLoaded)
+            if (!DataAvailable)
                 throw new InvalidOperationException(
                     "Saving hashes without loading them first would overwrite existing data");
 
@@ -85,7 +91,7 @@ namespace Controllers.Hash
             await transactionalStorageController.PushAsync(uriHashesFilename, serialiedData);
         }
 
-        public async Task SetHashAsync(string uri, string hash)
+        public async Task SetHashAsync(string uri, string hash, IStatus status)
         {
             if (uriHashes.ContainsKey(uri) &&
                 uriHashes[uri] == hash) return;
@@ -94,7 +100,7 @@ namespace Controllers.Hash
                 uriHashes.Add(uri, hash);
             else uriHashes[uri] = hash;
 
-            await SaveAsync();
+            await SaveAsync(status);
         }
     }
 }

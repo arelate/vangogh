@@ -1,61 +1,83 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Interfaces.Data;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Settings;
 using Interfaces.SerializedStorage;
-using System;
+using Interfaces.Status;
 
 namespace Controllers.Settings
 {
-    public class SettingsController : 
-        ILoadAsyncDelegate, 
-        ISettingsProperty,
+    public class SettingsController :
+        ISettingsController,
         IGetDirectoryDelegate
     {
         private IGetFilenameDelegate getFilenameDelegate;
         private ISerializedStorageController serializedStorageController;
+        private IStatusController statusController;
 
-        public ISettings Settings { get; private set; }
+        private ISettings settings;
 
         public SettingsController(
             IGetFilenameDelegate getFilenameDelegate,
-            ISerializedStorageController serializedStorageController)
+            ISerializedStorageController serializedStorageController,
+            IStatusController statusController)
         {
             this.getFilenameDelegate = getFilenameDelegate;
             this.serializedStorageController = serializedStorageController;
+            this.statusController = statusController;
         }
 
-        public async Task LoadAsync()
+        public bool DataAvailable
         {
-            Settings = await serializedStorageController.DeserializePullAsync<
+            get;
+            private set;
+        }
+
+        public async Task LoadAsync(IStatus status = null)
+        {
+            var loadStatus = statusController.Create(status, "Load settings");
+
+            settings = await serializedStorageController.DeserializePullAsync<
                 Models.Settings.Settings>(
-                getFilenameDelegate.GetFilename());
+                getFilenameDelegate.GetFilename(),
+                loadStatus);
 
             // set defaults
 
-            if (Settings == null) Settings =
-                new Models.Settings.Settings();
+            if (settings == null) settings = new Models.Settings.Settings();
 
-            if (Settings.DownloadsLanguages == null)
-                Settings.DownloadsLanguages = new string[0];
-            if (Settings.DownloadsOperatingSystems == null)
-                Settings.DownloadsOperatingSystems = new string[0];
-            if (Settings.Directories == null)
-                Settings.Directories = new Dictionary<string, string>();
+            if (settings.DownloadsLanguages == null)
+                settings.DownloadsLanguages = new string[0];
+            if (settings.DownloadsOperatingSystems == null)
+                settings.DownloadsOperatingSystems = new string[0];
+            if (settings.Directories == null)
+                settings.Directories = new Dictionary<string, string>();
+
+            DataAvailable = true;
+
+            statusController.Complete(loadStatus);
         }
 
         public string GetDirectory(string directory = null)
         {
-            if (Settings.Directories == null ||
-                Settings.Directories.Count == 0) return string.Empty;
+            if (!DataAvailable) LoadAsync().Wait();
 
-            if (Settings.Directories.ContainsKey(directory))
-                return Settings.Directories[directory];
+            if (settings.Directories == null ||
+                settings.Directories.Count == 0) return string.Empty;
+
+            if (settings.Directories.ContainsKey(directory))
+                return settings.Directories[directory];
 
             return string.Empty;
+        }
+
+        public async Task<ISettings> GetSettingsAsync(IStatus status)
+        {
+            if (!DataAvailable) await LoadAsync(status);
+
+            return settings;
         }
     }
 }

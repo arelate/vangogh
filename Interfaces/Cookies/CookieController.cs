@@ -2,22 +2,24 @@
 using System.Threading.Tasks;
 
 using Interfaces.Data;
+using Interfaces.Status;
 
 namespace Interfaces.Cookies
 {
-    public interface ISetCookiesDelegate
+    public interface ISetCookiesAsyncDelegate
     {
-        Task SetCookies(IEnumerable<string> cookies);
+        Task SetCookiesAsync(IEnumerable<string> cookies, IStatus status);
     }
 
-    public interface IGetCookiesStringDelegate
+    public interface IGetCookiesStringAsyncDelegate
     {
-        string GetCookiesString();
+        Task<string> GetCookiesStringAsync(IStatus status);
     }
 
     public interface ICookieController:
-        ISetCookiesDelegate,
-        IGetCookiesStringDelegate,
+        ISetCookiesAsyncDelegate,
+        IGetCookiesStringAsyncDelegate,
+        IDataAvailableDelegate,
         ILoadAsyncDelegate,
         ISaveAsyncDelegate
     {

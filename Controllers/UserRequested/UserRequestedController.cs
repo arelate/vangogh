@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.UserRequested;
+using Interfaces.Status;
 
 namespace Controllers.UserRequested
 {
@@ -18,13 +20,22 @@ namespace Controllers.UserRequested
             return userRequested == null || userRequested.Length == 0;
         }
 
-        public IEnumerable<long> EnumerateIds()
+        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
         {
-            if (IsNullOrEmpty()) yield break;
+            var parsedIds = new List<long>();
 
-            foreach (var stringId in userRequested)
-                if (long.TryParse(stringId, out var id))
-                    yield return id;
+            await Task.Run(() =>
+            {
+                if (!IsNullOrEmpty())
+                {
+
+                    foreach (var stringId in userRequested)
+                        if (long.TryParse(stringId, out var id))
+                            parsedIds.Add(id);
+                }
+            });
+
+            return parsedIds;
         }
     }
 }

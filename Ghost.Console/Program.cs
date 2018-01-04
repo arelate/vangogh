@@ -76,7 +76,6 @@ using GOG.Controllers.UpdateScreenshots;
 using GOG.Controllers.ImageUri;
 
 using GOG.Activities.Help;
-using GOG.Activities.Load;
 using GOG.Activities.ValidateSettings;
 using GOG.Activities.Authorize;
 using GOG.Activities.UpdateData;
@@ -107,6 +106,8 @@ namespace Ghost.Console
         {
             #region Foundation Controllers
 
+            var statusController = new StatusController();
+
             var streamController = new StreamController();
             var fileController = new FileController();
             var directoryController = new DirectoryController();
@@ -132,18 +133,6 @@ namespace Ghost.Console
             var stringToBytesConversionController = new StringToBytesConversionController();
             var stringMd5Controller = new StringMd5Controller(stringToBytesConversionController, bytesMd5Controller);
 
-            var serializedStorageController = new SerializedStorageController(
-                precomputedHashController,
-                storageController,
-                stringMd5Controller,
-                serializationController);
-
-            var serializedTransactionalStorageController = new SerializedStorageController(
-                precomputedHashController,
-                transactionalStorageController,
-                stringMd5Controller,
-                serializationController);
-
             var consoleController = new ConsoleController();
             var lineBreakingDelegate = new LineBreakingDelegate();
 
@@ -153,6 +142,20 @@ namespace Ghost.Console
 
             var bytesFormattingController = new BytesFormattingController();
             var secondsFormattingController = new SecondsFormattingController();
+
+            var serializedStorageController = new SerializedStorageController(
+                precomputedHashController,
+                storageController,
+                stringMd5Controller,
+                serializationController,
+                statusController);
+
+            var serializedTransactionalStorageController = new SerializedStorageController(
+                precomputedHashController,
+                transactionalStorageController,
+                stringMd5Controller,
+                serializationController,
+                statusController);
 
             var collectionController = new CollectionController();
 
@@ -169,14 +172,16 @@ namespace Ghost.Console
                 templatesDirectoryDelegate,
                 appTemplateFilenameDelegate,
                 serializedStorageController,
-                collectionController);
+                collectionController,
+                statusController);
 
             var reportTemplateController = new TemplateController(
                 "status",
                 templatesDirectoryDelegate,
                 reportTemplateFilenameDelegate,
                 serializedStorageController,
-                collectionController);
+                collectionController,
+                statusController);
 
             var statusProgressController = new StatusProgressController();
 
@@ -195,11 +200,12 @@ namespace Ghost.Console
                 statusAppViewModelDelegate,
                 statusTreeToEnumerableController);
 
-            var consoleStatusPostUpdateDelegate = new StatusPostUpdateDelegate(
+            var consoleStatusPostViewUpdateDelegate = new StatusPostViewUpdateDelegate(
                 statusGetViewUpdateDelegate,
                 consoleInputOutputController);
 
-            var statusController = new StatusController(consoleStatusPostUpdateDelegate);
+            // add notification handler to drive console view updates
+            statusController.StatusChangedNotification += consoleStatusPostViewUpdateDelegate.PostViewUpdate;
 
             var throttleController = new ThrottleController(
                 statusController,
@@ -224,7 +230,8 @@ namespace Ghost.Console
             var cookieController = new CookieController(
                 cookieSerializationController,
                 serializedStorageController,
-                cookiesFilenameDelegate);
+                cookiesFilenameDelegate,
+                statusController);
 
             var networkController = new NetworkController(
                 cookieController,
@@ -267,7 +274,8 @@ namespace Ghost.Console
 
             var settingsController = new SettingsController(
                 settingsFilenameDelegate,
-                serializedStorageController);
+                serializedStorageController,
+                statusController);
 
             var downloadsLanguagesValidationDelegate = new DownloadsLanguagesValidationDelegate(languageController);
             var downloadsOperatingSystemsValidationDelegate = new DownloadsOperatingSystemsValidationDelegate();
@@ -493,29 +501,6 @@ namespace Ghost.Console
             #endregion
 
             #region Activity Controllers
-
-            #region Load
-
-            var loadDataActivity = new LoadDataActivity(
-                statusController,
-                settingsController,
-                precomputedHashController,
-                appTemplateController,
-                cookieController,
-                reportTemplateController,
-                productsDataController,
-                accountProductsDataController,
-                gameDetailsDataController,
-                gameProductDataController,
-                screenshotsDataController,
-                apiProductsDataController,
-                wishlistedDataController,
-                updatedDataController,
-                productDownloadsDataController,
-                productRoutesDataController,
-                validationResultsDataController);
-
-            #endregion
 
             #region Authorize
 
@@ -763,13 +748,15 @@ namespace Ghost.Console
                 userRequestedOrUpdatedEnumerateDelegate,
                 productsDataController,
                 expandImageUriDelegate,
-                productGetImageUriDelegate);
+                productGetImageUriDelegate,
+                statusController);
 
             var accountProductsImagesDownloadSourcesController = new ProductCoreImagesDownloadSourcesController<AccountProduct>(
                 userRequestedOrUpdatedEnumerateDelegate,
                 accountProductsDataController,
                 expandImageUriDelegate,
-                accountProductGetImageUriDelegate);
+                accountProductGetImageUriDelegate,
+                statusController);
 
             var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
                 screenshotsDataController,
@@ -778,7 +765,9 @@ namespace Ghost.Console
                 fileController,
                 statusController);
 
-            var routingController = new RoutingController(productRoutesDataController);
+            var routingController = new RoutingController(
+                productRoutesDataController,
+                statusController);
 
             var gameDetailsManualUrlsEnumerateDelegate = new GameDetailsManualUrlEnumerateDelegate(
                 settingsController,
@@ -792,14 +781,16 @@ namespace Ghost.Console
                 gameDetailsManualUrlsEnumerateDelegate,
                 routingController,
                 productFilesDirectoryDelegate,
-                uriFilenameDelegate);
+                uriFilenameDelegate,
+                statusController);
 
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
             var manualUrlDownloadSourcesController = new ManualUrlDownloadSourcesController(
                 updatedDataController,
                 gameDetailsDataController,
-                gameDetailsManualUrlsEnumerateDelegate);
+                gameDetailsManualUrlsEnumerateDelegate,
+                statusController);
 
             // schedule download controllers
 
@@ -1042,7 +1033,8 @@ namespace Ghost.Console
             var listUpdatedActivity = new ListUpdatedActivity(
                 updatedDataController,
                 accountProductsDataController,
-                statusController);
+                statusController,
+                consoleController);
 
             #endregion
 
@@ -1052,7 +1044,6 @@ namespace Ghost.Console
 
             var activityContextToActivityControllerMap = new Dictionary<(Activity, Context), IActivity>()
             {
-                { (Activity.Load, Context.Data), loadDataActivity },
                 { (Activity.Validate, Context.Settings), validateSettingsActivity },
                 { (Activity.Authorize, Context.None), authorizeActivity },
                 { (Activity.UpdateData, Context.Products), productsUpdateActivity },
@@ -1118,7 +1109,7 @@ namespace Ghost.Console
                     statusController.Fail(applicationStatus, combinedErrorMessages);
 
                     var failureDumpUri = "failureDump.json";
-                    await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus);
+                    await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
 
                     consoleInputOutputController.OutputOnRefresh(
                         "GoodOfflineGames.exe has encountered fatal error(s): " +
