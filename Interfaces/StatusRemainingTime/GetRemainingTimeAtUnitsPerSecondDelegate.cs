@@ -8,10 +8,4 @@ namespace Interfaces.StatusProgress
     {
         Tuple<long, double> GetRemainingTimeAtUnitsPerSecond(IStatus status);
     }
-
-    public interface IStatusProgressController:
-        IGetRemainingTimeAtUnitsPerSecondDelegate
-    {
-        // ...
-    }
 }

@@ -5,9 +5,9 @@ using System.Text;
 using Interfaces.Status;
 using Interfaces.StatusProgress;
 
-namespace Controllers.StatusProgress
+namespace Controllers.StatusRemainingTime
 {
-    public class StatusProgressController : IStatusProgressController
+    public class GetRemainingTimeAtUnitsPerSecondDelegate : IGetRemainingTimeAtUnitsPerSecondDelegate
     {
         public Tuple<long, double> GetRemainingTimeAtUnitsPerSecond(IStatus status)
         {

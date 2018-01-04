@@ -30,16 +30,16 @@ namespace Controllers.ViewModel
             public const string WarningsCount = "warningsCount";
         }
 
-        private IStatusProgressController statusProgressController;
+        private IGetRemainingTimeAtUnitsPerSecondDelegate getRemainingTimeAtUnitsPerSecondDelegate;
         private IFormattingController bytesFormattingController;
         private IFormattingController secondsFormattingController;
 
         public StatusAppViewModelDelegate(
-            IStatusProgressController statusProgressController,
+            IGetRemainingTimeAtUnitsPerSecondDelegate getRemainingTimeAtUnitsPerSecondDelegate,
             IFormattingController bytesFormattingController,
             IFormattingController secondsFormattingController)
         {
-            this.statusProgressController = statusProgressController;
+            this.getRemainingTimeAtUnitsPerSecondDelegate = getRemainingTimeAtUnitsPerSecondDelegate;
             this.bytesFormattingController = bytesFormattingController;
             this.secondsFormattingController = secondsFormattingController;
         }
@@ -87,7 +87,7 @@ namespace Controllers.ViewModel
                     currentFormatted = bytesFormattingController.Format(current);
                     totalFormatted = bytesFormattingController.Format(total);
 
-                    var remainingTimeAtSpeed = statusProgressController.GetRemainingTimeAtUnitsPerSecond(status);
+                    var remainingTimeAtSpeed = getRemainingTimeAtUnitsPerSecondDelegate.GetRemainingTimeAtUnitsPerSecond(status);
 
                     var remainingTime = secondsFormattingController.Format(remainingTimeAtSpeed.Item1);
                     var speed = bytesFormattingController.Format((long)remainingTimeAtSpeed.Item2);

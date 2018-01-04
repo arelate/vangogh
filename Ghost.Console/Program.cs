@@ -181,10 +181,10 @@ namespace Ghost.Console
                 serializedStorageController,
                 collectionController);
 
-            var statusProgressController = new StatusProgressController();
+            var getRemainingTimeAtUnitsPerSecondDelegate = new GetRemainingTimeAtUnitsPerSecondDelegate();
 
             var statusAppViewModelDelegate = new StatusAppViewModelDelegate(
-                statusProgressController,
+                getRemainingTimeAtUnitsPerSecondDelegate,
                 bytesFormattingController,
                 secondsFormattingController);
 
