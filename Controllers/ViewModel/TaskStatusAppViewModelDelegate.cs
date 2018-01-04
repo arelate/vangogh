@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Interfaces.ViewModel;
 using Interfaces.Status;
 using Interfaces.Formatting;
-using Interfaces.StatusProgress;
+using Interfaces.StatusRemainingTime;
 
 using Models.Units;
 

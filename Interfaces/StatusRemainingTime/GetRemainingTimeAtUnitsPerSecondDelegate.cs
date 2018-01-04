@@ -2,7 +2,7 @@
 
 using Interfaces.Status;
 
-namespace Interfaces.StatusProgress
+namespace Interfaces.StatusRemainingTime
 {
     public interface IGetRemainingTimeAtUnitsPerSecondDelegate
     {

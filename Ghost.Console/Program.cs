@@ -39,7 +39,7 @@ using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
 using Controllers.Status;
-using Controllers.StatusProgress;
+using Controllers.StatusRemainingTime;
 using Controllers.Hash;
 using Controllers.Containment;
 using Controllers.Sanitization;

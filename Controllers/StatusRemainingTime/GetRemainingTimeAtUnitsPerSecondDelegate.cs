@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using Interfaces.Status;
-using Interfaces.StatusProgress;
+using Interfaces.StatusRemainingTime;
 
 namespace Controllers.StatusRemainingTime
 {
