@@ -77,7 +77,7 @@ namespace Controllers.FileDownload
             }
         }
 
-        public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, IStatus status)
+        public async Task DownloadFileFromSourceAsync(string sourceUri, string destination, IStatus status)
         {
             var downloadEntryTask = await statusController.CreateAsync(status, "Download entry");
             try

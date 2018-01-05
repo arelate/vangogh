@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 using Interfaces.Network;
 using Interfaces.FillGaps;
 using Interfaces.UpdateUri;
-using Interfaces.UpdateIdentity;
 using Interfaces.Data;
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;
 
+using GOG.Interfaces.Delegates.GetUpdateIdentity;
+
 using Models.ProductCore;
+
+using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Activities.UpdateData
 {

@@ -12,11 +12,6 @@ namespace Interfaces.Network
         Task<string> GetAsync(IStatus status, string uri, IDictionary<string, string> parameters = null);
     }
 
-    public interface IGetDeserializedAsyncDelegate<T>
-    {
-        Task<T> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null);
-    }
-
     public interface IRequestResponseAsyncDelegate
     {
         Task<HttpResponseMessage> RequestResponseAsync(IStatus status, HttpMethod method, string uri, HttpContent content = null);

@@ -8,8 +8,9 @@ using Interfaces.ContextDefinitions;
 
 using Models.ProductCore;
 
-using GOG.Interfaces.PageResults;
-using GOG.Interfaces.Extraction;
+using GOG.Interfaces.Delegates.GetPageResults;
+
+using GOG.Interfaces.Delegates.ExtractPageResults;
 using GOG.Interfaces.NewUpdatedSelection;
 
 namespace GOG.Activities.UpdateData
@@ -20,8 +21,8 @@ namespace GOG.Activities.UpdateData
     {
         private Context context;
 
-        private IPageResultsController<PageType> pageResultsController;
-        private IPageResultsExtractionController<PageType, Type> pageResultsExtractingController;
+        private IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
+        private IExtractPageResultsDelegate<PageType, Type> extractPageResultsDelegate;
 
         private IRequestPageController requestPageController;
         private IDataController<Type> dataController;
@@ -30,8 +31,8 @@ namespace GOG.Activities.UpdateData
 
         public PageResultUpdateActivity(
             Context context,
-            IPageResultsController<PageType> pageResultsController,
-            IPageResultsExtractionController<PageType, Type> pageResultsExtractingController,
+            IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
+            IExtractPageResultsDelegate<PageType, Type> extractPageResultsDelegate,
             IRequestPageController requestPageController,
             IDataController<Type> dataController,
             IStatusController statusController,
@@ -40,8 +41,8 @@ namespace GOG.Activities.UpdateData
         {
             this.context = context;
 
-            this.pageResultsController = pageResultsController;
-            this.pageResultsExtractingController = pageResultsExtractingController;
+            this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
+            this.extractPageResultsDelegate = extractPageResultsDelegate;
 
             this.requestPageController = requestPageController;
             this.dataController = dataController;
@@ -53,10 +54,10 @@ namespace GOG.Activities.UpdateData
         {
             var updateAllProductsTask = await statusController.CreateAsync(status, $"Update {context}");
 
-            var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
+            var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync(updateAllProductsTask);
 
             var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extract {context}");
-            var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
+            var newProducts = extractPageResultsDelegate.ExtractMultiple(productsPageResults);
             await statusController.CompleteAsync(extractTask);
 
             if (selectNewUpdatedDelegate != null)

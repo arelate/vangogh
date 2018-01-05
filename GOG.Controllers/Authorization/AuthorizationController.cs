@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using GOG.Interfaces.Authorization;
+using GOG.Interfaces.Controllers.Authorization;
 
 using Interfaces.Uri;
 using Interfaces.Network;

@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\GOG.Activities\GOG.Activities.csproj" />
     <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj" />
+    <ProjectReference Include="..\GOG.Delegates\GOG.Delegates.csproj" />
     <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />

@@ -3,7 +3,7 @@
 using Interfaces.Settings;
 using Interfaces.Status;
 
-using GOG.Interfaces.Authorization;
+using GOG.Interfaces.Controllers.Authorization;
 
 namespace GOG.Activities.Authorize
 {

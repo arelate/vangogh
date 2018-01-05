@@ -7,6 +7,8 @@ using Interfaces.Status;
 
 using Models.Uris;
 
+using GOG.Interfaces.Delegates.GetDeserialized;
+
 namespace GOG.Activities.UpdateData
 {
     public class WishlistedUpdateActivity : Activity

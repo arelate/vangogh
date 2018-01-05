@@ -4,28 +4,28 @@ using System.Linq;
 using Interfaces.Data;
 using Interfaces.Status;
 
-using GOG.Interfaces.UpdateScreenshots;
+using GOG.Interfaces.Delegates.UpdateScreenshots;
 
 using GOG.Models;
 
 namespace GOG.Activities.UpdateData
 {
-    public class ScreenshotUpdateActivity : Activity
+    public class UpdateScreenshotsActivity : Activity
     {
         private IDataController<Product> productsDataController;
         private IDataController<long> screenshotsIndexDataController;
-        private IUpdateScreenshotsDelegate<Product> updateProductScreenshotsDelegate;
+        private IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
 
-        public ScreenshotUpdateActivity(
+        public UpdateScreenshotsActivity(
             IDataController<Product> productsDataController,
             IDataController<long> screenshotsIndexDataController,
-            IUpdateScreenshotsDelegate<Product> updateProductScreenshotsDelegate,
+            IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
             IStatusController statusController) :
             base(statusController)
         {
             this.productsDataController = productsDataController;
             this.screenshotsIndexDataController = screenshotsIndexDataController;
-            this.updateProductScreenshotsDelegate = updateProductScreenshotsDelegate;
+            this.updateScreenshotsAsyncDelegate = updateScreenshotsAsyncDelegate;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
@@ -57,7 +57,7 @@ namespace GOG.Activities.UpdateData
                     productsMissingScreenshots.Count(),
                     product.Title);
 
-                await updateProductScreenshotsDelegate.UpdateProductScreenshots(product, updateProductsScreenshotsTask);
+                await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product, updateProductsScreenshotsTask);
 
             }
 

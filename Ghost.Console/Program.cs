@@ -62,25 +62,27 @@ using Interfaces.ContextDefinitions;
 
 using GOG.Models;
 
-using GOG.Controllers.PageResults;
-using GOG.Controllers.Extraction;
+using GOG.Delegates.Extract;
+using GOG.Delegates.ExtractPageResults;
+using GOG.Delegates.GetPageResults;
+using GOG.Delegates.FillGaps;
+using GOG.Delegates.GetDownloadSources;
+using GOG.Delegates.GetUpdateIdentity;
+using GOG.Delegates.DownloadFileFromSource;
+using GOG.Delegates.GetImageUri;
+using GOG.Delegates.UpdateScreenshots;
+using GOG.Delegates.GetDeserialized;
+
 using GOG.Controllers.Enumeration;
-using GOG.Controllers.Network;
-using GOG.Controllers.FillGaps;
-using GOG.Controllers.UpdateIdentity;
-using GOG.Controllers.FileDownload;
 using GOG.Controllers.NewUpdatedSelection;
-using GOG.Controllers.DownloadSources;
 using GOG.Controllers.Authorization;
-using GOG.Controllers.UpdateScreenshots;
-using GOG.Controllers.ImageUri;
 
 using GOG.Activities.Help;
 using GOG.Activities.ValidateSettings;
 using GOG.Activities.Authorize;
 using GOG.Activities.UpdateData;
 using GOG.Activities.UpdateDownloads;
-using GOG.Activities.Download;
+using GOG.Activities.DownloadProductFiles;
 using GOG.Activities.Repair;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
@@ -538,7 +540,7 @@ namespace Ghost.Console
             var productParameterGetUpdateUriDelegate = new ProductParameterUpdateUriDelegate();
             var productParameterGetQueryParametersDelegate = new ProductParameterGetQueryParametersDelegate();
 
-            var productsPageResultsController = new PageResultsController<ProductsPageResult>(
+            var getProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<ProductsPageResult>(
                 Context.Products,
                 productParameterGetUpdateUriDelegate,
                 productParameterGetQueryParametersDelegate,
@@ -548,17 +550,17 @@ namespace Ghost.Console
                 serializationController,
                 statusController);
 
-            var productsExtractionController = new ProductsExtractionController();
+            var extractProductsDelegate = new ExtractProductsDelegate();
 
             var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
                     Context.Products,
-                    productsPageResultsController,
-                    productsExtractionController,
+                    getProductsPageResultsAsyncDelegate,
+                    extractProductsDelegate,
                     requestPageController,
                     productsDataController,
                     statusController);
 
-            var accountProductsPageResultsController = new PageResultsController<AccountProductsPageResult>(
+            var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
                 Context.AccountProducts,
                 productParameterGetUpdateUriDelegate,
                 productParameterGetQueryParametersDelegate,
@@ -568,7 +570,7 @@ namespace Ghost.Console
                 serializationController,
                 statusController);
 
-            var accountProductsExtractionController = new AccountProductsExtractionController();
+            var extractAccountProductsDelegate = new ExtractAccountProductsDelegate();
 
             var selectNewUpdatedDelegate = new SelectNewUpdatedDelegate(
                 accountProductsDataController,
@@ -578,8 +580,8 @@ namespace Ghost.Console
 
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
                     Context.AccountProducts,
-                    accountProductsPageResultsController,
-                    accountProductsExtractionController,
+                    getAccountProductsPageResultsAsyncDelegate,
+                    extractAccountProductsDelegate,
                     requestPageController,
                     accountProductsDataController,
                     statusController,
@@ -589,12 +591,12 @@ namespace Ghost.Console
 
             #region Update.Wishlisted
 
-            var getProductsPageResultDelegate = new GetDeserializedGOGDataDelegate<ProductsPageResult>(networkController,
+            var getDeserializedPageResultAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<ProductsPageResult>(networkController,
                 gogDataExtractionController,
                 serializationController);
 
             var wishlistedUpdateActivity = new WishlistedUpdateActivity(
-                getProductsPageResultDelegate,
+                getDeserializedPageResultAsyncDelegate,
                 wishlistedDataController,
                 statusController);
 
@@ -604,12 +606,12 @@ namespace Ghost.Console
 
             // dependencies for update controllers
 
-            var getGOGDataDelegate = new GetDeserializedGOGDataDelegate<GOGData>(networkController,
+            var getDeserializedGOGDataAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<GOGData>(networkController,
                 gogDataExtractionController,
                 serializationController);
 
-            var getGameProductDataDeserializedDelegate = new GetGameProductDataDeserializedDelegate(
-                getGOGDataDelegate);
+            var getDeserializedGameProductDataAsyncDelegate = new GetDeserializedGameProductDataAsyncDelegate(
+                getDeserializedGOGDataAsyncDelegate);
 
             var getProductUpdateIdentityDelegate = new GetProductUpdateIdentityDelegate();
             var getGameProductDataUpdateIdentityDelegate = new GetGameProductDataUpdateIdentityDelegate();
@@ -637,11 +639,11 @@ namespace Ghost.Console
                 productsDataController,
                 gameProductDataController,
                 updatedDataController,
-                getGameProductDataDeserializedDelegate,
+                getDeserializedGameProductDataAsyncDelegate,
                 getGameProductDataUpdateIdentityDelegate,
                 statusController);
 
-            var getApriProductDelegate = new GetDeserializedGOGModelDelegate<ApiProduct>(
+            var getApiProductDelegate = new GetDeserializedGOGModelAsyncDelegate<ApiProduct>(
                 networkController,
                 serializationController);
 
@@ -661,11 +663,11 @@ namespace Ghost.Console
                 productsDataController,
                 apiProductsDataController,
                 updatedDataController,
-                getApriProductDelegate,
+                getApiProductDelegate,
                 getProductUpdateIdentityDelegate,
                 statusController);
 
-            var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
+            var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelAsyncDelegate<GameDetails>(
                 networkController,
                 serializationController);
 
@@ -679,11 +681,11 @@ namespace Ghost.Console
 
             var sanitizationController = new SanitizationController();
 
-            var operatingSystemsDownloadsExtractionController = new OperatingSystemsDownloadsExtractionController(
+            var extractOperatingSystemsDownloadsDelegate = new ExtractOperatingSystemsDownloadsDelegate(
                 sanitizationController,
                 languageController);
 
-            var getGameDetailsDelegate = new GetDeserializedGameDetailsDelegate(
+            var getDeserializedGameDetailsAsyncDelegate = new GetDeserializedGameDetailsAsyncDelegate(
                 networkController,
                 serializationController,
                 languageController,
@@ -691,7 +693,7 @@ namespace Ghost.Console
                 gameDetailsLanguagesExtractionController,
                 gameDetailsDownloadsExtractionController,
                 sanitizationController,
-                operatingSystemsDownloadsExtractionController);
+                extractOperatingSystemsDownloadsDelegate);
 
             var gameDetailsEnumerateGapsDelegate = new MasterDetailsEnumerateGapsDelegate<AccountProduct, GameDetails>(
                 accountProductsDataController,
@@ -709,7 +711,7 @@ namespace Ghost.Console
                 accountProductsDataController,
                 gameDetailsDataController,
                 updatedDataController,
-                getGameDetailsDelegate,
+                getDeserializedGameDetailsAsyncDelegate,
                 getAccountProductUpdateIdentityDelegate,
                 statusController,
                 fillGameDetailsGapsDelegate);
@@ -718,45 +720,45 @@ namespace Ghost.Console
 
             #region Update.Screenshots
 
-            var updateProductScreenshotsDelegate = new UpdateProductScreenshotsDelegate(
+            var updateScreenshotsAsyncDelegate = new UpdateScreenshotsAsyncDelegate(
                 productParameterGetUpdateUriDelegate,
                 screenshotsDataController,
                 networkController,
                 screenshotExtractionController,
                 statusController);
 
-            var screenshotUpdateActivity = new ScreenshotUpdateActivity(
+            var updateScreenshotsActivity = new UpdateScreenshotsActivity(
                 productsDataController,
                 productScreenshotsIndexDataController,
-                updateProductScreenshotsDelegate,
+                updateScreenshotsAsyncDelegate,
                 statusController);
 
             #endregion
 
             // dependencies for download controllers
 
-            var productGetImageUriDelegate = new ProductGetImageUriDelegate();
-            var accountProductGetImageUriDelegate = new AccountProductGetImageUriDelegate();
+            var getProductImageUriDelegate = new GetProductImageUriDelegate();
+            var getAccountProductImageUriDelegate = new GetAccountProductImageUriDelegate();
 
             var userRequestedOrUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
                 userRequestedController,
                 updatedDataController);
 
-            var getProductsImagesDownloadSourcesDelegate = new GetProductCoreImagesDownloadSourcesDelegate<Product>(
+            var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
                 userRequestedOrUpdatedEnumerateDelegate,
                 productsDataController,
                 expandImageUriDelegate,
-                productGetImageUriDelegate,
+                getProductImageUriDelegate,
                 statusController);
 
-            var getAccountProductsImagesDownloadSourcesDelegate = new GetProductCoreImagesDownloadSourcesDelegate<AccountProduct>(
+            var getAccountProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>(
                 userRequestedOrUpdatedEnumerateDelegate,
                 accountProductsDataController,
                 expandImageUriDelegate,
-                accountProductGetImageUriDelegate,
+                getAccountProductImageUriDelegate,
                 statusController);
 
-            var screenshotsDownloadSourcesController = new ScreenshotsDownloadSourcesController(
+            var getScreenshotsDownloadSourcesAsyncDelegate = new GetScreenshotsDownloadSourcesAsyncDelegate(
                 screenshotsDataController,
                 expandScreenshotUriDelegate,
                 screenshotsDirectoryDelegate,
@@ -784,7 +786,7 @@ namespace Ghost.Console
 
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
-            var getManualUrlDownloadSourcesDelegate = new GetManualUrlDownloadSourcesDelegate(
+            var getManualUrlDownloadSourcesAsyncDelegate = new GetManualUrlDownloadSourcesAsyncDelegate(
                 updatedDataController,
                 gameDetailsDataController,
                 gameDetailsManualUrlsEnumerateDelegate,
@@ -794,7 +796,7 @@ namespace Ghost.Console
 
             var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.ProductsImages,
-                getProductsImagesDownloadSourcesDelegate,
+                getProductsImagesDownloadSourcesAsyncDelegate,
                 imagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
@@ -804,7 +806,7 @@ namespace Ghost.Console
 
             var updateAccountProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.AccountProductsImages,
-                getAccountProductsImagesDownloadSourcesDelegate,
+                getAccountProductsImagesDownloadSourcesAsyncDelegate,
                 imagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
@@ -814,7 +816,7 @@ namespace Ghost.Console
 
             var updateScreenshotsDownloadsActivity = new UpdateDownloadsActivity(
                 Context.Screenshots,
-                screenshotsDownloadSourcesController,
+                getScreenshotsDownloadSourcesAsyncDelegate,
                 screenshotsDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
@@ -824,7 +826,7 @@ namespace Ghost.Console
 
             var updateProductFilesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.ProductsFiles,
-                getManualUrlDownloadSourcesDelegate,
+                getManualUrlDownloadSourcesAsyncDelegate,
                 productFilesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
@@ -833,24 +835,6 @@ namespace Ghost.Console
                 statusController);
 
             // downloads processing
-
-            var productsImagesDownloadActivity = new DownloadActivity(
-                Context.ProductsImages,
-                productDownloadsDataController,
-                fileDownloadController,
-                statusController);
-
-            var accountProductsImagesDownloadActivity = new DownloadActivity(
-                Context.AccountProductsImages,
-                productDownloadsDataController,
-                fileDownloadController,
-                statusController);
-
-            var screenshotsDownloadActivity = new DownloadActivity(
-                Context.Screenshots,
-                productDownloadsDataController,
-                fileDownloadController,
-                statusController);
 
             var uriSansSessionExtractionController = new UriSansSessionExtractionController();
 
@@ -864,7 +848,7 @@ namespace Ghost.Console
                 validationDirectoryDelegate,
                 validationFilenameDelegate);
 
-            var validationDownloadFileFromSourceDelegate = new ValidationDownloadFileFromSourceDelegate(
+            var downloadValidationFileAsyncDelegate = new DownloadValidationFileAsyncDelegate(
                 uriSansSessionExtractionController,
                 validationExpectedDelegate,
                 validationFileEnumerateDelegate,
@@ -874,18 +858,40 @@ namespace Ghost.Console
                 fileDownloadController,
                 statusController);
 
-            var manualUrlDownloadFromSourceDelegate = new ManualUrlDownloadFromSourceDelegate(
+            var downloadManualUrlFileAsyncDelegate = new DownloadManualUrlFileAsyncDelegate(
                 networkController,
                 uriSansSessionExtractionController,
                 routingController,
                 fileDownloadController,
-                validationDownloadFileFromSourceDelegate,
+                downloadValidationFileAsyncDelegate,
                 statusController);
 
-            var productFilesDownloadActivity = new DownloadActivity(
+            var productsImagesDownloadActivity = new DownloadFilesActivity(
+                Context.ProductsImages,
+                productDownloadsDataController,
+                null,
+                fileDownloadController,
+                statusController);
+
+            var accountProductsImagesDownloadActivity = new DownloadFilesActivity(
+                Context.AccountProductsImages,
+                productDownloadsDataController,
+                null,
+                fileDownloadController,
+                statusController);
+
+            var screenshotsDownloadActivity = new DownloadFilesActivity(
+                Context.Screenshots,
+                productDownloadsDataController,
+                null,
+                fileDownloadController,
+                statusController);
+
+            var productFilesDownloadActivity = new DownloadFilesActivity(
                 Context.ProductsFiles,
                 productDownloadsDataController,
-                manualUrlDownloadFromSourceDelegate,
+                downloadManualUrlFileAsyncDelegate,
+                null,
                 statusController);
 
             // validation controllers
@@ -1050,7 +1056,7 @@ namespace Ghost.Console
                 { (Activity.UpdateData, Context.GameProductData), gameProductDataUpdateActivity },
                 { (Activity.UpdateData, Context.ApiProducts), apiProductUpdateActivity },
                 { (Activity.UpdateData, Context.GameDetails), gameDetailsUpdateActivity },
-                { (Activity.UpdateData, Context.Screenshots), screenshotUpdateActivity },
+                { (Activity.UpdateData, Context.Screenshots), updateScreenshotsActivity },
                 { (Activity.UpdateDownloads, Context.ProductsImages), updateProductsImagesDownloadsActivity },
                 { (Activity.UpdateDownloads, Context.AccountProductsImages), updateAccountProductsImagesDownloadsActivity },
                 { (Activity.UpdateDownloads, Context.Screenshots), updateScreenshotsDownloadsActivity },
