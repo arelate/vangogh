@@ -6,7 +6,7 @@ namespace Ghost.Console
 {
     class PlaygroundProgram
     {
-        static void Main(string[] args)
+        static async void Main(string[] args)
         {
             var consoleController = new Controllers.Console.ConsoleController();
             var lineBreakingDelegate = new Controllers.LineBreaking.LineBreakingDelegate();
@@ -15,20 +15,20 @@ namespace Ghost.Console
                 lineBreakingDelegate,
                 consoleController);
 
-            consoleIOController.OutputOnRefresh("abc", "de", "fgh");
-            consoleIOController.OutputContinuous("v", "uw", "xyz");
+            await consoleIOController.OutputOnRefreshAsync("abc", "de", "fgh");
+            await consoleIOController.OutputContinuousAsync("v", "uw", "xyz");
 
-            var name = consoleIOController.RequestInput("Enter some name:");
+            var name = await consoleIOController.RequestInputAsync("Enter some name:");
 
-            consoleIOController.OutputFixedOnRefresh("this is fixed content");
+            await consoleIOController.OutputFixedOnRefreshAsync("this is fixed content");
 
-            consoleIOController.OutputOnRefresh("abc", "de", "fgh");
+            await consoleIOController.OutputOnRefreshAsync("abc", "de", "fgh");
 
-            consoleIOController.RequestPrivateInput(string.Format("Enter password for {0}", name));
+            await consoleIOController.RequestPrivateInputAsync(string.Format("Enter password for {0}", name));
 
-            consoleIOController.OutputFixedOnRefresh("and some more fixed content");
+            await consoleIOController.OutputFixedOnRefreshAsync("and some more fixed content");
 
-            consoleIOController.OutputOnRefresh("v", "uw");
+            await consoleIOController.OutputOnRefreshAsync("v", "uw");
 
             System.Console.ReadLine();
 

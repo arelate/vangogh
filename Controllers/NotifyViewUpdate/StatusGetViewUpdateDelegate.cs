@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,11 +6,11 @@ using Interfaces.Status;
 using Interfaces.Tree;
 using Interfaces.Template;
 using Interfaces.ViewModel;
-using Interfaces.ViewUpdates;
+using Interfaces.NotifyViewUpdate;
 
 namespace Controllers.ViewUpdates
 {
-    public class StatusGetViewUpdateDelegate : IGetViewUpdateAsyncDelegate<string[]>
+    public class GetStatusViewUpdateDelegate : IGetViewUpdateAsyncDelegate<string[]>
     {
         private IStatus status;
         private ITemplateController templateController;
@@ -20,7 +19,7 @@ namespace Controllers.ViewUpdates
 
         private IList<string> viewParts;
 
-        public StatusGetViewUpdateDelegate(
+        public GetStatusViewUpdateDelegate(
             IStatus status,
             ITemplateController templateController,
             IGetViewModelDelegate<IStatus> statusViewModelDelegate,

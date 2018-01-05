@@ -1,9 +1,5 @@
 Backend
 
-- make statusController async after confirming that all 73 consumers are async contexts (and fixing requestRate/throttle to be async)
-
-- untangle post view updates mess - statusController should cause no circular dependencies for templateController
-
 - save previous version of the index data to unblock updateData-updated as a separate step that can run independently
 
 - add updateData-updated action

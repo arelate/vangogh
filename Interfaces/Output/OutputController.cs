@@ -2,37 +2,37 @@
 
 namespace Interfaces.Output
 {
-    public interface ISetRefreshDelegate
+    public interface ISetRefreshAsyncDelegate
     {
-        void SetRefresh();
+        Task SetRefreshAsync();
     }
 
-    public interface IClearContinuousLinesDelegate
+    public interface IClearContinuousLinesAsyncDelegate
     {
-        void ClearContinuousLines(int lines);
+        Task ClearContinuousLinesAsync(int lines);
     }
 
-    public interface IOutputOnRefreshDelegate<T>
+    public interface IOutputOnRefreshAsyncDelegate<T>
     {
-        void OutputOnRefresh(T data);
+        Task OutputOnRefreshAsync(T data);
     }
 
-    public interface IOutputFixedOnRefreshDelegate<T>
+    public interface IOutputFixedOnRefreshAsyncDelegate<T>
     {
-        void OutputFixedOnRefresh(T data);
+        Task OutputFixedOnRefreshAsync(T data);
     }
 
-    public interface IOutputContinuousDelegate<T>
+    public interface IOutputContinuousAsyncDelegate<T>
     {
-        void OutputContinuous(T data);
+        Task OutputContinuousAsync(T data);
     }
 
     public interface IOutputController<T> :
-        ISetRefreshDelegate,
-        IClearContinuousLinesDelegate,
-        IOutputOnRefreshDelegate<T>,
-        IOutputFixedOnRefreshDelegate<T>,
-        IOutputContinuousDelegate<T>
+        ISetRefreshAsyncDelegate,
+        IClearContinuousLinesAsyncDelegate,
+        IOutputOnRefreshAsyncDelegate<T>,
+        IOutputFixedOnRefreshAsyncDelegate<T>,
+        IOutputContinuousAsyncDelegate<T>
     {
         // ...
     }

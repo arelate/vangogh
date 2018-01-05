@@ -10,15 +10,15 @@ namespace GOG.Activities.ValidateSettings
     public class ValidateSettingsActivity : Activity
     {
         private IGetSettingsAsyncDelegate getSettingsAsyncDelegate;
-        private IValidatePropertiesDelegate<string[]> downloadsLanguagesValidationDelegate;
-        private IValidatePropertiesDelegate<string[]> downloadsOperatingSystemsValidationDelegate;
-        private IValidatePropertiesDelegate<IDictionary<string, string>> directoriesValidationDelegate;
+        private IValidatePropertiesAsyncDelegate<string[]> downloadsLanguagesValidationDelegate;
+        private IValidatePropertiesAsyncDelegate<string[]> downloadsOperatingSystemsValidationDelegate;
+        private IValidatePropertiesAsyncDelegate<IDictionary<string, string>> directoriesValidationDelegate;
 
         public ValidateSettingsActivity(
             IGetSettingsAsyncDelegate getSettingsAsyncDelegate,
-            IValidatePropertiesDelegate<string[]> downloadsLanguagesValidationDelegate,
-            IValidatePropertiesDelegate<string[]> downloadsOperatingSystemsValidationDelegate,
-            IValidatePropertiesDelegate<IDictionary<string, string>> directoriesValidationDelegate,
+            IValidatePropertiesAsyncDelegate<string[]> downloadsLanguagesValidationDelegate,
+            IValidatePropertiesAsyncDelegate<string[]> downloadsOperatingSystemsValidationDelegate,
+            IValidatePropertiesAsyncDelegate<IDictionary<string, string>> directoriesValidationDelegate,
             IStatusController statusController) :
             base(statusController)
         {
@@ -38,7 +38,7 @@ namespace GOG.Activities.ValidateSettings
                 validateSettingsTask,
                 "Validate downloads languages");
             settings.DownloadsLanguages =
-                    downloadsLanguagesValidationDelegate.ValidateProperties(
+                    await downloadsLanguagesValidationDelegate.ValidatePropertiesAsync(
                         settings.DownloadsLanguages);
             await statusController.CompleteAsync(validateDownloadsLanguagesTask);
 
@@ -46,14 +46,14 @@ namespace GOG.Activities.ValidateSettings
                 validateSettingsTask,
                 "Validate downloads operating systems");
             settings.DownloadsOperatingSystems =
-                downloadsOperatingSystemsValidationDelegate.ValidateProperties(
+                await downloadsOperatingSystemsValidationDelegate.ValidatePropertiesAsync(
                     settings.DownloadsOperatingSystems);
             await statusController.CompleteAsync(validateDownloadsOperatingSystemsTask);
 
             var validateDirectoriesTask = await statusController.CreateAsync(
                 validateSettingsTask,
                 "Validate directories");
-            directoriesValidationDelegate.ValidateProperties(
+            await directoriesValidationDelegate.ValidatePropertiesAsync(
                 settings.Directories);
             await statusController.CompleteAsync(validateDirectoriesTask);
 

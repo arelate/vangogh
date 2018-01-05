@@ -1,17 +1,21 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using Interfaces.PropertyValidation;
 
 using Models.Directories;
 
 namespace Controllers.PropertyValidation
 {
-    public class DirectoriesValidationDelegate : IValidatePropertiesDelegate<IDictionary<string, string>>
+    public class DirectoriesValidationDelegate : IValidatePropertiesAsyncDelegate<IDictionary<string, string>>
     {
-        public IDictionary<string, string> ValidateProperties(IDictionary<string, string> settingsDirectories)
+        public async Task<IDictionary<string, string>> ValidatePropertiesAsync(IDictionary<string, string> settingsDirectories)
         {
-            var requiredDirectories = new string[] {
+            return await Task.Run(() =>
+            {
+                var requiredDirectories = new string[] {
                 Directories.Data,
                 Directories.RecycleBin,
                 Directories.Images,
@@ -21,11 +25,13 @@ namespace Controllers.PropertyValidation
                 Directories.Screenshots
             };
 
-            foreach (var requiredDirectory in requiredDirectories)
-                if (!settingsDirectories.ContainsKey(requiredDirectory))
-                    settingsDirectories.Add(requiredDirectory, requiredDirectory);
+                foreach (var requiredDirectory in requiredDirectories)
+                    if (!settingsDirectories.ContainsKey(requiredDirectory))
+                        settingsDirectories.Add(requiredDirectory, requiredDirectory);
 
-            return settingsDirectories;
+                return settingsDirectories;
+
+            });
         }
     }
 }

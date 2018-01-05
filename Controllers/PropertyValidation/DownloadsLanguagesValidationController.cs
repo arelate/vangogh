@@ -1,9 +1,11 @@
-﻿using Interfaces.PropertyValidation;
+﻿using System.Threading.Tasks;
+
+using Interfaces.PropertyValidation;
 using Interfaces.Language;
 
 namespace Controllers.PropertyValidation
 {
-    public class DownloadsLanguagesValidationDelegate : IValidatePropertiesDelegate<string[]>
+    public class DownloadsLanguagesValidationDelegate : IValidatePropertiesAsyncDelegate<string[]>
     {
         private ILanguageController languageController;
         private string[] defaultLanguages = new string[1] { "en" };
@@ -13,26 +15,30 @@ namespace Controllers.PropertyValidation
             this.languageController = languageController;
         }
 
-        public string[] ValidateProperties(string[] downloadsLanguages)
+        public async Task<string[]> ValidatePropertiesAsync(string[] downloadsLanguages)
         {
-            if (downloadsLanguages == null ||
-                downloadsLanguages.Length == 0)
-                downloadsLanguages = defaultLanguages;
-
-            // validate that download languages are actually codes and not language names
-            for (var ii = 0; ii < downloadsLanguages.Length; ii++)
+            return await Task.Run(() =>
             {
-                var languageOrLanguageCode = downloadsLanguages[ii];
-                if (languageController.IsLanguageCode(languageOrLanguageCode)) continue;
-                else
-                {
-                    var code = languageController.GetLanguageCode(languageOrLanguageCode);
-                    if (!string.IsNullOrEmpty(code))
-                        downloadsLanguages[ii] = code;
-                }
-            }
+                if (downloadsLanguages == null ||
+                    downloadsLanguages.Length == 0)
+                    downloadsLanguages = defaultLanguages;
 
-            return downloadsLanguages;
+                // validate that download languages are actually codes and not language names
+                for (var ii = 0; ii < downloadsLanguages.Length; ii++)
+                {
+                    var languageOrLanguageCode = downloadsLanguages[ii];
+                    if (languageController.IsLanguageCode(languageOrLanguageCode)) continue;
+                    else
+                    {
+                        var code = languageController.GetLanguageCode(languageOrLanguageCode);
+                        if (!string.IsNullOrEmpty(code))
+                            downloadsLanguages[ii] = code;
+                    }
+
+                }
+
+                return downloadsLanguages;
+            });
         }
     }
 }

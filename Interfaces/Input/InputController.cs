@@ -1,18 +1,20 @@
-﻿namespace Interfaces.Input
+﻿using System.Threading.Tasks;
+
+namespace Interfaces.Input
 {
-    public interface IRequestInputDelegate<T>
+    public interface IRequestInputAsyncDelegate<T>
     {
-        T RequestInput(string message);
+        Task<T> RequestInputAsync(string message);
     }
 
-    public interface IRequestPrivateInputDelegate<T>
+    public interface IRequestPrivateInputAsyncDelegate<T>
     {
-        T RequestPrivateInput(string message);
+        Task<T> RequestPrivateInputAsync(string message);
     }
 
     public interface IInputController<T>:
-        IRequestInputDelegate<T>,
-        IRequestPrivateInputDelegate<T>
+        IRequestInputAsyncDelegate<T>,
+        IRequestPrivateInputAsyncDelegate<T>
     {
         // ...
     }

@@ -1,9 +1,11 @@
-﻿using Interfaces.PropertyValidation;
+﻿using System.Threading.Tasks;
+
+using Interfaces.PropertyValidation;
 using Interfaces.Input;
 
 namespace Controllers.PropertyValidation
 {
-    public class UsernamePasswordValidationDelegate : IValidatePropertiesDelegate<string[]>
+    public class UsernamePasswordValidationDelegate : IValidatePropertiesAsyncDelegate<string[]>
     {
         private IInputController<string> inputController;
 
@@ -12,7 +14,7 @@ namespace Controllers.PropertyValidation
             this.inputController = inputController;
         }
 
-        public string[] ValidateProperties(string[] usernamePassword)
+        public async Task<string[]> ValidatePropertiesAsync(string[] usernamePassword)
         {
             if (usernamePassword == null ||
                 usernamePassword.Length < 2)
@@ -23,11 +25,11 @@ namespace Controllers.PropertyValidation
 
             if (emptyUsername)
                 usernamePassword[0] =
-                    inputController.RequestInput("Please enter your GOG.com username (email):");
+                    await inputController.RequestInputAsync("Please enter your GOG.com username (email):");
 
             if (emptyPassword)
                 usernamePassword[1] =
-                    inputController.RequestPrivateInput(
+                    await inputController.RequestPrivateInputAsync(
                         string.Format(
                             "Please enter password for {0}:", 
                             usernamePassword[0]));

@@ -1,7 +1,9 @@
-﻿namespace Interfaces.PropertyValidation
+﻿using System.Threading.Tasks;
+
+namespace Interfaces.PropertyValidation
 {
-    public interface IValidatePropertiesDelegate<Type>
+    public interface IValidatePropertiesAsyncDelegate<Type>
     {
-        Type ValidateProperties(Type properties);
+        Task<Type> ValidatePropertiesAsync(Type properties);
     }
 }

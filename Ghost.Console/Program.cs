@@ -192,18 +192,18 @@ namespace Ghost.Console
                 bytesFormattingController,
                 secondsFormattingController);
 
-            var statusGetViewUpdateDelegate = new StatusGetViewUpdateDelegate(
+            var getStatusViewUpdateDelegate = new GetStatusViewUpdateDelegate(
                 applicationStatus,
                 appTemplateController,
                 statusAppViewModelDelegate,
                 statusTreeToEnumerableController);
 
-            var consoleStatusPostViewUpdateDelegate = new StatusPostViewUpdateDelegate(
-                statusGetViewUpdateDelegate,
+            var consoleNotifyStatusViewUpdateController = new NotifyStatusViewUpdateController(
+                getStatusViewUpdateDelegate,
                 consoleInputOutputController);
 
             // add notification handler to drive console view updates
-            statusController.NotifyStatusChangedAsync += consoleStatusPostViewUpdateDelegate.PostViewUpdateAsync;
+            statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
 
             var throttleController = new ThrottleController(
                 statusController,
@@ -1016,12 +1016,12 @@ namespace Ghost.Console
                 reportFilenameDelegate,
                 streamController);
 
-            var fileStatusPostUpdateAsyncDelegate = new StatusPostUpdateAsyncDelegate(
-                statusGetViewUpdateDelegate,
+            var fileNotifyStatusViewUpdateController = new NotifyStatusViewUpdateController(
+                getStatusViewUpdateDelegate,
                 reportFilePresentationController);
 
             var reportActivity = new ReportActivity(
-                fileStatusPostUpdateAsyncDelegate,
+                fileNotifyStatusViewUpdateController,
                 statusController);
 
             #endregion
@@ -1109,7 +1109,7 @@ namespace Ghost.Console
                     var failureDumpUri = "failureDump.json";
                     await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
 
-                    consoleInputOutputController.OutputOnRefresh(
+                    await consoleInputOutputController.OutputOnRefreshAsync(
                         "GoodOfflineGames.exe has encountered fatal error(s): " +
                         combinedErrorMessages +
                         $".\nPlease refer to {failureDumpUri} for further details.\n" +
@@ -1128,11 +1128,11 @@ namespace Ghost.Console
             if (applicationStatus.SummaryResults != null)
             {
                 foreach (var line in applicationStatus.SummaryResults)
-                    consoleInputOutputController.OutputOnRefresh(string.Join(" ", applicationStatus.SummaryResults));
+                    await consoleInputOutputController.OutputOnRefreshAsync(string.Join(" ", applicationStatus.SummaryResults));
             }
             else
             {
-                consoleInputOutputController.OutputContinuous(string.Empty, "All tasks are complete. Press ENTER to exit...");
+                await consoleInputOutputController.OutputContinuousAsync(string.Empty, "All tasks are complete. Press ENTER to exit...");
             }
 
             consoleController.ReadLine();

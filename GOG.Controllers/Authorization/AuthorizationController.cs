@@ -25,8 +25,8 @@ namespace GOG.Controllers.Authorization
             "{INSTRUCTIONS}";
         private const string gogData = "gogData";
 
-        private IValidatePropertiesDelegate<string[]> usernamePasswordValidationDelegate;
-        private IValidatePropertiesDelegate<string> securityCodeValidationDelegate;
+        private IValidatePropertiesAsyncDelegate<string[]> usernamePasswordValidationDelegate;
+        private IValidatePropertiesAsyncDelegate<string> securityCodeValidationDelegate;
         private IUriController uriController;
         private INetworkController networkController;
         private ISerializationController<string> serializationController;
@@ -34,8 +34,8 @@ namespace GOG.Controllers.Authorization
         private IStatusController statusController;
 
         public AuthorizationController(
-            IValidatePropertiesDelegate<string[]> usernamePasswordValidationDelegate,
-            IValidatePropertiesDelegate<string> securityCodeValidationDelegate,
+            IValidatePropertiesAsyncDelegate<string[]> usernamePasswordValidationDelegate,
+            IValidatePropertiesAsyncDelegate<string> securityCodeValidationDelegate,
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
@@ -109,7 +109,7 @@ namespace GOG.Controllers.Authorization
                 loginUri = Uris.Paths.Authentication.LoginCheck;
             }
 
-            var usernamePassword = usernamePasswordValidationDelegate.ValidateProperties(new string[] { username, password });
+            var usernamePassword = await usernamePasswordValidationDelegate.ValidatePropertiesAsync(new string[] { username, password });
 
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
@@ -129,7 +129,7 @@ namespace GOG.Controllers.Authorization
             var getTwoStepLoginCheckResponseTask = await statusController.CreateAsync(status, "Get second step authentication result");
 
             // 2FA is enabled for this user - ask for the code
-            var securityCode = securityCodeValidationDelegate.ValidateProperties(null);
+            var securityCode = await securityCodeValidationDelegate.ValidatePropertiesAsync(null);
 
             var secondStepAuthenticationToken = extractionControllers[
                 QueryParameters.SecondStepAuthenticationUnderscoreToken].ExtractMultiple(

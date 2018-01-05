@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Interfaces.LineBreaking;
 using Interfaces.Console;
@@ -31,31 +32,37 @@ namespace Controllers.InputOutput
             this.consoleController = consoleController;
         }
 
-        public void SetRefresh()
+        public async Task SetRefreshAsync()
         {
-            if (savedCursorTopPosition < 0) return;
-            // Save current (soon to be previous) frame lines count. 
-            // That will be used in the next frame to clear any remaning outputted lines
-            previousFrameLines = consoleController.CursorTop - savedCursorTopPosition;
-            // Reset/refresh cursor position to initial state
-            consoleController.CursorTop = savedCursorTopPosition;
-            // Make sure it's set to the start of the line for console providers with zero cursor width
-            consoleController.CursorLeft = 0;
+            await Task.Run(() =>
+            {
+                if (savedCursorTopPosition < 0) return;
+                // Save current (soon to be previous) frame lines count. 
+                // That will be used in the next frame to clear any remaning outputted lines
+                previousFrameLines = consoleController.CursorTop - savedCursorTopPosition;
+                // Reset/refresh cursor position to initial state
+                consoleController.CursorTop = savedCursorTopPosition;
+                // Make sure it's set to the start of the line for console providers with zero cursor width
+                consoleController.CursorLeft = 0;
+            });
         }
 
-        public void ClearContinuousLines(int lines)
+        public async Task ClearContinuousLinesAsync(int lines)
         {
-            if (lines < 1) return;
-            // Erase remaining previous frame lines with the padded space
-            consoleController.Write(
-                 string.Empty.PadRight(consoleController.WindowWidth * lines));
-            // Move cursor back so that next additional presentation will continue from the actual content
-            consoleController.CursorTop -= lines;
-            // This sets the correct state - we no longer need to track previous frame lines
-            previousFrameLines = 0;
+            await Task.Run(() =>
+            {
+                if (lines < 1) return;
+                // Erase remaining previous frame lines with the padded space
+                consoleController.Write(
+                     string.Empty.PadRight(consoleController.WindowWidth * lines));
+                // Move cursor back so that next additional presentation will continue from the actual content
+                consoleController.CursorTop -= lines;
+                // This sets the correct state - we no longer need to track previous frame lines
+                previousFrameLines = 0;
+            });
         }
 
-        public void OutputContinuous(params string[] data)
+        public async Task OutputContinuousAsync(params string[] data)
         {
             // Clear frame buffer
             fragmentBuffer.Clear();
@@ -72,36 +79,36 @@ namespace Controllers.InputOutput
             if (consoleController.CursorLeft > 0)
                 consoleController.WriteLine(string.Empty);
             // Clear remaining lines from the previous frame, if any
-            ClearContinuousLines(previousFrameLines - fragmentWrappedLines.Count());
+            await ClearContinuousLinesAsync(previousFrameLines - fragmentWrappedLines.Count());
         }
 
-        public void OutputOnRefresh(params string[] data)
+        public async Task OutputOnRefreshAsync(params string[] data)
         {
             // Refresh the frame cursor to the initial position
-            SetRefresh();
+            await SetRefreshAsync();
             // Preserve the current position
             savedCursorTopPosition = consoleController.CursorTop;
             // Use regular continuous output
-            OutputContinuous(data);
+            await OutputContinuousAsync(data);
         }
 
-        public void OutputFixedOnRefresh(params string[] data)
+        public async Task OutputFixedOnRefreshAsync(params string[] data)
         {
             // Fixed output is a combination of output on refresh and ...
-            OutputOnRefresh(data);
+            await OutputOnRefreshAsync(data);
             // ...saving new cursor position after fixed content, so that new content always goes below fixed
             savedCursorTopPosition = consoleController.CursorTop;
         }
 
-        public string RequestInput(string message)
+        public async Task<string> RequestInputAsync(string message)
         {
-            OutputContinuous(message);
+            await OutputContinuousAsync(message);
             return consoleController.ReadLine();
         }
 
-        public string RequestPrivateInput(string message)
+        public async Task<string> RequestPrivateInputAsync(string message)
         {
-            OutputContinuous(message);
+            await OutputContinuousAsync(message);
             return consoleController.ReadLinePrivate();
         }
     }

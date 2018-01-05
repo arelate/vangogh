@@ -8,7 +8,7 @@ using Interfaces.Stream;
 
 namespace Controllers.Presentation
 {
-    public class FilePresentationController : IOutputContinuousAsyncDelegate<string[]>
+    public class FilePresentationController : IOutputController<string[]>
     {
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
@@ -24,6 +24,11 @@ namespace Controllers.Presentation
             this.streamController = streamController;
         }
 
+        public Task ClearContinuousLinesAsync(int lines)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task OutputContinuousAsync(params string[] lines)
         {
             var reportUri = Path.Combine(
@@ -34,6 +39,21 @@ namespace Controllers.Presentation
             using (var streamWriter = new StreamWriter(reportStream))
                 foreach (var line in lines)
                     await streamWriter.WriteLineAsync(line);
+        }
+
+        public Task OutputFixedOnRefreshAsync(string[] data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task OutputOnRefreshAsync(string[] data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task SetRefreshAsync()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
