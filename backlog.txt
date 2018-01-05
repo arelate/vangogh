@@ -1,5 +1,7 @@
 Backend
 
+- complete spliting delegates from controllers
+
 - save previous version of the index data to unblock updateData-updated as a separate step that can run independently
 
 - add updateData-updated action
