@@ -10,16 +10,16 @@ using Interfaces.Status;
 
 using GOG.Models;
 
-namespace GOG.Controllers.Enumeration
+namespace GOG.Delegates.EnumerateAll
 {
-    public class UpdatedGameDetailsManualUrlFilesEnumerateAllDelegate : IEnumerateAllAsyncDelegate<string>
+    public class EnumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate : IEnumerateAllAsyncDelegate<string>
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateAsyncDelegate<GameDetails> gameDetailsFilesEnumerateDelegate;
         private IStatusController statusController;
 
-        public UpdatedGameDetailsManualUrlFilesEnumerateAllDelegate(
+        public EnumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateAsyncDelegate<GameDetails> gameDetailsFilesEnumerateDelegate,

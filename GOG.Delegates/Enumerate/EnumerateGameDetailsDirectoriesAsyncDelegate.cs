@@ -9,14 +9,14 @@ using Interfaces.Status;
 
 using GOG.Models;
 
-namespace GOG.Controllers.Enumeration
+namespace GOG.Delegates.Enumerate
 {
-    public class GameDetailsDirectoryEnumerateDelegate: IEnumerateAsyncDelegate<GameDetails>
+    public class EnumerateGameDetailsDirectoriesAsyncDelegate : IEnumerateAsyncDelegate<GameDetails>
     {
         private IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerateDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
 
-        public GameDetailsDirectoryEnumerateDelegate(
+        public EnumerateGameDetailsDirectoriesAsyncDelegate(
             IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerateDelegate,
             IGetDirectoryDelegate getDirectoryDelegate)
         {

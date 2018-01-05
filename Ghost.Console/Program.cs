@@ -72,8 +72,9 @@ using GOG.Delegates.DownloadFileFromSource;
 using GOG.Delegates.GetImageUri;
 using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
+using GOG.Delegates.Enumerate;
+using GOG.Delegates.EnumerateAll;
 
-using GOG.Controllers.Enumeration;
 using GOG.Controllers.NewUpdatedSelection;
 using GOG.Controllers.Authorization;
 
@@ -769,16 +770,16 @@ namespace Ghost.Console
                 productRoutesDataController,
                 statusController);
 
-            var gameDetailsManualUrlsEnumerateDelegate = new GameDetailsManualUrlEnumerateDelegate(
+            var enumerateGameDetailsManualUrlsAsyncDelegate = new EnumerateGameDetailsManualUrlsAsyncDelegate(
                 settingsController,
                 gameDetailsDataController);
 
-            var gameDetailsDirectoryEnumerateDelegate = new GameDetailsDirectoryEnumerateDelegate(
-                gameDetailsManualUrlsEnumerateDelegate,
+            var enumerateGameDetailsDirectoriesAsyncDelegate = new EnumerateGameDetailsDirectoriesAsyncDelegate(
+                enumerateGameDetailsManualUrlsAsyncDelegate,
                 productFilesDirectoryDelegate);
 
-            var gameDetailsFilesEnumerateDelegate = new GameDetailsFileEnumerateDelegate(
-                gameDetailsManualUrlsEnumerateDelegate,
+            var enumerateGameDetailsFilesAsyncDelegate = new EnumerateGameDetailsFilesAsyncDelegate(
+                enumerateGameDetailsManualUrlsAsyncDelegate,
                 routingController,
                 productFilesDirectoryDelegate,
                 uriFilenameDelegate,
@@ -789,7 +790,7 @@ namespace Ghost.Console
             var getManualUrlDownloadSourcesAsyncDelegate = new GetManualUrlDownloadSourcesAsyncDelegate(
                 updatedDataController,
                 gameDetailsDataController,
-                gameDetailsManualUrlsEnumerateDelegate,
+                enumerateGameDetailsManualUrlsAsyncDelegate,
                 statusController);
 
             // schedule download controllers
@@ -921,7 +922,7 @@ namespace Ghost.Console
                 productFileValidationController,
                 validationResultsDataController,
                 gameDetailsDataController,
-                gameDetailsManualUrlsEnumerateDelegate,
+                enumerateGameDetailsManualUrlsAsyncDelegate,
                 userRequestedOrUpdatedEnumerateDelegate,
                 routingController,
                 statusController);
@@ -943,9 +944,9 @@ namespace Ghost.Console
 
             #region Cleanup
 
-            var gameDetailsDirectoriesEnumerateAllDelegate = new GameDetailsDirectoriesEnumerateAllDelegate(
+            var enumerateAllGameDetailsDirectoriesAsyncDelegate = new EnumerateAllGameDetailsDirectoriesAsyncDelegate(
                 gameDetailsDataController,
-                gameDetailsDirectoryEnumerateDelegate,
+                enumerateGameDetailsDirectoriesAsyncDelegate,
                 statusController);
 
             var productFilesDirectoriesEnumerateAllDelegate = new ProductFilesDirectoriesEnumerateAllDelegate(
@@ -957,7 +958,7 @@ namespace Ghost.Console
 
             var directoryCleanupActivity = new CleanupActivity(
                 Context.Directories,
-                gameDetailsDirectoriesEnumerateAllDelegate, // expected items (directories for gameDetails)
+                enumerateAllGameDetailsDirectoriesAsyncDelegate, // expected items (directories for gameDetails)
                 productFilesDirectoriesEnumerateAllDelegate, // actual items (directories in productFiles)
                 directoryFilesEnumerateDelegate, // detailed items (files in directory)
                 validationFileEnumerateDelegate, // supplementary items (validation files)
@@ -965,16 +966,16 @@ namespace Ghost.Console
                 directoryController,
                 statusController);
 
-            var updatedGameDetailsManualUrlFilesEnumerateAllDelegate = new UpdatedGameDetailsManualUrlFilesEnumerateAllDelegate(
+            var enumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = new EnumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
                 updatedDataController,
                 gameDetailsDataController,
-                gameDetailsFilesEnumerateDelegate,
+                enumerateGameDetailsFilesAsyncDelegate,
                 statusController);
 
-            var updatedProductFilesEnumerateAllDelegate = new UpdatedProductFilesEnumerateAllDelegate(
+            var enumerateAllUpdatedProductFilesAsyncDelegate = new EnumerateAllUpdatedProductFilesAsyncDelegate(
                 updatedDataController,
                 gameDetailsDataController,
-                gameDetailsDirectoryEnumerateDelegate,
+                enumerateGameDetailsDirectoriesAsyncDelegate,
                 directoryController,
                 statusController);
 
@@ -982,8 +983,8 @@ namespace Ghost.Console
 
             var fileCleanupActivity = new CleanupActivity(
                 Context.Files,
-                updatedGameDetailsManualUrlFilesEnumerateAllDelegate, // expected items (files for updated gameDetails)
-                updatedProductFilesEnumerateAllDelegate, // actual items (updated product files)
+                enumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate, // expected items (files for updated gameDetails)
+                enumerateAllUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
                 passthroughEnumerateDelegate, // detailed items (passthrough)
                 validationFileEnumerateDelegate, // supplementary items (validation files)
                 recycleBinController,

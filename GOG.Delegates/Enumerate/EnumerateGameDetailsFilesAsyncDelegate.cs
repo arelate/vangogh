@@ -12,9 +12,9 @@ using Interfaces.Status;
 using GOG.Models;
 using System;
 
-namespace GOG.Controllers.Enumeration
+namespace GOG.Delegates.Enumerate
 {
-    public class GameDetailsFileEnumerateDelegate : IEnumerateAsyncDelegate<GameDetails>
+    public class EnumerateGameDetailsFilesAsyncDelegate : IEnumerateAsyncDelegate<GameDetails>
     {
         private IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerationDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
@@ -22,7 +22,7 @@ namespace GOG.Controllers.Enumeration
         private IRoutingController routingController;
         private IStatusController statusController;
 
-        public GameDetailsFileEnumerateDelegate(
+        public EnumerateGameDetailsFilesAsyncDelegate(
             IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerationDelegate,
             IRoutingController routingController,
             IGetDirectoryDelegate getDirectoryDelegate,

@@ -11,14 +11,14 @@ using Models.Uris;
 
 using GOG.Models;
 
-namespace GOG.Controllers.Enumeration
+namespace GOG.Delegates.Enumerate
 {
-    public class GameDetailsManualUrlEnumerateDelegate : IEnumerateAsyncDelegate<GameDetails>
+    public class EnumerateGameDetailsManualUrlsAsyncDelegate : IEnumerateAsyncDelegate<GameDetails>
     {
         private IGetSettingsAsyncDelegate getSettingsAsyncDelegate;
         private IDataController<GameDetails> gameDetailsDataController;
 
-        public GameDetailsManualUrlEnumerateDelegate(
+        public EnumerateGameDetailsManualUrlsAsyncDelegate(
             IGetSettingsAsyncDelegate getSettingsAsyncDelegate,
             IDataController<GameDetails> gameDetailsDataController)
         {

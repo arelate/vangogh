@@ -11,9 +11,9 @@ using Interfaces.Directory;
 
 using GOG.Models;
 
-namespace GOG.Controllers.Enumeration
+namespace GOG.Delegates.EnumerateAll
 {
-    public class UpdatedProductFilesEnumerateAllDelegate : IEnumerateAllAsyncDelegate<string>
+    public class EnumerateAllUpdatedProductFilesAsyncDelegate : IEnumerateAllAsyncDelegate<string>
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
@@ -21,7 +21,7 @@ namespace GOG.Controllers.Enumeration
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
-        public UpdatedProductFilesEnumerateAllDelegate(
+        public EnumerateAllUpdatedProductFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
