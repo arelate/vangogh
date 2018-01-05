@@ -31,14 +31,14 @@ namespace GOG.Controllers.DownloadSources
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
         {
-            var getDownloadSourcesStatus = statusController.Create(status, "Get download sources");
+            var getDownloadSourcesStatus = await statusController.CreateAsync(status, "Get download sources");
 
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
             var current = 0;
 
             foreach (var id in await updatedDataController.EnumerateIdsAsync(getDownloadSourcesStatus))
             {
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     getDownloadSourcesStatus,
                     ++current,
                     await updatedDataController.CountAsync(getDownloadSourcesStatus),
@@ -56,7 +56,7 @@ namespace GOG.Controllers.DownloadSources
                 }
             }
 
-            statusController.Complete(getDownloadSourcesStatus);
+            await statusController.CompleteAsync(getDownloadSourcesStatus);
 
             return gameDetailsDownloadSources;
         }

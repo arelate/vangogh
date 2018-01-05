@@ -82,7 +82,7 @@ namespace Controllers.Data
 
         public async Task LoadAsync(IStatus status)
         {
-            var loadStatus = statusController.Create(status, "Load index");
+            var loadStatus = await statusController.CreateAsync(status, "Load index");
 
             var indexUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
@@ -93,14 +93,14 @@ namespace Controllers.Data
 
             DataAvailable = true;
 
-            statusController.Complete(loadStatus);
+            await statusController.CompleteAsync(loadStatus);
         }
 
         public async Task SaveAsync(IStatus status)
         {
             if (!DataAvailable) throw new InvalidOperationException("Cannot save data before it's available");
 
-            var saveStatus = statusController.Create(status, "Save index");
+            var saveStatus = await statusController.CreateAsync(status, "Save index");
 
             var indexUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),
@@ -108,20 +108,20 @@ namespace Controllers.Data
 
             await serializedStorageController.SerializePushAsync(indexUri, indexes, saveStatus);
 
-            statusController.Complete(saveStatus);
+            await statusController.CompleteAsync(saveStatus);
         }
 
         private async Task Map(IStatus status, string taskMessage, Func<long, bool> itemAction, params long[] data)
         {
             if (!DataAvailable) await LoadAsync(status);
 
-            var task = statusController.Create(status, taskMessage);
+            var task = await statusController.CreateAsync(status, taskMessage);
             var counter = 0;
             var dataChanged = false;
 
             foreach (var item in data)
             {
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     task,
                     ++counter,
                     data.Length,
@@ -133,12 +133,12 @@ namespace Controllers.Data
 
             if (dataChanged)
             {
-                var saveDataTask = statusController.Create(task, "Save modified index");
+                var saveDataTask = await statusController.CreateAsync(task, "Save modified index");
                 await SaveAsync(status);
-                statusController.Complete(saveDataTask);
+                await statusController.CompleteAsync(saveDataTask);
             }
 
-            statusController.Complete(task);
+            await statusController.CompleteAsync(task);
         }
 
         public async Task RemoveAsync(IStatus status, params long[] data)

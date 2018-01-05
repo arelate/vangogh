@@ -4,37 +4,50 @@ using Interfaces.Status;
 
 namespace GOG.Interfaces.Authorization
 {
-    public interface IAuthorizeDelegate
+    public interface IAuthorizeAsyncDelegate
     {
-        Task Authorize(string username, string password, IStatus status);
+        Task AuthorizeAsync(string username, string password, IStatus status);
     }
 
-    public interface IIsAuthorizedDelegate
+    public interface IAuthorizedAsyncDelegate
     {
-        Task<bool> IsAuthorized(IStatus status);
+        Task<bool> AuthorizedAsync(IStatus status);
     }
 
-    public interface IGetAuthenticationTokenResponseDelegate
+    public interface IGetAuthenticationTokenResponseAsyncDelegate
     {
-        Task<string> GetAuthenticationTokenResponse(IStatus status);
+        Task<string> GetAuthenticationTokenResponseAsync(IStatus status);
     }
 
-    public interface IGetLoginCheckResponseDelegate
+    public interface IGetLoginCheckResponseAsyncDelegate
     {
-        Task<string> GetLoginCheckResponse(string authResponse, string username, string password, IStatus status);
+        Task<string> GetLoginCheckResponseAsync(string authResponse, string username, string password, IStatus status);
     }
 
-    public interface IGetTwoStepLoginCheckResponseDelegate
+    public interface IGetTwoStepLoginCheckResponseAsyncDelegate
     {
-        Task<string> GetTwoStepLoginCheckResponse(string loginCheckResult, IStatus status);
+        Task<string> GetTwoStepLoginCheckResponseAsync(string loginCheckResult, IStatus status);
     }
+
+    public interface ICheckAuthorizationSuccessAsyncDelegate
+    {
+        Task<bool> CheckAuthorizationSuccessAsync(string response, IStatus status);
+    }
+
+    public interface IThrowSecurityExceptionAsyncDelegate
+    {
+        Task ThrowSecurityExceptionAsync(IStatus status, string message);
+    }
+
 
     public interface IAuthorizationController:
-        IIsAuthorizedDelegate,
-        IGetAuthenticationTokenResponseDelegate,
-        IGetLoginCheckResponseDelegate,
-        IGetTwoStepLoginCheckResponseDelegate,
-        IAuthorizeDelegate
+        IAuthorizedAsyncDelegate,
+        IGetAuthenticationTokenResponseAsyncDelegate,
+        IGetLoginCheckResponseAsyncDelegate,
+        IGetTwoStepLoginCheckResponseAsyncDelegate,
+        ICheckAuthorizationSuccessAsyncDelegate,
+        IThrowSecurityExceptionAsyncDelegate,
+        IAuthorizeAsyncDelegate
     {
         // ...
     }

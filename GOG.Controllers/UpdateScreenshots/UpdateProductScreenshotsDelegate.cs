@@ -40,12 +40,12 @@ namespace GOG.Controllers.UpdateScreenshots
 
         public async Task UpdateProductScreenshots(Product product, IStatus status)
         {
-            var requestProductPageTask = statusController.Create(status, "Request product page containing screenshots information");
+            var requestProductPageTask = await statusController.CreateAsync(status, "Request product page containing screenshots information");
             var productPageUri = string.Format(getUpdateUriDelegate.GetUpdateUri(Context.Screenshots), product.Url);
             var productPageContent = await networkController.GetAsync(requestProductPageTask, productPageUri);
-            statusController.Complete(requestProductPageTask);
+            await statusController.CompleteAsync(requestProductPageTask);
 
-            var extractScreenshotsTask = statusController.Create(status, "Exract screenshots from the page");
+            var extractScreenshotsTask = await statusController.CreateAsync(status, "Exract screenshots from the page");
             var extractedProductScreenshots = screenshotExtractionController.ExtractMultiple(productPageContent);
 
             if (extractedProductScreenshots == null) return;
@@ -56,11 +56,11 @@ namespace GOG.Controllers.UpdateScreenshots
                 Title = product.Title,
                 Uris = new List<string>(extractedProductScreenshots)
             };
-            statusController.Complete(extractScreenshotsTask);
+            await statusController.CompleteAsync(extractScreenshotsTask);
 
-            var updateProductScreenshotsTask = statusController.Create(status, "Add product screenshots");
+            var updateProductScreenshotsTask = await statusController.CreateAsync(status, "Add product screenshots");
             await screenshotsDataController.UpdateAsync(updateProductScreenshotsTask, productScreenshots);
-            statusController.Complete(updateProductScreenshotsTask);
+            await statusController.CompleteAsync(updateProductScreenshotsTask);
         }
     }
 }

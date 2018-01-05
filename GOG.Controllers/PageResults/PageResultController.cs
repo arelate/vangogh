@@ -75,7 +75,7 @@ namespace GOG.Controllers.PageResults
             var totalPages = 1;
             T pageResult = null;
 
-            var getPagesTask = statusController.Create(status, $"Request {context}");
+            var getPagesTask = await statusController.CreateAsync(status, $"Request {context}");
 
             do
             {
@@ -85,7 +85,7 @@ namespace GOG.Controllers.PageResults
                     currentPage,
                     getPagesTask);
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     getPagesTask,
                     currentPage,
                     totalPages,
@@ -103,15 +103,15 @@ namespace GOG.Controllers.PageResults
 
                 if (responseHash == requestHash) continue;
 
-                var setHashTask = statusController.Create(getPagesTask, "Set hash");
+                var setHashTask = await statusController.CreateAsync(getPagesTask, "Set hash");
                 await precomputedHashController.SetHashAsync(requestUri + currentPage, responseHash, setHashTask);
-                statusController.Complete(setHashTask);
+                await statusController.CompleteAsync(setHashTask);
 
                 pageResults.Add(pageResult);
 
             } while (++currentPage <= totalPages);
 
-            statusController.Complete(getPagesTask);
+            await statusController.CompleteAsync(getPagesTask);
 
             return pageResults;
         }

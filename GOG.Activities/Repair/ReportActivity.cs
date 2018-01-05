@@ -27,7 +27,7 @@ namespace GOG.Activities.Repair
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var repairTask = statusController.Create(status, "Check validation results and attempting repair");
+            var repairTask = await statusController.CreateAsync(status, "Check validation results and attempting repair");
             var current = 0;
 
             var invalidResults = new List<ValidationResult>();
@@ -38,7 +38,7 @@ namespace GOG.Activities.Repair
 
                 if (validationResult == null) continue;
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     repairTask,
                     ++current,
                     await validationResultDataController.CountAsync(repairTask),
@@ -49,7 +49,7 @@ namespace GOG.Activities.Repair
 
             }
 
-            statusController.Complete(repairTask);
+            await statusController.CompleteAsync(repairTask);
         }
     }
 }

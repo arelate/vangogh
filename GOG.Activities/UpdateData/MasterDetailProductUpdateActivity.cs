@@ -66,7 +66,7 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateProductsTask = statusController.Create(status, $"Update {updateTypeDescription}");
+            var updateProductsTask = await statusController.CreateAsync(status, $"Update {updateTypeDescription}");
 
             // We'll limit detail updates to user specified ids.
             // if user didn't provide a list of ids - we'll use the details gaps 
@@ -80,7 +80,7 @@ namespace GOG.Activities.UpdateData
                 var product = await masterDataController.GetByIdAsync(id, updateProductsTask);
                 if (product == null) continue;
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     updateProductsTask,
                     ++currentProduct,
                     productsUpdateList.Count(),
@@ -102,7 +102,7 @@ namespace GOG.Activities.UpdateData
                 }
             }
 
-            statusController.Complete(updateProductsTask);
+            await statusController.CompleteAsync(updateProductsTask);
         }
     }
 }

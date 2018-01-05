@@ -49,7 +49,7 @@ namespace GOG.Controllers.NewUpdatedSelection
             // as previous version we normally don't process a lot of AccountProducts here.
             // Additionally we set products that don't exist in current collection as updated
 
-            var extractNewUpdatedTask = statusController.Create(status, "Extract new and updated products");
+            var extractNewUpdatedTask = await statusController.CreateAsync(status, "Extract new and updated products");
 
             var newUpdatedAccountProducts = collectionController.Reduce(accountProducts,
                 ap =>
@@ -61,13 +61,13 @@ namespace GOG.Controllers.NewUpdatedSelection
 
             await updatedDataController.UpdateAsync(extractNewUpdatedTask, updatedIds);
 
-            var addPreviouslyUnknownDataTask = statusController.Create(status, "Add previously unknown products as updated");
+            var addPreviouslyUnknownDataTask = await statusController.CreateAsync(status, "Add previously unknown products as updated");
 
             var knownAccountProducts = await accountProductsDataController.EnumerateIdsAsync(addPreviouslyUnknownDataTask);
             var unknownAccountProducts = accountProducts.Select(ap => ap.Id).Except(knownAccountProducts);
 
             if (unknownAccountProducts != null)
-                statusController.Inform(
+                await statusController.InformAsync(
                     addPreviouslyUnknownDataTask, 
                     "Selected the following new or updated products: " + string.Join(
                         Separators.Common.Comma, 
@@ -75,9 +75,9 @@ namespace GOG.Controllers.NewUpdatedSelection
 
             await updatedDataController.UpdateAsync(addPreviouslyUnknownDataTask, unknownAccountProducts.ToArray());
 
-            statusController.Complete(addPreviouslyUnknownDataTask);
+            await statusController.CompleteAsync(addPreviouslyUnknownDataTask);
 
-            statusController.Complete(extractNewUpdatedTask);
+            await statusController.CompleteAsync(extractNewUpdatedTask);
         }
     }
 }

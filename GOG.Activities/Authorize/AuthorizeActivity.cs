@@ -27,7 +27,7 @@ namespace GOG.Activities.Authorize
             var settings = await getSettingsAsyncDelegate.GetSettingsAsync(status);
             if (settings != null)
             {
-                await authorizationController.Authorize(
+                await authorizationController.AuthorizeAsync(
                     settings.Username,
                     settings.Password,
                     status);

@@ -1,55 +1,58 @@
-﻿namespace Interfaces.Status
+﻿using System.Threading.Tasks;
+
+namespace Interfaces.Status
 {
-    public interface ICreateDelegate
+    public interface ICreateAsyncDelegate
     {
-        IStatus Create(IStatus status, string title);
+        Task<IStatus> CreateAsync(IStatus status, string title);
     }
 
-    public interface ICompleteDelegate
+    public interface ICompleteAsyncDelegate
     {
-        void Complete(IStatus status);
+        Task CompleteAsync(IStatus status);
     }
 
-    public interface IUpdateProgressDelegate
+    public interface IUpdateProgressAsyncDelegate
     {
-        void UpdateProgress(IStatus status, long current, long total, string target, string unit = "");
+        Task UpdateProgressAsync(IStatus status, long current, long total, string target, string unit = "");
     }
 
-    public interface IFailDelegate
+    public interface IFailAsyncDelegate
     {
-        void Fail(IStatus status, string failureMessage);
+        Task FailAsync(IStatus status, string failureMessage);
     }
 
-    public interface IWarnDelegate
+    public interface IWarnAsyncDelegate
     {
-        void Warn(IStatus status, string warningMessage);
+        Task WarnAsync(IStatus status, string warningMessage);
     }
 
-    public interface IInformDelegate
+    public interface IInformAsyncDelegate
     {
-        void Inform(IStatus status, string informationMessage);
+        Task InformAsync(IStatus status, string informationMessage);
     }
 
-    public interface IAddSummaryResultsDelegate
+    public interface IPostSummaryResultsAsyncDelegate
     {
-        void AddSummaryResults(IStatus status, params string[] summaryResults);
+        Task PostSummaryResultsAsync(IStatus status, params string[] summaryResults);
     }
 
-    public delegate void StatusChangedNotificationDelegate();
+    public delegate Task StatusChangedNotificationAsyncDelegate();
 
-    public interface IStatusChangedNotifictionEvent {
-        event StatusChangedNotificationDelegate StatusChangedNotification;
+    public interface INotifyStatusChangedAsyncEvent
+    {
+        event StatusChangedNotificationAsyncDelegate NotifyStatusChangedAsync;
     }
 
     public interface IStatusController:
-        ICreateDelegate,
-        ICompleteDelegate,
-        IUpdateProgressDelegate,
-        IFailDelegate,
-        IWarnDelegate,
-        IInformDelegate,
-        IAddSummaryResultsDelegate,
-        IStatusChangedNotifictionEvent
+        ICreateAsyncDelegate,
+        ICompleteAsyncDelegate,
+        IUpdateProgressAsyncDelegate,
+        IFailAsyncDelegate,
+        IWarnAsyncDelegate,
+        IInformAsyncDelegate,
+        IPostSummaryResultsAsyncDelegate,
+        INotifyStatusChangedAsyncEvent
     {
         // ...
     }

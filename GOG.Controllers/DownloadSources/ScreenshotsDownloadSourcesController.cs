@@ -39,13 +39,13 @@ namespace GOG.Controllers.DownloadSources
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
         {
-            var processUpdatesTask = statusController.Create(status, "Process screenshots updates");
+            var processUpdatesTask = await statusController.CreateAsync(status, "Process screenshots updates");
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
             var current = 0;
             var total = await screenshotsDataController.CountAsync(processUpdatesTask);
 
-            var processProductsScreenshotsTask = statusController.Create(processUpdatesTask, "Process product screenshots");
+            var processProductsScreenshotsTask = await statusController.CreateAsync(processUpdatesTask, "Process product screenshots");
 
             foreach (var id in await screenshotsDataController.EnumerateIdsAsync(processProductsScreenshotsTask))
             {
@@ -53,11 +53,11 @@ namespace GOG.Controllers.DownloadSources
 
                 if (productScreenshots == null)
                 {
-                    statusController.Warn(processProductsScreenshotsTask, $"Product {id} doesn't have screenshots");
+                    await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {id} doesn't have screenshots");
                     continue;
                 }
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     processUpdatesTask, 
                     ++current, 
                     total,
@@ -81,8 +81,8 @@ namespace GOG.Controllers.DownloadSources
                     screenshotsSources.Add(id, currentProductScreenshotSources);
             }
 
-            statusController.Complete(processProductsScreenshotsTask);
-            statusController.Complete(processUpdatesTask);
+            await statusController.CompleteAsync(processProductsScreenshotsTask);
+            await statusController.CompleteAsync(processUpdatesTask);
 
             return screenshotsSources;
         }

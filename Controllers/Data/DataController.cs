@@ -82,11 +82,11 @@ namespace Controllers.Data
 
         public async Task LoadAsync(IStatus status)
         {
-            var loadStatus = statusController.Create(status, "Load data");
+            var loadStatus = await statusController.CreateAsync(status, "Load data");
 
             await indexDataController.LoadAsync(loadStatus);
 
-            statusController.Complete(loadStatus);
+            await statusController.CompleteAsync(loadStatus);
         }
 
         public Task SaveAsync(IStatus status = null)
@@ -101,7 +101,7 @@ namespace Controllers.Data
             Func<long[], Task> indexAction,
             params Type[] data)
         {
-            var mapTask = statusController.Create(status, taskMessage);
+            var mapTask = await statusController.CreateAsync(status, taskMessage);
             var counter = 0;
             var indexes = new List<long>();
 
@@ -110,7 +110,7 @@ namespace Controllers.Data
                 var index = indexingController.GetIndex(item);
                 indexes.Add(index);
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     mapTask,
                     ++counter,
                     data.Length,
@@ -119,11 +119,11 @@ namespace Controllers.Data
                 await itemAction(index, item);
             }
 
-            var updateIndexTask = statusController.Create(mapTask, "Update indexes");
+            var updateIndexTask = await statusController.CreateAsync(mapTask, "Update indexes");
             await indexAction(indexes.ToArray());
-            statusController.Complete(updateIndexTask);
+            await statusController.CompleteAsync(updateIndexTask);
 
-            statusController.Complete(mapTask);
+            await statusController.CompleteAsync(mapTask);
         }
 
         public async Task UpdateAsync(IStatus status, params Type[] data)

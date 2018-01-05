@@ -55,13 +55,13 @@ namespace GOG.Controllers.FileDownload
 
             if (fileController.Exists(destinationUri))
             {
-                statusController.Inform(status, "Validation file already exists, will not be redownloading");
+                await statusController.InformAsync(status, "Validation file already exists, will not be redownloading");
                 return;
             }
 
             var validationSourceUri = validationUriDelegate.GetUri(sourceUri);
 
-            var downloadValidationFileTask = statusController.Create(status, "Download validation file");
+            var downloadValidationFileTask = await statusController.CreateAsync(status, "Download validation file");
 
             await fileDownloadController.DownloadFileFromSourceAsync(
                 id,
@@ -70,7 +70,7 @@ namespace GOG.Controllers.FileDownload
                 validationDirectoryDelegate.GetDirectory(),
                 downloadValidationFileTask);
 
-            statusController.Complete(downloadValidationFileTask);
+            await statusController.CompleteAsync(downloadValidationFileTask);
         }
     }
 }

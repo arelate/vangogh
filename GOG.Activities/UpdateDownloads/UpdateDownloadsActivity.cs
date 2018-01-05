@@ -49,16 +49,16 @@ namespace GOG.Activities.UpdateDownloads
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateDownloadsTask = statusController.Create(
+            var updateDownloadsTask = await statusController.CreateAsync(
                 status,
                 $"Update {context} downloads");
 
-            var getSourcesTask = statusController.Create(
+            var getSourcesTask = await statusController.CreateAsync(
                 updateDownloadsTask,
                 $"Get {context} download sources");
 
             var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync(getSourcesTask);
-            statusController.Complete(getSourcesTask);
+            await statusController.CompleteAsync(getSourcesTask);
 
             var counter = 0;
 
@@ -78,14 +78,14 @@ namespace GOG.Activities.UpdateDownloads
 
                     if (product == null)
                     {
-                        statusController.Warn(
+                        await statusController.WarnAsync(
                             updateDownloadsTask,
                             $"Downloads are scheduled for the product/account product {id} that doesn't exist");
                         continue;
                     }
                 }
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     updateDownloadsTask,
                     ++counter,
                     downloadSources.Count,
@@ -110,7 +110,7 @@ namespace GOG.Activities.UpdateDownloads
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
-                var scheduleDownloadsTask = statusController.Create(
+                var scheduleDownloadsTask = await statusController.CreateAsync(
                     updateDownloadsTask,
                     "Schedule new downloads");
 
@@ -139,10 +139,10 @@ namespace GOG.Activities.UpdateDownloads
 
                 await productDownloadsDataController.UpdateAsync(scheduleDownloadsTask, productDownloads);
 
-                statusController.Complete(scheduleDownloadsTask);
+                await statusController.CompleteAsync(scheduleDownloadsTask);
             }
 
-            statusController.Complete(updateDownloadsTask);
+            await statusController.CompleteAsync(updateDownloadsTask);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Controllers.Settings
 
         public async Task LoadAsync(IStatus status = null)
         {
-            var loadStatus = statusController.Create(status, "Load settings");
+            var loadStatus = await statusController.CreateAsync(status, "Load settings");
 
             settings = await serializedStorageController.DeserializePullAsync<
                 Models.Settings.Settings>(
@@ -57,7 +57,7 @@ namespace Controllers.Settings
 
             DataAvailable = true;
 
-            statusController.Complete(loadStatus);
+            await statusController.CompleteAsync(loadStatus);
         }
 
         public string GetDirectory(string directory = null)

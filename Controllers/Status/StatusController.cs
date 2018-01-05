@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Status;
-using Interfaces.ViewUpdates;
 
 namespace Controllers.Status
 {
     public class StatusController : IStatusController
     {
-        public event StatusChangedNotificationDelegate StatusChangedNotification;
+        public event StatusChangedNotificationAsyncDelegate NotifyStatusChangedAsync;
 
         private void AssertValidStatus(IStatus status)
         {
@@ -16,7 +16,7 @@ namespace Controllers.Status
                 throw new ArgumentNullException("Current task status cannot be null");
         }
 
-        public IStatus Create(IStatus status, string title)
+        public async Task<IStatus> CreateAsync(IStatus status, string title)
         {
             AssertValidStatus(status);
 
@@ -30,12 +30,12 @@ namespace Controllers.Status
             };
             status.Children.Add(childStatus);
 
-            StatusChangedNotification?.Invoke();
+            await NotifyStatusChangedAsync?.Invoke();
 
             return childStatus;
         }
 
-        public void Complete(IStatus status)
+        public async Task CompleteAsync(IStatus status)
         {
             AssertValidStatus(status);
 
@@ -45,10 +45,10 @@ namespace Controllers.Status
             status.Complete = true;
             status.Completed = DateTime.UtcNow;
 
-            StatusChangedNotification?.Invoke();
+            await NotifyStatusChangedAsync?.Invoke();
         }
 
-        public void UpdateProgress(IStatus status, long current, long total, string target, string unit = "")
+        public async Task UpdateProgressAsync(IStatus status, long current, long total, string target, string unit = "")
         {
             AssertValidStatus(status);
 
@@ -63,10 +63,10 @@ namespace Controllers.Status
             status.Progress.Total = total;
             status.Progress.Unit = unit;
 
-            StatusChangedNotification?.Invoke();
+            await NotifyStatusChangedAsync?.Invoke();
         }
 
-        public void Fail(IStatus status, string failureMessage)
+        public async Task FailAsync(IStatus status, string failureMessage)
         {
             AssertValidStatus(status);
 
@@ -74,9 +74,11 @@ namespace Controllers.Status
                 status.Failures = new List<string>();
 
             status.Failures.Add(failureMessage);
+
+            await CompleteAsync(status); // this will notify status change subscribers
         }
 
-        public void Warn(IStatus status, string warningMessage)
+        public async Task WarnAsync(IStatus status, string warningMessage)
         {
             AssertValidStatus(status);
 
@@ -84,9 +86,11 @@ namespace Controllers.Status
                 status.Warnings = new List<string>();
 
             status.Warnings.Add(warningMessage);
+
+            await NotifyStatusChangedAsync?.Invoke();
         }
 
-        public void Inform(IStatus status, string informationMessage)
+        public async Task InformAsync(IStatus status, string informationMessage)
         {
             AssertValidStatus(status);
 
@@ -94,9 +98,11 @@ namespace Controllers.Status
                 status.Information = new List<string>();
 
             status.Information.Add(informationMessage);
+
+            await NotifyStatusChangedAsync?.Invoke();
         }
 
-        public void AddSummaryResults(IStatus status, params string[] summaryResults)
+        public async Task PostSummaryResultsAsync(IStatus status, params string[] summaryResults)
         {
             if (summaryResults == null) return;
 
@@ -107,6 +113,8 @@ namespace Controllers.Status
 
             foreach (var summaryResult in summaryResults)
                 status.SummaryResults.Add(summaryResult);
+
+            await NotifyStatusChangedAsync?.Invoke();
         }
     }
 }

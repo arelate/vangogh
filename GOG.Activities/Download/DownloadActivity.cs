@@ -32,7 +32,7 @@ namespace GOG.Activities.Download
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var processDownloadsTask = statusController.Create(status,
+            var processDownloadsTask = await statusController.CreateAsync(status,
                 $"Process updated {context} downloads");
 
             var current = 0;
@@ -46,7 +46,7 @@ namespace GOG.Activities.Download
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(id, processDownloadsTask);
                 if (productDownloads == null) continue;
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     processDownloadsTask,
                     ++current,
                     total,
@@ -57,7 +57,7 @@ namespace GOG.Activities.Download
                     d =>
                     d.Context == context).ToArray();
 
-                var processDownloadEntriesTask = statusController.Create(processDownloadsTask,
+                var processDownloadEntriesTask = await statusController.CreateAsync(processDownloadsTask,
                     $"Download {context} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
@@ -68,7 +68,7 @@ namespace GOG.Activities.Download
                     if (sanitizedUri.Contains(Separators.QueryString))
                         sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString));
 
-                    statusController.UpdateProgress(
+                    await statusController.UpdateProgressAsync(
                         processDownloadEntriesTask,
                         ii + 1,
                         downloadEntries.Length,
@@ -81,28 +81,28 @@ namespace GOG.Activities.Download
                         entry.Destination,
                         processDownloadEntriesTask);
 
-                    var removeEntryTask = statusController.Create(
+                    var removeEntryTask = await statusController.CreateAsync(
                         processDownloadEntriesTask,
                         $"Remove scheduled {context} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);
 
-                    statusController.Complete(removeEntryTask);
+                    await statusController.CompleteAsync(removeEntryTask);
                 }
 
                 // if there are no scheduled downloads left - mark file for removal
                 if (productDownloads.Downloads.Count == 0)
                     emptyProductDownloads.Add(productDownloads);
 
-                statusController.Complete(processDownloadEntriesTask);
+                await statusController.CompleteAsync(processDownloadEntriesTask);
             }
 
-            var clearEmptyDownloadsTask = statusController.Create(processDownloadsTask, "Clear empty downloads");
+            var clearEmptyDownloadsTask = await statusController.CreateAsync(processDownloadsTask, "Clear empty downloads");
             await productDownloadsDataController.RemoveAsync(clearEmptyDownloadsTask, emptyProductDownloads.ToArray());
-            statusController.Complete(clearEmptyDownloadsTask);
+            await statusController.CompleteAsync(clearEmptyDownloadsTask);
 
-            statusController.Complete(processDownloadsTask);
+            await statusController.CompleteAsync(processDownloadsTask);
         }
     }
 }

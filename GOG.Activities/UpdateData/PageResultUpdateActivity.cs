@@ -51,26 +51,26 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateAllProductsTask = statusController.Create(status, $"Update {context}");
+            var updateAllProductsTask = await statusController.CreateAsync(status, $"Update {context}");
 
             var productsPageResults = await pageResultsController.GetPageResults(updateAllProductsTask);
 
-            var extractTask = statusController.Create(updateAllProductsTask, $"Extract {context}");
+            var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extract {context}");
             var newProducts = pageResultsExtractingController.ExtractMultiple(productsPageResults);
-            statusController.Complete(extractTask);
+            await statusController.CompleteAsync(extractTask);
 
             if (selectNewUpdatedDelegate != null)
             {
-                var refineDataTask = statusController.Create(updateAllProductsTask, $"Select new/updated {context}");
+                var refineDataTask = await statusController.CreateAsync(updateAllProductsTask, $"Select new/updated {context}");
                 await selectNewUpdatedDelegate.SelectNewUpdatedAsync(newProducts, refineDataTask);
-                statusController.Complete(refineDataTask);
+                await statusController.CompleteAsync(refineDataTask);
             }
 
-            var updateTask = statusController.Create(updateAllProductsTask, $"Save {context}");
+            var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Save {context}");
             await dataController.UpdateAsync(updateTask, newProducts.ToArray());
-            statusController.Complete(updateTask);
+            await statusController.CompleteAsync(updateTask);
 
-            statusController.Complete(updateAllProductsTask);
+            await statusController.CompleteAsync(updateAllProductsTask);
         }
     }
 }

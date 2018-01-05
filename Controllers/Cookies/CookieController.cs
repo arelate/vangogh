@@ -57,7 +57,7 @@ namespace Controllers.Cookies
 
         public async Task LoadAsync(IStatus status)
         {
-            var loadStatus = statusController.Create(status, "Load cookies");
+            var loadStatus = await statusController.CreateAsync(status, "Load cookies");
 
             storedCookies = await serializedStorageController.DeserializePullAsync<Dictionary<string, string>>(
                 getFilenameDelegate.GetFilename(),
@@ -68,21 +68,21 @@ namespace Controllers.Cookies
 
             DataAvailable = true;
 
-            statusController.Complete(loadStatus);
+            await statusController.CompleteAsync(loadStatus);
         }
 
         public async Task SaveAsync(IStatus status)
         {
             if (!DataAvailable) throw new InvalidOperationException("Cannot save data before it's available");
 
-            var saveStatus = statusController.Create(status, "Save cookies");
+            var saveStatus = await statusController.CreateAsync(status, "Save cookies");
 
             await serializedStorageController.SerializePushAsync(
                 getFilenameDelegate.GetFilename(),
                 storedCookies,
                 saveStatus);
 
-            statusController.Complete(saveStatus);
+            await statusController.CompleteAsync(saveStatus);
         }
 
         public async Task SetCookiesAsync(IEnumerable<string> cookies, IStatus status)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Validation;
@@ -31,7 +28,7 @@ namespace GOG.Activities.Validate
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var validateDataTask = statusController.Create(status, "Validate data");
+            var validateDataTask = await statusController.CreateAsync(status, "Validate data");
 
             var dataFiles = await precomputedHashController.EnumerateKeysAsync(validateDataTask);
             var dataFilesCount = dataFiles.Count();
@@ -42,17 +39,17 @@ namespace GOG.Activities.Validate
                 if (!fileController.Exists(dataFile))
                     continue;
 
-                statusController.UpdateProgress(validateDataTask,
+                await statusController.UpdateProgressAsync(validateDataTask,
                     ++current,
                     dataFilesCount,
                     dataFile);
 
                 var precomputedHash = precomputedHashController.GetHash(dataFile);
                 if(!await fileValidateDelegate.ValidateFileAsync(dataFile, precomputedHash, validateDataTask))
-                    statusController.Warn(validateDataTask, $"Data file {dataFile} hash doesn't match precomputed value");
+                    await statusController.WarnAsync(validateDataTask, $"Data file {dataFile} hash doesn't match precomputed value");
             }
 
-            statusController.Complete(validateDataTask);
+            await statusController.CompleteAsync(validateDataTask);
         }
     }
 }

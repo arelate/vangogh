@@ -161,7 +161,7 @@ namespace Ghost.Console
 
             var statusTreeToEnumerableController = new StatusTreeToEnumerableController();
 
-            var applicationStatus = new Status() { Title = "This ghost is the kind one." };
+            var applicationStatus = new Status() { Title = "This ghost is a kind one." };
 
             var templatesDirectoryDelegate = new RelativeDirectoryDelegate("templates");
             var appTemplateFilenameDelegate = new FixedFilenameDelegate("app", jsonFilenameDelegate);
@@ -203,7 +203,7 @@ namespace Ghost.Console
                 consoleInputOutputController);
 
             // add notification handler to drive console view updates
-            statusController.StatusChangedNotification += consoleStatusPostViewUpdateDelegate.PostViewUpdate;
+            statusController.NotifyStatusChangedAsync += consoleStatusPostViewUpdateDelegate.PostViewUpdateAsync;
 
             var throttleController = new ThrottleController(
                 statusController,
@@ -1083,7 +1083,7 @@ namespace Ghost.Console
             {
                 if (!activityContextToActivityControllerMap.ContainsKey(activityContext))
                 {
-                    statusController.Warn(
+                    await statusController.WarnAsync(
                         applicationStatus,
                         activityContextController.ToString(activityContext) + " is not mapped to an Activity.");
                     continue;
@@ -1104,7 +1104,7 @@ namespace Ghost.Console
 
                     var combinedErrorMessages = string.Join(Models.Separators.Separators.Common.Comma, errorMessages);
 
-                    statusController.Fail(applicationStatus, combinedErrorMessages);
+                    await statusController.FailAsync(applicationStatus, combinedErrorMessages);
 
                     var failureDumpUri = "failureDump.json";
                     await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);

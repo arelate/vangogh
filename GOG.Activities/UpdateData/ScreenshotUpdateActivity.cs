@@ -30,12 +30,12 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateProductsScreenshotsTask = statusController.Create(status, "Update Screenshots");
+            var updateProductsScreenshotsTask = await statusController.CreateAsync(status, "Update Screenshots");
 
-            var getUpdatesListTask = statusController.Create(updateProductsScreenshotsTask, "Get updates");
+            var getUpdatesListTask = await statusController.CreateAsync(updateProductsScreenshotsTask, "Get updates");
             var productsMissingScreenshots = (await productsDataController.EnumerateIdsAsync(getUpdatesListTask)).Except(
                 await screenshotsIndexDataController.EnumerateIdsAsync(getUpdatesListTask));
-            statusController.Complete(getUpdatesListTask);
+            await statusController.CompleteAsync(getUpdatesListTask);
 
             var counter = 0;
 
@@ -45,13 +45,13 @@ namespace GOG.Activities.UpdateData
 
                 if (product == null)
                 {
-                    statusController.Inform(
+                    await statusController.InformAsync(
                         updateProductsScreenshotsTask,
                         $"Product {id} was not found as product or accountProduct, but marked as missing screenshots");
                     continue;
                 }
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     updateProductsScreenshotsTask,
                     ++counter,
                     productsMissingScreenshots.Count(),
@@ -61,7 +61,7 @@ namespace GOG.Activities.UpdateData
 
             }
 
-            statusController.Complete(updateProductsScreenshotsTask);
+            await statusController.CompleteAsync(updateProductsScreenshotsTask);
         }
     }
 }

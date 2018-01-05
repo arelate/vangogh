@@ -37,7 +37,7 @@ namespace GOG.Controllers.Enumeration
 
         public async Task<IEnumerable<string>> EnumerateAllAsync(IStatus status)
         {
-            var enumerateUpdatedProductFilesTask = statusController.Create(status, "Enumerate updated productFiles");
+            var enumerateUpdatedProductFilesTask = await statusController.CreateAsync(status, "Enumerate updated productFiles");
 
             var updatedIds = await updatedDataController.EnumerateIdsAsync(enumerateUpdatedProductFilesTask);
             var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdatedProductFilesTask);
@@ -49,7 +49,7 @@ namespace GOG.Controllers.Enumeration
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateUpdatedProductFilesTask);
 
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     enumerateUpdatedProductFilesTask,
                     ++current,
                     updatedIdsCount,
@@ -62,7 +62,7 @@ namespace GOG.Controllers.Enumeration
                 }
             }
 
-            statusController.Complete(enumerateUpdatedProductFilesTask);
+            await statusController.CompleteAsync(enumerateUpdatedProductFilesTask);
 
             return updatedProductFiles;
         }

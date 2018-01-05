@@ -36,7 +36,7 @@ namespace GOG.Controllers.DownloadSources
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
         {
-            var getDownloadSourcesStatus = statusController.Create(status, "Get download sources");
+            var getDownloadSourcesStatus = await statusController.CreateAsync(status, "Get download sources");
 
             var productImageSources = new Dictionary<long, IList<string>>();
             var productIds = await productEnumerateDelegate.EnumerateIdsAsync(getDownloadSourcesStatus);
@@ -44,7 +44,7 @@ namespace GOG.Controllers.DownloadSources
 
             foreach (var id in productIds)
             {
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     getDownloadSourcesStatus,
                     ++current,
                     productIds.Count(),
@@ -66,7 +66,7 @@ namespace GOG.Controllers.DownloadSources
                     productImageSources[id].Add(source);
             }
 
-            statusController.Complete(getDownloadSourcesStatus);
+            await statusController.CompleteAsync(getDownloadSourcesStatus);
 
             return productImageSources;
         }

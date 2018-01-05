@@ -23,14 +23,14 @@ namespace Controllers.Throttle
 
         public async Task ThrottleAsync(int delaySeconds, IStatus status)
         {
-            var throttleTask = statusController.Create(
+            var throttleTask = await statusController.CreateAsync(
                 status,
                 $"Sleeping {secondsFormattingController.Format(delaySeconds)} before next operation");
 
             for (var ii = 0; ii < delaySeconds; ii++)
             {
                 await Task.Delay(1000);
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     throttleTask, 
                     ii + 1, 
                     delaySeconds, 
@@ -38,7 +38,7 @@ namespace Controllers.Throttle
                     TimeUnits.Seconds);
             }
 
-            statusController.Complete(throttleTask);
+            await statusController.CompleteAsync(throttleTask);
         }
     }
 }

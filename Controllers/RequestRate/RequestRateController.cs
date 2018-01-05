@@ -54,9 +54,9 @@ namespace Controllers.RequestRate
             var elapsed = (int) (now - lastRequestToUriPrefix[prefix]).TotalSeconds;
             if (elapsed < requestIntervalSeconds)
             {
-                var limitRateTask = statusController.Create(status, "Limit request rate to avoid temporary server block");
+                var limitRateTask = await statusController.CreateAsync(status, "Limit request rate to avoid temporary server block");
                 await throttleController.ThrottleAsync(requestIntervalSeconds - elapsed, status);
-                statusController.Complete(limitRateTask);
+                await statusController.CompleteAsync(limitRateTask);
             }
 
             lastRequestToUriPrefix[prefix] = now;

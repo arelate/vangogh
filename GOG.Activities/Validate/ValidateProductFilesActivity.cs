@@ -58,7 +58,7 @@ namespace GOG.Activities.Validate
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var validateProductsStatus = statusController.Create(status, "Validate products");
+            var validateProductsStatus = await statusController.CreateAsync(status, "Validate products");
 
             var current = 0;
 
@@ -77,14 +77,14 @@ namespace GOG.Activities.Validate
                         Title = gameDetails.Title
                     };
 
-                statusController.UpdateProgress(validateProductsStatus,
+                await statusController.UpdateProgressAsync(validateProductsStatus,
                     ++current,
                     validateProductsCount,
                     gameDetails.Title);
 
                 var localFiles = new List<string>();
 
-                var getLocalFilesTask = statusController.Create(validateProductsStatus, "Enumerate local product files");
+                var getLocalFilesTask = await statusController.CreateAsync(validateProductsStatus, "Enumerate local product files");
                 foreach (var manualUrl in await manualUrlsEnumerationController.EnumerateAsync(gameDetails, getLocalFilesTask))
                 {
                     var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl, getLocalFilesTask);
@@ -96,7 +96,7 @@ namespace GOG.Activities.Validate
 
                     localFiles.Add(localFile);
                 }
-                statusController.Complete(getLocalFilesTask);
+                await statusController.CompleteAsync(getLocalFilesTask);
 
 
                 // check if current validation results allow us to skip validating current product
@@ -106,7 +106,7 @@ namespace GOG.Activities.Validate
 
                 var fileValidationResults = new List<IFileValidationResult>(localFiles.Count);
 
-                var validateFilesTask = statusController.Create(
+                var validateFilesTask = await statusController.CreateAsync(
                     validateProductsStatus,
                     "Validate product files");
 
@@ -114,7 +114,7 @@ namespace GOG.Activities.Validate
 
                 foreach (var localFile in localFiles)
                 {
-                    statusController.UpdateProgress(validateFilesTask,
+                    await statusController.UpdateProgressAsync(validateFilesTask,
                         ++currentFile,
                         localFiles.Count,
                         localFile);
@@ -130,21 +130,21 @@ namespace GOG.Activities.Validate
                     }
                     catch (Exception ex)
                     {
-                        statusController.Fail(validateProductsStatus,
+                        await statusController.FailAsync(validateProductsStatus,
                             $"{localFile}: {ex.Message}");
                     }
                 }
 
-                statusController.Complete(validateFilesTask);
+                await statusController.CompleteAsync(validateFilesTask);
 
                 validationResults.Files = fileValidationResults.ToArray();
 
-                var updateValidationResultsTask = statusController.Create(validateProductsStatus, "Update validation results");
+                var updateValidationResultsTask = await statusController.CreateAsync(validateProductsStatus, "Update validation results");
                 await validationResultsDataController.UpdateAsync(validateProductsStatus, validationResults);
-                statusController.Complete(updateValidationResultsTask);
+                await statusController.CompleteAsync(updateValidationResultsTask);
             }
 
-            statusController.Complete(validateProductsStatus);
+            await statusController.CompleteAsync(validateProductsStatus);
         }
     }
 }

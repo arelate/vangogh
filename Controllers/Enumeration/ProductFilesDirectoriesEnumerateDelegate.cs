@@ -26,7 +26,7 @@ namespace Controllers.Enumeration
 
         public async Task<IEnumerable<string>> EnumerateAllAsync(IStatus status)
         {
-            var enumerateProductFilesDirectoriesTask = statusController.Create(status, "Enumerate productFiles directories");
+            var enumerateProductFilesDirectoriesTask = await statusController.CreateAsync(status, "Enumerate productFiles directories");
 
             var directories = new List<string>();
 
@@ -36,7 +36,7 @@ namespace Controllers.Enumeration
                 directories.AddRange(directoryController.EnumerateDirectories(productFilesDirectory));
             });
 
-            statusController.Complete(enumerateProductFilesDirectoriesTask);
+            await statusController.CompleteAsync(enumerateProductFilesDirectoriesTask);
 
             return directories;
         }

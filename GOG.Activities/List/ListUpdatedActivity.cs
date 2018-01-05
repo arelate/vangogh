@@ -31,14 +31,14 @@ namespace GOG.Activities.List
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var listUpdatedStatus = statusController.Create(status, "List updated account products");
+            var listUpdatedStatus = await statusController.CreateAsync(status, "List updated account products");
             var current = 0;
             var count = await updatedDataController.CountAsync(listUpdatedStatus);
             var updatedAccountProducts = new Dictionary<long, string>();
 
             foreach (var updatedId in await updatedDataController.EnumerateIdsAsync(listUpdatedStatus))
             {
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     listUpdatedStatus,
                     ++current,
                     count,
@@ -51,7 +51,7 @@ namespace GOG.Activities.List
                 var accountProduct = await accountProductsDataController.GetByIdAsync(updatedId, listUpdatedStatus);
                 if (accountProduct == null)
                 {
-                    statusController.Warn(
+                    await statusController.WarnAsync(
                         listUpdatedStatus,
                         "Account product {updatedId} doesn't exist, but is marked as updated");
                     continue;
@@ -64,7 +64,7 @@ namespace GOG.Activities.List
                 // TODO: figure out how to add and post summaries for the activity like this one using consolePresentationController
             }
 
-            statusController.Complete(listUpdatedStatus);
+            await statusController.CompleteAsync(listUpdatedStatus);
         }
     }
 }

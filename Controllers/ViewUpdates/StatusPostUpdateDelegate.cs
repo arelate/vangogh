@@ -1,9 +1,11 @@
-﻿using Interfaces.ViewUpdates;
+﻿using System.Threading.Tasks;
+
+using Interfaces.ViewUpdates;
 using Interfaces.Output;
 
 namespace Controllers.ViewUpdates
 {
-    public class StatusPostViewUpdateDelegate : IPostViewUpdateDelegate
+    public class StatusPostViewUpdateDelegate : IPostViewUpdateAsyncDelegate
     {
         private IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate;
         private IOutputOnRefreshDelegate<string[]> outputOnRefreshDelegate;
@@ -16,11 +18,10 @@ namespace Controllers.ViewUpdates
             this.outputOnRefreshDelegate = outputOnRefreshDelegate;
         }
 
-        public void PostViewUpdate()
+        public async Task PostViewUpdateAsync()
         {
-            // TODO: fix this later
             outputOnRefreshDelegate.OutputOnRefresh(
-                getViewUpdateDelegate.GetViewUpdateAsync().Result);
+                await getViewUpdateDelegate.GetViewUpdateAsync());
         }
     }
 }

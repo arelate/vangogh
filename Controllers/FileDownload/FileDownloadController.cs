@@ -51,7 +51,7 @@ namespace Controllers.FileDownload
             if (fileController.Exists(fullPath) &&
                 fileController.GetSize(fullPath) == response.Content.Headers.ContentLength)
             {
-                statusController.Inform(
+                await statusController.InformAsync(
                     status, 
                     $"File {fullPath} already exists and matches response size, will not be redownloading");
                 return;
@@ -67,7 +67,7 @@ namespace Controllers.FileDownload
                         (long) response.Content.Headers.ContentLength :
                         totalBytesRead;
                     await writeableStream.WriteAsync(buffer, 0, bytesRead);
-                    statusController.UpdateProgress(
+                    await statusController.UpdateProgressAsync(
                         status,
                         totalBytesRead,
                         contentLength,
@@ -79,7 +79,7 @@ namespace Controllers.FileDownload
 
         public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, IStatus status)
         {
-            var downloadEntryTask = statusController.Create(status, "Download entry");
+            var downloadEntryTask = await statusController.CreateAsync(status, "Download entry");
             try
             {
                 using (var response = await networkController.RequestResponseAsync(downloadEntryTask, HttpMethod.Get, sourceUri))
@@ -87,11 +87,11 @@ namespace Controllers.FileDownload
             }
             catch (Exception ex)
             {
-                statusController.Warn(downloadEntryTask, $"{sourceUri}: {ex.Message}");
+                await statusController.WarnAsync(downloadEntryTask, $"{sourceUri}: {ex.Message}");
             }
             finally
             {
-                statusController.Complete(downloadEntryTask);
+                await statusController.CompleteAsync(downloadEntryTask);
             }
         }
     }

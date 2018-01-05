@@ -37,35 +37,35 @@ namespace Controllers.Routing
 
         public async Task<string> TraceRouteAsync(long id, string source, IStatus status)
         {
-            var traceRouteStatus = statusController.Create(status, "Trace route");
+            var traceRouteStatus = await statusController.CreateAsync(status, "Trace route");
 
             var productRoutes = await productRoutesDataController.GetByIdAsync(id, traceRouteStatus);
 
             if (productRoutes == null)
                 return string.Empty;
 
-            statusController.Complete(traceRouteStatus);
+            await statusController.CompleteAsync(traceRouteStatus);
 
             return TraceProductRoute(productRoutes.Routes, source);
         }
 
         public async Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources, IStatus status)
         {
-            var traceRouteStatus = statusController.Create(status, "Trace routes");
+            var traceRouteStatus = await statusController.CreateAsync(status, "Trace routes");
 
             var destination = new List<string>();
 
             var productRoutes = await productRoutesDataController.GetByIdAsync(id, traceRouteStatus);
             if (productRoutes == null)
             {
-                statusController.Complete(traceRouteStatus);
+                await statusController.CompleteAsync(traceRouteStatus);
                 return destination;
             }
 
             foreach (var source in sources)
                 destination.Add(TraceProductRoute(productRoutes.Routes, source));
 
-            statusController.Complete(traceRouteStatus);
+            await statusController.CompleteAsync(traceRouteStatus);
 
             return destination;
         } 
@@ -75,7 +75,7 @@ namespace Controllers.Routing
             if (source == destination)
                 throw new System.ArgumentException("Destination cannot be the same as source");
 
-            var updateRouteStatus = statusController.Create(status, "Update route");
+            var updateRouteStatus = await statusController.CreateAsync(status, "Update route");
 
             var productRoutes = await productRoutesDataController.GetByIdAsync(id, updateRouteStatus);
             if (productRoutes == null)
@@ -106,7 +106,7 @@ namespace Controllers.Routing
 
             await productRoutesDataController.UpdateAsync(status, productRoutes);
 
-            statusController.Complete(updateRouteStatus);
+            await statusController.CompleteAsync(updateRouteStatus);
         }
     }
 }

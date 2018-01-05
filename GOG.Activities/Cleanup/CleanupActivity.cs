@@ -43,7 +43,7 @@ namespace GOG.Activities.Cleanup
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var cleanupTask = statusController.Create(status, $"Cleanup {context}");
+            var cleanupTask = await statusController.CreateAsync(status, $"Cleanup {context}");
 
             var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAllAsync(status);
             var actualItems = await actualItemsEnumerateDelegate.EnumerateAllAsync(status);
@@ -58,12 +58,12 @@ namespace GOG.Activities.Cleanup
                     cleanupItems.AddRange(supplementaryItemsEnumerateDelegate.Enumerate(detailedItem));
                 }
 
-            var moveToRecycleBinTask = statusController.Create(status, "Move unexpected items to recycle bin");
+            var moveToRecycleBinTask = await statusController.CreateAsync(status, "Move unexpected items to recycle bin");
             var current = 0;
 
             foreach (var item in cleanupItems)
             {
-                statusController.UpdateProgress(
+                await statusController.UpdateProgressAsync(
                     moveToRecycleBinTask,
                     ++current,
                     cleanupItems.Count,
@@ -86,7 +86,7 @@ namespace GOG.Activities.Cleanup
             foreach (var directory in emptyDirectories)
                 directoryController.Delete(directory);
 
-            statusController.Complete(moveToRecycleBinTask);
+            await statusController.CompleteAsync(moveToRecycleBinTask);
         }
     }
 }

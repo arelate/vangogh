@@ -19,9 +19,9 @@ namespace GOG.Activities.Report
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var reportTask = statusController.Create(status, "Presenting report on application task status");
+            var reportTask = await statusController.CreateAsync(status, "Presenting report on application task status");
             await postViewUpdateAsyncDelegate.PostViewUpdateAsync();
-            statusController.Complete(reportTask);
+            await statusController.CompleteAsync(reportTask);
         }
 
     }

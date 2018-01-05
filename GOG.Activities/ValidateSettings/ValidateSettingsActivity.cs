@@ -32,32 +32,32 @@ namespace GOG.Activities.ValidateSettings
         {
             var settings = await getSettingsAsyncDelegate.GetSettingsAsync(status);
 
-            var validateSettingsTask = statusController.Create(status, "Validate settings");
+            var validateSettingsTask = await statusController.CreateAsync(status, "Validate settings");
 
-            var validateDownloadsLanguagesTask = statusController.Create(
+            var validateDownloadsLanguagesTask = await statusController.CreateAsync(
                 validateSettingsTask,
                 "Validate downloads languages");
             settings.DownloadsLanguages =
                     downloadsLanguagesValidationDelegate.ValidateProperties(
                         settings.DownloadsLanguages);
-            statusController.Complete(validateDownloadsLanguagesTask);
+            await statusController.CompleteAsync(validateDownloadsLanguagesTask);
 
-            var validateDownloadsOperatingSystemsTask = statusController.Create(
+            var validateDownloadsOperatingSystemsTask = await statusController.CreateAsync(
                 validateSettingsTask,
                 "Validate downloads operating systems");
             settings.DownloadsOperatingSystems =
                 downloadsOperatingSystemsValidationDelegate.ValidateProperties(
                     settings.DownloadsOperatingSystems);
-            statusController.Complete(validateDownloadsOperatingSystemsTask);
+            await statusController.CompleteAsync(validateDownloadsOperatingSystemsTask);
 
-            var validateDirectoriesTask = statusController.Create(
+            var validateDirectoriesTask = await statusController.CreateAsync(
                 validateSettingsTask,
                 "Validate directories");
             directoriesValidationDelegate.ValidateProperties(
                 settings.Directories);
-            statusController.Complete(validateDirectoriesTask);
+            await statusController.CompleteAsync(validateDirectoriesTask);
 
-            statusController.Complete(validateSettingsTask);
+            await statusController.CompleteAsync(validateSettingsTask);
         }
     }
 }

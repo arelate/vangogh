@@ -20,13 +20,13 @@ namespace GOG.Activities.Cleanup
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var cleanupUpdatedTask = statusController.Create(status, "Cleanup updated, close update cycle");
+            var cleanupUpdatedTask = await statusController.CreateAsync(status, "Cleanup updated, close update cycle");
 
             await updatedDataController.RemoveAsync(
                 cleanupUpdatedTask,
                 (await updatedDataController.EnumerateIdsAsync(cleanupUpdatedTask)).ToArray());
 
-            statusController.Complete(cleanupUpdatedTask);
+            await statusController.CompleteAsync(cleanupUpdatedTask);
         }
     }
 }

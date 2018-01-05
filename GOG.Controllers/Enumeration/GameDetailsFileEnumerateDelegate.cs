@@ -38,7 +38,7 @@ namespace GOG.Controllers.Enumeration
 
         public async Task<IEnumerable<string>> EnumerateAsync(GameDetails gameDetails, IStatus status)
         {
-            var enumerateGameDetailsFilesStatus = statusController.Create(status, "Enumerate game details files");
+            var enumerateGameDetailsFilesStatus = await statusController.CreateAsync(status, "Enumerate game details files");
 
             var gameDetailsFiles = new List<string>();
 
@@ -53,7 +53,7 @@ namespace GOG.Controllers.Enumeration
             // it's not possible to map manualUrls to resolvedUrls
             if (gameDetailsManualUrlsCount != gameDetailsResolvedUris.Count)
             {
-                statusController.Complete(enumerateGameDetailsFilesStatus);
+                await statusController.CompleteAsync(enumerateGameDetailsFilesStatus);
                 throw new ArgumentException($"Product {gameDetails.Id} resolvedUris count doesn't match manualUrls count");
             }
 
@@ -72,7 +72,7 @@ namespace GOG.Controllers.Enumeration
                 gameDetailsFiles.Add(localFileUri);
             }
 
-            statusController.Complete(enumerateGameDetailsFilesStatus);
+            await statusController.CompleteAsync(enumerateGameDetailsFilesStatus);
 
             if (gameDetailsManualUrlsCount != gameDetailsFiles.Count)
                 throw new ArgumentException($"Product {gameDetails.Id} files count doesn't match manualUrls count");

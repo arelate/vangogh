@@ -141,7 +141,7 @@ namespace Controllers.Validation
 
                     chunksValidation.Add(await VerifyChunkAsync(fileStream, from, to, expectedMd5, status));
 
-                    statusController.UpdateProgress(
+                    await statusController.UpdateProgressAsync(
                         status,
                         length,
                         expectedSize,
@@ -151,10 +151,10 @@ namespace Controllers.Validation
 
                 fileValidation.Chunks = chunksValidation.ToArray();
 
-                statusController.UpdateProgress(status, length, expectedSize, productFileUri);
+                await statusController.UpdateProgressAsync(status, length, expectedSize, productFileUri);
             }
 
-            statusController.Inform(status, $"Validation result: {productFileUri} is valid: " +
+            await statusController.InformAsync(status, $"Validation result: {productFileUri} is valid: " +
                 $"{validationResultController.ProductFileIsValid(fileValidation)}");
 
             return fileValidation;

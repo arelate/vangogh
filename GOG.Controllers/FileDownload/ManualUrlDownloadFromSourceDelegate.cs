@@ -41,7 +41,7 @@ namespace GOG.Controllers.FileDownload
 
         public async Task DownloadFileFromSourceAsync(long id, string title, string sourceUri, string destination, IStatus status)
         {
-            var downloadTask = statusController.Create(status, "Download game details manual url");
+            var downloadTask = await statusController.CreateAsync(status, "Download game details manual url");
 
             HttpResponseMessage response;
             try
@@ -50,11 +50,11 @@ namespace GOG.Controllers.FileDownload
             }
             catch (HttpRequestException ex)
             {
-                statusController.Fail(
+                await statusController.FailAsync(
                     downloadTask,
                     $"Failed to get successful response for {sourceUri} for " +
                     $"product {id}: {title}, message: {ex.Message}");
-                statusController.Complete(downloadTask);
+                await statusController.CompleteAsync(downloadTask);
                 return;
             }
 
@@ -86,7 +86,7 @@ namespace GOG.Controllers.FileDownload
                 }
                 catch (Exception ex)
                 {
-                    statusController.Fail(
+                    await statusController.FailAsync(
                         downloadTask, 
                         $"Couldn't download {sourceUri}, resolved as {resolvedUri} to {destination} " +
                         $"for product {id}: {title}, error message: {ex.Message}");
@@ -107,7 +107,7 @@ namespace GOG.Controllers.FileDownload
                     downloadTask);
             }
 
-            statusController.Complete(downloadTask);
+            await statusController.CompleteAsync(downloadTask);
         }
     }
 }
