@@ -15,7 +15,7 @@ using Models.ProductScreenshots;
 
 namespace GOG.Controllers.DownloadSources
 {
-    public class ScreenshotsDownloadSourcesController : IDownloadSourcesController
+    public class ScreenshotsDownloadSourcesController : IGetDownloadSourcesAsyncDelegate
     {
         private IDataController<ProductScreenshots> screenshotsDataController;
         private IExpandImageUriDelegate expandScreenshotUriDelegate;

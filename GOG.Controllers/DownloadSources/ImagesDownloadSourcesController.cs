@@ -11,7 +11,7 @@ using Models.ProductCore;
 
 namespace GOG.Controllers.DownloadSources
 {
-    public class ProductCoreImagesDownloadSourcesController<T> : IDownloadSourcesController
+    public class GetProductCoreImagesDownloadSourcesDelegate<T> : IGetDownloadSourcesAsyncDelegate
         where T : ProductCore
     {
         private IDataController<T> dataController;
@@ -20,7 +20,7 @@ namespace GOG.Controllers.DownloadSources
         private IGetImageUriDelegate<T> getImageUriDelegate;
         private IStatusController statusController;
 
-        public ProductCoreImagesDownloadSourcesController(
+        public GetProductCoreImagesDownloadSourcesDelegate(
             IEnumerateIdsAsyncDelegate productEnumerateDelegate,
             IDataController<T> dataController,
             IExpandImageUriDelegate expandImageUriDelegate,

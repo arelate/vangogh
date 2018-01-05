@@ -9,10 +9,4 @@ namespace Interfaces.DownloadSources
     {
         Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status);
     }
-
-    public interface IDownloadSourcesController :
-        IGetDownloadSourcesAsyncDelegate
-    {
-        // ...
-    }
 }

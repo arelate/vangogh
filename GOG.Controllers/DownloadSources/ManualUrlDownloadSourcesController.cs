@@ -10,14 +10,14 @@ using GOG.Models;
 
 namespace GOG.Controllers.DownloadSources
 {
-    public class ManualUrlDownloadSourcesController : IDownloadSourcesController
+    public class GetManualUrlDownloadSourcesDelegate : IGetDownloadSourcesAsyncDelegate
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IEnumerateAsyncDelegate<GameDetails> gameDetailsManualUrlEnumerationController;
         private IStatusController statusController;
 
-        public ManualUrlDownloadSourcesController(
+        public GetManualUrlDownloadSourcesDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IEnumerateAsyncDelegate<GameDetails> gameDetailsManualUrlEnumerationController,

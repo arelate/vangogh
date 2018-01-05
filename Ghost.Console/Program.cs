@@ -611,9 +611,9 @@ namespace Ghost.Console
             var getGameProductDataDeserializedDelegate = new GetGameProductDataDeserializedDelegate(
                 getGOGDataDelegate);
 
-            var productGetUpdateIdentityDelegate = new ProductGetUpdateIdentityDelegate();
-            var productUrlGetUpdateIdentityDelegate = new ProductUrlGetUpdateIdentityDelegate();
-            var accountProductGetUpdateIdentityDelegate = new AccountProductGetUpdateIdentityDelegate();
+            var getProductUpdateIdentityDelegate = new GetProductUpdateIdentityDelegate();
+            var getGameProductDataUpdateIdentityDelegate = new GetGameProductDataUpdateIdentityDelegate();
+            var getAccountProductUpdateIdentityDelegate = new GetAccountProductUpdateIdentityDelegate();
 
             var fillGameDetailsGapsDelegate = new FillGameDetailsGapsDelegate();
 
@@ -638,7 +638,7 @@ namespace Ghost.Console
                 gameProductDataController,
                 updatedDataController,
                 getGameProductDataDeserializedDelegate,
-                productUrlGetUpdateIdentityDelegate,
+                getGameProductDataUpdateIdentityDelegate,
                 statusController);
 
             var getApriProductDelegate = new GetDeserializedGOGModelDelegate<ApiProduct>(
@@ -662,7 +662,7 @@ namespace Ghost.Console
                 apiProductsDataController,
                 updatedDataController,
                 getApriProductDelegate,
-                productGetUpdateIdentityDelegate,
+                getProductUpdateIdentityDelegate,
                 statusController);
 
             var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelDelegate<GameDetails>(
@@ -710,7 +710,7 @@ namespace Ghost.Console
                 gameDetailsDataController,
                 updatedDataController,
                 getGameDetailsDelegate,
-                accountProductGetUpdateIdentityDelegate,
+                getAccountProductUpdateIdentityDelegate,
                 statusController,
                 fillGameDetailsGapsDelegate);
 
@@ -742,14 +742,14 @@ namespace Ghost.Console
                 userRequestedController,
                 updatedDataController);
 
-            var productsImagesDownloadSourcesController = new ProductCoreImagesDownloadSourcesController<Product>(
+            var getProductsImagesDownloadSourcesDelegate = new GetProductCoreImagesDownloadSourcesDelegate<Product>(
                 userRequestedOrUpdatedEnumerateDelegate,
                 productsDataController,
                 expandImageUriDelegate,
                 productGetImageUriDelegate,
                 statusController);
 
-            var accountProductsImagesDownloadSourcesController = new ProductCoreImagesDownloadSourcesController<AccountProduct>(
+            var getAccountProductsImagesDownloadSourcesDelegate = new GetProductCoreImagesDownloadSourcesDelegate<AccountProduct>(
                 userRequestedOrUpdatedEnumerateDelegate,
                 accountProductsDataController,
                 expandImageUriDelegate,
@@ -784,7 +784,7 @@ namespace Ghost.Console
 
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
-            var manualUrlDownloadSourcesController = new ManualUrlDownloadSourcesController(
+            var getManualUrlDownloadSourcesDelegate = new GetManualUrlDownloadSourcesDelegate(
                 updatedDataController,
                 gameDetailsDataController,
                 gameDetailsManualUrlsEnumerateDelegate,
@@ -794,7 +794,7 @@ namespace Ghost.Console
 
             var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.ProductsImages,
-                productsImagesDownloadSourcesController,
+                getProductsImagesDownloadSourcesDelegate,
                 imagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
@@ -804,7 +804,7 @@ namespace Ghost.Console
 
             var updateAccountProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.AccountProductsImages,
-                accountProductsImagesDownloadSourcesController,
+                getAccountProductsImagesDownloadSourcesDelegate,
                 imagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
@@ -824,7 +824,7 @@ namespace Ghost.Console
 
             var updateProductFilesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.ProductsFiles,
-                manualUrlDownloadSourcesController,
+                getManualUrlDownloadSourcesDelegate,
                 productFilesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,

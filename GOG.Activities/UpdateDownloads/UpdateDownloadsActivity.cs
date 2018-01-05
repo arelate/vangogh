@@ -20,7 +20,7 @@ namespace GOG.Activities.UpdateDownloads
     {
         private Context context;
 
-        private IDownloadSourcesController downloadSourcesController;
+        private IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IFileController fileController;
         private IDataController<ProductDownloads> productDownloadsDataController;
@@ -29,7 +29,7 @@ namespace GOG.Activities.UpdateDownloads
 
         public UpdateDownloadsActivity(
             Context context,
-            IDownloadSourcesController downloadSourcesController,
+            IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
             IDataController<ProductDownloads> productDownloadsDataController,
@@ -39,7 +39,7 @@ namespace GOG.Activities.UpdateDownloads
             base(statusController)
         {
             this.context = context;
-            this.downloadSourcesController = downloadSourcesController;
+            this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.fileController = fileController;
             this.productDownloadsDataController = productDownloadsDataController;
@@ -57,7 +57,7 @@ namespace GOG.Activities.UpdateDownloads
                 updateDownloadsTask,
                 $"Get {context} download sources");
 
-            var downloadSources = await downloadSourcesController.GetDownloadSourcesAsync(getSourcesTask);
+            var downloadSources = await getDownloadSourcesAsyncDelegate.GetDownloadSourcesAsync(getSourcesTask);
             await statusController.CompleteAsync(getSourcesTask);
 
             var counter = 0;

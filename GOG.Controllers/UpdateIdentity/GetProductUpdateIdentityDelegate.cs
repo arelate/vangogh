@@ -4,7 +4,7 @@ using GOG.Models;
 
 namespace GOG.Controllers.UpdateIdentity
 {
-    public class ProductGetUpdateIdentityDelegate : IGetUpdateIdentityDelegate<Product>
+    public class GetProductUpdateIdentityDelegate : IGetUpdateIdentityDelegate<Product>
     {
         public string GetUpdateIdentity(Product product)
         {
