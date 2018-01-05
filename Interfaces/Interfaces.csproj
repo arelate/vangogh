@@ -10,6 +10,8 @@
   
   <ItemGroup>
     <Folder Include="Activity\" />
+    <Folder Include="Delegates\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>

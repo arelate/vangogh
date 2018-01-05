@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Status;
 
-namespace Interfaces.DownloadSources
+namespace GOG.Interfaces.Delegates.GetDownloadSources
 {
     public interface IGetDownloadSourcesAsyncDelegate
     {

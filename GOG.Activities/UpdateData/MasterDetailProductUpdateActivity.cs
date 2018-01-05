@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Network;
-using Interfaces.FillGaps;
 using Interfaces.UpdateUri;
 using Interfaces.Data;
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;
 
 using GOG.Interfaces.Delegates.GetUpdateIdentity;
+using GOG.Interfaces.Delegates.FillGaps;
 
 using Models.ProductCore;
 

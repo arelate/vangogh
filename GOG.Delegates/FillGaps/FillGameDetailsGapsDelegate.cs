@@ -1,4 +1,4 @@
-﻿using Interfaces.FillGaps;
+﻿using GOG.Interfaces.Delegates.FillGaps;
 
 using GOG.Models;
 

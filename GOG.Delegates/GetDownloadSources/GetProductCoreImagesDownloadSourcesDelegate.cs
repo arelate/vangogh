@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Linq;
 
-using Interfaces.DownloadSources;
 using Interfaces.Data;
 using Interfaces.ImageUri;
 using Interfaces.Status;
@@ -10,6 +9,7 @@ using Interfaces.Status;
 using Models.ProductCore;
 
 using GOG.Interfaces.Delegates.GetImageUri;
+using GOG.Interfaces.Delegates.GetDownloadSources;
 
 namespace GOG.Delegates.GetDownloadSources
 {

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.IO;
 
-using Interfaces.DownloadSources;
 using Interfaces.Destination.Directory;
 using Interfaces.Data;
 using Interfaces.Status;
@@ -11,6 +10,8 @@ using Interfaces.ContextDefinitions;
 
 using Models.ProductCore;
 using Models.ProductDownloads;
+
+using GOG.Interfaces.Delegates.GetDownloadSources;
 
 using GOG.Models;
 

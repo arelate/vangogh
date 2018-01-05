@@ -1,4 +1,4 @@
-﻿namespace Interfaces.FillGaps
+﻿namespace GOG.Interfaces.Delegates.FillGaps
 {
     public interface IFillGapsDelegate<FromType, ToType>
     {

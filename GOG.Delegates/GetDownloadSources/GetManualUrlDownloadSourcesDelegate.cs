@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.DownloadSources;
 using Interfaces.Data;
 using Interfaces.Enumeration;
 using Interfaces.Status;
+
+using GOG.Interfaces.Delegates.GetDownloadSources;
 
 using GOG.Models;
 
