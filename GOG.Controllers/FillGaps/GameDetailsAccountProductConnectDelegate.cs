@@ -1,12 +1,12 @@
-﻿using Interfaces.Connection;
+﻿using Interfaces.FillGaps;
 
 using GOG.Models;
 
-namespace GOG.Controllers.Connection
+namespace GOG.Controllers.FillGaps
 {
-    public class GameDetailsAccountProductConnectDelegate : IConnectDelegate<GameDetails, AccountProduct>
+    public class FillGameDetailsGapsDelegate : IFillGapsDelegate<GameDetails, AccountProduct>
     {
-        public void Connect(GameDetails gameDetails, AccountProduct accountProduct)
+        public void FillGaps(GameDetails gameDetails, AccountProduct accountProduct)
         {
             // GOG.com quirk
             // GameDetails are requested using xxxxxxxxx.json Uri, 

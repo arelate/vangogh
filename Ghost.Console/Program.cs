@@ -66,7 +66,7 @@ using GOG.Controllers.PageResults;
 using GOG.Controllers.Extraction;
 using GOG.Controllers.Enumeration;
 using GOG.Controllers.Network;
-using GOG.Controllers.Connection;
+using GOG.Controllers.FillGaps;
 using GOG.Controllers.UpdateIdentity;
 using GOG.Controllers.FileDownload;
 using GOG.Controllers.NewUpdatedSelection;
@@ -615,7 +615,7 @@ namespace Ghost.Console
             var productUrlGetUpdateIdentityDelegate = new ProductUrlGetUpdateIdentityDelegate();
             var accountProductGetUpdateIdentityDelegate = new AccountProductGetUpdateIdentityDelegate();
 
-            var gameDetailsAccountProductConnectDelegate = new GameDetailsAccountProductConnectDelegate();
+            var fillGameDetailsGapsDelegate = new FillGameDetailsGapsDelegate();
 
             var userRequestedController = new UserRequestedController(args);
 
@@ -712,7 +712,7 @@ namespace Ghost.Console
                 getGameDetailsDelegate,
                 accountProductGetUpdateIdentityDelegate,
                 statusController,
-                gameDetailsAccountProductConnectDelegate);
+                fillGameDetailsGapsDelegate);
 
             #endregion
 

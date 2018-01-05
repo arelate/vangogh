@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Network;
-using Interfaces.Connection;
+using Interfaces.FillGaps;
 using Interfaces.UpdateUri;
 using Interfaces.UpdateIdentity;
 using Interfaces.Data;
@@ -28,7 +28,7 @@ namespace GOG.Activities.UpdateData
         private IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
 
         private IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate;
-        private IConnectDelegate<DetailType, MasterType> connectDelegate;
+        private IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
         private Context context;
         private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
@@ -45,7 +45,7 @@ namespace GOG.Activities.UpdateData
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate,
             IStatusController statusController,
-            IConnectDelegate<DetailType, MasterType> connectDelegate = null) :
+            IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null) :
             base(statusController)
         {
             this.masterDataController = masterDataController;
@@ -57,7 +57,7 @@ namespace GOG.Activities.UpdateData
             this.getDeserializedDelegate = getDeserializedDelegate;
 
             this.getUpdateIdentityDelegate = getUpdateIdentityDelegate;
-            this.connectDelegate = connectDelegate;
+            this.fillGapsDelegate = fillGapsDelegate;
 
             this.context = context;
             this.getUpdateUriDelegate = getUpdateUriDelegate;
@@ -97,7 +97,7 @@ namespace GOG.Activities.UpdateData
 
                 if (data != null)
                 {
-                    connectDelegate?.Connect(data, product);
+                    fillGapsDelegate?.FillGaps(data, product);
                     await detailDataController.UpdateAsync(updateProductsTask, data);
                 }
             }
