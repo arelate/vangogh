@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
+using Interfaces.Delegates.Confirm;
+
 using Interfaces.Controllers.File;
+using Interfaces.Controllers.Hash;
+using Interfaces.Controllers.Stream;
 
 using Interfaces.Validation;
-using Interfaces.Stream;
-using Interfaces.Hash;
 using Interfaces.Status;
-using Interfaces.Expectation;
 using Interfaces.ValidationResult;
 
 using Models.Units;
@@ -20,7 +21,7 @@ namespace Controllers.Validation
 {
     public class FileValidationController : IFileValidationController
     {
-        private IExpectedDelegate<string> validationExpectedDelegate;
+        private IConfirmDelegate<string> confirmValidationExpectedDelegate;
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
@@ -29,14 +30,14 @@ namespace Controllers.Validation
         private IStatusController statusController;
 
         public FileValidationController(
-            IExpectedDelegate<string> validationExpectedDelegate,
+            IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFileController fileController,
             IStreamController streamController,
             IBytesHashController bytesHashController,
             IValidationResultController validationResultController,
             IStatusController statusController)
         {
-            this.validationExpectedDelegate = validationExpectedDelegate;
+            this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
             this.bytesHashController = bytesHashController;
@@ -59,7 +60,7 @@ namespace Controllers.Validation
             if (string.IsNullOrEmpty(validationUri))
                 throw new ArgumentNullException("Validation location is invalid");
 
-            fileValidation.ValidationExpected = validationExpectedDelegate.Expected(productFileUri);
+            fileValidation.ValidationExpected = confirmValidationExpectedDelegate.Confirm(productFileUri);
 
             if (!fileValidation.ValidationExpected)
                 return fileValidation;

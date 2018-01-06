@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.Hash;
+using Interfaces.Controllers.Hash;
+
 using Interfaces.Storage;
 
 namespace Controllers.Hash

@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.File;
+using Interfaces.Controllers.Hash;
 
 using Interfaces.Validation;
 using Interfaces.Status;
-using Interfaces.Hash;
 
 namespace GOG.Activities.Validate
 {

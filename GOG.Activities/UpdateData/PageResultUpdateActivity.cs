@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Linq;
 
-using Interfaces.RequestPage;
+using Interfaces.Delegates.RequestPage;
+
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;
@@ -24,7 +25,7 @@ namespace GOG.Activities.UpdateData
         private IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
         private IExtractPageResultsDelegate<PageType, Type> extractPageResultsDelegate;
 
-        private IRequestPageController requestPageController;
+        //private IRequestPageAsyncDelegate requestPageAsyncDelegate;
         private IDataController<Type> dataController;
 
         private ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate;
@@ -33,7 +34,7 @@ namespace GOG.Activities.UpdateData
             Context context,
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IExtractPageResultsDelegate<PageType, Type> extractPageResultsDelegate,
-            IRequestPageController requestPageController,
+            //IRequestPageAsyncDelegate requestPageAsyncDelegate,
             IDataController<Type> dataController,
             IStatusController statusController,
             ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate = null) :
@@ -44,7 +45,7 @@ namespace GOG.Activities.UpdateData
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.extractPageResultsDelegate = extractPageResultsDelegate;
 
-            this.requestPageController = requestPageController;
+            //this.requestPageAsyncDelegate = requestPageAsyncDelegate;
             this.dataController = dataController;
 
             this.selectNewUpdatedDelegate = selectNewUpdatedDelegate;

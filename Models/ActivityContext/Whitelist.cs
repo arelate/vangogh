@@ -10,6 +10,13 @@ namespace Models.ActivityContext
         public static Dictionary<Activity, Context[]> Whitelist = new Dictionary<Activity, Context[]>()
         {
             {
+                Activity.Correct,
+                new Context[]
+                {
+                    Context.Settings
+                }
+            },
+            {
                 Activity.Authorize,
                 new Context[]
                 {
@@ -53,8 +60,7 @@ namespace Models.ActivityContext
                 new Context[]
                 {
                     Context.ProductsFiles,
-                    Context.Data,
-                    Context.Settings
+                    Context.Data
                 }
             },
             {

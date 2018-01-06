@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-using Interfaces.Controllers.Output;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-using Interfaces.Stream;
+
+using Interfaces.Controllers.Output;
+using Interfaces.Controllers.Stream;
 
 namespace Controllers.Presentation
 {

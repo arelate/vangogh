@@ -2,8 +2,8 @@
 using System.IO;
 
 using Interfaces.Controllers.File;
+using Interfaces.Controllers.Stream;
 
-using Interfaces.Stream;
 using Interfaces.Storage;
 
 namespace Controllers.Storage

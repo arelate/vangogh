@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
 using System.Text;
 
+using Interfaces.Controllers.Hash;
+
 using Interfaces.SerializedStorage;
 using Interfaces.Storage;
 using Interfaces.Serialization;
-using Interfaces.Hash;
 using Interfaces.Status;
 
 namespace Controllers.SerializedStorage

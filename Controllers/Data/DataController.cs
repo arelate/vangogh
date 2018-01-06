@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetIndex;
+using Interfaces.Delegates.MoveToRecycleBin;
 
 using Interfaces.Controllers.Data;
 
 using Interfaces.Collection;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-using Interfaces.RecycleBin;
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
 
@@ -28,7 +28,7 @@ namespace Controllers.Data
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
 
-        private IRecycleBinController recycleBinController;
+        private IMoveToRecycleBinDelegate moveToRecycleBinDelegate;
 
         private IStatusController statusController;
 
@@ -39,7 +39,7 @@ namespace Controllers.Data
             ICollectionController collectionController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            IRecycleBinController recycleBinController,
+            IMoveToRecycleBinDelegate moveToRecycleBinDelegate,
             IStatusController statusController)
         {
             this.indexDataController = indexDataController;
@@ -52,7 +52,7 @@ namespace Controllers.Data
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
 
-            this.recycleBinController = recycleBinController;
+            this.moveToRecycleBinDelegate = moveToRecycleBinDelegate;
 
             this.statusController = statusController;
         }
@@ -155,7 +155,7 @@ namespace Controllers.Data
                 async (index, item) =>
                 {
                     if (await indexDataController.ContainsAsync(index, status))
-                        recycleBinController.MoveToRecycleBin(GetItemUri(index));
+                        moveToRecycleBinDelegate.MoveToRecycleBin(GetItemUri(index));
                 },
                 async (indexes) =>
                 {

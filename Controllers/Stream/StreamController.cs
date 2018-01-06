@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-using Interfaces.Stream;
+using Interfaces.Controllers.Stream;
 
 namespace Controllers.Stream
 {

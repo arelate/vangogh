@@ -14,41 +14,41 @@ namespace Models.ActivityContext
             {
                 (Activity.UpdateData, Context.Any),
                 new AC[] {
-                    (Activity.Validate, Context.Settings)
+                    (Activity.Correct, Context.Settings)
                 }
             },
             {
                 (Activity.UpdateDownloads, Context.Any),
                 new AC[] {
-                    (Activity.Validate, Context.Settings)
+                    (Activity.Correct, Context.Settings)
                 }
             },
             {
                 (Activity.Download, Context.Any),
                 new AC[]
                 {
-                    (Activity.Validate, Context.Settings)
+                    (Activity.Correct, Context.Settings)
                 }
             },
             {
                 (Activity.Validate, Context.Any),
                 new AC[]
                 {
-                    (Activity.Validate, Context.Settings)
+                    (Activity.Correct, Context.Settings)
                 }
             },
             {
                 (Activity.Repair, Context.Any),
                 new AC[]
                 {
-                    (Activity.Validate, Context.Settings)
+                    (Activity.Correct, Context.Settings)
                 }
             },
             {
                 (Activity.Cleanup, Context.Any),
                 new AC[]
                 {
-                    (Activity.Validate, Context.Settings)
+                    (Activity.Correct, Context.Settings)
                 }
             },
             {

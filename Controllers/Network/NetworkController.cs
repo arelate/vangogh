@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
 
-using Interfaces.Network;
+using Interfaces.Delegates.Constrain;
+
+using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Cookies;
-using Interfaces.RequestRate;
+
 using Interfaces.Status;
 
 using Models.Network;
@@ -20,16 +22,16 @@ namespace Controllers.Network
         private HttpClient client;
         private ICookiesController cookieController;
         private IUriController uriController;
-        private IRequestRateController requestRateController;
+        private IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate;
 
         public NetworkController(
             ICookiesController cookieController,
             IUriController uriController,
-            IRequestRateController requestRateController)
+            IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate)
         {
             this.cookieController = cookieController;
             this.uriController = uriController;
-            this.requestRateController = requestRateController;
+            this.constrainRequestRateAsyncDelegate = constrainRequestRateAsyncDelegate;
 
             var httpHandler = new HttpClientHandler()
             {
@@ -61,7 +63,7 @@ namespace Controllers.Network
             string uri,
             HttpContent content = null)
         {
-            await requestRateController.EnforceRequestRateAsync(uri, status);
+            await constrainRequestRateAsyncDelegate.ConstrainAsync(uri, status);
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);

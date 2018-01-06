@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.RequestPage;
+using Interfaces.Delegates.GetQueryParameters;
+using Interfaces.Delegates.RequestPage;
+
+using Interfaces.Controllers.Hash;
+
 using Interfaces.Serialization;
 using Interfaces.Status;
-using Interfaces.Hash;
-using Interfaces.QueryParameters;
 using Interfaces.ContextDefinitions;
 
 using Models.Units;
@@ -22,7 +24,7 @@ namespace GOG.Delegates.GetPageResults
         private Context context;
         private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
         private IGetQueryParametersDelegate<Context> getQueryParametersDelegate;
-        private IRequestPageController requestPageController;
+        private IRequestPageAsyncDelegate requestPageAsyncDelegate;
         private IStringHashController stringHashController;
         private IPrecomputedHashController precomputedHashController;
         private ISerializationController<string> serializationController;
@@ -35,7 +37,7 @@ namespace GOG.Delegates.GetPageResults
             Context context,
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
             IGetQueryParametersDelegate<Context> getQueryParametersDelegate,
-            IRequestPageController requestPageController,
+            IRequestPageAsyncDelegate requestPageAsyncDelegate,
             IStringHashController stringHashController,
             IPrecomputedHashController precomputedHashController,
             ISerializationController<string> serializationController,
@@ -45,7 +47,7 @@ namespace GOG.Delegates.GetPageResults
             this.getUpdateUriDelegate = getUpdateUriDelegate;
             this.getQueryParametersDelegate = getQueryParametersDelegate;
 
-            this.requestPageController = requestPageController;
+            this.requestPageAsyncDelegate = requestPageAsyncDelegate;
             this.stringHashController = stringHashController;
             this.precomputedHashController = precomputedHashController;
             this.serializationController = serializationController;
@@ -79,7 +81,7 @@ namespace GOG.Delegates.GetPageResults
 
             do
             {
-                var response = await requestPageController.RequestPageAsync(
+                var response = await requestPageAsyncDelegate.RequestPageAsync(
                     requestUri, 
                     requestParameters, 
                     currentPage,

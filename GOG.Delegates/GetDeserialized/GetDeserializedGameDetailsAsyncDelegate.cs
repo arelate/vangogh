@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Interfaces.Network;
+using Interfaces.Controllers.Network;
+
 using Interfaces.Serialization;
 using Interfaces.Language;
 using Interfaces.Containment;

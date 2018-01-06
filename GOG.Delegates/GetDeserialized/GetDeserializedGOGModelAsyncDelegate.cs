@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Network;
+using Interfaces.Controllers.Network;
+
 using Interfaces.Serialization;
 using Interfaces.Status;
 

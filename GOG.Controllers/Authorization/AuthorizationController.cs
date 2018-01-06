@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Uri;
+using Interfaces.Delegates.Correct;
 
-using Interfaces.Network;
+using Interfaces.Controllers.Uri;
+using Interfaces.Controllers.Network;
+
 using Interfaces.Extraction;
 using Interfaces.Serialization;
-using Interfaces.PropertyValidation;
 using Interfaces.Status;
 
 using Models.Uris;
@@ -26,8 +27,8 @@ namespace GOG.Controllers.Authorization
             "{INSTRUCTIONS}";
         private const string gogData = "gogData";
 
-        private IValidatePropertiesAsyncDelegate<string[]> usernamePasswordValidationDelegate;
-        private IValidatePropertiesAsyncDelegate<string> securityCodeValidationDelegate;
+        private ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate;
+        private ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate;
         private IUriController uriController;
         private INetworkController networkController;
         private ISerializationController<string> serializationController;
@@ -35,16 +36,16 @@ namespace GOG.Controllers.Authorization
         private IStatusController statusController;
 
         public AuthorizationController(
-            IValidatePropertiesAsyncDelegate<string[]> usernamePasswordValidationDelegate,
-            IValidatePropertiesAsyncDelegate<string> securityCodeValidationDelegate,
+            ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
+            ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate,
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
             IDictionary<string, IStringExtractionController> extractionControllers,
             IStatusController statusController)
         {
-            this.usernamePasswordValidationDelegate = usernamePasswordValidationDelegate;
-            this.securityCodeValidationDelegate = securityCodeValidationDelegate;
+            this.correctUsernamePasswordAsyncDelegate = correctUsernamePasswordAsyncDelegate;
+            this.correctSecurityCodeAsyncDelegate = correctSecurityCodeAsyncDelegate;
             this.uriController = uriController;
             this.networkController = networkController;
             this.serializationController = serializationController;
@@ -110,7 +111,8 @@ namespace GOG.Controllers.Authorization
                 loginUri = Uris.Paths.Authentication.LoginCheck;
             }
 
-            var usernamePassword = await usernamePasswordValidationDelegate.ValidatePropertiesAsync(new string[] { username, password });
+            var usernamePassword = await correctUsernamePasswordAsyncDelegate.CorrectAsync(
+                new string[] { username, password });
 
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
@@ -130,7 +132,7 @@ namespace GOG.Controllers.Authorization
             var getTwoStepLoginCheckResponseTask = await statusController.CreateAsync(status, "Get second step authentication result");
 
             // 2FA is enabled for this user - ask for the code
-            var securityCode = await securityCodeValidationDelegate.ValidatePropertiesAsync(null);
+            var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null);
 
             var secondStepAuthenticationToken = extractionControllers[
                 QueryParameters.SecondStepAuthenticationUnderscoreToken].ExtractMultiple(

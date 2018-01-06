@@ -12,6 +12,13 @@ using Delegates.Throttle;
 using Delegates.GetDirectory;
 using Delegates.GetFilename;
 using Delegates.Format;
+using Delegates.Confirm;
+using Delegates.GetETA;
+using Delegates.GetQueryParameters;
+using Delegates.MoveToRecycleBin;
+using Delegates.Correct;
+using Delegates.RequestPage;
+using Delegates.Constrain;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -26,24 +33,17 @@ using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Settings;
-using Controllers.RequestPage;
-using Controllers.RequestRate;
 using Controllers.Cookies;
-using Controllers.PropertyValidation;
 using Controllers.Validation;
 using Controllers.ValidationResult;
 using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Presentation;
-using Controllers.RecycleBin;
 using Controllers.Routing;
 using Controllers.Status;
-using Controllers.StatusRemainingTime;
 using Controllers.Hash;
 using Controllers.Containment;
 using Controllers.Sanitization;
-using Controllers.Expectation;
-using Controllers.QueryParameters;
 using Controllers.Template;
 using Controllers.ViewModel;
 using Controllers.Tree;
@@ -78,7 +78,7 @@ using GOG.Controllers.NewUpdatedSelection;
 using GOG.Controllers.Authorization;
 
 using GOG.Activities.Help;
-using GOG.Activities.ValidateSettings;
+using GOG.Activities.CorrectSettings;
 using GOG.Activities.Authorize;
 using GOG.Activities.UpdateData;
 using GOG.Activities.UpdateDownloads;
@@ -183,10 +183,10 @@ namespace Ghost.Console
                 serializedStorageController,
                 collectionController);
 
-            var getRemainingTimeAtUnitsPerSecondDelegate = new GetRemainingTimeAtUnitsPerSecondDelegate();
+            var getETADelegate = new GetETADelegate();
 
             var statusAppViewModelDelegate = new StatusAppViewModelDelegate(
-                getRemainingTimeAtUnitsPerSecondDelegate,
+                getETADelegate,
                 formatBytesDelegate,
                 formatSecondsDelegate);
 
@@ -211,7 +211,7 @@ namespace Ghost.Console
                 statusController,
                 formatSecondsDelegate);
 
-            var requestRateController = new RequestRateController(
+            var constrainRequestRateAsyncDelegate = new ConstrainRequestRateAsyncDelegate(
                 throttleAsyncDelegate,
                 collectionController,
                 statusController,
@@ -236,7 +236,7 @@ namespace Ghost.Console
             var networkController = new NetworkController(
                 cookiesController,
                 uriController,
-                requestRateController);
+                constrainRequestRateAsyncDelegate);
 
             var fileDownloadController = new FileDownloadController(
                 networkController,
@@ -244,7 +244,7 @@ namespace Ghost.Console
                 fileController,
                 statusController);
 
-            var requestPageController = new RequestPageController(
+            var requestPageAsyncDelegate = new RequestPageAsyncDelegate(
                 networkController);
 
             var languageController = new LanguageController();
@@ -285,15 +285,15 @@ namespace Ghost.Console
                 serializedStorageController,
                 statusController);
 
-            var downloadsLanguagesValidationDelegate = new DownloadsLanguagesValidationDelegate(languageController);
-            var downloadsOperatingSystemsValidationDelegate = new DownloadsOperatingSystemsValidationDelegate();
-            var directoriesValidationDelegate = new DirectoriesValidationDelegate();
+            var correctDownloadsLanguagesAsyncDelegate = new CorrectDownloadsLanguagesAsyncDelegate(languageController);
+            var correctDownloadsOperatingSystemsAsyncDelegate = new CorrectDownloadsOperatingSystemsAsyncDelegate();
+            var correctSettingsDirectoriesAsyncDelegate = new CorrectSettingsDirectoriesAsyncDelegate();
 
-            var validateSettingsActivity = new ValidateSettingsActivity(
+            var correctSettingsActivity = new CorrectSettingsActivity(
                 settingsController,
-                downloadsLanguagesValidationDelegate,
-                downloadsOperatingSystemsValidationDelegate,
-                directoriesValidationDelegate,
+                correctDownloadsLanguagesAsyncDelegate,
+                correctDownloadsOperatingSystemsAsyncDelegate,
+                correctSettingsDirectoriesAsyncDelegate,
                 statusController);
 
             var dataDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Data, settingsController);
@@ -411,7 +411,7 @@ namespace Ghost.Console
 
             // data controllers
 
-            var recycleBinController = new RecycleBinController(
+            var moveToRecycleBinDelegate = new MoveToRecycleBinDelegate(
                 recycleBinDirectoryDelegate,
                 fileController,
                 directoryController);
@@ -423,7 +423,7 @@ namespace Ghost.Console
                 collectionController,
                 productsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
@@ -433,7 +433,7 @@ namespace Ghost.Console
                 collectionController,
                 accountProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
@@ -443,7 +443,7 @@ namespace Ghost.Console
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var gameProductDataController = new DataController<GameProductData>(
@@ -453,7 +453,7 @@ namespace Ghost.Console
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
@@ -463,7 +463,7 @@ namespace Ghost.Console
                 collectionController,
                 apiProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
@@ -473,7 +473,7 @@ namespace Ghost.Console
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
@@ -483,7 +483,7 @@ namespace Ghost.Console
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var productRoutesDataController = new DataController<ProductRoutes>(
@@ -493,7 +493,7 @@ namespace Ghost.Console
                 collectionController,
                 productRoutesDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             var validationResultsDataController = new DataController<ValidationResult>(
@@ -503,7 +503,7 @@ namespace Ghost.Console
                 collectionController,
                 validationResultsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 statusController);
 
             #endregion
@@ -512,8 +512,10 @@ namespace Ghost.Console
 
             #region Authorize
 
-            var usernamePasswordValidationDelegate = new UsernamePasswordValidationDelegate(consoleInputOutputController);
-            var securityCodeValidationDelegate = new SecurityCodeValidationDelegate(consoleInputOutputController);
+            var correctUsernamePasswordAsyncDelegate = new CorrectUsernamePasswordAsyncDelegate(
+                consoleInputOutputController);
+            var correctSecurityCodeAsyncDelegate = new CorrectSecurityCodeAsyncDelegate(
+                consoleInputOutputController);
 
             var authorizationExtractionControllers = new Dictionary<string, IStringExtractionController>()
             {
@@ -528,8 +530,8 @@ namespace Ghost.Console
             };
 
             var authorizationController = new AuthorizationController(
-                usernamePasswordValidationDelegate,
-                securityCodeValidationDelegate,
+                correctUsernamePasswordAsyncDelegate,
+                correctSecurityCodeAsyncDelegate,
                 uriController,
                 networkController,
                 serializationController,
@@ -546,13 +548,13 @@ namespace Ghost.Console
             #region Update.PageResults
 
             var getProductUpdateUriByContextDelegate = new GetProductUpdateUriByContextDelegate();
-            var productParameterGetQueryParametersDelegate = new ProductParameterGetQueryParametersDelegate();
+            var getQueryParametersForProductContextDelegate = new GetQueryParametersForProductContextDelegate();
 
             var getProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<ProductsPageResult>(
                 Context.Products,
                 getProductUpdateUriByContextDelegate,
-                productParameterGetQueryParametersDelegate,
-                requestPageController,
+                getQueryParametersForProductContextDelegate,
+                requestPageAsyncDelegate,
                 stringMd5Controller,
                 precomputedHashController,
                 serializationController,
@@ -564,15 +566,15 @@ namespace Ghost.Console
                     Context.Products,
                     getProductsPageResultsAsyncDelegate,
                     extractProductsDelegate,
-                    requestPageController,
+                    //requestPageAsyncDelegate,
                     productsDataController,
                     statusController);
 
             var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
                 Context.AccountProducts,
                 getProductUpdateUriByContextDelegate,
-                productParameterGetQueryParametersDelegate,
-                requestPageController,
+                getQueryParametersForProductContextDelegate,
+                requestPageAsyncDelegate,
                 stringMd5Controller,
                 precomputedHashController,
                 serializationController,
@@ -590,7 +592,7 @@ namespace Ghost.Console
                     Context.AccountProducts,
                     getAccountProductsPageResultsAsyncDelegate,
                     extractAccountProductsDelegate,
-                    requestPageController,
+                    //requestPageAsyncDelegate,
                     accountProductsDataController,
                     statusController,
                     selectNewUpdatedDelegate);
@@ -846,7 +848,7 @@ namespace Ghost.Console
 
             var uriSansSessionExtractionController = new UriSansSessionExtractionController();
 
-            var validationExpectedDelegate = new ValidationExpectedDelegate();
+            var confirmValidationExpectedDelegate = new ConfirmValidationExpectedDelegate();
 
             var formatValidationUriDelegate = new FormatValidationUriDelegate(
                 getValidationFilenameDelegate,
@@ -858,7 +860,7 @@ namespace Ghost.Console
 
             var downloadValidationFileAsyncDelegate = new DownloadValidationFileAsyncDelegate(
                 uriSansSessionExtractionController,
-                validationExpectedDelegate,
+                confirmValidationExpectedDelegate,
                 validationFileEnumerateDelegate,
                 validationDirectoryDelegate,
                 formatValidationUriDelegate,
@@ -915,7 +917,7 @@ namespace Ghost.Console
                 statusController);
 
             var productFileValidationController = new FileValidationController(
-                validationExpectedDelegate,
+                confirmValidationExpectedDelegate,
                 fileController,
                 streamController,
                 bytesMd5Controller,
@@ -969,7 +971,7 @@ namespace Ghost.Console
                 productFilesDirectoriesEnumerateAllDelegate, // actual items (directories in productFiles)
                 directoryFilesEnumerateDelegate, // detailed items (files in directory)
                 validationFileEnumerateDelegate, // supplementary items (validation files)
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 directoryController,
                 statusController);
 
@@ -994,7 +996,7 @@ namespace Ghost.Console
                 enumerateAllUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
                 passthroughEnumerateDelegate, // detailed items (passthrough)
                 validationFileEnumerateDelegate, // supplementary items (validation files)
-                recycleBinController,
+                moveToRecycleBinDelegate,
                 directoryController,
                 statusController);
 
@@ -1056,7 +1058,7 @@ namespace Ghost.Console
 
             var activityContextToActivityControllerMap = new Dictionary<(Activity, Context), IActivity>()
             {
-                { (Activity.Validate, Context.Settings), validateSettingsActivity },
+                { (Activity.Correct, Context.Settings), correctSettingsActivity },
                 { (Activity.Authorize, Context.None), authorizeActivity },
                 { (Activity.UpdateData, Context.Products), productsUpdateActivity },
                 { (Activity.UpdateData, Context.AccountProducts), accountProductsUpdateActivity },

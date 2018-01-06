@@ -5,10 +5,10 @@ using System.IO;
 using System.Net.Http;
 
 using Interfaces.Controllers.File;
+using Interfaces.Controllers.Stream;
+using Interfaces.Controllers.Network;
 
 using Interfaces.FileDownload;
-using Interfaces.Network;
-using Interfaces.Stream;
 using Interfaces.Status;
 
 using Models.Units;

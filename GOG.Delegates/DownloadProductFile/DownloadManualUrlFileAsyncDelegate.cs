@@ -5,11 +5,12 @@ using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Interfaces.Controllers.Network;
+
 using Interfaces.FileDownload;
 using Interfaces.Extraction;
 using Interfaces.Routing;
 using Interfaces.Status;
-using Interfaces.Network;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 

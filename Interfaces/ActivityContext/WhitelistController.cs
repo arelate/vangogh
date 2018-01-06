@@ -2,6 +2,7 @@
 
 namespace Interfaces.ActivityContext
 {
+    // TODO: convert to Confirm delegate
     public interface IIsWhitelistedDelegate
     {
         bool IsWhitelisted(AC activityContext);

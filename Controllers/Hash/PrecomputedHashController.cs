@@ -3,8 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Hash;
+using Interfaces.Controllers.Hash;
 using Interfaces.Controllers.Data;
+
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Serialization;
 using Interfaces.Storage;

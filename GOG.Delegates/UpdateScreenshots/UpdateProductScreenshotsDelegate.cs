@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Network;
+using Interfaces.Controllers.Network;
+
 using Interfaces.Extraction;
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;

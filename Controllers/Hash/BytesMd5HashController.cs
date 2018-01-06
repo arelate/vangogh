@@ -2,7 +2,7 @@
 
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Hash;
+using Interfaces.Controllers.Hash;
 
 namespace Controllers.Hash
 {

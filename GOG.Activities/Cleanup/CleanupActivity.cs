@@ -3,11 +3,12 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.MoveToRecycleBin;
+
 using Interfaces.Controllers.Directory;
 
 using Interfaces.Status;
 using Interfaces.Enumeration;
-using Interfaces.RecycleBin;
 using Interfaces.ContextDefinitions;
 
 namespace GOG.Activities.Cleanup
@@ -19,7 +20,7 @@ namespace GOG.Activities.Cleanup
         private IEnumerateAllAsyncDelegate<string> actualItemsEnumerateDelegate;
         private IEnumerateDelegate<string> itemsDetailsEnumerateDelegate;
         private IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate;
-        private IRecycleBinController recycleBinController;
+        private IMoveToRecycleBinDelegate moveToRecycleBinDelegate;
         private IDirectoryController directoryController;
 
         public CleanupActivity(
@@ -28,7 +29,7 @@ namespace GOG.Activities.Cleanup
             IEnumerateAllAsyncDelegate<string> actualItemsEnumerateDelegate,
             IEnumerateDelegate<string> itemsDetailsEnumerateDelegate,
             IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate,
-            IRecycleBinController recycleBinController,
+            IMoveToRecycleBinDelegate moveToRecycleBinDelegate,
             IDirectoryController directoryController,
             IStatusController statusController) :
             base(statusController)
@@ -38,7 +39,7 @@ namespace GOG.Activities.Cleanup
             this.actualItemsEnumerateDelegate = actualItemsEnumerateDelegate;
             this.itemsDetailsEnumerateDelegate = itemsDetailsEnumerateDelegate;
             this.supplementaryItemsEnumerateDelegate = supplementaryItemsEnumerateDelegate;
-            this.recycleBinController = recycleBinController;
+            this.moveToRecycleBinDelegate = moveToRecycleBinDelegate;
             this.directoryController = directoryController;
         }
 
@@ -70,7 +71,7 @@ namespace GOG.Activities.Cleanup
                     cleanupItems.Count,
                     item);
 
-                recycleBinController.MoveToRecycleBin(item);
+                moveToRecycleBinDelegate.MoveToRecycleBin(item);
             }
 
             // check if any of the directories are left empty and delete

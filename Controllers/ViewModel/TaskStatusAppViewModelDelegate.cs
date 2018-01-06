@@ -3,10 +3,10 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Delegates.Format;
+using Interfaces.Delegates.GetETA;
 
 using Interfaces.ViewModel;
 using Interfaces.Status;
-using Interfaces.StatusRemainingTime;
 
 using Models.Units;
 
@@ -31,16 +31,16 @@ namespace Controllers.ViewModel
             public const string WarningsCount = "warningsCount";
         }
 
-        private IGetRemainingTimeAtUnitsPerSecondDelegate getRemainingTimeAtUnitsPerSecondDelegate;
+        private IGetETADelegate getETADelegate;
         private IFormatDelegate<long, string> formatBytesDelegate;
         private IFormatDelegate<long, string> formatSecondsDelegate;
 
         public StatusAppViewModelDelegate(
-            IGetRemainingTimeAtUnitsPerSecondDelegate getRemainingTimeAtUnitsPerSecondDelegate,
+            IGetETADelegate getETADelegate,
             IFormatDelegate<long, string> formatBytesDelegate,
             IFormatDelegate<long, string> formatSecondsDelegate)
         {
-            this.getRemainingTimeAtUnitsPerSecondDelegate = getRemainingTimeAtUnitsPerSecondDelegate;
+            this.getETADelegate = getETADelegate;
             this.formatBytesDelegate = formatBytesDelegate;
             this.formatSecondsDelegate = formatSecondsDelegate;
         }
@@ -88,10 +88,10 @@ namespace Controllers.ViewModel
                     currentFormatted = formatBytesDelegate.Format(current);
                     totalFormatted = formatBytesDelegate.Format(total);
 
-                    var remainingTimeAtSpeed = getRemainingTimeAtUnitsPerSecondDelegate.GetRemainingTimeAtUnitsPerSecond(status);
+                    var estimatedTimeAvailable = getETADelegate.GetETA(status);
 
-                    var remainingTime = formatSecondsDelegate.Format(remainingTimeAtSpeed.Item1);
-                    var speed = formatBytesDelegate.Format((long)remainingTimeAtSpeed.Item2);
+                    var remainingTime = formatSecondsDelegate.Format(estimatedTimeAvailable.Item1);
+                    var speed = formatBytesDelegate.Format((long)estimatedTimeAvailable.Item2);
 
                     viewModel[StatusAppViewModelSchema.RemainingTime] = remainingTime;
                     viewModel[StatusAppViewModelSchema.AverageUnitsPerSecond] = speed;

@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Interfaces.Network;
+using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Data;
+
 using Interfaces.Status;
 
 using Models.Uris;

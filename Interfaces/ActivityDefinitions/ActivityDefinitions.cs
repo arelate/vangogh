@@ -2,6 +2,7 @@
 {
     public enum Activity
     {
+        Correct,
         Authorize,
         UpdateData,
         UpdateDownloads,
