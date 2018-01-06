@@ -57,7 +57,7 @@ namespace GOG.Controllers.Authorization
         {
             var getUserDataTask = await statusController.CreateAsync(status, "Get userData.json");
 
-            var userDataString = await networkController.GetAsync(getUserDataTask, Uris.Paths.Authentication.UserData);
+            var userDataString = await networkController.GetResourceAsync(getUserDataTask, Uris.Paths.Authentication.UserData);
             if (string.IsNullOrEmpty(userDataString)) return false;
 
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
@@ -72,7 +72,7 @@ namespace GOG.Controllers.Authorization
             var getAuthenticationTokenResponseTask = await statusController.CreateAsync(status, "Get authorization token response");
 
             // request authorization token
-            var authResponse = await networkController.GetAsync(
+            var authResponse = await networkController.GetResourceAsync(
                 status,
                 Uris.Paths.Authentication.Auth,
                 QueryParametersCollections.Authenticate);
@@ -120,7 +120,7 @@ namespace GOG.Controllers.Authorization
 
             string loginData = uriController.ConcatenateQueryParameters(QueryParametersCollections.LoginAuthenticate);
 
-            var loginCheckResult = await networkController.PostAsync(getLoginCheckResponseTask, loginUri, null, loginData);
+            var loginCheckResult = await networkController.PostDataToResourceAsync(getLoginCheckResponseTask, loginUri, null, loginData);
 
             await statusController.CompleteAsync(getLoginCheckResponseTask);
 
@@ -151,7 +151,7 @@ namespace GOG.Controllers.Authorization
 
             string secondStepData = uriController.ConcatenateQueryParameters(QueryParametersCollections.SecondStepAuthentication);
 
-            var secondStepLoginCheckResult = await networkController.PostAsync(status, Uris.Paths.Authentication.TwoStep, null, secondStepData);
+            var secondStepLoginCheckResult = await networkController.PostDataToResourceAsync(status, Uris.Paths.Authentication.TwoStep, null, secondStepData);
 
             await statusController.CompleteAsync(getTwoStepLoginCheckResponseTask);
 

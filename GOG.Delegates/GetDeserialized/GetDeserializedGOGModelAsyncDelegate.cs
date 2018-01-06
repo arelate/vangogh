@@ -15,20 +15,20 @@ namespace GOG.Delegates.GetDeserialized
     public class GetDeserializedGOGModelAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
         where T : ProductCore
     {
-        private IGetAsyncDelegate getDelegate;
+        private IGetResourceAsyncDelegate getResourceAsyncDelegate;
         private ISerializationController<string> serializationController;
 
         public GetDeserializedGOGModelAsyncDelegate(
-            IGetAsyncDelegate getDelegate,
+            IGetResourceAsyncDelegate getResourceAsyncDelegate,
             ISerializationController<string> serializationController)
         {
-            this.getDelegate = getDelegate;
+            this.getResourceAsyncDelegate = getResourceAsyncDelegate;
             this.serializationController = serializationController;
         }
 
         public async Task<T> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await getDelegate.GetAsync(status, uri, parameters);
+            var response = await getResourceAsyncDelegate.GetResourceAsync(status, uri, parameters);
 
             if (response == null) return default(T);
 

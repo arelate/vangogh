@@ -14,23 +14,23 @@ namespace GOG.Delegates.GetDeserialized
 {
     public class GetDeserializedGOGDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
     {
-        private IGetAsyncDelegate getDelegate;
+        private IGetResourceAsyncDelegate getResourceAsyncDelegate;
         private IStringExtractionController gogDataExtractionController;
         private ISerializationController<string> serializationController;
 
         public GetDeserializedGOGDataAsyncDelegate(
-            IGetAsyncDelegate getDelegate,
+            IGetResourceAsyncDelegate getResourceAsyncDelegate,
             IStringExtractionController gogDataExtractionController,
             ISerializationController<string> serializationController)
         {
-            this.getDelegate = getDelegate;
+            this.getResourceAsyncDelegate = getResourceAsyncDelegate;
             this.gogDataExtractionController = gogDataExtractionController;
             this.serializationController = serializationController;
         }
 
         public async Task<T> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await getDelegate.GetAsync(status, uri, parameters);
+            var response = await getResourceAsyncDelegate.GetResourceAsync(status, uri, parameters);
 
             var dataCollection = gogDataExtractionController.ExtractMultiple(response);
 

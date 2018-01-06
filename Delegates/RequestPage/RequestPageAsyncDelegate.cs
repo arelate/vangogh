@@ -32,7 +32,7 @@ namespace Delegates.RequestPage
 
             parameters[pageQueryParameter] = page.ToString();
 
-            var pageResponse = await networkController.GetAsync(status, uri, parameters);
+            var pageResponse = await networkController.GetResourceAsync(status, uri, parameters);
 
             return pageResponse;
         }

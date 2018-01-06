@@ -12,6 +12,7 @@ using GOG.Models;
 
 namespace GOG.Delegates.Extract
 {
+    // TODO: untangle this single instance of triple type ExtractMultiple
     public class ExtractOperatingSystemsDownloadsDelegate: 
         IExtractMultipleDelegate<IEnumerable<string>, OperatingSystemsDownloads[][], OperatingSystemsDownloads>
     {

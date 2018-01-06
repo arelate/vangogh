@@ -42,7 +42,7 @@ namespace Controllers.Network
             client.DefaultRequestHeaders.Add(Headers.UserAgent, HeaderDefaultValues.UserAgent);
         }
 
-        public async Task<string> GetAsync(
+        public async Task<string> GetResourceAsync(
             IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null)
@@ -80,7 +80,7 @@ namespace Controllers.Network
             return response;
         }
 
-        public async Task<string> PostAsync(
+        public async Task<string> PostDataToResourceAsync(
             IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null,

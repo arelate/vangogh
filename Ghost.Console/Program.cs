@@ -42,7 +42,6 @@ using Controllers.Presentation;
 using Controllers.Routing;
 using Controllers.Status;
 using Controllers.Hash;
-using Controllers.Containment;
 using Controllers.Sanitization;
 using Controllers.Template;
 using Controllers.ViewModel;
@@ -681,7 +680,7 @@ namespace Ghost.Console
                 networkController,
                 serializationController);
 
-            var languageDownloadsContainmentController = new StringContainmentController(
+            var confirmStringContainsLanguageDownloadsDelegate = new ConfirmStringMatchesAllDelegate(
                 collectionController,
                 Models.Separators.Separators.GameDetailsDownloadsStart,
                 Models.Separators.Separators.GameDetailsDownloadsEnd);
@@ -699,7 +698,7 @@ namespace Ghost.Console
                 networkController,
                 serializationController,
                 languageController,
-                languageDownloadsContainmentController,
+                confirmStringContainsLanguageDownloadsDelegate,
                 gameDetailsLanguagesExtractionController,
                 gameDetailsDownloadsExtractionController,
                 sanitizationController,

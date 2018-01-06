@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Confirm;
+
 using Interfaces.Controllers.Network;
 
 using Interfaces.Serialization;
 using Interfaces.Language;
-using Interfaces.Containment;
 using Interfaces.Extraction;
 using Interfaces.Sanitization;
 using Interfaces.Status;
@@ -20,11 +21,11 @@ namespace GOG.Delegates.GetDeserialized
 {
     public class GetDeserializedGameDetailsAsyncDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {
-        private IGetAsyncDelegate getDelegate;
+        private IGetResourceAsyncDelegate getResourceAsyncDelegate;
         private ISerializationController<string> serializationController;
         private ILanguageController languageController;
 
-        private IContainmentController<string> languageDownloadsContainmentController;
+        private IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
         private IStringExtractionController languagesExtractionController;
         private IStringExtractionController downloadsExtractionController;
         private ISanitizationController sanitizationController;
@@ -36,20 +37,20 @@ namespace GOG.Delegates.GetDeserialized
             operatingSystemsDownloadsExtractionController;
 
         public GetDeserializedGameDetailsAsyncDelegate(
-            IGetAsyncDelegate getDelegate,
+            IGetResourceAsyncDelegate getResourceAsyncDelegate,
             ISerializationController<string> serializationController,
             ILanguageController languageController,
-            IContainmentController<string> languageDownloadsContainmentController,
+            IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate,
             IStringExtractionController languagesExtractionController,
             IStringExtractionController downloadsExtractionController,
             ISanitizationController sanitizationController,
             IExtractMultipleDelegate<IEnumerable<string>, OperatingSystemsDownloads[][], OperatingSystemsDownloads> operatingSystemsDownloadsExtractionController)
         {
-            this.getDelegate = getDelegate;
+            this.getResourceAsyncDelegate = getResourceAsyncDelegate;
             this.serializationController = serializationController;
             this.languageController = languageController;
 
-            this.languageDownloadsContainmentController = languageDownloadsContainmentController;
+            this.confirmStringContainsLanguageDownloadsDelegate = confirmStringContainsLanguageDownloadsDelegate;
             this.languagesExtractionController = languagesExtractionController;
             this.downloadsExtractionController = downloadsExtractionController;
             this.sanitizationController = sanitizationController;
@@ -72,7 +73,7 @@ namespace GOG.Delegates.GetDeserialized
             // - deserialize downloads into OperatingSystemsDownloads collection
             // - assign languages, since we know we should have as many downloads array as languages
 
-            var data = await getDelegate.GetAsync(status, uri, parameters);
+            var data = await getResourceAsyncDelegate.GetResourceAsync(status, uri, parameters);
             var gameDetails = serializationController.Deserialize<GameDetails>(data);
 
             if (gameDetails == null) return null;
@@ -82,7 +83,7 @@ namespace GOG.Delegates.GetDeserialized
 
             var nullString = "null";
 
-            while (languageDownloadsContainmentController.Contained(data))
+            while (confirmStringContainsLanguageDownloadsDelegate.Confirm(data))
             {
                 var extractedDownloadStrings = downloadsExtractionController.ExtractMultiple(data);
                 var downloadString = extractedDownloadStrings.Single();
