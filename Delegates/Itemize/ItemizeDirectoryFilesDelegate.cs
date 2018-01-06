@@ -2,21 +2,21 @@
 
 using Interfaces.Controllers.Directory;
 
-using Interfaces.Enumeration;
+using Interfaces.Delegates.Itemize;
 
-namespace Controllers.Enumeration
+namespace Delegates.Itemize
 {
-    public class DirectoryFilesEnumerateDelegate : IEnumerateDelegate<string>
+    public class ItemizeDirectoryFilesDelegate : IItemizeDelegate<string, string>
     {
         private IDirectoryController directoryController;
 
-        public DirectoryFilesEnumerateDelegate(
+        public ItemizeDirectoryFilesDelegate(
             IDirectoryController directoryController)
         {
             this.directoryController = directoryController;
         }
 
-        public IEnumerable<string> Enumerate(string directory)
+        public IEnumerable<string> Itemize(string directory)
         {
             return directoryController.EnumerateFiles(directory);
         }

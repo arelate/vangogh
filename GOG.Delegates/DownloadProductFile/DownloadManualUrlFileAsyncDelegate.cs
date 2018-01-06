@@ -5,6 +5,8 @@ using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Format;
+
 using Interfaces.Controllers.Network;
 
 using Interfaces.FileDownload;
@@ -19,7 +21,7 @@ namespace GOG.Delegates.DownloadFileFromSource
     public class DownloadManualUrlFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
         private INetworkController networkController;
-        private IStringExtractionController uriSansSessionExtractionController;
+        private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private IRoutingController routingController;
         private IFileDownloadController fileDownloadController;
         private IStatusController statusController;
@@ -27,14 +29,14 @@ namespace GOG.Delegates.DownloadFileFromSource
 
         public DownloadManualUrlFileAsyncDelegate(
             INetworkController networkController,
-            IStringExtractionController uriSansSessionExtractionController,
+            IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IRoutingController routingController,
             IFileDownloadController fileDownloadController,
             IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
             IStatusController statusController)
         {
             this.networkController = networkController;
-            this.uriSansSessionExtractionController = uriSansSessionExtractionController;
+            this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.routingController = routingController;
             this.fileDownloadController = fileDownloadController;
             this.downloadValidationFileAsyncDelegate = downloadValidationFileAsyncDelegate;
@@ -70,7 +72,7 @@ namespace GOG.Delegates.DownloadFileFromSource
                 // Storing this key is pointless - it expries after some time and needs to be updated.
                 // So here we filter our this session key and store direct file Uri
 
-                var uriSansSession = uriSansSessionExtractionController.ExtractMultiple(resolvedUri).Single();
+                var uriSansSession = formatUriRemoveSessionDelegate.Format(resolvedUri);
 
                 await routingController.UpdateRouteAsync(
                     id,

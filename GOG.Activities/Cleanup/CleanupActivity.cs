@@ -4,11 +4,12 @@ using System.IO;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.MoveToRecycleBin;
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Directory;
 
 using Interfaces.Status;
-using Interfaces.Enumeration;
 using Interfaces.ContextDefinitions;
 
 namespace GOG.Activities.Cleanup
@@ -16,29 +17,29 @@ namespace GOG.Activities.Cleanup
     public class CleanupActivity : Activity
     {
         private Context context;
-        private IEnumerateAllAsyncDelegate<string> expectedItemsEnumarateDelegate;
-        private IEnumerateAllAsyncDelegate<string> actualItemsEnumerateDelegate;
-        private IEnumerateDelegate<string> itemsDetailsEnumerateDelegate;
-        private IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate;
+        private IItemizeMultipleAsyncDelegate<string> itemizeMultipleExpectedItemsAsyncDelegate;
+        private IItemizeMultipleAsyncDelegate<string> itemizeMultipleActualItemsAsyncDelegate;
+        private IItemizeDelegate<string, string> itemizeDetailsDelegate;
+        private IFormatDelegate<string, string> formatSupplementaryItemDelegate;
         private IMoveToRecycleBinDelegate moveToRecycleBinDelegate;
         private IDirectoryController directoryController;
 
         public CleanupActivity(
             Context context,
-            IEnumerateAllAsyncDelegate<string> expectedItemsEnumarateDelegate,
-            IEnumerateAllAsyncDelegate<string> actualItemsEnumerateDelegate,
-            IEnumerateDelegate<string> itemsDetailsEnumerateDelegate,
-            IEnumerateDelegate<string> supplementaryItemsEnumerateDelegate,
+            IItemizeMultipleAsyncDelegate<string> itemizeMultipleExpectedItemsAsyncDelegate,
+            IItemizeMultipleAsyncDelegate<string> itemizeMultipleActualItemsAsyncDelegate,
+            IItemizeDelegate<string, string> itemizeDetailsDelegate,
+            IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IMoveToRecycleBinDelegate moveToRecycleBinDelegate,
             IDirectoryController directoryController,
             IStatusController statusController) :
             base(statusController)
         {
             this.context = context;
-            this.expectedItemsEnumarateDelegate = expectedItemsEnumarateDelegate;
-            this.actualItemsEnumerateDelegate = actualItemsEnumerateDelegate;
-            this.itemsDetailsEnumerateDelegate = itemsDetailsEnumerateDelegate;
-            this.supplementaryItemsEnumerateDelegate = supplementaryItemsEnumerateDelegate;
+            this.itemizeMultipleExpectedItemsAsyncDelegate = itemizeMultipleExpectedItemsAsyncDelegate;
+            this.itemizeMultipleActualItemsAsyncDelegate = itemizeMultipleActualItemsAsyncDelegate;
+            this.itemizeDetailsDelegate = itemizeDetailsDelegate;
+            this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
             this.moveToRecycleBinDelegate = moveToRecycleBinDelegate;
             this.directoryController = directoryController;
         }
@@ -47,17 +48,17 @@ namespace GOG.Activities.Cleanup
         {
             var cleanupTask = await statusController.CreateAsync(status, $"Cleanup {context}");
 
-            var expectedItems = await expectedItemsEnumarateDelegate.EnumerateAllAsync(status);
-            var actualItems = await actualItemsEnumerateDelegate.EnumerateAllAsync(status);
+            var expectedItems = await itemizeMultipleExpectedItemsAsyncDelegate.ItemizeMulitpleAsync(status);
+            var actualItems = await itemizeMultipleActualItemsAsyncDelegate.ItemizeMulitpleAsync(status);
 
             var unexpectedItems = actualItems.Except(expectedItems);
             var cleanupItems = new List<string>();
 
             foreach (var unexpectedItem in unexpectedItems)
-                foreach (var detailedItem in itemsDetailsEnumerateDelegate.Enumerate(unexpectedItem))
+                foreach (var detailedItem in itemizeDetailsDelegate.Itemize(unexpectedItem))
                 {
                     cleanupItems.Add(detailedItem);
-                    cleanupItems.AddRange(supplementaryItemsEnumerateDelegate.Enumerate(detailedItem));
+                    cleanupItems.Add(formatSupplementaryItemDelegate.Format(detailedItem));
                 }
 
             var moveToRecycleBinTask = await statusController.CreateAsync(status, "Move unexpected items to recycle bin");

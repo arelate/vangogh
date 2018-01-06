@@ -4,11 +4,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Validation;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Format;
+
 using Interfaces.Controllers.Data;
-using Interfaces.Enumeration;
+
+using Interfaces.Validation;
 using Interfaces.Routing;
 using Interfaces.Status;
 using Interfaces.ValidationResult;
@@ -23,22 +26,22 @@ namespace GOG.Activities.Validate
     {
         private IGetDirectoryDelegate productFileDirectoryDelegate;
         private IGetFilenameDelegate productFileFilenameDelegate;
-        private IEnumerateDelegate<string> validationFileEnumerateDelegate;
+        private IFormatDelegate<string, string> formatValidationFileDelegate;
         private IFileValidationController fileValidationController;
         private IDataController<ValidationResult> validationResultsDataController;
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateAsyncDelegate<GameDetails> manualUrlsEnumerationController;
+        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
         private IEnumerateIdsAsyncDelegate productEnumerateDelegate;
         private IRoutingController routingController;
 
         public ValidateProductFilesActivity(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
-            IEnumerateDelegate<string> validationFileEnumerateDelegate,
+            IFormatDelegate<string, string> formatValidationFileDelegate,
             IFileValidationController fileValidationController,
             IDataController<ValidationResult> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateAsyncDelegate<GameDetails> manualUrlsEnumerationController,
+            IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IEnumerateIdsAsyncDelegate productEnumerateDelegate,
             IRoutingController routingController,
             IStatusController statusController) :
@@ -46,11 +49,11 @@ namespace GOG.Activities.Validate
         {
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
             this.productFileFilenameDelegate = productFileFilenameDelegate;
-            this.validationFileEnumerateDelegate = validationFileEnumerateDelegate;
+            this.formatValidationFileDelegate = formatValidationFileDelegate;
             this.fileValidationController = fileValidationController;
             this.validationResultsDataController = validationResultsDataController;
             this.gameDetailsDataController = gameDetailsDataController;
-            this.manualUrlsEnumerationController = manualUrlsEnumerationController;
+            this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
 
             this.productEnumerateDelegate = productEnumerateDelegate;
             this.routingController = routingController;
@@ -85,7 +88,8 @@ namespace GOG.Activities.Validate
                 var localFiles = new List<string>();
 
                 var getLocalFilesTask = await statusController.CreateAsync(validateProductsStatus, "Enumerate local product files");
-                foreach (var manualUrl in await manualUrlsEnumerationController.EnumerateAsync(gameDetails, getLocalFilesTask))
+                foreach (var manualUrl in 
+                    await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails, getLocalFilesTask))
                 {
                     var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl, getLocalFilesTask);
 
@@ -119,7 +123,7 @@ namespace GOG.Activities.Validate
                         localFiles.Count,
                         localFile);
 
-                    var validationFile = validationFileEnumerateDelegate.Enumerate(localFile).Single();
+                    var validationFile = formatValidationFileDelegate.Format(localFile);
 
                     try
                     {
@@ -139,7 +143,10 @@ namespace GOG.Activities.Validate
 
                 validationResults.Files = fileValidationResults.ToArray();
 
-                var updateValidationResultsTask = await statusController.CreateAsync(validateProductsStatus, "Update validation results");
+                var updateValidationResultsTask = await statusController.CreateAsync(
+                    validateProductsStatus, 
+                    "Update validation results");
+
                 await validationResultsDataController.UpdateAsync(validateProductsStatus, validationResults);
                 await statusController.CompleteAsync(updateValidationResultsTask);
             }

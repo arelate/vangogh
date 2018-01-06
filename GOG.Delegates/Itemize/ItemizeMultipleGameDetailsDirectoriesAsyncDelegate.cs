@@ -2,31 +2,33 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using Interfaces.Enumeration;
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Data;
+
 using Interfaces.Status;
 
 using GOG.Models;
 
-namespace GOG.Delegates.EnumerateAll
+namespace GOG.Delegates.Itemize
 {
-    public class EnumerateAllGameDetailsDirectoriesAsyncDelegate : IEnumerateAllAsyncDelegate<string>
+    public class ItemizeMultipleGameDetailsDirectoriesAsyncDelegate : IItemizeMultipleAsyncDelegate<string>
     {
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
+        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
         private IStatusController statusController;
 
-        public EnumerateAllGameDetailsDirectoriesAsyncDelegate(
+        public ItemizeMultipleGameDetailsDirectoriesAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
+            IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
             IStatusController statusController)
         {
             this.gameDetailsDataController = gameDetailsDataController;
-            this.gameDetailsDirectoryEnumerateDelegate = gameDetailsDirectoryEnumerateDelegate;
+            this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> EnumerateAllAsync(IStatus status)
+        public async Task<IEnumerable<string>> ItemizeMulitpleAsync(IStatus status)
         {
             var enumerateGameDetailsDirectoriesTask = await statusController.CreateAsync(status, "Enumerate gameDetails directories");
             var directories = new List<string>();
@@ -45,7 +47,7 @@ namespace GOG.Delegates.EnumerateAll
                     gameDetails.Title);
 
                 directories.AddRange(
-                    await gameDetailsDirectoryEnumerateDelegate.EnumerateAsync(
+                    await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
                         gameDetails, 
                         enumerateGameDetailsDirectoriesTask));
             }

@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using Interfaces.Enumeration;
+using Interfaces.Delegates.Format;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 
-namespace Controllers.Enumeration
+namespace Delegates.Format.Uri
 {
-    public class ValidationFileEnumerateDelegate : IEnumerateDelegate<string>
+    public class FormatValidationFileDelegate : IFormatDelegate<string, string>
     {
         private IGetDirectoryDelegate validationDirectoryDelegate;
         private IGetFilenameDelegate validationFilenameDelegate;
 
-        public ValidationFileEnumerateDelegate(
+        public FormatValidationFileDelegate(
             IGetDirectoryDelegate validationDirectoryDelegate,
             IGetFilenameDelegate validationFilenameDelegate)
         {
@@ -20,14 +20,12 @@ namespace Controllers.Enumeration
             this.validationFilenameDelegate = validationFilenameDelegate;
         }
 
-        public IEnumerable<string> Enumerate(string uri)
+        public string Format(string uri)
         {
-            return new string[] {
-                Path.Combine(
+            return Path.Combine(
                     validationDirectoryDelegate.GetDirectory(),
                     validationFilenameDelegate.GetFilename(
-                        Path.GetFileName(uri)))
-            };
+                        Path.GetFileName(uri)));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 
 using Interfaces.Delegates.Format;
 
-namespace Delegates.Format
+namespace Delegates.Format.Numbers
 {
     public abstract class FormatNumbersDelegate : IFormatDelegate<long, string>
     {

@@ -1,6 +1,6 @@
 ﻿using Models.Units;
 
-namespace Delegates.Format
+namespace Delegates.Format.Numbers
 {
     public class FormatSecondsDelegate : FormatNumbersDelegate
     {

@@ -5,44 +5,45 @@ using System.IO;
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Routing;
-using Interfaces.Enumeration;
 using Interfaces.Status;
 
 using GOG.Models;
 using System;
 
-namespace GOG.Delegates.Enumerate
+namespace GOG.Delegates.Itemize
 {
-    public class EnumerateGameDetailsFilesAsyncDelegate : IEnumerateAsyncDelegate<GameDetails>
+    public class ItemizeGameDetailsFilesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        private IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerationDelegate;
+        private IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsManualUrlsDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IRoutingController routingController;
         private IStatusController statusController;
 
-        public EnumerateGameDetailsFilesAsyncDelegate(
-            IEnumerateAsyncDelegate<GameDetails> manualUrlEnumerationDelegate,
+        public ItemizeGameDetailsFilesAsyncDelegate(
+            IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IRoutingController routingController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IStatusController statusController)
         {
-            this.manualUrlEnumerationDelegate = manualUrlEnumerationDelegate;
+            this.itemizeGameDetailsManualUrlsDelegate = itemizeGameDetailsManualUrlsDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
             this.routingController = routingController;
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> EnumerateAsync(GameDetails gameDetails, IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails, IStatus status)
         {
             var enumerateGameDetailsFilesStatus = await statusController.CreateAsync(status, "Enumerate game details files");
 
             var gameDetailsFiles = new List<string>();
 
-            var gameDetailsManualUrls = await manualUrlEnumerationDelegate.EnumerateAsync(gameDetails, status);
+            var gameDetailsManualUrls = await itemizeGameDetailsManualUrlsDelegate.ItemizeAsync(gameDetails, status);
             var gameDetailsManualUrlsCount = gameDetailsManualUrls.Count();
             var gameDetailsResolvedUris = await routingController.TraceRoutesAsync(
                 gameDetails.Id, 

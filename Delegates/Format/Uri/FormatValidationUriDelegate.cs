@@ -2,27 +2,26 @@
 using System.IO;
 
 using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Format;
 
-using Interfaces.Extraction;
-
-namespace Delegates.Format
+namespace Delegates.Format.Uri
 {
-    public class FormatValidationUriDelegate : FormatUriDelegate
+    public class FormatValidationUriDelegate : IFormatDelegate<string, string>
     {
         private IGetFilenameDelegate getValidationFilenameDelegate;
-        private IStringExtractionController uriSansSessionExtractionController;
+        private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
 
         public FormatValidationUriDelegate(
             IGetFilenameDelegate getValidationFilenameDelegate,
-            IStringExtractionController uriSansSessionExtractionController)
+            IFormatDelegate<string, string> formatUriRemoveSessionDelegate)
         {
             this.getValidationFilenameDelegate = getValidationFilenameDelegate;
-            this.uriSansSessionExtractionController = uriSansSessionExtractionController;
+            this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
         }
 
-        public override string Format(string sourceUri)
+        public string Format(string sourceUri)
         {
-            var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).Single();
+            var sourceUriSansSession = formatUriRemoveSessionDelegate.Format(sourceUri);
             var sourceFilename = Path.GetFileName(sourceUriSansSession);
             var validationFilename = getValidationFilenameDelegate.GetFilename(sourceFilename);
 

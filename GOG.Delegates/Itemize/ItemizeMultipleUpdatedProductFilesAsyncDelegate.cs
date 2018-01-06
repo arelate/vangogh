@@ -1,42 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Directory;
 
-using Interfaces.Enumeration;
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Status;
 
 using GOG.Models;
 
-namespace GOG.Delegates.EnumerateAll
+namespace GOG.Delegates.Itemize
 {
-    public class EnumerateAllUpdatedProductFilesAsyncDelegate : IEnumerateAllAsyncDelegate<string>
+    public class ItemizeMultipleUpdatedProductFilesAsyncDelegate : IItemizeMultipleAsyncDelegate<string>
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate;
+        private IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsDirectoriesAsyncDelegate;
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
-        public EnumerateAllUpdatedProductFilesAsyncDelegate(
+        public ItemizeMultipleUpdatedProductFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateAsyncDelegate<GameDetails> gameDetailsDirectoryEnumerateDelegate,
+            IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
             IDirectoryController directoryController,
             IStatusController statusController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
-            this.gameDetailsDirectoryEnumerateDelegate = gameDetailsDirectoryEnumerateDelegate;
+            this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
             this.directoryController = directoryController;
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> EnumerateAllAsync(IStatus status)
+        public async Task<IEnumerable<string>> ItemizeMulitpleAsync(IStatus status)
         {
             var enumerateUpdatedProductFilesTask = await statusController.CreateAsync(status, "Enumerate updated productFiles");
 
@@ -56,7 +54,11 @@ namespace GOG.Delegates.EnumerateAll
                     updatedIdsCount,
                     gameDetails.Title);
 
-                var gameDetailsDirectories = await gameDetailsDirectoryEnumerateDelegate.EnumerateAsync(gameDetails, enumerateUpdatedProductFilesTask);
+                var gameDetailsDirectories = 
+                    await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
+                        gameDetails, 
+                        enumerateUpdatedProductFilesTask);
+
                 foreach (var gameDetailDirectory in gameDetailsDirectories)
                 {
                     updatedProductFiles.AddRange(directoryController.EnumerateFiles(gameDetailDirectory));

@@ -1,6 +1,6 @@
 ﻿using Models.Uris;
 
-namespace Delegates.Format
+namespace Delegates.Format.Uri
 {
     public class FormatScreenshotsUriDelegate : FormatUriDelegate
     {

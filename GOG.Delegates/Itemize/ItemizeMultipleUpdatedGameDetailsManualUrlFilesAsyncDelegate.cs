@@ -4,34 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.Enumeration;
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Data;
+
 using Interfaces.Status;
 
 using GOG.Models;
 
-namespace GOG.Delegates.EnumerateAll
+namespace GOG.Delegates.Itemize
 {
-    public class EnumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate : IEnumerateAllAsyncDelegate<string>
+    public class ItemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate : IItemizeMultipleAsyncDelegate<string>
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateAsyncDelegate<GameDetails> gameDetailsFilesEnumerateDelegate;
+        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate;
         private IStatusController statusController;
 
-        public EnumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
+        public ItemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateAsyncDelegate<GameDetails> gameDetailsFilesEnumerateDelegate,
+            IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate,
             IStatusController statusController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
-            this.gameDetailsFilesEnumerateDelegate = gameDetailsFilesEnumerateDelegate;
+            this.itemizeGameDetailsFilesAsyncDelegate = itemizeGameDetailsFilesAsyncDelegate;
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> EnumerateAllAsync(IStatus status)
+        public async Task<IEnumerable<string>> ItemizeMulitpleAsync(IStatus status)
         {
             var enumerateUpdateGameDetailsFilesTask = await statusController.CreateAsync(status, "Enumerate updated gameDetails files");
 
@@ -52,7 +54,7 @@ namespace GOG.Delegates.EnumerateAll
                     gameDetails.Title);
 
                 gameDetailsFiles.AddRange(
-                    await gameDetailsFilesEnumerateDelegate.EnumerateAsync(
+                    await itemizeGameDetailsFilesAsyncDelegate.ItemizeAsync(
                         gameDetails, 
                         enumerateUpdateGameDetailsFilesTask));
             }

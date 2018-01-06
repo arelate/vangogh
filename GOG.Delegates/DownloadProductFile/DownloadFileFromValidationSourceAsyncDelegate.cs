@@ -7,8 +7,6 @@ using Interfaces.Delegates.Confirm;
 
 using Interfaces.Controllers.File;
 
-using Interfaces.Extraction;
-using Interfaces.Enumeration;
 using Interfaces.FileDownload;
 using Interfaces.Status;
 
@@ -18,9 +16,9 @@ namespace GOG.Delegates.DownloadFileFromSource
 {
     public class DownloadValidationFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
-        private IStringExtractionController uriSansSessionExtractionController;
+        private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private IConfirmDelegate<string> confirmValidationExpectedDelegate;
-        private IEnumerateDelegate<string> validationFileEnumerateDelegate;
+        private IFormatDelegate<string, string> formatValidationFileDelegate;
         private IGetDirectoryDelegate validationDirectoryDelegate;
         private IFormatDelegate<string, string> formatValidationUriDelegate;
         private IFileController fileController;
@@ -28,18 +26,18 @@ namespace GOG.Delegates.DownloadFileFromSource
         private IStatusController statusController;
 
         public DownloadValidationFileAsyncDelegate(
-            IStringExtractionController uriSansSessionExtractionController,
+            IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
-            IEnumerateDelegate<string> validationFileEnumerateDelegate,
+            IFormatDelegate<string, string> formatValidationFileDelegate,
             IGetDirectoryDelegate validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
             IFileController fileController,
             IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceAsyncDelegate,
             IStatusController statusController)
         {
-            this.uriSansSessionExtractionController = uriSansSessionExtractionController;
+            this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
-            this.validationFileEnumerateDelegate = validationFileEnumerateDelegate;
+            this.formatValidationFileDelegate = formatValidationFileDelegate;
             this.validationDirectoryDelegate = validationDirectoryDelegate;
             this.formatValidationUriDelegate = formatValidationUriDelegate;
             this.fileController = fileController;
@@ -51,8 +49,8 @@ namespace GOG.Delegates.DownloadFileFromSource
         {
             if (string.IsNullOrEmpty(sourceUri)) return;
 
-            var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).Single();
-            var destinationUri = validationFileEnumerateDelegate.Enumerate(sourceUriSansSession).Single();
+            var sourceUriSansSession = formatUriRemoveSessionDelegate.Format(sourceUri);
+            var destinationUri = formatValidationFileDelegate.Format(sourceUriSansSession);
             
             // return early if validation is not expected for this file
             if (!confirmValidationExpectedDelegate.Confirm(sourceUriSansSession)) return;

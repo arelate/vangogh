@@ -2,21 +2,21 @@
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Directory;
 
-using Interfaces.Enumeration;
 using Interfaces.Status;
 
-namespace Controllers.Enumeration
+namespace Delegates.Itemize
 {
-    public class ProductFilesDirectoriesEnumerateAllDelegate : IEnumerateAllAsyncDelegate<string>
+    public class ItemizeMultipleProductFilesDirectoriesAsyncDelegate : IItemizeMultipleAsyncDelegate<string>
     {
         private IGetDirectoryDelegate productFilesDirectoryDelegate;
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
-        public ProductFilesDirectoriesEnumerateAllDelegate(
+        public ItemizeMultipleProductFilesDirectoriesAsyncDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate,
             IDirectoryController directoryController,
             IStatusController statusController)
@@ -26,9 +26,11 @@ namespace Controllers.Enumeration
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> EnumerateAllAsync(IStatus status)
+        public async Task<IEnumerable<string>> ItemizeMulitpleAsync(IStatus status)
         {
-            var enumerateProductFilesDirectoriesTask = await statusController.CreateAsync(status, "Enumerate productFiles directories");
+            var enumerateProductFilesDirectoriesTask = await statusController.CreateAsync(
+                status, 
+                "Enumerate productFiles directories");
 
             var directories = new List<string>();
 

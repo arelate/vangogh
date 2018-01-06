@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Data;
-using Interfaces.Enumeration;
+
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
@@ -15,18 +17,18 @@ namespace GOG.Delegates.GetDownloadSources
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
-        private IEnumerateAsyncDelegate<GameDetails> gameDetailsManualUrlEnumerationController;
+        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
         private IStatusController statusController;
 
         public GetManualUrlDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
-            IEnumerateAsyncDelegate<GameDetails> gameDetailsManualUrlEnumerationController,
+            IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
             IStatusController statusController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
-            this.gameDetailsManualUrlEnumerationController = gameDetailsManualUrlEnumerationController;
+            this.itemizeGameDetailsManualUrlsAsyncController = itemizeGameDetailsManualUrlsAsyncController;
             this.statusController = statusController;
         }
 
@@ -50,7 +52,8 @@ namespace GOG.Delegates.GetDownloadSources
                 if (!gameDetailsDownloadSources.ContainsKey(id))
                     gameDetailsDownloadSources.Add(id, new List<string>());
 
-                foreach (var manualUrl in await gameDetailsManualUrlEnumerationController.EnumerateAsync(gameDetails, status))
+                foreach (var manualUrl in 
+                    await itemizeGameDetailsManualUrlsAsyncController.ItemizeAsync(gameDetails, status))
                 {
                     if (!gameDetailsDownloadSources[id].Contains(manualUrl))
                         gameDetailsDownloadSources[id].Add(manualUrl);

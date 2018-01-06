@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Data;
-using Interfaces.Enumeration;
+
 using Interfaces.Settings;
 using Interfaces.Status;
 
@@ -11,14 +13,14 @@ using Models.Uris;
 
 using GOG.Models;
 
-namespace GOG.Delegates.Enumerate
+namespace GOG.Delegates.Itemize
 {
-    public class EnumerateGameDetailsManualUrlsAsyncDelegate : IEnumerateAsyncDelegate<GameDetails>
+    public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
         private IGetSettingsAsyncDelegate getSettingsAsyncDelegate;
         private IDataController<GameDetails> gameDetailsDataController;
 
-        public EnumerateGameDetailsManualUrlsAsyncDelegate(
+        public ItemizeGameDetailsManualUrlsAsyncDelegate(
             IGetSettingsAsyncDelegate getSettingsAsyncDelegate,
             IDataController<GameDetails> gameDetailsDataController)
         {
@@ -26,7 +28,7 @@ namespace GOG.Delegates.Enumerate
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
-        public async Task<IEnumerable<string>> EnumerateAsync(GameDetails gameDetails, IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails, IStatus status)
         {
             var settings = await getSettingsAsyncDelegate.GetSettingsAsync(status);
 
@@ -66,7 +68,7 @@ namespace GOG.Delegates.Enumerate
             // last but not least - recursively add DLCs
             if (gameDetails.DLCs != null)
                 foreach (var dlc in gameDetails.DLCs)
-                    manualUrls.AddRange(await EnumerateAsync(dlc, status));
+                    manualUrls.AddRange(await ItemizeAsync(dlc, status));
 
             return manualUrls;
         }

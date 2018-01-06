@@ -11,7 +11,8 @@ using Delegates.Convert;
 using Delegates.Throttle;
 using Delegates.GetDirectory;
 using Delegates.GetFilename;
-using Delegates.Format;
+using Delegates.Format.Numbers;
+using Delegates.Format.Uri;
 using Delegates.Confirm;
 using Delegates.GetETA;
 using Delegates.GetQueryParameters;
@@ -19,6 +20,7 @@ using Delegates.MoveToRecycleBin;
 using Delegates.Correct;
 using Delegates.RequestPage;
 using Delegates.Constrain;
+using Delegates.Itemize;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -47,7 +49,6 @@ using Controllers.Template;
 using Controllers.ViewModel;
 using Controllers.Tree;
 using Controllers.ViewUpdates;
-using Controllers.Enumeration;
 using Controllers.ActivityContext;
 using Controllers.UserRequested;
 using Controllers.InputOutput;
@@ -69,8 +70,7 @@ using GOG.Delegates.DownloadFileFromSource;
 using GOG.Delegates.GetImageUri;
 using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
-using GOG.Delegates.Enumerate;
-using GOG.Delegates.EnumerateAll;
+using GOG.Delegates.Itemize;
 using GOG.Delegates.GetUpdateUri;
 
 using GOG.Controllers.NewUpdatedSelection;
@@ -778,16 +778,16 @@ namespace Ghost.Console
                 productRoutesDataController,
                 statusController);
 
-            var enumerateGameDetailsManualUrlsAsyncDelegate = new EnumerateGameDetailsManualUrlsAsyncDelegate(
+            var itemizeGameDetailsManualUrlsAsyncDelegate = new ItemizeGameDetailsManualUrlsAsyncDelegate(
                 settingsController,
                 gameDetailsDataController);
 
-            var enumerateGameDetailsDirectoriesAsyncDelegate = new EnumerateGameDetailsDirectoriesAsyncDelegate(
-                enumerateGameDetailsManualUrlsAsyncDelegate,
+            var itemizeGameDetailsDirectoriesAsyncDelegate = new ItemizeGameDetailsDirectoriesAsyncDelegate(
+                itemizeGameDetailsManualUrlsAsyncDelegate,
                 productFilesDirectoryDelegate);
 
-            var enumerateGameDetailsFilesAsyncDelegate = new EnumerateGameDetailsFilesAsyncDelegate(
-                enumerateGameDetailsManualUrlsAsyncDelegate,
+            var itemizeGameDetailsFilesAsyncDelegate = new ItemizeGameDetailsFilesAsyncDelegate(
+                itemizeGameDetailsManualUrlsAsyncDelegate,
                 routingController,
                 productFilesDirectoryDelegate,
                 getUriFilenameDelegate,
@@ -798,7 +798,7 @@ namespace Ghost.Console
             var getManualUrlDownloadSourcesAsyncDelegate = new GetManualUrlDownloadSourcesAsyncDelegate(
                 updatedDataController,
                 gameDetailsDataController,
-                enumerateGameDetailsManualUrlsAsyncDelegate,
+                itemizeGameDetailsManualUrlsAsyncDelegate,
                 statusController);
 
             // schedule download controllers
@@ -845,22 +845,22 @@ namespace Ghost.Console
 
             // downloads processing
 
-            var uriSansSessionExtractionController = new UriSansSessionExtractionController();
+            var formatUriRemoveSessionDelegate = new FormatUriRemoveSessionDelegate();
 
             var confirmValidationExpectedDelegate = new ConfirmValidationExpectedDelegate();
 
             var formatValidationUriDelegate = new FormatValidationUriDelegate(
                 getValidationFilenameDelegate,
-                uriSansSessionExtractionController);
+                formatUriRemoveSessionDelegate);
 
-            var validationFileEnumerateDelegate = new ValidationFileEnumerateDelegate(
+            var formatValidationFileDelegate = new FormatValidationFileDelegate(
                 validationDirectoryDelegate,
                 getValidationFilenameDelegate);
 
             var downloadValidationFileAsyncDelegate = new DownloadValidationFileAsyncDelegate(
-                uriSansSessionExtractionController,
+                formatUriRemoveSessionDelegate,
                 confirmValidationExpectedDelegate,
-                validationFileEnumerateDelegate,
+                formatValidationFileDelegate,
                 validationDirectoryDelegate,
                 formatValidationUriDelegate,
                 fileController,
@@ -869,7 +869,7 @@ namespace Ghost.Console
 
             var downloadManualUrlFileAsyncDelegate = new DownloadManualUrlFileAsyncDelegate(
                 networkController,
-                uriSansSessionExtractionController,
+                formatUriRemoveSessionDelegate,
                 routingController,
                 fileDownloadController,
                 downloadValidationFileAsyncDelegate,
@@ -926,11 +926,11 @@ namespace Ghost.Console
             var validateProductFilesActivity = new ValidateProductFilesActivity(
                 productFilesDirectoryDelegate,
                 getUriFilenameDelegate,
-                validationFileEnumerateDelegate,
+                formatValidationFileDelegate,
                 productFileValidationController,
                 validationResultsDataController,
                 gameDetailsDataController,
-                enumerateGameDetailsManualUrlsAsyncDelegate,
+                itemizeGameDetailsManualUrlsAsyncDelegate,
                 userRequestedOrUpdatedEnumerateDelegate,
                 routingController,
                 statusController);
@@ -952,49 +952,51 @@ namespace Ghost.Console
 
             #region Cleanup
 
-            var enumerateAllGameDetailsDirectoriesAsyncDelegate = new EnumerateAllGameDetailsDirectoriesAsyncDelegate(
+            var itemizeMultipleGameDetailsDirectoriesAsyncDelegate = new ItemizeMultipleGameDetailsDirectoriesAsyncDelegate(
                 gameDetailsDataController,
-                enumerateGameDetailsDirectoriesAsyncDelegate,
+                itemizeGameDetailsDirectoriesAsyncDelegate,
                 statusController);
 
-            var productFilesDirectoriesEnumerateAllDelegate = new ProductFilesDirectoriesEnumerateAllDelegate(
+            var itemizeMultipleProductFilesDirectoriesAsyncDelegate = new ItemizeMultipleProductFilesDirectoriesAsyncDelegate(
                 productFilesBaseDirectoryDelegate,
                 directoryController,
                 statusController);
 
-            var directoryFilesEnumerateDelegate = new DirectoryFilesEnumerateDelegate(directoryController);
+            var itemizeDirectoryFilesDelegate = new ItemizeDirectoryFilesDelegate(directoryController);
 
             var directoryCleanupActivity = new CleanupActivity(
                 Context.Directories,
-                enumerateAllGameDetailsDirectoriesAsyncDelegate, // expected items (directories for gameDetails)
-                productFilesDirectoriesEnumerateAllDelegate, // actual items (directories in productFiles)
-                directoryFilesEnumerateDelegate, // detailed items (files in directory)
-                validationFileEnumerateDelegate, // supplementary items (validation files)
+                itemizeMultipleGameDetailsDirectoriesAsyncDelegate, // expected items (directories for gameDetails)
+                itemizeMultipleProductFilesDirectoriesAsyncDelegate, // actual items (directories in productFiles)
+                itemizeDirectoryFilesDelegate, // detailed items (files in directory)
+                formatValidationFileDelegate, // supplementary items (validation files)
                 moveToRecycleBinDelegate,
                 directoryController,
                 statusController);
 
-            var enumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = new EnumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
-                updatedDataController,
-                gameDetailsDataController,
-                enumerateGameDetailsFilesAsyncDelegate,
-                statusController);
+            var itemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
+                new ItemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate(
+                    updatedDataController,
+                    gameDetailsDataController,
+                    itemizeGameDetailsFilesAsyncDelegate,
+                    statusController);
 
-            var enumerateAllUpdatedProductFilesAsyncDelegate = new EnumerateAllUpdatedProductFilesAsyncDelegate(
-                updatedDataController,
-                gameDetailsDataController,
-                enumerateGameDetailsDirectoriesAsyncDelegate,
-                directoryController,
-                statusController);
+            var itemizeMultipleUpdatedProductFilesAsyncDelegate = 
+                new ItemizeMultipleUpdatedProductFilesAsyncDelegate(
+                    updatedDataController,
+                    gameDetailsDataController,
+                    itemizeGameDetailsDirectoriesAsyncDelegate,
+                    directoryController,
+                    statusController);
 
-            var passthroughEnumerateDelegate = new PassthroughEnumerateDelegate();
+            var itemizePassthroughDelegate = new ItemizePassthroughDelegate();
 
             var fileCleanupActivity = new CleanupActivity(
                 Context.Files,
-                enumerateAllUpdatedGameDetailsManualUrlFilesAsyncDelegate, // expected items (files for updated gameDetails)
-                enumerateAllUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
-                passthroughEnumerateDelegate, // detailed items (passthrough)
-                validationFileEnumerateDelegate, // supplementary items (validation files)
+                itemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate, // expected items (files for updated gameDetails)
+                itemizeMultipleUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
+                itemizePassthroughDelegate, // detailed items (passthrough)
+                formatValidationFileDelegate, // supplementary items (validation files)
                 moveToRecycleBinDelegate,
                 directoryController,
                 statusController);
