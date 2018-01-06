@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Collections.Generic;
 
+using Interfaces.Delegates.Format;
+
 using Interfaces.ViewModel;
 using Interfaces.Status;
-using Interfaces.Formatting;
 using Interfaces.StatusRemainingTime;
 
 using Models.Units;
@@ -31,17 +32,17 @@ namespace Controllers.ViewModel
         }
 
         private IGetRemainingTimeAtUnitsPerSecondDelegate getRemainingTimeAtUnitsPerSecondDelegate;
-        private IFormattingController bytesFormattingController;
-        private IFormattingController secondsFormattingController;
+        private IFormatDelegate<long, string> formatBytesDelegate;
+        private IFormatDelegate<long, string> formatSecondsDelegate;
 
         public StatusAppViewModelDelegate(
             IGetRemainingTimeAtUnitsPerSecondDelegate getRemainingTimeAtUnitsPerSecondDelegate,
-            IFormattingController bytesFormattingController,
-            IFormattingController secondsFormattingController)
+            IFormatDelegate<long, string> formatBytesDelegate,
+            IFormatDelegate<long, string> formatSecondsDelegate)
         {
             this.getRemainingTimeAtUnitsPerSecondDelegate = getRemainingTimeAtUnitsPerSecondDelegate;
-            this.bytesFormattingController = bytesFormattingController;
-            this.secondsFormattingController = secondsFormattingController;
+            this.formatBytesDelegate = formatBytesDelegate;
+            this.formatSecondsDelegate = formatSecondsDelegate;
         }
 
         public IDictionary<string, string> GetViewModel(IStatus status)
@@ -84,13 +85,13 @@ namespace Controllers.ViewModel
                 {
                     viewModel[StatusAppViewModelSchema.ContainsETA] = "true";
 
-                    currentFormatted = bytesFormattingController.Format(current);
-                    totalFormatted = bytesFormattingController.Format(total);
+                    currentFormatted = formatBytesDelegate.Format(current);
+                    totalFormatted = formatBytesDelegate.Format(total);
 
                     var remainingTimeAtSpeed = getRemainingTimeAtUnitsPerSecondDelegate.GetRemainingTimeAtUnitsPerSecond(status);
 
-                    var remainingTime = secondsFormattingController.Format(remainingTimeAtSpeed.Item1);
-                    var speed = bytesFormattingController.Format((long)remainingTimeAtSpeed.Item2);
+                    var remainingTime = formatSecondsDelegate.Format(remainingTimeAtSpeed.Item1);
+                    var speed = formatBytesDelegate.Format((long)remainingTimeAtSpeed.Item2);
 
                     viewModel[StatusAppViewModelSchema.RemainingTime] = remainingTime;
                     viewModel[StatusAppViewModelSchema.AverageUnitsPerSecond] = speed;

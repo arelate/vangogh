@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 
-using Interfaces.Formatting;
+using Interfaces.Delegates.Format;
 
-namespace Controllers.Formatting
+namespace Delegates.Format
 {
-    public abstract class FormattingController : IFormattingController
+    public abstract class FormatNumbersDelegate : IFormatDelegate<long, string>
     {
         protected long[] relativeOrders;
         protected string[] orderTitles;

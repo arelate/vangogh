@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Collections.Generic;
 
+using Interfaces.Delegates.Format;
+
 using Interfaces.ViewModel;
 using Interfaces.Status;
-using Interfaces.Formatting;
 
 using Models.Units;
 
@@ -12,7 +13,7 @@ namespace Controllers.ViewModel
 {
     public class StatusReportViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
-        private static class statusReportViewModelSchema
+        private static class StatusReportViewModelSchema
         {
             public const string Complete = "complete";
             public const string Title = "title";
@@ -31,15 +32,15 @@ namespace Controllers.ViewModel
             public const string Information = "information";
         }
 
-        private IFormattingController bytesFormattingController;
-        private IFormattingController secondsFormattingController;
+        private IFormatDelegate<long, string> formatBytesDelegate;
+        private IFormatDelegate<long, string> formatSecondsDelegate;
 
         public StatusReportViewModelDelegate(
-            IFormattingController bytesFormattingController,
-            IFormattingController secondsFormattingController)
+            IFormatDelegate<long, string> formatBytesDelegate,
+            IFormatDelegate<long, string> formatSecondsDelegate)
         {
-            this.bytesFormattingController = bytesFormattingController;
-            this.secondsFormattingController = secondsFormattingController;
+            this.formatBytesDelegate = formatBytesDelegate;
+            this.formatSecondsDelegate = formatSecondsDelegate;
         }
 
         public IDictionary<string, string> GetViewModel(IStatus status)
@@ -47,29 +48,29 @@ namespace Controllers.ViewModel
             // viewmodel schemas
             var viewModel = new Dictionary<string, string>()
             {
-                { statusReportViewModelSchema.Title, "" },
-                { statusReportViewModelSchema.Complete, "" },
-                { statusReportViewModelSchema.Started, "" },
-                { statusReportViewModelSchema.Duration, "" },
-                { statusReportViewModelSchema.Result, "" },
-                { statusReportViewModelSchema.ContainsProgress, "" },
-                { statusReportViewModelSchema.ProgressTarget, "" },
-                { statusReportViewModelSchema.ProgressCurrent, "" },
-                { statusReportViewModelSchema.ProgressTotal, "" },
-                { statusReportViewModelSchema.ContainsFailures, ""},
-                { statusReportViewModelSchema.Failures, ""},
-                { statusReportViewModelSchema.ContainsWarnings, ""},
-                { statusReportViewModelSchema.Warnings, ""},
-                { statusReportViewModelSchema.ContainsInformation, ""},
-                { statusReportViewModelSchema.Information, ""}
+                { StatusReportViewModelSchema.Title, "" },
+                { StatusReportViewModelSchema.Complete, "" },
+                { StatusReportViewModelSchema.Started, "" },
+                { StatusReportViewModelSchema.Duration, "" },
+                { StatusReportViewModelSchema.Result, "" },
+                { StatusReportViewModelSchema.ContainsProgress, "" },
+                { StatusReportViewModelSchema.ProgressTarget, "" },
+                { StatusReportViewModelSchema.ProgressCurrent, "" },
+                { StatusReportViewModelSchema.ProgressTotal, "" },
+                { StatusReportViewModelSchema.ContainsFailures, ""},
+                { StatusReportViewModelSchema.Failures, ""},
+                { StatusReportViewModelSchema.ContainsWarnings, ""},
+                { StatusReportViewModelSchema.Warnings, ""},
+                { StatusReportViewModelSchema.ContainsInformation, ""},
+                { StatusReportViewModelSchema.Information, ""}
             };
 
-            viewModel[statusReportViewModelSchema.Title] = status.Title;
-            viewModel[statusReportViewModelSchema.Complete] = status.Complete ? "true" : "";
-            viewModel[statusReportViewModelSchema.Started] = status.Started.ToLocalTime().ToString();
-            viewModel[statusReportViewModelSchema.Duration] =
+            viewModel[StatusReportViewModelSchema.Title] = status.Title;
+            viewModel[StatusReportViewModelSchema.Complete] = status.Complete ? "true" : "";
+            viewModel[StatusReportViewModelSchema.Started] = status.Started.ToLocalTime().ToString();
+            viewModel[StatusReportViewModelSchema.Duration] =
                 status.Complete ?
-                secondsFormattingController.Format((status.Completed - status.Started).Seconds) :
+                formatSecondsDelegate.Format((status.Completed - status.Started).Seconds) :
                 "";
 
             var results = new List<string>();
@@ -77,45 +78,45 @@ namespace Controllers.ViewModel
             if (status.Warnings != null && status.Warnings.Any()) results.Add("Warning(s)");
             var result = string.Join(",", results);
             if (string.IsNullOrEmpty(result)) result = "Success";
-            viewModel[statusReportViewModelSchema.Result] = result;
+            viewModel[StatusReportViewModelSchema.Result] = result;
 
             if (status.Progress != null)
             {
                 var current = status.Progress.Current;
                 var total = status.Progress.Total;
 
-                viewModel[statusReportViewModelSchema.ContainsProgress] = "true";
-                viewModel[statusReportViewModelSchema.ProgressTarget] = status.Progress.Target;
+                viewModel[StatusReportViewModelSchema.ContainsProgress] = "true";
+                viewModel[StatusReportViewModelSchema.ProgressTarget] = status.Progress.Target;
 
                 var currentFormatted = current.ToString();
                 var totalFormatted = total.ToString();
 
                 if (status.Progress.Unit == DataUnits.Bytes)
                 {
-                    currentFormatted = bytesFormattingController.Format(current);
-                    totalFormatted = bytesFormattingController.Format(total);
+                    currentFormatted = formatBytesDelegate.Format(current);
+                    totalFormatted = formatBytesDelegate.Format(total);
                 }
 
-                viewModel[statusReportViewModelSchema.ProgressCurrent] = currentFormatted;
-                viewModel[statusReportViewModelSchema.ProgressTotal] = totalFormatted;
+                viewModel[StatusReportViewModelSchema.ProgressCurrent] = currentFormatted;
+                viewModel[StatusReportViewModelSchema.ProgressTotal] = totalFormatted;
             }
 
             if (status.Failures != null && status.Failures.Any())
             {
-                viewModel[statusReportViewModelSchema.ContainsFailures] = "true";
-                viewModel[statusReportViewModelSchema.Failures] = string.Join("; ", status.Failures);
+                viewModel[StatusReportViewModelSchema.ContainsFailures] = "true";
+                viewModel[StatusReportViewModelSchema.Failures] = string.Join("; ", status.Failures);
             }
 
             if (status.Warnings != null && status.Warnings.Any())
             {
-                viewModel[statusReportViewModelSchema.ContainsWarnings] = "true";
-                viewModel[statusReportViewModelSchema.Warnings] = string.Join("; ", status.Warnings);
+                viewModel[StatusReportViewModelSchema.ContainsWarnings] = "true";
+                viewModel[StatusReportViewModelSchema.Warnings] = string.Join("; ", status.Warnings);
             }
 
             if (status.Information != null && status.Information.Any())
             {
-                viewModel[statusReportViewModelSchema.ContainsInformation] = "true";
-                viewModel[statusReportViewModelSchema.Information] = string.Join("; ", status.Information);
+                viewModel[StatusReportViewModelSchema.ContainsInformation] = "true";
+                viewModel[StatusReportViewModelSchema.Information] = string.Join("; ", status.Information);
             }
 
             return viewModel;

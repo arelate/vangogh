@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Delegates.Throttle;
+using Interfaces.Delegates.Format;
 
 using Interfaces.Status;
-using Interfaces.Formatting;
 
 using Models.Units;
 
@@ -12,21 +12,21 @@ namespace Delegates.Throttle
     public class ThrottleAsyncDelegate : IThrottleAsyncDelegate
     {
         private IStatusController statusController;
-        IFormattingController secondsFormattingController;
+        IFormatDelegate<long, string> formatSecondsDelegate;
 
         public ThrottleAsyncDelegate(
             IStatusController statusController,
-            IFormattingController secondsFormattingController)
+            IFormatDelegate<long, string> formatSecondsDelegate)
         {
             this.statusController = statusController;
-            this.secondsFormattingController = secondsFormattingController;
+            this.formatSecondsDelegate = formatSecondsDelegate;
         }
 
         public async Task ThrottleAsync(int delaySeconds, IStatus status)
         {
             var throttleTask = await statusController.CreateAsync(
                 status,
-                $"Sleeping {secondsFormattingController.Format(delaySeconds)} before next operation");
+                $"Sleeping {formatSecondsDelegate.Format(delaySeconds)} before next operation");
 
             for (var ii = 0; ii < delaySeconds; ii++)
             {

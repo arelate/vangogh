@@ -11,7 +11,7 @@ using Delegates.Convert;
 using Delegates.Throttle;
 using Delegates.GetDirectory;
 using Delegates.GetFilename;
-using Delegates.GetUri;
+using Delegates.Format;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -28,8 +28,6 @@ using Controllers.Console;
 using Controllers.Settings;
 using Controllers.RequestPage;
 using Controllers.RequestRate;
-using Controllers.ImageUri;
-using Controllers.Formatting;
 using Controllers.Cookies;
 using Controllers.PropertyValidation;
 using Controllers.Validation;
@@ -144,8 +142,8 @@ namespace Ghost.Console
                 breakLinesDelegate,
                 consoleController);
 
-            var bytesFormattingController = new BytesFormattingController();
-            var secondsFormattingController = new SecondsFormattingController();
+            var formatBytesDelegate = new FormatBytesDelegate();
+            var formatSecondsDelegate = new FormatSecondsDelegate();
 
             var serializedStorageController = new SerializedStorageController(
                 precomputedHashController,
@@ -189,12 +187,12 @@ namespace Ghost.Console
 
             var statusAppViewModelDelegate = new StatusAppViewModelDelegate(
                 getRemainingTimeAtUnitsPerSecondDelegate,
-                bytesFormattingController,
-                secondsFormattingController);
+                formatBytesDelegate,
+                formatSecondsDelegate);
 
             var statusReportViewModelDelegate = new StatusReportViewModelDelegate(
-                bytesFormattingController,
-                secondsFormattingController);
+                formatBytesDelegate,
+                formatSecondsDelegate);
 
             var getStatusViewUpdateDelegate = new GetStatusViewUpdateDelegate(
                 applicationStatus,
@@ -211,7 +209,7 @@ namespace Ghost.Console
 
             var throttleAsyncDelegate = new ThrottleAsyncDelegate(
                 statusController,
-                secondsFormattingController);
+                formatSecondsDelegate);
 
             var requestRateController = new RequestRateController(
                 throttleAsyncDelegate,
@@ -259,8 +257,8 @@ namespace Ghost.Console
             var gogDataExtractionController = new GOGDataExtractionController();
             var screenshotExtractionController = new ScreenshotExtractionController();
 
-            var expandImageUriDelegate = new ExpandImageUriDelegate();
-            var expandScreenshotUriDelegate = new ExpandScreenshotUriDelegate();
+            var formatImagesUriDelegate = new FormatImagesUriDelegate();
+            var formatScreenshotsUriDelegate = new FormatScreenshotsUriDelegate();
 
             #endregion
 
@@ -757,20 +755,20 @@ namespace Ghost.Console
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
                 userRequestedOrUpdatedEnumerateDelegate,
                 productsDataController,
-                expandImageUriDelegate,
+                formatImagesUriDelegate,
                 getProductImageUriDelegate,
                 statusController);
 
             var getAccountProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>(
                 userRequestedOrUpdatedEnumerateDelegate,
                 accountProductsDataController,
-                expandImageUriDelegate,
+                formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
                 statusController);
 
             var getScreenshotsDownloadSourcesAsyncDelegate = new GetScreenshotsDownloadSourcesAsyncDelegate(
                 screenshotsDataController,
-                expandScreenshotUriDelegate,
+                formatScreenshotsUriDelegate,
                 screenshotsDirectoryDelegate,
                 fileController,
                 statusController);
@@ -850,7 +848,7 @@ namespace Ghost.Console
 
             var validationExpectedDelegate = new ValidationExpectedDelegate();
 
-            var getValidationUriDelegate = new GetValidationUriDelegate(
+            var formatValidationUriDelegate = new FormatValidationUriDelegate(
                 getValidationFilenameDelegate,
                 uriSansSessionExtractionController);
 
@@ -863,7 +861,7 @@ namespace Ghost.Console
                 validationExpectedDelegate,
                 validationFileEnumerateDelegate,
                 validationDirectoryDelegate,
-                getValidationUriDelegate,
+                formatValidationUriDelegate,
                 fileController,
                 fileDownloadController,
                 statusController);

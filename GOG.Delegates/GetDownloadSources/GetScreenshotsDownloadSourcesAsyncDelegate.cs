@@ -8,7 +8,7 @@ using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Controllers.File;
 
-using Interfaces.ImageUri;
+using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
@@ -21,20 +21,20 @@ namespace GOG.Delegates.GetDownloadSources
     public class GetScreenshotsDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
         private IDataController<ProductScreenshots> screenshotsDataController;
-        private IExpandImageUriDelegate expandScreenshotUriDelegate;
+        private IFormatDelegate<string, string> formatScreenshotsUriDelegate;
         private IGetDirectoryDelegate screenshotsDirectoryDelegate;
         private IFileController fileController;
         private IStatusController statusController;
 
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
-            IExpandImageUriDelegate expandScreenshotUriDelegate,
+            IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
             IFileController fileController,
             IStatusController statusController)
         {
             this.screenshotsDataController = screenshotsDataController;
-            this.expandScreenshotUriDelegate = expandScreenshotUriDelegate;
+            this.formatScreenshotsUriDelegate = formatScreenshotsUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
             this.fileController = fileController;
             this.statusController = statusController;
@@ -70,7 +70,7 @@ namespace GOG.Delegates.GetDownloadSources
 
                 foreach (var uri in productScreenshots.Uris)
                 {
-                    var sourceUri = expandScreenshotUriDelegate.ExpandImageUri(uri);
+                    var sourceUri = formatScreenshotsUriDelegate.Format(uri);
                     var destinationUri = Path.Combine(
                         screenshotsDirectoryDelegate.GetDirectory(),
                         Path.GetFileName(sourceUri));

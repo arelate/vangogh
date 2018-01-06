@@ -1,10 +1,10 @@
 ﻿using Models.Units;
 
-namespace Controllers.Formatting
+namespace Delegates.Format
 {
-    public class SecondsFormattingController : FormattingController
+    public class FormatSecondsDelegate : FormatNumbersDelegate
     {
-        public SecondsFormattingController()
+        public FormatSecondsDelegate()
         {
             relativeOrders = new long[] { 7, 24, 60, 60, 1 };
             orderTitles = new string[] {

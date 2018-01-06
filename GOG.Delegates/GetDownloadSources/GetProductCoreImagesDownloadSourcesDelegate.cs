@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using System.Linq;
 
+using Interfaces.Delegates.Format;
+
 using Interfaces.Controllers.Data;
-using Interfaces.ImageUri;
+
 using Interfaces.Status;
 
 using Models.ProductCore;
@@ -18,20 +20,20 @@ namespace GOG.Delegates.GetDownloadSources
     {
         private IDataController<T> dataController;
         private IEnumerateIdsAsyncDelegate productEnumerateDelegate;
-        private IExpandImageUriDelegate expandImageUriDelegate;
+        private IFormatDelegate<string, string> formatImagesUriDelegate;
         private IGetImageUriDelegate<T> getImageUriDelegate;
         private IStatusController statusController;
 
         public GetProductCoreImagesDownloadSourcesAsyncDelegate(
             IEnumerateIdsAsyncDelegate productEnumerateDelegate,
             IDataController<T> dataController,
-            IExpandImageUriDelegate expandImageUriDelegate,
+            IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<T> getImageUriDelegate,
             IStatusController statusController)
         {
             this.productEnumerateDelegate = productEnumerateDelegate;
             this.dataController = dataController;
-            this.expandImageUriDelegate = expandImageUriDelegate;
+            this.formatImagesUriDelegate = formatImagesUriDelegate;
             this.getImageUriDelegate = getImageUriDelegate;
             this.statusController = statusController;
         }
@@ -58,7 +60,7 @@ namespace GOG.Delegates.GetDownloadSources
                 if (productCore == null) continue;
 
                 var imageSources = new List<string>() {
-                    expandImageUriDelegate.ExpandImageUri(
+                    formatImagesUriDelegate.Format(
                         getImageUriDelegate.GetImageUri(productCore)) };
 
                 if (!productImageSources.ContainsKey(id))

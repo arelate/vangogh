@@ -1,10 +1,10 @@
 ﻿using Models.Units;
 
-namespace Controllers.Formatting
+namespace Delegates.Format
 {
-    public class BytesFormattingController : FormattingController
+    public class FormatBytesDelegate : FormatNumbersDelegate
     {
-        public BytesFormattingController()
+        public FormatBytesDelegate()
         {
             relativeOrders = new long[] { 1024, 1024, 1024, 1024, 1 };
             orderTitles = new string[] {

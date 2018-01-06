@@ -1,19 +1,18 @@
 ﻿using System.Linq;
 using System.IO;
 
-using Interfaces.Delegates.GetUri;
 using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Extraction;
 
-namespace Delegates.GetUri
+namespace Delegates.Format
 {
-    public class GetValidationUriDelegate : IGetUriDelegate
+    public class FormatValidationUriDelegate : FormatUriDelegate
     {
         private IGetFilenameDelegate getValidationFilenameDelegate;
         private IStringExtractionController uriSansSessionExtractionController;
 
-        public GetValidationUriDelegate(
+        public FormatValidationUriDelegate(
             IGetFilenameDelegate getValidationFilenameDelegate,
             IStringExtractionController uriSansSessionExtractionController)
         {
@@ -21,7 +20,7 @@ namespace Delegates.GetUri
             this.uriSansSessionExtractionController = uriSansSessionExtractionController;
         }
 
-        public string GetUri(string sourceUri)
+        public override string Format(string sourceUri)
         {
             var sourceUriSansSession = uriSansSessionExtractionController.ExtractMultiple(sourceUri).Single();
             var sourceFilename = Path.GetFileName(sourceUriSansSession);

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetUri;
+using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.File;
 
@@ -22,7 +22,7 @@ namespace GOG.Delegates.DownloadFileFromSource
         private IExpectedDelegate<string> validationExpectedForUriDelegate;
         private IEnumerateDelegate<string> validationFileEnumerateDelegate;
         private IGetDirectoryDelegate validationDirectoryDelegate;
-        private IGetUriDelegate validationUriDelegate;
+        private IFormatDelegate<string, string> formatValidationUriDelegate;
         private IFileController fileController;
         private IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceAsyncDelegate;
         private IStatusController statusController;
@@ -32,7 +32,7 @@ namespace GOG.Delegates.DownloadFileFromSource
             IExpectedDelegate<string> validationExpectedForUriDelegate,
             IEnumerateDelegate<string> validationFileEnumerateDelegate,
             IGetDirectoryDelegate validationDirectoryDelegate,
-            IGetUriDelegate validationUriDelegate,
+            IFormatDelegate<string, string> formatValidationUriDelegate,
             IFileController fileController,
             IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceAsyncDelegate,
             IStatusController statusController)
@@ -41,7 +41,7 @@ namespace GOG.Delegates.DownloadFileFromSource
             this.validationExpectedForUriDelegate = validationExpectedForUriDelegate;
             this.validationFileEnumerateDelegate = validationFileEnumerateDelegate;
             this.validationDirectoryDelegate = validationDirectoryDelegate;
-            this.validationUriDelegate = validationUriDelegate;
+            this.formatValidationUriDelegate = formatValidationUriDelegate;
             this.fileController = fileController;
             this.downloadFileFromSourceAsyncDelegate = downloadFileFromSourceAsyncDelegate;
             this.statusController = statusController;
@@ -63,7 +63,7 @@ namespace GOG.Delegates.DownloadFileFromSource
                 return;
             }
 
-            var validationSourceUri = validationUriDelegate.GetUri(sourceUri);
+            var validationSourceUri = formatValidationUriDelegate.Format(sourceUri);
 
             var downloadValidationFileTask = await statusController.CreateAsync(status, "Download validation file");
 
