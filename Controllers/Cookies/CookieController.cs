@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Interfaces.Controllers.Cookies;
 using Interfaces.Serialization;
 using Interfaces.SerializedStorage;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetFilename;
 using Interfaces.Status;
 
 using Models.Separators;

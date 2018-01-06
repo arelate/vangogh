@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 
+using Interfaces.Controllers.Directory;
+
 using Interfaces.Enumeration;
-using Interfaces.Directory;
 
 namespace Controllers.Enumeration
 {

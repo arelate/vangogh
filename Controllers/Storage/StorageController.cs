@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.IO;
 
+using Interfaces.Controllers.File;
+
 using Interfaces.Stream;
-using Interfaces.File;
 using Interfaces.Storage;
 
 namespace Controllers.Storage

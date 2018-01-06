@@ -5,8 +5,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Interfaces.Template;
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetFilename;
 using Interfaces.SerializedStorage;
 using Interfaces.Collection;
 using Interfaces.Status;

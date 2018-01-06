@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using System.IO;
 
-using Interfaces.Destination.Directory;
+using Interfaces.Delegates.GetDirectory;
+
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.File;
+
 using Interfaces.Status;
-using Interfaces.File;
 using Interfaces.ContextDefinitions;
 
 using Models.ProductCore;

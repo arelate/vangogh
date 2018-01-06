@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.GetDirectory;
+
+using Interfaces.Controllers.Directory;
+
 using Interfaces.Enumeration;
-using Interfaces.Directory;
-using Interfaces.Destination.Directory;
 using Interfaces.Status;
 
 namespace Controllers.Enumeration

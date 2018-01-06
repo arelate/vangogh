@@ -6,6 +6,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Delegates.BreakLines;
+using Delegates.GetIndex;
+using Delegates.Convert;
+using Delegates.Throttle;
+using Delegates.GetDirectory;
+using Delegates.GetFilename;
+using Delegates.GetUri;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -21,21 +27,15 @@ using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Settings;
 using Controllers.RequestPage;
-using Controllers.Throttle;
 using Controllers.RequestRate;
 using Controllers.ImageUri;
 using Controllers.Formatting;
-using Controllers.Destination.Directory;
-using Controllers.Destination.Filename;
-using Controllers.Destination.Uri;
 using Controllers.Cookies;
 using Controllers.PropertyValidation;
 using Controllers.Validation;
 using Controllers.ValidationResult;
-using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
-using Controllers.Indexing;
 using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
@@ -124,18 +124,18 @@ namespace Ghost.Console
                 fileController);
             var serializationController = new JSONStringController();
 
-            var jsonFilenameDelegate = new JsonFilenameDelegate();
-            var uriHashesFilenameDelegate = new FixedFilenameDelegate("hashes", jsonFilenameDelegate);
+            var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
+            var getUriHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
 
             var precomputedHashController = new PrecomputedHashController(
-                uriHashesFilenameDelegate,
+                getUriHashesFilenameDelegate,
                 serializationController,
                 transactionalStorageController);
 
-            var bytesToStringConversionController = new BytesToStringConvertionController();
-            var bytesMd5Controller = new BytesMd5Controller(bytesToStringConversionController);
-            var stringToBytesConversionController = new StringToBytesConversionController();
-            var stringMd5Controller = new StringMd5Controller(stringToBytesConversionController, bytesMd5Controller);
+            var convertBytesToStringDelegate = new ConvertBytesToStringDelegate();
+            var bytesMd5Controller = new BytesMd5Controller(convertBytesToStringDelegate);
+            var convertStringToBytesDelegate = new ConvertStringToBytesDelegate();
+            var stringMd5Controller = new StringMd5Controller(convertStringToBytesDelegate, bytesMd5Controller);
 
             var consoleController = new ConsoleController();
             var breakLinesDelegate = new BreakLinesDelegate();
@@ -167,9 +167,9 @@ namespace Ghost.Console
 
             var applicationStatus = new Status() { Title = "This ghost is a kind one." };
 
-            var templatesDirectoryDelegate = new RelativeDirectoryDelegate("templates");
-            var appTemplateFilenameDelegate = new FixedFilenameDelegate("app", jsonFilenameDelegate);
-            var reportTemplateFilenameDelegate = new FixedFilenameDelegate("report", jsonFilenameDelegate);
+            var templatesDirectoryDelegate = new GetRelativeDirectoryDelegate("templates");
+            var appTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
+            var reportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
 
             var appTemplateController = new TemplateController(
                 "status",
@@ -209,12 +209,12 @@ namespace Ghost.Console
             // add notification handler to drive console view updates
             statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
 
-            var throttleController = new ThrottleController(
+            var throttleAsyncDelegate = new ThrottleAsyncDelegate(
                 statusController,
                 secondsFormattingController);
 
             var requestRateController = new RequestRateController(
-                throttleController,
+                throttleAsyncDelegate,
                 collectionController,
                 statusController,
                 new string[] {
@@ -226,7 +226,7 @@ namespace Ghost.Console
 
             var uriController = new UriController();
 
-            var cookiesFilenameDelegate = new FixedFilenameDelegate("cookies", jsonFilenameDelegate);
+            var cookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
             var cookieSerializationController = new CookieSerializationController();
 
             var cookiesController = new CookiesController(
@@ -268,11 +268,19 @@ namespace Ghost.Console
 
             // Data controllers for products, game details, game product data, etc.
 
-            var productCoreIndexingController = new ProductCoreIndexingController();
+            var getProductIndexDelegate = new GetProductCoreIndexDelegate<Product>();
+            var getAccountProductIndexDelegate = new GetProductCoreIndexDelegate<AccountProduct>();
+            var getGameDetailsIndexDelegate = new GetProductCoreIndexDelegate<GameDetails>();
+            var getGameProductDataIndexDelegate = new GetProductCoreIndexDelegate<GameProductData>();
+            var getApiProductIndexDelegate = new GetProductCoreIndexDelegate<ApiProduct>();
+            var getProductScreenshotsIndexDelegate = new GetProductCoreIndexDelegate<ProductScreenshots>();
+            var getProductDownloadsIndexDelegate = new GetProductCoreIndexDelegate<ProductDownloads>();
+            var getProductRoutesIndexDelegate = new GetProductCoreIndexDelegate<ProductRoutes>();
+            var getValidationResultIndexDelegate = new GetProductCoreIndexDelegate<ValidationResult>();
 
             // directories
 
-            var settingsFilenameDelegate = new FixedFilenameDelegate("settings", jsonFilenameDelegate);
+            var settingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
 
             var settingsController = new SettingsController(
                 settingsFilenameDelegate,
@@ -290,37 +298,37 @@ namespace Ghost.Console
                 directoriesValidationDelegate,
                 statusController);
 
-            var dataDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Data, settingsController);
+            var dataDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Data, settingsController);
 
-            var accountProductsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.AccountProducts, dataDirectoryDelegate);
-            var apiProductsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ApiProducts, dataDirectoryDelegate);
-            var gameDetailsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.GameDetails, dataDirectoryDelegate);
-            var gameProductDataDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.GameProductData, dataDirectoryDelegate);
-            var productsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.Products, dataDirectoryDelegate);
-            var productDownloadsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ProductDownloads, dataDirectoryDelegate);
-            var productRoutesDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ProductRoutes, dataDirectoryDelegate);
-            var productScreenshotsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ProductScreenshots, dataDirectoryDelegate);
-            var validationResultsDirectoryDelegate = new RelativeDirectoryDelegate(DataDirectories.ValidationResults, dataDirectoryDelegate);
+            var accountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, dataDirectoryDelegate);
+            var apiProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ApiProducts, dataDirectoryDelegate);
+            var gameDetailsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameDetails, dataDirectoryDelegate);
+            var gameProductDataDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameProductData, dataDirectoryDelegate);
+            var productsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.Products, dataDirectoryDelegate);
+            var productDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductDownloads, dataDirectoryDelegate);
+            var productRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductRoutes, dataDirectoryDelegate);
+            var productScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductScreenshots, dataDirectoryDelegate);
+            var validationResultsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ValidationResults, dataDirectoryDelegate);
 
-            var recycleBinDirectoryDelegate = new SettingsDirectoryDelegate(Directories.RecycleBin, settingsController);
-            var imagesDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Images, settingsController);
-            var reportDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Reports, settingsController);
-            var validationDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Md5, settingsController);
-            var productFilesBaseDirectoryDelegate = new SettingsDirectoryDelegate(Directories.ProductFiles, settingsController);
-            var screenshotsDirectoryDelegate = new SettingsDirectoryDelegate(Directories.Screenshots, settingsController);
+            var recycleBinDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.RecycleBin, settingsController);
+            var imagesDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Images, settingsController);
+            var reportDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Reports, settingsController);
+            var validationDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Md5, settingsController);
+            var productFilesBaseDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.ProductFiles, settingsController);
+            var screenshotsDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Screenshots, settingsController);
 
-            var productFilesDirectoryDelegate = new UriDirectoryDelegate(productFilesBaseDirectoryDelegate);
+            var productFilesDirectoryDelegate = new GetUriDirectoryDelegate(productFilesBaseDirectoryDelegate);
 
             // filenames
 
-            var indexFilenameDelegate = new FixedFilenameDelegate("index", jsonFilenameDelegate);
+            var indexFilenameDelegate = new GetFixedFilenameDelegate("index", getJsonFilenameDelegate);
 
-            var wishlistedFilenameDelegate = new FixedFilenameDelegate("wishlisted", jsonFilenameDelegate);
-            var updatedFilenameDelegate = new FixedFilenameDelegate("updated", jsonFilenameDelegate);
+            var wishlistedFilenameDelegate = new GetFixedFilenameDelegate("wishlisted", getJsonFilenameDelegate);
+            var updatedFilenameDelegate = new GetFixedFilenameDelegate("updated", getJsonFilenameDelegate);
 
-            var uriFilenameDelegate = new UriFilenameDelegate();
-            var reportFilenameDelegate = new ReportFilenameDelegate();
-            var validationFilenameDelegate = new ValidationFilenameDelegate();
+            var getUriFilenameDelegate = new GetUriFilenameDelegate();
+            var getReportFilenameDelegate = new GetReportFilenameDelegate();
+            var getValidationFilenameDelegate = new GetValidationFilenameDelegate();
 
             // index filenames
 
@@ -413,90 +421,90 @@ namespace Ghost.Console
             var productsDataController = new DataController<Product>(
                 productsIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getProductIndexDelegate,
                 collectionController,
                 productsDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
                 accountProductsIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getAccountProductIndexDelegate,
                 collectionController,
                 accountProductsDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 gameDetailsIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getGameDetailsIndexDelegate,
                 collectionController,
                 gameDetailsDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var gameProductDataController = new DataController<GameProductData>(
                 gameProductDataIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getGameProductDataIndexDelegate,
                 collectionController,
                 gameProductDataDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
                 apiProductsIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getApiProductIndexDelegate,
                 collectionController,
                 apiProductsDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 productScreenshotsIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getProductScreenshotsIndexDelegate,
                 collectionController,
                 productScreenshotsDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
                 productDownloadsIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getProductDownloadsIndexDelegate,
                 collectionController,
                 productDownloadsDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var productRoutesDataController = new DataController<ProductRoutes>(
                 productRoutesIndexDataController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getProductRoutesIndexDelegate,
                 collectionController,
                 productRoutesDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
             var validationResultsDataController = new DataController<ValidationResult>(
                 validationResultsIndexController,
                 serializedStorageController,
-                productCoreIndexingController,
+                getValidationResultIndexDelegate,
                 collectionController,
                 validationResultsDirectoryDelegate,
-                jsonFilenameDelegate,
+                getJsonFilenameDelegate,
                 recycleBinController,
                 statusController);
 
@@ -783,7 +791,7 @@ namespace Ghost.Console
                 enumerateGameDetailsManualUrlsAsyncDelegate,
                 routingController,
                 productFilesDirectoryDelegate,
-                uriFilenameDelegate,
+                getUriFilenameDelegate,
                 statusController);
 
             // product files are driven through gameDetails manual urls
@@ -842,20 +850,20 @@ namespace Ghost.Console
 
             var validationExpectedDelegate = new ValidationExpectedDelegate();
 
-            var validationUriDelegate = new ValidationUriDelegate(
-                validationFilenameDelegate,
+            var getValidationUriDelegate = new GetValidationUriDelegate(
+                getValidationFilenameDelegate,
                 uriSansSessionExtractionController);
 
             var validationFileEnumerateDelegate = new ValidationFileEnumerateDelegate(
                 validationDirectoryDelegate,
-                validationFilenameDelegate);
+                getValidationFilenameDelegate);
 
             var downloadValidationFileAsyncDelegate = new DownloadValidationFileAsyncDelegate(
                 uriSansSessionExtractionController,
                 validationExpectedDelegate,
                 validationFileEnumerateDelegate,
                 validationDirectoryDelegate,
-                validationUriDelegate,
+                getValidationUriDelegate,
                 fileController,
                 fileDownloadController,
                 statusController);
@@ -918,7 +926,7 @@ namespace Ghost.Console
 
             var validateProductFilesActivity = new ValidateProductFilesActivity(
                 productFilesDirectoryDelegate,
-                uriFilenameDelegate,
+                getUriFilenameDelegate,
                 validationFileEnumerateDelegate,
                 productFileValidationController,
                 validationResultsDataController,
@@ -1021,7 +1029,7 @@ namespace Ghost.Console
 
             var reportFilePresentationController = new FilePresentationController(
                 reportDirectoryDelegate,
-                reportFilenameDelegate,
+                getReportFilenameDelegate,
                 streamController);
 
             var fileNotifyStatusViewUpdateController = new NotifyStatusViewUpdateController(

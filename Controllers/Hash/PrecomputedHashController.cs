@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Hash;
 using Interfaces.Controllers.Data;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetFilename;
 using Interfaces.Serialization;
 using Interfaces.Storage;
 using Interfaces.Status;

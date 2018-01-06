@@ -2,8 +2,9 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
+using Interfaces.Controllers.File;
+
 using Interfaces.Storage;
-using Interfaces.File;
 
 namespace Controllers.Storage {
     public class TransactionalStorageController: ITransactionalStorageController

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
+using Interfaces.Controllers.File;
+
 using Interfaces.Validation;
-using Interfaces.File;
 using Interfaces.Stream;
 using Interfaces.Hash;
 using Interfaces.Status;

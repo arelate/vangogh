@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
 
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetFilename;
+
+using Interfaces.Controllers.File;
+
 using Interfaces.ImageUri;
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
-using Interfaces.File;
 
 using Models.ProductScreenshots;
 

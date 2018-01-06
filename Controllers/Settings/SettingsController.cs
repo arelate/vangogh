@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetFilename;
 using Interfaces.Settings;
 using Interfaces.SerializedStorage;
 using Interfaces.Status;

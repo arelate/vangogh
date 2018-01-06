@@ -3,11 +3,13 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.GetIndex;
+
 using Interfaces.Controllers.Data;
+
 using Interfaces.Collection;
-using Interfaces.Indexing;
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetFilename;
 using Interfaces.RecycleBin;
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
@@ -20,7 +22,7 @@ namespace Controllers.Data
 
         private ISerializedStorageController serializedStorageController;
 
-        private IIndexingController indexingController;
+        private IGetIndexDelegate<Type> getIndexDelegate;
         private ICollectionController collectionController;
 
         private IGetDirectoryDelegate getDirectoryDelegate;
@@ -33,7 +35,7 @@ namespace Controllers.Data
         public DataController(
             IDataController<long> indexDataController,
             ISerializedStorageController serializedStorageController,
-            IIndexingController indexingController,
+            IGetIndexDelegate<Type> getIndexDelegate,
             ICollectionController collectionController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
@@ -44,7 +46,7 @@ namespace Controllers.Data
 
             this.serializedStorageController = serializedStorageController;
 
-            this.indexingController = indexingController;
+            this.getIndexDelegate = getIndexDelegate;
             this.collectionController = collectionController;
 
             this.getDirectoryDelegate = getDirectoryDelegate;
@@ -64,7 +66,7 @@ namespace Controllers.Data
         {
             if (data == null) return true;
 
-            var index = indexingController.GetIndex(data);
+            var index = getIndexDelegate.GetIndex(data);
             return await indexDataController.ContainsAsync(index, status);
         }
 
@@ -107,7 +109,7 @@ namespace Controllers.Data
 
             foreach (var item in data)
             {
-                var index = indexingController.GetIndex(item);
+                var index = getIndexDelegate.GetIndex(item);
                 indexes.Add(index);
 
                 await statusController.UpdateProgressAsync(

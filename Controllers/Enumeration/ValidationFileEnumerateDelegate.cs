@@ -2,8 +2,8 @@
 using System.IO;
 
 using Interfaces.Enumeration;
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetFilename;
 
 namespace Controllers.Enumeration
 {

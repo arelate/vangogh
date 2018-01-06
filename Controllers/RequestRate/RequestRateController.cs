@@ -3,8 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Throttle;
+
 using Interfaces.RequestRate;
-using Interfaces.Throttle;
 using Interfaces.Status;
 using Interfaces.Collection;
 
@@ -12,7 +13,7 @@ namespace Controllers.RequestRate
 {
     public class RequestRateController : IRequestRateController
     {
-        private IThrottleController throttleController;
+        private IThrottleAsyncDelegate throttleAsyncDelegate;
         private ICollectionController collectionController;
         private IStatusController statusController;
         private Dictionary<string, DateTime> lastRequestToUriPrefix;
@@ -22,12 +23,12 @@ namespace Controllers.RequestRate
         private int rateLimitRequestsCount;
 
         public RequestRateController(
-            IThrottleController throttleController,
+            IThrottleAsyncDelegate throttleAsyncDelegate,
             ICollectionController collectionController,
             IStatusController statusController,
             params string[] uriPrefixes)
         {
-            this.throttleController = throttleController;
+            this.throttleAsyncDelegate = throttleAsyncDelegate;
             this.collectionController = collectionController;
             this.statusController = statusController;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
@@ -55,7 +56,7 @@ namespace Controllers.RequestRate
             if (elapsed < requestIntervalSeconds)
             {
                 var limitRateTask = await statusController.CreateAsync(status, "Limit request rate to avoid temporary server block");
-                await throttleController.ThrottleAsync(requestIntervalSeconds - elapsed, status);
+                await throttleAsyncDelegate.ThrottleAsync(requestIntervalSeconds - elapsed, status);
                 await statusController.CompleteAsync(limitRateTask);
             }
 

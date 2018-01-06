@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-using Interfaces.File;
+using Interfaces.Controllers.File;
 
 namespace Controllers.File
 {

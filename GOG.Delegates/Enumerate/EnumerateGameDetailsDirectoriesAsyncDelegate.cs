@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Settings;
-using Interfaces.Destination.Directory;
+using Interfaces.Delegates.GetDirectory;
 using Interfaces.Enumeration;
 using Interfaces.Status;
 

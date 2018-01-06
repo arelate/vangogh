@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Output;
 
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetFilename;
 using Interfaces.Stream;
 
 namespace Controllers.Presentation

@@ -1,12 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetUri;
+
+using Interfaces.Controllers.File;
+
 using Interfaces.Extraction;
 using Interfaces.Expectation;
 using Interfaces.Enumeration;
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Uri;
-using Interfaces.File;
 using Interfaces.FileDownload;
 using Interfaces.Status;
 

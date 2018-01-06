@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
 
-using Interfaces.Destination.Directory;
-using Interfaces.Destination.Filename;
+using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.GetFilename;
 using Interfaces.Routing;
 using Interfaces.Enumeration;
 using Interfaces.Status;
