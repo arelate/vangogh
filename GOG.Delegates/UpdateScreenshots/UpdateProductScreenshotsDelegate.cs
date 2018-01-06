@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using GOG.Interfaces.Delegates.UpdateScreenshots;
-
-using Interfaces.UpdateUri;
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;
 
+using Models.ProductScreenshots;
+
 using GOG.Models;
 
-using Models.ProductScreenshots;
+using GOG.Interfaces.Delegates.GetUpdateUri;
+using GOG.Interfaces.Delegates.UpdateScreenshots;
 
 namespace GOG.Delegates.UpdateScreenshots
 {

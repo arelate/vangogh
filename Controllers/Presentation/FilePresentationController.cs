@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-using Interfaces.Output;
+using Interfaces.Controllers.Output;
+
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;
 using Interfaces.Stream;

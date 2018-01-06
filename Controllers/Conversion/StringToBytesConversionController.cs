@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Interfaces.Conversion;
+using Interfaces.Delegates.Convert;
 
 namespace Controllers.Conversion
 {
-    public class StringToBytesConversionController : IConversionController<string, byte[]>
+    public class StringToBytesConversionController : IConvertDelegate<string, byte[]>
     {
         public byte[] Convert(string data)
         {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Linq;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.ImageUri;
 using Interfaces.Status;
 

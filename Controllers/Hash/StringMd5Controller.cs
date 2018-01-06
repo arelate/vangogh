@@ -1,15 +1,16 @@
-﻿using Interfaces.Hash;
-using Interfaces.Conversion;
+﻿using Interfaces.Delegates.Convert;
+
+using Interfaces.Hash;
 
 namespace Controllers.Hash
 {
     public class StringMd5Controller : IStringHashController
     {
-        private IConversionController<string, byte[]> stringToBytesConversionController;
+        private IConvertDelegate<string, byte[]> stringToBytesConversionController;
         private IBytesHashController bytesHashController;
 
         public StringMd5Controller(
-            IConversionController<string, byte[]> stringToBytesConversionController,
+            IConvertDelegate<string, byte[]> stringToBytesConversionController,
             IBytesHashController bytesHashController)
         {
             this.stringToBytesConversionController = stringToBytesConversionController;

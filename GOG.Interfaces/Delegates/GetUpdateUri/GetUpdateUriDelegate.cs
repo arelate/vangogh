@@ -1,4 +1,4 @@
-﻿namespace Interfaces.UpdateUri
+﻿namespace GOG.Interfaces.Delegates.GetUpdateUri
 {
     public interface IGetUpdateUriDelegate<T>
     {

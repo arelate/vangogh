@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
 using Models.ProductCore;

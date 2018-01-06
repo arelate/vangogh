@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.Cookies;
+using Interfaces.Controllers.Cookies;
 using Interfaces.Serialization;
 using Interfaces.SerializedStorage;
 using Interfaces.Destination.Filename;
@@ -14,7 +14,7 @@ using Models.Separators;
 
 namespace Controllers.Cookies
 {
-    public class CookieController : ICookieController
+    public class CookiesController : ICookiesController
     {
         private ISerializedStorageController serializedStorageController;
         private IStrongTypeSerializationController<(string, string), string> cookieSerializationController;
@@ -22,7 +22,7 @@ namespace Controllers.Cookies
         private IGetFilenameDelegate getFilenameDelegate;
         private IStatusController statusController;
 
-        public CookieController(
+        public CookiesController(
             IStrongTypeSerializationController<(string, string), string> cookieSerializationController,
             ISerializedStorageController serializedStorageController,
             IGetFilenameDelegate getFilenameDelegate,

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 
 namespace Interfaces.UserRequested
 {

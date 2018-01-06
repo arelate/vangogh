@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Interfaces.RequestPage;
 using Interfaces.Serialization;
 using Interfaces.Status;
-using Interfaces.UpdateUri;
 using Interfaces.Hash;
 using Interfaces.QueryParameters;
 using Interfaces.ContextDefinitions;
@@ -12,6 +11,7 @@ using Interfaces.ContextDefinitions;
 using Models.Units;
 
 using GOG.Interfaces.Delegates.GetPageResults;
+using GOG.Interfaces.Delegates.GetUpdateUri;
 
 using GOG.Models;
 

@@ -4,25 +4,26 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
 
-using Interfaces.Uri;
 using Interfaces.Network;
-using Interfaces.Cookies;
+using Interfaces.Controllers.Cookies;
 using Interfaces.RequestRate;
 using Interfaces.Status;
 
 using Models.Network;
+
+using Interfaces.Controllers.Uri;
 
 namespace Controllers.Network
 {
     public sealed class NetworkController : INetworkController
     {
         private HttpClient client;
-        private ICookieController cookieController;
+        private ICookiesController cookieController;
         private IUriController uriController;
         private IRequestRateController requestRateController;
 
         public NetworkController(
-            ICookieController cookieController,
+            ICookiesController cookieController,
             IUriController uriController,
             IRequestRateController requestRateController)
         {

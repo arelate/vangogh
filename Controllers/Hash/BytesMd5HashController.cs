@@ -1,16 +1,18 @@
 ﻿using System.Security.Cryptography;
 
+using Interfaces.Delegates.Convert;
+
 using Interfaces.Hash;
-using Interfaces.Conversion;
 
 namespace Controllers.Hash
 {
     public class BytesMd5Controller : IBytesHashController
     {
         private MD5 md5;
-        private IConversionController<byte[], string> byteToStringConversionController;
+        private IConvertDelegate<byte[], string> byteToStringConversionController;
 
-        public BytesMd5Controller(IConversionController<byte[], string> byteToStringConversionController)
+        public BytesMd5Controller(
+            IConvertDelegate<byte[], string> byteToStringConversionController)
         {
             md5 = MD5.Create();
             this.byteToStringConversionController = byteToStringConversionController;

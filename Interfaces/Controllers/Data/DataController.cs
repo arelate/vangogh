@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Status;
 
-namespace Interfaces.Data
+namespace Interfaces.Controllers.Data
 {
     public interface ILoadAsyncDelegate
     {

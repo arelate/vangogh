@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Enumeration;
 using Interfaces.Status;
 

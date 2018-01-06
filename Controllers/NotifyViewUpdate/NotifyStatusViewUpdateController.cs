@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 
+using Interfaces.Controllers.Output;
+
 using Interfaces.NotifyViewUpdate;
-using Interfaces.Output;
 
 namespace Controllers.ViewUpdates
 {

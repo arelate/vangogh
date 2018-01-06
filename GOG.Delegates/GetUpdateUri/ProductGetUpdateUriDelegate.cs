@@ -1,13 +1,14 @@
 ﻿using System;
 
-using Interfaces.UpdateUri;
 using Interfaces.ContextDefinitions;
 
 using Models.Uris;
 
-namespace Controllers.UpdateUri
+using GOG.Interfaces.Delegates.GetUpdateUri;
+
+namespace GOG.Delegates.GetUpdateUri
 {
-    public class ProductParameterUpdateUriDelegate : IGetUpdateUriDelegate<Context>
+    public class GetProductUpdateUriByContextDelegate : IGetUpdateUriDelegate<Context>
     {
         public string GetUpdateUri(Context context)
         {

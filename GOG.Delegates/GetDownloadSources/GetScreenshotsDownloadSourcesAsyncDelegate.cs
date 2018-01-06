@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 using Interfaces.ImageUri;
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Status;
 using Interfaces.Destination.Directory;
 using Interfaces.Destination.Filename;

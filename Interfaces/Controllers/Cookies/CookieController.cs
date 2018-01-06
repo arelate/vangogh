@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
-namespace Interfaces.Cookies
+namespace Interfaces.Controllers.Cookies
 {
     public interface ISetCookiesAsyncDelegate
     {
@@ -16,7 +16,7 @@ namespace Interfaces.Cookies
         Task<string> GetCookiesStringAsync(IStatus status);
     }
 
-    public interface ICookieController:
+    public interface ICookiesController:
         ISetCookiesAsyncDelegate,
         IGetCookiesStringAsyncDelegate,
         IDataAvailableDelegate,

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Interfaces.Uri;
+using Interfaces.Controllers.Uri;
 
 using Models.Separators;
 

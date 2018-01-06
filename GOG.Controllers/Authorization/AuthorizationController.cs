@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using GOG.Interfaces.Controllers.Authorization;
+using Interfaces.Controllers.Uri;
 
-using Interfaces.Uri;
 using Interfaces.Network;
 using Interfaces.Extraction;
 using Interfaces.Serialization;
@@ -13,6 +12,8 @@ using Interfaces.Status;
 
 using Models.Uris;
 using Models.QueryParameters;
+
+using GOG.Interfaces.Controllers.Authorization;
 
 namespace GOG.Controllers.Authorization
 {

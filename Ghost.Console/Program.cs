@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Delegates.BreakLines;
+
 using Controllers.Stream;
 using Controllers.Storage;
 using Controllers.File;
@@ -34,7 +36,6 @@ using Controllers.Conversion;
 using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Indexing;
-using Controllers.LineBreaking;
 using Controllers.Presentation;
 using Controllers.RecycleBin;
 using Controllers.Routing;
@@ -44,7 +45,6 @@ using Controllers.Hash;
 using Controllers.Containment;
 using Controllers.Sanitization;
 using Controllers.Expectation;
-using Controllers.UpdateUri;
 using Controllers.QueryParameters;
 using Controllers.Template;
 using Controllers.ViewModel;
@@ -74,6 +74,7 @@ using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
 using GOG.Delegates.Enumerate;
 using GOG.Delegates.EnumerateAll;
+using GOG.Delegates.GetUpdateUri;
 
 using GOG.Controllers.NewUpdatedSelection;
 using GOG.Controllers.Authorization;
@@ -137,10 +138,10 @@ namespace Ghost.Console
             var stringMd5Controller = new StringMd5Controller(stringToBytesConversionController, bytesMd5Controller);
 
             var consoleController = new ConsoleController();
-            var lineBreakingDelegate = new LineBreakingDelegate();
+            var breakLinesDelegate = new BreakLinesDelegate();
 
             var consoleInputOutputController = new ConsoleInputOutputController(
-                lineBreakingDelegate,
+                breakLinesDelegate,
                 consoleController);
 
             var bytesFormattingController = new BytesFormattingController();
@@ -228,14 +229,14 @@ namespace Ghost.Console
             var cookiesFilenameDelegate = new FixedFilenameDelegate("cookies", jsonFilenameDelegate);
             var cookieSerializationController = new CookieSerializationController();
 
-            var cookieController = new CookieController(
+            var cookiesController = new CookiesController(
                 cookieSerializationController,
                 serializedStorageController,
                 cookiesFilenameDelegate,
                 statusController);
 
             var networkController = new NetworkController(
-                cookieController,
+                cookiesController,
                 uriController,
                 requestRateController);
 
@@ -538,12 +539,12 @@ namespace Ghost.Console
 
             #region Update.PageResults
 
-            var productParameterGetUpdateUriDelegate = new ProductParameterUpdateUriDelegate();
+            var getProductUpdateUriByContextDelegate = new GetProductUpdateUriByContextDelegate();
             var productParameterGetQueryParametersDelegate = new ProductParameterGetQueryParametersDelegate();
 
             var getProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<ProductsPageResult>(
                 Context.Products,
-                productParameterGetUpdateUriDelegate,
+                getProductUpdateUriByContextDelegate,
                 productParameterGetQueryParametersDelegate,
                 requestPageController,
                 stringMd5Controller,
@@ -563,7 +564,7 @@ namespace Ghost.Console
 
             var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
                 Context.AccountProducts,
-                productParameterGetUpdateUriDelegate,
+                getProductUpdateUriByContextDelegate,
                 productParameterGetQueryParametersDelegate,
                 requestPageController,
                 stringMd5Controller,
@@ -635,7 +636,7 @@ namespace Ghost.Console
 
             var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
                 Context.GameProductData,
-                productParameterGetUpdateUriDelegate,
+                getProductUpdateUriByContextDelegate,
                 userRequestedOrGameProductDataGapsAndUpdatedEnumerateDelegate,
                 productsDataController,
                 gameProductDataController,
@@ -659,7 +660,7 @@ namespace Ghost.Console
 
             var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
                 Context.ApiProducts,
-                productParameterGetUpdateUriDelegate,
+                getProductUpdateUriByContextDelegate,
                 userRequestedOrApiProductGapsAndUpdatedEnumerateDelegate,
                 productsDataController,
                 apiProductsDataController,
@@ -707,7 +708,7 @@ namespace Ghost.Console
 
             var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
                 Context.GameDetails,
-                productParameterGetUpdateUriDelegate,
+                getProductUpdateUriByContextDelegate,
                 userRequestedOrGameDetailsGapsAndUpdatedEnumerateDelegate,
                 accountProductsDataController,
                 gameDetailsDataController,
@@ -722,7 +723,7 @@ namespace Ghost.Console
             #region Update.Screenshots
 
             var updateScreenshotsAsyncDelegate = new UpdateScreenshotsAsyncDelegate(
-                productParameterGetUpdateUriDelegate,
+                getProductUpdateUriByContextDelegate,
                 screenshotsDataController,
                 networkController,
                 screenshotExtractionController,

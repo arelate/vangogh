@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
 namespace GOG.Activities.Cleanup

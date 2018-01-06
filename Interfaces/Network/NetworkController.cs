@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 
 using Interfaces.Status;
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 
 namespace Interfaces.Network
 {

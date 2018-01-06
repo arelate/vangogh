@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Interfaces.Output
+namespace Interfaces.Controllers.Output
 {
     public interface ISetRefreshAsyncDelegate
     {

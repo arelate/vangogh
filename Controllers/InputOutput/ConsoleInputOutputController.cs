@@ -3,9 +3,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.LineBreaking;
+using Interfaces.Delegates.BreakLines;
+
+using Interfaces.Controllers.Output;
+
 using Interfaces.Console;
-using Interfaces.Output;
 using Interfaces.Input;
 
 namespace Controllers.InputOutput
@@ -19,16 +21,16 @@ namespace Controllers.InputOutput
 
         private StringBuilder fragmentBuffer;
 
-        private ILineBreakingDelegate lineBreakingDelegate;
+        private IBreakLinesDelegate breakLinesDelegate;
         private IConsoleController consoleController;
 
         public ConsoleInputOutputController(
-            ILineBreakingDelegate lineBreakingDelegate,
+            IBreakLinesDelegate breakLinesDelegate,
             IConsoleController consoleController)
         {
             fragmentBuffer = new StringBuilder();
 
-            this.lineBreakingDelegate = lineBreakingDelegate;
+            this.breakLinesDelegate = breakLinesDelegate;
             this.consoleController = consoleController;
         }
 
@@ -67,7 +69,7 @@ namespace Controllers.InputOutput
             // Clear frame buffer
             fragmentBuffer.Clear();
             // Break the lines with new line separator, also wrap lines given the available console width
-            var fragmentWrappedLines = lineBreakingDelegate.BreakLines(consoleController.WindowWidth, data);
+            var fragmentWrappedLines = breakLinesDelegate.BreakLines(consoleController.WindowWidth, data);
             // To build the buffer, we'll pad each line with spaces.
             // That takes care of previous frame lines that could have been longer
             foreach (var line in fragmentWrappedLines)

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-using Interfaces.LineBreaking;
+using Interfaces.Delegates.BreakLines;
 
 using Models.Separators;
 
-namespace Controllers.LineBreaking
+namespace Delegates.BreakLines
 {
-    public class LineBreakingDelegate : ILineBreakingDelegate
+    public class BreakLinesDelegate : IBreakLinesDelegate
     {
         public IEnumerable<string> BreakLines(int availableWidth, IEnumerable<string> lines)
         {

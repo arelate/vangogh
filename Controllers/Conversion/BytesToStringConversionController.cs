@@ -1,10 +1,10 @@
 ﻿using System.Text;
 
-using Interfaces.Conversion;
+using Interfaces.Delegates.Convert;
 
 namespace Controllers.Conversion
 {
-    public class BytesToStringConvertionController : IConversionController<byte[], string>
+    public class BytesToStringConvertionController : IConvertDelegate<byte[], string>
     {
         public string Convert(byte[] data)
         {

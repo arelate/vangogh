@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Interfaces.Uri
+namespace Interfaces.Controllers.Uri
 {
     public interface IConcatenateQueryParametersDelegate
     {

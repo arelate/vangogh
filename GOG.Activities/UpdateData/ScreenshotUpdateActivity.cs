@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Linq;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;

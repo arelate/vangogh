@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 
 using Interfaces.Collection;
-using Interfaces.Data;
+using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
 using GOG.Interfaces.NewUpdatedSelection;

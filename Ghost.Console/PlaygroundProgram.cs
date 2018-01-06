@@ -9,10 +9,10 @@ namespace Ghost.Console
         static async void Main(string[] args)
         {
             var consoleController = new Controllers.Console.ConsoleController();
-            var lineBreakingDelegate = new Controllers.LineBreaking.LineBreakingDelegate();
+            var breakLinesDelegate = new Delegates.BreakLines.BreakLinesDelegate();
 
             var consoleIOController = new Controllers.InputOutput.ConsoleInputOutputController(
-                lineBreakingDelegate,
+                breakLinesDelegate,
                 consoleController);
 
             await consoleIOController.OutputOnRefreshAsync("abc", "de", "fgh");
