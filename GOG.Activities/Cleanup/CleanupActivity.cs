@@ -17,8 +17,8 @@ namespace GOG.Activities.Cleanup
     public class CleanupActivity : Activity
     {
         private Context context;
-        private IItemizeMultipleAsyncDelegate<string> itemizeMultipleExpectedItemsAsyncDelegate;
-        private IItemizeMultipleAsyncDelegate<string> itemizeMultipleActualItemsAsyncDelegate;
+        private IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
+        private IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
         private IItemizeDelegate<string, string> itemizeDetailsDelegate;
         private IFormatDelegate<string, string> formatSupplementaryItemDelegate;
         private IRecycleDelegate moveToRecycleBinDelegate;
@@ -26,8 +26,8 @@ namespace GOG.Activities.Cleanup
 
         public CleanupActivity(
             Context context,
-            IItemizeMultipleAsyncDelegate<string> itemizeMultipleExpectedItemsAsyncDelegate,
-            IItemizeMultipleAsyncDelegate<string> itemizeMultipleActualItemsAsyncDelegate,
+            IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
+            IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate moveToRecycleBinDelegate,
@@ -36,8 +36,8 @@ namespace GOG.Activities.Cleanup
             base(statusController)
         {
             this.context = context;
-            this.itemizeMultipleExpectedItemsAsyncDelegate = itemizeMultipleExpectedItemsAsyncDelegate;
-            this.itemizeMultipleActualItemsAsyncDelegate = itemizeMultipleActualItemsAsyncDelegate;
+            this.itemizeAllExpectedItemsAsyncDelegate = itemizeAllExpectedItemsAsyncDelegate;
+            this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
             this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
             this.moveToRecycleBinDelegate = moveToRecycleBinDelegate;
@@ -48,8 +48,8 @@ namespace GOG.Activities.Cleanup
         {
             var cleanupTask = await statusController.CreateAsync(status, $"Cleanup {context}");
 
-            var expectedItems = await itemizeMultipleExpectedItemsAsyncDelegate.ItemizeMulitpleAsync(status);
-            var actualItems = await itemizeMultipleActualItemsAsyncDelegate.ItemizeMulitpleAsync(status);
+            var expectedItems = await itemizeAllExpectedItemsAsyncDelegate.ItemizeAllAsync(status);
+            var actualItems = await itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync(status);
 
             var unexpectedItems = actualItems.Except(expectedItems);
             var cleanupItems = new List<string>();

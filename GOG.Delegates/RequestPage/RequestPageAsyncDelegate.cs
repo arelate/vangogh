@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.RequestPage;
+using GOG.Interfaces.Delegates.RequestPage;
 
 using Interfaces.Controllers.Network;
 
 using Interfaces.Status;
 
-namespace Delegates.RequestPage
+namespace GOG.Delegates.RequestPage
 {
     public class RequestPageAsyncDelegate: IRequestPageAsyncDelegate
     {

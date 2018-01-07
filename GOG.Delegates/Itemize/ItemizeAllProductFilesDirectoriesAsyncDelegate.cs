@@ -8,15 +8,15 @@ using Interfaces.Controllers.Directory;
 
 using Interfaces.Status;
 
-namespace Delegates.Itemize
+namespace GOG.Delegates.Itemize
 {
-    public class ItemizeMultipleProductFilesDirectoriesAsyncDelegate : IItemizeMultipleAsyncDelegate<string>
+    public class ItemizeAllProductFilesDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
         private IGetDirectoryDelegate productFilesDirectoryDelegate;
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
-        public ItemizeMultipleProductFilesDirectoriesAsyncDelegate(
+        public ItemizeAllProductFilesDirectoriesAsyncDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate,
             IDirectoryController directoryController,
             IStatusController statusController)
@@ -26,7 +26,7 @@ namespace Delegates.Itemize
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeMulitpleAsync(IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
         {
             var enumerateProductFilesDirectoriesTask = await statusController.CreateAsync(
                 status, 

@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 
-using Interfaces.Extraction;
+using Interfaces.Delegates.Itemize;
 
 using Models.Separators;
 
-namespace Controllers.Extraction
+namespace GOG.Delegates.Itemize
 {
-    public class GameDetailsDownloadsExtractionController : IStringExtractionController
+    public class ItemizeGameDetailsDownloadsDelegate : IItemizeDelegate<string, string>
     {
-        public IEnumerable<string> ExtractMultiple(string data)
+        public IEnumerable<string> Itemize(string data)
         {
             // downloads are double array and so far nothing else in the game details data is
             // so we'll leverage this fact to extract actual content

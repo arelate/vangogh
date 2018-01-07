@@ -12,7 +12,7 @@ using GOG.Models;
 
 namespace GOG.Delegates.Itemize
 {
-    public class ItemizeMultipleUpdatedProductFilesAsyncDelegate : IItemizeMultipleAsyncDelegate<string>
+    public class ItemizeAllUpdatedProductFilesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
         private IDataController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
@@ -20,7 +20,7 @@ namespace GOG.Delegates.Itemize
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
-        public ItemizeMultipleUpdatedProductFilesAsyncDelegate(
+        public ItemizeAllUpdatedProductFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
@@ -34,7 +34,7 @@ namespace GOG.Delegates.Itemize
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeMulitpleAsync(IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
         {
             var enumerateUpdatedProductFilesTask = await statusController.CreateAsync(status, "Enumerate updated productFiles");
 

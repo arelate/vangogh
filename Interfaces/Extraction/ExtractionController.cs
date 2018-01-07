@@ -9,11 +9,6 @@ namespace Interfaces.Extraction
         IEnumerable<Output> ExtractMultiple(Input data);
     }
 
-    public interface IExtractMultipleDelegate<Input1, Input2, Output>
-    {
-        IEnumerable<Output> ExtractMultiple(Input1 data1, Input2 data2);
-    }
-
     public interface IStringExtractionController:
         IExtractMultipleDelegate<string, string>
     {

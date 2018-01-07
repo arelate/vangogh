@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Linq;
 
-using Interfaces.Delegates.RequestPage;
+using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
@@ -10,8 +11,6 @@ using Interfaces.ContextDefinitions;
 using Models.ProductCore;
 
 using GOG.Interfaces.Delegates.GetPageResults;
-
-using GOG.Interfaces.Delegates.ExtractPageResults;
 using GOG.Interfaces.NewUpdatedSelection;
 
 namespace GOG.Activities.UpdateData
@@ -23,9 +22,8 @@ namespace GOG.Activities.UpdateData
         private Context context;
 
         private IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
-        private IExtractPageResultsDelegate<PageType, Type> extractPageResultsDelegate;
+        private IItemizeDelegate<IList<PageType>, Type> itemizePageResultsDelegate;
 
-        //private IRequestPageAsyncDelegate requestPageAsyncDelegate;
         private IDataController<Type> dataController;
 
         private ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate;
@@ -33,8 +31,7 @@ namespace GOG.Activities.UpdateData
         public PageResultUpdateActivity(
             Context context,
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
-            IExtractPageResultsDelegate<PageType, Type> extractPageResultsDelegate,
-            //IRequestPageAsyncDelegate requestPageAsyncDelegate,
+            IItemizeDelegate<IList<PageType>, Type> itemizePageResultsDelegate,
             IDataController<Type> dataController,
             IStatusController statusController,
             ISelectNewUpdatedAsyncDelegate<Type> selectNewUpdatedDelegate = null) :
@@ -43,9 +40,8 @@ namespace GOG.Activities.UpdateData
             this.context = context;
 
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
-            this.extractPageResultsDelegate = extractPageResultsDelegate;
+            this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
-            //this.requestPageAsyncDelegate = requestPageAsyncDelegate;
             this.dataController = dataController;
 
             this.selectNewUpdatedDelegate = selectNewUpdatedDelegate;
@@ -58,7 +54,7 @@ namespace GOG.Activities.UpdateData
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync(updateAllProductsTask);
 
             var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extract {context}");
-            var newProducts = extractPageResultsDelegate.ExtractMultiple(productsPageResults);
+            var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
             await statusController.CompleteAsync(extractTask);
 
             if (selectNewUpdatedDelegate != null)

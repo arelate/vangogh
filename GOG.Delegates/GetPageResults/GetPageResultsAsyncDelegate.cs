@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetQueryParameters;
-using Interfaces.Delegates.RequestPage;
 
 using Interfaces.Controllers.Hash;
 
@@ -14,6 +13,7 @@ using Models.Units;
 
 using GOG.Interfaces.Delegates.GetPageResults;
 using GOG.Interfaces.Delegates.GetUpdateUri;
+using GOG.Interfaces.Delegates.RequestPage;
 
 using GOG.Models;
 

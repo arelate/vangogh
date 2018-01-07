@@ -2,6 +2,7 @@
 
 namespace Interfaces.Tree
 {
+    // TODO: isn't this Convert delegate?
     public interface IToEnumerableDelegate<T>
     {
         IEnumerable<T> ToEnumerable(T item);

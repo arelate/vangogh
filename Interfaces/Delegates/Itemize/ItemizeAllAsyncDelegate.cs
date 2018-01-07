@@ -6,8 +6,8 @@ using Interfaces.Status;
 
 namespace Interfaces.Delegates.Itemize
 {
-    public interface IItemizeMultipleAsyncDelegate<Output>
+    public interface IItemizeAllAsyncDelegate<Output>
     {
-        Task<IEnumerable<Output>> ItemizeMulitpleAsync(IStatus status);
+        Task<IEnumerable<Output>> ItemizeAllAsync(IStatus status);
     }
 }

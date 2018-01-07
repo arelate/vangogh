@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Status;
 
-namespace Interfaces.Delegates.RequestPage
+namespace GOG.Interfaces.Delegates.RequestPage
 {
     public interface IRequestPageAsyncDelegate
     {

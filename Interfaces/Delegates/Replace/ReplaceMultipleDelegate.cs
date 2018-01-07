@@ -1,7 +1,7 @@
 ﻿namespace Interfaces.Delegates.Replace
 {
-    public interface IReplaceMultipleDelegate
+    public interface IReplaceMultipleDelegate<Type>
     {
-        string ReplaceMultiple(string data, string replaceWith, params string[] findWhat);
+        Type ReplaceMultiple(Type data, Type replaceWith, params Type[] findWhat);
     }
 }

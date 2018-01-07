@@ -18,7 +18,6 @@ using Delegates.GetETA;
 using Delegates.GetQueryParameters;
 using Delegates.Recycle;
 using Delegates.Correct;
-using Delegates.RequestPage;
 using Delegates.Constrain;
 using Delegates.Itemize;
 using Delegates.Replace;
@@ -60,8 +59,6 @@ using Interfaces.ContextDefinitions;
 
 using GOG.Models;
 
-using GOG.Delegates.Extract;
-using GOG.Delegates.ExtractPageResults;
 using GOG.Delegates.GetPageResults;
 using GOG.Delegates.FillGaps;
 using GOG.Delegates.GetDownloadSources;
@@ -72,6 +69,8 @@ using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
 using GOG.Delegates.Itemize;
 using GOG.Delegates.GetUpdateUri;
+using GOG.Delegates.Format;
+using GOG.Delegates.RequestPage;
 
 using GOG.Controllers.NewUpdatedSelection;
 using GOG.Controllers.Authorization;
@@ -559,12 +558,12 @@ namespace Ghost.Console
                 serializationController,
                 statusController);
 
-            var extractProductsDelegate = new ExtractProductsDelegate();
+            var itemizeProductsPageResultProductsDelegate = new ItemizeProductsPageResultProductsDelegate();
 
             var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
                     Context.Products,
                     getProductsPageResultsAsyncDelegate,
-                    extractProductsDelegate,
+                    itemizeProductsPageResultProductsDelegate,
                     //requestPageAsyncDelegate,
                     productsDataController,
                     statusController);
@@ -579,7 +578,7 @@ namespace Ghost.Console
                 serializationController,
                 statusController);
 
-            var extractAccountProductsDelegate = new ExtractAccountProductsDelegate();
+            var itemizeAccountProductsPageResultProductsDelegate = new ItemizeAccountProductsPageResultProductsDelegate();
 
             var selectNewUpdatedDelegate = new SelectNewUpdatedDelegate(
                 accountProductsDataController,
@@ -590,7 +589,7 @@ namespace Ghost.Console
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
                     Context.AccountProducts,
                     getAccountProductsPageResultsAsyncDelegate,
-                    extractAccountProductsDelegate,
+                    itemizeAccountProductsPageResultProductsDelegate,
                     //requestPageAsyncDelegate,
                     accountProductsDataController,
                     statusController,
@@ -685,24 +684,30 @@ namespace Ghost.Console
                 Models.Separators.Separators.GameDetailsDownloadsStart,
                 Models.Separators.Separators.GameDetailsDownloadsEnd);
 
-            var gameDetailsLanguagesExtractionController = new GameDetailsLanguagesExtractionController();
-            var gameDetailsDownloadsExtractionController = new GameDetailsDownloadsExtractionController();
+            var replaceMultipleStringsDelegate = new ReplaceMultipleStringsDelegate();
 
-            var replaceMultipleDelegate = new ReplaceMultipleDelegate();
+            var itemizeDownloadLanguagesDelegate = new ItemizeDownloadLanguagesDelegate(
+                languageController,
+                replaceMultipleStringsDelegate);
 
-            var extractOperatingSystemsDownloadsDelegate = new ExtractOperatingSystemsDownloadsDelegate(
-                replaceMultipleDelegate,
-                languageController);
+            var itemizeGameDetailsDownloadsDelegate = new ItemizeGameDetailsDownloadsDelegate();
+
+            var formatDownloadLanguagesDelegate = new FormatDownloadLanguageDelegate(
+                replaceMultipleStringsDelegate);
+
+            var convertOperatingSystemsDownloads2DArrayToArrayDelegate = new Convert2DArrayToArrayDelegate<OperatingSystemsDownloads>();
 
             var getDeserializedGameDetailsAsyncDelegate = new GetDeserializedGameDetailsAsyncDelegate(
                 networkController,
                 serializationController,
                 languageController,
+                formatDownloadLanguagesDelegate,
                 confirmStringContainsLanguageDownloadsDelegate,
-                gameDetailsLanguagesExtractionController,
-                gameDetailsDownloadsExtractionController,
-                replaceMultipleDelegate,
-                extractOperatingSystemsDownloadsDelegate);
+                itemizeDownloadLanguagesDelegate,
+                itemizeGameDetailsDownloadsDelegate,
+                replaceMultipleStringsDelegate,
+                convertOperatingSystemsDownloads2DArrayToArrayDelegate,
+                collectionController);
 
             var enumerateGameDetailsGapsDelegate = new EnumerateMasterDetailsGapsDelegate<AccountProduct, GameDetails>(
                 accountProductsDataController,
@@ -952,12 +957,12 @@ namespace Ghost.Console
 
             #region Cleanup
 
-            var itemizeMultipleGameDetailsDirectoriesAsyncDelegate = new ItemizeMultipleGameDetailsDirectoriesAsyncDelegate(
+            var itemizeAllGameDetailsDirectoriesAsyncDelegate = new ItemizeAllGameDetailsDirectoriesAsyncDelegate(
                 gameDetailsDataController,
                 itemizeGameDetailsDirectoriesAsyncDelegate,
                 statusController);
 
-            var itemizeMultipleProductFilesDirectoriesAsyncDelegate = new ItemizeMultipleProductFilesDirectoriesAsyncDelegate(
+            var itemizeAllProductFilesDirectoriesAsyncDelegate = new ItemizeAllProductFilesDirectoriesAsyncDelegate(
                 productFilesBaseDirectoryDelegate,
                 directoryController,
                 statusController);
@@ -966,23 +971,23 @@ namespace Ghost.Console
 
             var directoryCleanupActivity = new CleanupActivity(
                 Context.Directories,
-                itemizeMultipleGameDetailsDirectoriesAsyncDelegate, // expected items (directories for gameDetails)
-                itemizeMultipleProductFilesDirectoriesAsyncDelegate, // actual items (directories in productFiles)
+                itemizeAllGameDetailsDirectoriesAsyncDelegate, // expected items (directories for gameDetails)
+                itemizeAllProductFilesDirectoriesAsyncDelegate, // actual items (directories in productFiles)
                 itemizeDirectoryFilesDelegate, // detailed items (files in directory)
                 formatValidationFileDelegate, // supplementary items (validation files)
                 recycleDelegate,
                 directoryController,
                 statusController);
 
-            var itemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
-                new ItemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate(
+            var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
+                new ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
                     updatedDataController,
                     gameDetailsDataController,
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
-            var itemizeMultipleUpdatedProductFilesAsyncDelegate = 
-                new ItemizeMultipleUpdatedProductFilesAsyncDelegate(
+            var itemizeAllUpdatedProductFilesAsyncDelegate = 
+                new ItemizeAllUpdatedProductFilesAsyncDelegate(
                     updatedDataController,
                     gameDetailsDataController,
                     itemizeGameDetailsDirectoriesAsyncDelegate,
@@ -993,8 +998,8 @@ namespace Ghost.Console
 
             var fileCleanupActivity = new CleanupActivity(
                 Context.Files,
-                itemizeMultipleUpdatedGameDetailsManualUrlFilesAsyncDelegate, // expected items (files for updated gameDetails)
-                itemizeMultipleUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
+                itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate, // expected items (files for updated gameDetails)
+                itemizeAllUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
                 itemizePassthroughDelegate, // detailed items (passthrough)
                 formatValidationFileDelegate, // supplementary items (validation files)
                 recycleDelegate,

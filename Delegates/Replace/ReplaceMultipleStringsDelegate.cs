@@ -2,7 +2,7 @@
 
 namespace Delegates.Replace
 {
-    public class ReplaceMultipleDelegate : IReplaceMultipleDelegate
+    public class ReplaceMultipleStringsDelegate : IReplaceMultipleDelegate<string>
     {
         public string ReplaceMultiple(string input, string replaceWith, params string[] findWhat)
         {

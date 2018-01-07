@@ -12,13 +12,13 @@ using GOG.Models;
 
 namespace GOG.Delegates.Itemize
 {
-    public class ItemizeMultipleGameDetailsDirectoriesAsyncDelegate : IItemizeMultipleAsyncDelegate<string>
+    public class ItemizeAllGameDetailsDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
         private IDataController<GameDetails> gameDetailsDataController;
         private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
         private IStatusController statusController;
 
-        public ItemizeMultipleGameDetailsDirectoriesAsyncDelegate(
+        public ItemizeAllGameDetailsDirectoriesAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
             IStatusController statusController)
@@ -28,7 +28,7 @@ namespace GOG.Delegates.Itemize
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeMulitpleAsync(IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
         {
             var enumerateGameDetailsDirectoriesTask = await statusController.CreateAsync(status, "Enumerate gameDetails directories");
             var directories = new List<string>();
