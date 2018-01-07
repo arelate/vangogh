@@ -10,6 +10,7 @@ using Models.ProductCore;
 
 namespace Delegates.EnumerateIds
 {
+    // TODO: itemization
     public class EnumerateMasterDetailsGapsDelegate<MasterType, DetailType>:
         IEnumerateIdsAsyncDelegate
         where MasterType: ProductCore

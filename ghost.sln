@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Activities", "GOG.Activ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Delegates", "GOG.Delegates\GOG.Delegates.csproj", "{8BF6C982-ECE3-4F76-9BFB-98E67D2C9BB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delegates", "Delegates\Delegates.csproj", "{947A3513-C259-40C1-B5FA-A6F77E3858A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Delegates", "Delegates\Delegates.csproj", "{947A3513-C259-40C1-B5FA-A6F77E3858A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

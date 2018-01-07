@@ -5,16 +5,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Delegates.BreakLines;
-using Delegates.GetIndex;
 using Delegates.Convert;
-using Delegates.Throttle;
 using Delegates.GetDirectory;
 using Delegates.GetFilename;
 using Delegates.Format.Numbers;
 using Delegates.Format.Uri;
+using Delegates.Format.Text;
+using Delegates.Format.Status;
 using Delegates.Confirm;
-using Delegates.GetETA;
 using Delegates.GetQueryParameters;
 using Delegates.Recycle;
 using Delegates.Correct;
@@ -134,10 +132,10 @@ namespace Ghost.Console
             var stringMd5Controller = new StringMd5Controller(convertStringToBytesDelegate, bytesMd5Controller);
 
             var consoleController = new ConsoleController();
-            var breakLinesDelegate = new BreakLinesDelegate();
+            var formatTextToFitConsoleWindowDelegate = new FormatTextToFitConsoleWindowDelegate(consoleController);
 
             var consoleInputOutputController = new ConsoleInputOutputController(
-                breakLinesDelegate,
+                formatTextToFitConsoleWindowDelegate,
                 consoleController);
 
             var formatBytesDelegate = new FormatBytesDelegate();
@@ -181,10 +179,10 @@ namespace Ghost.Console
                 serializedStorageController,
                 collectionController);
 
-            var getETADelegate = new GetETADelegate();
+            var formatRemainingTimeAtSpeedDelegate = new FormatRemainingTimeAtSpeedDelegate();
 
             var statusAppViewModelDelegate = new StatusAppViewModelDelegate(
-                getETADelegate,
+                formatRemainingTimeAtSpeedDelegate,
                 formatBytesDelegate,
                 formatSecondsDelegate);
 
@@ -205,12 +203,12 @@ namespace Ghost.Console
             // add notification handler to drive console view updates
             statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
 
-            var throttleAsyncDelegate = new ThrottleAsyncDelegate(
+            var constrainExecutionAsyncDelegate = new ConstrainExecutionAsyncDelegate(
                 statusController,
                 formatSecondsDelegate);
 
             var constrainRequestRateAsyncDelegate = new ConstrainRequestRateAsyncDelegate(
-                throttleAsyncDelegate,
+                constrainExecutionAsyncDelegate,
                 collectionController,
                 statusController,
                 new string[] {
@@ -264,15 +262,15 @@ namespace Ghost.Console
 
             // Data controllers for products, game details, game product data, etc.
 
-            var getProductIndexDelegate = new GetProductCoreIndexDelegate<Product>();
-            var getAccountProductIndexDelegate = new GetProductCoreIndexDelegate<AccountProduct>();
-            var getGameDetailsIndexDelegate = new GetProductCoreIndexDelegate<GameDetails>();
-            var getGameProductDataIndexDelegate = new GetProductCoreIndexDelegate<GameProductData>();
-            var getApiProductIndexDelegate = new GetProductCoreIndexDelegate<ApiProduct>();
-            var getProductScreenshotsIndexDelegate = new GetProductCoreIndexDelegate<ProductScreenshots>();
-            var getProductDownloadsIndexDelegate = new GetProductCoreIndexDelegate<ProductDownloads>();
-            var getProductRoutesIndexDelegate = new GetProductCoreIndexDelegate<ProductRoutes>();
-            var getValidationResultIndexDelegate = new GetProductCoreIndexDelegate<ValidationResult>();
+            var convertProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<Product>();
+            var convertAccountProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<AccountProduct>();
+            var convertGameDetailsToIndexDelegate = new ConvertProductCoreToIndexDelegate<GameDetails>();
+            var convertGameProductDataToIndexDelegate = new ConvertProductCoreToIndexDelegate<GameProductData>();
+            var convertApiProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<ApiProduct>();
+            var convertProductScreenshotsToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductScreenshots>();
+            var convertProductDownloadsToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductDownloads>();
+            var convertProductRoutesToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductRoutes>();
+            var convertValidationResultToIndexDelegate = new ConvertProductCoreToIndexDelegate<ValidationResult>();
 
             // directories
 
@@ -417,7 +415,7 @@ namespace Ghost.Console
             var productsDataController = new DataController<Product>(
                 productsIndexDataController,
                 serializedStorageController,
-                getProductIndexDelegate,
+                convertProductToIndexDelegate,
                 collectionController,
                 productsDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -427,7 +425,7 @@ namespace Ghost.Console
             var accountProductsDataController = new DataController<AccountProduct>(
                 accountProductsIndexDataController,
                 serializedStorageController,
-                getAccountProductIndexDelegate,
+                convertAccountProductToIndexDelegate,
                 collectionController,
                 accountProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -437,7 +435,7 @@ namespace Ghost.Console
             var gameDetailsDataController = new DataController<GameDetails>(
                 gameDetailsIndexDataController,
                 serializedStorageController,
-                getGameDetailsIndexDelegate,
+                convertGameDetailsToIndexDelegate,
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -447,7 +445,7 @@ namespace Ghost.Console
             var gameProductDataController = new DataController<GameProductData>(
                 gameProductDataIndexDataController,
                 serializedStorageController,
-                getGameProductDataIndexDelegate,
+                convertGameProductDataToIndexDelegate,
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -457,7 +455,7 @@ namespace Ghost.Console
             var apiProductsDataController = new DataController<ApiProduct>(
                 apiProductsIndexDataController,
                 serializedStorageController,
-                getApiProductIndexDelegate,
+                convertApiProductToIndexDelegate,
                 collectionController,
                 apiProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -467,7 +465,7 @@ namespace Ghost.Console
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 productScreenshotsIndexDataController,
                 serializedStorageController,
-                getProductScreenshotsIndexDelegate,
+                convertProductScreenshotsToIndexDelegate,
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -477,7 +475,7 @@ namespace Ghost.Console
             var productDownloadsDataController = new DataController<ProductDownloads>(
                 productDownloadsIndexDataController,
                 serializedStorageController,
-                getProductDownloadsIndexDelegate,
+                convertProductDownloadsToIndexDelegate,
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -487,7 +485,7 @@ namespace Ghost.Console
             var productRoutesDataController = new DataController<ProductRoutes>(
                 productRoutesIndexDataController,
                 serializedStorageController,
-                getProductRoutesIndexDelegate,
+                convertProductRoutesToIndexDelegate,
                 collectionController,
                 productRoutesDirectoryDelegate,
                 getJsonFilenameDelegate,
@@ -497,7 +495,7 @@ namespace Ghost.Console
             var validationResultsDataController = new DataController<ValidationResult>(
                 validationResultsIndexController,
                 serializedStorageController,
-                getValidationResultIndexDelegate,
+                convertValidationResultToIndexDelegate,
                 collectionController,
                 validationResultsDirectoryDelegate,
                 getJsonFilenameDelegate,

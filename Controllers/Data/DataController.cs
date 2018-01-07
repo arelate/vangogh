@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.GetIndex;
+using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Recycle;
 
 using Interfaces.Controllers.Data;
@@ -22,7 +22,7 @@ namespace Controllers.Data
 
         private ISerializedStorageController serializedStorageController;
 
-        private IGetIndexDelegate<Type> getIndexDelegate;
+        private IConvertDelegate<Type, long> convertProductToIndexDelegate;
         private ICollectionController collectionController;
 
         private IGetDirectoryDelegate getDirectoryDelegate;
@@ -35,7 +35,7 @@ namespace Controllers.Data
         public DataController(
             IDataController<long> indexDataController,
             ISerializedStorageController serializedStorageController,
-            IGetIndexDelegate<Type> getIndexDelegate,
+            IConvertDelegate<Type, long> convertProductToIndexDelegate,
             ICollectionController collectionController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
@@ -46,7 +46,7 @@ namespace Controllers.Data
 
             this.serializedStorageController = serializedStorageController;
 
-            this.getIndexDelegate = getIndexDelegate;
+            this.convertProductToIndexDelegate = convertProductToIndexDelegate;
             this.collectionController = collectionController;
 
             this.getDirectoryDelegate = getDirectoryDelegate;
@@ -66,7 +66,7 @@ namespace Controllers.Data
         {
             if (data == null) return true;
 
-            var index = getIndexDelegate.GetIndex(data);
+            var index = convertProductToIndexDelegate.Convert(data);
             return await indexDataController.ContainsAsync(index, status);
         }
 
@@ -109,7 +109,7 @@ namespace Controllers.Data
 
             foreach (var item in data)
             {
-                var index = getIndexDelegate.GetIndex(item);
+                var index = convertProductToIndexDelegate.Convert(item);
                 indexes.Add(index);
 
                 await statusController.UpdateProgressAsync(

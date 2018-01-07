@@ -1,17 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Interfaces.Delegates.BreakLines;
+using Interfaces.Delegates.Format;
+
+using Interfaces.Console;
 
 using Models.Separators;
 
-namespace Delegates.BreakLines
+namespace Delegates.Format.Text
 {
-    public class BreakLinesDelegate : IBreakLinesDelegate
+    public class FormatTextToFitConsoleWindowDelegate : IFormatDelegate<IEnumerable<string>, IEnumerable<string>>
     {
-        public IEnumerable<string> BreakLines(int availableWidth, IEnumerable<string> lines)
+        private IWindowWidthProperty windowWidthProperty;
+
+        public FormatTextToFitConsoleWindowDelegate(IWindowWidthProperty windowWidthProperty)
+        {
+            this.windowWidthProperty = windowWidthProperty;
+        }
+
+        public IEnumerable<string> Format(IEnumerable<string> lines)
         {
             var brokenLines = new List<string>();
+            var availableWidth = (windowWidthProperty != null) ?
+                windowWidthProperty.WindowWidth :
+                40;
 
             foreach (var line in lines)
                 foreach (var splitLine in line.Split(Separators.Common.NewLine, StringSplitOptions.None))

@@ -1,14 +1,14 @@
 ﻿using System;
 
-using Interfaces.Delegates.GetETA;
+using Interfaces.Delegates.Format;
 
 using Interfaces.Status;
 
-namespace Delegates.GetETA
+namespace Delegates.Format.Status
 {
-    public class GetETADelegate : IGetETADelegate
+    public class FormatRemainingTimeAtSpeedDelegate : IFormatDelegate<IStatus, Tuple<long, double>>
     {
-        public Tuple<long, double> GetETA(IStatus status)
+        public Tuple<long, double> Format(IStatus status)
         {
             if (status == null ||
                 status.Progress == null) return new Tuple<long, double>(0, 0);

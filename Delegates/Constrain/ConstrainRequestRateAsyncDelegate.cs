@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.Throttle;
 using Interfaces.Delegates.Constrain;
 
 using Interfaces.Status;
@@ -13,7 +12,7 @@ namespace Delegates.Constrain
 {
     public class ConstrainRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
     {
-        private IThrottleAsyncDelegate throttleAsyncDelegate;
+        private IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
         private ICollectionController collectionController;
         private IStatusController statusController;
         private Dictionary<string, DateTime> lastRequestToUriPrefix;
@@ -23,12 +22,12 @@ namespace Delegates.Constrain
         private int rateLimitRequestsCount;
 
         public ConstrainRequestRateAsyncDelegate(
-            IThrottleAsyncDelegate throttleAsyncDelegate,
+            IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
             ICollectionController collectionController,
             IStatusController statusController,
             params string[] uriPrefixes)
         {
-            this.throttleAsyncDelegate = throttleAsyncDelegate;
+            this.constrainExecutionAsyncDelegate = constrainExecutionAsyncDelegate;
             this.collectionController = collectionController;
             this.statusController = statusController;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
@@ -56,7 +55,7 @@ namespace Delegates.Constrain
             if (elapsed < requestIntervalSeconds)
             {
                 var limitRateTask = await statusController.CreateAsync(status, "Limit request rate to avoid temporary server block");
-                await throttleAsyncDelegate.ThrottleAsync(requestIntervalSeconds - elapsed, status);
+                await constrainExecutionAsyncDelegate.ConstrainAsync(requestIntervalSeconds - elapsed, status);
                 await statusController.CompleteAsync(limitRateTask);
             }
 

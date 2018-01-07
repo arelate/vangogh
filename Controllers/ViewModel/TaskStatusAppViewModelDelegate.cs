@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Delegates.Format;
-using Interfaces.Delegates.GetETA;
 
 using Interfaces.ViewModel;
 using Interfaces.Status;
@@ -31,16 +30,16 @@ namespace Controllers.ViewModel
             public const string WarningsCount = "warningsCount";
         }
 
-        private IGetETADelegate getETADelegate;
+        private IFormatDelegate<IStatus, Tuple<long, double>> formatRemainingTimeAtSpeedDelegate;
         private IFormatDelegate<long, string> formatBytesDelegate;
         private IFormatDelegate<long, string> formatSecondsDelegate;
 
         public StatusAppViewModelDelegate(
-            IGetETADelegate getETADelegate,
+            IFormatDelegate<IStatus, Tuple<long, double>> formatRemainingTimeAtSpeedDelegate,
             IFormatDelegate<long, string> formatBytesDelegate,
             IFormatDelegate<long, string> formatSecondsDelegate)
         {
-            this.getETADelegate = getETADelegate;
+            this.formatRemainingTimeAtSpeedDelegate = formatRemainingTimeAtSpeedDelegate;
             this.formatBytesDelegate = formatBytesDelegate;
             this.formatSecondsDelegate = formatSecondsDelegate;
         }
@@ -88,7 +87,7 @@ namespace Controllers.ViewModel
                     currentFormatted = formatBytesDelegate.Format(current);
                     totalFormatted = formatBytesDelegate.Format(total);
 
-                    var estimatedTimeAvailable = getETADelegate.GetETA(status);
+                    var estimatedTimeAvailable = formatRemainingTimeAtSpeedDelegate.Format(status);
 
                     var remainingTime = formatSecondsDelegate.Format(estimatedTimeAvailable.Item1);
                     var speed = formatBytesDelegate.Format((long)estimatedTimeAvailable.Item2);

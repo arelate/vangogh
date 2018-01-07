@@ -7,6 +7,7 @@ using Interfaces.Status;
 
 namespace Delegates.EnumerateIds
 {
+    // TODO: itemization
     public class EnumerateUserRequestedIdsDelegate : IEnumerateIdsAsyncDelegate
     {
         private string[] userRequested;

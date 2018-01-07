@@ -9,7 +9,7 @@ namespace Ghost.Console
         static async void Main(string[] args)
         {
             var consoleController = new Controllers.Console.ConsoleController();
-            var breakLinesDelegate = new Delegates.BreakLines.BreakLinesDelegate();
+            var breakLinesDelegate = new Delegates.Format.Text.FormatTextToFitConsoleWindowDelegate(consoleController);
 
             var consoleIOController = new Controllers.InputOutput.ConsoleInputOutputController(
                 breakLinesDelegate,

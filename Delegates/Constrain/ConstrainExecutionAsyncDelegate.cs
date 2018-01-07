@@ -1,20 +1,20 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Delegates.Throttle;
+using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Format;
 
 using Interfaces.Status;
 
 using Models.Units;
 
-namespace Delegates.Throttle
+namespace Delegates.Constrain
 {
-    public class ThrottleAsyncDelegate : IThrottleAsyncDelegate
+    public class ConstrainExecutionAsyncDelegate : IConstrainAsyncDelegate<int>
     {
         private IStatusController statusController;
         IFormatDelegate<long, string> formatSecondsDelegate;
 
-        public ThrottleAsyncDelegate(
+        public ConstrainExecutionAsyncDelegate(
             IStatusController statusController,
             IFormatDelegate<long, string> formatSecondsDelegate)
         {
@@ -22,7 +22,7 @@ namespace Delegates.Throttle
             this.formatSecondsDelegate = formatSecondsDelegate;
         }
 
-        public async Task ThrottleAsync(int delaySeconds, IStatus status)
+        public async Task ConstrainAsync(int delaySeconds, IStatus status)
         {
             var throttleTask = await statusController.CreateAsync(
                 status,
