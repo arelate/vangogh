@@ -1,20 +1,20 @@
 ﻿using System.IO;
 
 using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.MoveToRecycleBin;
+using Interfaces.Delegates.Recycle;
 
 using Interfaces.Controllers.Directory;
 using Interfaces.Controllers.File;
 
-namespace Delegates.MoveToRecycleBin
+namespace Delegates.Recycle
 {
-    public class MoveToRecycleBinDelegate : IMoveToRecycleBinDelegate
+    public class RecycleDelegate : IRecycleDelegate
     {
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IFileController fileController;
         private IDirectoryController directoryController;
 
-        public MoveToRecycleBinDelegate(
+        public RecycleDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
             IDirectoryController directoryController)
@@ -24,7 +24,7 @@ namespace Delegates.MoveToRecycleBin
             this.directoryController = directoryController;
         }
 
-        public void MoveToRecycleBin(string uri)
+        public void Recycle(string uri)
         {
             var recycleBinUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(),

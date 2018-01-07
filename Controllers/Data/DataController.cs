@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetIndex;
-using Interfaces.Delegates.MoveToRecycleBin;
+using Interfaces.Delegates.Recycle;
 
 using Interfaces.Controllers.Data;
 
@@ -28,7 +28,7 @@ namespace Controllers.Data
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
 
-        private IMoveToRecycleBinDelegate moveToRecycleBinDelegate;
+        private IRecycleDelegate moveToRecycleBinDelegate;
 
         private IStatusController statusController;
 
@@ -39,7 +39,7 @@ namespace Controllers.Data
             ICollectionController collectionController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            IMoveToRecycleBinDelegate moveToRecycleBinDelegate,
+            IRecycleDelegate moveToRecycleBinDelegate,
             IStatusController statusController)
         {
             this.indexDataController = indexDataController;
@@ -155,7 +155,7 @@ namespace Controllers.Data
                 async (index, item) =>
                 {
                     if (await indexDataController.ContainsAsync(index, status))
-                        moveToRecycleBinDelegate.MoveToRecycleBin(GetItemUri(index));
+                        moveToRecycleBinDelegate.Recycle(GetItemUri(index));
                 },
                 async (indexes) =>
                 {

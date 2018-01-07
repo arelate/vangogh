@@ -16,11 +16,13 @@ using Delegates.Format.Uri;
 using Delegates.Confirm;
 using Delegates.GetETA;
 using Delegates.GetQueryParameters;
-using Delegates.MoveToRecycleBin;
+using Delegates.Recycle;
 using Delegates.Correct;
 using Delegates.RequestPage;
 using Delegates.Constrain;
 using Delegates.Itemize;
+using Delegates.Replace;
+using Delegates.EnumerateIds;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -44,13 +46,11 @@ using Controllers.Presentation;
 using Controllers.Routing;
 using Controllers.Status;
 using Controllers.Hash;
-using Controllers.Sanitization;
 using Controllers.Template;
 using Controllers.ViewModel;
 using Controllers.Tree;
 using Controllers.ViewUpdates;
 using Controllers.ActivityContext;
-using Controllers.UserRequested;
 using Controllers.InputOutput;
 
 using Interfaces.Activity;
@@ -410,7 +410,7 @@ namespace Ghost.Console
 
             // data controllers
 
-            var moveToRecycleBinDelegate = new MoveToRecycleBinDelegate(
+            var recycleDelegate = new RecycleDelegate(
                 recycleBinDirectoryDelegate,
                 fileController,
                 directoryController);
@@ -422,7 +422,7 @@ namespace Ghost.Console
                 collectionController,
                 productsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
@@ -432,7 +432,7 @@ namespace Ghost.Console
                 collectionController,
                 accountProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
@@ -442,7 +442,7 @@ namespace Ghost.Console
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var gameProductDataController = new DataController<GameProductData>(
@@ -452,7 +452,7 @@ namespace Ghost.Console
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
@@ -462,7 +462,7 @@ namespace Ghost.Console
                 collectionController,
                 apiProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
@@ -472,7 +472,7 @@ namespace Ghost.Console
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
@@ -482,7 +482,7 @@ namespace Ghost.Console
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var productRoutesDataController = new DataController<ProductRoutes>(
@@ -492,7 +492,7 @@ namespace Ghost.Console
                 collectionController,
                 productRoutesDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             var validationResultsDataController = new DataController<ValidationResult>(
@@ -502,7 +502,7 @@ namespace Ghost.Console
                 collectionController,
                 validationResultsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 statusController);
 
             #endregion
@@ -628,23 +628,23 @@ namespace Ghost.Console
 
             var fillGameDetailsGapsDelegate = new FillGameDetailsGapsDelegate();
 
-            var userRequestedController = new UserRequestedController(args);
+            var enumerateUserRequestedIdsDelegate = new EnumerateUserRequestedIdsDelegate(args);
 
             // product update controllers
 
-            var gameProductDataEnumerateGapsDelegate = new MasterDetailsEnumerateGapsDelegate<Product, GameProductData>(
+            var enumerateGameProductDataGapsDelegate = new EnumerateMasterDetailsGapsDelegate<Product, GameProductData>(
                 productsDataController,
                 gameProductDataController);
 
-            var userRequestedOrGameProductDataGapsAndUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
-                userRequestedController,
-                gameProductDataEnumerateGapsDelegate,
+            var enumerateUserRequestedIdsOrDefaultDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
+                enumerateUserRequestedIdsDelegate,
+                enumerateGameProductDataGapsDelegate,
                 updatedDataController);
 
             var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
                 Context.GameProductData,
                 getProductUpdateUriByContextDelegate,
-                userRequestedOrGameProductDataGapsAndUpdatedEnumerateDelegate,
+                enumerateUserRequestedIdsOrDefaultDelegate,
                 productsDataController,
                 gameProductDataController,
                 updatedDataController,
@@ -656,19 +656,19 @@ namespace Ghost.Console
                 networkController,
                 serializationController);
 
-            var apiProductEnumerateGapsDelegate = new MasterDetailsEnumerateGapsDelegate<Product, ApiProduct>(
+            var enumerateApiProductsGapsDelegate = new EnumerateMasterDetailsGapsDelegate<Product, ApiProduct>(
                 productsDataController,
                 apiProductsDataController);
 
-            var userRequestedOrApiProductGapsAndUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
-                userRequestedController,
-                apiProductEnumerateGapsDelegate,
+            var enumerateUserRequestedOrApiProductGapsAndUpdatedDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
+                enumerateUserRequestedIdsDelegate,
+                enumerateApiProductsGapsDelegate,
                 updatedDataController);
 
             var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
                 Context.ApiProducts,
                 getProductUpdateUriByContextDelegate,
-                userRequestedOrApiProductGapsAndUpdatedEnumerateDelegate,
+                enumerateUserRequestedOrApiProductGapsAndUpdatedDelegate,
                 productsDataController,
                 apiProductsDataController,
                 updatedDataController,
@@ -688,10 +688,10 @@ namespace Ghost.Console
             var gameDetailsLanguagesExtractionController = new GameDetailsLanguagesExtractionController();
             var gameDetailsDownloadsExtractionController = new GameDetailsDownloadsExtractionController();
 
-            var sanitizationController = new SanitizationController();
+            var replaceMultipleDelegate = new ReplaceMultipleDelegate();
 
             var extractOperatingSystemsDownloadsDelegate = new ExtractOperatingSystemsDownloadsDelegate(
-                sanitizationController,
+                replaceMultipleDelegate,
                 languageController);
 
             var getDeserializedGameDetailsAsyncDelegate = new GetDeserializedGameDetailsAsyncDelegate(
@@ -701,22 +701,22 @@ namespace Ghost.Console
                 confirmStringContainsLanguageDownloadsDelegate,
                 gameDetailsLanguagesExtractionController,
                 gameDetailsDownloadsExtractionController,
-                sanitizationController,
+                replaceMultipleDelegate,
                 extractOperatingSystemsDownloadsDelegate);
 
-            var gameDetailsEnumerateGapsDelegate = new MasterDetailsEnumerateGapsDelegate<AccountProduct, GameDetails>(
+            var enumerateGameDetailsGapsDelegate = new EnumerateMasterDetailsGapsDelegate<AccountProduct, GameDetails>(
                 accountProductsDataController,
                 gameDetailsDataController);
 
-            var userRequestedOrGameDetailsGapsAndUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
-                userRequestedController,
-                gameDetailsEnumerateGapsDelegate,
+            var enumerateUserRequestedOrGameDetailsGapsAndUpdatedDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
+                enumerateUserRequestedIdsDelegate,
+                enumerateGameDetailsGapsDelegate,
                 updatedDataController);
 
             var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
                 Context.GameDetails,
                 getProductUpdateUriByContextDelegate,
-                userRequestedOrGameDetailsGapsAndUpdatedEnumerateDelegate,
+                enumerateUserRequestedOrGameDetailsGapsAndUpdatedDelegate,
                 accountProductsDataController,
                 gameDetailsDataController,
                 updatedDataController,
@@ -749,19 +749,19 @@ namespace Ghost.Console
             var getProductImageUriDelegate = new GetProductImageUriDelegate();
             var getAccountProductImageUriDelegate = new GetAccountProductImageUriDelegate();
 
-            var userRequestedOrUpdatedEnumerateDelegate = new UserRequestedOrDefaultEnumerateIdsDelegate(
-                userRequestedController,
+            var enumerateUserRequestedOrUpdatedDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
+                enumerateUserRequestedIdsDelegate,
                 updatedDataController);
 
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
-                userRequestedOrUpdatedEnumerateDelegate,
+                enumerateUserRequestedOrUpdatedDelegate,
                 productsDataController,
                 formatImagesUriDelegate,
                 getProductImageUriDelegate,
                 statusController);
 
             var getAccountProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>(
-                userRequestedOrUpdatedEnumerateDelegate,
+                enumerateUserRequestedOrUpdatedDelegate,
                 accountProductsDataController,
                 formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
@@ -931,7 +931,7 @@ namespace Ghost.Console
                 validationResultsDataController,
                 gameDetailsDataController,
                 itemizeGameDetailsManualUrlsAsyncDelegate,
-                userRequestedOrUpdatedEnumerateDelegate,
+                enumerateUserRequestedOrUpdatedDelegate,
                 routingController,
                 statusController);
 
@@ -970,7 +970,7 @@ namespace Ghost.Console
                 itemizeMultipleProductFilesDirectoriesAsyncDelegate, // actual items (directories in productFiles)
                 itemizeDirectoryFilesDelegate, // detailed items (files in directory)
                 formatValidationFileDelegate, // supplementary items (validation files)
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 directoryController,
                 statusController);
 
@@ -997,7 +997,7 @@ namespace Ghost.Console
                 itemizeMultipleUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
                 itemizePassthroughDelegate, // detailed items (passthrough)
                 formatValidationFileDelegate, // supplementary items (validation files)
-                moveToRecycleBinDelegate,
+                recycleDelegate,
                 directoryController,
                 statusController);
 

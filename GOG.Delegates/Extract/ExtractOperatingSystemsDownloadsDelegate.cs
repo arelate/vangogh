@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using Interfaces.Sanitization;
+using Interfaces.Delegates.Replace;
+
 using Interfaces.Language;
 
 using Interfaces.Extraction;
@@ -16,14 +17,14 @@ namespace GOG.Delegates.Extract
     public class ExtractOperatingSystemsDownloadsDelegate: 
         IExtractMultipleDelegate<IEnumerable<string>, OperatingSystemsDownloads[][], OperatingSystemsDownloads>
     {
-        private ISanitizationController sanitizationController;
+        private IReplaceMultipleDelegate replaceMultipleDelegate;
         private ILanguageController languageController;
 
         public ExtractOperatingSystemsDownloadsDelegate(
-            ISanitizationController sanitizationController,
+            IReplaceMultipleDelegate replaceMultipleDelegate,
             ILanguageController languageController)
         {
-            this.sanitizationController = sanitizationController;
+            this.replaceMultipleDelegate = replaceMultipleDelegate;
             this.languageController = languageController;
         }
 
@@ -40,7 +41,7 @@ namespace GOG.Delegates.Extract
                 if (download == null)
                     throw new InvalidOperationException("Extracted downloads doesn't contain expected element");
 
-                var language = sanitizationController.SanitizeMultiple(
+                var language = replaceMultipleDelegate.ReplaceMultiple(
                     languages.ElementAt(ii),
                     string.Empty,
                     new string[2] { "\"", "," });

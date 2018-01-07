@@ -1,23 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.UserRequested;
+using Interfaces.Controllers.Data;
+
 using Interfaces.Status;
 
-namespace Controllers.UserRequested
+namespace Delegates.EnumerateIds
 {
-    public class UserRequestedController : IUserRequestedController
+    public class EnumerateUserRequestedIdsDelegate : IEnumerateIdsAsyncDelegate
     {
         private string[] userRequested;
 
-        public UserRequestedController(params string[] userRequested)
+        public EnumerateUserRequestedIdsDelegate(params string[] userRequested)
         {
             this.userRequested = userRequested;
-        }
-
-        public bool IsNullOrEmpty()
-        {
-            return userRequested == null || userRequested.Length == 0;
         }
 
         public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
@@ -26,7 +22,7 @@ namespace Controllers.UserRequested
 
             await Task.Run(() =>
             {
-                if (!IsNullOrEmpty())
+                if (userRequested != null && userRequested.Length > 0)
                 {
 
                     foreach (var stringId in userRequested)

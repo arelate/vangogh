@@ -3,7 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.MoveToRecycleBin;
+using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
@@ -21,7 +21,7 @@ namespace GOG.Activities.Cleanup
         private IItemizeMultipleAsyncDelegate<string> itemizeMultipleActualItemsAsyncDelegate;
         private IItemizeDelegate<string, string> itemizeDetailsDelegate;
         private IFormatDelegate<string, string> formatSupplementaryItemDelegate;
-        private IMoveToRecycleBinDelegate moveToRecycleBinDelegate;
+        private IRecycleDelegate moveToRecycleBinDelegate;
         private IDirectoryController directoryController;
 
         public CleanupActivity(
@@ -30,7 +30,7 @@ namespace GOG.Activities.Cleanup
             IItemizeMultipleAsyncDelegate<string> itemizeMultipleActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
-            IMoveToRecycleBinDelegate moveToRecycleBinDelegate,
+            IRecycleDelegate moveToRecycleBinDelegate,
             IDirectoryController directoryController,
             IStatusController statusController) :
             base(statusController)
@@ -72,7 +72,7 @@ namespace GOG.Activities.Cleanup
                     cleanupItems.Count,
                     item);
 
-                moveToRecycleBinDelegate.MoveToRecycleBin(item);
+                moveToRecycleBinDelegate.Recycle(item);
             }
 
             // check if any of the directories are left empty and delete

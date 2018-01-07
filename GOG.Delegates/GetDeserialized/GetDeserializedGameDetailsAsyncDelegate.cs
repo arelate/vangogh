@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Replace;
 
 using Interfaces.Controllers.Network;
 
 using Interfaces.Serialization;
 using Interfaces.Language;
 using Interfaces.Extraction;
-using Interfaces.Sanitization;
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
@@ -28,7 +28,7 @@ namespace GOG.Delegates.GetDeserialized
         private IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
         private IStringExtractionController languagesExtractionController;
         private IStringExtractionController downloadsExtractionController;
-        private ISanitizationController sanitizationController;
+        private IReplaceMultipleDelegate replaceMultipleDelegate;
 
         private IExtractMultipleDelegate<
             IEnumerable<string>, 
@@ -43,7 +43,7 @@ namespace GOG.Delegates.GetDeserialized
             IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate,
             IStringExtractionController languagesExtractionController,
             IStringExtractionController downloadsExtractionController,
-            ISanitizationController sanitizationController,
+            IReplaceMultipleDelegate replaceMultipleDelegate,
             IExtractMultipleDelegate<IEnumerable<string>, OperatingSystemsDownloads[][], OperatingSystemsDownloads> operatingSystemsDownloadsExtractionController)
         {
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
@@ -53,7 +53,7 @@ namespace GOG.Delegates.GetDeserialized
             this.confirmStringContainsLanguageDownloadsDelegate = confirmStringContainsLanguageDownloadsDelegate;
             this.languagesExtractionController = languagesExtractionController;
             this.downloadsExtractionController = downloadsExtractionController;
-            this.sanitizationController = sanitizationController;
+            this.replaceMultipleDelegate = replaceMultipleDelegate;
 
             this.operatingSystemsDownloadsExtractionController = operatingSystemsDownloadsExtractionController;
         }
@@ -90,8 +90,8 @@ namespace GOG.Delegates.GetDeserialized
 
                 downloadStrings.Add(downloadString);
 
-                // ...and sanitize it from original string
-                data = sanitizationController.SanitizeMultiple(data, nullString, downloadString);
+                // ...and remove it from the original string
+                data = replaceMultipleDelegate.ReplaceMultiple(data, nullString, downloadString);
             }
 
             foreach (var downloadString in downloadStrings)
@@ -101,7 +101,7 @@ namespace GOG.Delegates.GetDeserialized
                     throw new InvalidOperationException("Download string doesn't seem to contain any languages.");
 
                 // ... and sanitize lanugage strings from downloads
-                var sanitizedDownloadsString = sanitizationController.SanitizeMultiple(
+                var sanitizedDownloadsString = replaceMultipleDelegate.ReplaceMultiple(
                     downloadString, 
                     string.Empty, 
                     languages.ToArray());

@@ -8,9 +8,9 @@ using Interfaces.Status;
 
 using Models.ProductCore;
 
-namespace Controllers.Data
+namespace Delegates.EnumerateIds
 {
-    public class MasterDetailsEnumerateGapsDelegate<MasterType, DetailType>:
+    public class EnumerateMasterDetailsGapsDelegate<MasterType, DetailType>:
         IEnumerateIdsAsyncDelegate
         where MasterType: ProductCore
         where DetailType: ProductCore
@@ -18,7 +18,7 @@ namespace Controllers.Data
         private IDataController<MasterType> masterDataController;
         private IDataController<DetailType> detailDataController;
 
-        public MasterDetailsEnumerateGapsDelegate(
+        public EnumerateMasterDetailsGapsDelegate(
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController)
         {

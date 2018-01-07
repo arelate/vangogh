@@ -1,28 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.Controllers.Data;
-using Interfaces.UserRequested;
 using Interfaces.Status;
 
-namespace Controllers.Data
+namespace Delegates.EnumerateIds
 {
-    public class UserRequestedOrDefaultEnumerateIdsDelegate : IEnumerateIdsAsyncDelegate
+    public class EnumerateUserRequestedIdsOrDefaultDelegate : IEnumerateIdsAsyncDelegate
     {
-        private IUserRequestedController userRequestedController;
+        private IEnumerateIdsAsyncDelegate enumerateUserRequestedIdsAsyncDelegate;
         private IEnumerateIdsAsyncDelegate[] otherEnumerateDelegates;
 
-        public UserRequestedOrDefaultEnumerateIdsDelegate(
-            IUserRequestedController userRequestedController,
+        public EnumerateUserRequestedIdsOrDefaultDelegate(
+            IEnumerateIdsAsyncDelegate enumerateUserRequestedIdsAsyncDelegate,
             params IEnumerateIdsAsyncDelegate[] otherEnumerateDelegates)
         {
-            this.userRequestedController = userRequestedController;
+            this.enumerateUserRequestedIdsAsyncDelegate = enumerateUserRequestedIdsAsyncDelegate;
             this.otherEnumerateDelegates = otherEnumerateDelegates;
         }
 
         public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
         {
-            if (!userRequestedController.IsNullOrEmpty()) return await userRequestedController.EnumerateIdsAsync(status);
+            var userRequestedIds = await enumerateUserRequestedIdsAsyncDelegate.EnumerateIdsAsync(status);
+
+            if (userRequestedIds != null || userRequestedIds.Count() > 0) return userRequestedIds;
 
             var otherIds = new List<long>();
             foreach (var enumerableDelegate in otherEnumerateDelegates)
