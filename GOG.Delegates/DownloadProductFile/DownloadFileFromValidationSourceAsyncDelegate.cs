@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Download;
 
 using Interfaces.Controllers.File;
 
-using Interfaces.FileDownload;
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
-namespace GOG.Delegates.DownloadFileFromSource
+namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadValidationFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
@@ -22,7 +22,7 @@ namespace GOG.Delegates.DownloadFileFromSource
         private IGetDirectoryDelegate validationDirectoryDelegate;
         private IFormatDelegate<string, string> formatValidationUriDelegate;
         private IFileController fileController;
-        private IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceAsyncDelegate;
+        private IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
         private IStatusController statusController;
 
         public DownloadValidationFileAsyncDelegate(
@@ -32,7 +32,7 @@ namespace GOG.Delegates.DownloadFileFromSource
             IGetDirectoryDelegate validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
             IFileController fileController,
-            IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceAsyncDelegate,
+            IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate,
             IStatusController statusController)
         {
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
@@ -41,7 +41,7 @@ namespace GOG.Delegates.DownloadFileFromSource
             this.validationDirectoryDelegate = validationDirectoryDelegate;
             this.formatValidationUriDelegate = formatValidationUriDelegate;
             this.fileController = fileController;
-            this.downloadFileFromSourceAsyncDelegate = downloadFileFromSourceAsyncDelegate;
+            this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
             this.statusController = statusController;
         }
 
@@ -65,7 +65,7 @@ namespace GOG.Delegates.DownloadFileFromSource
 
             var downloadValidationFileTask = await statusController.CreateAsync(status, "Download validation file");
 
-            await downloadFileFromSourceAsyncDelegate.DownloadFileFromSourceAsync(
+            await downloadFromUriAsyncDelegate.DownloadFromUriAsync(
                 validationSourceUri,
                 validationDirectoryDelegate.GetDirectory(),
                 downloadValidationFileTask);

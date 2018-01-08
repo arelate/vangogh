@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\Cookies\CookieSerializationController.cs" />
+    <Compile Remove="Controllers\Cookie\CookieSerializationController.cs" />
   </ItemGroup>
   
   <ItemGroup>

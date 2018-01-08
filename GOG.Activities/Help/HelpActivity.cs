@@ -2,10 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Status;
-using Interfaces.Console;
 using Interfaces.ActivityContext;
-
-using Models.ActivityContext;
 
 namespace GOG.Activities.Help
 {

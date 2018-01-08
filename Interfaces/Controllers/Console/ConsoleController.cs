@@ -1,4 +1,4 @@
-﻿namespace Interfaces.Console
+﻿namespace Interfaces.Controllers.Console
 {
     public interface ICursorLeftProperty
     {

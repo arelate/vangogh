@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Interfaces.Collection
+namespace Interfaces.Controllers.Collection
 {
     public interface IMapDelegate
     {

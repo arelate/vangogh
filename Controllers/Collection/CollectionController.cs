@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Interfaces.Collection;
+using Interfaces.Controllers.Collection;
 
 namespace Controllers.Collection
 {

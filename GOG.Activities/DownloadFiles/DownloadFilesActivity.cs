@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
+
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;
-using Interfaces.FileDownload;
 
 using Models.ProductDownloads;
 using Models.Separators;
@@ -18,20 +18,17 @@ namespace GOG.Activities.DownloadProductFiles
         private Context context;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
-        private IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceAsyncDelegate;
 
         public DownloadFilesActivity(
             Context context,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IDownloadFileFromSourceAsyncDelegate downloadFileFromSourceAsyncDelegate,
             IStatusController statusController) :
             base(statusController)
         {
             this.context = context;
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
-            this.downloadFileFromSourceAsyncDelegate = downloadFileFromSourceAsyncDelegate;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
@@ -78,27 +75,12 @@ namespace GOG.Activities.DownloadProductFiles
                         downloadEntries.Length,
                         sanitizedUri);
 
-                    switch (context)
-                    {
-                        case Context.ProductsFiles:
-                            await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
-                                id,
-                                productDownloads.Title,
-                                sanitizedUri,
-                                entry.Destination,
-                                processDownloadEntriesTask);
-                            break;
-                        case Context.ProductsImages:
-                        case Context.AccountProductsImages:
-                        case Context.Screenshots:
-                            await downloadFileFromSourceAsyncDelegate?.DownloadFileFromSourceAsync(
-                                sanitizedUri,
-                                entry.Destination,
-                                processDownloadEntriesTask);
-                            break;
-                        default:
-                            throw new System.InvalidOperationException($"{context} doesn't have a download delegate mapped.");
-                    }
+                    await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
+                        id,
+                        productDownloads.Title,
+                        sanitizedUri,
+                        entry.Destination,
+                        processDownloadEntriesTask);
 
                     var removeEntryTask = await statusController.CreateAsync(
                         processDownloadEntriesTask,

@@ -20,6 +20,7 @@ using Delegates.Constrain;
 using Delegates.Itemize;
 using Delegates.Replace;
 using Delegates.EnumerateIds;
+using Delegates.Download;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -27,7 +28,6 @@ using Controllers.File;
 using Controllers.Directory;
 using Controllers.Uri;
 using Controllers.Network;
-using Controllers.FileDownload;
 using Controllers.Language;
 using Controllers.Serialization;
 using Controllers.Extraction;
@@ -61,7 +61,7 @@ using GOG.Delegates.GetPageResults;
 using GOG.Delegates.FillGaps;
 using GOG.Delegates.GetDownloadSources;
 using GOG.Delegates.GetUpdateIdentity;
-using GOG.Delegates.DownloadFileFromSource;
+using GOG.Delegates.DownloadProductFile;
 using GOG.Delegates.GetImageUri;
 using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
@@ -236,10 +236,15 @@ namespace Ghost.Console
                 uriController,
                 constrainRequestRateAsyncDelegate);
 
-            var fileDownloadController = new FileDownloadController(
+            var downloadFromResponseAsyncDelegate = new DownloadFromResponseAsyncDelegate(
                 networkController,
                 streamController,
                 fileController,
+                statusController);
+
+            var downloadFromUriAsyncDelegate = new DownloadFromUriAsyncDelegate(
+                networkController,
+                downloadFromResponseAsyncDelegate,
                 statusController);
 
             var requestPageAsyncDelegate = new RequestPageAsyncDelegate(
@@ -869,43 +874,41 @@ namespace Ghost.Console
                 validationDirectoryDelegate,
                 formatValidationUriDelegate,
                 fileController,
-                fileDownloadController,
+                downloadFromUriAsyncDelegate,
                 statusController);
 
             var downloadManualUrlFileAsyncDelegate = new DownloadManualUrlFileAsyncDelegate(
                 networkController,
                 formatUriRemoveSessionDelegate,
                 routingController,
-                fileDownloadController,
+                downloadFromResponseAsyncDelegate,
                 downloadValidationFileAsyncDelegate,
                 statusController);
+
+            var downloadProductImageAsyncDelegate = new DownloadProductImageAsyncDelegate(downloadFromUriAsyncDelegate);
 
             var productsImagesDownloadActivity = new DownloadFilesActivity(
                 Context.ProductsImages,
                 productDownloadsDataController,
-                null,
-                fileDownloadController,
+                downloadProductImageAsyncDelegate,
                 statusController);
 
             var accountProductsImagesDownloadActivity = new DownloadFilesActivity(
                 Context.AccountProductsImages,
                 productDownloadsDataController,
-                null,
-                fileDownloadController,
+                downloadProductImageAsyncDelegate,
                 statusController);
 
             var screenshotsDownloadActivity = new DownloadFilesActivity(
                 Context.Screenshots,
                 productDownloadsDataController,
-                null,
-                fileDownloadController,
+                downloadProductImageAsyncDelegate,
                 statusController);
 
             var productFilesDownloadActivity = new DownloadFilesActivity(
                 Context.ProductsFiles,
                 productDownloadsDataController,
                 downloadManualUrlFileAsyncDelegate,
-                null,
                 statusController);
 
             // validation controllers

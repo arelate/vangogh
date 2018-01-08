@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
-using Interfaces.Console;
+
+using Interfaces.Controllers.Console;
 
 using GOG.Models;
 

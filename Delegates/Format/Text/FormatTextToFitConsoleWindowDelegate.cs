@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Format;
 
-using Interfaces.Console;
+using Interfaces.Controllers.Console;
 
 using Models.Separators;
 

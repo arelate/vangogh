@@ -1,29 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Download;
 
 using Interfaces.Controllers.Network;
 
-using Interfaces.FileDownload;
 using Interfaces.Extraction;
 using Interfaces.Routing;
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
-namespace GOG.Delegates.DownloadFileFromSource
+namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadManualUrlFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
         private INetworkController networkController;
         private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private IRoutingController routingController;
-        private IFileDownloadController fileDownloadController;
+        private IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
         private IStatusController statusController;
         private IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
 
@@ -31,14 +28,14 @@ namespace GOG.Delegates.DownloadFileFromSource
             INetworkController networkController,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IRoutingController routingController,
-            IFileDownloadController fileDownloadController,
+            IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
             IStatusController statusController)
         {
             this.networkController = networkController;
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.routingController = routingController;
-            this.fileDownloadController = fileDownloadController;
+            this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
             this.downloadValidationFileAsyncDelegate = downloadValidationFileAsyncDelegate;
             this.statusController = statusController;
         }
@@ -83,7 +80,7 @@ namespace GOG.Delegates.DownloadFileFromSource
 
                 try
                 {
-                    await fileDownloadController.DownloadFileFromResponseAsync(
+                    await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(
                         response, 
                         destination, 
                         downloadTask);

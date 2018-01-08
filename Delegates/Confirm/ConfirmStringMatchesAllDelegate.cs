@@ -1,6 +1,6 @@
 ﻿using Interfaces.Delegates.Confirm;
 
-using Interfaces.Collection;
+using Interfaces.Controllers.Collection;
 
 namespace Delegates.Confirm
 {

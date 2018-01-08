@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
@@ -8,21 +7,21 @@ using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Network;
 
-using Interfaces.FileDownload;
+using Interfaces.Delegates.Download;
 using Interfaces.Status;
 
 using Models.Units;
 
-namespace Controllers.FileDownload
+namespace Delegates.Download
 {
-    public class FileDownloadController : IFileDownloadController
+    public class DownloadFromResponseAsyncDelegate : IDownloadFromResponseAsyncDelegate
     {
         private INetworkController networkController;
         private IStreamController streamController;
         private IFileController fileController;
         private IStatusController statusController;
 
-        public FileDownloadController(
+        public DownloadFromResponseAsyncDelegate(
             INetworkController networkController,
             IStreamController streamController,
             IFileController fileController,
@@ -35,7 +34,7 @@ namespace Controllers.FileDownload
             this.statusController = statusController;
         }
 
-        public async Task DownloadFileFromResponseAsync(HttpResponseMessage response, string destination, IStatus status)
+        public async Task DownloadFromResponseAsync(HttpResponseMessage response, string destination, IStatus status)
         {
             response.EnsureSuccessStatusCode();
 
@@ -77,22 +76,22 @@ namespace Controllers.FileDownload
             }
         }
 
-        public async Task DownloadFileFromSourceAsync(string sourceUri, string destination, IStatus status)
-        {
-            var downloadEntryTask = await statusController.CreateAsync(status, "Download entry");
-            try
-            {
-                using (var response = await networkController.RequestResponseAsync(downloadEntryTask, HttpMethod.Get, sourceUri))
-                    await DownloadFileFromResponseAsync(response, destination, downloadEntryTask);
-            }
-            catch (Exception ex)
-            {
-                await statusController.WarnAsync(downloadEntryTask, $"{sourceUri}: {ex.Message}");
-            }
-            finally
-            {
-                await statusController.CompleteAsync(downloadEntryTask);
-            }
-        }
+        //public async Task DownloadFileFromSourceAsync(string sourceUri, string destination, IStatus status)
+        //{
+        //    var downloadEntryTask = await statusController.CreateAsync(status, "Download entry");
+        //    try
+        //    {
+        //        using (var response = await networkController.RequestResponseAsync(downloadEntryTask, HttpMethod.Get, sourceUri))
+        //            await DownloadFileFromResponseAsync(response, destination, downloadEntryTask);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await statusController.WarnAsync(downloadEntryTask, $"{sourceUri}: {ex.Message}");
+        //    }
+        //    finally
+        //    {
+        //        await statusController.CompleteAsync(downloadEntryTask);
+        //    }
+        //}
     }
 }

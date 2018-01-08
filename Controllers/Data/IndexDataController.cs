@@ -3,10 +3,12 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Controllers.Data;
-using Interfaces.Collection;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
+
+using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Collection;
+
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
 

@@ -10,11 +10,11 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Network;
+using Interfaces.Controllers.Collection;
 
 using Interfaces.Serialization;
 using Interfaces.Language;
 using Interfaces.Status;
-using Interfaces.Collection;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 

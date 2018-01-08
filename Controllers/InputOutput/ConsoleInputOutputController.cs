@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Output;
+using Interfaces.Controllers.Console;
 
-using Interfaces.Console;
 using Interfaces.Input;
 
 namespace Controllers.InputOutput

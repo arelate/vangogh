@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-using Interfaces.Console;
-
-using Models.Separators;
+using Interfaces.Controllers.Console;
 
 namespace Controllers.Console
 {
