@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Convert;
+
 using Interfaces.Status;
-using Interfaces.Tree;
 using Interfaces.Template;
 using Interfaces.ViewModel;
 using Interfaces.NotifyViewUpdate;
@@ -15,7 +16,7 @@ namespace Controllers.ViewUpdates
         private IStatus status;
         private ITemplateController templateController;
         private IGetViewModelDelegate<IStatus> statusViewModelDelegate;
-        private ITreeToEnumerableController<IStatus> statusTreeToEnumerableController;
+        private IConvertDelegate<IStatus, IEnumerable<IStatus>> convertStatusTreeToEnumerableDelegate;
 
         private IList<string> viewParts;
 
@@ -23,12 +24,12 @@ namespace Controllers.ViewUpdates
             IStatus status,
             ITemplateController templateController,
             IGetViewModelDelegate<IStatus> statusViewModelDelegate,
-            ITreeToEnumerableController<IStatus> statusTreeToEnumerableController)
+            IConvertDelegate<IStatus, IEnumerable<IStatus>> convertStatusTreeToEnumerableDelegate)
         {
             this.status = status;
             this.templateController = templateController;
             this.statusViewModelDelegate = statusViewModelDelegate;
-            this.statusTreeToEnumerableController = statusTreeToEnumerableController;
+            this.convertStatusTreeToEnumerableDelegate = convertStatusTreeToEnumerableDelegate;
 
             this.viewParts = new List<string>();
         }
@@ -36,7 +37,7 @@ namespace Controllers.ViewUpdates
         public async Task<string[]> GetViewUpdateAsync()
         {
             viewParts.Clear();
-            foreach (var individualStatus in statusTreeToEnumerableController.ToEnumerable(status))
+            foreach (var individualStatus in convertStatusTreeToEnumerableDelegate.Convert(status))
             {
                 var viewModel = statusViewModelDelegate.GetViewModel(individualStatus);
                 if (viewModel != null)

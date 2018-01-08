@@ -45,7 +45,6 @@ using Controllers.Status;
 using Controllers.Hash;
 using Controllers.Template;
 using Controllers.ViewModel;
-using Controllers.Tree;
 using Controllers.ViewUpdates;
 using Controllers.ActivityContext;
 using Controllers.InputOutput;
@@ -54,6 +53,7 @@ using Interfaces.Activity;
 using Interfaces.Extraction;
 using Interfaces.ActivityDefinitions;
 using Interfaces.ContextDefinitions;
+using Interfaces.Status;
 
 using GOG.Models;
 
@@ -157,7 +157,9 @@ namespace Ghost.Console
 
             var collectionController = new CollectionController();
 
-            var statusTreeToEnumerableController = new StatusTreeToEnumerableController();
+            var itemizeStatusChildrenDelegate = new ItemizeStatusChildrenDelegate();
+
+            var statusTreeToEnumerableController = new ConvertTreeToEnumerableDelegate<IStatus>(itemizeStatusChildrenDelegate);
 
             var applicationStatus = new Status() { Title = "This ghost is a kind one." };
 
@@ -1116,10 +1118,11 @@ namespace Ghost.Console
                 }
                 catch (AggregateException ex)
                 {
-                    var exceptionTreeToEnumerableController = new ExceptionTreeToEnumerableController();
+                    var itemizeInnerExceptionsDelegate = new ItemizeInnerExceptionsDelegate();
+                    var convertTreeToEnumerableDelegate = new ConvertTreeToEnumerableDelegate<Exception>(itemizeInnerExceptionsDelegate);
 
                     List<string> errorMessages = new List<string>();
-                    foreach (var innerException in exceptionTreeToEnumerableController.ToEnumerable(ex))
+                    foreach (var innerException in convertTreeToEnumerableDelegate.Convert(ex))
                         errorMessages.Add(innerException.Message);
 
                     var combinedErrorMessages = string.Join(Models.Separators.Separators.Common.Comma, errorMessages);
