@@ -1,19 +1,19 @@
 Backend
 
+- add last modified to the index (and transparently - data controller) and methods to get last modified stamp for id, or all objects that were modified on or after that stamp
+
+- add last modified to track start of the activities
+
+- modify (again) console output controller to use "single line control" and output only on one line. One idea is to collapse to ellipsis all earlier steps if the content doesn't fit
+
 - complete spliting delegates from controllers
 
-- save previous version of the index data to unblock updateData-updated as a separate step that can run independently
+- use updateData-updated last modified and add all modified accountProducts to updated (as well as flagged as updated) 
 
 - add updateData-updated action
 
-- rename app to ghost
-
-- add statement (aka recipe) system to track meaningful actions per id
-
-- move updated enumeration to take command line parameters into account - in the future this will also be a central point for whitelists/blacklists
-
 - change clear updated from unconditional clearing to receipt based system. To clear updated we'll need successful completion of several activities since product was added as updated:
--- need to track when product was added
+-- need to track when product was modified, updated
 -- need to define this dependency system
 -- need to change clear updated model to check everything above
 

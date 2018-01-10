@@ -63,7 +63,7 @@ namespace GOG.Controllers.NewUpdatedSelection
 
             var addPreviouslyUnknownDataTask = await statusController.CreateAsync(status, "Add previously unknown products as updated");
 
-            var knownAccountProducts = await accountProductsDataController.EnumerateIdsAsync(addPreviouslyUnknownDataTask);
+            var knownAccountProducts = await accountProductsDataController.ItemizeAllAsync(addPreviouslyUnknownDataTask);
             var unknownAccountProducts = accountProducts.Select(ap => ap.Id).Except(knownAccountProducts);
 
             if (unknownAccountProducts != null)

@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Itemize;
 
 using Interfaces.Status;
 
 namespace Delegates.EnumerateIds
 {
-    // TODO: itemization
-    public class EnumerateUserRequestedIdsDelegate : IEnumerateIdsAsyncDelegate
+    public class ItemizeAllUserRequestedIdsAsyncDelegate : IItemizeAllAsyncDelegate<long>
     {
         private string[] userRequested;
 
-        public EnumerateUserRequestedIdsDelegate(params string[] userRequested)
+        public ItemizeAllUserRequestedIdsAsyncDelegate(params string[] userRequested)
         {
             this.userRequested = userRequested;
         }
 
-        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
+        public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
         {
             var parsedIds = new List<long>();
 

@@ -39,7 +39,7 @@ namespace GOG.Delegates.GetDownloadSources
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
             var current = 0;
 
-            foreach (var id in await updatedDataController.EnumerateIdsAsync(getDownloadSourcesStatus))
+            foreach (var id in await updatedDataController.ItemizeAllAsync(getDownloadSourcesStatus))
             {
                 await statusController.UpdateProgressAsync(
                     getDownloadSourcesStatus,

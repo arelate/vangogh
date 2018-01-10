@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 
 using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 
@@ -19,19 +20,19 @@ namespace GOG.Delegates.GetDownloadSources
         where T : ProductCore
     {
         private IDataController<T> dataController;
-        private IEnumerateIdsAsyncDelegate productEnumerateDelegate;
+        private IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
         private IFormatDelegate<string, string> formatImagesUriDelegate;
         private IGetImageUriDelegate<T> getImageUriDelegate;
         private IStatusController statusController;
 
         public GetProductCoreImagesDownloadSourcesAsyncDelegate(
-            IEnumerateIdsAsyncDelegate productEnumerateDelegate,
+            IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate,
             IDataController<T> dataController,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<T> getImageUriDelegate,
             IStatusController statusController)
         {
-            this.productEnumerateDelegate = productEnumerateDelegate;
+            this.itemizeAllProductsAsyncDelegate = itemizeAllProductsAsyncDelegate;
             this.dataController = dataController;
             this.formatImagesUriDelegate = formatImagesUriDelegate;
             this.getImageUriDelegate = getImageUriDelegate;
@@ -43,7 +44,7 @@ namespace GOG.Delegates.GetDownloadSources
             var getDownloadSourcesStatus = await statusController.CreateAsync(status, "Get download sources");
 
             var productImageSources = new Dictionary<long, IList<string>>();
-            var productIds = await productEnumerateDelegate.EnumerateIdsAsync(getDownloadSourcesStatus);
+            var productIds = await itemizeAllProductsAsyncDelegate.ItemizeAllAsync(getDownloadSourcesStatus);
             var current = 0;
 
             foreach (var id in productIds)

@@ -70,7 +70,7 @@ namespace Controllers.Data
             return indexes.Count;
         }
 
-        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
+        public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 

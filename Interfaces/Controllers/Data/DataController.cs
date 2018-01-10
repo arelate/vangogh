@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Status;
 
 namespace Interfaces.Controllers.Data
@@ -23,11 +25,6 @@ namespace Interfaces.Controllers.Data
     public interface IEnumerateKeysAsyncDelegate<T>
     {
         Task<IEnumerable<T>> EnumerateKeysAsync(IStatus status);
-    }
-    
-    public interface IEnumerateIdsAsyncDelegate
-    {
-        Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status);
     }
 
     public interface IUpdateAsyncDelegate<Type>
@@ -63,7 +60,7 @@ namespace Interfaces.Controllers.Data
         IDataAvailableDelegate,
         ILoadAsyncDelegate,
         ISaveAsyncDelegate,
-        IEnumerateIdsAsyncDelegate,
+        IItemizeAllAsyncDelegate<long>,
         ICountAsyncDelegate,
         IGetByIdAsyncDelegate<Type>,
         IUpdateAsyncDelegate<Type>,

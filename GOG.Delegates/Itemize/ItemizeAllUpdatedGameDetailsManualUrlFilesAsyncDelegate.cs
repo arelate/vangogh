@@ -37,7 +37,7 @@ namespace GOG.Delegates.Itemize
         {
             var enumerateUpdateGameDetailsFilesTask = await statusController.CreateAsync(status, "Enumerate updated gameDetails files");
 
-            var updatedIds = await updatedDataController.EnumerateIdsAsync(enumerateUpdateGameDetailsFilesTask);
+            var updatedIds = await updatedDataController.ItemizeAllAsync(enumerateUpdateGameDetailsFilesTask);
             var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdateGameDetailsFilesTask);
             var current = 0;
 

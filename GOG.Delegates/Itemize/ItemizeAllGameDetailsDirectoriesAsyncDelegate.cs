@@ -33,7 +33,7 @@ namespace GOG.Delegates.Itemize
             var enumerateGameDetailsDirectoriesTask = await statusController.CreateAsync(status, "Enumerate gameDetails directories");
             var directories = new List<string>();
             var current = 0;
-            var gameDetailsIds = await gameDetailsDataController.EnumerateIdsAsync(enumerateGameDetailsDirectoriesTask);
+            var gameDetailsIds = await gameDetailsDataController.ItemizeAllAsync(enumerateGameDetailsDirectoriesTask);
             var gameDetailsCount = await gameDetailsDataController.CountAsync(enumerateGameDetailsDirectoriesTask);
 
             foreach (var id in gameDetailsIds)

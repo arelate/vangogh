@@ -37,7 +37,7 @@ namespace GOG.Activities.List
             var count = await updatedDataController.CountAsync(listUpdatedStatus);
             var updatedAccountProducts = new Dictionary<long, string>();
 
-            foreach (var updatedId in await updatedDataController.EnumerateIdsAsync(listUpdatedStatus))
+            foreach (var updatedId in await updatedDataController.ItemizeAllAsync(listUpdatedStatus))
             {
                 await statusController.UpdateProgressAsync(
                     listUpdatedStatus,

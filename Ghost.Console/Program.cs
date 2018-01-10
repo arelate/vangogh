@@ -632,23 +632,23 @@ namespace Ghost.Console
 
             var fillGameDetailsGapsDelegate = new FillGameDetailsGapsDelegate();
 
-            var enumerateUserRequestedIdsDelegate = new EnumerateUserRequestedIdsDelegate(args);
+            var itemizeAllUserRequestedIdsAsyncDelegate = new ItemizeAllUserRequestedIdsAsyncDelegate(args);
 
             // product update controllers
 
-            var enumerateGameProductDataGapsDelegate = new EnumerateMasterDetailsGapsDelegate<Product, GameProductData>(
+            var itemizeAllGameProductDataGapsAsyncDelegatepsDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<Product, GameProductData>(
                 productsDataController,
                 gameProductDataController);
 
-            var enumerateUserRequestedIdsOrDefaultDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
-                enumerateUserRequestedIdsDelegate,
-                enumerateGameProductDataGapsDelegate,
+            var itemizeAllUserRequestedIdsOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
+                itemizeAllUserRequestedIdsAsyncDelegate,
+                itemizeAllGameProductDataGapsAsyncDelegatepsDelegate,
                 updatedDataController);
 
             var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
                 Context.GameProductData,
                 getProductUpdateUriByContextDelegate,
-                enumerateUserRequestedIdsOrDefaultDelegate,
+                itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
                 productsDataController,
                 gameProductDataController,
                 updatedDataController,
@@ -660,19 +660,19 @@ namespace Ghost.Console
                 networkController,
                 serializationController);
 
-            var enumerateApiProductsGapsDelegate = new EnumerateMasterDetailsGapsDelegate<Product, ApiProduct>(
+            var itemizeAllApiProductsGapsAsyncDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<Product, ApiProduct>(
                 productsDataController,
                 apiProductsDataController);
 
-            var enumerateUserRequestedOrApiProductGapsAndUpdatedDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
-                enumerateUserRequestedIdsDelegate,
-                enumerateApiProductsGapsDelegate,
+            var itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
+                itemizeAllUserRequestedIdsAsyncDelegate,
+                itemizeAllApiProductsGapsAsyncDelegate,
                 updatedDataController);
 
             var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
                 Context.ApiProducts,
                 getProductUpdateUriByContextDelegate,
-                enumerateUserRequestedOrApiProductGapsAndUpdatedDelegate,
+                itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
                 productsDataController,
                 apiProductsDataController,
                 updatedDataController,
@@ -714,19 +714,19 @@ namespace Ghost.Console
                 convertOperatingSystemsDownloads2DArrayToArrayDelegate,
                 collectionController);
 
-            var enumerateGameDetailsGapsDelegate = new EnumerateMasterDetailsGapsDelegate<AccountProduct, GameDetails>(
+            var itemizeAllGameDetailsGapsAsyncDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<AccountProduct, GameDetails>(
                 accountProductsDataController,
                 gameDetailsDataController);
 
-            var enumerateUserRequestedOrGameDetailsGapsAndUpdatedDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
-                enumerateUserRequestedIdsDelegate,
-                enumerateGameDetailsGapsDelegate,
+            var itemizeAllUserRequestedOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
+                itemizeAllUserRequestedIdsAsyncDelegate,
+                itemizeAllGameDetailsGapsAsyncDelegate,
                 updatedDataController);
 
             var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
                 Context.GameDetails,
                 getProductUpdateUriByContextDelegate,
-                enumerateUserRequestedOrGameDetailsGapsAndUpdatedDelegate,
+                itemizeAllUserRequestedOrDefaultAsyncDelegate,
                 accountProductsDataController,
                 gameDetailsDataController,
                 updatedDataController,
@@ -759,19 +759,19 @@ namespace Ghost.Console
             var getProductImageUriDelegate = new GetProductImageUriDelegate();
             var getAccountProductImageUriDelegate = new GetAccountProductImageUriDelegate();
 
-            var enumerateUserRequestedOrUpdatedDelegate = new EnumerateUserRequestedIdsOrDefaultDelegate(
-                enumerateUserRequestedIdsDelegate,
+            var itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
+                itemizeAllUserRequestedIdsAsyncDelegate,
                 updatedDataController);
 
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
-                enumerateUserRequestedOrUpdatedDelegate,
+                itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
                 productsDataController,
                 formatImagesUriDelegate,
                 getProductImageUriDelegate,
                 statusController);
 
             var getAccountProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>(
-                enumerateUserRequestedOrUpdatedDelegate,
+                itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
                 accountProductsDataController,
                 formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
@@ -939,7 +939,7 @@ namespace Ghost.Console
                 validationResultsDataController,
                 gameDetailsDataController,
                 itemizeGameDetailsManualUrlsAsyncDelegate,
-                enumerateUserRequestedOrUpdatedDelegate,
+                itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
                 routingController,
                 statusController);
 

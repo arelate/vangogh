@@ -164,9 +164,9 @@ namespace Controllers.Data
                 data);
         }
 
-        public async Task<IEnumerable<long>> EnumerateIdsAsync(IStatus status)
+        public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
         {
-            return await indexDataController.EnumerateIdsAsync(status);
+            return await indexDataController.ItemizeAllAsync(status);
         }
 
         public async Task<int> CountAsync(IStatus status)

@@ -50,7 +50,7 @@ namespace GOG.Delegates.GetDownloadSources
 
             var processProductsScreenshotsTask = await statusController.CreateAsync(processUpdatesTask, "Process product screenshots");
 
-            foreach (var id in await screenshotsDataController.EnumerateIdsAsync(processProductsScreenshotsTask))
+            foreach (var id in await screenshotsDataController.ItemizeAllAsync(processProductsScreenshotsTask))
             {
                 var productScreenshots = await screenshotsDataController.GetByIdAsync(id, processProductsScreenshotsTask);
 

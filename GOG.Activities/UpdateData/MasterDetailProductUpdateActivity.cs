@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Data;
 
@@ -27,7 +29,7 @@ namespace GOG.Activities.UpdateData
         private IDataController<DetailType> detailDataController;
         private IDataController<long> updatedDataController;
 
-        private IEnumerateIdsAsyncDelegate userRequestedOrOtherEnumerateDelegate;
+        private IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate;
 
         private IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
 
@@ -42,7 +44,7 @@ namespace GOG.Activities.UpdateData
         public MasterDetailProductUpdateActivity(
             Context context,
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
-            IEnumerateIdsAsyncDelegate userRequestedOrOtherEnumerateDelegate,
+            IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate,
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,
             IDataController<long> updatedDataController,
@@ -56,7 +58,7 @@ namespace GOG.Activities.UpdateData
             this.detailDataController = detailDataController;
             this.updatedDataController = updatedDataController;
 
-            this.userRequestedOrOtherEnumerateDelegate = userRequestedOrOtherEnumerateDelegate;
+            this.itemizeUserRequestedOrDefaultAsyncDelegate = itemizeUserRequestedOrDefaultAsyncDelegate;
 
             this.getDeserializedDelegate = getDeserializedDelegate;
 
@@ -75,7 +77,7 @@ namespace GOG.Activities.UpdateData
             // We'll limit detail updates to user specified ids.
             // if user didn't provide a list of ids - we'll use the details gaps 
             // (ids that exist in master list, but not detail) and updated
-            var productsUpdateList = await userRequestedOrOtherEnumerateDelegate.EnumerateIdsAsync(updateProductsTask);
+            var productsUpdateList = await itemizeUserRequestedOrDefaultAsyncDelegate.ItemizeAllAsync(updateProductsTask);
 
             var currentProduct = 0;
 

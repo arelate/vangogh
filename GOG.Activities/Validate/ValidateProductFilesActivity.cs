@@ -31,7 +31,7 @@ namespace GOG.Activities.Validate
         private IDataController<ValidationResult> validationResultsDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        private IEnumerateIdsAsyncDelegate productEnumerateDelegate;
+        private IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
         private IRoutingController routingController;
 
         public ValidateProductFilesActivity(
@@ -42,7 +42,7 @@ namespace GOG.Activities.Validate
             IDataController<ValidationResult> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IEnumerateIdsAsyncDelegate productEnumerateDelegate,
+            IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate,
             IRoutingController routingController,
             IStatusController statusController) :
             base(statusController)
@@ -55,7 +55,7 @@ namespace GOG.Activities.Validate
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
 
-            this.productEnumerateDelegate = productEnumerateDelegate;
+            this.itemizeAllProductsAsyncDelegate = itemizeAllProductsAsyncDelegate;
             this.routingController = routingController;
         }
 
@@ -65,7 +65,7 @@ namespace GOG.Activities.Validate
 
             var current = 0;
 
-            var validateProductsList = await productEnumerateDelegate.EnumerateIdsAsync(validateProductsStatus);
+            var validateProductsList = await itemizeAllProductsAsyncDelegate.ItemizeAllAsync(validateProductsStatus);
             var validateProductsCount = validateProductsList.Count();
 
             foreach (var id in validateProductsList)

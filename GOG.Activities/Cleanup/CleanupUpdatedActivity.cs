@@ -24,7 +24,7 @@ namespace GOG.Activities.Cleanup
 
             await updatedDataController.RemoveAsync(
                 cleanupUpdatedTask,
-                (await updatedDataController.EnumerateIdsAsync(cleanupUpdatedTask)).ToArray());
+                (await updatedDataController.ItemizeAllAsync(cleanupUpdatedTask)).ToArray());
 
             await statusController.CompleteAsync(cleanupUpdatedTask);
         }

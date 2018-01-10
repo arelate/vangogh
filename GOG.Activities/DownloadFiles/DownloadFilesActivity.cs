@@ -37,7 +37,7 @@ namespace GOG.Activities.DownloadProductFiles
                 $"Process updated {context} downloads");
 
             var current = 0;
-            var productDownloadsData = await productDownloadsDataController.EnumerateIdsAsync(processDownloadsTask);
+            var productDownloadsData = await productDownloadsDataController.ItemizeAllAsync(processDownloadsTask);
             var total = await productDownloadsDataController.CountAsync(processDownloadsTask);
 
             var emptyProductDownloads = new List<ProductDownloads>();

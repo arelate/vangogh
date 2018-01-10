@@ -32,7 +32,7 @@ namespace GOG.Activities.Repair
 
             var invalidResults = new List<ValidationResult>();
 
-            foreach (var id in await validationResultDataController.EnumerateIdsAsync(repairTask))
+            foreach (var id in await validationResultDataController.ItemizeAllAsync(repairTask))
             {
                 var validationResult = await validationResultDataController.GetByIdAsync(id, repairTask);
 
