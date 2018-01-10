@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
@@ -56,6 +57,11 @@ namespace Interfaces.Controllers.Data
         bool DataAvailable { get; }
     }
 
+    public interface IGetLastModifiedAsyncDelegate
+    {
+        Task<DateTime> GetLastModifiedAsync(long id, IStatus status);
+    }
+
     public interface IDataController<Type>:
         IDataAvailableDelegate,
         ILoadAsyncDelegate,
@@ -66,7 +72,9 @@ namespace Interfaces.Controllers.Data
         IUpdateAsyncDelegate<Type>,
         IRemoveAsyncDelegate<Type>,
         IContainsAsyncDelegate<Type>,
-        IContainsIdAsyncDelegate
+        IContainsIdAsyncDelegate,
+        IGetLastModifiedAsyncDelegate,
+        IItemizeAsyncDelegate<DateTime, long> // all items modified on or after a certain date
     {
         // ...
     }

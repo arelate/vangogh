@@ -2,7 +2,7 @@
   "profiles": {
     "ghost": {
       "commandName": "Project",
-      "commandLineArgs": "updateData-gameDetails 1439548178 1947156754"
+      "commandLineArgs": "updateData-products"
     }
   }
 }

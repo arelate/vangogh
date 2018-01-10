@@ -178,5 +178,15 @@ namespace Controllers.Data
         {
             return await indexDataController.ContainsAsync(id, status);
         }
+
+        public async Task<DateTime> GetLastModifiedAsync(long id, IStatus status)
+        {
+            return await indexDataController.GetLastModifiedAsync(id, status);
+        }
+
+        public async Task<IEnumerable<long>> ItemizeAsync(DateTime item, IStatus status)
+        {
+            return await indexDataController.ItemizeAsync(item, status);
+        }
     }
 }

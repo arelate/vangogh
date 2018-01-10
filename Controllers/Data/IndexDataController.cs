@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
@@ -24,7 +25,7 @@ namespace Controllers.Data
         private ISerializedStorageController serializedStorageController;
         private IStatusController statusController;
 
-        private IList<long> indexes;
+        private IDictionary<long, DateTime> indexesLastModified;
 
         public IndexDataController(
             ICollectionController collectionController,
@@ -53,28 +54,28 @@ namespace Controllers.Data
         {
             if (!DataAvailable) await LoadAsync(status);
 
-            return indexes.Contains(data);
+            return indexesLastModified.ContainsKey(data);
         }
 
         public async Task<bool> ContainsIdAsync(long id, IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
-            return indexes.Contains(id);
+            return indexesLastModified.ContainsKey(id);
         }
 
         public async Task<int> CountAsync(IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
-            return indexes.Count;
+            return indexesLastModified.Count;
         }
 
         public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
-            return indexes;
+            return indexesLastModified.Keys;
         }
 
         public Task<long> GetByIdAsync(long id, IStatus status)
@@ -90,8 +91,8 @@ namespace Controllers.Data
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
-            indexes = await serializedStorageController.DeserializePullAsync<List<long>>(indexUri, loadStatus);
-            if (indexes == null) indexes = new List<long>();
+            indexesLastModified = await serializedStorageController.DeserializePullAsync<Dictionary<long, DateTime>>(indexUri, loadStatus);
+            if (indexesLastModified == null) indexesLastModified = new Dictionary<long, DateTime>();
 
             DataAvailable = true;
 
@@ -108,7 +109,7 @@ namespace Controllers.Data
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
-            await serializedStorageController.SerializePushAsync(indexUri, indexes, saveStatus);
+            await serializedStorageController.SerializePushAsync(indexUri, indexesLastModified, saveStatus);
 
             await statusController.CompleteAsync(saveStatus);
         }
@@ -152,9 +153,9 @@ namespace Controllers.Data
                 "Remove index item(s)",
                 (item) =>
                 {
-                    if (indexes.Contains(item))
+                    if (indexesLastModified.ContainsKey(item))
                     {
-                        indexes.Remove(item);
+                        indexesLastModified.Remove(item);
                         return true;
                     }
                     return false;
@@ -170,14 +171,31 @@ namespace Controllers.Data
                 status,
                 "Update index item(s)",
                 (item) => {
-                    if (!indexes.Contains(item))
+                    if (!indexesLastModified.ContainsKey(item))
                     {
-                        indexes.Add(item);
+                        // TODO: need to understand if we should update last modified even if the item exists
+                        indexesLastModified.Add(item, DateTime.UtcNow);
                         return true;
                     }
                     return false;
                 },
                 data);
+        }
+
+        public async Task<DateTime> GetLastModifiedAsync(long id, IStatus status)
+        {
+            if (!DataAvailable) await LoadAsync(status);
+
+            return indexesLastModified.ContainsKey(id) ?
+                indexesLastModified[id] :
+                DateTime.MinValue.ToUniversalTime();
+        }
+
+        public async Task<IEnumerable<long>> ItemizeAsync(DateTime moment, IStatus status)
+        {
+            if (!DataAvailable) await LoadAsync(status);
+
+            return indexesLastModified.Where(idLastModified => { return idLastModified.Value >= moment; }).Select(idLastModified => idLastModified.Key);
         }
     }
 }
