@@ -37,6 +37,7 @@ using Controllers.Settings;
 using Controllers.Cookies;
 using Controllers.Validation;
 using Controllers.ValidationResult;
+using Controllers.Index;
 using Controllers.Data;
 using Controllers.SerializedStorage;
 using Controllers.Presentation;
@@ -1056,8 +1057,7 @@ namespace Ghost.Console
             var listUpdatedActivity = new ListUpdatedActivity(
                 updatedDataController,
                 accountProductsDataController,
-                statusController,
-                consoleController);
+                statusController);
 
             #endregion
 

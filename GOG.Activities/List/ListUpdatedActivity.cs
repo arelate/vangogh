@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
+
 using Interfaces.Status;
 
 using Interfaces.Controllers.Console;
@@ -12,22 +14,17 @@ namespace GOG.Activities.List
 {
     public class ListUpdatedActivity : Activity
     {
-        IDataController<long> updatedDataController;
+        IIndexController<long> updatedDataController;
         IDataController<AccountProduct> accountProductsDataController;
 
-        IConsoleController consoleController; // temp. while we wait clarity on summary results
-
         public ListUpdatedActivity(
-            IDataController<long> updatedDataController,
+            IIndexController<long> updatedDataController,
             IDataController<AccountProduct> accountProductsDataController,
-            IStatusController statusController,
-            IConsoleController consoleController) :
+            IStatusController statusController) :
             base(statusController)
         {
             this.updatedDataController = updatedDataController;
             this.accountProductsDataController = accountProductsDataController;
-
-            this.consoleController = consoleController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)

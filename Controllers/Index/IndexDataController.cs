@@ -7,15 +7,15 @@ using System.Linq;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 
-using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Collection;
 
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
 
-namespace Controllers.Data
+namespace Controllers.Index
 {
-    public class IndexDataController : IDataController<long>
+    public class IndexDataController : IIndexController<long>
     {
         private ICollectionController collectionController;
 
@@ -50,13 +50,6 @@ namespace Controllers.Data
             private set;
         }
 
-        public async Task<bool> ContainsAsync(long data, IStatus status)
-        {
-            if (!DataAvailable) await LoadAsync(status);
-
-            return indexesLastModified.ContainsKey(data);
-        }
-
         public async Task<bool> ContainsIdAsync(long id, IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
@@ -76,11 +69,6 @@ namespace Controllers.Data
             if (!DataAvailable) await LoadAsync(status);
 
             return indexesLastModified.Keys;
-        }
-
-        public Task<long> GetByIdAsync(long id, IStatus status)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task LoadAsync(IStatus status)

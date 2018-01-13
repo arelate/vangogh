@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
 
@@ -15,11 +15,11 @@ namespace GOG.Activities.UpdateData
     public class WishlistedUpdateActivity : Activity
     {
         private IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
-        private IDataController<long> wishlistedDataController;
+        private IIndexController<long> wishlistedDataController;
 
         public WishlistedUpdateActivity(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
-            IDataController<long> wishlistedDataController,
+            IIndexController<long> wishlistedDataController,
             IStatusController statusController) :
             base(statusController)
         {

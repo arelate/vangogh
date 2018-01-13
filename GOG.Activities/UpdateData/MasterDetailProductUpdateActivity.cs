@@ -6,6 +6,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
 using Interfaces.ContextDefinitions;
@@ -27,7 +28,7 @@ namespace GOG.Activities.UpdateData
     {
         private IDataController<MasterType> masterDataController;
         private IDataController<DetailType> detailDataController;
-        private IDataController<long> updatedDataController;
+        private IIndexController<long> updatedDataController;
 
         private IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate;
 
@@ -47,7 +48,7 @@ namespace GOG.Activities.UpdateData
             IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate,
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,
-            IDataController<long> updatedDataController,
+            IIndexController<long> updatedDataController,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate,
             IStatusController statusController,

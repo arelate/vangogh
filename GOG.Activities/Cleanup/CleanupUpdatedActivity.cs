@@ -2,16 +2,17 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 using Interfaces.Status;
 
 namespace GOG.Activities.Cleanup
 {
     public class CleanupUpdatedActivity : Activity
     {
-        private IDataController<long> updatedDataController;
+        private IIndexController<long> updatedDataController;
 
         public CleanupUpdatedActivity(
-            IDataController<long> updatedDataController,
+            IIndexController<long> updatedDataController,
             IStatusController statusController) :
             base(statusController)
         {

@@ -2,6 +2,7 @@
 using System.Linq;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
@@ -13,12 +14,12 @@ namespace GOG.Activities.UpdateData
     public class UpdateScreenshotsActivity : Activity
     {
         private IDataController<Product> productsDataController;
-        private IDataController<long> screenshotsIndexDataController;
+        private IIndexController<long> screenshotsIndexDataController;
         private IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
 
         public UpdateScreenshotsActivity(
             IDataController<Product> productsDataController,
-            IDataController<long> screenshotsIndexDataController,
+            IIndexController<long> screenshotsIndexDataController,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
             IStatusController statusController) :
             base(statusController)

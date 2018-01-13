@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Directory;
 
 using Interfaces.Delegates.Itemize;
@@ -14,14 +15,14 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllUpdatedProductFilesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        private IDataController<long> updatedDataController;
+        private IIndexController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsDirectoriesAsyncDelegate;
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
         public ItemizeAllUpdatedProductFilesAsyncDelegate(
-            IDataController<long> updatedDataController,
+            IIndexController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
             IDirectoryController directoryController,

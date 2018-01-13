@@ -18,9 +18,9 @@ namespace Interfaces.Controllers.Data
         Task SaveAsync(IStatus status);
     }
 
-    public interface IGetByIdAsyncDelegate<Type>
+    public interface IGetByIdAsyncDelegate<IdentityType, ReturnType>
     {
-        Task<Type> GetByIdAsync(long id, IStatus status);
+        Task<ReturnType> GetByIdAsync(IdentityType id, IStatus status);
     }
 
     public interface IEnumerateKeysAsyncDelegate<T>
@@ -42,9 +42,9 @@ namespace Interfaces.Controllers.Data
         Task<bool> ContainsAsync(Type data, IStatus status);
     }
 
-    public interface IContainsIdAsyncDelegate
+    public interface IContainsIdAsyncDelegate<IdentityType>
     {
-        Task<bool> ContainsIdAsync(long id, IStatus status);
+        Task<bool> ContainsIdAsync(IdentityType id, IStatus status);
     }
 
     public interface ICountAsyncDelegate
@@ -57,23 +57,23 @@ namespace Interfaces.Controllers.Data
         bool DataAvailable { get; }
     }
 
-    public interface IGetLastModifiedAsyncDelegate
+    public interface IGetLastModifiedAsyncDelegate<IdentityType>
     {
-        Task<DateTime> GetLastModifiedAsync(long id, IStatus status);
+        Task<DateTime> GetLastModifiedAsync(IdentityType id, IStatus status);
     }
 
-    public interface IDataController<Type>:
+    public interface IDataController<DataType> :
         IDataAvailableDelegate,
         ILoadAsyncDelegate,
         ISaveAsyncDelegate,
         IItemizeAllAsyncDelegate<long>,
         ICountAsyncDelegate,
-        IGetByIdAsyncDelegate<Type>,
-        IUpdateAsyncDelegate<Type>,
-        IRemoveAsyncDelegate<Type>,
-        IContainsAsyncDelegate<Type>,
-        IContainsIdAsyncDelegate,
-        IGetLastModifiedAsyncDelegate,
+        IGetByIdAsyncDelegate<long, DataType>,
+        IUpdateAsyncDelegate<DataType>,
+        IRemoveAsyncDelegate<DataType>,
+        IContainsAsyncDelegate<DataType>,
+        IContainsIdAsyncDelegate<long>,
+        IGetLastModifiedAsyncDelegate<long>,
         IItemizeAsyncDelegate<DateTime, long> // all items modified on or after a certain date
     {
         // ...

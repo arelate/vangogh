@@ -9,6 +9,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Collection;
 
 using Interfaces.SerializedStorage;
@@ -18,7 +19,7 @@ namespace Controllers.Data
 {
     public class DataController<Type> : IDataController<Type>
     {
-        private IDataController<long> indexDataController;
+        private IIndexController<long> indexController;
 
         private ISerializedStorageController serializedStorageController;
 
@@ -33,7 +34,7 @@ namespace Controllers.Data
         private IStatusController statusController;
 
         public DataController(
-            IDataController<long> indexDataController,
+            IIndexController<long> indexController,
             ISerializedStorageController serializedStorageController,
             IConvertDelegate<Type, long> convertProductToIndexDelegate,
             ICollectionController collectionController,
@@ -42,7 +43,7 @@ namespace Controllers.Data
             IRecycleDelegate moveToRecycleBinDelegate,
             IStatusController statusController)
         {
-            this.indexDataController = indexDataController;
+            this.indexController = indexController;
 
             this.serializedStorageController = serializedStorageController;
 
@@ -67,7 +68,7 @@ namespace Controllers.Data
             if (data == null) return true;
 
             var index = convertProductToIndexDelegate.Convert(data);
-            return await indexDataController.ContainsAsync(index, status);
+            return await indexController.ContainsIdAsync(index, status);
         }
 
         private string GetItemUri(long id)
@@ -86,7 +87,7 @@ namespace Controllers.Data
         {
             var loadStatus = await statusController.CreateAsync(status, "Load data");
 
-            await indexDataController.LoadAsync(loadStatus);
+            await indexController.LoadAsync(loadStatus);
 
             await statusController.CompleteAsync(loadStatus);
         }
@@ -142,7 +143,7 @@ namespace Controllers.Data
                 },
                 async (indexes) =>
                 {
-                    await indexDataController.UpdateAsync(status, indexes);
+                    await indexController.UpdateAsync(status, indexes);
                 },
                 data);
         }
@@ -154,39 +155,39 @@ namespace Controllers.Data
                 "Remove data item(s)",
                 async (index, item) =>
                 {
-                    if (await indexDataController.ContainsAsync(index, status))
+                    if (await indexController.ContainsIdAsync(index, status))
                         moveToRecycleBinDelegate.Recycle(GetItemUri(index));
                 },
                 async (indexes) =>
                 {
-                    await indexDataController.RemoveAsync(status, indexes);
+                    await indexController.RemoveAsync(status, indexes);
                 },
                 data);
         }
 
         public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
         {
-            return await indexDataController.ItemizeAllAsync(status);
+            return await indexController.ItemizeAllAsync(status);
         }
 
         public async Task<int> CountAsync(IStatus status)
         {
-            return await indexDataController.CountAsync(status);
+            return await indexController.CountAsync(status);
         }
 
         public async Task<bool> ContainsIdAsync(long id, IStatus status)
         {
-            return await indexDataController.ContainsAsync(id, status);
+            return await indexController.ContainsIdAsync(id, status);
         }
 
         public async Task<DateTime> GetLastModifiedAsync(long id, IStatus status)
         {
-            return await indexDataController.GetLastModifiedAsync(id, status);
+            return await indexController.GetLastModifiedAsync(id, status);
         }
 
         public async Task<IEnumerable<long>> ItemizeAsync(DateTime item, IStatus status)
         {
-            return await indexDataController.ItemizeAsync(item, status);
+            return await indexController.ItemizeAsync(item, status);
         }
     }
 }

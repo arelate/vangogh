@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
 
@@ -15,13 +16,13 @@ namespace GOG.Delegates.GetDownloadSources
 {
     public class GetManualUrlDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        private IDataController<long> updatedDataController;
+        private IIndexController<long> updatedDataController;
         private IDataController<GameDetails> gameDetailsDataController;
         private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
         private IStatusController statusController;
 
         public GetManualUrlDownloadSourcesAsyncDelegate(
-            IDataController<long> updatedDataController,
+            IIndexController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
             IStatusController statusController)

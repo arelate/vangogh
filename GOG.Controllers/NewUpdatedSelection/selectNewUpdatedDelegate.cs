@@ -4,6 +4,7 @@ using System.Linq;
 
 using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 using Interfaces.Status;
 
 using GOG.Interfaces.NewUpdatedSelection;
@@ -18,13 +19,13 @@ namespace GOG.Controllers.NewUpdatedSelection
     {
         private IDataController<AccountProduct> accountProductsDataController;
         private ICollectionController collectionController;
-        private IDataController<long> updatedDataController;
+        private IIndexController<long> updatedDataController;
         private IStatusController statusController;
 
         public SelectNewUpdatedDelegate(
             IDataController<AccountProduct> accountProductsDataController,
             ICollectionController collectionController,
-            IDataController<long> updatedDataController,
+            IIndexController<long> updatedDataController,
             IStatusController statusController)
         {
             this.accountProductsDataController = accountProductsDataController;
