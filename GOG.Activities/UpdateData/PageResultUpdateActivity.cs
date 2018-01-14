@@ -12,7 +12,6 @@ using Interfaces.Status;
 using Models.ProductCore;
 
 using GOG.Interfaces.Delegates.GetPageResults;
-using GOG.Interfaces.NewUpdatedSelection;
 
 using Interfaces.ActivityContext;
 
@@ -33,8 +32,6 @@ namespace GOG.Activities.UpdateData
 
         private IDataController<DataType> dataController;
 
-        private ISelectNewUpdatedAsyncDelegate<DataType> selectNewUpdatedDelegate;
-
         public PageResultUpdateActivity(
             AC activityContext,
             IActivityContextController activityContextController,
@@ -42,8 +39,7 @@ namespace GOG.Activities.UpdateData
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
-            IStatusController statusController,
-            ISelectNewUpdatedAsyncDelegate<DataType> selectNewUpdatedDelegate = null) :
+            IStatusController statusController) :
             base(statusController)
         {
             this.activityContext = activityContext;
@@ -54,8 +50,6 @@ namespace GOG.Activities.UpdateData
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
             this.dataController = dataController;
-
-            this.selectNewUpdatedDelegate = selectNewUpdatedDelegate;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
@@ -67,13 +61,6 @@ namespace GOG.Activities.UpdateData
             var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extract {activityContext.Item2}");
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
             await statusController.CompleteAsync(extractTask);
-
-            //if (selectNewUpdatedDelegate != null)
-            //{
-            //    var refineDataTask = await statusController.CreateAsync(updateAllProductsTask, $"Select new/updated {activityContext.Item2}");
-            //    await selectNewUpdatedDelegate.SelectNewUpdatedAsync(newProducts, refineDataTask);
-            //    await statusController.CompleteAsync(refineDataTask);
-            //}
 
             if (newProducts.Count() > 0)
             {

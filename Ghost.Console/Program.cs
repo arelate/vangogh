@@ -70,8 +70,8 @@ using GOG.Delegates.Itemize;
 using GOG.Delegates.GetUpdateUri;
 using GOG.Delegates.Format;
 using GOG.Delegates.RequestPage;
+using GOG.Delegates.Confirm;
 
-using GOG.Controllers.NewUpdatedSelection;
 using GOG.Controllers.Authorization;
 
 using GOG.Activities.Help;
@@ -608,12 +608,6 @@ namespace Ghost.Console
 
             var itemizeAccountProductsPageResultProductsDelegate = new ItemizeAccountProductsPageResultProductsDelegate();
 
-            var selectNewUpdatedDelegate = new SelectNewUpdatedDelegate(
-                accountProductsDataController,
-                collectionController,
-                updatedDataController,
-                statusController);
-
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
                     (Activity.UpdateData, Context.AccountProducts),
                     activityContextController,
@@ -621,13 +615,17 @@ namespace Ghost.Console
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,
                     accountProductsDataController,
-                    statusController,
-                    selectNewUpdatedDelegate);
+                    statusController);
+
+            var confirmAccountProductIsNewDelegate = new ConfirmAccountProductIsNewDelegate();
+            var confirmAccountProductHasUpdatesDelegate = new ConfirmAccountProductHasUpdatesDelegate();
 
             var updatedUpdateActivity = new UpdatedUpdateActivity(
                 activityContextController,
                 activityContextCreatedIndexController,
                 accountProductsDataController,
+                confirmAccountProductIsNewDelegate,
+                confirmAccountProductHasUpdatesDelegate,
                 statusController);
 
             #endregion
