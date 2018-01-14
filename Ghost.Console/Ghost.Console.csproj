@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <StartupObject>Ghost.Console.Program</StartupObject>
+    <StartupObject></StartupObject>
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
     <AssemblyName>ghost</AssemblyName>

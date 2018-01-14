@@ -624,6 +624,12 @@ namespace Ghost.Console
                     statusController,
                     selectNewUpdatedDelegate);
 
+            var updatedUpdateActivity = new UpdatedUpdateActivity(
+                activityContextController,
+                activityContextCreatedIndexController,
+                accountProductsDataController,
+                statusController);
+
             #endregion
 
             #region Update.Wishlisted
@@ -1083,6 +1089,7 @@ namespace Ghost.Console
                 { (Activity.Authorize, Context.None), authorizeActivity },
                 { (Activity.UpdateData, Context.Products), productsUpdateActivity },
                 { (Activity.UpdateData, Context.AccountProducts), accountProductsUpdateActivity },
+                { (Activity.UpdateData, Context.Updated), updatedUpdateActivity },
                 { (Activity.UpdateData, Context.Wishlist), wishlistedUpdateActivity },
                 { (Activity.UpdateData, Context.GameProductData), gameProductDataUpdateActivity },
                 { (Activity.UpdateData, Context.ApiProducts), apiProductUpdateActivity },

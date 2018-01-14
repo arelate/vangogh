@@ -32,7 +32,8 @@ namespace Models.ActivityContext
                     Context.GameProductData,
                     Context.ApiProducts,
                     Context.GameDetails,
-                    Context.Screenshots
+                    Context.Screenshots,
+                    Context.Updated
                 }
             },
             {

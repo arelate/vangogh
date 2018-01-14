@@ -1,5 +1,7 @@
 Backend
 
+- expand activityContextCreated tracking to all activityContexts
+
 - add last modified to the index (and transparently - data controller) and methods to get last modified stamp for id, or all objects that were modified on or after that stamp
 
 - add last modified to track start of the activities

@@ -14,8 +14,6 @@ using Models.ProductCore;
 using GOG.Interfaces.Delegates.GetPageResults;
 using GOG.Interfaces.NewUpdatedSelection;
 
-using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
 using Interfaces.ActivityContext;
 
 using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
