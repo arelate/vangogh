@@ -57,9 +57,9 @@ namespace Interfaces.Controllers.Data
         bool DataAvailable { get; }
     }
 
-    public interface IGetLastModifiedAsyncDelegate<IdentityType>
+    public interface IGetCreatedAsyncDelegate<IdentityType>
     {
-        Task<DateTime> GetLastModifiedAsync(IdentityType id, IStatus status);
+        Task<DateTime> GetCreatedAsync(IdentityType id, IStatus status);
     }
 
     public interface IDataController<DataType> :
@@ -73,7 +73,7 @@ namespace Interfaces.Controllers.Data
         IRemoveAsyncDelegate<DataType>,
         IContainsAsyncDelegate<DataType>,
         IContainsIdAsyncDelegate<long>,
-        IGetLastModifiedAsyncDelegate<long>,
+        IGetCreatedAsyncDelegate<long>,
         IItemizeAsyncDelegate<DateTime, long> // all items modified on or after a certain date
     {
         // ...

@@ -180,9 +180,9 @@ namespace Controllers.Data
             return await indexController.ContainsIdAsync(id, status);
         }
 
-        public async Task<DateTime> GetLastModifiedAsync(long id, IStatus status)
+        public async Task<DateTime> GetCreatedAsync(long id, IStatus status)
         {
-            return await indexController.GetLastModifiedAsync(id, status);
+            return await indexController.GetCreatedAsync(id, status);
         }
 
         public async Task<IEnumerable<long>> ItemizeAsync(DateTime item, IStatus status)
