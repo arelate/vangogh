@@ -4,11 +4,11 @@ using GOG.Models;
 
 namespace GOG.Delegates.Confirm
 {
-    public class ConfirmAccountProductIsNewDelegate : IConfirmDelegate<AccountProduct>
+    public class ConfirmAccountProductUpdatedDelegate : IConfirmDelegate<AccountProduct>
     {
         public bool Confirm(AccountProduct accountProduct)
         {
-            return accountProduct.IsNew;
+            return accountProduct.IsNew || accountProduct.Updates > 0;
         }
     }
 }

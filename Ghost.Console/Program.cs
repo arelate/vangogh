@@ -408,7 +408,7 @@ namespace Ghost.Console
                 serializedStorageController,
                 statusController);
 
-            var updatedDataController = new IndexController<long>(
+            var updatedIndexController = new IndexController<long>(
                 collectionController,
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
@@ -617,15 +617,14 @@ namespace Ghost.Console
                     accountProductsDataController,
                     statusController);
 
-            var confirmAccountProductIsNewDelegate = new ConfirmAccountProductIsNewDelegate();
-            var confirmAccountProductHasUpdatesDelegate = new ConfirmAccountProductHasUpdatesDelegate();
+            var confirmAccountProductUpdatedDelegate = new ConfirmAccountProductUpdatedDelegate();
 
             var updatedUpdateActivity = new UpdatedUpdateActivity(
                 activityContextController,
                 activityContextCreatedIndexController,
                 accountProductsDataController,
-                confirmAccountProductIsNewDelegate,
-                confirmAccountProductHasUpdatesDelegate,
+                confirmAccountProductUpdatedDelegate,
+                updatedIndexController,
                 statusController);
 
             #endregion
@@ -671,7 +670,7 @@ namespace Ghost.Console
             var itemizeAllUserRequestedIdsOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
                 itemizeAllGameProductDataGapsAsyncDelegatepsDelegate,
-                updatedDataController);
+                updatedIndexController);
 
             var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
                 Context.GameProductData,
@@ -679,7 +678,7 @@ namespace Ghost.Console
                 itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
                 productsDataController,
                 gameProductDataController,
-                updatedDataController,
+                updatedIndexController,
                 getDeserializedGameProductDataAsyncDelegate,
                 getGameProductDataUpdateIdentityDelegate,
                 statusController);
@@ -695,7 +694,7 @@ namespace Ghost.Console
             var itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
                 itemizeAllApiProductsGapsAsyncDelegate,
-                updatedDataController);
+                updatedIndexController);
 
             var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
                 Context.ApiProducts,
@@ -703,7 +702,7 @@ namespace Ghost.Console
                 itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
                 productsDataController,
                 apiProductsDataController,
-                updatedDataController,
+                updatedIndexController,
                 getApiProductDelegate,
                 getProductUpdateIdentityDelegate,
                 statusController);
@@ -749,7 +748,7 @@ namespace Ghost.Console
             var itemizeAllUserRequestedOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
                 itemizeAllGameDetailsGapsAsyncDelegate,
-                updatedDataController);
+                updatedIndexController);
 
             var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
                 Context.GameDetails,
@@ -757,7 +756,7 @@ namespace Ghost.Console
                 itemizeAllUserRequestedOrDefaultAsyncDelegate,
                 accountProductsDataController,
                 gameDetailsDataController,
-                updatedDataController,
+                updatedIndexController,
                 getDeserializedGameDetailsAsyncDelegate,
                 getAccountProductUpdateIdentityDelegate,
                 statusController,
@@ -789,7 +788,7 @@ namespace Ghost.Console
 
             var itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
-                updatedDataController);
+                updatedIndexController);
 
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
                 itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
@@ -834,7 +833,7 @@ namespace Ghost.Console
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
             var getManualUrlDownloadSourcesAsyncDelegate = new GetManualUrlDownloadSourcesAsyncDelegate(
-                updatedDataController,
+                updatedIndexController,
                 gameDetailsDataController,
                 itemizeGameDetailsManualUrlsAsyncDelegate,
                 statusController);
@@ -1012,14 +1011,14 @@ namespace Ghost.Console
 
             var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
                 new ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
-                    updatedDataController,
+                    updatedIndexController,
                     gameDetailsDataController,
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
             var itemizeAllUpdatedProductFilesAsyncDelegate = 
                 new ItemizeAllUpdatedProductFilesAsyncDelegate(
-                    updatedDataController,
+                    updatedIndexController,
                     gameDetailsDataController,
                     itemizeGameDetailsDirectoriesAsyncDelegate,
                     directoryController,
@@ -1038,7 +1037,7 @@ namespace Ghost.Console
                 statusController);
 
             var cleanupUpdatedActivity = new CleanupUpdatedActivity(
-                updatedDataController,
+                updatedIndexController,
                 statusController);
 
             #endregion
@@ -1071,7 +1070,7 @@ namespace Ghost.Console
             #region List
 
             var listUpdatedActivity = new ListUpdatedActivity(
-                updatedDataController,
+                updatedIndexController,
                 accountProductsDataController,
                 statusController);
 

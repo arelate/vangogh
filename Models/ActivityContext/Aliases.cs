@@ -17,6 +17,7 @@ namespace Models.ActivityContext
                     {
                         (Activity.UpdateData, Context.Products),
                         (Activity.UpdateData, Context.AccountProducts),
+                        (Activity.UpdateData, Context.Updated),
                         (Activity.UpdateData, Context.Wishlist),
                         (Activity.UpdateData, Context.GameProductData),
                         (Activity.UpdateData, Context.ApiProducts),
@@ -50,6 +51,7 @@ namespace Models.ActivityContext
                     {
                         (Activity.UpdateData, Context.Products),
                         (Activity.UpdateData, Context.AccountProducts),
+                        (Activity.UpdateData, Context.Updated),
                         (Activity.UpdateData, Context.Wishlist),
                         (Activity.UpdateData, Context.GameProductData),
                         (Activity.UpdateData, Context.ApiProducts),

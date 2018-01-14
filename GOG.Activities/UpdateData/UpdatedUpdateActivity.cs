@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
@@ -24,23 +25,25 @@ namespace GOG.Activities.UpdateData
         private IIndexController<string> activityContextCreatedIndexController;
 
         private IDataController<AccountProduct> accountProductDataController;
-        private IConfirmDelegate<AccountProduct> confirmAccountProductIsNewDelegate;
-        private IConfirmDelegate<AccountProduct> confirmAccountProductHasUpdatesDelegate;
+        private IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
+
+        private IIndexController<long> updatedIndexController;
 
         public UpdatedUpdateActivity(
             IActivityContextController activityContextController,
             IIndexController<string> activityContextCreatedIndexController,
             IDataController<AccountProduct> accountProductDataController,
-            IConfirmDelegate<AccountProduct> confirmAccountProductIsNewDelegate,
-            IConfirmDelegate<AccountProduct> confirmAccountProductHasUpdatesDelegate,
+            IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
+            IIndexController<long> updatedIndexController,
             IStatusController statusController): base(statusController)
         {
             this.activityContextController = activityContextController;
             this.activityContextCreatedIndexController = activityContextCreatedIndexController;
 
             this.accountProductDataController = accountProductDataController;
-            this.confirmAccountProductIsNewDelegate = confirmAccountProductIsNewDelegate;
-            this.confirmAccountProductHasUpdatesDelegate = confirmAccountProductHasUpdatesDelegate;
+            this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
+
+            this.updatedIndexController = updatedIndexController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
@@ -56,10 +59,45 @@ namespace GOG.Activities.UpdateData
             // In the future additional heuristics can be employed - such as using products, not just 
             // account products and other. Currently they are considered as YAGNI
 
-            var lastUpdatedAccountProductsData = await activityContextCreatedIndexController.GetCreatedAsync(
-                activityContextController.ToString((A.UpdateData, Context.AccountProducts)), status);
+            var updateDataUpdatedStatus = await statusController.CreateAsync(status, "Process updated account products");
 
-            var newAccountProducts = await accountProductDataController.ItemizeAsync(lastUpdatedAccountProductsData, status);
+            var addNewlyCreatedStatus = await statusController.CreateAsync(updateDataUpdatedStatus, "Add account products created since last data update");
+
+            var accountProductsNewOrUpdated = new List<long>();
+
+            var lastUpdatedAccountProductsData = await activityContextCreatedIndexController.GetCreatedAsync(
+                activityContextController.ToString((A.UpdateData, Context.AccountProducts)), addNewlyCreatedStatus);
+
+            var newlyCreatedAccountProducts = await accountProductDataController.ItemizeAsync(lastUpdatedAccountProductsData, addNewlyCreatedStatus);
+
+            accountProductsNewOrUpdated.AddRange(newlyCreatedAccountProducts);
+
+            await statusController.CompleteAsync(addNewlyCreatedStatus);
+
+            var addUpdatedAccountProductsStatus = await statusController.CreateAsync(updateDataUpdatedStatus, "Add updated account products");
+
+            var current = 0;
+
+            foreach (var id in await accountProductDataController.ItemizeAllAsync(addUpdatedAccountProductsStatus))
+            {
+                await statusController.UpdateProgressAsync(
+                    addUpdatedAccountProductsStatus,
+                    ++current,
+                    await accountProductDataController.CountAsync(addUpdatedAccountProductsStatus),
+                    id.ToString());
+
+                var accountProduct = await accountProductDataController.GetByIdAsync(id, status);
+
+                if (confirmAccountProductUpdatedDelegate.Confirm(accountProduct))
+                    accountProductsNewOrUpdated.Add(id);
+            }
+
+            await updatedIndexController.UpdateAsync(addUpdatedAccountProductsStatus, accountProductsNewOrUpdated.ToArray());
+
+            await statusController.CompleteAsync(addUpdatedAccountProductsStatus);
+
+            await statusController.CompleteAsync(updateDataUpdatedStatus);
+
         }
     }
 }
