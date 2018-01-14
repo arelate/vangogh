@@ -325,6 +325,8 @@ namespace Ghost.Console
 
             var indexFilenameDelegate = new GetFixedFilenameDelegate("index", getJsonFilenameDelegate);
 
+            var activityContextCreatedFilenameDelegate = new GetFixedFilenameDelegate("activityContextCreated", getJsonFilenameDelegate);
+
             var wishlistedFilenameDelegate = new GetFixedFilenameDelegate("wishlisted", getJsonFilenameDelegate);
             var updatedFilenameDelegate = new GetFixedFilenameDelegate("updated", getJsonFilenameDelegate);
 
@@ -334,63 +336,63 @@ namespace Ghost.Console
 
             // index filenames
 
-            var productsIndexDataController = new IndexDataController(
+            var productsIndexDataController = new IndexController<long>(
                 collectionController,
                 productsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var accountProductsIndexDataController = new IndexDataController(
+            var accountProductsIndexDataController = new IndexController<long>(
                 collectionController,
                 accountProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var gameDetailsIndexDataController = new IndexDataController(
+            var gameDetailsIndexDataController = new IndexController<long>(
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var gameProductDataIndexDataController = new IndexDataController(
+            var gameProductDataIndexDataController = new IndexController<long>(
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var apiProductsIndexDataController = new IndexDataController(
+            var apiProductsIndexDataController = new IndexController<long>(
                 collectionController,
                 apiProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var productScreenshotsIndexDataController = new IndexDataController(
+            var productScreenshotsIndexDataController = new IndexController<long>(
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var productDownloadsIndexDataController = new IndexDataController(
+            var productDownloadsIndexDataController = new IndexController<long>(
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var productRoutesIndexDataController = new IndexDataController(
+            var productRoutesIndexDataController = new IndexController<long>(
                 collectionController,
                 productRoutesDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var validationResultsIndexController = new IndexDataController(
+            var validationResultsIndexController = new IndexController<long>(
                 collectionController,
                 validationResultsDirectoryDelegate,
                 indexFilenameDelegate,
@@ -399,14 +401,14 @@ namespace Ghost.Console
 
             // index data controllers that are data controllers
 
-            var wishlistedDataController = new IndexDataController(
+            var wishlistedDataController = new IndexController<long>(
                 collectionController,
                 dataDirectoryDelegate,
                 wishlistedFilenameDelegate,
                 serializedStorageController,
                 statusController);
 
-            var updatedDataController = new IndexDataController(
+            var updatedDataController = new IndexController<long>(
                 collectionController,
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
@@ -512,6 +514,24 @@ namespace Ghost.Console
 
             #endregion
 
+            var aliasController = new AliasController(ActivityContext.Aliases);
+            var whitelistController = new WhitelistController(ActivityContext.Whitelist);
+            var prerequisitesController = new PrerequisiteController(ActivityContext.Prerequisites);
+            var supplementaryController = new SupplementaryController(ActivityContext.Supplementary);
+
+            var activityContextController = new ActivityContextController(
+                aliasController,
+                whitelistController,
+                prerequisitesController,
+                supplementaryController);
+
+            var activityContextCreatedIndexController = new IndexController<string>(
+                collectionController,
+                dataDirectoryDelegate,
+                activityContextCreatedFilenameDelegate,
+                serializedStorageController,
+                statusController);
+
             #region Activity Controllers
 
             #region Authorize
@@ -567,7 +587,9 @@ namespace Ghost.Console
             var itemizeProductsPageResultProductsDelegate = new ItemizeProductsPageResultProductsDelegate();
 
             var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
-                    Context.Products,
+                    (Activity.UpdateData, Context.Products),
+                    activityContextController,
+                    activityContextCreatedIndexController,
                     getProductsPageResultsAsyncDelegate,
                     itemizeProductsPageResultProductsDelegate,
                     //requestPageAsyncDelegate,
@@ -593,10 +615,11 @@ namespace Ghost.Console
                 statusController);
 
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
-                    Context.AccountProducts,
+                    (Activity.UpdateData, Context.AccountProducts),
+                    activityContextController,
+                    activityContextCreatedIndexController,
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,
-                    //requestPageAsyncDelegate,
                     accountProductsDataController,
                     statusController,
                     selectNewUpdatedDelegate);
@@ -1015,17 +1038,6 @@ namespace Ghost.Console
                 statusController);
 
             #endregion
-
-            var aliasController = new AliasController(ActivityContext.Aliases);
-            var whitelistController = new WhitelistController(ActivityContext.Whitelist);
-            var prerequisitesController = new PrerequisiteController(ActivityContext.Prerequisites);
-            var supplementaryController = new SupplementaryController(ActivityContext.Supplementary);
-
-            var activityContextController = new ActivityContextController(
-                aliasController,
-                whitelistController,
-                prerequisitesController,
-                supplementaryController);
 
             #region Help
 

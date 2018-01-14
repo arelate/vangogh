@@ -15,7 +15,7 @@ using Interfaces.Status;
 
 namespace Controllers.Index
 {
-    public class IndexDataController : IIndexController<long>
+    public class IndexController<Type> : IIndexController<Type>
     {
         private ICollectionController collectionController;
 
@@ -25,9 +25,9 @@ namespace Controllers.Index
         private ISerializedStorageController serializedStorageController;
         private IStatusController statusController;
 
-        private IDictionary<long, DateTime> indexesCreated;
+        private IDictionary<Type, DateTime> indexesCreated;
 
-        public IndexDataController(
+        public IndexController(
             ICollectionController collectionController,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
@@ -50,7 +50,7 @@ namespace Controllers.Index
             private set;
         }
 
-        public async Task<bool> ContainsIdAsync(long id, IStatus status)
+        public async Task<bool> ContainsIdAsync(Type id, IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
@@ -64,7 +64,7 @@ namespace Controllers.Index
             return indexesCreated.Count;
         }
 
-        public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
+        public async Task<IEnumerable<Type>> ItemizeAllAsync(IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
@@ -79,8 +79,8 @@ namespace Controllers.Index
                 getDirectoryDelegate.GetDirectory(),
                 getFilenameDelegate.GetFilename());
 
-            indexesCreated = await serializedStorageController.DeserializePullAsync<Dictionary<long, DateTime>>(indexUri, loadStatus);
-            if (indexesCreated == null) indexesCreated = new Dictionary<long, DateTime>();
+            indexesCreated = await serializedStorageController.DeserializePullAsync<Dictionary<Type, DateTime>>(indexUri, loadStatus);
+            if (indexesCreated == null) indexesCreated = new Dictionary<Type, DateTime>();
 
             DataAvailable = true;
 
@@ -102,7 +102,7 @@ namespace Controllers.Index
             await statusController.CompleteAsync(saveStatus);
         }
 
-        private async Task Map(IStatus status, string taskMessage, Func<long, bool> itemAction, params long[] data)
+        private async Task Map(IStatus status, string taskMessage, Func<Type, bool> itemAction, params Type[] data)
         {
             if (!DataAvailable) await LoadAsync(status);
 
@@ -132,7 +132,7 @@ namespace Controllers.Index
             await statusController.CompleteAsync(task);
         }
 
-        public async Task RemoveAsync(IStatus status, params long[] data)
+        public async Task RemoveAsync(IStatus status, params Type[] data)
         {
             if (!DataAvailable) await LoadAsync(status);
 
@@ -151,7 +151,7 @@ namespace Controllers.Index
                 data);
         }
 
-        public async Task UpdateAsync(IStatus status, params long[] data)
+        public async Task UpdateAsync(IStatus status, params Type[] data)
         {
             if (!DataAvailable) await LoadAsync(status);
 
@@ -170,7 +170,7 @@ namespace Controllers.Index
                 data);
         }
 
-        public async Task<DateTime> GetCreatedAsync(long id, IStatus status)
+        public async Task<DateTime> GetCreatedAsync(Type id, IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
@@ -179,14 +179,14 @@ namespace Controllers.Index
                 DateTime.MinValue.ToUniversalTime();
         }
 
-        public async Task<IEnumerable<long>> ItemizeAsync(DateTime moment, IStatus status)
+        public async Task<IEnumerable<Type>> ItemizeAsync(DateTime moment, IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
             return indexesCreated.Where(idLastModified => { return idLastModified.Value >= moment; }).Select(idLastModified => idLastModified.Key);
         }
 
-        public async Task Recreate(IStatus status, params long[] data)
+        public async Task Recreate(IStatus status, params Type[] data)
         {
             await RemoveAsync(status, data);
             await UpdateAsync(status, data);
