@@ -22,14 +22,14 @@ namespace GOG.Delegates.GetDownloadSources
     {
         private IDataController<ProductScreenshots> screenshotsDataController;
         private IFormatDelegate<string, string> formatScreenshotsUriDelegate;
-        private IGetDirectoryDelegate screenshotsDirectoryDelegate;
+        private IGetDirectoryAsyncDelegate screenshotsDirectoryDelegate;
         private IFileController fileController;
         private IStatusController statusController;
 
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
-            IGetDirectoryDelegate screenshotsDirectoryDelegate,
+            IGetDirectoryAsyncDelegate screenshotsDirectoryDelegate,
             IFileController fileController,
             IStatusController statusController)
         {
@@ -72,7 +72,7 @@ namespace GOG.Delegates.GetDownloadSources
                 {
                     var sourceUri = formatScreenshotsUriDelegate.Format(uri);
                     var destinationUri = Path.Combine(
-                        screenshotsDirectoryDelegate.GetDirectory(),
+                        await screenshotsDirectoryDelegate.GetDirectoryAsync(string.Empty, processUpdatesTask),
                         Path.GetFileName(sourceUri));
 
                     if (fileController.Exists(destinationUri)) continue;

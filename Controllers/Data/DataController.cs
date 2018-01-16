@@ -11,6 +11,7 @@ using Interfaces.Delegates.GetFilename;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Stash;
 
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
@@ -26,10 +27,10 @@ namespace Controllers.Data
         private IConvertDelegate<Type, long> convertProductToIndexDelegate;
         private ICollectionController collectionController;
 
-        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
 
-        private IRecycleDelegate moveToRecycleBinDelegate;
+        private IRecycleAsyncDelegate recycleAsyncDelegate;
 
         private IStatusController statusController;
 
@@ -38,9 +39,9 @@ namespace Controllers.Data
             ISerializedStorageController serializedStorageController,
             IConvertDelegate<Type, long> convertProductToIndexDelegate,
             ICollectionController collectionController,
-            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetDirectoryAsyncDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            IRecycleDelegate moveToRecycleBinDelegate,
+            IRecycleAsyncDelegate recycleAsyncDelegate,
             IStatusController statusController)
         {
             this.indexController = indexController;
@@ -53,14 +54,9 @@ namespace Controllers.Data
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
 
-            this.moveToRecycleBinDelegate = moveToRecycleBinDelegate;
+            this.recycleAsyncDelegate = recycleAsyncDelegate;
 
             this.statusController = statusController;
-        }
-
-        public bool DataAvailable
-        {
-            get { return true; } // dataController doesn't hold any state, always reads from disk, so the data is always available
         }
 
         public async Task<bool> ContainsAsync(Type data, IStatus status)
@@ -71,30 +67,18 @@ namespace Controllers.Data
             return await indexController.ContainsIdAsync(index, status);
         }
 
-        private string GetItemUri(long id)
+        private async Task<string> GetItemUri(long id, IStatus status)
         {
             return Path.Combine(
-                getDirectoryDelegate.GetDirectory(),
+                await getDirectoryDelegate.GetDirectoryAsync(string.Empty, status),
                 getFilenameDelegate.GetFilename(id.ToString()));
         }
 
         public async Task<Type> GetByIdAsync(long id, IStatus status)
         {
-            return await serializedStorageController.DeserializePullAsync<Type>(GetItemUri(id), status);
-        }
-
-        public async Task LoadAsync(IStatus status)
-        {
-            var loadStatus = await statusController.CreateAsync(status, "Load data");
-
-            await indexController.LoadAsync(loadStatus);
-
-            await statusController.CompleteAsync(loadStatus);
-        }
-
-        public Task SaveAsync(IStatus status = null)
-        {
-            throw new NotImplementedException();
+            return await serializedStorageController.DeserializePullAsync<Type>(
+                await GetItemUri(id, status), 
+                status);
         }
 
         private async Task MapItemsAndIndexes(
@@ -137,7 +121,7 @@ namespace Controllers.Data
                 async (index, item) =>
                 {
                     await serializedStorageController.SerializePushAsync(
-                        GetItemUri(index),
+                        await GetItemUri(index, status),
                         item,
                         status);
                 },
@@ -156,7 +140,7 @@ namespace Controllers.Data
                 async (index, item) =>
                 {
                     if (await indexController.ContainsIdAsync(index, status))
-                        moveToRecycleBinDelegate.Recycle(GetItemUri(index));
+                        await recycleAsyncDelegate.RecycleAsync(await GetItemUri(index, status), status);
                 },
                 async (indexes) =>
                 {
@@ -178,16 +162,6 @@ namespace Controllers.Data
         public async Task<bool> ContainsIdAsync(long id, IStatus status)
         {
             return await indexController.ContainsIdAsync(id, status);
-        }
-
-        public async Task<DateTime> GetCreatedAsync(long id, IStatus status)
-        {
-            return await indexController.GetCreatedAsync(id, status);
-        }
-
-        public async Task<IEnumerable<long>> ItemizeAsync(DateTime item, IStatus status)
-        {
-            return await indexController.ItemizeAsync(item, status);
         }
     }
 }

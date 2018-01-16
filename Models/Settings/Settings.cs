@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using Interfaces.Settings;
+using Interfaces.Models.Settings;
 
 namespace Models.Settings
 {

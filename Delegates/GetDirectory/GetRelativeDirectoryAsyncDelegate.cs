@@ -1,27 +1,32 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
 
+using Interfaces.Status;
+
 namespace Delegates.GetDirectory
 {
-    public class GetRelativeDirectoryDelegate : IGetDirectoryDelegate
+    public class GetRelativeDirectoryAsyncDelegate : IGetDirectoryAsyncDelegate
     {
         private string baseDirectory;
-        private IGetDirectoryDelegate[] parentDirectories;
+        private IGetDirectoryAsyncDelegate[] parentDirectories;
 
-        public GetRelativeDirectoryDelegate(string baseDirectory, params IGetDirectoryDelegate[] parentDirectories)
+        public GetRelativeDirectoryAsyncDelegate(string baseDirectory, params IGetDirectoryAsyncDelegate[] parentDirectories)
         {
             this.baseDirectory = baseDirectory;
             this.parentDirectories = parentDirectories;
         }
 
-        public string GetDirectory(string relativeDirectory = null)
+        public async Task<string> GetDirectoryAsync(string relativeDirectory, IStatus status)
         {
             var currentPath = string.Empty;
 
             if (parentDirectories != null)
                 foreach (var directoryDelegate in parentDirectories)
-                    currentPath = Path.Combine(directoryDelegate.GetDirectory(), currentPath);
+                    currentPath = Path.Combine(
+                        await directoryDelegate.GetDirectoryAsync(string.Empty, status), 
+                        currentPath);
 
             if (relativeDirectory == null) relativeDirectory = string.Empty;
 

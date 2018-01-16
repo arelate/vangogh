@@ -18,10 +18,7 @@ namespace Interfaces.Controllers.Cookies
 
     public interface ICookiesController:
         ISetCookiesAsyncDelegate,
-        IGetCookiesStringAsyncDelegate,
-        IDataAvailableDelegate,
-        ILoadAsyncDelegate,
-        ISaveAsyncDelegate
+        IGetCookiesStringAsyncDelegate
     {
         // ...
     }

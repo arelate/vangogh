@@ -12,12 +12,12 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllProductFilesDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        private IGetDirectoryDelegate productFilesDirectoryDelegate;
+        private IGetDirectoryAsyncDelegate productFilesDirectoryDelegate;
         private IDirectoryController directoryController;
         private IStatusController statusController;
 
         public ItemizeAllProductFilesDirectoriesAsyncDelegate(
-            IGetDirectoryDelegate productFilesDirectoryDelegate,
+            IGetDirectoryAsyncDelegate productFilesDirectoryDelegate,
             IDirectoryController directoryController,
             IStatusController statusController)
         {
@@ -29,16 +29,13 @@ namespace GOG.Delegates.Itemize
         public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
         {
             var enumerateProductFilesDirectoriesTask = await statusController.CreateAsync(
-                status, 
+                status,
                 "Enumerate productFiles directories");
 
             var directories = new List<string>();
 
-            await Task.Run(() =>
-            {
-                var productFilesDirectory = productFilesDirectoryDelegate.GetDirectory();
-                directories.AddRange(directoryController.EnumerateDirectories(productFilesDirectory));
-            });
+            var productFilesDirectory = await productFilesDirectoryDelegate.GetDirectoryAsync(string.Empty, enumerateProductFilesDirectoriesTask);
+            directories.AddRange(directoryController.EnumerateDirectories(productFilesDirectory));
 
             await statusController.CompleteAsync(enumerateProductFilesDirectoriesTask);
 

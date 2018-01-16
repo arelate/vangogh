@@ -33,10 +33,10 @@ using Controllers.Serialization;
 using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
-using Controllers.Settings;
 using Controllers.Cookies;
 using Controllers.Validation;
 using Controllers.ValidationResult;
+using Controllers.Stash;
 using Controllers.Index;
 using Controllers.Data;
 using Controllers.SerializedStorage;
@@ -55,6 +55,8 @@ using Interfaces.Extraction;
 using Interfaces.ActivityDefinitions;
 using Interfaces.ContextDefinitions;
 using Interfaces.Status;
+
+using Interfaces.Models.Settings;
 
 using GOG.Models;
 
@@ -94,6 +96,7 @@ using Models.Status;
 using Models.QueryParameters;
 using Models.Directories;
 using Models.ActivityContext;
+using Models.Settings;
 
 #endregion
 
@@ -164,7 +167,7 @@ namespace Ghost.Console
 
             var applicationStatus = new Status() { Title = "This ghost is a kind one." };
 
-            var templatesDirectoryDelegate = new GetRelativeDirectoryDelegate("templates");
+            var templatesDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate("templates");
             var appTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
             var reportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
 
@@ -282,44 +285,48 @@ namespace Ghost.Console
 
             // directories
 
-            var settingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
+            var getEmptyDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(string.Empty, null);
+            var getSettingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
 
-            var settingsController = new SettingsController(
-                settingsFilenameDelegate,
+            var settingsStashController = new StashController<ISettings, Settings>(getEmptyDirectoryDelegate,
+                getSettingsFilenameDelegate,
                 serializedStorageController,
                 statusController);
 
-            var correctDownloadsLanguagesAsyncDelegate = new CorrectDownloadsLanguagesAsyncDelegate(languageController);
-            var correctDownloadsOperatingSystemsAsyncDelegate = new CorrectDownloadsOperatingSystemsAsyncDelegate();
+            var correctSettingsCollectionsAsyncDelegate = new CorrectSettingsCollectionsAsyncDelegate(statusController);
+            var correctSettingsDownloadsLanguagesAsyncDelegate = new CorrectSettingsDownloadsLanguagesAsyncDelegate(languageController);
+            var correctSettingsDownloadsOperatingSystemsAsyncDelegate = new CorrectSettingsDownloadsOperatingSystemsAsyncDelegate();
             var correctSettingsDirectoriesAsyncDelegate = new CorrectSettingsDirectoriesAsyncDelegate();
 
             var correctSettingsActivity = new CorrectSettingsActivity(
-                settingsController,
-                correctDownloadsLanguagesAsyncDelegate,
-                correctDownloadsOperatingSystemsAsyncDelegate,
-                correctSettingsDirectoriesAsyncDelegate,
-                statusController);
+                settingsStashController,
+                statusController,
+                correctSettingsCollectionsAsyncDelegate,
+                correctSettingsDownloadsLanguagesAsyncDelegate,
+                correctSettingsDownloadsOperatingSystemsAsyncDelegate,
+                correctSettingsDirectoriesAsyncDelegate);
 
-            var dataDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Data, settingsController);
 
-            var accountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, dataDirectoryDelegate);
-            var apiProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ApiProducts, dataDirectoryDelegate);
-            var gameDetailsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameDetails, dataDirectoryDelegate);
-            var gameProductDataDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameProductData, dataDirectoryDelegate);
-            var productsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.Products, dataDirectoryDelegate);
-            var productDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductDownloads, dataDirectoryDelegate);
-            var productRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductRoutes, dataDirectoryDelegate);
-            var productScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductScreenshots, dataDirectoryDelegate);
-            var validationResultsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ValidationResults, dataDirectoryDelegate);
+            var dataDirectoryDelegate = new GetSettingsDirectoryAsyncDelegate(Directories.Data, settingsStashController);
 
-            var recycleBinDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.RecycleBin, settingsController);
-            var imagesDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Images, settingsController);
-            var reportDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Reports, settingsController);
-            var validationDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Md5, settingsController);
-            var productFilesBaseDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.ProductFiles, settingsController);
-            var screenshotsDirectoryDelegate = new GetSettingsDirectoryDelegate(Directories.Screenshots, settingsController);
+            var accountProductsDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.AccountProducts, dataDirectoryDelegate);
+            var apiProductsDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.ApiProducts, dataDirectoryDelegate);
+            var gameDetailsDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.GameDetails, dataDirectoryDelegate);
+            var gameProductDataDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.GameProductData, dataDirectoryDelegate);
+            var productsDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.Products, dataDirectoryDelegate);
+            var productDownloadsDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.ProductDownloads, dataDirectoryDelegate);
+            var productRoutesDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.ProductRoutes, dataDirectoryDelegate);
+            var productScreenshotsDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.ProductScreenshots, dataDirectoryDelegate);
+            var validationResultsDirectoryDelegate = new GetRelativeDirectoryAsyncDelegate(DataDirectories.ValidationResults, dataDirectoryDelegate);
 
-            var productFilesDirectoryDelegate = new GetUriDirectoryDelegate(productFilesBaseDirectoryDelegate);
+            var recycleBinDirectoryDelegate = new GetSettingsDirectoryAsyncDelegate(Directories.RecycleBin, settingsStashController);
+            var imagesDirectoryDelegate = new GetSettingsDirectoryAsyncDelegate(Directories.Images, settingsStashController);
+            var reportDirectoryDelegate = new GetSettingsDirectoryAsyncDelegate(Directories.Reports, settingsStashController);
+            var validationDirectoryDelegate = new GetSettingsDirectoryAsyncDelegate(Directories.Md5, settingsStashController);
+            var productFilesBaseDirectoryDelegate = new GetSettingsDirectoryAsyncDelegate(Directories.ProductFiles, settingsStashController);
+            var screenshotsDirectoryDelegate = new GetSettingsDirectoryAsyncDelegate(Directories.Screenshots, settingsStashController);
+
+            var productFilesDirectoryDelegate = new GetUriDirectoryAsyncDelegate(productFilesBaseDirectoryDelegate);
 
             // filenames
 
@@ -336,170 +343,214 @@ namespace Ghost.Console
 
             // index filenames
 
-            var productsIndexDataController = new IndexController<long>(
-                collectionController,
+            var productsIndexStashController = new StashController<IList<long>, List<long>>(
                 productsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializedTransactionalStorageController, 
                 statusController);
 
-            var accountProductsIndexDataController = new IndexController<long>(
+            var productsIndexController = new IndexController<long>(
+                productsIndexStashController,
                 collectionController,
+                statusController);
+
+            var accountProductsIndexStashController = new StashController<IList<long>, List<long>>(
                 accountProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var gameDetailsIndexDataController = new IndexController<long>(
+            var accountProductsIndexController = new IndexController<long>(
+                accountProductsIndexStashController,
                 collectionController,
+                statusController);
+
+            var gameDetailsIndexStashController = new StashController<IList<long>, List<long>>(
                 gameDetailsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var gameProductDataIndexDataController = new IndexController<long>(
+            var gameDetailsIndexController = new IndexController<long>(
+                gameDetailsIndexStashController,
                 collectionController,
+                statusController);
+
+            var gameProductDataIndexStashController = new StashController<IList<long>, List<long>>(
                 gameProductDataDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var apiProductsIndexDataController = new IndexController<long>(
+            var gameProductDataIndexController = new IndexController<long>(
+                gameProductDataIndexStashController,
                 collectionController,
+                statusController);
+
+            var apiProductsIndexStashController = new StashController<IList<long>, List<long>>(
                 apiProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var productScreenshotsIndexDataController = new IndexController<long>(
+            var apiProductsIndexController = new IndexController<long>(
+                apiProductsIndexStashController,
                 collectionController,
+                statusController);
+
+            var productScreenshotsIndexStashController = new StashController<IList<long>, List<long>>(
                 productScreenshotsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var productDownloadsIndexDataController = new IndexController<long>(
+            var productScreenshotsIndexController = new IndexController<long>(
+                productScreenshotsIndexStashController,
                 collectionController,
+                statusController);
+
+            var productDownloadsIndexStashController = new StashController<IList<long>, List<long>>(
                 productDownloadsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var productRoutesIndexDataController = new IndexController<long>(
+            var productDownloadsIndexController = new IndexController<long>(
+                productDownloadsIndexStashController,
                 collectionController,
+                statusController);
+
+            var productRoutesIndexStashController = new StashController<IList<long>, List<long>>(
                 productRoutesDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            var validationResultsIndexController = new IndexController<long>(
+            var productRoutesIndexController = new IndexController<long>(
+                productRoutesIndexStashController,
                 collectionController,
+                statusController);
+
+            var validationResultsIndexStashController = new StashController<IList<long>, List<long>>(
                 validationResultsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
                 statusController);
 
-            // index data controllers that are data controllers
-
-            var wishlistedDataController = new IndexController<long>(
+            var validationResultsIndexController = new IndexController<long>(
+                validationResultsIndexStashController,
                 collectionController,
-                dataDirectoryDelegate,
-                wishlistedFilenameDelegate,
-                serializedStorageController,
                 statusController);
 
-            var updatedIndexController = new IndexController<long>(
+            // index data controllers that are data controllers
+
+            var wishlistedStashController = new StashController<IList<long>, List<long>>(
+                dataDirectoryDelegate,
+                wishlistedFilenameDelegate,
+                serializedTransactionalStorageController,
+                statusController);
+
+            var wishlistedController = new IndexController<long>(
+                wishlistedStashController,
                 collectionController,
+                statusController);
+
+            var updatedStashController = new StashController<IList<long>, List<long>>(
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
-                serializedStorageController,
+                serializedTransactionalStorageController,
+                statusController);
+
+            var updatedController = new IndexController<long>(
+                updatedStashController,
+                collectionController,
                 statusController);
 
             // data controllers
 
-            var recycleDelegate = new RecycleDelegate(
+            var recycleAsyncDelegate = new RecycleAsyncDelegate(
                 recycleBinDirectoryDelegate,
                 fileController,
                 directoryController);
 
             var productsDataController = new DataController<Product>(
-                productsIndexDataController,
+                productsIndexController,
                 serializedStorageController,
                 convertProductToIndexDelegate,
                 collectionController,
                 productsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
-                accountProductsIndexDataController,
+                accountProductsIndexController,
                 serializedStorageController,
                 convertAccountProductToIndexDelegate,
                 collectionController,
                 accountProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
-                gameDetailsIndexDataController,
+                gameDetailsIndexController,
                 serializedStorageController,
                 convertGameDetailsToIndexDelegate,
                 collectionController,
                 gameDetailsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var gameProductDataController = new DataController<GameProductData>(
-                gameProductDataIndexDataController,
+                gameProductDataIndexController,
                 serializedStorageController,
                 convertGameProductDataToIndexDelegate,
                 collectionController,
                 gameProductDataDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var apiProductsDataController = new DataController<ApiProduct>(
-                apiProductsIndexDataController,
+                apiProductsIndexController,
                 serializedStorageController,
                 convertApiProductToIndexDelegate,
                 collectionController,
                 apiProductsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
-                productScreenshotsIndexDataController,
+                productScreenshotsIndexController,
                 serializedStorageController,
                 convertProductScreenshotsToIndexDelegate,
                 collectionController,
                 productScreenshotsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
-                productDownloadsIndexDataController,
+                productDownloadsIndexController,
                 serializedStorageController,
                 convertProductDownloadsToIndexDelegate,
                 collectionController,
                 productDownloadsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var productRoutesDataController = new DataController<ProductRoutes>(
-                productRoutesIndexDataController,
+                productRoutesIndexController,
                 serializedStorageController,
                 convertProductRoutesToIndexDelegate,
                 collectionController,
                 productRoutesDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             var validationResultsDataController = new DataController<ValidationResult>(
@@ -509,7 +560,7 @@ namespace Ghost.Console
                 collectionController,
                 validationResultsDirectoryDelegate,
                 getJsonFilenameDelegate,
-                recycleDelegate,
+                recycleAsyncDelegate,
                 statusController);
 
             #endregion
@@ -525,12 +576,12 @@ namespace Ghost.Console
                 prerequisitesController,
                 supplementaryController);
 
-            var activityContextCreatedIndexController = new IndexController<string>(
-                collectionController,
-                dataDirectoryDelegate,
-                activityContextCreatedFilenameDelegate,
-                serializedStorageController,
-                statusController);
+            //var activityContextCreatedIndexController = new IndexController<string>(
+            //    collectionController,
+            //    dataDirectoryDelegate,
+            //    activityContextCreatedFilenameDelegate,
+            //    serializedStorageController,
+            //    statusController);
 
             #region Activity Controllers
 
@@ -563,7 +614,7 @@ namespace Ghost.Console
                 statusController);
 
             var authorizeActivity = new AuthorizeActivity(
-                settingsController,
+                settingsStashController,
                 authorizationController,
                 statusController);
 
@@ -589,7 +640,6 @@ namespace Ghost.Console
             var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
                     (Activity.UpdateData, Context.Products),
                     activityContextController,
-                    activityContextCreatedIndexController,
                     getProductsPageResultsAsyncDelegate,
                     itemizeProductsPageResultProductsDelegate,
                     //requestPageAsyncDelegate,
@@ -611,7 +661,6 @@ namespace Ghost.Console
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
                     (Activity.UpdateData, Context.AccountProducts),
                     activityContextController,
-                    activityContextCreatedIndexController,
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,
                     accountProductsDataController,
@@ -621,10 +670,9 @@ namespace Ghost.Console
 
             var updatedUpdateActivity = new UpdatedUpdateActivity(
                 activityContextController,
-                activityContextCreatedIndexController,
                 accountProductsDataController,
                 confirmAccountProductUpdatedDelegate,
-                updatedIndexController,
+                updatedController,
                 statusController);
 
             #endregion
@@ -637,7 +685,7 @@ namespace Ghost.Console
 
             var wishlistedUpdateActivity = new WishlistedUpdateActivity(
                 getDeserializedPageResultAsyncDelegate,
-                wishlistedDataController,
+                wishlistedController,
                 statusController);
 
             #endregion
@@ -670,7 +718,7 @@ namespace Ghost.Console
             var itemizeAllUserRequestedIdsOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
                 itemizeAllGameProductDataGapsAsyncDelegatepsDelegate,
-                updatedIndexController);
+                updatedController);
 
             var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
                 Context.GameProductData,
@@ -678,7 +726,7 @@ namespace Ghost.Console
                 itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
                 productsDataController,
                 gameProductDataController,
-                updatedIndexController,
+                updatedController,
                 getDeserializedGameProductDataAsyncDelegate,
                 getGameProductDataUpdateIdentityDelegate,
                 statusController);
@@ -694,7 +742,7 @@ namespace Ghost.Console
             var itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
                 itemizeAllApiProductsGapsAsyncDelegate,
-                updatedIndexController);
+                updatedController);
 
             var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
                 Context.ApiProducts,
@@ -702,7 +750,7 @@ namespace Ghost.Console
                 itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
                 productsDataController,
                 apiProductsDataController,
-                updatedIndexController,
+                updatedController,
                 getApiProductDelegate,
                 getProductUpdateIdentityDelegate,
                 statusController);
@@ -748,7 +796,7 @@ namespace Ghost.Console
             var itemizeAllUserRequestedOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
                 itemizeAllGameDetailsGapsAsyncDelegate,
-                updatedIndexController);
+                updatedController);
 
             var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
                 Context.GameDetails,
@@ -756,7 +804,7 @@ namespace Ghost.Console
                 itemizeAllUserRequestedOrDefaultAsyncDelegate,
                 accountProductsDataController,
                 gameDetailsDataController,
-                updatedIndexController,
+                updatedController,
                 getDeserializedGameDetailsAsyncDelegate,
                 getAccountProductUpdateIdentityDelegate,
                 statusController,
@@ -775,7 +823,7 @@ namespace Ghost.Console
 
             var updateScreenshotsActivity = new UpdateScreenshotsActivity(
                 productsDataController,
-                productScreenshotsIndexDataController,
+                productScreenshotsIndexController,
                 updateScreenshotsAsyncDelegate,
                 statusController);
 
@@ -788,7 +836,7 @@ namespace Ghost.Console
 
             var itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
                 itemizeAllUserRequestedIdsAsyncDelegate,
-                updatedIndexController);
+                updatedController);
 
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
                 itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
@@ -816,7 +864,7 @@ namespace Ghost.Console
                 statusController);
 
             var itemizeGameDetailsManualUrlsAsyncDelegate = new ItemizeGameDetailsManualUrlsAsyncDelegate(
-                settingsController,
+                settingsStashController,
                 gameDetailsDataController);
 
             var itemizeGameDetailsDirectoriesAsyncDelegate = new ItemizeGameDetailsDirectoriesAsyncDelegate(
@@ -833,7 +881,7 @@ namespace Ghost.Console
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
             var getManualUrlDownloadSourcesAsyncDelegate = new GetManualUrlDownloadSourcesAsyncDelegate(
-                updatedIndexController,
+                updatedController,
                 gameDetailsDataController,
                 itemizeGameDetailsManualUrlsAsyncDelegate,
                 statusController);
@@ -1005,20 +1053,20 @@ namespace Ghost.Console
                 itemizeAllProductFilesDirectoriesAsyncDelegate, // actual items (directories in productFiles)
                 itemizeDirectoryFilesDelegate, // detailed items (files in directory)
                 formatValidationFileDelegate, // supplementary items (validation files)
-                recycleDelegate,
+                recycleAsyncDelegate,
                 directoryController,
                 statusController);
 
             var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
                 new ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
-                    updatedIndexController,
+                    updatedController,
                     gameDetailsDataController,
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
             var itemizeAllUpdatedProductFilesAsyncDelegate = 
                 new ItemizeAllUpdatedProductFilesAsyncDelegate(
-                    updatedIndexController,
+                    updatedController,
                     gameDetailsDataController,
                     itemizeGameDetailsDirectoriesAsyncDelegate,
                     directoryController,
@@ -1032,12 +1080,12 @@ namespace Ghost.Console
                 itemizeAllUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
                 itemizePassthroughDelegate, // detailed items (passthrough)
                 formatValidationFileDelegate, // supplementary items (validation files)
-                recycleDelegate,
+                recycleAsyncDelegate,
                 directoryController,
                 statusController);
 
             var cleanupUpdatedActivity = new CleanupUpdatedActivity(
-                updatedIndexController,
+                updatedController,
                 statusController);
 
             #endregion
@@ -1070,7 +1118,7 @@ namespace Ghost.Console
             #region List
 
             var listUpdatedActivity = new ListUpdatedActivity(
-                updatedIndexController,
+                updatedController,
                 accountProductsDataController,
                 statusController);
 
@@ -1174,7 +1222,7 @@ namespace Ghost.Console
             }
             else
             {
-                await consoleInputOutputController.OutputContinuousAsync(string.Empty, "All tasks are complete. Press ENTER to exit...");
+                await consoleInputOutputController.OutputContinuousAsync(applicationStatus, string.Empty, "All tasks are complete. Press ENTER to exit...");
             }
 
             consoleController.ReadLine();

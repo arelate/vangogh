@@ -2,6 +2,8 @@
 using Interfaces.Input;
 using System.Threading.Tasks;
 
+using Interfaces.Status;
+
 namespace Delegates.Correct
 {
     public class CorrectUsernamePasswordAsyncDelegate : ICorrectAsyncDelegate<string[]>
@@ -13,7 +15,7 @@ namespace Delegates.Correct
             this.inputController = inputController;
         }
 
-        public async Task<string[]> CorrectAsync(string[] usernamePassword)
+        public async Task<string[]> CorrectAsync(string[] usernamePassword, IStatus status)
         {
             if (usernamePassword == null ||
                 usernamePassword.Length < 2)

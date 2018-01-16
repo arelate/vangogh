@@ -112,7 +112,8 @@ namespace GOG.Controllers.Authorization
             }
 
             var usernamePassword = await correctUsernamePasswordAsyncDelegate.CorrectAsync(
-                new string[] { username, password });
+                new string[] { username, password }, 
+                getLoginCheckResponseTask);
 
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
@@ -132,7 +133,7 @@ namespace GOG.Controllers.Authorization
             var getTwoStepLoginCheckResponseTask = await statusController.CreateAsync(status, "Get second step authentication result");
 
             // 2FA is enabled for this user - ask for the code
-            var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null);
+            var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null, getTwoStepLoginCheckResponseTask);
 
             var secondStepAuthenticationToken = extractionControllers[
                 QueryParameters.SecondStepAuthenticationUnderscoreToken].ExtractMultiple(

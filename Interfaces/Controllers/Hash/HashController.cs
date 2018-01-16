@@ -42,10 +42,7 @@ namespace Interfaces.Controllers.Hash
     public interface IPrecomputedHashController:
         IGetHashDelegate<string>,
         ISetHashAsyncDelegate<string>,
-        IEnumerateKeysAsyncDelegate<string>,
-        ILoadAsyncDelegate,
-        ISaveAsyncDelegate,
-        IDataAvailableDelegate
+        IEnumerateKeysAsyncDelegate<string>
     {
         // ...
     }

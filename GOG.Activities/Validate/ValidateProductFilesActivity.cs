@@ -24,7 +24,7 @@ namespace GOG.Activities.Validate
 {
     public class ValidateProductFilesActivity : Activity
     {
-        private IGetDirectoryDelegate productFileDirectoryDelegate;
+        private IGetDirectoryAsyncDelegate productFileDirectoryDelegate;
         private IGetFilenameDelegate productFileFilenameDelegate;
         private IFormatDelegate<string, string> formatValidationFileDelegate;
         private IFileValidationController fileValidationController;
@@ -35,7 +35,7 @@ namespace GOG.Activities.Validate
         private IRoutingController routingController;
 
         public ValidateProductFilesActivity(
-            IGetDirectoryDelegate productFileDirectoryDelegate,
+            IGetDirectoryAsyncDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
             IFileValidationController fileValidationController,
@@ -95,7 +95,7 @@ namespace GOG.Activities.Validate
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
-                        productFileDirectoryDelegate.GetDirectory(manualUrl),
+                        await productFileDirectoryDelegate.GetDirectoryAsync(manualUrl, getLocalFilesTask),
                         productFileFilenameDelegate.GetFilename(resolvedUri));
 
                     localFiles.Add(localFile);

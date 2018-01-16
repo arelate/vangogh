@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Interfaces.Settings
+namespace Interfaces.Models.Settings
 {
     public interface ISettings
     {

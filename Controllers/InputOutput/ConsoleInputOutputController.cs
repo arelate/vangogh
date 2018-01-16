@@ -11,6 +11,8 @@ using Interfaces.Controllers.Console;
 
 using Interfaces.Input;
 
+using Interfaces.Status;
+
 namespace Controllers.InputOutput
 {
     public class ConsoleInputOutputController :
@@ -65,7 +67,7 @@ namespace Controllers.InputOutput
             });
         }
 
-        public async Task OutputContinuousAsync(params string[] data)
+        public async Task OutputContinuousAsync(IStatus status, params string[] data)
         {
             // Clear frame buffer
             fragmentBuffer.Clear();
@@ -92,7 +94,7 @@ namespace Controllers.InputOutput
             // Preserve the current position
             savedCursorTopPosition = consoleController.CursorTop;
             // Use regular continuous output
-            await OutputContinuousAsync(data);
+            await OutputContinuousAsync(null, data);
         }
 
         public async Task OutputFixedOnRefreshAsync(params string[] data)
@@ -105,13 +107,13 @@ namespace Controllers.InputOutput
 
         public async Task<string> RequestInputAsync(string message)
         {
-            await OutputContinuousAsync(message);
+            await OutputContinuousAsync(null, message);
             return consoleController.ReadLine();
         }
 
         public async Task<string> RequestPrivateInputAsync(string message)
         {
-            await OutputContinuousAsync(message);
+            await OutputContinuousAsync(null, message);
             return consoleController.ReadLinePrivate();
         }
     }

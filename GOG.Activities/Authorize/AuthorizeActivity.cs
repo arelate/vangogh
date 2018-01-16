@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Settings;
+using Interfaces.Controllers.Stash;
 using Interfaces.Status;
+
+using Interfaces.Models.Settings;
 
 using GOG.Interfaces.Controllers.Authorization;
 
@@ -9,22 +11,22 @@ namespace GOG.Activities.Authorize
 {
     public class AuthorizeActivity : Activity
     {
-        private IGetSettingsAsyncDelegate getSettingsAsyncDelegate;
+        private IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate;
         private IAuthorizationController authorizationController;
 
         public AuthorizeActivity(
-            IGetSettingsAsyncDelegate getSettingsAsyncDelegate,
+            IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate,
             IAuthorizationController authorizationController,
             IStatusController statusController) :
             base(statusController)
         {
-            this.getSettingsAsyncDelegate = getSettingsAsyncDelegate;
+            this.getSettingsDataAsyncDelegate = getSettingsDataAsyncDelegate;
             this.authorizationController = authorizationController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var settings = await getSettingsAsyncDelegate.GetSettingsAsync(status);
+            var settings = await getSettingsDataAsyncDelegate.GetDataAsync(status);
             if (settings != null)
             {
                 await authorizationController.AuthorizeAsync(

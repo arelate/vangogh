@@ -1,111 +1,54 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
-
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Stash;
 
-using Interfaces.SerializedStorage;
 using Interfaces.Status;
 
 namespace Controllers.Index
 {
     public class IndexController<Type> : IIndexController<Type>
     {
+        private IStashController<IList<Type>, List<Type>> indexesStashController;
+
         private ICollectionController collectionController;
 
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
-
-        private ISerializedStorageController serializedStorageController;
         private IStatusController statusController;
 
-        private IDictionary<Type, DateTime> indexesCreated;
-
         public IndexController(
+            IStashController<IList<Type>, List<Type>> indexesStashController,
             ICollectionController collectionController,
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate,
-            ISerializedStorageController serializedStorageController,
             IStatusController statusController)
         {
+            this.indexesStashController = indexesStashController;
+
             this.collectionController = collectionController;
-
-            this.getDirectoryDelegate = getDirectoryDelegate;
-            this.getFilenameDelegate = getFilenameDelegate;
-
-            this.serializedStorageController = serializedStorageController;
 
             this.statusController = statusController;
         }
 
-        public bool DataAvailable
-        {
-            get;
-            private set;
-        }
-
         public async Task<bool> ContainsIdAsync(Type id, IStatus status)
         {
-            if (!DataAvailable) await LoadAsync(status);
-
-            return indexesCreated.ContainsKey(id);
+            var indexes = await indexesStashController.GetDataAsync(status);
+            return indexes.Contains(id);
         }
 
         public async Task<int> CountAsync(IStatus status)
         {
-            if (!DataAvailable) await LoadAsync(status);
-
-            return indexesCreated.Count;
+            var indexes = await indexesStashController.GetDataAsync(status);
+            return indexes.Count;
         }
 
         public async Task<IEnumerable<Type>> ItemizeAllAsync(IStatus status)
         {
-            if (!DataAvailable) await LoadAsync(status);
-
-            return indexesCreated.Keys;
-        }
-
-        public async Task LoadAsync(IStatus status)
-        {
-            var loadStatus = await statusController.CreateAsync(status, "Load index");
-
-            var indexUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(),
-                getFilenameDelegate.GetFilename());
-
-            indexesCreated = await serializedStorageController.DeserializePullAsync<Dictionary<Type, DateTime>>(indexUri, loadStatus);
-            if (indexesCreated == null) indexesCreated = new Dictionary<Type, DateTime>();
-
-            DataAvailable = true;
-
-            await statusController.CompleteAsync(loadStatus);
-        }
-
-        public async Task SaveAsync(IStatus status)
-        {
-            if (!DataAvailable) throw new InvalidOperationException("Cannot save data before it's available");
-
-            var saveStatus = await statusController.CreateAsync(status, "Save index");
-
-            var indexUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(),
-                getFilenameDelegate.GetFilename());
-
-            await serializedStorageController.SerializePushAsync(indexUri, indexesCreated, saveStatus);
-
-            await statusController.CompleteAsync(saveStatus);
+            return await indexesStashController.GetDataAsync(status);
         }
 
         private async Task Map(IStatus status, string taskMessage, Func<Type, bool> itemAction, params Type[] data)
         {
-            if (!DataAvailable) await LoadAsync(status);
-
             var task = await statusController.CreateAsync(status, taskMessage);
             var counter = 0;
             var dataChanged = false;
@@ -125,7 +68,7 @@ namespace Controllers.Index
             if (dataChanged)
             {
                 var saveDataTask = await statusController.CreateAsync(task, "Save modified index");
-                await SaveAsync(status);
+                await indexesStashController.SaveAsync(status);
                 await statusController.CompleteAsync(saveDataTask);
             }
 
@@ -134,16 +77,16 @@ namespace Controllers.Index
 
         public async Task RemoveAsync(IStatus status, params Type[] data)
         {
-            if (!DataAvailable) await LoadAsync(status);
+            var indexes = await indexesStashController.GetDataAsync(status);
 
             await Map(
                 status,
                 "Remove index item(s)",
                 (item) =>
                 {
-                    if (indexesCreated.ContainsKey(item))
+                    if (indexes.Contains(item))
                     {
-                        indexesCreated.Remove(item);
+                        indexes.Remove(item);
                         return true;
                     }
                     return false;
@@ -153,37 +96,20 @@ namespace Controllers.Index
 
         public async Task UpdateAsync(IStatus status, params Type[] data)
         {
-            if (!DataAvailable) await LoadAsync(status);
+            var indexes = await indexesStashController.GetDataAsync(status);
 
             await Map(
                 status,
                 "Update index item(s)",
                 (item) => {
-                    if (!indexesCreated.ContainsKey(item))
+                    if (!indexes.Contains(item))
                     {
-                        // TODO: need to understand if we should update last modified even if the item exists
-                        indexesCreated.Add(item, DateTime.UtcNow);
+                        indexes.Add(item);
                         return true;
                     }
                     return false;
                 },
                 data);
-        }
-
-        public async Task<DateTime> GetCreatedAsync(Type id, IStatus status)
-        {
-            if (!DataAvailable) await LoadAsync(status);
-
-            return indexesCreated.ContainsKey(id) ?
-                indexesCreated[id] :
-                DateTime.MinValue.ToUniversalTime();
-        }
-
-        public async Task<IEnumerable<Type>> ItemizeAsync(DateTime moment, IStatus status)
-        {
-            if (!DataAvailable) await LoadAsync(status);
-
-            return indexesCreated.Where(idLastModified => { return idLastModified.Value >= moment; }).Select(idLastModified => idLastModified.Key);
         }
 
         public async Task Recreate(IStatus status, params Type[] data)

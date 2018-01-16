@@ -8,16 +8,6 @@ using Interfaces.Status;
 
 namespace Interfaces.Controllers.Data
 {
-    public interface ILoadAsyncDelegate
-    {
-        Task LoadAsync(IStatus status);
-    }
-
-    public interface ISaveAsyncDelegate
-    {
-        Task SaveAsync(IStatus status);
-    }
-
     public interface IGetByIdAsyncDelegate<IdentityType, ReturnType>
     {
         Task<ReturnType> GetByIdAsync(IdentityType id, IStatus status);
@@ -52,29 +42,14 @@ namespace Interfaces.Controllers.Data
         Task<int> CountAsync(IStatus status);
     }
 
-    public interface IDataAvailableDelegate
-    {
-        bool DataAvailable { get; }
-    }
-
-    public interface IGetCreatedAsyncDelegate<IdentityType>
-    {
-        Task<DateTime> GetCreatedAsync(IdentityType id, IStatus status);
-    }
-
     public interface IDataController<DataType> :
-        IDataAvailableDelegate,
-        ILoadAsyncDelegate,
-        ISaveAsyncDelegate,
         IItemizeAllAsyncDelegate<long>,
         ICountAsyncDelegate,
         IGetByIdAsyncDelegate<long, DataType>,
         IUpdateAsyncDelegate<DataType>,
         IRemoveAsyncDelegate<DataType>,
         IContainsAsyncDelegate<DataType>,
-        IContainsIdAsyncDelegate<long>,
-        IGetCreatedAsyncDelegate<long>,
-        IItemizeAsyncDelegate<DateTime, long> // all items modified on or after a certain date
+        IContainsIdAsyncDelegate<long>
     {
         // ...
     }

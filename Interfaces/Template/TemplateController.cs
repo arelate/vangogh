@@ -35,9 +35,7 @@ namespace Interfaces.Template
         IPrimaryTemplateProperty, 
         IResolveSubTemplatesAsyncDelegate,
         IGetContentByTitleAsyncDelegate,
-        IBindAsyncDelegate,
-        ILoadAsyncDelegate,
-        IDataAvailableDelegate
+        IBindAsyncDelegate
     {
         // ...
     }

@@ -1,7 +1,11 @@
-﻿namespace Interfaces.Delegates.GetDirectory
+﻿using System.Threading.Tasks;
+
+using Interfaces.Status;
+
+namespace Interfaces.Delegates.GetDirectory
 {
-    public interface IGetDirectoryDelegate
+    public interface IGetDirectoryAsyncDelegate
     {
-        string GetDirectory(string source = null);
+        Task<string> GetDirectoryAsync(string input, IStatus status);
     }
 }

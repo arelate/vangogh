@@ -3,6 +3,7 @@
 using Interfaces.Delegates.Correct;
 
 using Interfaces.Input;
+using Interfaces.Status;
 
 namespace Delegates.Correct
 {
@@ -17,7 +18,7 @@ namespace Delegates.Correct
             this.requestInputDelegate = requestInputDelegate;
         }
 
-        public async Task<string> CorrectAsync(string properties)
+        public async Task<string> CorrectAsync(string properties, IStatus status)
         {
             var securityCode = string.Empty;
 

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Recycle;
@@ -6,16 +7,18 @@ using Interfaces.Delegates.Recycle;
 using Interfaces.Controllers.Directory;
 using Interfaces.Controllers.File;
 
+using Interfaces.Status;
+
 namespace Delegates.Recycle
 {
-    public class RecycleDelegate : IRecycleDelegate
+    public class RecycleAsyncDelegate : IRecycleAsyncDelegate
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
         private IFileController fileController;
         private IDirectoryController directoryController;
 
-        public RecycleDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
+        public RecycleAsyncDelegate(
+            IGetDirectoryAsyncDelegate getDirectoryDelegate,
             IFileController fileController,
             IDirectoryController directoryController)
         {
@@ -24,10 +27,10 @@ namespace Delegates.Recycle
             this.directoryController = directoryController;
         }
 
-        public void Recycle(string uri)
+        public async Task RecycleAsync(string uri, IStatus status)
         {
             var recycleBinUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(),
+                await getDirectoryDelegate.GetDirectoryAsync(string.Empty, status),
                 uri);
             fileController.Move(uri, recycleBinUri);
         }

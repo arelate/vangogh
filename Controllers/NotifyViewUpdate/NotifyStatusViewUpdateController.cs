@@ -28,6 +28,7 @@ namespace Controllers.ViewUpdates
         public async Task NotifyViewUpdateOutputContinuousAsync()
         {
             await outputController.OutputContinuousAsync(
+                null,
                 await getViewUpdateDelegate.GetViewUpdateAsync());
         }
     }

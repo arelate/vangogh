@@ -25,7 +25,6 @@ namespace GOG.Activities.UpdateData
     {
         private AC activityContext;
         private IActivityContextController activityContextController;
-        private IIndexController<string> activityContextCreatedIndexController;
 
         private IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
         private IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
@@ -35,7 +34,6 @@ namespace GOG.Activities.UpdateData
         public PageResultUpdateActivity(
             AC activityContext,
             IActivityContextController activityContextController,
-            IIndexController<string> activityContextCreatedIndexController,
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
@@ -44,7 +42,6 @@ namespace GOG.Activities.UpdateData
         {
             this.activityContext = activityContext;
             this.activityContextController = activityContextController;
-            this.activityContextCreatedIndexController = activityContextCreatedIndexController;
 
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
@@ -66,7 +63,7 @@ namespace GOG.Activities.UpdateData
             {
                 var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Save {activityContext.Item2}");
                 // set the date when new products were added to be able to filter those products as updated
-                await activityContextCreatedIndexController.Recreate(updateAllProductsTask, activityContextController.ToString(activityContext));
+                //await activityContextCreatedIndexController.Recreate(updateAllProductsTask, activityContextController.ToString(activityContext));
                 // actually update the products
                 await dataController.UpdateAsync(updateTask, newProducts.ToArray());
                 await statusController.CompleteAsync(updateTask);

@@ -22,7 +22,6 @@ namespace GOG.Activities.UpdateData
     public class UpdatedUpdateActivity: Activity
     {
         private IActivityContextController activityContextController;
-        private IIndexController<string> activityContextCreatedIndexController;
 
         private IDataController<AccountProduct> accountProductDataController;
         private IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
@@ -31,14 +30,12 @@ namespace GOG.Activities.UpdateData
 
         public UpdatedUpdateActivity(
             IActivityContextController activityContextController,
-            IIndexController<string> activityContextCreatedIndexController,
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
             IIndexController<long> updatedIndexController,
             IStatusController statusController): base(statusController)
         {
             this.activityContextController = activityContextController;
-            this.activityContextCreatedIndexController = activityContextCreatedIndexController;
 
             this.accountProductDataController = accountProductDataController;
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
@@ -65,12 +62,12 @@ namespace GOG.Activities.UpdateData
 
             var accountProductsNewOrUpdated = new List<long>();
 
-            var lastUpdatedAccountProductsData = await activityContextCreatedIndexController.GetCreatedAsync(
-                activityContextController.ToString((A.UpdateData, Context.AccountProducts)), addNewlyCreatedStatus);
+            //var lastUpdatedAccountProductsData = await activityContextCreatedIndexController.GetCreatedAsync(
+            //    activityContextController.ToString((A.UpdateData, Context.AccountProducts)), addNewlyCreatedStatus);
 
-            var newlyCreatedAccountProducts = await accountProductDataController.ItemizeAsync(lastUpdatedAccountProductsData, addNewlyCreatedStatus);
+            //var newlyCreatedAccountProducts = await accountProductDataController.ItemizeAsync(lastUpdatedAccountProductsData, addNewlyCreatedStatus);
 
-            accountProductsNewOrUpdated.AddRange(newlyCreatedAccountProducts);
+            //accountProductsNewOrUpdated.AddRange(newlyCreatedAccountProducts);
 
             await statusController.CompleteAsync(addNewlyCreatedStatus);
 

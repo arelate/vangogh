@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Stash;
 
-using Interfaces.Settings;
+using Interfaces.Models.Settings;
 using Interfaces.Status;
 
 using Models.Uris;
@@ -17,20 +18,20 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        private IGetSettingsAsyncDelegate getSettingsAsyncDelegate;
+        private IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate;
         private IDataController<GameDetails> gameDetailsDataController;
 
         public ItemizeGameDetailsManualUrlsAsyncDelegate(
-            IGetSettingsAsyncDelegate getSettingsAsyncDelegate,
+            IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate,
             IDataController<GameDetails> gameDetailsDataController)
         {
-            this.getSettingsAsyncDelegate = getSettingsAsyncDelegate;
+            this.getSettingsDataAsyncDelegate = getSettingsDataAsyncDelegate;
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
         public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails, IStatus status)
         {
-            var settings = await getSettingsAsyncDelegate.GetSettingsAsync(status);
+            var settings = await getSettingsDataAsyncDelegate.GetDataAsync(status);
 
             if (settings == null ||
                 settings.DownloadsLanguages == null ||

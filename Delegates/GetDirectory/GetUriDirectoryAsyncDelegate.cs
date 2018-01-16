@@ -1,23 +1,25 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
+
+using Interfaces.Status;
 
 using Models.Separators;
 
 namespace Delegates.GetDirectory
 {
-    public class GetUriDirectoryDelegate : IGetDirectoryDelegate
+    public class GetUriDirectoryAsyncDelegate : IGetDirectoryAsyncDelegate
     {
-        private IGetDirectoryDelegate baseDirectoryDelegate;
+        private IGetDirectoryAsyncDelegate baseDirectoryDelegate;
 
-
-        public GetUriDirectoryDelegate(IGetDirectoryDelegate baseDirectoryDelegate)
+        public GetUriDirectoryAsyncDelegate(IGetDirectoryAsyncDelegate baseDirectoryDelegate)
         {
             this.baseDirectoryDelegate = baseDirectoryDelegate;
         }
 
-        public string GetDirectory(string source = null)
+        public async Task<string> GetDirectoryAsync(string source, IStatus status)
         {
             var directory = string.Empty;
 
@@ -35,7 +37,7 @@ namespace Delegates.GetDirectory
             var baseDirectory = string.Empty;
 
             if (baseDirectoryDelegate != null)
-                baseDirectory = baseDirectoryDelegate.GetDirectory();
+                baseDirectory = await baseDirectoryDelegate.GetDirectoryAsync(string.Empty, status);
 
             return Path.Combine(baseDirectory, directory);
         }

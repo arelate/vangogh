@@ -7,16 +7,18 @@ using Interfaces.Delegates.GetFilename;
 using Interfaces.Controllers.Output;
 using Interfaces.Controllers.Stream;
 
+using Interfaces.Status;
+
 namespace Controllers.Presentation
 {
     public class FilePresentationController : IOutputController<string[]>
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
+        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IStreamController streamController;
 
         public FilePresentationController(
-            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetDirectoryAsyncDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IStreamController streamController)
         {
@@ -30,10 +32,10 @@ namespace Controllers.Presentation
             throw new System.NotImplementedException();
         }
 
-        public async Task OutputContinuousAsync(params string[] lines)
+        public async Task OutputContinuousAsync(IStatus status, params string[] lines)
         {
             var reportUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(),
+                await getDirectoryDelegate.GetDirectoryAsync(string.Empty, status),
                 getFilenameDelegate.GetFilename());
 
             using (var reportStream = streamController.OpenWritable(reportUri))
