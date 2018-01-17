@@ -1,17 +1,22 @@
 Backend
 
-- abbstract Save/Load/DataAvailable to a controller
+- abstract Save/Load/DataAvailable to a controller -> stashController and complete transition to it for template, cookies, precomputedHash (and any other I've missed here)
 
-- expand activityContextCreated tracking to all activityContexts
+- introduce getPathDelegate to abstract away directory + filename
+
+- introduce timelineContoller to track created/modified/completed (action succeeded) for an id
 
 - modify (again) console output controller to use "single line control" and output only on one line. One idea is to collapse to ellipsis all earlier steps if the content doesn't fit
 
-- complete spliting delegates from controllers
+- complete splitting delegates from controllers
 
 - change clear updated from unconditional clearing to receipt based system. To clear updated we'll need successful completion of several activities since product was added as updated:
--- need to track when product was modified, updated
--- need to define this dependency system
--- need to change clear updated model to check everything above
+-- use timelineController and fulfill the following conditions
+-- the moment product was last set as updated is T0
+-- Since T0, there should be the following events on the product timeline:
+-- gameDetails modified at Tgd > T0;
+-- product files download should have been completed at Tpfd > Tgd;
+-- product files validation should have been completed at Tv > Tpfd;
 
 - investigate /user/data/games (from https://www.gog.com/forum/general/unofficial_gog_api_documentation/page2) and game_type == pack specifically
 
@@ -22,8 +27,6 @@ Backend
 	need: search-products, search-accountProducts, search-gameDetails, etc. + alias "search" (all together, each operation lists separate results)
 
 	design alternatives:
-	- (no - requires deserialization) use only text fields for search
-	- (no - would hit too much of internal data) use serialized entry
 	- (yes, and would be required for frontends as well) build search index with viewModels and new activity (update-searchIndex, should be postReq for many activities)
 	- search outputs a list of productCore (id,title)
 	- this might require to add Results to ActivityStatus - not sure if string, ProductCore yet (would be great to have the ProductCore)
