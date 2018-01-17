@@ -17,7 +17,7 @@ namespace Controllers.Stash
         IStashController<InterfaceType, InstanceType>
         where InstanceType : InterfaceType, new()
     {
-        private IGetDirectoryAsyncDelegate getDirectoryAsyncDelegate;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
 
         private ISerializedStorageController serializedStorageController;
@@ -27,12 +27,12 @@ namespace Controllers.Stash
         private InterfaceType storedData;
 
         public StashController(
-            IGetDirectoryAsyncDelegate getDirectoryAsyncDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializedStorageController serializedStorageController,
             IStatusController statusController)
         {
-            this.getDirectoryAsyncDelegate = getDirectoryAsyncDelegate;
+            this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
 
             this.serializedStorageController = serializedStorageController;
@@ -58,7 +58,7 @@ namespace Controllers.Stash
             var loadStatus = await statusController.CreateAsync(status, "Load stored data");
 
             var storedDataUri = Path.Combine(
-                await getDirectoryAsyncDelegate.GetDirectoryAsync(string.Empty, loadStatus),
+                getDirectoryDelegate.GetDirectory(string.Empty),
                 getFilenameDelegate.GetFilename());
 
             storedData = await serializedStorageController.DeserializePullAsync<InstanceType>(storedDataUri, loadStatus);
@@ -76,7 +76,7 @@ namespace Controllers.Stash
             var saveStatus = await statusController.CreateAsync(status, "Save stored data");
 
             var storedDataUri = Path.Combine(
-                await getDirectoryAsyncDelegate.GetDirectoryAsync(string.Empty, saveStatus),
+                getDirectoryDelegate.GetDirectory(string.Empty),
                 getFilenameDelegate.GetFilename());
 
             await serializedStorageController.SerializePushAsync(storedDataUri, storedData, saveStatus);

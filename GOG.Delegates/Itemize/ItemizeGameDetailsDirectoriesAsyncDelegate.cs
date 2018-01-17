@@ -13,11 +13,11 @@ namespace GOG.Delegates.Itemize
     public class ItemizeGameDetailsDirectoriesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
         private IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
+        private IGetDirectoryDelegate getDirectoryDelegate;
 
         public ItemizeGameDetailsDirectoriesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IGetDirectoryAsyncDelegate getDirectoryDelegate)
+            IGetDirectoryDelegate getDirectoryDelegate)
         {
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
@@ -29,7 +29,7 @@ namespace GOG.Delegates.Itemize
 
             foreach (var manualUrl in await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails, status))
             {
-                var directory = await getDirectoryDelegate.GetDirectoryAsync(manualUrl, status);
+                var directory = getDirectoryDelegate.GetDirectory(manualUrl);
 
                 if (!gameDetailsDirectories.Contains(directory))
                     gameDetailsDirectories.Add(directory);

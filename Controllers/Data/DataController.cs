@@ -11,7 +11,6 @@ using Interfaces.Delegates.GetFilename;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Collection;
-using Interfaces.Controllers.Stash;
 
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
@@ -27,10 +26,10 @@ namespace Controllers.Data
         private IConvertDelegate<Type, long> convertProductToIndexDelegate;
         private ICollectionController collectionController;
 
-        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
 
-        private IRecycleAsyncDelegate recycleAsyncDelegate;
+        private IRecycleDelegate recycleDelegate;
 
         private IStatusController statusController;
 
@@ -39,9 +38,9 @@ namespace Controllers.Data
             ISerializedStorageController serializedStorageController,
             IConvertDelegate<Type, long> convertProductToIndexDelegate,
             ICollectionController collectionController,
-            IGetDirectoryAsyncDelegate getDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            IRecycleAsyncDelegate recycleAsyncDelegate,
+            IRecycleDelegate recycleDelegate,
             IStatusController statusController)
         {
             this.indexController = indexController;
@@ -54,7 +53,7 @@ namespace Controllers.Data
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
 
-            this.recycleAsyncDelegate = recycleAsyncDelegate;
+            this.recycleDelegate = recycleDelegate;
 
             this.statusController = statusController;
         }
@@ -67,17 +66,17 @@ namespace Controllers.Data
             return await indexController.ContainsIdAsync(index, status);
         }
 
-        private async Task<string> GetItemUri(long id, IStatus status)
+        private string GetItemUriHelper(long id, IStatus status)
         {
             return Path.Combine(
-                await getDirectoryDelegate.GetDirectoryAsync(string.Empty, status),
+                getDirectoryDelegate.GetDirectory(string.Empty),
                 getFilenameDelegate.GetFilename(id.ToString()));
         }
 
         public async Task<Type> GetByIdAsync(long id, IStatus status)
         {
             return await serializedStorageController.DeserializePullAsync<Type>(
-                await GetItemUri(id, status), 
+                GetItemUriHelper(id, status), 
                 status);
         }
 
@@ -121,7 +120,7 @@ namespace Controllers.Data
                 async (index, item) =>
                 {
                     await serializedStorageController.SerializePushAsync(
-                        await GetItemUri(index, status),
+                        GetItemUriHelper(index, status),
                         item,
                         status);
                 },
@@ -140,7 +139,7 @@ namespace Controllers.Data
                 async (index, item) =>
                 {
                     if (await indexController.ContainsIdAsync(index, status))
-                        await recycleAsyncDelegate.RecycleAsync(await GetItemUri(index, status), status);
+                    recycleDelegate.Recycle(GetItemUriHelper(index, status));
                 },
                 async (indexes) =>
                 {

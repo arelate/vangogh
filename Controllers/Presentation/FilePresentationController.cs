@@ -13,12 +13,12 @@ namespace Controllers.Presentation
 {
     public class FilePresentationController : IOutputController<string[]>
     {
-        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IStreamController streamController;
 
         public FilePresentationController(
-            IGetDirectoryAsyncDelegate getDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IStreamController streamController)
         {
@@ -35,7 +35,7 @@ namespace Controllers.Presentation
         public async Task OutputContinuousAsync(IStatus status, params string[] lines)
         {
             var reportUri = Path.Combine(
-                await getDirectoryDelegate.GetDirectoryAsync(string.Empty, status),
+                getDirectoryDelegate.GetDirectory(string.Empty),
                 getFilenameDelegate.GetFilename());
 
             using (var reportStream = streamController.OpenWritable(reportUri))

@@ -4,8 +4,8 @@ using Interfaces.Status;
 
 namespace Interfaces.Delegates.GetDirectory
 {
-    public interface IGetDirectoryAsyncDelegate
+    public interface IGetDirectoryDelegate
     {
-        Task<string> GetDirectoryAsync(string input, IStatus status);
+        string GetDirectory(string input);
     }
 }

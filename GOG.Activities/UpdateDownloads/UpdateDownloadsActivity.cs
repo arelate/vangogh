@@ -24,7 +24,7 @@ namespace GOG.Activities.UpdateDownloads
         private Context context;
 
         private IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
-        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IFileController fileController;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDataController<AccountProduct> accountProductsDataController;
@@ -33,7 +33,7 @@ namespace GOG.Activities.UpdateDownloads
         public UpdateDownloadsActivity(
             Context context,
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
-            IGetDirectoryAsyncDelegate getDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
@@ -119,7 +119,7 @@ namespace GOG.Activities.UpdateDownloads
 
                 foreach (var source in downloadSource.Value)
                 {
-                    var destinationDirectory = await getDirectoryDelegate?.GetDirectoryAsync(source, scheduleDownloadsTask);
+                    var destinationDirectory = getDirectoryDelegate?.GetDirectory(source);
 
                     var scheduledDownloadEntry = new ProductDownloadEntry()
                     {

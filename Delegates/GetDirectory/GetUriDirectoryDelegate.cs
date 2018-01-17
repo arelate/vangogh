@@ -10,16 +10,16 @@ using Models.Separators;
 
 namespace Delegates.GetDirectory
 {
-    public class GetUriDirectoryAsyncDelegate : IGetDirectoryAsyncDelegate
+    public class GetUriDirectoryDelegate : IGetDirectoryDelegate
     {
-        private IGetDirectoryAsyncDelegate baseDirectoryDelegate;
+        private IGetDirectoryDelegate baseDirectoryDelegate;
 
-        public GetUriDirectoryAsyncDelegate(IGetDirectoryAsyncDelegate baseDirectoryDelegate)
+        public GetUriDirectoryDelegate(IGetDirectoryDelegate baseDirectoryDelegate)
         {
             this.baseDirectoryDelegate = baseDirectoryDelegate;
         }
 
-        public async Task<string> GetDirectoryAsync(string source, IStatus status)
+        public string GetDirectory(string source)
         {
             var directory = string.Empty;
 
@@ -37,7 +37,7 @@ namespace Delegates.GetDirectory
             var baseDirectory = string.Empty;
 
             if (baseDirectoryDelegate != null)
-                baseDirectory = await baseDirectoryDelegate.GetDirectoryAsync(string.Empty, status);
+                baseDirectory = baseDirectoryDelegate.GetDirectory(string.Empty);
 
             return Path.Combine(baseDirectory, directory);
         }

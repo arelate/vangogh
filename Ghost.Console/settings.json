@@ -2,14 +2,5 @@
 	"username": "",
 	"password": "",
 	"downloadsLanguages": [ "en" ],
-	"downloadsOperatingSystems": [ "Windows", "Mac" ],
-	"directories": [
-		{"Key": "data", "Value": "data"},
-		{"Key": "recycleBin", "Value": "recycleBin"},
-		{"Key": "images", "Value": "images"},
-		{"Key": "reports", "Value": "reports"},
-		{"Key": "md5", "Value": "md5"},
-		{"Key": "productFiles", "Value": "productFiles"},
-		{"Key": "screenshots", "Value": "screenshots"}	
-	]
+	"downloadsOperatingSystems": [ "Windows", "Mac" ]
 }

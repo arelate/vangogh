@@ -20,7 +20,7 @@ namespace Controllers.Template
     public class TemplateController : ITemplateController
     {
         private ITemplate[] templates;
-        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private ISerializedStorageController serializedStorageController;
         private ICollectionController collectionController;
@@ -35,7 +35,7 @@ namespace Controllers.Template
 
         public TemplateController(
             string primaryTemplateTitle,
-            IGetDirectoryAsyncDelegate getDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializedStorageController serializedStorageController,
             ICollectionController collectionController)
@@ -98,7 +98,7 @@ namespace Controllers.Template
         public async Task LoadAsync(IStatus status)
         {
             var templateUri = Path.Combine(
-                await getDirectoryDelegate.GetDirectoryAsync(string.Empty, status),
+                getDirectoryDelegate.GetDirectory(string.Empty),
                 getFilenameDelegate.GetFilename());
 
             templates = await serializedStorageController.DeserializePullAsync<Models.Template.Template[]>(templateUri, status);

@@ -21,7 +21,7 @@ namespace GOG.Activities.Cleanup
         private IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
         private IItemizeDelegate<string, string> itemizeDetailsDelegate;
         private IFormatDelegate<string, string> formatSupplementaryItemDelegate;
-        private IRecycleAsyncDelegate recycleAsyncDelegate;
+        private IRecycleDelegate recycleDelegate;
         private IDirectoryController directoryController;
 
         public CleanupActivity(
@@ -30,7 +30,7 @@ namespace GOG.Activities.Cleanup
             IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
-            IRecycleAsyncDelegate recycleAsyncDelegate,
+            IRecycleDelegate recycleDelegate,
             IDirectoryController directoryController,
             IStatusController statusController) :
             base(statusController)
@@ -40,7 +40,7 @@ namespace GOG.Activities.Cleanup
             this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
             this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
-            this.recycleAsyncDelegate = recycleAsyncDelegate;
+            this.recycleDelegate = recycleDelegate;
             this.directoryController = directoryController;
         }
 
@@ -72,7 +72,7 @@ namespace GOG.Activities.Cleanup
                     cleanupItems.Count,
                     item);
 
-                await recycleAsyncDelegate.RecycleAsync(item, moveToRecycleBinTask);
+                recycleDelegate.Recycle(item);
             }
 
             // check if any of the directories are left empty and delete

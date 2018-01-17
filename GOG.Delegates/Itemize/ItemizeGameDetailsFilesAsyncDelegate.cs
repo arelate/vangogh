@@ -18,7 +18,7 @@ namespace GOG.Delegates.Itemize
     public class ItemizeGameDetailsFilesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
         private IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsManualUrlsDelegate;
-        private IGetDirectoryAsyncDelegate getDirectoryDelegate;
+        private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
         private IRoutingController routingController;
         private IStatusController statusController;
@@ -26,7 +26,7 @@ namespace GOG.Delegates.Itemize
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IRoutingController routingController,
-            IGetDirectoryAsyncDelegate getDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IStatusController statusController)
         {
@@ -67,9 +67,7 @@ namespace GOG.Delegates.Itemize
                     continue;
 
                 var localFileUri = Path.Combine(
-                    await getDirectoryDelegate.GetDirectoryAsync(
-                        gameDetailsManualUrls.ElementAt(ii), 
-                        enumerateGameDetailsFilesStatus),
+                        getDirectoryDelegate.GetDirectory(gameDetailsManualUrls.ElementAt(ii)),
                     getFilenameDelegate.GetFilename(gameDetailsResolvedUris[ii]));
 
                 gameDetailsFiles.Add(localFileUri);

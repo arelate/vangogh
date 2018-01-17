@@ -14,4 +14,10 @@
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Timeline\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Chronology\ChronologyController.cs" />
+  </ItemGroup>
 </Project>

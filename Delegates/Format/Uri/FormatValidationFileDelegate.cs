@@ -9,11 +9,11 @@ namespace Delegates.Format.Uri
 {
     public class FormatValidationFileDelegate : IFormatDelegate<string, string>
     {
-        private IGetDirectoryAsyncDelegate validationDirectoryDelegate;
+        private IGetDirectoryDelegate validationDirectoryDelegate;
         private IGetFilenameDelegate validationFilenameDelegate;
 
         public FormatValidationFileDelegate(
-            IGetDirectoryAsyncDelegate validationDirectoryDelegate,
+            IGetDirectoryDelegate validationDirectoryDelegate,
             IGetFilenameDelegate validationFilenameDelegate)
         {
             this.validationDirectoryDelegate = validationDirectoryDelegate;
@@ -23,8 +23,7 @@ namespace Delegates.Format.Uri
         public string Format(string uri)
         {
             return Path.Combine(
-                    // TODO: Clearly fix this
-                    validationDirectoryDelegate.GetDirectoryAsync(string.Empty, null).Result,
+                    validationDirectoryDelegate.GetDirectory(string.Empty),
                     validationFilenameDelegate.GetFilename(
                         Path.GetFileName(uri)));
         }

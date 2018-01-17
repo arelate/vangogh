@@ -19,7 +19,7 @@ namespace GOG.Delegates.DownloadProductFile
         private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private IConfirmDelegate<string> confirmValidationExpectedDelegate;
         private IFormatDelegate<string, string> formatValidationFileDelegate;
-        private IGetDirectoryAsyncDelegate validationDirectoryDelegate;
+        private IGetDirectoryDelegate validationDirectoryDelegate;
         private IFormatDelegate<string, string> formatValidationUriDelegate;
         private IFileController fileController;
         private IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
@@ -29,7 +29,7 @@ namespace GOG.Delegates.DownloadProductFile
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
-            IGetDirectoryAsyncDelegate validationDirectoryDelegate,
+            IGetDirectoryDelegate validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
             IFileController fileController,
             IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate,
@@ -67,7 +67,7 @@ namespace GOG.Delegates.DownloadProductFile
 
             await downloadFromUriAsyncDelegate.DownloadFromUriAsync(
                 validationSourceUri,
-                await validationDirectoryDelegate.GetDirectoryAsync(string.Empty, downloadValidationFileTask),
+                validationDirectoryDelegate.GetDirectory(string.Empty),
                 downloadValidationFileTask);
 
             await statusController.CompleteAsync(downloadValidationFileTask);
