@@ -55,6 +55,7 @@ using Interfaces.Extraction;
 using Interfaces.ActivityDefinitions;
 using Interfaces.ContextDefinitions;
 using Interfaces.Status;
+using Interfaces.Template;
 
 using Interfaces.Models.Settings;
 
@@ -97,6 +98,7 @@ using Models.QueryParameters;
 using Models.Directories;
 using Models.ActivityContext;
 using Models.Settings;
+using Models.Template;
 
 #endregion
 
@@ -171,18 +173,26 @@ namespace Ghost.Console
             var appTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
             var reportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
 
-            var appTemplateController = new TemplateController(
-                "status",
+            var appTemplateStashController = new StashController<IList<Template>, List<Template>>(
                 templatesDirectoryDelegate,
                 appTemplateFilenameDelegate,
                 serializedStorageController,
+                statusController);
+
+            var appTemplateController = new TemplateController(
+                "status",
+                appTemplateStashController,
                 collectionController);
 
-            var reportTemplateController = new TemplateController(
-                "status",
+            var reportTemplateStashController = new StashController<IList<Template>, List<Template>>(
                 templatesDirectoryDelegate,
                 reportTemplateFilenameDelegate,
                 serializedStorageController,
+                statusController);
+
+            var reportTemplateController = new TemplateController(
+                "status",
+                reportTemplateStashController,
                 collectionController);
 
             var formatRemainingTimeAtSpeedDelegate = new FormatRemainingTimeAtSpeedDelegate();

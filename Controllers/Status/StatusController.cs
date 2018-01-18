@@ -16,7 +16,7 @@ namespace Controllers.Status
                 throw new ArgumentNullException("Current task status cannot be null");
         }
 
-        public async Task<IStatus> CreateAsync(IStatus status, string title)
+        public async Task<IStatus> CreateAsync(IStatus status, string title, bool notifyStatusChanged = true)
         {
             AssertValidStatus(status);
 
@@ -30,12 +30,13 @@ namespace Controllers.Status
             };
             status.Children.Add(childStatus);
 
-            await NotifyStatusChangedAsync?.Invoke();
+            if (notifyStatusChanged)
+                await NotifyStatusChangedAsync?.Invoke();
 
             return childStatus;
         }
 
-        public async Task CompleteAsync(IStatus status)
+        public async Task CompleteAsync(IStatus status, bool notifyStatusChanged = true)
         {
             AssertValidStatus(status);
 
@@ -45,7 +46,8 @@ namespace Controllers.Status
             status.Complete = true;
             status.Completed = DateTime.UtcNow;
 
-            await NotifyStatusChangedAsync?.Invoke();
+            if (notifyStatusChanged)
+                await NotifyStatusChangedAsync?.Invoke();
         }
 
         public async Task UpdateProgressAsync(IStatus status, long current, long total, string target, string unit = "")

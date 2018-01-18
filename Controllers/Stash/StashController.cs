@@ -55,7 +55,7 @@ namespace Controllers.Stash
 
         public async Task LoadAsync(IStatus status)
         {
-            var loadStatus = await statusController.CreateAsync(status, "Load stored data");
+            var loadStatus = await statusController.CreateAsync(status, "Load stored data", false);
 
             var storedDataUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(string.Empty),
@@ -73,7 +73,7 @@ namespace Controllers.Stash
         {
             if (!DataAvailable) throw new InvalidOperationException("Cannot save data before it's available");
 
-            var saveStatus = await statusController.CreateAsync(status, "Save stored data");
+            var saveStatus = await statusController.CreateAsync(status, "Save stored data", false);
 
             var storedDataUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(string.Empty),

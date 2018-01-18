@@ -5,24 +5,21 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Interfaces.Template;
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Stash;
 
-using Interfaces.SerializedStorage;
 using Interfaces.Status;
 
 using Models.Separators;
+
+using T = Models.Template.Template;
 
 namespace Controllers.Template
 {
     public class TemplateController : ITemplateController
     {
-        private ITemplate[] templates;
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
-        private ISerializedStorageController serializedStorageController;
+        private IStashController<IList<T>, List<T>> templateStashController;
         private ICollectionController collectionController;
 
         private const string anyCharactersExpression = "(.*?)";
@@ -35,30 +32,18 @@ namespace Controllers.Template
 
         public TemplateController(
             string primaryTemplateTitle,
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate,
-            ISerializedStorageController serializedStorageController,
+            IStashController<IList<T>, List<T>> templateStashController,
             ICollectionController collectionController)
         {
             this.PrimaryTemplate = primaryTemplateTitle;
-            this.getDirectoryDelegate = getDirectoryDelegate;
-            this.getFilenameDelegate = getFilenameDelegate;
-            this.serializedStorageController = serializedStorageController;
+            this.templateStashController = templateStashController;
             this.collectionController = collectionController;
         }
 
         public string PrimaryTemplate { get; private set; }
 
-        public bool DataAvailable
-        {
-            get;
-            private set;
-        }
-
         public async Task<string> BindAsync(string templateTitle, IDictionary<string, string> viewModel, IStatus status)
         {
-            if (!DataAvailable) await LoadAsync(status);
-
             var templateContent = await GetContentByTitleAsync(templateTitle, status);
 
             var resolvedConditionalsTemplateContent = await ResolveConditionalsAsync(templateContent, viewModel, status);
@@ -87,7 +72,7 @@ namespace Controllers.Template
 
         public async Task<string> GetContentByTitleAsync(string templateTitle, IStatus status)
         {
-            if (!DataAvailable) await LoadAsync(status);
+            var templates = await templateStashController.GetDataAsync(status);
 
             if (string.IsNullOrEmpty(templateTitle))
                 return string.Empty;
@@ -95,20 +80,7 @@ namespace Controllers.Template
             return (template != null) ? template.Content : string.Empty;
         }
 
-        public async Task LoadAsync(IStatus status)
-        {
-            var templateUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(string.Empty),
-                getFilenameDelegate.GetFilename());
-
-            templates = await serializedStorageController.DeserializePullAsync<Models.Template.Template[]>(templateUri, status);
-
-            if (templates == null)
-                templates = new Models.Template.Template[0];
-
-            DataAvailable = true;
-        }
-
+        // TODO: should be refactored into some delegate
         private async Task<string> FindAndReplace(string inputString,
             string regexPattern,
             string matchPrefix,
@@ -134,8 +106,6 @@ namespace Controllers.Template
 
         public async Task<string> ResolveSubTemplatesAsync(string templateContent, IStatus status)
         {
-            if (!DataAvailable) await LoadAsync(status);
-
             return await FindAndReplace(
                 templateContent,
                 subTemplate,

@@ -4,12 +4,12 @@ namespace Interfaces.Status
 {
     public interface ICreateAsyncDelegate
     {
-        Task<IStatus> CreateAsync(IStatus status, string title);
+        Task<IStatus> CreateAsync(IStatus status, string title, bool notifyStatusChanged = true);
     }
 
     public interface ICompleteAsyncDelegate
     {
-        Task CompleteAsync(IStatus status);
+        Task CompleteAsync(IStatus status, bool notifyStatusChanged = true);
     }
 
     public interface IUpdateProgressAsyncDelegate
