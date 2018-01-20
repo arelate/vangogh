@@ -14,13 +14,13 @@ namespace GOG.Activities.CorrectSettings
 {
     public class CorrectSettingsActivity : Activity
     {
-        private IStashController<ISettings, Settings> settingsStashController;
-        private ICorrectAsyncDelegate<ISettings>[] correctSettingsDelegates; 
+        private IStashController<Settings> settingsStashController;
+        private ICorrectAsyncDelegate<Settings>[] correctSettingsDelegates; 
 
         public CorrectSettingsActivity(
-            IStashController<ISettings, Settings> settingsStashController,
+            IStashController<Settings> settingsStashController,
             IStatusController statusController,
-            params ICorrectAsyncDelegate<ISettings>[] correctSettingsDelegates) :
+            params ICorrectAsyncDelegate<Settings>[] correctSettingsDelegates) :
             base(statusController)
         {
             this.settingsStashController = settingsStashController;

@@ -22,14 +22,14 @@ namespace Interfaces.Controllers.Stash
         Task SaveAsync(IStatus status);
     }
 
-    public interface IGetDataAsyncDelegate<InterfaceType>
+    public interface IGetDataAsyncDelegate<ModelType>
     {
-        Task<InterfaceType> GetDataAsync(IStatus status);
+        Task<ModelType> GetDataAsync(IStatus status);
     }
 
-    public interface IStashController<InterfaceType, InstanceType>:
+    public interface IStashController<ModelType>:
         IDataAvailableDelegate,
-        IGetDataAsyncDelegate<InterfaceType>,
+        IGetDataAsyncDelegate<ModelType>,
         ISaveAsyncDelegate,
         ILoadAsyncDelegate
     {

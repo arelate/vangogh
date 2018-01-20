@@ -10,12 +10,11 @@ using Interfaces.Controllers.Stash;
 
 using Interfaces.Status;
 using System.Threading.Tasks;
+using System.Diagnostics.Contracts;
 
 namespace Controllers.Stash
 {
-    public class StashController<InterfaceType, InstanceType> :
-        IStashController<InterfaceType, InstanceType>
-        where InstanceType : InterfaceType, new()
+    public class StashController<ModelType>: IStashController<ModelType> where ModelType : new()
     {
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IGetFilenameDelegate getFilenameDelegate;
@@ -24,7 +23,7 @@ namespace Controllers.Stash
 
         private IStatusController statusController;
 
-        private InterfaceType storedData;
+        private ModelType storedData;
 
         public StashController(
             IGetDirectoryDelegate getDirectoryDelegate,
@@ -46,7 +45,7 @@ namespace Controllers.Stash
             private set;
         }
 
-        public async Task<InterfaceType> GetDataAsync(IStatus status)
+        public async Task<ModelType> GetDataAsync(IStatus status)
         {
             if (!DataAvailable) await LoadAsync(status);
 
@@ -61,8 +60,8 @@ namespace Controllers.Stash
                 getDirectoryDelegate.GetDirectory(string.Empty),
                 getFilenameDelegate.GetFilename());
 
-            storedData = await serializedStorageController.DeserializePullAsync<InstanceType>(storedDataUri, loadStatus);
-            if (storedData == null) storedData = new InstanceType();
+            storedData = await serializedStorageController.DeserializePullAsync<ModelType>(storedDataUri, loadStatus);
+            if (storedData == null) storedData = new ModelType();
 
             DataAvailable = true;
 

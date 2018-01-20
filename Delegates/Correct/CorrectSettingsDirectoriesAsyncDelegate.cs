@@ -8,12 +8,13 @@ using Interfaces.Models.Settings;
 using Interfaces.Status;
 
 using Models.Directories;
+using Models.Settings;
 
 namespace Delegates.Correct
 {
-    public class CorrectSettingsDirectoriesAsyncDelegate : ICorrectAsyncDelegate<ISettings>
+    public class CorrectSettingsDirectoriesAsyncDelegate : ICorrectAsyncDelegate<Settings>
     {
-        public async Task<ISettings> CorrectAsync(ISettings settings, IStatus status)
+        public async Task<Settings> CorrectAsync(Settings settings, IStatus status)
         {
             return await Task.Run(() =>
             {

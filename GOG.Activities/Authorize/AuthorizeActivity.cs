@@ -3,19 +3,19 @@
 using Interfaces.Controllers.Stash;
 using Interfaces.Status;
 
-using Interfaces.Models.Settings;
-
 using GOG.Interfaces.Controllers.Authorization;
+
+using Models.Settings;
 
 namespace GOG.Activities.Authorize
 {
     public class AuthorizeActivity : Activity
     {
-        private IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate;
+        private IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
         private IAuthorizationController authorizationController;
 
         public AuthorizeActivity(
-            IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate,
+            IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate,
             IAuthorizationController authorizationController,
             IStatusController statusController) :
             base(statusController)

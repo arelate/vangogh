@@ -7,10 +7,10 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Stash;
 
-using Interfaces.Models.Settings;
 using Interfaces.Status;
 
 using Models.Uris;
+using Models.Settings;
 
 using GOG.Models;
 
@@ -18,11 +18,11 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        private IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate;
+        private IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
         private IDataController<GameDetails> gameDetailsDataController;
 
         public ItemizeGameDetailsManualUrlsAsyncDelegate(
-            IGetDataAsyncDelegate<ISettings> getSettingsDataAsyncDelegate,
+            IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate,
             IDataController<GameDetails> gameDetailsDataController)
         {
             this.getSettingsDataAsyncDelegate = getSettingsDataAsyncDelegate;

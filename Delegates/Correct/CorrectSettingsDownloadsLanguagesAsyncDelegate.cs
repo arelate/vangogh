@@ -8,9 +8,11 @@ using Interfaces.Models.Settings;
 
 using Interfaces.Status;
 
+using Models.Settings;
+
 namespace Delegates.Correct
 {
-    public class CorrectSettingsDownloadsLanguagesAsyncDelegate : ICorrectAsyncDelegate<ISettings>
+    public class CorrectSettingsDownloadsLanguagesAsyncDelegate : ICorrectAsyncDelegate<Settings>
     {
         private ILanguageController languageController;
         private string[] defaultLanguages = new string[1] { "en" };
@@ -20,7 +22,7 @@ namespace Delegates.Correct
             this.languageController = languageController;
         }
 
-        public async Task<ISettings> CorrectAsync(ISettings settings, IStatus status)
+        public async Task<Settings> CorrectAsync(Settings settings, IStatus status)
         {
             return await Task.Run(() =>
             {

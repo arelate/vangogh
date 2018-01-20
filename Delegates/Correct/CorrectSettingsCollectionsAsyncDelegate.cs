@@ -6,9 +6,11 @@ using Interfaces.Models.Settings;
 
 using Interfaces.Status;
 
+using Models.Settings;
+
 namespace Delegates.Correct
 {
-    public class CorrectSettingsCollectionsAsyncDelegate : ICorrectAsyncDelegate<ISettings>
+    public class CorrectSettingsCollectionsAsyncDelegate : ICorrectAsyncDelegate<Settings>
     {
         private IStatusController statusController;
 
@@ -17,7 +19,7 @@ namespace Delegates.Correct
             this.statusController = statusController;
         }
 
-        public async Task<ISettings> CorrectAsync(ISettings settings, IStatus status)
+        public async Task<Settings> CorrectAsync(Settings settings, IStatus status)
         {
             var correctSettingsStatus = await statusController.CreateAsync(status, "Correct settings");
 

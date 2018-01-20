@@ -6,13 +6,15 @@ using Interfaces.Models.Settings;
 
 using Interfaces.Status;
 
+using Models.Settings;
+
 namespace Delegates.Correct
 {
-    public class CorrectSettingsDownloadsOperatingSystemsAsyncDelegate : ICorrectAsyncDelegate<ISettings>
+    public class CorrectSettingsDownloadsOperatingSystemsAsyncDelegate : ICorrectAsyncDelegate<Settings>
     {
         private string[] defaultOperatingSystems = new string[1] { "Windows" };
 
-        public async Task<ISettings> CorrectAsync(ISettings settings, IStatus status)
+        public async Task<Settings> CorrectAsync(Settings settings, IStatus status)
         {
             return await Task.Run(() =>
             {

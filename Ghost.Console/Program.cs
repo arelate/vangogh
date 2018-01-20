@@ -173,7 +173,7 @@ namespace Ghost.Console
             var appTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
             var reportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
 
-            var appTemplateStashController = new StashController<IList<Template>, List<Template>>(
+            var appTemplateStashController = new StashController<List<Template>>(
                 templatesDirectoryDelegate,
                 appTemplateFilenameDelegate,
                 serializedStorageController,
@@ -184,7 +184,7 @@ namespace Ghost.Console
                 appTemplateStashController,
                 collectionController);
 
-            var reportTemplateStashController = new StashController<IList<Template>, List<Template>>(
+            var reportTemplateStashController = new StashController<List<Template>>(
                 templatesDirectoryDelegate,
                 reportTemplateFilenameDelegate,
                 serializedStorageController,
@@ -236,13 +236,20 @@ namespace Ghost.Console
 
             var uriController = new UriController();
 
-            var cookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
+            var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty, null);
+
+            var getCookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
             var cookieSerializationController = new CookieSerializationController();
 
-            var cookiesController = new CookiesController(
-                cookieSerializationController,
+            var cookieStashController = new StashController<Dictionary<string, string>>(
+                getEmptyDirectoryDelegate,
+                getCookiesFilenameDelegate,
                 serializedStorageController,
-                cookiesFilenameDelegate,
+                statusController);
+
+            var cookiesController = new CookiesController(
+                cookieStashController,
+                cookieSerializationController,
                 statusController);
 
             var networkController = new NetworkController(
@@ -295,10 +302,9 @@ namespace Ghost.Console
 
             // directories
 
-            var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty, null);
             var getSettingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
 
-            var settingsStashController = new StashController<ISettings, Settings>(getEmptyDirectoryDelegate,
+            var settingsStashController = new StashController<Settings>(getEmptyDirectoryDelegate,
                 getSettingsFilenameDelegate,
                 serializedStorageController,
                 statusController);
@@ -353,7 +359,7 @@ namespace Ghost.Console
 
             // index filenames
 
-            var productsIndexStashController = new StashController<IList<long>, List<long>>(
+            var productsIndexStashController = new StashController<List<long>>(
                 productsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController, 
@@ -364,7 +370,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var accountProductsIndexStashController = new StashController<IList<long>, List<long>>(
+            var accountProductsIndexStashController = new StashController<List<long>>(
                 accountProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -375,7 +381,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var gameDetailsIndexStashController = new StashController<IList<long>, List<long>>(
+            var gameDetailsIndexStashController = new StashController<List<long>>(
                 gameDetailsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -386,7 +392,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var gameProductDataIndexStashController = new StashController<IList<long>, List<long>>(
+            var gameProductDataIndexStashController = new StashController<List<long>>(
                 gameProductDataDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -397,7 +403,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var apiProductsIndexStashController = new StashController<IList<long>, List<long>>(
+            var apiProductsIndexStashController = new StashController<List<long>>(
                 apiProductsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -408,7 +414,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var productScreenshotsIndexStashController = new StashController<IList<long>, List<long>>(
+            var productScreenshotsIndexStashController = new StashController<List<long>>(
                 productScreenshotsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -419,7 +425,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var productDownloadsIndexStashController = new StashController<IList<long>, List<long>>(
+            var productDownloadsIndexStashController = new StashController<List<long>>(
                 productDownloadsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -430,7 +436,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var productRoutesIndexStashController = new StashController<IList<long>, List<long>>(
+            var productRoutesIndexStashController = new StashController<List<long>>(
                 productRoutesDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -441,7 +447,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var validationResultsIndexStashController = new StashController<IList<long>, List<long>>(
+            var validationResultsIndexStashController = new StashController<List<long>>(
                 validationResultsDirectoryDelegate,
                 indexFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -454,7 +460,7 @@ namespace Ghost.Console
 
             // index data controllers that are data controllers
 
-            var wishlistedStashController = new StashController<IList<long>, List<long>>(
+            var wishlistedStashController = new StashController<List<long>>(
                 dataDirectoryDelegate,
                 wishlistedFilenameDelegate,
                 serializedTransactionalStorageController,
@@ -465,7 +471,7 @@ namespace Ghost.Console
                 collectionController,
                 statusController);
 
-            var updatedStashController = new StashController<IList<long>, List<long>>(
+            var updatedStashController = new StashController<List<long>>(
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
                 serializedTransactionalStorageController,

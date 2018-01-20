@@ -19,7 +19,7 @@ namespace Controllers.Template
 {
     public class TemplateController : ITemplateController
     {
-        private IStashController<IList<T>, List<T>> templateStashController;
+        private IStashController<List<T>> templateStashController;
         private ICollectionController collectionController;
 
         private const string anyCharactersExpression = "(.*?)";
@@ -32,7 +32,7 @@ namespace Controllers.Template
 
         public TemplateController(
             string primaryTemplateTitle,
-            IStashController<IList<T>, List<T>> templateStashController,
+            IStashController<List<T>> templateStashController,
             ICollectionController collectionController)
         {
             this.PrimaryTemplate = primaryTemplateTitle;

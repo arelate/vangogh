@@ -12,14 +12,14 @@ namespace Controllers.Index
 {
     public class IndexController<Type> : IIndexController<Type>
     {
-        private IStashController<IList<Type>, List<Type>> indexesStashController;
+        private IStashController<List<Type>> indexesStashController;
 
         private ICollectionController collectionController;
 
         private IStatusController statusController;
 
         public IndexController(
-            IStashController<IList<Type>, List<Type>> indexesStashController,
+            IStashController<List<Type>> indexesStashController,
             ICollectionController collectionController,
             IStatusController statusController)
         {
