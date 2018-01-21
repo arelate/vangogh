@@ -5,9 +5,9 @@ using System.IO;
 using System.Xml;
 
 using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Hash;
 
 using Interfaces.Controllers.File;
-using Interfaces.Controllers.Hash;
 using Interfaces.Controllers.Stream;
 
 using Interfaces.Validation;
@@ -25,7 +25,7 @@ namespace Controllers.Validation
         private IFileController fileController;
         private IStreamController streamController;
         private XmlDocument validationXml;
-        private IBytesHashController bytesHashController;
+        private IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate;
         private IValidationResultController validationResultController;
         private IStatusController statusController;
 
@@ -33,14 +33,14 @@ namespace Controllers.Validation
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFileController fileController,
             IStreamController streamController,
-            IBytesHashController bytesHashController,
+            IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate,
             IValidationResultController validationResultController,
             IStatusController statusController)
         {
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
-            this.bytesHashController = bytesHashController;
+            this.getBytesHashAsyncDelegate = getBytesHashAsyncDelegate;
             this.validationResultController = validationResultController;
             this.statusController = statusController;
 
@@ -180,7 +180,7 @@ namespace Controllers.Validation
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
-            chunkValidation.ActualHash = bytesHashController.GetHash(buffer);
+            chunkValidation.ActualHash = await getBytesHashAsyncDelegate.GetHashAsync(buffer, status);
 
             return chunkValidation;
         }

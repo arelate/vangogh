@@ -11,18 +11,18 @@ namespace GOG.Activities.Validate
 {
     public class ValidateDataActivity: Activity
     {
-        private IPrecomputedHashController precomputedHashController;
+        private IStoredHashController storedHashController;
         private IFileController fileController;
         private IValidateFileAsyncDelegate<bool> fileValidateDelegate;
 
         public ValidateDataActivity(
-            IPrecomputedHashController precomputedHashController,
+            IStoredHashController storedHashController,
             IFileController fileController,
             IValidateFileAsyncDelegate<bool> fileValidateDelegate,
             IStatusController statusController) :
             base(statusController)
         {
-            this.precomputedHashController = precomputedHashController;
+            this.storedHashController = storedHashController;
             this.fileController = fileController;
             this.fileValidateDelegate = fileValidateDelegate;
         }
@@ -31,7 +31,7 @@ namespace GOG.Activities.Validate
         {
             var validateDataTask = await statusController.CreateAsync(status, "Validate data");
 
-            var dataFiles = await precomputedHashController.EnumerateKeysAsync(validateDataTask);
+            var dataFiles = await storedHashController.ItemizeAllAsync(validateDataTask);
             var dataFilesCount = dataFiles.Count();
             var current = 0;
 
@@ -45,7 +45,7 @@ namespace GOG.Activities.Validate
                     dataFilesCount,
                     dataFile);
 
-                var precomputedHash = precomputedHashController.GetHash(dataFile);
+                var precomputedHash = await storedHashController.GetHashAsync(dataFile, validateDataTask);
                 if(!await fileValidateDelegate.ValidateFileAsync(dataFile, precomputedHash, validateDataTask))
                     await statusController.WarnAsync(validateDataTask, $"Data file {dataFile} hash doesn't match precomputed value");
             }

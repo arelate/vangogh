@@ -10,6 +10,8 @@
   
   <ItemGroup>
     <Folder Include="Activity\" />
+    <Folder Include="Delegates\Hash\" />
+    <Folder Include="Controllers\Hash\" />
   </ItemGroup>
 
   <ItemGroup>

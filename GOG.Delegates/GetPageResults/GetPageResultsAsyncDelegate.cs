@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetQueryParameters;
+using Interfaces.Delegates.Hash;
 
 using Interfaces.Controllers.Hash;
 
@@ -25,8 +26,8 @@ namespace GOG.Delegates.GetPageResults
         private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
         private IGetQueryParametersDelegate<Context> getQueryParametersDelegate;
         private IRequestPageAsyncDelegate requestPageAsyncDelegate;
-        private IStringHashController stringHashController;
-        private IPrecomputedHashController precomputedHashController;
+        private IGetHashAsyncDelegate<string> getStringHashDelegate;
+        private IStoredHashController storedHashController;
         private ISerializationController<string> serializationController;
         private IStatusController statusController;
 
@@ -38,8 +39,8 @@ namespace GOG.Delegates.GetPageResults
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
             IGetQueryParametersDelegate<Context> getQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
-            IStringHashController stringHashController,
-            IPrecomputedHashController precomputedHashController,
+            IGetHashAsyncDelegate<string> getStringHashDelegate,
+            IStoredHashController storedHashController,
             ISerializationController<string> serializationController,
             IStatusController statusController)
         {
@@ -48,8 +49,8 @@ namespace GOG.Delegates.GetPageResults
             this.getQueryParametersDelegate = getQueryParametersDelegate;
 
             this.requestPageAsyncDelegate = requestPageAsyncDelegate;
-            this.stringHashController = stringHashController;
-            this.precomputedHashController = precomputedHashController;
+            this.getStringHashDelegate = getStringHashDelegate;
+            this.storedHashController = storedHashController;
             this.serializationController = serializationController;
 
             this.statusController = statusController;
@@ -94,8 +95,8 @@ namespace GOG.Delegates.GetPageResults
                     requestUri,
                     PageUnits.Pages);
 
-                var requestHash = precomputedHashController.GetHash(requestUri + currentPage);
-                var responseHash = stringHashController.GetHash(response);
+                var requestHash = await storedHashController.GetHashAsync(requestUri + currentPage, getPagesTask);
+                var responseHash = await getStringHashDelegate.GetHashAsync(response, getPagesTask);
 
                 pageResult = serializationController.Deserialize<T>(response);
 
@@ -106,7 +107,7 @@ namespace GOG.Delegates.GetPageResults
                 if (responseHash == requestHash) continue;
 
                 var setHashTask = await statusController.CreateAsync(getPagesTask, "Set hash");
-                await precomputedHashController.SetHashAsync(requestUri + currentPage, responseHash, setHashTask);
+                await storedHashController.SetHashAsync(requestUri + currentPage, responseHash, setHashTask);
                 await statusController.CompleteAsync(setHashTask);
 
                 pageResults.Add(pageResult);

@@ -21,6 +21,7 @@ using Delegates.Itemize;
 using Delegates.Replace;
 using Delegates.EnumerateIds;
 using Delegates.Download;
+using Delegates.Hash;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -125,17 +126,25 @@ namespace Ghost.Console
             var serializationController = new JSONStringController();
 
             var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
-            var getUriHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
+            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
 
-            var precomputedHashController = new PrecomputedHashController(
-                getUriHashesFilenameDelegate,
-                serializationController,
-                transactionalStorageController);
+            var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty, null);
 
             var convertBytesToStringDelegate = new ConvertBytesToStringDelegate();
-            var bytesMd5Controller = new BytesMd5Controller(convertBytesToStringDelegate);
+            var getBytesMd5HashAsyncDelegate = new GetBytesMd5HashAsyncDelegate(convertBytesToStringDelegate);
             var convertStringToBytesDelegate = new ConvertStringToBytesDelegate();
-            var stringMd5Controller = new StringMd5Controller(convertStringToBytesDelegate, bytesMd5Controller);
+            var getStringMd5HashAsyncDelegate = new GetStringMd5HashAsyncDelegate(
+                convertStringToBytesDelegate, 
+                getBytesMd5HashAsyncDelegate);
+
+            var storedHashesStashController = new StashController<Dictionary<string, string>>(
+                getEmptyDirectoryDelegate,
+                getStoredHashesFilenameDelegate,
+                serializationController,
+                storageController,
+                statusController);
+
+            var precomputedHashController = new StoredHashController(storedHashesStashController);
 
             var consoleController = new ConsoleController();
             var formatTextToFitConsoleWindowDelegate = new FormatTextToFitConsoleWindowDelegate(consoleController);
@@ -147,17 +156,10 @@ namespace Ghost.Console
             var formatBytesDelegate = new FormatBytesDelegate();
             var formatSecondsDelegate = new FormatSecondsDelegate();
 
-            var serializedStorageController = new SerializedStorageController(
-                precomputedHashController,
-                storageController,
-                stringMd5Controller,
-                serializationController,
-                statusController);
-
             var serializedTransactionalStorageController = new SerializedStorageController(
                 precomputedHashController,
                 transactionalStorageController,
-                stringMd5Controller,
+                getStringMd5HashAsyncDelegate,
                 serializationController,
                 statusController);
 
@@ -176,7 +178,8 @@ namespace Ghost.Console
             var appTemplateStashController = new StashController<List<Template>>(
                 templatesDirectoryDelegate,
                 appTemplateFilenameDelegate,
-                serializedStorageController,
+                serializationController,
+                storageController,
                 statusController);
 
             var appTemplateController = new TemplateController(
@@ -187,7 +190,8 @@ namespace Ghost.Console
             var reportTemplateStashController = new StashController<List<Template>>(
                 templatesDirectoryDelegate,
                 reportTemplateFilenameDelegate,
-                serializedStorageController,
+                serializationController,
+                storageController,
                 statusController);
 
             var reportTemplateController = new TemplateController(
@@ -236,15 +240,14 @@ namespace Ghost.Console
 
             var uriController = new UriController();
 
-            var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty, null);
-
             var getCookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
             var cookieSerializationController = new CookieSerializationController();
 
             var cookieStashController = new StashController<Dictionary<string, string>>(
                 getEmptyDirectoryDelegate,
                 getCookiesFilenameDelegate,
-                serializedStorageController,
+                serializationController,
+                storageController,
                 statusController);
 
             var cookiesController = new CookiesController(
@@ -306,7 +309,8 @@ namespace Ghost.Console
 
             var settingsStashController = new StashController<Settings>(getEmptyDirectoryDelegate,
                 getSettingsFilenameDelegate,
-                serializedStorageController,
+                serializationController,
+                storageController,
                 statusController);
 
             var correctSettingsCollectionsAsyncDelegate = new CorrectSettingsCollectionsAsyncDelegate(statusController);
@@ -362,7 +366,8 @@ namespace Ghost.Console
             var productsIndexStashController = new StashController<List<long>>(
                 productsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController, 
+                serializationController,
+                storageController, 
                 statusController);
 
             var productsIndexController = new IndexController<long>(
@@ -373,7 +378,8 @@ namespace Ghost.Console
             var accountProductsIndexStashController = new StashController<List<long>>(
                 accountProductsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var accountProductsIndexController = new IndexController<long>(
@@ -384,7 +390,8 @@ namespace Ghost.Console
             var gameDetailsIndexStashController = new StashController<List<long>>(
                 gameDetailsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var gameDetailsIndexController = new IndexController<long>(
@@ -395,7 +402,8 @@ namespace Ghost.Console
             var gameProductDataIndexStashController = new StashController<List<long>>(
                 gameProductDataDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var gameProductDataIndexController = new IndexController<long>(
@@ -406,7 +414,8 @@ namespace Ghost.Console
             var apiProductsIndexStashController = new StashController<List<long>>(
                 apiProductsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var apiProductsIndexController = new IndexController<long>(
@@ -417,7 +426,8 @@ namespace Ghost.Console
             var productScreenshotsIndexStashController = new StashController<List<long>>(
                 productScreenshotsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var productScreenshotsIndexController = new IndexController<long>(
@@ -428,7 +438,8 @@ namespace Ghost.Console
             var productDownloadsIndexStashController = new StashController<List<long>>(
                 productDownloadsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var productDownloadsIndexController = new IndexController<long>(
@@ -439,7 +450,8 @@ namespace Ghost.Console
             var productRoutesIndexStashController = new StashController<List<long>>(
                 productRoutesDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var productRoutesIndexController = new IndexController<long>(
@@ -450,7 +462,8 @@ namespace Ghost.Console
             var validationResultsIndexStashController = new StashController<List<long>>(
                 validationResultsDirectoryDelegate,
                 indexFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var validationResultsIndexController = new IndexController<long>(
@@ -463,7 +476,8 @@ namespace Ghost.Console
             var wishlistedStashController = new StashController<List<long>>(
                 dataDirectoryDelegate,
                 wishlistedFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var wishlistedController = new IndexController<long>(
@@ -474,7 +488,8 @@ namespace Ghost.Console
             var updatedStashController = new StashController<List<long>>(
                 dataDirectoryDelegate,
                 updatedFilenameDelegate,
-                serializedTransactionalStorageController,
+                serializationController,
+                storageController, 
                 statusController);
 
             var updatedController = new IndexController<long>(
@@ -491,7 +506,7 @@ namespace Ghost.Console
 
             var productsDataController = new DataController<Product>(
                 productsIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertProductToIndexDelegate,
                 collectionController,
                 productsDirectoryDelegate,
@@ -501,7 +516,7 @@ namespace Ghost.Console
 
             var accountProductsDataController = new DataController<AccountProduct>(
                 accountProductsIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertAccountProductToIndexDelegate,
                 collectionController,
                 accountProductsDirectoryDelegate,
@@ -511,7 +526,7 @@ namespace Ghost.Console
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 gameDetailsIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertGameDetailsToIndexDelegate,
                 collectionController,
                 gameDetailsDirectoryDelegate,
@@ -521,7 +536,7 @@ namespace Ghost.Console
 
             var gameProductDataController = new DataController<GameProductData>(
                 gameProductDataIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertGameProductDataToIndexDelegate,
                 collectionController,
                 gameProductDataDirectoryDelegate,
@@ -531,7 +546,7 @@ namespace Ghost.Console
 
             var apiProductsDataController = new DataController<ApiProduct>(
                 apiProductsIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertApiProductToIndexDelegate,
                 collectionController,
                 apiProductsDirectoryDelegate,
@@ -541,7 +556,7 @@ namespace Ghost.Console
 
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 productScreenshotsIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertProductScreenshotsToIndexDelegate,
                 collectionController,
                 productScreenshotsDirectoryDelegate,
@@ -551,7 +566,7 @@ namespace Ghost.Console
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
                 productDownloadsIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertProductDownloadsToIndexDelegate,
                 collectionController,
                 productDownloadsDirectoryDelegate,
@@ -561,7 +576,7 @@ namespace Ghost.Console
 
             var productRoutesDataController = new DataController<ProductRoutes>(
                 productRoutesIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertProductRoutesToIndexDelegate,
                 collectionController,
                 productRoutesDirectoryDelegate,
@@ -571,7 +586,7 @@ namespace Ghost.Console
 
             var validationResultsDataController = new DataController<ValidationResult>(
                 validationResultsIndexController,
-                serializedStorageController,
+                serializedTransactionalStorageController,
                 convertValidationResultToIndexDelegate,
                 collectionController,
                 validationResultsDirectoryDelegate,
@@ -646,7 +661,7 @@ namespace Ghost.Console
                 getProductUpdateUriByContextDelegate,
                 getQueryParametersForProductContextDelegate,
                 requestPageAsyncDelegate,
-                stringMd5Controller,
+                getStringMd5HashAsyncDelegate,
                 precomputedHashController,
                 serializationController,
                 statusController);
@@ -667,7 +682,7 @@ namespace Ghost.Console
                 getProductUpdateUriByContextDelegate,
                 getQueryParametersForProductContextDelegate,
                 requestPageAsyncDelegate,
-                stringMd5Controller,
+                getStringMd5HashAsyncDelegate,
                 precomputedHashController,
                 serializationController,
                 statusController);
@@ -1006,9 +1021,9 @@ namespace Ghost.Console
 
             var validationResultController = new ValidationResultController();
 
-            var fileMd5Controller = new FileMd5Controller(
+            var fileMd5Controller = new GetFileMd5HashAsyncDelegate(
                 storageController,
-                stringMd5Controller);
+                getStringMd5HashAsyncDelegate);
 
             var dataFileValidateDelegate = new DataFileValidateDelegate(
                 fileMd5Controller,
@@ -1018,7 +1033,7 @@ namespace Ghost.Console
                 confirmValidationExpectedDelegate,
                 fileController,
                 streamController,
-                bytesMd5Controller,
+                getBytesMd5HashAsyncDelegate,
                 validationResultController,
                 statusController);
 
@@ -1213,7 +1228,7 @@ namespace Ghost.Console
                     await statusController.FailAsync(applicationStatus, combinedErrorMessages);
 
                     var failureDumpUri = "failureDump.json";
-                    await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
+                    await serializedTransactionalStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
 
                     await consoleInputOutputController.OutputOnRefreshAsync(
                         "GoodOfflineGames.exe has encountered fatal error(s): " +

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Text;
 
+using Interfaces.Delegates.Hash;
+
 using Interfaces.Controllers.Hash;
 
 using Interfaces.SerializedStorage;
@@ -14,20 +16,20 @@ namespace Controllers.SerializedStorage
     {
         private IStorageController<string> storageController;
         private ISerializationController<string> serializarionController;
-        private IStringHashController stringHashController;
-        private IPrecomputedHashController precomputedHashController;
+        private IGetHashAsyncDelegate<string> getStringHashAsyncDelegate;
+        private IStoredHashController storedHashController;
         private IStatusController statusController;
 
         public SerializedStorageController(
-            IPrecomputedHashController precomputedHashController,
+            IStoredHashController storedHashController,
             IStorageController<string> storageController,
-            IStringHashController stringHashController,
+            IGetHashAsyncDelegate<string> getStringHashAsyncDelegate,
             ISerializationController<string> serializarionController,
             IStatusController statusController)
         {
-            this.precomputedHashController = precomputedHashController;
+            this.storedHashController = storedHashController;
             this.storageController = storageController;
-            this.stringHashController = stringHashController;
+            this.getStringHashAsyncDelegate = getStringHashAsyncDelegate;
             this.serializarionController = serializarionController;
             this.statusController = statusController;
         }
@@ -36,9 +38,6 @@ namespace Controllers.SerializedStorage
         {
             var serializedData = await storageController.PullAsync(uri);
 
-            //var hash = stringHashController.GetHash(serializedData);
-            //await precomputedHashController.SetHashAsync(uri, hash);
-
             return serializarionController.Deserialize<T>(serializedData);
         }
 
@@ -46,13 +45,13 @@ namespace Controllers.SerializedStorage
         {
             var serializedData = serializarionController.Serialize(data);
 
-            var hash = stringHashController.GetHash(serializedData);
-            var existingHash = precomputedHashController.GetHash(uri);
+            var hash = await getStringHashAsyncDelegate.GetHashAsync(serializedData, status);
+            var existingHash = await storedHashController.GetHashAsync(uri, status);
 
             // data has not changed, no need to write to storage
             if (hash == existingHash) return;
 
-            await precomputedHashController.SetHashAsync(uri, hash, status);
+            await storedHashController.SetHashAsync(uri, hash, status);
             await storageController.PushAsync(uri, serializedData);
         }
     }

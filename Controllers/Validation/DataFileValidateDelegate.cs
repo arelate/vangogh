@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.Controllers.Hash;
+using Interfaces.Delegates.Hash;
 
 using Interfaces.Status;
 using Interfaces.Validation;
@@ -12,20 +12,20 @@ namespace Controllers.Validation
 {
     public class DataFileValidateDelegate : IValidateFileAsyncDelegate<bool>
     {
-        private IFileHashController fileMd5Controller;
+        private IGetHashAsyncDelegate<string> getFileMd5HashAsyncDelegate;
         private IStatusController statusController;
 
         public DataFileValidateDelegate(
-            IFileHashController fileMd5Controller,
+            IGetHashAsyncDelegate<string> getFileMd5HashAsyncDelegate,
             IStatusController statusController)
         {
-            this.fileMd5Controller = fileMd5Controller;
+            this.getFileMd5HashAsyncDelegate = getFileMd5HashAsyncDelegate;
             this.statusController = statusController;
         }
 
         public async Task<bool> ValidateFileAsync(string uri, string md5, IStatus status)
         {
-            return await fileMd5Controller.GetHashAsync(uri) == md5;
+            return await getFileMd5HashAsyncDelegate.GetHashAsync(uri, status) == md5;
         }
     }
 }

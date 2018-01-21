@@ -9,4 +9,7 @@
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Hash\" />
+  </ItemGroup>
 </Project>
