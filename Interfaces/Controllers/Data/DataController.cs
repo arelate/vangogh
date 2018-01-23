@@ -22,9 +22,15 @@ namespace Interfaces.Controllers.Data
     {
         Task UpdateAsync(IStatus status, params Type[] data);
     }
-    public interface IRemoveAsyncDelegate<Type>
+
+    public interface ICreateAsyncDelegate<Type>
     {
-        Task RemoveAsync(IStatus status, params Type[] data);
+        Task CreateAsync(IStatus status, params Type[] data);
+    }
+
+    public interface IDeleteAsyncDelegate<Type>
+    {
+        Task DeleteAsync(IStatus status, params Type[] data);
     }
 
     public interface IContainsAsyncDelegate<Type>
@@ -46,8 +52,9 @@ namespace Interfaces.Controllers.Data
         IItemizeAllAsyncDelegate<long>,
         ICountAsyncDelegate,
         IGetByIdAsyncDelegate<long, DataType>,
+        ICreateAsyncDelegate<DataType>,
         IUpdateAsyncDelegate<DataType>,
-        IRemoveAsyncDelegate<DataType>,
+        IDeleteAsyncDelegate<DataType>,
         IContainsAsyncDelegate<DataType>,
         IContainsIdAsyncDelegate<long>
     {

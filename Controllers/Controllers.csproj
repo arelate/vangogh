@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Timeline\" />
+    <Folder Include="Records\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Chronology\ChronologyController.cs" />

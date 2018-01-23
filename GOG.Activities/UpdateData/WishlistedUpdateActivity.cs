@@ -49,7 +49,7 @@ namespace GOG.Activities.UpdateData
                 wishlistedIds.Add(product.Id);
             }
 
-            await wishlistedDataController.UpdateAsync(saveDataTask, wishlistedIds.ToArray());
+            await wishlistedDataController.CreateAsync(saveDataTask, wishlistedIds.ToArray());
 
             await statusController.CompleteAsync(saveDataTask);
 

@@ -100,7 +100,7 @@ namespace GOG.Activities.DownloadProductFiles
             }
 
             var clearEmptyDownloadsTask = await statusController.CreateAsync(processDownloadsTask, "Clear empty downloads");
-            await productDownloadsDataController.RemoveAsync(clearEmptyDownloadsTask, emptyProductDownloads.ToArray());
+            await productDownloadsDataController.DeleteAsync(clearEmptyDownloadsTask, emptyProductDownloads.ToArray());
             await statusController.CompleteAsync(clearEmptyDownloadsTask);
 
             await statusController.CompleteAsync(processDownloadsTask);

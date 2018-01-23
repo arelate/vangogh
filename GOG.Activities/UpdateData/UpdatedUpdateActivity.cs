@@ -89,7 +89,7 @@ namespace GOG.Activities.UpdateData
                     accountProductsNewOrUpdated.Add(id);
             }
 
-            await updatedIndexController.UpdateAsync(addUpdatedAccountProductsStatus, accountProductsNewOrUpdated.ToArray());
+            await updatedIndexController.CreateAsync(addUpdatedAccountProductsStatus, accountProductsNewOrUpdated.ToArray());
 
             await statusController.CompleteAsync(addUpdatedAccountProductsStatus);
 

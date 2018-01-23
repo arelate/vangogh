@@ -75,13 +75,13 @@ namespace Controllers.Index
             await statusController.CompleteAsync(task);
         }
 
-        public async Task RemoveAsync(IStatus status, params Type[] data)
+        public async Task DeleteAsync(IStatus status, params Type[] data)
         {
             var indexes = await indexesStashController.GetDataAsync(status);
 
             await Map(
                 status,
-                "Remove index item(s)",
+                "Delete index item(s)",
                 (item) =>
                 {
                     if (indexes.Contains(item))
@@ -94,13 +94,13 @@ namespace Controllers.Index
                 data);
         }
 
-        public async Task UpdateAsync(IStatus status, params Type[] data)
+        public async Task CreateAsync(IStatus status, params Type[] data)
         {
             var indexes = await indexesStashController.GetDataAsync(status);
 
             await Map(
                 status,
-                "Update index item(s)",
+                "Create index item(s)",
                 (item) => {
                     if (!indexes.Contains(item))
                     {
@@ -110,12 +110,6 @@ namespace Controllers.Index
                     return false;
                 },
                 data);
-        }
-
-        public async Task Recreate(IStatus status, params Type[] data)
-        {
-            await RemoveAsync(status, data);
-            await UpdateAsync(status, data);
         }
     }
 }

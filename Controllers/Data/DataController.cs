@@ -102,6 +102,27 @@ namespace Controllers.Data
             await statusController.CompleteAsync(mapTask);
         }
 
+        public async Task CreateAsync(IStatus status, params Type[] data)
+        {
+            await MapItemsAndIndexes(
+                status,
+                "Create data item(s)",
+                async (index, item) =>
+                {
+                    await serializedStorageController.SerializePushAsync(
+                            getPathDelegate.GetPath(
+                                string.Empty,
+                                index.ToString()),
+                            item,
+                            status);
+                },
+                async (indexes) =>
+                {
+                    await indexController.CreateAsync(status, indexes);
+                },
+                data);
+        }
+
         public async Task UpdateAsync(IStatus status, params Type[] data)
         {
             await MapItemsAndIndexes(
@@ -118,12 +139,12 @@ namespace Controllers.Data
                 },
                 async (indexes) =>
                 {
-                    await indexController.UpdateAsync(status, indexes);
+                    await indexController.CreateAsync(status, indexes);
                 },
                 data);
         }
 
-        public async Task RemoveAsync(IStatus status, params Type[] data)
+        public async Task DeleteAsync(IStatus status, params Type[] data)
         {
             await MapItemsAndIndexes(
                 status,
@@ -138,7 +159,7 @@ namespace Controllers.Data
                 },
                 async (indexes) =>
                 {
-                    await indexController.RemoveAsync(status, indexes);
+                    await indexController.DeleteAsync(status, indexes);
                 },
                 data);
         }

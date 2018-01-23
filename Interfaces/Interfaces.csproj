@@ -13,6 +13,8 @@
     <Folder Include="Delegates\Hash\" />
     <Folder Include="Controllers\Hash\" />
     <Folder Include="Delegates\GetPath\" />
+    <Folder Include="Controllers\Records\" />
+    <Folder Include="Models\RecordsTypes\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -51,6 +51,7 @@ using Controllers.ViewModel;
 using Controllers.ViewUpdates;
 using Controllers.ActivityContext;
 using Controllers.InputOutput;
+using Controllers.Records;
 
 using Interfaces.Activity;
 using Interfaces.Extraction;
@@ -101,6 +102,7 @@ using Models.Directories;
 using Models.ActivityContext;
 using Models.Settings;
 using Models.Template;
+using Models.ProductRecords;
 
 #endregion
 
@@ -683,13 +685,6 @@ namespace Ghost.Console
                 whitelistController,
                 prerequisitesController,
                 supplementaryController);
-
-            //var activityContextCreatedIndexController = new IndexController<string>(
-            //    collectionController,
-            //    dataDirectoryDelegate,
-            //    activityContextCreatedFilenameDelegate,
-            //    serializedStorageController,
-            //    statusController);
 
             #region Activity Controllers
 
