@@ -1,31 +1,24 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 
 using Interfaces.Delegates.Format;
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.GetPath;
 
 namespace Delegates.Format.Uri
 {
     public class FormatValidationFileDelegate : IFormatDelegate<string, string>
     {
-        private IGetDirectoryDelegate validationDirectoryDelegate;
-        private IGetFilenameDelegate validationFilenameDelegate;
+        private IGetPathDelegate getPathDelegate;
 
-        public FormatValidationFileDelegate(
-            IGetDirectoryDelegate validationDirectoryDelegate,
-            IGetFilenameDelegate validationFilenameDelegate)
+        public FormatValidationFileDelegate(IGetPathDelegate getPathDelegate)
         {
-            this.validationDirectoryDelegate = validationDirectoryDelegate;
-            this.validationFilenameDelegate = validationFilenameDelegate;
+            this.getPathDelegate = getPathDelegate;
         }
 
         public string Format(string uri)
         {
-            return Path.Combine(
-                    validationDirectoryDelegate.GetDirectory(string.Empty),
-                    validationFilenameDelegate.GetFilename(
-                        Path.GetFileName(uri)));
+            return getPathDelegate.GetPath(
+                string.Empty,
+                Path.GetFileName((uri)));
         }
     }
 }

@@ -1,9 +1,5 @@
 Backend
 
-- abstract Save/Load/DataAvailable to a controller -> stashController and complete transition to it for template, cookies, precomputedHash (and any other I've missed here)
-
-- introduce getPathDelegate to abstract away directory + filename
-
 - introduce timelineContoller to track created/modified/completed (action succeeded) for an id
 
 - modify (again) console output controller to use "single line control" and output only on one line. One idea is to collapse to ellipsis all earlier steps if the content doesn't fit

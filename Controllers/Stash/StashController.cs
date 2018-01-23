@@ -2,8 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.GetPath;
 
 using Interfaces.Serialization;
 using Interfaces.Storage;
@@ -16,8 +15,7 @@ namespace Controllers.Stash
 {
     public class StashController<ModelType>: IStashController<ModelType> where ModelType : new()
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
+        private IGetPathDelegate getPathDelegate;
 
         private ISerializationController<string> serializationController;
         private IStorageController<string> storageController;
@@ -27,14 +25,12 @@ namespace Controllers.Stash
         private ModelType storedData;
 
         public StashController(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate,
+            IGetPathDelegate getPathDelegate,
             ISerializationController<string> serializationController,
             IStorageController<string> storageController,
             IStatusController statusController)
         {
-            this.getDirectoryDelegate = getDirectoryDelegate;
-            this.getFilenameDelegate = getFilenameDelegate;
+            this.getPathDelegate = getPathDelegate;
 
             this.serializationController = serializationController;
             this.storageController = storageController;
@@ -59,9 +55,7 @@ namespace Controllers.Stash
         {
             var loadStatus = await statusController.CreateAsync(status, "Load stored data", false);
 
-            var storedDataUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(string.Empty),
-                getFilenameDelegate.GetFilename());
+            var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
 
             var serializedData = await storageController.PullAsync(storedDataUri);
             storedData = serializationController.Deserialize<ModelType>(serializedData);
@@ -79,9 +73,7 @@ namespace Controllers.Stash
 
             var saveStatus = await statusController.CreateAsync(status, "Save stored data", false);
 
-            var storedDataUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(string.Empty),
-                getFilenameDelegate.GetFilename());
+            var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
 
             var serializedData = serializationController.Serialize(storedData);
             await storageController.PushAsync(storedDataUri, serializedData);

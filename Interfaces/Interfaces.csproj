@@ -12,6 +12,7 @@
     <Folder Include="Activity\" />
     <Folder Include="Delegates\Hash\" />
     <Folder Include="Controllers\Hash\" />
+    <Folder Include="Delegates\GetPath\" />
   </ItemGroup>
 
   <ItemGroup>

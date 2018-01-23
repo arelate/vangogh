@@ -36,7 +36,7 @@ namespace Controllers.Presentation
         {
             var reportUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(string.Empty),
-                getFilenameDelegate.GetFilename());
+                getFilenameDelegate.GetFilename(string.Empty));
 
             using (var reportStream = streamController.OpenWritable(reportUri))
             using (var streamWriter = new StreamWriter(reportStream))

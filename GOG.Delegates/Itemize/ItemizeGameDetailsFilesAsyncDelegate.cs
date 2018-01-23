@@ -5,6 +5,7 @@ using System.IO;
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.GetPath;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Routing;
@@ -18,21 +19,24 @@ namespace GOG.Delegates.Itemize
     public class ItemizeGameDetailsFilesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
         private IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsManualUrlsDelegate;
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
+        private IGetPathDelegate getPathDelegate;
+        //private IGetDirectoryDelegate getDirectoryDelegate;
+        //private IGetFilenameDelegate getFilenameDelegate;
         private IRoutingController routingController;
         private IStatusController statusController;
 
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IRoutingController routingController,
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate,
+            IGetPathDelegate getPathDelegate,
+            //IGetDirectoryDelegate getDirectoryDelegate,
+            //IGetFilenameDelegate getFilenameDelegate,
             IStatusController statusController)
         {
             this.itemizeGameDetailsManualUrlsDelegate = itemizeGameDetailsManualUrlsDelegate;
-            this.getDirectoryDelegate = getDirectoryDelegate;
-            this.getFilenameDelegate = getFilenameDelegate;
+            //this.getDirectoryDelegate = getDirectoryDelegate;
+            //this.getFilenameDelegate = getFilenameDelegate;
+            this.getPathDelegate = getPathDelegate;
             this.routingController = routingController;
             this.statusController = statusController;
         }
@@ -66,11 +70,15 @@ namespace GOG.Delegates.Itemize
                 if (string.IsNullOrEmpty(gameDetailsResolvedUris[ii]))
                     continue;
 
-                var localFileUri = Path.Combine(
-                        getDirectoryDelegate.GetDirectory(gameDetailsManualUrls.ElementAt(ii)),
-                    getFilenameDelegate.GetFilename(gameDetailsResolvedUris[ii]));
+                //var localFileUri = Path.Combine(
+                //    getDirectoryDelegate.GetDirectory(gameDetailsManualUrls.ElementAt(ii)),
+                //getFilenameDelegate.GetFilename(gameDetailsResolvedUris[ii]));
 
-                gameDetailsFiles.Add(localFileUri);
+                var localFilePath = getPathDelegate.GetPath(
+                    gameDetailsManualUrls.ElementAt(ii),
+                    gameDetailsResolvedUris[ii]);
+
+                gameDetailsFiles.Add(localFilePath);
             }
 
             await statusController.CompleteAsync(enumerateGameDetailsFilesStatus);

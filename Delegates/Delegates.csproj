@@ -11,5 +11,6 @@
 
   <ItemGroup>
     <Folder Include="Hash\" />
+    <Folder Include="GetPath\" />
   </ItemGroup>
 </Project>
