@@ -23,14 +23,14 @@ namespace GOG.Activities.UpdateData
     {
         private IActivityContextController activityContextController;
 
-        private IDataController<AccountProduct> accountProductDataController;
+        private IDataController<long, AccountProduct> accountProductDataController;
         private IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
         private IIndexController<long> updatedIndexController;
 
         public UpdatedUpdateActivity(
             IActivityContextController activityContextController,
-            IDataController<AccountProduct> accountProductDataController,
+            IDataController<long, AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
             IIndexController<long> updatedIndexController,
             IStatusController statusController): base(statusController)
@@ -89,7 +89,8 @@ namespace GOG.Activities.UpdateData
                     accountProductsNewOrUpdated.Add(id);
             }
 
-            await updatedIndexController.CreateAsync(addUpdatedAccountProductsStatus, accountProductsNewOrUpdated.ToArray());
+            foreach (var accountProduct in accountProductsNewOrUpdated)
+                await updatedIndexController.CreateAsync(accountProduct, addUpdatedAccountProductsStatus);
 
             await statusController.CompleteAsync(addUpdatedAccountProductsStatus);
 

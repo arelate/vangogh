@@ -7,19 +7,19 @@ using Interfaces.Models.RecordsTypes;
 
 namespace Interfaces.Controllers.Records
 {
-    public interface IGetRecordAsyncDelegate
+    public interface IGetRecordAsyncDelegate<Type>
     {
-        Task<DateTime> GetRecordAsync(long id, RecordsTypes recordType, IStatus status);
+        Task<DateTime> GetRecordAsync(Type id, RecordsTypes recordType, IStatus status);
     }
 
-    public interface ISetRecordAsyncDelegate
+    public interface ISetRecordAsyncDelegate<Type>
     {
-        Task SetRecordAsync(long id, RecordsTypes recordType, IStatus status);
+        Task SetRecordAsync(Type id, RecordsTypes recordType, IStatus status);
     }
 
-    public interface IRecordsController:
-        IGetRecordAsyncDelegate,
-        ISetRecordAsyncDelegate
+    public interface IRecordsController<Type>:
+        IGetRecordAsyncDelegate<Type>,
+        ISetRecordAsyncDelegate<Type>
     {
         // ...
     }

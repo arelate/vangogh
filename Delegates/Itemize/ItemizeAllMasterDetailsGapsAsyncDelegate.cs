@@ -13,18 +13,17 @@ using Models.ProductCore;
 
 namespace Delegates.EnumerateIds
 {
-    // TODO: itemization
     public class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType, DetailType>:
         IItemizeAllAsyncDelegate<long>
         where MasterType: ProductCore
         where DetailType: ProductCore
     {
-        private IDataController<MasterType> masterDataController;
-        private IDataController<DetailType> detailDataController;
+        private IDataController<long, MasterType> masterDataController;
+        private IDataController<long, DetailType> detailDataController;
 
         public ItemizeAllMasterDetailsGapsAsyncDelegate(
-            IDataController<MasterType> masterDataController,
-            IDataController<DetailType> detailDataController)
+            IDataController<long, MasterType> masterDataController,
+            IDataController<long, DetailType> detailDataController)
         {
             this.masterDataController = masterDataController;
             this.detailDataController = detailDataController;

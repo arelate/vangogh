@@ -26,18 +26,18 @@ namespace GOG.Activities.UpdateDownloads
         private IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IFileController fileController;
-        private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDataController<AccountProduct> accountProductsDataController;
-        private IDataController<Product> productsDataController;
+        private IDataController<long, ProductDownloads> productDownloadsDataController;
+        private IDataController<long, AccountProduct> accountProductsDataController;
+        private IDataController<long, Product> productsDataController;
 
         public UpdateDownloadsActivity(
             Context context,
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
-            IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<AccountProduct> accountProductsDataController,
-            IDataController<Product> productsDataController,
+            IDataController<long, ProductDownloads> productDownloadsDataController,
+            IDataController<long, AccountProduct> accountProductsDataController,
+            IDataController<long, Product> productsDataController,
             IStatusController statusController) :
             base(statusController)
         {
@@ -140,7 +140,7 @@ namespace GOG.Activities.UpdateDownloads
                     productDownloads.Downloads.Add(scheduledDownloadEntry);
                 }
 
-                await productDownloadsDataController.UpdateAsync(scheduleDownloadsTask, productDownloads);
+                await productDownloadsDataController.UpdateAsync(productDownloads, scheduleDownloadsTask);
 
                 await statusController.CompleteAsync(scheduleDownloadsTask);
             }

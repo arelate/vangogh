@@ -16,12 +16,12 @@ namespace GOG.Activities.DownloadProductFiles
     public class DownloadFilesActivity : Activity
     {
         private Context context;
-        private IDataController<ProductDownloads> productDownloadsDataController;
+        private IDataController<long, ProductDownloads> productDownloadsDataController;
         private IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
 
         public DownloadFilesActivity(
             Context context,
-            IDataController<ProductDownloads> productDownloadsDataController,
+            IDataController<long, ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IStatusController statusController) :
             base(statusController)
@@ -87,7 +87,7 @@ namespace GOG.Activities.DownloadProductFiles
                         $"Remove scheduled {context} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
-                    await productDownloadsDataController.UpdateAsync(removeEntryTask, productDownloads);
+                    await productDownloadsDataController.UpdateAsync(productDownloads, removeEntryTask);
 
                     await statusController.CompleteAsync(removeEntryTask);
                 }
@@ -100,7 +100,10 @@ namespace GOG.Activities.DownloadProductFiles
             }
 
             var clearEmptyDownloadsTask = await statusController.CreateAsync(processDownloadsTask, "Clear empty downloads");
-            await productDownloadsDataController.DeleteAsync(clearEmptyDownloadsTask, emptyProductDownloads.ToArray());
+
+            foreach (var productDownload in emptyProductDownloads)
+                await productDownloadsDataController.DeleteAsync(productDownload, clearEmptyDownloadsTask);
+
             await statusController.CompleteAsync(clearEmptyDownloadsTask);
 
             await statusController.CompleteAsync(processDownloadsTask);

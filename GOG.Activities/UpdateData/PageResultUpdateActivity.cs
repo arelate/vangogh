@@ -29,14 +29,14 @@ namespace GOG.Activities.UpdateData
         private IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
         private IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
-        private IDataController<DataType> dataController;
+        private IDataController<long, DataType> dataController;
 
         public PageResultUpdateActivity(
             AC activityContext,
             IActivityContextController activityContextController,
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
-            IDataController<DataType> dataController,
+            IDataController<long, DataType> dataController,
             IStatusController statusController) :
             base(statusController)
         {
@@ -65,7 +65,10 @@ namespace GOG.Activities.UpdateData
                 // set the date when new products were added to be able to filter those products as updated
                 //await activityContextCreatedIndexController.Recreate(updateAllProductsTask, activityContextController.ToString(activityContext));
                 // actually update the products
-                await dataController.UpdateAsync(updateTask, newProducts.ToArray());
+
+                foreach (var product in newProducts)
+                    await dataController.UpdateAsync(product, updateTask);
+                
                 await statusController.CompleteAsync(updateTask);
             }
 

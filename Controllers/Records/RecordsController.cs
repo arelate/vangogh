@@ -13,20 +13,20 @@ using Models.ProductRecords;
 
 namespace Controllers.Records
 {
-    public class RecordsController: IRecordsController
+    public class RecordsController<Type>: IRecordsController<Type>
     {
-        private IDataController<ProductRecords> productRecordsController;
+        private IDataController<Type, ProductRecords> productRecordsController;
         private IStatusController statusController;
 
         public RecordsController(
-            IDataController<ProductRecords> productRecordsController,
+            IDataController<Type, ProductRecords> productRecordsController,
             IStatusController statusController)
         {
             this.productRecordsController = productRecordsController;
             this.statusController = statusController;
         }
 
-        public async Task<DateTime> GetRecordAsync(long id, RecordsTypes recordType, IStatus status)
+        public async Task<DateTime> GetRecordAsync(Type id, RecordsTypes recordType, IStatus status)
         {
             var minRecord = DateTime.MinValue.ToUniversalTime();
             var productRecord = await productRecordsController.GetByIdAsync(id, status);
@@ -39,19 +39,20 @@ namespace Controllers.Records
                 minRecord;
         }
 
-        public async Task SetRecordAsync(long id, RecordsTypes recordType, IStatus status)
+        public async Task SetRecordAsync(Type id, RecordsTypes recordType, IStatus status)
         {
             var productRecord = await productRecordsController.GetByIdAsync(id, status);
 
             if (productRecord == null)
             {
-                await productRecordsController.CreateAsync(
-                    status,
-                    new ProductRecords
-                    {
-                        Records = new Dictionary<RecordsTypes, DateTime>()
-                    });
-                productRecord = await productRecordsController.GetByIdAsync(id, status);
+                productRecord = new ProductRecords
+                {
+                    Records = new Dictionary<RecordsTypes, DateTime>()
+                };
+
+                await productRecordsController.UpdateAsync(
+                    productRecord,
+                    status);
             }
 
             var nowTimestamp = DateTime.UtcNow;
@@ -60,7 +61,7 @@ namespace Controllers.Records
                 productRecord.Records.Add(recordType, nowTimestamp);
             else productRecord.Records[recordType] = nowTimestamp;
 
-            await productRecordsController.UpdateAsync(status, productRecord);
+            await productRecordsController.UpdateAsync(productRecord, status);
         }
     }
 }

@@ -20,14 +20,14 @@ namespace GOG.Delegates.GetDownloadSources
 {
     public class GetScreenshotsDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        private IDataController<ProductScreenshots> screenshotsDataController;
+        private IDataController<long, ProductScreenshots> screenshotsDataController;
         private IFormatDelegate<string, string> formatScreenshotsUriDelegate;
         private IGetDirectoryDelegate screenshotsDirectoryDelegate;
         private IFileController fileController;
         private IStatusController statusController;
 
         public GetScreenshotsDownloadSourcesAsyncDelegate(
-            IDataController<ProductScreenshots> screenshotsDataController,
+            IDataController<long, ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
             IFileController fileController,

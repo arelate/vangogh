@@ -11,11 +11,11 @@ namespace Controllers.Routing
 {
     public class RoutingController : IRoutingController
     {
-        private IDataController<ProductRoutes> productRoutesDataController;
+        private IDataController<long, ProductRoutes> productRoutesDataController;
         private IStatusController statusController;
 
         public RoutingController(
-            IDataController<ProductRoutes> productRoutesDataController,
+            IDataController<long, ProductRoutes> productRoutesDataController,
             IStatusController statusController)
         {
             this.productRoutesDataController = productRoutesDataController;
@@ -104,7 +104,7 @@ namespace Controllers.Routing
                     Destination = destination
                 });
 
-            await productRoutesDataController.UpdateAsync(status, productRoutes);
+            await productRoutesDataController.UpdateAsync(productRoutes, status);
 
             await statusController.CompleteAsync(updateRouteStatus);
         }

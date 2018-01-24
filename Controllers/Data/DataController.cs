@@ -9,13 +9,14 @@ using Interfaces.Delegates.GetPath;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Records;
 
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
 
 namespace Controllers.Data
 {
-    public class DataController<Type> : IDataController<Type>
+    public class DataController<Type> : IDataController<long, Type>
     {
         private IIndexController<long> indexController;
 
@@ -28,6 +29,8 @@ namespace Controllers.Data
 
         private IRecycleDelegate recycleDelegate;
 
+        private IRecordsController<long> recordsController;
+
         private IStatusController statusController;
 
         public DataController(
@@ -37,6 +40,7 @@ namespace Controllers.Data
             ICollectionController collectionController,
             IGetPathDelegate getPathDelegate,
             IRecycleDelegate recycleDelegate,
+            IRecordsController<long> recordsController,
             IStatusController statusController)
         {
             this.indexController = indexController;
@@ -49,6 +53,8 @@ namespace Controllers.Data
             this.getPathDelegate = getPathDelegate;
 
             this.recycleDelegate = recycleDelegate;
+
+            this.recordsController = recordsController;
 
             this.statusController = statusController;
         }
@@ -73,61 +79,22 @@ namespace Controllers.Data
         private async Task MapItemsAndIndexes(
             IStatus status,
             string taskMessage,
-            Func<long, Type, Task> itemAction,
-            Func<long[], Task> indexAction,
-            params Type[] data)
+            Func<long, Type, Task> action,
+            Type data)
         {
             var mapTask = await statusController.CreateAsync(status, taskMessage);
-            var counter = 0;
-            var indexes = new List<long>();
 
-            foreach (var item in data)
-            {
-                var index = convertProductToIndexDelegate.Convert(item);
-                indexes.Add(index);
-
-                await statusController.UpdateProgressAsync(
-                    mapTask,
-                    ++counter,
-                    data.Length,
-                    index.ToString());
-
-                await itemAction(index, item);
-            }
-
-            var updateIndexTask = await statusController.CreateAsync(mapTask, "Update indexes");
-            await indexAction(indexes.ToArray());
-            await statusController.CompleteAsync(updateIndexTask);
+            var index = convertProductToIndexDelegate.Convert(data);
+            await action(index, data);
 
             await statusController.CompleteAsync(mapTask);
         }
 
-        public async Task CreateAsync(IStatus status, params Type[] data)
+        public async Task UpdateAsync(Type data, IStatus status)
         {
             await MapItemsAndIndexes(
                 status,
-                "Create data item(s)",
-                async (index, item) =>
-                {
-                    await serializedStorageController.SerializePushAsync(
-                            getPathDelegate.GetPath(
-                                string.Empty,
-                                index.ToString()),
-                            item,
-                            status);
-                },
-                async (indexes) =>
-                {
-                    await indexController.CreateAsync(status, indexes);
-                },
-                data);
-        }
-
-        public async Task UpdateAsync(IStatus status, params Type[] data)
-        {
-            await MapItemsAndIndexes(
-                status,
-                "Update data item(s)",
+                "Update data item",
                 async (index, item) =>
                 {
                     await serializedStorageController.SerializePushAsync(
@@ -136,15 +103,15 @@ namespace Controllers.Data
                             index.ToString()),
                         item,
                         status);
-                },
-                async (indexes) =>
-                {
-                    await indexController.CreateAsync(status, indexes);
+                
+                    if (!(await indexController.ContainsIdAsync(index, status)))
+                        await indexController.CreateAsync(index, status);
+
                 },
                 data);
         }
 
-        public async Task DeleteAsync(IStatus status, params Type[] data)
+        public async Task DeleteAsync(Type data, IStatus status)
         {
             await MapItemsAndIndexes(
                 status,
@@ -155,11 +122,9 @@ namespace Controllers.Data
                     recycleDelegate.Recycle(
                         getPathDelegate.GetPath(
                             string.Empty,
-                            index.ToString()));
-                },
-                async (indexes) =>
-                {
-                    await indexController.DeleteAsync(status, indexes);
+                            index.ToString())); 
+
+                await indexController.DeleteAsync(index, status);
                 },
                 data);
         }

@@ -7,6 +7,7 @@ namespace Interfaces.Status
         Task<IStatus> CreateAsync(IStatus status, string title, bool notifyStatusChanged = true);
     }
 
+    // TODO: Consider using IDisposale to allow using pattern
     public interface ICompleteAsyncDelegate
     {
         Task CompleteAsync(IStatus status, bool notifyStatusChanged = true);

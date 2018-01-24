@@ -19,15 +19,10 @@ namespace GOG.Activities.Cleanup
             this.updatedDataController = updatedDataController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public override Task ProcessActivityAsync(IStatus status)
         {
-            var cleanupUpdatedTask = await statusController.CreateAsync(status, "Cleanup updated, close update cycle");
-
-            await updatedDataController.DeleteAsync(
-                cleanupUpdatedTask,
-                (await updatedDataController.ItemizeAllAsync(cleanupUpdatedTask)).ToArray());
-
-            await statusController.CompleteAsync(cleanupUpdatedTask);
+            // TODO: cleanup updated needs to use records controller
+            throw new System.NotImplementedException();
         }
     }
 }

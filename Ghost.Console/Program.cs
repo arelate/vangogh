@@ -60,8 +60,6 @@ using Interfaces.ContextDefinitions;
 using Interfaces.Status;
 using Interfaces.Template;
 
-using Interfaces.Models.Settings;
-
 using GOG.Models;
 
 using GOG.Delegates.GetPageResults;
@@ -395,6 +393,7 @@ namespace Ghost.Console
             var productsIndexController = new IndexController<long>(
                 productsIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getAccountProductsIndexPathDelegate = new GetPathDelegate(
@@ -410,6 +409,7 @@ namespace Ghost.Console
             var accountProductsIndexController = new IndexController<long>(
                 accountProductsIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getGameDetailsIndexPathDelegate = new GetPathDelegate(
@@ -425,6 +425,7 @@ namespace Ghost.Console
             var gameDetailsIndexController = new IndexController<long>(
                 gameDetailsIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getGameProductDataIndexPathDelegate = new GetPathDelegate(
@@ -440,6 +441,7 @@ namespace Ghost.Console
             var gameProductDataIndexController = new IndexController<long>(
                 gameProductDataIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getApiProductsIndexPathDelegate = new GetPathDelegate(
@@ -455,6 +457,7 @@ namespace Ghost.Console
             var apiProductsIndexController = new IndexController<long>(
                 apiProductsIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getProductScreenshotsIndexPathDelegate = new GetPathDelegate(
@@ -470,6 +473,7 @@ namespace Ghost.Console
             var productScreenshotsIndexController = new IndexController<long>(
                 productScreenshotsIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getProductDownloadsIndexPathDelegate = new GetPathDelegate(
@@ -485,6 +489,7 @@ namespace Ghost.Console
             var productDownloadsIndexController = new IndexController<long>(
                 productDownloadsIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getProductRoutesIndexPathDelegate = new GetPathDelegate(
@@ -500,6 +505,7 @@ namespace Ghost.Console
             var productRoutesIndexController = new IndexController<long>(
                 productRoutesIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getValidationResultsIndexPathDelegate = new GetPathDelegate(
@@ -515,6 +521,7 @@ namespace Ghost.Console
             var validationResultsIndexController = new IndexController<long>(
                 validationResultsIndexStashController,
                 collectionController,
+                null,
                 statusController);
 
             // index data controllers that are data controllers
@@ -532,6 +539,7 @@ namespace Ghost.Console
             var wishlistedController = new IndexController<long>(
                 wishlistedStashController,
                 collectionController,
+                null,
                 statusController);
 
             var getUpdatedPathDelegate = new GetPathDelegate(
@@ -547,6 +555,7 @@ namespace Ghost.Console
             var updatedController = new IndexController<long>(
                 updatedStashController,
                 collectionController,
+                null,
                 statusController);
 
             // data controllers
@@ -567,6 +576,7 @@ namespace Ghost.Console
                 collectionController,
                 getProductsPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getAccountProductsPathDelegate = new GetPathDelegate(
@@ -580,6 +590,7 @@ namespace Ghost.Console
                 collectionController,
                 getAccountProductsPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getGameDetailsPathDelegate = new GetPathDelegate(
@@ -593,6 +604,7 @@ namespace Ghost.Console
                 collectionController,
                 getGameDetailsPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getGameProductDataPathDelegate = new GetPathDelegate(
@@ -606,6 +618,7 @@ namespace Ghost.Console
                 collectionController,
                 getGameProductDataPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getApiProductPathDelegate = new GetPathDelegate(
@@ -619,6 +632,7 @@ namespace Ghost.Console
                 collectionController,
                 getApiProductPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getScreenshotsPathDelegate = new GetPathDelegate(
@@ -632,6 +646,7 @@ namespace Ghost.Console
                 collectionController,
                 getScreenshotsPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getProductDownloadsPathDelegate = new GetPathDelegate(
@@ -645,6 +660,7 @@ namespace Ghost.Console
                 collectionController,
                 getProductDownloadsPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getProductRoutesPathDelegate = new GetPathDelegate(
@@ -658,6 +674,7 @@ namespace Ghost.Console
                 collectionController,
                 getProductRoutesPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             var getValidationResultsPathDelegate = new GetPathDelegate(
@@ -671,6 +688,7 @@ namespace Ghost.Console
                 collectionController,
                 getValidationResultsPathDelegate,
                 recycleDelegate,
+                null,
                 statusController);
 
             #endregion

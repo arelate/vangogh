@@ -20,14 +20,14 @@ namespace GOG.Delegates.UpdateScreenshots
     public class UpdateScreenshotsAsyncDelegate : IUpdateScreenshotsAsyncDelegate<Product>
     {
         private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
-        private IDataController<ProductScreenshots> screenshotsDataController;
+        private IDataController<long, ProductScreenshots> screenshotsDataController;
         private INetworkController networkController;
         private IStringExtractionController screenshotExtractionController;
 
         private IStatusController statusController;
         public UpdateScreenshotsAsyncDelegate(
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
-            IDataController<ProductScreenshots> screenshotsDataController,
+            IDataController<long, ProductScreenshots> screenshotsDataController,
             INetworkController networkController,
             IStringExtractionController screenshotExtractionController,
             IStatusController statusController)
@@ -60,7 +60,7 @@ namespace GOG.Delegates.UpdateScreenshots
             await statusController.CompleteAsync(extractScreenshotsTask);
 
             var updateProductScreenshotsTask = await statusController.CreateAsync(status, "Add product screenshots");
-            await screenshotsDataController.UpdateAsync(updateProductScreenshotsTask, productScreenshots);
+            await screenshotsDataController.UpdateAsync(productScreenshots, updateProductScreenshotsTask);
             await statusController.CompleteAsync(updateProductScreenshotsTask);
         }
     }

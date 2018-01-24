@@ -17,13 +17,13 @@ namespace GOG.Delegates.GetDownloadSources
     public class GetManualUrlDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
         private IIndexController<long> updatedDataController;
-        private IDataController<GameDetails> gameDetailsDataController;
+        private IDataController<long, GameDetails> gameDetailsDataController;
         private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
         private IStatusController statusController;
 
         public GetManualUrlDownloadSourcesAsyncDelegate(
             IIndexController<long> updatedDataController,
-            IDataController<GameDetails> gameDetailsDataController,
+            IDataController<long, GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
             IStatusController statusController)
         {

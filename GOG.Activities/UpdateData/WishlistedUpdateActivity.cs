@@ -41,15 +41,11 @@ namespace GOG.Activities.UpdateData
 
             var saveDataTask = await statusController.CreateAsync(updateWishlistTask, "Save");
 
-            var wishlistedIds = new List<long>();
-
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                wishlistedIds.Add(product.Id);
+                await wishlistedDataController.CreateAsync(product.Id, saveDataTask);
             }
-
-            await wishlistedDataController.CreateAsync(saveDataTask, wishlistedIds.ToArray());
 
             await statusController.CompleteAsync(saveDataTask);
 

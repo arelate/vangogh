@@ -26,8 +26,8 @@ namespace GOG.Activities.UpdateData
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
-        private IDataController<MasterType> masterDataController;
-        private IDataController<DetailType> detailDataController;
+        private IDataController<long, MasterType> masterDataController;
+        private IDataController<long, DetailType> detailDataController;
         private IIndexController<long> updatedDataController;
 
         private IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate;
@@ -46,8 +46,8 @@ namespace GOG.Activities.UpdateData
             Context context,
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
             IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate,
-            IDataController<MasterType> masterDataController,
-            IDataController<DetailType> detailDataController,
+            IDataController<long, MasterType> masterDataController,
+            IDataController<long, DetailType> detailDataController,
             IIndexController<long> updatedDataController,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate,
@@ -105,7 +105,7 @@ namespace GOG.Activities.UpdateData
                 if (data != null)
                 {
                     fillGapsDelegate?.FillGaps(data, product);
-                    await detailDataController.UpdateAsync(updateProductsTask, data);
+                    await detailDataController.UpdateAsync(data, updateProductsTask);
                 }
             }
 
