@@ -110,7 +110,179 @@ namespace Ghost.Console
     {
         static async Task Main(string[] args)
         {
-            #region Foundation Controllers
+            #region Delegates.GetDirectory
+
+            var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty, null);
+
+            var getTemplatesDirectoryDelegate = new GetRelativeDirectoryDelegate("templates");
+
+            var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data, getEmptyDirectoryDelegate);
+
+            var getAccountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, getDataDirectoryDelegate);
+            var getApiProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ApiProducts, getDataDirectoryDelegate);
+            var getGameDetailsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameDetails, getDataDirectoryDelegate);
+            var getGameProductDataDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameProductData, getDataDirectoryDelegate);
+            var getProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.Products, getDataDirectoryDelegate);
+            var getProductDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductDownloads, getDataDirectoryDelegate);
+            var getProductRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductRoutes, getDataDirectoryDelegate);
+            var getProductScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductScreenshots, getDataDirectoryDelegate);
+            var getValidationResultsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ValidationResults, getDataDirectoryDelegate);
+
+            var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.RecycleBin, getDataDirectoryDelegate);
+            var getImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Images, getDataDirectoryDelegate);
+            var getReportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Reports, getDataDirectoryDelegate);
+            var getValidationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Md5, getDataDirectoryDelegate);
+            var getProductFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductFiles, getDataDirectoryDelegate);
+            var getScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Screenshots, getDataDirectoryDelegate);
+
+            var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Records, getDataDirectoryDelegate);
+
+            var getAccountProductRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, getRecordsDirectoryDelegate);
+
+            var getProductFilesDirectoryDelegate = new GetUriDirectoryDelegate(getProductFilesBaseDirectoryDelegate);
+
+            #endregion
+
+            #region Delegates.GetFilename
+
+            var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
+            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
+
+            var getAppTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
+            var gerReportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
+            var getCookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
+            var getSettingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
+
+            var getIndexFilenameDelegate = new GetFixedFilenameDelegate("index", getJsonFilenameDelegate);
+
+            var getWishlistedFilenameDelegate = new GetFixedFilenameDelegate("wishlisted", getJsonFilenameDelegate);
+            var getUpdatedFilenameDelegate = new GetFixedFilenameDelegate("updated", getJsonFilenameDelegate);
+
+            var getUriFilenameDelegate = new GetUriFilenameDelegate();
+            var getReportFilenameDelegate = new GetReportFilenameDelegate();
+            var getValidationFilenameDelegate = new GetValidationFilenameDelegate();
+
+            #endregion
+
+            #region Delegates.GetPath
+
+            var getStoredHashesPathDelegate = new GetPathDelegate(
+                getEmptyDirectoryDelegate,
+                getStoredHashesFilenameDelegate);
+
+            var getAppTemplatePathDelegate = new GetPathDelegate(
+                getTemplatesDirectoryDelegate,
+                getAppTemplateFilenameDelegate);
+
+            var getReportTemplatePathDelegate = new GetPathDelegate(
+                getTemplatesDirectoryDelegate,
+                gerReportTemplateFilenameDelegate);
+
+            var getCookiePathDelegate = new GetPathDelegate(
+                getEmptyDirectoryDelegate,
+                getCookiesFilenameDelegate);
+
+            var getSettingsPathDelegate = new GetPathDelegate(
+                getEmptyDirectoryDelegate,
+                getSettingsFilenameDelegate);
+
+            var getProductsIndexPathDelegate = new GetPathDelegate(
+                getProductsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getAccountProductsIndexPathDelegate = new GetPathDelegate(
+                getAccountProductsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getGameDetailsIndexPathDelegate = new GetPathDelegate(
+                getGameDetailsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getGameProductDataIndexPathDelegate = new GetPathDelegate(
+                getGameProductDataDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getApiProductsIndexPathDelegate = new GetPathDelegate(
+                getApiProductsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getProductScreenshotsIndexPathDelegate = new GetPathDelegate(
+                getProductScreenshotsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getProductDownloadsIndexPathDelegate = new GetPathDelegate(
+                getProductDownloadsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getProductRoutesIndexPathDelegate = new GetPathDelegate(
+                getProductRoutesDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getValidationResultsIndexPathDelegate = new GetPathDelegate(
+                getValidationResultsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getWishlistedPathDelegate = new GetPathDelegate(
+                getDataDirectoryDelegate,
+                getWishlistedFilenameDelegate);
+
+            var getUpdatedPathDelegate = new GetPathDelegate(
+                getDataDirectoryDelegate,
+                getUpdatedFilenameDelegate);
+
+            var getProductsPathDelegate = new GetPathDelegate(
+                getProductsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getAccountProductsPathDelegate = new GetPathDelegate(
+                getAccountProductsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getGameDetailsPathDelegate = new GetPathDelegate(
+                getGameDetailsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getGameProductDataPathDelegate = new GetPathDelegate(
+                getGameProductDataDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getApiProductPathDelegate = new GetPathDelegate(
+                getApiProductsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getScreenshotsPathDelegate = new GetPathDelegate(
+                getProductScreenshotsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getProductDownloadsPathDelegate = new GetPathDelegate(
+                getProductDownloadsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getProductRoutesPathDelegate = new GetPathDelegate(
+                getProductRoutesDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getValidationResultsPathDelegate = new GetPathDelegate(
+                getValidationResultsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            var getGameDetailsFilesPathDelegate = new GetPathDelegate(
+                getProductFilesDirectoryDelegate,
+                getUriFilenameDelegate);
+
+            var getValidationPathDelegate = new GetPathDelegate(
+                getValidationDirectoryDelegate,
+                getValidationFilenameDelegate);
+
+            var getAccountProductRecordsIndexPathDelegate = new GetPathDelegate(
+                getAccountProductRecordsDirectoryDelegate,
+                getIndexFilenameDelegate);
+
+            var getAccountProductRecordsPathDelegate = new GetPathDelegate(
+                getAccountProductRecordsDirectoryDelegate,
+                getJsonFilenameDelegate);
+
+            #endregion
 
             var statusController = new StatusController();
 
@@ -126,21 +298,12 @@ namespace Ghost.Console
                 fileController);
             var serializationController = new JSONStringController();
 
-            var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
-            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
-
-            var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty, null);
-
             var convertBytesToStringDelegate = new ConvertBytesToStringDelegate();
             var getBytesMd5HashAsyncDelegate = new GetBytesMd5HashAsyncDelegate(convertBytesToStringDelegate);
             var convertStringToBytesDelegate = new ConvertStringToBytesDelegate();
             var getStringMd5HashAsyncDelegate = new GetStringMd5HashAsyncDelegate(
                 convertStringToBytesDelegate, 
                 getBytesMd5HashAsyncDelegate);
-
-            var getStoredHashesPathDelegate = new GetPathDelegate(
-                getEmptyDirectoryDelegate,
-                getStoredHashesFilenameDelegate);
 
             var storedHashesStashController = new StashController<Dictionary<string, string>>(
                 getStoredHashesPathDelegate,
@@ -175,14 +338,6 @@ namespace Ghost.Console
 
             var applicationStatus = new Status() { Title = "This ghost is a kind one." };
 
-            var templatesDirectoryDelegate = new GetRelativeDirectoryDelegate("templates");
-            var appTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
-            var reportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
-
-            var getAppTemplatePathDelegate = new GetPathDelegate(
-                templatesDirectoryDelegate,
-                appTemplateFilenameDelegate);
-
             var appTemplateStashController = new StashController<List<Template>>(
                 getAppTemplatePathDelegate,
                 serializationController,
@@ -193,10 +348,6 @@ namespace Ghost.Console
                 "status",
                 appTemplateStashController,
                 collectionController);
-
-            var getReportTemplatePathDelegate = new GetPathDelegate(
-                templatesDirectoryDelegate,
-                reportTemplateFilenameDelegate);
 
             var reportTemplateStashController = new StashController<List<Template>>(
                 getReportTemplatePathDelegate,
@@ -230,6 +381,7 @@ namespace Ghost.Console
                 getStatusViewUpdateDelegate,
                 consoleInputOutputController);
 
+            // TODO: Implement a better way
             // add notification handler to drive console view updates
             statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
 
@@ -250,12 +402,7 @@ namespace Ghost.Console
 
             var uriController = new UriController();
 
-            var getCookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
             var cookieSerializationController = new CookieSerializationController();
-
-            var getCookiePathDelegate = new GetPathDelegate(
-                getEmptyDirectoryDelegate,
-                getCookiesFilenameDelegate);
 
             var cookieStashController = new StashController<Dictionary<string, string>>(
                 getCookiePathDelegate,
@@ -300,7 +447,10 @@ namespace Ghost.Console
             var formatImagesUriDelegate = new FormatImagesUriDelegate();
             var formatScreenshotsUriDelegate = new FormatScreenshotsUriDelegate();
 
-            #endregion
+            var recycleDelegate = new RecycleDelegate(
+                getRecycleBinDirectoryDelegate,
+                fileController,
+                directoryController);
 
             #region Data Controllers
 
@@ -315,14 +465,6 @@ namespace Ghost.Console
             var convertProductDownloadsToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductDownloads>();
             var convertProductRoutesToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductRoutes>();
             var convertValidationResultToIndexDelegate = new ConvertProductCoreToIndexDelegate<ValidationResult>();
-
-            // directories
-
-            var getSettingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
-
-            var getSettingsPathDelegate = new GetPathDelegate(
-                getEmptyDirectoryDelegate,
-                getSettingsFilenameDelegate);
 
             var settingsStashController = new StashController<Settings>(
                 getSettingsPathDelegate,
@@ -343,47 +485,6 @@ namespace Ghost.Console
                 correctSettingsDownloadsOperatingSystemsAsyncDelegate,
                 correctSettingsDirectoriesAsyncDelegate);
 
-
-            var dataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data, getEmptyDirectoryDelegate);
-
-            var accountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, dataDirectoryDelegate);
-            var apiProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ApiProducts, dataDirectoryDelegate);
-            var gameDetailsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameDetails, dataDirectoryDelegate);
-            var gameProductDataDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameProductData, dataDirectoryDelegate);
-            var productsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.Products, dataDirectoryDelegate);
-            var productDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductDownloads, dataDirectoryDelegate);
-            var productRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductRoutes, dataDirectoryDelegate);
-            var productScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductScreenshots, dataDirectoryDelegate);
-            var validationResultsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ValidationResults, dataDirectoryDelegate);
-
-            var recycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.RecycleBin, dataDirectoryDelegate);
-            var imagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Images, dataDirectoryDelegate);
-            var reportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Reports, dataDirectoryDelegate);
-            var validationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Md5, dataDirectoryDelegate);
-            var productFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductFiles, dataDirectoryDelegate);
-            var screenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Screenshots, dataDirectoryDelegate);
-
-            var productFilesDirectoryDelegate = new GetUriDirectoryDelegate(productFilesBaseDirectoryDelegate);
-
-            // filenames
-
-            var indexFilenameDelegate = new GetFixedFilenameDelegate("index", getJsonFilenameDelegate);
-
-            var activityContextCreatedFilenameDelegate = new GetFixedFilenameDelegate("activityContextCreated", getJsonFilenameDelegate);
-
-            var wishlistedFilenameDelegate = new GetFixedFilenameDelegate("wishlisted", getJsonFilenameDelegate);
-            var updatedFilenameDelegate = new GetFixedFilenameDelegate("updated", getJsonFilenameDelegate);
-
-            var getUriFilenameDelegate = new GetUriFilenameDelegate();
-            var getReportFilenameDelegate = new GetReportFilenameDelegate();
-            var getValidationFilenameDelegate = new GetValidationFilenameDelegate();
-
-            // index filenames
-
-            var getProductsIndexPathDelegate = new GetPathDelegate(
-                productsDirectoryDelegate,
-                indexFilenameDelegate);
-
             var productsIndexStashController = new StashController<List<long>>(
                 getProductsIndexPathDelegate,
                 serializationController,
@@ -396,26 +497,46 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getAccountProductsIndexPathDelegate = new GetPathDelegate(
-                accountProductsDirectoryDelegate,
-                indexFilenameDelegate);
-
             var accountProductsIndexStashController = new StashController<List<long>>(
                 getAccountProductsIndexPathDelegate,
                 serializationController,
                 storageController, 
                 statusController);
 
+            var accountProductRecordsIndexStashController = new StashController<List<long>>(
+                getAccountProductRecordsIndexPathDelegate,
+                serializationController,
+                storageController,
+                statusController);
+
+            var accountProductRecordsIndexController = new IndexController<long>(
+                accountProductRecordsIndexStashController,
+                collectionController,
+                null, // records index controller doesn't need records tracking
+                statusController);
+
+            var convertProductRecordsToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductRecords>();
+
+            var accountProductRecordsDataController = new DataController<ProductRecords>(
+                accountProductRecordsIndexController,
+                serializedTransactionalStorageController,
+                convertProductRecordsToIndexDelegate,
+                collectionController,
+                getAccountProductRecordsPathDelegate,
+                recycleDelegate,
+                null, // records data controller doesn't need records tracking
+                statusController);
+
+            var accountProductsRecordsController = new RecordsController<long>(
+                accountProductRecordsDataController,
+                statusController);
+
             var accountProductsIndexController = new IndexController<long>(
                 accountProductsIndexStashController,
                 collectionController,
-                null,
+                accountProductsRecordsController,
                 statusController);
-
-            var getGameDetailsIndexPathDelegate = new GetPathDelegate(
-                gameDetailsDirectoryDelegate,
-                indexFilenameDelegate);
-
+            
             var gameDetailsIndexStashController = new StashController<List<long>>(
                 getGameDetailsIndexPathDelegate,
                 serializationController,
@@ -427,10 +548,6 @@ namespace Ghost.Console
                 collectionController,
                 null,
                 statusController);
-
-            var getGameProductDataIndexPathDelegate = new GetPathDelegate(
-                gameProductDataDirectoryDelegate,
-                indexFilenameDelegate);
 
             var gameProductDataIndexStashController = new StashController<List<long>>(
                 getGameProductDataIndexPathDelegate,
@@ -444,10 +561,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getApiProductsIndexPathDelegate = new GetPathDelegate(
-                apiProductsDirectoryDelegate,
-                indexFilenameDelegate);
-
             var apiProductsIndexStashController = new StashController<List<long>>(
                 getApiProductsIndexPathDelegate,
                 serializationController,
@@ -459,10 +572,6 @@ namespace Ghost.Console
                 collectionController,
                 null,
                 statusController);
-
-            var getProductScreenshotsIndexPathDelegate = new GetPathDelegate(
-                productScreenshotsDirectoryDelegate,
-                indexFilenameDelegate);
 
             var productScreenshotsIndexStashController = new StashController<List<long>>(
                 getProductScreenshotsIndexPathDelegate,
@@ -476,10 +585,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getProductDownloadsIndexPathDelegate = new GetPathDelegate(
-                productDownloadsDirectoryDelegate,
-                indexFilenameDelegate);
-
             var productDownloadsIndexStashController = new StashController<List<long>>(
                 getProductDownloadsIndexPathDelegate,
                 serializationController,
@@ -491,10 +596,6 @@ namespace Ghost.Console
                 collectionController,
                 null,
                 statusController);
-
-            var getProductRoutesIndexPathDelegate = new GetPathDelegate(
-                productRoutesDirectoryDelegate,
-                indexFilenameDelegate);
 
             var productRoutesIndexStashController = new StashController<List<long>>(
                 getProductRoutesIndexPathDelegate,
@@ -508,10 +609,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getValidationResultsIndexPathDelegate = new GetPathDelegate(
-                validationResultsDirectoryDelegate,
-                indexFilenameDelegate);
-
             var validationResultsIndexStashController = new StashController<List<long>>(
                 getValidationResultsIndexPathDelegate,
                 serializationController,
@@ -524,12 +621,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            // index data controllers that are data controllers
-
-            var getWishlistedPathDelegate = new GetPathDelegate(
-                dataDirectoryDelegate,
-                wishlistedFilenameDelegate);
-
             var wishlistedStashController = new StashController<List<long>>(
                 getWishlistedPathDelegate,
                 serializationController,
@@ -541,10 +632,6 @@ namespace Ghost.Console
                 collectionController,
                 null,
                 statusController);
-
-            var getUpdatedPathDelegate = new GetPathDelegate(
-                dataDirectoryDelegate,
-                updatedFilenameDelegate);
 
             var updatedStashController = new StashController<List<long>>(
                 getUpdatedPathDelegate,
@@ -560,15 +647,6 @@ namespace Ghost.Console
 
             // data controllers
 
-            var recycleDelegate = new RecycleDelegate(
-                recycleBinDirectoryDelegate,
-                fileController,
-                directoryController);
-
-            var getProductsPathDelegate = new GetPathDelegate(
-                productsDirectoryDelegate,
-                getJsonFilenameDelegate);
-
             var productsDataController = new DataController<Product>(
                 productsIndexController,
                 serializedTransactionalStorageController,
@@ -579,10 +657,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getAccountProductsPathDelegate = new GetPathDelegate(
-                accountProductsDirectoryDelegate,
-                getJsonFilenameDelegate);
-
             var accountProductsDataController = new DataController<AccountProduct>(
                 accountProductsIndexController,
                 serializedTransactionalStorageController,
@@ -590,12 +664,8 @@ namespace Ghost.Console
                 collectionController,
                 getAccountProductsPathDelegate,
                 recycleDelegate,
-                null,
+                accountProductsRecordsController,
                 statusController);
-
-            var getGameDetailsPathDelegate = new GetPathDelegate(
-                gameDetailsDirectoryDelegate,
-                getJsonFilenameDelegate);
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 gameDetailsIndexController,
@@ -607,10 +677,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getGameProductDataPathDelegate = new GetPathDelegate(
-                gameProductDataDirectoryDelegate,
-                getJsonFilenameDelegate);
-
             var gameProductDataController = new DataController<GameProductData>(
                 gameProductDataIndexController,
                 serializedTransactionalStorageController,
@@ -620,10 +686,6 @@ namespace Ghost.Console
                 recycleDelegate,
                 null,
                 statusController);
-
-            var getApiProductPathDelegate = new GetPathDelegate(
-                apiProductsDirectoryDelegate,
-                getJsonFilenameDelegate);
 
             var apiProductsDataController = new DataController<ApiProduct>(
                 apiProductsIndexController,
@@ -635,10 +697,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getScreenshotsPathDelegate = new GetPathDelegate(
-                productScreenshotsDirectoryDelegate,
-                getJsonFilenameDelegate);
-
             var screenshotsDataController = new DataController<ProductScreenshots>(
                 productScreenshotsIndexController,
                 serializedTransactionalStorageController,
@@ -648,10 +706,6 @@ namespace Ghost.Console
                 recycleDelegate,
                 null,
                 statusController);
-
-            var getProductDownloadsPathDelegate = new GetPathDelegate(
-                productDownloadsDirectoryDelegate,
-                getJsonFilenameDelegate);
 
             var productDownloadsDataController = new DataController<ProductDownloads>(
                 productDownloadsIndexController,
@@ -663,10 +717,6 @@ namespace Ghost.Console
                 null,
                 statusController);
 
-            var getProductRoutesPathDelegate = new GetPathDelegate(
-                productRoutesDirectoryDelegate,
-                getJsonFilenameDelegate);
-
             var productRoutesDataController = new DataController<ProductRoutes>(
                 productRoutesIndexController,
                 serializedTransactionalStorageController,
@@ -676,10 +726,6 @@ namespace Ghost.Console
                 recycleDelegate,
                 null,
                 statusController);
-
-            var getValidationResultsPathDelegate = new GetPathDelegate(
-                validationResultsDirectoryDelegate,
-                getJsonFilenameDelegate);
 
             var validationResultsDataController = new DataController<ValidationResult>(
                 validationResultsIndexController,
@@ -976,7 +1022,7 @@ namespace Ghost.Console
             var getScreenshotsDownloadSourcesAsyncDelegate = new GetScreenshotsDownloadSourcesAsyncDelegate(
                 screenshotsDataController,
                 formatScreenshotsUriDelegate,
-                screenshotsDirectoryDelegate,
+                getScreenshotsDirectoryDelegate,
                 fileController,
                 statusController);
 
@@ -990,11 +1036,7 @@ namespace Ghost.Console
 
             var itemizeGameDetailsDirectoriesAsyncDelegate = new ItemizeGameDetailsDirectoriesAsyncDelegate(
                 itemizeGameDetailsManualUrlsAsyncDelegate,
-                productFilesDirectoryDelegate);
-
-            var getGameDetailsFilesPathDelegate = new GetPathDelegate(
-                productFilesDirectoryDelegate,
-                getUriFilenameDelegate);
+                getProductFilesDirectoryDelegate);
 
             var itemizeGameDetailsFilesAsyncDelegate = new ItemizeGameDetailsFilesAsyncDelegate(
                 itemizeGameDetailsManualUrlsAsyncDelegate,
@@ -1015,7 +1057,7 @@ namespace Ghost.Console
             var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.ProductsImages,
                 getProductsImagesDownloadSourcesAsyncDelegate,
-                imagesDirectoryDelegate,
+                getImagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
@@ -1025,7 +1067,7 @@ namespace Ghost.Console
             var updateAccountProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.AccountProductsImages,
                 getAccountProductsImagesDownloadSourcesAsyncDelegate,
-                imagesDirectoryDelegate,
+                getImagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
@@ -1035,7 +1077,7 @@ namespace Ghost.Console
             var updateScreenshotsDownloadsActivity = new UpdateDownloadsActivity(
                 Context.Screenshots,
                 getScreenshotsDownloadSourcesAsyncDelegate,
-                screenshotsDirectoryDelegate,
+                getScreenshotsDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
@@ -1045,7 +1087,7 @@ namespace Ghost.Console
             var updateProductFilesDownloadsActivity = new UpdateDownloadsActivity(
                 Context.ProductsFiles,
                 getManualUrlDownloadSourcesAsyncDelegate,
-                productFilesDirectoryDelegate,
+                getProductFilesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
@@ -1062,10 +1104,6 @@ namespace Ghost.Console
                 getValidationFilenameDelegate,
                 formatUriRemoveSessionDelegate);
 
-            var getValidationPathDelegate = new GetPathDelegate(
-                validationDirectoryDelegate,
-                getValidationFilenameDelegate);
-
             var formatValidationFileDelegate = new FormatValidationFileDelegate(
                 getValidationPathDelegate);
 
@@ -1073,7 +1111,7 @@ namespace Ghost.Console
                 formatUriRemoveSessionDelegate,
                 confirmValidationExpectedDelegate,
                 formatValidationFileDelegate,
-                validationDirectoryDelegate,
+                getValidationDirectoryDelegate,
                 formatValidationUriDelegate,
                 fileController,
                 downloadFromUriAsyncDelegate,
@@ -1134,7 +1172,7 @@ namespace Ghost.Console
                 statusController);
 
             var validateProductFilesActivity = new ValidateProductFilesActivity(
-                productFilesDirectoryDelegate,
+                getProductFilesDirectoryDelegate,
                 getUriFilenameDelegate,
                 formatValidationFileDelegate,
                 productFileValidationController,
@@ -1168,7 +1206,7 @@ namespace Ghost.Console
                 statusController);
 
             var itemizeAllProductFilesDirectoriesAsyncDelegate = new ItemizeAllProductFilesDirectoriesAsyncDelegate(
-                productFilesBaseDirectoryDelegate,
+                getProductFilesBaseDirectoryDelegate,
                 directoryController,
                 statusController);
 
@@ -1228,7 +1266,7 @@ namespace Ghost.Console
             #region Report Task Status 
 
             var reportFilePresentationController = new FilePresentationController(
-                reportDirectoryDelegate,
+                getReportDirectoryDelegate,
                 getReportFilenameDelegate,
                 streamController);
 

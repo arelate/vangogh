@@ -80,9 +80,9 @@ namespace Controllers.Index
                     {
                         indexes.Remove(item);
 
-                    await recordsController.SetRecordAsync(
+                    await recordsController?.SetRecordAsync(
                         item,
-                        RecordsTypes.Removed,
+                        RecordsTypes.Deleted,
                         status);
 
                         return true;
@@ -104,7 +104,7 @@ namespace Controllers.Index
                     {
                         indexes.Add(item);
 
-                        await recordsController.SetRecordAsync(
+                        await recordsController?.SetRecordAsync(
                             item,
                             RecordsTypes.Created,
                             status);

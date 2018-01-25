@@ -58,7 +58,8 @@ namespace Controllers.Stash
             var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
 
             var serializedData = await storageController.PullAsync(storedDataUri);
-            storedData = serializationController.Deserialize<ModelType>(serializedData);
+            if (string.IsNullOrEmpty(serializedData)) 
+                storedData = serializationController.Deserialize<ModelType>(serializedData);
 
             if (storedData == null) storedData = new ModelType();
 

@@ -11,6 +11,7 @@ namespace Models.Directories
         public static string Md5 = "md5";
         public static string ProductFiles = "productFiles";
         public static string Screenshots = "screenshots";
+        public static string Records = "records";
     }
 
     public static class DataDirectories {

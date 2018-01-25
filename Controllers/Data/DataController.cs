@@ -14,6 +14,8 @@ using Interfaces.Controllers.Records;
 using Interfaces.SerializedStorage;
 using Interfaces.Status;
 
+using Interfaces.Models.RecordsTypes;
+
 namespace Controllers.Data
 {
     public class DataController<Type> : IDataController<long, Type>
@@ -97,16 +99,17 @@ namespace Controllers.Data
                 "Update data item",
                 async (index, item) =>
                 {
+                    if (!(await indexController.ContainsIdAsync(index, status)))
+                        await indexController.CreateAsync(index, status);
+
                     await serializedStorageController.SerializePushAsync(
                         getPathDelegate.GetPath(
                             string.Empty,
                             index.ToString()),
                         item,
                         status);
-                
-                    if (!(await indexController.ContainsIdAsync(index, status)))
-                        await indexController.CreateAsync(index, status);
 
+                    await recordsController?.SetRecordAsync(index, RecordsTypes.Updated, status);
                 },
                 data);
         }
@@ -118,13 +121,15 @@ namespace Controllers.Data
                 "Remove data item(s)",
                 async (index, item) =>
                 {
+                    await indexController.DeleteAsync(index, status);
+
                     if (await indexController.ContainsIdAsync(index, status))
                     recycleDelegate.Recycle(
                         getPathDelegate.GetPath(
                             string.Empty,
                             index.ToString())); 
 
-                await indexController.DeleteAsync(index, status);
+                    await recordsController?.SetRecordAsync(index, RecordsTypes.Deleted, status);
                 },
                 data);
         }
