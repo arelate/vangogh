@@ -48,14 +48,14 @@ namespace Interfaces.Controllers.Data
         Task<int> CountAsync(IStatus status);
     }
 
-    public interface IDataController<IdentityType, DataType> :
-        IItemizeAllAsyncDelegate<IdentityType>,
+    public interface IDataController<DataType> :
+        IItemizeAllAsyncDelegate<long>,
         ICountAsyncDelegate,
-        IGetByIdAsyncDelegate<IdentityType, DataType>,
+        IGetByIdAsyncDelegate<long, DataType>,
         IUpdateAsyncDelegate<DataType>,
         IDeleteAsyncDelegate<DataType>,
         IContainsAsyncDelegate<DataType>,
-        IContainsIdAsyncDelegate<IdentityType>
+        IContainsIdAsyncDelegate<long>
     {
         // ...
     }

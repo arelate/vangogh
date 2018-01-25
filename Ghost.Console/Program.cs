@@ -527,7 +527,7 @@ namespace Ghost.Console
                 null, // records data controller doesn't need records tracking
                 statusController);
 
-            var accountProductsRecordsController = new RecordsController<long>(
+            var accountProductsRecordsController = new RecordsController(
                 accountProductRecordsDataController,
                 statusController);
 

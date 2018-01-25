@@ -16,12 +16,12 @@ namespace GOG.Activities.DownloadProductFiles
     public class DownloadFilesActivity : Activity
     {
         private Context context;
-        private IDataController<long, ProductDownloads> productDownloadsDataController;
+        private IDataController<ProductDownloads> productDownloadsDataController;
         private IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
 
         public DownloadFilesActivity(
             Context context,
-            IDataController<long, ProductDownloads> productDownloadsDataController,
+            IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IStatusController statusController) :
             base(statusController)

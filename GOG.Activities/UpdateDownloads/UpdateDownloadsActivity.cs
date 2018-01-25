@@ -26,18 +26,18 @@ namespace GOG.Activities.UpdateDownloads
         private IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
         private IFileController fileController;
-        private IDataController<long, ProductDownloads> productDownloadsDataController;
-        private IDataController<long, AccountProduct> accountProductsDataController;
-        private IDataController<long, Product> productsDataController;
+        private IDataController<ProductDownloads> productDownloadsDataController;
+        private IDataController<AccountProduct> accountProductsDataController;
+        private IDataController<Product> productsDataController;
 
         public UpdateDownloadsActivity(
             Context context,
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
-            IDataController<long, ProductDownloads> productDownloadsDataController,
-            IDataController<long, AccountProduct> accountProductsDataController,
-            IDataController<long, Product> productsDataController,
+            IDataController<ProductDownloads> productDownloadsDataController,
+            IDataController<AccountProduct> accountProductsDataController,
+            IDataController<Product> productsDataController,
             IStatusController statusController) :
             base(statusController)
         {

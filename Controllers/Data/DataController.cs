@@ -16,9 +16,11 @@ using Interfaces.Status;
 
 using Interfaces.Models.RecordsTypes;
 
+using Models.ProductCore;
+
 namespace Controllers.Data
 {
-    public class DataController<Type> : IDataController<long, Type>
+    public class DataController<Type> : IDataController<Type>
     {
         private IIndexController<long> indexController;
 
@@ -109,7 +111,11 @@ namespace Controllers.Data
                         item,
                         status);
 
-                    await recordsController?.SetRecordAsync(index, RecordsTypes.Updated, status);
+                    if (recordsController != null)
+                        await recordsController.SetRecordAsync(
+                            index, 
+                            RecordsTypes.Updated, 
+                            status);
                 },
                 data);
         }
@@ -129,7 +135,11 @@ namespace Controllers.Data
                             string.Empty,
                             index.ToString())); 
 
-                    await recordsController?.SetRecordAsync(index, RecordsTypes.Deleted, status);
+                    if (recordsController != null)
+                        await recordsController.SetRecordAsync(
+                            index, 
+                            RecordsTypes.Deleted, 
+                            status);
                 },
                 data);
         }

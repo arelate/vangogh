@@ -19,7 +19,7 @@ namespace GOG.Delegates.GetDownloadSources
     public class GetProductCoreImagesDownloadSourcesAsyncDelegate<T> : IGetDownloadSourcesAsyncDelegate
         where T : ProductCore
     {
-        private IDataController<long, T> dataController;
+        private IDataController<T> dataController;
         private IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
         private IFormatDelegate<string, string> formatImagesUriDelegate;
         private IGetImageUriDelegate<T> getImageUriDelegate;
@@ -27,7 +27,7 @@ namespace GOG.Delegates.GetDownloadSources
 
         public GetProductCoreImagesDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate,
-            IDataController<long, T> dataController,
+            IDataController<T> dataController,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<T> getImageUriDelegate,
             IStatusController statusController)

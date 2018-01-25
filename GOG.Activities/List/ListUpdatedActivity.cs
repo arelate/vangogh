@@ -15,11 +15,11 @@ namespace GOG.Activities.List
     public class ListUpdatedActivity : Activity
     {
         IIndexController<long> updatedDataController;
-        IDataController<long, AccountProduct> accountProductsDataController;
+        IDataController<AccountProduct> accountProductsDataController;
 
         public ListUpdatedActivity(
             IIndexController<long> updatedDataController,
-            IDataController<long, AccountProduct> accountProductsDataController,
+            IDataController<AccountProduct> accountProductsDataController,
             IStatusController statusController) :
             base(statusController)
         {

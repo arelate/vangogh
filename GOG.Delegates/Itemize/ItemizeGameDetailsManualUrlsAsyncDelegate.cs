@@ -19,11 +19,11 @@ namespace GOG.Delegates.Itemize
     public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
         private IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
-        private IDataController<long, GameDetails> gameDetailsDataController;
+        private IDataController<GameDetails> gameDetailsDataController;
 
         public ItemizeGameDetailsManualUrlsAsyncDelegate(
             IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate,
-            IDataController<long, GameDetails> gameDetailsDataController)
+            IDataController<GameDetails> gameDetailsDataController)
         {
             this.getSettingsDataAsyncDelegate = getSettingsDataAsyncDelegate;
             this.gameDetailsDataController = gameDetailsDataController;

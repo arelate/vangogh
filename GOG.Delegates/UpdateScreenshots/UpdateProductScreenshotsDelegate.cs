@@ -20,14 +20,14 @@ namespace GOG.Delegates.UpdateScreenshots
     public class UpdateScreenshotsAsyncDelegate : IUpdateScreenshotsAsyncDelegate<Product>
     {
         private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
-        private IDataController<long, ProductScreenshots> screenshotsDataController;
+        private IDataController<ProductScreenshots> screenshotsDataController;
         private INetworkController networkController;
         private IStringExtractionController screenshotExtractionController;
 
         private IStatusController statusController;
         public UpdateScreenshotsAsyncDelegate(
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
-            IDataController<long, ProductScreenshots> screenshotsDataController,
+            IDataController<ProductScreenshots> screenshotsDataController,
             INetworkController networkController,
             IStringExtractionController screenshotExtractionController,
             IStatusController statusController)

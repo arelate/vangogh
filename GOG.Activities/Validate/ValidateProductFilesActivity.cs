@@ -28,8 +28,8 @@ namespace GOG.Activities.Validate
         private IGetFilenameDelegate productFileFilenameDelegate;
         private IFormatDelegate<string, string> formatValidationFileDelegate;
         private IFileValidationController fileValidationController;
-        private IDataController<long, ValidationResult> validationResultsDataController;
-        private IDataController<long, GameDetails> gameDetailsDataController;
+        private IDataController<ValidationResult> validationResultsDataController;
+        private IDataController<GameDetails> gameDetailsDataController;
         private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
         private IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
         private IRoutingController routingController;
@@ -39,8 +39,8 @@ namespace GOG.Activities.Validate
             IGetFilenameDelegate productFileFilenameDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
             IFileValidationController fileValidationController,
-            IDataController<long, ValidationResult> validationResultsDataController,
-            IDataController<long, GameDetails> gameDetailsDataController,
+            IDataController<ValidationResult> validationResultsDataController,
+            IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate,
             IRoutingController routingController,

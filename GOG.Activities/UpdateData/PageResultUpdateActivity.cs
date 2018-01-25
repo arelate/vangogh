@@ -29,14 +29,14 @@ namespace GOG.Activities.UpdateData
         private IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
         private IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
-        private IDataController<long, DataType> dataController;
+        private IDataController<DataType> dataController;
 
         public PageResultUpdateActivity(
             AC activityContext,
             IActivityContextController activityContextController,
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
-            IDataController<long, DataType> dataController,
+            IDataController<DataType> dataController,
             IStatusController statusController) :
             base(statusController)
         {
@@ -62,12 +62,14 @@ namespace GOG.Activities.UpdateData
             if (newProducts.Count() > 0)
             {
                 var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Save {activityContext.Item2}");
-                // set the date when new products were added to be able to filter those products as updated
-                //await activityContextCreatedIndexController.Recreate(updateAllProductsTask, activityContextController.ToString(activityContext));
-                // actually update the products
+                var current = 0;
 
                 foreach (var product in newProducts)
+                {
+                    await statusController.UpdateProgressAsync(updateTask, ++current, newProducts.Count(), product.Title);
+
                     await dataController.UpdateAsync(product, updateTask);
+                }
                 
                 await statusController.CompleteAsync(updateTask);
             }

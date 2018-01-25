@@ -18,12 +18,12 @@ namespace Delegates.EnumerateIds
         where MasterType: ProductCore
         where DetailType: ProductCore
     {
-        private IDataController<long, MasterType> masterDataController;
-        private IDataController<long, DetailType> detailDataController;
+        private IDataController<MasterType> masterDataController;
+        private IDataController<DetailType> detailDataController;
 
         public ItemizeAllMasterDetailsGapsAsyncDelegate(
-            IDataController<long, MasterType> masterDataController,
-            IDataController<long, DetailType> detailDataController)
+            IDataController<MasterType> masterDataController,
+            IDataController<DetailType> detailDataController)
         {
             this.masterDataController = masterDataController;
             this.detailDataController = detailDataController;

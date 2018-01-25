@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Convert;
+
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
 
@@ -10,26 +12,27 @@ using Interfaces.Models.RecordsTypes;
 using Interfaces.Status;
 
 using Models.ProductRecords;
+using Models.ProductCore;
 
 namespace Controllers.Records
 {
-    public class RecordsController<Type>: IRecordsController<Type>
+    public class RecordsController: IRecordsController<long>
     {
-        private IDataController<Type, ProductRecords> productRecordsController;
+        private IDataController<ProductRecords> productRecordsDataController;
         private IStatusController statusController;
 
         public RecordsController(
-            IDataController<Type, ProductRecords> productRecordsController,
+            IDataController<ProductRecords> productRecordsController,
             IStatusController statusController)
         {
-            this.productRecordsController = productRecordsController;
+            this.productRecordsDataController = productRecordsController;
             this.statusController = statusController;
         }
 
-        public async Task<DateTime> GetRecordAsync(Type id, RecordsTypes recordType, IStatus status)
+        public async Task<DateTime> GetRecordAsync(long id, RecordsTypes recordType, IStatus status)
         {
             var minRecord = DateTime.MinValue.ToUniversalTime();
-            var productRecord = await productRecordsController.GetByIdAsync(id, status);
+            var productRecord = await productRecordsDataController.GetByIdAsync(id, status);
 
             if (productRecord == null || 
                 productRecord.Records == null) return minRecord;
@@ -39,21 +42,16 @@ namespace Controllers.Records
                 minRecord;
         }
 
-        public async Task SetRecordAsync(Type id, RecordsTypes recordType, IStatus status)
+        public async Task SetRecordAsync(long id, RecordsTypes recordType, IStatus status)
         {
-            var productRecord = await productRecordsController.GetByIdAsync(id, status);
+            var productRecord = await productRecordsDataController.GetByIdAsync(id, status);
 
             if (productRecord == null)
-            {
                 productRecord = new ProductRecords
                 {
+                    Id = id,
                     Records = new Dictionary<RecordsTypes, DateTime>()
                 };
-
-                await productRecordsController.UpdateAsync(
-                    productRecord,
-                    status);
-            }
 
             var nowTimestamp = DateTime.UtcNow;
 
@@ -61,7 +59,7 @@ namespace Controllers.Records
                 productRecord.Records.Add(recordType, nowTimestamp);
             else productRecord.Records[recordType] = nowTimestamp;
 
-            await productRecordsController.UpdateAsync(productRecord, status);
+            await productRecordsDataController.UpdateAsync(productRecord, status);
         }
     }
 }

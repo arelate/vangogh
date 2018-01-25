@@ -26,8 +26,8 @@ namespace GOG.Activities.UpdateData
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
-        private IDataController<long, MasterType> masterDataController;
-        private IDataController<long, DetailType> detailDataController;
+        private IDataController<MasterType> masterDataController;
+        private IDataController<DetailType> detailDataController;
         private IIndexController<long> updatedDataController;
 
         private IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate;
@@ -46,8 +46,8 @@ namespace GOG.Activities.UpdateData
             Context context,
             IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
             IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate,
-            IDataController<long, MasterType> masterDataController,
-            IDataController<long, DetailType> detailDataController,
+            IDataController<MasterType> masterDataController,
+            IDataController<DetailType> detailDataController,
             IIndexController<long> updatedDataController,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate,

@@ -11,11 +11,11 @@ namespace Controllers.Routing
 {
     public class RoutingController : IRoutingController
     {
-        private IDataController<long, ProductRoutes> productRoutesDataController;
+        private IDataController<ProductRoutes> productRoutesDataController;
         private IStatusController statusController;
 
         public RoutingController(
-            IDataController<long, ProductRoutes> productRoutesDataController,
+            IDataController<ProductRoutes> productRoutesDataController,
             IStatusController statusController)
         {
             this.productRoutesDataController = productRoutesDataController;
