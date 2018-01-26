@@ -9,7 +9,7 @@
 	},
 	{
 		"title": "progress",
-		"content": "{{target}}. [{progressPercent}, {progressCurrent}/{progressTotal}]<containsEta?eta>"
+		"content": "[{progressPercent}, {progressCurrent}/{progressTotal}]<containsEta?eta>{{target}}."
 	},
 	{
 		"title": "eta",

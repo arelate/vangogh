@@ -79,7 +79,7 @@ namespace Controllers.Stash
             var serializedData = serializationController.Serialize(storedData);
             await storageController.PushAsync(storedDataUri, serializedData);
 
-            await statusController.CompleteAsync(saveStatus);
+            await statusController.CompleteAsync(saveStatus, false);
         }
     }
 }

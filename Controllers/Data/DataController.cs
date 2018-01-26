@@ -86,12 +86,12 @@ namespace Controllers.Data
             Func<long, Type, Task> action,
             Type data)
         {
-            var mapTask = await statusController.CreateAsync(status, taskMessage);
+            var mapTask = await statusController.CreateAsync(status, taskMessage, false);
 
             var index = convertProductToIndexDelegate.Convert(data);
             await action(index, data);
 
-            await statusController.CompleteAsync(mapTask);
+            await statusController.CompleteAsync(mapTask, false);
         }
 
         public async Task UpdateAsync(Type data, IStatus status)

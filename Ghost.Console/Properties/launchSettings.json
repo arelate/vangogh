@@ -2,7 +2,7 @@
   "profiles": {
     "ghost": {
       "commandName": "Project",
-      "commandLineArgs": "updateData-accountProducts"
+      "commandLineArgs": "updateData-products"
     }
   }
 }
