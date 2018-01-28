@@ -7,6 +7,7 @@ namespace Models.Directories
 {
     public static class Directories
     {
+<<<<<<< HEAD
         public static IDictionary<Entity, string> Data = new Dictionary<Entity, string>
         {
             { Entity.Products, "products" },
@@ -19,6 +20,18 @@ namespace Models.Directories
             { Entity.Screenshots, "screenshots" },
             { Entity.ValidationResults, "validationResults" }
         };
+=======
+        public static string Data = "data";
+        public static string RecycleBin = "recycleBin";
+        public static string Images = "images";
+        public static string Reports = "reports";
+        public static string Md5 = "md5";
+        public static string ProductFiles = "productFiles";
+        public static string Screenshots = "screenshots";
+        public static string Records = "records";
+        public static string Templates = "templates";
+    }
+>>>>>>> 031a7711257f6ae79974a8ec1a38663d42935d5c
 
         public static IDictionary<Entity, string> Base = new Dictionary<Entity, string>
         {
