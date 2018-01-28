@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Interfaces.Storage
+namespace Interfaces.Controllers.Storage
 {
     public interface IPullAsyncDelegate<Type>
     {

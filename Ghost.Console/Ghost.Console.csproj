@@ -13,6 +13,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>Latest</LangVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="data\**" />
     <EmbeddedResource Remove="data\**" />
@@ -28,6 +31,7 @@
     <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Ghost.Factories\Ghost.Factories.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,8 +10,8 @@ using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Records;
+using Interfaces.Controllers.SerializedStorage;
 
-using Interfaces.SerializedStorage;
 using Interfaces.Status;
 
 using Interfaces.Models.RecordsTypes;
@@ -65,8 +65,6 @@ namespace Controllers.Data
 
         public async Task<bool> ContainsAsync(Type data, IStatus status)
         {
-            if (data == null) return true;
-
             var index = convertProductToIndexDelegate.Convert(data);
             return await indexController.ContainsIdAsync(index, status);
         }

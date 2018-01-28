@@ -3,11 +3,10 @@ using System.IO;
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.File;
-
-using Interfaces.Storage;
+using Interfaces.Controllers.Storage;
 
 namespace Controllers.Storage {
-    public class TransactionalStorageController: ITransactionalStorageController
+    public class TransactionalStorageController: IStorageController<string>
     {
         private IStorageController<string> storageController; 
         private IFileController fileController;

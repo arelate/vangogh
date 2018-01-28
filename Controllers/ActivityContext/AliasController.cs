@@ -2,9 +2,9 @@
 
 using Interfaces.ActivityContext;
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
 
 namespace Controllers.ActivityContext
 {
@@ -17,7 +17,7 @@ namespace Controllers.ActivityContext
             this.aliases = aliases;
         }
 
-        public (Activity, Context)[] ExpandAlias(string activityContext)
+        public (Activity, Entity)[] ExpandAlias(string activityContext)
         {
             return aliases[activityContext];
         }

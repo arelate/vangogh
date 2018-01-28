@@ -14,7 +14,7 @@ using GOG.Interfaces.Delegates.GetPageResults;
 
 using Interfaces.ActivityContext;
 
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
 
 namespace GOG.Activities.UpdateData
 {

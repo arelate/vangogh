@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 using Interfaces.ActivityContext;
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
 
 namespace Controllers.ActivityContext
 {
     public class WhitelistController : IWhitelistController
     {
-        private IDictionary<Activity, Context[]> whitelist;
+        private IDictionary<Activity, Entity[]> whitelist;
 
-        public WhitelistController(IDictionary<Activity, Context[]> whitelist)
+        public WhitelistController(IDictionary<Activity, Entity[]> whitelist)
         {
             this.whitelist = whitelist;
         }

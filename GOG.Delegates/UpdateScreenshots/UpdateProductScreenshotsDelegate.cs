@@ -6,7 +6,7 @@ using Interfaces.Controllers.Network;
 
 using Interfaces.Extraction;
 using Interfaces.Status;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 using Models.ProductScreenshots;
 
@@ -19,14 +19,14 @@ namespace GOG.Delegates.UpdateScreenshots
 {
     public class UpdateScreenshotsAsyncDelegate : IUpdateScreenshotsAsyncDelegate<Product>
     {
-        private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
+        private IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
         private IDataController<ProductScreenshots> screenshotsDataController;
         private INetworkController networkController;
         private IStringExtractionController screenshotExtractionController;
 
         private IStatusController statusController;
         public UpdateScreenshotsAsyncDelegate(
-            IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
+            IGetUpdateUriDelegate<Entity> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
             INetworkController networkController,
             IStringExtractionController screenshotExtractionController,
@@ -42,7 +42,7 @@ namespace GOG.Delegates.UpdateScreenshots
         public async Task UpdateScreenshotsAsync(Product product, IStatus status)
         {
             var requestProductPageTask = await statusController.CreateAsync(status, "Request product page containing screenshots information");
-            var productPageUri = string.Format(getUpdateUriDelegate.GetUpdateUri(Context.Screenshots), product.Url);
+            var productPageUri = string.Format(getUpdateUriDelegate.GetUpdateUri(Entity.Screenshots), product.Url);
             var productPageContent = await networkController.GetResourceAsync(requestProductPageTask, productPageUri);
             await statusController.CompleteAsync(requestProductPageTask);
 

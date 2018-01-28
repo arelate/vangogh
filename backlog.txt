@@ -1,14 +1,8 @@
 Backend
 
-
-- transition from individual similar delegates to delegates dictionaries that uses the same keys (products, accountProducts, etc for getDirectory, getFilename, getPath, stash, index, data, records)
-
-- finish implementing recordsController for all index/dataControllers
-
-
+- introduce timelineContoller to track created/modified/completed (action succeeded) for an id
 
 - add distill controller to process bulk records - to distill updated information, search index
-
 
 - modify (again) console output controller to use "single line control" and output only on one line. One idea is to collapse to ellipsis all earlier steps if the content doesn't fit
 

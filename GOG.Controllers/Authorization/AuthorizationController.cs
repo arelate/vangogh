@@ -6,9 +6,9 @@ using Interfaces.Delegates.Correct;
 
 using Interfaces.Controllers.Uri;
 using Interfaces.Controllers.Network;
+using Interfaces.Controllers.Serialization;
 
 using Interfaces.Extraction;
-using Interfaces.Serialization;
 using Interfaces.Status;
 
 using Models.Uris;

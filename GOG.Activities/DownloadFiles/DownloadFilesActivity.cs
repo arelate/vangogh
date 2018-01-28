@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 using Models.ProductDownloads;
 using Models.Separators;
@@ -15,12 +15,12 @@ namespace GOG.Activities.DownloadProductFiles
 {
     public class DownloadFilesActivity : Activity
     {
-        private Context context;
+        private Entity context;
         private IDataController<ProductDownloads> productDownloadsDataController;
         private IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
 
         public DownloadFilesActivity(
-            Context context,
+            Entity context,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IStatusController statusController) :

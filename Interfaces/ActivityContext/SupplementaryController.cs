@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
 
 namespace Interfaces.ActivityContext
 {

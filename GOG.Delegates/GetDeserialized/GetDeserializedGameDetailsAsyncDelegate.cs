@@ -12,7 +12,7 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Collection;
 
-using Interfaces.Serialization;
+using Interfaces.Controllers.Serialization;
 using Interfaces.Language;
 using Interfaces.Status;
 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
 
 namespace Models.ActivityContext
 {
@@ -12,71 +12,71 @@ namespace Models.ActivityContext
         public static IDictionary<AC, AC[]> Prerequisites = new Dictionary<AC, AC[]>()
         {
             {
-                (Activity.UpdateData, Context.Any),
+                (Activity.UpdateData, Entity.Any),
                 new AC[] {
-                    (Activity.Correct, Context.Settings)
+                    (Activity.Correct, Entity.Settings)
                 }
             },
             {
-                (Activity.UpdateDownloads, Context.Any),
+                (Activity.UpdateDownloads, Entity.Any),
                 new AC[] {
-                    (Activity.Correct, Context.Settings)
+                    (Activity.Correct, Entity.Settings)
                 }
             },
             {
-                (Activity.Download, Context.Any),
+                (Activity.Download, Entity.Any),
                 new AC[]
                 {
-                    (Activity.Correct, Context.Settings)
+                    (Activity.Correct, Entity.Settings)
                 }
             },
             {
-                (Activity.Validate, Context.Any),
+                (Activity.Validate, Entity.Any),
                 new AC[]
                 {
-                    (Activity.Correct, Context.Settings)
+                    (Activity.Correct, Entity.Settings)
                 }
             },
             {
-                (Activity.Repair, Context.Any),
+                (Activity.Repair, Entity.Any),
                 new AC[]
                 {
-                    (Activity.Correct, Context.Settings)
+                    (Activity.Correct, Entity.Settings)
                 }
             },
             {
-                (Activity.Cleanup, Context.Any),
+                (Activity.Cleanup, Entity.Any),
                 new AC[]
                 {
-                    (Activity.Correct, Context.Settings)
+                    (Activity.Correct, Entity.Settings)
                 }
             },
             {
-                (Activity.UpdateData, Context.AccountProducts),
+                (Activity.UpdateData, Entity.AccountProducts),
                 new AC[]
                 {
-                    (Activity.Authorize, Context.None)
+                    (Activity.Authorize, Entity.None)
                 }
             },
             {
-                (Activity.UpdateData, Context.GameDetails),
+                (Activity.UpdateData, Entity.GameDetails),
                 new AC[]
                 {
-                    (Activity.Authorize, Context.None)
+                    (Activity.Authorize, Entity.None)
                 }
             },
             {
-                (Activity.UpdateData, Context.Wishlist),
+                (Activity.UpdateData, Entity.Wishlist),
                 new AC[]
                 {
-                    (Activity.Authorize, Context.None)
+                    (Activity.Authorize, Entity.None)
                 }
             },
             {
-                (Activity.Download, Context.ProductsFiles),
+                (Activity.Download, Entity.ProductFiles),
                 new AC[]
                 {
-                    (Activity.Authorize, Context.None)
+                    (Activity.Authorize, Entity.None)
                 }
             }
         };

@@ -1,104 +1,104 @@
 ﻿using System.Collections.Generic;
 
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 namespace Models.ActivityContext
 {
     public static partial class ActivityContext
     {
-        public static Dictionary<Activity, Context[]> Whitelist = new Dictionary<Activity, Context[]>()
+        public static Dictionary<Activity, Entity[]> Whitelist = new Dictionary<Activity, Entity[]>()
         {
             {
                 Activity.Correct,
-                new Context[]
+                new Entity[]
                 {
-                    Context.Settings
+                    Entity.Settings
                 }
             },
             {
                 Activity.Authorize,
-                new Context[]
+                new Entity[]
                 {
-                    Context.None
+                    Entity.None
                 }
             },
             {
                 Activity.UpdateData,
-                new Context[] {
-                    Context.Products,
-                    Context.AccountProducts,
-                    Context.Wishlist,
-                    Context.GameProductData,
-                    Context.ApiProducts,
-                    Context.GameDetails,
-                    Context.Screenshots,
-                    Context.Updated
+                new Entity[] {
+                    Entity.Products,
+                    Entity.AccountProducts,
+                    Entity.Wishlist,
+                    Entity.GameProductData,
+                    Entity.ApiProducts,
+                    Entity.GameDetails,
+                    Entity.Screenshots,
+                    Entity.Updated
                 }
             },
             {
                 Activity.UpdateDownloads,
-                new Context[]
+                new Entity[]
                 {
-                    Context.ProductsImages,
-                    Context.AccountProductsImages,
-                    Context.Screenshots,
-                    Context.ProductsFiles
+                    Entity.ProductImages,
+                    Entity.AccountProductImages,
+                    Entity.Screenshots,
+                    Entity.ProductFiles
                 }
             },
             {
                 Activity.Download,
-                new Context[]
+                new Entity[]
                 {
-                    Context.ProductsImages,
-                    Context.AccountProductsImages,
-                    Context.Screenshots,
-                    Context.ProductsFiles
+                    Entity.ProductImages,
+                    Entity.AccountProductImages,
+                    Entity.Screenshots,
+                    Entity.ProductFiles
                 }
             },
             {
                 Activity.Validate,
-                new Context[]
+                new Entity[]
                 {
-                    Context.ProductsFiles,
-                    Context.Data
+                    Entity.ProductFiles,
+                    Entity.Data
                 }
             },
             {
                 Activity.Repair,
-                new Context[]
+                new Entity[]
                 {
-                    Context.ProductsFiles
+                    Entity.ProductFiles
                 }
             },
             {
                 Activity.Cleanup,
-                new Context[]
+                new Entity[]
                 {
-                    Context.Directories,
-                    Context.Files,
-                    Context.Updated
+                    Entity.Directories,
+                    Entity.Files,
+                    Entity.Updated
                 }
             },
             {
                 Activity.Report,
-                new Context[]
+                new Entity[]
                 {
-                    Context.None
+                    Entity.None
                 }
             },
             {
                 Activity.List,
-                new Context[]
+                new Entity[]
                 {
-                    Context.Updated
+                    Entity.Updated
                 }
             },
             {
                 Activity.Help,
-                new Context[]
+                new Entity[]
                 {
-                    Context.None
+                    Entity.None
                 }
             }
         };

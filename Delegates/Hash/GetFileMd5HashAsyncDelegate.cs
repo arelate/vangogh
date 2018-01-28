@@ -2,7 +2,7 @@
 
 using Interfaces.Delegates.Hash;
 
-using Interfaces.Storage;
+using Interfaces.Controllers.Storage;
 using Interfaces.Status;
 
 namespace Delegates.Hash
