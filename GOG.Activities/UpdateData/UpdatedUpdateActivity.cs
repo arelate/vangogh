@@ -12,7 +12,7 @@ using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
 using A = Interfaces.ActivityDefinitions.Activity;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 using Interfaces.ActivityContext;
 
 using GOG.Models;

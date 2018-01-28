@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Network;
 
-using Interfaces.Serialization;
+using Interfaces.Controllers.Serialization;
 using Interfaces.Status;
 
 using Models.ProductCore;

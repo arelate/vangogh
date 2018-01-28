@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Json;
 using System.IO;
 
-using Interfaces.Serialization;
+using Interfaces.Controllers.Serialization;
 
 namespace Controllers.Serialization
 {

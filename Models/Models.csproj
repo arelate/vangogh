@@ -15,5 +15,6 @@
 
   <ItemGroup>
     <Folder Include="ProductRecords\" />
+    <Folder Include="Filenames\" />
   </ItemGroup>
 </Project>

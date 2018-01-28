@@ -2,7 +2,7 @@
 
 using Interfaces.Status;
 
-namespace Interfaces.SerializedStorage
+namespace Interfaces.Controllers.SerializedStorage
 {
     public interface ISerializePushAsyncDelegate
     {

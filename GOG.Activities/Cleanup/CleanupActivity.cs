@@ -10,13 +10,13 @@ using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Directory;
 
 using Interfaces.Status;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 namespace GOG.Activities.Cleanup
 {
     public class CleanupActivity : Activity
     {
-        private Context context;
+        private Entity context;
         private IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
         private IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
         private IItemizeDelegate<string, string> itemizeDetailsDelegate;
@@ -25,7 +25,7 @@ namespace GOG.Activities.Cleanup
         private IDirectoryController directoryController;
 
         public CleanupActivity(
-            Context context,
+            Entity context,
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,

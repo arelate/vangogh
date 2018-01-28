@@ -3,8 +3,7 @@ using System.IO;
 
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
-
-using Interfaces.Storage;
+using Interfaces.Controllers.Storage;
 
 namespace Controllers.Storage
 {
@@ -27,7 +26,7 @@ namespace Controllers.Storage
         {
             using (var stream = streamController.OpenWritable(uri))
             using (StreamWriter writer = new StreamWriter(stream))
-                await writer.WriteLineAsync(data.ToString());
+                await writer.WriteLineAsync(data);
         }
 
         public async Task<string> PullAsync(string uri)

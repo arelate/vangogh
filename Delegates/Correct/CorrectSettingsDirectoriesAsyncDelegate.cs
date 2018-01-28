@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Correct;
 
 using Interfaces.Models.Settings;
+using Interfaces.Models.Entities;
 
 using Interfaces.Status;
 
@@ -22,13 +23,13 @@ namespace Delegates.Correct
                     throw new System.ArgumentNullException("Cannot correct directories for null settings");
 
                 var requiredDirectories = new string[] {
-                    Directories.Data,
-                    Directories.RecycleBin,
-                    Directories.Images,
-                    Directories.Reports,
-                    Directories.Md5,
-                    Directories.ProductFiles,
-                    Directories.Screenshots
+                    Directories.Base[Entity.Data],
+                    Directories.Base[Entity.RecycleBin],
+                    Directories.Base[Entity.Images],
+                    Directories.Base[Entity.Reports],
+                    Directories.Base[Entity.Md5],
+                    Directories.Base[Entity.ProductFiles],
+                    Directories.Base[Entity.Screenshots]
                 };
 
                 foreach (var requiredDirectory in requiredDirectories)

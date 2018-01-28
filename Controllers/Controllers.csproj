@@ -17,6 +17,7 @@
   <ItemGroup>
     <Folder Include="Timeline\" />
     <Folder Include="Records\" />
+    <Folder Include="StrongTypeSerialization\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Chronology\ChronologyController.cs" />

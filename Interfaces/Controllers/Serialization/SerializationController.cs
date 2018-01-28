@@ -1,4 +1,4 @@
-﻿namespace Interfaces.Serialization
+﻿namespace Interfaces.Controllers.Serialization
 {
     public interface ISerializeDelegate<ToType>
     {

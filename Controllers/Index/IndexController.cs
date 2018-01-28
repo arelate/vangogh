@@ -55,16 +55,16 @@ namespace Controllers.Index
 
         private async Task Map(IStatus status, string taskMessage, Func<Type, Task<bool>> itemAction, Type data)
         {
-            var task = await statusController.CreateAsync(status, taskMessage);
+            var task = await statusController.CreateAsync(status, taskMessage, false);
 
             if (await itemAction(data)) 
             {
-                var saveDataTask = await statusController.CreateAsync(task, "Save modified index");
+                var saveDataTask = await statusController.CreateAsync(task, "Save modified index", false);
                 await indexesStashController.SaveAsync(status);
-                await statusController.CompleteAsync(saveDataTask);
+                await statusController.CompleteAsync(saveDataTask, false);
             }
 
-            await statusController.CompleteAsync(task);
+            await statusController.CompleteAsync(task, false);
         }
 
         public async Task DeleteAsync(Type data, IStatus status)

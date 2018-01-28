@@ -1,10 +1,10 @@
 ﻿using System;
 
-using Interfaces.Serialization;
+using Interfaces.Controllers.StrongTypeSerialization;
 
 using Models.Separators;
 
-namespace Controllers.Serialization
+namespace Controllers.StrongTypeSerialization
 {
     public class CookieSerializationController : IStrongTypeSerializationController<(string, string), string>
     {

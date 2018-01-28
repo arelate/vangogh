@@ -6,9 +6,9 @@ using Interfaces.Delegates.Hash;
 
 using Interfaces.Controllers.Hash;
 
-using Interfaces.Serialization;
+using Interfaces.Controllers.Serialization;
 using Interfaces.Status;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 using Models.Units;
 
@@ -22,9 +22,9 @@ namespace GOG.Delegates.GetPageResults
 {
     public class GetPageResultsAsyncDelegate<T> : IGetPageResultsAsyncDelegate<T> where T : PageResult
     {
-        private Context context;
-        private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
-        private IGetQueryParametersDelegate<Context> getQueryParametersDelegate;
+        private Entity context;
+        private IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
+        private IGetQueryParametersDelegate<Entity> getQueryParametersDelegate;
         private IRequestPageAsyncDelegate requestPageAsyncDelegate;
         private IGetHashAsyncDelegate<string> getStringHashDelegate;
         private IStoredHashController storedHashController;
@@ -35,9 +35,9 @@ namespace GOG.Delegates.GetPageResults
         private IDictionary<string, string> requestParameters;
 
         public GetPageResultsAsyncDelegate(
-            Context context,
-            IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
-            IGetQueryParametersDelegate<Context> getQueryParametersDelegate,
+            Entity context,
+            IGetUpdateUriDelegate<Entity> getUpdateUriDelegate,
+            IGetQueryParametersDelegate<Entity> getQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
             IGetHashAsyncDelegate<string> getStringHashDelegate,
             IStoredHashController storedHashController,

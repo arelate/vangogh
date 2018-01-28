@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
@@ -8,9 +7,9 @@ using Interfaces.Status;
 
 namespace Interfaces.Controllers.Data
 {
-    public interface IGetByIdAsyncDelegate<IdentityType, ReturnType>
+    public interface IGetByIdAsyncDelegate<IdentityType, DataType>
     {
-        Task<ReturnType> GetByIdAsync(IdentityType id, IStatus status);
+        Task<DataType> GetByIdAsync(IdentityType id, IStatus status);
     }
 
     public interface IEnumerateKeysAsyncDelegate<T>

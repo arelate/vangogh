@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.Controllers.Network;
 
 using Interfaces.Extraction;
-using Interfaces.Serialization;
+using Interfaces.Controllers.Serialization;
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDeserialized;

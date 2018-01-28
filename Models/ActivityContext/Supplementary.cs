@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
 
 namespace Models.ActivityContext
 {
@@ -11,7 +11,7 @@ namespace Models.ActivityContext
     {
         public static IList<AC> Supplementary = new List<AC>()
         {
-            (Activity.Report, Context.None)
+            (Activity.Report, Entity.None)
         };
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Interfaces.Serialization
+﻿namespace Interfaces.Controllers.StrongTypeSerialization
 {
     public interface IStrongTypeSerializeDelegate<FromType, ToType>
     {

@@ -32,6 +32,7 @@ using Controllers.Uri;
 using Controllers.Network;
 using Controllers.Language;
 using Controllers.Serialization;
+using Controllers.StrongTypeSerialization;
 using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
@@ -56,7 +57,7 @@ using Controllers.Records;
 using Interfaces.Activity;
 using Interfaces.Extraction;
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 using Interfaces.Status;
 using Interfaces.Template;
 
@@ -102,6 +103,8 @@ using Models.Settings;
 using Models.Template;
 using Models.ProductRecords;
 
+using Ghost.Factories.Controllers;
+     
 #endregion
 
 namespace Ghost.Console
@@ -116,28 +119,28 @@ namespace Ghost.Console
 
             var getTemplatesDirectoryDelegate = new GetRelativeDirectoryDelegate("templates");
 
-            var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data, getEmptyDirectoryDelegate);
+            var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Data], getEmptyDirectoryDelegate);
 
-            var getAccountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, getDataDirectoryDelegate);
-            var getApiProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ApiProducts, getDataDirectoryDelegate);
-            var getGameDetailsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameDetails, getDataDirectoryDelegate);
-            var getGameProductDataDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameProductData, getDataDirectoryDelegate);
-            var getProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.Products, getDataDirectoryDelegate);
-            var getProductDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductDownloads, getDataDirectoryDelegate);
-            var getProductRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductRoutes, getDataDirectoryDelegate);
-            var getProductScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ProductScreenshots, getDataDirectoryDelegate);
-            var getValidationResultsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.ValidationResults, getDataDirectoryDelegate);
+            var getAccountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.AccountProducts], getDataDirectoryDelegate);
+            var getApiProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ApiProducts], getDataDirectoryDelegate);
+            var getGameDetailsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.GameDetails], getDataDirectoryDelegate);
+            var getGameProductDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.GameProductData], getDataDirectoryDelegate);
+            var getProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.Products], getDataDirectoryDelegate);
+            var getProductDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductDownloads], getDataDirectoryDelegate);
+            var getProductRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductRoutes], getDataDirectoryDelegate);
+            var getProductScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.Screenshots], getDataDirectoryDelegate);
+            var getValidationResultsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ValidationResults], getDataDirectoryDelegate);
 
-            var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.RecycleBin, getDataDirectoryDelegate);
-            var getImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Images, getDataDirectoryDelegate);
-            var getReportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Reports, getDataDirectoryDelegate);
-            var getValidationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Md5, getDataDirectoryDelegate);
-            var getProductFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductFiles, getDataDirectoryDelegate);
-            var getScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Screenshots, getDataDirectoryDelegate);
+            var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.RecycleBin], getDataDirectoryDelegate);
+            var getImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Images], getDataDirectoryDelegate);
+            var getReportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Reports], getDataDirectoryDelegate);
+            var getValidationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Md5], getDataDirectoryDelegate);
+            var getProductFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.ProductFiles], getDataDirectoryDelegate);
+            var getScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Screenshots], getDataDirectoryDelegate);
 
-            var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Records, getDataDirectoryDelegate);
+            var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Records], getDataDirectoryDelegate);
 
-            var getAccountProductRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, getRecordsDirectoryDelegate);
+            var getAccountProductRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.AccountProducts], getRecordsDirectoryDelegate);
 
             var getProductFilesDirectoryDelegate = new GetUriDirectoryDelegate(getProductFilesBaseDirectoryDelegate);
 
@@ -647,15 +650,26 @@ namespace Ghost.Console
 
             // data controllers
 
-            var productsDataController = new DataController<Product>(
-                productsIndexController,
-                serializedTransactionalStorageController,
-                convertProductToIndexDelegate,
+            var dataControllerFactory = new DataControllerFactory(
                 collectionController,
-                getProductsPathDelegate,
+                serializationController,
+                storageController,
+                serializedTransactionalStorageController,
                 recycleDelegate,
-                null,
+                getDataDirectoryDelegate,
+                getJsonFilenameDelegate,
                 statusController);
+
+            var productsDataController = dataControllerFactory.GetDataController<Product>();
+            //var productsDataController = new DataController<Product>(
+                //productsIndexController,
+                //serializedTransactionalStorageController,
+                //convertProductToIndexDelegate,
+                //collectionController,
+                //getProductsPathDelegate,
+                //recycleDelegate,
+                //null,
+                //statusController);
 
             var accountProductsDataController = new DataController<AccountProduct>(
                 accountProductsIndexController,
@@ -793,7 +807,7 @@ namespace Ghost.Console
             var getQueryParametersForProductContextDelegate = new GetQueryParametersForProductContextDelegate();
 
             var getProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<ProductsPageResult>(
-                Context.Products,
+                Entity.Products,
                 getProductUpdateUriByContextDelegate,
                 getQueryParametersForProductContextDelegate,
                 requestPageAsyncDelegate,
@@ -805,7 +819,7 @@ namespace Ghost.Console
             var itemizeProductsPageResultProductsDelegate = new ItemizeProductsPageResultProductsDelegate();
 
             var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
-                    (Activity.UpdateData, Context.Products),
+                    (Activity.UpdateData, Entity.Products),
                     activityContextController,
                     getProductsPageResultsAsyncDelegate,
                     itemizeProductsPageResultProductsDelegate,
@@ -814,7 +828,7 @@ namespace Ghost.Console
                     statusController);
 
             var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
-                Context.AccountProducts,
+                Entity.AccountProducts,
                 getProductUpdateUriByContextDelegate,
                 getQueryParametersForProductContextDelegate,
                 requestPageAsyncDelegate,
@@ -826,7 +840,7 @@ namespace Ghost.Console
             var itemizeAccountProductsPageResultProductsDelegate = new ItemizeAccountProductsPageResultProductsDelegate();
 
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
-                    (Activity.UpdateData, Context.AccountProducts),
+                    (Activity.UpdateData, Entity.AccountProducts),
                     activityContextController,
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,
@@ -888,7 +902,7 @@ namespace Ghost.Console
                 updatedController);
 
             var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
-                Context.GameProductData,
+                Entity.GameProductData,
                 getProductUpdateUriByContextDelegate,
                 itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
                 productsDataController,
@@ -912,7 +926,7 @@ namespace Ghost.Console
                 updatedController);
 
             var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
-                Context.ApiProducts,
+                Entity.ApiProducts,
                 getProductUpdateUriByContextDelegate,
                 itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
                 productsDataController,
@@ -966,7 +980,7 @@ namespace Ghost.Console
                 updatedController);
 
             var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
-                Context.GameDetails,
+                Entity.GameDetails,
                 getProductUpdateUriByContextDelegate,
                 itemizeAllUserRequestedOrDefaultAsyncDelegate,
                 accountProductsDataController,
@@ -1055,7 +1069,7 @@ namespace Ghost.Console
             // schedule download controllers
 
             var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
-                Context.ProductsImages,
+                Entity.ProductImages,
                 getProductsImagesDownloadSourcesAsyncDelegate,
                 getImagesDirectoryDelegate,
                 fileController,
@@ -1065,7 +1079,7 @@ namespace Ghost.Console
                 statusController);
 
             var updateAccountProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
-                Context.AccountProductsImages,
+                Entity.AccountProductImages,
                 getAccountProductsImagesDownloadSourcesAsyncDelegate,
                 getImagesDirectoryDelegate,
                 fileController,
@@ -1075,7 +1089,7 @@ namespace Ghost.Console
                 statusController);
 
             var updateScreenshotsDownloadsActivity = new UpdateDownloadsActivity(
-                Context.Screenshots,
+                Entity.Screenshots,
                 getScreenshotsDownloadSourcesAsyncDelegate,
                 getScreenshotsDirectoryDelegate,
                 fileController,
@@ -1085,7 +1099,7 @@ namespace Ghost.Console
                 statusController);
 
             var updateProductFilesDownloadsActivity = new UpdateDownloadsActivity(
-                Context.ProductsFiles,
+                Entity.ProductFiles,
                 getManualUrlDownloadSourcesAsyncDelegate,
                 getProductFilesDirectoryDelegate,
                 fileController,
@@ -1128,25 +1142,25 @@ namespace Ghost.Console
             var downloadProductImageAsyncDelegate = new DownloadProductImageAsyncDelegate(downloadFromUriAsyncDelegate);
 
             var productsImagesDownloadActivity = new DownloadFilesActivity(
-                Context.ProductsImages,
+                Entity.ProductImages,
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
             var accountProductsImagesDownloadActivity = new DownloadFilesActivity(
-                Context.AccountProductsImages,
+                Entity.AccountProductImages,
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
             var screenshotsDownloadActivity = new DownloadFilesActivity(
-                Context.Screenshots,
+                Entity.Screenshots,
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
             var productFilesDownloadActivity = new DownloadFilesActivity(
-                Context.ProductsFiles,
+                Entity.ProductFiles,
                 productDownloadsDataController,
                 downloadManualUrlFileAsyncDelegate,
                 statusController);
@@ -1213,7 +1227,7 @@ namespace Ghost.Console
             var itemizeDirectoryFilesDelegate = new ItemizeDirectoryFilesDelegate(directoryController);
 
             var directoryCleanupActivity = new CleanupActivity(
-                Context.Directories,
+                Entity.Directories,
                 itemizeAllGameDetailsDirectoriesAsyncDelegate, // expected items (directories for gameDetails)
                 itemizeAllProductFilesDirectoriesAsyncDelegate, // actual items (directories in productFiles)
                 itemizeDirectoryFilesDelegate, // detailed items (files in directory)
@@ -1240,7 +1254,7 @@ namespace Ghost.Console
             var itemizePassthroughDelegate = new ItemizePassthroughDelegate();
 
             var fileCleanupActivity = new CleanupActivity(
-                Context.Files,
+                Entity.Files,
                 itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate, // expected items (files for updated gameDetails)
                 itemizeAllUpdatedProductFilesAsyncDelegate, // actual items (updated product files)
                 itemizePassthroughDelegate, // detailed items (passthrough)
@@ -1293,35 +1307,35 @@ namespace Ghost.Console
 
             #region Activity Context To Activity Controllers Mapping
 
-            var activityContextToActivityControllerMap = new Dictionary<(Activity, Context), IActivity>()
+            var activityContextToActivityControllerMap = new Dictionary<(Activity, Entity), IActivity>()
             {
-                { (Activity.Correct, Context.Settings), correctSettingsActivity },
-                { (Activity.Authorize, Context.None), authorizeActivity },
-                { (Activity.UpdateData, Context.Products), productsUpdateActivity },
-                { (Activity.UpdateData, Context.AccountProducts), accountProductsUpdateActivity },
-                { (Activity.UpdateData, Context.Updated), updatedUpdateActivity },
-                { (Activity.UpdateData, Context.Wishlist), wishlistedUpdateActivity },
-                { (Activity.UpdateData, Context.GameProductData), gameProductDataUpdateActivity },
-                { (Activity.UpdateData, Context.ApiProducts), apiProductUpdateActivity },
-                { (Activity.UpdateData, Context.GameDetails), gameDetailsUpdateActivity },
-                { (Activity.UpdateData, Context.Screenshots), updateScreenshotsActivity },
-                { (Activity.UpdateDownloads, Context.ProductsImages), updateProductsImagesDownloadsActivity },
-                { (Activity.UpdateDownloads, Context.AccountProductsImages), updateAccountProductsImagesDownloadsActivity },
-                { (Activity.UpdateDownloads, Context.Screenshots), updateScreenshotsDownloadsActivity },
-                { (Activity.UpdateDownloads, Context.ProductsFiles), updateProductFilesDownloadsActivity },
-                { (Activity.Download, Context.ProductsImages), productsImagesDownloadActivity },
-                { (Activity.Download, Context.AccountProductsImages), accountProductsImagesDownloadActivity },
-                { (Activity.Download, Context.Screenshots), screenshotsDownloadActivity },
-                { (Activity.Download, Context.ProductsFiles), productFilesDownloadActivity },
-                { (Activity.Validate, Context.ProductsFiles), validateProductFilesActivity },
-                { (Activity.Validate, Context.Data), validateDataActivity },
-                { (Activity.Repair, Context.ProductsFiles), repairActivity },
-                { (Activity.Cleanup, Context.Directories), directoryCleanupActivity },
-                { (Activity.Cleanup, Context.Files), fileCleanupActivity },
-                { (Activity.Cleanup, Context.Updated), cleanupUpdatedActivity },
-                { (Activity.Report, Context.None), reportActivity },
-                { (Activity.List, Context.Updated), listUpdatedActivity },
-                { (Activity.Help, Context.None), helpActivity }
+                { (Activity.Correct, Entity.Settings), correctSettingsActivity },
+                { (Activity.Authorize, Entity.None), authorizeActivity },
+                { (Activity.UpdateData, Entity.Products), productsUpdateActivity },
+                { (Activity.UpdateData, Entity.AccountProducts), accountProductsUpdateActivity },
+                { (Activity.UpdateData, Entity.Updated), updatedUpdateActivity },
+                { (Activity.UpdateData, Entity.Wishlist), wishlistedUpdateActivity },
+                { (Activity.UpdateData, Entity.GameProductData), gameProductDataUpdateActivity },
+                { (Activity.UpdateData, Entity.ApiProducts), apiProductUpdateActivity },
+                { (Activity.UpdateData, Entity.GameDetails), gameDetailsUpdateActivity },
+                { (Activity.UpdateData, Entity.Screenshots), updateScreenshotsActivity },
+                { (Activity.UpdateDownloads, Entity.ProductImages), updateProductsImagesDownloadsActivity },
+                { (Activity.UpdateDownloads, Entity.AccountProductImages), updateAccountProductsImagesDownloadsActivity },
+                { (Activity.UpdateDownloads, Entity.Screenshots), updateScreenshotsDownloadsActivity },
+                { (Activity.UpdateDownloads, Entity.ProductFiles), updateProductFilesDownloadsActivity },
+                { (Activity.Download, Entity.ProductImages), productsImagesDownloadActivity },
+                { (Activity.Download, Entity.AccountProductImages), accountProductsImagesDownloadActivity },
+                { (Activity.Download, Entity.Screenshots), screenshotsDownloadActivity },
+                { (Activity.Download, Entity.ProductFiles), productFilesDownloadActivity },
+                { (Activity.Validate, Entity.ProductFiles), validateProductFilesActivity },
+                { (Activity.Validate, Entity.Data), validateDataActivity },
+                { (Activity.Repair, Entity.ProductFiles), repairActivity },
+                { (Activity.Cleanup, Entity.Directories), directoryCleanupActivity },
+                { (Activity.Cleanup, Entity.Files), fileCleanupActivity },
+                { (Activity.Cleanup, Entity.Updated), cleanupUpdatedActivity },
+                { (Activity.Report, Entity.None), reportActivity },
+                { (Activity.List, Entity.Updated), listUpdatedActivity },
+                { (Activity.Help, Entity.None), helpActivity }
             };
 
 

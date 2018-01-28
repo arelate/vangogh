@@ -2,81 +2,81 @@
 using System.Collections.Generic;
 
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 namespace Models.ActivityContext
 {
     public static partial class ActivityContext
     {
-        public static Dictionary<string, (Activity, Context)[]> Aliases =
-            new Dictionary<string, (Activity, Context)[]>()
+        public static Dictionary<string, (Activity, Entity)[]> Aliases =
+            new Dictionary<string, (Activity, Entity)[]>()
             {
                 {
                     "updateData",
-                    new (Activity,Context)[]
+                new (Activity,Entity)[]
                     {
-                        (Activity.UpdateData, Context.Products),
-                        (Activity.UpdateData, Context.AccountProducts),
-                        (Activity.UpdateData, Context.Updated),
-                        (Activity.UpdateData, Context.Wishlist),
-                        (Activity.UpdateData, Context.GameProductData),
-                        (Activity.UpdateData, Context.ApiProducts),
-                        (Activity.UpdateData, Context.GameDetails),
-                        (Activity.UpdateData, Context.Screenshots)
+                    (Activity.UpdateData, Entity.Products),
+                    (Activity.UpdateData, Entity.AccountProducts),
+                    (Activity.UpdateData, Entity.Updated),
+                    (Activity.UpdateData, Entity.Wishlist),
+                    (Activity.UpdateData, Entity.GameProductData),
+                    (Activity.UpdateData, Entity.ApiProducts),
+                    (Activity.UpdateData, Entity.GameDetails),
+                    (Activity.UpdateData, Entity.Screenshots)
                     }
                 },
                 {
                     "updateDownloads",
-                    new (Activity,Context)[]
+                new (Activity,Entity)[]
                     {
-                        (Activity.UpdateDownloads, Context.ProductsImages),
-                        (Activity.UpdateDownloads, Context.AccountProductsImages),
-                        (Activity.UpdateDownloads, Context.Screenshots),
-                        (Activity.UpdateDownloads, Context.ProductsFiles)
+                    (Activity.UpdateDownloads, Entity.ProductImages),
+                    (Activity.UpdateDownloads, Entity.AccountProductImages),
+                    (Activity.UpdateDownloads, Entity.Screenshots),
+                    (Activity.UpdateDownloads, Entity.ProductFiles)
                     }
                 },
                 {
                     "download",
-                    new (Activity,Context)[]
+                new (Activity,Entity)[]
                     {
-                        (Activity.Download, Context.ProductsImages),
-                        (Activity.Download, Context.AccountProductsImages),
-                        (Activity.Download, Context.Screenshots),
-                        (Activity.Download, Context.ProductsFiles)
+                    (Activity.Download, Entity.ProductImages),
+                    (Activity.Download, Entity.AccountProductImages),
+                    (Activity.Download, Entity.Screenshots),
+                    (Activity.Download, Entity.ProductFiles)
                     }
                 },
                 {
                     "sync",
-                    new (Activity, Context)[]
+                new (Activity, Entity)[]
                     {
-                        (Activity.UpdateData, Context.Products),
-                        (Activity.UpdateData, Context.AccountProducts),
-                        (Activity.UpdateData, Context.Updated),
-                        (Activity.UpdateData, Context.Wishlist),
-                        (Activity.UpdateData, Context.GameProductData),
-                        (Activity.UpdateData, Context.ApiProducts),
-                        (Activity.UpdateData, Context.GameDetails),
-                        (Activity.UpdateData, Context.Screenshots),
-                        (Activity.UpdateDownloads, Context.ProductsImages),
-                        (Activity.UpdateDownloads, Context.AccountProductsImages),
-                        (Activity.UpdateDownloads, Context.Screenshots),
-                        (Activity.UpdateDownloads, Context.ProductsFiles),
-                        (Activity.Download, Context.ProductsImages),
-                        (Activity.Download, Context.AccountProductsImages),
-                        (Activity.Download, Context.Screenshots),
-                        (Activity.Download, Context.ProductsFiles),
-                        (Activity.Validate, Context.ProductsFiles),
-                        (Activity.Repair, Context.ProductsFiles),
-                        (Activity.Cleanup, Context.Directories),
-                        (Activity.Cleanup, Context.Files),
-                        (Activity.Cleanup, Context.Updated)
+                    (Activity.UpdateData, Entity.Products),
+                    (Activity.UpdateData, Entity.AccountProducts),
+                        (Activity.UpdateData, Entity.Updated),
+                        (Activity.UpdateData, Entity.Wishlist),
+                        (Activity.UpdateData, Entity.GameProductData),
+                        (Activity.UpdateData, Entity.ApiProducts),
+                        (Activity.UpdateData, Entity.GameDetails),
+                        (Activity.UpdateData, Entity.Screenshots),
+                        (Activity.UpdateDownloads, Entity.ProductImages),
+                        (Activity.UpdateDownloads, Entity.AccountProductImages),
+                        (Activity.UpdateDownloads, Entity.Screenshots),
+                        (Activity.UpdateDownloads, Entity.ProductFiles),
+                        (Activity.Download, Entity.ProductImages),
+                        (Activity.Download, Entity.AccountProductImages),
+                        (Activity.Download, Entity.Screenshots),
+                        (Activity.Download, Entity.ProductFiles),
+                        (Activity.Validate, Entity.ProductFiles),
+                        (Activity.Repair, Entity.ProductFiles),
+                        (Activity.Cleanup, Entity.Directories),
+                        (Activity.Cleanup, Entity.Files),
+                        (Activity.Cleanup, Entity.Updated)
                     }
                 },
                 {
                     "?",
-                    new (Activity, Context)[]
+                new (Activity, Entity)[]
                     {
-                        (Activity.Help, Context.None)
+                        (Activity.Help, Entity.None)
                     }
                 }
             };

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 using Interfaces.ActivityContext;
 using Interfaces.ActivityDefinitions;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 using Models.Separators;
 
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.ContextDefinitions.Context>;
+using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
 
 namespace Controllers.ActivityContext
 {
@@ -36,7 +36,7 @@ namespace Controllers.ActivityContext
             if (string.IsNullOrEmpty(activityContext))
                 throw new ArgumentNullException("Cannot parse empty activity-context");
 
-            var context = Context.None;
+            var context = Entity.None;
 
             var parts = activityContext.Split(
                 new string[] { Separators.ActivityContext },
@@ -44,7 +44,7 @@ namespace Controllers.ActivityContext
 
             var activity = (Activity)Enum.Parse(typeof(Activity), parts[0], true);
             if (parts.Length > 1)
-                context = (Context)Enum.Parse(typeof(Context), parts[1], true);
+                context = (Entity)Enum.Parse(typeof(Entity), parts[1], true);
 
             return (activity, context);
         }
@@ -56,7 +56,7 @@ namespace Controllers.ActivityContext
             // if nothing was requested - show help
             if (args.Length < 1)
             {
-                activityContextQueue.Add((Activity.Help, Context.None));
+                activityContextQueue.Add((Activity.Help, Entity.None));
                 return activityContextQueue;
             }
 
@@ -109,7 +109,7 @@ namespace Controllers.ActivityContext
             var context = activityContext.Item2;
 
             return
-                context != Context.None ?
+                context != Entity.None ?
                 activityString + Separators.ActivityContext + context :
                 activityString;
         }

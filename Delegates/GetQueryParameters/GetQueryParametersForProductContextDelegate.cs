@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.GetQueryParameters;
 
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 namespace Delegates.GetQueryParameters
 {
-    public class GetQueryParametersForProductContextDelegate : IGetQueryParametersDelegate<Context>
+    public class GetQueryParametersForProductContextDelegate : IGetQueryParametersDelegate<Entity>
     {
-        public IDictionary<string, string> GetQueryParameters(Context context)
+        public IDictionary<string, string> GetQueryParameters(Entity context)
         {
             switch (context)
             {
-                case Context.Products:
+                case Entity.Products:
                     return Models.QueryParameters.QueryParametersCollections.GamesAjaxFiltered;
-                case Context.AccountProducts:
+                case Entity.AccountProducts:
                     return Models.QueryParameters.QueryParametersCollections.AccountGetFilteredProducts;
                 default:
                     throw new NotImplementedException();

@@ -9,7 +9,7 @@ using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 using GOG.Interfaces.Delegates.GetUpdateIdentity;
 using GOG.Interfaces.Delegates.FillGaps;
@@ -37,14 +37,14 @@ namespace GOG.Activities.UpdateData
         private IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate;
         private IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
-        private Context context;
-        private IGetUpdateUriDelegate<Context> getUpdateUriDelegate;
+        private Entity context;
+        private IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
 
         private string updateTypeDescription;
 
         public MasterDetailProductUpdateActivity(
-            Context context,
-            IGetUpdateUriDelegate<Context> getUpdateUriDelegate,
+            Entity context,
+            IGetUpdateUriDelegate<Entity> getUpdateUriDelegate,
             IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate,
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,

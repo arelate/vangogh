@@ -8,7 +8,7 @@ using Interfaces.Controllers.Data;
 using Interfaces.Controllers.File;
 
 using Interfaces.Status;
-using Interfaces.ContextDefinitions;
+using Interfaces.Models.Entities;
 
 using Models.ProductCore;
 using Models.ProductDownloads;
@@ -21,7 +21,7 @@ namespace GOG.Activities.UpdateDownloads
 {
     public class UpdateDownloadsActivity : Activity
     {
-        private Context context;
+        private Entity context;
 
         private IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
         private IGetDirectoryDelegate getDirectoryDelegate;
@@ -31,7 +31,7 @@ namespace GOG.Activities.UpdateDownloads
         private IDataController<Product> productsDataController;
 
         public UpdateDownloadsActivity(
-            Context context,
+            Entity context,
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
