@@ -58,6 +58,8 @@ namespace Ghost.Factories.Controllers
         private IDictionary<Entity, IGetDirectoryDelegate> getIndexDirectoryDelegates;
         private IDictionary<Entity, IGetPathDelegate> getIndexPathDelegates;
 
+        private IDictionary<Type, Entity> typeToEntityMapping;
+
         private IGetFilenameDelegate getIndexFilenameDelegate;
 
         public DataControllerFactory(
@@ -89,11 +91,18 @@ namespace Ghost.Factories.Controllers
             getIndexPathDelegates = new Dictionary<Entity, IGetPathDelegate>(dataEntitiesCount);
 
             getIndexFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Base[Entity.Index], getJsonFilenameDelegate);
+
+            typeToEntityMapping = new Dictionary<Type, Entity>
+            {
+                { typeof(Product), Entity.Products }
+            };
         }
 
         public Entity GetEntityFromType<Type>() where Type: ProductCore
         {
-            return (Entity)Enum.Parse(typeof(Entity), typeof(Type).ToString());
+            //var typeString = typeof(Type).ToString();
+            //return (Entity)Enum.Parse(typeof(Entity), titleParts[titleParts.Length - 1]);
+            return typeToEntityMapping[typeof(Type)];
         }
 
         public IGetDirectoryDelegate GetDirectoryDelegate(Entity entity)

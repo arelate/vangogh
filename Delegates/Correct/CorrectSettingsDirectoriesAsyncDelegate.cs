@@ -25,7 +25,8 @@ namespace Delegates.Correct
                 var requiredDirectories = new string[] {
                     Directories.Base[Entity.Data],
                     Directories.Base[Entity.RecycleBin],
-                    Directories.Base[Entity.Images],
+                    Directories.Base[Entity.ProductImages],
+                    Directories.Base[Entity.AccountProductImages],
                     Directories.Base[Entity.Reports],
                     Directories.Base[Entity.Md5],
                     Directories.Base[Entity.ProductFiles],

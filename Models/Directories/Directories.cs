@@ -16,8 +16,8 @@ namespace Models.Directories
             { Entity.ApiProducts, "apiProducts" },
             { Entity.ProductDownloads, "productDownloads" },
             { Entity.ProductRoutes, "productRoutes" },
-            { Entity.Screenshots, "screenshots" },
-            { Entity.ValidationResults, "validationResults" }
+            { Entity.ValidationResults, "validationResults" },
+            { Entity.ProductScreenshots, "productScreenshots" }
         };
 
         public static IDictionary<Entity, string> Base = new Dictionary<Entity, string>
@@ -26,10 +26,13 @@ namespace Models.Directories
             { Entity.RecycleBin, "recycleBin" },
             { Entity.ProductImages, "productsImages" },
             { Entity.AccountProductImages, "accountProductsImages" },
+            { Entity.Screenshots, "screenshots" },
             { Entity.Reports, "reports" },
             { Entity.Md5, "md5" },
             { Entity.ProductFiles, "productFiles"},
-            { Entity.Records, "records" }
+            { Entity.Records, "records" },
+            { Entity.Templates, "templates" }
+
         };
     }
 }

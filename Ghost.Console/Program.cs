@@ -128,11 +128,12 @@ namespace Ghost.Console
             var getProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.Products], getDataDirectoryDelegate);
             var getProductDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductDownloads], getDataDirectoryDelegate);
             var getProductRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductRoutes], getDataDirectoryDelegate);
-            var getProductScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.Screenshots], getDataDirectoryDelegate);
+            var getProductScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductScreenshots], getDataDirectoryDelegate);
             var getValidationResultsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ValidationResults], getDataDirectoryDelegate);
 
             var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.RecycleBin], getDataDirectoryDelegate);
-            var getImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Images], getDataDirectoryDelegate);
+            var getProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.ProductImages], getDataDirectoryDelegate);
+            var getAccountProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.AccountProductImages], getDataDirectoryDelegate);
             var getReportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Reports], getDataDirectoryDelegate);
             var getValidationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Md5], getDataDirectoryDelegate);
             var getProductFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.ProductFiles], getDataDirectoryDelegate);
@@ -1123,7 +1124,7 @@ namespace Ghost.Console
             var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Entity.ProductImages,
                 getProductsImagesDownloadSourcesAsyncDelegate,
-                getImagesDirectoryDelegate,
+                getProductImagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
@@ -1133,7 +1134,7 @@ namespace Ghost.Console
             var updateAccountProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Entity.AccountProductImages,
                 getAccountProductsImagesDownloadSourcesAsyncDelegate,
-                getImagesDirectoryDelegate,
+                getAccountProductImagesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
