@@ -117,7 +117,7 @@ namespace Ghost.Console
 
             var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty);
 
-            var getTemplatesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Templates);
+            var getTemplatesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Templates]);
 
             var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Data], getEmptyDirectoryDelegate);
 
@@ -140,13 +140,9 @@ namespace Ghost.Console
 
             var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Records], getDataDirectoryDelegate);
 
-<<<<<<< HEAD
             var getAccountProductRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.AccountProducts], getRecordsDirectoryDelegate);
-=======
-            var getProductRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.Products, getRecordsDirectoryDelegate);
-            var getAccountProductRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.AccountProducts, getRecordsDirectoryDelegate);
-            var getGameDetailsRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(DataDirectories.GameDetails, getRecordsDirectoryDelegate);
->>>>>>> 031a7711257f6ae79974a8ec1a38663d42935d5c
+            var getProductRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.Products], getRecordsDirectoryDelegate);
+            var getGameDetailsRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.GameDetails], getRecordsDirectoryDelegate);
 
             var getProductFilesDirectoryDelegate = new GetUriDirectoryDelegate(getProductFilesBaseDirectoryDelegate);
 
@@ -155,17 +151,17 @@ namespace Ghost.Console
             #region Delegates.GetFilename
 
             var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
-            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Hashes, getJsonFilenameDelegate);
+            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
 
-            var getAppTemplateFilenameDelegate = new GetFixedFilenameDelegate(Filenames.AppTemplates, getJsonFilenameDelegate);
-            var gerReportTemplateFilenameDelegate = new GetFixedFilenameDelegate(Filenames.ReportTemplates, getJsonFilenameDelegate);
-            var getCookiesFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Cookies, getJsonFilenameDelegate);
-            var getSettingsFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Settings, getJsonFilenameDelegate);
+            var getAppTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
+            var gerReportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
+            var getCookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
+            var getSettingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
 
-            var getIndexFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Index, getJsonFilenameDelegate);
+            var getIndexFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Base[Entity.Index], getJsonFilenameDelegate);
 
-            var getWishlistedFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Wishlisted, getJsonFilenameDelegate);
-            var getUpdatedFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Updated, getJsonFilenameDelegate);
+            var getWishlistedFilenameDelegate = new GetFixedFilenameDelegate("wishlisted", getJsonFilenameDelegate);
+            var getUpdatedFilenameDelegate = new GetFixedFilenameDelegate("updated", getJsonFilenameDelegate);
 
             var getUriFilenameDelegate = new GetUriFilenameDelegate();
             var getReportFilenameDelegate = new GetReportFilenameDelegate();
@@ -712,12 +708,8 @@ namespace Ghost.Console
                 storageController,
                 serializedTransactionalStorageController,
                 recycleDelegate,
-<<<<<<< HEAD
                 getDataDirectoryDelegate,
                 getJsonFilenameDelegate,
-=======
-                productsRecordsController,
->>>>>>> 031a7711257f6ae79974a8ec1a38663d42935d5c
                 statusController);
 
             var productsDataController = dataControllerFactory.GetDataController<Product>();

@@ -15,7 +15,7 @@
         ProductRoutes,
         Screenshots,
         ValidationResults,
-        // base direcotries
+        // base directories
         Data,
         RecycleBin,
         Images,
@@ -25,6 +25,7 @@
         AccountProductImages,
         ProductFiles,
         Records,
+        Templates,
         // base filenames
         Index,
         Wishlist,
