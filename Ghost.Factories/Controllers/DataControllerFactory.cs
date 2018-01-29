@@ -94,14 +94,13 @@ namespace Ghost.Factories.Controllers
 
             typeToEntityMapping = new Dictionary<Type, Entity>
             {
-                { typeof(Product), Entity.Products }
+                { typeof(Product), Entity.Products },
+                { typeof(AccountProduct), Entity.AccountProducts }
             };
         }
 
         public Entity GetEntityFromType<Type>() where Type: ProductCore
         {
-            //var typeString = typeof(Type).ToString();
-            //return (Entity)Enum.Parse(typeof(Entity), titleParts[titleParts.Length - 1]);
             return typeToEntityMapping[typeof(Type)];
         }
 

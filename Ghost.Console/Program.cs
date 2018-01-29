@@ -121,11 +121,11 @@ namespace Ghost.Console
 
             var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Data], getEmptyDirectoryDelegate);
 
-            var getAccountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.AccountProducts], getDataDirectoryDelegate);
+            //var getAccountProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.AccountProducts], getDataDirectoryDelegate);
             var getApiProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ApiProducts], getDataDirectoryDelegate);
             var getGameDetailsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.GameDetails], getDataDirectoryDelegate);
             var getGameProductDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.GameProductData], getDataDirectoryDelegate);
-            var getProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.Products], getDataDirectoryDelegate);
+            //var getProductsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.Products], getDataDirectoryDelegate);
             var getProductDownloadsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductDownloads], getDataDirectoryDelegate);
             var getProductRoutesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductRoutes], getDataDirectoryDelegate);
             var getProductScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data[Entity.ProductScreenshots], getDataDirectoryDelegate);
@@ -192,13 +192,13 @@ namespace Ghost.Console
                 getEmptyDirectoryDelegate,
                 getSettingsFilenameDelegate);
 
-            var getProductsIndexPathDelegate = new GetPathDelegate(
-                getProductsDirectoryDelegate,
-                getIndexFilenameDelegate);
+            //var getProductsIndexPathDelegate = new GetPathDelegate(
+            //    getProductsDirectoryDelegate,
+            //    getIndexFilenameDelegate);
 
-            var getAccountProductsIndexPathDelegate = new GetPathDelegate(
-                getAccountProductsDirectoryDelegate,
-                getIndexFilenameDelegate);
+            //var getAccountProductsIndexPathDelegate = new GetPathDelegate(
+            //    getAccountProductsDirectoryDelegate,
+            //    getIndexFilenameDelegate);
 
             var getGameDetailsIndexPathDelegate = new GetPathDelegate(
                 getGameDetailsDirectoryDelegate,
@@ -236,13 +236,13 @@ namespace Ghost.Console
                 getDataDirectoryDelegate,
                 getUpdatedFilenameDelegate);
 
-            var getProductsPathDelegate = new GetPathDelegate(
-                getProductsDirectoryDelegate,
-                getJsonFilenameDelegate);
+            //var getProductsPathDelegate = new GetPathDelegate(
+            //    getProductsDirectoryDelegate,
+            //    getJsonFilenameDelegate);
 
-            var getAccountProductsPathDelegate = new GetPathDelegate(
-                getAccountProductsDirectoryDelegate,
-                getJsonFilenameDelegate);
+            //var getAccountProductsPathDelegate = new GetPathDelegate(
+            //    getAccountProductsDirectoryDelegate,
+            //    getJsonFilenameDelegate);
 
             var getGameDetailsPathDelegate = new GetPathDelegate(
                 getGameDetailsDirectoryDelegate,
@@ -359,11 +359,11 @@ namespace Ghost.Console
                 storageController,
                 statusController);
 
-            var productsIndexStashController = new StashController<List<long>>(
-                getProductsIndexPathDelegate,
-                serializationController,
-                storageController,
-                statusController);
+            //var productsIndexStashController = new StashController<List<long>>(
+            //    getProductsIndexPathDelegate,
+            //    serializationController,
+            //    storageController,
+            //    statusController);
 
             var productRecordsIndexStashController = new StashController<List<long>>(
                 getProductRecordsIndexPathDelegate,
@@ -371,11 +371,11 @@ namespace Ghost.Console
                 storageController,
                 statusController);
 
-            var accountProductsIndexStashController = new StashController<List<long>>(
-                getAccountProductsIndexPathDelegate,
-                serializationController,
-                storageController,
-                statusController);
+            //var accountProductsIndexStashController = new StashController<List<long>>(
+            //    getAccountProductsIndexPathDelegate,
+            //    serializationController,
+            //    storageController,
+            //    statusController);
 
             var accountProductRecordsIndexStashController = new StashController<List<long>>(
                 getAccountProductRecordsIndexPathDelegate,
@@ -565,8 +565,8 @@ namespace Ghost.Console
 
             #region Delegates.Convert
 
-            var convertProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<Product>();
-            var convertAccountProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<AccountProduct>();
+            //var convertProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<Product>();
+            //var convertAccountProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<AccountProduct>();
             var convertGameDetailsToIndexDelegate = new ConvertProductCoreToIndexDelegate<GameDetails>();
             var convertGameProductDataToIndexDelegate = new ConvertProductCoreToIndexDelegate<GameProductData>();
             var convertApiProductToIndexDelegate = new ConvertProductCoreToIndexDelegate<ApiProduct>();
@@ -615,11 +615,11 @@ namespace Ghost.Console
                 productRecordsDataController,
                 statusController);
 
-            var productsIndexController = new IndexController<long>(
-                productsIndexStashController,
-                collectionController,
-                productsRecordsController,
-                statusController);
+            //var productsIndexController = new IndexController<long>(
+            //    productsIndexStashController,
+            //    collectionController,
+            //    productsRecordsController,
+            //    statusController);
 
             var accountProductRecordsIndexController = new IndexController<long>(
                 accountProductRecordsIndexStashController,
@@ -641,11 +641,11 @@ namespace Ghost.Console
                 accountProductRecordsDataController,
                 statusController);
 
-            var accountProductsIndexController = new IndexController<long>(
-                accountProductsIndexStashController,
-                collectionController,
-                accountProductsRecordsController,
-                statusController);
+            //var accountProductsIndexController = new IndexController<long>(
+            //    accountProductsIndexStashController,
+            //    collectionController,
+            //    accountProductsRecordsController,
+            //    statusController);
             
             var gameDetailsIndexController = new IndexController<long>(
                 gameDetailsIndexStashController,
@@ -703,6 +703,16 @@ namespace Ghost.Console
 
             // data controllers
 
+            var recordsDataControllerFactory = new DataControllerFactory(
+                collectionController,
+                serializationController,
+                transactionalStorageController,
+                serializedTransactionalStorageController,
+                recycleDelegate,
+                getRecordsDirectoryDelegate,
+                getJsonFilenameDelegate,
+                statusController);
+
             var dataControllerFactory = new DataControllerFactory(
                 collectionController,
                 serializationController,
@@ -714,6 +724,8 @@ namespace Ghost.Console
                 statusController);
 
             var productsDataController = dataControllerFactory.GetDataController<Product>();
+            var accountProductsDataController = dataControllerFactory.GetDataController<AccountProduct>();
+
             //var productsDataController = new DataController<Product>(
                 //productsIndexController,
                 //serializedTransactionalStorageController,
@@ -724,15 +736,15 @@ namespace Ghost.Console
                 //null,
                 //statusController);
 
-            var accountProductsDataController = new DataController<AccountProduct>(
-                accountProductsIndexController,
-                serializedTransactionalStorageController,
-                convertAccountProductToIndexDelegate,
-                collectionController,
-                getAccountProductsPathDelegate,
-                recycleDelegate,
-                accountProductsRecordsController,
-                statusController);
+            //var accountProductsDataController = new DataController<AccountProduct>(
+            //    accountProductsIndexController,
+            //    serializedTransactionalStorageController,
+            //    convertAccountProductToIndexDelegate,
+            //    collectionController,
+            //    getAccountProductsPathDelegate,
+            //    recycleDelegate,
+            //    accountProductsRecordsController,
+            //    statusController);
 
             var gameDetailsDataController = new DataController<GameDetails>(
                 gameDetailsIndexController,
