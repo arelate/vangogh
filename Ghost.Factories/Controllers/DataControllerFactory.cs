@@ -49,13 +49,15 @@ namespace Ghost.Factories.Controllers
         private IRecycleDelegate recycleDelegate;
         private IStatusController statusController;
 
-        private IGetDirectoryDelegate getDataDirectoryDelegate;
+        private IGetDirectoryDelegate getRootDataDirectoryDelegate;
+        private IGetDirectoryDelegate getRootRecordsDirectoryDelegate;
         private IGetFilenameDelegate getJsonFilenameDelegate;
 
         private IDictionary<Entity, IIndexController<long>> indexControllers;
         private IDictionary<Entity, IStashController<List<long>>> indexStashControllers;
 
-        private IDictionary<Entity, IGetDirectoryDelegate> getIndexDirectoryDelegates;
+        private IDictionary<Entity, IGetDirectoryDelegate> getDataDirectoryDelegates;
+        private IDictionary<Entity, IGetDirectoryDelegate> getRecordsDirectoryDelegates;
         private IDictionary<Entity, IGetPathDelegate> getIndexPathDelegates;
 
         private IDictionary<Type, Entity> typeToEntityMapping;
@@ -68,7 +70,8 @@ namespace Ghost.Factories.Controllers
             IStorageController<string> storageController,
             ISerializedStorageController serializedStorageController,
             IRecycleDelegate recycleDelegate,
-            IGetDirectoryDelegate getDataDirectoryDelegate,
+            IGetDirectoryDelegate getRootDataDirectoryDelegate,
+            IGetDirectoryDelegate getRootRecordsDirectoryDelegate,
             IGetFilenameDelegate getJsonFilenameDelegate,
             IStatusController statusController)
         {
@@ -79,16 +82,16 @@ namespace Ghost.Factories.Controllers
             this.recycleDelegate = recycleDelegate;
             this.statusController = statusController;
 
-            this.getDataDirectoryDelegate = getDataDirectoryDelegate;
+            this.getRootDataDirectoryDelegate = getRootDataDirectoryDelegate;
+            this.getRootRecordsDirectoryDelegate = getRootRecordsDirectoryDelegate;
             this.getJsonFilenameDelegate = getJsonFilenameDelegate;
 
-            var dataEntitiesCount = Directories.Data.Count;
+            indexControllers = new Dictionary<Entity, IIndexController<long>>();
+            indexStashControllers = new Dictionary<Entity, IStashController<List<long>>>();
 
-            indexControllers = new Dictionary<Entity, IIndexController<long>>(dataEntitiesCount);
-            indexStashControllers = new Dictionary<Entity, IStashController<List<long>>>(dataEntitiesCount);
-
-            getIndexDirectoryDelegates = new Dictionary<Entity, IGetDirectoryDelegate>(dataEntitiesCount);
-            getIndexPathDelegates = new Dictionary<Entity, IGetPathDelegate>(dataEntitiesCount);
+            getDataDirectoryDelegates = new Dictionary<Entity, IGetDirectoryDelegate>();
+            getRecordsDirectoryDelegates = new Dictionary<Entity, IGetDirectoryDelegate>();
+            getIndexPathDelegates = new Dictionary<Entity, IGetPathDelegate>();
 
             getIndexFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Base[Entity.Index], getJsonFilenameDelegate);
 
@@ -104,29 +107,41 @@ namespace Ghost.Factories.Controllers
             return typeToEntityMapping[typeof(Type)];
         }
 
-        public IGetDirectoryDelegate GetDirectoryDelegate(Entity entity)
+        public IGetDirectoryDelegate GetRecordsDirectoryDelegate(Entity entity)
         {
-            if (!getIndexDirectoryDelegates.ContainsKey(entity))
-                getIndexDirectoryDelegates.Add(
+            if (!getRecordsDirectoryDelegates.ContainsKey(entity))
+                getRecordsDirectoryDelegates.Add(
+                    entity,
+                    new GetRelativeDirectoryDelegate(
+                        Directories.Data[entity],
+                        getRootRecordsDirectoryDelegate));
+
+            return getRecordsDirectoryDelegates[entity];
+        }
+
+        public IGetDirectoryDelegate GetDataDirectoryDelegate(Entity entity)
+        {
+            if (!getDataDirectoryDelegates.ContainsKey(entity))
+                getDataDirectoryDelegates.Add(
                     entity, 
                     new GetRelativeDirectoryDelegate(
                         Directories.Data[entity], 
-                        getDataDirectoryDelegate));
+                        getRootDataDirectoryDelegate));
 
-            return getIndexDirectoryDelegates[entity];
+            return getDataDirectoryDelegates[entity];
         }
 
         public IGetPathDelegate GetIndexPathDelegate(Entity entity)
         {
             return new GetPathDelegate(
-                GetDirectoryDelegate(entity),
+                GetDataDirectoryDelegate(entity),
                 getIndexFilenameDelegate);
         }
 
         public IGetPathDelegate GetDataPathDelegate(Entity entity)
         {
             return new GetPathDelegate(
-                GetDirectoryDelegate(entity),
+                GetDataDirectoryDelegate(entity),
                 getJsonFilenameDelegate);
         }
 
@@ -160,7 +175,6 @@ namespace Ghost.Factories.Controllers
 
         public IIndexController<long> GetIndexController(Entity entity)
         {
-            var type = typeof(Type);
             if (!indexControllers.ContainsKey(entity))
                 indexControllers.Add(
                     entity, 
@@ -178,6 +192,45 @@ namespace Ghost.Factories.Controllers
             return new ConvertProductCoreToIndexDelegate<Type>();
         }
 
+        public IIndexController<long> GetRecordsIndexController(Entity entity) {
+            throw new NotImplementedException();
+        }
+
+        public IGetPathDelegate GetRecordsIndexPathDelegate(Entity entity)
+        {
+            return new GetPathDelegate(
+                GetRecordsDirectoryDelegate(entity),
+                getIndexFilenameDelegate);
+        }
+
+        public IGetPathDelegate GetRecordsDataPathDelegate(Entity entity)
+        {
+            return new GetPathDelegate(
+                GetRecordsDirectoryDelegate(entity),
+                getJsonFilenameDelegate);
+        }
+        public IDataController<ProductRecords> GetRecordsDataController<Type>() where Type: ProductCore
+        {
+            var entity = GetEntityFromType<Type>();
+
+            return new DataController<ProductRecords>(
+                GetRecordsIndexController(entity),
+                serializedStorageController,
+                GetConvertToIndexDelegate<ProductRecords>(),
+                collectionController,
+                GetRecordsDataPathDelegate(entity),
+                recycleDelegate,
+                null, // records data controller doesn't track changes
+                statusController);
+        }
+
+        public IRecordsController<long> GetRecordsController<Type>() where Type: ProductCore 
+        {
+            return new RecordsController(
+                GetRecordsDataController<Type>(),
+                statusController);
+        }
+
         public IDataController<Type> GetDataController<Type>() where Type: ProductCore
         {
             var entity = GetEntityFromType<Type>();
@@ -189,7 +242,7 @@ namespace Ghost.Factories.Controllers
                 collectionController,
                 GetDataPathDelegate(entity),
                 recycleDelegate,
-                null,
+                GetRecordsController<Type>(),
                 statusController);
         }
     }

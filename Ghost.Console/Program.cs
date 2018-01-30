@@ -703,16 +703,6 @@ namespace Ghost.Console
 
             // data controllers
 
-            var recordsDataControllerFactory = new DataControllerFactory(
-                collectionController,
-                serializationController,
-                transactionalStorageController,
-                serializedTransactionalStorageController,
-                recycleDelegate,
-                getRecordsDirectoryDelegate,
-                getJsonFilenameDelegate,
-                statusController);
-
             var dataControllerFactory = new DataControllerFactory(
                 collectionController,
                 serializationController,
@@ -720,6 +710,7 @@ namespace Ghost.Console
                 serializedTransactionalStorageController,
                 recycleDelegate,
                 getDataDirectoryDelegate,
+                getRecordsDirectoryDelegate,
                 getJsonFilenameDelegate,
                 statusController);
 
