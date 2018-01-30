@@ -162,7 +162,6 @@ namespace GOG.Controllers.Authorization
         public async Task ThrowSecurityExceptionAsync(IStatus status, string message)
         {
             await statusController.FailAsync(status, message);
-            await statusController.CompleteAsync(status);
             throw new System.Security.SecurityException(message);
         }
 

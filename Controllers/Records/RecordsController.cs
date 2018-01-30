@@ -11,7 +11,7 @@ using Interfaces.Models.RecordsTypes;
 
 using Interfaces.Status;
 
-using Models.ProductRecords;
+using Models.Records;
 using Models.ProductCore;
 
 namespace Controllers.Records

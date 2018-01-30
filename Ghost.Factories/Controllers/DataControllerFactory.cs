@@ -34,7 +34,7 @@ using Controllers.Records;
 using Models.ProductCore;
 using Models.Directories;
 using Models.Filenames;
-using Models.ProductRecords;
+using Models.Records;
 
 using GOG.Models;
 
@@ -49,30 +49,21 @@ namespace Ghost.Factories.Controllers
         private IRecycleDelegate recycleDelegate;
         private IStatusController statusController;
 
-        private IGetDirectoryDelegate getRootDataDirectoryDelegate;
-        private IGetDirectoryDelegate getRootRecordsDirectoryDelegate;
-        private IGetFilenameDelegate getJsonFilenameDelegate;
-
-        private IDictionary<Entity, IIndexController<long>> indexControllers;
-        private IDictionary<Entity, IStashController<List<long>>> indexStashControllers;
-
-        private IDictionary<Entity, IGetDirectoryDelegate> getDataDirectoryDelegates;
-        private IDictionary<Entity, IGetDirectoryDelegate> getRecordsDirectoryDelegates;
-        private IDictionary<Entity, IGetPathDelegate> getIndexPathDelegates;
-
         private IDictionary<Type, Entity> typeToEntityMapping;
 
+        private IGetDirectoryDelegate getDataDirectoryDelegate;
+        private IGetDirectoryDelegate getRecordsDirectoryDelegate;
+
         private IGetFilenameDelegate getIndexFilenameDelegate;
+        private IGetFilenameDelegate getJsonFilenameDelegate;
 
         public DataControllerFactory(
+            IGetDirectoryDelegate getDataDirectoryDelegate,
             ICollectionController collectionController,
             ISerializationController<string> serializationController,
             IStorageController<string> storageController,
             ISerializedStorageController serializedStorageController,
             IRecycleDelegate recycleDelegate,
-            IGetDirectoryDelegate getRootDataDirectoryDelegate,
-            IGetDirectoryDelegate getRootRecordsDirectoryDelegate,
-            IGetFilenameDelegate getJsonFilenameDelegate,
             IStatusController statusController)
         {
             this.collectionController = collectionController;
@@ -82,167 +73,118 @@ namespace Ghost.Factories.Controllers
             this.recycleDelegate = recycleDelegate;
             this.statusController = statusController;
 
-            this.getRootDataDirectoryDelegate = getRootDataDirectoryDelegate;
-            this.getRootRecordsDirectoryDelegate = getRootRecordsDirectoryDelegate;
-            this.getJsonFilenameDelegate = getJsonFilenameDelegate;
+            this.getDataDirectoryDelegate = getDataDirectoryDelegate;
+            getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Records], getDataDirectoryDelegate);
 
-            indexControllers = new Dictionary<Entity, IIndexController<long>>();
-            indexStashControllers = new Dictionary<Entity, IStashController<List<long>>>();
-
-            getDataDirectoryDelegates = new Dictionary<Entity, IGetDirectoryDelegate>();
-            getRecordsDirectoryDelegates = new Dictionary<Entity, IGetDirectoryDelegate>();
-            getIndexPathDelegates = new Dictionary<Entity, IGetPathDelegate>();
-
+            getJsonFilenameDelegate = new GetJsonFilenameDelegate();
             getIndexFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Base[Entity.Index], getJsonFilenameDelegate);
 
             typeToEntityMapping = new Dictionary<Type, Entity>
             {
                 { typeof(Product), Entity.Products },
-                { typeof(AccountProduct), Entity.AccountProducts }
+                { typeof(AccountProduct), Entity.AccountProducts },
             };
         }
 
-        public Entity GetEntityFromType<Type>() where Type: ProductCore
+        public IGetDirectoryDelegate CreateDirectoryDelegate(
+            Entity entity,
+            IGetDirectoryDelegate getRootDirectoryDelegate)
         {
-            return typeToEntityMapping[typeof(Type)];
+            return new GetRelativeDirectoryDelegate(
+                Directories.Data[entity],
+                getRootDirectoryDelegate);
         }
 
-        public IGetDirectoryDelegate GetRecordsDirectoryDelegate(Entity entity)
-        {
-            if (!getRecordsDirectoryDelegates.ContainsKey(entity))
-                getRecordsDirectoryDelegates.Add(
-                    entity,
-                    new GetRelativeDirectoryDelegate(
-                        Directories.Data[entity],
-                        getRootRecordsDirectoryDelegate));
-
-            return getRecordsDirectoryDelegates[entity];
-        }
-
-        public IGetDirectoryDelegate GetDataDirectoryDelegate(Entity entity)
-        {
-            if (!getDataDirectoryDelegates.ContainsKey(entity))
-                getDataDirectoryDelegates.Add(
-                    entity, 
-                    new GetRelativeDirectoryDelegate(
-                        Directories.Data[entity], 
-                        getRootDataDirectoryDelegate));
-
-            return getDataDirectoryDelegates[entity];
-        }
-
-        public IGetPathDelegate GetIndexPathDelegate(Entity entity)
+        public IGetPathDelegate CreatePathDelegate(
+            Entity entity,
+            IGetDirectoryDelegate getRootDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate)
         {
             return new GetPathDelegate(
-                GetDataDirectoryDelegate(entity),
-                getIndexFilenameDelegate);
-        }
-
-        public IGetPathDelegate GetDataPathDelegate(Entity entity)
-        {
-            return new GetPathDelegate(
-                GetDataDirectoryDelegate(entity),
-                getJsonFilenameDelegate);
-        }
-
-        public IRecordsController<long> GetRecordsController()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IStashController<List<long>> GetIndexStashController(Entity entity)
-        {
-            if (!indexStashControllers.ContainsKey(entity))
-                indexStashControllers.Add(
+                CreateDirectoryDelegate(
                     entity,
-                    new StashController<List<long>>(
-                        GetIndexPathDelegate(entity),
-                        serializationController,
-                        storageController,
-                        statusController));
-            
-            return indexStashControllers[entity];
+                    getRootDirectoryDelegate),
+                getFilenameDelegate);
         }
 
-        public IStashController<List<Type>> GetDataStashController<Type>(Entity entity) where Type: ProductCore
+        public IStashController<List<long>> CreateStashController(
+            IGetDirectoryDelegate getRootDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
+            Entity entity)
         {
-            return new StashController<List<Type>>(
-                GetDataPathDelegate(entity),
+            return new StashController<List<long>>(
+                CreatePathDelegate(
+                    entity,
+                    getRootDirectoryDelegate,
+                    getFilenameDelegate),
                 serializationController,
                 storageController,
                 statusController);
         }
 
-        public IIndexController<long> GetIndexController(Entity entity)
+        public IIndexController<long> CreateIndexController(
+            IGetDirectoryDelegate getRootDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
+            IRecordsController<long> recordsController,
+            Entity entity)
         {
-            if (!indexControllers.ContainsKey(entity))
-                indexControllers.Add(
-                    entity, 
-                    new IndexController<long>(
-                        GetIndexStashController(entity),
-                        collectionController,
-                        null,
-                        statusController));
-
-            return indexControllers[entity];
+            return new IndexController<long>(
+                CreateStashController(
+                    getRootDirectoryDelegate,
+                    getFilenameDelegate,
+                    entity),
+                collectionController,
+                recordsController,
+                statusController);
         }
 
-        public IConvertDelegate<Type, long> GetConvertToIndexDelegate<Type>() where Type: ProductCore
+        public IConvertDelegate<Type, long> CreateConvertToIndexDelegate<Type>() where Type : ProductCore
         {
             return new ConvertProductCoreToIndexDelegate<Type>();
         }
 
-        public IIndexController<long> GetRecordsIndexController(Entity entity) {
-            throw new NotImplementedException();
-        }
-
-        public IGetPathDelegate GetRecordsIndexPathDelegate(Entity entity)
+        public IRecordsController<long> CreateRecordsController<Type>() where Type : ProductCore
         {
-            return new GetPathDelegate(
-                GetRecordsDirectoryDelegate(entity),
-                getIndexFilenameDelegate);
-        }
+            var entity = typeToEntityMapping[typeof(Type)];
 
-        public IGetPathDelegate GetRecordsDataPathDelegate(Entity entity)
-        {
-            return new GetPathDelegate(
-                GetRecordsDirectoryDelegate(entity),
-                getJsonFilenameDelegate);
-        }
-        public IDataController<ProductRecords> GetRecordsDataController<Type>() where Type: ProductCore
-        {
-            var entity = GetEntityFromType<Type>();
-
-            return new DataController<ProductRecords>(
-                GetRecordsIndexController(entity),
-                serializedStorageController,
-                GetConvertToIndexDelegate<ProductRecords>(),
-                collectionController,
-                GetRecordsDataPathDelegate(entity),
-                recycleDelegate,
-                null, // records data controller doesn't track changes
-                statusController);
-        }
-
-        public IRecordsController<long> GetRecordsController<Type>() where Type: ProductCore 
-        {
             return new RecordsController(
-                GetRecordsDataController<Type>(),
+                CreateDataControllerHelper<ProductRecords>(
+                    entity, 
+                    null, // record data controller doesn't track changes
+                    getRecordsDirectoryDelegate),
                 statusController);
         }
 
-        public IDataController<Type> GetDataController<Type>() where Type: ProductCore
+        public IDataController<Type> CreateDataController<Type>() where Type : ProductCore
         {
-            var entity = GetEntityFromType<Type>();
+            var entity = typeToEntityMapping[typeof(Type)];
 
+            return CreateDataControllerHelper<Type>(
+                entity,
+                CreateRecordsController<Type>(),
+                getDataDirectoryDelegate);
+        }
+
+        private IDataController<Type> CreateDataControllerHelper<Type>(
+            Entity entity,
+            IRecordsController<long> recordsController,
+            IGetDirectoryDelegate getDirectoryDelegate) where Type: ProductCore
+        {
             return new DataController<Type>(
-                GetIndexController(entity),
+                CreateIndexController(
+                    getDirectoryDelegate,
+                    getIndexFilenameDelegate,
+                    recordsController,
+                    entity),
                 serializedStorageController,
-                GetConvertToIndexDelegate<Type>(),
+                CreateConvertToIndexDelegate<Type>(),
                 collectionController,
-                GetDataPathDelegate(entity),
+                CreatePathDelegate(
+                    entity,
+                    getDirectoryDelegate,
+                    getJsonFilenameDelegate),
                 recycleDelegate,
-                GetRecordsController<Type>(),
+                recordsController,
                 statusController);
         }
     }
