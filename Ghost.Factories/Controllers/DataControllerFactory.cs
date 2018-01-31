@@ -83,6 +83,7 @@ namespace Ghost.Factories.Controllers
             {
                 { typeof(Product), Entity.Products },
                 { typeof(AccountProduct), Entity.AccountProducts },
+                { typeof(GameDetails), Entity.GameDetails }
             };
         }
 
