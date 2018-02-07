@@ -9,23 +9,25 @@ using GOG.Interfaces.Delegates.UpdateScreenshots;
 
 using GOG.Models;
 
+using Models.ProductScreenshots;
+
 namespace GOG.Activities.UpdateData
 {
     public class UpdateScreenshotsActivity : Activity
     {
         private IDataController<Product> productsDataController;
-        private IIndexController<long> screenshotsIndexDataController;
+        private IDataController<ProductScreenshots> productScreenshotsDataController;
         private IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
 
         public UpdateScreenshotsActivity(
             IDataController<Product> productsDataController,
-            IIndexController<long> screenshotsIndexDataController,
+            IDataController<ProductScreenshots> productScreenshotsDataController,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
             IStatusController statusController) :
             base(statusController)
         {
             this.productsDataController = productsDataController;
-            this.screenshotsIndexDataController = screenshotsIndexDataController;
+            this.productScreenshotsDataController = productScreenshotsDataController;
             this.updateScreenshotsAsyncDelegate = updateScreenshotsAsyncDelegate;
         }
 
@@ -35,7 +37,7 @@ namespace GOG.Activities.UpdateData
 
             var getUpdatesListTask = await statusController.CreateAsync(updateProductsScreenshotsTask, "Get updates");
             var productsMissingScreenshots = (await productsDataController.ItemizeAllAsync(getUpdatesListTask)).Except(
-                await screenshotsIndexDataController.ItemizeAllAsync(getUpdatesListTask));
+                await productScreenshotsDataController.ItemizeAllAsync(getUpdatesListTask));
             await statusController.CompleteAsync(getUpdatesListTask);
 
             var counter = 0;

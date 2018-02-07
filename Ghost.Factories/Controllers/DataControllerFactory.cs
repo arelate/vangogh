@@ -148,7 +148,7 @@ namespace Ghost.Factories.Controllers
         {
             var entity = typeToEntityMapping[typeof(Type)];
 
-            return new RecordsController(
+            return new IdentityRecordsController(
                 CreateDataControllerHelper<ProductRecords>(
                     entity, 
                     null, // record data controller doesn't track changes
