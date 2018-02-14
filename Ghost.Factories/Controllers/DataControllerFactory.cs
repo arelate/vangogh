@@ -83,7 +83,8 @@ namespace Ghost.Factories.Controllers
             {
                 { typeof(Product), Entity.Products },
                 { typeof(AccountProduct), Entity.AccountProducts },
-                { typeof(GameDetails), Entity.GameDetails }
+                { typeof(GameDetails), Entity.GameDetails },
+                { typeof(long), Entity.Index }
             };
         }
 
@@ -124,6 +125,16 @@ namespace Ghost.Factories.Controllers
         }
 
         public IIndexController<long> CreateIndexController(
+            IGetFilenameDelegate getFilenameDelegate)
+        {
+            return CreateIndexControllerWithRecordsController(
+                getDataDirectoryDelegate,
+                getFilenameDelegate,
+                null, // TODO: add records controller support
+                Entity.Index);
+        }
+
+        private IIndexController<long> CreateIndexControllerWithRecordsController(
             IGetDirectoryDelegate getRootDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             IRecordsController<long> recordsController,
@@ -172,7 +183,7 @@ namespace Ghost.Factories.Controllers
             IGetDirectoryDelegate getDirectoryDelegate) where Type: ProductCore
         {
             return new DataController<Type>(
-                CreateIndexController(
+                CreateIndexControllerWithRecordsController(
                     getDirectoryDelegate,
                     getIndexFilenameDelegate,
                     recordsController,

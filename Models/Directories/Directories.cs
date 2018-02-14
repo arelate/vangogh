@@ -17,7 +17,8 @@ namespace Models.Directories
             { Entity.ProductDownloads, "productDownloads" },
             { Entity.ProductRoutes, "productRoutes" },
             { Entity.ValidationResults, "validationResults" },
-            { Entity.ProductScreenshots, "productScreenshots" }
+            { Entity.ProductScreenshots, "productScreenshots" },
+            { Entity.Index, "" }
         };
 
         public static IDictionary<Entity, string> Base = new Dictionary<Entity, string>
