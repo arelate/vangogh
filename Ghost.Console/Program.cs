@@ -380,30 +380,33 @@ namespace Ghost.Console
 
             #region Data Controllers
 
-
-            // data controllers
-
             var dataControllerFactory = new DataControllerFactory(
-                getDataDirectoryDelegate,
                 collectionController,
                 serializationController,
                 storageController,
                 serializedTransactionalStorageController,
                 recycleDelegate,
+                getDataDirectoryDelegate,
                 statusController);
 
-            var wishlistedIndexController = dataControllerFactory.CreateIndexController(getWishlistedFilenameDelegate);
-            var updatedIndexController = dataControllerFactory.CreateIndexController(getUpdatedFilenameDelegate);
+            var wishlistedIndexController = dataControllerFactory.CreateIndexController(
+                Entity.Wishlist, 
+                getWishlistedFilenameDelegate);
+            var updatedIndexController = dataControllerFactory.CreateIndexController(
+                Entity.Updated, 
+                getUpdatedFilenameDelegate);
 
-            var productsDataController = dataControllerFactory.CreateDataController<Product>();
-            var accountProductsDataController = dataControllerFactory.CreateDataController<AccountProduct>();
-            var gameDetailsDataController = dataControllerFactory.CreateDataController<GameDetails>();
-            var gameProductDataDataController = dataControllerFactory.CreateDataController<GameProductData>();
-            var apiProductsDataController = dataControllerFactory.CreateDataController<ApiProduct>();
-            var productScreenshotsDataController = dataControllerFactory.CreateDataController<ProductScreenshots>();
-            var productDownloadsDataController = dataControllerFactory.CreateDataController<ProductDownloads>();
-            var productRoutesDataController = dataControllerFactory.CreateDataController<ProductRoutes>();
-            var validationResultsDataController = dataControllerFactory.CreateDataController<ValidationResult>();
+            var activityRecordsController = dataControllerFactory.CreateStringRecordsController(Entity.Activity);
+
+            var productsDataController = dataControllerFactory.CreateDataController<Product>(Entity.Products);
+            var accountProductsDataController = dataControllerFactory.CreateDataController<AccountProduct>(Entity.AccountProducts);
+            var gameDetailsDataController = dataControllerFactory.CreateDataController<GameDetails>(Entity.GameDetails);
+            var gameProductDataDataController = dataControllerFactory.CreateDataController<GameProductData>(Entity.GameProductData);
+            var apiProductsDataController = dataControllerFactory.CreateDataController<ApiProduct>(Entity.ApiProducts);
+            var productScreenshotsDataController = dataControllerFactory.CreateDataController<ProductScreenshots>(Entity.ProductScreenshots);
+            var productDownloadsDataController = dataControllerFactory.CreateDataController<ProductDownloads>(Entity.ProductDownloads);
+            var productRoutesDataController = dataControllerFactory.CreateDataController<ProductRoutes>(Entity.ProductRoutes);
+            var validationResultsDataController = dataControllerFactory.CreateDataController<ValidationResult>(Entity.ValidationResults);
 
             #endregion
 
@@ -417,6 +420,11 @@ namespace Ghost.Console
                 whitelistController,
                 prerequisitesController,
                 supplementaryController);
+
+            //var udap = activityContextController.ToString((Activity.UpdateData, Entity.AccountProducts));
+            //var started = await activityRecordsController.GetRecordAsync(udap, Interfaces.Models.RecordsTypes.RecordsTypes.Updated, applicationStatus);
+            //var completed = await activityRecordsController.GetRecordAsync(udap, Interfaces.Models.RecordsTypes.RecordsTypes.Completed, applicationStatus);
+            //var elapsed = completed - started;
 
             #region Activity Controllers
 
@@ -477,8 +485,8 @@ namespace Ghost.Console
                     activityContextController,
                     getProductsPageResultsAsyncDelegate,
                     itemizeProductsPageResultProductsDelegate,
-                    //requestPageAsyncDelegate,
                     productsDataController,
+                    activityRecordsController,
                     statusController);
 
             var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
@@ -499,6 +507,7 @@ namespace Ghost.Console
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,
                     accountProductsDataController,
+                    activityRecordsController,
                     statusController);
 
             var confirmAccountProductUpdatedDelegate = new ConfirmAccountProductUpdatedDelegate();

@@ -13,12 +13,12 @@ using Models.Records;
 
 namespace Controllers.Records
 {
-    public class IdentityRecordsController: IRecordsController<long>
+    public class IndexRecordsController: IRecordsController<long>
     {
         private IDataController<ProductRecords> productRecordsDataController;
         private IStatusController statusController;
 
-        public IdentityRecordsController(
+        public IndexRecordsController(
             IDataController<ProductRecords> productRecordsController,
             IStatusController statusController)
         {

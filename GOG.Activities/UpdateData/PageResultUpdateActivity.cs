@@ -5,6 +5,9 @@ using System.Linq;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Records;
+
+using Interfaces.Models.RecordsTypes;
 
 using Interfaces.Status;
 
@@ -29,6 +32,7 @@ namespace GOG.Activities.UpdateData
         private IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
         private IDataController<DataType> dataController;
+        IRecordsController<string> activityRecordsController;
 
         public PageResultUpdateActivity(
             AC activityContext,
@@ -36,6 +40,7 @@ namespace GOG.Activities.UpdateData
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
+            IRecordsController<string> activityRecordsController,
             IStatusController statusController) :
             base(statusController)
         {
@@ -46,11 +51,16 @@ namespace GOG.Activities.UpdateData
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
             this.dataController = dataController;
+            this.activityRecordsController = activityRecordsController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
             var updateAllProductsTask = await statusController.CreateAsync(status, $"Update {activityContext.Item2}");
+
+            var activityContextString = activityContextController.ToString(activityContext);
+
+            await activityRecordsController.SetRecordAsync(activityContextString, RecordsTypes.Updated, updateAllProductsTask);
 
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync(updateAllProductsTask);
 
@@ -72,6 +82,8 @@ namespace GOG.Activities.UpdateData
                 
                 await statusController.CompleteAsync(updateTask);
             }
+
+            await activityRecordsController.SetRecordAsync(activityContextString, RecordsTypes.Completed, updateAllProductsTask);
 
             await statusController.CompleteAsync(updateAllProductsTask);
         }

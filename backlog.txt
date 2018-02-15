@@ -1,6 +1,7 @@
 Backend
 
-- introduce timelineContoller to track created/modified/completed (action succeeded) for an id
+- Implement recordsContoller to track created/modified/completed (action succeeded) for an id
+-- Track all modifications for index/dataControllers [done]
 
 - add distill controller to process bulk records - to distill updated information, search index
 

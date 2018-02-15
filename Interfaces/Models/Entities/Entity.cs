@@ -5,7 +5,7 @@
         // special
         None,
         Any,
-        // data
+        // data types
         Products,
         AccountProducts,
         GameDetails,
@@ -35,5 +35,7 @@
         // ...
         Files,
         Directories,
+        // activity records
+        Activity
     }
 }
