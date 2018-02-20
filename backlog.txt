@@ -1,21 +1,26 @@
 Backend
 
-- Implement recordsContoller to track created/modified/completed (action succeeded) for an id
--- Track all modifications for index/dataControllers [done]
+- Implement recordsContoller to track created/modified/deleted/started/completed for an id
+-- Track CRUD operations for index/dataControllers [done]
+-- Track started/completed for activities (starting with PageResultUpdateActivity) [done]
+-- Reimplement updateData-updated to use the following conditions:
+1) set products that have isNew, Updates>0 as updated
+2) set products that were created/updated between "updateData-accountProducts" started and completed as updated
 
-- add distill controller to process bulk records - to distill updated information, search index
+- change clear updated from unconditional clearing to recordsContoller based system. 
+To clear updated we'll need successful completion of several activities since product was added as updated:
+-- the moment product updated entry was modified is T0
+-- Since T0, there should be the following events on the product timeline:
+-- gameDetails activity should have been started and completed at Tgda > T0;
+-- gameDetails for this product modified at Tgd > Tgda;
+-- product files download should have been started and completed at Tpfd > Tgd;
+-- product files validation should have been started and completed at Tv > Tpfd;
+
+- add read/write through cache for dataController
 
 - modify (again) console output controller to use "single line control" and output only on one line. One idea is to collapse to ellipsis all earlier steps if the content doesn't fit
 
 - complete splitting delegates from controllers
-
-- change clear updated from unconditional clearing to receipt based system. To clear updated we'll need successful completion of several activities since product was added as updated:
--- use timelineController and fulfill the following conditions
--- the moment product was last set as updated is T0
--- Since T0, there should be the following events on the product timeline:
--- gameDetails modified at Tgd > T0;
--- product files download should have been completed at Tpfd > Tgd;
--- product files validation should have been completed at Tv > Tpfd;
 
 - investigate /user/data/games (from https://www.gog.com/forum/general/unofficial_gog_api_documentation/page2) and game_type == pack specifically
 

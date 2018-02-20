@@ -60,7 +60,7 @@ namespace GOG.Activities.UpdateData
 
             var activityContextString = activityContextController.ToString(activityContext);
 
-            await activityRecordsController.SetRecordAsync(activityContextString, RecordsTypes.Updated, updateAllProductsTask);
+            await activityRecordsController.SetRecordAsync(activityContextString, RecordsTypes.Started, updateAllProductsTask);
 
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync(updateAllProductsTask);
 
