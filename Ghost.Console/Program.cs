@@ -421,11 +421,6 @@ namespace Ghost.Console
                 prerequisitesController,
                 supplementaryController);
 
-            //var udap = activityContextController.ToString((Activity.UpdateData, Entity.AccountProducts));
-            //var started = await activityRecordsController.GetRecordAsync(udap, Interfaces.Models.RecordsTypes.RecordsTypes.Updated, applicationStatus);
-            //var completed = await activityRecordsController.GetRecordAsync(udap, Interfaces.Models.RecordsTypes.RecordsTypes.Completed, applicationStatus);
-            //var elapsed = completed - started;
-
             #region Activity Controllers
 
             #region Authorize
@@ -1000,8 +995,6 @@ namespace Ghost.Console
                 { (Activity.List, Entity.Updated), listUpdatedActivity },
                 { (Activity.Help, Entity.None), helpActivity }
             };
-
-
 
             var activityContextQueue = activityContextController.GetQueue(args);
             var commandLineParameters = activityContextController.GetParameters(args).ToArray();

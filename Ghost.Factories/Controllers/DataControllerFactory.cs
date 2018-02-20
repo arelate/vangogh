@@ -16,6 +16,7 @@ using Interfaces.Status;
 
 using Delegates.GetDirectory;
 using Delegates.GetFilename;
+using Delegates.Convert;
 
 using Controllers.Index;
 using Controllers.Data;
@@ -167,7 +168,8 @@ namespace Ghost.Factories.Controllers
         {
             return new StringRecordsController(
                 CreateIndexRecordsController(
-                    entity));
+                    entity),
+                new ConvertStringToIndexDelegate());
         }
 
         /// <summary>
