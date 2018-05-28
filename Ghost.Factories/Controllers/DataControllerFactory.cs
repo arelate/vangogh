@@ -42,9 +42,9 @@ namespace Ghost.Factories.Controllers
 {
     public class DataControllerFactory
     {
-        private ICollectionController collectionController;
-        private ISerializationController<string> serializationController;
-        private IStorageController<string> storageController;
+        private readonly ICollectionController collectionController;
+        private readonly ISerializationController<string> serializationController;
+        private readonly IStorageController<string> storageController;
         private ISerializedStorageController serializedStorageController;
         private IRecycleDelegate recycleDelegate;
         private IStatusController statusController;
