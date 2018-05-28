@@ -1,0 +1,115 @@
+{
+    "options": [
+        {
+            "title": "authorize",
+            "desc": "",
+            "order": 1,
+            "hidden": true
+        },
+        {
+            "title": "cleanup",
+            "desc": "",
+            "order": 60,
+            "aliases": ["sync"]
+        },
+        {
+            "title": "download",
+            "desc": "",
+            "order": 30,
+            "aliases": ["sync"]
+        },
+        {
+            "title": "help",
+            "desc": ""
+        },
+        {
+            "title": "list",
+            "desc": ""
+        },
+        {
+            "title": "prepare",
+            "desc": "Prepare ",
+            "order": 20,            
+            "aliases": ["sync"],
+            "hidden": true
+        },
+        {
+            "title": "repair",
+            "desc": "",
+            "order": 50,            
+            "aliases": ["sync"]
+        },
+        {
+            "title": "trace",
+            "desc": "Enable debug tracing. Traces are stored at .\\traces."
+        },
+        {
+            "title": "update",
+            "desc": "",
+            "order": 10,            
+            "aliases": ["sync"]
+        },
+        {
+            "title": "validate",
+            "desc": "",
+            "order": 40,            
+            "aliases": ["sync"]
+        }
+    ],
+    "options-variable-arguments": [
+        {
+            "title": "username",
+            "desc": "GOG.com account username",
+            "options": ["authorize"]
+        },
+        {
+            "title": "password",
+            "desc": "GOG.com account password",
+            "options": ["authorize"]
+        }
+    ],
+    "options-fixed-arguments": [
+        {
+            "desc": "data",
+            "options": ["list", "update"],
+            "arguments": ["products", "accountproducts", "updated", "wishlisted", "gameproductdata", "apiproducts", "gamedetails", "screenshots"]
+        },
+        {
+            "desc": "data",
+            "options": ["prepare", "download"],
+            "values": ["productimages", "accountproductimages", "screenshots", "productfiles"]
+        },
+        {
+            "desc": "os",
+            "options": ["prepare", "download"],
+            "values": ["windows", "osx", "linux"]
+        },
+        {
+            "desc": "lang",
+            "options": ["prepare", "download"],
+            "values": ["en"]
+        },
+        {
+            "desc": "data",
+            "options": ["cleanup"],
+            "values": ["files", "folders", "updated"]
+        },
+        {
+            "desc": "data",
+            "options": ["validate", "repair"],
+            "values": ["productfiles"]
+        }
+    ],
+    "dependencies": [
+        {
+            "option": "update",
+            "arguments": ["accountproducts", "updated", "wishlisted", "apiproducts", "gamedetails"],
+            "requires": [
+                {
+                    "option": "authorize",
+                    "arguments": []
+                }
+            ]
+        }
+    ]
+}

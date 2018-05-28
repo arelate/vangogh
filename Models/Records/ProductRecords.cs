@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 using Interfaces.Models.RecordsTypes;
 
-namespace Models.Records
+namespace Models.ProductRecords
 {
     [DataContract]
     public class ProductRecords: ProductCore.ProductCore

@@ -6,7 +6,8 @@ namespace Interfaces.Models.RecordsTypes
     {
         Created = 0,
         Updated = 1,
-        Completed = 2,
-        Deleted = 3
+        Deleted = 2,
+        Started = 10,
+        Completed = 11
     }
 }

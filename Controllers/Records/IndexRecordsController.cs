@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.Convert;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
 
@@ -11,17 +9,16 @@ using Interfaces.Models.RecordsTypes;
 
 using Interfaces.Status;
 
-using Models.ProductRecords;
-using Models.ProductCore;
+using Models.Records;
 
 namespace Controllers.Records
 {
-    public class RecordsController: IRecordsController<long>
+    public class IndexRecordsController: IRecordsController<long>
     {
         private IDataController<ProductRecords> productRecordsDataController;
         private IStatusController statusController;
 
-        public RecordsController(
+        public IndexRecordsController(
             IDataController<ProductRecords> productRecordsController,
             IStatusController statusController)
         {

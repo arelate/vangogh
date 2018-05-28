@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Timeline\**" />
+    <EmbeddedResource Remove="Timeline\**" />
+    <None Remove="Timeline\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
@@ -15,8 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Timeline\" />
-    <Folder Include="Records\" />
     <Folder Include="StrongTypeSerialization\" />
   </ItemGroup>
   <ItemGroup>
