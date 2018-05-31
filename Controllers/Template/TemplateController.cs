@@ -19,16 +19,16 @@ namespace Controllers.Template
 {
     public class TemplateController : ITemplateController
     {
-        private IStashController<List<T>> templateStashController;
-        private ICollectionController collectionController;
+        IStashController<List<T>> templateStashController;
+        ICollectionController collectionController;
 
-        private const string anyCharactersExpression = "(.*?)";
-        private const string templateValuePrefix = Separators.TemplatePrefix;
-        private const string templateValueSuffix = Separators.TemplateSuffix;
-        private const string templateValue = templateValuePrefix + anyCharactersExpression + templateValueSuffix;
-        private const string subTemplatePrefix = Separators.TemplatePrefix + Separators.TemplatePrefix;
-        private const string subTemplateSuffix = Separators.TemplateSuffix + Separators.TemplateSuffix;
-        private const string subTemplate = subTemplatePrefix + anyCharactersExpression + subTemplateSuffix;
+        const string anyCharactersExpression = "(.*?)";
+        const string templateValuePrefix = Separators.TemplatePrefix;
+        const string templateValueSuffix = Separators.TemplateSuffix;
+        const string templateValue = templateValuePrefix + anyCharactersExpression + templateValueSuffix;
+        const string subTemplatePrefix = Separators.TemplatePrefix + Separators.TemplatePrefix;
+        const string subTemplateSuffix = Separators.TemplateSuffix + Separators.TemplateSuffix;
+        const string subTemplate = subTemplatePrefix + anyCharactersExpression + subTemplateSuffix;
 
         public TemplateController(
             string primaryTemplateTitle,
@@ -68,7 +68,7 @@ namespace Controllers.Template
             return view;
         }
 
-        private delegate Task<string> GetContentAsync(string input, IStatus status);
+        delegate Task<string> GetContentAsync(string input, IStatus status);
 
         public async Task<string> GetContentByTitleAsync(string templateTitle, IStatus status)
         {
@@ -81,7 +81,7 @@ namespace Controllers.Template
         }
 
         // TODO: should be refactored into some delegate
-        private async Task<string> FindAndReplace(string inputString,
+        async Task<string> FindAndReplace(string inputString,
             string regexPattern,
             string matchPrefix,
             string matchSuffix,
@@ -124,7 +124,7 @@ namespace Controllers.Template
                 ">",
                 async (match, replacementStatus) =>
                 {
-                    var conditionalParts = match.Split(new string[2] { "?", ":" }, StringSplitOptions.RemoveEmptyEntries);
+                    var conditionalParts = match.Split(new string[] { "?", ":" }, StringSplitOptions.RemoveEmptyEntries);
                     if (conditionalParts.Length < 2)
                         throw new InvalidDataException("Conditional expression doesn't have expected separators");
 

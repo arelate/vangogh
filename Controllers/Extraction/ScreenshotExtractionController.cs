@@ -11,8 +11,8 @@ namespace Controllers.Extraction
 {
     public class ScreenshotExtractionController : IStringExtractionController
     {
-        private const string attributePrefix = "data-src=\"";
-        private Regex regex = new Regex(attributePrefix + "\\S*\"");
+        const string attributePrefix = "data-src=\"";
+        readonly Regex regex = new Regex(attributePrefix + "\\S*\"");
 
         public IEnumerable<string> ExtractMultiple(string pageContent)
         {

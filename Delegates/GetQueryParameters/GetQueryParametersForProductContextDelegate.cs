@@ -18,7 +18,7 @@ namespace Delegates.GetQueryParameters
                 case Entity.AccountProducts:
                     return Models.QueryParameters.QueryParametersCollections.AccountGetFilteredProducts;
                 default:
-                    throw new NotImplementedException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

@@ -31,15 +31,15 @@ namespace Models.QueryParameters
         public static string Layout = "layout";
         public static string Brand = "brand";
         // LoginAuthenticate
-        private static string Login = "login";
-        private static string UnderscoreToken = "[_token]";
+        static string Login = "login";
+        static string UnderscoreToken = "[_token]";
         public static string LoginUsername = Login + "[username]";
         public static string LoginPassword = Login + "[password]";
         public static string LoginId = Login + "[id]";
         public static string LoginUnderscoreToken = Login + UnderscoreToken;
         // SecondStepAuthentication
-        private static string SecondStepAuthentication = "second_step_authentication";
-        private static string SecondStepAuthenticationToken = SecondStepAuthentication + "[token]";
+        static string SecondStepAuthentication = "second_step_authentication";
+        static string SecondStepAuthenticationToken = SecondStepAuthentication + "[token]";
         public static string SecondStepAuthenticationTokenLetter1 = SecondStepAuthenticationToken + "[letter_1]";
         public static string SecondStepAuthenticationTokenLetter2 = SecondStepAuthenticationToken + "[letter_2]";
         public static string SecondStepAuthenticationTokenLetter3 = SecondStepAuthenticationToken + "[letter_3]";
@@ -50,7 +50,7 @@ namespace Models.QueryParameters
 
     public static class QueryParametersCollections
     {
-        public static Dictionary<string, string> AccountGetFilteredProducts = new Dictionary<string, string>()
+        public static Dictionary<string, string> AccountGetFilteredProducts = new Dictionary<string, string>
         {
             { QueryParameters.HasHiddenProducts, "false" },
             { QueryParameters.HiddenFlag, "0" },
@@ -60,14 +60,14 @@ namespace Models.QueryParameters
             { QueryParameters.SortBy, SortBy.DatePurchased }
         };
 
-        public static Dictionary<string, string> GamesAjaxFiltered = new Dictionary<string, string>()
+        public static Dictionary<string, string> GamesAjaxFiltered = new Dictionary<string, string>
         {
             { QueryParameters.MediaType, "game" },
             { QueryParameters.Page, "1" },
             { QueryParameters.Sort, SortBy.DateAdded }
         };
 
-        public static Dictionary<string, string> Authenticate = new Dictionary<string, string>()
+        public static Dictionary<string, string> Authenticate = new Dictionary<string, string>
         {
             { QueryParameters.ClientId, "46755278331571209" },
             { QueryParameters.RedirectUri, Uris.Uris.Paths.Authentication.OnLoginSuccess},
@@ -76,15 +76,15 @@ namespace Models.QueryParameters
             { QueryParameters.Brand, "gog" }
         };
 
-        public static Dictionary<string, string> LoginAuthenticate = new Dictionary<string, string>()
+        public static Dictionary<string, string> LoginAuthenticate = new Dictionary<string, string>
         {
             { QueryParameters.LoginUsername, string.Empty },
             { QueryParameters.LoginPassword, string.Empty },
             { QueryParameters.LoginId, string.Empty },
-            { QueryParameters.LoginUnderscoreToken, string.Empty },
+            { QueryParameters.LoginUnderscoreToken, string.Empty }
         };
 
-        public static Dictionary<string, string> SecondStepAuthentication = new Dictionary<string, string>()
+        public static Dictionary<string, string> SecondStepAuthentication = new Dictionary<string, string>
         {
             { QueryParameters.SecondStepAuthenticationTokenLetter1, string.Empty },
             { QueryParameters.SecondStepAuthenticationTokenLetter2, string.Empty },

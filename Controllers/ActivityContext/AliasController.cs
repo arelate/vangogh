@@ -10,7 +10,7 @@ namespace Controllers.ActivityContext
 {
     public class AliasController : IAliasController
     {
-        private IDictionary<string, AC[]> aliases;
+        readonly IDictionary<string, AC[]> aliases;
 
         public AliasController(IDictionary<string, AC[]> aliases)
         {

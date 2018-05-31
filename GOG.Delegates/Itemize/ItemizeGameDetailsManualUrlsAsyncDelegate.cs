@@ -18,8 +18,8 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        private IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
-        private IDataController<GameDetails> gameDetailsDataController;
+        readonly IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
+        IDataController<GameDetails> gameDetailsDataController;
 
         public ItemizeGameDetailsManualUrlsAsyncDelegate(
             IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate,

@@ -13,10 +13,10 @@ using Models.Records;
 
 namespace Controllers.Records
 {
-    public class IndexRecordsController: IRecordsController<long>
+    public class IndexRecordsController : IRecordsController<long>
     {
-        private IDataController<ProductRecords> productRecordsDataController;
-        private IStatusController statusController;
+        readonly IDataController<ProductRecords> productRecordsDataController;
+        IStatusController statusController;
 
         public IndexRecordsController(
             IDataController<ProductRecords> productRecordsController,
@@ -31,7 +31,7 @@ namespace Controllers.Records
             var minRecord = DateTime.MinValue.ToUniversalTime();
             var productRecord = await productRecordsDataController.GetByIdAsync(id, status);
 
-            if (productRecord == null || 
+            if (productRecord == null ||
                 productRecord.Records == null) return minRecord;
 
             return productRecord.Records.ContainsKey(recordType) ?

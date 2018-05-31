@@ -10,7 +10,7 @@ namespace Controllers.Hash
 {
     public class StoredHashController : IStoredHashController
     {
-        private IStashController<Dictionary<string, string>> precomputedHashesStashController;
+        readonly IStashController<Dictionary<string, string>> precomputedHashesStashController;
 
         public StoredHashController(
             IStashController<Dictionary<string, string>> precomputedHashesStashController)

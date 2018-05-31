@@ -10,7 +10,7 @@ namespace GOG.Activities
     {
         protected IStatusController statusController;
 
-        public Activity(
+        protected Activity(
             IStatusController statusController)
         {
             this.statusController = statusController;

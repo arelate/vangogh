@@ -12,16 +12,16 @@ using Interfaces.Status;
 
 namespace Controllers.Stash
 {
-    public class StashController<ModelType>: IStashController<ModelType> where ModelType : new()
+    public class StashController<ModelType>: IStashController<ModelType> where ModelType : class, new()
     {
-        private IGetPathDelegate getPathDelegate;
+        readonly IGetPathDelegate getPathDelegate;
 
-        private ISerializationController<string> serializationController;
-        private IStorageController<string> storageController;
+        readonly ISerializationController<string> serializationController;
+        readonly IStorageController<string> storageController;
 
-        private IStatusController statusController;
+        readonly IStatusController statusController;
 
-        private ModelType storedData;
+        ModelType storedData;
 
         public StashController(
             IGetPathDelegate getPathDelegate,

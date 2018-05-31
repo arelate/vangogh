@@ -14,8 +14,8 @@ namespace Delegates.Correct
 {
     public class CorrectSettingsDownloadsLanguagesAsyncDelegate : ICorrectAsyncDelegate<Settings>
     {
-        private ILanguageController languageController;
-        private string[] defaultLanguages = new string[1] { "en" };
+        readonly ILanguageController languageController;
+        readonly string[] defaultLanguages = { "en" };
 
         public CorrectSettingsDownloadsLanguagesAsyncDelegate(ILanguageController languageController)
         {
@@ -27,7 +27,7 @@ namespace Delegates.Correct
             return await Task.Run(() =>
             {
                 if (settings == null)
-                    throw new System.ArgumentNullException("Cannot correct downloads languages for null settings");
+                    throw new System.ArgumentNullException();
 
                 if (settings.DownloadsLanguages == null ||
                     settings.DownloadsLanguages.Length == 0)
@@ -38,12 +38,10 @@ namespace Delegates.Correct
                 {
                     var languageOrLanguageCode = settings.DownloadsLanguages[ii];
                     if (languageController.IsLanguageCode(languageOrLanguageCode)) continue;
-                    else
-                    {
-                        var code = languageController.GetLanguageCode(languageOrLanguageCode);
-                        if (!string.IsNullOrEmpty(code))
-                            settings.DownloadsLanguages[ii] = code;
-                    }
+
+                    var code = languageController.GetLanguageCode(languageOrLanguageCode);
+                    if (!string.IsNullOrEmpty(code))
+                        settings.DownloadsLanguages[ii] = code;
                 }
 
                 return settings;

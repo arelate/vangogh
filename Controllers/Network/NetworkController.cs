@@ -19,10 +19,10 @@ namespace Controllers.Network
 {
     public sealed class NetworkController : INetworkController
     {
-        private HttpClient client;
-        private ICookiesController cookieController;
-        private IUriController uriController;
-        private IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate;
+        HttpClient client;
+        ICookiesController cookieController;
+        readonly IUriController uriController;
+        IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate;
 
         public NetworkController(
             ICookiesController cookieController,
@@ -33,7 +33,7 @@ namespace Controllers.Network
             this.uriController = uriController;
             this.constrainRequestRateAsyncDelegate = constrainRequestRateAsyncDelegate;
 
-            var httpHandler = new HttpClientHandler()
+            var httpHandler = new HttpClientHandler
             {
                 UseDefaultCredentials = false
             };
@@ -47,7 +47,7 @@ namespace Controllers.Network
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
-            string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
+            var uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
             using (var response = await RequestResponseAsync(status, HttpMethod.Get, uri))
             {
@@ -86,7 +86,7 @@ namespace Controllers.Network
             IDictionary<string, string> parameters = null,
             string data = null)
         {
-            string uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
+            var uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
             if (data == null) data = string.Empty;
             var content = new StringContent(data, Encoding.UTF8, HeaderDefaultValues.ContentType);

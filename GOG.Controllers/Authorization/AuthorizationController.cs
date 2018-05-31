@@ -20,20 +20,20 @@ namespace GOG.Controllers.Authorization
 {
     public class AuthorizationController : IAuthorizationController
     {
-        private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
-        private const string successfullyAuthorized = "Successfully authorized";
-        private const string recaptchaDetected = "Login page contains reCAPTCHA.\n" +
+        const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
+        const string successfullyAuthorized = "Successfully authorized";
+        const string recaptchaDetected = "Login page contains reCAPTCHA.\n" +
             "Please login in the browser, then export the galaxy-login-* cookies into ./cookies.json\n" +
             "{INSTRUCTIONS}";
-        private const string gogData = "gogData";
+        const string gogData = "gogData";
 
-        private ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate;
-        private ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate;
-        private IUriController uriController;
-        private INetworkController networkController;
-        private ISerializationController<string> serializationController;
-        private IDictionary<string, IStringExtractionController> extractionControllers;
-        private IStatusController statusController;
+        ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate;
+        ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate;
+        IUriController uriController;
+        INetworkController networkController;
+        ISerializationController<string> serializationController;
+        IDictionary<string, IStringExtractionController> extractionControllers;
+        readonly IStatusController statusController;
 
         public AuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
@@ -112,14 +112,14 @@ namespace GOG.Controllers.Authorization
             }
 
             var usernamePassword = await correctUsernamePasswordAsyncDelegate.CorrectAsync(
-                new string[] { username, password }, 
+                new string[] { username, password },
                 getLoginCheckResponseTask);
 
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUnderscoreToken] = loginToken;
 
-            string loginData = uriController.ConcatenateQueryParameters(QueryParametersCollections.LoginAuthenticate);
+            var loginData = uriController.ConcatenateQueryParameters(QueryParametersCollections.LoginAuthenticate);
 
             var loginCheckResult = await networkController.PostDataToResourceAsync(getLoginCheckResponseTask, loginUri, null, loginData);
 
@@ -150,7 +150,7 @@ namespace GOG.Controllers.Authorization
             QueryParametersCollections.SecondStepAuthentication[
                 QueryParameters.SecondStepAuthenticationUnderscoreToken] = secondStepAuthenticationToken;
 
-            string secondStepData = uriController.ConcatenateQueryParameters(QueryParametersCollections.SecondStepAuthentication);
+            var secondStepData = uriController.ConcatenateQueryParameters(QueryParametersCollections.SecondStepAuthentication);
 
             var secondStepLoginCheckResult = await networkController.PostDataToResourceAsync(status, Uris.Paths.Authentication.TwoStep, null, secondStepData);
 

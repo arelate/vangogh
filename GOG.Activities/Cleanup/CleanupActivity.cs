@@ -16,13 +16,13 @@ namespace GOG.Activities.Cleanup
 {
     public class CleanupActivity : Activity
     {
-        private Entity context;
-        private IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
-        private IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
-        private IItemizeDelegate<string, string> itemizeDetailsDelegate;
-        private IFormatDelegate<string, string> formatSupplementaryItemDelegate;
-        private IRecycleDelegate recycleDelegate;
-        private IDirectoryController directoryController;
+        Entity context;
+        readonly IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
+        readonly IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
+        readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
+        readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
+        readonly IRecycleDelegate recycleDelegate;
+        readonly IDirectoryController directoryController;
 
         public CleanupActivity(
             Entity context,
@@ -81,8 +81,8 @@ namespace GOG.Activities.Cleanup
             {
                 var directory = Path.GetDirectoryName(item);
                 if (!emptyDirectories.Contains(directory) &&
-                    directoryController.EnumerateFiles(directory).Count() == 0 &&
-                    directoryController.EnumerateDirectories(directory).Count() == 0)
+                    !directoryController.EnumerateFiles(directory).Any()&&
+                    !directoryController.EnumerateDirectories(directory).Any())
                     emptyDirectories.Add(directory);
             }
 

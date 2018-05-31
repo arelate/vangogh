@@ -8,7 +8,7 @@ namespace Delegates.Correct
 {
     public class CorrectUsernamePasswordAsyncDelegate : ICorrectAsyncDelegate<string[]>
     {
-        private IInputController<string> inputController;
+        readonly IInputController<string> inputController;
 
         public CorrectUsernamePasswordAsyncDelegate(IInputController<string> inputController)
         {

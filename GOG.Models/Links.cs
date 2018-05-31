@@ -2,7 +2,7 @@
 
 namespace GOG.Models
 {
-    [DataContract()]
+    [DataContract]
     public class Links
     {
         [DataMember(Name = "purchase_link")]

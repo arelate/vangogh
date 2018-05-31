@@ -6,8 +6,8 @@ namespace Delegates.Confirm
 {
     public class ConfirmStringMatchesAllDelegate : IConfirmDelegate<string>
     {
-        private string[] matches;
-        private ICollectionController collectionController;
+        readonly string[] matches;
+        readonly ICollectionController collectionController;
 
         public ConfirmStringMatchesAllDelegate(
             ICollectionController collectionController,

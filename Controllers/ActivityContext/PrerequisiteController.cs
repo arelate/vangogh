@@ -10,7 +10,7 @@ namespace Controllers.ActivityContext
 {
     public class PrerequisiteController : IPrerequisiteController
     {
-        private IDictionary<AC, AC[]> prerequisites;
+        readonly IDictionary<AC, AC[]> prerequisites;
 
         public PrerequisiteController(IDictionary<AC, AC[]> prerequisites)
         {

@@ -9,8 +9,8 @@ namespace Delegates.EnumerateIds
 {
     public class ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate : IItemizeAllAsyncDelegate<long>
     {
-        private IItemizeAllAsyncDelegate<long> itemizeUserRequestedIdsAsyncDelegate;
-        private IItemizeAllAsyncDelegate<long>[] itemizeDefaultIdsDelegates;
+        readonly IItemizeAllAsyncDelegate<long> itemizeUserRequestedIdsAsyncDelegate;
+        readonly IItemizeAllAsyncDelegate<long>[] itemizeDefaultIdsDelegates;
 
         public ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeUserRequestedIdsAsyncDelegate,
@@ -24,7 +24,7 @@ namespace Delegates.EnumerateIds
         {
             var userRequestedIds = await itemizeUserRequestedIdsAsyncDelegate.ItemizeAllAsync(status);
 
-            if (userRequestedIds != null || userRequestedIds.Count() > 0) return userRequestedIds;
+            if (userRequestedIds != null || userRequestedIds.Any()) return userRequestedIds;
 
             var otherIds = new List<long>();
             foreach (var enumerableDelegate in itemizeDefaultIdsDelegates)

@@ -12,9 +12,9 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllProductFilesDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        private IGetDirectoryDelegate productFilesDirectoryDelegate;
-        private IDirectoryController directoryController;
-        private IStatusController statusController;
+        readonly IGetDirectoryDelegate productFilesDirectoryDelegate;
+        readonly IDirectoryController directoryController;
+        readonly IStatusController statusController;
 
         public ItemizeAllProductFilesDirectoriesAsyncDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate,

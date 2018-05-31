@@ -11,11 +11,11 @@ namespace Delegates.Format.Numbers
         protected string[] orderTitles;
         protected string format;
         protected string zero;
-        protected bool roundValue = false;
+        protected bool roundValue;
 
         public string Format(long value)
         {
-            long max = relativeOrders.Aggregate((long)1, (a, b) => a * b);
+            var max = relativeOrders.Aggregate((long)1, (a, b) => a * b);
 
             for (var ii = 0; ii < relativeOrders.Length; ii++)
             {

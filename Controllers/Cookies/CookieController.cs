@@ -13,9 +13,9 @@ namespace Controllers.Cookies
 {
     public class CookiesController : ICookiesController
     {
-        private IStashController<Dictionary<string, string>> cookieStashController;
-        private IStrongTypeSerializationController<(string, string), string> cookieSerializationController;
-        private IStatusController statusController;
+        readonly IStashController<Dictionary<string, string>> cookieStashController;
+        readonly IStrongTypeSerializationController<(string, string), string> cookieSerializationController;
+        IStatusController statusController;
 
         public CookiesController(
             IStashController<Dictionary<string, string>> cookieStashController,

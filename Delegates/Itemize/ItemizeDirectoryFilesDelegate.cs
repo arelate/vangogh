@@ -8,7 +8,7 @@ namespace Delegates.Itemize
 {
     public class ItemizeDirectoryFilesDelegate : IItemizeDelegate<string, string>
     {
-        private IDirectoryController directoryController;
+        readonly IDirectoryController directoryController;
 
         public ItemizeDirectoryFilesDelegate(
             IDirectoryController directoryController)

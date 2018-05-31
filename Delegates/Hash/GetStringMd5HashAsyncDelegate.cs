@@ -9,8 +9,8 @@ namespace Delegates.Hash
 {
     public class GetStringMd5HashAsyncDelegate : IGetHashAsyncDelegate<string>
     {
-        private IConvertDelegate<string, byte[]> stringToBytesConversionController;
-        private IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate;
+        readonly IConvertDelegate<string, byte[]> stringToBytesConversionController;
+        readonly IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate;
 
         public GetStringMd5HashAsyncDelegate(
             IConvertDelegate<string, byte[]> stringToBytesConversionController,

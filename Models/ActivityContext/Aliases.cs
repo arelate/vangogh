@@ -9,7 +9,7 @@ namespace Models.ActivityContext
     public static partial class ActivityContext
     {
         public static Dictionary<string, (Activity, Entity)[]> Aliases =
-            new Dictionary<string, (Activity, Entity)[]>()
+            new Dictionary<string, (Activity, Entity)[]>
             {
                 {
                     "updateData",

@@ -6,11 +6,11 @@ namespace Controllers.Language
 {
     public class LanguageController : ILanguageController
     {
-        private IDictionary<string, string> knownLanguages;
+        readonly IDictionary<string, string> knownLanguages;
 
         public LanguageController()
         {
-            knownLanguages = new Dictionary<string, string>()
+            knownLanguages = new Dictionary<string, string>
             {
                 // extracted from https://www.gog.com/account, so should contain all of them
                 { "english", "en" },

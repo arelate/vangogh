@@ -13,14 +13,14 @@ namespace Delegates.Constrain
 {
     public class ConstrainRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
     {
-        private IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
-        private ICollectionController collectionController;
-        private IStatusController statusController;
-        private Dictionary<string, DateTime> lastRequestToUriPrefix;
-        private string[] uriPrefixes;
-        private const int requestIntervalSeconds = 30;
-        private const int passthroughCount = 100; // don't throttle first N requests
-        private int rateLimitRequestsCount;
+        readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
+        readonly ICollectionController collectionController;
+        readonly IStatusController statusController;
+        readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
+        readonly string[] uriPrefixes;
+        const int requestIntervalSeconds = 30;
+        const int passthroughCount = 100; // don't throttle first N requests
+        int rateLimitRequestsCount;
 
         public ConstrainRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
@@ -45,7 +45,7 @@ namespace Delegates.Constrain
 
         public async Task ConstrainAsync(string uri, IStatus status)
         {
-            var prefix = collectionController.Reduce(uriPrefixes, p => uri.StartsWith(p)).SingleOrDefault();
+            var prefix = collectionController.Reduce(uriPrefixes, uri.StartsWith).SingleOrDefault();
             if (string.IsNullOrEmpty(prefix)) return;
 
             // don't limit rate for the first N requests, even if they match rate limit prefix

@@ -10,7 +10,7 @@ namespace Controllers.Serialization
     {
         public string Serialize<Type>(Type data)
         {
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Type));
+            var jsonSerializer = new DataContractJsonSerializer(typeof(Type));
             string outputData = string.Empty;
 
             MemoryStream memoryStream = null;
@@ -36,7 +36,7 @@ namespace Controllers.Serialization
 
         public Type Deserialize<Type>(string data)
         {
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Type));
+            var jsonSerializer = new DataContractJsonSerializer(typeof(Type));
             Type parsedData = default(Type);
 
             if (string.IsNullOrEmpty(data)) return parsedData;

@@ -24,15 +24,15 @@ namespace GOG.Activities.Validate
 {
     public class ValidateProductFilesActivity : Activity
     {
-        private IGetDirectoryDelegate productFileDirectoryDelegate;
-        private IGetFilenameDelegate productFileFilenameDelegate;
-        private IFormatDelegate<string, string> formatValidationFileDelegate;
-        private IFileValidationController fileValidationController;
-        private IDataController<ValidationResult> validationResultsDataController;
-        private IDataController<GameDetails> gameDetailsDataController;
-        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        private IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
-        private IRoutingController routingController;
+        readonly IGetDirectoryDelegate productFileDirectoryDelegate;
+        readonly IGetFilenameDelegate productFileFilenameDelegate;
+        readonly IFormatDelegate<string, string> formatValidationFileDelegate;
+        readonly IFileValidationController fileValidationController;
+        readonly IDataController<ValidationResult> validationResultsDataController;
+        readonly IDataController<GameDetails> gameDetailsDataController;
+        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
+        readonly IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
+        readonly IRoutingController routingController;
 
         public ValidateProductFilesActivity(
             IGetDirectoryDelegate productFileDirectoryDelegate,
@@ -74,7 +74,7 @@ namespace GOG.Activities.Validate
                 var validationResults = await validationResultsDataController.GetByIdAsync(id, validateProductsStatus);
 
                 if (validationResults == null)
-                    validationResults = new ValidationResult()
+                    validationResults = new ValidationResult
                     {
                         Id = id,
                         Title = gameDetails.Title

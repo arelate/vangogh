@@ -2,7 +2,7 @@
 
 namespace GOG.Models
 {
-    [DataContract()]
+    [DataContract]
     public class InDevelopment
     {
         [DataMember(Name = "active")]

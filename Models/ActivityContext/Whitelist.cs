@@ -7,7 +7,7 @@ namespace Models.ActivityContext
 {
     public static partial class ActivityContext
     {
-        public static Dictionary<Activity, Entity[]> Whitelist = new Dictionary<Activity, Entity[]>()
+        public static Dictionary<Activity, Entity[]> Whitelist = new Dictionary<Activity, Entity[]>
         {
             {
                 Activity.Correct,

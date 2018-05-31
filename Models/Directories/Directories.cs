@@ -21,7 +21,7 @@ namespace Models.Directories
             { Entity.Wishlist, "wishlist" },
             { Entity.Updated, "updated" },
             { Entity.Activity, "activity" },
-            { Entity.Index, "" },
+            { Entity.Index, "" }
         };
 
         public static IDictionary<Entity, string> Base = new Dictionary<Entity, string>

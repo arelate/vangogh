@@ -18,8 +18,8 @@ namespace Delegates.EnumerateIds
         where MasterType: ProductCore
         where DetailType: ProductCore
     {
-        private IDataController<MasterType> masterDataController;
-        private IDataController<DetailType> detailDataController;
+        readonly IDataController<MasterType> masterDataController;
+        readonly IDataController<DetailType> detailDataController;
 
         public ItemizeAllMasterDetailsGapsAsyncDelegate(
             IDataController<MasterType> masterDataController,

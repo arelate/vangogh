@@ -87,4 +87,13 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30A8FC0B-23DC-4FF2-B308-A08D4A06D59F}
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.FileWidth = 80
+		$1.TabsToSpaces = True
+		$1.scope = text/plain
+		$0.CSharpFormattingPolicy = $2
+		$2.scope = text/x-csharp
+	EndGlobalSection
 EndGlobal

@@ -11,9 +11,9 @@ namespace GOG.Delegates.RequestPage
 {
     public class RequestPageAsyncDelegate: IRequestPageAsyncDelegate
     {
-        private INetworkController networkController;
+        readonly INetworkController networkController;
 
-        private const string pageQueryParameter = "page";
+        const string pageQueryParameter = "page";
 
         public RequestPageAsyncDelegate(
             INetworkController networkController)

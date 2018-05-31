@@ -10,7 +10,7 @@ namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadProductImageAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
-        private IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
+        readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
 
         public DownloadProductImageAsyncDelegate(IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate)
         {

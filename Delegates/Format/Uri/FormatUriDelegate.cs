@@ -8,7 +8,7 @@ namespace Delegates.Format.Uri
 
         public string Format(string partialUri)
         {
-            return string.Format(uriTemplate, partialUri); ;
+            return string.Format(uriTemplate, partialUri);
         }
     }
 }

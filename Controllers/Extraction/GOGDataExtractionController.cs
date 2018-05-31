@@ -7,8 +7,8 @@ namespace Controllers.Extraction
 {
     public class GOGDataExtractionController : IStringExtractionController
     {
-        private const string gogDataPrefix = "var gogData = ";
-        private Regex regex = new Regex(gogDataPrefix + "(.*)");
+        const string gogDataPrefix = "var gogData = ";
+        readonly Regex regex = new Regex(gogDataPrefix + "(.*)");
 
         public IEnumerable<string> ExtractMultiple(string data)
         {

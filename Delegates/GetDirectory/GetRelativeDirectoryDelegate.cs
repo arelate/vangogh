@@ -9,8 +9,8 @@ namespace Delegates.GetDirectory
 {
     public class GetRelativeDirectoryDelegate : IGetDirectoryDelegate
     {
-        private string baseDirectory;
-        private IGetDirectoryDelegate[] parentDirectories;
+        readonly string baseDirectory;
+        readonly IGetDirectoryDelegate[] parentDirectories;
 
         public GetRelativeDirectoryDelegate(string baseDirectory, params IGetDirectoryDelegate[] parentDirectories)
         {

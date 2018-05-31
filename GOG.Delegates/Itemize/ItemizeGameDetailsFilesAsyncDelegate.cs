@@ -18,12 +18,12 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsFilesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        private IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsManualUrlsDelegate;
-        private IGetPathDelegate getPathDelegate;
+        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate;
+        readonly IGetPathDelegate getPathDelegate;
         //private IGetDirectoryDelegate getDirectoryDelegate;
         //private IGetFilenameDelegate getFilenameDelegate;
-        private IRoutingController routingController;
-        private IStatusController statusController;
+        readonly IRoutingController routingController;
+        readonly IStatusController statusController;
 
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,

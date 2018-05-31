@@ -9,7 +9,7 @@ namespace Models.ActivityContext
 {
     public static partial class ActivityContext
     {
-        public static IList<AC> Supplementary = new List<AC>()
+        public static IList<AC> Supplementary = new List<AC>
         {
             (Activity.Report, Entity.None)
         };

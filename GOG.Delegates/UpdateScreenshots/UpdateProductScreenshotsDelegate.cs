@@ -19,12 +19,12 @@ namespace GOG.Delegates.UpdateScreenshots
 {
     public class UpdateScreenshotsAsyncDelegate : IUpdateScreenshotsAsyncDelegate<Product>
     {
-        private IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
-        private IDataController<ProductScreenshots> screenshotsDataController;
-        private INetworkController networkController;
-        private IStringExtractionController screenshotExtractionController;
+        readonly IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
+        readonly IDataController<ProductScreenshots> screenshotsDataController;
+        readonly INetworkController networkController;
+        readonly IStringExtractionController screenshotExtractionController;
 
-        private IStatusController statusController;
+        readonly IStatusController statusController;
         public UpdateScreenshotsAsyncDelegate(
             IGetUpdateUriDelegate<Entity> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
@@ -51,7 +51,7 @@ namespace GOG.Delegates.UpdateScreenshots
 
             if (extractedProductScreenshots == null) return;
 
-            var productScreenshots = new ProductScreenshots()
+            var productScreenshots = new ProductScreenshots
             {
                 Id = product.Id,
                 Title = product.Title,

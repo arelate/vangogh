@@ -9,7 +9,7 @@ namespace Models.ActivityContext
 {
     public static partial class ActivityContext
     {
-        public static IDictionary<AC, AC[]> Prerequisites = new Dictionary<AC, AC[]>()
+        public static IDictionary<AC, AC[]> Prerequisites = new Dictionary<AC, AC[]>
         {
             {
                 (Activity.UpdateData, Entity.Any),

@@ -41,18 +41,18 @@ namespace Ghost.Factories.Controllers
     /// </summary>
     public class DataControllerFactory
     {
-        private readonly ICollectionController collectionController;
-        private readonly ISerializationController<string> serializationController;
-        private readonly IStorageController<string> storageController;
-        private ISerializedStorageController serializedStorageController;
-        private IRecycleDelegate recycleDelegate;
-        private IStatusController statusController;
+        readonly ICollectionController collectionController;
+        readonly ISerializationController<string> serializationController;
+        readonly IStorageController<string> storageController;
+        readonly ISerializedStorageController serializedStorageController;
+        readonly IRecycleDelegate recycleDelegate;
+        readonly IStatusController statusController;
 
-        private IGetDirectoryDelegate getDataDirectoryDelegate;
-        private IGetDirectoryDelegate getRecordsDirectoryDelegate;
+        IGetDirectoryDelegate getDataDirectoryDelegate;
+        IGetDirectoryDelegate getRecordsDirectoryDelegate;
 
-        private IGetFilenameDelegate getIndexFilenameDelegate;
-        private IGetFilenameDelegate getJsonFilenameDelegate;
+        readonly IGetFilenameDelegate getIndexFilenameDelegate;
+        readonly IGetFilenameDelegate getJsonFilenameDelegate;
 
         public DataControllerFactory(
             ICollectionController collectionController,

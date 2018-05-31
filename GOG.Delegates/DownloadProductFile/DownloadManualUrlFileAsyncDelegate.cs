@@ -17,12 +17,12 @@ namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadManualUrlFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
-        private INetworkController networkController;
-        private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
-        private IRoutingController routingController;
-        private IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        private IStatusController statusController;
-        private IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
+        readonly INetworkController networkController;
+        readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        readonly IRoutingController routingController;
+        readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
+        readonly IStatusController statusController;
+        readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
 
         public DownloadManualUrlFileAsyncDelegate(
             INetworkController networkController,

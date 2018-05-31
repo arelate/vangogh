@@ -14,9 +14,9 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllGameDetailsDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        private IDataController<GameDetails> gameDetailsDataController;
-        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
-        private IStatusController statusController;
+        readonly IDataController<GameDetails> gameDetailsDataController;
+        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
+        readonly IStatusController statusController;
 
         public ItemizeAllGameDetailsDirectoriesAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController,

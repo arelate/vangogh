@@ -12,7 +12,7 @@ namespace Controllers.Extraction
         internal virtual string ExtractValue(string data)
         {
             string valueAttribute = "value=\"";
-            var start = data.IndexOf(valueAttribute) + valueAttribute.Length;
+            var start = data.IndexOf(valueAttribute, System.StringComparison.Ordinal) + valueAttribute.Length;
             return data.Substring(start, data.Length - start  - 1);
         }
 

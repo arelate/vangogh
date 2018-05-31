@@ -12,7 +12,7 @@ namespace Delegates.GetDirectory
 {
     public class GetUriDirectoryDelegate : IGetDirectoryDelegate
     {
-        private IGetDirectoryDelegate baseDirectoryDelegate;
+        readonly IGetDirectoryDelegate baseDirectoryDelegate;
 
         public GetUriDirectoryDelegate(IGetDirectoryDelegate baseDirectoryDelegate)
         {

@@ -4,7 +4,7 @@ using Models.ProductCore;
 
 namespace GOG.Models
 {
-    [DataContract()]
+    [DataContract]
     public class ApiProduct: ProductCore
     {
         [DataMember(Name = "purchase_link")]

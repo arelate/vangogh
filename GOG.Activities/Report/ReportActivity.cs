@@ -7,7 +7,7 @@ namespace GOG.Activities.Report
 {
     public class ReportActivity: Activity
     {
-        private INotifyViewUpdateOutputContinuousAsyncDelegate notifyViewUpdateOutputContinuousAsyncDelegate;
+        readonly INotifyViewUpdateOutputContinuousAsyncDelegate notifyViewUpdateOutputContinuousAsyncDelegate;
 
         public ReportActivity(
             INotifyViewUpdateOutputContinuousAsyncDelegate notifyViewUpdateOutputContinuousAsyncDelegate,

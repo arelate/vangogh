@@ -22,20 +22,20 @@ namespace Controllers.Data
 {
     public class DataController<Type> : IDataController<Type>
     {
-        private IIndexController<long> indexController;
+        readonly IIndexController<long> indexController;
 
-        private ISerializedStorageController serializedStorageController;
+        ISerializedStorageController serializedStorageController;
 
-        private IConvertDelegate<Type, long> convertProductToIndexDelegate;
-        private ICollectionController collectionController;
+        IConvertDelegate<Type, long> convertProductToIndexDelegate;
+        ICollectionController collectionController;
 
-        private IGetPathDelegate getPathDelegate;
+        IGetPathDelegate getPathDelegate;
 
-        private IRecycleDelegate recycleDelegate;
+        IRecycleDelegate recycleDelegate;
 
-        private IRecordsController<long> recordsController;
+        IRecordsController<long> recordsController;
 
-        private IStatusController statusController;
+        IStatusController statusController;
 
         public DataController(
             IIndexController<long> indexController,
@@ -78,7 +78,7 @@ namespace Controllers.Data
                 status);
         }
 
-        private async Task MapItemsAndIndexes(
+        async Task MapItemsAndIndexes(
             IStatus status,
             string taskMessage,
             Func<long, Type, Task> action,

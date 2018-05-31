@@ -4,7 +4,7 @@ namespace Delegates.GetFilename
 {
     public class GetFixedFilenameDelegate : IGetFilenameDelegate
     {
-        private string fixedFilename;
+        readonly string fixedFilename;
 
         public GetFixedFilenameDelegate(string fixedFilename, IGetFilenameDelegate jsonFilenameDelegate)
         {

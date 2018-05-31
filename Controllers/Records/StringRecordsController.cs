@@ -13,8 +13,8 @@ namespace Controllers.Records
 {
     public class StringRecordsController: IRecordsController<string>
     {
-        private IRecordsController<long> indexRecordsController;
-        private IConvertDelegate<string, long> convertStringToIndexDelegate;
+        readonly IRecordsController<long> indexRecordsController;
+        readonly IConvertDelegate<string, long> convertStringToIndexDelegate;
 
         public StringRecordsController(
             IRecordsController<long> indexRecordsController,

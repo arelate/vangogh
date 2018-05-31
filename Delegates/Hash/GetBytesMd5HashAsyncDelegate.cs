@@ -10,8 +10,8 @@ namespace Delegates.Hash
 {
     public class GetBytesMd5HashAsyncDelegate: IGetHashAsyncDelegate<byte[]>
     {
-        private MD5 md5;
-        private IConvertDelegate<byte[], string> byteToStringConversionController;
+        readonly MD5 md5;
+        readonly IConvertDelegate<byte[], string> byteToStringConversionController;
 
         public GetBytesMd5HashAsyncDelegate(
             IConvertDelegate<byte[], string> byteToStringConversionController)

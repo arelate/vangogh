@@ -8,7 +8,7 @@ namespace Controllers.ActivityContext
 {
     public class SupplementaryController : ISupplementaryController
     {
-        private IList<AC> supplementary;
+        readonly IList<AC> supplementary;
 
         public SupplementaryController(IList<AC> supplementary)
         {

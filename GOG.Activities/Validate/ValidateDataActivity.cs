@@ -11,9 +11,9 @@ namespace GOG.Activities.Validate
 {
     public class ValidateDataActivity: Activity
     {
-        private IStoredHashController storedHashController;
-        private IFileController fileController;
-        private IValidateFileAsyncDelegate<bool> fileValidateDelegate;
+        readonly IStoredHashController storedHashController;
+        readonly IFileController fileController;
+        readonly IValidateFileAsyncDelegate<bool> fileValidateDelegate;
 
         public ValidateDataActivity(
             IStoredHashController storedHashController,

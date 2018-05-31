@@ -13,8 +13,8 @@ namespace GOG.Activities.Repair
 {
     public class RepairActivity : Activity
     {
-        private IDataController<ValidationResult> validationResultDataController;
-        private IValidationResultController validationResultController;
+        readonly IDataController<ValidationResult> validationResultDataController;
+        readonly IValidationResultController validationResultController;
 
         public RepairActivity(
             IDataController<ValidationResult> validationResultDataController,

@@ -17,10 +17,10 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        private IIndexController<long> updatedDataController;
-        private IDataController<GameDetails> gameDetailsDataController;
-        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate;
-        private IStatusController statusController;
+        readonly IIndexController<long> updatedDataController;
+        readonly IDataController<GameDetails> gameDetailsDataController;
+        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate;
+        readonly IStatusController statusController;
 
         public ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
             IIndexController<long> updatedDataController,

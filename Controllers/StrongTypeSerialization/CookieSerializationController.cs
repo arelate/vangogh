@@ -8,13 +8,13 @@ namespace Controllers.StrongTypeSerialization
 {
     public class CookieSerializationController : IStrongTypeSerializationController<(string, string), string>
     {
-        private const string cookieNameValueTemplate = "{0}" + Separators.Common.Equality + "{1}";
+        const string cookieNameValueTemplate = "{0}" + Separators.Common.Equality + "{1}";
 
         public (string, string) Deserialize(string cookie)
         {
             var deserializedCookie = new ValueTuple<string ,string>();
 
-            var cookieNameValue = cookie.Substring(0, cookie.IndexOf(Separators.Common.SemiColon));
+            var cookieNameValue = cookie.Substring(0, cookie.IndexOf(Separators.Common.SemiColon, StringComparison.Ordinal));
             var cookieNameValueParts = cookieNameValue.Split(
                 new string[] { Separators.Common.Equality },
                 StringSplitOptions.RemoveEmptyEntries);

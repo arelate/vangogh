@@ -7,7 +7,7 @@ namespace Delegates.Confirm
 {
     public class ConfirmValidationExpectedDelegate : IConfirmDelegate<string>
     {
-        private readonly string[] extensionsWhitelist = new string[] {
+        readonly string[] extensionsWhitelist = {
             ".exe", // Windows
             ".bin", // Windows
             ".dmg", // Mac

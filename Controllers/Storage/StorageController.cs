@@ -9,8 +9,8 @@ namespace Controllers.Storage
 {
     public class StorageController : IStorageController<string>
     {
-        private IStreamController streamController;
-        private IFileController fileController;
+        readonly IStreamController streamController;
+        readonly IFileController fileController;
 
         public StorageController(
             IStreamController streamController,

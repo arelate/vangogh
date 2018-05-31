@@ -14,8 +14,8 @@ namespace GOG.Activities.UpdateData
 {
     public class WishlistedUpdateActivity : Activity
     {
-        private IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
-        private IIndexController<long> wishlistedDataController;
+        readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
+        readonly IIndexController<long> wishlistedDataController;
 
         public WishlistedUpdateActivity(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,

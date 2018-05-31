@@ -7,7 +7,7 @@ namespace GOG.Delegates.Format
 {
     public class FormatDownloadLanguageDelegate : IFormatDelegate<string, string>
     {
-        private IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
         public FormatDownloadLanguageDelegate(IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
         {
@@ -19,7 +19,7 @@ namespace GOG.Delegates.Format
             downloadLanguage = replaceMultipleStringsDelegate.ReplaceMultiple(
                 downloadLanguage,
                 string.Empty,
-                new string[2] { "\"", "," });
+                new string[] { "\"", "," });
 
             downloadLanguage = Regex.Unescape(downloadLanguage);
 

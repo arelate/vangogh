@@ -15,13 +15,13 @@ namespace Controllers.Index
 {
     public class IndexController<Type> : IIndexController<Type>
     {
-        private IStashController<List<Type>> indexesStashController;
+        readonly IStashController<List<Type>> indexesStashController;
 
-        private ICollectionController collectionController;
+        ICollectionController collectionController;
 
-        private IRecordsController<Type> recordsController;
+        readonly IRecordsController<Type> recordsController;
 
-        private IStatusController statusController;
+        IStatusController statusController;
 
         public IndexController(
             IStashController<List<Type>> indexesStashController,
@@ -53,11 +53,11 @@ namespace Controllers.Index
             return await indexesStashController.GetDataAsync(status);
         }
 
-        private async Task Map(IStatus status, string taskMessage, Func<Type, Task<bool>> itemAction, Type data)
+        async Task Map(IStatus status, string taskMessage, Func<Type, Task<bool>> itemAction, Type data)
         {
             var task = await statusController.CreateAsync(status, taskMessage, false);
 
-            if (await itemAction(data)) 
+            if (await itemAction(data))
             {
                 var saveDataTask = await statusController.CreateAsync(task, "Save modified index", false);
                 await indexesStashController.SaveAsync(status);

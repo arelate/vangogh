@@ -25,14 +25,14 @@ namespace GOG.Activities.UpdateData
         where PageType : Models.PageResult
         where DataType : ProductCore
     {
-        private AC activityContext;
-        private IActivityContextController activityContextController;
+        AC activityContext;
+        readonly IActivityContextController activityContextController;
 
-        private IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
-        private IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
+        readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
+        readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
-        private IDataController<DataType> dataController;
-        IRecordsController<string> activityRecordsController;
+        readonly IDataController<DataType> dataController;
+        readonly IRecordsController<string> activityRecordsController;
 
         public PageResultUpdateActivity(
             AC activityContext,
@@ -68,7 +68,7 @@ namespace GOG.Activities.UpdateData
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
             await statusController.CompleteAsync(extractTask);
 
-            if (newProducts.Count() > 0)
+            if (newProducts.Any())
             {
                 var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Save {activityContext.Item2}");
                 var current = 0;

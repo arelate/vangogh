@@ -19,13 +19,13 @@ namespace Controllers.InputOutput
         IInputController<string>,
         IOutputController<string[]>
     {
-        private int savedCursorTopPosition = -1;
-        private int previousFrameLines = 0;
+        int savedCursorTopPosition = -1;
+        int previousFrameLines;
 
-        private StringBuilder fragmentBuffer;
+        StringBuilder fragmentBuffer;
 
-        private IFormatDelegate<IEnumerable<string>, IEnumerable<string>> formatTextToFitConsoleWindowDelegate;
-        private IConsoleController consoleController;
+        IFormatDelegate<IEnumerable<string>, IEnumerable<string>> formatTextToFitConsoleWindowDelegate;
+        readonly IConsoleController consoleController;
 
         public ConsoleInputOutputController(
             IFormatDelegate<IEnumerable<string>, IEnumerable<string>> formatTextToFitConsoleWindowDelegate,

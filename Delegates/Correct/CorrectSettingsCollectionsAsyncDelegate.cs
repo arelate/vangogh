@@ -12,7 +12,7 @@ namespace Delegates.Correct
 {
     public class CorrectSettingsCollectionsAsyncDelegate : ICorrectAsyncDelegate<Settings>
     {
-        private IStatusController statusController;
+        readonly IStatusController statusController;
 
         public CorrectSettingsCollectionsAsyncDelegate(IStatusController statusController)
         {

@@ -8,8 +8,8 @@ namespace Controllers.ViewUpdates
 {
     public class NotifyStatusViewUpdateController: INotifyViewUpdateController
     {
-        private IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate;
-        private IOutputController<string[]> outputController;
+        readonly IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate;
+        readonly IOutputController<string[]> outputController;
 
         public NotifyStatusViewUpdateController(
             IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate,

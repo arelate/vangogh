@@ -21,13 +21,13 @@ namespace Controllers.Validation
 {
     public class FileValidationController : IFileValidationController
     {
-        private IConfirmDelegate<string> confirmValidationExpectedDelegate;
-        private IFileController fileController;
-        private IStreamController streamController;
-        private XmlDocument validationXml;
-        private IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate;
-        private IValidationResultController validationResultController;
-        private IStatusController statusController;
+        IConfirmDelegate<string> confirmValidationExpectedDelegate;
+        readonly IFileController fileController;
+        IStreamController streamController;
+        XmlDocument validationXml;
+        IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate;
+        IValidationResultController validationResultController;
+        IStatusController statusController;
 
         public FileValidationController(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
@@ -44,21 +44,21 @@ namespace Controllers.Validation
             this.validationResultController = validationResultController;
             this.statusController = statusController;
 
-            validationXml = new XmlDocument() { PreserveWhitespace = false };
+            validationXml = new XmlDocument { PreserveWhitespace = false };
         }
 
         public async Task<IFileValidationResult> ValidateFileAsync(string productFileUri, string validationUri, IStatus status)
         {
-            var fileValidation = new FileValidation()
+            var fileValidation = new FileValidation
             {
                 Filename = productFileUri
             };
 
             if (string.IsNullOrEmpty(productFileUri))
-                throw new ArgumentNullException("File location is invalid");
+                throw new ArgumentNullException();
 
             if (string.IsNullOrEmpty(validationUri))
-                throw new ArgumentNullException("Validation location is invalid");
+                throw new ArgumentNullException();
 
             fileValidation.ValidationExpected = confirmValidationExpectedDelegate.Confirm(productFileUri);
 
@@ -167,7 +167,7 @@ namespace Controllers.Validation
             if (!fileStream.CanSeek)
                 throw new Exception("Unable to seek in the file stream");
 
-            var chunkValidation = new ChunkValidation()
+            var chunkValidation = new ChunkValidation
             {
                 From = from,
                 To = to,

@@ -16,10 +16,10 @@ namespace Delegates.Download
 {
     public class DownloadFromResponseAsyncDelegate : IDownloadFromResponseAsyncDelegate
     {
-        private INetworkController networkController;
-        private IStreamController streamController;
-        private IFileController fileController;
-        private IStatusController statusController;
+        INetworkController networkController;
+        readonly IStreamController streamController;
+        readonly IFileController fileController;
+        readonly IStatusController statusController;
 
         public DownloadFromResponseAsyncDelegate(
             INetworkController networkController,

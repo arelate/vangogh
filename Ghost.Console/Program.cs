@@ -262,7 +262,7 @@ namespace Ghost.Console
 
             var statusTreeToEnumerableController = new ConvertTreeToEnumerableDelegate<IStatus>(itemizeStatusChildrenDelegate);
 
-            var applicationStatus = new Status() { Title = "This ghost is a kind one." };
+            var applicationStatus = new Status { Title = "This ghost is a kind one." };
 
             var appTemplateController = new TemplateController(
                 "status",
@@ -430,7 +430,7 @@ namespace Ghost.Console
             var correctSecurityCodeAsyncDelegate = new CorrectSecurityCodeAsyncDelegate(
                 consoleInputOutputController);
 
-            var authorizationExtractionControllers = new Dictionary<string, IStringExtractionController>()
+            var authorizationExtractionControllers = new Dictionary<string, IStringExtractionController>
             {
                 { QueryParameters.LoginId,
                     loginIdExtractionController },
@@ -965,7 +965,7 @@ namespace Ghost.Console
 
             #region Activity Context To Activity Controllers Mapping
 
-            var activityContextToActivityControllerMap = new Dictionary<(Activity, Entity), IActivity>()
+            var activityContextToActivityControllerMap = new Dictionary<(Activity, Entity), IActivity>
             {
                 { (Activity.Correct, Entity.Settings), correctSettingsActivity },
                 { (Activity.Authorize, Entity.None), authorizeActivity },
@@ -1023,7 +1023,7 @@ namespace Ghost.Console
                     var itemizeInnerExceptionsDelegate = new ItemizeInnerExceptionsDelegate();
                     var convertTreeToEnumerableDelegate = new ConvertTreeToEnumerableDelegate<Exception>(itemizeInnerExceptionsDelegate);
 
-                    List<string> errorMessages = new List<string>();
+                    var errorMessages = new List<string>();
                     foreach (var innerException in convertTreeToEnumerableDelegate.Convert(ex))
                         errorMessages.Add(innerException.Message);
 

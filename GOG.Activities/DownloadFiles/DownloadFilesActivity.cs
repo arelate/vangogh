@@ -15,9 +15,9 @@ namespace GOG.Activities.DownloadProductFiles
 {
     public class DownloadFilesActivity : Activity
     {
-        private Entity context;
-        private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
+        Entity context;
+        readonly IDataController<ProductDownloads> productDownloadsDataController;
+        readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
 
         public DownloadFilesActivity(
             Entity context,
@@ -67,7 +67,7 @@ namespace GOG.Activities.DownloadProductFiles
 
                     var sanitizedUri = entry.SourceUri;
                     if (sanitizedUri.Contains(Separators.QueryString))
-                        sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString));
+                        sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
 
                     await statusController.UpdateProgressAsync(
                         processDownloadEntriesTask,

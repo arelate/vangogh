@@ -21,14 +21,14 @@ namespace GOG.Activities.UpdateDownloads
 {
     public class UpdateDownloadsActivity : Activity
     {
-        private Entity context;
+        Entity context;
 
-        private IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IFileController fileController;
-        private IDataController<ProductDownloads> productDownloadsDataController;
-        private IDataController<AccountProduct> accountProductsDataController;
-        private IDataController<Product> productsDataController;
+        readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
+        readonly IGetDirectoryDelegate getDirectoryDelegate;
+        readonly IFileController fileController;
+        readonly IDataController<ProductDownloads> productDownloadsDataController;
+        readonly IDataController<AccountProduct> accountProductsDataController;
+        readonly IDataController<Product> productsDataController;
 
         public UpdateDownloadsActivity(
             Entity context,
@@ -97,7 +97,7 @@ namespace GOG.Activities.UpdateDownloads
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id, updateDownloadsTask);
                 if (productDownloads == null)
                 {
-                    productDownloads = new ProductDownloads()
+                    productDownloads = new ProductDownloads
                     {
                         Id = product.Id,
                         Title = product.Title,
@@ -121,7 +121,7 @@ namespace GOG.Activities.UpdateDownloads
                 {
                     var destinationDirectory = getDirectoryDelegate?.GetDirectory(source);
 
-                    var scheduledDownloadEntry = new ProductDownloadEntry()
+                    var scheduledDownloadEntry = new ProductDownloadEntry
                     {
                         Context = context,
                         SourceUri = source,

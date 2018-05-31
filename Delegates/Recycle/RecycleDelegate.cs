@@ -10,9 +10,9 @@ namespace Delegates.Recycle
 {
     public class RecycleDelegate : IRecycleDelegate
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IFileController fileController;
-        private IDirectoryController directoryController;
+        readonly IGetDirectoryDelegate getDirectoryDelegate;
+        readonly IFileController fileController;
+        IDirectoryController directoryController;
 
         public RecycleDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,

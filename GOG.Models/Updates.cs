@@ -2,7 +2,7 @@
 
 namespace GOG.Models
 {
-    [DataContract()]
+    [DataContract]
     public class Updates
     {
         [DataMember(Name = "messages")]

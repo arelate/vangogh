@@ -22,17 +22,17 @@ namespace GOG.Delegates.GetPageResults
 {
     public class GetPageResultsAsyncDelegate<T> : IGetPageResultsAsyncDelegate<T> where T : PageResult
     {
-        private Entity context;
-        private IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
-        private IGetQueryParametersDelegate<Entity> getQueryParametersDelegate;
-        private IRequestPageAsyncDelegate requestPageAsyncDelegate;
-        private IGetHashAsyncDelegate<string> getStringHashDelegate;
-        private IStoredHashController storedHashController;
-        private ISerializationController<string> serializationController;
-        private IStatusController statusController;
+        Entity context;
+        IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
+        IGetQueryParametersDelegate<Entity> getQueryParametersDelegate;
+        readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
+        readonly IGetHashAsyncDelegate<string> getStringHashDelegate;
+        readonly IStoredHashController storedHashController;
+        readonly ISerializationController<string> serializationController;
+        readonly IStatusController statusController;
 
-        private string requestUri;
-        private IDictionary<string, string> requestParameters;
+        readonly string requestUri;
+        readonly IDictionary<string, string> requestParameters;
 
         public GetPageResultsAsyncDelegate(
             Entity context,

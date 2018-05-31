@@ -13,12 +13,12 @@ namespace Controllers.ViewUpdates
 {
     public class GetStatusViewUpdateDelegate : IGetViewUpdateAsyncDelegate<string[]>
     {
-        private IStatus status;
-        private ITemplateController templateController;
-        private IGetViewModelDelegate<IStatus> statusViewModelDelegate;
-        private IConvertDelegate<IStatus, IEnumerable<IStatus>> convertStatusTreeToEnumerableDelegate;
+        readonly IStatus status;
+        readonly ITemplateController templateController;
+        readonly IGetViewModelDelegate<IStatus> statusViewModelDelegate;
+        readonly IConvertDelegate<IStatus, IEnumerable<IStatus>> convertStatusTreeToEnumerableDelegate;
 
-        private IList<string> viewParts;
+        readonly IList<string> viewParts;
 
         public GetStatusViewUpdateDelegate(
             IStatus status,

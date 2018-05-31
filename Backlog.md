@@ -18,6 +18,7 @@ To clear updated we'll need successful completion of several activities since pr
     - product files validation should have been started and completed at Tv > Tpfd;
 
 - Performance: add read/write through cache for dataController
+- Performance: binary serialization bby default, option to export json
 
 - modify (again) console output controller to use "single line control" and output only on one line.
     - provide same multi-line viewModel

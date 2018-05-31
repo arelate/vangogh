@@ -26,21 +26,21 @@ namespace GOG.Activities.UpdateData
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
-        private IDataController<MasterType> masterDataController;
-        private IDataController<DetailType> detailDataController;
-        private IIndexController<long> updatedDataController;
+        readonly IDataController<MasterType> masterDataController;
+        readonly IDataController<DetailType> detailDataController;
+        IIndexController<long> updatedDataController;
 
-        private IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate;
+        readonly IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate;
 
-        private IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
+        readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
 
-        private IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate;
-        private IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
+        readonly IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate;
+        readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
-        private Entity context;
-        private IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
+        Entity context;
+        readonly IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
 
-        private string updateTypeDescription;
+        readonly string updateTypeDescription;
 
         public MasterDetailProductUpdateActivity(
             Entity context,

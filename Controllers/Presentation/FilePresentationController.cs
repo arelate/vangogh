@@ -11,11 +11,12 @@ using Interfaces.Status;
 
 namespace Controllers.Presentation
 {
+    // TODO: The amount of NotImplementedException is clear indication this needs to be a delegate instead
     public class FilePresentationController : IOutputController<string[]>
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
-        private IStreamController streamController;
+        IGetDirectoryDelegate getDirectoryDelegate;
+        IGetFilenameDelegate getFilenameDelegate;
+        IStreamController streamController;
 
         public FilePresentationController(
             IGetDirectoryDelegate getDirectoryDelegate,

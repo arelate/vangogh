@@ -2,7 +2,7 @@
 
 namespace GOG.Models
 {
-    [DataContract()]
+    [DataContract]
     public class AccountProductsPageResult: PageResult
     {
         [DataMember(Name = "totalProducts")]

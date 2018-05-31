@@ -11,7 +11,7 @@ namespace Delegates.Format.Text
 {
     public class FormatTextToFitConsoleWindowDelegate : IFormatDelegate<IEnumerable<string>, IEnumerable<string>>
     {
-        private IWindowWidthProperty windowWidthProperty;
+        readonly IWindowWidthProperty windowWidthProperty;
 
         public FormatTextToFitConsoleWindowDelegate(IWindowWidthProperty windowWidthProperty)
         {
@@ -37,8 +37,8 @@ namespace Delegates.Format.Text
                         brokenLines.Add(needToBreak ?
                             segment.Substring(0, availableWidth) :
                             segment);
-                        segment = needToBreak ? 
-                            segment.Substring(availableWidth, segment.Length - availableWidth) : 
+                        segment = needToBreak ?
+                            segment.Substring(availableWidth, segment.Length - availableWidth) :
                             string.Empty;
 
                     } while (segment.Length >= availableWidth);

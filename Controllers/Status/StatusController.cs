@@ -10,10 +10,10 @@ namespace Controllers.Status
     {
         public event StatusChangedNotificationAsyncDelegate NotifyStatusChangedAsync;
 
-        private void AssertValidStatus(IStatus status)
+        void AssertValidStatus(IStatus status)
         {
             if (status == null)
-                throw new ArgumentNullException("Current task status cannot be null");
+                throw new ArgumentNullException();
         }
 
         public async Task<IStatus> CreateAsync(IStatus status, string title, bool notifyStatusChanged = true)
@@ -23,7 +23,7 @@ namespace Controllers.Status
             if (status.Children == null)
                 status.Children = new List<IStatus>();
 
-            var childStatus = new Models.Status.Status()
+            var childStatus = new Models.Status.Status
             {
                 Title = title,
                 Started = DateTime.UtcNow

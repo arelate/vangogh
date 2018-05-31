@@ -14,10 +14,10 @@ namespace Controllers.ActivityContext
 {
     public class ActivityContextController : IActivityContextController
     {
-        private IAliasController aliasController;
-        private IWhitelistController whitelistController;
-        private IPrerequisiteController prerequisiteController;
-        private ISupplementaryController supplementaryController;
+        IAliasController aliasController;
+        IWhitelistController whitelistController;
+        IPrerequisiteController prerequisiteController;
+        ISupplementaryController supplementaryController;
 
         public ActivityContextController(
             IAliasController aliasController,
@@ -34,7 +34,7 @@ namespace Controllers.ActivityContext
         public AC ParseSingle(string activityContext)
         {
             if (string.IsNullOrEmpty(activityContext))
-                throw new ArgumentNullException("Cannot parse empty activity-context");
+                throw new ArgumentNullException();
 
             var context = Entity.None;
 

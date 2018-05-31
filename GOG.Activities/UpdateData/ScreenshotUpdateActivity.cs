@@ -15,9 +15,9 @@ namespace GOG.Activities.UpdateData
 {
     public class UpdateScreenshotsActivity : Activity
     {
-        private IDataController<Product> productsDataController;
-        private IDataController<ProductScreenshots> productScreenshotsDataController;
-        private IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
+        readonly IDataController<Product> productsDataController;
+        readonly IDataController<ProductScreenshots> productScreenshotsDataController;
+        readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
 
         public UpdateScreenshotsActivity(
             IDataController<Product> productsDataController,

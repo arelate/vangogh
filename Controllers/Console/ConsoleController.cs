@@ -75,7 +75,7 @@ namespace Controllers.Console
             OutputFormattedMessage(System.Console.WriteLine, message, data);
         }
 
-        private void OutputFormattedMessage(Action<string> consoleOutput, string message, params object[] data)
+        void OutputFormattedMessage(Action<string> consoleOutput, string message, params object[] data)
         {
             var formattedMessage =
                 (data != null && data.Length > 0) ?

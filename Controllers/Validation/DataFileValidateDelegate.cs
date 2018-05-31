@@ -12,8 +12,8 @@ namespace Controllers.Validation
 {
     public class DataFileValidateDelegate : IValidateFileAsyncDelegate<bool>
     {
-        private IGetHashAsyncDelegate<string> getFileMd5HashAsyncDelegate;
-        private IStatusController statusController;
+        readonly IGetHashAsyncDelegate<string> getFileMd5HashAsyncDelegate;
+        IStatusController statusController;
 
         public DataFileValidateDelegate(
             IGetHashAsyncDelegate<string> getFileMd5HashAsyncDelegate,

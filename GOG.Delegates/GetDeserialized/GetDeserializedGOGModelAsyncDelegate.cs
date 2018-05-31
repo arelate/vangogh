@@ -15,8 +15,8 @@ namespace GOG.Delegates.GetDeserialized
     public class GetDeserializedGOGModelAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
         where T : ProductCore
     {
-        private IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        private ISerializationController<string> serializationController;
+        readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
+        readonly ISerializationController<string> serializationController;
 
         public GetDeserializedGOGModelAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,

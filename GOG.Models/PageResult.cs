@@ -4,7 +4,7 @@ using GOG.Interfaces.Models;
 
 namespace GOG.Models
 {
-    [DataContract()]
+    [DataContract]
     public abstract class PageResult: IPageResult
     {
         [DataMember(Name = "page")]

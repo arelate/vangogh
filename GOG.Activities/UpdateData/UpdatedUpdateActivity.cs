@@ -21,12 +21,12 @@ namespace GOG.Activities.UpdateData
 {
     public class UpdatedUpdateActivity: Activity
     {
-        private IActivityContextController activityContextController;
+        IActivityContextController activityContextController;
 
-        private IDataController<AccountProduct> accountProductDataController;
-        private IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
+        readonly IDataController<AccountProduct> accountProductDataController;
+        readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
-        private IIndexController<long> updatedIndexController;
+        readonly IIndexController<long> updatedIndexController;
 
         public UpdatedUpdateActivity(
             IActivityContextController activityContextController,

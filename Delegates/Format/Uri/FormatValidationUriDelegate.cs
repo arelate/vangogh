@@ -8,8 +8,8 @@ namespace Delegates.Format.Uri
 {
     public class FormatValidationUriDelegate : IFormatDelegate<string, string>
     {
-        private IGetFilenameDelegate getValidationFilenameDelegate;
-        private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        readonly IGetFilenameDelegate getValidationFilenameDelegate;
+        readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
 
         public FormatValidationUriDelegate(
             IGetFilenameDelegate getValidationFilenameDelegate,

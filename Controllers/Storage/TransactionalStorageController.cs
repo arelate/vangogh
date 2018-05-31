@@ -8,8 +8,8 @@ using Interfaces.Controllers.Storage;
 namespace Controllers.Storage {
     public class TransactionalStorageController: IStorageController<string>
     {
-        private IStorageController<string> storageController; 
-        private IFileController fileController;
+        readonly IStorageController<string> storageController; 
+        readonly IFileController fileController;
 
         public TransactionalStorageController(
             IStorageController<string> storageController,

@@ -13,7 +13,7 @@ namespace Controllers.ViewModel
 {
     public class StatusReportViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
-        private static class StatusReportViewModelSchema
+        static class StatusReportViewModelSchema
         {
             public const string Complete = "complete";
             public const string Title = "title";
@@ -32,8 +32,8 @@ namespace Controllers.ViewModel
             public const string Information = "information";
         }
 
-        private IFormatDelegate<long, string> formatBytesDelegate;
-        private IFormatDelegate<long, string> formatSecondsDelegate;
+        readonly IFormatDelegate<long, string> formatBytesDelegate;
+        readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
         public StatusReportViewModelDelegate(
             IFormatDelegate<long, string> formatBytesDelegate,
@@ -46,7 +46,7 @@ namespace Controllers.ViewModel
         public IDictionary<string, string> GetViewModel(IStatus status)
         {
             // viewmodel schemas
-            var viewModel = new Dictionary<string, string>()
+            var viewModel = new Dictionary<string, string>
             {
                 { StatusReportViewModelSchema.Title, "" },
                 { StatusReportViewModelSchema.Complete, "" },

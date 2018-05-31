@@ -16,14 +16,14 @@ namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadValidationFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
-        private IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
-        private IConfirmDelegate<string> confirmValidationExpectedDelegate;
-        private IFormatDelegate<string, string> formatValidationFileDelegate;
-        private IGetDirectoryDelegate validationDirectoryDelegate;
-        private IFormatDelegate<string, string> formatValidationUriDelegate;
-        private IFileController fileController;
-        private IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
-        private IStatusController statusController;
+        readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        readonly IConfirmDelegate<string> confirmValidationExpectedDelegate;
+        readonly IFormatDelegate<string, string> formatValidationFileDelegate;
+        readonly IGetDirectoryDelegate validationDirectoryDelegate;
+        readonly IFormatDelegate<string, string> formatValidationUriDelegate;
+        readonly IFileController fileController;
+        readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
+        readonly IStatusController statusController;
 
         public DownloadValidationFileAsyncDelegate(
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,

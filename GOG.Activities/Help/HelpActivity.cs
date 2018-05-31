@@ -8,7 +8,7 @@ namespace GOG.Activities.Help
 {
     public class HelpActivity : Activity
     {
-        private IActivityContextController activityContextController;
+        IActivityContextController activityContextController;
 
         public HelpActivity(
             IActivityContextController activityContextController,

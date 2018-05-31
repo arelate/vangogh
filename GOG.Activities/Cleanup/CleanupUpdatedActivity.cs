@@ -9,7 +9,7 @@ namespace GOG.Activities.Cleanup
 {
     public class CleanupUpdatedActivity : Activity
     {
-        private IIndexController<long> updatedDataController;
+        IIndexController<long> updatedDataController;
 
         public CleanupUpdatedActivity(
             IIndexController<long> updatedDataController,

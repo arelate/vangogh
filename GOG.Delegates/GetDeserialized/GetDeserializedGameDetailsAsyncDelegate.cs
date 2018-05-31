@@ -24,18 +24,18 @@ namespace GOG.Delegates.GetDeserialized
 {
     public class GetDeserializedGameDetailsAsyncDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {
-        private IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        private ISerializationController<string> serializationController;
-        private ILanguageController languageController;
-        private IFormatDelegate<string, string> formatDownloadLanguageDelegate;
-        private IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
-        private IItemizeDelegate<string, string> itemizeDownloadLanguagesDelegate;
-        private IItemizeDelegate<string, string> itemizeGameDetailsDownloadsDelegate;
-        private IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
-        private IConvertDelegate<
-            OperatingSystemsDownloads[][], 
+        readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
+        readonly ISerializationController<string> serializationController;
+        readonly ILanguageController languageController;
+        readonly IFormatDelegate<string, string> formatDownloadLanguageDelegate;
+        readonly IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
+        readonly IItemizeDelegate<string, string> itemizeDownloadLanguagesDelegate;
+        readonly IItemizeDelegate<string, string> itemizeGameDetailsDownloadsDelegate;
+        readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        readonly IConvertDelegate<
+            OperatingSystemsDownloads[][],
             OperatingSystemsDownloads[]> convert2DArrayToArrayDelegate;
-        private ICollectionController collectionController;
+        readonly ICollectionController collectionController;
 
         public GetDeserializedGameDetailsAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,

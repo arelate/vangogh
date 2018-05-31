@@ -11,8 +11,8 @@ namespace GOG.Activities.Authorize
 {
     public class AuthorizeActivity : Activity
     {
-        private IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
-        private IAuthorizationController authorizationController;
+        readonly IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
+        readonly IAuthorizationController authorizationController;
 
         public AuthorizeActivity(
             IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate,
@@ -34,7 +34,7 @@ namespace GOG.Activities.Authorize
                     settings.Password,
                     status);
             }
-            else throw new System.ArgumentNullException("Settings are null");
+            else throw new System.ArgumentNullException();
         }
     }
 }

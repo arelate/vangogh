@@ -2,7 +2,7 @@
 
 namespace GOG.Models
 {
-    [DataContract()]
+    [DataContract]
     public class ApiDLCProduct
     {
         [DataMember(Name = "id")]
@@ -13,7 +13,7 @@ namespace GOG.Models
         public string ExpandedLink { get; set; }
     }
 
-    [DataContract()]
+    [DataContract]
     public class ApiDLCs
     {
         [DataMember(Name = "products")]

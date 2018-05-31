@@ -5,7 +5,7 @@ namespace Delegates.GetFilename
 {
     public class GetReportFilenameDelegate : IGetFilenameDelegate
     {
-        private const string reportTimestampFormat = "yyyyMMdd-HHmmss";
+        const string reportTimestampFormat = "yyyyMMdd-HHmmss";
 
         public string GetFilename(string source = null)
         {

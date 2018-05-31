@@ -14,8 +14,8 @@ namespace GOG.Activities.CorrectSettings
 {
     public class CorrectSettingsActivity : Activity
     {
-        private IStashController<Settings> settingsStashController;
-        private ICorrectAsyncDelegate<Settings>[] correctSettingsDelegates; 
+        readonly IStashController<Settings> settingsStashController;
+        readonly ICorrectAsyncDelegate<Settings>[] correctSettingsDelegates;
 
         public CorrectSettingsActivity(
             IStashController<Settings> settingsStashController,

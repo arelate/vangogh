@@ -13,7 +13,7 @@ namespace Controllers.Uri
         {
             if (parameters == null) return string.Empty;
 
-            List<string> parametersStrings = new List<string>(parameters.Count);
+            var parametersStrings = new List<string>(parameters.Count);
 
             foreach (string key in parameters.Keys)
             {

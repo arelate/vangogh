@@ -16,10 +16,10 @@ namespace GOG.Delegates.GetDownloadSources
 {
     public class GetManualUrlDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        private IIndexController<long> updatedDataController;
-        private IDataController<GameDetails> gameDetailsDataController;
-        private IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
-        private IStatusController statusController;
+        readonly IIndexController<long> updatedDataController;
+        readonly IDataController<GameDetails> gameDetailsDataController;
+        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
+        readonly IStatusController statusController;
 
         public GetManualUrlDownloadSourcesAsyncDelegate(
             IIndexController<long> updatedDataController,

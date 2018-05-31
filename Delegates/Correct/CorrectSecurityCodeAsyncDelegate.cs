@@ -9,9 +9,9 @@ namespace Delegates.Correct
 {
     public class CorrectSecurityCodeAsyncDelegate : ICorrectAsyncDelegate<string>
     {
-        private const string securityCodeHasBeenSent = 
+        const string securityCodeHasBeenSent = 
             "Enter four digits security code that has been sent to your email:";
-        private IRequestInputAsyncDelegate<string> requestInputDelegate;
+        readonly IRequestInputAsyncDelegate<string> requestInputDelegate;
 
         public CorrectSecurityCodeAsyncDelegate(IRequestInputAsyncDelegate<string> requestInputDelegate)
         {

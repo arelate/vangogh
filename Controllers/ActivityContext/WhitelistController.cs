@@ -11,7 +11,7 @@ namespace Controllers.ActivityContext
 {
     public class WhitelistController : IWhitelistController
     {
-        private IDictionary<Activity, Entity[]> whitelist;
+        readonly IDictionary<Activity, Entity[]> whitelist;
 
         public WhitelistController(IDictionary<Activity, Entity[]> whitelist)
         {

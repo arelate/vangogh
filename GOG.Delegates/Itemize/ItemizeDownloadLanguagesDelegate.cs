@@ -10,8 +10,8 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeDownloadLanguagesDelegate : IItemizeDelegate<string, string>
     {
-        private ILanguageController languageController;
-        private IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        ILanguageController languageController;
+        IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
         public ItemizeDownloadLanguagesDelegate(
             ILanguageController languageController,

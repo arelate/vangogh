@@ -8,8 +8,8 @@ namespace Delegates.GetPath
 {
     public class GetPathDelegate: IGetPathDelegate
     {
-        private IGetDirectoryDelegate getDirectoryDelegate;
-        private IGetFilenameDelegate getFilenameDelegate;
+        readonly IGetDirectoryDelegate getDirectoryDelegate;
+        readonly IGetFilenameDelegate getFilenameDelegate;
 
         public GetPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,

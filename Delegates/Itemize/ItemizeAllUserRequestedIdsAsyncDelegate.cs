@@ -9,7 +9,7 @@ namespace Delegates.EnumerateIds
 {
     public class ItemizeAllUserRequestedIdsAsyncDelegate : IItemizeAllAsyncDelegate<long>
     {
-        private string[] userRequested;
+        readonly string[] userRequested;
 
         public ItemizeAllUserRequestedIdsAsyncDelegate(params string[] userRequested)
         {

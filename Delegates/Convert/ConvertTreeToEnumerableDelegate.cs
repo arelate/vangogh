@@ -6,9 +6,9 @@ using Interfaces.Delegates.Convert;
 
 namespace Delegates.Convert
 {
-    public class ConvertTreeToEnumerableDelegate<T> : IConvertDelegate<T, IEnumerable<T>>
+    public class ConvertTreeToEnumerableDelegate<T> : IConvertDelegate<T, IEnumerable<T>> where T: class
     {
-        private IItemizeDelegate<T, T> itemizeChildrenDelegate;
+        readonly IItemizeDelegate<T, T> itemizeChildrenDelegate;
 
         public ConvertTreeToEnumerableDelegate(
             IItemizeDelegate<T, T> itemizeChildrenDelegate)

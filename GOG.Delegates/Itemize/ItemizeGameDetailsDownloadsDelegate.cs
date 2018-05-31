@@ -15,8 +15,8 @@ namespace GOG.Delegates.Itemize
 
             string result = string.Empty;
 
-            int fromIndex = data.IndexOf(Separators.GameDetailsDownloadsStart),
-                toIndex = data.IndexOf(Separators.GameDetailsDownloadsEnd);
+            int fromIndex = data.IndexOf(Separators.GameDetailsDownloadsStart, System.StringComparison.Ordinal),
+                toIndex = data.IndexOf(Separators.GameDetailsDownloadsEnd, System.StringComparison.Ordinal);
 
             if (fromIndex < toIndex)
                 result = data.Substring(

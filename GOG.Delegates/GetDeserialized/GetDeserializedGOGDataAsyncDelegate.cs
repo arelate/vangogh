@@ -14,9 +14,9 @@ namespace GOG.Delegates.GetDeserialized
 {
     public class GetDeserializedGOGDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
     {
-        private IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        private IStringExtractionController gogDataExtractionController;
-        private ISerializationController<string> serializationController;
+        readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
+        readonly IStringExtractionController gogDataExtractionController;
+        readonly ISerializationController<string> serializationController;
 
         public GetDeserializedGOGDataAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,

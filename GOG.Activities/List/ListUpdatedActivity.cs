@@ -14,8 +14,8 @@ namespace GOG.Activities.List
 {
     public class ListUpdatedActivity : Activity
     {
-        IIndexController<long> updatedDataController;
-        IDataController<AccountProduct> accountProductsDataController;
+        readonly IIndexController<long> updatedDataController;
+        readonly IDataController<AccountProduct> accountProductsDataController;
 
         public ListUpdatedActivity(
             IIndexController<long> updatedDataController,

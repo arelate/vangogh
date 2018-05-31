@@ -9,8 +9,8 @@ namespace Delegates.Hash
 {
     public class GetFileMd5HashAsyncDelegate: IGetHashAsyncDelegate<string>
     {
-        private IStorageController<string> storageController;
-        private IGetHashAsyncDelegate<string> getStringHashAsyncDelegate;
+        readonly IStorageController<string> storageController;
+        readonly IGetHashAsyncDelegate<string> getStringHashAsyncDelegate;
 
         public GetFileMd5HashAsyncDelegate(
             IStorageController<string> storageController,

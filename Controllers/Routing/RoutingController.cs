@@ -11,8 +11,8 @@ namespace Controllers.Routing
 {
     public class RoutingController : IRoutingController
     {
-        private IDataController<ProductRoutes> productRoutesDataController;
-        private IStatusController statusController;
+        readonly IDataController<ProductRoutes> productRoutesDataController;
+        readonly IStatusController statusController;
 
         public RoutingController(
             IDataController<ProductRoutes> productRoutesDataController,
@@ -22,7 +22,7 @@ namespace Controllers.Routing
             this.statusController = statusController;
         }
 
-        private string TraceProductRoute(List<ProductRoutesEntry> productRoutes, string source)
+        string TraceProductRoute(List<ProductRoutesEntry> productRoutes, string source)
         {
             if (productRoutes == null) return string.Empty;
 
@@ -80,13 +80,13 @@ namespace Controllers.Routing
             var productRoutes = await productRoutesDataController.GetByIdAsync(id, updateRouteStatus);
             if (productRoutes == null)
             {
-                productRoutes = new ProductRoutes()
+                productRoutes = new ProductRoutes
                 {
                     Id = id,
                     Title = title,
                     Routes = new List<ProductRoutesEntry>()
                 };
-            };
+            }
 
             var existingRouteUpdated = false;
             foreach (var route in productRoutes.Routes)
@@ -98,7 +98,7 @@ namespace Controllers.Routing
                 }
 
             if (!existingRouteUpdated)
-                productRoutes.Routes.Add(new ProductRoutesEntry()
+                productRoutes.Routes.Add(new ProductRoutesEntry
                 {
                     Source = source,
                     Destination = destination

@@ -11,8 +11,8 @@ namespace Delegates.Constrain
 {
     public class ConstrainExecutionAsyncDelegate : IConstrainAsyncDelegate<int>
     {
-        private IStatusController statusController;
-        IFormatDelegate<long, string> formatSecondsDelegate;
+        readonly IStatusController statusController;
+        readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
         public ConstrainExecutionAsyncDelegate(
             IStatusController statusController,
@@ -32,10 +32,10 @@ namespace Delegates.Constrain
             {
                 await Task.Delay(1000);
                 await statusController.UpdateProgressAsync(
-                    throttleTask, 
-                    ii + 1, 
-                    delaySeconds, 
-                    "Countdown", 
+                    throttleTask,
+                    ii + 1,
+                    delaySeconds,
+                    "Countdown",
                     TimeUnits.Seconds);
             }
 

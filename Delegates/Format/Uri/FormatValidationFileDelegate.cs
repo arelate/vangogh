@@ -7,7 +7,7 @@ namespace Delegates.Format.Uri
 {
     public class FormatValidationFileDelegate : IFormatDelegate<string, string>
     {
-        private IGetPathDelegate getPathDelegate;
+        readonly IGetPathDelegate getPathDelegate;
 
         public FormatValidationFileDelegate(IGetPathDelegate getPathDelegate)
         {

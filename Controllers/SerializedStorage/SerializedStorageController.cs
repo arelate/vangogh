@@ -14,11 +14,11 @@ namespace Controllers.SerializedStorage
 {
     public class SerializedStorageController : ISerializedStorageController
     {
-        private IStorageController<string> storageController;
-        private ISerializationController<string> serializarionController;
-        private IGetHashAsyncDelegate<string> getStringHashAsyncDelegate;
-        private IStoredHashController storedHashController;
-        private IStatusController statusController;
+        readonly IStorageController<string> storageController;
+        readonly ISerializationController<string> serializarionController;
+        readonly IGetHashAsyncDelegate<string> getStringHashAsyncDelegate;
+        readonly IStoredHashController storedHashController;
+        IStatusController statusController;
 
         public SerializedStorageController(
             IStoredHashController storedHashController,

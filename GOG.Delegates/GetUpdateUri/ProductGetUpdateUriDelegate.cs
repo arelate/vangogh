@@ -26,7 +26,7 @@ namespace GOG.Delegates.GetUpdateUri
                 case Entity.GameDetails:
                     return Uris.Paths.Account.GameDetailsRequestTemplate;
                 default:
-                    throw new NotImplementedException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

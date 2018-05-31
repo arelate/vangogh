@@ -13,7 +13,7 @@
 
         public static class Roots
         {
-            private const string GOGcom = "gog.com";
+            const string GOGcom = "gog.com";
             public const string Website = Protocols.Https + "www." + GOGcom;
             public const string Login = Protocols.Https + "login." + GOGcom;
             public const string Auth = Protocols.Https + "auth." + GOGcom;
@@ -50,7 +50,7 @@
 
             public static class Account
             {
-                private const string AccountRoot = Roots.Website + "/account";
+                const string AccountRoot = Roots.Website + "/account";
                 public const string GetFilteredProducts = AccountRoot + "/getFilteredProducts";
                 public const string GameDetails = AccountRoot + "/gameDetails";
                 public const string GameDetailsRequestTemplate = GameDetails + "/{0}.json";

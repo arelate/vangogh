@@ -20,7 +20,7 @@ namespace Delegates.Correct
             return await Task.Run(() =>
             {
                 if (settings == null)
-                    throw new System.ArgumentNullException("Cannot correct directories for null settings");
+                    throw new System.ArgumentNullException();
 
                 var requiredDirectories = new string[] {
                     Directories.Base[Entity.Data],

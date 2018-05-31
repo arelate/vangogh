@@ -12,9 +12,9 @@ namespace Delegates.Download
 {
     public class DownloadFromUriAsyncDelegate : IDownloadFromUriAsyncDelegate
     {
-        private IRequestResponseAsyncDelegate requestResponseAsyncDelegate;
-        private IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        private IStatusController statusController;
+        readonly IRequestResponseAsyncDelegate requestResponseAsyncDelegate;
+        readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
+        readonly IStatusController statusController;
 
         public DownloadFromUriAsyncDelegate(
             IRequestResponseAsyncDelegate requestResponseAsyncDelegate,

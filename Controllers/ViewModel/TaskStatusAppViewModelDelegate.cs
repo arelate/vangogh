@@ -13,7 +13,7 @@ namespace Controllers.ViewModel
 {
     public class StatusAppViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
-        private static class StatusAppViewModelSchema
+        static class StatusAppViewModelSchema
         {
             public const string Title = "title";
             public const string ContainsProgress = "containsProgress";
@@ -30,9 +30,9 @@ namespace Controllers.ViewModel
             public const string WarningsCount = "warningsCount";
         }
 
-        private IFormatDelegate<IStatus, Tuple<long, double>> formatRemainingTimeAtSpeedDelegate;
-        private IFormatDelegate<long, string> formatBytesDelegate;
-        private IFormatDelegate<long, string> formatSecondsDelegate;
+        readonly IFormatDelegate<IStatus, Tuple<long, double>> formatRemainingTimeAtSpeedDelegate;
+        readonly IFormatDelegate<long, string> formatBytesDelegate;
+        readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
         public StatusAppViewModelDelegate(
             IFormatDelegate<IStatus, Tuple<long, double>> formatRemainingTimeAtSpeedDelegate,
@@ -49,7 +49,7 @@ namespace Controllers.ViewModel
             if (status.Complete) return null;
 
             // viewmodel schemas
-            var viewModel = new Dictionary<string, string>()
+            var viewModel = new Dictionary<string, string>
             {
                 { StatusAppViewModelSchema.Title, "" },
                 { StatusAppViewModelSchema.ContainsProgress, "" },
