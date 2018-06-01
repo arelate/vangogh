@@ -19,6 +19,7 @@ To clear updated we'll need successful completion of several activities since pr
 
 - Performance: add read/write through cache for dataController
 - Performance: binary serialization bby default, option to export json
+- Performance: https://stackoverflow.com/questions/45644934/notepad-beats-them-all
 
 - modify (again) console output controller to use "single line control" and output only on one line.
     - provide same multi-line viewModel
