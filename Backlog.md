@@ -27,6 +27,13 @@ To clear updated we'll need successful completion of several activities since pr
     - return colored output and drive through templates
     - provide two methods in the output controller: writeLine (output a line and start a new line) and rewrite (CR + write)
 
+- continue to add .editorconfig rules
+    - https://raw.githubusercontent.com/dotnet/samples/master/.editorconfig
+    - https://groups.google.com/forum/#!topic/editorconfig/Ftaui8OlLYc
+    - https://www.techcartnow.com/enforcing-c-sharp-7-code-style-latest-coding-patterns-using-editorconfig-in-visual-studio-2017/
+    - https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+    - https://github.com/dotnet/roslyn/pull/15065
+
 - investigate /user/data/games (from https://www.gog.com/forum/general/unofficial_gog_api_documentation/page2) and game_type == pack specifically
 
 - rearchitecture commands, parameters, targets into a new sessionContext class
