@@ -34,4 +34,13 @@
     <ProjectReference Include="..\Ghost.Factories\Ghost.Factories.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="templates\app.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="templates\report.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
