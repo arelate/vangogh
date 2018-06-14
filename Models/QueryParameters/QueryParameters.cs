@@ -32,20 +32,19 @@ namespace Models.QueryParameters
         public static string Brand = "brand";
         // LoginAuthenticate
         static string Login = "login";
-        static string UnderscoreToken = "[_token]";
         public static string LoginUsername = Login + "[username]";
         public static string LoginPassword = Login + "[password]";
         public static string LoginId = Login + "[id]";
-        public static string LoginUnderscoreToken = Login + UnderscoreToken;
+        public static string LoginToken = Login + "[_token]";
         // SecondStepAuthentication
         static string SecondStepAuthentication = "second_step_authentication";
-        static string SecondStepAuthenticationToken = SecondStepAuthentication + "[token]";
-        public static string SecondStepAuthenticationTokenLetter1 = SecondStepAuthenticationToken + "[letter_1]";
-        public static string SecondStepAuthenticationTokenLetter2 = SecondStepAuthenticationToken + "[letter_2]";
-        public static string SecondStepAuthenticationTokenLetter3 = SecondStepAuthenticationToken + "[letter_3]";
-        public static string SecondStepAuthenticationTokenLetter4 = SecondStepAuthenticationToken + "[letter_4]";
+        static string SecondStepAuthenticationTokenLetters = SecondStepAuthentication + "[token]";
+        public static string SecondStepAuthenticationTokenLetter1 = SecondStepAuthenticationTokenLetters + "[letter_1]";
+        public static string SecondStepAuthenticationTokenLetter2 = SecondStepAuthenticationTokenLetters + "[letter_2]";
+        public static string SecondStepAuthenticationTokenLetter3 = SecondStepAuthenticationTokenLetters + "[letter_3]";
+        public static string SecondStepAuthenticationTokenLetter4 = SecondStepAuthenticationTokenLetters + "[letter_4]";
         //public static string SecondStepAuthenticationSend = SecondStepAuthentication + "[send]";
-        public static string SecondStepAuthenticationUnderscoreToken = SecondStepAuthentication + UnderscoreToken;
+        public static string SecondStepAuthenticationToken = SecondStepAuthentication + "[_token]";
     }
 
     public static class QueryParametersCollections
@@ -81,7 +80,7 @@ namespace Models.QueryParameters
             { QueryParameters.LoginUsername, string.Empty },
             { QueryParameters.LoginPassword, string.Empty },
             { QueryParameters.LoginId, string.Empty },
-            { QueryParameters.LoginUnderscoreToken, string.Empty }
+            { QueryParameters.LoginToken, string.Empty }
         };
 
         public static Dictionary<string, string> SecondStepAuthentication = new Dictionary<string, string>
@@ -91,7 +90,7 @@ namespace Models.QueryParameters
             { QueryParameters.SecondStepAuthenticationTokenLetter3, string.Empty },
             { QueryParameters.SecondStepAuthenticationTokenLetter4, string.Empty },
             //{ QueryParameters.SecondStepAuthenticationSend, string.Empty },
-            { QueryParameters.SecondStepAuthenticationUnderscoreToken, string.Empty }
+            { QueryParameters.SecondStepAuthenticationToken, string.Empty }
         };
     }
 }

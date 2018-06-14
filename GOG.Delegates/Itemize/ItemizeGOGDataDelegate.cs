@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-using Interfaces.Extraction;
+using Interfaces.Delegates.Itemize;
 
-namespace Controllers.Extraction
+namespace GOG.Delegates.Itemize
 {
-    public class GOGDataExtractionController : IStringExtractionController
+    public class ItemizeGOGDataDelegate : IItemizeDelegate<string, string>
     {
         const string gogDataPrefix = "var gogData = ";
         readonly Regex regex = new Regex(gogDataPrefix + "(.*)");
 
-        public IEnumerable<string> ExtractMultiple(string data)
+        public IEnumerable<string> Itemize(string data)
         {
             var match = regex.Match(data);
             var gogData = new List<string>();

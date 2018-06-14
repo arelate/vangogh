@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Network;
 
-using Interfaces.Extraction;
 using Interfaces.Status;
+
 using Interfaces.Models.Entities;
 
 using Models.ProductScreenshots;
@@ -22,20 +24,20 @@ namespace GOG.Delegates.UpdateScreenshots
         readonly IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
         readonly IDataController<ProductScreenshots> screenshotsDataController;
         readonly INetworkController networkController;
-        readonly IStringExtractionController screenshotExtractionController;
+        readonly IItemizeDelegate<string, string> itemizeScreenshotsDelegates;
 
         readonly IStatusController statusController;
         public UpdateScreenshotsAsyncDelegate(
             IGetUpdateUriDelegate<Entity> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
             INetworkController networkController,
-            IStringExtractionController screenshotExtractionController,
+            IItemizeDelegate<string, string> itemizeScreenshotsDelegates,
             IStatusController statusController)
         {
             this.getUpdateUriDelegate = getUpdateUriDelegate;
             this.screenshotsDataController = screenshotsDataController;
             this.networkController = networkController;
-            this.screenshotExtractionController = screenshotExtractionController;
+            this.itemizeScreenshotsDelegates = itemizeScreenshotsDelegates;
             this.statusController = statusController;
         }
 
@@ -47,7 +49,7 @@ namespace GOG.Delegates.UpdateScreenshots
             await statusController.CompleteAsync(requestProductPageTask);
 
             var extractScreenshotsTask = await statusController.CreateAsync(status, "Exract screenshots from the page");
-            var extractedProductScreenshots = screenshotExtractionController.ExtractMultiple(productPageContent);
+            var extractedProductScreenshots = itemizeScreenshotsDelegates.Itemize(productPageContent);
 
             if (extractedProductScreenshots == null) return;
 

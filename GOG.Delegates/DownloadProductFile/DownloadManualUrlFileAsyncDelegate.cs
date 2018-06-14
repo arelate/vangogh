@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Download;
+using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Network;
 
-using Interfaces.Extraction;
 using Interfaces.Routing;
 using Interfaces.Status;
 

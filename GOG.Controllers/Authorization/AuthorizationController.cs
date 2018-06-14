@@ -8,7 +8,7 @@ using Interfaces.Controllers.Uri;
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Serialization;
 
-using Interfaces.Extraction;
+using Interfaces.Delegates.Itemize;
 using Interfaces.Status;
 
 using Models.Uris;
@@ -32,7 +32,7 @@ namespace GOG.Controllers.Authorization
         IUriController uriController;
         INetworkController networkController;
         ISerializationController<string> serializationController;
-        IDictionary<string, IStringExtractionController> extractionControllers;
+        IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates;
         readonly IStatusController statusController;
 
         public AuthorizationController(
@@ -41,7 +41,7 @@ namespace GOG.Controllers.Authorization
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IDictionary<string, IStringExtractionController> extractionControllers,
+            IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates,
             IStatusController statusController)
         {
             this.correctUsernamePasswordAsyncDelegate = correctUsernamePasswordAsyncDelegate;
@@ -49,7 +49,7 @@ namespace GOG.Controllers.Authorization
             this.uriController = uriController;
             this.networkController = networkController;
             this.serializationController = serializationController;
-            this.extractionControllers = extractionControllers;
+            this.attributeValuesItemizeDelegates = attributeValuesItemizeDelegates;
             this.statusController = statusController;
         }
 
@@ -86,23 +86,23 @@ namespace GOG.Controllers.Authorization
         {
             var getLoginCheckResponseTask = await statusController.CreateAsync(status, "Get login check result");
 
-            var loginToken = extractionControllers[
-                QueryParameters.LoginUnderscoreToken].ExtractMultiple(
+            var loginToken = attributeValuesItemizeDelegates[
+                QueryParameters.LoginToken].Itemize(
                 authResponse).First();
 
             // login using username / password or login id / password
             var loginUri = string.Empty;
             if (authResponse.Contains(QueryParameters.LoginId))
             {
-                var loginId = extractionControllers[
-                    QueryParameters.LoginId].ExtractMultiple(
+                var loginId = attributeValuesItemizeDelegates[
+                    QueryParameters.LoginId].Itemize(
                     authResponse).First();
                 QueryParametersCollections.LoginAuthenticate.Remove(QueryParameters.LoginUsername);
                 QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginId] = loginId;
                 loginUri = Uris.Paths.Authentication.Login;
 
-                username = extractionControllers[
-                    QueryParameters.LoginUsername].ExtractMultiple(
+                username = attributeValuesItemizeDelegates[
+                    QueryParameters.LoginUsername].Itemize(
                     authResponse).First();
             }
             else
@@ -117,7 +117,7 @@ namespace GOG.Controllers.Authorization
 
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
-            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUnderscoreToken] = loginToken;
+            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginToken] = loginToken;
 
             var loginData = uriController.ConcatenateQueryParameters(QueryParametersCollections.LoginAuthenticate);
 
@@ -135,8 +135,8 @@ namespace GOG.Controllers.Authorization
             // 2FA is enabled for this user - ask for the code
             var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null, getTwoStepLoginCheckResponseTask);
 
-            var secondStepAuthenticationToken = extractionControllers[
-                QueryParameters.SecondStepAuthenticationUnderscoreToken].ExtractMultiple(
+            var secondStepAuthenticationToken = attributeValuesItemizeDelegates[
+                QueryParameters.SecondStepAuthenticationToken].Itemize(
                 loginCheckResult).First();
 
             QueryParametersCollections.SecondStepAuthentication[
@@ -148,7 +148,7 @@ namespace GOG.Controllers.Authorization
             QueryParametersCollections.SecondStepAuthentication[
                 QueryParameters.SecondStepAuthenticationTokenLetter4] = securityCode[3].ToString();
             QueryParametersCollections.SecondStepAuthentication[
-                QueryParameters.SecondStepAuthenticationUnderscoreToken] = secondStepAuthenticationToken;
+                QueryParameters.SecondStepAuthenticationToken] = secondStepAuthenticationToken;
 
             var secondStepData = uriController.ConcatenateQueryParameters(QueryParametersCollections.SecondStepAuthentication);
 
@@ -205,7 +205,7 @@ namespace GOG.Controllers.Authorization
 
             if (await CheckAuthorizationSuccessAsync(loginCheckResponse, authorizeTask)) return;
 
-            if (!loginCheckResponse.Contains(QueryParameters.SecondStepAuthenticationUnderscoreToken))
+            if (!loginCheckResponse.Contains(QueryParameters.SecondStepAuthenticationToken))
                 await ThrowSecurityExceptionAsync(authorizeTask, failedToAuthenticate);
 
             var twoStepLoginCheckResponse = await GetTwoStepLoginCheckResponseAsync(loginCheckResponse, authorizeTask);

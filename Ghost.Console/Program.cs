@@ -13,12 +13,12 @@ using Delegates.Format.Numbers;
 using Delegates.Format.Uri;
 using Delegates.Format.Text;
 using Delegates.Format.Status;
+using Delegates.Itemize;
 using Delegates.Confirm;
 using Delegates.GetQueryParameters;
 using Delegates.Recycle;
 using Delegates.Correct;
 using Delegates.Constrain;
-using Delegates.Itemize;
 using Delegates.Replace;
 using Delegates.EnumerateIds;
 using Delegates.Download;
@@ -33,7 +33,6 @@ using Controllers.Network;
 using Controllers.Language;
 using Controllers.Serialization;
 using Controllers.StrongTypeSerialization;
-using Controllers.Extraction;
 using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Cookies;
@@ -51,8 +50,9 @@ using Controllers.ViewUpdates;
 using Controllers.ActivityContext;
 using Controllers.InputOutput;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Activity;
-using Interfaces.Extraction;
 using Interfaces.ActivityDefinitions;
 using Interfaces.Models.Entities;
 using Interfaces.Status;
@@ -98,6 +98,7 @@ using Models.Filenames;
 using Models.ActivityContext;
 using Models.Settings;
 using Models.Template;
+using Models.AttributeValuesPatterns;
 
 using Ghost.Factories.Controllers;
      
@@ -107,7 +108,9 @@ namespace Ghost.Console
 {
     class Program
     {
+#pragma warning disable IDE1006 // Naming Styles
         static async Task Main(string[] args)
+#pragma warning restore IDE1006 // Naming Styles
         {
             #region Delegates.GetDirectory
 
@@ -345,13 +348,17 @@ namespace Ghost.Console
 
             var languageController = new LanguageController();
 
-            var loginIdExtractionController = new LoginIdExtractionController();
-            var loginUsernameExtractionController = new LoginUsernameExtractionController();
-            var loginUnderscoreTokenExtractionController = new LoginTokenExtractionController();
-            var secondStepAuthenticationUnderscoreTokenExtractionController = new SecondStepAuthenticationTokenExtractionController();
+            var itemizeLoginIdDelegate = new ItemizeAttributeValuesDelegate(
+                AttributeValuesPatterns.LoginId);
+            var itemizeLoginUsernameDelegate = new ItemizeAttributeValuesDelegate(
+                AttributeValuesPatterns.LoginUsername);
+            var itemizeLoginTokenDelegate = new ItemizeAttributeValuesDelegate(
+                AttributeValuesPatterns.LoginToken);
+            var itemizeSecondStepAuthenticationTokenDelegate = new ItemizeAttributeValuesDelegate(
+                AttributeValuesPatterns.SecondStepAuthenticationToken);
 
-            var gogDataExtractionController = new GOGDataExtractionController();
-            var screenshotExtractionController = new ScreenshotExtractionController();
+            var itemizeGOGDataDelegate = new ItemizeGOGDataDelegate();
+            var itemizeScreenshotsDelegate = new ItemizeScreenshotsDelegate();
 
             var formatImagesUriDelegate = new FormatImagesUriDelegate();
             var formatScreenshotsUriDelegate = new FormatScreenshotsUriDelegate();
@@ -430,16 +437,16 @@ namespace Ghost.Console
             var correctSecurityCodeAsyncDelegate = new CorrectSecurityCodeAsyncDelegate(
                 consoleInputOutputController);
 
-            var authorizationExtractionControllers = new Dictionary<string, IStringExtractionController>
+            var attributeValuesItemizeDelegates = new Dictionary<string, IItemizeDelegate<string, string>>
             {
                 { QueryParameters.LoginId,
-                    loginIdExtractionController },
+                    itemizeLoginIdDelegate },
                 { QueryParameters.LoginUsername,
-                    loginUsernameExtractionController },
-                { QueryParameters.LoginUnderscoreToken,
-                    loginUnderscoreTokenExtractionController },
-                { QueryParameters.SecondStepAuthenticationUnderscoreToken,
-                    secondStepAuthenticationUnderscoreTokenExtractionController }
+                    itemizeLoginUsernameDelegate },
+                { QueryParameters.LoginToken,
+                    itemizeLoginTokenDelegate },
+                { QueryParameters.SecondStepAuthenticationToken,
+                    itemizeSecondStepAuthenticationTokenDelegate }
             };
 
             var authorizationController = new AuthorizationController(
@@ -448,7 +455,7 @@ namespace Ghost.Console
                 uriController,
                 networkController,
                 serializationController,
-                authorizationExtractionControllers,
+                attributeValuesItemizeDelegates,
                 statusController);
 
             var authorizeActivity = new AuthorizeActivity(
@@ -519,7 +526,7 @@ namespace Ghost.Console
             #region Update.Wishlisted
 
             var getDeserializedPageResultAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<ProductsPageResult>(networkController,
-                gogDataExtractionController,
+                itemizeGOGDataDelegate,
                 serializationController);
 
             var wishlistedUpdateActivity = new WishlistedUpdateActivity(
@@ -534,7 +541,7 @@ namespace Ghost.Console
             // dependencies for update controllers
 
             var getDeserializedGOGDataAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<GOGData>(networkController,
-                gogDataExtractionController,
+                itemizeGOGDataDelegate,
                 serializationController);
 
             var getDeserializedGameProductDataAsyncDelegate = new GetDeserializedGameProductDataAsyncDelegate(
@@ -657,7 +664,7 @@ namespace Ghost.Console
                 getProductUpdateUriByContextDelegate,
                 productScreenshotsDataController,
                 networkController,
-                screenshotExtractionController,
+                itemizeScreenshotsDelegate,
                 statusController);
 
             var updateScreenshotsActivity = new UpdateScreenshotsActivity(

@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-using Interfaces.Extraction;
+using Interfaces.Delegates.Itemize;
 
-namespace Controllers.Extraction
+namespace GOG.Delegates.Itemize
 {
-    public class ScreenshotExtractionController : IStringExtractionController
+    public class ItemizeScreenshotsDelegate: IItemizeDelegate<string, string>
     {
         const string attributePrefix = "data-src=\"";
         readonly Regex regex = new Regex(attributePrefix + "\\S*\"");
 
-        public IEnumerable<string> ExtractMultiple(string pageContent)
+        public IEnumerable<string> Itemize(string pageContent)
         {
             var match = regex.Match(pageContent);
             while (match.Success)
