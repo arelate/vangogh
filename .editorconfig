@@ -5,6 +5,17 @@ root = true
 [*]
 indent_style = space
 
+# Example: Pascal Casing
+[*.cs]
+dotnet_naming_rule.methods_and_properties_must_be_pascal_case.severity = warning
+dotnet_naming_rule.methods_and_properties_must_be_pascal_case.symbols  = method_and_property_symbols
+dotnet_naming_rule.methods_and_properties_must_be_pascal_case.style    = pascal_case_style
+
+dotnet_naming_symbols.method_and_property_symbols.applicable_kinds           = method,property
+dotnet_naming_symbols.method_and_property_symbols.applicable_accessibilities = *
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
 # Example: async methods end in Async
 [*.cs]
 dotnet_naming_rule.async_methods_must_end_with_async.severity = warning
@@ -16,3 +27,25 @@ dotnet_naming_symbols.method_symbols.required_modifiers = async
 
 dotnet_naming_style.end_in_async_style.capitalization  = pascal_case
 dotnet_naming_style.end_in_async_style.required_suffix = Async
+
+# Example: public members must be capitalized
+[*.cs]
+dotnet_naming_rule.public_members_must_be_capitalized.severity = warning
+dotnet_naming_rule.public_members_must_be_capitalized.symbols  = public_symbols
+dotnet_naming_rule.public_members_must_be_capitalized.style    = first_word_upper_case_style
+
+dotnet_naming_symbols.public_symbols.applicable_kinds   = property,method,field,event,delegate
+dotnet_naming_symbols.public_symbols.required_modifiers = public,internal,protected,protected_internal
+
+dotnet_naming_style.first_word_upper_case_style.capitalization = first_word_upper
+
+# Example: non-public members must be lower-case
+[*.cs]
+dotnet_naming_rule.non_public_members_must_be_lower_case.severity = warning
+dotnet_naming_rule.non_public_members_must_be_lower_case.symbols  = non_public_symbols
+dotnet_naming_rule.non_public_members_must_be_lower_case.style    = all_lower_case_style
+
+dotnet_naming_symbols.non_public_symbols.applicable_kinds   = property,method,field,event,delegate
+dotnet_naming_symbols.non_public_symbols.required_modifiers = private
+
+dotnet_naming_style.all_lower_case_style.capitalization = all_lower
