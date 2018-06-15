@@ -24,6 +24,11 @@ namespace Controllers.Records
             this.convertStringToIndexDelegate = convertStringToIndexDelegate;
         }
 
+        public async Task CommitAsync(IStatus status)
+        {
+            await indexRecordsController.CommitAsync(status);
+        }
+
         public async Task<DateTime> GetRecordAsync(string activity, RecordsTypes recordType, IStatus status)
         {
             var index = convertStringToIndexDelegate.Convert(activity);

@@ -85,6 +85,8 @@ namespace GOG.Activities.UpdateData
 
             await activityRecordsController.SetRecordAsync(activityContextString, RecordsTypes.Completed, updateAllProductsTask);
 
+            await dataController.CommitAsync(updateAllProductsTask);
+
             await statusController.CompleteAsync(updateAllProductsTask);
         }
     }

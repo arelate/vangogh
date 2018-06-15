@@ -16,12 +16,12 @@ using Interfaces.Status;
 
 using Interfaces.Models.RecordsTypes;
 
-using Models.ProductCore;
-
 namespace Controllers.Data
 {
     public class DataController<Type> : IDataController<Type>
     {
+        readonly IDictionary<long, Type> data;
+
         readonly IIndexController<long> indexController;
 
         ISerializedStorageController serializedStorageController;
@@ -37,6 +37,8 @@ namespace Controllers.Data
 
         IStatusController statusController;
 
+        ICommitAsyncDelegate[] additionalCommitDelegates;
+
         public DataController(
             IIndexController<long> indexController,
             ISerializedStorageController serializedStorageController,
@@ -45,8 +47,11 @@ namespace Controllers.Data
             IGetPathDelegate getPathDelegate,
             IRecycleDelegate recycleDelegate,
             IRecordsController<long> recordsController,
-            IStatusController statusController)
+            IStatusController statusController,
+            params ICommitAsyncDelegate[] additionalCommitDelegates)
         {
+            this.data = new Dictionary<long, Type>();
+
             this.indexController = indexController;
 
             this.serializedStorageController = serializedStorageController;
@@ -61,6 +66,7 @@ namespace Controllers.Data
             this.recordsController = recordsController;
 
             this.statusController = statusController;
+            this.additionalCommitDelegates = additionalCommitDelegates;
         }
 
         public async Task<bool> ContainsAsync(Type data, IStatus status)
@@ -71,14 +77,15 @@ namespace Controllers.Data
 
         public async Task<Type> GetByIdAsync(long id, IStatus status)
         {
-            return await serializedStorageController.DeserializePullAsync<Type>(
+            if (data.ContainsKey(id)) return data[id];
+            else return await serializedStorageController.DeserializePullAsync<Type>(
                 getPathDelegate.GetPath(
                     string.Empty,
                     id.ToString()), 
                 status);
         }
 
-        async Task MapItemsAndIndexes(
+        async Task MapItemsAndIndexesAsync(
             IStatus status,
             string taskMessage,
             Func<long, Type, Task> action,
@@ -92,9 +99,9 @@ namespace Controllers.Data
             await statusController.CompleteAsync(mapTask, false);
         }
 
-        public async Task UpdateAsync(Type data, IStatus status)
+        public async Task UpdateAsync(Type updatedData, IStatus status)
         {
-            await MapItemsAndIndexes(
+            await MapItemsAndIndexesAsync(
                 status,
                 "Update data item",
                 async (index, item) =>
@@ -102,12 +109,8 @@ namespace Controllers.Data
                     if (!(await indexController.ContainsIdAsync(index, status)))
                         await indexController.CreateAsync(index, status);
 
-                    await serializedStorageController.SerializePushAsync(
-                        getPathDelegate.GetPath(
-                            string.Empty,
-                            index.ToString()),
-                        item,
-                        status);
+                    if (!data.ContainsKey(index)) data.Add(index, item);
+                    else data[index] = item;
 
                     if (recordsController != null)
                         await recordsController.SetRecordAsync(
@@ -115,23 +118,23 @@ namespace Controllers.Data
                             RecordsTypes.Updated, 
                             status);
                 },
-                data);
+                updatedData);
         }
 
         public async Task DeleteAsync(Type data, IStatus status)
         {
-            await MapItemsAndIndexes(
+            await MapItemsAndIndexesAsync(
                 status,
                 "Remove data item(s)",
                 async (index, item) =>
                 {
-                    await indexController.DeleteAsync(index, status);
-
                     if (await indexController.ContainsIdAsync(index, status))
-                    recycleDelegate.Recycle(
-                        getPathDelegate.GetPath(
-                            string.Empty,
-                            index.ToString())); 
+                        recycleDelegate.Recycle(
+                            getPathDelegate.GetPath(
+                                string.Empty,
+                                index.ToString()));
+
+                    await indexController.DeleteAsync(index, status);
 
                     if (recordsController != null)
                         await recordsController.SetRecordAsync(
@@ -155,6 +158,65 @@ namespace Controllers.Data
         public async Task<bool> ContainsIdAsync(long id, IStatus status)
         {
             return await indexController.ContainsIdAsync(id, status);
+        }
+
+        public async Task CommitAsync(IStatus status)
+        {
+            var commitTask = await statusController.CreateAsync(status, "Commit updated data");
+
+            var commitIndexTask = await statusController.CreateAsync(commitTask, "Commit index");
+            // commit index controller
+            await indexController.CommitAsync(status);
+            await statusController.CompleteAsync(commitIndexTask);
+
+            // commit records controller
+            if (recordsController != null)
+            {
+                var commitRecordsTask = await statusController.CreateAsync(commitTask, "Commit records");
+                await recordsController.CommitAsync(status);
+                await statusController.CompleteAsync(commitRecordsTask);
+            }
+
+            var commitDataTask = await statusController.CreateAsync(commitTask, "Commit items");
+            var current = 0;
+            // update all items
+            foreach (var indexItem in data)
+            {
+                var index = indexItem.Key;
+                var item = indexItem.Value;
+
+                await statusController.UpdateProgressAsync(
+                    commitDataTask,
+                    ++current,
+                    data.Count,
+                    index.ToString());
+
+                await serializedStorageController.SerializePushAsync(
+                    getPathDelegate.GetPath(
+                        string.Empty,
+                        index.ToString()),
+                    item,
+                    status);
+            }
+            await statusController.CompleteAsync(commitDataTask);
+
+            var additionalCommitsTask = await statusController.CreateAsync(commitTask, "Additional commit dependencies");
+            current = 0;
+
+            foreach (var commitDelegate in additionalCommitDelegates)
+            {
+                await statusController.UpdateProgressAsync(
+                    additionalCommitsTask,
+                    ++current,
+                    additionalCommitDelegates.Length,
+                    "Commit delegate");
+
+                await commitDelegate.CommitAsync(additionalCommitsTask);
+            }
+
+            await statusController.CompleteAsync(additionalCommitsTask);
+
+            await statusController.CompleteAsync(commitTask);
         }
     }
 }

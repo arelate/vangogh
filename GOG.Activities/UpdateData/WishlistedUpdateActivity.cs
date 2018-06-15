@@ -49,6 +49,8 @@ namespace GOG.Activities.UpdateData
 
             await statusController.CompleteAsync(saveDataTask);
 
+            await wishlistedDataController.CommitAsync(updateWishlistTask);
+
             await statusController.CompleteAsync(updateWishlistTask);
         }
     }

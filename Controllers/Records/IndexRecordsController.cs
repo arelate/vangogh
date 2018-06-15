@@ -26,6 +26,11 @@ namespace Controllers.Records
             this.statusController = statusController;
         }
 
+        public async Task CommitAsync(IStatus status)
+        {
+            await productRecordsDataController.CommitAsync(status);
+        }
+
         public async Task<DateTime> GetRecordAsync(long id, RecordsTypes recordType, IStatus status)
         {
             var minRecord = DateTime.MinValue.ToUniversalTime();

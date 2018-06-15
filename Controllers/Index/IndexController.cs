@@ -53,15 +53,15 @@ namespace Controllers.Index
             return await indexesStashController.GetDataAsync(status);
         }
 
-        async Task Map(IStatus status, string taskMessage, Func<Type, Task<bool>> itemAction, Type data)
+        async Task MapAsync(IStatus status, string taskMessage, Func<Type, Task<bool>> itemAction, Type data)
         {
             var task = await statusController.CreateAsync(status, taskMessage, false);
 
             if (await itemAction(data))
             {
-                var saveDataTask = await statusController.CreateAsync(task, "Save modified index", false);
-                await indexesStashController.SaveAsync(status);
-                await statusController.CompleteAsync(saveDataTask, false);
+                //var saveDataTask = await statusController.CreateAsync(task, "Save modified index", false);
+                //await indexesStashController.SaveAsync(status);
+                //await statusController.CompleteAsync(saveDataTask, false);
             }
 
             await statusController.CompleteAsync(task, false);
@@ -71,7 +71,7 @@ namespace Controllers.Index
         {
             var indexes = await indexesStashController.GetDataAsync(status);
 
-            await Map(
+            await MapAsync(
                 status,
                 "Delete index item(s)",
                 async (item) =>
@@ -97,7 +97,7 @@ namespace Controllers.Index
         {
             var indexes = await indexesStashController.GetDataAsync(status);
 
-            await Map(
+            await MapAsync(
                 status,
                 "Create index item(s)",
                 async (item) => {
@@ -116,6 +116,16 @@ namespace Controllers.Index
                     return false;
                 },
                 data);
+        }
+
+        public async Task CommitAsync(IStatus status)
+        {
+            if (indexesStashController.DataAvailable)
+            {
+                var saveDataTask = await statusController.CreateAsync(status, "Save modified index", false);
+                await indexesStashController.SaveAsync(status);
+                await statusController.CompleteAsync(saveDataTask, false);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
+using Interfaces.Controllers.Hash;
 
 using Interfaces.Models.Entities;
 
@@ -46,6 +47,7 @@ namespace Ghost.Factories.Controllers
         readonly IStorageController<string> storageController;
         readonly ISerializedStorageController serializedStorageController;
         readonly IRecycleDelegate recycleDelegate;
+        readonly IStoredHashController storedHashController;
         readonly IStatusController statusController;
 
         IGetDirectoryDelegate getDataDirectoryDelegate;
@@ -60,6 +62,7 @@ namespace Ghost.Factories.Controllers
             IStorageController<string> storageController,
             ISerializedStorageController serializedStorageController,
             IRecycleDelegate recycleDelegate,
+            IStoredHashController storedHashController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IStatusController statusController)
         {
@@ -68,6 +71,7 @@ namespace Ghost.Factories.Controllers
             this.storageController = storageController;
             this.serializedStorageController = serializedStorageController;
             this.recycleDelegate = recycleDelegate;
+            this.storedHashController = storedHashController;
             this.statusController = statusController;
 
             this.getDataDirectoryDelegate = getDataDirectoryDelegate;
@@ -238,7 +242,8 @@ namespace Ghost.Factories.Controllers
                     getJsonFilenameDelegate),
                 recycleDelegate,
                 recordsController,
-                statusController);
+                statusController,
+                storedHashController);
         }
     }
 }

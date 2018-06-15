@@ -14,7 +14,8 @@ namespace Interfaces.Controllers.Index
         ICountAsyncDelegate,
         ICreateAsyncDelegate<IndexType>,
         IDeleteAsyncDelegate<IndexType>,
-        IContainsIdAsyncDelegate<IndexType>
+        IContainsIdAsyncDelegate<IndexType>,
+        ICommitAsyncDelegate
     {
         // ...
     }

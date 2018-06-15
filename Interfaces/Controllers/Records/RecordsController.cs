@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Interfaces.Controllers.Data;
+
 using Interfaces.Status;
 
 using Interfaces.Models.RecordsTypes;
@@ -19,7 +21,8 @@ namespace Interfaces.Controllers.Records
 
     public interface IRecordsController<Type>:
         IGetRecordAsyncDelegate<Type>,
-        ISetRecordAsyncDelegate<Type>
+        ISetRecordAsyncDelegate<Type>,
+        ICommitAsyncDelegate
     {
         // ...
     }

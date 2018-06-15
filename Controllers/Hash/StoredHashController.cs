@@ -44,7 +44,10 @@ namespace Controllers.Hash
             if (!storedHashes.ContainsKey(uri))
                 storedHashes.Add(uri, hash);
             else storedHashes[uri] = hash;
+        }
 
+        public async Task CommitAsync(IStatus status)
+        {
             await precomputedHashesStashController.SaveAsync(status);
         }
     }

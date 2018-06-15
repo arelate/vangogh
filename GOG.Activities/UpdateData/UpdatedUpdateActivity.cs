@@ -94,6 +94,8 @@ namespace GOG.Activities.UpdateData
 
             await statusController.CompleteAsync(addUpdatedAccountProductsStatus);
 
+            await updatedIndexController.CommitAsync(updateDataUpdatedStatus);
+
             await statusController.CompleteAsync(updateDataUpdatedStatus);
 
         }

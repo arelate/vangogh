@@ -47,6 +47,12 @@ namespace Interfaces.Controllers.Data
         Task<int> CountAsync(IStatus status);
     }
 
+    public interface ICommitAsyncDelegate
+    {
+        Task CommitAsync(IStatus status);
+    }
+
+
     public interface IDataController<DataType> :
         IItemizeAllAsyncDelegate<long>,
         ICountAsyncDelegate,
@@ -54,7 +60,8 @@ namespace Interfaces.Controllers.Data
         IUpdateAsyncDelegate<DataType>,
         IDeleteAsyncDelegate<DataType>,
         IContainsAsyncDelegate<DataType>,
-        IContainsIdAsyncDelegate<long>
+        IContainsIdAsyncDelegate<long>,
+        ICommitAsyncDelegate
     {
         // ...
     }

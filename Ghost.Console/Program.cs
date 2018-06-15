@@ -199,9 +199,9 @@ namespace Ghost.Console
                 streamController,
                 fileController,
                 ioTraceDelegate);
-            var transactionalStorageController = new TransactionalStorageController(
-                storageController,
-                fileController);
+            //var transactionalStorageController = new TransactionalStorageController(
+            //    storageController,
+            //    fileController);
             var serializationController = new JSONStringController();
 
             var convertBytesToStringDelegate = new ConvertBytesToStringDelegate();
@@ -257,9 +257,16 @@ namespace Ghost.Console
             var formatBytesDelegate = new FormatBytesDelegate();
             var formatSecondsDelegate = new FormatSecondsDelegate();
 
-            var serializedTransactionalStorageController = new SerializedStorageController(
+            //var serializedTransactionalStorageController = new SerializedStorageController(
+            //    precomputedHashController,
+            //    transactionalStorageController,
+            //    getStringMd5HashAsyncDelegate,
+            //    serializationController,
+            //    statusController);
+
+            var serializedStorageController = new SerializedStorageController(
                 precomputedHashController,
-                transactionalStorageController,
+                storageController,
                 getStringMd5HashAsyncDelegate,
                 serializationController,
                 statusController);
@@ -396,8 +403,9 @@ namespace Ghost.Console
                 collectionController,
                 serializationController,
                 storageController,
-                serializedTransactionalStorageController,
+                serializedStorageController,
                 recycleDelegate,
+                precomputedHashController,
                 getDataDirectoryDelegate,
                 statusController);
 
@@ -1044,7 +1052,7 @@ namespace Ghost.Console
                     await statusController.FailAsync(applicationStatus, combinedErrorMessages);
 
                     var failureDumpUri = "failureDump.json";
-                    await serializedTransactionalStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
+                    await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
 
                     await consoleInputOutputController.OutputOnRefreshAsync(
                         "GoodOfflineGames.exe has encountered fatal error(s): " +

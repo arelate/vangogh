@@ -109,6 +109,8 @@ namespace GOG.Activities.UpdateData
                 }
             }
 
+            await detailDataController.CommitAsync(updateProductsTask);
+
             await statusController.CompleteAsync(updateProductsTask);
         }
     }
