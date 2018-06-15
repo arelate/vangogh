@@ -23,6 +23,7 @@ using Delegates.Replace;
 using Delegates.EnumerateIds;
 using Delegates.Download;
 using Delegates.Hash;
+using Delegates.Trace;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -191,9 +192,13 @@ namespace Ghost.Console
             var fileController = new FileController();
             var directoryController = new DirectoryController();
 
+            var ioOperations = new List<string>();
+            var ioTraceDelegate = new IOTraceDelegate(ioOperations);
+
             var storageController = new StorageController(
                 streamController,
-                fileController);
+                fileController,
+                ioTraceDelegate);
             var transactionalStorageController = new TransactionalStorageController(
                 storageController,
                 fileController);
@@ -1066,6 +1071,9 @@ namespace Ghost.Console
             {
                 await consoleInputOutputController.OutputContinuousAsync(applicationStatus, string.Empty, "All tasks are complete. Press ENTER to exit...");
             }
+
+            // output IO Trace
+            await storageController.PushAsync("iotrace.txt", string.Join("\n", ioOperations));
 
             consoleController.ReadLine();
         }
