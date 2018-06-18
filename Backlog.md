@@ -26,6 +26,7 @@ To clear updated we'll need successful completion of several activities since pr
     - serialize/deserialize as a collection using commit model
     - binary serialization by default, option to export json for items and slices
     - enumerate by recorded
+    - add export operation to produce json files
 
 - modify (again) console output controller to use "single line control" and output only on one line.
     - provide same multi-line viewModel
