@@ -1,6 +1,8 @@
 Backend
 =======
 
+- Debug authorization controller - seems to always fail on first two attempts, succeeds on third
+
 - Implement recordsContoller to track created/modified/deleted/started/completed for an id
     - *[done]* Track CRUD operations for index/dataControllers
     - *[done]* Track started/completed for activities (starting with PageResultUpdateActivity)
@@ -17,9 +19,13 @@ To clear updated we'll need successful completion of several activities since pr
     - product files download should have been started and completed at Tpfd > Tgd;
     - product files validation should have been started and completed at Tv > Tpfd;
 
-- Performance: add read/write through cache for dataController
-- Performance: binary serialization bby default, option to export json
 - Performance: https://stackoverflow.com/questions/45644934/notepad-beats-them-all
+- Performance: rethink data controller model:
+    - deprecate index controller
+    - use stash for data/records
+    - serialize/deserialize as a collection using commit model
+    - binary serialization by default, option to export json for items and slices
+    - enumerate by recorded
 
 - modify (again) console output controller to use "single line control" and output only on one line.
     - provide same multi-line viewModel

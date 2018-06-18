@@ -10,7 +10,7 @@ namespace Delegates.Itemize
     {
         public IEnumerable<IStatus> Itemize(IStatus item)
         {
-            return item != null ? item.Children : null;
+            return item?.Children;
         }
     }
 }

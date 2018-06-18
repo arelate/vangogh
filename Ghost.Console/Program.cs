@@ -419,7 +419,7 @@ namespace Ghost.Console
             var activityRecordsController = dataControllerFactory.CreateStringRecordsController(Entity.Activity);
 
             var productsDataController = dataControllerFactory.CreateDataController<Product>(Entity.Products);
-            var accountProductsDataController = dataControllerFactory.CreateDataController<AccountProduct>(Entity.AccountProducts);
+            var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>(Entity.AccountProducts);
             var gameDetailsDataController = dataControllerFactory.CreateDataController<GameDetails>(Entity.GameDetails);
             var gameProductDataDataController = dataControllerFactory.CreateDataController<GameProductData>(Entity.GameProductData);
             var apiProductsDataController = dataControllerFactory.CreateDataController<ApiProduct>(Entity.ApiProducts);

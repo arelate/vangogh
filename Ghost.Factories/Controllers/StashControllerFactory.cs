@@ -38,5 +38,23 @@ namespace Ghost.Factories.Controllers
                 storageController,
                 statusController);
         }
+
+        public static IStashController<Dictionary<long, Type>> CreateDataStashController<Type>(
+            Entity entity,
+            IGetDirectoryDelegate getRootDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
+            ISerializationController<string> serializationController,
+            IStorageController<string> storageController,
+            IStatusController statusController)
+        {
+            return new StashController<Dictionary<long, Type>>(
+                GetPathDelegateFactory.CreatePathDelegate(
+                    entity,
+                    getRootDirectoryDelegate,
+                    getFilenameDelegate),
+                serializationController,
+                storageController,
+                statusController);
+        }
     }
 }

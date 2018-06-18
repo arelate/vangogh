@@ -15,26 +15,26 @@ namespace Controllers.Records
 {
     public class IndexRecordsController : IRecordsController<long>
     {
-        readonly IDataController<ProductRecords> productRecordsDataController;
-        IStatusController statusController;
+        readonly IDataController<ProductRecords> productRecordsController;
+        readonly IStatusController statusController;
 
         public IndexRecordsController(
             IDataController<ProductRecords> productRecordsController,
             IStatusController statusController)
         {
-            this.productRecordsDataController = productRecordsController;
+            this.productRecordsController = productRecordsController;
             this.statusController = statusController;
         }
 
         public async Task CommitAsync(IStatus status)
         {
-            await productRecordsDataController.CommitAsync(status);
+            await productRecordsController.CommitAsync(status);
         }
 
         public async Task<DateTime> GetRecordAsync(long id, RecordsTypes recordType, IStatus status)
         {
             var minRecord = DateTime.MinValue.ToUniversalTime();
-            var productRecord = await productRecordsDataController.GetByIdAsync(id, status);
+            var productRecord = await productRecordsController.GetByIdAsync(id, status);
 
             if (productRecord == null ||
                 productRecord.Records == null) return minRecord;
@@ -46,7 +46,7 @@ namespace Controllers.Records
 
         public async Task SetRecordAsync(long id, RecordsTypes recordType, IStatus status)
         {
-            var productRecord = await productRecordsDataController.GetByIdAsync(id, status);
+            var productRecord = await productRecordsController.GetByIdAsync(id, status);
 
             if (productRecord == null)
                 productRecord = new ProductRecords
@@ -61,7 +61,7 @@ namespace Controllers.Records
                 productRecord.Records.Add(recordType, nowTimestamp);
             else productRecord.Records[recordType] = nowTimestamp;
 
-            await productRecordsDataController.UpdateAsync(productRecord, status);
+            await productRecordsController.UpdateAsync(productRecord, status);
         }
     }
 }

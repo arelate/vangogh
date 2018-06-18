@@ -189,13 +189,22 @@ namespace Ghost.Factories.Controllers
         /// Interfaces.Models.Entities.Products, etc.</param>
         /// <returns>An instance of the data controller, enabling CRUD operations 
         /// on certain serialized stored data</returns>
-        public IDataController<Type> CreateDataController<Type>(Entity entity) 
+        public IDataController<Type> CreateDataController<Type>(Entity entity)
             where Type : ProductCore
         {
             return CreateDataController<Type>(
                 entity,
-                CreateIndexRecordsController(entity), 
+                CreateIndexRecordsController(entity),
                 getDataDirectoryDelegate);
+        }
+
+        public IDataController<Type> CreateDataControllerEx<Type>(Entity entity)
+            where Type: ProductCore
+        {
+            return CreateDataControllerEx<Type>(
+                entity,
+                CreateIndexRecordsController(entity),
+                getJsonFilenameDelegate);
         }
 
         /// <summary>
@@ -221,7 +230,7 @@ namespace Ghost.Factories.Controllers
         public IDataController<Type> CreateDataController<Type>(
             Entity entity,
             IRecordsController<long> recordsController,
-            IGetDirectoryDelegate getDirectoryDelegate) 
+            IGetDirectoryDelegate getDirectoryDelegate)
             where Type : ProductCore
         {
             // IMPORTANT: Please note the summary and don't create entity based on Type.
@@ -241,6 +250,26 @@ namespace Ghost.Factories.Controllers
                     getDirectoryDelegate,
                     getJsonFilenameDelegate),
                 recycleDelegate,
+                recordsController,
+                statusController,
+                storedHashController);
+        }
+
+        public IDataController<Type> CreateDataControllerEx<Type>(
+            Entity entity,
+            IRecordsController<long> recordsController,
+            IGetFilenameDelegate getFilenameDelegate)
+            where Type : ProductCore
+        {
+            return new DataControllerEx<Type>(
+                StashControllerFactory.CreateDataStashController<Type>(
+                    entity,
+                    getDataDirectoryDelegate,
+                    getFilenameDelegate,
+                    serializationController,
+                    storageController,
+                    statusController),
+                ConvertDelegateFactory.CreateConvertToIndexDelegate<Type>(),
                 recordsController,
                 statusController,
                 storedHashController);
