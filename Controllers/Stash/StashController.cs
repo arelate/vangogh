@@ -69,7 +69,11 @@ namespace Controllers.Stash
 
         public async Task SaveAsync(IStatus status)
         {
-            if (!DataAvailable) throw new InvalidOperationException("Cannot save data before it's available");
+            if (!DataAvailable) {
+                await statusController.WarnAsync(status, 
+                    "Attempted to save stashed data that has not been made available");
+                return;
+            };
 
             var saveStatus = await statusController.CreateAsync(status, "Save stored data", false);
 

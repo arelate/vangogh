@@ -78,19 +78,21 @@ namespace Controllers.Data
             {
                 data.Add(index, updatedData);
 
-                await recordsController?.SetRecordAsync(
-                    index,
-                    RecordsTypes.Created,
-                    status);
+                if (recordsController != null)
+                    await recordsController.SetRecordAsync(
+                        index,
+                        RecordsTypes.Created,
+                        status);
             }
             else
             {
                 data[index] = updatedData;
 
-                await recordsController?.SetRecordAsync(
-                    index,
-                    RecordsTypes.Updated,
-                    status);
+                if (recordsController != null)
+                    await recordsController.SetRecordAsync(
+                        index,
+                        RecordsTypes.Updated,
+                        status);
             }
         }
 
@@ -103,10 +105,11 @@ namespace Controllers.Data
             {
                 data.Remove(index);
 
-                await recordsController?.SetRecordAsync(
-                    index,
-                    RecordsTypes.Deleted,
-                    status);
+                if (recordsController != null)
+                    await recordsController.SetRecordAsync(
+                        index,
+                        RecordsTypes.Deleted,
+                        status);
             }
         }
 
