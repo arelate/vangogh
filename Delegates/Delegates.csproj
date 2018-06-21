@@ -3,14 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Hash\" />
-    <Folder Include="GetPath\" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
+  
 </Project>
