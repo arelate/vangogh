@@ -5,7 +5,6 @@ using Interfaces.Delegates.Recycle;
 using Interfaces.Controllers.Serialization;
 using Interfaces.Controllers.Storage;
 using Interfaces.Controllers.SerializedStorage;
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
@@ -19,7 +18,6 @@ using Delegates.GetDirectory;
 using Delegates.GetFilename;
 using Delegates.Convert;
 
-using Controllers.Index;
 using Controllers.Data;
 using Controllers.Records;
 
@@ -42,11 +40,8 @@ namespace Ghost.Factories.Controllers
     /// </summary>
     public class DataControllerFactory
     {
-        readonly ICollectionController collectionController;
         readonly ISerializationController<string> serializationController;
         readonly IStorageController<string> storageController;
-        readonly ISerializedStorageController serializedStorageController;
-        readonly IRecycleDelegate recycleDelegate;
         readonly IStoredHashController storedHashController;
         readonly IStatusController statusController;
 
@@ -54,20 +49,14 @@ namespace Ghost.Factories.Controllers
         IGetDirectoryDelegate getRecordsDirectoryDelegate;
 
         public DataControllerFactory(
-            ICollectionController collectionController,
             ISerializationController<string> serializationController,
             IStorageController<string> storageController,
-            ISerializedStorageController serializedStorageController,
-            IRecycleDelegate recycleDelegate,
             IStoredHashController storedHashController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IStatusController statusController)
         {
-            this.collectionController = collectionController;
             this.serializationController = serializationController;
             this.storageController = storageController;
-            this.serializedStorageController = serializedStorageController;
-            this.recycleDelegate = recycleDelegate;
             this.storedHashController = storedHashController;
             this.statusController = statusController;
 

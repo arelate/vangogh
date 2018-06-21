@@ -13,6 +13,8 @@ using Interfaces.Status;
 
 using Interfaces.Models.Entities;
 
+using Delegates.GetPath;
+
 using Controllers.Stash;
 
 using Ghost.Factories.Delegates;
@@ -23,16 +25,15 @@ namespace Ghost.Factories.Controllers
     {
         public static IStashController<List<long>> CreateStashController(
             Entity entity,
-            IGetDirectoryDelegate getRootDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializationController<string> serializationController,
             IStorageController<string> storageController,
             IStatusController statusController)
         {
             return new StashController<List<long>>(
-                GetPathDelegateFactory.CreatePathDelegate(
-                    entity,
-                    getRootDirectoryDelegate,
+                new GetPathDelegate(
+                    getDirectoryDelegate,
                     getFilenameDelegate),
                 serializationController,
                 storageController,
@@ -41,16 +42,15 @@ namespace Ghost.Factories.Controllers
 
         public static IStashController<Dictionary<long, Type>> CreateDataStashController<Type>(
             Entity entity,
-            IGetDirectoryDelegate getRootDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
             ISerializationController<string> serializationController,
             IStorageController<string> storageController,
             IStatusController statusController)
         {
             return new StashController<Dictionary<long, Type>>(
-                GetPathDelegateFactory.CreatePathDelegate(
-                    entity,
-                    getRootDirectoryDelegate,
+                new GetPathDelegate(
+                    getDirectoryDelegate,
                     getFilenameDelegate),
                 serializationController,
                 storageController,

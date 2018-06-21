@@ -401,11 +401,8 @@ namespace Ghost.Console
             #region Data Controllers
 
             var dataControllerFactory = new DataControllerFactory(
-                collectionController,
                 serializationController,
                 storageController,
-                serializedStorageController,
-                recycleDelegate,
                 precomputedHashController,
                 getDataDirectoryDelegate,
                 statusController);
