@@ -102,7 +102,7 @@ using Models.Template;
 using Models.AttributeValuesPatterns;
 
 using Ghost.Factories.Controllers;
-     
+
 #endregion
 
 namespace Ghost.Console
@@ -198,7 +198,7 @@ namespace Ghost.Console
             var storageController = new StorageController(
                 streamController,
                 fileController);
-                // ioTraceDelegate);
+            // ioTraceDelegate);
 
             //var transactionalStorageController = new TransactionalStorageController(
             //    storageController,
@@ -209,39 +209,48 @@ namespace Ghost.Console
             var getBytesMd5HashAsyncDelegate = new GetBytesMd5HashAsyncDelegate(convertBytesToStringDelegate);
             var convertStringToBytesDelegate = new ConvertStringToBytesDelegate();
             var getStringMd5HashAsyncDelegate = new GetStringMd5HashAsyncDelegate(
-                convertStringToBytesDelegate, 
+                convertStringToBytesDelegate,
                 getBytesMd5HashAsyncDelegate);
+
+            var protoBufSerializedStorageController = new ProtoBufSerializedStorageController(
+                streamController,
+                statusController);
 
             #region Controllers.Stash
 
             var storedHashesStashController = new StashController<Dictionary<string, string>>(
                 getStoredHashesPathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var appTemplateStashController = new StashController<List<Template>>(
                 getAppTemplatePathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var reportTemplateStashController = new StashController<List<Template>>(
                 getReportTemplatePathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var cookieStashController = new StashController<Dictionary<string, string>>(
                 getCookiePathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var settingsStashController = new StashController<Settings>(
                 getSettingsPathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             #endregion
@@ -401,8 +410,7 @@ namespace Ghost.Console
             #region Data Controllers
 
             var dataControllerFactory = new DataControllerFactory(
-                serializationController,
-                storageController,
+                protoBufSerializedStorageController,
                 precomputedHashController,
                 getDataDirectoryDelegate,
                 statusController);
@@ -917,14 +925,14 @@ namespace Ghost.Console
                 directoryController,
                 statusController);
 
-            var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
+            var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate =
                 new ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
                     updatedIndexController,
                     gameDetailsDataController,
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
-            var itemizeAllUpdatedProductFilesAsyncDelegate = 
+            var itemizeAllUpdatedProductFilesAsyncDelegate =
                 new ItemizeAllUpdatedProductFilesAsyncDelegate(
                     updatedIndexController,
                     gameDetailsDataController,

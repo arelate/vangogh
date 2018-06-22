@@ -3,7 +3,8 @@ using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Recycle;
 
 using Interfaces.Controllers.Serialization;
-using Interfaces.Controllers.Storage;
+// using Interfaces.Controllers.Storage;
+// using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Data;
@@ -40,8 +41,9 @@ namespace Ghost.Factories.Controllers
     /// </summary>
     public class DataControllerFactory
     {
-        readonly ISerializationController<string> serializationController;
-        readonly IStorageController<string> storageController;
+        readonly ISerializedStorageController serializedStorageController;
+        // readonly ISerializationController<string> serializationController;
+        // readonly IStorageController<string> storageController;
         readonly IStoredHashController storedHashController;
         readonly IStatusController statusController;
 
@@ -49,14 +51,16 @@ namespace Ghost.Factories.Controllers
         IGetDirectoryDelegate getRecordsDirectoryDelegate;
 
         public DataControllerFactory(
-            ISerializationController<string> serializationController,
-            IStorageController<string> storageController,
+            ISerializedStorageController serializedStorageController,
+            // ISerializationController<string> serializationController,
+            // IStorageController<string> storageController,
             IStoredHashController storedHashController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IStatusController statusController)
         {
-            this.serializationController = serializationController;
-            this.storageController = storageController;
+            this.serializedStorageController = serializedStorageController;
+            // this.serializationController = serializationController;
+            // this.storageController = storageController;
             this.storedHashController = storedHashController;
             this.statusController = statusController;
 
@@ -125,13 +129,12 @@ namespace Ghost.Factories.Controllers
             IGetFilenameDelegate getFilenameDelegate)
             where Type : ProductCore
         {
-            return new DataControllerEx<Type>(
+            return new DataController<Type>(
                 StashControllerFactory.CreateDataStashController<Type>(
                     entity,
                     getDirectoryDelegate,
                     getFilenameDelegate,
-                    serializationController,
-                    storageController,
+                    serializedStorageController,
                     statusController),
                 ConvertDelegateFactory.CreateConvertToIndexDelegate<Type>(),
                 recordsController,

@@ -6,8 +6,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Controllers.Stash;
-using Interfaces.Controllers.Serialization;
-using Interfaces.Controllers.Storage;
+using Interfaces.Controllers.SerializedStorage;
 
 using Interfaces.Status;
 
@@ -27,16 +26,14 @@ namespace Ghost.Factories.Controllers
             Entity entity,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            ISerializationController<string> serializationController,
-            IStorageController<string> storageController,
+            ISerializedStorageController serializedStorageController,
             IStatusController statusController)
         {
             return new StashController<List<long>>(
                 new GetPathDelegate(
                     getDirectoryDelegate,
                     getFilenameDelegate),
-                serializationController,
-                storageController,
+                serializedStorageController,
                 statusController);
         }
 
@@ -44,16 +41,14 @@ namespace Ghost.Factories.Controllers
             Entity entity,
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            ISerializationController<string> serializationController,
-            IStorageController<string> storageController,
+            ISerializedStorageController serializedStorageController,
             IStatusController statusController)
         {
             return new StashController<Dictionary<long, Type>>(
                 new GetPathDelegate(
                     getDirectoryDelegate,
                     getFilenameDelegate),
-                serializationController,
-                storageController,
+                serializedStorageController,
                 statusController);
         }
     }
