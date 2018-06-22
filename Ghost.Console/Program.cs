@@ -213,6 +213,7 @@ namespace Ghost.Console
                 getBytesMd5HashAsyncDelegate);
 
             var protoBufSerializedStorageController = new ProtoBufSerializedStorageController(
+                fileController,
                 streamController,
                 statusController);
 
@@ -225,37 +226,44 @@ namespace Ghost.Console
                 protoBufSerializedStorageController,
                 statusController);
 
-            var appTemplateStashController = new StashController<List<Template>>(
-                getAppTemplatePathDelegate,
-                // serializationController,
-                // storageController,
-                protoBufSerializedStorageController,
-                statusController);
+            #endregion
 
-            var reportTemplateStashController = new StashController<List<Template>>(
-                getReportTemplatePathDelegate,
-                // serializationController,
-                // storageController,
-                protoBufSerializedStorageController,
-                statusController);
+            var precomputedHashController = new StoredHashController(storedHashesStashController);
 
-            var cookieStashController = new StashController<Dictionary<string, string>>(
-                getCookiePathDelegate,
-                // serializationController,
-                // storageController,
-                protoBufSerializedStorageController,
+            var serializedStorageController = new SerializedStorageController(
+                precomputedHashController,
+                storageController,
+                getStringMd5HashAsyncDelegate,
+                serializationController,
                 statusController);
 
             var settingsStashController = new StashController<Settings>(
                 getSettingsPathDelegate,
                 // serializationController,
                 // storageController,
-                protoBufSerializedStorageController,
+                serializedStorageController,
                 statusController);
 
-            #endregion
+            var appTemplateStashController = new StashController<List<Template>>(
+                getAppTemplatePathDelegate,
+                // serializationController,
+                // storageController,
+                serializedStorageController,
+                statusController);
 
-            var precomputedHashController = new StoredHashController(storedHashesStashController);
+            var reportTemplateStashController = new StashController<List<Template>>(
+                getReportTemplatePathDelegate,
+                // serializationController,
+                // storageController,
+                serializedStorageController,
+                statusController);
+
+            var cookieStashController = new StashController<Dictionary<string, string>>(
+                getCookiePathDelegate,
+                // serializationController,
+                // storageController,
+                serializedStorageController,
+                statusController);
 
             var consoleController = new ConsoleController();
             var formatTextToFitConsoleWindowDelegate = new FormatTextToFitConsoleWindowDelegate(consoleController);
@@ -273,13 +281,6 @@ namespace Ghost.Console
             //    getStringMd5HashAsyncDelegate,
             //    serializationController,
             //    statusController);
-
-            var serializedStorageController = new SerializedStorageController(
-                precomputedHashController,
-                storageController,
-                getStringMd5HashAsyncDelegate,
-                serializationController,
-                statusController);
 
             var collectionController = new CollectionController();
 

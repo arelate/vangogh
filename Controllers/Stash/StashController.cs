@@ -68,7 +68,7 @@ namespace Controllers.Stash
 
             DataAvailable = true;
 
-            await statusController.CompleteAsync(loadStatus);
+            await statusController.CompleteAsync(loadStatus, false);
         }
 
         public async Task SaveAsync(IStatus status)
