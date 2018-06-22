@@ -17,12 +17,6 @@
     <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="data\**" />
-    <EmbeddedResource Remove="data\**" />
-    <None Remove="data\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\Delegates\Delegates.csproj" />
     <ProjectReference Include="..\GOG.Activities\GOG.Activities.csproj" />

@@ -4,12 +4,14 @@ using System.Runtime.Serialization;
 
 using Interfaces.Models.RecordsTypes;
 
+using ProtoBuf;
+
 namespace Models.ProductRecords
 {
-    [DataContract]
+    [ProtoContract, DataContract]
     public class ProductRecords: ProductCore.ProductCore
     {
-        [DataMember(Name = "records")]
+        [ProtoMember(1), DataMember(Name = "records")]
         public Dictionary<RecordsTypes, DateTime> Records { get; set; }
     }
 }

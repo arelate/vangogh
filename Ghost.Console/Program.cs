@@ -102,7 +102,7 @@ using Models.Template;
 using Models.AttributeValuesPatterns;
 
 using Ghost.Factories.Controllers;
-     
+
 #endregion
 
 namespace Ghost.Console
@@ -193,12 +193,13 @@ namespace Ghost.Console
             var directoryController = new DirectoryController();
 
             var ioOperations = new List<string>();
-            var ioTraceDelegate = new IOTraceDelegate(ioOperations);
+            // var ioTraceDelegate = new IOTraceDelegate(ioOperations);
 
             var storageController = new StorageController(
                 streamController,
-                fileController,
-                ioTraceDelegate);
+                fileController);
+            // ioTraceDelegate);
+
             //var transactionalStorageController = new TransactionalStorageController(
             //    storageController,
             //    fileController);
@@ -208,39 +209,48 @@ namespace Ghost.Console
             var getBytesMd5HashAsyncDelegate = new GetBytesMd5HashAsyncDelegate(convertBytesToStringDelegate);
             var convertStringToBytesDelegate = new ConvertStringToBytesDelegate();
             var getStringMd5HashAsyncDelegate = new GetStringMd5HashAsyncDelegate(
-                convertStringToBytesDelegate, 
+                convertStringToBytesDelegate,
                 getBytesMd5HashAsyncDelegate);
+
+            var protoBufSerializedStorageController = new ProtoBufSerializedStorageController(
+                streamController,
+                statusController);
 
             #region Controllers.Stash
 
             var storedHashesStashController = new StashController<Dictionary<string, string>>(
                 getStoredHashesPathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var appTemplateStashController = new StashController<List<Template>>(
                 getAppTemplatePathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var reportTemplateStashController = new StashController<List<Template>>(
                 getReportTemplatePathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var cookieStashController = new StashController<Dictionary<string, string>>(
                 getCookiePathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             var settingsStashController = new StashController<Settings>(
                 getSettingsPathDelegate,
-                serializationController,
-                storageController,
+                // serializationController,
+                // storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             #endregion
@@ -400,33 +410,34 @@ namespace Ghost.Console
             #region Data Controllers
 
             var dataControllerFactory = new DataControllerFactory(
-                collectionController,
-                serializationController,
-                storageController,
-                serializedStorageController,
-                recycleDelegate,
+                protoBufSerializedStorageController,
                 precomputedHashController,
                 getDataDirectoryDelegate,
                 statusController);
 
-            var wishlistedIndexController = dataControllerFactory.CreateIndexController(
-                Entity.Wishlist, 
-                getWishlistedFilenameDelegate);
-            var updatedIndexController = dataControllerFactory.CreateIndexController(
-                Entity.Updated, 
-                getUpdatedFilenameDelegate);
+            // TODO: Remove the stub
+            Interfaces.Controllers.Index.IIndexController<long> wishlistedIndexController = null;
+            //  dataControllerFactory.CreateIndexController(
+            //     Entity.Wishlist, 
+            //     getWishlistedFilenameDelegate);
+
+            // TODO: Remove the stub
+            Interfaces.Controllers.Index.IIndexController<long> updatedIndexController = null;
+            // dataControllerFactory.CreateIndexController(
+            //     Entity.Updated, 
+            //     getUpdatedFilenameDelegate);
 
             var activityRecordsController = dataControllerFactory.CreateStringRecordsController(Entity.Activity);
 
-            var productsDataController = dataControllerFactory.CreateDataController<Product>(Entity.Products);
+            var productsDataController = dataControllerFactory.CreateDataControllerEx<Product>(Entity.Products);
             var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>(Entity.AccountProducts);
-            var gameDetailsDataController = dataControllerFactory.CreateDataController<GameDetails>(Entity.GameDetails);
-            var gameProductDataDataController = dataControllerFactory.CreateDataController<GameProductData>(Entity.GameProductData);
-            var apiProductsDataController = dataControllerFactory.CreateDataController<ApiProduct>(Entity.ApiProducts);
-            var productScreenshotsDataController = dataControllerFactory.CreateDataController<ProductScreenshots>(Entity.ProductScreenshots);
-            var productDownloadsDataController = dataControllerFactory.CreateDataController<ProductDownloads>(Entity.ProductDownloads);
-            var productRoutesDataController = dataControllerFactory.CreateDataController<ProductRoutes>(Entity.ProductRoutes);
-            var validationResultsDataController = dataControllerFactory.CreateDataController<ValidationResult>(Entity.ValidationResults);
+            var gameDetailsDataController = dataControllerFactory.CreateDataControllerEx<GameDetails>(Entity.GameDetails);
+            var gameProductDataDataController = dataControllerFactory.CreateDataControllerEx<GameProductData>(Entity.GameProductData);
+            var apiProductsDataController = dataControllerFactory.CreateDataControllerEx<ApiProduct>(Entity.ApiProducts);
+            var productScreenshotsDataController = dataControllerFactory.CreateDataControllerEx<ProductScreenshots>(Entity.ProductScreenshots);
+            var productDownloadsDataController = dataControllerFactory.CreateDataControllerEx<ProductDownloads>(Entity.ProductDownloads);
+            var productRoutesDataController = dataControllerFactory.CreateDataControllerEx<ProductRoutes>(Entity.ProductRoutes);
+            var validationResultsDataController = dataControllerFactory.CreateDataControllerEx<ValidationResult>(Entity.ValidationResults);
 
             #endregion
 
@@ -914,14 +925,14 @@ namespace Ghost.Console
                 directoryController,
                 statusController);
 
-            var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
+            var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate =
                 new ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
                     updatedIndexController,
                     gameDetailsDataController,
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
-            var itemizeAllUpdatedProductFilesAsyncDelegate = 
+            var itemizeAllUpdatedProductFilesAsyncDelegate =
                 new ItemizeAllUpdatedProductFilesAsyncDelegate(
                     updatedIndexController,
                     gameDetailsDataController,
@@ -1081,7 +1092,7 @@ namespace Ghost.Console
             }
 
             // output IO Trace
-            await storageController.PushAsync("iotrace.txt", string.Join("\n", ioOperations));
+            // await storageController.PushAsync("iotrace.txt", string.Join("\n", ioOperations));
 
             consoleController.ReadLine();
         }

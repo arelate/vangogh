@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetPath;
 
-using Interfaces.Controllers.Serialization;
-using Interfaces.Controllers.Storage;
+using Interfaces.Controllers.SerializedStorage;
+// using Interfaces.Controllers.Storage;
 using Interfaces.Controllers.Stash;
 
 using Interfaces.Status;
@@ -16,8 +16,9 @@ namespace Controllers.Stash
     {
         readonly IGetPathDelegate getPathDelegate;
 
-        readonly ISerializationController<string> serializationController;
-        readonly IStorageController<string> storageController;
+        readonly ISerializedStorageController serializedStorageController;
+        // readonly ISerializationController<string> serializationController;
+        // readonly IStorageController<string> storageController;
 
         readonly IStatusController statusController;
 
@@ -25,14 +26,16 @@ namespace Controllers.Stash
 
         public StashController(
             IGetPathDelegate getPathDelegate,
-            ISerializationController<string> serializationController,
-            IStorageController<string> storageController,
+            // ISerializationController<string> serializationController,
+            // IStorageController<string> storageController,
+            ISerializedStorageController serializedStorageController,
             IStatusController statusController)
         {
             this.getPathDelegate = getPathDelegate;
 
-            this.serializationController = serializationController;
-            this.storageController = storageController;
+            this.serializedStorageController = serializedStorageController;
+            // this.serializationController = serializationController;
+            // this.storageController = storageController;
 
             this.statusController = statusController;
         }
@@ -56,9 +59,10 @@ namespace Controllers.Stash
 
             var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
 
-            var serializedData = await storageController.PullAsync(storedDataUri);
-            if (!string.IsNullOrEmpty(serializedData)) 
-                storedData = serializationController.Deserialize<ModelType>(serializedData);
+            // var serializedData = await storageController.PullAsync(storedDataUri);
+            // if (!string.IsNullOrEmpty(serializedData)) 
+            //     storedData = serializationController.Deserialize<ModelType>(serializedData);
+            storedData = await serializedStorageController.DeserializePullAsync<ModelType>(storedDataUri, loadStatus);
 
             if (storedData == null) storedData = new ModelType();
 
@@ -69,14 +73,19 @@ namespace Controllers.Stash
 
         public async Task SaveAsync(IStatus status)
         {
-            if (!DataAvailable) throw new InvalidOperationException("Cannot save data before it's available");
+            if (!DataAvailable) {
+                await statusController.WarnAsync(status, 
+                    "Attempted to save stashed data that has not been made available");
+                return;
+            };
 
             var saveStatus = await statusController.CreateAsync(status, "Save stored data", false);
 
             var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
 
-            var serializedData = serializationController.Serialize(storedData);
-            await storageController.PushAsync(storedDataUri, serializedData);
+            await serializedStorageController.SerializePushAsync(storedDataUri, storedData, saveStatus);
+            // var serializedData = serializationController.Serialize(storedData);
+            // await storageController.PushAsync(storedDataUri, serializedData);
 
             await statusController.CompleteAsync(saveStatus, false);
         }
