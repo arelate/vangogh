@@ -102,7 +102,7 @@ using Models.Template;
 using Models.AttributeValuesPatterns;
 
 using Ghost.Factories.Controllers;
-     
+
 #endregion
 
 namespace Ghost.Console
@@ -136,7 +136,9 @@ namespace Ghost.Console
             #region Delegates.GetFilename
 
             var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
-            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
+            var getBinFilenameDelegate = new GetBinFilenameDelegate();
+
+            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getBinFilenameDelegate);
 
             var getAppTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
             var gerReportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
@@ -188,64 +190,82 @@ namespace Ghost.Console
 
             var statusController = new StatusController();
 
+            var ioOperations = new List<string>();
+            var ioTraceDelegate = new IOTraceDelegate(ioOperations);
+
             var streamController = new StreamController();
             var fileController = new FileController();
             var directoryController = new DirectoryController();
-
-            var ioOperations = new List<string>();
-            var ioTraceDelegate = new IOTraceDelegate(ioOperations);
 
             var storageController = new StorageController(
                 streamController,
                 fileController,
                 ioTraceDelegate);
-            //var transactionalStorageController = new TransactionalStorageController(
-            //    storageController,
-            //    fileController);
+
             var serializationController = new JSONStringController();
 
             var convertBytesToStringDelegate = new ConvertBytesToStringDelegate();
             var getBytesMd5HashAsyncDelegate = new GetBytesMd5HashAsyncDelegate(convertBytesToStringDelegate);
             var convertStringToBytesDelegate = new ConvertStringToBytesDelegate();
             var getStringMd5HashAsyncDelegate = new GetStringMd5HashAsyncDelegate(
-                convertStringToBytesDelegate, 
+                convertStringToBytesDelegate,
                 getBytesMd5HashAsyncDelegate);
+
+            var protoBufSerializedStorageController = new ProtoBufSerializedStorageController(
+                fileController,
+                streamController,
+                statusController,
+                ioTraceDelegate);
 
             #region Controllers.Stash
 
             var storedHashesStashController = new StashController<Dictionary<string, string>>(
                 getStoredHashesPathDelegate,
-                serializationController,
-                storageController,
-                statusController);
-
-            var appTemplateStashController = new StashController<List<Template>>(
-                getAppTemplatePathDelegate,
-                serializationController,
-                storageController,
-                statusController);
-
-            var reportTemplateStashController = new StashController<List<Template>>(
-                getReportTemplatePathDelegate,
-                serializationController,
-                storageController,
-                statusController);
-
-            var cookieStashController = new StashController<Dictionary<string, string>>(
-                getCookiePathDelegate,
-                serializationController,
-                storageController,
-                statusController);
-
-            var settingsStashController = new StashController<Settings>(
-                getSettingsPathDelegate,
-                serializationController,
-                storageController,
+                protoBufSerializedStorageController,
                 statusController);
 
             #endregion
 
             var precomputedHashController = new StoredHashController(storedHashesStashController);
+
+            var serializedStorageController = new SerializedStorageController(
+                precomputedHashController,
+                storageController,
+                getStringMd5HashAsyncDelegate,
+                serializationController,
+                statusController);
+
+            #region User editable files stashControllers
+
+            // Settings.json 
+
+            var settingsStashController = new StashController<Settings>(
+                getSettingsPathDelegate,
+                serializedStorageController,
+                statusController);
+
+            // templates/app.json
+
+            var appTemplateStashController = new StashController<List<Template>>(
+                getAppTemplatePathDelegate,
+                serializedStorageController,
+                statusController);
+
+            // templates/report.json
+
+            var reportTemplateStashController = new StashController<List<Template>>(
+                getReportTemplatePathDelegate,
+                serializedStorageController,
+                statusController);
+
+            // cookies.json - this is required to be editable to allow user paste browser cookies
+
+            var cookieStashController = new StashController<Dictionary<string, string>>(
+                getCookiePathDelegate,
+                serializedStorageController,
+                statusController);
+
+            #endregion
 
             var consoleController = new ConsoleController();
             var formatTextToFitConsoleWindowDelegate = new FormatTextToFitConsoleWindowDelegate(consoleController);
@@ -256,20 +276,6 @@ namespace Ghost.Console
 
             var formatBytesDelegate = new FormatBytesDelegate();
             var formatSecondsDelegate = new FormatSecondsDelegate();
-
-            //var serializedTransactionalStorageController = new SerializedStorageController(
-            //    precomputedHashController,
-            //    transactionalStorageController,
-            //    getStringMd5HashAsyncDelegate,
-            //    serializationController,
-            //    statusController);
-
-            var serializedStorageController = new SerializedStorageController(
-                precomputedHashController,
-                storageController,
-                getStringMd5HashAsyncDelegate,
-                serializationController,
-                statusController);
 
             var collectionController = new CollectionController();
 
@@ -400,33 +406,35 @@ namespace Ghost.Console
             #region Data Controllers
 
             var dataControllerFactory = new DataControllerFactory(
-                collectionController,
-                serializationController,
-                storageController,
-                serializedStorageController,
-                recycleDelegate,
+                protoBufSerializedStorageController,
                 precomputedHashController,
                 getDataDirectoryDelegate,
+                getBinFilenameDelegate,
                 statusController);
 
-            var wishlistedIndexController = dataControllerFactory.CreateIndexController(
-                Entity.Wishlist, 
-                getWishlistedFilenameDelegate);
-            var updatedIndexController = dataControllerFactory.CreateIndexController(
-                Entity.Updated, 
-                getUpdatedFilenameDelegate);
+            // TODO: Remove the stub
+            Interfaces.Controllers.Index.IIndexController<long> wishlistedIndexController = null;
+            //  dataControllerFactory.CreateIndexController(
+            //     Entity.Wishlist, 
+            //     getWishlistedFilenameDelegate);
+
+            // TODO: Remove the stub
+            Interfaces.Controllers.Index.IIndexController<long> updatedIndexController = null;
+            // dataControllerFactory.CreateIndexController(
+            //     Entity.Updated, 
+            //     getUpdatedFilenameDelegate);
 
             var activityRecordsController = dataControllerFactory.CreateStringRecordsController(Entity.Activity);
 
-            var productsDataController = dataControllerFactory.CreateDataController<Product>(Entity.Products);
-            var accountProductsDataController = dataControllerFactory.CreateDataController<AccountProduct>(Entity.AccountProducts);
-            var gameDetailsDataController = dataControllerFactory.CreateDataController<GameDetails>(Entity.GameDetails);
-            var gameProductDataDataController = dataControllerFactory.CreateDataController<GameProductData>(Entity.GameProductData);
-            var apiProductsDataController = dataControllerFactory.CreateDataController<ApiProduct>(Entity.ApiProducts);
-            var productScreenshotsDataController = dataControllerFactory.CreateDataController<ProductScreenshots>(Entity.ProductScreenshots);
-            var productDownloadsDataController = dataControllerFactory.CreateDataController<ProductDownloads>(Entity.ProductDownloads);
-            var productRoutesDataController = dataControllerFactory.CreateDataController<ProductRoutes>(Entity.ProductRoutes);
-            var validationResultsDataController = dataControllerFactory.CreateDataController<ValidationResult>(Entity.ValidationResults);
+            var productsDataController = dataControllerFactory.CreateDataControllerEx<Product>(Entity.Products);
+            var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>(Entity.AccountProducts);
+            var gameDetailsDataController = dataControllerFactory.CreateDataControllerEx<GameDetails>(Entity.GameDetails);
+            var gameProductDataDataController = dataControllerFactory.CreateDataControllerEx<GameProductData>(Entity.GameProductData);
+            var apiProductsDataController = dataControllerFactory.CreateDataControllerEx<ApiProduct>(Entity.ApiProducts);
+            var productScreenshotsDataController = dataControllerFactory.CreateDataControllerEx<ProductScreenshots>(Entity.ProductScreenshots);
+            var productDownloadsDataController = dataControllerFactory.CreateDataControllerEx<ProductDownloads>(Entity.ProductDownloads);
+            var productRoutesDataController = dataControllerFactory.CreateDataControllerEx<ProductRoutes>(Entity.ProductRoutes);
+            var validationResultsDataController = dataControllerFactory.CreateDataControllerEx<ValidationResult>(Entity.ValidationResults);
 
             #endregion
 
@@ -914,14 +922,14 @@ namespace Ghost.Console
                 directoryController,
                 statusController);
 
-            var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate = 
+            var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate =
                 new ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
                     updatedIndexController,
                     gameDetailsDataController,
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
-            var itemizeAllUpdatedProductFilesAsyncDelegate = 
+            var itemizeAllUpdatedProductFilesAsyncDelegate =
                 new ItemizeAllUpdatedProductFilesAsyncDelegate(
                     updatedIndexController,
                     gameDetailsDataController,

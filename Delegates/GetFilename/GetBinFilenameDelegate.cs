@@ -2,9 +2,9 @@
 
 namespace Delegates.GetFilename
 {
-    public class GetJsonFilenameDelegate : IGetFilenameDelegate
+    public class GetBinFilenameDelegate : IGetFilenameDelegate
     {
-        const string extension = ".json";
+        const string extension = ".bin";
 
         public string GetFilename(string source = null)
         {

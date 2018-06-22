@@ -6,12 +6,13 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Controllers.Stash;
-using Interfaces.Controllers.Serialization;
-using Interfaces.Controllers.Storage;
+using Interfaces.Controllers.SerializedStorage;
 
 using Interfaces.Status;
 
 using Interfaces.Models.Entities;
+
+using Delegates.GetPath;
 
 using Controllers.Stash;
 
@@ -23,19 +24,31 @@ namespace Ghost.Factories.Controllers
     {
         public static IStashController<List<long>> CreateStashController(
             Entity entity,
-            IGetDirectoryDelegate getRootDirectoryDelegate,
+            IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate,
-            ISerializationController<string> serializationController,
-            IStorageController<string> storageController,
+            ISerializedStorageController serializedStorageController,
             IStatusController statusController)
         {
             return new StashController<List<long>>(
-                GetPathDelegateFactory.CreatePathDelegate(
-                    entity,
-                    getRootDirectoryDelegate,
+                new GetPathDelegate(
+                    getDirectoryDelegate,
                     getFilenameDelegate),
-                serializationController,
-                storageController,
+                serializedStorageController,
+                statusController);
+        }
+
+        public static IStashController<Dictionary<long, Type>> CreateDataStashController<Type>(
+            Entity entity,
+            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetFilenameDelegate getFilenameDelegate,
+            ISerializedStorageController serializedStorageController,
+            IStatusController statusController)
+        {
+            return new StashController<Dictionary<long, Type>>(
+                new GetPathDelegate(
+                    getDirectoryDelegate,
+                    getFilenameDelegate),
+                serializedStorageController,
                 statusController);
         }
     }

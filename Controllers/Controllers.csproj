@@ -5,24 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Timeline\**" />
-    <EmbeddedResource Remove="Timeline\**" />
-    <None Remove="Timeline\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="2.3.13" />
     <PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="StrongTypeSerialization\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Chronology\ChronologyController.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
+
 </Project>

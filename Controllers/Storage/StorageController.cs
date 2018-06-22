@@ -40,7 +40,7 @@ namespace Controllers.Storage
 
             var completed = DateTime.Now;
             var duration = (completed - started).TotalMilliseconds;
-            traceDelegate.Trace(
+            traceDelegate?.Trace(
                 "Push",
                 started.ToFileTimeUtc().ToString(),
                 completed.ToFileTimeUtc().ToString(),
@@ -65,7 +65,7 @@ namespace Controllers.Storage
 
             var completed = DateTime.Now;
             var duration = (completed - started).TotalMilliseconds;
-            traceDelegate.Trace(
+            traceDelegate?.Trace(
                 "Pull",
                 started.ToFileTimeUtc().ToString(),
                 completed.ToFileTimeUtc().ToString(),
