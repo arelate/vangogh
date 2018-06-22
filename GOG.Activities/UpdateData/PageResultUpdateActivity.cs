@@ -72,14 +72,16 @@ namespace GOG.Activities.UpdateData
             {
                 var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Save {activityContext.Item2}");
                 var current = 0;
+                var updateProgressEvery = 10;
 
                 foreach (var product in newProducts)
                 {
-                    await statusController.UpdateProgressAsync(updateTask, ++current, newProducts.Count(), product.Title);
+                    if (++current % updateProgressEvery == 0)
+                        await statusController.UpdateProgressAsync(updateTask, current, newProducts.Count(), product.Title);
 
                     await dataController.UpdateAsync(product, updateTask);
                 }
-                
+
                 await statusController.CompleteAsync(updateTask);
             }
 

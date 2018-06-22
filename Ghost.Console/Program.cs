@@ -136,7 +136,9 @@ namespace Ghost.Console
             #region Delegates.GetFilename
 
             var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
-            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getJsonFilenameDelegate);
+            var getBinFilenameDelegate = new GetBinFilenameDelegate();
+
+            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getBinFilenameDelegate);
 
             var getAppTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
             var gerReportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
@@ -188,21 +190,18 @@ namespace Ghost.Console
 
             var statusController = new StatusController();
 
+            var ioOperations = new List<string>();
+            var ioTraceDelegate = new IOTraceDelegate(ioOperations);
+
             var streamController = new StreamController();
             var fileController = new FileController();
             var directoryController = new DirectoryController();
 
-            var ioOperations = new List<string>();
-            // var ioTraceDelegate = new IOTraceDelegate(ioOperations);
-
             var storageController = new StorageController(
                 streamController,
-                fileController);
-            // ioTraceDelegate);
+                fileController,
+                ioTraceDelegate);
 
-            //var transactionalStorageController = new TransactionalStorageController(
-            //    storageController,
-            //    fileController);
             var serializationController = new JSONStringController();
 
             var convertBytesToStringDelegate = new ConvertBytesToStringDelegate();
@@ -215,14 +214,13 @@ namespace Ghost.Console
             var protoBufSerializedStorageController = new ProtoBufSerializedStorageController(
                 fileController,
                 streamController,
-                statusController);
+                statusController,
+                ioTraceDelegate);
 
             #region Controllers.Stash
 
             var storedHashesStashController = new StashController<Dictionary<string, string>>(
                 getStoredHashesPathDelegate,
-                // serializationController,
-                // storageController,
                 protoBufSerializedStorageController,
                 statusController);
 
@@ -237,33 +235,37 @@ namespace Ghost.Console
                 serializationController,
                 statusController);
 
+            #region User editable files stashControllers
+
+            // Settings.json 
+
             var settingsStashController = new StashController<Settings>(
                 getSettingsPathDelegate,
-                // serializationController,
-                // storageController,
                 serializedStorageController,
                 statusController);
+
+            // templates/app.json
 
             var appTemplateStashController = new StashController<List<Template>>(
                 getAppTemplatePathDelegate,
-                // serializationController,
-                // storageController,
                 serializedStorageController,
                 statusController);
+
+            // templates/report.json
 
             var reportTemplateStashController = new StashController<List<Template>>(
                 getReportTemplatePathDelegate,
-                // serializationController,
-                // storageController,
                 serializedStorageController,
                 statusController);
 
+            // cookies.json - this is required to be editable to allow user paste browser cookies
+
             var cookieStashController = new StashController<Dictionary<string, string>>(
                 getCookiePathDelegate,
-                // serializationController,
-                // storageController,
                 serializedStorageController,
                 statusController);
+
+            #endregion
 
             var consoleController = new ConsoleController();
             var formatTextToFitConsoleWindowDelegate = new FormatTextToFitConsoleWindowDelegate(consoleController);
@@ -274,13 +276,6 @@ namespace Ghost.Console
 
             var formatBytesDelegate = new FormatBytesDelegate();
             var formatSecondsDelegate = new FormatSecondsDelegate();
-
-            //var serializedTransactionalStorageController = new SerializedStorageController(
-            //    precomputedHashController,
-            //    transactionalStorageController,
-            //    getStringMd5HashAsyncDelegate,
-            //    serializationController,
-            //    statusController);
 
             var collectionController = new CollectionController();
 
@@ -414,6 +409,7 @@ namespace Ghost.Console
                 protoBufSerializedStorageController,
                 precomputedHashController,
                 getDataDirectoryDelegate,
+                getBinFilenameDelegate,
                 statusController);
 
             // TODO: Remove the stub
@@ -1093,7 +1089,7 @@ namespace Ghost.Console
             }
 
             // output IO Trace
-            // await storageController.PushAsync("iotrace.txt", string.Join("\n", ioOperations));
+            await storageController.PushAsync("iotrace.txt", string.Join("\n", ioOperations));
 
             consoleController.ReadLine();
         }

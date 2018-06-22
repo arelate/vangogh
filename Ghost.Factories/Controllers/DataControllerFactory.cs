@@ -48,6 +48,7 @@ namespace Ghost.Factories.Controllers
         readonly IStatusController statusController;
 
         IGetDirectoryDelegate getDataDirectoryDelegate;
+        IGetFilenameDelegate getDataFilenameDelegate;
         IGetDirectoryDelegate getRecordsDirectoryDelegate;
 
         public DataControllerFactory(
@@ -56,6 +57,7 @@ namespace Ghost.Factories.Controllers
             // IStorageController<string> storageController,
             IStoredHashController storedHashController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
+            IGetFilenameDelegate getDataFilenameDelegate,
             IStatusController statusController)
         {
             this.serializedStorageController = serializedStorageController;
@@ -68,13 +70,15 @@ namespace Ghost.Factories.Controllers
             getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(
                 Directories.Base[Entity.Records],
                 getDataDirectoryDelegate);
+
+            this.getDataFilenameDelegate = getDataFilenameDelegate;
         }
 
         public IGetFilenameDelegate GetDataFilenameDelegate(Entity entity) 
         {
             return new GetFixedFilenameDelegate(
-                Filenames.Base[entity], 
-                new GetJsonFilenameDelegate());
+                Filenames.Base[entity],
+                getDataFilenameDelegate);
         }
 
         /// <summary>
