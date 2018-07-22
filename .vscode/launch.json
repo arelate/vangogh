@@ -1,4 +1,7 @@
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -6,11 +9,12 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/Ghost.Console/bin/Debug/netcoreapp2.1/ghost.dll",
-            "args": ["updateData-accountProducts"],
-            "cwd": "${workspaceRoot}/Ghost.Console/bin/Debug/netcoreapp2.1/",
+            "program": "${workspaceFolder}/Ghost.Console/bin/Debug/netcoreapp2.1/ghost.dll",
+            "args": ["updateData-products"],
+            "cwd": "${workspaceFolder}/Ghost.Console",
+            "console": "internalConsole",
             "stopAtEntry": false,
-            "console": "integratedTerminal"
+            "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "name": ".NET Core Attach",
