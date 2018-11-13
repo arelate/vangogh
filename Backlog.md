@@ -60,6 +60,8 @@ To clear updated we'll need successful completion of several activities since pr
 
 - [Backlog] serve data and frontend files via http or better yet websockets server
 
+- [Backlog] Few improvements from https://blogs.msdn.microsoft.com/dotnet/2018/11/12/building-c-8-0/ (async iterators)
+
 - debug data validation - why stored file md5 doesn't match precomputed hash at push (encoding? special characters?)
 
 Frontend
