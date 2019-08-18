@@ -1,4 +1,4 @@
-﻿namespace Models.AttributeValuesPatterns
+﻿namespace Models.Patterns
 {
     public static class AttributeValuesPatterns
     {

@@ -1,4 +1,4 @@
-﻿using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Confirm;
 
 using Interfaces.Controllers.Collection;
 

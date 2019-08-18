@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Collection;
@@ -30,5 +31,19 @@ namespace Controllers.Collection
             foreach (var item in collection)
                 if (reduce(item)) yield return item;
         }
+
+        public IEnumerable<T> Intersect<T>(IEnumerable<T> firstCollection, IEnumerable<T> secondCollection)
+        {
+            return Reduce(
+                firstCollection,
+                firstItem => Find(
+                    secondCollection, 
+                    secondItem => secondItem.Equals(firstItem)) != null);
+        }
+
+        public bool ConfirmExclusive<T>(IEnumerable<T> firstCollection, IEnumerable<T> secondCollection)
+        {
+            return !Intersect(firstCollection, secondCollection).Any();
+        }        
     }
 }

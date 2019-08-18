@@ -1,0 +1,268 @@
+{
+    "defaultArgs": "help",
+    "methods": [
+        {
+            "title": "authorize",
+            "desc": "",
+            "order": 10,
+            "hidden": true,
+            "collections": [],
+            "parameters": [
+                "username",
+                "password"
+            ]
+        },
+        {
+            "title": "cleanup",
+            "desc": "",
+            "order": 70,
+            "collections": [
+                "folders",
+                "files",
+                "updated"
+            ],
+            "parameters": [
+                "id"
+            ]
+        },
+        {
+            "title": "download",
+            "desc": "",
+            "order": 40,
+            "collections": [
+                "productimages",
+                "accountproductimages",
+                "screenshots",
+                "productfiles"
+            ],
+            "parameters": [
+                "id",
+                "os",
+                "lang"
+            ]
+        },
+        {
+            "title": "help",
+            "desc": ""
+        },
+        {
+            "title": "list",
+            "desc": "",
+            "collections": [
+                "products",
+                "gameproductdata",
+                "accountproducts",
+                "apiproducts",
+                "gamedetails",
+                "updated",
+                "wishlisted",
+                "screenshots"
+            ],
+            "parameters": [
+                "id"
+            ]
+        },
+        {
+            "title": "prepare",
+            "desc": "",
+            "hidden": true,
+            "order": 30,
+            "collections": [
+                "productimages",
+                "accountproductimages",
+                "screenshots",
+                "productfiles"
+            ],
+            "parameters": [
+                "id",
+                "os",
+                "lang"
+            ]
+        },
+        {
+            "title": "repair",
+            "desc": "",
+            "order": 60,
+            "collections": [
+                "productfiles"
+            ],
+            "parameters": [
+                "id"
+            ]
+        },
+        {
+            "title": "trace",
+            "desc": "Enable debug tracing. Traces are stored at .\\traces."
+        },
+        {
+            "title": "update",
+            "desc": "",
+            "order": 20,
+            "collections": [
+                "products",
+                "gameproductdata",
+                "accountproducts",
+                "apiproducts",
+                "gamedetails",
+                "updated",
+                "wishlisted",
+                "screenshots"
+            ],
+            "parameters": [
+                "id"
+            ]
+        },
+        {
+            "title": "validate",
+            "desc": "",
+            "order": 50,
+            "collections": [
+                "productfiles"
+            ],
+            "parameters": [
+                "id"
+            ]
+        }
+    ],
+    "method-sets": [
+        {
+            "title": "sync",
+            "desc": "Full sync of the data from GOG.com",
+            "methods": [
+                "update",
+                "prepare",
+                "download",
+                "validate",
+                "repair",
+                "cleanup"
+            ]
+        }
+    ],
+    "collections": [
+        {
+            "title": "products",
+            "desc": "Products"
+        },
+        {
+            "title": "gameproductdata",
+            "desc": "Game prodcut data"
+        },
+        {
+            "title": "accountproducts",
+            "desc": "Account products"
+        },
+        {
+            "title": "apiprodicts",
+            "desc": "API products"
+        },
+        {
+            "title": "gamedetails",
+            "desc": "Game details"
+        },
+        {
+            "title": "updated",
+            "desc": "Updated products"
+        },
+        {
+            "title": "wishlisted",
+            "desc": "Wishlisted products"
+        },
+        {
+            "title": "screenshots",
+            "desc": "Screenshots"
+        },
+        {
+            "title": "accountproductimages",
+            "desc": "Account product images"
+        },
+        {
+            "title": "productimages",
+            "desc": "Product images"
+        },
+        {
+            "title": "files",
+            "desc": "Product files"
+        },
+        {
+            "title": "folders",
+            "desc": "Product folders"
+        },
+        {
+            "title": "productfiles",
+            "desc": "Product files"
+        }
+    ],
+    "parameters": [
+        {
+            "title": "username",
+            "desc": "GOG.com account username"
+        },
+        {
+            "title": "password",
+            "desc": "GOG.com account password"
+        },
+        {
+            "title": "id",
+            "desc": "GOG.com product ID",
+            "multiple": true
+        },
+        {
+            "title": "os",
+            "desc": "Operating systems",
+            "values": [
+                "windows",
+                "osx",
+                "linux"
+            ]
+        },
+        {
+            "title": "lang",
+            "desc": "Languages",
+            "values": [
+                "en"
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "method": "update",
+            "collections": [
+                "accountproducts",
+                "apiproducts",
+                "gamedetails",
+                "updated",
+                "wishlisted"
+            ],
+            "requires": [
+                {
+                    "method": "authorize",
+                    "collections": []
+                }
+            ]
+        },
+        {
+            "method": "download",
+            "collections": [
+                "productfiles"
+            ],
+            "requires": [
+                {
+                    "method": "authorize",
+                    "collections": []
+                },
+                {
+                    "method": "prepare",
+                    "collections": [
+                        "productfiles"
+                    ]
+                },
+                {
+                    "method": "update",
+                    "collections": [
+                        "gamedetails"
+                    ]
+                }
+            ]
+        }
+    ]
+}

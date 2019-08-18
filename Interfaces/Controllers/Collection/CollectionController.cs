@@ -18,10 +18,22 @@ namespace Interfaces.Controllers.Collection
         T Find<T>(IEnumerable<T> collection, Predicate<T> find);
     }
 
+    public interface IIntersectDelegate
+    {
+        IEnumerable<T> Intersect<T>(IEnumerable<T> firstCollection, IEnumerable<T> secondCollection);
+    }
+
+    public interface IConfirmExclusiveDelegate
+    {
+        bool ConfirmExclusive<T>(IEnumerable<T> firstCollection, IEnumerable<T> secondCollection);
+    }
+
     public interface ICollectionController:
         IMapDelegate,
         IReduceDelegate,
-        IFindDelegate
+        IFindDelegate,
+        IIntersectDelegate,
+        IConfirmExclusiveDelegate        
     {
         // ...
     }

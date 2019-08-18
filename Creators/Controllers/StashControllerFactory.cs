@@ -16,9 +16,9 @@ using Delegates.GetPath;
 
 using Controllers.Stash;
 
-using Ghost.Factories.Delegates;
+using Creators.Delegates;
 
-namespace Ghost.Factories.Controllers
+namespace Creators.Controllers
 {
     public static class StashControllerFactory
     {

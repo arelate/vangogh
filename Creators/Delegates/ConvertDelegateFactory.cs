@@ -4,7 +4,7 @@ using Delegates.Convert;
 
 using Models.ProductCore;
 
-namespace Ghost.Factories.Delegates
+namespace Creators.Delegates
 {
     public static class ConvertDelegateFactory
     {

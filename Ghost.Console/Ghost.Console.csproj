@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <StartupObject></StartupObject>
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
-    <AssemblyName>ghost</AssemblyName>
+    <AssemblyName>vangogh</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,7 +25,7 @@
     <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Ghost.Factories\Ghost.Factories.csproj" />
+    <ProjectReference Include="..\Creators\Creators.csproj" />
   </ItemGroup>
 
   <ItemGroup>
