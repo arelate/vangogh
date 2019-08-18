@@ -27,16 +27,16 @@ using Models.Directories;
 using Models.Filenames;
 using Models.Records;
 
-using Ghost.Factories.Delegates;
+using Creators.Delegates;
 
-namespace Ghost.Factories.Controllers
+namespace Creators.Controllers
 {
     /// <summary>
     /// Provides methods that encapsulate dependency injection for creating 
     /// a data controller: index controller, records controller, etc.
     /// Additionally this factory allows creating individual instances of an
     /// index controller and records controller.
-    /// Finally this class uses some static helpers from Ghost.Factories
+    /// Finally this class uses some static helpers from Creators
     /// get path by entity, get directory by entity and convert by type delegates.
     /// </summary>
     public class DataControllerFactory

@@ -6,7 +6,7 @@ using Delegates.GetDirectory;
 
 using Models.Directories;
 
-namespace Ghost.Factories.Delegates
+namespace Creators.Delegates
 {
     public static class GetDirectoryDelegateFactory
     {

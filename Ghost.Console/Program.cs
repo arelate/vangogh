@@ -88,6 +88,9 @@ using GOG.Activities.Validate;
 using GOG.Activities.Report;
 using GOG.Activities.List;
 
+using Models.ArgsDefinitions;
+using Models.ArgsTokens;
+using Models.Requests;
 using Models.ProductRoutes;
 using Models.ProductScreenshots;
 using Models.ProductDownloads;
@@ -99,9 +102,10 @@ using Models.Filenames;
 using Models.ActivityContext;
 using Models.Settings;
 using Models.Template;
-using Models.AttributeValuesPatterns;
+using Models.Patterns;
 
-using Ghost.Factories.Controllers;
+using Creators.Delegates.Convert.Requests;
+using Creators.Controllers;
 
 #endregion
 
@@ -109,9 +113,7 @@ namespace Ghost.Console
 {
     class Program
     {
-#pragma warning disable IDE1006 // Naming Styles
         static async Task Main(string[] args)
-#pragma warning restore IDE1006 // Naming Styles
         {
             #region Delegates.GetDirectory
 
@@ -138,6 +140,8 @@ namespace Ghost.Console
             var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
             var getBinFilenameDelegate = new GetBinFilenameDelegate();
 
+            var getArgsDefinitionsFilenameDelegate = new GetFixedFilenameDelegate("definitions", getJsonFilenameDelegate);
+
             var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getBinFilenameDelegate);
 
             var getAppTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
@@ -157,6 +161,10 @@ namespace Ghost.Console
             #endregion
 
             #region Delegates.GetPath
+
+            var getArgsDefinitionsPathDelegate = new GetPathDelegate(
+                getEmptyDirectoryDelegate,
+                getArgsDefinitionsFilenameDelegate);
 
             var getStoredHashesPathDelegate = new GetPathDelegate(
                 getEmptyDirectoryDelegate,
@@ -234,6 +242,11 @@ namespace Ghost.Console
                 getStringMd5HashAsyncDelegate,
                 serializationController,
                 statusController);
+
+            var argsDefinitionStashController = new StashController<ArgsDefinition>(
+                getArgsDefinitionsPathDelegate,
+                serializedStorageController,
+                statusController);                
 
             #region User editable files stashControllers
 
@@ -988,6 +1001,26 @@ namespace Ghost.Console
                 statusController);
 
             #endregion
+
+            #endregion
+
+            #region ArgsDefinition and args
+
+            var argsDefinitions = await argsDefinitionStashController.GetDataAsync(applicationStatus);
+
+            if (args == null ||
+                args.Length == 0)
+                args = argsDefinitions.DefaultArgs.Split(" ");
+
+            var convertArgsToRequestsDelegateCreator = 
+                new ConvertArgsToRequestsDelegateCreator(
+                    argsDefinitions,
+                    collectionController);
+
+            var convertArgsToRequestsDelegate =
+                convertArgsToRequestsDelegateCreator.CreateDelegate();
+
+            var requests = convertArgsToRequestsDelegate.Convert(args);                                
 
             #endregion
 
