@@ -109,7 +109,7 @@ using Creators.Controllers;
 
 #endregion
 
-namespace Ghost.Console
+namespace vangogh.Console
 {
     class Program
     {
@@ -296,7 +296,7 @@ namespace Ghost.Console
 
             var statusTreeToEnumerableController = new ConvertTreeToEnumerableDelegate<IStatus>(itemizeStatusChildrenDelegate);
 
-            var applicationStatus = new Status { Title = "This ghost is a kind one." };
+            var applicationStatus = new Status { Title = "" };
 
             var appTemplateController = new TemplateController(
                 "status",
