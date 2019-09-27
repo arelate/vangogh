@@ -24,6 +24,8 @@ using Delegates.EnumerateIds;
 using Delegates.Download;
 using Delegates.Hash;
 using Delegates.Trace;
+using Delegates.Instantiate;
+using Delegates.Convert.Requests;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -1006,19 +1008,24 @@ namespace vangogh.Console
 
             #region ArgsDefinition and args
 
+
             var argsDefinitions = await argsDefinitionStashController.GetDataAsync(applicationStatus);
 
             if (args == null ||
                 args.Length == 0)
                 args = argsDefinitions.DefaultArgs.Split(" ");
 
-            var convertArgsToRequestsDelegateCreator = 
-                new ConvertArgsToRequestsDelegateCreator(
-                    argsDefinitions,
-                    collectionController);
+            // var convertArgsToRequestsDelegateCreator = 
+            //     new ConvertArgsToRequestsDelegateCreator(
+            //         argsDefinitions,
+            //         collectionController);
 
-            var convertArgsToRequestsDelegate =
-                convertArgsToRequestsDelegateCreator.CreateDelegate();
+            var instantiateDelegate = new InstantiateDelegate();
+            var convertArgsToRequestsDelegate = instantiateDelegate.Instantiate(
+                typeof(ConvertArgsToRequestsDelegate)) as ConvertArgsToRequestsDelegate;
+
+            // var convertArgsToRequestsDelegate =
+            //     convertArgsToRequestsDelegateCreator.CreateDelegate();
 
             var requests = convertArgsToRequestsDelegate.Convert(args);                                
 

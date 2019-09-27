@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
 
+using Delegates.Convert.Requests;
+using Delegates.Convert.ArgsTokens;
+using Delegates.Confirm.ArgsTokens;
+using Delegates.Compare.ArgsDefinitions;
+
+using Attributes;
+
 using Models.ArgsTokens;
 using Models.Requests;
 
@@ -20,6 +27,13 @@ namespace Delegates.Convert.Requests
         private IComparer<string> methodOrderCompareDelegate;
         private IConvertDelegate<RequestsData, IEnumerable<Request>> convertRequestsDataToRequestsDelegate;
 
+        [ImplementationDependencies(
+            typeof(ConvertTokensToTypedTokensDelegate),
+            typeof(ConvertTypedTokensToRequestsDataDelegate),
+            typeof(ConvertRequestsDataToResolvedCollectionsDelegate),
+            typeof(ConvertRequestsDataToResolvedDependenciesDelegate),
+            typeof(MethodOrderCompareDelegate),
+            typeof(ConvertRequestsDataToRequestsDelegate))]
         public ConvertArgsToRequestsDelegate(
             IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToTypedTokensDelegate,
             IConvertDelegate<TypedTokens, RequestsData> convertTypedTokensToRequestsDataDelegate,
