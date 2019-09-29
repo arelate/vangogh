@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Confirm;
 
+using Attributes;
+
 using Models.ArgsTokens;
 
 using TypedTokens = System.Collections.Generic.IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>;
@@ -17,6 +19,10 @@ namespace Delegates.Convert.ArgsTokens
         private IConvertDelegate<TypedTokens, TypedTokens> convertLikelyTypedToTypedTokensDelegate;
         private IConvertDelegate<TypedTokens, TypedTokens> convertMethodsSetTokensToMethodTitleTokensDelegate;
 
+        [ImplementationDependencies(
+            typeof(ConvertTokensToLikelyTypedTokensDelegate),
+            typeof(ConvertLikelyTypedToTypedTokensDelegate),
+            typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))]
         public ConvertTokensToTypedTokensDelegate(
             IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToLikelyTypedTokensDelegate,
             IConvertDelegate<TypedTokens, TypedTokens> convertLikelyTypedToTypedTokensDelegate,

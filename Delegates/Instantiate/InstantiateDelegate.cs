@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using System.Collections.Generic;
 
 using Interfaces.Delegates.Instantiate;
 
@@ -8,44 +10,60 @@ namespace Delegates.Instantiate
 {
     public class InstantiateDelegate : IInstantiateDelegate
     {
+        private readonly Dictionary<Type, object> instancesCache;
+
+        private InstantiateDelegate()
+        { 
+            instancesCache = new Dictionary<Type, object>();
+        }
+
         public object Instantiate(Type type)
         {
-            ImplementationDependenciesAttribute implementationsDependenciesAttribute = null;
+            if (type == null)
+                throw new ArgumentException($"Cannot instantiate null type");
 
-            foreach (var constructorInfo in type.GetConstructors())
+            if (type.IsInterface ||
+                type.IsAbstract)
+                throw new ArgumentException($"Type {type.Name} is an interface or abstract class");
+
+            if (!instancesCache.ContainsKey(type))
             {
-                implementationsDependenciesAttribute = Attribute.GetCustomAttribute(
-                    constructorInfo,
-                    typeof(ImplementationDependenciesAttribute))
-                    as ImplementationDependenciesAttribute;
+                ConstructorInfo instatiationConstructor = null;
+                object[] implementationDependencies = null;
 
-                if (implementationsDependenciesAttribute != null)
-                    break;
+                foreach (var constructorInfo in type.GetConstructors())
+                {
+                    var implementationsDependenciesAttribute = Attribute.GetCustomAttribute(
+                        constructorInfo,
+                        typeof(ImplementationDependenciesAttribute))
+                        as ImplementationDependenciesAttribute;
+
+                    if (implementationsDependenciesAttribute != null)
+                    {
+                        instatiationConstructor = constructorInfo;
+                        implementationDependencies = new object[
+                            implementationsDependenciesAttribute.ImplementationTypes.Length];
+
+                        for (var ii = 0; ii < implementationDependencies.Length; ii++)
+                            implementationDependencies[ii] = Instantiate(
+                                implementationsDependenciesAttribute.ImplementationTypes[ii]);
+                    }
+                }
+
+                if (instatiationConstructor == null)
+                {
+                    instatiationConstructor = type.GetConstructor(Type.EmptyTypes)!;
+
+                    if (instatiationConstructor == null)
+                        throw new ArgumentException(
+                            $@"Type {type.Name} cannot be instantitated as it does not
+                        have constructor with specified dependencies or without any parameters");
+                }
+
+                instancesCache[type] = instatiationConstructor.Invoke(implementationDependencies);
             }
 
-            if (implementationsDependenciesAttribute == null)
-            {
-                var defaultConstructor = type.GetConstructor(Type.EmptyTypes)!;
-                if (defaultConstructor != null)
-                    return defaultConstructor.Invoke(null);
-
-                throw new ArgumentException($"Type {type.Name} doesn't contain an accessible default constructor");
-            }
-            else
-            {
-                var implementationTypes = implementationsDependenciesAttribute.ImplementationTypes;
-                var constructor = type.GetConstructor(implementationTypes);
-
-                if (constructor == null)
-                    throw new ArgumentException($"Type {type.Name} doesn't contain an accessible constructor accepting implementation types: {string.Join(',', implementationsDependenciesAttribute.ImplementationTypes as object[])}");
-
-                object[] implementationDependencies = new object[implementationTypes.Length];
-
-                for (var ii = 0; ii < implementationDependencies.Length; ii++)
-                    implementationDependencies[ii] = Instantiate(implementationTypes[ii]);
-
-                return constructor.Invoke(implementationDependencies);
-            }
+            return instancesCache[type];
         }
     }
 }

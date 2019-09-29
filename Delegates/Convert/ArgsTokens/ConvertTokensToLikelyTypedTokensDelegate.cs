@@ -3,25 +3,34 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Confirm;
+using Interfaces.Status;
+
+using Delegates.Confirm.ArgsTokens;
+
+using Attributes;
 
 using Models.ArgsTokens;
 
 namespace Delegates.Convert.ArgsTokens
 {
     public class ConvertTokensToLikelyTypedTokensDelegate :
-        IConvertDelegate<
+        IConvertAsyncDelegate<
             IEnumerable<string>,
-            IEnumerable<(string, Tokens)>>
+            IAsyncEnumerable<(string, Tokens)>>
     {
-        private IConfirmDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate;
+        private IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate;
 
+        [ImplementationDependencies(
+            typeof(ConfirmLikelyTokenTypeDelegate))]
         public ConvertTokensToLikelyTypedTokensDelegate(
-            IConfirmDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate)
+            IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate)
         {
             this.confirmLikelyTokenTypeDelegate = confirmLikelyTokenTypeDelegate;
         }
 
-        public IEnumerable<(string, Tokens)> Convert(IEnumerable<string> untypedTokens)
+        public async IAsyncEnumerable<(string, Tokens)> ConvertAsync(
+            IEnumerable<string> untypedTokens, 
+            IStatus status)
         {
             var groups = new Queue<Groups>(TokensGroups.ParsingExpectations.Keys);
             var tokens = new Queue<string>(untypedTokens);
@@ -49,7 +58,7 @@ namespace Delegates.Convert.ArgsTokens
                     new ValueTuple<string, Tokens>(currentToken, Tokens.Unknown);
 
                 foreach (var type in TokensGroups.ParsingExpectations[currentGroup])
-                    if (confirmLikelyTokenTypeDelegate.Confirm((currentToken, type)))
+                    if (await confirmLikelyTokenTypeDelegate.ConfirmAsync((currentToken, type), status))
                     {
                         typedToken.Type = type;
                         yield return typedToken;
@@ -82,7 +91,6 @@ namespace Delegates.Convert.ArgsTokens
                     currentToken = tokens.Count > 0 ?
                         tokens.Dequeue() :
                         null;
-
             }
         }
     }

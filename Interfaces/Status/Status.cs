@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Interfaces.Models.Properties;
+
 namespace Interfaces.Status
 {
     public interface ICompleteProperty
@@ -8,10 +10,10 @@ namespace Interfaces.Status
         bool Complete { get; set; }
     }
 
-    public interface ITitleProperty
-    {
-        string Title { get; set; }
-    }
+    // public interface ITitleProperty
+    // {
+    //     string Title { get; set; }
+    // }
 
     public interface IChildrenProperty
     {

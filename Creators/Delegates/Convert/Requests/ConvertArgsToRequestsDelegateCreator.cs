@@ -28,7 +28,7 @@ namespace Creators.Delegates.Convert.Requests
         {
             var confirmLikelyTokenTypeDelegate =
                 new ConfirmLikelyTokenTypeDelegate(
-                    argsDefinitions,
+                    null,
                     collectionController);
 
             var convertTokensToLikelyTypedTokensDelegate =
