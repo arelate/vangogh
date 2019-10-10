@@ -126,12 +126,16 @@ namespace vangogh.Console
             #region Delegates.GetDirectory
 
             var getEmptyDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(Delegates.GetDirectory.Empty.GetEmptyDirectoryDelegate))
-                as Delegates.GetDirectory.Empty.GetEmptyDirectoryDelegate;
+                typeof(Delegates.GetDirectory.Base.GetEmptyDirectoryDelegate))
+                as Delegates.GetDirectory.Base.GetEmptyDirectoryDelegate;
 
-            var getTemplatesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Templates);
+            var getTemplatesDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(Delegates.GetDirectory.Base.GetTemplatesDirectoryDelegate))
+                as Delegates.GetDirectory.Base.GetTemplatesDirectoryDelegate;
 
-            var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data);
+            var getDataDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(Delegates.GetDirectory.Base.GetDataDirectoryDelegate))
+                as Delegates.GetDirectory.Base.GetDataDirectoryDelegate;
 
             var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.RecycleBin, getDataDirectoryDelegate);
             var getProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductImages, getDataDirectoryDelegate);
