@@ -1,17 +1,9 @@
-using System;
 using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
 
-using Delegates.Convert.Requests;
-using Delegates.Convert.ArgsTokens;
-using Delegates.Confirm.ArgsTokens;
-using Delegates.Compare.ArgsDefinitions;
-
-using Attributes;
-
-using Models.ArgsTokens;
 using Models.Requests;
+using Models.ArgsTokens;
 
 using TypedTokens = System.Collections.Generic.IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>;
 
@@ -19,7 +11,7 @@ namespace Delegates.Convert.Requests
 {
     public class ConvertArgsToRequestsDelegate : IConvertDelegate<string[], IEnumerable<Request>>
     {
-        private IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToTypedTokensDelegate;
+        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate;
         private IConvertDelegate<TypedTokens, RequestsData> convertTypedTokensToRequestsDataDelegate;
         private IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedCollectionsDelegate;
         private IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedDependenciesDelegate;
@@ -27,15 +19,8 @@ namespace Delegates.Convert.Requests
         private IComparer<string> methodOrderCompareDelegate;
         private IConvertDelegate<RequestsData, IEnumerable<Request>> convertRequestsDataToRequestsDelegate;
 
-        [ImplementationDependencies(
-            typeof(ConvertTokensToTypedTokensDelegate),
-            typeof(ConvertTypedTokensToRequestsDataDelegate),
-            typeof(ConvertRequestsDataToResolvedCollectionsDelegate),
-            typeof(ConvertRequestsDataToResolvedDependenciesDelegate),
-            typeof(MethodOrderCompareDelegate),
-            typeof(ConvertRequestsDataToRequestsDelegate))]
         public ConvertArgsToRequestsDelegate(
-            IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToTypedTokensDelegate,
+            IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate,
             IConvertDelegate<TypedTokens, RequestsData> convertTypedTokensToRequestsDataDelegate,
             IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedCollectionsDelegate,
             IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedDependenciesDelegate,
@@ -54,7 +39,8 @@ namespace Delegates.Convert.Requests
         {
             #region Phase 1: Parse tokens into typed tokens
 
-            var typedTokens = convertTokensToTypedTokensDelegate.Convert(tokens);
+            // var typedTokens = convertTokensToTypedTokensDelegate.Convert(tokens);
+            TypedTokens typedTokens = null;
 
             #endregion
 

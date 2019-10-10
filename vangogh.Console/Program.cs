@@ -24,8 +24,8 @@ using Delegates.EnumerateIds;
 using Delegates.Download;
 using Delegates.Hash;
 using Delegates.Trace;
-using Delegates.Instantiate;
 using Delegates.Convert.Requests;
+using Delegates.Confirm.ArgsTokens;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -52,6 +52,7 @@ using Controllers.ViewModel;
 using Controllers.ViewUpdates;
 using Controllers.ActivityContext;
 using Controllers.InputOutput;
+using Controllers.Dependencies;
 
 using Interfaces.Delegates.Itemize;
 
@@ -117,21 +118,28 @@ namespace vangogh.Console
     {
         static async Task Main(string[] args)
         {
+            var dependenciesController = new DependenciesController();
+            var dependenciesControllerInitializer = new DependenciesControllerInitializer(dependenciesController);
+
+            dependenciesControllerInitializer.Initialize();
+
             #region Delegates.GetDirectory
 
-            var getEmptyDirectoryDelegate = new GetRelativeDirectoryDelegate(string.Empty);
+            var getEmptyDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(Delegates.GetDirectory.Empty.GetEmptyDirectoryDelegate))
+                as Delegates.GetDirectory.Empty.GetEmptyDirectoryDelegate;
 
-            var getTemplatesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Templates]);
+            var getTemplatesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Templates);
 
-            var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Data], getEmptyDirectoryDelegate);
+            var getDataDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Data);
 
-            var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.RecycleBin], getDataDirectoryDelegate);
-            var getProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.ProductImages], getDataDirectoryDelegate);
-            var getAccountProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.AccountProductImages], getDataDirectoryDelegate);
-            var getReportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Reports], getDataDirectoryDelegate);
-            var getValidationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Md5], getDataDirectoryDelegate);
-            var getProductFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.ProductFiles], getDataDirectoryDelegate);
-            var getScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Base[Entity.Screenshots], getDataDirectoryDelegate);
+            var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.RecycleBin, getDataDirectoryDelegate);
+            var getProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductImages, getDataDirectoryDelegate);
+            var getAccountProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.AccountProductImages, getDataDirectoryDelegate);
+            var getReportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Reports, getDataDirectoryDelegate);
+            var getValidationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Md5, getDataDirectoryDelegate);
+            var getProductFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductFiles, getDataDirectoryDelegate);
+            var getScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Screenshots, getDataDirectoryDelegate);
 
             var getProductFilesDirectoryDelegate = new GetUriDirectoryDelegate(getProductFilesBaseDirectoryDelegate);
 
@@ -142,7 +150,9 @@ namespace vangogh.Console
             var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
             var getBinFilenameDelegate = new GetBinFilenameDelegate();
 
-            var getArgsDefinitionsFilenameDelegate = new GetFixedFilenameDelegate("definitions", getJsonFilenameDelegate);
+            var getArgsDefinitionsFilenameDelegate = dependenciesController.GetInstance(
+                typeof(Delegates.GetFilename.ArgsDefinitions.GetArgsDefinitionsFilenameDelegate))
+                as Delegates.GetFilename.ArgsDefinitions.GetArgsDefinitionsFilenameDelegate;
 
             var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getBinFilenameDelegate);
 
@@ -1015,19 +1025,21 @@ namespace vangogh.Console
                 args.Length == 0)
                 args = argsDefinitions.DefaultArgs.Split(" ");
 
-            // var convertArgsToRequestsDelegateCreator = 
-            //     new ConvertArgsToRequestsDelegateCreator(
-            //         argsDefinitions,
-            //         collectionController);
+             var convertArgsToRequestsDelegateCreator = 
+                 new ConvertArgsToRequestsDelegateCreator(
+                     argsDefinitions,
+                     argsDefinitionStashController,
+                     collectionController,
+                     dependenciesController);
 
-            var instantiateDelegate = new InstantiateDelegate();
-            var convertArgsToRequestsDelegate = instantiateDelegate.Instantiate(
-                typeof(ConvertArgsToRequestsDelegate)) as ConvertArgsToRequestsDelegate;
+            var confirmLikelyTokenTypeDelegate = dependenciesController.GetInstance(
+                typeof(ConfirmLikelyTokenTypeDelegate)) 
+                as ConfirmLikelyTokenTypeDelegate;
 
             // var convertArgsToRequestsDelegate =
             //     convertArgsToRequestsDelegateCreator.CreateDelegate();
 
-            var requests = convertArgsToRequestsDelegate.Convert(args);                                
+            //var requests = convertArgsToRequestsDelegate.Convert(args);                                
 
             #endregion
 

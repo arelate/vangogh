@@ -5,10 +5,6 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Status;
 
-using Delegates.Confirm.ArgsTokens;
-
-using Attributes;
-
 using Models.ArgsTokens;
 
 namespace Delegates.Convert.ArgsTokens
@@ -20,8 +16,6 @@ namespace Delegates.Convert.ArgsTokens
     {
         private IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate;
 
-        [ImplementationDependencies(
-            typeof(ConfirmLikelyTokenTypeDelegate))]
         public ConvertTokensToLikelyTypedTokensDelegate(
             IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate)
         {

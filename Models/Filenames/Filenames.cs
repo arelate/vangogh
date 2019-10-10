@@ -7,6 +7,7 @@ namespace Models.Filenames
 {
     public static class Filenames
     {
+        public static string ArgsDefinitions = "definitions";
         public static IDictionary<Entity, string> Base = new Dictionary<Entity, string>{
             { Entity.Index, "index" },
             { Entity.AccountProducts, "accountProducts" },

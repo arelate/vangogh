@@ -6,9 +6,9 @@ namespace Delegates.GetFilename
     {
         readonly string fixedFilename;
 
-        public GetFixedFilenameDelegate(string fixedFilename, IGetFilenameDelegate jsonFilenameDelegate)
+        public GetFixedFilenameDelegate(string fixedFilename, IGetFilenameDelegate getFilenameDelegate)
         {
-            this.fixedFilename = jsonFilenameDelegate.GetFilename(fixedFilename);
+            this.fixedFilename = getFilenameDelegate.GetFilename(fixedFilename);
         }
 
         public string GetFilename(string source = null)

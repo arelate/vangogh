@@ -1,12 +1,15 @@
 using System;
+using System.Threading.Tasks;
 
 using Xunit;
 
 using Interfaces.Delegates.Confirm;
+using Interfaces.Status;
 
 using Controllers.Collection;
 
 using Models.ArgsTokens;
+using Models.Status;
 
 using TestModels.ArgsDefinitions;
 
@@ -15,15 +18,18 @@ namespace Delegates.Confirm.ArgsTokens.Tests
 
     public class ConfirmLikelyTokenTypeDelegateTests
     {
-        private IConfirmDelegate<(string Token, Tokens Type)> confirmLikelyTokenTypeDelegate;
+        private IConfirmAsyncDelegate<(string Token, Tokens Type)> confirmLikelyTokenTypeDelegate;
+        private IStatus testStatus;
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
             var collectionController = new CollectionController();
 
             this.confirmLikelyTokenTypeDelegate = new ConfirmLikelyTokenTypeDelegate(
-                ReferenceArgsDefinition.ArgsDefinition,
+                null,
+                // ReferenceArgsDefinition.ArgsDefinition,
                 collectionController);
+            testStatus = new Status();
         }
 
         [Theory]
@@ -50,22 +56,25 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         [InlineData("--os", Tokens.ParameterTitle)]
         [InlineData("--lang", Tokens.ParameterTitle)]
         [InlineData("thiscanbeanyotherstring", Tokens.LikelyParameterValue)]
-        public void CanConfirmLikelyTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
+        public async Task CanConfirmLikelyTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
         {
             Assert.True(
-                this.confirmLikelyTokenTypeDelegate.Confirm(
-                    (token, tokenType)));
+                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
+                    (token, tokenType),
+                    testStatus));
         }
 
         [Theory]
         [InlineData(Tokens.ParameterValue)]
         [InlineData(Tokens.Unknown)]
-        public void ConfirmingUndefinedTokenTypesThrowsNotImplementedException(Tokens tokenType)
+        public async Task ConfirmingUndefinedTokenTypesThrowsNotImplementedException(Tokens tokenType)
         {
-            Assert.Throws<NotImplementedException>(
-                () =>
-                this.confirmLikelyTokenTypeDelegate.Confirm(
-                    (string.Empty, tokenType)));
+            await Assert.ThrowsAsync<NotImplementedException>(
+                async () =>
+                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
+                    (string.Empty, tokenType),
+                    testStatus)
+            );
         }
 
         [Theory]
@@ -73,11 +82,12 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         [InlineData("adpu", Tokens.LikelyMethodsAbbrevation)] // doesn't start with -
         [InlineData("--adpu", Tokens.LikelyMethodsAbbrevation)] // starts with --
         [InlineData("-username", Tokens.ParameterTitle)] // doesn't start with --
-        public void CanConfirmWrongTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
+        public async Task CanConfirmWrongTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
         {
             Assert.False(
-                this.confirmLikelyTokenTypeDelegate.Confirm(
-                    (token, tokenType)));
+                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
+                    (token, tokenType),
+                    testStatus));
         }
 
     }

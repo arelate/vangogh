@@ -1,5 +1,7 @@
 using Interfaces.Creators;
+using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Dependencies;
 
 using Delegates.Convert.Requests;
 using Delegates.Convert.ArgsTokens;
@@ -14,26 +16,31 @@ namespace Creators.Delegates.Convert.Requests
         IDelegateCreator<ConvertArgsToRequestsDelegate>
     {
         private ArgsDefinition argsDefinitions;
+        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDelegate;
         private ICollectionController collectionController;
+        private readonly IDependenciesController dependenciesController;
 
         public ConvertArgsToRequestsDelegateCreator(
             ArgsDefinition argsDefinitions,
-            ICollectionController collectionController)
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDelegate,
+            ICollectionController collectionController,
+            IDependenciesController dependenciesController)
         {
             this.argsDefinitions = argsDefinitions;
+            this.getArgsDefinitionDelegate = getArgsDefinitionDelegate;
             this.collectionController = collectionController;
+            this.dependenciesController = dependenciesController;
         }
 
         public ConvertArgsToRequestsDelegate CreateDelegate()
         {
-            var confirmLikelyTokenTypeDelegate =
-                new ConfirmLikelyTokenTypeDelegate(
-                    null,
-                    collectionController);
+            // var confirmLikelyTokenTypeDelegate =
+            //     dependenciesController.GetInstance(typeof(ConfirmLikelyTokenTypeDelegate)) 
+            //     as ConfirmLikelyTokenTypeDelegate;
 
             var convertTokensToLikelyTypedTokensDelegate =
-                new ConvertTokensToLikelyTypedTokensDelegate(
-                    confirmLikelyTokenTypeDelegate);
+                dependenciesController.GetInstance(typeof(ConvertTokensToLikelyTypedTokensDelegate))
+                as ConvertTokensToLikelyTypedTokensDelegate;
 
             var convertLikelyTypedTokensToTypedTokensDelegate =
                 new ConvertLikelyTypedToTypedTokensDelegate(

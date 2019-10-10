@@ -5,13 +5,17 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Convert;
 using Interfaces.Controllers.Collection;
 
+using Interfaces.Status;
+
 using Models.ArgsTokens;
 using Models.ArgsDefinitions;
 
 namespace Delegates.Convert.ArgsTokens
 {
     public class ConvertLikelyTypedToTypedTokensDelegate :
-        IConvertDelegate<IEnumerable<(string Token, Tokens Type)>, IEnumerable<(string Token, Tokens Type)>>
+        IConvertAsyncDelegate<
+            IAsyncEnumerable<(string Token, Tokens Type)>, 
+            IAsyncEnumerable<(string Token, Tokens Type)>>
     {
         private ArgsDefinition argsDefinition;
         private ICollectionController collectionController;
@@ -24,13 +28,15 @@ namespace Delegates.Convert.ArgsTokens
             this.collectionController = collectionController;
         }
 
-        public IEnumerable<(string Token, Tokens Type)> Convert(IEnumerable<(string Token, Tokens Type)> likelyTypedTokens)
+        public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
+            IAsyncEnumerable<(string Token, Tokens Type)> likelyTypedTokens, 
+            IStatus status)
         {
             if (likelyTypedTokens == null)
                 throw new ArgumentNullException();
 
             var currentParameterTitle = string.Empty;
-            foreach (var likelyTypedToken in likelyTypedTokens)
+            await foreach (var likelyTypedToken in likelyTypedTokens)
             {
                 switch (likelyTypedToken.Type)
                 {

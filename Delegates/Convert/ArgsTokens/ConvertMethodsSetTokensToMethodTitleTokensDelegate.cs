@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using Interfaces.Controllers.Collection;
 using Interfaces.Delegates.Convert;
 
+using Interfaces.Status;
+
 using Models.ArgsDefinitions;
 using Models.ArgsTokens;
 
 namespace Delegates.Convert.ArgsTokens
 {
     public class ConvertMethodsSetTokensToMethodTitleTokensDelegate :
-        IConvertDelegate<IEnumerable<(string Token, Tokens Type)>, IEnumerable<(string Token, Tokens Type)>>
+        IConvertAsyncDelegate<
+            IAsyncEnumerable<(string Token, Tokens Type)>, 
+            IAsyncEnumerable<(string Token, Tokens Type)>>
     {
         private ArgsDefinition argsDefinition;
         private ICollectionController collectionController;
@@ -21,9 +25,11 @@ namespace Delegates.Convert.ArgsTokens
             this.argsDefinition = argsDefinition;
             this.collectionController = collectionController;
         }
-        public IEnumerable<(string Token, Tokens Type)> Convert(IEnumerable<(string Token, Tokens Type)> typedTokens)
+        public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
+            IAsyncEnumerable<(string Token, Tokens Type)> typedTokens, 
+            IStatus status)
         {
-            foreach (var typedToken in typedTokens)
+            await foreach (var typedToken in typedTokens)
             {
                 switch (typedToken.Type)
                 {

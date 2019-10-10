@@ -68,7 +68,7 @@ namespace Creators.Controllers
 
             this.getDataDirectoryDelegate = getDataDirectoryDelegate;
             getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(
-                Directories.Base[Entity.Records],
+                Directories.Records,
                 getDataDirectoryDelegate);
 
             this.getDataFilenameDelegate = getDataFilenameDelegate;
