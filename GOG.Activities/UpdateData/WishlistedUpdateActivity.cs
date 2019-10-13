@@ -35,7 +35,7 @@ namespace GOG.Activities.UpdateData
 
             var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserializedAsync(
                 requestContentTask,
-                Uris.Paths.Account.Wishlist);
+                Uris.Endpoints.Account.Wishlist);
 
             await statusController.CompleteAsync(requestContentTask);
 

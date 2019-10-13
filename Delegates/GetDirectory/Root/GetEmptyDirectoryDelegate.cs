@@ -1,4 +1,4 @@
-namespace Delegates.GetDirectory.Base
+namespace Delegates.GetDirectory.Root
 {
     public class GetEmptyDirectoryDelegate : GetRelativeDirectoryDelegate
     {

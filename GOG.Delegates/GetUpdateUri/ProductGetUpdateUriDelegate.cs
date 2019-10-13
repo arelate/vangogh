@@ -15,16 +15,16 @@ namespace GOG.Delegates.GetUpdateUri
             switch (context)
             {
                 case Entity.Products:
-                    return Uris.Paths.Games.AjaxFiltered;
+                    return Uris.Endpoints.Games.AjaxFiltered;
                 case Entity.AccountProducts:
-                    return Uris.Paths.Account.GetFilteredProducts;
+                    return Uris.Endpoints.Account.GetFilteredProducts;
                 case Entity.Screenshots: // screenshots use the same page as game product data
                 case Entity.GameProductData:
-                    return Uris.Paths.GameProductData.ProductTemplate;
+                    return Uris.Endpoints.GameProductData.ProductTemplate;
                 case Entity.ApiProducts:
-                    return Uris.Paths.Api.ProductTemplate;
+                    return Uris.Endpoints.Api.ProductTemplate;
                 case Entity.GameDetails:
-                    return Uris.Paths.Account.GameDetailsRequestTemplate;
+                    return Uris.Endpoints.Account.GameDetailsRequestTemplate;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -1,6 +1,6 @@
 using Models.Directories;
 
-namespace Delegates.GetDirectory.Base
+namespace Delegates.GetDirectory.Root
 {
     public class GetDataDirectoryDelegate : GetRelativeDirectoryDelegate
     {

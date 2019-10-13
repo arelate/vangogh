@@ -3,16 +3,18 @@ using System.Linq;
 
 using Interfaces.Delegates.Confirm;
 
+using Models.Extensions;
+
 namespace Delegates.Confirm
 {
     public class ConfirmValidationExpectedDelegate : IConfirmDelegate<string>
     {
         readonly string[] extensionsWhitelist = {
-            ".exe", // Windows
-            ".bin", // Windows
-            ".dmg", // Mac
-            ".pkg", // Mac
-            ".sh" // Linux
+            Extensions.EXE, // Windows
+            Extensions.BIN, // Windows
+            Extensions.DMG, // Mac
+            Extensions.PKG, // Mac
+            Extensions.SH // Linux
         };
 
         public bool Confirm(string uri)

@@ -77,7 +77,7 @@ namespace Creators.Controllers
         public IGetFilenameDelegate GetDataFilenameDelegate(Entity entity) 
         {
             return new GetFixedFilenameDelegate(
-                Filenames.Base[entity],
+                string.Empty, // STUB
                 getDataFilenameDelegate);
         }
 

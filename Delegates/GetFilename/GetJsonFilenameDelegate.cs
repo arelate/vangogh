@@ -1,14 +1,14 @@
 ﻿using Interfaces.Delegates.GetFilename;
 
+using Models.Extensions;
+
 namespace Delegates.GetFilename
 {
     public class GetJsonFilenameDelegate : IGetFilenameDelegate
     {
-        const string extension = ".json";
-
         public string GetFilename(string source = null)
         {
-            return source + extension;
+            return source + Extensions.JSON;
         }
     }
 }

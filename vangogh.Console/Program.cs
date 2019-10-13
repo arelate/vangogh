@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Delegates.Convert;
-using Delegates.GetDirectory;
 using Delegates.GetFilename;
 using Delegates.GetPath;
 using Delegates.Format.Numbers;
@@ -23,9 +22,13 @@ using Delegates.Replace;
 using Delegates.EnumerateIds;
 using Delegates.Download;
 using Delegates.Hash;
-using Delegates.Trace;
 using Delegates.Convert.Requests;
 using Delegates.Confirm.ArgsTokens;
+using Delegates.GetDirectory.Root;
+using Delegates.GetDirectory.Data;
+using Delegates.GetFilename.ArgsDefinitions;
+using Delegates.GetFilename.Binary;
+using Delegates.GetFilename.Json;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -80,7 +83,6 @@ using GOG.Delegates.Confirm;
 using GOG.Controllers.Authorization;
 
 using GOG.Activities.Help;
-using GOG.Activities.CorrectSettings;
 using GOG.Activities.Authorize;
 using GOG.Activities.UpdateData;
 using GOG.Activities.UpdateDownloads;
@@ -126,54 +128,105 @@ namespace vangogh.Console
             #region Delegates.GetDirectory
 
             var getEmptyDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(Delegates.GetDirectory.Base.GetEmptyDirectoryDelegate))
-                as Delegates.GetDirectory.Base.GetEmptyDirectoryDelegate;
+                typeof(GetEmptyDirectoryDelegate))
+                as GetEmptyDirectoryDelegate;
 
             var getTemplatesDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(Delegates.GetDirectory.Base.GetTemplatesDirectoryDelegate))
-                as Delegates.GetDirectory.Base.GetTemplatesDirectoryDelegate;
+                typeof(GetTemplatesDirectoryDelegate))
+                as GetTemplatesDirectoryDelegate;
 
             var getDataDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(Delegates.GetDirectory.Base.GetDataDirectoryDelegate))
-                as Delegates.GetDirectory.Base.GetDataDirectoryDelegate;
+                typeof(GetDataDirectoryDelegate))
+                as GetDataDirectoryDelegate;
 
-            var getRecycleBinDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.RecycleBin, getDataDirectoryDelegate);
-            var getProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductImages, getDataDirectoryDelegate);
-            var getAccountProductImagesDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.AccountProductImages, getDataDirectoryDelegate);
-            var getReportDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Reports, getDataDirectoryDelegate);
-            var getValidationDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Md5, getDataDirectoryDelegate);
-            var getProductFilesBaseDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.ProductFiles, getDataDirectoryDelegate);
-            var getScreenshotsDirectoryDelegate = new GetRelativeDirectoryDelegate(Directories.Screenshots, getDataDirectoryDelegate);
+            var getRecycleBinDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetRecycleBinDirectoryDelegate))
+                as GetRecycleBinDirectoryDelegate;
 
-            var getProductFilesDirectoryDelegate = new GetUriDirectoryDelegate(getProductFilesBaseDirectoryDelegate);
+            var getProductImagesDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetProductImagesDirectoryDelegate))
+                as GetProductImagesDirectoryDelegate;
 
+            var getAccountProductImagesDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetAccountProductImagesDirectoryDelegate))
+                as GetAccountProductImagesDirectoryDelegate;
+
+            var getReportDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetReportDirectoryDelegate))
+                as GetReportDirectoryDelegate;
+
+            var getMd5DirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetMd5DirectoryDelegate))
+                as GetMd5DirectoryDelegate;
+            
+            var getProductFilesRootDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetProductFilesRootDirectoryDelegate))
+                as GetProductFilesRootDirectoryDelegate;
+            
+            var getScreenshotsDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetScreenshotsDirectoryDelegate))
+                as GetScreenshotsDirectoryDelegate;
+            
+            var getProductFilesDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetProductFilesDirectoryDelegate))
+                as GetProductFilesDirectoryDelegate;
+            
             #endregion
 
             #region Delegates.GetFilename
 
-            var getJsonFilenameDelegate = new GetJsonFilenameDelegate();
-            var getBinFilenameDelegate = new GetBinFilenameDelegate();
+            var getJsonFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetJsonFilenameDelegate))
+                as GetJsonFilenameDelegate;
+            
+            var getBinFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetBinFilenameDelegate))
+                as GetBinFilenameDelegate;
 
             var getArgsDefinitionsFilenameDelegate = dependenciesController.GetInstance(
-                typeof(Delegates.GetFilename.ArgsDefinitions.GetArgsDefinitionsFilenameDelegate))
-                as Delegates.GetFilename.ArgsDefinitions.GetArgsDefinitionsFilenameDelegate;
+                typeof(GetArgsDefinitionsFilenameDelegate))
+                as GetArgsDefinitionsFilenameDelegate;
 
-            var getStoredHashesFilenameDelegate = new GetFixedFilenameDelegate("hashes", getBinFilenameDelegate);
+            var getHashesFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetHashesFilenameDelegate))
+                as GetHashesFilenameDelegate;
+            
+            var getAppTemplateFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetAppTemplateFilenameDelegate))
+                as GetAppTemplateFilenameDelegate;
+            
+            var getReportTemplateFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetReportTemplateFilenameDelegate))
+                as GetReportTemplateFilenameDelegate;                
 
-            var getAppTemplateFilenameDelegate = new GetFixedFilenameDelegate("app", getJsonFilenameDelegate);
-            var gerReportTemplateFilenameDelegate = new GetFixedFilenameDelegate("report", getJsonFilenameDelegate);
-            var getCookiesFilenameDelegate = new GetFixedFilenameDelegate("cookies", getJsonFilenameDelegate);
-            var getSettingsFilenameDelegate = new GetFixedFilenameDelegate("settings", getJsonFilenameDelegate);
+            var getCookiesFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetCookiesFilenameDelegate))
+                as GetCookiesFilenameDelegate;  
+            
+            var getIndexFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetIndexFilenameDelegate))
+                as GetIndexFilenameDelegate;
 
-            var getIndexFilenameDelegate = new GetFixedFilenameDelegate(Filenames.Base[Entity.Index], getJsonFilenameDelegate);
+            var getWishlistedFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetWishlistedFilenameDelegate))
+                as GetWishlistedFilenameDelegate;
 
-            var getWishlistedFilenameDelegate = new GetFixedFilenameDelegate("wishlisted", getJsonFilenameDelegate);
-            var getUpdatedFilenameDelegate = new GetFixedFilenameDelegate("updated", getJsonFilenameDelegate);
+            var getUpdatedFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetUpdatedFilenameDelegate))
+                as GetUpdatedFilenameDelegate;
 
-            var getUriFilenameDelegate = new GetUriFilenameDelegate();
-            var getReportFilenameDelegate = new GetReportFilenameDelegate();
-            var getValidationFilenameDelegate = new GetValidationFilenameDelegate();
+            var getUriFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetUriFilenameDelegate))
+                as GetUriFilenameDelegate;
 
+            var getReportFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetReportFilenameDelegate))
+                as GetReportFilenameDelegate;
+
+            var getValidationFilenameDelegate = dependenciesController.GetInstance(
+                typeof(GetValidationFilenameDelegate))
+                as GetValidationFilenameDelegate;
+            
             #endregion
 
             #region Delegates.GetPath
@@ -184,7 +237,7 @@ namespace vangogh.Console
 
             var getStoredHashesPathDelegate = new GetPathDelegate(
                 getEmptyDirectoryDelegate,
-                getStoredHashesFilenameDelegate);
+                getHashesFilenameDelegate);
 
             var getAppTemplatePathDelegate = new GetPathDelegate(
                 getTemplatesDirectoryDelegate,
@@ -192,30 +245,23 @@ namespace vangogh.Console
 
             var getReportTemplatePathDelegate = new GetPathDelegate(
                 getTemplatesDirectoryDelegate,
-                gerReportTemplateFilenameDelegate);
+                getReportTemplateFilenameDelegate);
 
             var getCookiePathDelegate = new GetPathDelegate(
                 getEmptyDirectoryDelegate,
                 getCookiesFilenameDelegate);
-
-            var getSettingsPathDelegate = new GetPathDelegate(
-                getEmptyDirectoryDelegate,
-                getSettingsFilenameDelegate);
 
             var getGameDetailsFilesPathDelegate = new GetPathDelegate(
                 getProductFilesDirectoryDelegate,
                 getUriFilenameDelegate);
 
             var getValidationPathDelegate = new GetPathDelegate(
-                getValidationDirectoryDelegate,
+                getMd5DirectoryDelegate,
                 getValidationFilenameDelegate);
 
             #endregion
 
             var statusController = new StatusController();
-
-            var ioOperations = new List<string>();
-            var ioTraceDelegate = new IOTraceDelegate(ioOperations);
 
             var streamController = new StreamController();
             var fileController = new FileController();
@@ -223,8 +269,7 @@ namespace vangogh.Console
 
             var storageController = new StorageController(
                 streamController,
-                fileController,
-                ioTraceDelegate);
+                fileController);
 
             var serializationController = new JSONStringController();
 
@@ -238,8 +283,7 @@ namespace vangogh.Console
             var protoBufSerializedStorageController = new ProtoBufSerializedStorageController(
                 fileController,
                 streamController,
-                statusController,
-                ioTraceDelegate);
+                statusController);
 
             #region Controllers.Stash
 
@@ -262,16 +306,9 @@ namespace vangogh.Console
             var argsDefinitionStashController = new StashController<ArgsDefinition>(
                 getArgsDefinitionsPathDelegate,
                 serializedStorageController,
-                statusController);                
+                statusController);
 
             #region User editable files stashControllers
-
-            // Settings.json 
-
-            var settingsStashController = new StashController<Settings>(
-                getSettingsPathDelegate,
-                serializedStorageController,
-                statusController);
 
             // templates/app.json
 
@@ -359,9 +396,9 @@ namespace vangogh.Console
                 collectionController,
                 statusController,
                 new string[] {
-                    Models.Uris.Uris.Paths.Account.GameDetails, // gameDetails requests
-                    Models.Uris.Uris.Paths.ProductFiles.ManualUrlDownlink, // manualUrls from gameDetails requests
-                    Models.Uris.Uris.Paths.ProductFiles.ManualUrlCDNSecure, // resolved manualUrls and validation files requests
+                    Models.Uris.Uris.Endpoints.Account.GameDetails, // gameDetails requests
+                    Models.Uris.Uris.Endpoints.ProductFiles.ManualUrlDownlink, // manualUrls from gameDetails requests
+                    Models.Uris.Uris.Endpoints.ProductFiles.ManualUrlCDNSecure, // resolved manualUrls and validation files requests
                     Models.Uris.Uris.Roots.Api // API entries
                 });
 
@@ -414,23 +451,6 @@ namespace vangogh.Console
                 getRecycleBinDirectoryDelegate,
                 fileController,
                 directoryController);
-
-            #region Correct settings 
-
-            var correctSettingsCollectionsAsyncDelegate = new CorrectSettingsCollectionsAsyncDelegate(statusController);
-            var correctSettingsDownloadsLanguagesAsyncDelegate = new CorrectSettingsDownloadsLanguagesAsyncDelegate(languageController);
-            var correctSettingsDownloadsOperatingSystemsAsyncDelegate = new CorrectSettingsDownloadsOperatingSystemsAsyncDelegate();
-            var correctSettingsDirectoriesAsyncDelegate = new CorrectSettingsDirectoriesAsyncDelegate();
-
-            var correctSettingsActivity = new CorrectSettingsActivity(
-                settingsStashController,
-                statusController,
-                correctSettingsCollectionsAsyncDelegate,
-                correctSettingsDownloadsLanguagesAsyncDelegate,
-                correctSettingsDownloadsOperatingSystemsAsyncDelegate,
-                correctSettingsDirectoriesAsyncDelegate);
-
-            #endregion
 
             #region Data Controllers
 
@@ -509,7 +529,6 @@ namespace vangogh.Console
                 statusController);
 
             var authorizeActivity = new AuthorizeActivity(
-                settingsStashController,
                 authorizationController,
                 statusController);
 
@@ -760,7 +779,6 @@ namespace vangogh.Console
                 statusController);
 
             var itemizeGameDetailsManualUrlsAsyncDelegate = new ItemizeGameDetailsManualUrlsAsyncDelegate(
-                settingsStashController,
                 gameDetailsDataController);
 
             var itemizeGameDetailsDirectoriesAsyncDelegate = new ItemizeGameDetailsDirectoriesAsyncDelegate(
@@ -840,7 +858,7 @@ namespace vangogh.Console
                 formatUriRemoveSessionDelegate,
                 confirmValidationExpectedDelegate,
                 formatValidationFileDelegate,
-                getValidationDirectoryDelegate,
+                getMd5DirectoryDelegate,
                 formatValidationUriDelegate,
                 fileController,
                 downloadFromUriAsyncDelegate,
@@ -935,7 +953,7 @@ namespace vangogh.Console
                 statusController);
 
             var itemizeAllProductFilesDirectoriesAsyncDelegate = new ItemizeAllProductFilesDirectoriesAsyncDelegate(
-                getProductFilesBaseDirectoryDelegate,
+                getProductFilesRootDirectoryDelegate,
                 directoryController,
                 statusController);
 
@@ -1029,15 +1047,15 @@ namespace vangogh.Console
                 args.Length == 0)
                 args = argsDefinitions.DefaultArgs.Split(" ");
 
-             var convertArgsToRequestsDelegateCreator = 
-                 new ConvertArgsToRequestsDelegateCreator(
-                     argsDefinitions,
-                     argsDefinitionStashController,
-                     collectionController,
-                     dependenciesController);
+            var convertArgsToRequestsDelegateCreator =
+                new ConvertArgsToRequestsDelegateCreator(
+                    argsDefinitions,
+                    argsDefinitionStashController,
+                    collectionController,
+                    dependenciesController);
 
             var confirmLikelyTokenTypeDelegate = dependenciesController.GetInstance(
-                typeof(ConfirmLikelyTokenTypeDelegate)) 
+                typeof(ConfirmLikelyTokenTypeDelegate))
                 as ConfirmLikelyTokenTypeDelegate;
 
             // var convertArgsToRequestsDelegate =
@@ -1051,7 +1069,6 @@ namespace vangogh.Console
 
             var activityContextToActivityControllerMap = new Dictionary<(Activity, Entity), IActivity>
             {
-                { (Activity.Correct, Entity.Settings), correctSettingsActivity },
                 { (Activity.Authorize, Entity.None), authorizeActivity },
                 { (Activity.UpdateData, Entity.Products), productsUpdateActivity },
                 { (Activity.UpdateData, Entity.AccountProducts), accountProductsUpdateActivity },
@@ -1143,9 +1160,6 @@ namespace vangogh.Console
             {
                 await consoleInputOutputController.OutputContinuousAsync(applicationStatus, string.Empty, "All tasks are complete. Press ENTER to exit...");
             }
-
-            // output IO Trace
-            await storageController.PushAsync("iotrace.txt", string.Join("\n", ioOperations));
 
             consoleController.ReadLine();
         }

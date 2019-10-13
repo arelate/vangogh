@@ -69,7 +69,7 @@ namespace Models.QueryParameters
         public static Dictionary<string, string> Authenticate = new Dictionary<string, string>
         {
             { QueryParameters.ClientId, "46755278331571209" },
-            { QueryParameters.RedirectUri, Uris.Uris.Paths.Authentication.OnLoginSuccess},
+            { QueryParameters.RedirectUri, Uris.Uris.Endpoints.Authentication.OnLoginSuccess},
             { QueryParameters.ResponseType, "code" },
             { QueryParameters.Layout, "default" },
             { QueryParameters.Brand, "gog" }

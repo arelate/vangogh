@@ -57,7 +57,7 @@ namespace GOG.Controllers.Authorization
         {
             var getUserDataTask = await statusController.CreateAsync(status, "Get userData.json");
 
-            var userDataString = await networkController.GetResourceAsync(getUserDataTask, Uris.Paths.Authentication.UserData);
+            var userDataString = await networkController.GetResourceAsync(getUserDataTask, Uris.Endpoints.Authentication.UserData);
             if (string.IsNullOrEmpty(userDataString)) return false;
 
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
@@ -74,7 +74,7 @@ namespace GOG.Controllers.Authorization
             // request authorization token
             var authResponse = await networkController.GetResourceAsync(
                 status,
-                Uris.Paths.Authentication.Auth,
+                Uris.Endpoints.Authentication.Auth,
                 QueryParametersCollections.Authenticate);
 
             await statusController.CompleteAsync(getAuthenticationTokenResponseTask);
@@ -99,7 +99,7 @@ namespace GOG.Controllers.Authorization
                     authResponse).First();
                 QueryParametersCollections.LoginAuthenticate.Remove(QueryParameters.LoginUsername);
                 QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginId] = loginId;
-                loginUri = Uris.Paths.Authentication.Login;
+                loginUri = Uris.Endpoints.Authentication.Login;
 
                 username = attributeValuesItemizeDelegates[
                     QueryParameters.LoginUsername].Itemize(
@@ -108,7 +108,7 @@ namespace GOG.Controllers.Authorization
             else
             {
                 QueryParametersCollections.LoginAuthenticate.Remove(QueryParameters.LoginId);
-                loginUri = Uris.Paths.Authentication.LoginCheck;
+                loginUri = Uris.Endpoints.Authentication.LoginCheck;
             }
 
             var usernamePassword = await correctUsernamePasswordAsyncDelegate.CorrectAsync(
@@ -152,7 +152,7 @@ namespace GOG.Controllers.Authorization
 
             var secondStepData = uriController.ConcatenateQueryParameters(QueryParametersCollections.SecondStepAuthentication);
 
-            var secondStepLoginCheckResult = await networkController.PostDataToResourceAsync(status, Uris.Paths.Authentication.TwoStep, null, secondStepData);
+            var secondStepLoginCheckResult = await networkController.PostDataToResourceAsync(status, Uris.Endpoints.Authentication.TwoStep, null, secondStepData);
 
             await statusController.CompleteAsync(getTwoStepLoginCheckResponseTask);
 

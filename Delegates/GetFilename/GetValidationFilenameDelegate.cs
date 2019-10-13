@@ -1,4 +1,4 @@
-﻿using Models.Uris;
+﻿using Models.Extensions;
 
 namespace Delegates.GetFilename
 {
@@ -7,8 +7,8 @@ namespace Delegates.GetFilename
         public override string GetFilename(string source = null)
         {
             var filename = base.GetFilename(source);
-            if (!filename.EndsWith(Uris.Extensions.Validation.ValidationExtension, System.StringComparison.Ordinal))
-                filename += Uris.Extensions.Validation.ValidationExtension;
+            if (!filename.EndsWith(Extensions.XML, System.StringComparison.Ordinal))
+                filename += Extensions.XML;
 
             return filename;
         }
