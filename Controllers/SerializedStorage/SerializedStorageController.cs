@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
-using System.Text;
 
-using Interfaces.Delegates.Hash;
+using Interfaces.Delegates.Convert;
 
-using Interfaces.Controllers.Hash;
+using Interfaces.Controllers.Hashes;
 using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Storage;
 using Interfaces.Controllers.Serialization;
@@ -16,20 +15,20 @@ namespace Controllers.SerializedStorage
     {
         readonly IStorageController<string> storageController;
         readonly ISerializationController<string> serializarionController;
-        readonly IGetHashAsyncDelegate<string> getStringHashAsyncDelegate;
-        readonly IStoredHashController storedHashController;
+        readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
+        readonly IHashesController hashesController;
         IStatusController statusController;
 
         public SerializedStorageController(
-            IStoredHashController storedHashController,
+            IHashesController hashesController,
             IStorageController<string> storageController,
-            IGetHashAsyncDelegate<string> getStringHashAsyncDelegate,
+            IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate,
             ISerializationController<string> serializarionController,
             IStatusController statusController)
         {
-            this.storedHashController = storedHashController;
+            this.hashesController = hashesController;
             this.storageController = storageController;
-            this.getStringHashAsyncDelegate = getStringHashAsyncDelegate;
+            this.convertStringToHashDelegate = convertStringToHashDelegate;
             this.serializarionController = serializarionController;
             this.statusController = statusController;
         }
@@ -45,13 +44,13 @@ namespace Controllers.SerializedStorage
         {
             var serializedData = serializarionController.Serialize(data);
 
-            var hash = await getStringHashAsyncDelegate.GetHashAsync(serializedData, status);
-            var existingHash = await storedHashController.GetHashAsync(uri, status);
+            var hash = await convertStringToHashDelegate.ConvertAsync(serializedData, status);
+            var existingHash = await hashesController.ConvertAsync(uri, status);
 
             // data has not changed, no need to write to storage
             if (hash == existingHash) return;
 
-            await storedHashController.SetHashAsync(uri, hash, status);
+            await hashesController.SetHashAsync(uri, hash, status);
             await storageController.PushAsync(uri, serializedData);
         }
     }

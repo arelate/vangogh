@@ -15,18 +15,12 @@ using Models.ProductCore;
 
 using GOG.Interfaces.Delegates.GetPageResults;
 
-using Interfaces.ActivityContext;
-
-using AC = System.ValueTuple<Interfaces.ActivityDefinitions.Activity, Interfaces.Models.Entities.Entity>;
-
 namespace GOG.Activities.UpdateData
 {
     public class PageResultUpdateActivity<PageType, DataType> : Activity
         where PageType : Models.PageResult
         where DataType : ProductCore
     {
-        AC activityContext;
-        readonly IActivityContextController activityContextController;
 
         readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
         readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
@@ -35,8 +29,6 @@ namespace GOG.Activities.UpdateData
         readonly IRecordsController<string> activityRecordsController;
 
         public PageResultUpdateActivity(
-            AC activityContext,
-            IActivityContextController activityContextController,
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
@@ -44,9 +36,6 @@ namespace GOG.Activities.UpdateData
             IStatusController statusController) :
             base(statusController)
         {
-            this.activityContext = activityContext;
-            this.activityContextController = activityContextController;
-
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
@@ -56,21 +45,20 @@ namespace GOG.Activities.UpdateData
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var updateAllProductsTask = await statusController.CreateAsync(status, $"Update {activityContext.Item2}");
+            var updateAllProductsTask = await statusController.CreateAsync(status, $"Updating...");
 
-            var activityContextString = activityContextController.ToString(activityContext);
-
-            await activityRecordsController.SetRecordAsync(activityContextString, RecordsTypes.Started, updateAllProductsTask);
+            // TODO: Figure out better way to identify and activity
+            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started, updateAllProductsTask);
 
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync(updateAllProductsTask);
 
-            var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extract {activityContext.Item2}");
+            var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extracting...");
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
             await statusController.CompleteAsync(extractTask);
 
             if (newProducts.Any())
             {
-                var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Save {activityContext.Item2}");
+                var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Saving...");
                 var current = 0;
                 var updateProgressEvery = 10;
 
@@ -85,7 +73,8 @@ namespace GOG.Activities.UpdateData
                 await statusController.CompleteAsync(updateTask);
             }
 
-            await activityRecordsController.SetRecordAsync(activityContextString, RecordsTypes.Completed, updateAllProductsTask);
+            // TODO: Figure out better way to identify and activity
+            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Completed, updateAllProductsTask);
 
             await dataController.CommitAsync(updateAllProductsTask);
 

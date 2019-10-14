@@ -5,7 +5,7 @@ using System.IO;
 using System.Xml;
 
 using Interfaces.Delegates.Confirm;
-using Interfaces.Delegates.Hash;
+using Interfaces.Delegates.Convert;
 
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
@@ -25,7 +25,7 @@ namespace Controllers.Validation
         readonly IFileController fileController;
         IStreamController streamController;
         XmlDocument validationXml;
-        IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate;
+        IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
         IValidationResultController validationResultController;
         IStatusController statusController;
 
@@ -33,14 +33,14 @@ namespace Controllers.Validation
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFileController fileController,
             IStreamController streamController,
-            IGetHashAsyncDelegate<byte[]> getBytesHashAsyncDelegate,
+            IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate,
             IValidationResultController validationResultController,
             IStatusController statusController)
         {
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
-            this.getBytesHashAsyncDelegate = getBytesHashAsyncDelegate;
+            this.convertBytesToHashDelegate = convertBytesToHashDelegate;
             this.validationResultController = validationResultController;
             this.statusController = statusController;
 
@@ -180,7 +180,7 @@ namespace Controllers.Validation
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
-            chunkValidation.ActualHash = await getBytesHashAsyncDelegate.GetHashAsync(buffer, status);
+            chunkValidation.ActualHash = await convertBytesToHashDelegate.ConvertAsync(buffer, status);
 
             return chunkValidation;
         }

@@ -2,14 +2,10 @@
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Recycle;
 
-using Interfaces.Controllers.Serialization;
-// using Interfaces.Controllers.Storage;
-// using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.SerializedStorage;
-using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Hash;
+using Interfaces.Controllers.Hashes;
 
 using Interfaces.Models.Entities;
 
@@ -44,7 +40,7 @@ namespace Creators.Controllers
         readonly ISerializedStorageController serializedStorageController;
         // readonly ISerializationController<string> serializationController;
         // readonly IStorageController<string> storageController;
-        readonly IStoredHashController storedHashController;
+        readonly IHashesController hashesController;
         readonly IStatusController statusController;
 
         IGetDirectoryDelegate getDataDirectoryDelegate;
@@ -53,17 +49,13 @@ namespace Creators.Controllers
 
         public DataControllerFactory(
             ISerializedStorageController serializedStorageController,
-            // ISerializationController<string> serializationController,
-            // IStorageController<string> storageController,
-            IStoredHashController storedHashController,
+            IHashesController hashesController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IGetFilenameDelegate getDataFilenameDelegate,
             IStatusController statusController)
         {
             this.serializedStorageController = serializedStorageController;
-            // this.serializationController = serializationController;
-            // this.storageController = storageController;
-            this.storedHashController = storedHashController;
+            this.hashesController = hashesController;
             this.statusController = statusController;
 
             this.getDataDirectoryDelegate = getDataDirectoryDelegate;
@@ -143,7 +135,7 @@ namespace Creators.Controllers
                 ConvertDelegateFactory.CreateConvertToIndexDelegate<Type>(),
                 recordsController,
                 statusController,
-                storedHashController);
+                hashesController);
         }
     }
 }

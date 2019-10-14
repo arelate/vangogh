@@ -11,9 +11,7 @@ using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
-using A = Interfaces.ActivityDefinitions.Activity;
 using Interfaces.Models.Entities;
-using Interfaces.ActivityContext;
 
 using GOG.Models;
 
@@ -21,22 +19,17 @@ namespace GOG.Activities.UpdateData
 {
     public class UpdatedUpdateActivity: Activity
     {
-        IActivityContextController activityContextController;
-
         readonly IDataController<AccountProduct> accountProductDataController;
         readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
         readonly IIndexController<long> updatedIndexController;
 
         public UpdatedUpdateActivity(
-            IActivityContextController activityContextController,
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
             IIndexController<long> updatedIndexController,
             IStatusController statusController): base(statusController)
         {
-            this.activityContextController = activityContextController;
-
             this.accountProductDataController = accountProductDataController;
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
 

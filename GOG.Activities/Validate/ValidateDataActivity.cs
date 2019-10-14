@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.File;
-using Interfaces.Controllers.Hash;
+using Interfaces.Controllers.Hashes;
 
 using Interfaces.Validation;
 using Interfaces.Status;
@@ -11,27 +11,27 @@ namespace GOG.Activities.Validate
 {
     public class ValidateDataActivity: Activity
     {
-        readonly IStoredHashController storedHashController;
+        readonly IHashesController hashesController;
         readonly IFileController fileController;
-        readonly IValidateFileAsyncDelegate<bool> fileValidateDelegate;
+        readonly IValidateFileAsyncDelegate<bool> validateFileDelegate;
 
         public ValidateDataActivity(
-            IStoredHashController storedHashController,
+            IHashesController hashesController,
             IFileController fileController,
-            IValidateFileAsyncDelegate<bool> fileValidateDelegate,
+            IValidateFileAsyncDelegate<bool> validateFileDelegate,
             IStatusController statusController) :
             base(statusController)
         {
-            this.storedHashController = storedHashController;
+            this.hashesController = hashesController;
             this.fileController = fileController;
-            this.fileValidateDelegate = fileValidateDelegate;
+            this.validateFileDelegate = validateFileDelegate;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
             var validateDataTask = await statusController.CreateAsync(status, "Validate data");
 
-            var dataFiles = await storedHashController.ItemizeAllAsync(validateDataTask);
+            var dataFiles = await hashesController.ItemizeAllAsync(validateDataTask);
             var dataFilesCount = dataFiles.Count();
             var current = 0;
 
@@ -45,8 +45,8 @@ namespace GOG.Activities.Validate
                     dataFilesCount,
                     dataFile);
 
-                var precomputedHash = await storedHashController.GetHashAsync(dataFile, validateDataTask);
-                if(!await fileValidateDelegate.ValidateFileAsync(dataFile, precomputedHash, validateDataTask))
+                var precomputedHash = await hashesController.ConvertAsync(dataFile, validateDataTask);
+                if(!await validateFileDelegate.ValidateFileAsync(dataFile, precomputedHash, validateDataTask))
                     await statusController.WarnAsync(validateDataTask, $"Data file {dataFile} hash doesn't match precomputed value");
             }
 

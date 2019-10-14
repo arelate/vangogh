@@ -21,7 +21,9 @@ using Delegates.Constrain;
 using Delegates.Replace;
 using Delegates.EnumerateIds;
 using Delegates.Download;
-using Delegates.Hash;
+using Delegates.Convert.Hashes;
+using Delegates.Convert.Bytes;
+using Delegates.Convert.Collections; 
 using Delegates.Convert.Requests;
 using Delegates.Confirm.ArgsTokens;
 using Delegates.GetDirectory.Root;
@@ -29,6 +31,9 @@ using Delegates.GetDirectory.Data;
 using Delegates.GetFilename.ArgsDefinitions;
 using Delegates.GetFilename.Binary;
 using Delegates.GetFilename.Json;
+using Delegates.GetPath.ArgsDefinitions;
+using Delegates.GetPath.Binary;
+using Delegates.GetPath.Json;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -37,7 +42,7 @@ using Controllers.Directory;
 using Controllers.Uri;
 using Controllers.Network;
 using Controllers.Language;
-using Controllers.Serialization;
+using Controllers.Serialization.JSON;
 using Controllers.StrongTypeSerialization;
 using Controllers.Collection;
 using Controllers.Console;
@@ -45,22 +50,23 @@ using Controllers.Cookies;
 using Controllers.Validation;
 using Controllers.ValidationResult;
 using Controllers.Stash;
-using Controllers.SerializedStorage;
+using Controllers.Stash.Hashes;
+using Controllers.Stash.ArgsDefinitions;
+using Controllers.SerializedStorage.ProtoBuf;
+using Controllers.SerializedStorage.JSON;
 using Controllers.Presentation;
 using Controllers.Routing;
 using Controllers.Status;
-using Controllers.Hash;
+using Controllers.Hashes;
 using Controllers.Template;
 using Controllers.ViewModel;
 using Controllers.ViewUpdates;
-using Controllers.ActivityContext;
 using Controllers.InputOutput;
 using Controllers.Dependencies;
 
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Activity;
-using Interfaces.ActivityDefinitions;
 using Interfaces.Models.Entities;
 using Interfaces.Status;
 
@@ -104,7 +110,6 @@ using Models.Status;
 using Models.QueryParameters;
 using Models.Directories;
 using Models.Filenames;
-using Models.ActivityContext;
 using Models.Settings;
 using Models.Template;
 using Models.Patterns;
@@ -125,23 +130,21 @@ namespace vangogh.Console
 
             dependenciesControllerInitializer.Initialize();
 
-            #region Delegates.GetDirectory
+            // var getEmptyDirectoryDelegate = dependenciesController.GetInstance(
+            //     typeof(GetEmptyDirectoryDelegate))
+            //     as GetEmptyDirectoryDelegate;
 
-            var getEmptyDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(GetEmptyDirectoryDelegate))
-                as GetEmptyDirectoryDelegate;
-
-            var getTemplatesDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(GetTemplatesDirectoryDelegate))
-                as GetTemplatesDirectoryDelegate;
+            // var getTemplatesDirectoryDelegate = dependenciesController.GetInstance(
+            //     typeof(GetTemplatesDirectoryDelegate))
+            //     as GetTemplatesDirectoryDelegate;
 
             var getDataDirectoryDelegate = dependenciesController.GetInstance(
                 typeof(GetDataDirectoryDelegate))
                 as GetDataDirectoryDelegate;
 
-            var getRecycleBinDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(GetRecycleBinDirectoryDelegate))
-                as GetRecycleBinDirectoryDelegate;
+            // var getRecycleBinDirectoryDelegate = dependenciesController.GetInstance(
+            //     typeof(GetRecycleBinDirectoryDelegate))
+            //     as GetRecycleBinDirectoryDelegate;
 
             var getProductImagesDirectoryDelegate = dependenciesController.GetInstance(
                 typeof(GetProductImagesDirectoryDelegate))
@@ -171,49 +174,45 @@ namespace vangogh.Console
                 typeof(GetProductFilesDirectoryDelegate))
                 as GetProductFilesDirectoryDelegate;
             
-            #endregion
-
-            #region Delegates.GetFilename
-
-            var getJsonFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetJsonFilenameDelegate))
-                as GetJsonFilenameDelegate;
+            // var getJsonFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetJsonFilenameDelegate))
+            //     as GetJsonFilenameDelegate;
             
             var getBinFilenameDelegate = dependenciesController.GetInstance(
                 typeof(GetBinFilenameDelegate))
                 as GetBinFilenameDelegate;
 
-            var getArgsDefinitionsFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetArgsDefinitionsFilenameDelegate))
-                as GetArgsDefinitionsFilenameDelegate;
+            // var getArgsDefinitionsFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetArgsDefinitionsFilenameDelegate))
+            //     as GetArgsDefinitionsFilenameDelegate;
 
-            var getHashesFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetHashesFilenameDelegate))
-                as GetHashesFilenameDelegate;
+            // var getHashesFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetHashesFilenameDelegate))
+            //     as GetHashesFilenameDelegate;
             
-            var getAppTemplateFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetAppTemplateFilenameDelegate))
-                as GetAppTemplateFilenameDelegate;
+            // var getAppTemplateFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetAppTemplateFilenameDelegate))
+            //     as GetAppTemplateFilenameDelegate;
             
-            var getReportTemplateFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetReportTemplateFilenameDelegate))
-                as GetReportTemplateFilenameDelegate;                
+            // var getReportTemplateFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetReportTemplateFilenameDelegate))
+            //     as GetReportTemplateFilenameDelegate;                
 
-            var getCookiesFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetCookiesFilenameDelegate))
-                as GetCookiesFilenameDelegate;  
+            // var getCookiesFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetCookiesFilenameDelegate))
+            //     as GetCookiesFilenameDelegate;  
             
-            var getIndexFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetIndexFilenameDelegate))
-                as GetIndexFilenameDelegate;
+            // var getIndexFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetIndexFilenameDelegate))
+            //     as GetIndexFilenameDelegate;
 
-            var getWishlistedFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetWishlistedFilenameDelegate))
-                as GetWishlistedFilenameDelegate;
+            // var getWishlistedFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetWishlistedFilenameDelegate))
+            //     as GetWishlistedFilenameDelegate;
 
-            var getUpdatedFilenameDelegate = dependenciesController.GetInstance(
-                typeof(GetUpdatedFilenameDelegate))
-                as GetUpdatedFilenameDelegate;
+            // var getUpdatedFilenameDelegate = dependenciesController.GetInstance(
+            //     typeof(GetUpdatedFilenameDelegate))
+            //     as GetUpdatedFilenameDelegate;
 
             var getUriFilenameDelegate = dependenciesController.GetInstance(
                 typeof(GetUriFilenameDelegate))
@@ -227,86 +226,94 @@ namespace vangogh.Console
                 typeof(GetValidationFilenameDelegate))
                 as GetValidationFilenameDelegate;
             
-            #endregion
+            var getArgsDefinitionsPathDelegate = dependenciesController.GetInstance(
+                typeof(GetArgsDefinitionsPathDelegate))
+                as GetArgsDefinitionsPathDelegate;
+            
+            var getHashesPathDelegate = dependenciesController.GetInstance(
+                typeof(GetHashesPathDelegate))
+                as GetHashesPathDelegate;
 
-            #region Delegates.GetPath
+            var getAppTemplatePathDelegate = dependenciesController.GetInstance(
+                typeof(GetAppTemplatePathDelegate))
+                as GetAppTemplatePathDelegate;
 
-            var getArgsDefinitionsPathDelegate = new GetPathDelegate(
-                getEmptyDirectoryDelegate,
-                getArgsDefinitionsFilenameDelegate);
+            var getReportTemplatePathDelegate = dependenciesController.GetInstance(
+                typeof(GetReportTemplatePathDelegate))
+                as GetReportTemplatePathDelegate;
 
-            var getStoredHashesPathDelegate = new GetPathDelegate(
-                getEmptyDirectoryDelegate,
-                getHashesFilenameDelegate);
+            var getCookiePathDelegate = dependenciesController.GetInstance(
+                typeof(GetCookiePathDelegate))
+                as GetCookiePathDelegate;
 
-            var getAppTemplatePathDelegate = new GetPathDelegate(
-                getTemplatesDirectoryDelegate,
-                getAppTemplateFilenameDelegate);
+            var getGameDetailsFilesPathDelegate = dependenciesController.GetInstance(
+                typeof(GetGameDetailsFilesPathDelegate))
+                as GetGameDetailsFilesPathDelegate;
 
-            var getReportTemplatePathDelegate = new GetPathDelegate(
-                getTemplatesDirectoryDelegate,
-                getReportTemplateFilenameDelegate);
+            var getValidationPathDelegate = dependenciesController.GetInstance(
+                typeof(GetValidationPathDelegate))
+                as GetValidationPathDelegate;
 
-            var getCookiePathDelegate = new GetPathDelegate(
-                getEmptyDirectoryDelegate,
-                getCookiesFilenameDelegate);
+            var statusController = dependenciesController.GetInstance(
+                typeof(StatusController))
+                as StatusController;                  
 
-            var getGameDetailsFilesPathDelegate = new GetPathDelegate(
-                getProductFilesDirectoryDelegate,
-                getUriFilenameDelegate);
+            var streamController = dependenciesController.GetInstance(
+                typeof(StreamController))
+                as StreamController;
 
-            var getValidationPathDelegate = new GetPathDelegate(
-                getMd5DirectoryDelegate,
-                getValidationFilenameDelegate);
+            var fileController = dependenciesController.GetInstance(
+                typeof(FileController))
+                as FileController;
+            
+            var directoryController = dependenciesController.GetInstance(
+                typeof(DirectoryController))
+                as DirectoryController;
+            
+            var storageController = dependenciesController.GetInstance(
+                typeof(StorageController))
+                as StorageController;
 
-            #endregion
+            var jsonSerializationController = dependenciesController.GetInstance(
+                typeof(JSONSerializationController))
+                as JSONSerializationController;
+            
+            var convertBytesToStringDelegate = dependenciesController.GetInstance(
+                typeof(ConvertBytesToStringDelegate))
+                as ConvertBytesToStringDelegate;
+            
+            var convertBytesToMd5HashDelegate = dependenciesController.GetInstance(
+                typeof(ConvertBytesToMd5HashDelegate))
+                as ConvertBytesToMd5HashDelegate;
 
-            var statusController = new StatusController();
+            var convertStringToBytesDelegate = dependenciesController.GetInstance(
+                typeof(ConvertStringToBytesDelegate))
+                as ConvertStringToBytesDelegate;
+            
+            var convertStringToMd5HashDelegate = dependenciesController.GetInstance(
+                typeof(ConvertStringToMd5HashDelegate))
+                as ConvertStringToMd5HashDelegate;
+            
+            var protoBufSerializedStorageController = dependenciesController.GetInstance(
+                typeof(ProtoBufSerializedStorageController))
+                as ProtoBufSerializedStorageController;
+            
+            var hashesStashController = dependenciesController.GetInstance(
+                typeof(HashesStashController))
+                as HashesStashController;
 
-            var streamController = new StreamController();
-            var fileController = new FileController();
-            var directoryController = new DirectoryController();
-
-            var storageController = new StorageController(
-                streamController,
-                fileController);
-
-            var serializationController = new JSONStringController();
-
-            var convertBytesToStringDelegate = new ConvertBytesToStringDelegate();
-            var getBytesMd5HashAsyncDelegate = new GetBytesMd5HashAsyncDelegate(convertBytesToStringDelegate);
-            var convertStringToBytesDelegate = new ConvertStringToBytesDelegate();
-            var getStringMd5HashAsyncDelegate = new GetStringMd5HashAsyncDelegate(
-                convertStringToBytesDelegate,
-                getBytesMd5HashAsyncDelegate);
-
-            var protoBufSerializedStorageController = new ProtoBufSerializedStorageController(
-                fileController,
-                streamController,
-                statusController);
-
-            #region Controllers.Stash
-
-            var storedHashesStashController = new StashController<Dictionary<string, string>>(
-                getStoredHashesPathDelegate,
-                protoBufSerializedStorageController,
-                statusController);
-
-            #endregion
-
-            var precomputedHashController = new StoredHashController(storedHashesStashController);
-
-            var serializedStorageController = new SerializedStorageController(
-                precomputedHashController,
-                storageController,
-                getStringMd5HashAsyncDelegate,
-                serializationController,
-                statusController);
-
-            var argsDefinitionStashController = new StashController<ArgsDefinition>(
-                getArgsDefinitionsPathDelegate,
-                serializedStorageController,
-                statusController);
+            // TODO: Review if still needed/desired to have this
+            var hashesController = dependenciesController.GetInstance(
+                typeof(HashesController))
+                as HashesController;
+            
+            var jsonSerializedStorageController = dependenciesController.GetInstance(
+                typeof(JSONSerializedStorageController))
+                as JSONSerializedStorageController;
+            
+            var argsDefinitionStashController = dependenciesController.GetInstance(
+                typeof(ArgsDefinitionsStashController))
+                as ArgsDefinitionsStashController;
 
             #region User editable files stashControllers
 
@@ -314,21 +321,21 @@ namespace vangogh.Console
 
             var appTemplateStashController = new StashController<List<Template>>(
                 getAppTemplatePathDelegate,
-                serializedStorageController,
+                jsonSerializedStorageController,
                 statusController);
 
             // templates/report.json
 
             var reportTemplateStashController = new StashController<List<Template>>(
                 getReportTemplatePathDelegate,
-                serializedStorageController,
+                jsonSerializedStorageController,
                 statusController);
 
             // cookies.json - this is required to be editable to allow user paste browser cookies
 
             var cookieStashController = new StashController<Dictionary<string, string>>(
                 getCookiePathDelegate,
-                serializedStorageController,
+                jsonSerializedStorageController,
                 statusController);
 
             #endregion
@@ -447,16 +454,15 @@ namespace vangogh.Console
             var formatImagesUriDelegate = new FormatImagesUriDelegate();
             var formatScreenshotsUriDelegate = new FormatScreenshotsUriDelegate();
 
-            var recycleDelegate = new RecycleDelegate(
-                getRecycleBinDirectoryDelegate,
-                fileController,
-                directoryController);
+            var recycleDelegate = dependenciesController.GetInstance(
+                typeof(RecycleDelegate))
+                as RecycleDelegate;
 
             #region Data Controllers
 
             var dataControllerFactory = new DataControllerFactory(
                 protoBufSerializedStorageController,
-                precomputedHashController,
+                hashesController,
                 getDataDirectoryDelegate,
                 getBinFilenameDelegate,
                 statusController);
@@ -487,17 +493,6 @@ namespace vangogh.Console
 
             #endregion
 
-            var aliasController = new AliasController(ActivityContext.Aliases);
-            var whitelistController = new WhitelistController(ActivityContext.Whitelist);
-            var prerequisitesController = new PrerequisiteController(ActivityContext.Prerequisites);
-            var supplementaryController = new SupplementaryController(ActivityContext.Supplementary);
-
-            var activityContextController = new ActivityContextController(
-                aliasController,
-                whitelistController,
-                prerequisitesController,
-                supplementaryController);
-
             #region Activity Controllers
 
             #region Authorize
@@ -524,7 +519,7 @@ namespace vangogh.Console
                 correctSecurityCodeAsyncDelegate,
                 uriController,
                 networkController,
-                serializationController,
+                jsonSerializationController,
                 attributeValuesItemizeDelegates,
                 statusController);
 
@@ -544,16 +539,15 @@ namespace vangogh.Console
                 getProductUpdateUriByContextDelegate,
                 getQueryParametersForProductContextDelegate,
                 requestPageAsyncDelegate,
-                getStringMd5HashAsyncDelegate,
-                precomputedHashController,
-                serializationController,
+                convertStringToMd5HashDelegate,
+                hashesController,
+                jsonSerializationController,
                 statusController);
 
             var itemizeProductsPageResultProductsDelegate = new ItemizeProductsPageResultProductsDelegate();
 
             var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
-                    (Activity.UpdateData, Entity.Products),
-                    activityContextController,
+                    // (Activity.UpdateData, Entity.Products),
                     getProductsPageResultsAsyncDelegate,
                     itemizeProductsPageResultProductsDelegate,
                     productsDataController,
@@ -565,16 +559,15 @@ namespace vangogh.Console
                 getProductUpdateUriByContextDelegate,
                 getQueryParametersForProductContextDelegate,
                 requestPageAsyncDelegate,
-                getStringMd5HashAsyncDelegate,
-                precomputedHashController,
-                serializationController,
+                convertStringToMd5HashDelegate,
+                hashesController,
+                jsonSerializationController,
                 statusController);
 
             var itemizeAccountProductsPageResultProductsDelegate = new ItemizeAccountProductsPageResultProductsDelegate();
 
             var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
-                    (Activity.UpdateData, Entity.AccountProducts),
-                    activityContextController,
+                    // (Activity.UpdateData, Entity.AccountProducts),
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,
                     accountProductsDataController,
@@ -584,7 +577,6 @@ namespace vangogh.Console
             var confirmAccountProductUpdatedDelegate = new ConfirmAccountProductUpdatedDelegate();
 
             var updatedUpdateActivity = new UpdatedUpdateActivity(
-                activityContextController,
                 accountProductsDataController,
                 confirmAccountProductUpdatedDelegate,
                 updatedIndexController,
@@ -596,7 +588,7 @@ namespace vangogh.Console
 
             var getDeserializedPageResultAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<ProductsPageResult>(networkController,
                 itemizeGOGDataDelegate,
-                serializationController);
+                jsonSerializationController);
 
             var wishlistedUpdateActivity = new WishlistedUpdateActivity(
                 getDeserializedPageResultAsyncDelegate,
@@ -611,7 +603,7 @@ namespace vangogh.Console
 
             var getDeserializedGOGDataAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<GOGData>(networkController,
                 itemizeGOGDataDelegate,
-                serializationController);
+                jsonSerializationController);
 
             var getDeserializedGameProductDataAsyncDelegate = new GetDeserializedGameProductDataAsyncDelegate(
                 getDeserializedGOGDataAsyncDelegate);
@@ -648,7 +640,7 @@ namespace vangogh.Console
 
             var getApiProductDelegate = new GetDeserializedGOGModelAsyncDelegate<ApiProduct>(
                 networkController,
-                serializationController);
+                jsonSerializationController);
 
             var itemizeAllApiProductsGapsAsyncDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<Product, ApiProduct>(
                 productsDataController,
@@ -672,7 +664,7 @@ namespace vangogh.Console
 
             var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelAsyncDelegate<GameDetails>(
                 networkController,
-                serializationController);
+                jsonSerializationController);
 
             var confirmStringContainsLanguageDownloadsDelegate = new ConfirmStringMatchesAllDelegate(
                 collectionController,
@@ -694,7 +686,7 @@ namespace vangogh.Console
 
             var getDeserializedGameDetailsAsyncDelegate = new GetDeserializedGameDetailsAsyncDelegate(
                 networkController,
-                serializationController,
+                jsonSerializationController,
                 languageController,
                 formatDownloadLanguagesDelegate,
                 confirmStringContainsLanguageDownloadsDelegate,
@@ -902,9 +894,9 @@ namespace vangogh.Console
 
             var validationResultController = new ValidationResultController();
 
-            var fileMd5Controller = new GetFileMd5HashAsyncDelegate(
+            var fileMd5Controller = new ConvertFileToMd5HashDelegate(
                 storageController,
-                getStringMd5HashAsyncDelegate);
+                convertStringToMd5HashDelegate);
 
             var dataFileValidateDelegate = new DataFileValidateDelegate(
                 fileMd5Controller,
@@ -914,7 +906,7 @@ namespace vangogh.Console
                 confirmValidationExpectedDelegate,
                 fileController,
                 streamController,
-                getBytesMd5HashAsyncDelegate,
+                convertBytesToMd5HashDelegate,
                 validationResultController,
                 statusController);
 
@@ -931,7 +923,7 @@ namespace vangogh.Console
                 statusController);
 
             var validateDataActivity = new ValidateDataActivity(
-                precomputedHashController,
+                hashesController,
                 fileController,
                 dataFileValidateDelegate,
                 statusController);
@@ -1005,7 +997,6 @@ namespace vangogh.Console
             #region Help
 
             var helpActivity = new HelpActivity(
-                activityContextController,
                 statusController);
 
             #endregion
@@ -1067,85 +1058,82 @@ namespace vangogh.Console
 
             #region Activity Context To Activity Controllers Mapping
 
-            var activityContextToActivityControllerMap = new Dictionary<(Activity, Entity), IActivity>
-            {
-                { (Activity.Authorize, Entity.None), authorizeActivity },
-                { (Activity.UpdateData, Entity.Products), productsUpdateActivity },
-                { (Activity.UpdateData, Entity.AccountProducts), accountProductsUpdateActivity },
-                { (Activity.UpdateData, Entity.Updated), updatedUpdateActivity },
-                { (Activity.UpdateData, Entity.Wishlist), wishlistedUpdateActivity },
-                { (Activity.UpdateData, Entity.GameProductData), gameProductDataUpdateActivity },
-                { (Activity.UpdateData, Entity.ApiProducts), apiProductUpdateActivity },
-                { (Activity.UpdateData, Entity.GameDetails), gameDetailsUpdateActivity },
-                { (Activity.UpdateData, Entity.Screenshots), updateScreenshotsActivity },
-                { (Activity.UpdateDownloads, Entity.ProductImages), updateProductsImagesDownloadsActivity },
-                { (Activity.UpdateDownloads, Entity.AccountProductImages), updateAccountProductsImagesDownloadsActivity },
-                { (Activity.UpdateDownloads, Entity.Screenshots), updateScreenshotsDownloadsActivity },
-                { (Activity.UpdateDownloads, Entity.ProductFiles), updateProductFilesDownloadsActivity },
-                { (Activity.Download, Entity.ProductImages), productsImagesDownloadActivity },
-                { (Activity.Download, Entity.AccountProductImages), accountProductsImagesDownloadActivity },
-                { (Activity.Download, Entity.Screenshots), screenshotsDownloadActivity },
-                { (Activity.Download, Entity.ProductFiles), productFilesDownloadActivity },
-                { (Activity.Validate, Entity.ProductFiles), validateProductFilesActivity },
-                { (Activity.Validate, Entity.Data), validateDataActivity },
-                { (Activity.Repair, Entity.ProductFiles), repairActivity },
-                { (Activity.Cleanup, Entity.Directories), directoryCleanupActivity },
-                { (Activity.Cleanup, Entity.Files), fileCleanupActivity },
-                { (Activity.Cleanup, Entity.Updated), cleanupUpdatedActivity },
-                { (Activity.Report, Entity.None), reportActivity },
-                { (Activity.List, Entity.Updated), listUpdatedActivity },
-                { (Activity.Help, Entity.None), helpActivity }
-            };
-
-            var activityContextQueue = activityContextController.GetQueue(args);
-            var commandLineParameters = activityContextController.GetParameters(args).ToArray();
+            // var activityContextToActivityControllerMap = new Dictionary<(Activity, Entity), IActivity>
+            // {
+            //     { (Activity.Authorize, Entity.None), authorizeActivity },
+            //     { (Activity.UpdateData, Entity.Products), productsUpdateActivity },
+            //     { (Activity.UpdateData, Entity.AccountProducts), accountProductsUpdateActivity },
+            //     { (Activity.UpdateData, Entity.Updated), updatedUpdateActivity },
+            //     { (Activity.UpdateData, Entity.Wishlist), wishlistedUpdateActivity },
+            //     { (Activity.UpdateData, Entity.GameProductData), gameProductDataUpdateActivity },
+            //     { (Activity.UpdateData, Entity.ApiProducts), apiProductUpdateActivity },
+            //     { (Activity.UpdateData, Entity.GameDetails), gameDetailsUpdateActivity },
+            //     { (Activity.UpdateData, Entity.Screenshots), updateScreenshotsActivity },
+            //     { (Activity.UpdateDownloads, Entity.ProductImages), updateProductsImagesDownloadsActivity },
+            //     { (Activity.UpdateDownloads, Entity.AccountProductImages), updateAccountProductsImagesDownloadsActivity },
+            //     { (Activity.UpdateDownloads, Entity.Screenshots), updateScreenshotsDownloadsActivity },
+            //     { (Activity.UpdateDownloads, Entity.ProductFiles), updateProductFilesDownloadsActivity },
+            //     { (Activity.Download, Entity.ProductImages), productsImagesDownloadActivity },
+            //     { (Activity.Download, Entity.AccountProductImages), accountProductsImagesDownloadActivity },
+            //     { (Activity.Download, Entity.Screenshots), screenshotsDownloadActivity },
+            //     { (Activity.Download, Entity.ProductFiles), productFilesDownloadActivity },
+            //     { (Activity.Validate, Entity.ProductFiles), validateProductFilesActivity },
+            //     { (Activity.Validate, Entity.Data), validateDataActivity },
+            //     { (Activity.Repair, Entity.ProductFiles), repairActivity },
+            //     { (Activity.Cleanup, Entity.Directories), directoryCleanupActivity },
+            //     { (Activity.Cleanup, Entity.Files), fileCleanupActivity },
+            //     { (Activity.Cleanup, Entity.Updated), cleanupUpdatedActivity },
+            //     { (Activity.Report, Entity.None), reportActivity },
+            //     { (Activity.List, Entity.Updated), listUpdatedActivity },
+            //     { (Activity.Help, Entity.None), helpActivity }
+            // };
 
             #endregion
 
             #region Core Activities Loop
 
-            foreach (var activityContext in activityContextQueue)
-            {
-                if (!activityContextToActivityControllerMap.ContainsKey(activityContext))
-                {
-                    await statusController.WarnAsync(
-                        applicationStatus,
-                        activityContextController.ToString(activityContext) + " is not mapped to an Activity.");
-                    continue;
-                }
+            // foreach (var activityContext in activityContextQueue)
+            // {
+            //     if (!activityContextToActivityControllerMap.ContainsKey(activityContext))
+            //     {
+            //         await statusController.WarnAsync(
+            //             applicationStatus,
+            //             activityContextController.ToString(activityContext) + " is not mapped to an Activity.");
+            //         continue;
+            //     }
 
-                var activity = activityContextToActivityControllerMap[activityContext];
-                try
-                {
-                    await activity.ProcessActivityAsync(applicationStatus);
-                }
-                catch (AggregateException ex)
-                {
-                    var itemizeInnerExceptionsDelegate = new ItemizeInnerExceptionsDelegate();
-                    var convertTreeToEnumerableDelegate = new ConvertTreeToEnumerableDelegate<Exception>(itemizeInnerExceptionsDelegate);
+            //     var activity = activityContextToActivityControllerMap[activityContext];
+            //     try
+            //     {
+            //         await activity.ProcessActivityAsync(applicationStatus);
+            //     }
+            //     catch (AggregateException ex)
+            //     {
+            //         var itemizeInnerExceptionsDelegate = new ItemizeInnerExceptionsDelegate();
+            //         var convertTreeToEnumerableDelegate = new ConvertTreeToEnumerableDelegate<Exception>(itemizeInnerExceptionsDelegate);
 
-                    var errorMessages = new List<string>();
-                    foreach (var innerException in convertTreeToEnumerableDelegate.Convert(ex))
-                        errorMessages.Add(innerException.Message);
+            //         var errorMessages = new List<string>();
+            //         foreach (var innerException in convertTreeToEnumerableDelegate.Convert(ex))
+            //             errorMessages.Add(innerException.Message);
 
-                    var combinedErrorMessages = string.Join(Models.Separators.Separators.Common.Comma, errorMessages);
+            //         var combinedErrorMessages = string.Join(Models.Separators.Separators.Common.Comma, errorMessages);
 
-                    await statusController.FailAsync(applicationStatus, combinedErrorMessages);
+            //         await statusController.FailAsync(applicationStatus, combinedErrorMessages);
 
-                    var failureDumpUri = "failureDump.json";
-                    await serializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
+            //         var failureDumpUri = "failureDump.json";
+            //         await jsonSerializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
 
-                    await consoleInputOutputController.OutputOnRefreshAsync(
-                        "GoodOfflineGames.exe has encountered fatal error(s): " +
-                        combinedErrorMessages +
-                        $".\nPlease refer to {failureDumpUri} for further details.\n" +
-                        "Press ENTER to close the window...");
+            //         await consoleInputOutputController.OutputOnRefreshAsync(
+            //             "GoodOfflineGames.exe has encountered fatal error(s): " +
+            //             combinedErrorMessages +
+            //             $".\nPlease refer to {failureDumpUri} for further details.\n" +
+            //             "Press ENTER to close the window...");
 
-                    consoleController.ReadLine();
+            //         consoleController.ReadLine();
 
-                    return;
-                }
-            }
+            //         return;
+            //     }
+            // }
 
             #endregion
 
