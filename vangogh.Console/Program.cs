@@ -25,6 +25,7 @@ using Delegates.Convert.Hashes;
 using Delegates.Convert.Bytes;
 using Delegates.Convert.Collections; 
 using Delegates.Convert.Requests;
+using Delegates.Convert.Collections.Status;
 using Delegates.Confirm.ArgsTokens;
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.Data;
@@ -52,6 +53,8 @@ using Controllers.ValidationResult;
 using Controllers.Stash;
 using Controllers.Stash.Hashes;
 using Controllers.Stash.ArgsDefinitions;
+using Controllers.Stash.Templates;
+using Controllers.Stash.Cookies;
 using Controllers.SerializedStorage.ProtoBuf;
 using Controllers.SerializedStorage.JSON;
 using Controllers.Presentation;
@@ -59,6 +62,8 @@ using Controllers.Routing;
 using Controllers.Status;
 using Controllers.Hashes;
 using Controllers.Template;
+using Controllers.Template.App;
+using Controllers.Template.Report;
 using Controllers.ViewModel;
 using Controllers.ViewUpdates;
 using Controllers.InputOutput;
@@ -243,8 +248,8 @@ namespace vangogh.Console
                 as GetReportTemplatePathDelegate;
 
             var getCookiePathDelegate = dependenciesController.GetInstance(
-                typeof(GetCookiePathDelegate))
-                as GetCookiePathDelegate;
+                typeof(GetCookiesPathDelegate))
+                as GetCookiesPathDelegate;
 
             var getGameDetailsFilesPathDelegate = dependenciesController.GetInstance(
                 typeof(GetGameDetailsFilesPathDelegate))
@@ -315,61 +320,65 @@ namespace vangogh.Console
                 typeof(ArgsDefinitionsStashController))
                 as ArgsDefinitionsStashController;
 
-            #region User editable files stashControllers
+            var appTemplateStashController = dependenciesController.GetInstance(
+                typeof(AppTemplateStashController))
+                as AppTemplateStashController;
 
-            // templates/app.json
+            var reportTemplateStashController = dependenciesController.GetInstance(
+                typeof(ReportTemplateStashController))
+                as ReportTemplateStashController;
 
-            var appTemplateStashController = new StashController<List<Template>>(
-                getAppTemplatePathDelegate,
-                jsonSerializedStorageController,
-                statusController);
+            var cookiesStashController = dependenciesController.GetInstance(
+                typeof(CookiesStashController))
+                as CookiesStashController;
 
-            // templates/report.json
+            var consoleController = dependenciesController.GetInstance(
+                typeof(ConsoleController))
+                as ConsoleController;
 
-            var reportTemplateStashController = new StashController<List<Template>>(
-                getReportTemplatePathDelegate,
-                jsonSerializedStorageController,
-                statusController);
+            var formatTextToFitConsoleWindowDelegate = dependenciesController.GetInstance(
+                typeof(FormatTextToFitConsoleWindowDelegate))
+                as FormatTextToFitConsoleWindowDelegate;
 
-            // cookies.json - this is required to be editable to allow user paste browser cookies
+            var consoleInputOutputController = dependenciesController.GetInstance(
+                typeof(ConsoleInputOutputController))
+                as ConsoleInputOutputController;
 
-            var cookieStashController = new StashController<Dictionary<string, string>>(
-                getCookiePathDelegate,
-                jsonSerializedStorageController,
-                statusController);
+            var formatBytesDelegate = dependenciesController.GetInstance(
+                typeof(FormatBytesDelegate))
+                as FormatBytesDelegate;
 
-            #endregion
+            var formatSecondsDelegate = dependenciesController.GetInstance(
+                typeof(FormatSecondsDelegate))
+                as FormatSecondsDelegate;
 
-            var consoleController = new ConsoleController();
-            var formatTextToFitConsoleWindowDelegate = new FormatTextToFitConsoleWindowDelegate(consoleController);
+            var collectionController = dependenciesController.GetInstance(
+                typeof(CollectionController))
+                as CollectionController;
 
-            var consoleInputOutputController = new ConsoleInputOutputController(
-                formatTextToFitConsoleWindowDelegate,
-                consoleController);
+            var itemizeStatusChildrenDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeStatusChildrenDelegate))
+                as ItemizeStatusChildrenDelegate;
 
-            var formatBytesDelegate = new FormatBytesDelegate();
-            var formatSecondsDelegate = new FormatSecondsDelegate();
+            var convertStatusTreeToEnumerableDelegate = dependenciesController.GetInstance(
+                typeof(ConvertStatusTreeToEnumerableDelegate))
+                as ConvertStatusTreeToEnumerableDelegate;
 
-            var collectionController = new CollectionController();
+            var applicationStatus = dependenciesController.GetInstance(
+                typeof(Status))
+                as Status;
 
-            var itemizeStatusChildrenDelegate = new ItemizeStatusChildrenDelegate();
+            var appTemplateController = dependenciesController.GetInstance(
+                typeof(AppTemplateController))
+                as AppTemplateController;
 
-            var statusTreeToEnumerableController = new ConvertTreeToEnumerableDelegate<IStatus>(itemizeStatusChildrenDelegate);
+            var reportTemplateController = dependenciesController.GetInstance(
+                typeof(ReportTemplateController))
+                as ReportTemplateController;
 
-            var applicationStatus = new Status { Title = "" };
-
-            var appTemplateController = new TemplateController(
-                "status",
-                appTemplateStashController,
-                collectionController);
-
-
-            var reportTemplateController = new TemplateController(
-                "status",
-                reportTemplateStashController,
-                collectionController);
-
-            var formatRemainingTimeAtSpeedDelegate = new FormatRemainingTimeAtSpeedDelegate();
+            var formatRemainingTimeAtSpeedDelegate = dependenciesController.GetInstance(
+                typeof(FormatRemainingTimeAtSpeedDelegate))
+                as FormatRemainingTimeAtSpeedDelegate;
 
             var statusAppViewModelDelegate = new StatusAppViewModelDelegate(
                 formatRemainingTimeAtSpeedDelegate,
@@ -384,7 +393,7 @@ namespace vangogh.Console
                 applicationStatus,
                 appTemplateController,
                 statusAppViewModelDelegate,
-                statusTreeToEnumerableController);
+                convertStatusTreeToEnumerableDelegate);
 
             var consoleNotifyStatusViewUpdateController = new NotifyStatusViewUpdateController(
                 getStatusViewUpdateDelegate,
@@ -414,7 +423,7 @@ namespace vangogh.Console
             var cookieSerializationController = new CookieSerializationController();
 
             var cookiesController = new CookiesController(
-                cookieStashController,
+                cookiesStashController,
                 cookieSerializationController,
                 statusController);
 
@@ -1149,7 +1158,7 @@ namespace vangogh.Console
                 await consoleInputOutputController.OutputContinuousAsync(applicationStatus, string.Empty, "All tasks are complete. Press ENTER to exit...");
             }
 
-            consoleController.ReadLine();
+            System.Console.ReadLine();
         }
     }
 }

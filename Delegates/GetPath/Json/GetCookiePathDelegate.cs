@@ -3,9 +3,9 @@ using Interfaces.Delegates.GetFilename;
 
 namespace Delegates.GetPath.Json
 {
-    public class GetCookiePathDelegate: GetPathDelegate
+    public class GetCookiesPathDelegate: GetPathDelegate
     {
-        public GetCookiePathDelegate(
+        public GetCookiesPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate):
             base(getDirectoryDelegate, getFilenameDelegate)

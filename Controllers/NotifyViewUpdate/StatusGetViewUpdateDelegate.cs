@@ -43,7 +43,7 @@ namespace Controllers.ViewUpdates
                 if (viewModel != null)
                 {
                     var view = await templateController.BindAsync(
-                        templateController.PrimaryTemplate,
+                        await templateController.GetPrimaryTemplateTitleAsync(status),
                         viewModel,
                         status);
 

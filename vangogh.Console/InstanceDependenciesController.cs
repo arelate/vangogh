@@ -3,6 +3,8 @@ using Interfaces.Controllers.Dependencies;
 using Controllers.Collection;
 using Controllers.Stash.ArgsDefinitions;
 using Controllers.Stash.Hashes;
+using Controllers.Stash.Templates;
+using Controllers.Stash.Cookies;
 using Controllers.Hashes;
 using Controllers.File;
 using Controllers.Directory;
@@ -12,28 +14,30 @@ using Controllers.SerializedStorage.ProtoBuf;
 using Controllers.SerializedStorage.JSON;
 using Controllers.Serialization.JSON;
 using Controllers.Status;
+using Controllers.Console;
+using Controllers.InputOutput;
+using Controllers.Template.App;
+using Controllers.Template.Report;
 
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.Data;
-
 using Delegates.GetFilename;
 using Delegates.GetFilename.ArgsDefinitions;
 using Delegates.GetFilename.Binary;
 using Delegates.GetFilename.Json;
-
 using Delegates.GetPath;
 using Delegates.GetPath.ArgsDefinitions;
 using Delegates.GetPath.Binary;
 using Delegates.GetPath.Json;
-
 using Delegates.Convert;
 using Delegates.Convert.Hashes;
 using Delegates.Convert.Bytes;
-
+using Delegates.Convert.Collections.Status;
 using Delegates.Recycle;
-
 using Delegates.Confirm.ArgsTokens;
 using Delegates.Convert.ArgsTokens;
+using Delegates.Format.Text;
+using Delegates.Itemize;
 
 namespace vangogh.Console
 {
@@ -118,7 +122,7 @@ namespace vangogh.Console
                 typeof(GetTemplatesDirectoryDelegate),
                 typeof(GetReportTemplateFilenameDelegate));                  
 
-            dependenciesController.AddDependencies<GetCookiePathDelegate>(
+            dependenciesController.AddDependencies<GetCookiesPathDelegate>(
                 typeof(GetEmptyDirectoryDelegate),
                 typeof(GetCookiesFilenameDelegate));   
 
@@ -179,6 +183,51 @@ namespace vangogh.Console
                 typeof(GetArgsDefinitionsPathDelegate),
                 typeof(JSONSerializedStorageController),
                 typeof(StatusController));                
+
+            // Controllers.Stash.Templates
+
+            dependenciesController.AddDependencies<AppTemplateStashController>(
+                typeof(GetAppTemplatePathDelegate),
+                typeof(JSONSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<ReportTemplateStashController>(
+                typeof(GetReportTemplatePathDelegate),
+                typeof(JSONSerializedStorageController),
+                typeof(StatusController));
+
+            // Controllers.Stash.Cookies
+
+            dependenciesController.AddDependencies<CookiesStashController>(
+                typeof(GetCookiesPathDelegate),
+                typeof(JSONSerializedStorageController),
+                typeof(StatusController));
+
+            // Delegates.Format.Text
+
+            dependenciesController.AddDependencies<FormatTextToFitConsoleWindowDelegate>(
+                typeof(ConsoleController));
+
+            // Controllers.InputOutput
+
+            dependenciesController.AddDependencies<ConsoleInputOutputController>(
+                typeof(FormatTextToFitConsoleWindowDelegate),
+                typeof(ConsoleController));
+
+            // Delegates.Convert.Collections.Status
+
+            dependenciesController.AddDependencies<ConvertStatusTreeToEnumerableDelegate>(
+                typeof(ItemizeStatusChildrenDelegate));
+
+            // Controllers.Template
+
+            dependenciesController.AddDependencies<AppTemplateController>(
+                typeof(AppTemplateStashController),
+                typeof(CollectionController));
+
+            dependenciesController.AddDependencies<ReportTemplateController>(
+                typeof(ReportTemplateStashController),
+                typeof(CollectionController));                
 
             // ...
 
