@@ -137,6 +137,8 @@ namespace vangogh.Console
 
             dependenciesControllerInitializer.Initialize();
 
+            #region Processed Dependencies
+
             // var getEmptyDirectoryDelegate = dependenciesController.GetInstance(
             //     typeof(GetEmptyDirectoryDelegate))
             //     as GetEmptyDirectoryDelegate;
@@ -233,25 +235,25 @@ namespace vangogh.Console
                 typeof(GetValidationFilenameDelegate))
                 as GetValidationFilenameDelegate;
             
-            var getArgsDefinitionsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetArgsDefinitionsPathDelegate))
-                as GetArgsDefinitionsPathDelegate;
+            // var getArgsDefinitionsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetArgsDefinitionsPathDelegate))
+            //     as GetArgsDefinitionsPathDelegate;
             
-            var getHashesPathDelegate = dependenciesController.GetInstance(
-                typeof(GetHashesPathDelegate))
-                as GetHashesPathDelegate;
+            // var getHashesPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetHashesPathDelegate))
+            //     as GetHashesPathDelegate;
 
-            var getAppTemplatePathDelegate = dependenciesController.GetInstance(
-                typeof(GetAppTemplatePathDelegate))
-                as GetAppTemplatePathDelegate;
+            // var getAppTemplatePathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetAppTemplatePathDelegate))
+            //     as GetAppTemplatePathDelegate;
 
-            var getReportTemplatePathDelegate = dependenciesController.GetInstance(
-                typeof(GetReportTemplatePathDelegate))
-                as GetReportTemplatePathDelegate;
+            // var getReportTemplatePathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetReportTemplatePathDelegate))
+            //     as GetReportTemplatePathDelegate;
 
-            var getCookiePathDelegate = dependenciesController.GetInstance(
-                typeof(GetCookiesPathDelegate))
-                as GetCookiesPathDelegate;
+            // var getCookiePathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetCookiesPathDelegate))
+            //     as GetCookiesPathDelegate;
 
             var getGameDetailsFilesPathDelegate = dependenciesController.GetInstance(
                 typeof(GetGameDetailsFilesPathDelegate))
@@ -285,17 +287,17 @@ namespace vangogh.Console
                 typeof(JSONSerializationController))
                 as JSONSerializationController;
             
-            var convertBytesToStringDelegate = dependenciesController.GetInstance(
-                typeof(ConvertBytesToStringDelegate))
-                as ConvertBytesToStringDelegate;
+            // var convertBytesToStringDelegate = dependenciesController.GetInstance(
+            //     typeof(ConvertBytesToStringDelegate))
+            //     as ConvertBytesToStringDelegate;
             
             var convertBytesToMd5HashDelegate = dependenciesController.GetInstance(
                 typeof(ConvertBytesToMd5HashDelegate))
                 as ConvertBytesToMd5HashDelegate;
 
-            var convertStringToBytesDelegate = dependenciesController.GetInstance(
-                typeof(ConvertStringToBytesDelegate))
-                as ConvertStringToBytesDelegate;
+            // var convertStringToBytesDelegate = dependenciesController.GetInstance(
+            //     typeof(ConvertStringToBytesDelegate))
+            //     as ConvertStringToBytesDelegate;
             
             var convertStringToMd5HashDelegate = dependenciesController.GetInstance(
                 typeof(ConvertStringToMd5HashDelegate))
@@ -305,126 +307,126 @@ namespace vangogh.Console
                 typeof(ProtoBufSerializedStorageController))
                 as ProtoBufSerializedStorageController;
             
-            var hashesStashController = dependenciesController.GetInstance(
-                typeof(HashesStashController))
-                as HashesStashController;
+            // var hashesStashController = dependenciesController.GetInstance(
+            //     typeof(HashesStashController))
+            //     as HashesStashController;
 
             // TODO: Review if still needed/desired to have this
             var hashesController = dependenciesController.GetInstance(
                 typeof(HashesController))
                 as HashesController;
             
-            var jsonSerializedStorageController = dependenciesController.GetInstance(
-                typeof(JSONSerializedStorageController))
-                as JSONSerializedStorageController;
+            // var jsonSerializedStorageController = dependenciesController.GetInstance(
+            //     typeof(JSONSerializedStorageController))
+            //     as JSONSerializedStorageController;
             
             var argsDefinitionStashController = dependenciesController.GetInstance(
                 typeof(ArgsDefinitionsStashController))
                 as ArgsDefinitionsStashController;
 
-            var appTemplateStashController = dependenciesController.GetInstance(
-                typeof(AppTemplateStashController))
-                as AppTemplateStashController;
+            // var appTemplateStashController = dependenciesController.GetInstance(
+            //     typeof(AppTemplateStashController))
+            //     as AppTemplateStashController;
 
-            var reportTemplateStashController = dependenciesController.GetInstance(
-                typeof(ReportTemplateStashController))
-                as ReportTemplateStashController;
+            // var reportTemplateStashController = dependenciesController.GetInstance(
+            //     typeof(ReportTemplateStashController))
+            //     as ReportTemplateStashController;
 
-            var cookiesStashController = dependenciesController.GetInstance(
-                typeof(CookiesStashController))
-                as CookiesStashController;
+            // var cookiesStashController = dependenciesController.GetInstance(
+            //     typeof(CookiesStashController))
+            //     as CookiesStashController;
 
-            var consoleController = dependenciesController.GetInstance(
-                typeof(ConsoleController))
-                as ConsoleController;
+            // var consoleController = dependenciesController.GetInstance(
+            //     typeof(ConsoleController))
+            //     as ConsoleController;
 
-            var formatTextToFitConsoleWindowDelegate = dependenciesController.GetInstance(
-                typeof(FormatTextToFitConsoleWindowDelegate))
-                as FormatTextToFitConsoleWindowDelegate;
+            // var formatTextToFitConsoleWindowDelegate = dependenciesController.GetInstance(
+            //     typeof(FormatTextToFitConsoleWindowDelegate))
+            //     as FormatTextToFitConsoleWindowDelegate;
 
             var consoleInputOutputController = dependenciesController.GetInstance(
                 typeof(ConsoleInputOutputController))
                 as ConsoleInputOutputController;
 
-            var formatBytesDelegate = dependenciesController.GetInstance(
-                typeof(FormatBytesDelegate))
-                as FormatBytesDelegate;
+            // var formatBytesDelegate = dependenciesController.GetInstance(
+            //     typeof(FormatBytesDelegate))
+            //     as FormatBytesDelegate;
 
-            var formatSecondsDelegate = dependenciesController.GetInstance(
-                typeof(FormatSecondsDelegate))
-                as FormatSecondsDelegate;
+            // var formatSecondsDelegate = dependenciesController.GetInstance(
+            //     typeof(FormatSecondsDelegate))
+            //     as FormatSecondsDelegate;
 
             var collectionController = dependenciesController.GetInstance(
                 typeof(CollectionController))
                 as CollectionController;
 
-            var itemizeStatusChildrenDelegate = dependenciesController.GetInstance(
-                typeof(ItemizeStatusChildrenDelegate))
-                as ItemizeStatusChildrenDelegate;
+            // var itemizeStatusChildrenDelegate = dependenciesController.GetInstance(
+            //     typeof(ItemizeStatusChildrenDelegate))
+            //     as ItemizeStatusChildrenDelegate;
 
-            var convertStatusTreeToEnumerableDelegate = dependenciesController.GetInstance(
-                typeof(ConvertStatusTreeToEnumerableDelegate))
-                as ConvertStatusTreeToEnumerableDelegate;
+            // var convertStatusTreeToEnumerableDelegate = dependenciesController.GetInstance(
+            //     typeof(ConvertStatusTreeToEnumerableDelegate))
+            //     as ConvertStatusTreeToEnumerableDelegate;
 
             var applicationStatus = dependenciesController.GetInstance(
                 typeof(Status))
                 as Status;
 
-            var appTemplateController = dependenciesController.GetInstance(
-                typeof(AppTemplateController))
-                as AppTemplateController;
+            // var appTemplateController = dependenciesController.GetInstance(
+            //     typeof(AppTemplateController))
+            //     as AppTemplateController;
 
-            var reportTemplateController = dependenciesController.GetInstance(
-                typeof(ReportTemplateController))
-                as ReportTemplateController;
+            // var reportTemplateController = dependenciesController.GetInstance(
+            //     typeof(ReportTemplateController))
+            //     as ReportTemplateController;
 
-            var formatRemainingTimeAtSpeedDelegate = dependenciesController.GetInstance(
-                typeof(FormatRemainingTimeAtSpeedDelegate))
-                as FormatRemainingTimeAtSpeedDelegate;
+            // var formatRemainingTimeAtSpeedDelegate = dependenciesController.GetInstance(
+            //     typeof(FormatRemainingTimeAtSpeedDelegate))
+            //     as FormatRemainingTimeAtSpeedDelegate;
 
-            var getStatusAppViewModelDelegate = dependenciesController.GetInstance(
-                typeof(GetStatusAppViewModelDelegate))
-                as GetStatusAppViewModelDelegate;
+            // var getStatusAppViewModelDelegate = dependenciesController.GetInstance(
+            //     typeof(GetStatusAppViewModelDelegate))
+            //     as GetStatusAppViewModelDelegate;
 
-            var statusReportViewModelDelegate = dependenciesController.GetInstance(
-                typeof(GetStatusReportViewModelDelegate))
-                as GetStatusReportViewModelDelegate;
+            // var statusReportViewModelDelegate = dependenciesController.GetInstance(
+            //     typeof(GetStatusReportViewModelDelegate))
+            //     as GetStatusReportViewModelDelegate;
             
             var getStatusViewUpdateDelegate = dependenciesController.GetInstance(
                 typeof(GetStatusViewUpdateDelegate))
                 as GetStatusViewUpdateDelegate;
             
-            var consoleNotifyStatusViewUpdateController = dependenciesController.GetInstance(
-                typeof(NotifyStatusViewUpdateController))
-                as NotifyStatusViewUpdateController;
+            // var consoleNotifyStatusViewUpdateController = dependenciesController.GetInstance(
+            //     typeof(NotifyStatusViewUpdateController))
+            //     as NotifyStatusViewUpdateController;
 
             // TODO: Implement a better way
             // add notification handler to drive console view updates
             // statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
 
-            var constrainExecutionAsyncDelegate = dependenciesController.GetInstance(
-                typeof(ConstrainExecutionAsyncDelegate))
-                as ConstrainExecutionAsyncDelegate;
+            // var constrainExecutionAsyncDelegate = dependenciesController.GetInstance(
+            //     typeof(ConstrainExecutionAsyncDelegate))
+            //     as ConstrainExecutionAsyncDelegate;
 
-            var itemizeAllRateConstrainedUrisDelegate = dependenciesController.GetInstance(
-                typeof(ItemizeAllRateConstrainedUrisDelegate))
-                as ItemizeAllRateConstrainedUrisDelegate;;
+            // var itemizeAllRateConstrainedUrisDelegate = dependenciesController.GetInstance(
+            //     typeof(ItemizeAllRateConstrainedUrisDelegate))
+            //     as ItemizeAllRateConstrainedUrisDelegate;
 
-            var constrainRequestRateAsyncDelegate = dependenciesController.GetInstance(
-                typeof(ConstrainRequestRateAsyncDelegate))
-                as ConstrainRequestRateAsyncDelegate;;
+            // var constrainRequestRateAsyncDelegate = dependenciesController.GetInstance(
+            //     typeof(ConstrainRequestRateAsyncDelegate))
+            //     as ConstrainRequestRateAsyncDelegate;;
 
             var uriController = dependenciesController.GetInstance(
                 typeof(UriController))
                 as UriController;
 
-            var cookiesSerializationController = dependenciesController.GetInstance(
-                typeof(CookiesSerializationController))
-                as CookiesSerializationController;
+            // var cookiesSerializationController = dependenciesController.GetInstance(
+            //     typeof(CookiesSerializationController))
+            //     as CookiesSerializationController;
 
-            var cookiesController = dependenciesController.GetInstance(
-                typeof(CookiesController))
-                as CookiesController;
+            // var cookiesController = dependenciesController.GetInstance(
+            //     typeof(CookiesController))
+            //     as CookiesController;
 
             var networkController = dependenciesController.GetInstance(
                 typeof(NetworkController))
@@ -481,6 +483,8 @@ namespace vangogh.Console
             var recycleDelegate = dependenciesController.GetInstance(
                 typeof(RecycleDelegate))
                 as RecycleDelegate;
+
+            #endregion
 
             #region Data Controllers
 
