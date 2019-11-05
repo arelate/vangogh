@@ -4,9 +4,9 @@ using Interfaces.Controllers.StrongTypeSerialization;
 
 using Models.Separators;
 
-namespace Controllers.StrongTypeSerialization
+namespace Controllers.StrongTypeSerialization.Cookies
 {
-    public class CookieSerializationController : IStrongTypeSerializationController<(string, string), string>
+    public class CookiesSerializationController : IStrongTypeSerializationController<(string, string), string>
     {
         const string cookieNameValueTemplate = "{0}" + Separators.Common.Equality + "{1}";
 

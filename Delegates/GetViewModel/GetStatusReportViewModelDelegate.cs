@@ -9,9 +9,10 @@ using Interfaces.Status;
 
 using Models.Units;
 
-namespace Controllers.ViewModel
+namespace Delegates.GetViewModel
 {
-    public class StatusReportViewModelDelegate : IGetViewModelDelegate<IStatus>
+    // TODO: Convert delegate
+    public class GetStatusReportViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
         static class StatusReportViewModelSchema
         {
@@ -35,7 +36,7 @@ namespace Controllers.ViewModel
         readonly IFormatDelegate<long, string> formatBytesDelegate;
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
-        public StatusReportViewModelDelegate(
+        public GetStatusReportViewModelDelegate(
             IFormatDelegate<long, string> formatBytesDelegate,
             IFormatDelegate<long, string> formatSecondsDelegate)
         {

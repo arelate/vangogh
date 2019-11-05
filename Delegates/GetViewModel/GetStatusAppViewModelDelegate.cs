@@ -9,9 +9,10 @@ using Interfaces.Status;
 
 using Models.Units;
 
-namespace Controllers.ViewModel
+namespace Delegates.GetViewModel
 {
-    public class StatusAppViewModelDelegate : IGetViewModelDelegate<IStatus>
+    // TODO: Convert delegate
+    public class GetStatusAppViewModelDelegate : IGetViewModelDelegate<IStatus>
     {
         static class StatusAppViewModelSchema
         {
@@ -34,7 +35,7 @@ namespace Controllers.ViewModel
         readonly IFormatDelegate<long, string> formatBytesDelegate;
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
-        public StatusAppViewModelDelegate(
+        public GetStatusAppViewModelDelegate(
             IFormatDelegate<IStatus, Tuple<long, double>> formatRemainingTimeAtSpeedDelegate,
             IFormatDelegate<long, string> formatBytesDelegate,
             IFormatDelegate<long, string> formatSecondsDelegate)

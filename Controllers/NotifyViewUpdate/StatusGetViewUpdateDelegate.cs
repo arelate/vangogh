@@ -13,7 +13,7 @@ namespace Controllers.ViewUpdates
 {
     public class GetStatusViewUpdateDelegate : IGetViewUpdateAsyncDelegate<string[]>
     {
-        readonly IStatus status;
+        // readonly IStatus status;
         readonly ITemplateController templateController;
         readonly IGetViewModelDelegate<IStatus> statusViewModelDelegate;
         readonly IConvertDelegate<IStatus, IEnumerable<IStatus>> convertStatusTreeToEnumerableDelegate;
@@ -21,12 +21,12 @@ namespace Controllers.ViewUpdates
         readonly IList<string> viewParts;
 
         public GetStatusViewUpdateDelegate(
-            IStatus status,
+            // IStatus status,
             ITemplateController templateController,
             IGetViewModelDelegate<IStatus> statusViewModelDelegate,
             IConvertDelegate<IStatus, IEnumerable<IStatus>> convertStatusTreeToEnumerableDelegate)
         {
-            this.status = status;
+            // this.status = status;
             this.templateController = templateController;
             this.statusViewModelDelegate = statusViewModelDelegate;
             this.convertStatusTreeToEnumerableDelegate = convertStatusTreeToEnumerableDelegate;
@@ -34,7 +34,7 @@ namespace Controllers.ViewUpdates
             this.viewParts = new List<string>();
         }
 
-        public async Task<string[]> GetViewUpdateAsync()
+        public async Task<string[]> GetViewUpdateAsync(IStatus status)
         {
             viewParts.Clear();
             foreach (var individualStatus in convertStatusTreeToEnumerableDelegate.Convert(status))

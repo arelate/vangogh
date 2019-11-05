@@ -4,6 +4,8 @@ using Interfaces.Controllers.Output;
 
 using Interfaces.NotifyViewUpdate;
 
+using Interfaces.Status;
+
 namespace Controllers.ViewUpdates
 {
     public class NotifyStatusViewUpdateController: INotifyViewUpdateController
@@ -19,17 +21,17 @@ namespace Controllers.ViewUpdates
             this.outputController = outputController;
         }
 
-        public async Task NotifyViewUpdateOutputOnRefreshAsync()
+        public async Task NotifyViewUpdateOutputOnRefreshAsync(IStatus status)
         {
             await outputController.OutputOnRefreshAsync(
-                await getViewUpdateDelegate.GetViewUpdateAsync());
+                await getViewUpdateDelegate.GetViewUpdateAsync(status));
         }
 
-        public async Task NotifyViewUpdateOutputContinuousAsync()
+        public async Task NotifyViewUpdateOutputContinuousAsync(IStatus status)
         {
             await outputController.OutputContinuousAsync(
                 null,
-                await getViewUpdateDelegate.GetViewUpdateAsync());
+                await getViewUpdateDelegate.GetViewUpdateAsync(status));
         }
     }
 }

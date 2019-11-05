@@ -35,6 +35,8 @@ using Delegates.GetFilename.Json;
 using Delegates.GetPath.ArgsDefinitions;
 using Delegates.GetPath.Binary;
 using Delegates.GetPath.Json;
+using Delegates.GetViewModel;
+using Delegates.Itemize.Attributes;
 
 using Controllers.Stream;
 using Controllers.Storage;
@@ -44,7 +46,7 @@ using Controllers.Uri;
 using Controllers.Network;
 using Controllers.Language;
 using Controllers.Serialization.JSON;
-using Controllers.StrongTypeSerialization;
+using Controllers.StrongTypeSerialization.Cookies;
 using Controllers.Collection;
 using Controllers.Console;
 using Controllers.Cookies;
@@ -64,7 +66,7 @@ using Controllers.Hashes;
 using Controllers.Template;
 using Controllers.Template.App;
 using Controllers.Template.Report;
-using Controllers.ViewModel;
+// using Controllers.ViewModel;
 using Controllers.ViewUpdates;
 using Controllers.InputOutput;
 using Controllers.Dependencies;
@@ -380,88 +382,101 @@ namespace vangogh.Console
                 typeof(FormatRemainingTimeAtSpeedDelegate))
                 as FormatRemainingTimeAtSpeedDelegate;
 
-            var statusAppViewModelDelegate = new StatusAppViewModelDelegate(
-                formatRemainingTimeAtSpeedDelegate,
-                formatBytesDelegate,
-                formatSecondsDelegate);
+            var getStatusAppViewModelDelegate = dependenciesController.GetInstance(
+                typeof(GetStatusAppViewModelDelegate))
+                as GetStatusAppViewModelDelegate;
 
-            var statusReportViewModelDelegate = new StatusReportViewModelDelegate(
-                formatBytesDelegate,
-                formatSecondsDelegate);
-
-            var getStatusViewUpdateDelegate = new GetStatusViewUpdateDelegate(
-                applicationStatus,
-                appTemplateController,
-                statusAppViewModelDelegate,
-                convertStatusTreeToEnumerableDelegate);
-
-            var consoleNotifyStatusViewUpdateController = new NotifyStatusViewUpdateController(
-                getStatusViewUpdateDelegate,
-                consoleInputOutputController);
+            var statusReportViewModelDelegate = dependenciesController.GetInstance(
+                typeof(GetStatusReportViewModelDelegate))
+                as GetStatusReportViewModelDelegate;
+            
+            var getStatusViewUpdateDelegate = dependenciesController.GetInstance(
+                typeof(GetStatusViewUpdateDelegate))
+                as GetStatusViewUpdateDelegate;
+            
+            var consoleNotifyStatusViewUpdateController = dependenciesController.GetInstance(
+                typeof(NotifyStatusViewUpdateController))
+                as NotifyStatusViewUpdateController;
 
             // TODO: Implement a better way
             // add notification handler to drive console view updates
-            statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
+            // statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
 
-            var constrainExecutionAsyncDelegate = new ConstrainExecutionAsyncDelegate(
-                statusController,
-                formatSecondsDelegate);
+            var constrainExecutionAsyncDelegate = dependenciesController.GetInstance(
+                typeof(ConstrainExecutionAsyncDelegate))
+                as ConstrainExecutionAsyncDelegate;
 
-            var constrainRequestRateAsyncDelegate = new ConstrainRequestRateAsyncDelegate(
-                constrainExecutionAsyncDelegate,
-                collectionController,
-                statusController,
-                new string[] {
-                    Models.Uris.Uris.Endpoints.Account.GameDetails, // gameDetails requests
-                    Models.Uris.Uris.Endpoints.ProductFiles.ManualUrlDownlink, // manualUrls from gameDetails requests
-                    Models.Uris.Uris.Endpoints.ProductFiles.ManualUrlCDNSecure, // resolved manualUrls and validation files requests
-                    Models.Uris.Uris.Roots.Api // API entries
-                });
+            var itemizeAllRateConstrainedUrisDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeAllRateConstrainedUrisDelegate))
+                as ItemizeAllRateConstrainedUrisDelegate;;
 
-            var uriController = new UriController();
+            var constrainRequestRateAsyncDelegate = dependenciesController.GetInstance(
+                typeof(ConstrainRequestRateAsyncDelegate))
+                as ConstrainRequestRateAsyncDelegate;;
 
-            var cookieSerializationController = new CookieSerializationController();
+            var uriController = dependenciesController.GetInstance(
+                typeof(UriController))
+                as UriController;
 
-            var cookiesController = new CookiesController(
-                cookiesStashController,
-                cookieSerializationController,
-                statusController);
+            var cookiesSerializationController = dependenciesController.GetInstance(
+                typeof(CookiesSerializationController))
+                as CookiesSerializationController;
 
-            var networkController = new NetworkController(
-                cookiesController,
-                uriController,
-                constrainRequestRateAsyncDelegate);
+            var cookiesController = dependenciesController.GetInstance(
+                typeof(CookiesController))
+                as CookiesController;
 
-            var downloadFromResponseAsyncDelegate = new DownloadFromResponseAsyncDelegate(
-                networkController,
-                streamController,
-                fileController,
-                statusController);
+            var networkController = dependenciesController.GetInstance(
+                typeof(NetworkController))
+                as NetworkController;
 
-            var downloadFromUriAsyncDelegate = new DownloadFromUriAsyncDelegate(
-                networkController,
-                downloadFromResponseAsyncDelegate,
-                statusController);
+            var downloadFromResponseAsyncDelegate = dependenciesController.GetInstance(
+                typeof(DownloadFromResponseAsyncDelegate))
+                as DownloadFromResponseAsyncDelegate;
 
-            var requestPageAsyncDelegate = new RequestPageAsyncDelegate(
-                networkController);
+            var downloadFromUriAsyncDelegate = dependenciesController.GetInstance(
+                typeof(DownloadFromUriAsyncDelegate))
+                as DownloadFromUriAsyncDelegate;
 
-            var languageController = new LanguageController();
+            var requestPageAsyncDelegate = dependenciesController.GetInstance(
+                typeof(RequestPageAsyncDelegate))
+                as RequestPageAsyncDelegate;
 
-            var itemizeLoginIdDelegate = new ItemizeAttributeValuesDelegate(
-                AttributeValuesPatterns.LoginId);
-            var itemizeLoginUsernameDelegate = new ItemizeAttributeValuesDelegate(
-                AttributeValuesPatterns.LoginUsername);
-            var itemizeLoginTokenDelegate = new ItemizeAttributeValuesDelegate(
-                AttributeValuesPatterns.LoginToken);
-            var itemizeSecondStepAuthenticationTokenDelegate = new ItemizeAttributeValuesDelegate(
-                AttributeValuesPatterns.SecondStepAuthenticationToken);
+            var languageController = dependenciesController.GetInstance(
+                typeof(LanguageController))
+                as LanguageController;
 
-            var itemizeGOGDataDelegate = new ItemizeGOGDataDelegate();
-            var itemizeScreenshotsDelegate = new ItemizeScreenshotsDelegate();
+            var itemizeLoginIdDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeLoginIdAttributeValuesDelegate))
+                as ItemizeLoginIdAttributeValuesDelegate;
 
-            var formatImagesUriDelegate = new FormatImagesUriDelegate();
-            var formatScreenshotsUriDelegate = new FormatScreenshotsUriDelegate();
+            var itemizeLoginUsernameDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeLoginUsernameAttributeValuesDelegate))
+                as ItemizeLoginUsernameAttributeValuesDelegate;
+
+            var itemizeLoginTokenDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeLoginTokenAttributeValuesDelegate))
+                as ItemizeLoginTokenAttributeValuesDelegate;
+                
+            var itemizeSecondStepAuthenticationTokenDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate))
+                as ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate;
+
+            var itemizeGOGDataDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeGOGDataDelegate))
+                as ItemizeGOGDataDelegate;
+
+            var itemizeScreenshotsDelegate = dependenciesController.GetInstance(
+                typeof(ItemizeScreenshotsDelegate))
+                as ItemizeScreenshotsDelegate;;
+
+            var formatImagesUriDelegate = dependenciesController.GetInstance(
+                typeof(FormatImagesUriDelegate))
+                as FormatImagesUriDelegate;
+
+            var formatScreenshotsUriDelegate = dependenciesController.GetInstance(
+                typeof(FormatScreenshotsUriDelegate))
+                as FormatScreenshotsUriDelegate;
 
             var recycleDelegate = dependenciesController.GetInstance(
                 typeof(RecycleDelegate))

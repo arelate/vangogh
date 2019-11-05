@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Constrain;
+using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Collection;
 
@@ -17,7 +18,7 @@ namespace Delegates.Constrain
         readonly ICollectionController collectionController;
         readonly IStatusController statusController;
         readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
-        readonly string[] uriPrefixes;
+        readonly IItemizeAllDelegate<string> itemizeRateContraindesUris;
         const int requestIntervalSeconds = 30;
         const int passthroughCount = 100; // don't throttle first N requests
         int rateLimitRequestsCount;
@@ -26,7 +27,7 @@ namespace Delegates.Constrain
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
             ICollectionController collectionController,
             IStatusController statusController,
-            params string[] uriPrefixes)
+            IItemizeAllDelegate<string> itemizeRateContraindesUris)
         {
             this.constrainExecutionAsyncDelegate = constrainExecutionAsyncDelegate;
             this.collectionController = collectionController;
@@ -34,18 +35,18 @@ namespace Delegates.Constrain
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
             rateLimitRequestsCount = 0;
 
-            this.uriPrefixes = uriPrefixes;
+            this.itemizeRateContraindesUris = itemizeRateContraindesUris;
 
-            if (this.uriPrefixes != null)
-                foreach (var prefix in this.uriPrefixes)
+            if (this.itemizeRateContraindesUris != null)
+                foreach (var uri in this.itemizeRateContraindesUris.ItemizeAll())
                     lastRequestToUriPrefix.Add(
-                        prefix, 
+                        uri, 
                         DateTime.UtcNow - TimeSpan.FromSeconds(requestIntervalSeconds));
         }
 
         public async Task ConstrainAsync(string uri, IStatus status)
         {
-            var prefix = collectionController.Reduce(uriPrefixes, uri.StartsWith).SingleOrDefault();
+            var prefix = collectionController.Reduce(itemizeRateContraindesUris.ItemizeAll(), uri.StartsWith).SingleOrDefault();
             if (string.IsNullOrEmpty(prefix)) return;
 
             // don't limit rate for the first N requests, even if they match rate limit prefix

@@ -18,6 +18,11 @@ using Controllers.Console;
 using Controllers.InputOutput;
 using Controllers.Template.App;
 using Controllers.Template.Report;
+using Controllers.ViewUpdates;
+using Controllers.Cookies;
+using Controllers.StrongTypeSerialization.Cookies;
+using Controllers.Network;
+using Controllers.Uri;
 
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.Data;
@@ -36,8 +41,17 @@ using Delegates.Convert.Collections.Status;
 using Delegates.Recycle;
 using Delegates.Confirm.ArgsTokens;
 using Delegates.Convert.ArgsTokens;
-using Delegates.Format.Text;
 using Delegates.Itemize;
+using Delegates.GetViewModel;
+using Delegates.Format.Status;
+using Delegates.Format.Numbers;
+using Delegates.Format.Text;
+using Delegates.Format.Uri;
+using Delegates.Constrain;
+using Delegates.Download;
+
+using GOG.Delegates.Itemize;
+using GOG.Delegates.RequestPage;
 
 namespace vangogh.Console
 {
@@ -92,7 +106,7 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<GetReportTemplateFilenameDelegate>(
                 typeof(GetJsonFilenameDelegate));
 
-            dependenciesController.AddDependencies<GetReportTemplateFilenameDelegate>(
+            dependenciesController.AddDependencies<GetCookiesFilenameDelegate>(
                 typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetIndexFilenameDelegate>(
@@ -228,6 +242,70 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<ReportTemplateController>(
                 typeof(ReportTemplateStashController),
                 typeof(CollectionController));                
+
+            // Delegates.GetViewModel
+
+            dependenciesController.AddDependencies<GetStatusAppViewModelDelegate>(
+                typeof(FormatRemainingTimeAtSpeedDelegate),
+                typeof(FormatBytesDelegate),
+                typeof(FormatSecondsDelegate));
+                
+            dependenciesController.AddDependencies<GetStatusReportViewModelDelegate>(
+                typeof(FormatBytesDelegate),
+                typeof(FormatSecondsDelegate));
+
+            // Controllers.ViewUpdates
+
+            dependenciesController.AddDependencies<GetStatusViewUpdateDelegate>(
+                typeof(AppTemplateController),
+                typeof(GetStatusAppViewModelDelegate),
+                typeof(ConvertStatusTreeToEnumerableDelegate));
+
+            dependenciesController.AddDependencies<NotifyStatusViewUpdateController>(
+                typeof(GetStatusViewUpdateDelegate),
+                typeof(ConsoleInputOutputController));
+
+            // Delegates.Constrain
+
+            dependenciesController.AddDependencies<ConstrainExecutionAsyncDelegate>(
+                typeof(StatusController),
+                typeof(FormatSecondsDelegate));
+
+            dependenciesController.AddDependencies<ConstrainRequestRateAsyncDelegate>(
+                typeof(ConstrainExecutionAsyncDelegate),
+                typeof(CollectionController),
+                typeof(StatusController),
+                typeof(ItemizeAllRateConstrainedUrisDelegate));
+
+            // Controllers.Cookies
+
+            dependenciesController.AddDependencies<CookiesController>(
+                typeof(CookiesStashController),
+                typeof(CookiesSerializationController),
+                typeof(StatusController));
+
+            // Controllers.Network
+
+            dependenciesController.AddDependencies<NetworkController>(
+                typeof(CookiesController),
+                typeof(UriController),
+                typeof(ConstrainRequestRateAsyncDelegate));
+
+            // Delegates.Download
+
+            dependenciesController.AddDependencies<DownloadFromResponseAsyncDelegate>(
+                typeof(NetworkController),
+                typeof(StreamController),
+                typeof(FileController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<DownloadFromUriAsyncDelegate>(
+                typeof(NetworkController),
+                typeof(DownloadFromResponseAsyncDelegate),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<RequestPageAsyncDelegate>(
+                typeof(NetworkController));
 
             // ...
 

@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Interfaces.Status;
 
 namespace Interfaces.Delegates.Itemize
 {
@@ -6,4 +10,10 @@ namespace Interfaces.Delegates.Itemize
     {
         IEnumerable<Output> Itemize(Input item);
     }
+
+    public interface IItemizeAsyncDelegate<Input, Output>
+    {
+        // TODO: IAsyncEnumerable
+        Task<IEnumerable<Output>> ItemizeAsync(Input item, IStatus status);
+    }    
 }
