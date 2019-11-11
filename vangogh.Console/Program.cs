@@ -507,17 +507,17 @@ namespace vangogh.Console
             //     Entity.Updated, 
             //     getUpdatedFilenameDelegate);
 
-            var activityRecordsController = dataControllerFactory.CreateStringRecordsController(Entity.Activity);
+            var activityRecordsController = dataControllerFactory.CreateStringRecordsController();
 
-            var productsDataController = dataControllerFactory.CreateDataControllerEx<Product>(Entity.Products);
-            var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>(Entity.AccountProducts);
-            var gameDetailsDataController = dataControllerFactory.CreateDataControllerEx<GameDetails>(Entity.GameDetails);
-            var gameProductDataDataController = dataControllerFactory.CreateDataControllerEx<GameProductData>(Entity.GameProductData);
-            var apiProductsDataController = dataControllerFactory.CreateDataControllerEx<ApiProduct>(Entity.ApiProducts);
-            var productScreenshotsDataController = dataControllerFactory.CreateDataControllerEx<ProductScreenshots>(Entity.ProductScreenshots);
-            var productDownloadsDataController = dataControllerFactory.CreateDataControllerEx<ProductDownloads>(Entity.ProductDownloads);
-            var productRoutesDataController = dataControllerFactory.CreateDataControllerEx<ProductRoutes>(Entity.ProductRoutes);
-            var validationResultsDataController = dataControllerFactory.CreateDataControllerEx<ValidationResult>(Entity.ValidationResults);
+            var productsDataController = dataControllerFactory.CreateDataControllerEx<Product>();
+            var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>();
+            var gameDetailsDataController = dataControllerFactory.CreateDataControllerEx<GameDetails>();
+            var gameProductDataDataController = dataControllerFactory.CreateDataControllerEx<GameProductData>();
+            var apiProductsDataController = dataControllerFactory.CreateDataControllerEx<ApiProduct>();
+            var productScreenshotsDataController = dataControllerFactory.CreateDataControllerEx<ProductScreenshots>();
+            var productDownloadsDataController = dataControllerFactory.CreateDataControllerEx<ProductDownloads>();
+            var productRoutesDataController = dataControllerFactory.CreateDataControllerEx<ProductRoutes>();
+            var validationResultsDataController = dataControllerFactory.CreateDataControllerEx<ValidationResult>();
 
             #endregion
 

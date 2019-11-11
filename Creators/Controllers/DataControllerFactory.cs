@@ -1,4 +1,6 @@
-﻿using Interfaces.Delegates.GetDirectory;
+﻿using System.Collections.Generic;
+
+using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Recycle;
 
@@ -14,9 +16,11 @@ using Interfaces.Status;
 using Delegates.GetDirectory;
 using Delegates.GetFilename;
 using Delegates.Convert;
+using Delegates.GetPath;
 
 using Controllers.Data;
 using Controllers.Records;
+using Controllers.Stash;
 
 using Models.ProductCore;
 using Models.Directories;
@@ -38,14 +42,11 @@ namespace Creators.Controllers
     public class DataControllerFactory
     {
         readonly ISerializedStorageController serializedStorageController;
-        // readonly ISerializationController<string> serializationController;
-        // readonly IStorageController<string> storageController;
         readonly IHashesController hashesController;
         readonly IStatusController statusController;
 
         IGetDirectoryDelegate getDataDirectoryDelegate;
         IGetFilenameDelegate getDataFilenameDelegate;
-        IGetDirectoryDelegate getRecordsDirectoryDelegate;
 
         public DataControllerFactory(
             ISerializedStorageController serializedStorageController,
@@ -59,81 +60,95 @@ namespace Creators.Controllers
             this.statusController = statusController;
 
             this.getDataDirectoryDelegate = getDataDirectoryDelegate;
-            getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(
-                Directories.Records,
-                getDataDirectoryDelegate);
 
             this.getDataFilenameDelegate = getDataFilenameDelegate;
         }
 
-        public IGetFilenameDelegate GetDataFilenameDelegate(Entity entity) 
+        public IRecordsController<string> CreateStringRecordsController()
         {
-            return new GetFixedFilenameDelegate(
-                string.Empty, // STUB
-                getDataFilenameDelegate);
-        }
+            var convertToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductRecords>();
 
-        /// <summary>
-        /// Creates an index records controller that will
-        /// track records of important operations like created, modified, completed, etc.
-        /// </summary>
-        /// <param name="entity">Internal representation of the data type, that
-        /// corresponds to Products, AccountProducts, etc. GOG data types. Entity 
-        /// primarily affects file path of the data of this records controller, the default being:
-        /// \data\records\[entity] that will contain index.json and [id].json for every recorded [id] operation.
-        /// </param>
-        /// <returns>Index records controller that will track records of operations for an entity</returns>
-        public IRecordsController<long> CreateIndexRecordsController(Entity entity)
-        {
-            // IMPORTANT: Index records controller itself creates data controller for the 
-            // Type: ProductRecords, which doesn't track ProductRecords changes. 
-            // Index records controller data for each type is very similar, and comes 
-            // from ProductRecords data controller: index.json and [id].json which are located 
-            // in the \data\records\[entity] directory.
+            var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(
+                Directories.Records,
+                getDataDirectoryDelegate);
 
-            return new IndexRecordsController(
-                CreateDataControllerEx<ProductRecords>(
-                    entity,
-                    null, // record data controller doesn't track own changes
+            var getPathDelegate = new GetPathDelegate(
                     getRecordsDirectoryDelegate,
-                    GetDataFilenameDelegate(entity)),
-                statusController);
-        }
+                    new GetFixedFilenameDelegate(
+                        string.Empty, // STUB
+                        getDataFilenameDelegate));
 
-        public IRecordsController<string> CreateStringRecordsController(Entity entity)
-        {
+            var dataStashController = new StashController<Dictionary<long, ProductRecords>>(
+                getPathDelegate,
+                serializedStorageController,
+                statusController);
+
+            var productRecordsDataController =  new DataController<ProductRecords>(
+                dataStashController,
+                convertToIndexDelegate,
+                null,
+                statusController,
+                hashesController);
+
+            var recordsIndexController = new IndexRecordsController(
+                productRecordsDataController,
+                statusController);
+
             return new StringRecordsController(
-                CreateIndexRecordsController(
-                    entity),
+                recordsIndexController,
                 new ConvertStringToIndexDelegate());
         }
 
-        public IDataController<Type> CreateDataControllerEx<Type>(Entity entity)
+        public IDataController<Type> CreateDataControllerEx<Type>()
             where Type: ProductCore
         {
-            return CreateDataControllerEx<Type>(
-                entity,
-                CreateIndexRecordsController(entity),
-                getDataDirectoryDelegate,
-                GetDataFilenameDelegate(entity));
-        }
+            var convertProductRecordToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductRecords>();
 
-        public IDataController<Type> CreateDataControllerEx<Type>(
-            Entity entity,
-            IRecordsController<long> recordsController,
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate)
-            where Type : ProductCore
-        {
+            var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(
+                Directories.Records,
+                getDataDirectoryDelegate);
+
+            var getRecordsPathDelegate = new GetPathDelegate(
+                    getRecordsDirectoryDelegate,
+                    new GetFixedFilenameDelegate(
+                        string.Empty, // STUB
+                        getDataFilenameDelegate));
+
+            var recordsDataStashController = new StashController<Dictionary<long, ProductRecords>>(
+                getRecordsPathDelegate,
+                serializedStorageController,
+                statusController);
+
+            var productRecordsDataController =  new DataController<ProductRecords>(
+                recordsDataStashController,
+                convertProductRecordToIndexDelegate,
+                null,
+                statusController,
+                hashesController);
+
+            var indexRecordsController = new IndexRecordsController(
+                productRecordsDataController,
+                statusController);
+
+            var getFilenameDelegate =  new GetFixedFilenameDelegate(
+                string.Empty, // STUB
+                getDataFilenameDelegate);
+
+            var convertToIndexDelegate = new ConvertProductCoreToIndexDelegate<Type>();
+
+            var getDataPathDelegate = new GetPathDelegate(
+                    getDataDirectoryDelegate,
+                    getFilenameDelegate);
+
+            var dataStashController = new StashController<Dictionary<long, Type>>(
+                getDataPathDelegate,
+                serializedStorageController,
+                statusController);
+
             return new DataController<Type>(
-                StashControllerFactory.CreateDataStashController<Type>(
-                    entity,
-                    getDirectoryDelegate,
-                    getFilenameDelegate,
-                    serializedStorageController,
-                    statusController),
-                ConvertDelegateFactory.CreateConvertToIndexDelegate<Type>(),
-                recordsController,
+                dataStashController,
+                convertToIndexDelegate,
+                indexRecordsController,
                 statusController,
                 hashesController);
         }
