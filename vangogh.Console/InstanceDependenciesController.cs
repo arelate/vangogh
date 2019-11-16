@@ -5,6 +5,7 @@ using Controllers.Stash.ArgsDefinitions;
 using Controllers.Stash.Hashes;
 using Controllers.Stash.Templates;
 using Controllers.Stash.Cookies;
+using Controllers.Stash.Records;
 using Controllers.Hashes;
 using Controllers.File;
 using Controllers.Directory;
@@ -23,6 +24,8 @@ using Controllers.Cookies;
 using Controllers.StrongTypeSerialization.Cookies;
 using Controllers.Network;
 using Controllers.Uri;
+using Controllers.Data.Session;
+using Controllers.Records.Session;
 
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.Data;
@@ -34,6 +37,7 @@ using Delegates.GetPath;
 using Delegates.GetPath.ArgsDefinitions;
 using Delegates.GetPath.Binary;
 using Delegates.GetPath.Json;
+using Delegates.GetPath.Records;
 using Delegates.Convert;
 using Delegates.Convert.Hashes;
 using Delegates.Convert.Bytes;
@@ -52,6 +56,8 @@ using Delegates.Download;
 
 using GOG.Delegates.Itemize;
 using GOG.Delegates.RequestPage;
+
+using Models.Records;
 
 namespace vangogh.Console
 {
@@ -90,7 +96,10 @@ namespace vangogh.Console
                 typeof(GetDataDirectoryDelegate));
 
             dependenciesController.AddDependencies<GetProductFilesDirectoryDelegate>(
-                typeof(GetProductFilesRootDirectoryDelegate));                
+                typeof(GetProductFilesRootDirectoryDelegate));    
+
+            dependenciesController.AddDependencies<GetRecordsDirectoryDelegate>(
+                typeof(GetDataDirectoryDelegate));            
 
             // Delegates.GetFilename
 
@@ -116,7 +125,10 @@ namespace vangogh.Console
                 typeof(GetJsonFilenameDelegate));                
 
             dependenciesController.AddDependencies<GetUpdatedFilenameDelegate>(
-                typeof(GetJsonFilenameDelegate));     
+                typeof(GetJsonFilenameDelegate));   
+
+            dependenciesController.AddDependencies<GetSessionRecordsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));  
 
             // Delegates.GetPath
 
@@ -146,7 +158,11 @@ namespace vangogh.Console
 
             dependenciesController.AddDependencies<GetValidationPathDelegate>(
                 typeof(GetMd5DirectoryDelegate),
-                typeof(GetValidationFilenameDelegate));                   
+                typeof(GetValidationFilenameDelegate));         
+
+            dependenciesController.AddDependencies<GetSessionRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetSessionRecordsFilenameDelegate));
 
             // Controllers.Storage
 
@@ -170,10 +186,15 @@ namespace vangogh.Console
                 typeof(StreamController),
                 typeof(StatusController));
 
-            // Controllers.Stash.Hashes
+            // Controllers.Stash
 
             dependenciesController.AddDependencies<HashesStashController>(
                 typeof(GetHashesPathDelegate),
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<SessionRecordsStashController>(
+                typeof(GetSessionRecordsPathDelegate),
                 typeof(ProtoBufSerializedStorageController),
                 typeof(StatusController));
 
@@ -306,6 +327,24 @@ namespace vangogh.Console
 
             dependenciesController.AddDependencies<RequestPageAsyncDelegate>(
                 typeof(NetworkController));
+
+            // Controllers.Data
+
+            dependenciesController.AddDependencies<SessionRecordsDataController>(
+                typeof(SessionRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));
+
+            // Controllers.Records.Session
+
+            dependenciesController.AddDependencies<SessionRecordsIndexController>(
+                typeof(SessionRecordsDataController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<SessionRecordsController>(
+                typeof(SessionRecordsIndexController),
+                typeof(ConvertStringToIndexDelegate));
 
             // ...
 

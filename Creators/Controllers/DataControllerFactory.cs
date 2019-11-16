@@ -8,19 +8,24 @@ using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Hashes;
+using Interfaces.Controllers.Dependencies;
 
 using Interfaces.Models.Entities;
 
 using Interfaces.Status;
 
-using Delegates.GetDirectory;
+using Delegates.GetDirectory.Data;
 using Delegates.GetFilename;
 using Delegates.Convert;
 using Delegates.GetPath;
+using Delegates.GetPath.Records;
 
 using Controllers.Data;
+using Controllers.Data.Session;
 using Controllers.Records;
+using Controllers.Records.Session;
 using Controllers.Stash;
+using Controllers.Stash.Records;
 
 using Models.ProductCore;
 using Models.Directories;
@@ -47,13 +52,15 @@ namespace Creators.Controllers
 
         IGetDirectoryDelegate getDataDirectoryDelegate;
         IGetFilenameDelegate getDataFilenameDelegate;
+        IDependenciesController dependenciesController;
 
         public DataControllerFactory(
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IGetFilenameDelegate getDataFilenameDelegate,
-            IStatusController statusController)
+            IStatusController statusController,
+            IDependenciesController dependenciesController)
         {
             this.serializedStorageController = serializedStorageController;
             this.hashesController = hashesController;
@@ -62,51 +69,19 @@ namespace Creators.Controllers
             this.getDataDirectoryDelegate = getDataDirectoryDelegate;
 
             this.getDataFilenameDelegate = getDataFilenameDelegate;
-        }
-
-        public IRecordsController<string> CreateStringRecordsController()
-        {
-            var convertToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductRecords>();
-
-            var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(
-                Directories.Records,
-                getDataDirectoryDelegate);
-
-            var getPathDelegate = new GetPathDelegate(
-                    getRecordsDirectoryDelegate,
-                    new GetFixedFilenameDelegate(
-                        string.Empty, // STUB
-                        getDataFilenameDelegate));
-
-            var dataStashController = new StashController<Dictionary<long, ProductRecords>>(
-                getPathDelegate,
-                serializedStorageController,
-                statusController);
-
-            var productRecordsDataController =  new DataController<ProductRecords>(
-                dataStashController,
-                convertToIndexDelegate,
-                null,
-                statusController,
-                hashesController);
-
-            var recordsIndexController = new IndexRecordsController(
-                productRecordsDataController,
-                statusController);
-
-            return new StringRecordsController(
-                recordsIndexController,
-                new ConvertStringToIndexDelegate());
+            this.dependenciesController = dependenciesController;
         }
 
         public IDataController<Type> CreateDataControllerEx<Type>()
             where Type: ProductCore
         {
-            var convertProductRecordToIndexDelegate = new ConvertProductCoreToIndexDelegate<ProductRecords>();
+            var convertProductRecordToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>))
+                as ConvertProductCoreToIndexDelegate<ProductRecords>;
 
-            var getRecordsDirectoryDelegate = new GetRelativeDirectoryDelegate(
-                Directories.Records,
-                getDataDirectoryDelegate);
+            var getRecordsDirectoryDelegate = dependenciesController.GetInstance(
+                typeof(GetRecordsDirectoryDelegate))
+                as GetRecordsDirectoryDelegate;
 
             var getRecordsPathDelegate = new GetPathDelegate(
                     getRecordsDirectoryDelegate,

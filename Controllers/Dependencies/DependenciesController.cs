@@ -55,7 +55,6 @@ namespace Controllers.Dependencies
                 for (var ii=0; ii<implementationTypeDependencies.Length; ii++) {
                     implementationInstanceDependencies[ii] = 
                         GetInstance(implementationTypeDependencies[ii]);
-
                 }
 
                 instancesCache[type] = instatiationConstructor.Invoke(implementationInstanceDependencies);

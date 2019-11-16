@@ -6,7 +6,7 @@ using Interfaces.Models.RecordsTypes;
 
 using ProtoBuf;
 
-namespace Models.ProductRecords
+namespace Models.Records
 {
     [ProtoContract, DataContract]
     public class ProductRecords: ProductCore.ProductCore

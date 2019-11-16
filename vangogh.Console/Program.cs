@@ -70,6 +70,7 @@ using Controllers.Template.Report;
 using Controllers.ViewUpdates;
 using Controllers.InputOutput;
 using Controllers.Dependencies;
+using Controllers.Records.Session;
 
 using Interfaces.Delegates.Itemize;
 
@@ -493,7 +494,8 @@ namespace vangogh.Console
                 hashesController,
                 getDataDirectoryDelegate,
                 getBinFilenameDelegate,
-                statusController);
+                statusController,
+                dependenciesController);
 
             // TODO: Remove the stub
             Interfaces.Controllers.Index.IIndexController<long> wishlistedIndexController = null;
@@ -507,7 +509,9 @@ namespace vangogh.Console
             //     Entity.Updated, 
             //     getUpdatedFilenameDelegate);
 
-            var activityRecordsController = dataControllerFactory.CreateStringRecordsController();
+            var sessionRecordsController = dependenciesController.GetInstance(
+                typeof(SessionRecordsController))
+                as SessionRecordsController;;
 
             var productsDataController = dataControllerFactory.CreateDataControllerEx<Product>();
             var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>();
@@ -579,7 +583,7 @@ namespace vangogh.Console
                     getProductsPageResultsAsyncDelegate,
                     itemizeProductsPageResultProductsDelegate,
                     productsDataController,
-                    activityRecordsController,
+                    sessionRecordsController,
                     statusController);
 
             var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
@@ -599,7 +603,7 @@ namespace vangogh.Console
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,
                     accountProductsDataController,
-                    activityRecordsController,
+                    sessionRecordsController,
                     statusController);
 
             var confirmAccountProductUpdatedDelegate = new ConfirmAccountProductUpdatedDelegate();
