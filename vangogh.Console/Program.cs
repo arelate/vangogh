@@ -59,6 +59,7 @@ using Controllers.Stash.Hashes;
 using Controllers.Stash.ArgsDefinitions;
 using Controllers.Stash.Templates;
 using Controllers.Stash.Cookies;
+using Controllers.Stash.Records;
 using Controllers.SerializedStorage.ProtoBuf;
 using Controllers.SerializedStorage.JSON;
 using Controllers.Presentation;
@@ -558,48 +559,86 @@ namespace vangogh.Console
 
             // Delegates.GetPath.Records
 
-            var getAccountProductsRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetAccountProductsRecordsPathDelegate))
-                as GetAccountProductsRecordsPathDelegate;
+            // var getAccountProductsRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetAccountProductsRecordsPathDelegate))
+            //     as GetAccountProductsRecordsPathDelegate;
 
-            var getApiProductsRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetApiProductsRecordsPathDelegate))
-                as GetApiProductsRecordsPathDelegate;
+            // var getApiProductsRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetApiProductsRecordsPathDelegate))
+            //     as GetApiProductsRecordsPathDelegate;
 
-            var getGameDetailsRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetGameDetailsRecordsPathDelegate))
-                as GetGameDetailsRecordsPathDelegate;
+            // var getGameDetailsRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetGameDetailsRecordsPathDelegate))
+            //     as GetGameDetailsRecordsPathDelegate;
 
-            var getGameProductDataRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetGameProductDataRecordsPathDelegate))
-                as GetGameProductDataRecordsPathDelegate;
+            // var getGameProductDataRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetGameProductDataRecordsPathDelegate))
+            //     as GetGameProductDataRecordsPathDelegate;
 
-            var getProductDownloadsRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetProductDownloadsRecordsPathDelegate))
-                as GetProductDownloadsRecordsPathDelegate;
+            // var getProductDownloadsRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetProductDownloadsRecordsPathDelegate))
+            //     as GetProductDownloadsRecordsPathDelegate;
 
-            var getProductRoutesRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetProductRoutesRecordsPathDelegate))
-                as GetProductRoutesRecordsPathDelegate;
+            // var getProductRoutesRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetProductRoutesRecordsPathDelegate))
+            //     as GetProductRoutesRecordsPathDelegate;
 
-            var getProductScreenshotsRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetProductScreenshotsRecordsPathDelegate))
-                as GetProductScreenshotsRecordsPathDelegate;
+            // var getProductScreenshotsRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetProductScreenshotsRecordsPathDelegate))
+            //     as GetProductScreenshotsRecordsPathDelegate;
 
-            var getProductsRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetProductsRecordsPathDelegate))
-                as GetProductsRecordsPathDelegate;
+            // var getProductsRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetProductsRecordsPathDelegate))
+            //     as GetProductsRecordsPathDelegate;
 
-            var getValidationResultsRecordsPathDelegate = dependenciesController.GetInstance(
-                typeof(GetValidationResultsRecordsPathDelegate))
-                as GetValidationResultsRecordsPathDelegate;
+            // var getValidationResultsRecordsPathDelegate = dependenciesController.GetInstance(
+            //     typeof(GetValidationResultsRecordsPathDelegate))
+            //     as GetValidationResultsRecordsPathDelegate;
+
+            // Controllers.Stash.Records
+
+            var accountProductsRecordsStashController = dependenciesController.GetInstance(
+                typeof(AccountProductsRecordsStashController))
+                as AccountProductsRecordsStashController;
+
+            var apiProductsRecordsStashController = dependenciesController.GetInstance(
+                typeof(ApiProductsRecordsStashController))
+                as ApiProductsRecordsStashController;
+
+            var gameDetailsRecordsStashController = dependenciesController.GetInstance(
+                typeof(GameDetailsRecordsStashController))
+                as GameDetailsRecordsStashController;
+
+            var gameProductDataRecordsStashController = dependenciesController.GetInstance(
+                typeof(GameProductDataRecordsStashController))
+                as GameProductDataRecordsStashController;
+
+            var productDownloadsRecordsStashController = dependenciesController.GetInstance(
+                typeof(ProductDownloadsRecordsStashController))
+                as ProductDownloadsRecordsStashController;
+
+            var productRoutesRecordsStashController = dependenciesController.GetInstance(
+                typeof(ProductRoutesRecordsStashController))
+                as ProductRoutesRecordsStashController;
+
+            var productScreenshotsRecordsStashController = dependenciesController.GetInstance(
+                typeof(ProductScreenshotsRecordsStashController))
+                as ProductScreenshotsRecordsStashController;
+
+            var productsRecordsStashController = dependenciesController.GetInstance(
+                typeof(ProductsRecordsStashController))
+                as ProductsRecordsStashController;
+
+            var validationResultsRecordsStashController = dependenciesController.GetInstance(
+                typeof(ValidationResultsRecordsStashController))
+                as ValidationResultsRecordsStashController;
 
             // Controllers.Data
 
             var productsDataController = dataControllerFactory.CreateDataControllerEx<Product>(
                 convertProductRecordToIndexDelegate,
                 getProductsFilenameDelegate,
-                getProductsRecordsPathDelegate,
+                productsRecordsStashController,
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -607,7 +646,7 @@ namespace vangogh.Console
             var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>(
                 convertProductRecordToIndexDelegate,
                 getAccountProductsFilenameDelegate,
-                getAccountProductsRecordsPathDelegate,        
+                accountProductsRecordsStashController,        
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -615,7 +654,7 @@ namespace vangogh.Console
             var gameDetailsDataController = dataControllerFactory.CreateDataControllerEx<GameDetails>(
                 convertProductRecordToIndexDelegate,
                 getGameDetailsFilenameDelegate,
-                getGameDetailsRecordsPathDelegate,                
+                gameDetailsRecordsStashController,                
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -623,7 +662,7 @@ namespace vangogh.Console
             var gameProductDataDataController = dataControllerFactory.CreateDataControllerEx<GameProductData>(
                 convertProductRecordToIndexDelegate,
                 getGameProductDataFilenameDelegate,
-                getGameProductDataRecordsPathDelegate,                
+                gameProductDataRecordsStashController,                
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -631,7 +670,7 @@ namespace vangogh.Console
             var apiProductsDataController = dataControllerFactory.CreateDataControllerEx<ApiProduct>(
                 convertProductRecordToIndexDelegate,
                 getApiProductsFilenameDelegate,
-                getApiProductsRecordsPathDelegate,                
+                apiProductsRecordsStashController,                
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -639,7 +678,7 @@ namespace vangogh.Console
             var productScreenshotsDataController = dataControllerFactory.CreateDataControllerEx<ProductScreenshots>(
                 convertProductRecordToIndexDelegate,
                 getProductScreenshotsFilenameDelegate,
-                getProductScreenshotsRecordsPathDelegate,        
+                productScreenshotsRecordsStashController,        
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -647,7 +686,7 @@ namespace vangogh.Console
             var productDownloadsDataController = dataControllerFactory.CreateDataControllerEx<ProductDownloads>(
                 convertProductRecordToIndexDelegate,
                 getProductDownloadsFilenameDelegate,
-                getProductDownloadsRecordsPathDelegate,                
+                productDownloadsRecordsStashController,                
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -655,7 +694,7 @@ namespace vangogh.Console
             var productRoutesDataController = dataControllerFactory.CreateDataControllerEx<ProductRoutes>(
                 convertProductRecordToIndexDelegate,
                 getProductRoutesFilenameDelegate,
-                getProductRoutesRecordsPathDelegate,                
+                productRoutesRecordsStashController,                
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,
@@ -663,7 +702,7 @@ namespace vangogh.Console
             var validationResultsDataController = dataControllerFactory.CreateDataControllerEx<ValidationResults>(
                 convertProductRecordToIndexDelegate,
                 getValidationResultsFilenameDelegate,
-                getValidationResultsRecordsPathDelegate,                
+                validationResultsRecordsStashController,                
                 protoBufSerializedStorageController,
                 hashesController,
                 getDataDirectoryDelegate,

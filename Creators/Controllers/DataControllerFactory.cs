@@ -11,6 +11,7 @@ using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Hashes;
 using Interfaces.Controllers.Dependencies;
+using Interfaces.Controllers.Stash;
 
 using Interfaces.Models.Entities;
 
@@ -51,20 +52,15 @@ namespace Creators.Controllers
         public IDataController<Type> CreateDataControllerEx<Type>(
             IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
             IGetFilenameDelegate getProductTypeFilenameDelegate,
-            IGetPathDelegate getProductTypeRecordsPathDelegate,
+            IStashController<Dictionary<long, ProductRecords>> productTypeRecordsStashController,
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IStatusController statusController)
             where Type : ProductCore
         {
-            var productTypeRecordsDataStashController = new StashController<Dictionary<long, ProductRecords>>(
-                getProductTypeRecordsPathDelegate,
-                serializedStorageController,
-                statusController);
-
             var productTypeRecordsDataController = new DataController<ProductRecords>(
-                productTypeRecordsDataStashController,
+                productTypeRecordsStashController,
                 convertProductRecordToIndexDelegate,
                 null,
                 statusController,

@@ -257,8 +257,55 @@ namespace vangogh.Console
                 typeof(ProtoBufSerializedStorageController),
                 typeof(StatusController));
 
+            // Controllers.Stash.Records
+
             dependenciesController.AddDependencies<SessionRecordsStashController>(
                 typeof(GetSessionRecordsPathDelegate),
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<AccountProductsRecordsStashController>(
+                typeof(GetAccountProductsRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<ApiProductsRecordsStashController>(
+                typeof(GetApiProductsRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<GameDetailsRecordsStashController>(
+                typeof(GetGameDetailsRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<GameProductDataRecordsStashController>(
+                typeof(GetGameProductDataRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<ProductDownloadsRecordsStashController>(
+                typeof(GetProductDownloadsRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<ProductRoutesRecordsStashController>(
+                typeof(GetProductRoutesRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<ProductScreenshotsRecordsStashController>(
+                typeof(GetProductScreenshotsRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<ProductsRecordsStashController>(
+                typeof(GetProductsRecordsPathDelegate),                
+                typeof(ProtoBufSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<ValidationResultsRecordsStashController>(
+                typeof(GetValidationResultsRecordsPathDelegate),                
                 typeof(ProtoBufSerializedStorageController),
                 typeof(StatusController));
 
