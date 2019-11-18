@@ -39,6 +39,7 @@ using Delegates.GetPath.ArgsDefinitions;
 using Delegates.GetPath.Binary;
 using Delegates.GetPath.Json;
 using Delegates.GetPath.Records;
+using Delegates.GetPath.Data;
 using Delegates.Convert;
 using Delegates.Convert.Hashes;
 using Delegates.Convert.Bytes;
@@ -188,6 +189,8 @@ namespace vangogh.Console
                 typeof(GetMd5DirectoryDelegate),
                 typeof(GetValidationFilenameDelegate));
 
+            // Delegates.GetPath.Records
+
             dependenciesController.AddDependencies<GetSessionRecordsPathDelegate>(
                 typeof(GetRecordsDirectoryDelegate),
                 typeof(GetSessionRecordsFilenameDelegate));
@@ -227,6 +230,44 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<GetValidationResultsRecordsPathDelegate>(
                 typeof(GetRecordsDirectoryDelegate),
                 typeof(GetValidationResultsFilenameDelegate));
+
+            // Delegates.GetPath.Data
+
+            dependenciesController.AddDependencies<GetAccountProductsPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetAccountProductsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetApiProductsPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetApiProductsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetGameDetailsPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetGameDetailsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetGameProductDataPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetGameProductDataFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductDownloadsPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetProductDownloadsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductRoutesPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetProductRoutesFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductScreenshotsPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetProductScreenshotsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductsPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetProductsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetValidationResultsPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetValidationResultsFilenameDelegate));            
 
             // Controllers.Storage
 

@@ -51,11 +51,10 @@ namespace Creators.Controllers
     {
         public IDataController<Type> CreateDataControllerEx<Type>(
             IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
-            IGetFilenameDelegate getProductTypeFilenameDelegate,
+            IGetPathDelegate getProductTypePathDelegate,
             IDataController<ProductRecords> productTypeRecordsDataController,
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
-            IGetDirectoryDelegate getDataDirectoryDelegate,
             IStatusController statusController)
             where Type : ProductCore
         {
@@ -65,12 +64,8 @@ namespace Creators.Controllers
 
             var convertProductTypeToIndexDelegate = new ConvertProductCoreToIndexDelegate<Type>();
 
-            var getDataPathDelegate = new GetPathDelegate(
-                getDataDirectoryDelegate,
-                getProductTypeFilenameDelegate);
-
             var productTypeDataStashController = new StashController<Dictionary<long, Type>>(
-                getDataPathDelegate,
+                getProductTypePathDelegate,
                 serializedStorageController,
                 statusController);
 
