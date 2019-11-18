@@ -24,7 +24,7 @@ using Delegates.GetPath;
 using Delegates.GetPath.Records;
 
 using Controllers.Data;
-using Controllers.Data.Session;
+using Controllers.Data.Records;
 using Controllers.Records;
 using Controllers.Records.Session;
 using Controllers.Stash;
@@ -52,20 +52,13 @@ namespace Creators.Controllers
         public IDataController<Type> CreateDataControllerEx<Type>(
             IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
             IGetFilenameDelegate getProductTypeFilenameDelegate,
-            IStashController<Dictionary<long, ProductRecords>> productTypeRecordsStashController,
+            IDataController<ProductRecords> productTypeRecordsDataController,
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IStatusController statusController)
             where Type : ProductCore
         {
-            var productTypeRecordsDataController = new DataController<ProductRecords>(
-                productTypeRecordsStashController,
-                convertProductRecordToIndexDelegate,
-                null,
-                statusController,
-                hashesController);
-
             var productTypeIndexRecordsController = new IndexRecordsController(
                 productTypeRecordsDataController,
                 statusController);

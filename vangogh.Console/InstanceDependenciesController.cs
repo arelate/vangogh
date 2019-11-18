@@ -24,7 +24,7 @@ using Controllers.Cookies;
 using Controllers.StrongTypeSerialization.Cookies;
 using Controllers.Network;
 using Controllers.Uri;
-using Controllers.Data.Session;
+using Controllers.Data.Records;
 using Controllers.Records.Session;
 
 using Delegates.GetDirectory.Root;
@@ -439,13 +439,67 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<RequestPageAsyncDelegate>(
                 typeof(NetworkController));
 
-            // Controllers.Data
+            // Controllers.Data.Records
 
             dependenciesController.AddDependencies<SessionRecordsDataController>(
                 typeof(SessionRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
                 typeof(StatusController),
                 typeof(HashesController));
+
+            dependenciesController.AddDependencies<AccountProductsRecordsDataController>(
+                typeof(AccountProductsRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
+
+            dependenciesController.AddDependencies<ApiProductsRecordsDataController>(
+                typeof(ApiProductsRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));  
+
+            dependenciesController.AddDependencies<GameDetailsRecordsDataController>(
+                typeof(GameDetailsRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
+
+            dependenciesController.AddDependencies<GameProductDataRecordsDataController>(
+                typeof(GameProductDataRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
+
+            dependenciesController.AddDependencies<ProductDownloadsRecordsDataController>(
+                typeof(ProductDownloadsRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
+
+            dependenciesController.AddDependencies<ProductRoutesRecordsDataController>(
+                typeof(ProductRoutesRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
+
+            dependenciesController.AddDependencies<ProductScreenshotsRecordsDataController>(
+                typeof(ProductScreenshotsRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
+
+            dependenciesController.AddDependencies<ProductsRecordsDataController>(
+                typeof(ProductsRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
+
+            dependenciesController.AddDependencies<ValidationResultsRecordsDataController>(
+                typeof(ValidationResultsRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(StatusController),
+                typeof(HashesController));                
 
             // Controllers.Records.Session
 

@@ -10,17 +10,17 @@ using Interfaces.Status;
 
 using Models.Records;
 
-namespace Controllers.Data.Session
+namespace Controllers.Data.Records
 {
-    public class SessionRecordsDataController : DataController<ProductRecords>
+    public class ProductRoutesRecordsDataController : DataController<ProductRecords>
     {
-        public SessionRecordsDataController(
-            IStashController<Dictionary<long, ProductRecords>> sessionRecordsStashController,
+        public ProductRoutesRecordsDataController(
+            IStashController<Dictionary<long, ProductRecords>> productRoutesRecordsStashController,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             IStatusController statusController,
             ICommitAsyncDelegate hashesController) :
             base(
-                sessionRecordsStashController,
+                productRoutesRecordsStashController,
                 convertProductRecordsToIndexDelegate,
                 null,
                 statusController,
