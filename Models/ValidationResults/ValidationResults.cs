@@ -1,8 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
-using Interfaces.ValidationResult;
+using Interfaces.ValidationResults;
 
-namespace Models.ValidationResult
+namespace Models.ValidationResults
 {
     [DataContract]
     public class ChunkValidation: IChunkValidation
@@ -19,7 +19,7 @@ namespace Models.ValidationResult
 
     [DataContract]
     [KnownType(typeof(ChunkValidation))]
-    public class FileValidation: IFileValidationResult
+    public class FileValidation: IFileValidationResults
     {
         [DataMember(Name = "filename")]
         public string Filename { get; set; }
@@ -41,9 +41,9 @@ namespace Models.ValidationResult
 
     [DataContract]
     [KnownType(typeof(FileValidation))]
-    public class ValidationResult: ProductCore.ProductCore, IValidationResult
+    public class ValidationResults: ProductCore.ProductCore, IValidationResults
     {
         [DataMember(Name = "files")]
-        public IFileValidationResult[] Files { get; set; }
+        public IFileValidationResults[] Files { get; set; }
     }
 }

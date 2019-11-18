@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 using Interfaces.Status;
 
 using Interfaces.Controllers.Data;
-using Interfaces.ValidationResult;
+using Interfaces.ValidationResults;
 
-using Models.ValidationResult;
+using Models.ValidationResults;
 
 namespace GOG.Activities.Repair
 {
     public class RepairActivity : Activity
     {
-        readonly IDataController<ValidationResult> validationResultDataController;
+        readonly IDataController<ValidationResults> validationResultDataController;
         readonly IValidationResultController validationResultController;
 
         public RepairActivity(
-            IDataController<ValidationResult> validationResultDataController,
+            IDataController<ValidationResults> validationResultDataController,
             IValidationResultController validationResultController,
             IStatusController statusController) : base(statusController)
         {
@@ -30,7 +30,7 @@ namespace GOG.Activities.Repair
             var repairTask = await statusController.CreateAsync(status, "Check validation results and attempting repair");
             var current = 0;
 
-            var invalidResults = new List<ValidationResult>();
+            var invalidResults = new List<ValidationResults>();
 
             foreach (var id in await validationResultDataController.ItemizeAllAsync(repairTask))
             {

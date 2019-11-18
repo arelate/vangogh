@@ -3,6 +3,7 @@
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Recycle;
+using Interfaces.Delegates.Convert;
 
 using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Data;
@@ -46,86 +47,62 @@ namespace Creators.Controllers
     /// </summary>
     public class DataControllerFactory
     {
-        readonly ISerializedStorageController serializedStorageController;
-        readonly IHashesController hashesController;
-        readonly IStatusController statusController;
-
-        IGetDirectoryDelegate getDataDirectoryDelegate;
-        IGetFilenameDelegate getDataFilenameDelegate;
-        IDependenciesController dependenciesController;
-
-        public DataControllerFactory(
+        public IDataController<Type> CreateDataControllerEx<Type>(
+            IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
+            IGetDirectoryDelegate getRecordsDirectoryDelegate,
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
             IGetFilenameDelegate getDataFilenameDelegate,
             IStatusController statusController,
             IDependenciesController dependenciesController)
-        {
-            this.serializedStorageController = serializedStorageController;
-            this.hashesController = hashesController;
-            this.statusController = statusController;
-
-            this.getDataDirectoryDelegate = getDataDirectoryDelegate;
-
-            this.getDataFilenameDelegate = getDataFilenameDelegate;
-            this.dependenciesController = dependenciesController;
-        }
-
-        public IDataController<Type> CreateDataControllerEx<Type>()
             where Type: ProductCore
         {
-            var convertProductRecordToIndexDelegate = dependenciesController.GetInstance(
-                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>))
-                as ConvertProductCoreToIndexDelegate<ProductRecords>;
-
-            var getRecordsDirectoryDelegate = dependenciesController.GetInstance(
-                typeof(GetRecordsDirectoryDelegate))
-                as GetRecordsDirectoryDelegate;
-
-            var getRecordsPathDelegate = new GetPathDelegate(
+            var getProductTypeRecordsPathDelegate = new GetPathDelegate(
                     getRecordsDirectoryDelegate,
                     new GetFixedFilenameDelegate(
                         string.Empty, // STUB
                         getDataFilenameDelegate));
 
-            var recordsDataStashController = new StashController<Dictionary<long, ProductRecords>>(
-                getRecordsPathDelegate,
+            var productTypeRecordsDataStashController = new StashController<Dictionary<long, ProductRecords>>(
+                getProductTypeRecordsPathDelegate,
                 serializedStorageController,
                 statusController);
 
-            var productRecordsDataController =  new DataController<ProductRecords>(
-                recordsDataStashController,
+            var productTypeRecordsDataController =  new DataController<ProductRecords>(
+                productTypeRecordsDataStashController,
                 convertProductRecordToIndexDelegate,
                 null,
                 statusController,
                 hashesController);
 
-            var indexRecordsController = new IndexRecordsController(
-                productRecordsDataController,
+            var productTypeIndexRecordsController = new IndexRecordsController(
+                productTypeRecordsDataController,
                 statusController);
 
-            var getFilenameDelegate =  new GetFixedFilenameDelegate(
+            var getProductTypeFilenameDelegate =  new GetFixedFilenameDelegate(
                 string.Empty, // STUB
                 getDataFilenameDelegate);
 
-            var convertToIndexDelegate = new ConvertProductCoreToIndexDelegate<Type>();
+            var convertProductTypeToIndexDelegate = new ConvertProductCoreToIndexDelegate<Type>();
 
             var getDataPathDelegate = new GetPathDelegate(
                     getDataDirectoryDelegate,
-                    getFilenameDelegate);
+                    getProductTypeFilenameDelegate);
 
-            var dataStashController = new StashController<Dictionary<long, Type>>(
+            var productTypeDataStashController = new StashController<Dictionary<long, Type>>(
                 getDataPathDelegate,
                 serializedStorageController,
                 statusController);
 
-            return new DataController<Type>(
-                dataStashController,
-                convertToIndexDelegate,
-                indexRecordsController,
+            var productTypeDataController = new DataController<Type>(
+                productTypeDataStashController,
+                convertProductTypeToIndexDelegate,
+                productTypeIndexRecordsController,
                 statusController,
                 hashesController);
+
+            return productTypeDataController;
         }
     }
 }

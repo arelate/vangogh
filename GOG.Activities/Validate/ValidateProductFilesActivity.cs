@@ -14,9 +14,9 @@ using Interfaces.Controllers.Data;
 using Interfaces.Validation;
 using Interfaces.Routing;
 using Interfaces.Status;
-using Interfaces.ValidationResult;
+using Interfaces.ValidationResults;
 
-using Models.ValidationResult;
+using Models.ValidationResults;
 
 using GOG.Models;
 
@@ -28,7 +28,7 @@ namespace GOG.Activities.Validate
         readonly IGetFilenameDelegate productFileFilenameDelegate;
         readonly IFormatDelegate<string, string> formatValidationFileDelegate;
         readonly IFileValidationController fileValidationController;
-        readonly IDataController<ValidationResult> validationResultsDataController;
+        readonly IDataController<ValidationResults> validationResultsDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
         readonly IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
@@ -39,7 +39,7 @@ namespace GOG.Activities.Validate
             IGetFilenameDelegate productFileFilenameDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
             IFileValidationController fileValidationController,
-            IDataController<ValidationResult> validationResultsDataController,
+            IDataController<ValidationResults> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate,
@@ -74,7 +74,7 @@ namespace GOG.Activities.Validate
                 var validationResults = await validationResultsDataController.GetByIdAsync(id, validateProductsStatus);
 
                 if (validationResults == null)
-                    validationResults = new ValidationResult
+                    validationResults = new ValidationResults
                     {
                         Id = id,
                         Title = gameDetails.Title
@@ -108,7 +108,7 @@ namespace GOG.Activities.Validate
 
                 // ...
 
-                var fileValidationResults = new List<IFileValidationResult>(localFiles.Count);
+                var fileValidationResults = new List<IFileValidationResults>(localFiles.Count);
 
                 var validateFilesTask = await statusController.CreateAsync(
                     validateProductsStatus,

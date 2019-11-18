@@ -1,4 +1,4 @@
-﻿namespace Interfaces.ValidationResult
+﻿namespace Interfaces.ValidationResults
 {
     public interface IFromProperty
     {
@@ -69,7 +69,7 @@
         IChunkValidation[] Chunks { get; set; }
     }
 
-    public interface IFileValidationResult:
+    public interface IFileValidationResults:
         IFilenameProperty,
         IValidationExpectedProperty,
         IValidationFileExistsProperty,
@@ -82,8 +82,8 @@
         // ...
     }
 
-    public interface IValidationResult
+    public interface IValidationResults
     {
-        IFileValidationResult[] Files { get; set; }
+        IFileValidationResults[] Files { get; set; }
     }
 }

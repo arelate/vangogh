@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Interfaces.ValidationResult
+namespace Interfaces.ValidationResults
 {
     public interface IProductIsValidDelegate
     {
-        bool ProductIsValid(IValidationResult validationResult);
+        bool ProductIsValid(IValidationResults validationResults);
     }
 
     public interface IProductFileIsValidDelegate
     {
-        bool ProductFileIsValid(IFileValidationResult fileValidationResult);
+        bool ProductFileIsValid(IFileValidationResults fileValidationResult);
     }
 
     public interface IValidationResultController:

@@ -12,10 +12,10 @@ using Interfaces.Controllers.Stream;
 
 using Interfaces.Validation;
 using Interfaces.Status;
-using Interfaces.ValidationResult;
+using Interfaces.ValidationResults;
 
 using Models.Units;
-using Models.ValidationResult;
+using Models.ValidationResults;
 
 namespace Controllers.Validation
 {
@@ -47,7 +47,7 @@ namespace Controllers.Validation
             validationXml = new XmlDocument { PreserveWhitespace = false };
         }
 
-        public async Task<IFileValidationResult> ValidateFileAsync(string productFileUri, string validationUri, IStatus status)
+        public async Task<IFileValidationResults> ValidateFileAsync(string productFileUri, string validationUri, IStatus status)
         {
             var fileValidation = new FileValidation
             {

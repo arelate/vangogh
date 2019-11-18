@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Interfaces.ValidationResult;
+using Interfaces.ValidationResults;
 
 namespace Controllers.ValidationResult
 {
     public class ValidationResultController : IValidationResultController
     {
-        public bool ProductFileIsValid(IFileValidationResult fileValidationResult)
+        public bool ProductFileIsValid(IFileValidationResults fileValidationResult)
         {
             if (fileValidationResult == null) return false;
 
@@ -34,7 +34,7 @@ namespace Controllers.ValidationResult
             return true;
         }
 
-        public bool ProductIsValid(IValidationResult validationResult)
+        public bool ProductIsValid(IValidationResults validationResult)
         {
             if (validationResult == null) return false;
 
