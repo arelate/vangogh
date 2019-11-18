@@ -4,6 +4,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.GetPath;
 
 using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Data;
@@ -49,27 +50,20 @@ namespace Creators.Controllers
     {
         public IDataController<Type> CreateDataControllerEx<Type>(
             IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
-            IGetDirectoryDelegate getRecordsDirectoryDelegate,
+            IGetFilenameDelegate getProductTypeFilenameDelegate,
+            IGetPathDelegate getProductTypeRecordsPathDelegate,
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
             IGetDirectoryDelegate getDataDirectoryDelegate,
-            IGetFilenameDelegate getDataFilenameDelegate,
-            IStatusController statusController,
-            IDependenciesController dependenciesController)
-            where Type: ProductCore
+            IStatusController statusController)
+            where Type : ProductCore
         {
-            var getProductTypeRecordsPathDelegate = new GetPathDelegate(
-                    getRecordsDirectoryDelegate,
-                    new GetFixedFilenameDelegate(
-                        string.Empty, // STUB
-                        getDataFilenameDelegate));
-
             var productTypeRecordsDataStashController = new StashController<Dictionary<long, ProductRecords>>(
                 getProductTypeRecordsPathDelegate,
                 serializedStorageController,
                 statusController);
 
-            var productTypeRecordsDataController =  new DataController<ProductRecords>(
+            var productTypeRecordsDataController = new DataController<ProductRecords>(
                 productTypeRecordsDataStashController,
                 convertProductRecordToIndexDelegate,
                 null,
@@ -80,15 +74,11 @@ namespace Creators.Controllers
                 productTypeRecordsDataController,
                 statusController);
 
-            var getProductTypeFilenameDelegate =  new GetFixedFilenameDelegate(
-                string.Empty, // STUB
-                getDataFilenameDelegate);
-
             var convertProductTypeToIndexDelegate = new ConvertProductCoreToIndexDelegate<Type>();
 
             var getDataPathDelegate = new GetPathDelegate(
-                    getDataDirectoryDelegate,
-                    getProductTypeFilenameDelegate);
+                getDataDirectoryDelegate,
+                getProductTypeFilenameDelegate);
 
             var productTypeDataStashController = new StashController<Dictionary<long, Type>>(
                 getDataPathDelegate,

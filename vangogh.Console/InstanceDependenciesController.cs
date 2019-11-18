@@ -33,6 +33,7 @@ using Delegates.GetFilename;
 using Delegates.GetFilename.ArgsDefinitions;
 using Delegates.GetFilename.Binary;
 using Delegates.GetFilename.Json;
+using Delegates.GetFilename.Data;
 using Delegates.GetPath;
 using Delegates.GetPath.ArgsDefinitions;
 using Delegates.GetPath.Binary;
@@ -66,9 +67,9 @@ namespace vangogh.Console
         private readonly IDependenciesController dependenciesController;
         public DependenciesControllerInitializer(
             IDependenciesController dependenciesController)
-            {
-                this.dependenciesController = dependenciesController;
-            }
+        {
+            this.dependenciesController = dependenciesController;
+        }
 
         public void Initialize()
         {
@@ -85,7 +86,7 @@ namespace vangogh.Console
 
             dependenciesController.AddDependencies<GetReportDirectoryDelegate>(
                 typeof(GetDataDirectoryDelegate));
-            
+
             dependenciesController.AddDependencies<GetMd5DirectoryDelegate>(
                 typeof(GetDataDirectoryDelegate));
 
@@ -96,10 +97,10 @@ namespace vangogh.Console
                 typeof(GetDataDirectoryDelegate));
 
             dependenciesController.AddDependencies<GetProductFilesDirectoryDelegate>(
-                typeof(GetProductFilesRootDirectoryDelegate));    
+                typeof(GetProductFilesRootDirectoryDelegate));
 
             dependenciesController.AddDependencies<GetRecordsDirectoryDelegate>(
-                typeof(GetDataDirectoryDelegate));            
+                typeof(GetDataDirectoryDelegate));
 
             // Delegates.GetFilename
 
@@ -122,13 +123,40 @@ namespace vangogh.Console
                 typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetWishlistedFilenameDelegate>(
-                typeof(GetJsonFilenameDelegate));                
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetUpdatedFilenameDelegate>(
-                typeof(GetJsonFilenameDelegate));   
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetSessionRecordsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));  
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetAccountProductsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetApiProductsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetGameDetailsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetGameProductDataFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductDownloadsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductRoutesFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductScreenshotsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetValidationResultsFilenameDelegate>(
+                typeof(GetBinFilenameDelegate));
 
             // Delegates.GetPath
 
@@ -138,31 +166,67 @@ namespace vangogh.Console
 
             dependenciesController.AddDependencies<GetHashesPathDelegate>(
                 typeof(GetEmptyDirectoryDelegate),
-                typeof(GetHashesFilenameDelegate));            
+                typeof(GetHashesFilenameDelegate));
 
             dependenciesController.AddDependencies<GetAppTemplatePathDelegate>(
                 typeof(GetTemplatesDirectoryDelegate),
-                typeof(GetAppTemplateFilenameDelegate));    
+                typeof(GetAppTemplateFilenameDelegate));
 
             dependenciesController.AddDependencies<GetReportTemplatePathDelegate>(
                 typeof(GetTemplatesDirectoryDelegate),
-                typeof(GetReportTemplateFilenameDelegate));                  
+                typeof(GetReportTemplateFilenameDelegate));
 
             dependenciesController.AddDependencies<GetCookiesPathDelegate>(
                 typeof(GetEmptyDirectoryDelegate),
-                typeof(GetCookiesFilenameDelegate));   
+                typeof(GetCookiesFilenameDelegate));
 
             dependenciesController.AddDependencies<GetGameDetailsFilesPathDelegate>(
                 typeof(GetProductFilesDirectoryDelegate),
-                typeof(GetUriFilenameDelegate));   
+                typeof(GetUriFilenameDelegate));
 
             dependenciesController.AddDependencies<GetValidationPathDelegate>(
                 typeof(GetMd5DirectoryDelegate),
-                typeof(GetValidationFilenameDelegate));         
+                typeof(GetValidationFilenameDelegate));
 
             dependenciesController.AddDependencies<GetSessionRecordsPathDelegate>(
                 typeof(GetRecordsDirectoryDelegate),
                 typeof(GetSessionRecordsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetAccountProductsRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetAccountProductsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetApiProductsRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetApiProductsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetGameDetailsRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetGameDetailsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetGameProductDataRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetGameProductDataFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductDownloadsRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetProductDownloadsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductRoutesRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetProductRoutesFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductScreenshotsRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetProductScreenshotsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetProductsRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetProductsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetValidationResultsRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetValidationResultsFilenameDelegate));
 
             // Controllers.Storage
 
@@ -217,7 +281,7 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<ArgsDefinitionsStashController>(
                 typeof(GetArgsDefinitionsPathDelegate),
                 typeof(JSONSerializedStorageController),
-                typeof(StatusController));                
+                typeof(StatusController));
 
             // Controllers.Stash.Templates
 
@@ -262,7 +326,7 @@ namespace vangogh.Console
 
             dependenciesController.AddDependencies<ReportTemplateController>(
                 typeof(ReportTemplateStashController),
-                typeof(CollectionController));                
+                typeof(CollectionController));
 
             // Delegates.GetViewModel
 
@@ -270,7 +334,7 @@ namespace vangogh.Console
                 typeof(FormatRemainingTimeAtSpeedDelegate),
                 typeof(FormatBytesDelegate),
                 typeof(FormatSecondsDelegate));
-                
+
             dependenciesController.AddDependencies<GetStatusReportViewModelDelegate>(
                 typeof(FormatBytesDelegate),
                 typeof(FormatSecondsDelegate));
@@ -356,7 +420,7 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<ConfirmLikelyTokenTypeDelegate>(
                 typeof(ArgsDefinitionsStashController),
                 typeof(CollectionController));
-            
+
             dependenciesController.AddDependencies<ConvertTokensToLikelyTypedTokensDelegate>(
                 typeof(ConfirmLikelyTokenTypeDelegate));
         }
