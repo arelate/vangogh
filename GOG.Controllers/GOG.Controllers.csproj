@@ -8,6 +8,7 @@
     <ProjectReference Include="..\GOG.Interfaces\GOG.Interfaces.csproj" />
     <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\Controllers\Controllers.csproj" />
   </ItemGroup>
 
 </Project>

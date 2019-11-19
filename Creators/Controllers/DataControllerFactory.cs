@@ -50,22 +50,15 @@ namespace Creators.Controllers
     public class DataControllerFactory
     {
         public IDataController<Type> CreateDataControllerEx<Type>(
-            IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
-            IGetPathDelegate getProductTypePathDelegate,
-            IRecordsController<long> productTypeIndexRecordsController,
+            IStashController<Dictionary<long, Type>> productTypeStashController,
             IConvertDelegate<Type, long> convertProductTypeToIndexDelegate,
-            ISerializedStorageController serializedStorageController,
-            IHashesController hashesController,
-            IStatusController statusController)
+            IRecordsController<long> productTypeIndexRecordsController,
+            IStatusController statusController,            
+            IHashesController hashesController)
             where Type : ProductCore
         {
-            var productTypeDataStashController = new StashController<Dictionary<long, Type>>(
-                getProductTypePathDelegate,
-                serializedStorageController,
-                statusController);
-
             var productTypeDataController = new DataController<Type>(
-                productTypeDataStashController,
+                productTypeStashController,
                 convertProductTypeToIndexDelegate,
                 productTypeIndexRecordsController,
                 statusController,
