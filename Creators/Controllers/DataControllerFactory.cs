@@ -52,16 +52,12 @@ namespace Creators.Controllers
         public IDataController<Type> CreateDataControllerEx<Type>(
             IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
             IGetPathDelegate getProductTypePathDelegate,
-            IDataController<ProductRecords> productTypeRecordsDataController,
+            IRecordsController<long> productTypeIndexRecordsController,
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
             IStatusController statusController)
             where Type : ProductCore
         {
-            var productTypeIndexRecordsController = new IndexRecordsController(
-                productTypeRecordsDataController,
-                statusController);
-
             var convertProductTypeToIndexDelegate = new ConvertProductCoreToIndexDelegate<Type>();
 
             var productTypeDataStashController = new StashController<Dictionary<long, Type>>(

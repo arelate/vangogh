@@ -8,10 +8,10 @@ namespace Controllers.Records.Session
     public class SessionRecordsIndexController : IndexRecordsController
     {
         public SessionRecordsIndexController(
-            IDataController<ProductRecords> productRecordsController,
+            IDataController<ProductRecords> sessionRecordsController,
             IStatusController statusController) :
             base(
-                productRecordsController,
+                sessionRecordsController,
                 statusController)
         {
             // ...

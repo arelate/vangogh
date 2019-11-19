@@ -26,6 +26,7 @@ using Controllers.Network;
 using Controllers.Uri;
 using Controllers.Data.Records;
 using Controllers.Records.Session;
+using Controllers.Records.Data;
 
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.Data;
@@ -551,6 +552,44 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<SessionRecordsController>(
                 typeof(SessionRecordsIndexController),
                 typeof(ConvertStringToIndexDelegate));
+
+            // Controllers.Records.Data
+
+            dependenciesController.AddDependencies<AccountProductsRecordsIndexController>(
+                typeof(AccountProductsRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<ApiProductsRecordsIndexController>(
+                typeof(ApiProductsRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<GameDetailsRecordsIndexController>(
+                typeof(GameDetailsRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<GameProductDataRecordsIndexController>(
+                typeof(GameProductDataRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<ProductDownloadsRecordsIndexController>(
+                typeof(ProductDownloadsRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<ProductRoutesRecordsIndexController>(
+                typeof(ProductRoutesRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<ProductScreenshotsRecordsIndexController>(
+                typeof(ProductScreenshotsRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<ProductsRecordsIndexController>(
+                typeof(ProductsRecordsDataController),
+                typeof(StatusController));            
+
+            dependenciesController.AddDependencies<ValidationResultsRecordsIndexController>(
+                typeof(ValidationResultsRecordsDataController),
+                typeof(StatusController));            
 
             // ...
 
