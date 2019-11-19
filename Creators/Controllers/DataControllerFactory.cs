@@ -53,13 +53,12 @@ namespace Creators.Controllers
             IConvertDelegate<ProductRecords, long> convertProductRecordToIndexDelegate,
             IGetPathDelegate getProductTypePathDelegate,
             IRecordsController<long> productTypeIndexRecordsController,
+            IConvertDelegate<Type, long> convertProductTypeToIndexDelegate,
             ISerializedStorageController serializedStorageController,
             IHashesController hashesController,
             IStatusController statusController)
             where Type : ProductCore
         {
-            var convertProductTypeToIndexDelegate = new ConvertProductCoreToIndexDelegate<Type>();
-
             var productTypeDataStashController = new StashController<Dictionary<long, Type>>(
                 getProductTypePathDelegate,
                 serializedStorageController,

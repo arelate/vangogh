@@ -26,6 +26,7 @@ using Delegates.Convert.Bytes;
 using Delegates.Convert.Collections;
 using Delegates.Convert.Requests;
 using Delegates.Convert.Collections.Status;
+using Delegates.Convert.Data;
 using Delegates.Confirm.ArgsTokens;
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.Data;
@@ -99,6 +100,7 @@ using GOG.Delegates.GetUpdateUri;
 using GOG.Delegates.Format;
 using GOG.Delegates.RequestPage;
 using GOG.Delegates.Confirm;
+using GOG.Delegates.Convert.Data;
 
 using GOG.Controllers.Authorization;
 
@@ -750,68 +752,117 @@ namespace vangogh.Console
                 typeof(ValidationResultsRecordsIndexController))
                 as ValidationResultsRecordsIndexController;
 
+            // Delegates.Convert.Data
+
+            var convertProductDownloadsToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertProductDownloadsToIndexDelegate))
+                as ConvertProductDownloadsToIndexDelegate;
+
+            var convertProductRoutesToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertProductRoutesToIndexDelegate))
+                as ConvertProductRoutesToIndexDelegate;
+
+            var convertProductScreenshotsToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertProductScreenshotsToIndexDelegate))
+                as ConvertProductScreenshotsToIndexDelegate;
+
+            var convertValidationResultsToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertValidationResultsToIndexDelegate))
+                as ConvertValidationResultsToIndexDelegate;
+
+            // GOG.Delegates.Convert.Data
+
+            var convertAccountProductToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertAccountProductToIndexDelegate))
+                as ConvertAccountProductToIndexDelegate;
+
+            var convertApiProductToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertApiProductToIndexDelegate))
+                as ConvertApiProductToIndexDelegate;
+
+            var convertGameDetailsToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertGameDetailsToIndexDelegate))
+                as ConvertGameDetailsToIndexDelegate;
+
+            var convertGameProductDataToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertGameProductDataToIndexDelegate))
+                as ConvertGameProductDataToIndexDelegate;
+
+            var convertProductToIndexDelegate = dependenciesController.GetInstance(
+                typeof(ConvertProductToIndexDelegate))
+                as ConvertProductToIndexDelegate;
+
             // Controllers.Data
 
             var productsDataController = dataControllerFactory.CreateDataControllerEx<Product>(
                 convertProductRecordToIndexDelegate,
                 getProductsPathDelegate,
                 productsRecordsIndexController,
+                convertProductToIndexDelegate,
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var accountProductsDataController = dataControllerFactory.CreateDataControllerEx<AccountProduct>(
                 convertProductRecordToIndexDelegate,
                 getAccountProductsPathDelegate,
-                accountProductsRecordsIndexController,        
+                accountProductsRecordsIndexController,
+                convertAccountProductToIndexDelegate,        
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var gameDetailsDataController = dataControllerFactory.CreateDataControllerEx<GameDetails>(
                 convertProductRecordToIndexDelegate,
                 getGameDetailsPathDelegate,
-                gameDetailsRecordsIndexController,                
+                gameDetailsRecordsIndexController,
+                convertGameDetailsToIndexDelegate,                
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var gameProductDataDataController = dataControllerFactory.CreateDataControllerEx<GameProductData>(
                 convertProductRecordToIndexDelegate,
                 getGameProductDataPathDelegate,
-                gameProductDataRecordsIndexController,                
+                gameProductDataRecordsIndexController,
+                convertGameProductDataToIndexDelegate,                
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var apiProductsDataController = dataControllerFactory.CreateDataControllerEx<ApiProduct>(
                 convertProductRecordToIndexDelegate,
                 getApiProductsPathDelegate,
-                apiProductsRecordsIndexController,                
+                apiProductsRecordsIndexController,
+                convertApiProductToIndexDelegate,                
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var productScreenshotsDataController = dataControllerFactory.CreateDataControllerEx<ProductScreenshots>(
                 convertProductRecordToIndexDelegate,
                 getProductScreenshotsPathDelegate,
-                productScreenshotsRecordsIndexController,        
+                productScreenshotsRecordsIndexController,
+                convertProductScreenshotsToIndexDelegate,        
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var productDownloadsDataController = dataControllerFactory.CreateDataControllerEx<ProductDownloads>(
                 convertProductRecordToIndexDelegate,
                 getProductDownloadsPathDelegate,
-                productDownloadsRecordsIndexController,                
+                productDownloadsRecordsIndexController,
+                convertProductDownloadsToIndexDelegate,                
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var productRoutesDataController = dataControllerFactory.CreateDataControllerEx<ProductRoutes>(
                 convertProductRecordToIndexDelegate,
                 getProductRoutesPathDelegate,
-                productRoutesRecordsIndexController,                
+                productRoutesRecordsIndexController, 
+                convertProductRoutesToIndexDelegate,               
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
             var validationResultsDataController = dataControllerFactory.CreateDataControllerEx<ValidationResults>(
                 convertProductRecordToIndexDelegate,
                 getValidationResultsPathDelegate,
-                validationResultsRecordsIndexController,                
+                validationResultsRecordsIndexController,
+                convertValidationResultsToIndexDelegate,                
                 protoBufSerializedStorageController,
                 hashesController,
                 statusController);
