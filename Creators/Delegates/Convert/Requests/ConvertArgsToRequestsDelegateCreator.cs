@@ -34,12 +34,12 @@ namespace Creators.Delegates.Convert.Requests
 
         public ConvertArgsToRequestsDelegate CreateDelegate()
         {
-            // var confirmLikelyTokenTypeDelegate =
-            //     dependenciesController.GetInstance(typeof(ConfirmLikelyTokenTypeDelegate)) 
+            // var confirmLikelyTokenTypeDelegate = dependenciesController.GetInstance(
+            //    typeof(ConfirmLikelyTokenTypeDelegate)) 
             //     as ConfirmLikelyTokenTypeDelegate;
 
-            var convertTokensToLikelyTypedTokensDelegate =
-                dependenciesController.GetInstance(typeof(ConvertTokensToLikelyTypedTokensDelegate))
+            var convertTokensToLikelyTypedTokensDelegate = dependenciesController.GetInstance(
+                typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
 
             var convertLikelyTypedTokensToTypedTokensDelegate =
