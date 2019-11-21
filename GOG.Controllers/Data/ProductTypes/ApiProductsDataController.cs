@@ -21,7 +21,7 @@ namespace GOG.Controllers.Data.ProductTypes
             IConvertDelegate<ApiProduct, long> convertApiProductsToIndexDelegate,
             IRecordsController<long> apiProductsRecordsIndexController,
             IStatusController statusController,
-            params ICommitAsyncDelegate[] hashesController) :
+            ICommitAsyncDelegate hashesController) :
             base(
                 apiProductsStashController,
                 convertApiProductsToIndexDelegate,

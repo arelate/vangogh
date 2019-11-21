@@ -19,7 +19,7 @@ namespace Controllers.Data.ProductTypes
             IConvertDelegate<ValidationResults, long> convertValidationResultsToIndexDelegate,
             IRecordsController<long> validationResultsRecordsIndexController,
             IStatusController statusController,
-            params ICommitAsyncDelegate[] hashesController) :
+            ICommitAsyncDelegate hashesController) :
             base(
                 validationResultsStashController,
                 convertValidationResultsToIndexDelegate,

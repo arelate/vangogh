@@ -19,7 +19,7 @@ namespace Controllers.Data.ProductTypes
             IConvertDelegate<ProductRoutes, long> convertProductRoutesToIndexDelegate,
             IRecordsController<long> productRoutesRecordsIndexController,
             IStatusController statusController,
-            params ICommitAsyncDelegate[] hashesController) :
+            ICommitAsyncDelegate hashesController) :
             base(
                 productRoutesStashController,
                 convertProductRoutesToIndexDelegate,
