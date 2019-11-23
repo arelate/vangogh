@@ -404,22 +404,6 @@ namespace vangogh.Console
                 typeof(LanguageController))
                 as LanguageController;
 
-            var itemizeLoginIdDelegate = dependenciesController.GetInstance(
-                typeof(ItemizeLoginIdAttributeValuesDelegate))
-                as ItemizeLoginIdAttributeValuesDelegate;
-
-            var itemizeLoginUsernameDelegate = dependenciesController.GetInstance(
-                typeof(ItemizeLoginUsernameAttributeValuesDelegate))
-                as ItemizeLoginUsernameAttributeValuesDelegate;
-
-            var itemizeLoginTokenDelegate = dependenciesController.GetInstance(
-                typeof(ItemizeLoginTokenAttributeValuesDelegate))
-                as ItemizeLoginTokenAttributeValuesDelegate;
-
-            var itemizeSecondStepAuthenticationTokenDelegate = dependenciesController.GetInstance(
-                typeof(ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate))
-                as ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate;
-
             var itemizeGOGDataDelegate = dependenciesController.GetInstance(
                 typeof(ItemizeGOGDataDelegate))
                 as ItemizeGOGDataDelegate;
@@ -504,44 +488,19 @@ namespace vangogh.Console
 
             #region Activity Controllers
 
-            #region Authorize
-
-            var correctUsernamePasswordAsyncDelegate = new CorrectUsernamePasswordAsyncDelegate(
-                consoleInputOutputController);
-            var correctSecurityCodeAsyncDelegate = new CorrectSecurityCodeAsyncDelegate(
-                consoleInputOutputController);
-
-            var attributeValuesItemizeDelegates = new Dictionary<string, IItemizeDelegate<string, string>>
-            {
-                { QueryParameters.LoginId,
-                    itemizeLoginIdDelegate },
-                { QueryParameters.LoginUsername,
-                    itemizeLoginUsernameDelegate },
-                { QueryParameters.LoginToken,
-                    itemizeLoginTokenDelegate },
-                { QueryParameters.SecondStepAuthenticationToken,
-                    itemizeSecondStepAuthenticationTokenDelegate }
-            };
-
-            var authorizationController = new AuthorizationController(
-                correctUsernamePasswordAsyncDelegate,
-                correctSecurityCodeAsyncDelegate,
-                uriController,
-                networkController,
-                jsonSerializationController,
-                attributeValuesItemizeDelegates,
-                statusController);
-
-            var authorizeActivity = new AuthorizeActivity(
-                authorizationController,
-                statusController);
-
-            #endregion
+            var authorizeActivity = dependenciesController.GetInstance(
+                typeof(AuthorizeActivity))
+                as AuthorizeActivity;
 
             #region Update.PageResults
 
-            var getProductUpdateUriByContextDelegate = new GetProductUpdateUriByContextDelegate();
-            var getQueryParametersForProductContextDelegate = new GetQueryParametersForProductContextDelegate();
+            var getProductUpdateUriByContextDelegate = dependenciesController.GetInstance(
+                typeof(GetProductUpdateUriByContextDelegate))
+                as GetProductUpdateUriByContextDelegate;
+
+            var getQueryParametersForProductContextDelegate = dependenciesController.GetInstance(
+                typeof(GetQueryParametersForProductContextDelegate))
+                as GetQueryParametersForProductContextDelegate;
 
             var getProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<ProductsPageResult>(
                 Entity.Products,

@@ -30,6 +30,8 @@ using Controllers.Data.ProductTypes;
 using Controllers.Records.Session;
 using Controllers.Records.ProductTypes;
 
+using Delegates.Correct;
+using Delegates.Itemize.Attributes;
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.ProductTypes;
 using Delegates.GetFilename;
@@ -66,6 +68,9 @@ using GOG.Delegates.Convert.ProductTypes;
 
 using GOG.Controllers.Stash.ProductTypes;
 using GOG.Controllers.Data.ProductTypes;
+using GOG.Controllers.Authorization;
+
+using GOG.Activities.Authorize;
 
 using Models.Records;
 
@@ -713,6 +718,34 @@ namespace vangogh.Console
                 typeof(ProductsRecordsIndexController),
                 typeof(StatusController),
                 typeof(HashesController));    
+
+            // Delegates.Correct
+
+            dependenciesController.AddDependencies<CorrectUsernamePasswordAsyncDelegate>(
+                typeof(ConsoleInputOutputController));
+
+            dependenciesController.AddDependencies<CorrectSecurityCodeAsyncDelegate>(
+                typeof(ConsoleInputOutputController));
+
+            // GOG.Controllers.Authorization
+
+            dependenciesController.AddDependencies<GOGAuthorizationController>(
+                typeof(CorrectUsernamePasswordAsyncDelegate),
+                typeof(CorrectSecurityCodeAsyncDelegate),
+                typeof(ItemizeLoginTokenAttributeValuesDelegate),
+                typeof(ItemizeLoginIdAttributeValuesDelegate),
+                typeof(ItemizeLoginUsernameAttributeValuesDelegate),
+                typeof(ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate),
+                typeof(UriController),
+                typeof(NetworkController),
+                typeof(JSONSerializationController),
+                typeof(StatusController));
+
+            // GOG.Activities.Authorize
+
+            dependenciesController.AddDependencies<AuthorizeActivity>(
+                typeof(GOGAuthorizationController),
+                typeof(StatusController));
 
             // ...
 

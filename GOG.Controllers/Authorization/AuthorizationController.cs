@@ -18,7 +18,7 @@ using GOG.Interfaces.Controllers.Authorization;
 
 namespace GOG.Controllers.Authorization
 {
-    public class AuthorizationController : IAuthorizationController
+    public class GOGAuthorizationController : IAuthorizationController
     {
         const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
         const string successfullyAuthorized = "Successfully authorized";
@@ -32,24 +32,37 @@ namespace GOG.Controllers.Authorization
         IUriController uriController;
         INetworkController networkController;
         ISerializationController<string> serializationController;
-        IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates;
+        // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates;
+        IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate;
+        IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate;
+        IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate;
+        IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
+
         readonly IStatusController statusController;
 
-        public AuthorizationController(
+        public GOGAuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
             ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate,
+            IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate,
+            IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate,
+            IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate,
+            IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate,
             IUriController uriController,
             INetworkController networkController,
             ISerializationController<string> serializationController,
-            IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates,
+            // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates,
             IStatusController statusController)
         {
             this.correctUsernamePasswordAsyncDelegate = correctUsernamePasswordAsyncDelegate;
             this.correctSecurityCodeAsyncDelegate = correctSecurityCodeAsyncDelegate;
+            this.itemizeLoginTokenAttribueValueDelegate = itemizeLoginTokenAttribueValueDelegate;
+            this.itemizeLoginIdAttributeValueDelegate = itemizeLoginIdAttributeValueDelegate;
+            this.itemizeLoginUsernameAttributeValueDelegate = itemizeLoginUsernameAttributeValueDelegate;
+            this.itemizeSecondStepAuthenticationTokenAttributeValueDelegate = itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
             this.uriController = uriController;
             this.networkController = networkController;
             this.serializationController = serializationController;
-            this.attributeValuesItemizeDelegates = attributeValuesItemizeDelegates;
+            // this.attributeValuesItemizeDelegates = attributeValuesItemizeDelegates;
             this.statusController = statusController;
         }
 
@@ -86,24 +99,18 @@ namespace GOG.Controllers.Authorization
         {
             var getLoginCheckResponseTask = await statusController.CreateAsync(status, "Get login check result");
 
-            var loginToken = attributeValuesItemizeDelegates[
-                QueryParameters.LoginToken].Itemize(
-                authResponse).First();
+            var loginToken = itemizeLoginTokenAttribueValueDelegate.Itemize(authResponse).First();
 
             // login using username / password or login id / password
             var loginUri = string.Empty;
             if (authResponse.Contains(QueryParameters.LoginId))
             {
-                var loginId = attributeValuesItemizeDelegates[
-                    QueryParameters.LoginId].Itemize(
-                    authResponse).First();
+                var loginId = itemizeLoginIdAttributeValueDelegate.Itemize(authResponse).First();
                 QueryParametersCollections.LoginAuthenticate.Remove(QueryParameters.LoginUsername);
                 QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginId] = loginId;
                 loginUri = Uris.Endpoints.Authentication.Login;
 
-                username = attributeValuesItemizeDelegates[
-                    QueryParameters.LoginUsername].Itemize(
-                    authResponse).First();
+                username = itemizeLoginUsernameAttributeValueDelegate.Itemize(authResponse).First();
             }
             else
             {
@@ -135,9 +142,7 @@ namespace GOG.Controllers.Authorization
             // 2FA is enabled for this user - ask for the code
             var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null, getTwoStepLoginCheckResponseTask);
 
-            var secondStepAuthenticationToken = attributeValuesItemizeDelegates[
-                QueryParameters.SecondStepAuthenticationToken].Itemize(
-                loginCheckResult).First();
+            var secondStepAuthenticationToken = itemizeSecondStepAuthenticationTokenAttributeValueDelegate.Itemize(loginCheckResult).First();
 
             QueryParametersCollections.SecondStepAuthentication[
                 QueryParameters.SecondStepAuthenticationTokenLetter1] = securityCode[0].ToString();
