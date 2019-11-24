@@ -19,18 +19,18 @@ using GOG.Interfaces.Delegates.GetPageResults;
 
 namespace GOG.Activities.Update.ProductTypes
 {
-    public class UpdateProductsActivity : UpdatePageResultActivity<ProductsPageResult, Product>
+    public class UpdateAccountProductsActivity : UpdatePageResultActivity<AccountProductsPageResult, AccountProduct>
     {
-        public UpdateProductsActivity(
-            IGetPageResultsAsyncDelegate<ProductsPageResult> getProductsPageResultsAsyncDelegate,
-            IItemizeDelegate<IList<ProductsPageResult>, Product> itemizeProductsPageResultsDelegate,
-            IDataController<Product> productsDataController,
+        public UpdateAccountProductsActivity(
+            IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
+            IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct> itemizeAccountProductsPageResultsDelegate,
+            IDataController<AccountProduct> accountProductsDataController,
             IRecordsController<string> activityRecordsController,
             IStatusController statusController) :
             base(
-                getProductsPageResultsAsyncDelegate,
-                itemizeProductsPageResultsDelegate,
-                productsDataController,
+                getAccountProductsPageResultsAsyncDelegate,
+                itemizeAccountProductsPageResultsDelegate,
+                accountProductsDataController,
                 activityRecordsController,
                 statusController)
         {

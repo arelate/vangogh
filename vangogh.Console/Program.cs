@@ -494,35 +494,21 @@ namespace vangogh.Console
                 typeof(AuthorizeActivity))
                 as AuthorizeActivity;
 
-            #region Update.PageResults
-
-            var productsUpdateActivity = dependenciesController.GetInstance(
+            var updateProductsActivity = dependenciesController.GetInstance(
                 typeof(UpdateProductsActivity))
                 as UpdateProductsActivity;
 
-            var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
-                Entity.AccountProducts,
-                getProductUpdateUriByContextDelegate,
-                getQueryParametersForProductContextDelegate,
-                requestPageAsyncDelegate,
-                convertStringToMd5HashDelegate,
-                hashesController,
-                jsonSerializationController,
-                statusController);
+            var updateAccountProductsActivity = dependenciesController.GetInstance(
+                typeof(UpdateAccountProductsActivity))
+                as UpdateAccountProductsActivity;
 
-            var itemizeAccountProductsPageResultProductsDelegate = new ItemizeAccountProductsPageResultProductsDelegate();
+            #region Update.PageResults
 
-            var accountProductsUpdateActivity = new UpdatePageResultActivity<AccountProductsPageResult, AccountProduct>(
-                    // (Activity.UpdateData, Entity.AccountProducts),
-                    getAccountProductsPageResultsAsyncDelegate,
-                    itemizeAccountProductsPageResultProductsDelegate,
-                    accountProductsDataController,
-                    sessionRecordsController,
-                    statusController);
+            var confirmAccountProductUpdatedDelegate = dependenciesController.GetInstance(
+                typeof(ConfirmAccountProductUpdatedDelegate))
+                as ConfirmAccountProductUpdatedDelegate;
 
-            var confirmAccountProductUpdatedDelegate = new ConfirmAccountProductUpdatedDelegate();
-
-            var updatedUpdateActivity = new UpdatedUpdateActivity(
+            var updatedUpdateActivity = new UpdateUpdatedActivity(
                 accountProductsDataController,
                 confirmAccountProductUpdatedDelegate,
                 updatedIndexController,

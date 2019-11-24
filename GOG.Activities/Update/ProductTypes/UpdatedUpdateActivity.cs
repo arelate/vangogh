@@ -15,16 +15,16 @@ using Interfaces.Models.Entities;
 
 using GOG.Models;
 
-namespace GOG.Activities.Update
+namespace GOG.Activities.Update.ProductTypes
 {
-    public class UpdatedUpdateActivity: Activity
+    public class UpdateUpdatedActivity: Activity
     {
         readonly IDataController<AccountProduct> accountProductDataController;
         readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
         readonly IIndexController<long> updatedIndexController;
 
-        public UpdatedUpdateActivity(
+        public UpdateUpdatedActivity(
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
             IIndexController<long> updatedIndexController,

@@ -68,6 +68,7 @@ using GOG.Delegates.Itemize;
 using GOG.Delegates.RequestPage;
 using GOG.Delegates.Convert.ProductTypes;
 using GOG.Delegates.GetPageResults.ProductTypes;
+using GOG.Delegates.Confirm;
 
 using GOG.Controllers.Stash.ProductTypes;
 using GOG.Controllers.Data.ProductTypes;
@@ -769,6 +770,32 @@ namespace vangogh.Console
                 typeof(ItemizeProductsPageResultProductsDelegate),
                 typeof(ProductsDataController),
                 typeof(SessionRecordsController),
+                typeof(StatusController));
+            
+            // GOG.Delegates.GetPageResults
+
+            dependenciesController.AddDependencies<GetAccountProductsPageResultsAsyncDelegate>(
+                typeof(GetAccountProductsUpdateUriDelegate),
+                typeof(GetAccountProductsUpdateQueryParametersDelegate),
+                typeof(RequestPageAsyncDelegate),
+                typeof(ConvertStringToMd5HashDelegate),
+                typeof(HashesController),
+                typeof(JSONSerializationController),
+                typeof(StatusController));
+
+            // GOG.Activities.Update.ProductTypes
+
+            dependenciesController.AddDependencies<UpdateAccountProductsActivity>(
+                typeof(GetAccountProductsPageResultsAsyncDelegate),
+                typeof(ItemizeAccountProductsPageResultProductsDelegate),
+                typeof(AccountProductsDataController),
+                typeof(SessionRecordsController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<UpdateUpdatedActivity>(
+                typeof(AccountProductsDataController),
+                typeof(ConfirmAccountProductUpdatedDelegate),
+                typeof(UpdatedIndexController),
                 typeof(StatusController));
 
             // ...
