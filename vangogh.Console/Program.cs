@@ -6,7 +6,6 @@ using Delegates.GetFilename;
 using Delegates.Format.Uri;
 using Delegates.Itemize;
 using Delegates.Confirm;
-using Delegates.GetQueryParameters;
 using Delegates.Recycle;
 using Delegates.Correct;
 using Delegates.Replace;
@@ -19,6 +18,8 @@ using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.ProductTypes;
 using Delegates.GetPath.Json;
 using Delegates.Itemize.Attributes;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.GetValue.QueryParameters.ProductTypes;
 
 using Controllers.Storage;
 using Controllers.File;
@@ -52,6 +53,7 @@ using GOG.Models;
 using GOG.Controllers.Data.ProductTypes;
 
 using GOG.Delegates.GetPageResults;
+using GOG.Delegates.GetPageResults.ProductTypes;
 using GOG.Delegates.FillGaps;
 using GOG.Delegates.GetDownloadSources;
 using GOG.Delegates.GetUpdateIdentity;
@@ -60,7 +62,6 @@ using GOG.Delegates.GetImageUri;
 using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
 using GOG.Delegates.Itemize;
-using GOG.Delegates.GetUpdateUri;
 using GOG.Delegates.Format;
 using GOG.Delegates.RequestPage;
 using GOG.Delegates.Confirm;
@@ -69,7 +70,8 @@ using GOG.Controllers.Authorization;
 
 using GOG.Activities.Help;
 using GOG.Activities.Authorize;
-using GOG.Activities.UpdateData;
+using GOG.Activities.Update;
+using GOG.Activities.Update.ProductTypes;
 using GOG.Activities.UpdateDownloads;
 using GOG.Activities.DownloadProductFiles;
 using GOG.Activities.Repair;
@@ -494,33 +496,9 @@ namespace vangogh.Console
 
             #region Update.PageResults
 
-            var getProductUpdateUriByContextDelegate = dependenciesController.GetInstance(
-                typeof(GetProductUpdateUriByContextDelegate))
-                as GetProductUpdateUriByContextDelegate;
-
-            var getQueryParametersForProductContextDelegate = dependenciesController.GetInstance(
-                typeof(GetQueryParametersForProductContextDelegate))
-                as GetQueryParametersForProductContextDelegate;
-
-            var getProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<ProductsPageResult>(
-                Entity.Products,
-                getProductUpdateUriByContextDelegate,
-                getQueryParametersForProductContextDelegate,
-                requestPageAsyncDelegate,
-                convertStringToMd5HashDelegate,
-                hashesController,
-                jsonSerializationController,
-                statusController);
-
-            var itemizeProductsPageResultProductsDelegate = new ItemizeProductsPageResultProductsDelegate();
-
-            var productsUpdateActivity = new PageResultUpdateActivity<ProductsPageResult, Product>(
-                    // (Activity.UpdateData, Entity.Products),
-                    getProductsPageResultsAsyncDelegate,
-                    itemizeProductsPageResultProductsDelegate,
-                    productsDataController,
-                    sessionRecordsController,
-                    statusController);
+            var productsUpdateActivity = dependenciesController.GetInstance(
+                typeof(UpdateProductsActivity))
+                as UpdateProductsActivity;
 
             var getAccountProductsPageResultsAsyncDelegate = new GetPageResultsAsyncDelegate<AccountProductsPageResult>(
                 Entity.AccountProducts,
@@ -534,7 +512,7 @@ namespace vangogh.Console
 
             var itemizeAccountProductsPageResultProductsDelegate = new ItemizeAccountProductsPageResultProductsDelegate();
 
-            var accountProductsUpdateActivity = new PageResultUpdateActivity<AccountProductsPageResult, AccountProduct>(
+            var accountProductsUpdateActivity = new UpdatePageResultActivity<AccountProductsPageResult, AccountProduct>(
                     // (Activity.UpdateData, Entity.AccountProducts),
                     getAccountProductsPageResultsAsyncDelegate,
                     itemizeAccountProductsPageResultProductsDelegate,

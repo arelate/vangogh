@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.GetQueryParameters;
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.GetValue;
 
 using Interfaces.Controllers.Hashes;
 
@@ -13,40 +13,33 @@ using Interfaces.Models.Entities;
 using Models.Units;
 
 using GOG.Interfaces.Delegates.GetPageResults;
-using GOG.Interfaces.Delegates.GetUpdateUri;
 using GOG.Interfaces.Delegates.RequestPage;
 
 using GOG.Models;
 
 namespace GOG.Delegates.GetPageResults
 {
-    public class GetPageResultsAsyncDelegate<T> : IGetPageResultsAsyncDelegate<T> where T : PageResult
+    public abstract class GetPageResultsAsyncDelegate<T> : IGetPageResultsAsyncDelegate<T> where T : PageResult
     {
-        Entity context;
-        IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
-        IGetQueryParametersDelegate<Entity> getQueryParametersDelegate;
+        readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
+        readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
         readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
         readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
         readonly IHashesController hashesController;
         readonly ISerializationController<string> serializationController;
         readonly IStatusController statusController;
 
-        readonly string requestUri;
-        readonly IDictionary<string, string> requestParameters;
-
         public GetPageResultsAsyncDelegate(
-            Entity context,
-            IGetUpdateUriDelegate<Entity> getUpdateUriDelegate,
-            IGetQueryParametersDelegate<Entity> getQueryParametersDelegate,
+            IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
+            IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
             IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate,
             IHashesController storedHashController,
             ISerializationController<string> serializationController,
             IStatusController statusController)
         {
-            this.context = context;
-            this.getUpdateUriDelegate = getUpdateUriDelegate;
-            this.getQueryParametersDelegate = getQueryParametersDelegate;
+            this.getPageResultsUpdateUriDelegate = getPageResultsUpdateUriDelegate;
+            this.getPageResultsUpdateQueryParametersDelegate = getPageResultsUpdateQueryParametersDelegate;
 
             this.requestPageAsyncDelegate = requestPageAsyncDelegate;
             this.convertStringToHashDelegate = convertStringToHashDelegate;
@@ -54,9 +47,6 @@ namespace GOG.Delegates.GetPageResults
             this.serializationController = serializationController;
 
             this.statusController = statusController;
-
-            requestUri = getUpdateUriDelegate.GetUpdateUri(context);
-            requestParameters = getQueryParametersDelegate.GetQueryParameters(context);
         }
 
         public async Task<IList<T>> GetPageResultsAsync(IStatus status)
@@ -78,7 +68,10 @@ namespace GOG.Delegates.GetPageResults
             var totalPages = 1;
             T pageResult = null;
 
-            var getPagesTask = await statusController.CreateAsync(status, $"Request {context}");
+            var requestUri = getPageResultsUpdateUriDelegate.GetValue();
+            var requestParameters = getPageResultsUpdateQueryParametersDelegate.GetValue();
+
+            var getPagesTask = await statusController.CreateAsync(status, $"Request pages data");
 
             do
             {

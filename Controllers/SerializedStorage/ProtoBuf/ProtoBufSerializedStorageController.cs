@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using System.Text;
 
-using Interfaces.Delegates.Trace;
-
 using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.File;
