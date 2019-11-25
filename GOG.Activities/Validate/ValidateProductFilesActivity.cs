@@ -10,6 +10,7 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 
 using Interfaces.Validation;
 using Interfaces.Routing;
@@ -31,7 +32,7 @@ namespace GOG.Activities.Validate
         readonly IDataController<ValidationResults> validationResultsDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        readonly IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
+        readonly IIndexController<long> updatedIndexController;
         readonly IRoutingController routingController;
 
         public ValidateProductFilesActivity(
@@ -42,7 +43,7 @@ namespace GOG.Activities.Validate
             IDataController<ValidationResults> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate,
+            IIndexController<long> updatedIndexController,
             IRoutingController routingController,
             IStatusController statusController) :
             base(statusController)
@@ -55,7 +56,7 @@ namespace GOG.Activities.Validate
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
 
-            this.itemizeAllProductsAsyncDelegate = itemizeAllProductsAsyncDelegate;
+            this.updatedIndexController = updatedIndexController;
             this.routingController = routingController;
         }
 
@@ -65,10 +66,9 @@ namespace GOG.Activities.Validate
 
             var current = 0;
 
-            var validateProductsList = await itemizeAllProductsAsyncDelegate.ItemizeAllAsync(validateProductsStatus);
-            var validateProductsCount = validateProductsList.Count();
+            var count = await updatedIndexController.CountAsync(validateProductsStatus);
 
-            foreach (var id in validateProductsList)
+            await foreach (var id in updatedIndexController.ItemizeAllAsync(validateProductsStatus))
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id, validateProductsStatus);
                 var validationResults = await validationResultsDataController.GetByIdAsync(id, validateProductsStatus);
@@ -82,7 +82,7 @@ namespace GOG.Activities.Validate
 
                 await statusController.UpdateProgressAsync(validateProductsStatus,
                     ++current,
-                    validateProductsCount,
+                    count,
                     gameDetails.Title);
 
                 var localFiles = new List<string>();

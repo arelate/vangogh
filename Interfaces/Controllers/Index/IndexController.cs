@@ -1,11 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using Interfaces.Delegates.Itemize;
+﻿using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-
-using Interfaces.Status;
 
 namespace Interfaces.Controllers.Index
 {

@@ -36,7 +36,6 @@ using Controllers.SerializedStorage.ProtoBuf;
 using Controllers.Presentation;
 using Controllers.Routing;
 using Controllers.Status;
-using Controllers.Hashes;
 using Controllers.ViewUpdates;
 using Controllers.InputOutput;
 using Controllers.Dependencies;
@@ -78,7 +77,6 @@ using GOG.Activities.Repair;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
 using GOG.Activities.Report;
-using GOG.Activities.List;
 
 using Models.Status;
 using Models.QueryParameters;
@@ -265,15 +263,6 @@ namespace vangogh.Console
             //     typeof(ProtoBufSerializedStorageController))
             //     as ProtoBufSerializedStorageController;
 
-            // var hashesStashController = dependenciesController.GetInstance(
-            //     typeof(HashesStashController))
-            //     as HashesStashController;
-
-            // TODO: Review if still needed/desired to have this
-            var hashesController = dependenciesController.GetInstance(
-                typeof(HashesController))
-                as HashesController;
-
             // var jsonSerializedStorageController = dependenciesController.GetInstance(
             //     typeof(JSONSerializedStorageController))
             //     as JSONSerializedStorageController;
@@ -456,6 +445,19 @@ namespace vangogh.Console
                 typeof(ProductsDataController))
                 as ProductsDataController;
 
+            System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
+            var product = new Product() {
+                Id = 1,
+                Title = "Test product",
+            };
+
+            await productsDataController.UpdateAsync(product, applicationStatus);
+            System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
+
+            await productsDataController.CommitAsync(applicationStatus);
+
+            return;
+
             var accountProductsDataController = dependenciesController.GetInstance(
                 typeof(AccountProductsDataController))
                 as AccountProductsDataController;
@@ -546,29 +548,23 @@ namespace vangogh.Console
 
             var fillGameDetailsGapsDelegate = new FillGameDetailsGapsDelegate();
 
-            var itemizeAllUserRequestedIdsAsyncDelegate = new ItemizeAllUserRequestedIdsAsyncDelegate(args);
-
             // product update controllers
 
             var itemizeAllGameProductDataGapsAsyncDelegatepsDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<Product, GameProductData>(
                 productsDataController,
                 gameProductDataDataController);
 
-            var itemizeAllUserRequestedIdsOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
-                itemizeAllUserRequestedIdsAsyncDelegate,
-                itemizeAllGameProductDataGapsAsyncDelegatepsDelegate,
-                updatedIndexController);
-
-            var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
-                Entity.GameProductData,
-                getProductUpdateUriByContextDelegate,
-                itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
-                productsDataController,
-                gameProductDataDataController,
-                updatedIndexController,
-                getDeserializedGameProductDataAsyncDelegate,
-                getGameProductDataUpdateIdentityDelegate,
-                statusController);
+            MasterDetailProductUpdateActivity<Product, GameProductData> gameProductDataUpdateActivity = null;
+            // var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
+            //     Entity.GameProductData,
+            //     getProductUpdateUriByContextDelegate,
+            //     itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
+            //     productsDataController,
+            //     gameProductDataDataController,
+            //     updatedIndexController,
+            //     getDeserializedGameProductDataAsyncDelegate,
+            //     getGameProductDataUpdateIdentityDelegate,
+            //     statusController);
 
             var getApiProductDelegate = new GetDeserializedGOGModelAsyncDelegate<ApiProduct>(
                 networkController,
@@ -578,21 +574,22 @@ namespace vangogh.Console
                 productsDataController,
                 apiProductsDataController);
 
-            var itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
-                itemizeAllUserRequestedIdsAsyncDelegate,
-                itemizeAllApiProductsGapsAsyncDelegate,
-                updatedIndexController);
+            // var itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
+            //     itemizeAllUserRequestedIdsDelegate,
+            //     itemizeAllApiProductsGapsAsyncDelegate,
+            //     updatedIndexController);
 
-            var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
-                Entity.ApiProducts,
-                getProductUpdateUriByContextDelegate,
-                itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
-                productsDataController,
-                apiProductsDataController,
-                updatedIndexController,
-                getApiProductDelegate,
-                getProductUpdateIdentityDelegate,
-                statusController);
+            MasterDetailProductUpdateActivity<Product, ApiProduct> apiProductUpdateActivity = null;
+            // var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
+            //     Entity.ApiProducts,
+            //     getProductUpdateUriByContextDelegate,
+            //     itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
+            //     productsDataController,
+            //     apiProductsDataController,
+            //     updatedIndexController,
+            //     getApiProductDelegate,
+            //     getProductUpdateIdentityDelegate,
+            //     statusController);
 
             var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelAsyncDelegate<GameDetails>(
                 networkController,
@@ -632,29 +629,31 @@ namespace vangogh.Console
                 accountProductsDataController,
                 gameDetailsDataController);
 
-            var itemizeAllUserRequestedOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
-                itemizeAllUserRequestedIdsAsyncDelegate,
-                itemizeAllGameDetailsGapsAsyncDelegate,
-                updatedIndexController);
+            // var itemizeAllUserRequestedOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
+            //     itemizeAllUserRequestedIdsDelegate,
+            //     itemizeAllGameDetailsGapsAsyncDelegate,
+            //     updatedIndexController);
 
-            var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
-                Entity.GameDetails,
-                getProductUpdateUriByContextDelegate,
-                itemizeAllUserRequestedOrDefaultAsyncDelegate,
-                accountProductsDataController,
-                gameDetailsDataController,
-                updatedIndexController,
-                getDeserializedGameDetailsAsyncDelegate,
-                getAccountProductUpdateIdentityDelegate,
-                statusController,
-                fillGameDetailsGapsDelegate);
+            MasterDetailProductUpdateActivity<AccountProduct, GameDetails> gameDetailsUpdateActivity = null;
+
+            // var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
+            //     Entity.GameDetails,
+            //     getProductUpdateUriByContextDelegate,
+            //     itemizeAllUserRequestedOrDefaultAsyncDelegate,
+            //     accountProductsDataController,
+            //     gameDetailsDataController,
+            //     updatedIndexController,
+            //     getDeserializedGameDetailsAsyncDelegate,
+            //     getAccountProductUpdateIdentityDelegate,
+            //     statusController,
+            //     fillGameDetailsGapsDelegate);
 
             #endregion
 
             #region Update.Screenshots
 
             var updateScreenshotsAsyncDelegate = new UpdateScreenshotsAsyncDelegate(
-                getProductUpdateUriByContextDelegate,
+                null, //getProductUpdateUriByContextDelegate,
                 productScreenshotsDataController,
                 networkController,
                 itemizeScreenshotsDelegate,
@@ -673,19 +672,15 @@ namespace vangogh.Console
             var getProductImageUriDelegate = new GetProductImageUriDelegate();
             var getAccountProductImageUriDelegate = new GetAccountProductImageUriDelegate();
 
-            var itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
-                itemizeAllUserRequestedIdsAsyncDelegate,
-                updatedIndexController);
-
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
-                itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
+                updatedIndexController,
                 productsDataController,
                 formatImagesUriDelegate,
                 getProductImageUriDelegate,
                 statusController);
 
             var getAccountProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>(
-                itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
+                updatedIndexController,
                 accountProductsDataController,
                 formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
@@ -830,10 +825,6 @@ namespace vangogh.Console
                 storageController,
                 convertStringToMd5HashDelegate);
 
-            var dataFileValidateDelegate = new DataFileValidateDelegate(
-                convertFileToMd5HashDelegate,
-                statusController);
-
             var productFileValidationController = new FileValidationController(
                 confirmValidationExpectedDelegate,
                 fileController,
@@ -850,14 +841,8 @@ namespace vangogh.Console
                 validationResultsDataController,
                 gameDetailsDataController,
                 itemizeGameDetailsManualUrlsAsyncDelegate,
-                itemizeAllUserRequestedIdsOrUpdatedAsyncDelegate,
+                updatedIndexController,
                 routingController,
-                statusController);
-
-            var validateDataActivity = new ValidateDataActivity(
-                hashesController,
-                fileController,
-                dataFileValidateDelegate,
                 statusController);
 
             #region Repair
@@ -946,15 +931,6 @@ namespace vangogh.Console
 
             var reportActivity = new ReportActivity(
                 fileNotifyStatusViewUpdateController,
-                statusController);
-
-            #endregion
-
-            #region List
-
-            var listUpdatedActivity = new ListUpdatedActivity(
-                updatedIndexController,
-                accountProductsDataController,
                 statusController);
 
             #endregion

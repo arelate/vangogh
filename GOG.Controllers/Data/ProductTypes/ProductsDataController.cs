@@ -20,14 +20,12 @@ namespace GOG.Controllers.Data.ProductTypes
             IStashController<Dictionary<long, Product>> productsStashController,
             IConvertDelegate<Product, long> convertProductsToIndexDelegate,
             IRecordsController<long> productsRecordsIndexController,
-            IStatusController statusController,
-            ICommitAsyncDelegate hashesController) :
+            IStatusController statusController) :
             base(
                 productsStashController,
                 convertProductsToIndexDelegate,
                 productsRecordsIndexController,
-                statusController,
-                hashesController)
+                statusController)
         {
             // ...
         }

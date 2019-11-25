@@ -35,17 +35,14 @@ namespace GOG.Delegates.Itemize
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<string> ItemizeAllAsync(IStatus status)
         {
             var enumerateUpdatedProductFilesTask = await statusController.CreateAsync(status, "Enumerate updated productFiles");
 
-            var updatedIds = await updatedDataController.ItemizeAllAsync(enumerateUpdatedProductFilesTask);
             var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdatedProductFilesTask);
             var current = 0;
 
-            var updatedProductFiles = new List<string>();
-
-            foreach (var id in updatedIds)
+            await foreach (var id in updatedDataController.ItemizeAllAsync(enumerateUpdatedProductFilesTask))
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateUpdatedProductFilesTask);
 
@@ -55,20 +52,17 @@ namespace GOG.Delegates.Itemize
                     updatedIdsCount,
                     gameDetails.Title);
 
-                var gameDetailsDirectories = 
+                var gameDetailsDirectories =
                     await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
-                        gameDetails, 
+                        gameDetails,
                         enumerateUpdatedProductFilesTask);
 
                 foreach (var gameDetailDirectory in gameDetailsDirectories)
-                {
-                    updatedProductFiles.AddRange(directoryController.EnumerateFiles(gameDetailDirectory));
-                }
+                    foreach (var updatedFile in directoryController.EnumerateFiles(gameDetailDirectory))
+                        yield return updatedFile;
             }
 
             await statusController.CompleteAsync(enumerateUpdatedProductFilesTask);
-
-            return updatedProductFiles;
         }
     }
 }

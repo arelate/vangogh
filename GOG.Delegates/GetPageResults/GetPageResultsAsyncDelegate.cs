@@ -24,8 +24,6 @@ namespace GOG.Delegates.GetPageResults
         readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
         readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
         readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
-        readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
-        readonly IHashesController hashesController;
         readonly ISerializationController<string> serializationController;
         readonly IStatusController statusController;
 
@@ -33,8 +31,6 @@ namespace GOG.Delegates.GetPageResults
             IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
-            IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate,
-            IHashesController storedHashController,
             ISerializationController<string> serializationController,
             IStatusController statusController)
         {
@@ -42,8 +38,6 @@ namespace GOG.Delegates.GetPageResults
             this.getPageResultsUpdateQueryParametersDelegate = getPageResultsUpdateQueryParametersDelegate;
 
             this.requestPageAsyncDelegate = requestPageAsyncDelegate;
-            this.convertStringToHashDelegate = convertStringToHashDelegate;
-            this.hashesController = storedHashController;
             this.serializationController = serializationController;
 
             this.statusController = statusController;
@@ -54,14 +48,12 @@ namespace GOG.Delegates.GetPageResults
             // GOG.com quirk
             // Products, AccountProducts use server-side paginated results, similar to Wikipedia.
             // This class encapsulates requesting sequence of pages up to the total number of pages.
-            // Additionally page requests are filtered using hashes, so if response has the same hash
-            // we would not deserialize it again - no point passing around same data.
             // Please note that ealier app versions also used heuristic optimization when
             // some page was unchanged - stop requesting next pages. This leads to stale data as GOG.com 
             // changes information all the time updating Products and AccountProducts. It's especially
             // important for AccountProducts as GOG.com can set Updates information on any AccountProduct. 
             // Updated is used for driving updated.json - that in turn is used for all subsequent operations 
-            // as an optimization - we don't process all products all the time, just updated
+            // as an optimization - we don't process all products all the time, only updated
 
             var pageResults = new List<T>();
             var currentPage = 1;
@@ -88,20 +80,11 @@ namespace GOG.Delegates.GetPageResults
                     requestUri,
                     PageUnits.Pages);
 
-                var requestHash = await hashesController.ConvertAsync(requestUri + currentPage, getPagesTask);
-                var responseHash = await convertStringToHashDelegate.ConvertAsync(response, getPagesTask);
-
                 pageResult = serializationController.Deserialize<T>(response);
 
                 if (pageResult == null) continue;
 
                 totalPages = pageResult.TotalPages;
-
-                if (responseHash == requestHash) continue;
-
-                var setHashTask = await statusController.CreateAsync(getPagesTask, "Set hash", false);
-                await hashesController.SetHashAsync(requestUri + currentPage, responseHash, setHashTask);
-                await statusController.CompleteAsync(setHashTask, false);
 
                 pageResults.Add(pageResult);
 

@@ -6,6 +6,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
 
@@ -20,19 +21,19 @@ namespace GOG.Delegates.GetDownloadSources
         where T : ProductCore
     {
         readonly IDataController<T> dataController;
-        readonly IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate;
+        readonly IIndexController<long> updatedIndexController;
         readonly IFormatDelegate<string, string> formatImagesUriDelegate;
         readonly IGetImageUriDelegate<T> getImageUriDelegate;
         readonly IStatusController statusController;
 
         public GetProductCoreImagesDownloadSourcesAsyncDelegate(
-            IItemizeAllAsyncDelegate<long> itemizeAllProductsAsyncDelegate,
+            IIndexController<long> updatedIndexController,
             IDataController<T> dataController,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<T> getImageUriDelegate,
             IStatusController statusController)
         {
-            this.itemizeAllProductsAsyncDelegate = itemizeAllProductsAsyncDelegate;
+            this.updatedIndexController = updatedIndexController;
             this.dataController = dataController;
             this.formatImagesUriDelegate = formatImagesUriDelegate;
             this.getImageUriDelegate = getImageUriDelegate;
@@ -44,15 +45,15 @@ namespace GOG.Delegates.GetDownloadSources
             var getDownloadSourcesStatus = await statusController.CreateAsync(status, "Get download sources");
 
             var productImageSources = new Dictionary<long, IList<string>>();
-            var productIds = await itemizeAllProductsAsyncDelegate.ItemizeAllAsync(getDownloadSourcesStatus);
+            var count = await updatedIndexController.CountAsync(getDownloadSourcesStatus);
             var current = 0;
 
-            foreach (var id in productIds)
+            await foreach (var id in updatedIndexController.ItemizeAllAsync(getDownloadSourcesStatus))
             {
                 await statusController.UpdateProgressAsync(
                     getDownloadSourcesStatus,
                     ++current,
-                    productIds.Count(),
+                    count,
                     id.ToString());
 
                 var productCore = await dataController.GetByIdAsync(id, getDownloadSourcesStatus);

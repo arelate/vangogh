@@ -31,7 +31,7 @@ namespace GOG.Activities.Update
         readonly IDataController<DetailType> detailDataController;
         IIndexController<long> updatedDataController;
 
-        readonly IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate;
+        readonly IItemizeAllAsyncDelegate<MasterType> itemizeMasterTypeGapsAsyncDelegate;
 
         readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
 
@@ -47,7 +47,7 @@ namespace GOG.Activities.Update
         public MasterDetailProductUpdateActivity(
             // Entity context,
             IGetValueDelegate<string> getUpdateUriDelegate,
-            IItemizeAllAsyncDelegate<long> itemizeUserRequestedOrDefaultAsyncDelegate,
+            IItemizeAllAsyncDelegate<MasterType> itemizeMasterTypeGapsAsyncDelegate,
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,
             IIndexController<long> updatedDataController,
@@ -61,7 +61,7 @@ namespace GOG.Activities.Update
             this.detailDataController = detailDataController;
             this.updatedDataController = updatedDataController;
 
-            this.itemizeUserRequestedOrDefaultAsyncDelegate = itemizeUserRequestedOrDefaultAsyncDelegate;
+            this.itemizeMasterTypeGapsAsyncDelegate = itemizeMasterTypeGapsAsyncDelegate;
 
             this.getDeserializedDelegate = getDeserializedDelegate;
 
@@ -80,19 +80,17 @@ namespace GOG.Activities.Update
             // We'll limit detail updates to user specified ids.
             // if user didn't provide a list of ids - we'll use the details gaps 
             // (ids that exist in master list, but not detail) and updated
-            var productsUpdateList = await itemizeUserRequestedOrDefaultAsyncDelegate.ItemizeAllAsync(updateProductsTask);
 
             var currentProduct = 0;
 
-            foreach (var id in productsUpdateList)
+            await foreach (var product in itemizeMasterTypeGapsAsyncDelegate.ItemizeAllAsync(updateProductsTask))
             {
-                var product = await masterDataController.GetByIdAsync(id, updateProductsTask);
                 if (product == null) continue;
 
                 await statusController.UpdateProgressAsync(
                     updateProductsTask,
                     ++currentProduct,
-                    productsUpdateList.Count(),
+                    0, // TODO: Probably need to figure a better way to report progress on unknown sets
                     product.Title);
 
                 var updateIdentity = getUpdateIdentityDelegate.GetUpdateIdentity(product);

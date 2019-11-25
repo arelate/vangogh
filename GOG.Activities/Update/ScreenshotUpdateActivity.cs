@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
 
 using Interfaces.Controllers.Data;
@@ -36,8 +37,10 @@ namespace GOG.Activities.Update
             var updateProductsScreenshotsTask = await statusController.CreateAsync(status, "Update Screenshots");
 
             var getUpdatesListTask = await statusController.CreateAsync(updateProductsScreenshotsTask, "Get updates");
-            var productsMissingScreenshots = (await productsDataController.ItemizeAllAsync(getUpdatesListTask)).Except(
-                await productScreenshotsDataController.ItemizeAllAsync(getUpdatesListTask));
+            var productsMissingScreenshots = new List<long>();
+            // TODO: Properly enumerate productsMissingScreenshots
+            // (productsDataController.ItemizeAllAsync(getUpdatesListTask)).Except(
+            //     productScreenshotsDataController.ItemizeAllAsync(getUpdatesListTask));
             await statusController.CompleteAsync(getUpdatesListTask);
 
             var counter = 0;

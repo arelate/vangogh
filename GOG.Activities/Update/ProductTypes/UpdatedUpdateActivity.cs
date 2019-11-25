@@ -68,18 +68,16 @@ namespace GOG.Activities.Update.ProductTypes
 
             var current = 0;
 
-            foreach (var id in await accountProductDataController.ItemizeAllAsync(addUpdatedAccountProductsStatus))
+            await foreach (var accountProduct in accountProductDataController.ItemizeAllAsync(addUpdatedAccountProductsStatus))
             {
                 await statusController.UpdateProgressAsync(
                     addUpdatedAccountProductsStatus,
                     ++current,
                     await accountProductDataController.CountAsync(addUpdatedAccountProductsStatus),
-                    id.ToString());
-
-                var accountProduct = await accountProductDataController.GetByIdAsync(id, status);
+                    accountProduct.Id.ToString());
 
                 if (confirmAccountProductUpdatedDelegate.Confirm(accountProduct))
-                    accountProductsNewOrUpdated.Add(id);
+                    accountProductsNewOrUpdated.Add(accountProduct.Id);
             }
 
             foreach (var accountProduct in accountProductsNewOrUpdated)

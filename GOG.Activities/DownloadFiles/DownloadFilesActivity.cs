@@ -37,14 +37,12 @@ namespace GOG.Activities.DownloadProductFiles
                 $"Process updated {context} downloads");
 
             var current = 0;
-            var productDownloadsData = await productDownloadsDataController.ItemizeAllAsync(processDownloadsTask);
             var total = await productDownloadsDataController.CountAsync(processDownloadsTask);
 
             var emptyProductDownloads = new List<ProductDownloads>();
 
-            foreach (var id in productDownloadsData)
+            await foreach (var productDownloads in productDownloadsDataController.ItemizeAllAsync(processDownloadsTask))
             {
-                var productDownloads = await productDownloadsDataController.GetByIdAsync(id, processDownloadsTask);
                 if (productDownloads == null) continue;
 
                 await statusController.UpdateProgressAsync(
@@ -76,7 +74,7 @@ namespace GOG.Activities.DownloadProductFiles
                         sanitizedUri);
 
                     await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
-                        id,
+                        productDownloads.Id,
                         productDownloads.Title,
                         sanitizedUri,
                         entry.Destination,

@@ -32,10 +32,8 @@ namespace GOG.Activities.Repair
 
             var invalidResults = new List<ValidationResults>();
 
-            foreach (var id in await validationResultDataController.ItemizeAllAsync(repairTask))
+            await foreach (var validationResult in validationResultDataController.ItemizeAllAsync(repairTask))
             {
-                var validationResult = await validationResultDataController.GetByIdAsync(id, repairTask);
-
                 if (validationResult == null) continue;
 
                 await statusController.UpdateProgressAsync(

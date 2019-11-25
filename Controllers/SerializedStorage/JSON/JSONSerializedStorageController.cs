@@ -13,15 +13,11 @@ namespace Controllers.SerializedStorage.JSON
     public class JSONSerializedStorageController: SerializedStorageController
     {
         public JSONSerializedStorageController(
-            IHashesController hashesController,
             IStorageController<string> storageController,
-            IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate,
             ISerializationController<string> jsonSerializarionController,
             IStatusController statusController):
             base(
-                hashesController,
                 storageController,
-                convertStringToHashDelegate,
                 jsonSerializarionController,
                 statusController)
             {

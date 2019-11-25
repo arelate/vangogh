@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Recycle;
-using Interfaces.Delegates.GetPath;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Index;
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Stash;
 
 using Interfaces.Status;
@@ -19,20 +13,18 @@ using Interfaces.Models.RecordsTypes;
 
 namespace Controllers.Data
 {
-    public class DataController<Type> : IDataController<Type>
+    public class DataController<DataType> : IDataController<DataType>
     {
-        readonly IStashController<Dictionary<long, Type>> stashController;
-        readonly IConvertDelegate<Type, long> convertProductToIndexDelegate;
+        readonly IStashController<Dictionary<long, DataType>> stashController;
+        readonly IConvertDelegate<DataType, long> convertProductToIndexDelegate;
         readonly IRecordsController<long> recordsController;
         readonly IStatusController statusController;
-        readonly ICommitAsyncDelegate[] additionalCommitDelegates;
 
         public DataController(
-            IStashController<Dictionary<long, Type>> stashController,
-            IConvertDelegate<Type, long> convertProductToIndexDelegate,
+            IStashController<Dictionary<long, DataType>> stashController,
+            IConvertDelegate<DataType, long> convertProductToIndexDelegate,
             IRecordsController<long> recordsController,
-            IStatusController statusController,
-            params ICommitAsyncDelegate[] additionalCommitDelegates)
+            IStatusController statusController)
         {
             this.stashController = stashController;
 
@@ -41,10 +33,9 @@ namespace Controllers.Data
             this.recordsController = recordsController;
 
             this.statusController = statusController;
-            this.additionalCommitDelegates = additionalCommitDelegates;
         }
 
-        public async Task<bool> ContainsAsync(Type item, IStatus status)
+        public async Task<bool> ContainsAsync(DataType item, IStatus status)
         {
             var data = await stashController.GetDataAsync(status);
             return data.ContainsValue(item);
@@ -56,11 +47,11 @@ namespace Controllers.Data
             return data.ContainsKey(id);
         }
 
-        public async Task<Type> GetByIdAsync(long id, IStatus status)
+        public async Task<DataType> GetByIdAsync(long id, IStatus status)
         {
             var data = await stashController.GetDataAsync(status);
             if (data.ContainsKey(id)) return data[id];
-            else return default(Type);
+            else return default(DataType);
         }
 
         public async Task<int> CountAsync(IStatus status)
@@ -69,7 +60,7 @@ namespace Controllers.Data
             return data.Count;
         }
 
-        public async Task UpdateAsync(Type updatedData, IStatus status)
+        public async Task UpdateAsync(DataType updatedData, IStatus status)
         {
             var data = await stashController.GetDataAsync(status);
             var index = convertProductToIndexDelegate.Convert(updatedData);
@@ -96,7 +87,7 @@ namespace Controllers.Data
             }
         }
 
-        public async Task DeleteAsync(Type deletedData, IStatus status)
+        public async Task DeleteAsync(DataType deletedData, IStatus status)
         {
             var data = await stashController.GetDataAsync(status);
             var index = convertProductToIndexDelegate.Convert(deletedData);
@@ -113,10 +104,11 @@ namespace Controllers.Data
             }
         }
 
-        public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<DataType> ItemizeAllAsync(IStatus status)
         {
             var data = await stashController.GetDataAsync(status);
-            return data.Keys;
+            foreach (var dataValue in data.Values)
+                yield return dataValue;
         }
 
         public async Task CommitAsync(IStatus status)
@@ -134,22 +126,6 @@ namespace Controllers.Data
             var commitDataTask = await statusController.CreateAsync(commitTask, "Commit items");
             await stashController.SaveAsync(commitDataTask);
             await statusController.CompleteAsync(commitDataTask);
-
-            var additionalCommitsTask = await statusController.CreateAsync(commitTask, "Additional commit dependencies");
-            var current = 0;
-
-            foreach (var commitDelegate in additionalCommitDelegates)
-            {
-                await statusController.UpdateProgressAsync(
-                    additionalCommitsTask,
-                    ++current,
-                    additionalCommitDelegates.Length,
-                    "Commit delegate");
-
-                await commitDelegate.CommitAsync(additionalCommitsTask);
-            }
-
-            await statusController.CompleteAsync(additionalCommitsTask);
 
             await statusController.CompleteAsync(commitTask);
         }

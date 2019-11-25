@@ -26,20 +26,11 @@ namespace GOG.Delegates.Itemize
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<string> ItemizeAllAsync(IStatus status)
         {
-            var enumerateProductFilesDirectoriesTask = await statusController.CreateAsync(
-                status,
-                "Enumerate productFiles directories");
-
-            var directories = new List<string>();
-
             var productFilesDirectory = productFilesDirectoryDelegate.GetDirectory(string.Empty);
-            directories.AddRange(directoryController.EnumerateDirectories(productFilesDirectory));
-
-            await statusController.CompleteAsync(enumerateProductFilesDirectoriesTask);
-
-            return directories;
+            foreach (var directory in directoryController.EnumerateDirectories(productFilesDirectory))
+                yield return directory;
         }
     }
 }

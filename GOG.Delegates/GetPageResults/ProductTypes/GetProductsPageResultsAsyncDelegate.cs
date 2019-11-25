@@ -21,16 +21,12 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             IGetValueDelegate<string> getProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getProductsQueryUpdateQueryParameters,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
-            IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate,
-            IHashesController storedHashController,
             ISerializationController<string> serializationController,
             IStatusController statusController):
             base(
                 getProductsUpdateUriDelegate,
                 getProductsQueryUpdateQueryParameters,
                 requestPageAsyncDelegate,
-                convertStringToHashDelegate,
-                storedHashController,
                 serializationController,
                 statusController)
         {

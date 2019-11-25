@@ -17,14 +17,12 @@ namespace Controllers.Data.Records
         public ProductRoutesRecordsDataController(
             IStashController<Dictionary<long, ProductRecords>> productRoutesRecordsStashController,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
-            IStatusController statusController,
-            ICommitAsyncDelegate hashesController) :
+            IStatusController statusController) :
             base(
                 productRoutesRecordsStashController,
                 convertProductRecordsToIndexDelegate,
                 null,
-                statusController,
-                hashesController)
+                statusController)
         {
             // ...
         }

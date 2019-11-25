@@ -48,10 +48,13 @@ namespace GOG.Activities.Cleanup
         {
             var cleanupTask = await statusController.CreateAsync(status, $"Cleanup {context}");
 
-            var expectedItems = await itemizeAllExpectedItemsAsyncDelegate.ItemizeAllAsync(status);
-            var actualItems = await itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync(status);
+            var unexpectedItems = new List<string>();
+            await foreach (var actualItem in itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync(status))
+                unexpectedItems.Add(actualItem);
 
-            var unexpectedItems = actualItems.Except(expectedItems);
+            await foreach (var expectedItem in itemizeAllExpectedItemsAsyncDelegate.ItemizeAllAsync(status))
+                unexpectedItems.Remove(expectedItem);
+
             var cleanupItems = new List<string>();
 
             foreach (var unexpectedItem in unexpectedItems)

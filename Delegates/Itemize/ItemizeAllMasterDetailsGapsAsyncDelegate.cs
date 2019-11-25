@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Interfaces.Delegates.Itemize;
 
@@ -13,10 +10,10 @@ using Models.ProductCore;
 
 namespace Delegates.EnumerateIds
 {
-    public class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType, DetailType>:
-        IItemizeAllAsyncDelegate<long>
-        where MasterType: ProductCore
-        where DetailType: ProductCore
+    public class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType, DetailType> :
+        IItemizeAllAsyncDelegate<MasterType>
+        where MasterType : ProductCore
+        where DetailType : ProductCore
     {
         readonly IDataController<MasterType> masterDataController;
         readonly IDataController<DetailType> detailDataController;
@@ -29,15 +26,11 @@ namespace Delegates.EnumerateIds
             this.detailDataController = detailDataController;
         }
 
-        public async Task<IEnumerable<long>> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<MasterType> ItemizeAllAsync(IStatus status)
         {
-            var gaps = new List<long>();
-
-            foreach (var id in await masterDataController.ItemizeAllAsync(status))
-                if (!await detailDataController.ContainsIdAsync(id, status))
-                    gaps.Add(id);
-
-            return gaps;
+            await foreach (var masterDataValue in masterDataController.ItemizeAllAsync(status))
+                if (!await detailDataController.ContainsIdAsync(masterDataValue.Id, status))
+                    yield return masterDataValue;
         }
     }
 }

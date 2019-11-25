@@ -17,14 +17,12 @@ namespace Controllers.Data.Records
         public ValidationResultsRecordsDataController(
             IStashController<Dictionary<long, ProductRecords>> validationResultsRecordsStashController,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
-            IStatusController statusController,
-            ICommitAsyncDelegate hashesController) :
+            IStatusController statusController) :
             base(
                 validationResultsRecordsStashController,
                 convertProductRecordsToIndexDelegate,
                 null,
-                statusController,
-                hashesController)
+                statusController)
         {
             // ...
         }
