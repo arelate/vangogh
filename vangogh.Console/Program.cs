@@ -139,14 +139,6 @@ namespace vangogh.Console
                 typeof(GetProductFilesDirectoryDelegate))
                 as GetProductFilesDirectoryDelegate;
 
-            // var getJsonFilenameDelegate = dependenciesController.GetInstance(
-            //     typeof(GetJsonFilenameDelegate))
-            //     as GetJsonFilenameDelegate;
-
-            // var getBinFilenameDelegate = dependenciesController.GetInstance(
-            //     typeof(GetBinFilenameDelegate))
-            //     as GetBinFilenameDelegate;
-
             // var getArgsDefinitionsFilenameDelegate = dependenciesController.GetInstance(
             //     typeof(GetArgsDefinitionsFilenameDelegate))
             //     as GetArgsDefinitionsFilenameDelegate;
@@ -416,13 +408,13 @@ namespace vangogh.Console
                 as RecycleDelegate;
 
             // TODO: Actually implement this using dependencyController
-            Interfaces.Controllers.Index.IIndexController<long> wishlistedIndexController = null;
+            Interfaces.Controllers.Data.IDataController<long> wishlistedDataController = null;
             //  dataControllerFactory.CreateIndexController(
             //     Entity.Wishlist, 
             //     getWishlistedFilenameDelegate);
 
             // TODO: Actually implement this using dependencyController
-            Interfaces.Controllers.Index.IIndexController<long> updatedIndexController = null;
+            Interfaces.Controllers.Data.IDataController<long> updatedDataController = null;
             // dataControllerFactory.CreateIndexController(
             //     Entity.Updated, 
             //     getUpdatedFilenameDelegate);
@@ -445,18 +437,18 @@ namespace vangogh.Console
                 typeof(ProductsDataController))
                 as ProductsDataController;
 
-            System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
-            var product = new Product() {
-                Id = 1,
-                Title = "Test product",
-            };
+            // System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
+            // var product = new Product() {
+            //     Id = 1,
+            //     Title = "Test product",
+            // };
 
-            await productsDataController.UpdateAsync(product, applicationStatus);
-            System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
+            // await productsDataController.UpdateAsync(product, applicationStatus);
+            // System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
 
-            await productsDataController.CommitAsync(applicationStatus);
+            // await productsDataController.CommitAsync(applicationStatus);
 
-            return;
+            // return;
 
             var accountProductsDataController = dependenciesController.GetInstance(
                 typeof(AccountProductsDataController))
@@ -513,7 +505,7 @@ namespace vangogh.Console
             var updatedUpdateActivity = new UpdateUpdatedActivity(
                 accountProductsDataController,
                 confirmAccountProductUpdatedDelegate,
-                updatedIndexController,
+                updatedDataController,
                 statusController);
 
             #endregion
@@ -526,7 +518,7 @@ namespace vangogh.Console
 
             var wishlistedUpdateActivity = new WishlistedUpdateActivity(
                 getDeserializedPageResultAsyncDelegate,
-                wishlistedIndexController,
+                wishlistedDataController,
                 statusController);
 
             #endregion
@@ -673,14 +665,14 @@ namespace vangogh.Console
             var getAccountProductImageUriDelegate = new GetAccountProductImageUriDelegate();
 
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
-                updatedIndexController,
+                updatedDataController,
                 productsDataController,
                 formatImagesUriDelegate,
                 getProductImageUriDelegate,
                 statusController);
 
             var getAccountProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>(
-                updatedIndexController,
+                updatedDataController,
                 accountProductsDataController,
                 formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
@@ -713,7 +705,7 @@ namespace vangogh.Console
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
             var getManualUrlDownloadSourcesAsyncDelegate = new GetManualUrlDownloadSourcesAsyncDelegate(
-                updatedIndexController,
+                updatedDataController,
                 gameDetailsDataController,
                 itemizeGameDetailsManualUrlsAsyncDelegate,
                 statusController);
@@ -841,7 +833,7 @@ namespace vangogh.Console
                 validationResultsDataController,
                 gameDetailsDataController,
                 itemizeGameDetailsManualUrlsAsyncDelegate,
-                updatedIndexController,
+                updatedDataController,
                 routingController,
                 statusController);
 
@@ -880,14 +872,14 @@ namespace vangogh.Console
 
             var itemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate =
                 new ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
-                    updatedIndexController,
+                    updatedDataController,
                     gameDetailsDataController,
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
             var itemizeAllUpdatedProductFilesAsyncDelegate =
                 new ItemizeAllUpdatedProductFilesAsyncDelegate(
-                    updatedIndexController,
+                    updatedDataController,
                     gameDetailsDataController,
                     itemizeGameDetailsDirectoriesAsyncDelegate,
                     directoryController,
@@ -906,7 +898,7 @@ namespace vangogh.Console
                 statusController);
 
             var cleanupUpdatedActivity = new CleanupUpdatedActivity(
-                updatedIndexController,
+                updatedDataController,
                 statusController);
 
             #endregion

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Collection;
 
 using Interfaces.Delegates.Convert;
 
@@ -15,14 +15,16 @@ namespace Controllers.Data.ProductTypes
     public class ProductRoutesDataController : DataController<ProductRoutes>
     {
         public ProductRoutesDataController(
-            IStashController<Dictionary<long, ProductRoutes>> productRoutesStashController,
+            IStashController<List<ProductRoutes>> productRoutesStashController,
             IConvertDelegate<ProductRoutes, long> convertProductRoutesToIndexDelegate,
             IRecordsController<long> productRoutesRecordsIndexController,
+            ICollectionController collectionController,
             IStatusController statusController) :
             base(
                 productRoutesStashController,
                 convertProductRoutesToIndexDelegate,
                 productRoutesRecordsIndexController,
+                collectionController,
                 statusController)
         {
             // ...

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
 
-using Interfaces.Controllers.Index;
 using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
@@ -22,18 +21,18 @@ namespace GOG.Activities.Update.ProductTypes
         readonly IDataController<AccountProduct> accountProductDataController;
         readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
-        readonly IIndexController<long> updatedIndexController;
+        readonly IDataController<long> updatedDataController;
 
         public UpdateUpdatedActivity(
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
-            IIndexController<long> updatedIndexController,
+            IDataController<long> updatedDataController,
             IStatusController statusController): base(statusController)
         {
             this.accountProductDataController = accountProductDataController;
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
 
-            this.updatedIndexController = updatedIndexController;
+            this.updatedDataController = updatedDataController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
@@ -81,11 +80,11 @@ namespace GOG.Activities.Update.ProductTypes
             }
 
             foreach (var accountProduct in accountProductsNewOrUpdated)
-                await updatedIndexController.CreateAsync(accountProduct, addUpdatedAccountProductsStatus);
+                await updatedDataController.UpdateAsync(accountProduct, addUpdatedAccountProductsStatus);
 
             await statusController.CompleteAsync(addUpdatedAccountProductsStatus);
 
-            await updatedIndexController.CommitAsync(updateDataUpdatedStatus);
+            await updatedDataController.CommitAsync(updateDataUpdatedStatus);
 
             await statusController.CompleteAsync(updateDataUpdatedStatus);
 

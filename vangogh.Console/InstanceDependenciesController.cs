@@ -40,7 +40,6 @@ using Delegates.GetFilename.Json;
 using Delegates.GetFilename.ProductTypes;
 using Delegates.GetPath;
 using Delegates.GetPath.ArgsDefinitions;
-using Delegates.GetPath.Binary;
 using Delegates.GetPath.Json;
 using Delegates.GetPath.Records;
 using Delegates.GetPath.ProductTypes;
@@ -125,9 +124,6 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<GetArgsDefinitionsFilenameDelegate>(
                 typeof(GetJsonFilenameDelegate));
 
-            dependenciesController.AddDependencies<GetHashesFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
-
             dependenciesController.AddDependencies<GetAppTemplateFilenameDelegate>(
                 typeof(GetJsonFilenameDelegate));
 
@@ -147,44 +143,40 @@ namespace vangogh.Console
                 typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetSessionRecordsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetAccountProductsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetApiProductsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetGameDetailsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetGameProductDataFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetProductDownloadsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetProductRoutesFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetProductScreenshotsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetProductsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             dependenciesController.AddDependencies<GetValidationResultsFilenameDelegate>(
-                typeof(GetBinFilenameDelegate));
+                typeof(GetJsonFilenameDelegate));
 
             // Delegates.GetPath
 
             dependenciesController.AddDependencies<GetArgsDefinitionsPathDelegate>(
                 typeof(GetEmptyDirectoryDelegate),
                 typeof(GetArgsDefinitionsFilenameDelegate));
-
-            dependenciesController.AddDependencies<GetHashesPathDelegate>(
-                typeof(GetEmptyDirectoryDelegate),
-                typeof(GetHashesFilenameDelegate));
 
             dependenciesController.AddDependencies<GetAppTemplatePathDelegate>(
                 typeof(GetTemplatesDirectoryDelegate),
@@ -308,63 +300,56 @@ namespace vangogh.Console
                 typeof(StreamController),
                 typeof(StatusController));
 
-            // Controllers.Stash
-
-            dependenciesController.AddDependencies<HashesStashController>(
-                typeof(GetHashesPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
-                typeof(StatusController));
-
             // Controllers.Stash.Records
 
             dependenciesController.AddDependencies<SessionRecordsStashController>(
                 typeof(GetSessionRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<AccountProductsRecordsStashController>(
                 typeof(GetAccountProductsRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ApiProductsRecordsStashController>(
                 typeof(GetApiProductsRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameDetailsRecordsStashController>(
                 typeof(GetGameDetailsRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameProductDataRecordsStashController>(
                 typeof(GetGameProductDataRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductDownloadsRecordsStashController>(
                 typeof(GetProductDownloadsRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductRoutesRecordsStashController>(
                 typeof(GetProductRoutesRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductScreenshotsRecordsStashController>(
                 typeof(GetProductScreenshotsRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductsRecordsStashController>(
                 typeof(GetProductsRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ValidationResultsRecordsStashController>(
                 typeof(GetValidationResultsRecordsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             // Controllers.SerializedStorage.JSON
@@ -495,51 +480,61 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<SessionRecordsDataController>(
                 typeof(SessionRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<AccountProductsRecordsDataController>(
                 typeof(AccountProductsRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ApiProductsRecordsDataController>(
                 typeof(ApiProductsRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameDetailsRecordsDataController>(
                 typeof(GameDetailsRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameProductDataRecordsDataController>(
                 typeof(GameProductDataRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductDownloadsRecordsDataController>(
                 typeof(ProductDownloadsRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductRoutesRecordsDataController>(
                 typeof(ProductRoutesRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductScreenshotsRecordsDataController>(
                 typeof(ProductScreenshotsRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductsRecordsDataController>(
                 typeof(ProductsRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ValidationResultsRecordsDataController>(
                 typeof(ValidationResultsRecordsStashController),
                 typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             // Controllers.Records.Session
@@ -594,49 +589,49 @@ namespace vangogh.Console
 
             dependenciesController.AddDependencies<AccountProductsStashController>(
                 typeof(GetAccountProductsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ApiProductsStashController>(
                 typeof(GetApiProductsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameDetailsStashController>(
                 typeof(GetGameDetailsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameProductDataStashController>(
                 typeof(GetGameProductDataPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductsStashController>(
                 typeof(GetProductsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             // Controllers.Stash.ProductTypes
 
             dependenciesController.AddDependencies<ProductDownloadsStashController>(
                 typeof(GetProductDownloadsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductRoutesStashController>(
                 typeof(GetProductRoutesPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductScreenshotsStashController>(
                 typeof(GetProductScreenshotsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ValidationResultsStashController>(
                 typeof(GetValidationResultsPathDelegate),
-                typeof(ProtoBufSerializedStorageController),
+                typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
             // Controllers.Data.ProductTypes
@@ -645,24 +640,28 @@ namespace vangogh.Console
                 typeof(ProductDownloadsStashController),
                 typeof(ConvertProductDownloadsToIndexDelegate),
                 typeof(ProductDownloadsRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductRoutesDataController>(
                 typeof(ProductRoutesStashController),
                 typeof(ConvertProductRoutesToIndexDelegate),
                 typeof(ProductRoutesRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductScreenshotsDataController>(
                 typeof(ProductScreenshotsStashController),
                 typeof(ConvertProductScreenshotsToIndexDelegate),
                 typeof(ProductScreenshotsRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ValidationResultsDataController>(
                 typeof(ValidationResultsStashController),
                 typeof(ConvertValidationResultsToIndexDelegate),
                 typeof(ValidationResultsRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             // GOG.Controllers.Data.ProductTypes
@@ -671,30 +670,35 @@ namespace vangogh.Console
                 typeof(AccountProductsStashController),
                 typeof(ConvertAccountProductToIndexDelegate),
                 typeof(AccountProductsRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ApiProductsDataController>(
                 typeof(ApiProductsStashController),
                 typeof(ConvertApiProductToIndexDelegate),
                 typeof(ApiProductsRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameDetailsDataController>(
                 typeof(GameDetailsStashController),
                 typeof(ConvertGameDetailsToIndexDelegate),
                 typeof(GameDetailsRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<GameProductDataDataController>(
                 typeof(GameProductDataStashController),
                 typeof(ConvertGameProductDataToIndexDelegate),
                 typeof(GameProductDataRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             dependenciesController.AddDependencies<ProductsDataController>(
                 typeof(ProductsStashController),
                 typeof(ConvertProductToIndexDelegate),
                 typeof(ProductsRecordsIndexController),
+                typeof(CollectionController),                
                 typeof(StatusController));
 
             // Delegates.Correct

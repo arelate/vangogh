@@ -6,8 +6,8 @@ namespace Delegates.GetFilename.ProductTypes
 {
     public class GetProductScreenshotsFilenameDelegate: GetFixedFilenameDelegate
     {
-        public GetProductScreenshotsFilenameDelegate(IGetFilenameDelegate getBinFilenameDelegate):
-            base(Filenames.ProductScreenshots, getBinFilenameDelegate)
+        public GetProductScreenshotsFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate):
+            base(Filenames.ProductScreenshots, getFilenameExtensionDelegate)
         {
             // ...
         }

@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Index;
+using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
@@ -15,11 +14,11 @@ namespace GOG.Activities.Update
     public class WishlistedUpdateActivity : Activity
     {
         readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
-        readonly IIndexController<long> wishlistedDataController;
+        readonly IDataController<long> wishlistedDataController;
 
         public WishlistedUpdateActivity(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
-            IIndexController<long> wishlistedDataController,
+            IDataController<long> wishlistedDataController,
             IStatusController statusController) :
             base(statusController)
         {
@@ -44,7 +43,7 @@ namespace GOG.Activities.Update
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                await wishlistedDataController.CreateAsync(product.Id, saveDataTask);
+                await wishlistedDataController.UpdateAsync(product.Id, saveDataTask);
             }
 
             await statusController.CompleteAsync(saveDataTask);

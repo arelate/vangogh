@@ -6,8 +6,8 @@ namespace Delegates.GetFilename.Binary
 {
     public class GetSessionRecordsFilenameDelegate: GetFixedFilenameDelegate
     {
-        public GetSessionRecordsFilenameDelegate(IGetFilenameDelegate getBinFilenameDelegate):
-            base(Filenames.Session, getBinFilenameDelegate)
+        public GetSessionRecordsFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate):
+            base(Filenames.Session, getFilenameExtensionDelegate)
         {
             // ...
         }

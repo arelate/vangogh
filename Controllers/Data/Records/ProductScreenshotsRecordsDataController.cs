@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
-using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Collection;
 
 using Interfaces.Delegates.Convert;
 
@@ -15,13 +14,15 @@ namespace Controllers.Data.Records
     public class ProductScreenshotsRecordsDataController : DataController<ProductRecords>
     {
         public ProductScreenshotsRecordsDataController(
-            IStashController<Dictionary<long, ProductRecords>> productScreenshotsRecordsStashController,
+            IStashController<List<ProductRecords>> productScreenshotsRecordsStashController,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
+            ICollectionController collectionController,
             IStatusController statusController) :
             base(
                 productScreenshotsRecordsStashController,
                 convertProductRecordsToIndexDelegate,
                 null,
+                collectionController,
                 statusController)
         {
             // ...

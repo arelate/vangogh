@@ -11,8 +11,7 @@ using GOG.Models;
 
 namespace GOG.Controllers.Stash.ProductTypes
 {
-    public class ApiProductsStashController :
-        StashController<Dictionary<long, ApiProduct>>
+    public class ApiProductsStashController : StashController<List<ApiProduct>>
     {
         public ApiProductsStashController(
             IGetPathDelegate getApiProductsPathDelegate,

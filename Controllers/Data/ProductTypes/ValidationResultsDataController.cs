@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Collection;
 
 using Interfaces.Delegates.Convert;
 
@@ -15,14 +15,16 @@ namespace Controllers.Data.ProductTypes
     public class ValidationResultsDataController : DataController<ValidationResults>
     {
         public ValidationResultsDataController(
-            IStashController<Dictionary<long, ValidationResults>> validationResultsStashController,
+            IStashController<List<ValidationResults>> validationResultsStashController,
             IConvertDelegate<ValidationResults, long> convertValidationResultsToIndexDelegate,
             IRecordsController<long> validationResultsRecordsIndexController,
+            ICollectionController collectionController,
             IStatusController statusController) :
             base(
                 validationResultsStashController,
                 convertValidationResultsToIndexDelegate,
                 validationResultsRecordsIndexController,
+                collectionController,
                 statusController)
         {
             // ...

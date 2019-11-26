@@ -10,7 +10,7 @@ using Models.Records;
 
 namespace Controllers.Stash.Records
 {
-    public class ProductRoutesRecordsStashController : StashController<Dictionary<long, ProductRecords>>
+    public class ProductRoutesRecordsStashController : StashController<List<ProductRecords>>
     {
         public ProductRoutesRecordsStashController(
             IGetPathDelegate getProductRoutesRecordsPathDelegate,

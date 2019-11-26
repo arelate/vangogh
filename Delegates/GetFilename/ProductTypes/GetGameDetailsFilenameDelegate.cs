@@ -6,8 +6,8 @@ namespace Delegates.GetFilename.ProductTypes
 {
     public class GetGameDetailsFilenameDelegate : GetFixedFilenameDelegate
     {
-        public GetGameDetailsFilenameDelegate(IGetFilenameDelegate getBinFilenameDelegate) :
-            base(Filenames.GameDetails, getBinFilenameDelegate)
+        public GetGameDetailsFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate) :
+            base(Filenames.GameDetails, getFilenameExtensionDelegate)
         {
             // ...
         }

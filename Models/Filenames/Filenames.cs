@@ -4,7 +4,6 @@
     {
         public static string ArgsDefinitions = "definitions";
         public static string Index = "index";
-        public static string Hashes = "hashes";
         public static string AppTemplate = "appTemplate";
         public static string ReportTemplate = "reportTemplate";
         public static string Cookies = "cookies";

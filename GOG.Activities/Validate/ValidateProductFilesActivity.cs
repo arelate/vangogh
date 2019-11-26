@@ -10,7 +10,6 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Index;
 
 using Interfaces.Validation;
 using Interfaces.Routing;
@@ -32,7 +31,7 @@ namespace GOG.Activities.Validate
         readonly IDataController<ValidationResults> validationResultsDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        readonly IIndexController<long> updatedIndexController;
+        readonly IDataController<long> updatedDataController;
         readonly IRoutingController routingController;
 
         public ValidateProductFilesActivity(
@@ -43,7 +42,7 @@ namespace GOG.Activities.Validate
             IDataController<ValidationResults> validationResultsDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IIndexController<long> updatedIndexController,
+            IDataController<long> updatedDataController,
             IRoutingController routingController,
             IStatusController statusController) :
             base(statusController)
@@ -56,7 +55,7 @@ namespace GOG.Activities.Validate
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
 
-            this.updatedIndexController = updatedIndexController;
+            this.updatedDataController = updatedDataController;
             this.routingController = routingController;
         }
 
@@ -66,9 +65,9 @@ namespace GOG.Activities.Validate
 
             var current = 0;
 
-            var count = await updatedIndexController.CountAsync(validateProductsStatus);
+            var count = await updatedDataController.CountAsync(validateProductsStatus);
 
-            await foreach (var id in updatedIndexController.ItemizeAllAsync(validateProductsStatus))
+            await foreach (var id in updatedDataController.ItemizeAllAsync(validateProductsStatus))
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id, validateProductsStatus);
                 var validationResults = await validationResultsDataController.GetByIdAsync(id, validateProductsStatus);

@@ -10,7 +10,7 @@ using Models.ValidationResults;
 namespace Controllers.Stash.ProductTypes
 {
     public class ValidationResultsStashController :
-        StashController<Dictionary<long, ValidationResults>>
+        StashController<List<ValidationResults>>
     {
         public ValidationResultsStashController(
             IGetPathDelegate getValidationResultsPathDelegate,

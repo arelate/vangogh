@@ -10,7 +10,7 @@ using Models.ProductRoutes;
 namespace Controllers.Stash.ProductTypes
 {
     public class ProductRoutesStashController :
-        StashController<Dictionary<long, ProductRoutes>>
+        StashController<List<ProductRoutes>>
     {
         public ProductRoutesStashController(
             IGetPathDelegate getProductRoutesPathDelegate,

@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.GetValue;
 
-using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
 using Interfaces.Models.Entities;
@@ -29,7 +27,7 @@ namespace GOG.Activities.Update
     {
         readonly IDataController<MasterType> masterDataController;
         readonly IDataController<DetailType> detailDataController;
-        IIndexController<long> updatedDataController;
+        IDataController<long> updatedDataController;
 
         readonly IItemizeAllAsyncDelegate<MasterType> itemizeMasterTypeGapsAsyncDelegate;
 
@@ -50,7 +48,7 @@ namespace GOG.Activities.Update
             IItemizeAllAsyncDelegate<MasterType> itemizeMasterTypeGapsAsyncDelegate,
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,
-            IIndexController<long> updatedDataController,
+            IDataController<long> updatedDataController,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate,
             IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate,
             IStatusController statusController,
@@ -102,9 +100,10 @@ namespace GOG.Activities.Update
 
                 var data = await getDeserializedDelegate.GetDeserializedAsync(updateProductsTask, uri);
 
-                if (data != null)
+                if (data != null &&
+                    fillGapsDelegate != null)
                 {
-                    fillGapsDelegate?.FillGaps(data, product);
+                    fillGapsDelegate.FillGaps(data, product);
                     await detailDataController.UpdateAsync(data, updateProductsTask);
                 }
             }

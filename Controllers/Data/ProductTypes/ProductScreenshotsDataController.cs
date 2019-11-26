@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Collection;
 
 using Interfaces.Delegates.Convert;
 
@@ -15,14 +15,16 @@ namespace Controllers.Data.ProductTypes
     public class ProductScreenshotsDataController : DataController<ProductScreenshots>
     {
         public ProductScreenshotsDataController(
-            IStashController<Dictionary<long, ProductScreenshots>> productScreenshotsStashController,
+            IStashController<List<ProductScreenshots>> productScreenshotsStashController,
             IConvertDelegate<ProductScreenshots, long> convertProductScreenshotsToIndexDelegate,
             IRecordsController<long> productScreenshotsRecordsIndexController,
+            ICollectionController collectionController,
             IStatusController statusController) :
             base(
                 productScreenshotsStashController,
                 convertProductScreenshotsToIndexDelegate,
                 productScreenshotsRecordsIndexController,
+                collectionController,
                 statusController)
         {
             // ...

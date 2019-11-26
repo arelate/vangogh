@@ -10,7 +10,7 @@ using Models.ProductScreenshots;
 namespace Controllers.Stash.ProductTypes
 {
     public class ProductScreenshotsStashController :
-        StashController<Dictionary<long, ProductScreenshots>>
+        StashController<List<ProductScreenshots>>
     {
         public ProductScreenshotsStashController(
             IGetPathDelegate getProductScreenshotsPathDelegate,

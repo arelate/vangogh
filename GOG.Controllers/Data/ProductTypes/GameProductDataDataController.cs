@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Collection;
 
 using Interfaces.Delegates.Convert;
 
@@ -17,14 +17,16 @@ namespace GOG.Controllers.Data.ProductTypes
     public class GameProductDataDataController : DataController<GameProductData>
     {
         public GameProductDataDataController(
-            IStashController<Dictionary<long, GameProductData>> gameProductDataStashController,
+            IStashController<List<GameProductData>> gameProductDataStashController,
             IConvertDelegate<GameProductData, long> convertGameProductDataToIndexDelegate,
             IRecordsController<long> gameProductDataRecordsIndexController,
+            ICollectionController collectionController,
             IStatusController statusController) :
             base(
                 gameProductDataStashController,
                 convertGameProductDataToIndexDelegate,
                 gameProductDataRecordsIndexController,
+                collectionController,
                 statusController)
         {
             // ...
