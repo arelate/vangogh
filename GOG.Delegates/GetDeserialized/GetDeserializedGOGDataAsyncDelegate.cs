@@ -13,7 +13,7 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.GetDeserialized
 {
-    public class GetDeserializedGOGDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
+    public abstract class GetDeserializedGOGDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
     {
         readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
         readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;

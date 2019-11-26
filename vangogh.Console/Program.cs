@@ -60,6 +60,7 @@ using GOG.Delegates.DownloadProductFile;
 using GOG.Delegates.GetImageUri;
 using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
+using GOG.Delegates.GetDeserialized.ProductTypes;
 using GOG.Delegates.Itemize;
 using GOG.Delegates.Format;
 using GOG.Delegates.RequestPage;
@@ -73,7 +74,6 @@ using GOG.Activities.Update;
 using GOG.Activities.Update.ProductTypes;
 using GOG.Activities.UpdateDownloads;
 using GOG.Activities.DownloadProductFiles;
-using GOG.Activities.Repair;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
 using GOG.Activities.Report;
@@ -479,30 +479,21 @@ namespace vangogh.Console
                 typeof(UpdateAccountProductsActivity))
                 as UpdateAccountProductsActivity;
 
-            var updatedUpdateActivity = dependenciesController.GetInstance(
+            var updateUpdatedActivity = dependenciesController.GetInstance(
                 typeof(UpdateUpdatedActivity))
                 as UpdateUpdatedActivity;
 
-            #region Update.Wishlisted
-
-            var getDeserializedPageResultAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<ProductsPageResult>(networkController,
-                itemizeGOGDataDelegate,
-                jsonSerializationController);
-
-            var wishlistedUpdateActivity = new WishlistedUpdateActivity(
-                getDeserializedPageResultAsyncDelegate,
-                wishlistedDataController,
-                statusController);
-
-            #endregion
+            var updateWishlistedActivity = dependenciesController.GetInstance(
+                typeof(UpdateWishlistedActivity))
+                as UpdateWishlistedActivity;
 
             #region Update.Products
 
             // dependencies for update controllers
 
-            var getDeserializedGOGDataAsyncDelegate = new GetDeserializedGOGDataAsyncDelegate<GOGData>(networkController,
-                itemizeGOGDataDelegate,
-                jsonSerializationController);
+            var getDeserializedGOGDataAsyncDelegate = dependenciesController.GetInstance(
+                typeof(GetGOGDataDeserializedGOGDataAsyncDelegate))
+                as GetGOGDataDeserializedGOGDataAsyncDelegate;
 
             var getDeserializedGameProductDataAsyncDelegate = new GetDeserializedGameProductDataAsyncDelegate(
                 getDeserializedGOGDataAsyncDelegate);
@@ -810,15 +801,6 @@ namespace vangogh.Console
                 routingController,
                 statusController);
 
-            #region Repair
-
-            var repairActivity = new RepairActivity(
-                validationResultsDataController,
-                validationResultController,
-                statusController);
-
-            #endregion
-
             #region Cleanup
 
             var itemizeAllGameDetailsDirectoriesAsyncDelegate = new ItemizeAllGameDetailsDirectoriesAsyncDelegate(
@@ -925,40 +907,6 @@ namespace vangogh.Console
             //     convertArgsToRequestsDelegateCreator.CreateDelegate();
 
             //var requests = convertArgsToRequestsDelegate.Convert(args);                                
-
-            #endregion
-
-            #region Activity Context To Activity Controllers Mapping
-
-            // var activityContextToActivityControllerMap = new Dictionary<(Activity, Entity), IActivity>
-            // {
-            //     { (Activity.Authorize, Entity.None), authorizeActivity },
-            //     { (Activity.UpdateData, Entity.Products), productsUpdateActivity },
-            //     { (Activity.UpdateData, Entity.AccountProducts), accountProductsUpdateActivity },
-            //     { (Activity.UpdateData, Entity.Updated), updatedUpdateActivity },
-            //     { (Activity.UpdateData, Entity.Wishlist), wishlistedUpdateActivity },
-            //     { (Activity.UpdateData, Entity.GameProductData), gameProductDataUpdateActivity },
-            //     { (Activity.UpdateData, Entity.ApiProducts), apiProductUpdateActivity },
-            //     { (Activity.UpdateData, Entity.GameDetails), gameDetailsUpdateActivity },
-            //     { (Activity.UpdateData, Entity.Screenshots), updateScreenshotsActivity },
-            //     { (Activity.UpdateDownloads, Entity.ProductImages), updateProductsImagesDownloadsActivity },
-            //     { (Activity.UpdateDownloads, Entity.AccountProductImages), updateAccountProductsImagesDownloadsActivity },
-            //     { (Activity.UpdateDownloads, Entity.Screenshots), updateScreenshotsDownloadsActivity },
-            //     { (Activity.UpdateDownloads, Entity.ProductFiles), updateProductFilesDownloadsActivity },
-            //     { (Activity.Download, Entity.ProductImages), productsImagesDownloadActivity },
-            //     { (Activity.Download, Entity.AccountProductImages), accountProductsImagesDownloadActivity },
-            //     { (Activity.Download, Entity.Screenshots), screenshotsDownloadActivity },
-            //     { (Activity.Download, Entity.ProductFiles), productFilesDownloadActivity },
-            //     { (Activity.Validate, Entity.ProductFiles), validateProductFilesActivity },
-            //     { (Activity.Validate, Entity.Data), validateDataActivity },
-            //     { (Activity.Repair, Entity.ProductFiles), repairActivity },
-            //     { (Activity.Cleanup, Entity.Directories), directoryCleanupActivity },
-            //     { (Activity.Cleanup, Entity.Files), fileCleanupActivity },
-            //     { (Activity.Cleanup, Entity.Updated), cleanupUpdatedActivity },
-            //     { (Activity.Report, Entity.None), reportActivity },
-            //     { (Activity.List, Entity.Updated), listUpdatedActivity },
-            //     { (Activity.Help, Entity.None), helpActivity }
-            // };
 
             #endregion
 

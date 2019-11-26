@@ -9,14 +9,14 @@ using Models.Uris;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
-namespace GOG.Activities.Update
+namespace GOG.Activities.Update.ProductTypes
 {
-    public class WishlistedUpdateActivity : Activity
+    public class UpdateWishlistedActivity : Activity
     {
         readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
         readonly IDataController<long> wishlistedDataController;
 
-        public WishlistedUpdateActivity(
+        public UpdateWishlistedActivity(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,
             IStatusController statusController) :

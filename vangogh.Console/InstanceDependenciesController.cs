@@ -65,6 +65,7 @@ using GOG.Delegates.RequestPage;
 using GOG.Delegates.Convert.ProductTypes;
 using GOG.Delegates.GetPageResults.ProductTypes;
 using GOG.Delegates.Confirm;
+using GOG.Delegates.GetDeserialized.ProductTypes;
 
 using GOG.Controllers.Stash.ProductTypes;
 using GOG.Controllers.Data.ProductTypes;
@@ -837,6 +838,25 @@ namespace vangogh.Console
                 typeof(AccountProductsDataController),
                 typeof(ConfirmAccountProductUpdatedDelegate),
                 typeof(UpdatedDataController),
+                typeof(StatusController));
+
+            // GOG.Delegates.GetDeserialized.ProductTypes
+
+            dependenciesController.AddDependencies<GetProductsPageResultDeserializedGOGDataAsyncDelegate>(
+                typeof(NetworkController),
+                typeof(ItemizeGOGDataDelegate),
+                typeof(JSONSerializationController));
+
+            dependenciesController.AddDependencies<GetGOGDataDeserializedGOGDataAsyncDelegate>(
+                typeof(NetworkController),
+                typeof(ItemizeGOGDataDelegate),
+                typeof(JSONSerializationController));
+
+            // GOG.Activities.Update.ProductTypes
+
+            dependenciesController.AddDependencies<UpdateWishlistedActivity>(
+                typeof(GetProductsPageResultDeserializedGOGDataAsyncDelegate),
+                typeof(WishlistedDataController),
                 typeof(StatusController));
 
             // ...
