@@ -1,21 +1,21 @@
 using System.Collections.Generic;
 
 using Interfaces.Delegates.GetPath;
-
 using Interfaces.Controllers.SerializedStorage;
 
 using Interfaces.Status;
 
-namespace Controllers.Stash.Hashes
+
+namespace Controllers.Stash.ProductTypes
 {
-    public class HashesStashController : StashController<Dictionary<string, string>>
+    public class UpdatedStashController : StashController<List<long>>
     {
-        public HashesStashController(
-            IGetPathDelegate getHashesPathDelegate,
+        public UpdatedStashController(
+            IGetPathDelegate getUpdatedPathDelegate,
             ISerializedStorageController serializedStorageController,
             IStatusController statusController) :
             base(
-                getHashesPathDelegate,
+                getUpdatedPathDelegate,
                 serializedStorageController,
                 statusController)
         {

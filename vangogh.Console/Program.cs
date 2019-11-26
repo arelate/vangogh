@@ -407,17 +407,13 @@ namespace vangogh.Console
                 typeof(RecycleDelegate))
                 as RecycleDelegate;
 
-            // TODO: Actually implement this using dependencyController
-            Interfaces.Controllers.Data.IDataController<long> wishlistedDataController = null;
-            //  dataControllerFactory.CreateIndexController(
-            //     Entity.Wishlist, 
-            //     getWishlistedFilenameDelegate);
+            var wishlistedDataController = dependenciesController.GetInstance(
+                typeof(WishlistedDataController))
+                as WishlistedDataController;
 
-            // TODO: Actually implement this using dependencyController
-            Interfaces.Controllers.Data.IDataController<long> updatedDataController = null;
-            // dataControllerFactory.CreateIndexController(
-            //     Entity.Updated, 
-            //     getUpdatedFilenameDelegate);
+            var updatedDataController = dependenciesController.GetInstance(
+                typeof(UpdatedDataController))
+                as UpdatedDataController;
 
             var sessionRecordsController = dependenciesController.GetInstance(
                 typeof(SessionRecordsController))
@@ -436,19 +432,6 @@ namespace vangogh.Console
             var productsDataController = dependenciesController.GetInstance(
                 typeof(ProductsDataController))
                 as ProductsDataController;
-
-            // System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
-            // var product = new Product() {
-            //     Id = 1,
-            //     Title = "Test product",
-            // };
-
-            // await productsDataController.UpdateAsync(product, applicationStatus);
-            // System.Console.WriteLine($"Contains product by id=1: {await productsDataController.ContainsIdAsync(1, applicationStatus)}");
-
-            // await productsDataController.CommitAsync(applicationStatus);
-
-            // return;
 
             var accountProductsDataController = dependenciesController.GetInstance(
                 typeof(AccountProductsDataController))
@@ -496,19 +479,9 @@ namespace vangogh.Console
                 typeof(UpdateAccountProductsActivity))
                 as UpdateAccountProductsActivity;
 
-            #region Update.PageResults
-
-            var confirmAccountProductUpdatedDelegate = dependenciesController.GetInstance(
-                typeof(ConfirmAccountProductUpdatedDelegate))
-                as ConfirmAccountProductUpdatedDelegate;
-
-            var updatedUpdateActivity = new UpdateUpdatedActivity(
-                accountProductsDataController,
-                confirmAccountProductUpdatedDelegate,
-                updatedDataController,
-                statusController);
-
-            #endregion
+            var updatedUpdateActivity = dependenciesController.GetInstance(
+                typeof(UpdateUpdatedActivity))
+                as UpdateUpdatedActivity;
 
             #region Update.Wishlisted
 

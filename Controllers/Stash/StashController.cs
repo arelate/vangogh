@@ -11,7 +11,7 @@ using Interfaces.Status;
 
 namespace Controllers.Stash
 {
-    public class StashController<ModelType>: IStashController<ModelType> where ModelType : class, new()
+    public abstract class StashController<ModelType>: IStashController<ModelType> where ModelType : class, new()
     {
         readonly IGetPathDelegate getPathDelegate;
         readonly ISerializedStorageController serializedStorageController;

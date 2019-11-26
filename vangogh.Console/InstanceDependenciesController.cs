@@ -2,7 +2,6 @@ using Interfaces.Controllers.Dependencies;
 
 using Controllers.Collection;
 using Controllers.Stash.ArgsDefinitions;
-using Controllers.Stash.Hashes;
 using Controllers.Stash.Templates;
 using Controllers.Stash.Cookies;
 using Controllers.Stash.Records;
@@ -38,7 +37,6 @@ using Delegates.GetFilename.ArgsDefinitions;
 using Delegates.GetFilename.Binary;
 using Delegates.GetFilename.Json;
 using Delegates.GetFilename.ProductTypes;
-using Delegates.GetPath;
 using Delegates.GetPath.ArgsDefinitions;
 using Delegates.GetPath.Json;
 using Delegates.GetPath.Records;
@@ -136,12 +134,6 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<GetIndexFilenameDelegate>(
                 typeof(GetJsonFilenameDelegate));
 
-            dependenciesController.AddDependencies<GetWishlistedFilenameDelegate>(
-                typeof(GetJsonFilenameDelegate));
-
-            dependenciesController.AddDependencies<GetUpdatedFilenameDelegate>(
-                typeof(GetJsonFilenameDelegate));
-
             dependenciesController.AddDependencies<GetSessionRecordsFilenameDelegate>(
                 typeof(GetJsonFilenameDelegate));
 
@@ -171,6 +163,12 @@ namespace vangogh.Console
 
             dependenciesController.AddDependencies<GetValidationResultsFilenameDelegate>(
                 typeof(GetJsonFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetWishlistedFilenameDelegate>(
+                typeof(GetJsonFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetUpdatedFilenameDelegate>(
+                typeof(GetJsonFilenameDelegate));                
 
             // Delegates.GetPath
 
@@ -240,6 +238,14 @@ namespace vangogh.Console
                 typeof(GetRecordsDirectoryDelegate),
                 typeof(GetValidationResultsFilenameDelegate));
 
+            dependenciesController.AddDependencies<GetUpdatedRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetUpdatedFilenameDelegate));     
+
+            dependenciesController.AddDependencies<GetWishlistedRecordsPathDelegate>(
+                typeof(GetRecordsDirectoryDelegate),
+                typeof(GetWishlistedFilenameDelegate));                           
+
             // Delegates.GetPath.ProductTypes
 
             dependenciesController.AddDependencies<GetAccountProductsPathDelegate>(
@@ -277,6 +283,14 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<GetValidationResultsPathDelegate>(
                 typeof(GetDataDirectoryDelegate),
                 typeof(GetValidationResultsFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetUpdatedPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetUpdatedFilenameDelegate));
+
+            dependenciesController.AddDependencies<GetWishlistedPathDelegate>(
+                typeof(GetDataDirectoryDelegate),
+                typeof(GetWishlistedFilenameDelegate));                                
 
             // Controllers.Storage
 
@@ -351,6 +365,16 @@ namespace vangogh.Console
                 typeof(GetValidationResultsRecordsPathDelegate),
                 typeof(JSONSerializedStorageController),
                 typeof(StatusController));
+
+            dependenciesController.AddDependencies<UpdatedRecordsStashController>(
+                typeof(GetUpdatedRecordsPathDelegate),
+                typeof(JSONSerializedStorageController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<WishlistedRecordsStashController>(
+                typeof(GetWishlistedPathDelegate),
+                typeof(JSONSerializedStorageController),
+                typeof(StatusController));                     
 
             // Controllers.SerializedStorage.JSON
 
@@ -537,6 +561,18 @@ namespace vangogh.Console
                 typeof(CollectionController),                
                 typeof(StatusController));
 
+            dependenciesController.AddDependencies<UpdatedRecordsDataController>(
+                typeof(UpdatedRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
+                typeof(StatusController));             
+
+            dependenciesController.AddDependencies<WishlistedRecordsDataController>(
+                typeof(WishlistedRecordsStashController),
+                typeof(ConvertProductCoreToIndexDelegate<ProductRecords>),
+                typeof(CollectionController),                
+                typeof(StatusController));  
+
             // Controllers.Records.Session
 
             dependenciesController.AddDependencies<SessionRecordsIndexController>(
@@ -584,6 +620,14 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<ValidationResultsRecordsIndexController>(
                 typeof(ValidationResultsRecordsDataController),
                 typeof(StatusController));
+
+            dependenciesController.AddDependencies<UpdatedRecordsIndexController>(
+                typeof(UpdatedRecordsDataController),
+                typeof(StatusController));
+
+            dependenciesController.AddDependencies<WishlistedRecordsIndexController>(
+                typeof(WishlistedRecordsDataController),
+                typeof(StatusController));                                
 
             // GOG.Controllers.Stash.ProductTypes
 
@@ -634,6 +678,16 @@ namespace vangogh.Console
                 typeof(JSONSerializedStorageController),
                 typeof(StatusController));
 
+            dependenciesController.AddDependencies<UpdatedStashController>(
+                typeof(GetUpdatedPathDelegate),
+                typeof(JSONSerializedStorageController),
+                typeof(StatusController));     
+
+            dependenciesController.AddDependencies<WishlistedStashController>(
+                typeof(GetWishlistedPathDelegate),
+                typeof(JSONSerializedStorageController),
+                typeof(StatusController));                                
+
             // Controllers.Data.ProductTypes
 
             dependenciesController.AddDependencies<ProductDownloadsDataController>(
@@ -663,6 +717,20 @@ namespace vangogh.Console
                 typeof(ValidationResultsRecordsIndexController),
                 typeof(CollectionController),                
                 typeof(StatusController));
+
+            dependenciesController.AddDependencies<UpdatedDataController>(
+                typeof(UpdatedStashController),
+                typeof(ConvertPassthroughIndexDelegate),
+                typeof(UpdatedRecordsIndexController),
+                typeof(CollectionController),                
+                typeof(StatusController));          
+
+            dependenciesController.AddDependencies<WishlistedDataController>(
+                typeof(WishlistedStashController),
+                typeof(ConvertPassthroughIndexDelegate),
+                typeof(WishlistedRecordsIndexController),
+                typeof(CollectionController),                
+                typeof(StatusController));                         
 
             // GOG.Controllers.Data.ProductTypes
 
@@ -768,8 +836,7 @@ namespace vangogh.Console
             dependenciesController.AddDependencies<UpdateUpdatedActivity>(
                 typeof(AccountProductsDataController),
                 typeof(ConfirmAccountProductUpdatedDelegate),
-                // TODO: fix
-                // typeof(UpdatedIndexController),
+                typeof(UpdatedDataController),
                 typeof(StatusController));
 
             // ...
