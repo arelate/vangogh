@@ -20,7 +20,8 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Activities.Update
 {
-    public class MasterDetailProductUpdateActivity<MasterType, DetailType> :
+    // TODO: abstract
+    public class UpdateMasterDetailProductActivity<MasterType, DetailType> :
         Activity
         where MasterType : ProductCore
         where DetailType : ProductCore
@@ -42,7 +43,7 @@ namespace GOG.Activities.Update
 
         readonly string updateTypeDescription;
 
-        public MasterDetailProductUpdateActivity(
+        public UpdateMasterDetailProductActivity(
             // Entity context,
             IGetValueDelegate<string> getUpdateUriDelegate,
             IItemizeAllAsyncDelegate<MasterType> itemizeMasterTypeGapsAsyncDelegate,

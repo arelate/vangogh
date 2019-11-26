@@ -510,8 +510,8 @@ namespace vangogh.Console
                 productsDataController,
                 gameProductDataDataController);
 
-            MasterDetailProductUpdateActivity<Product, GameProductData> gameProductDataUpdateActivity = null;
-            // var gameProductDataUpdateActivity = new MasterDetailProductUpdateActivity<Product, GameProductData>(
+            UpdateMasterDetailProductActivity<Product, GameProductData> gameProductDataUpdateActivity = null;
+            // var gameProductDataUpdateActivity = new UpdateMasterDetailProductActivity<Product, GameProductData>(
             //     Entity.GameProductData,
             //     getProductUpdateUriByContextDelegate,
             //     itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
@@ -535,8 +535,8 @@ namespace vangogh.Console
             //     itemizeAllApiProductsGapsAsyncDelegate,
             //     updatedIndexController);
 
-            MasterDetailProductUpdateActivity<Product, ApiProduct> apiProductUpdateActivity = null;
-            // var apiProductUpdateActivity = new MasterDetailProductUpdateActivity<Product, ApiProduct>(
+            UpdateMasterDetailProductActivity<Product, ApiProduct> apiProductUpdateActivity = null;
+            // var apiProductUpdateActivity = new UpdateMasterDetailProductActivity<Product, ApiProduct>(
             //     Entity.ApiProducts,
             //     getProductUpdateUriByContextDelegate,
             //     itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
@@ -590,9 +590,9 @@ namespace vangogh.Console
             //     itemizeAllGameDetailsGapsAsyncDelegate,
             //     updatedIndexController);
 
-            MasterDetailProductUpdateActivity<AccountProduct, GameDetails> gameDetailsUpdateActivity = null;
+            UpdateMasterDetailProductActivity<AccountProduct, GameDetails> gameDetailsUpdateActivity = null;
 
-            // var gameDetailsUpdateActivity = new MasterDetailProductUpdateActivity<AccountProduct, GameDetails>(
+            // var gameDetailsUpdateActivity = new UpdateMasterDetailProductActivity<AccountProduct, GameDetails>(
             //     Entity.GameDetails,
             //     getProductUpdateUriByContextDelegate,
             //     itemizeAllUserRequestedOrDefaultAsyncDelegate,
