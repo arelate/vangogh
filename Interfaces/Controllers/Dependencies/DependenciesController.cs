@@ -1,8 +1,10 @@
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace Interfaces.Controllers.Dependencies
 {
+
     public interface IInstantiateTypeDelegate
     {
         object Instantiate(Type type);
@@ -23,11 +25,23 @@ namespace Interfaces.Controllers.Dependencies
         Type[] GetDependentConstructorDependencyTypes(ConstructorInfo constructorInfo);
     }
 
+    public interface IGetTypeDependencyGraphDelegate
+    {
+        List<(Type, int)> GetTypeDependencyGraph(Type type, int level = 0);
+    }
+
+    public interface IDependencyGraphToStringDelegate
+    {
+        IEnumerable<string> DependencyGraphToString(List<(Type, int)> dependencyGraph);
+    }
+
     public interface IDependenciesController :
         IInstantiateTypeDelegate,
         IInstantiateTypesDelegate,
         IGetDependentConstructorDelegate,
-        IGetDependentConstructorDependencyTypesDelegate
+        IGetDependentConstructorDependencyTypesDelegate,
+        IGetTypeDependencyGraphDelegate,
+        IDependencyGraphToStringDelegate        
     {
         // ...
     }

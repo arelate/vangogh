@@ -8,6 +8,7 @@ using Attributes;
 
 namespace Controllers.Dependencies
 {
+
     public class DependenciesController : IDependenciesController
     {
         private readonly Dictionary<Type, object> singletonInstancesCache = new Dictionary<Type, object>();
@@ -87,6 +88,28 @@ namespace Controllers.Dependencies
                 implementationTypeDependencies[ii] = Type.GetType(declaredDependencies.Dependencies[ii]);
 
             return implementationTypeDependencies;
+        }
+
+        public List<(Type,int)> GetTypeDependencyGraph(Type type, int level = 0)
+        {
+            var plainGraph = new List<(Type,int)>();
+            
+            plainGraph.Add(new ValueTuple<Type,int>(type, level));
+
+            var dependentConstructor = GetDependentConstructor(type);
+
+            if (dependentConstructor != null)
+                foreach (var dependencyType in GetDependentConstructorDependencyTypes(dependentConstructor))
+                    plainGraph.AddRange(GetTypeDependencyGraph(dependencyType, level+1));    
+
+            return plainGraph;
+        }
+
+        public IEnumerable<string> DependencyGraphToString(List<(Type, int)> dependencyGraph)
+        {
+            
+            foreach (var dependencyLine in dependencyGraph)
+                yield return $"{new String('|', dependencyLine.Item2)}{dependencyLine.Item1.FullName}";
         }
     }
 }

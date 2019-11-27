@@ -486,6 +486,12 @@ namespace vangogh.Console
                 typeof(UpdateWishlistedActivity))
                 as UpdateWishlistedActivity;
 
+
+            var dependencyGraph = dependenciesController.GetTypeDependencyGraph(typeof(UpdateAccountProductsActivity));
+            foreach (var line in dependenciesController.DependencyGraphToString(dependencyGraph))
+                System.Console.WriteLine(line);
+
+
             #region Update.Products
 
             // dependencies for update controllers
