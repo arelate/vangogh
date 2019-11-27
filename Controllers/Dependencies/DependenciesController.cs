@@ -10,69 +10,83 @@ namespace Controllers.Dependencies
 {
     public class DependenciesController : IDependenciesController
     {
-        private readonly Dictionary<Type, object> instancesCache;
-
-        public DependenciesController()
-        {
-            instancesCache = new Dictionary<Type, object>();
-        }
+        private readonly Dictionary<Type, object> singletonInstancesCache = new Dictionary<Type, object>();
 
         public object Instantiate(Type type)
         {
-            if (type == null)
-                throw new ArgumentException($"Cannot instantiate null type");
-
-            if (type.IsInterface ||
+            if (type == null ||
+                type.IsInterface ||
                 type.IsAbstract)
-                throw new ArgumentException(
-                    $"Type {type.Name} is an interface or abstract class");
+                throw new ArgumentException($"Invalid type: {type.Name}: null, an interface or abstract");
 
-            if (!instancesCache.ContainsKey(type))
+            if (!singletonInstancesCache.ContainsKey(type))
             {
-                ConstructorInfo instatiationConstructor = null;
-                Type[] implementationTypeDependencies = null;
+                var dependentConstructor = GetDependentConstructor(type);
 
-                foreach (var constructorInfo in type.GetConstructors())
+                if (dependentConstructor == null)
                 {
-                    if (constructorInfo.CustomAttributes != null)
-                    {
-                        var declaredDependencies = constructorInfo.GetCustomAttribute(
-                            typeof(DependenciesAttribute))
-                            as DependenciesAttribute;
-                        if (declaredDependencies == null) continue;
+                    dependentConstructor = type.GetConstructor(Type.EmptyTypes);
 
-                        instatiationConstructor = constructorInfo;
-                        implementationTypeDependencies = new Type[declaredDependencies.Dependencies.Length];
-                        for (var ii = 0; ii < implementationTypeDependencies.Length; ii++)
-                            implementationTypeDependencies[ii] = Type.GetType(declaredDependencies.Dependencies[ii]);
-                    }
+                    if (dependentConstructor == null)
+                        throw new ArgumentException(
+                            $@"Type {type.Name} cannot be instantiated as it does not
+                            have constructor with specified dependencies or default constructor");
                 }
 
-                if (instatiationConstructor == null &&
-                    implementationTypeDependencies == null)
-                {
-                    implementationTypeDependencies = new Type[0];
-                    instatiationConstructor = type.GetConstructor(implementationTypeDependencies);
-                }
-                // instatiationConstructor = type.GetConstructor(implementationTypeDependencies);
+                var dependentConstructorDependencies =
+                    GetDependentConstructorDependencyTypes(dependentConstructor);
 
-                if (instatiationConstructor == null)
-                    throw new ArgumentException(
-                        $@"Type {type.Name} cannot be instantitated as it does not
-                        have constructor with specified dependencies");
+                var instantiatedDependencies =
+                    Instantiate(dependentConstructorDependencies);
 
-                object[] implementationInstanceDependencies =
-                    new object[implementationTypeDependencies.Length];
-                for (var ii = 0; ii < implementationTypeDependencies.Length; ii++)
-                {
-                    implementationInstanceDependencies[ii] =
-                        Instantiate(implementationTypeDependencies[ii]);
-                }
-
-                instancesCache[type] = instatiationConstructor.Invoke(implementationInstanceDependencies);
+                singletonInstancesCache[type] = dependentConstructor.Invoke(instantiatedDependencies);
             }
 
-            return instancesCache[type];
+            return singletonInstancesCache[type];
+        }
+
+        public object[] Instantiate(Type[] types)
+        {
+            object[] instances = new object[types.Length];
+
+            for (var ii = 0; ii < types.Length; ii++)
+                instances[ii] = Instantiate(types[ii]);
+
+            return instances;
+        }
+
+        public ConstructorInfo GetDependentConstructor(Type type)
+        {
+            foreach (var constructorInfo in type.GetConstructors())
+                if (constructorInfo.CustomAttributes != null)
+                {
+                    var declaredDependencies = constructorInfo.GetCustomAttribute(
+                        typeof(DependenciesAttribute))
+                        as DependenciesAttribute;
+                    if (declaredDependencies == null) continue;
+
+                    return constructorInfo;
+                }
+
+            return null;
+        }
+
+        public Type[] GetDependentConstructorDependencyTypes(ConstructorInfo constructorInfo)
+        {
+            Type[] implementationTypeDependencies = null;
+
+            var declaredDependencies = constructorInfo.GetCustomAttribute(
+                typeof(DependenciesAttribute))
+                as DependenciesAttribute;
+
+            if (declaredDependencies == null)
+                return Type.EmptyTypes;
+
+            implementationTypeDependencies = new Type[declaredDependencies.Dependencies.Length];
+            for (var ii = 0; ii < implementationTypeDependencies.Length; ii++)
+                implementationTypeDependencies[ii] = Type.GetType(declaredDependencies.Dependencies[ii]);
+
+            return implementationTypeDependencies;
         }
     }
 }
