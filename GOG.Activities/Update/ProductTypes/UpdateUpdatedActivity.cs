@@ -12,6 +12,8 @@ using Interfaces.Status;
 
 using Interfaces.Models.Entities;
 
+using Attributes;
+
 using GOG.Models;
 
 namespace GOG.Activities.Update.ProductTypes
@@ -23,6 +25,11 @@ namespace GOG.Activities.Update.ProductTypes
 
         readonly IDataController<long> updatedDataController;
 
+        [Dependencies(
+            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
+            "GOG.Delegates.Confirm.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
+            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public UpdateUpdatedActivity(
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,

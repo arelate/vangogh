@@ -8,6 +8,8 @@ using Interfaces.Controllers.Network;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace Delegates.Download
 {
     public class DownloadFromUriAsyncDelegate : IDownloadFromUriAsyncDelegate
@@ -16,6 +18,10 @@ namespace Delegates.Download
         readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
         readonly IStatusController statusController;
 
+        [Dependencies(
+            "Controllers.Network.NetworkController,Controllers",
+            "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
+            "Controllers.Status.StatusController,Controllers")]
         public DownloadFromUriAsyncDelegate(
             IRequestResponseAsyncDelegate requestResponseAsyncDelegate,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,

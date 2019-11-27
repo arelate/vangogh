@@ -36,7 +36,7 @@ using Controllers.SerializedStorage.ProtoBuf;
 using Controllers.Presentation;
 using Controllers.Routing;
 using Controllers.Status;
-using Controllers.ViewUpdates;
+using Controllers.NotifyViewUpdate;
 using Controllers.InputOutput;
 using Controllers.Dependencies;
 using Controllers.Records.Session;
@@ -84,6 +84,8 @@ using Models.Records;
 
 using Creators.Delegates.Convert.Requests;
 
+using Delegates.GetPath.ArgsDefinitions;
+
 namespace vangogh.Console
 {
     class Program
@@ -91,251 +93,248 @@ namespace vangogh.Console
         static async Task Main(string[] args)
         {
             var dependenciesController = new DependenciesController();
-            var dependenciesControllerInitializer = new DependenciesControllerInitializer(dependenciesController);
 
-            dependenciesControllerInitializer.Initialize();
-
-            // var getEmptyDirectoryDelegate = dependenciesController.GetInstance(
+            // var getEmptyDirectoryDelegate = dependenciesController.Instantiate(
             //     typeof(GetEmptyDirectoryDelegate))
             //     as GetEmptyDirectoryDelegate;
 
-            // var getTemplatesDirectoryDelegate = dependenciesController.GetInstance(
+            // var getTemplatesDirectoryDelegate = dependenciesController.Instantiate(
             //     typeof(GetTemplatesDirectoryDelegate))
             //     as GetTemplatesDirectoryDelegate;
 
-            // var getDataDirectoryDelegate = dependenciesController.GetInstance(
+            // var getDataDirectoryDelegate = dependenciesController.Instantiate(
             //     typeof(GetDataDirectoryDelegate))
             //     as GetDataDirectoryDelegate;
 
-            // var getRecycleBinDirectoryDelegate = dependenciesController.GetInstance(
+            // var getRecycleBinDirectoryDelegate = dependenciesController.Instantiate(
             //     typeof(GetRecycleBinDirectoryDelegate))
             //     as GetRecycleBinDirectoryDelegate;
 
-            var getProductImagesDirectoryDelegate = dependenciesController.GetInstance(
+            var getProductImagesDirectoryDelegate = dependenciesController.Instantiate(
                 typeof(GetProductImagesDirectoryDelegate))
                 as GetProductImagesDirectoryDelegate;
 
-            var getAccountProductImagesDirectoryDelegate = dependenciesController.GetInstance(
+            var getAccountProductImagesDirectoryDelegate = dependenciesController.Instantiate(
                 typeof(GetAccountProductImagesDirectoryDelegate))
                 as GetAccountProductImagesDirectoryDelegate;
 
-            var getReportDirectoryDelegate = dependenciesController.GetInstance(
+            var getReportDirectoryDelegate = dependenciesController.Instantiate(
                 typeof(GetReportDirectoryDelegate))
                 as GetReportDirectoryDelegate;
 
-            var getMd5DirectoryDelegate = dependenciesController.GetInstance(
+            var getMd5DirectoryDelegate = dependenciesController.Instantiate(
                 typeof(GetMd5DirectoryDelegate))
                 as GetMd5DirectoryDelegate;
 
-            var getProductFilesRootDirectoryDelegate = dependenciesController.GetInstance(
+            var getProductFilesRootDirectoryDelegate = dependenciesController.Instantiate(
                 typeof(GetProductFilesRootDirectoryDelegate))
                 as GetProductFilesRootDirectoryDelegate;
 
-            var getScreenshotsDirectoryDelegate = dependenciesController.GetInstance(
+            var getScreenshotsDirectoryDelegate = dependenciesController.Instantiate(
                 typeof(GetScreenshotsDirectoryDelegate))
                 as GetScreenshotsDirectoryDelegate;
 
-            var getProductFilesDirectoryDelegate = dependenciesController.GetInstance(
+            var getProductFilesDirectoryDelegate = dependenciesController.Instantiate(
                 typeof(GetProductFilesDirectoryDelegate))
                 as GetProductFilesDirectoryDelegate;
 
-            // var getArgsDefinitionsFilenameDelegate = dependenciesController.GetInstance(
+            // var getArgsDefinitionsFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetArgsDefinitionsFilenameDelegate))
             //     as GetArgsDefinitionsFilenameDelegate;
 
-            // var getHashesFilenameDelegate = dependenciesController.GetInstance(
+            // var getHashesFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetHashesFilenameDelegate))
             //     as GetHashesFilenameDelegate;
 
-            // var getAppTemplateFilenameDelegate = dependenciesController.GetInstance(
+            // var getAppTemplateFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetAppTemplateFilenameDelegate))
             //     as GetAppTemplateFilenameDelegate;
 
-            // var getReportTemplateFilenameDelegate = dependenciesController.GetInstance(
+            // var getReportTemplateFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetReportTemplateFilenameDelegate))
             //     as GetReportTemplateFilenameDelegate;                
 
-            // var getCookiesFilenameDelegate = dependenciesController.GetInstance(
+            // var getCookiesFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetCookiesFilenameDelegate))
             //     as GetCookiesFilenameDelegate;  
 
-            // var getIndexFilenameDelegate = dependenciesController.GetInstance(
+            // var getIndexFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetIndexFilenameDelegate))
             //     as GetIndexFilenameDelegate;
 
-            // var getWishlistedFilenameDelegate = dependenciesController.GetInstance(
+            // var getWishlistedFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetWishlistedFilenameDelegate))
             //     as GetWishlistedFilenameDelegate;
 
-            // var getUpdatedFilenameDelegate = dependenciesController.GetInstance(
+            // var getUpdatedFilenameDelegate = dependenciesController.Instantiate(
             //     typeof(GetUpdatedFilenameDelegate))
             //     as GetUpdatedFilenameDelegate;
 
-            var getUriFilenameDelegate = dependenciesController.GetInstance(
+            var getUriFilenameDelegate = dependenciesController.Instantiate(
                 typeof(GetUriFilenameDelegate))
                 as GetUriFilenameDelegate;
 
-            var getReportFilenameDelegate = dependenciesController.GetInstance(
+            var getReportFilenameDelegate = dependenciesController.Instantiate(
                 typeof(GetReportFilenameDelegate))
                 as GetReportFilenameDelegate;
 
-            var getValidationFilenameDelegate = dependenciesController.GetInstance(
+            var getValidationFilenameDelegate = dependenciesController.Instantiate(
                 typeof(GetValidationFilenameDelegate))
                 as GetValidationFilenameDelegate;
 
-            // var getArgsDefinitionsPathDelegate = dependenciesController.GetInstance(
+            // var getArgsDefinitionsPathDelegate = dependenciesController.Instantiate(
             //     typeof(GetArgsDefinitionsPathDelegate))
             //     as GetArgsDefinitionsPathDelegate;
 
-            // var getHashesPathDelegate = dependenciesController.GetInstance(
+            // var getHashesPathDelegate = dependenciesController.Instantiate(
             //     typeof(GetHashesPathDelegate))
             //     as GetHashesPathDelegate;
 
-            // var getAppTemplatePathDelegate = dependenciesController.GetInstance(
+            // var getAppTemplatePathDelegate = dependenciesController.Instantiate(
             //     typeof(GetAppTemplatePathDelegate))
             //     as GetAppTemplatePathDelegate;
 
-            // var getReportTemplatePathDelegate = dependenciesController.GetInstance(
+            // var getReportTemplatePathDelegate = dependenciesController.Instantiate(
             //     typeof(GetReportTemplatePathDelegate))
             //     as GetReportTemplatePathDelegate;
 
-            // var getCookiePathDelegate = dependenciesController.GetInstance(
+            // var getCookiePathDelegate = dependenciesController.Instantiate(
             //     typeof(GetCookiesPathDelegate))
             //     as GetCookiesPathDelegate;
 
-            var getGameDetailsFilesPathDelegate = dependenciesController.GetInstance(
+            var getGameDetailsFilesPathDelegate = dependenciesController.Instantiate(
                 typeof(GetGameDetailsFilesPathDelegate))
                 as GetGameDetailsFilesPathDelegate;
 
-            var getValidationPathDelegate = dependenciesController.GetInstance(
+            var getValidationPathDelegate = dependenciesController.Instantiate(
                 typeof(GetValidationPathDelegate))
                 as GetValidationPathDelegate;
 
-            var statusController = dependenciesController.GetInstance(
+            var statusController = dependenciesController.Instantiate(
                 typeof(StatusController))
                 as StatusController;
 
-            var streamController = dependenciesController.GetInstance(
+            var streamController = dependenciesController.Instantiate(
                 typeof(StreamController))
                 as StreamController;
 
-            var fileController = dependenciesController.GetInstance(
+            var fileController = dependenciesController.Instantiate(
                 typeof(FileController))
                 as FileController;
 
-            var directoryController = dependenciesController.GetInstance(
+            var directoryController = dependenciesController.Instantiate(
                 typeof(DirectoryController))
                 as DirectoryController;
 
-            var storageController = dependenciesController.GetInstance(
+            var storageController = dependenciesController.Instantiate(
                 typeof(StorageController))
                 as StorageController;
 
-            var jsonSerializationController = dependenciesController.GetInstance(
+            var jsonSerializationController = dependenciesController.Instantiate(
                 typeof(JSONSerializationController))
                 as JSONSerializationController;
 
-            // var convertBytesToStringDelegate = dependenciesController.GetInstance(
+            // var convertBytesToStringDelegate = dependenciesController.Instantiate(
             //     typeof(ConvertBytesToStringDelegate))
             //     as ConvertBytesToStringDelegate;
 
-            var convertBytesToMd5HashDelegate = dependenciesController.GetInstance(
+            var convertBytesToMd5HashDelegate = dependenciesController.Instantiate(
                 typeof(ConvertBytesToMd5HashDelegate))
                 as ConvertBytesToMd5HashDelegate;
 
-            // var convertStringToBytesDelegate = dependenciesController.GetInstance(
+            // var convertStringToBytesDelegate = dependenciesController.Instantiate(
             //     typeof(ConvertStringToBytesDelegate))
             //     as ConvertStringToBytesDelegate;
 
-            var convertStringToMd5HashDelegate = dependenciesController.GetInstance(
+            var convertStringToMd5HashDelegate = dependenciesController.Instantiate(
                 typeof(ConvertStringToMd5HashDelegate))
                 as ConvertStringToMd5HashDelegate;
 
-            // var protoBufSerializedStorageController = dependenciesController.GetInstance(
+            // var protoBufSerializedStorageController = dependenciesController.Instantiate(
             //     typeof(ProtoBufSerializedStorageController))
             //     as ProtoBufSerializedStorageController;
 
-            // var jsonSerializedStorageController = dependenciesController.GetInstance(
+            // var jsonSerializedStorageController = dependenciesController.Instantiate(
             //     typeof(JSONSerializedStorageController))
             //     as JSONSerializedStorageController;
 
-            var argsDefinitionStashController = dependenciesController.GetInstance(
+            var argsDefinitionStashController = dependenciesController.Instantiate(
                 typeof(ArgsDefinitionsStashController))
                 as ArgsDefinitionsStashController;
 
-            // var appTemplateStashController = dependenciesController.GetInstance(
+            // var appTemplateStashController = dependenciesController.Instantiate(
             //     typeof(AppTemplateStashController))
             //     as AppTemplateStashController;
 
-            // var reportTemplateStashController = dependenciesController.GetInstance(
+            // var reportTemplateStashController = dependenciesController.Instantiate(
             //     typeof(ReportTemplateStashController))
             //     as ReportTemplateStashController;
 
-            // var cookiesStashController = dependenciesController.GetInstance(
+            // var cookiesStashController = dependenciesController.Instantiate(
             //     typeof(CookiesStashController))
             //     as CookiesStashController;
 
-            // var consoleController = dependenciesController.GetInstance(
+            // var consoleController = dependenciesController.Instantiate(
             //     typeof(ConsoleController))
             //     as ConsoleController;
 
-            // var formatTextToFitConsoleWindowDelegate = dependenciesController.GetInstance(
+            // var formatTextToFitConsoleWindowDelegate = dependenciesController.Instantiate(
             //     typeof(FormatTextToFitConsoleWindowDelegate))
             //     as FormatTextToFitConsoleWindowDelegate;
 
-            var consoleInputOutputController = dependenciesController.GetInstance(
+            var consoleInputOutputController = dependenciesController.Instantiate(
                 typeof(ConsoleInputOutputController))
                 as ConsoleInputOutputController;
 
-            // var formatBytesDelegate = dependenciesController.GetInstance(
+            // var formatBytesDelegate = dependenciesController.Instantiate(
             //     typeof(FormatBytesDelegate))
             //     as FormatBytesDelegate;
 
-            // var formatSecondsDelegate = dependenciesController.GetInstance(
+            // var formatSecondsDelegate = dependenciesController.Instantiate(
             //     typeof(FormatSecondsDelegate))
             //     as FormatSecondsDelegate;
 
-            var collectionController = dependenciesController.GetInstance(
+            var collectionController = dependenciesController.Instantiate(
                 typeof(CollectionController))
                 as CollectionController;
 
-            // var itemizeStatusChildrenDelegate = dependenciesController.GetInstance(
+            // var itemizeStatusChildrenDelegate = dependenciesController.Instantiate(
             //     typeof(ItemizeStatusChildrenDelegate))
             //     as ItemizeStatusChildrenDelegate;
 
-            // var convertStatusTreeToEnumerableDelegate = dependenciesController.GetInstance(
+            // var convertStatusTreeToEnumerableDelegate = dependenciesController.Instantiate(
             //     typeof(ConvertStatusTreeToEnumerableDelegate))
             //     as ConvertStatusTreeToEnumerableDelegate;
 
-            var applicationStatus = dependenciesController.GetInstance(
+            var applicationStatus = dependenciesController.Instantiate(
                 typeof(Status))
                 as Status;
 
-            // var appTemplateController = dependenciesController.GetInstance(
+            // var appTemplateController = dependenciesController.Instantiate(
             //     typeof(AppTemplateController))
             //     as AppTemplateController;
 
-            // var reportTemplateController = dependenciesController.GetInstance(
+            // var reportTemplateController = dependenciesController.Instantiate(
             //     typeof(ReportTemplateController))
             //     as ReportTemplateController;
 
-            // var formatRemainingTimeAtSpeedDelegate = dependenciesController.GetInstance(
+            // var formatRemainingTimeAtSpeedDelegate = dependenciesController.Instantiate(
             //     typeof(FormatRemainingTimeAtSpeedDelegate))
             //     as FormatRemainingTimeAtSpeedDelegate;
 
-            // var getStatusAppViewModelDelegate = dependenciesController.GetInstance(
+            // var getStatusAppViewModelDelegate = dependenciesController.Instantiate(
             //     typeof(GetStatusAppViewModelDelegate))
             //     as GetStatusAppViewModelDelegate;
 
-            // var statusReportViewModelDelegate = dependenciesController.GetInstance(
+            // var statusReportViewModelDelegate = dependenciesController.Instantiate(
             //     typeof(GetStatusReportViewModelDelegate))
             //     as GetStatusReportViewModelDelegate;
 
-            var getStatusViewUpdateDelegate = dependenciesController.GetInstance(
+            var getStatusViewUpdateDelegate = dependenciesController.Instantiate(
                 typeof(GetStatusViewUpdateDelegate))
                 as GetStatusViewUpdateDelegate;
 
-            // var consoleNotifyStatusViewUpdateController = dependenciesController.GetInstance(
+            // var consoleNotifyStatusViewUpdateController = dependenciesController.Instantiate(
             //     typeof(NotifyStatusViewUpdateController))
             //     as NotifyStatusViewUpdateController;
 
@@ -343,147 +342,147 @@ namespace vangogh.Console
             // add notification handler to drive console view updates
             // statusController.NotifyStatusChangedAsync += consoleNotifyStatusViewUpdateController.NotifyViewUpdateOutputOnRefreshAsync;
 
-            // var constrainExecutionAsyncDelegate = dependenciesController.GetInstance(
+            // var constrainExecutionAsyncDelegate = dependenciesController.Instantiate(
             //     typeof(ConstrainExecutionAsyncDelegate))
             //     as ConstrainExecutionAsyncDelegate;
 
-            // var itemizeAllRateConstrainedUrisDelegate = dependenciesController.GetInstance(
+            // var itemizeAllRateConstrainedUrisDelegate = dependenciesController.Instantiate(
             //     typeof(ItemizeAllRateConstrainedUrisDelegate))
             //     as ItemizeAllRateConstrainedUrisDelegate;
 
-            // var constrainRequestRateAsyncDelegate = dependenciesController.GetInstance(
+            // var constrainRequestRateAsyncDelegate = dependenciesController.Instantiate(
             //     typeof(ConstrainRequestRateAsyncDelegate))
             //     as ConstrainRequestRateAsyncDelegate;;
 
-            var uriController = dependenciesController.GetInstance(
+            var uriController = dependenciesController.Instantiate(
                 typeof(UriController))
                 as UriController;
 
-            // var cookiesSerializationController = dependenciesController.GetInstance(
+            // var cookiesSerializationController = dependenciesController.Instantiate(
             //     typeof(CookiesSerializationController))
             //     as CookiesSerializationController;
 
-            // var cookiesController = dependenciesController.GetInstance(
+            // var cookiesController = dependenciesController.Instantiate(
             //     typeof(CookiesController))
             //     as CookiesController;
 
-            var networkController = dependenciesController.GetInstance(
+            var networkController = dependenciesController.Instantiate(
                 typeof(NetworkController))
                 as NetworkController;
 
-            var downloadFromResponseAsyncDelegate = dependenciesController.GetInstance(
+            var downloadFromResponseAsyncDelegate = dependenciesController.Instantiate(
                 typeof(DownloadFromResponseAsyncDelegate))
                 as DownloadFromResponseAsyncDelegate;
 
-            var downloadFromUriAsyncDelegate = dependenciesController.GetInstance(
+            var downloadFromUriAsyncDelegate = dependenciesController.Instantiate(
                 typeof(DownloadFromUriAsyncDelegate))
                 as DownloadFromUriAsyncDelegate;
 
-            var requestPageAsyncDelegate = dependenciesController.GetInstance(
+            var requestPageAsyncDelegate = dependenciesController.Instantiate(
                 typeof(RequestPageAsyncDelegate))
                 as RequestPageAsyncDelegate;
 
-            var languageController = dependenciesController.GetInstance(
+            var languageController = dependenciesController.Instantiate(
                 typeof(LanguageController))
                 as LanguageController;
 
-            var itemizeGOGDataDelegate = dependenciesController.GetInstance(
+            var itemizeGOGDataDelegate = dependenciesController.Instantiate(
                 typeof(ItemizeGOGDataDelegate))
                 as ItemizeGOGDataDelegate;
 
-            var itemizeScreenshotsDelegate = dependenciesController.GetInstance(
+            var itemizeScreenshotsDelegate = dependenciesController.Instantiate(
                 typeof(ItemizeScreenshotsDelegate))
                 as ItemizeScreenshotsDelegate; ;
 
-            var formatImagesUriDelegate = dependenciesController.GetInstance(
+            var formatImagesUriDelegate = dependenciesController.Instantiate(
                 typeof(FormatImagesUriDelegate))
                 as FormatImagesUriDelegate;
 
-            var formatScreenshotsUriDelegate = dependenciesController.GetInstance(
+            var formatScreenshotsUriDelegate = dependenciesController.Instantiate(
                 typeof(FormatScreenshotsUriDelegate))
                 as FormatScreenshotsUriDelegate;
 
-            var recycleDelegate = dependenciesController.GetInstance(
+            var recycleDelegate = dependenciesController.Instantiate(
                 typeof(RecycleDelegate))
                 as RecycleDelegate;
 
-            var wishlistedDataController = dependenciesController.GetInstance(
+            var wishlistedDataController = dependenciesController.Instantiate(
                 typeof(WishlistedDataController))
                 as WishlistedDataController;
 
-            var updatedDataController = dependenciesController.GetInstance(
+            var updatedDataController = dependenciesController.Instantiate(
                 typeof(UpdatedDataController))
                 as UpdatedDataController;
 
-            var sessionRecordsController = dependenciesController.GetInstance(
+            var sessionRecordsController = dependenciesController.Instantiate(
                 typeof(SessionRecordsController))
                 as SessionRecordsController;
 
-            // var convertProductRecordToIndexDelegate = dependenciesController.GetInstance(
+            // var convertProductRecordToIndexDelegate = dependenciesController.Instantiate(
             //     typeof(ConvertProductCoreToIndexDelegate<ProductRecords>))
             //     as ConvertProductCoreToIndexDelegate<ProductRecords>;
 
-            // var getRecordsDirectoryDelegate = dependenciesController.GetInstance(
+            // var getRecordsDirectoryDelegate = dependenciesController.Instantiate(
             //     typeof(GetRecordsDirectoryDelegate))
             //     as GetRecordsDirectoryDelegate;
 
             // Controllers.Data
 
-            var productsDataController = dependenciesController.GetInstance(
+            var productsDataController = dependenciesController.Instantiate(
                 typeof(ProductsDataController))
                 as ProductsDataController;
 
-            var accountProductsDataController = dependenciesController.GetInstance(
+            var accountProductsDataController = dependenciesController.Instantiate(
                 typeof(AccountProductsDataController))
                 as AccountProductsDataController;
 
-            var gameDetailsDataController = dependenciesController.GetInstance(
+            var gameDetailsDataController = dependenciesController.Instantiate(
                 typeof(GameDetailsDataController))
                 as GameDetailsDataController;
 
-            var gameProductDataDataController = dependenciesController.GetInstance(
+            var gameProductDataDataController = dependenciesController.Instantiate(
                 typeof(GameProductDataDataController))
                 as GameProductDataDataController;
 
-            var apiProductsDataController = dependenciesController.GetInstance(
+            var apiProductsDataController = dependenciesController.Instantiate(
                 typeof(ApiProductsDataController))
                 as ApiProductsDataController;
 
-            var productScreenshotsDataController = dependenciesController.GetInstance(
+            var productScreenshotsDataController = dependenciesController.Instantiate(
                 typeof(ProductScreenshotsDataController))
                 as ProductScreenshotsDataController;
 
-            var productDownloadsDataController = dependenciesController.GetInstance(
+            var productDownloadsDataController = dependenciesController.Instantiate(
                 typeof(ProductDownloadsDataController))
                 as ProductDownloadsDataController;
 
-            var productRoutesDataController = dependenciesController.GetInstance(
+            var productRoutesDataController = dependenciesController.Instantiate(
                 typeof(ProductRoutesDataController))
                 as ProductRoutesDataController;
 
-            var validationResultsDataController = dependenciesController.GetInstance(
+            var validationResultsDataController = dependenciesController.Instantiate(
                 typeof(ValidationResultsDataController))
                 as ValidationResultsDataController;
 
             #region Activity Controllers
 
-            var authorizeActivity = dependenciesController.GetInstance(
+            var authorizeActivity = dependenciesController.Instantiate(
                 typeof(AuthorizeActivity))
                 as AuthorizeActivity;
 
-            var updateProductsActivity = dependenciesController.GetInstance(
+            var updateProductsActivity = dependenciesController.Instantiate(
                 typeof(UpdateProductsActivity))
                 as UpdateProductsActivity;
 
-            var updateAccountProductsActivity = dependenciesController.GetInstance(
+            var updateAccountProductsActivity = dependenciesController.Instantiate(
                 typeof(UpdateAccountProductsActivity))
                 as UpdateAccountProductsActivity;
 
-            var updateUpdatedActivity = dependenciesController.GetInstance(
+            var updateUpdatedActivity = dependenciesController.Instantiate(
                 typeof(UpdateUpdatedActivity))
                 as UpdateUpdatedActivity;
 
-            var updateWishlistedActivity = dependenciesController.GetInstance(
+            var updateWishlistedActivity = dependenciesController.Instantiate(
                 typeof(UpdateWishlistedActivity))
                 as UpdateWishlistedActivity;
 
@@ -491,7 +490,7 @@ namespace vangogh.Console
 
             // dependencies for update controllers
 
-            var getDeserializedGOGDataAsyncDelegate = dependenciesController.GetInstance(
+            var getDeserializedGOGDataAsyncDelegate = dependenciesController.Instantiate(
                 typeof(GetGOGDataDeserializedGOGDataAsyncDelegate))
                 as GetGOGDataDeserializedGOGDataAsyncDelegate;
 
@@ -899,7 +898,7 @@ namespace vangogh.Console
                     collectionController,
                     dependenciesController);
 
-            var confirmLikelyTokenTypeDelegate = dependenciesController.GetInstance(
+            var confirmLikelyTokenTypeDelegate = dependenciesController.Instantiate(
                 typeof(ConfirmLikelyTokenTypeDelegate))
                 as ConfirmLikelyTokenTypeDelegate;
 

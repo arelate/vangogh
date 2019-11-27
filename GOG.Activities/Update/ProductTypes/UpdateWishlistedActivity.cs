@@ -5,6 +5,8 @@ using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Uris;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
@@ -16,6 +18,10 @@ namespace GOG.Activities.Update.ProductTypes
         readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
         readonly IDataController<long> wishlistedDataController;
 
+        [Dependencies(
+            "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
+            "Controllers.Data.ProductTypes.WishlistedDataController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public UpdateWishlistedActivity(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,

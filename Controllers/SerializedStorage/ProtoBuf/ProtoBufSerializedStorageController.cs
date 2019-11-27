@@ -8,6 +8,8 @@ using Interfaces.Controllers.File;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using ProtoBuf;
 
 namespace Controllers.SerializedStorage.ProtoBuf
@@ -18,6 +20,10 @@ namespace Controllers.SerializedStorage.ProtoBuf
         readonly IStreamController streamController;
         readonly IStatusController statusController;
 
+        [Dependencies(
+            "Controllers.File.FileController,Controllers",
+            "Controllers.Stream.StreamController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public ProtoBufSerializedStorageController(
             IFileController fileController,
             IStreamController streamController,

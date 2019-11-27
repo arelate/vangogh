@@ -5,6 +5,8 @@ using Interfaces.Delegates.Correct;
 using Interfaces.Input;
 using Interfaces.Status;
 
+using Attributes;
+
 namespace Delegates.Correct
 {
     public class CorrectSecurityCodeAsyncDelegate : ICorrectAsyncDelegate<string>
@@ -13,6 +15,7 @@ namespace Delegates.Correct
             "Enter four digits security code that has been sent to your email:";
         readonly IRequestInputAsyncDelegate<string> requestInputDelegate;
 
+        [Dependencies("Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
         public CorrectSecurityCodeAsyncDelegate(IRequestInputAsyncDelegate<string> requestInputDelegate)
         {
             this.requestInputDelegate = requestInputDelegate;

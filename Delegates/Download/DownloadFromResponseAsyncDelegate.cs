@@ -10,6 +10,8 @@ using Interfaces.Controllers.Network;
 using Interfaces.Delegates.Download;
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Units;
 
 namespace Delegates.Download
@@ -21,6 +23,11 @@ namespace Delegates.Download
         readonly IFileController fileController;
         readonly IStatusController statusController;
 
+        [Dependencies(
+            "Controllers.Network.NetworkController,Controllers",
+            "Controllers.Stream.StreamController,Controllers",
+            "Controllers.File.FileController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public DownloadFromResponseAsyncDelegate(
             INetworkController networkController,
             IStreamController streamController,

@@ -8,10 +8,18 @@ using Interfaces.Delegates.Convert;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace Controllers.Data.ProductTypes
 {
     public class WishlistedDataController : DataController<long>
     {
+        [Dependencies(
+            "Controllers.Stash.ProductTypes.WishlistedStashController,Controllers",
+            "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
+            "Controllers.Records.ProductTypes.WishlistedRecordsIndexController,Controllers",
+            "Controllers.Collection.CollectionController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public WishlistedDataController(
             IStashController<List<long>> wishlistedDataController,
             IConvertDelegate<long, long> convertPassthroughIndexDelegate,

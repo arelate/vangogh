@@ -6,6 +6,8 @@ using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Storage;
 
+using Attributes;
+
 namespace Controllers.Storage
 {
     public class StorageController : IStorageController<string>
@@ -13,6 +15,9 @@ namespace Controllers.Storage
         readonly IStreamController streamController;
         readonly IFileController fileController;
 
+        [Dependencies(
+            "Controllers.Stream.StreamController,Controllers",
+            "Controllers.File.FileController,Controllers")]
         public StorageController(
             IStreamController streamController,
             IFileController fileController)

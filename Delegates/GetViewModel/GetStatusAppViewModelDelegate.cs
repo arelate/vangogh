@@ -7,6 +7,8 @@ using Interfaces.Delegates.Format;
 using Interfaces.ViewModel;
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Units;
 
 namespace Delegates.GetViewModel
@@ -35,6 +37,10 @@ namespace Delegates.GetViewModel
         readonly IFormatDelegate<long, string> formatBytesDelegate;
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
+        [Dependencies(
+            "Delegates.Format.Status.FormatRemainingTimeAtSpeedDelegate,Delegates",
+            "Delegates.Format.Numbers.FormatBytesDelegate,Delegates",
+            "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates")]
         public GetStatusAppViewModelDelegate(
             IFormatDelegate<IStatus, Tuple<long, double>> formatRemainingTimeAtSpeedDelegate,
             IFormatDelegate<long, string> formatBytesDelegate,

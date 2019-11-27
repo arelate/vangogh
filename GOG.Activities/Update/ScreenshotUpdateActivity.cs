@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Linq;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Index;
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;

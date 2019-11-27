@@ -10,6 +10,8 @@ using Interfaces.Controllers.Collection;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace Delegates.Constrain
 {
     public class ConstrainRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
@@ -23,6 +25,11 @@ namespace Delegates.Constrain
         const int passthroughCount = 100; // don't throttle first N requests
         int rateLimitRequestsCount;
 
+        [Dependencies(
+            "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
+            "Controllers.Collection.CollectionController,Controllers",
+            "Controllers.Status.StatusController,Controllers",
+            "GOG.Delegates.Itemize.ItemizeAllRateConstrainedUrisDelegate,GOG.Delegates")]
         public ConstrainRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
             ICollectionController collectionController,

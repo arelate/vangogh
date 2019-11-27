@@ -11,6 +11,8 @@ using Interfaces.Models.RecordsTypes;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.ProductCore;
 
 using GOG.Models;
@@ -21,6 +23,12 @@ namespace GOG.Activities.Update.ProductTypes
 {
     public class UpdateAccountProductsActivity : UpdatePageResultActivity<AccountProductsPageResult, AccountProduct>
     {
+        [Dependencies(
+            "GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate,GOG.Delegates",
+            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
+            "Controllers.Records.Session.SessionRecordsController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public UpdateAccountProductsActivity(
             IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct> itemizeAccountProductsPageResultsDelegate,

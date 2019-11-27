@@ -38,7 +38,7 @@ namespace Creators.Delegates.Convert.Requests
             //    typeof(ConfirmLikelyTokenTypeDelegate)) 
             //     as ConfirmLikelyTokenTypeDelegate;
 
-            var convertTokensToLikelyTypedTokensDelegate = dependenciesController.GetInstance(
+            var convertTokensToLikelyTypedTokensDelegate = dependenciesController.Instantiate(
                 typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
 

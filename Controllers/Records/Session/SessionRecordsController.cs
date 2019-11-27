@@ -5,14 +5,15 @@ using Interfaces.Delegates.Convert;
 
 using Interfaces.Controllers.Records;
 
-using Interfaces.Models.RecordsTypes;
-
-using Interfaces.Status;
+using Attributes;
 
 namespace Controllers.Records.Session
 {
     public class SessionRecordsController: StringRecordsController
     {
+        [Dependencies(
+            "Controllers.Records.Session.SessionRecordsIndexController,Controllers",
+            "Delegates.Convert.ConvertStringToIndexDelegate,Delegates")]
         public SessionRecordsController(
             IRecordsController<long> sessionIndexRecordsController,
             IConvertDelegate<string, long> convertStringToIndexDelegate):

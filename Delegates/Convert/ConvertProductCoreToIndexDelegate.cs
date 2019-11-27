@@ -4,7 +4,7 @@ using Models.ProductCore;
 
 namespace Delegates.Convert
 {
-    public class ConvertProductCoreToIndexDelegate<Type> : IConvertDelegate<Type, long> where Type: ProductCore
+    public abstract class ConvertProductCoreToIndexDelegate<Type> : IConvertDelegate<Type, long> where Type: ProductCore
     {
         public long Convert(Type data)
         {

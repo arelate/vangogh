@@ -6,13 +6,18 @@ using Interfaces.NotifyViewUpdate;
 
 using Interfaces.Status;
 
-namespace Controllers.ViewUpdates
+using Attributes;
+
+namespace Controllers.NotifyViewUpdate
 {
     public class NotifyStatusViewUpdateController: INotifyViewUpdateController
     {
         readonly IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate;
         readonly IOutputController<string[]> outputController;
 
+        [Dependencies(
+            "Controllers.ViewUpdates.GetStatusViewUpdateDelegate,Controllers",
+            "Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
         public NotifyStatusViewUpdateController(
             IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate,
             IOutputController<string[]> outputController)

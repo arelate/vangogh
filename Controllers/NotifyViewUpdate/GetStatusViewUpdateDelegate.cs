@@ -9,7 +9,9 @@ using Interfaces.Template;
 using Interfaces.ViewModel;
 using Interfaces.NotifyViewUpdate;
 
-namespace Controllers.ViewUpdates
+using Attributes;
+
+namespace Controllers.NotifyViewUpdate
 {
     public class GetStatusViewUpdateDelegate : IGetViewUpdateAsyncDelegate<string[]>
     {
@@ -20,6 +22,10 @@ namespace Controllers.ViewUpdates
 
         readonly IList<string> viewParts;
 
+        [Dependencies(
+            "Controllers.Template.App.AppTemplateController,Controllers",
+            "Delegates.GetViewModel.GetStatusAppViewModelDelegate,Delegates",
+            "Delegates.Convert.Collections.Status.ConvertStatusTreeToEnumerableDelegate,Delegates")]
         public GetStatusViewUpdateDelegate(
             // IStatus status,
             ITemplateController templateController,

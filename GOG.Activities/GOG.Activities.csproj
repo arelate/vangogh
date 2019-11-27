@@ -9,6 +9,7 @@
     <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Attributes\Attributes.csproj" />
   </ItemGroup>
 
 </Project>

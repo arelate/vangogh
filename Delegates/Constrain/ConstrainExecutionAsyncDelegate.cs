@@ -5,6 +5,8 @@ using Interfaces.Delegates.Format;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Units;
 
 namespace Delegates.Constrain
@@ -14,6 +16,9 @@ namespace Delegates.Constrain
         readonly IStatusController statusController;
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
+        [Dependencies(
+            "Controllers.Status.StatusController,Controllers",
+            "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates")]
         public ConstrainExecutionAsyncDelegate(
             IStatusController statusController,
             IFormatDelegate<long, string> formatSecondsDelegate)

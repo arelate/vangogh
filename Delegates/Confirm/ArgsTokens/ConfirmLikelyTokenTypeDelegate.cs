@@ -8,6 +8,8 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Models.Properties;
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.ArgsTokens;
 using Models.ArgsDefinitions;
 
@@ -19,6 +21,9 @@ namespace Delegates.Confirm.ArgsTokens
         private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate;
         private readonly ICollectionController collectionController;
 
+        [Dependencies(
+            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Controllers.Collection.CollectionController,Controllers")]
         public ConfirmLikelyTokenTypeDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate,
             ICollectionController collectionController)

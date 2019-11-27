@@ -5,6 +5,8 @@ using Interfaces.Delegates.Convert;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace Delegates.Convert.Hashes
 {
     public class ConvertBytesToMd5HashDelegate: IConvertAsyncDelegate<byte[], Task<string>>
@@ -12,6 +14,7 @@ namespace Delegates.Convert.Hashes
         readonly MD5 md5;
         readonly IConvertDelegate<byte[], string> byteToStringConversionController;
 
+        [Dependencies("Delegates.Convert.Bytes.ConvertBytesToStringDelegate,Delegates")]
         public ConvertBytesToMd5HashDelegate(
             IConvertDelegate<byte[], string> byteToStringConversionController)
         {

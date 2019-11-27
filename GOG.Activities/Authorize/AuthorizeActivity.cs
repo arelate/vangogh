@@ -5,6 +5,8 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Controllers.Authorization;
 
+using Attributes;
+
 using Models.Settings;
 
 namespace GOG.Activities.Authorize
@@ -13,6 +15,9 @@ namespace GOG.Activities.Authorize
     {
         readonly IAuthorizationController authorizationController;
 
+        [Dependencies(
+            "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public AuthorizeActivity(
             IAuthorizationController authorizationController,
             IStatusController statusController) :

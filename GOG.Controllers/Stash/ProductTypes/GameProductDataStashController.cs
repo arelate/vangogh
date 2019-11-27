@@ -5,6 +5,8 @@ using Interfaces.Controllers.SerializedStorage;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using Controllers.Stash;
 
 using GOG.Models;
@@ -13,6 +15,10 @@ namespace GOG.Controllers.Stash.ProductTypes
 {
     public class GameProductDataStashController : StashController<List<GameProductData>>
     {
+        [Dependencies(
+            "Delegates.GetPath.ProductTypes.GetGameProductDataPathDelegate,Delegates",
+            "Controllers.SerializedStorage.JSON.JSONSerializedStorageController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public GameProductDataStashController(
             IGetPathDelegate getGameProductDataPathDelegate,
             ISerializedStorageController serializedStorageController,

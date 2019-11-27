@@ -7,6 +7,8 @@ using Interfaces.Controllers.Network;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace GOG.Delegates.RequestPage
 {
     public class RequestPageAsyncDelegate: IRequestPageAsyncDelegate
@@ -15,6 +17,7 @@ namespace GOG.Delegates.RequestPage
 
         const string pageQueryParameter = "page";
 
+        [Dependencies("Controllers.Network.NetworkController,Controllers")]
         public RequestPageAsyncDelegate(
             INetworkController networkController)
         {

@@ -11,6 +11,8 @@ using Interfaces.Controllers.Serialization;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Uris;
 using Models.QueryParameters;
 
@@ -40,6 +42,17 @@ namespace GOG.Controllers.Authorization
 
         readonly IStatusController statusController;
 
+        [Dependencies(
+            "Delegates.Correct.CorrectUsernamePasswordAsyncDelegate,Delegates",
+            "Delegates.Correct.CorrectSecurityCodeAsyncDelegate,Delegates",
+            "Delegates.Itemize.Attributes.ItemizeLoginTokenAttributeValuesDelegate,Delegates",
+            "Delegates.Itemize.Attributes.ItemizeLoginIdAttributeValuesDelegate,Delegates",
+            "Delegates.Itemize.Attributes.ItemizeLoginUsernameAttributeValuesDelegate,Delegates",
+            "Delegates.Itemize.Attributes.ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate,Delegates",
+            "Controllers.Uri.UriController,Controllers",
+            "Controllers.Network.NetworkController,Controllers",
+            "Controllers.Serialization.JSON.JSONSerializationController,Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public GOGAuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
             ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate,

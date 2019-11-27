@@ -7,6 +7,8 @@ using Interfaces.Delegates.Format;
 using Interfaces.ViewModel;
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Units;
 
 namespace Delegates.GetViewModel
@@ -36,6 +38,9 @@ namespace Delegates.GetViewModel
         readonly IFormatDelegate<long, string> formatBytesDelegate;
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
+        [Dependencies(
+            "Delegates.Format.Numbers.FormatBytesDelegate,Delegates",
+            "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates")]
         public GetStatusReportViewModelDelegate(
             IFormatDelegate<long, string> formatBytesDelegate,
             IFormatDelegate<long, string> formatSecondsDelegate)

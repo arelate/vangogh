@@ -13,6 +13,8 @@ using Interfaces.Input;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace Controllers.InputOutput
 {
     public class ConsoleInputOutputController :
@@ -27,6 +29,9 @@ namespace Controllers.InputOutput
         IFormatDelegate<IEnumerable<string>, IEnumerable<string>> formatTextToFitConsoleWindowDelegate;
         readonly IConsoleController consoleController;
 
+        [Dependencies(
+            "Delegates.Format.Text.FormatTextToFitConsoleWindowDelegate,Delegates",
+            "Controllers.Console.ConsoleController,Controllers")]
         public ConsoleInputOutputController(
             IFormatDelegate<IEnumerable<string>, IEnumerable<string>> formatTextToFitConsoleWindowDelegate,
             IConsoleController consoleController)
