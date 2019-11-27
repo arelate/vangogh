@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Delegates.Convert;
+using Delegates.Convert.Debug;
 using Delegates.GetFilename;
 using Delegates.Format.Uri;
 using Delegates.Itemize;
@@ -18,6 +19,7 @@ using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.ProductTypes;
 using Delegates.GetPath.Json;
 using Delegates.Itemize.Attributes;
+using Delegates.Itemize.Debug;
 using Delegates.GetValue.Uri.ProductTypes;
 using Delegates.GetValue.QueryParameters.ProductTypes;
 
@@ -486,11 +488,12 @@ namespace vangogh.Console
                 typeof(UpdateWishlistedActivity))
                 as UpdateWishlistedActivity;
 
+            // var convertTypeDependenciesToStringsDelegate = dependenciesController.Instantiate(
+            //     typeof(ConvertTypeDependenciesToStringsDelegate))
+            //     as ConvertTypeDependenciesToStringsDelegate;
 
-            var dependencyGraph = dependenciesController.GetTypeDependencyGraph(typeof(UpdateAccountProductsActivity));
-            foreach (var line in dependenciesController.DependencyGraphToString(dependencyGraph))
-                System.Console.WriteLine(line);
-
+            // foreach (var line in convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateProductsActivity)))
+            //     System.Console.WriteLine(line);
 
             #region Update.Products
 
