@@ -1,17 +1,17 @@
 using System;
 using System.Reflection;
 
-namespace Interfaces.Controllers.Dependencies
+namespace Interfaces.Controllers.Instances
 {
 
-    public interface IInstantiateTypeDelegate
+    public interface IGetInstanceDelegate
     {
-        object Instantiate(Type type);
+        object GetInstance(Type type);
     }
 
-    public interface IInstantiateTypesDelegate
+    public interface IGetInstancesDelegate
     {
-        object[] Instantiate(Type[] types);
+        object[] GetInstances(Type[] types);
     }
 
     public interface IGetDependentConstructorDelegate
@@ -24,9 +24,9 @@ namespace Interfaces.Controllers.Dependencies
         Type[] GetDependentConstructorDependencyTypes(ConstructorInfo constructorInfo);
     }
 
-    public interface IDependenciesController :
-        IInstantiateTypeDelegate,
-        IInstantiateTypesDelegate,
+    public interface IInstancesController :
+        IGetInstanceDelegate,
+        IGetInstancesDelegate,
         IGetDependentConstructorDelegate,
         IGetDependentConstructorDependencyTypesDelegate
     {

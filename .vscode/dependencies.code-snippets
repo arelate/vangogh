@@ -15,23 +15,14 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-	"Add dependencies": {
-		"scope": "csharp",
-		"prefix": "adddeps",
-		"body": [
-			"dependenciesController.AddDependencies<${1:ForType}>(",
-			"\ttypeof(${2:Dependency}));"
-		],
-		"description": "Add dependencies to dependenciesController"
-	},
 	"Get instance": {
 		"scope": "csharp",
 		"prefix": "getinst",
 		"body": [
-			"dependenciesController.GetInstance(",
+			"singletonInstancesController.GetInstance(",
 			"\ttypeof(${1:InstanceType}))",
 			"\tas ${1:InstanceType};"
 		],
-		"description": "Get class instance from dependenciesController"
+		"description": "Get class instance from singletonInstancesController"
 	}
 }

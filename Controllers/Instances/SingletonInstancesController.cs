@@ -2,18 +2,18 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Dependencies;
+using Interfaces.Controllers.Instances;
 
 using Attributes;
 
-namespace Controllers.Dependencies
+namespace Controllers.Instances
 {
 
-    public class DependenciesController : IDependenciesController
+    public class SingletonInstancesController : IInstancesController
     {
         private readonly Dictionary<Type, object> singletonInstancesCache = new Dictionary<Type, object>();
 
-        public object Instantiate(Type type)
+        public object GetInstance(Type type)
         {
             if (type == null ||
                 type.IsInterface ||
@@ -38,7 +38,7 @@ namespace Controllers.Dependencies
                     GetDependentConstructorDependencyTypes(dependentConstructor);
 
                 var instantiatedDependencies =
-                    Instantiate(dependentConstructorDependencies);
+                    GetInstances(dependentConstructorDependencies);
 
                 singletonInstancesCache[type] = dependentConstructor.Invoke(instantiatedDependencies);
             }
@@ -46,12 +46,12 @@ namespace Controllers.Dependencies
             return singletonInstancesCache[type];
         }
 
-        public object[] Instantiate(Type[] types)
+        public object[] GetInstances(Type[] types)
         {
             object[] instances = new object[types.Length];
 
             for (var ii = 0; ii < types.Length; ii++)
-                instances[ii] = Instantiate(types[ii]);
+                instances[ii] = GetInstance(types[ii]);
 
             return instances;
         }

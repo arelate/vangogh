@@ -1,7 +1,7 @@
 using Interfaces.Creators;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
-using Interfaces.Controllers.Dependencies;
+using Interfaces.Controllers.Instances;
 
 using Delegates.Convert.Requests;
 using Delegates.Convert.ArgsTokens;
@@ -18,18 +18,18 @@ namespace Creators.Delegates.Convert.Requests
         private ArgsDefinition argsDefinitions;
         private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDelegate;
         private ICollectionController collectionController;
-        private readonly IDependenciesController dependenciesController;
+        private readonly IInstancesController instancesController;
 
         public ConvertArgsToRequestsDelegateCreator(
             ArgsDefinition argsDefinitions,
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDelegate,
             ICollectionController collectionController,
-            IDependenciesController dependenciesController)
+            IInstancesController instancesController)
         {
             this.argsDefinitions = argsDefinitions;
             this.getArgsDefinitionDelegate = getArgsDefinitionDelegate;
             this.collectionController = collectionController;
-            this.dependenciesController = dependenciesController;
+            this.instancesController = instancesController;
         }
 
         public ConvertArgsToRequestsDelegate CreateDelegate()
@@ -38,7 +38,7 @@ namespace Creators.Delegates.Convert.Requests
             //    typeof(ConfirmLikelyTokenTypeDelegate)) 
             //     as ConfirmLikelyTokenTypeDelegate;
 
-            var convertTokensToLikelyTypedTokensDelegate = dependenciesController.Instantiate(
+            var convertTokensToLikelyTypedTokensDelegate = instancesController.GetInstance(
                 typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
 

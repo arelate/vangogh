@@ -5,6 +5,8 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
+using Attributes;
+
 using GOG.Models;
 
 namespace GOG.Delegates.GetDeserialized
@@ -13,6 +15,7 @@ namespace GOG.Delegates.GetDeserialized
     {
         readonly IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate;
 
+        [Dependencies("GOG.Delegates.GetDeserialized.ProductTypes.GetGOGDataDeserializedGOGDataAsyncDelegate,GOG.Delegates")]
         public GetDeserializedGameProductDataAsyncDelegate(
             IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate)
         {
