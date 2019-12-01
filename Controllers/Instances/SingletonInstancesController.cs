@@ -13,6 +13,7 @@ namespace Controllers.Instances
     {
         private readonly Dictionary<Type, object> singletonInstancesCache = new Dictionary<Type, object>();
 
+        // TODO: Create delegate? Convert delegate?
         public object GetInstance(Type type)
         {
             if (type == null ||
@@ -46,6 +47,7 @@ namespace Controllers.Instances
             return singletonInstancesCache[type];
         }
 
+        // TODO: Same as above
         public object[] GetInstances(Type[] types)
         {
             object[] instances = new object[types.Length];
@@ -56,6 +58,7 @@ namespace Controllers.Instances
             return instances;
         }
 
+        // TODO: Convert delegate
         public ConstructorInfo GetDependentConstructor(Type type)
         {
             foreach (var constructorInfo in type.GetConstructors())
@@ -72,6 +75,7 @@ namespace Controllers.Instances
             return null;
         }
 
+        // TODO: Itemize delegate
         public Type[] GetDependentConstructorDependencyTypes(ConstructorInfo constructorInfo)
         {
             Type[] implementationTypeDependencies = null;

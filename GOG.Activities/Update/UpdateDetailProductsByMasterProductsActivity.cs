@@ -3,16 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
 using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
-using Interfaces.Models.Entities;
 
-using GOG.Interfaces.Delegates.GetUpdateIdentity;
 using GOG.Interfaces.Delegates.FillGaps;
-// using GOG.Interfaces.Delegates.GetUpdateUri;
 
 using Models.ProductCore;
 
@@ -20,38 +18,31 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Activities.Update
 {
-    // TODO: abstract
-    public class UpdateMasterDetailProductActivity<MasterType, DetailType> :
+    public abstract class UpdateDetailProductsByMasterProductsActivity<DetailType, MasterType> :
         Activity
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
         readonly IDataController<MasterType> masterDataController;
         readonly IDataController<DetailType> detailDataController;
-        IDataController<long> updatedDataController;
+        readonly IDataController<long> updatedDataController;
 
-        readonly IItemizeAllAsyncDelegate<MasterType> itemizeMasterTypeGapsAsyncDelegate;
+        readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate;
 
-        readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate;
-
-        readonly IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate;
+        readonly IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate;
         readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
-        // Entity context;
-        // readonly IGetUpdateUriDelegate<Entity> getUpdateUriDelegate;
-        private readonly IGetValueDelegate<string> getUpdateUriDelegate;
+        private readonly IGetValueDelegate<string> getDetailUpdateUriDelegate;
 
         readonly string updateTypeDescription;
 
-        public UpdateMasterDetailProductActivity(
-            // Entity context,
-            IGetValueDelegate<string> getUpdateUriDelegate,
-            IItemizeAllAsyncDelegate<MasterType> itemizeMasterTypeGapsAsyncDelegate,
+        public UpdateDetailProductsByMasterProductsActivity(
+            IGetValueDelegate<string> getDetailUpdateUriDelegate,
+            IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate,
             IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,
             IDataController<long> updatedDataController,
-            IGetDeserializedAsyncDelegate<DetailType> getDeserializedDelegate,
-            IGetUpdateIdentityDelegate<MasterType> getUpdateIdentityDelegate,
+            IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate,
             IStatusController statusController,
             IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null) :
             base(statusController)
@@ -60,15 +51,12 @@ namespace GOG.Activities.Update
             this.detailDataController = detailDataController;
             this.updatedDataController = updatedDataController;
 
-            this.itemizeMasterTypeGapsAsyncDelegate = itemizeMasterTypeGapsAsyncDelegate;
+            this.getDeserializedDetailAsyncDelegate = getDeserializedDetailAsyncDelegate;
 
-            this.getDeserializedDelegate = getDeserializedDelegate;
-
-            this.getUpdateIdentityDelegate = getUpdateIdentityDelegate;
+            this.convertMasterTypeToDetailUpdateIdentityDelegate = convertMasterTypeToDetailUpdateIdentityDelegate;
             this.fillGapsDelegate = fillGapsDelegate;
 
-            // this.context = context;
-            this.getUpdateUriDelegate = getUpdateUriDelegate;
+            this.getDetailUpdateUriDelegate = getDetailUpdateUriDelegate;
             updateTypeDescription = typeof(DetailType).Name;
         }
 
@@ -82,30 +70,31 @@ namespace GOG.Activities.Update
 
             var currentProduct = 0;
 
-            await foreach (var product in itemizeMasterTypeGapsAsyncDelegate.ItemizeAllAsync(updateProductsTask))
+            await foreach (var updatedMasterProduct in updatedDataController.ItemizeAllAsync(updateProductsTask))
             {
-                if (product == null) continue;
+                var masterProduct = await masterDataController.GetByIdAsync(updatedMasterProduct, updateProductsTask);
 
                 await statusController.UpdateProgressAsync(
                     updateProductsTask,
                     ++currentProduct,
                     0, // TODO: Probably need to figure a better way to report progress on unknown sets
-                    product.Title);
+                    masterProduct.Title);
 
-                var updateIdentity = getUpdateIdentityDelegate.GetUpdateIdentity(product);
-                if (string.IsNullOrEmpty(updateIdentity)) continue;
+                var detailUpdateIdentity = convertMasterTypeToDetailUpdateIdentityDelegate.Convert(masterProduct);
+                if (string.IsNullOrEmpty(detailUpdateIdentity)) continue;
 
-                var uri = string.Format(
-                    getUpdateUriDelegate.GetValue(),
-                    updateIdentity);
+                var detailUpdateUri = string.Format(
+                    getDetailUpdateUriDelegate.GetValue(),
+                    detailUpdateIdentity);
 
-                var data = await getDeserializedDelegate.GetDeserializedAsync(updateProductsTask, uri);
+                var detailData = await getDeserializedDetailAsyncDelegate.GetDeserializedAsync(updateProductsTask, detailUpdateUri);
 
-                if (data != null &&
-                    fillGapsDelegate != null)
+                if (detailData != null)
                 {
-                    fillGapsDelegate.FillGaps(data, product);
-                    await detailDataController.UpdateAsync(data, updateProductsTask);
+                    if (fillGapsDelegate != null)
+                        fillGapsDelegate.FillGaps(detailData, masterProduct);
+
+                    await detailDataController.UpdateAsync(detailData, updateProductsTask);
                 }
             }
 

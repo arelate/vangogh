@@ -57,7 +57,6 @@ using GOG.Delegates.GetPageResults;
 using GOG.Delegates.GetPageResults.ProductTypes;
 using GOG.Delegates.FillGaps;
 using GOG.Delegates.GetDownloadSources;
-using GOG.Delegates.GetUpdateIdentity;
 using GOG.Delegates.DownloadProductFile;
 using GOG.Delegates.GetImageUri;
 using GOG.Delegates.UpdateScreenshots;
@@ -67,6 +66,7 @@ using GOG.Delegates.Itemize;
 using GOG.Delegates.Format;
 using GOG.Delegates.RequestPage;
 using GOG.Delegates.Confirm;
+using GOG.Delegates.Convert.UpdateIdentity;
 
 using GOG.Controllers.Authorization;
 
@@ -507,17 +507,17 @@ namespace vangogh.Console
                 typeof(GetDeserializedGameProductDataAsyncDelegate))
                 as GetDeserializedGameProductDataAsyncDelegate;
 
-            var getProductUpdateIdentityDelegate = singletonInstancesController.GetInstance(
-                typeof(GetProductUpdateIdentityDelegate))
-                as GetProductUpdateIdentityDelegate;
+            var convertProductToApiProductUpdateIdentityDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertProductToApiProductUpdateIdentityDelegate))
+                as ConvertProductToApiProductUpdateIdentityDelegate;
 
-            var getGameProductDataUpdateIdentityDelegate = singletonInstancesController.GetInstance(
-                typeof(GetGameProductDataUpdateIdentityDelegate))
-                as GetGameProductDataUpdateIdentityDelegate;
+            var convertProductToGameProductDataUpdateIdentityDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertProductToGameProductDataUpdateIdentityDelegate))
+                as ConvertProductToGameProductDataUpdateIdentityDelegate;
 
-            var getAccountProductUpdateIdentityDelegate = singletonInstancesController.GetInstance(
-                typeof(GetAccountProductUpdateIdentityDelegate))
-                as GetAccountProductUpdateIdentityDelegate;
+            var convertAccountProductToGameDetailsUpdateIdentityDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertAccountProductToGameDetailsUpdateIdentityDelegate))
+                as ConvertAccountProductToGameDetailsUpdateIdentityDelegate;
 
             var fillGameDetailsGapsDelegate = singletonInstancesController.GetInstance(
                 typeof(FillGameDetailsGapsDelegate))
@@ -529,17 +529,16 @@ namespace vangogh.Console
                 productsDataController,
                 gameProductDataDataController);
 
-            UpdateMasterDetailProductActivity<Product, GameProductData> gameProductDataUpdateActivity = null;
-            // var gameProductDataUpdateActivity = new UpdateMasterDetailProductActivity<Product, GameProductData>(
-            //     Entity.GameProductData,
-            //     getProductUpdateUriByContextDelegate,
-            //     itemizeAllUserRequestedIdsOrDefaultAsyncDelegate,
-            //     productsDataController,
-            //     gameProductDataDataController,
-            //     updatedIndexController,
-            //     getDeserializedGameProductDataAsyncDelegate,
-            //     getGameProductDataUpdateIdentityDelegate,
-            //     statusController);
+            var updateGameProductDataByProductsActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateGameProductDataByProductsActivity))
+                as UpdateGameProductDataByProductsActivity;
+
+            // var convertTypeDependenciesToStringsDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ConvertTypeDependenciesToStringsDelegate))
+            //     as ConvertTypeDependenciesToStringsDelegate;
+
+            // foreach (var dependency in convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateGameProductDataByProductsActivity)))
+            //     System.Console.WriteLine(dependency);
 
             var getApiProductDelegate = new GetDeserializedGOGModelAsyncDelegate<ApiProduct>(
                 networkController,
@@ -554,7 +553,7 @@ namespace vangogh.Console
             //     itemizeAllApiProductsGapsAsyncDelegate,
             //     updatedIndexController);
 
-            UpdateMasterDetailProductActivity<Product, ApiProduct> apiProductUpdateActivity = null;
+            UpdateDetailProductsByMasterProductsActivity<Product, ApiProduct> apiProductUpdateActivity = null;
             // var apiProductUpdateActivity = new UpdateMasterDetailProductActivity<Product, ApiProduct>(
             //     Entity.ApiProducts,
             //     getProductUpdateUriByContextDelegate,
@@ -609,7 +608,7 @@ namespace vangogh.Console
             //     itemizeAllGameDetailsGapsAsyncDelegate,
             //     updatedIndexController);
 
-            UpdateMasterDetailProductActivity<AccountProduct, GameDetails> gameDetailsUpdateActivity = null;
+            UpdateDetailProductsByMasterProductsActivity<AccountProduct, GameDetails> gameDetailsUpdateActivity = null;
 
             // var gameDetailsUpdateActivity = new UpdateMasterDetailProductActivity<AccountProduct, GameDetails>(
             //     Entity.GameDetails,
