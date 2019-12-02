@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
 
-namespace Delegates.Convert.Collections
+namespace Delegates.Convert
 {
     public class ConvertTreeToEnumerableDelegate<T> : IConvertDelegate<T, IEnumerable<T>> where T: class
     {

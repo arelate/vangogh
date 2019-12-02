@@ -27,7 +27,7 @@ namespace GOG.Activities.Update.ProductTypes
 
         [Dependencies(
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-            "GOG.Delegates.Confirm.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
+            "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
             "Controllers.Status.StatusController,Controllers")]
         public UpdateUpdatedActivity(

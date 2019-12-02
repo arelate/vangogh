@@ -18,18 +18,21 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
+using Attributes;
+
 using GOG.Models;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
+    // TODO: Refactor?
     public class GetDeserializedGameDetailsAsyncDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {
         readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
         readonly ISerializationController<string> serializationController;
         readonly ILanguageController languageController;
-        readonly IFormatDelegate<string, string> formatDownloadLanguageDelegate;
+        readonly IConvertDelegate<string, string> convertGameDetailsDownloadLanguagesToEmptyStringDelegate;
         readonly IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
-        readonly IItemizeDelegate<string, string> itemizeDownloadLanguagesDelegate;
+        readonly IItemizeDelegate<string, string> itemizeGameDetailsDownloadLanguagesDelegate;
         readonly IItemizeDelegate<string, string> itemizeGameDetailsDownloadsDelegate;
         readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
         readonly IConvertDelegate<
@@ -37,13 +40,24 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             OperatingSystemsDownloads[]> convert2DArrayToArrayDelegate;
         readonly ICollectionController collectionController;
 
+        [Dependencies(
+            "Controllers.Network.NetworkController,Controllers",
+            "Controllers.Serialization.JSON.JSONSerializationController,Controllers",
+            "Controllers.Language.LanguageController,Controllers",
+            "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate,GOG.Delegates",
+            "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate,GOG.Delegates",
+            "GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadLanguagesDelegate,GOG.Delegates",
+            "GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadsDelegate,GOG.Delegates",
+            "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates",
+            "GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate,GOG.Delegates",
+            "Controllers.Collection.CollectionController,Controllers")]
         public GetDeserializedGameDetailsAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
             ISerializationController<string> serializationController,
             ILanguageController languageController,
-            IFormatDelegate<string, string> formatDownloadLanguageDelegate,
+            IConvertDelegate<string, string> convertGameDetailsDownloadLanguagesToEmptyStringDelegate,
             IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate,
-            IItemizeDelegate<string, string> itemizeDownloadLanguagesDelegate,
+            IItemizeDelegate<string, string> itemizeGameDetailsDownloadLanguagesDelegate,
             IItemizeDelegate<string, string> itemizeGameDetailsDownloadsDelegate,
             IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate,
             IConvertDelegate<
@@ -54,10 +68,10 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
             this.serializationController = serializationController;
             this.languageController = languageController;
-            this.formatDownloadLanguageDelegate = formatDownloadLanguageDelegate;
+            this.convertGameDetailsDownloadLanguagesToEmptyStringDelegate = convertGameDetailsDownloadLanguagesToEmptyStringDelegate;
 
             this.confirmStringContainsLanguageDownloadsDelegate = confirmStringContainsLanguageDownloadsDelegate;
-            this.itemizeDownloadLanguagesDelegate = itemizeDownloadLanguagesDelegate;
+            this.itemizeGameDetailsDownloadLanguagesDelegate = itemizeGameDetailsDownloadLanguagesDelegate;
             this.itemizeGameDetailsDownloadsDelegate = itemizeGameDetailsDownloadsDelegate;
             this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
             this.convert2DArrayToArrayDelegate = convert2DArrayToArrayDelegate;
@@ -93,7 +107,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
 
             foreach (var downloadString in downloadStrings)
             {
-                var downloadLanguages = itemizeDownloadLanguagesDelegate.Itemize(downloadString);
+                var downloadLanguages = itemizeGameDetailsDownloadLanguagesDelegate.Itemize(downloadString);
                 if (downloadLanguages == null)
                     throw new InvalidOperationException("Cannot find any download languages or download language format changed.");
 
@@ -119,7 +133,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
 
                 collectionController.Map(downloadLanguages, language =>
                 {
-                    var formattedLanguage = formatDownloadLanguageDelegate.Format(language);
+                    var formattedLanguage = convertGameDetailsDownloadLanguagesToEmptyStringDelegate.Convert(language);
                     var languageCode = languageController.GetLanguageCode(formattedLanguage);
 
                     languageDownloads[languageDownloadIndex++].Language = languageCode;

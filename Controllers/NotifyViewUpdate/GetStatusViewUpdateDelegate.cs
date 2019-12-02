@@ -25,7 +25,7 @@ namespace Controllers.NotifyViewUpdate
         [Dependencies(
             "Controllers.Template.App.AppTemplateController,Controllers",
             "Delegates.GetViewModel.GetStatusAppViewModelDelegate,Delegates",
-            "Delegates.Convert.Collections.Status.ConvertStatusTreeToEnumerableDelegate,Delegates")]
+            "Delegates.Convert.Status.ConvertStatusTreeToEnumerableDelegate,Delegates")]
         public GetStatusViewUpdateDelegate(
             // IStatus status,
             ITemplateController templateController,

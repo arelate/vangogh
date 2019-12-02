@@ -12,7 +12,6 @@ using Delegates.Correct;
 using Delegates.Replace;
 using Delegates.Download;
 using Delegates.Convert.Hashes;
-using Delegates.Convert.Collections;
 using Delegates.Confirm.ArgsTokens;
 using Delegates.GetDirectory.Root;
 using Delegates.GetDirectory.ProductTypes;
@@ -62,10 +61,13 @@ using GOG.Delegates.UpdateScreenshots;
 using GOG.Delegates.GetDeserialized;
 using GOG.Delegates.GetDeserialized.ProductTypes;
 using GOG.Delegates.Itemize;
-using GOG.Delegates.Format;
+using GOG.Delegates.Itemize.ProductTypes;
+using GOG.Delegates.Convert.ProductTypes;
 using GOG.Delegates.RequestPage;
 using GOG.Delegates.Confirm;
+using GOG.Delegates.Confirm.ProductTypes;
 using GOG.Delegates.Convert.UpdateIdentity;
+using GOG.Delegates.Convert.ProductTypes;
 
 using GOG.Controllers.Authorization;
 
@@ -487,118 +489,25 @@ namespace vangogh.Console
                 typeof(UpdateWishlistedActivity))
                 as UpdateWishlistedActivity;
 
-            // var convertTypeDependenciesToStringsDelegate = dependenciesController.GetInstance(
-            //     typeof(ConvertTypeDependenciesToStringsDelegate))
-            //     as ConvertTypeDependenciesToStringsDelegate;
-
-            // foreach (var line in convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateProductsActivity)))
-            //     System.Console.WriteLine(line);
-
-            #region Update.Products
-
-            // dependencies for update controllers
-
-            // var getDeserializedGOGDataAsyncDelegate = dependenciesController.GetInstance(
-            //     typeof(GetGOGDataDeserializedGOGDataAsyncDelegate))
-            //     as GetGOGDataDeserializedGOGDataAsyncDelegate;
-
-            var getDeserializedGameProductDataAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(GetDeserializedGameProductDataAsyncDelegate))
-                as GetDeserializedGameProductDataAsyncDelegate;
-
-            var convertProductToApiProductUpdateIdentityDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertProductToApiProductUpdateIdentityDelegate))
-                as ConvertProductToApiProductUpdateIdentityDelegate;
-
-            var convertProductToGameProductDataUpdateIdentityDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertProductToGameProductDataUpdateIdentityDelegate))
-                as ConvertProductToGameProductDataUpdateIdentityDelegate;
-
-            var convertAccountProductToGameDetailsUpdateIdentityDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertAccountProductToGameDetailsUpdateIdentityDelegate))
-                as ConvertAccountProductToGameDetailsUpdateIdentityDelegate;
-
-            var fillGameDetailsGapsDelegate = singletonInstancesController.GetInstance(
-                typeof(FillGameDetailsGapsDelegate))
-                as FillGameDetailsGapsDelegate;
-
-            // product update controllers
-
             var updateGameProductDataByProductsActivity = singletonInstancesController.GetInstance(
                 typeof(UpdateGameProductDataByProductsActivity))
                 as UpdateGameProductDataByProductsActivity;
 
-            // var getDeserializedApiProductAsyncDelegate = singletonInstancesController.GetInstance(
-            //     typeof(GetDeserializedApiProductAsyncDelegate))
-            //     as GetDeserializedApiProductAsyncDelegate;
-
-            // var itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
-            //     itemizeAllUserRequestedIdsDelegate,
-            //     itemizeAllApiProductsGapsAsyncDelegate,
-            //     updatedIndexController);
-
-            var apiProductUpdateActivity = singletonInstancesController.GetInstance(
+            var updateApiProductsByProductsActivity = singletonInstancesController.GetInstance(
                 typeof(UpdateApiProductsByProductsActivity))
                 as UpdateApiProductsByProductsActivity;
+
+            var updateGameDetailsByAccountProductsActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateGameDetailsByAccountProductsActivity))
+                as UpdateGameDetailsByAccountProductsActivity;
 
             // var convertTypeDependenciesToStringsDelegate = singletonInstancesController.GetInstance(
             //     typeof(ConvertTypeDependenciesToStringsDelegate))
             //     as ConvertTypeDependenciesToStringsDelegate;
 
             // foreach (var dependency in
-            //     convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateApiProductsByProductsActivity)))
-            //     System.Console.WriteLine(dependency);
-
-            var confirmStringContainsLanguageDownloadsDelegate = new ConfirmStringMatchesAllDelegate(
-                collectionController,
-                Models.Separators.Separators.GameDetailsDownloadsStart,
-                Models.Separators.Separators.GameDetailsDownloadsEnd);
-
-            var replaceMultipleStringsDelegate = new ReplaceMultipleStringsDelegate();
-
-            var itemizeDownloadLanguagesDelegate = new ItemizeDownloadLanguagesDelegate(
-                languageController,
-                replaceMultipleStringsDelegate);
-
-            var itemizeGameDetailsDownloadsDelegate = new ItemizeGameDetailsDownloadsDelegate();
-
-            var formatDownloadLanguagesDelegate = new FormatDownloadLanguageDelegate(
-                replaceMultipleStringsDelegate);
-
-            var convertOperatingSystemsDownloads2DArrayToArrayDelegate = new Convert2DArrayToArrayDelegate<OperatingSystemsDownloads>();
-
-            var getDeserializedGameDetailsAsyncDelegate = new GetDeserializedGameDetailsAsyncDelegate(
-                networkController,
-                jsonSerializationController,
-                languageController,
-                formatDownloadLanguagesDelegate,
-                confirmStringContainsLanguageDownloadsDelegate,
-                itemizeDownloadLanguagesDelegate,
-                itemizeGameDetailsDownloadsDelegate,
-                replaceMultipleStringsDelegate,
-                convertOperatingSystemsDownloads2DArrayToArrayDelegate,
-                collectionController);
-
-            // var itemizeAllUserRequestedOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
-            //     itemizeAllUserRequestedIdsDelegate,
-            //     itemizeAllGameDetailsGapsAsyncDelegate,
-            //     updatedIndexController);
-
-            UpdateDetailProductsByMasterProductsActivity<AccountProduct, GameDetails> gameDetailsUpdateActivity = null;
-
-            // var gameDetailsUpdateActivity = new UpdateMasterDetailProductActivity<AccountProduct, GameDetails>(
-            //     Entity.GameDetails,
-            //     getProductUpdateUriByContextDelegate,
-            //     itemizeAllUserRequestedOrDefaultAsyncDelegate,
-            //     accountProductsDataController,
-            //     gameDetailsDataController,
-            //     updatedIndexController,
-            //     getDeserializedGameDetailsAsyncDelegate,
-            //     getAccountProductUpdateIdentityDelegate,
-            //     statusController,
-            //     fillGameDetailsGapsDelegate);
-
-            #endregion
+            //     convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateGameDetailsByAccountProductsActivity)))
+            //     System.Console.WriteLine(dependency);                
 
             #region Update.Screenshots
 

@@ -1,20 +1,24 @@
 ﻿using System.Text.RegularExpressions;
 
-using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Replace;
 
-namespace GOG.Delegates.Format
+using Attributes;
+
+namespace GOG.Delegates.Convert.ProductTypes
 {
-    public class FormatDownloadLanguageDelegate : IFormatDelegate<string, string>
+    public class ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate : IConvertDelegate<string, string>
     {
         readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
-        public FormatDownloadLanguageDelegate(IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
+        [Dependencies("Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates")]
+        public ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate(
+            IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
         {
             this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
         }
 
-        public string Format(string downloadLanguage)
+        public string Convert(string downloadLanguage)
         {
             downloadLanguage = replaceMultipleStringsDelegate.ReplaceMultiple(
                 downloadLanguage,

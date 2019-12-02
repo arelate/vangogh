@@ -4,14 +4,17 @@ using System.Text;
 
 using Interfaces.Delegates.Convert;
 
-namespace Delegates.Convert.Collections
+using GOG.Models;
+
+namespace GOG.Delegates.Convert.ProductTypes
 {
-    public class Convert2DArrayToArrayDelegate<Type> : IConvertDelegate<Type[][], Type[]> where Type: class
+    public class ConvertOperatingSystemsDownloads2DArrayToArrayDelegate : 
+        IConvertDelegate<OperatingSystemsDownloads[][], OperatingSystemsDownloads[]> 
     {
-        public Type[] Convert(Type[][] data)
+        public OperatingSystemsDownloads[] Convert(OperatingSystemsDownloads[][] data)
         {
             if (data == null) return null;
-            var projection = new List<Type>();
+            var projection = new List<OperatingSystemsDownloads>();
 
             for (var xx=0; xx<data.Length; xx++)
             {

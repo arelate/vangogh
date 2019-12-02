@@ -89,8 +89,11 @@ namespace Controllers.Instances
 
             implementationTypeDependencies = new Type[declaredDependencies.Dependencies.Length];
             for (var ii = 0; ii < implementationTypeDependencies.Length; ii++)
+            {
                 implementationTypeDependencies[ii] = Type.GetType(declaredDependencies.Dependencies[ii]);
-
+                if (implementationTypeDependencies[ii] == null)
+                    throw new ArgumentNullException($"Couldn't find the dependency type: {declaredDependencies.Dependencies[ii]}");
+            }
             return implementationTypeDependencies;
         }
     }

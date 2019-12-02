@@ -4,7 +4,7 @@ using Interfaces.Delegates.Itemize;
 
 using Models.Separators;
 
-namespace GOG.Delegates.Itemize
+namespace GOG.Delegates.Itemize.ProductTypes
 {
     public class ItemizeGameDetailsDownloadsDelegate : IItemizeDelegate<string, string>
     {

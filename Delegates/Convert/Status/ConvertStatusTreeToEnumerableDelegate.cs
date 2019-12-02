@@ -4,7 +4,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-namespace Delegates.Convert.Collections.Status
+namespace Delegates.Convert.Status
 {
     public class ConvertStatusTreeToEnumerableDelegate : ConvertTreeToEnumerableDelegate<IStatus>
     {

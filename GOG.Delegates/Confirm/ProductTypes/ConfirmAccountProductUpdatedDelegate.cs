@@ -2,7 +2,7 @@
 
 using GOG.Models;
 
-namespace GOG.Delegates.Confirm
+namespace GOG.Delegates.Confirm.ProductTypes
 {
     public class ConfirmAccountProductUpdatedDelegate : IConfirmDelegate<AccountProduct>
     {
