@@ -11,6 +11,7 @@ using Attributes;
 
 using GOG.Interfaces.Delegates.RequestPage;
 
+using Models.Dependencies;
 using GOG.Models;
 
 namespace GOG.Delegates.GetPageResults.ProductTypes
@@ -21,7 +22,7 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             "Delegates.GetValue.Uri.ProductTypes.GetAccountProductsUpdateUriDelegate,Delegates",
             "Delegates.GetValue.QueryParameters.ProductTypes.GetAccountProductsUpdateQueryParametersDelegate,Delegates",
             "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
-            "Controllers.Serialization.JSON.JSONSerializationController,Controllers",
+            Dependencies.JSONSerializationController,
             "Controllers.Status.StatusController,Controllers")]
         public GetAccountProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getAccountProductsUpdateUriDelegate,

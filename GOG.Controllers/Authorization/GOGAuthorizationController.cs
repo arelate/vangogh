@@ -15,6 +15,7 @@ using Attributes;
 
 using Models.Uris;
 using Models.QueryParameters;
+using Models.Dependencies;
 
 using GOG.Interfaces.Controllers.Authorization;
 
@@ -51,7 +52,7 @@ namespace GOG.Controllers.Authorization
             "Delegates.Itemize.Attributes.ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate,Delegates",
             "Controllers.Uri.UriController,Controllers",
             "Controllers.Network.NetworkController,Controllers",
-            "Controllers.Serialization.JSON.JSONSerializationController,Controllers",
+            Dependencies.JSONSerializationController,
             "Controllers.Status.StatusController,Controllers")]
         public GOGAuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,

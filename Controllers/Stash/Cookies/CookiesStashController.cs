@@ -6,13 +6,15 @@ using Interfaces.Status;
 
 using Attributes;
 
+using Models.Dependencies;
+
 namespace Controllers.Stash.Cookies
 {
     public class CookiesStashController: StashController<Dictionary<string, string>>
     {
         [Dependencies(
             "Delegates.GetPath.Json.GetCookiesPathDelegate,Delegates",
-            "Controllers.SerializedStorage.JSON.JSONSerializedStorageController,Controllers",
+            Dependencies.JSONSerializedStorageController,
             "Controllers.Status.StatusController,Controllers")]
         public CookiesStashController(
             IGetPathDelegate getCookiePathDelegate,

@@ -497,6 +497,8 @@ namespace vangogh.Console
                 typeof(UpdateApiProductsByProductsActivity))
                 as UpdateApiProductsByProductsActivity;
 
+            await updateApiProductsByProductsActivity.ProcessActivityAsync(applicationStatus);
+
             var updateGameDetailsByAccountProductsActivity = singletonInstancesController.GetInstance(
                 typeof(UpdateGameDetailsByAccountProductsActivity))
                 as UpdateGameDetailsByAccountProductsActivity;

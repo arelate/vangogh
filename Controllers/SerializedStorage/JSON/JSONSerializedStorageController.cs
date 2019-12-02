@@ -9,13 +9,15 @@ using Interfaces.Status;
 
 using Attributes;
 
+using Models.Dependencies;
+
 namespace Controllers.SerializedStorage.JSON
 {
     public class JSONSerializedStorageController: SerializedStorageController
     {
         [Dependencies(
             "Controllers.Storage.StorageController,Controllers",
-            "Controllers.Serialization.JSON.JSONSerializationController,Controllers",
+            Dependencies.JSONSerializationController,
             "Controllers.Status.StatusController,Controllers")]
         public JSONSerializedStorageController(
             IStorageController<string> storageController,

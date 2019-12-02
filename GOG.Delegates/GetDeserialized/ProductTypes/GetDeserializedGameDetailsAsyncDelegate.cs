@@ -20,6 +20,7 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 
 using Attributes;
 
+using Models.Dependencies;
 using GOG.Models;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
@@ -42,7 +43,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
 
         [Dependencies(
             "Controllers.Network.NetworkController,Controllers",
-            "Controllers.Serialization.JSON.JSONSerializationController,Controllers",
+            Dependencies.JSONSerializationController,
             "Controllers.Language.LanguageController,Controllers",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate,GOG.Delegates",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate,GOG.Delegates",

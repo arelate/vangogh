@@ -9,6 +9,7 @@ using Interfaces.Status;
 using Attributes;
 
 using Models.Records;
+using Models.Dependencies;
 
 namespace Controllers.Stash.Records
 {
@@ -16,7 +17,7 @@ namespace Controllers.Stash.Records
     {
         [Dependencies(
             "Delegates.GetPath.Records.GetUpdatedRecordsPathDelegate,Delegates",
-            "Controllers.SerializedStorage.JSON.JSONSerializedStorageController,Controllers",
+            Dependencies.DefaultSerializedStorageController,
             "Controllers.Status.StatusController,Controllers")]
         public UpdatedRecordsStashController(
             IGetPathDelegate getUpdatedRecordsPathDelegate,

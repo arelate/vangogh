@@ -9,6 +9,7 @@ using Attributes;
 
 using Controllers.Stash;
 
+using Models.Dependencies;
 using GOG.Models;
 
 namespace GOG.Controllers.Stash.ProductTypes
@@ -17,7 +18,7 @@ namespace GOG.Controllers.Stash.ProductTypes
     {
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetGameProductDataPathDelegate,Delegates",
-            "Controllers.SerializedStorage.JSON.JSONSerializedStorageController,Controllers",
+            Dependencies.DefaultSerializedStorageController,
             "Controllers.Status.StatusController,Controllers")]
         public GameProductDataStashController(
             IGetPathDelegate getGameProductDataPathDelegate,

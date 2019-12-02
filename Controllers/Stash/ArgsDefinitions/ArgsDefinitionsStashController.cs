@@ -5,6 +5,7 @@ using Interfaces.Status;
 using Attributes;
 
 using Models.ArgsDefinitions;
+using Models.Dependencies;
 
 namespace Controllers.Stash.ArgsDefinitions
 {
@@ -12,7 +13,7 @@ namespace Controllers.Stash.ArgsDefinitions
     {
         [Dependencies(
             "Delegates.GetPath.ArgsDefinitions.GetArgsDefinitionsPathDelegate,Delegates",
-            "Controllers.SerializedStorage.JSON.JSONSerializedStorageController,Controllers",
+            Dependencies.JSONSerializedStorageController,
             "Controllers.Status.StatusController,Controllers")]
         public ArgsDefinitionsStashController(
             IGetPathDelegate getPathDelegate,

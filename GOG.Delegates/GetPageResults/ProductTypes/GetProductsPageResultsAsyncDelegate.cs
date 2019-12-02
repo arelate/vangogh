@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
 using Interfaces.Controllers.Serialization;
@@ -11,6 +9,7 @@ using Attributes;
 
 using GOG.Interfaces.Delegates.RequestPage;
 
+using Models.Dependencies;
 using GOG.Models;
 
 namespace GOG.Delegates.GetPageResults.ProductTypes
@@ -21,7 +20,7 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             "Delegates.GetValue.Uri.ProductTypes.GetProductsUpdateUriDelegate,Delegates",
             "Delegates.GetValue.QueryParameters.ProductTypes.GetProductsUpdateQueryParametersDelegate,Delegates",
             "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
-            "Controllers.Serialization.JSON.JSONSerializationController,Controllers",
+            Dependencies.JSONSerializationController,
             "Controllers.Status.StatusController,Controllers")]
         public GetProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getProductsUpdateUriDelegate,

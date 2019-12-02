@@ -8,6 +8,7 @@ using Interfaces.Status;
 using Attributes;
 
 using Models.ProductScreenshots;
+using Models.Dependencies;
 
 namespace Controllers.Stash.ProductTypes
 {
@@ -16,7 +17,7 @@ namespace Controllers.Stash.ProductTypes
     {
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetProductScreenshotsPathDelegate,Delegates",
-            "Controllers.SerializedStorage.JSON.JSONSerializedStorageController,Controllers",
+            Dependencies.DefaultSerializedStorageController,
             "Controllers.Status.StatusController,Controllers")]
         public ProductScreenshotsStashController(
             IGetPathDelegate getProductScreenshotsPathDelegate,

@@ -7,13 +7,15 @@ using Interfaces.Status;
 
 using Attributes;
 
+using Models.Dependencies;
+
 namespace Controllers.Stash.ProductTypes
 {
     public class UpdatedStashController : StashController<List<long>>
     {
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetUpdatedPathDelegate,Delegates",
-            "Controllers.SerializedStorage.JSON.JSONSerializedStorageController,Controllers",
+            Dependencies.DefaultSerializationController,
             "Controllers.Status.StatusController,Controllers")]
         public UpdatedStashController(
             IGetPathDelegate getUpdatedPathDelegate,
