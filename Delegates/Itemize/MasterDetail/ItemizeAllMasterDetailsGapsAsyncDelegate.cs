@@ -8,9 +8,9 @@ using Interfaces.Status;
 
 using Models.ProductCore;
 
-namespace Delegates.EnumerateIds
+namespace Delegates.Itemize.MasterDetail
 {
-    public class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType, DetailType> :
+    public abstract class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType,DetailType> :
         IItemizeAllAsyncDelegate<MasterType>
         where MasterType : ProductCore
         where DetailType : ProductCore

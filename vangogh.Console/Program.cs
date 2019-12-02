@@ -10,7 +10,6 @@ using Delegates.Confirm;
 using Delegates.Recycle;
 using Delegates.Correct;
 using Delegates.Replace;
-using Delegates.EnumerateIds;
 using Delegates.Download;
 using Delegates.Convert.Hashes;
 using Delegates.Convert.Collections;
@@ -525,49 +524,30 @@ namespace vangogh.Console
 
             // product update controllers
 
-            var itemizeAllGameProductDataGapsAsyncDelegatepsDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<Product, GameProductData>(
-                productsDataController,
-                gameProductDataDataController);
-
             var updateGameProductDataByProductsActivity = singletonInstancesController.GetInstance(
                 typeof(UpdateGameProductDataByProductsActivity))
                 as UpdateGameProductDataByProductsActivity;
 
-            // var convertTypeDependenciesToStringsDelegate = singletonInstancesController.GetInstance(
-            //     typeof(ConvertTypeDependenciesToStringsDelegate))
-            //     as ConvertTypeDependenciesToStringsDelegate;
-
-            // foreach (var dependency in convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateGameProductDataByProductsActivity)))
-            //     System.Console.WriteLine(dependency);
-
-            var getApiProductDelegate = new GetDeserializedGOGModelAsyncDelegate<ApiProduct>(
-                networkController,
-                jsonSerializationController);
-
-            var itemizeAllApiProductsGapsAsyncDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<Product, ApiProduct>(
-                productsDataController,
-                apiProductsDataController);
+            // var getDeserializedApiProductAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetDeserializedApiProductAsyncDelegate))
+            //     as GetDeserializedApiProductAsyncDelegate;
 
             // var itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
             //     itemizeAllUserRequestedIdsDelegate,
             //     itemizeAllApiProductsGapsAsyncDelegate,
             //     updatedIndexController);
 
-            UpdateDetailProductsByMasterProductsActivity<Product, ApiProduct> apiProductUpdateActivity = null;
-            // var apiProductUpdateActivity = new UpdateMasterDetailProductActivity<Product, ApiProduct>(
-            //     Entity.ApiProducts,
-            //     getProductUpdateUriByContextDelegate,
-            //     itemizeAllUserRequestedOrApiProductGapsAndUpdatedDelegate,
-            //     productsDataController,
-            //     apiProductsDataController,
-            //     updatedIndexController,
-            //     getApiProductDelegate,
-            //     getProductUpdateIdentityDelegate,
-            //     statusController);
+            var apiProductUpdateActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateApiProductsByProductsActivity))
+                as UpdateApiProductsByProductsActivity;
 
-            var getDeserializedGameDetailsDelegate = new GetDeserializedGOGModelAsyncDelegate<GameDetails>(
-                networkController,
-                jsonSerializationController);
+            // var convertTypeDependenciesToStringsDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ConvertTypeDependenciesToStringsDelegate))
+            //     as ConvertTypeDependenciesToStringsDelegate;
+
+            // foreach (var dependency in
+            //     convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateApiProductsByProductsActivity)))
+            //     System.Console.WriteLine(dependency);
 
             var confirmStringContainsLanguageDownloadsDelegate = new ConfirmStringMatchesAllDelegate(
                 collectionController,
@@ -598,10 +578,6 @@ namespace vangogh.Console
                 replaceMultipleStringsDelegate,
                 convertOperatingSystemsDownloads2DArrayToArrayDelegate,
                 collectionController);
-
-            var itemizeAllGameDetailsGapsAsyncDelegate = new ItemizeAllMasterDetailsGapsAsyncDelegate<AccountProduct, GameDetails>(
-                accountProductsDataController,
-                gameDetailsDataController);
 
             // var itemizeAllUserRequestedOrDefaultAsyncDelegate = new ItemizeAllUserRequestedIdsOrDefaultAsyncDelegate(
             //     itemizeAllUserRequestedIdsDelegate,

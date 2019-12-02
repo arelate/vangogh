@@ -9,13 +9,13 @@ using Attributes;
 
 using GOG.Models;
 
-namespace GOG.Delegates.GetDeserialized
+namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
     public class GetDeserializedGameProductDataAsyncDelegate : IGetDeserializedAsyncDelegate<GameProductData>
     {
         readonly IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate;
 
-        [Dependencies("GOG.Delegates.GetDeserialized.ProductTypes.GetGOGDataDeserializedGOGDataAsyncDelegate,GOG.Delegates")]
+        [Dependencies("GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGOGDataAsyncDelegate,GOG.Delegates")]
         public GetDeserializedGameProductDataAsyncDelegate(
             IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate)
         {

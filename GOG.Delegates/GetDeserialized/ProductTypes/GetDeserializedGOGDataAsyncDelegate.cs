@@ -9,14 +9,14 @@ using GOG.Models;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
-    public class GetProductsPageResultDeserializedGOGDataAsyncDelegate :
-        GetDeserializedDataAsyncDelegate<ProductsPageResult>
+    public class GetDeserializedGOGDataAsyncDelegate :
+        GetDeserializedDataAsyncDelegate<GOGData>
     {
         [Dependencies(
             "Controllers.Network.NetworkController,Controllers",
             "GOG.Delegates.Itemize.ItemizeGOGDataDelegate,GOG.Delegates",
             "Controllers.Serialization.JSON.JSONSerializationController,Controllers")]
-        public GetProductsPageResultDeserializedGOGDataAsyncDelegate(
+        public GetDeserializedGOGDataAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
             IItemizeDelegate<string, string> itemizeGogDataDelegate,
             ISerializationController<string> serializationController) :

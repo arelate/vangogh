@@ -1,28 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Network;
-
 using Interfaces.Controllers.Serialization;
-using Interfaces.Status;
 
-using Models.ProductCore;
+using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.GetDeserialized
 {
-    public class GetDeserializedGOGModelAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
-        where T : ProductCore
+    public abstract class GetDeserializedDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
     {
         readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
+        readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;
         readonly ISerializationController<string> serializationController;
 
-        public GetDeserializedGOGModelAsyncDelegate(
+        public GetDeserializedDataAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
+            IItemizeDelegate<string, string> itemizeGogDataDelegate,
             ISerializationController<string> serializationController)
         {
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
+            this.itemizeGogDataDelegate = itemizeGogDataDelegate;
             this.serializationController = serializationController;
         }
 
@@ -30,9 +33,15 @@ namespace GOG.Delegates.GetDeserialized
         {
             var response = await getResourceAsyncDelegate.GetResourceAsync(status, uri, parameters);
 
-            if (response == null) return default(T);
+            var dataCollection = itemizeGogDataDelegate.Itemize(response);
 
-            return serializationController.Deserialize<T>(response);
+            if (dataCollection == null)
+                return default(T);
+
+            var content = dataCollection.Single();
+
+            var gogData = serializationController.Deserialize<T>(content);
+            return gogData;
         }
     }
 }

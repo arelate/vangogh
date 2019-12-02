@@ -1,31 +1,28 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-using Interfaces.Delegates.Itemize;
-
 using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Serialization;
 
+using Interfaces.Controllers.Serialization;
 using Interfaces.Status;
+
+using Models.ProductCore;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.GetDeserialized
 {
-    public abstract class GetDeserializedGOGDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
+    public abstract class GetDeserializedProductCoreAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
+        where T : ProductCore
     {
         readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;
         readonly ISerializationController<string> serializationController;
 
-        public GetDeserializedGOGDataAsyncDelegate(
+        public GetDeserializedProductCoreAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
-            IItemizeDelegate<string, string> itemizeGogDataDelegate,
             ISerializationController<string> serializationController)
         {
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
-            this.itemizeGogDataDelegate = itemizeGogDataDelegate;
             this.serializationController = serializationController;
         }
 
@@ -33,15 +30,9 @@ namespace GOG.Delegates.GetDeserialized
         {
             var response = await getResourceAsyncDelegate.GetResourceAsync(status, uri, parameters);
 
-            var dataCollection = itemizeGogDataDelegate.Itemize(response);
+            if (response == null) return default(T);
 
-            if (dataCollection == null)
-                return default(T);
-
-            var content = dataCollection.Single();
-
-            var gogData = serializationController.Deserialize<T>(content);
-            return gogData;
+            return serializationController.Deserialize<T>(response);
         }
     }
 }

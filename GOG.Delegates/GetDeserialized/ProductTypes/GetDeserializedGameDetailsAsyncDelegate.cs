@@ -20,7 +20,7 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 
 using GOG.Models;
 
-namespace GOG.Delegates.GetDeserialized
+namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
     public class GetDeserializedGameDetailsAsyncDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {

@@ -23,9 +23,8 @@ namespace GOG.Activities.Update
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
-        readonly IDataController<MasterType> masterDataController;
         readonly IDataController<DetailType> detailDataController;
-        readonly IDataController<long> updatedDataController;
+        readonly IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate;
 
         readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate;
 
@@ -39,17 +38,15 @@ namespace GOG.Activities.Update
         public UpdateDetailProductsByMasterProductsActivity(
             IGetValueDelegate<string> getDetailUpdateUriDelegate,
             IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate,
-            IDataController<MasterType> masterDataController,
             IDataController<DetailType> detailDataController,
-            IDataController<long> updatedDataController,
+            IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate,
             IStatusController statusController,
             IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null) :
             base(statusController)
         {
-            this.masterDataController = masterDataController;
             this.detailDataController = detailDataController;
-            this.updatedDataController = updatedDataController;
+            this.itemizeAllMasterDetailGapsAsyncDelegate = itemizeAllMasterDetailGapsAsyncDelegate;
 
             this.getDeserializedDetailAsyncDelegate = getDeserializedDetailAsyncDelegate;
 
@@ -70,17 +67,15 @@ namespace GOG.Activities.Update
 
             var currentProduct = 0;
 
-            await foreach (var updatedMasterProduct in updatedDataController.ItemizeAllAsync(updateProductsTask))
+            await foreach (var masterProductWithoutDetail in itemizeAllMasterDetailGapsAsyncDelegate.ItemizeAllAsync(updateProductsTask))
             {
-                var masterProduct = await masterDataController.GetByIdAsync(updatedMasterProduct, updateProductsTask);
-
                 await statusController.UpdateProgressAsync(
                     updateProductsTask,
                     ++currentProduct,
                     0, // TODO: Probably need to figure a better way to report progress on unknown sets
-                    masterProduct.Title);
+                    masterProductWithoutDetail.Title);
 
-                var detailUpdateIdentity = convertMasterTypeToDetailUpdateIdentityDelegate.Convert(masterProduct);
+                var detailUpdateIdentity = convertMasterTypeToDetailUpdateIdentityDelegate.Convert(masterProductWithoutDetail);
                 if (string.IsNullOrEmpty(detailUpdateIdentity)) continue;
 
                 var detailUpdateUri = string.Format(
@@ -92,7 +87,7 @@ namespace GOG.Activities.Update
                 if (detailData != null)
                 {
                     if (fillGapsDelegate != null)
-                        fillGapsDelegate.FillGaps(detailData, masterProduct);
+                        fillGapsDelegate.FillGaps(detailData, masterProductWithoutDetail);
 
                     await detailDataController.UpdateAsync(detailData, updateProductsTask);
                 }
