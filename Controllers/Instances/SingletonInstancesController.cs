@@ -23,7 +23,7 @@ namespace Controllers.Instances
 
             if (!singletonInstancesCache.ContainsKey(type))
             {
-                var dependentConstructor = GetDependentConstructor(type);
+                var dependentConstructor = GetInstantiationConstructorInfo(type);
 
                 if (dependentConstructor == null)
                 {
@@ -36,7 +36,7 @@ namespace Controllers.Instances
                 }
 
                 var dependentConstructorDependencies =
-                    GetDependentConstructorDependencyTypes(dependentConstructor);
+                    GetTypesForConstructor(dependentConstructor);
 
                 var instantiatedDependencies =
                     GetInstances(dependentConstructorDependencies);
@@ -59,7 +59,7 @@ namespace Controllers.Instances
         }
 
         // TODO: Convert delegate
-        public ConstructorInfo GetDependentConstructor(Type type)
+        public ConstructorInfo GetInstantiationConstructorInfo(Type type)
         {
             foreach (var constructorInfo in type.GetConstructors())
                 if (constructorInfo.CustomAttributes != null)
@@ -76,7 +76,7 @@ namespace Controllers.Instances
         }
 
         // TODO: Itemize delegate
-        public Type[] GetDependentConstructorDependencyTypes(ConstructorInfo constructorInfo)
+        public Type[] GetTypesForConstructor(ConstructorInfo constructorInfo)
         {
             Type[] implementationTypeDependencies = null;
 

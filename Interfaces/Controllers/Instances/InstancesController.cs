@@ -14,21 +14,21 @@ namespace Interfaces.Controllers.Instances
         object[] GetInstances(Type[] types);
     }
 
-    public interface IGetDependentConstructorDelegate
+    public interface IGetInstantiationConstructorInfoDelegate
     {
-        ConstructorInfo GetDependentConstructor(Type type);
+        ConstructorInfo GetInstantiationConstructorInfo(Type type);
     }
 
-    public interface IGetDependentConstructorDependencyTypesDelegate
+    public interface IGetTypesForConstructorDelegate
     {
-        Type[] GetDependentConstructorDependencyTypes(ConstructorInfo constructorInfo);
+        Type[] GetTypesForConstructor(ConstructorInfo constructorInfo);
     }
 
     public interface IInstancesController :
         IGetInstanceDelegate,
         IGetInstancesDelegate,
-        IGetDependentConstructorDelegate,
-        IGetDependentConstructorDependencyTypesDelegate
+        IGetInstantiationConstructorInfoDelegate,
+        IGetTypesForConstructorDelegate
     {
         // ...
     }
