@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Delegates.Convert;
 using Delegates.Convert.Debug;
+using Delegates.Convert.Requests;
 using Delegates.GetFilename;
 using Delegates.Format.Uri;
 using Delegates.Itemize;
@@ -84,8 +85,6 @@ using GOG.Activities.Report;
 using Models.Status;
 using Models.QueryParameters;
 using Models.Records;
-
-using Creators.Delegates.Convert.Requests;
 
 using Delegates.GetPath.ArgsDefinitions;
 
@@ -497,7 +496,7 @@ namespace vangogh.Console
                 typeof(UpdateApiProductsByProductsActivity))
                 as UpdateApiProductsByProductsActivity;
 
-            await updateApiProductsByProductsActivity.ProcessActivityAsync(applicationStatus);
+            // await updateApiProductsByProductsActivity.ProcessActivityAsync(applicationStatus);
 
             var updateGameDetailsByAccountProductsActivity = singletonInstancesController.GetInstance(
                 typeof(UpdateGameDetailsByAccountProductsActivity))
@@ -797,21 +796,14 @@ namespace vangogh.Console
                 args.Length == 0)
                 args = argsDefinitions.DefaultArgs.Split(" ");
 
-            var convertArgsToRequestsDelegateCreator =
-                new ConvertArgsToRequestsDelegateCreator(
-                    argsDefinitions,
-                    argsDefinitionStashController,
-                    collectionController,
-                    singletonInstancesController);
+            var convertArgsToRequestsDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertArgsToRequestsDelegate))
+                as ConvertArgsToRequestsDelegate;
 
-            var confirmLikelyTokenTypeDelegate = singletonInstancesController.GetInstance(
-                typeof(ConfirmLikelyTokenTypeDelegate))
-                as ConfirmLikelyTokenTypeDelegate;
-
-            // var convertArgsToRequestsDelegate =
-            //     convertArgsToRequestsDelegateCreator.CreateDelegate();
-
-            //var requests = convertArgsToRequestsDelegate.Convert(args);                                
+            await foreach (var request in convertArgsToRequestsDelegate.ConvertAsync(args, applicationStatus))
+            {
+                System.Console.WriteLine($"{request.Method} {request.Collection}");
+            }
 
             #endregion
 

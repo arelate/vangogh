@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\Delegates\Delegates.csproj" />
-    <ProjectReference Include="..\Creators\Creators.csproj" />    
   </ItemGroup>
 
 </Project>

@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Stash;
 
 using Interfaces.Status;
+
+using Attributes;
 
 using Models.ArgsTokens;
 using Models.ArgsDefinitions;
@@ -17,14 +20,17 @@ namespace Delegates.Convert.ArgsTokens
             IAsyncEnumerable<(string Token, Tokens Type)>, 
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
-        private ArgsDefinition argsDefinition;
+        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
         private ICollectionController collectionController;
 
+        [Dependencies(
+            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Controllers.Collection.CollectionController,Controllers")]
         public ConvertLikelyTypedToTypedTokensDelegate(
-            ArgsDefinition argsDefinition,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
             ICollectionController collectionController)
         {
-            this.argsDefinition = argsDefinition;
+            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
             this.collectionController = collectionController;
         }
 
@@ -34,6 +40,8 @@ namespace Delegates.Convert.ArgsTokens
         {
             if (likelyTypedTokens == null)
                 throw new ArgumentNullException();
+
+            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
 
             var currentParameterTitle = string.Empty;
             await foreach (var likelyTypedToken in likelyTypedTokens)
@@ -49,7 +57,7 @@ namespace Delegates.Convert.ArgsTokens
                         foreach (var methodAbbrevation in methodsAbbrevations)
                         {
                             var abbrevatedMethod = collectionController.Find(
-                                argsDefinition.Methods,
+                                argsDefinitions.Methods,
                                 method => method.Title.StartsWith(methodAbbrevation));
 
                             yield return abbrevatedMethod == null ?
@@ -61,7 +69,7 @@ namespace Delegates.Convert.ArgsTokens
                         var tokenType = Tokens.Unknown;
                         
                         var titledParameter = collectionController.Find(
-                              argsDefinition.Parameters,
+                              argsDefinitions.Parameters,
                               parameter => parameter.Title == currentParameterTitle);
 
                         if (titledParameter == null) tokenType = Tokens.Unknown;
