@@ -802,7 +802,7 @@ namespace vangogh.Console
 
             await foreach (var request in convertArgsToRequestsDelegate.ConvertAsync(args, applicationStatus))
             {
-                System.Console.WriteLine($"{request.Method} {request.Collection}");
+                System.Console.WriteLine($"{request.Method.ToUpper()} {request.Collection}");
             }
 
             #endregion
