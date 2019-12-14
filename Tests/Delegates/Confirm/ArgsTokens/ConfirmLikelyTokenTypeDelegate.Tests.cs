@@ -6,7 +6,8 @@ using Xunit;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Status;
 
-using Controllers.Collection;
+// using Controllers.Collection;
+using Controllers.Instances;
 
 using Models.ArgsTokens;
 using Models.Status;
@@ -23,12 +24,17 @@ namespace Delegates.Confirm.ArgsTokens.Tests
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
-            var collectionController = new CollectionController();
+            // var collectionController = new CollectionController();
+            var singletonInstancesController = new SingletonInstancesController();
 
-            this.confirmLikelyTokenTypeDelegate = new ConfirmLikelyTokenTypeDelegate(
-                null,
-                // ReferenceArgsDefinition.ArgsDefinition,
-                collectionController);
+            this.confirmLikelyTokenTypeDelegate = singletonInstancesController.GetInstance(
+                typeof(ConfirmLikelyTokenTypeDelegate))
+                as ConfirmLikelyTokenTypeDelegate;
+            
+            // new ConfirmLikelyTokenTypeDelegate(
+            //     null,
+            //     // ReferenceArgsDefinition.ArgsDefinition,
+            //     collectionController);
             testStatus = new Status();
         }
 
