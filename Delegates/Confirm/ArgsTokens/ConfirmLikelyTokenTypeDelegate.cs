@@ -24,6 +24,10 @@ namespace Delegates.Confirm.ArgsTokens
         [Dependencies(
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
             "Controllers.Collection.CollectionController,Controllers")]
+        [TestDependenciesOverrides(
+            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            ""
+        )]
         public ConfirmLikelyTokenTypeDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate,
             ICollectionController collectionController)

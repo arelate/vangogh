@@ -3,7 +3,7 @@ using System;
 namespace Attributes
 {
     [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
-    public class DependenciesAttribute : Attribute
+    public class TestDependenciesOverridesAttribute : Attribute
     {
 
         // NOTE: Dependency attribute is using string[] intentionally,
@@ -11,11 +11,11 @@ namespace Attributes
         // to add references (that can produce cross-reference issues).
         // The implicit expectation is that dependencies would be resolved
         // inside the domain that has access to all the dependencies' assemblies
-        public string[] Dependencies { get; set; }
+        public string[] TestDependenciesOverrides { get; set; }
 
-        public DependenciesAttribute(params string[] dependencies)
+        public TestDependenciesOverridesAttribute(params string[] testDependenciesOverrides)
         {
-            Dependencies = dependencies;
+            TestDependenciesOverrides = testDependenciesOverrides;
         }
 
     }

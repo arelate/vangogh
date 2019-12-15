@@ -17,10 +17,4 @@
     <ProjectReference Include="..\Delegates\Delegates.csproj" />
   </ItemGroup>
 
-   <ItemGroup>
-    <None Update="definitions.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup> 
-
 </Project>

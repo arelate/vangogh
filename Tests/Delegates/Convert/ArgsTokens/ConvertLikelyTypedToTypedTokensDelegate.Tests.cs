@@ -1,137 +1,143 @@
-// using System;
-// using System.Linq;
-// using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// using Xunit;
+using Xunit;
 
-// using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Convert;
 
-// // using Controllers.Collection;
-// using Controllers.Instances;
+using Controllers.Instances;
 
-// using Models.ArgsTokens;
+using Interfaces.Status;
 
-// using TestModels.ArgsDefinitions;
+using Models.ArgsTokens;
 
-// namespace Delegates.Convert.ArgsTokens.Tests
-// {
-//     public class ConvertLikelyTypedToTypedTokensDelegateTests
-//     {
-//         private IConvertDelegate<IEnumerable<(string Token, Tokens Type)>, IEnumerable<(string Token, Tokens Type)>> convertLikelyTypedToTypedTokensDelegate;
+namespace Delegates.Convert.ArgsTokens.Tests
+{
+    public class ConvertLikelyTypedToTypedTokensDelegateTests
+    {
+        private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
+        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string Token, Tokens Type)>, IAsyncEnumerable<(string Token, Tokens Type)>> convertLikelyTypedToTypedTokensDelegate;
+        private readonly Models.Status.Status testStatus;
 
-//         public ConvertLikelyTypedToTypedTokensDelegateTests()
-//         {
-//             // var collectionController = new CollectionController();
-//             var singletonInstancesController = new SingletonInstancesController();
+        public ConvertLikelyTypedToTypedTokensDelegateTests()
+        {
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-//             this.convertLikelyTypedToTypedTokensDelegate = singletonInstancesController.GetInstance(
-//                 typeof(ConvertLikelyTypedToTypedTokensDelegate))
-//                 as ConvertLikelyTypedToTypedTokensDelegate;
-            
-//                 // new ConvertLikelyTypedToTypedTokensDelegate(
-//                 //     ReferenceArgsDefinition.ArgsDefinition,
-//                 //     collectionController);
-//         }
+            this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertTokensToLikelyTypedTokensDelegate))
+                as ConvertTokensToLikelyTypedTokensDelegate;
 
-//         [Theory]
-//         [InlineData("-upd")]
-//         [InlineData("-updx")] // ends with unknown token
-//         [InlineData("-xupd")] // starts with unknown token
-//         public void ConvertLikelyMethodAbbrevationToMethodTitleTokens(string token)
-//         {
-//             var typedTokens = convertLikelyTypedToTypedTokensDelegate.Convert(
-//                 new (string, Tokens)[] { (token, Tokens.LikelyMethodsAbbrevation) });
+            this.convertLikelyTypedToTypedTokensDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertLikelyTypedToTypedTokensDelegate))
+                as ConvertLikelyTypedToTypedTokensDelegate;
 
-//             var methodTitlesCount = 0;
-//             foreach (var typedToken in typedTokens)
-//             {
-//                 if (typedToken.Type == Tokens.Unknown) continue;
-//                 Assert.Equal(Tokens.MethodTitle, typedToken.Type);
-//                 methodTitlesCount++;
-//             }
+            testStatus = new Models.Status.Status();
+        }
 
-//             Assert.Equal(3, methodTitlesCount);
-//         }
+        private async Task<List<(string, Tokens)>> ConvertTokensToTypedTokens(params string[] tokens)
+        {
+            var likelyTypedTokes = convertTokensToLikelyTypedTokensDelegate.ConvertAsync(
+                tokens,
+                testStatus);
 
-//         [Theory]
-//         [InlineData("-")]
-//         [InlineData(null)]
-//         [InlineData("")]
-//         public void ConvertLikelyMethodAbbrevationHandlesInvalidInputs(string token)
-//         {
-//             var typedTokens = convertLikelyTypedToTypedTokensDelegate.Convert(
-//                 new (string, Tokens)[] { (token, Tokens.LikelyMethodsAbbrevation) }
-//             );
+            var typedTokens = new List<(string, Tokens)>();
 
-//             Assert.NotNull(typedTokens);
-//             Assert.Empty(typedTokens);
-//         }
+            await foreach (var typedToken in convertLikelyTypedToTypedTokensDelegate.ConvertAsync(likelyTypedTokes, testStatus))
+                typedTokens.Add(typedToken);
 
-//         [Fact]
-//         public void ConvertLikelyTypedToTypedTokenDelegateHandlesEmptyInput()
-//         {
-//             var typedTokens = convertLikelyTypedToTypedTokensDelegate.Convert(
-//                 new (string, Tokens)[0]);
+            return typedTokens;
+        }
 
-//             Assert.NotNull(typedTokens);
-//             Assert.Empty(typedTokens);
-//         }
+        [Theory]
+        [InlineData("-upd")]
+        [InlineData("-updx")] // ends with unknown token
+        [InlineData("-xupd")] // starts with unknown token
+        public async void ConvertLikelyMethodAbbrevationToMethodTitleTokens(string token)
+        {
+            var typedTokens = await ConvertTokensToTypedTokens(token);
 
-//         [Fact]
-//         public void ConvertLikelyTypedToTypedTokenDelegateHandlesNullInput()
-//         {
-//             Assert.Throws<ArgumentNullException>(
-//                 () =>
-//                 {
-//                     var typedTokens = convertLikelyTypedToTypedTokensDelegate.Convert(null);
-//                     Assert.Empty(typedTokens);
-//                 });
-//         }
+            var methodTitlesCount = 0;
+            foreach (var typedToken in typedTokens)
+            {
+                if (typedToken.Item2 == Tokens.Unknown) continue;
+                Assert.Equal(Tokens.MethodTitle, typedToken.Item2);
+                methodTitlesCount++;
+            }
 
-//         [Theory]
-//         [InlineData("--id")]
-//         [InlineData("--arbitrarystring")] // starts with two dashes
-//         public void ConvertParameterTitleToParameterTitleTrimLeadingDash(string token)
-//         {
-//             var typedTokens = convertLikelyTypedToTypedTokensDelegate.Convert(
-//                 new (string, Tokens)[] { (token, Tokens.ParameterTitle) });
+            Assert.Equal(3, methodTitlesCount);
+        }
 
-//             foreach (var typedToken in typedTokens)
-//                 Assert.Equal(Tokens.ParameterTitle, typedToken.Type);
-//         }
+        [Theory]
+        [InlineData("-")]
+        [InlineData(null)]
+        [InlineData("")]
+        public async void ConvertLikelyMethodAbbrevationHandlesInvalidInputs(string token)
+        {
+            var typedTokens = await ConvertTokensToTypedTokens(token);
 
-//         [Theory]
-//         [InlineData("--os", "windows")]
-//         [InlineData("--os", "osx")]
-//         [InlineData("--os", "linux")]
-//         [InlineData("--lang", "en")]
-//         [InlineData("--id", "arbitrarystring")] // parameter that doesn't have values
-//         public void ConvertParameterTitleAndLikelyParameterValuesSucceeds(string parameter, string likelyValue)
-//         {
-//             var typedTokens = convertLikelyTypedToTypedTokensDelegate.Convert(
-//                 new (string, Tokens)[] {
-//                     (parameter, Tokens.ParameterTitle),
-//                     (likelyValue, Tokens.LikelyParameterValue) });
+            Assert.NotNull(typedTokens);
+            Assert.Empty(typedTokens);
+        }
 
-//             Assert.Equal(2, typedTokens.Count());
-//             Assert.Equal(Tokens.ParameterTitle, typedTokens.ElementAt(0).Type);
-//             Assert.Equal(Tokens.ParameterValue, typedTokens.ElementAt(1).Type);
-//         }
+        [Fact]
+        public async void ConvertLikelyTypedToTypedTokenDelegateHandlesEmptyInput()
+        {
+            var typedTokens = await ConvertTokensToTypedTokens(string.Empty);
 
-//         [Theory]
-//         [InlineData("--os", "bsd")]
-//         [InlineData("--lang", "klingon")]
-//         [InlineData("", "")]
-//         public void ConvertParameterTitleAndLikelyParameterValuesReturnsUnknowns(string parameter, string likelyValue)
-//         {
-//             var typedTokens = convertLikelyTypedToTypedTokensDelegate.Convert(
-//                 new (string, Tokens)[] {
-//                     (parameter, Tokens.ParameterTitle),
-//                     (likelyValue, Tokens.LikelyParameterValue) });    
+            Assert.NotNull(typedTokens);
+            Assert.Empty(typedTokens);
+        }
 
-//             Assert.Equal(2, typedTokens.Count());
-//             Assert.Equal(Tokens.ParameterTitle, typedTokens.ElementAt(0).Type);
-//             Assert.Equal(Tokens.Unknown, typedTokens.ElementAt(1).Type);        
-//         }
-//     }
-// }
+        [Fact]
+        public async void ConvertLikelyTypedToTypedTokenDelegateHandlesNullInput()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                async () => 
+                {
+                    var typedTokens = await ConvertTokensToTypedTokens(null);
+                    Assert.Empty(typedTokens);
+                });
+        }
+
+        [Theory]
+        [InlineData("--id")]
+        [InlineData("--arbitrarystring")] // starts with two dashes
+        public async void ConvertParameterTitleToParameterTitleTrimLeadingDash(string token)
+        {
+            var typedTokens = await ConvertTokensToTypedTokens(token);
+
+            foreach (var typedToken in typedTokens)
+                Assert.Equal(Tokens.ParameterTitle, typedToken.Item2);
+        }
+
+        [Theory]
+        [InlineData("--os", "windows")]
+        [InlineData("--os", "osx")]
+        [InlineData("--os", "linux")]
+        [InlineData("--lang", "en")]
+        [InlineData("--id", "arbitrarystring")] // parameter that doesn't have values
+        public async void ConvertParameterTitleAndLikelyParameterValuesSucceeds(string parameter, string likelyValue)
+        {
+            var typedTokens = await ConvertTokensToTypedTokens(parameter, likelyValue);
+
+            Assert.Equal(2, typedTokens.Count());
+            Assert.Equal(Tokens.ParameterTitle, typedTokens.ElementAt(0).Item2);
+            Assert.Equal(Tokens.ParameterValue, typedTokens.ElementAt(1).Item2);
+        }
+
+        [Theory]
+        [InlineData("--os", "bsd")]
+        [InlineData("--lang", "klingon")]
+        [InlineData("", "")]
+        public async void ConvertParameterTitleAndLikelyParameterValuesReturnsUnknowns(string parameter, string likelyValue)
+        {
+            var typedTokens = await ConvertTokensToTypedTokens(parameter, likelyValue);
+
+            Assert.Equal(2, typedTokens.Count());
+            Assert.Equal(Tokens.ParameterTitle, typedTokens.ElementAt(0).Item2);
+            Assert.Equal(Tokens.Unknown, typedTokens.ElementAt(1).Item2);
+        }
+    }
+}

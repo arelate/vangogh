@@ -15,7 +15,7 @@ namespace Delegates.Convert.ArgsTokens
 {
     public class ConvertMethodsSetTokensToMethodTitleTokensDelegate :
         IConvertAsyncDelegate<
-            IAsyncEnumerable<(string Token, Tokens Type)>, 
+            IAsyncEnumerable<(string Token, Tokens Type)>,
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
         private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
@@ -32,7 +32,7 @@ namespace Delegates.Convert.ArgsTokens
             this.collectionController = collectionController;
         }
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
-            IAsyncEnumerable<(string Token, Tokens Type)> typedTokens, 
+            IAsyncEnumerable<(string Token, Tokens Type)> typedTokens,
             IStatus status)
         {
             var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
@@ -46,7 +46,7 @@ namespace Delegates.Convert.ArgsTokens
                             methodsSet => methodsSet.Title == typedToken.Token);
                         if (titledMethodsSet == null)
                             yield return (typedToken.Token, Tokens.Unknown);
-                        else 
+                        else
                             foreach (var methodTitle in titledMethodsSet.Methods)
                                 yield return (methodTitle, Tokens.MethodTitle);
                         break;

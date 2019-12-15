@@ -12,6 +12,12 @@ namespace Controllers.Instances
     public class SingletonInstancesController : IInstancesController
     {
         private readonly Dictionary<Type, object> singletonInstancesCache = new Dictionary<Type, object>();
+        private readonly bool enableTestDependenciesOverrides;
+
+        public SingletonInstancesController(bool enableTestDependenciesOverrides = false)
+        {
+            this.enableTestDependenciesOverrides = enableTestDependenciesOverrides;
+        }
 
         // TODO: Create delegate? Convert delegate?
         public object GetInstance(Type type)
@@ -80,19 +86,42 @@ namespace Controllers.Instances
         {
             Type[] implementationTypeDependencies = null;
 
-            var declaredDependencies = constructorInfo.GetCustomAttribute(
+            var dependencies = constructorInfo.GetCustomAttribute(
                 typeof(DependenciesAttribute))
                 as DependenciesAttribute;
 
-            if (declaredDependencies == null)
+            if (dependencies == null)
                 return Type.EmptyTypes;
 
-            implementationTypeDependencies = new Type[declaredDependencies.Dependencies.Length];
+            if (enableTestDependenciesOverrides)
+            {
+                var testDependenciesOverrides = constructorInfo.GetCustomAttribute(
+                    typeof(TestDependenciesOverridesAttribute))
+                    as TestDependenciesOverridesAttribute;
+
+                if (testDependenciesOverrides != null)
+                {
+                    if (testDependenciesOverrides.TestDependenciesOverrides.Length !=
+                        dependencies.Dependencies.Length)
+                        throw new ArgumentOutOfRangeException(@"Test dependencies overrides should match the number of dependencies. 
+                        Use string.Empty to preserve dependency without specifying it.");
+
+                    for (var ii = 0; ii < testDependenciesOverrides.TestDependenciesOverrides.Length; ii++)
+                    {
+                        if (string.IsNullOrEmpty(testDependenciesOverrides.TestDependenciesOverrides[ii]))
+                            continue;
+
+                        dependencies.Dependencies[ii] = testDependenciesOverrides.TestDependenciesOverrides[ii];
+                    }
+                }
+            }
+
+            implementationTypeDependencies = new Type[dependencies.Dependencies.Length];
             for (var ii = 0; ii < implementationTypeDependencies.Length; ii++)
             {
-                implementationTypeDependencies[ii] = Type.GetType(declaredDependencies.Dependencies[ii]);
+                implementationTypeDependencies[ii] = Type.GetType(dependencies.Dependencies[ii]);
                 if (implementationTypeDependencies[ii] == null)
-                    throw new ArgumentNullException($"Couldn't find the dependency type: {declaredDependencies.Dependencies[ii]}");
+                    throw new ArgumentNullException($"Couldn't find the dependency type: {dependencies.Dependencies[ii]}");
             }
             return implementationTypeDependencies;
         }

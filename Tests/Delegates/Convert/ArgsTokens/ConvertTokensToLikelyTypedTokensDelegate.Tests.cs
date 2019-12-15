@@ -19,7 +19,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
         public ConvertTokensToLikelyTypedTokensDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController();
+            var singletonInstancesController = new SingletonInstancesController(true);
 
             this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertTokensToLikelyTypedTokensDelegate))
@@ -54,13 +54,6 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [InlineData("update", "screenshots")]
         public async void CanConvertTokensToLikelyTypedTokensDelegateMethodTitlesCollectionTitles(params string[] tokens)
         {
-            var singletonInstancesController = new SingletonInstancesController();
-            var argsDefinitionsStashController = singletonInstancesController.GetInstance(
-                typeof(Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController))
-                as Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController;
-
-            var argsDefinitions = await argsDefinitionsStashController.GetDataAsync(testStatus);
-
             var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
 
             Assert.NotEmpty(likelyTypedTokens);
