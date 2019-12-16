@@ -22,6 +22,9 @@ namespace Delegates.Sort.Requests
         [Dependencies(
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController",
             "Controllers.Collection.CollectionController")]
+        [TestDependenciesOverrides(
+            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "")]
         public SortRequestsMethodsByOrderAsyncDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
             ICollectionController collectionController)
@@ -40,7 +43,7 @@ namespace Delegates.Sort.Requests
                 var cy = collectionController.Find(argsDefinitions.Methods, c => c.Title == y);
 
                 if (cx == null || cy == null)
-                    throw new ArgumentNullException();
+                    throw new InvalidOperationException();
 
                 return cx.Order - cy.Order;
             });
