@@ -26,6 +26,9 @@ namespace Delegates.Convert.ArgsTokens
         [Dependencies(
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
             "Controllers.Collection.CollectionController,Controllers")]
+        [TestDependenciesOverrides(
+            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "")]
         public ConvertLikelyTypedToTypedTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
             ICollectionController collectionController)
@@ -46,6 +49,8 @@ namespace Delegates.Convert.ArgsTokens
             var currentParameterTitle = string.Empty;
             await foreach (var likelyTypedToken in likelyTypedTokens)
             {
+                if (string.IsNullOrEmpty(likelyTypedToken.Token)) continue;
+                
                 switch (likelyTypedToken.Type)
                 {
                     case Tokens.LikelyMethodsAbbrevation:

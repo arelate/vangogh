@@ -29,6 +29,8 @@ namespace Delegates.Convert.ArgsTokens
             IEnumerable<string> untypedTokens, 
             IStatus status)
         {
+            if (untypedTokens == null) yield break;
+
             var groups = new Queue<Groups>(TokensGroups.ParsingExpectations.Keys);
             var tokens = new Queue<string>(untypedTokens);
 
@@ -73,8 +75,10 @@ namespace Delegates.Convert.ArgsTokens
                         // all remaining tokens are Unknown, given assumption (2) above...
                         if (!string.IsNullOrEmpty(currentToken))
                             yield return (currentToken, Tokens.Unknown);
+
                         foreach (var token in tokens)
-                            yield return (token, Tokens.Unknown);
+                            if (!string.IsNullOrEmpty(token))
+                                yield return (token, Tokens.Unknown);
 
                         // ...and stop progression
                         currentToken = null;
