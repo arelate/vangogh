@@ -20,27 +20,27 @@ namespace Controllers.Instances.Tests
             testDependenciesOverridesInstancesController = new SingletonInstancesController(true);
         }
 
-        public static IEnumerable<object[]> EnumerateTypesWithDependencies()
+        private static IEnumerable<object[]> EnumerateTypesWithConstructorAttribute(Type attributeType)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 foreach (var type in assembly.GetTypes())
                     foreach (var constructorInfo in type.GetConstructors())
-                        if (constructorInfo.IsDefined(typeof(DependenciesAttribute), true))
-                            yield return new object[] { type };
+                        if (constructorInfo.IsDefined(attributeType, true))
+                            yield return new object[] { type };            
+        }
+
+        public static IEnumerable<object[]> EnumerateTypesWithDependencies()
+        {
+            return EnumerateTypesWithConstructorAttribute(typeof(DependenciesAttribute));
         }
 
         public static IEnumerable<object[]> EnumerateTypesWithTestDependenciesOverrides()
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                foreach (var type in assembly.GetTypes())
-                    foreach (var constructorInfo in type.GetConstructors())
-                        if (constructorInfo.IsDefined(typeof(TestDependenciesOverridesAttribute), true))
-                            yield return new object[] { type };
+            return EnumerateTypesWithConstructorAttribute(typeof(TestDependenciesOverridesAttribute));
         }
 
         [Theory]
         [MemberData(nameof(EnumerateTypesWithDependencies))]
-        [MemberData(nameof(EnumerateTypesWithTestDependenciesOverrides))]
         public void SingletonInstancesControllerCanInitializeAllDeclaredDependencies(params Type[] types)
         {
             Assert.NotEmpty(types);
