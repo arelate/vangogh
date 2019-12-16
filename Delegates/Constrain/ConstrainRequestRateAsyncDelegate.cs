@@ -47,7 +47,7 @@ namespace Delegates.Constrain
             if (this.itemizeRateContraindesUris != null)
                 foreach (var uri in this.itemizeRateContraindesUris.ItemizeAll())
                     lastRequestToUriPrefix.Add(
-                        uri, 
+                        uri,
                         DateTime.UtcNow - TimeSpan.FromSeconds(requestIntervalSeconds));
         }
 
@@ -60,7 +60,7 @@ namespace Delegates.Constrain
             if (++rateLimitRequestsCount <= passthroughCount) return;
 
             var now = DateTime.UtcNow;
-            var elapsed = (int) (now - lastRequestToUriPrefix[prefix]).TotalSeconds;
+            var elapsed = (int)(now - lastRequestToUriPrefix[prefix]).TotalSeconds;
             if (elapsed < requestIntervalSeconds)
             {
                 var limitRateTask = await statusController.CreateAsync(status, "Limit request rate to avoid temporary server block");

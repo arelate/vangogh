@@ -16,7 +16,7 @@ namespace Controllers.NotifyViewUpdate
         readonly IOutputController<string[]> outputController;
 
         [Dependencies(
-            "Controllers.ViewUpdates.GetStatusViewUpdateDelegate,Controllers",
+            "Controllers.NotifyViewUpdate.GetStatusViewUpdateDelegate,Controllers",
             "Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
         public NotifyStatusViewUpdateController(
             IGetViewUpdateAsyncDelegate<string[]> getViewUpdateDelegate,
