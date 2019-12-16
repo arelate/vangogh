@@ -86,6 +86,9 @@ namespace Controllers.Instances
         {
             Type[] implementationTypeDependencies = null;
 
+            if (constructorInfo == null)
+                return Type.EmptyTypes;
+
             var dependencies = constructorInfo.GetCustomAttribute(
                 typeof(DependenciesAttribute))
                 as DependenciesAttribute;
