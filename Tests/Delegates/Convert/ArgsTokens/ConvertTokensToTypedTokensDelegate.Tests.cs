@@ -1,80 +1,61 @@
-// using System;
-// using System.Linq;
-// using System.Collections.Generic;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// using Xunit;
+using Xunit;
 
-// using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Convert;
 
-// using Controllers.Collection;
+using Controllers.Instances;
 
-// using Delegates.Convert.ArgsTokens;
-// using Delegates.Confirm.ArgsTokens;
+using Models.ArgsTokens;
 
-// using Models.ArgsTokens;
+namespace Delegates.Convert.ArgsTokens.Tests
+{
+    public class ConvertTokensToTypedTokensDelegateTests
+    {
+        private readonly IConvertAsyncDelegate<IEnumerable<string>,IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate;
+        private readonly Models.Status.Status testStatus;
 
-// using TestModels.ArgsDefinitions;
+        public ConvertTokensToTypedTokensDelegateTests()
+        {
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-// using TypedTokens = System.Collections.Generic.IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>;
-
-// namespace Delegates.Convert.ArgsTokens.Tests
-// {
-//     public class ConvertTokensToTypedTokensDelegateTests
-//     {
-//         private IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToTypedTokensDelegate;
-
-//         public ConvertTokensToTypedTokensDelegateTests()
-//         {
-//             // var collectionController = new CollectionController();
-
-//             // var confirmLikelyTokenTypeDelegate = 
-//             //     new ConfirmLikelyTokenTypeDelegate(
-//             //         ReferenceArgsDefinition.ArgsDefinition,
-//             //         collectionController);
-
-//             // var convertTokensToLikelyTypedTokensDelegate = 
-//             //     new ConvertTokensToLikelyTypedTokensDelegate(
-//             //         confirmLikelyTokenTypeDelegate);
-
-//             // var convertLikelyTypedToTypedTokensDelegate =
-//             //     new ConvertLikelyTypedToTypedTokensDelegate(
-//             //         ReferenceArgsDefinition.ArgsDefinition,
-//             //         collectionController);
-
-//             // var convertMethodsSetTokensToMethodTitleTokensDelegate = 
-//             //     new ConvertMethodsSetTokensToMethodTitleTokensDelegate(
-//             //         ReferenceArgsDefinition.ArgsDefinition,
-//             //         collectionController);
-
-//             this.convertTokensToTypedTokensDelegate = singletonInstancesController.GetInstance(
-//                 typeof(ConvertTokensToTypedTokensDelegate))
-//                 as ConvertTokensToTypedTokensDelegate;
+            this.convertTokensToTypedTokensDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertTokensToTypedTokensDelegate))
+                as ConvertTokensToTypedTokensDelegate;
                 
-//             // new ConvertTokensToTypedTokensDelegate(
-//             //     convertTokensToLikelyTypedTokensDelegate,
-//             //     convertLikelyTypedToTypedTokensDelegate,
-//             //     convertMethodsSetTokensToMethodTitleTokensDelegate);
-//         }
+            testStatus = new Models.Status.Status();
+        }
 
-//         [Theory]
-//         [InlineData("-upd")]
-//         [InlineData("authorize", "--username", "anonymous")] // unrestricted parameter value
-//         [InlineData("download", "--os", "windows")] // correct predefined value
-//         [InlineData("download", "--os", "arbitrarystring")] // correct predefined value
-//         public void ConvertTokensToTypedTokensDelegateRemovesLikelyTokenTypes(params string[] tokens)
-//         {
-//             var typedTokens = convertTokensToTypedTokensDelegate.Convert(tokens);
-//             Assert.NotEmpty(typedTokens);
-//             Assert.DoesNotContain<(string, Tokens)>((tokens.Last(), Tokens.LikelyMethodsAbbrevation), typedTokens);
-//         }
+        private async Task<List<(string, Tokens)>> ConvertTokensToLikelyTypedTokens(params string[] tokens)
+        {
+            var likelyTypedTokens = new List<(string, Tokens)>();
+            await foreach (var likelyTypedToken in convertTokensToTypedTokensDelegate.ConvertAsync(tokens, testStatus))
+                likelyTypedTokens.Add(likelyTypedToken);
+            
+            return likelyTypedTokens;
+        }
 
-//         [Theory]
-//         [InlineData("sync")]
-//         public void ConvertTokensToTypedTokensDelegateExpandsMethodsSet(params string[] tokens)
-//         {
-//             var typedTokens = convertTokensToTypedTokensDelegate.Convert(tokens);
-//             Assert.NotEmpty(typedTokens);
-//             Assert.DoesNotContain<(string, Tokens)>((tokens.Last(), Tokens.MethodsSet), typedTokens);
-//         }
-//     }
-// }
+        [Theory]
+        [InlineData("-upd")]
+        [InlineData("authorize", "--username", "anonymous")] // unrestricted parameter value
+        [InlineData("download", "--os", "windows")] // correct predefined value
+        [InlineData("download", "--os", "arbitrarystring")] // correct predefined value
+        public async void ConvertTokensToTypedTokensDelegateRemovesLikelyTokenTypes(params string[] tokens)
+        {
+            var typedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
+            Assert.NotEmpty(typedTokens);
+            Assert.DoesNotContain<(string, Tokens)>((tokens.Last(), Tokens.LikelyMethodsAbbrevation), typedTokens);
+        }
+
+        [Theory]
+        [InlineData("sync")]
+        public async void ConvertTokensToTypedTokensDelegateExpandsMethodsSet(params string[] tokens)
+        {
+            var typedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
+            Assert.NotEmpty(typedTokens);
+            Assert.DoesNotContain<(string, Tokens)>((tokens.Last(), Tokens.MethodsSet), typedTokens);
+        }
+    }
+}

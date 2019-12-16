@@ -9,8 +9,6 @@ using Interfaces.Delegates.Convert;
 
 using Controllers.Instances;
 
-using Interfaces.Status;
-
 using Models.ArgsTokens;
 
 namespace Delegates.Convert.ArgsTokens.Tests
@@ -18,7 +16,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
     public class ConvertLikelyTypedToTypedTokensDelegateTests
     {
         private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
-        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string Token, Tokens Type)>, IAsyncEnumerable<(string Token, Tokens Type)>> convertLikelyTypedToTypedTokensDelegate;
+        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertLikelyTypedToTypedTokensDelegate;
         private readonly Models.Status.Status testStatus;
 
         public ConvertLikelyTypedToTypedTokensDelegateTests()

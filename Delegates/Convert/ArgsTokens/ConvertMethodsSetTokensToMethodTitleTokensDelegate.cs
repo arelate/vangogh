@@ -24,6 +24,9 @@ namespace Delegates.Convert.ArgsTokens
         [Dependencies(
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
             "Controllers.Collection.CollectionController,Controllers")]
+        [TestDependenciesOverrides(
+            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "")]            
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
             ICollectionController collectionController)

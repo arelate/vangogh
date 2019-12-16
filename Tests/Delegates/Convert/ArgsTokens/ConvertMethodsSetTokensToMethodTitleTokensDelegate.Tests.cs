@@ -1,74 +1,92 @@
-// using System;
-// using System.Linq;
-// using System.Collections.Generic;
-// using System.Threading.Tasks;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// using Xunit;
+using Xunit;
 
-// using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Convert;
 
-// using Controllers.Collection;
-// using Controllers.Instances;
+using Controllers.Instances;
 
-// using Models.ArgsTokens;
+using Models.ArgsTokens;
 
-// using TestModels.ArgsDefinitions;
+namespace Delegates.Convert.ArgsTokens.Tests
+{
+    public class ConvertMethodsSetTokensToMethodTitleTokensDelegateTests
+    {
+        private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
+        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertLikelyTypedToTypedTokensDelegate;
+        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertMethodsSetTokensToMethodTitleTokensDelegate;
 
-// namespace Delegates.Convert.ArgsTokens.Tests
-// {
-//     public class ConvertMethodsSetTokensToMethodTitleTokensDelegateTests
-//     {
-//         private IConvertAsyncDelegate<IAsyncEnumerable<(string Token, Tokens Type)>, IAsyncEnumerable<(string Token, Tokens Type)>> convertMethodsSetTokensToMethodTitleTokensDelegate;
-//         private Models.Status.Status testStatus;
+        private Models.Status.Status testStatus;
 
-//         public ConvertMethodsSetTokensToMethodTitleTokensDelegateTests()
-//         {
-//             // var collectionController = new CollectionController();
-//             var singletonInstancesController = new SingletonInstancesController();
+        public ConvertMethodsSetTokensToMethodTitleTokensDelegateTests()
+        {
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-//             this.convertMethodsSetTokensToMethodTitleTokensDelegate = singletonInstancesController.GetInstance(
-//                 typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))
-//                 as ConvertMethodsSetTokensToMethodTitleTokensDelegate;
+            this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertTokensToLikelyTypedTokensDelegate))
+                as ConvertTokensToLikelyTypedTokensDelegate;
 
-//             var testStatus = new Models.Status.Status();
+            this.convertLikelyTypedToTypedTokensDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertLikelyTypedToTypedTokensDelegate))
+                as ConvertLikelyTypedToTypedTokensDelegate;
 
-//             // new ConvertMethodsSetTokensToMethodTitleTokensDelegate(
-//             //     ReferenceArgsDefinition.ArgsDefinition,
-//             //     collectionController);
-//         }
+            this.convertMethodsSetTokensToMethodTitleTokensDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))
+                as ConvertMethodsSetTokensToMethodTitleTokensDelegate;
 
-//         [Fact]
-//         public async Task CanConvertMethodsSetTokensToMethodTitleTokens()
-//         {
-//             var typedTokens = new List<(string, Tokens)>();
-//             await foreach (var typedToken in
-//             convertMethodsSetTokensToMethodTitleTokensDelegate.ConvertAsync(
-//                 new (string, Tokens)[] { ("sync", Tokens.MethodsSet) },
-//                 testStatus))
-//             {
-//                 typedTokens.Add(typedToken);
-//             }
+            var testStatus = new Models.Status.Status();
+        }
 
-//             Assert.Equal(3, typedTokens.Count());
-//             foreach (var typedToken in typedTokens)
-//                 Assert.Equal(Tokens.MethodTitle, typedToken.Type);
-//         }
+        private async Task<List<(string, Tokens)>> ConvertTokensToTypedMethodTitleTokens(params string[] tokens)
+        {
+            var likelyTypedTokes = convertTokensToLikelyTypedTokensDelegate.ConvertAsync(
+                tokens,
+                testStatus);
 
-//         [Theory]
-//         [InlineData(Tokens.CollectionTitle)]
-//         [InlineData(Tokens.LikelyMethodsAbbrevation)]
-//         [InlineData(Tokens.LikelyParameterValue)]
-//         [InlineData(Tokens.MethodTitle)]
-//         [InlineData(Tokens.ParameterTitle)]
-//         [InlineData(Tokens.ParameterValue)]
-//         [InlineData(Tokens.Unknown)]
-//         public void ConvertMethodsSetTokensToMethodTitleTokensDelegatePassesThroughOtherTypes(Tokens tokenType)
-//         {
-//             var typedTokens = convertMethodsSetTokensToMethodTitleTokensDelegate.Convert(
-//                 new (string, Tokens)[] { ("", tokenType) });
+            var typedTokens = convertLikelyTypedToTypedTokensDelegate.ConvertAsync(
+                likelyTypedTokes, 
+                testStatus);
+            
+            var methodTitleTokens = convertMethodsSetTokensToMethodTitleTokensDelegate.ConvertAsync(
+                typedTokens,
+                testStatus);
 
-//             Assert.Single(typedTokens);
-//             Assert.Equal(tokenType, typedTokens.ElementAt(0).Type);
-//         }
-//     }
-// }
+            var typedMethodTitleTokens = new List<(string, Tokens)>();
+
+            await foreach (var token in methodTitleTokens)
+                typedMethodTitleTokens.Add(token);
+
+            return typedMethodTitleTokens;
+        }
+
+        [Theory]
+        [InlineData("sync")]
+        public async Task CanConvertMethodsSetTokensToMethodTitleTokens(string token)
+        {
+            var typedTokens = await ConvertTokensToTypedMethodTitleTokens(
+                new string[] { token });
+
+            Assert.Equal(3, typedTokens.Count());
+            foreach (var typedToken in typedTokens)
+                Assert.Equal(Tokens.MethodTitle, typedToken.Item2);
+        }
+
+        [Theory]
+        [InlineData("products")]
+        [InlineData("-u")]
+        [InlineData("--id")]
+        [InlineData("update")]
+        [InlineData("arbitrarystring")]
+        public async void ConvertMethodsSetTokensToMethodTitleTokensDelegatePassesThroughOtherTypes(string token)
+        {
+            var typedTokens = await ConvertTokensToTypedMethodTitleTokens(
+                new string[] { token });
+
+            Assert.Single(typedTokens);
+            Assert.NotEqual(Tokens.MethodsSet, typedTokens.ElementAt(0).Item2);
+        }
+    }
+}
