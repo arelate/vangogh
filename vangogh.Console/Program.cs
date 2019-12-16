@@ -512,25 +512,25 @@ namespace vangogh.Console
 
             #region Update.Screenshots
 
-            var updateScreenshotsAsyncDelegate = new UpdateScreenshotsAsyncDelegate(
-                null, //getProductUpdateUriByContextDelegate,
-                productScreenshotsDataController,
-                networkController,
-                itemizeScreenshotsDelegate,
-                statusController);
+            // var updateScreenshotsAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(UpdateScreenshotsAsyncDelegate))
+            //     as UpdateScreenshotsAsyncDelegate;
 
-            var updateScreenshotsActivity = new UpdateScreenshotsActivity(
-                productsDataController,
-                productScreenshotsDataController,
-                updateScreenshotsAsyncDelegate,
-                statusController);
+            var updateScreenshotsActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateScreenshotsActivity))
+                as UpdateScreenshotsActivity;
 
             #endregion
 
             // dependencies for download controllers
 
-            var getProductImageUriDelegate = new GetProductImageUriDelegate();
-            var getAccountProductImageUriDelegate = new GetAccountProductImageUriDelegate();
+            var getProductImageUriDelegate = singletonInstancesController.GetInstance(
+                typeof(GetProductImageUriDelegate))
+                as GetProductImageUriDelegate;
+                
+            var getAccountProductImageUriDelegate = singletonInstancesController.GetInstance(
+                typeof(GetAccountProductImageUriDelegate))
+                as GetAccountProductImageUriDelegate;
 
             var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
                 updatedDataController,

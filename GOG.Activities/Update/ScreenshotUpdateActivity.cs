@@ -7,6 +7,8 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
 
+using Attributes;
+
 using GOG.Models;
 
 using Models.ProductScreenshots;
@@ -19,6 +21,11 @@ namespace GOG.Activities.Update
         readonly IDataController<ProductScreenshots> productScreenshotsDataController;
         readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
 
+        [Dependencies(
+            "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
+            "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
+            "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",
+            "Controllers.Status.StatusController")]
         public UpdateScreenshotsActivity(
             IDataController<Product> productsDataController,
             IDataController<ProductScreenshots> productScreenshotsDataController,

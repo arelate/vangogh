@@ -7,15 +7,15 @@ using Interfaces.Delegates.GetValue;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Network;
 
+using GOG.Interfaces.Delegates.UpdateScreenshots;
+
 using Interfaces.Status;
 
-using Interfaces.Models.Entities;
+using Attributes;
 
 using Models.ProductScreenshots;
 
 using GOG.Models;
-
-using GOG.Interfaces.Delegates.UpdateScreenshots;
 
 namespace GOG.Delegates.UpdateScreenshots
 {
@@ -27,6 +27,13 @@ namespace GOG.Delegates.UpdateScreenshots
         readonly IItemizeDelegate<string, string> itemizeScreenshotsDelegates;
 
         readonly IStatusController statusController;
+
+        [Dependencies(
+            "Delegates.GetValue.Uri.ProductTypes.GetScreenshotsUpdateUriDelegate,Delegates",
+            "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
+            "Controllers.Network.NetworkController,Controllers",
+            "GOG.Delegates.Itemize.ItemizeScreenshotsDelegate,GOG.Delegates",
+            "Controllers.Status.StatusController,Controllers")]
         public UpdateScreenshotsAsyncDelegate(
             IGetValueDelegate<string> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
