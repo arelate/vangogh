@@ -47,6 +47,7 @@ namespace Delegates.Sort.Requests.Tests
         [InlineData("arbitrarystring", "authorize")] // first argument
         [InlineData("update", "arbitrarystring")] // second argument
         [InlineData("arbitrarystring1", "arbitrarystring2")] // both arguments
+        [InlineData(null, null)]
         public async void MethodOrderCompareDelegateThrowsForUnknownMethods(string method1, string method2)
         {
             var methods = new List<string>() { method1, method2 };

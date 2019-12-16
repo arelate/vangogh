@@ -1,57 +1,58 @@
-// using System;
-// using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// using Xunit;
+using Xunit;
 
-// using Controllers.Collection;
+using Controllers.Instances;
 
-// using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Convert;
 
-// using Delegates.Convert.Requests;
+using Delegates.Convert.Requests;
 
-// using Models.Requests;
+using Models.Requests;
 
-// using TestModels.ArgsDefinitions;
+using TestModels.ArgsDefinitions;
 
-// namespace Delegates.Convert.Requests.Tests
-// {
-//     public class ConvertRequestsDataToResolvedCollectionsDelegateTests
-//     {
-//         private IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedCollectionsDelegate;
+namespace Delegates.Convert.Requests.Tests
+{
+    public class ConvertRequestsDataToResolvedCollectionsDelegateTests
+    {
+        private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate;
+        private readonly Models.Status.Status testStatus;
 
-//         public ConvertRequestsDataToResolvedCollectionsDelegateTests()
-//         {
-//             // var collectionController = new CollectionController();
+        public ConvertRequestsDataToResolvedCollectionsDelegateTests()
+        {
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-//             convertRequestsDataToResolvedCollectionsDelegate = singletonInstancesController.GetInstance(
-//                 typeof(ConvertRequestsDataToResolvedCollectionsDelegate))
-//                 as ConvertRequestsDataToResolvedCollectionsDelegate;
+            convertRequestsDataToResolvedCollectionsDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertRequestsDataToResolvedCollectionsDelegate))
+                as ConvertRequestsDataToResolvedCollectionsDelegate;
                 
-//                 // new ConvertRequestsDataToResolvedCollectionsDelegate(
-//                 //     ReferenceArgsDefinition.ArgsDefinition,
-//                 //     collectionController);
-//         }
+            testStatus = new Models.Status.Status();
+        }
 
-//         [Theory]
-//         [InlineData(8, "update")] // no collections - should use all as default
-//         [InlineData(1, "update", "products")] // applicable collection
-//         [InlineData(9, "update", "productfiles")] // not applicable collection
-//         [InlineData(0, "authorize")] // no collection and none expected
-//         [InlineData(1, "authorize", "products")] // not applicable collection
-//         public void CanConvertRequestsDataToResolvedCollections(
-//             int expectedCollectionsCount,
-//             string method, 
-//             params string[] collections)
-//         {
-//             var requestsData = new RequestsData();
-//             requestsData.Methods.Add(method);
-//             requestsData.Collections.AddRange(collections);
+        [Theory]
+        [InlineData(8, "update")] // no collections - should use all as default
+        [InlineData(1, "update", "products")] // applicable collection
+        [InlineData(9, "update", "productfiles")] // not applicable collection
+        [InlineData(0, "authorize")] // no collection and none expected
+        [InlineData(1, "authorize", "products")] // not applicable collection
+        public async void CanConvertRequestsDataToResolvedCollections(
+            int expectedCollectionsCount,
+            string method, 
+            params string[] collections)
+        {
+            var requestsData = new RequestsData();
+            requestsData.Methods.Add(method);
+            requestsData.Collections.AddRange(collections);
 
-//             var requestsDataWithCollections =
-//                 convertRequestsDataToResolvedCollectionsDelegate.Convert(
-//                     requestsData);
+            var requestsDataWithCollections =
+                await convertRequestsDataToResolvedCollectionsDelegate.ConvertAsync(
+                    requestsData,
+                    testStatus);
 
-//             Assert.Equal(expectedCollectionsCount, requestsDataWithCollections.Collections.Count);
-//         }
-//     }
-// }
+            Assert.Equal(expectedCollectionsCount, requestsDataWithCollections.Collections.Count);
+        }
+    }
+}

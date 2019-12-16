@@ -1,54 +1,61 @@
-// using System;
-// using System.Linq;
-// using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// using Xunit;
+using Xunit;
 
-// using Controllers.Collection;
+using Controllers.Instances;
 
-// using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Convert;
 
-// using Delegates.Convert.Requests;
+using Delegates.Convert.Requests;
 
-// using Models.Requests;
+using Models.Requests;
 
-// using TestModels.ArgsDefinitions;
+using TestModels.ArgsDefinitions;
 
-// namespace Delegates.Convert.Requests.Tests
-// {
-//     public class ConvertRequestDataToRequestsDelegateTests
-//     {
-//         private IConvertDelegate<RequestsData, IEnumerable<Request>> convertRequestsDataToRequestsDelegate;
+namespace Delegates.Convert.Requests.Tests
+{
+    public class ConvertRequestDataToRequestsDelegateTests
+    {
+        private readonly IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate;
+        private readonly Models.Status.Status testStatus;
 
-//         public ConvertRequestDataToRequestsDelegateTests()
-//         {
-//             // var collectionController = new CollectionController();
+        public ConvertRequestDataToRequestsDelegateTests()
+        {
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-//             convertRequestsDataToRequestsDelegate = singletonInstancesController.GetInstance(
-//                 typeof(ConvertRequestsDataToRequestsDelegate))
-//                 as ConvertRequestsDataToRequestsDelegate;
-//                 // new ConvertRequestsDataToRequestsDelegate(
-//                 //     ReferenceArgsDefinition.ArgsDefinition,
-//                 //     collectionController);
-//         }
+            convertRequestsDataToRequestsDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertRequestsDataToRequestsDelegate))
+                as ConvertRequestsDataToRequestsDelegate;
 
-//         [Theory]
-//         [InlineData(2, "update", "products", "accountproducts")] // two applicable collections
-//         [InlineData(1, "update", "products", "productfiles")] // two collections, but only one applicable
-//         [InlineData(0, "update", "productfiles")] // no applicable collections
-//         public void CanConvertRequestDataToRequests(
-//             int requestsCount,
-//             string method,
-//             params string[] collections)
-//         {
-//             var requestsData = new RequestsData();
-//             requestsData.Methods.Add(method);
-//             requestsData.Collections.AddRange(collections);
-//             // Parameters are not part of the test, since they don't affect number of requests            
+            testStatus = new Models.Status.Status();
+        }
 
-//             var requests = convertRequestsDataToRequestsDelegate.Convert(requestsData);
+        [Theory]
+        [InlineData(2, "update", "products", "accountproducts")] // two applicable collections
+        [InlineData(1, "update", "products", "productfiles")] // two collections, but only one applicable
+        [InlineData(0, "update", "productfiles")] // no applicable collections
+        public async void CanConvertRequestDataToRequests(
+            int expectedRequestsCount,
+            string method,
+            params string[] collections)
+        {
+            var requestsData = new RequestsData();
+            requestsData.Methods.Add(method);
+            requestsData.Collections.AddRange(collections);
+            // Parameters are not part of the test, since they don't affect number of requests            
 
-//             Assert.Equal(requestsCount, requests.Count());
-//         }
-//     }
-// }
+            var requests = convertRequestsDataToRequestsDelegate.ConvertAsync(
+                requestsData,
+                testStatus);
+            
+            var requestsCount = 0;
+            await foreach (var request in requests)
+                requestsCount++;
+
+            Assert.Equal(expectedRequestsCount, requestsCount);
+        }
+    }
+}
