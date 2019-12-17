@@ -1,45 +1,54 @@
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Confirm;
+using Interfaces.Status;
+
+using Attributes;
 
 using Models.ArgsTokens;
-
-using TypedTokens = System.Collections.Generic.IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>;
 
 namespace Delegates.Convert.ArgsTokens
 {
     public class ConvertTokensToTypedTokensDelegate : 
-        IConvertDelegate<IEnumerable<string>, TypedTokens>
+        IConvertAsyncDelegate<
+            IEnumerable<string>, 
+            IAsyncEnumerable<(string, Tokens)>>
     {
-        private IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToLikelyTypedTokensDelegate;
-        private IConvertDelegate<TypedTokens, TypedTokens> convertLikelyTypedToTypedTokensDelegate;
-        private IConvertDelegate<TypedTokens, TypedTokens> convertMethodsSetTokensToMethodTitleTokensDelegate;
+        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
+        private IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertLikelyTypedToTypedTokensDelegate;
+        private IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertMethodsSetTokensToMethodTitleTokensDelegate;
 
+        [Dependencies(
+            "Delegates.Convert.ArgsTokens.ConvertTokensToLikelyTypedTokensDelegate,Delegates",
+            "Delegates.Convert.ArgsTokens.ConvertLikelyTypedToTypedTokensDelegate,Delegates",
+            "Delegates.Convert.ArgsTokens.ConvertMethodsSetTokensToMethodTitleTokensDelegate,Delegates")]
         public ConvertTokensToTypedTokensDelegate(
-            IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToLikelyTypedTokensDelegate,
-            IConvertDelegate<TypedTokens, TypedTokens> convertLikelyTypedToTypedTokensDelegate,
-            IConvertDelegate<TypedTokens, TypedTokens> convertMethodsSetTokensToMethodTitleTokensDelegate)
+            IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate,
+            IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertLikelyTypedToTypedTokensDelegate,
+            IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertMethodsSetTokensToMethodTitleTokensDelegate)
         {
             this.convertTokensToLikelyTypedTokensDelegate = convertTokensToLikelyTypedTokensDelegate;
             this.convertLikelyTypedToTypedTokensDelegate = convertLikelyTypedToTypedTokensDelegate;
             this.convertMethodsSetTokensToMethodTitleTokensDelegate = convertMethodsSetTokensToMethodTitleTokensDelegate;
         }
-        public TypedTokens Convert(IEnumerable<string> tokens)
+        public IAsyncEnumerable<(string, Tokens)> ConvertAsync(IEnumerable<string> tokens, IStatus status)
         {
             // 1. Convert untyped tokens into a likely-typed tokens
             var likelyTypedTokens = 
-                convertTokensToLikelyTypedTokensDelegate.Convert(
-                    tokens);
+                convertTokensToLikelyTypedTokensDelegate.ConvertAsync(
+                    tokens,
+                    status);
             // 2. Resolve likely types into specific types
             var typedTokens = 
-                convertLikelyTypedToTypedTokensDelegate.Convert(
-                    likelyTypedTokens);
+                convertLikelyTypedToTypedTokensDelegate.ConvertAsync(
+                    likelyTypedTokens,
+                    status);
             // 3. Expand methods sets (if present)
             var expandedTypedTokens = 
-                convertMethodsSetTokensToMethodTitleTokensDelegate.Convert(
-                    typedTokens);
+                convertMethodsSetTokensToMethodTitleTokensDelegate.ConvertAsync(
+                    typedTokens,
+                    status);
 
             return expandedTypedTokens;
         }

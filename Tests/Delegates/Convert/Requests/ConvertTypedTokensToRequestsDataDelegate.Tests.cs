@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using Xunit;
 
+using Controllers.Instances;
+
 using Interfaces.Delegates.Convert;
 
 using Models.ArgsTokens;
@@ -18,8 +20,11 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertTypedTokensToRequestsDataDelegateTests()
         {
-            this.convertTypedTokensToRequestsDataDelegate = 
-                new ConvertTypedTokensToRequestsDataDelegate();
+            var singletonInstancesController = new SingletonInstancesController(true);
+
+            this.convertTypedTokensToRequestsDataDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertTypedTokensToRequestsDataDelegate))
+                as ConvertTypedTokensToRequestsDataDelegate;
         }
 
         [Theory]

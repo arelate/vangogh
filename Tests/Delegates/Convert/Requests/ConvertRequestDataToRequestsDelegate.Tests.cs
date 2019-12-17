@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Xunit;
 
-using Controllers.Collection;
+using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
 
@@ -18,24 +19,26 @@ namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertRequestDataToRequestsDelegateTests
     {
-        private IConvertDelegate<RequestsData, IEnumerable<Request>> convertRequestsDataToRequestsDelegate;
+        private readonly IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate;
+        private readonly Models.Status.Status testStatus;
 
         public ConvertRequestDataToRequestsDelegateTests()
         {
-            var collectionController = new CollectionController();
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-            convertRequestsDataToRequestsDelegate = 
-                new ConvertRequestsDataToRequestsDelegate(
-                    ReferenceArgsDefinition.ArgsDefinition,
-                    collectionController);
+            convertRequestsDataToRequestsDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertRequestsDataToRequestsDelegate))
+                as ConvertRequestsDataToRequestsDelegate;
+
+            testStatus = new Models.Status.Status();
         }
 
         [Theory]
         [InlineData(2, "update", "products", "accountproducts")] // two applicable collections
         [InlineData(1, "update", "products", "productfiles")] // two collections, but only one applicable
         [InlineData(0, "update", "productfiles")] // no applicable collections
-        public void CanConvertRequestDataToRequests(
-            int requestsCount,
+        public async void CanConvertRequestDataToRequests(
+            int expectedRequestsCount,
             string method,
             params string[] collections)
         {
@@ -44,9 +47,15 @@ namespace Delegates.Convert.Requests.Tests
             requestsData.Collections.AddRange(collections);
             // Parameters are not part of the test, since they don't affect number of requests            
 
-            var requests = convertRequestsDataToRequestsDelegate.Convert(requestsData);
+            var requests = convertRequestsDataToRequestsDelegate.ConvertAsync(
+                requestsData,
+                testStatus);
+            
+            var requestsCount = 0;
+            await foreach (var request in requests)
+                requestsCount++;
 
-            Assert.Equal(requestsCount, requests.Count());
+            Assert.Equal(expectedRequestsCount, requestsCount);
         }
     }
 }

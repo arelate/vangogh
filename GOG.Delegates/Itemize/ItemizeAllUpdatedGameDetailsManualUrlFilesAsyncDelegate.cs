@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
+
+using Attributes;
 
 using GOG.Models;
 
@@ -17,13 +18,18 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        readonly IIndexController<long> updatedDataController;
+        readonly IDataController<long> updatedDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+			"GOG.Delegates.Itemize.ItemizeGameDetailsFilesAsyncDelegate,GOG.Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
-            IIndexController<long> updatedDataController,
+            IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate,
             IStatusController statusController)
@@ -34,17 +40,14 @@ namespace GOG.Delegates.Itemize
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<string> ItemizeAllAsync(IStatus status)
         {
             var enumerateUpdateGameDetailsFilesTask = await statusController.CreateAsync(status, "Enumerate updated gameDetails files");
 
-            var updatedIds = await updatedDataController.ItemizeAllAsync(enumerateUpdateGameDetailsFilesTask);
             var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdateGameDetailsFilesTask);
             var current = 0;
-
-            var gameDetailsFiles = new List<string>();
-
-            foreach (var id in updatedIds)
+            
+            await foreach (var id in updatedDataController.ItemizeAllAsync(enumerateUpdateGameDetailsFilesTask))
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateUpdateGameDetailsFilesTask);
 
@@ -54,15 +57,13 @@ namespace GOG.Delegates.Itemize
                     updatedIdsCount,
                     gameDetails.Title);
 
-                gameDetailsFiles.AddRange(
-                    await itemizeGameDetailsFilesAsyncDelegate.ItemizeAsync(
-                        gameDetails, 
-                        enumerateUpdateGameDetailsFilesTask));
+                foreach (var gameDetailsFile in await itemizeGameDetailsFilesAsyncDelegate.ItemizeAsync(
+                        gameDetails,
+                        enumerateUpdateGameDetailsFilesTask))
+                        yield return gameDetailsFile;
             }
 
             await statusController.CompleteAsync(enumerateUpdateGameDetailsFilesTask);
-
-            return gameDetailsFiles;
         }
     }
 }

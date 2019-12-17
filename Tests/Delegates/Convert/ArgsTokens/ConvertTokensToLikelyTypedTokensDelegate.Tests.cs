@@ -1,36 +1,38 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Xunit;
 
 using Interfaces.Delegates.Convert;
 
-using Controllers.Collection;
-
-using Delegates.Convert.ArgsTokens;
-using Delegates.Confirm.ArgsTokens;
+using Controllers.Instances;
 
 using Models.ArgsTokens;
-
-using TestModels.ArgsDefinitions;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
     public class ConvertTokensToLikelyTypedTokensDelegateTests
     {
-        private IConvertDelegate<IEnumerable<string>, IEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
+        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
+        private Models.Status.Status testStatus = new Models.Status.Status();
 
         public ConvertTokensToLikelyTypedTokensDelegateTests()
         {
-            var collectionController = new CollectionController();
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-            var confirmLikelyTokenTypeDelegate = new ConfirmLikelyTokenTypeDelegate(
-                ReferenceArgsDefinition.ArgsDefinition,
-                collectionController);
+            this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertTokensToLikelyTypedTokensDelegate))
+                as ConvertTokensToLikelyTypedTokensDelegate;
+        }
 
-            this.convertTokensToLikelyTypedTokensDelegate = new ConvertTokensToLikelyTypedTokensDelegate(
-                confirmLikelyTokenTypeDelegate);
+        private async Task<List<(string, Tokens)>> ConvertTokensToLikelyTypedTokens(params string[] tokens)
+        {
+            var likelyTypedTokens = new List<(string, Tokens)>();
+            await foreach (var likelyTypedToken in convertTokensToLikelyTypedTokensDelegate.ConvertAsync(tokens, testStatus))
+                likelyTypedTokens.Add(likelyTypedToken);
+            
+            return likelyTypedTokens;
         }
 
         [Theory]
@@ -50,9 +52,10 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [InlineData("update", "updated")]
         [InlineData("update", "wishlisted")]
         [InlineData("update", "screenshots")]
-        public void CanConvertTokensToLikelyTypedTokensDelegateMethodTitlesCollectionTitles(params string[] tokens)
+        public async void CanConvertTokensToLikelyTypedTokensDelegateMethodTitlesCollectionTitles(params string[] tokens)
         {
-            var likelyTypedTokens = convertTokensToLikelyTypedTokensDelegate.Convert(tokens);
+            var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
+
             Assert.NotEmpty(likelyTypedTokens);
             Assert.Equal(2, likelyTypedTokens.Count());
             Assert.Equal(Tokens.MethodTitle, likelyTypedTokens.ElementAt(0).Item2);
@@ -69,9 +72,10 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [InlineData("prepare", "--os")]
         [InlineData("prepare", "--lang")]
         [InlineData("update", "--id")]
-        public void CanConvertTokensToLikelyTypedTokensDelegateMethodTitlesParameterTitles(params string[] tokens)
+        public async void CanConvertTokensToLikelyTypedTokensDelegateMethodTitlesParameterTitles(params string[] tokens)
         {
-            var likelyTypedTokens = convertTokensToLikelyTypedTokensDelegate.Convert(tokens);
+            var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
+
             Assert.NotEmpty(likelyTypedTokens);
             Assert.Equal(2, likelyTypedTokens.Count());
             Assert.Equal(Tokens.MethodTitle, likelyTypedTokens.ElementAt(0).Item2);
@@ -82,9 +86,10 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [InlineData("productimages", "download")]
         [InlineData("productimages", "prepare")]
         [InlineData("products", "update")]
-        public void CanConvertTokensToLikelyTypedTokensDelegateWrongOrderOfValidTokensProducesLikelyParameterValues(params string[] tokens)
+        public async void CanConvertTokensToLikelyTypedTokensDelegateWrongOrderOfValidTokensProducesLikelyParameterValues(params string[] tokens)
         {
-            var likelyTypedTokens = convertTokensToLikelyTypedTokensDelegate.Convert(tokens);
+            var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
+
             Assert.NotEmpty(likelyTypedTokens);
             Assert.Equal(2, likelyTypedTokens.Count());
             Assert.Equal(Tokens.CollectionTitle, likelyTypedTokens.ElementAt(0).Item2);
@@ -94,9 +99,10 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [Theory]
         [InlineData("")]
         [InlineData("arbitrarystring")]
-        public void CanConvertTokensToLikelyTypedTokensDelegateRandomInputProducesLikelyParameterValues(params string[] tokens)
+        public async void CanConvertTokensToLikelyTypedTokensDelegateRandomInputProducesLikelyParameterValues(params string[] tokens)
         {
-            var likelyTypedTokens = convertTokensToLikelyTypedTokensDelegate.Convert(tokens);
+            var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
+
             Assert.NotEmpty(likelyTypedTokens);
             Assert.Single(likelyTypedTokens);
             Assert.Equal(Tokens.LikelyParameterValue, likelyTypedTokens.ElementAt(0).Item2);

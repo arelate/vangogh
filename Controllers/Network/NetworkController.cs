@@ -11,6 +11,8 @@ using Interfaces.Controllers.Cookies;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Network;
 
 using Interfaces.Controllers.Uri;
@@ -24,6 +26,10 @@ namespace Controllers.Network
         readonly IUriController uriController;
         IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate;
 
+        [Dependencies(
+            "Controllers.Cookies.CookiesController,Controllers",
+            "Controllers.Uri.UriController,Controllers",
+            "Delegates.Constrain.ConstrainRequestRateAsyncDelegate,Delegates")]
         public NetworkController(
             ICookiesController cookieController,
             IUriController uriController,

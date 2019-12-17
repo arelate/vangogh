@@ -1,46 +1,58 @@
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Sort;
 
-using Models.ArgsTokens;
+using Interfaces.Status;
+
+using Attributes;
+
 using Models.Requests;
-
-using TypedTokens = System.Collections.Generic.IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>;
+using Models.ArgsTokens;
 
 namespace Delegates.Convert.Requests
 {
-    public class ConvertArgsToRequestsDelegate : IConvertDelegate<string[], IEnumerable<Request>>
+    public class ConvertArgsToRequestsDelegate : IConvertAsyncDelegate<string[], IAsyncEnumerable<Request>>
     {
-        private IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToTypedTokensDelegate;
-        private IConvertDelegate<TypedTokens, RequestsData> convertTypedTokensToRequestsDataDelegate;
-        private IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedCollectionsDelegate;
-        private IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedDependenciesDelegate;
+        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate;
+        private IConvertDelegate<IEnumerable<(string, Tokens)>, RequestsData> convertTypedTokensToRequestsDataDelegate;
+        private IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate;
+        private IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedDependenciesDelegate;
 
-        private IComparer<string> methodOrderCompareDelegate;
-        private IConvertDelegate<RequestsData, IEnumerable<Request>> convertRequestsDataToRequestsDelegate;
+        private ISortAsyncDelegate<string> sortMethodsByOrderDelegate;
+        private IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate;
 
+        [Dependencies(
+            "Delegates.Convert.ArgsTokens.ConvertTokensToTypedTokensDelegate,Delegates",
+            "Delegates.Convert.Requests.ConvertTypedTokensToRequestsDataDelegate,Delegates",
+            "Delegates.Convert.Requests.ConvertRequestsDataToResolvedCollectionsDelegate,Delegates",
+            "Delegates.Convert.Requests.ConvertRequestsDataToResolvedDependenciesDelegate,Delegates",
+            "Delegates.Sort.Requests.SortRequestsMethodsByOrderAsyncDelegate,Delegates",
+            "Delegates.Convert.Requests.ConvertRequestsDataToRequestsDelegate,Delegates")]
         public ConvertArgsToRequestsDelegate(
-            IConvertDelegate<IEnumerable<string>, TypedTokens> convertTokensToTypedTokensDelegate,
-            IConvertDelegate<TypedTokens, RequestsData> convertTypedTokensToRequestsDataDelegate,
-            IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedCollectionsDelegate,
-            IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedDependenciesDelegate,
-            IComparer<string> methodOrderCompareDelegate,
-            IConvertDelegate<RequestsData, IEnumerable<Request>> convertRequestsDataToRequestsDelegate)
+            IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate,
+            IConvertDelegate<IEnumerable<(string, Tokens)>, RequestsData> convertTypedTokensToRequestsDataDelegate,
+            IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate,
+            IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedDependenciesDelegate,
+            ISortAsyncDelegate<string> sortMethodsByOrderDelegate,
+            IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate)
         {
             this.convertTokensToTypedTokensDelegate = convertTokensToTypedTokensDelegate;
             this.convertTypedTokensToRequestsDataDelegate = convertTypedTokensToRequestsDataDelegate;
             this.convertRequestsDataToResolvedCollectionsDelegate = convertRequestsDataToResolvedCollectionsDelegate;
             this.convertRequestsDataToResolvedDependenciesDelegate = convertRequestsDataToResolvedDependenciesDelegate;
-            this.methodOrderCompareDelegate = methodOrderCompareDelegate;
+            this.sortMethodsByOrderDelegate = sortMethodsByOrderDelegate;
             this.convertRequestsDataToRequestsDelegate = convertRequestsDataToRequestsDelegate;
         }
 
-        public IEnumerable<Request> Convert(string[] tokens)
+        public async IAsyncEnumerable<Request> ConvertAsync(string[] tokens, IStatus status)
         {
             #region Phase 1: Parse tokens into typed tokens
 
-            var typedTokens = convertTokensToTypedTokensDelegate.Convert(tokens);
+            var typedTokens = new List<(string, Tokens)>();
+            await foreach (var typedToken in convertTokensToTypedTokensDelegate.ConvertAsync(tokens, status))
+                typedTokens.Add(typedToken);
 
             #endregion
 
@@ -52,25 +64,26 @@ namespace Delegates.Convert.Requests
 
             #region Phase 3: If there were no collections specified for a method - add all method collections
 
-            requestsData = convertRequestsDataToResolvedCollectionsDelegate.Convert(requestsData);
+            requestsData = await convertRequestsDataToResolvedCollectionsDelegate.ConvertAsync(requestsData, status);
 
             #endregion
 
             #region Phase 4: Resolve dependencies some methods, collections might have
 
-            requestsData = convertRequestsDataToResolvedDependenciesDelegate.Convert(requestsData);
+            requestsData = await convertRequestsDataToResolvedDependenciesDelegate.ConvertAsync(requestsData, status);
 
             #endregion
 
             #region Phase 5: Sort methods by order
 
-            requestsData.Methods.Sort(methodOrderCompareDelegate);
+            await sortMethodsByOrderDelegate.SortAsync(requestsData.Methods, status);
 
             #endregion
 
             #region Phase 6: Convert requests data to requests
 
-            return convertRequestsDataToRequestsDelegate.Convert(requestsData);
+            await foreach (var request in convertRequestsDataToRequestsDelegate.ConvertAsync(requestsData, status))
+                yield return request;
 
             #endregion
         }

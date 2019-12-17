@@ -1,13 +1,12 @@
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Xunit;
 
-using Controllers.Collection;
+using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
-
-using Creators.Delegates.Convert.Requests;
 
 using Models.Requests;
 
@@ -18,30 +17,43 @@ namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertArgsToRequestsDelegateTests
     {
-        private IConvertDelegate<string[], IEnumerable<Request>> convertArgsToRequestsDelegate;
+        private readonly IConvertAsyncDelegate<string[], IAsyncEnumerable<Request>> convertArgsToRequestsDelegate;
+        private readonly Models.Status.Status testStatus;
 
         public ConvertArgsToRequestsDelegateTests()
         {
-            var collectionController = new CollectionController();
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-            var convertArgsToRequestsDelegateCreator = new ConvertArgsToRequestsDelegateCreator(
-                ReferenceArgsDefinition.ArgsDefinition,
-                collectionController);
+            this.convertArgsToRequestsDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertArgsToRequestsDelegate))
+                as ConvertArgsToRequestsDelegate;
 
-            convertArgsToRequestsDelegate = convertArgsToRequestsDelegateCreator.CreateDelegate();
+            testStatus = new Models.Status.Status();
+        }
+
+        private async Task<List<Request>> ConvertArgsToRequests(string args)
+        {
+            var requests = convertArgsToRequestsDelegate.ConvertAsync(args.Split(" "), testStatus);
+            var requestsList = new List<Request>();
+
+            await foreach (var request in requests)
+                requestsList.Add(request);
+
+            return requestsList;
         }
 
         [Theory]
         [InlineData("sync")]
         [InlineData("download productfiles")]
-        public void CanConvertArgsToRequests(string spaceSeparatedArgs)
+        public async void CanConvertArgsToRequests(string spaceSeparatedArgs)
         {
-            var requests = convertArgsToRequestsDelegate.Convert(spaceSeparatedArgs.Split(" "));
+            var requests = await ConvertArgsToRequests(spaceSeparatedArgs);
+
             var referenceRequests = ReferenceRequests.Requests[spaceSeparatedArgs];
 
             Assert.Equal(requests.Count(), referenceRequests.Count());
 
-            for (var ii=0; ii<requests.Count(); ii++)
+            for (var ii = 0; ii < requests.Count(); ii++)
             {
                 var request = requests.ElementAt(ii);
                 var referenceRequest = referenceRequests.ElementAt(ii);

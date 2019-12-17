@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace Delegates.Correct
 {
     public class CorrectUsernamePasswordAsyncDelegate : ICorrectAsyncDelegate<string[]>
     {
         readonly IInputController<string> inputController;
 
+        [Dependencies("Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
         public CorrectUsernamePasswordAsyncDelegate(IInputController<string> inputController)
         {
             this.inputController = inputController;

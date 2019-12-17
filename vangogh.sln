@@ -23,14 +23,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Delegates", "GOG.Delega
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Delegates", "Delegates\Delegates.csproj", "{947A3513-C259-40C1-B5FA-A6F77E3858A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Creators", "Creators\Creators.csproj", "{1CF71E91-0CF1-4145-926C-CDC878966ADA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{751A3F9D-D509-4A34-9765-E982B35DC0D8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A632B7DB-2684-4AC1-AF0B-61903695B604}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4FD29628-6C9E-473E-800F-6A883BB06948}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +84,14 @@ Global
 		{A632B7DB-2684-4AC1-AF0B-61903695B604}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A632B7DB-2684-4AC1-AF0B-61903695B604}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A632B7DB-2684-4AC1-AF0B-61903695B604}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1EFB74B-26C3-48FD-A4BF-4303481ED11C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1EFB74B-26C3-48FD-A4BF-4303481ED11C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1EFB74B-26C3-48FD-A4BF-4303481ED11C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1EFB74B-26C3-48FD-A4BF-4303481ED11C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FD29628-6C9E-473E-800F-6A883BB06948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FD29628-6C9E-473E-800F-6A883BB06948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD29628-6C9E-473E-800F-6A883BB06948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FD29628-6C9E-473E-800F-6A883BB06948}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

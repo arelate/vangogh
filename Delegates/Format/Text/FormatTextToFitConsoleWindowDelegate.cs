@@ -5,6 +5,8 @@ using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Console;
 
+using Attributes;
+
 using Models.Separators;
 
 namespace Delegates.Format.Text
@@ -13,6 +15,7 @@ namespace Delegates.Format.Text
     {
         readonly IWindowWidthProperty windowWidthProperty;
 
+        [Dependencies("Controllers.Console.ConsoleController,Controllers")]
         public FormatTextToFitConsoleWindowDelegate(IWindowWidthProperty windowWidthProperty)
         {
             this.windowWidthProperty = windowWidthProperty;

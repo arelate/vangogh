@@ -8,6 +8,8 @@ using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using GOG.Models;
 
 namespace GOG.Delegates.Itemize
@@ -18,6 +20,10 @@ namespace GOG.Delegates.Itemize
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public ItemizeAllGameDetailsDirectoriesAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
@@ -28,33 +34,28 @@ namespace GOG.Delegates.Itemize
             this.statusController = statusController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<string> ItemizeAllAsync(IStatus status)
         {
             var enumerateGameDetailsDirectoriesTask = await statusController.CreateAsync(status, "Enumerate gameDetails directories");
-            var directories = new List<string>();
+            
             var current = 0;
-            var gameDetailsIds = await gameDetailsDataController.ItemizeAllAsync(enumerateGameDetailsDirectoriesTask);
             var gameDetailsCount = await gameDetailsDataController.CountAsync(enumerateGameDetailsDirectoriesTask);
 
-            foreach (var id in gameDetailsIds)
+            await foreach (var gameDetails in gameDetailsDataController.ItemizeAllAsync(enumerateGameDetailsDirectoriesTask))
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateGameDetailsDirectoriesTask);
-
                 await statusController.UpdateProgressAsync(
                     enumerateGameDetailsDirectoriesTask,
                     ++current,
                     gameDetailsCount,
                     gameDetails.Title);
 
-                directories.AddRange(
-                    await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
+                foreach (var directory in await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
                         gameDetails, 
-                        enumerateGameDetailsDirectoriesTask));
+                        enumerateGameDetailsDirectoriesTask))
+                        yield return directory;
             }
 
             await statusController.CompleteAsync(enumerateGameDetailsDirectoriesTask);
-
-            return directories;
         }
     }
 }

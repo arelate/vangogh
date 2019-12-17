@@ -30,8 +30,9 @@ namespace Controllers.Status
             };
             status.Children.Add(childStatus);
 
-            if (notifyStatusChanged)
-                await NotifyStatusChangedAsync?.Invoke();
+            if (notifyStatusChanged &&
+                NotifyStatusChangedAsync != null)
+                await NotifyStatusChangedAsync.Invoke();
 
             return childStatus;
         }
@@ -46,8 +47,9 @@ namespace Controllers.Status
             status.Complete = true;
             status.Completed = DateTime.UtcNow;
 
-            if (notifyStatusChanged)
-                await NotifyStatusChangedAsync?.Invoke();
+            if (notifyStatusChanged &&
+                NotifyStatusChangedAsync != null)
+                await NotifyStatusChangedAsync.Invoke();
         }
 
         public async Task UpdateProgressAsync(IStatus status, long current, long total, string target, string unit = "")
@@ -65,7 +67,8 @@ namespace Controllers.Status
             status.Progress.Total = total;
             status.Progress.Unit = unit;
 
-            await NotifyStatusChangedAsync?.Invoke();
+            if (NotifyStatusChangedAsync != null)
+                await NotifyStatusChangedAsync.Invoke();
         }
 
         public async Task FailAsync(IStatus status, string failureMessage)
@@ -89,7 +92,8 @@ namespace Controllers.Status
 
             status.Warnings.Add(warningMessage);
 
-            await NotifyStatusChangedAsync?.Invoke();
+            if (NotifyStatusChangedAsync != null)
+                await NotifyStatusChangedAsync.Invoke();
         }
 
         public async Task InformAsync(IStatus status, string informationMessage)
@@ -101,7 +105,8 @@ namespace Controllers.Status
 
             status.Information.Add(informationMessage);
 
-            await NotifyStatusChangedAsync?.Invoke();
+            if (NotifyStatusChangedAsync != null)
+                await NotifyStatusChangedAsync.Invoke();
         }
 
         public async Task PostSummaryResultsAsync(IStatus status, params string[] summaryResults)
@@ -116,7 +121,8 @@ namespace Controllers.Status
             foreach (var summaryResult in summaryResults)
                 status.SummaryResults.Add(summaryResult);
 
-            await NotifyStatusChangedAsync?.Invoke();
+            if (NotifyStatusChangedAsync != null)
+                await NotifyStatusChangedAsync.Invoke();
         }
     }
 }

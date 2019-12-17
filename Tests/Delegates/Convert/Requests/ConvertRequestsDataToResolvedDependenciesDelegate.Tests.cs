@@ -1,32 +1,29 @@
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Xunit;
 
-using Controllers.Collection;
+using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
 
-using Delegates.Convert.Requests;
-
 using Models.Requests;
-
-using TestModels.ArgsDefinitions;
 
 namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertRequestsDataToResolvedDependenciesDelegateTests
     {
-        private IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedDependenciesDelegate;
+        private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedDependenciesDelegate;
+        private readonly Models.Status.Status testStatus;
 
         public ConvertRequestsDataToResolvedDependenciesDelegateTests()
         {
-            var collectionController = new CollectionController();
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-            convertRequestsDataToResolvedDependenciesDelegate =
-                new ConvertRequestsDataToResolvedDependenciesDelegate(
-                    ReferenceArgsDefinition.ArgsDefinition,
-                    collectionController);
+            convertRequestsDataToResolvedDependenciesDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertRequestsDataToResolvedDependenciesDelegate))
+                as ConvertRequestsDataToResolvedDependenciesDelegate;
+
+            testStatus = new Models.Status.Status();
         }
 
         [Theory]
@@ -37,10 +34,10 @@ namespace Delegates.Convert.Requests.Tests
         [InlineData(2, 1, "update", "wishlisted")]
         [InlineData(4, 2, "download", "productfiles")] // complex dependency
         [InlineData(1, 1, "update", "products")] // no dependency
-        public void CanConvertRequestsDataToResolvedDependencies(
-            int expectedMethodsCount, 
+        public async void CanConvertRequestsDataToResolvedDependencies(
+            int expectedMethodsCount,
             int expectedCollectionsCount,
-            string method, 
+            string method,
             string collection)
         {
             var requestsData = new RequestsData();
@@ -48,11 +45,11 @@ namespace Delegates.Convert.Requests.Tests
             requestsData.Collections.Add(collection);
 
             var requestsDataWithDependencies =
-                convertRequestsDataToResolvedDependenciesDelegate.Convert(
-                    requestsData);
+                await convertRequestsDataToResolvedDependenciesDelegate.ConvertAsync(
+                    requestsData,
+                    testStatus);
 
             Assert.Equal(expectedMethodsCount, requestsDataWithDependencies.Methods.Count);
             Assert.Equal(expectedCollectionsCount, requestsDataWithDependencies.Collections.Count);
         }
-    }
-}
+    }}

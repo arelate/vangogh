@@ -6,6 +6,8 @@ using Interfaces.Delegates.Recycle;
 using Interfaces.Controllers.Directory;
 using Interfaces.Controllers.File;
 
+using Attributes;
+
 namespace Delegates.Recycle
 {
     public class RecycleDelegate : IRecycleDelegate
@@ -14,6 +16,10 @@ namespace Delegates.Recycle
         readonly IFileController fileController;
         IDirectoryController directoryController;
 
+        [Dependencies(
+            "Delegates.GetDirectory.ProductTypes.GetRecycleBinDirectoryDelegate,Delegates",
+            "Controllers.File.FileController,Controllers",
+            "Controllers.Directory.DirectoryController,Controllers")]
         public RecycleDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,

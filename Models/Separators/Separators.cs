@@ -34,8 +34,6 @@
         // template
         public const string TemplatePrefix = Common.LeftCurlyBracket;
         public const string TemplateSuffix = Common.RightCurlyBracket;
-        // activity-context
-        public const string ActivityContext = Common.Dash;
         // headers
         public const string Headers = Common.NewLine;
     }

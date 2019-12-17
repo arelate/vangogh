@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Xunit;
 
-using Controllers.Collection;
+using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
 
@@ -17,16 +18,18 @@ namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertRequestsDataToResolvedCollectionsDelegateTests
     {
-        private IConvertDelegate<RequestsData, RequestsData> convertRequestsDataToResolvedCollectionsDelegate;
+        private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate;
+        private readonly Models.Status.Status testStatus;
 
         public ConvertRequestsDataToResolvedCollectionsDelegateTests()
         {
-            var collectionController = new CollectionController();
+            var singletonInstancesController = new SingletonInstancesController(true);
 
-            convertRequestsDataToResolvedCollectionsDelegate =
-                new ConvertRequestsDataToResolvedCollectionsDelegate(
-                    ReferenceArgsDefinition.ArgsDefinition,
-                    collectionController);
+            convertRequestsDataToResolvedCollectionsDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertRequestsDataToResolvedCollectionsDelegate))
+                as ConvertRequestsDataToResolvedCollectionsDelegate;
+                
+            testStatus = new Models.Status.Status();
         }
 
         [Theory]
@@ -35,7 +38,7 @@ namespace Delegates.Convert.Requests.Tests
         [InlineData(9, "update", "productfiles")] // not applicable collection
         [InlineData(0, "authorize")] // no collection and none expected
         [InlineData(1, "authorize", "products")] // not applicable collection
-        public void CanConvertRequestsDataToResolvedCollections(
+        public async void CanConvertRequestsDataToResolvedCollections(
             int expectedCollectionsCount,
             string method, 
             params string[] collections)
@@ -45,8 +48,9 @@ namespace Delegates.Convert.Requests.Tests
             requestsData.Collections.AddRange(collections);
 
             var requestsDataWithCollections =
-                convertRequestsDataToResolvedCollectionsDelegate.Convert(
-                    requestsData);
+                await convertRequestsDataToResolvedCollectionsDelegate.ConvertAsync(
+                    requestsData,
+                    testStatus);
 
             Assert.Equal(expectedCollectionsCount, requestsDataWithCollections.Collections.Count);
         }

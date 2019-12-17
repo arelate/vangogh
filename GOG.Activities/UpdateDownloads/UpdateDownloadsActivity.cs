@@ -8,21 +8,17 @@ using Interfaces.Controllers.Data;
 using Interfaces.Controllers.File;
 
 using Interfaces.Status;
-using Interfaces.Models.Entities;
-
-using Models.ProductCore;
-using Models.ProductDownloads;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
+using Models.ProductTypes;
 using GOG.Models;
 
 namespace GOG.Activities.UpdateDownloads
 {
-    public class UpdateDownloadsActivity : Activity
+    public abstract class UpdateDownloadsActivity<Type> : Activity
+        where Type: ProductCore
     {
-        Entity context;
-
         readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
         readonly IGetDirectoryDelegate getDirectoryDelegate;
         readonly IFileController fileController;
@@ -31,7 +27,6 @@ namespace GOG.Activities.UpdateDownloads
         readonly IDataController<Product> productsDataController;
 
         public UpdateDownloadsActivity(
-            Entity context,
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
@@ -41,7 +36,6 @@ namespace GOG.Activities.UpdateDownloads
             IStatusController statusController) :
             base(statusController)
         {
-            this.context = context;
             this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.fileController = fileController;
@@ -54,11 +48,11 @@ namespace GOG.Activities.UpdateDownloads
         {
             var updateDownloadsTask = await statusController.CreateAsync(
                 status,
-                $"Update {context} downloads");
+                $"Update {typeof(Type)} downloads");
 
             var getSourcesTask = await statusController.CreateAsync(
                 updateDownloadsTask,
-                $"Get {context} download sources");
+                $"Get {typeof(Type)} download sources");
 
             var downloadSources = await getDownloadSourcesAsyncDelegate.GetDownloadSourcesAsync(getSourcesTask);
             await statusController.CompleteAsync(getSourcesTask);
@@ -109,7 +103,7 @@ namespace GOG.Activities.UpdateDownloads
                 // and don't want to carry over any previously scheduled files that might not be relevant anymore
                 // (e.g. files that were scheduled, but never downloaded and then removed from data files)
                 var existingDownloadsOfType = productDownloads.Downloads.FindAll(
-                    d => d.Context == context).ToArray();
+                    d => d.Type == typeof(Type).ToString()).ToArray();
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
@@ -123,7 +117,7 @@ namespace GOG.Activities.UpdateDownloads
 
                     var scheduledDownloadEntry = new ProductDownloadEntry
                     {
-                        Context = context,
+                        Type = typeof(Type).ToString(),
                         SourceUri = source,
                         Destination = destinationDirectory
                     };

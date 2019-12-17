@@ -6,7 +6,7 @@ using Interfaces.Delegates.Convert;
 
 namespace Delegates.Convert
 {
-    public class Convert2DArrayToArrayDelegate<Type> : IConvertDelegate<Type[][], Type[]> where Type: class
+    public abstract class Convert2DArrayToArrayDelegate<Type> : IConvertDelegate<Type[][], Type[]> where Type: class
     {
         public Type[] Convert(Type[][] data)
         {

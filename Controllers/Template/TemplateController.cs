@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,13 +14,11 @@ using Interfaces.Status;
 
 using Models.Separators;
 
-using T = Models.Template.Template;
-
 namespace Controllers.Template
 {
     public class TemplateController : ITemplateController
     {
-        IStashController<List<T>> templateStashController;
+        IStashController<List<Models.Template.Template>> templateStashController;
         ICollectionController collectionController;
 
         const string anyCharactersExpression = "(.*?)";
@@ -31,16 +30,21 @@ namespace Controllers.Template
         const string subTemplate = subTemplatePrefix + anyCharactersExpression + subTemplateSuffix;
 
         public TemplateController(
-            string primaryTemplateTitle,
-            IStashController<List<T>> templateStashController,
+            IStashController<List<Models.Template.Template>> templateStashController,
             ICollectionController collectionController)
         {
-            this.PrimaryTemplate = primaryTemplateTitle;
             this.templateStashController = templateStashController;
             this.collectionController = collectionController;
         }
 
-        public string PrimaryTemplate { get; private set; }
+        // private string PrimaryTemplate { get; set; }
+
+        public async Task<string> GetPrimaryTemplateTitleAsync(IStatus status)
+        {
+            var templates = await templateStashController.GetDataAsync(status);
+            var primaryTemplate = templates.First();
+            return primaryTemplate.Title;
+        }
 
         public async Task<string> BindAsync(string templateTitle, IDictionary<string, string> viewModel, IStatus status)
         {

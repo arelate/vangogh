@@ -9,7 +9,7 @@ using Interfaces.Models.RecordsTypes;
 
 using Interfaces.Status;
 
-using Models.Records;
+using Models.ProductTypes;
 
 namespace Controllers.Records
 {

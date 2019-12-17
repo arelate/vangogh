@@ -6,9 +6,9 @@ using Interfaces.Status;
 
 namespace Interfaces.Template
 {
-    public interface IPrimaryTemplateProperty
+    public interface IGetPrimaryTemplateTitleProperty
     {
-        string PrimaryTemplate { get; }
+        Task<string> GetPrimaryTemplateTitleAsync(IStatus status);
     }
 
     public interface IResolveSubTemplatesAsyncDelegate
@@ -32,7 +32,7 @@ namespace Interfaces.Template
     }
 
     public interface ITemplateController:
-        IPrimaryTemplateProperty, 
+        IGetPrimaryTemplateTitleProperty, 
         IResolveSubTemplatesAsyncDelegate,
         IGetContentByTitleAsyncDelegate,
         IBindAsyncDelegate

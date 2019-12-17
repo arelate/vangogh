@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using System.IO;
 
-using Interfaces.Delegates.Trace;
-
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Storage;
+
+using Attributes;
 
 namespace Controllers.Storage
 {
@@ -14,16 +14,16 @@ namespace Controllers.Storage
     {
         readonly IStreamController streamController;
         readonly IFileController fileController;
-        readonly ITraceDelegate traceDelegate;
 
+        [Dependencies(
+            "Controllers.Stream.StreamController,Controllers",
+            "Controllers.File.FileController,Controllers")]
         public StorageController(
             IStreamController streamController,
-            IFileController fileController,
-            ITraceDelegate traceDelegate = null)
+            IFileController fileController)
         {
             this.streamController = streamController;
             this.fileController = fileController;
-            this.traceDelegate = traceDelegate;
         }
 
         public async Task PushAsync(
@@ -36,16 +36,8 @@ namespace Controllers.Storage
             using (StreamWriter writer = new StreamWriter(stream))
                 await writer.WriteLineAsync(data);
 
-            if (traceDelegate == null) return;
-
             var completed = DateTime.Now;
             var duration = (completed - started).TotalMilliseconds;
-            traceDelegate?.Trace(
-                "Push",
-                started.ToFileTimeUtc().ToString(),
-                completed.ToFileTimeUtc().ToString(),
-                duration.ToString(),
-                uri);
         }
 
         public async Task<string> PullAsync(string uri)
@@ -61,16 +53,8 @@ namespace Controllers.Storage
                     data = await reader.ReadToEndAsync();
             }
 
-            if (traceDelegate == null) return data;
-
             var completed = DateTime.Now;
             var duration = (completed - started).TotalMilliseconds;
-            traceDelegate?.Trace(
-                "Pull",
-                started.ToFileTimeUtc().ToString(),
-                completed.ToFileTimeUtc().ToString(),
-                duration.ToString(),
-                uri);
 
             return data;
         }

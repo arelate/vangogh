@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Index;
 
 using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
+
+using Attributes;
 
 using GOG.Models;
 
@@ -16,13 +17,18 @@ namespace GOG.Delegates.GetDownloadSources
 {
     public class GetManualUrlDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        readonly IIndexController<long> updatedDataController;
+        readonly IDataController<long> updatedDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public GetManualUrlDownloadSourcesAsyncDelegate(
-            IIndexController<long> updatedDataController,
+            IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
             IStatusController statusController)
@@ -40,7 +46,7 @@ namespace GOG.Delegates.GetDownloadSources
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
             var current = 0;
 
-            foreach (var id in await updatedDataController.ItemizeAllAsync(getDownloadSourcesStatus))
+            await foreach (var id in updatedDataController.ItemizeAllAsync(getDownloadSourcesStatus))
             {
                 await statusController.UpdateProgressAsync(
                     getDownloadSourcesStatus,

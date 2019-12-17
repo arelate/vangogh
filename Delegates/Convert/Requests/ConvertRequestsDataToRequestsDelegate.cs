@@ -3,8 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Stash;
 
 using Interfaces.Delegates.Convert;
+
+using Interfaces.Status;
+
+using Attributes;
 
 using Models.ArgsDefinitions;
 using Models.Requests;
@@ -12,22 +17,29 @@ using Models.Requests;
 namespace Delegates.Convert.Requests
 {
     public class ConvertRequestsDataToRequestsDelegate :
-        IConvertDelegate<RequestsData, IEnumerable<Request>>
+        IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>>
     {
-        private ArgsDefinition argsDefinitions;
+        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
         private ICollectionController collectionController;
 
+        [Dependencies(
+            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Controllers.Collection.CollectionController,Controllers")]
+        [TestDependenciesOverrides(
+            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "")]            
         public ConvertRequestsDataToRequestsDelegate(
-            ArgsDefinition argsDefinitions,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
             ICollectionController collectionController)
         {
-            this.argsDefinitions = argsDefinitions;
+            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
             this.collectionController = collectionController;
         }
 
-        public IEnumerable<Request> Convert(RequestsData requestsData)
+        public async IAsyncEnumerable<Request> ConvertAsync(RequestsData requestsData, IStatus status)
         {
             var requests = new List<Request>();
+            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
 
             foreach (var method in requestsData.Methods)
             {
@@ -58,7 +70,7 @@ namespace Delegates.Convert.Requests
                         Collection = string.Empty,
                         Parameters = methodParameters
                     };
-                    requests.Add(request);
+                    yield return request;
                 }
 
                 foreach (var collection in methodCollections)
@@ -69,11 +81,9 @@ namespace Delegates.Convert.Requests
                         Collection = collection,
                         Parameters = methodParameters
                     };
-                    requests.Add(request);
+                    yield return request;
                 }
             }
-
-            return requests;
         }
     }
 }

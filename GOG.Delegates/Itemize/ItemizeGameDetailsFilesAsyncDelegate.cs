@@ -11,6 +11,8 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Routing;
 using Interfaces.Status;
 
+using Attributes;
+
 using GOG.Models;
 using System;
 
@@ -25,6 +27,11 @@ namespace GOG.Delegates.Itemize
         readonly IRoutingController routingController;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
+			"Controllers.Routing.RoutingController,Controllers",
+			"Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IRoutingController routingController,

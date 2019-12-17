@@ -6,7 +6,7 @@ namespace Delegates.Format.Uri
     {
         public FormatImagesUriDelegate()
         {
-            uriTemplate = Uris.Paths.Images.FullUriTemplate;
+            uriTemplate = Uris.Endpoints.Images.FullUriTemplate;
         }
     }
 }

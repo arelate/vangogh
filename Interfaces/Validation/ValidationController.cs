@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.ValidationResult;
+using Interfaces.ValidationResults;
 using Interfaces.Status;
 
 namespace Interfaces.Validation
@@ -47,7 +47,7 @@ namespace Interfaces.Validation
         IVerifyFilenameDelegate,
         IVerifySizeDelegate,
         IVerifyChunkAsyncDelegate,
-        IValidateFileAsyncDelegate<IFileValidationResult>
+        IValidateFileAsyncDelegate<IFileValidationResults>
     {
         // ...
     }

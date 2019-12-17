@@ -10,13 +10,14 @@ using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Directory;
 
 using Interfaces.Status;
-using Interfaces.Models.Entities;
+
+using Models.ProductTypes;
 
 namespace GOG.Activities.Cleanup
 {
-    public class CleanupActivity : Activity
+    public abstract class CleanupActivity<Type> : Activity
+        where Type: ProductCore
     {
-        Entity context;
         readonly IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
         readonly IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
         readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
@@ -25,7 +26,6 @@ namespace GOG.Activities.Cleanup
         readonly IDirectoryController directoryController;
 
         public CleanupActivity(
-            Entity context,
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
@@ -35,7 +35,6 @@ namespace GOG.Activities.Cleanup
             IStatusController statusController) :
             base(statusController)
         {
-            this.context = context;
             this.itemizeAllExpectedItemsAsyncDelegate = itemizeAllExpectedItemsAsyncDelegate;
             this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
@@ -46,12 +45,15 @@ namespace GOG.Activities.Cleanup
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var cleanupTask = await statusController.CreateAsync(status, $"Cleanup {context}");
+            var cleanupTask = await statusController.CreateAsync(status, $"Cleanup {typeof(Type)}");
 
-            var expectedItems = await itemizeAllExpectedItemsAsyncDelegate.ItemizeAllAsync(status);
-            var actualItems = await itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync(status);
+            var unexpectedItems = new List<string>();
+            await foreach (var actualItem in itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync(status))
+                unexpectedItems.Add(actualItem);
 
-            var unexpectedItems = actualItems.Except(expectedItems);
+            await foreach (var expectedItem in itemizeAllExpectedItemsAsyncDelegate.ItemizeAllAsync(status))
+                unexpectedItems.Remove(expectedItem);
+
             var cleanupItems = new List<string>();
 
             foreach (var unexpectedItem in unexpectedItems)

@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
+using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
 using Interfaces.Models.Properties;
+using Interfaces.Status;
+
+using Attributes;
 
 using Models.ArgsTokens;
 using Models.ArgsDefinitions;
@@ -11,22 +16,29 @@ using Models.ArgsDefinitions;
 namespace Delegates.Confirm.ArgsTokens
 {
     public class ConfirmLikelyTokenTypeDelegate : 
-        IConfirmDelegate<(string Token, Tokens Type)>
+        IConfirmAsyncDelegate<(string Token, Tokens Type)>
     {
-        private ArgsDefinition argsDefinitions;
-        private ICollectionController collectionController;
+        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate;
+        private readonly ICollectionController collectionController;
 
+        [Dependencies(
+            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Controllers.Collection.CollectionController,Controllers")]
+        [TestDependenciesOverrides(
+            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "")]
         public ConfirmLikelyTokenTypeDelegate(
-            ArgsDefinition argsDefinitions,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate,
             ICollectionController collectionController)
         {
-            this.argsDefinitions = argsDefinitions;
+            this.getArgsDefinitionDataDelegate = getArgsDefinitionDataDelegate;
             this.collectionController = collectionController;
         }
 
-        public bool Confirm((string Token, Tokens Type) typedToken)
+        public async Task<bool> ConfirmAsync((string Token, Tokens Type) typedToken, IStatus status)
         {
             IEnumerable<ITitleProperty> titledItems = null;
+            var argsDefinitions = await getArgsDefinitionDataDelegate.GetDataAsync(status);
 
             switch (typedToken.Type)
             {

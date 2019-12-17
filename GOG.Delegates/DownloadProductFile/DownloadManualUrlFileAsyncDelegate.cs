@@ -13,6 +13,8 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
+using Attributes;
+
 namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadManualUrlFileAsyncDelegate : IDownloadProductFileAsyncDelegate
@@ -24,6 +26,13 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IStatusController statusController;
         readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
 
+		[Dependencies(
+			"Controllers.Network.NetworkController,Controllers",
+			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
+			"Controllers.Routing.RoutingController,Controllers",
+			"Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
+			"GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public DownloadManualUrlFileAsyncDelegate(
             INetworkController networkController,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,

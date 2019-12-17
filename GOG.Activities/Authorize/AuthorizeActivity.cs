@@ -5,36 +5,37 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Controllers.Authorization;
 
+using Attributes;
+
 using Models.Settings;
 
 namespace GOG.Activities.Authorize
 {
     public class AuthorizeActivity : Activity
     {
-        readonly IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
         readonly IAuthorizationController authorizationController;
 
+        [Dependencies(
+            "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
+            "Controllers.Status.StatusController,Controllers")]
         public AuthorizeActivity(
-            IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate,
             IAuthorizationController authorizationController,
             IStatusController statusController) :
             base(statusController)
         {
-            this.getSettingsDataAsyncDelegate = getSettingsDataAsyncDelegate;
             this.authorizationController = authorizationController;
         }
 
         public override async Task ProcessActivityAsync(IStatus status)
         {
-            var settings = await getSettingsDataAsyncDelegate.GetDataAsync(status);
-            if (settings != null)
-            {
-                await authorizationController.AuthorizeAsync(
-                    settings.Username,
-                    settings.Password,
-                    status);
-            }
-            else throw new System.ArgumentNullException();
+
+            var username = string.Empty;
+            var password = string.Empty;
+
+            await authorizationController.AuthorizeAsync(
+                username,
+                password,
+                status);
         }
     }
 }

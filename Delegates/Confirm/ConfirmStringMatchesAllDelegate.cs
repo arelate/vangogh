@@ -4,7 +4,7 @@ using Interfaces.Controllers.Collection;
 
 namespace Delegates.Confirm
 {
-    public class ConfirmStringMatchesAllDelegate : IConfirmDelegate<string>
+    public abstract class ConfirmStringMatchesAllDelegate : IConfirmDelegate<string>
     {
         readonly string[] matches;
         readonly ICollectionController collectionController;

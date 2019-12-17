@@ -12,7 +12,9 @@ using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
-using Models.ProductScreenshots;
+using Attributes;
+
+using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -26,6 +28,12 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IFileController fileController;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
+			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
+			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
+			"Controllers.File.FileController,Controllers",
+			"Controllers.Status.StatusController,Controllers")]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
@@ -50,13 +58,11 @@ namespace GOG.Delegates.GetDownloadSources
 
             var processProductsScreenshotsTask = await statusController.CreateAsync(processUpdatesTask, "Process product screenshots");
 
-            foreach (var id in await screenshotsDataController.ItemizeAllAsync(processProductsScreenshotsTask))
+            await foreach (var productScreenshots in screenshotsDataController.ItemizeAllAsync(processProductsScreenshotsTask))
             {
-                var productScreenshots = await screenshotsDataController.GetByIdAsync(id, processProductsScreenshotsTask);
-
                 if (productScreenshots == null)
                 {
-                    await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {id} doesn't have screenshots");
+                    await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {productScreenshots.Id} doesn't have screenshots");
                     continue;
                 }
 
@@ -81,7 +87,7 @@ namespace GOG.Delegates.GetDownloadSources
                 }
 
                 if (currentProductScreenshotSources.Any())
-                    screenshotsSources.Add(id, currentProductScreenshotSources);
+                    screenshotsSources.Add(productScreenshots.Id, currentProductScreenshotSources);
             }
 
             await statusController.CompleteAsync(processProductsScreenshotsTask);

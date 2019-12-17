@@ -5,7 +5,9 @@ using Interfaces.Routing;
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
-using Models.ProductRoutes;
+using Attributes;
+
+using Models.ProductTypes;
 
 namespace Controllers.Routing
 {
@@ -14,6 +16,9 @@ namespace Controllers.Routing
         readonly IDataController<ProductRoutes> productRoutesDataController;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Controllers.Data.ProductTypes.ProductRoutesDataController,Controllers",
+			"Controllers.Status.StatusController,Controllers")]
         public RoutingController(
             IDataController<ProductRoutes> productRoutesDataController,
             IStatusController statusController)

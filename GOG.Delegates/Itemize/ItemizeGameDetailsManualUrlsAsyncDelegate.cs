@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Stash;
 
 using Interfaces.Status;
+
+using Attributes;
 
 using Models.Uris;
 using Models.Settings;
@@ -18,20 +19,20 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        readonly IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate;
         IDataController<GameDetails> gameDetailsDataController;
 
+		[Dependencies(
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers")]
         public ItemizeGameDetailsManualUrlsAsyncDelegate(
-            IGetDataAsyncDelegate<Settings> getSettingsDataAsyncDelegate,
             IDataController<GameDetails> gameDetailsDataController)
         {
-            this.getSettingsDataAsyncDelegate = getSettingsDataAsyncDelegate;
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
         public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails, IStatus status)
         {
-            var settings = await getSettingsDataAsyncDelegate.GetDataAsync(status);
+            // STUB - need to pass download languages and OSes
+            Settings settings = null;
 
             if (settings == null ||
                 settings.DownloadsLanguages == null ||
@@ -62,7 +63,7 @@ namespace GOG.Delegates.Itemize
 
             foreach (var downloadEntry in gameDetailsDownloadEntries)
             {
-                var absoluteUri = string.Format(Uris.Paths.ProductFiles.ManualUrlRequestTemplate, downloadEntry.ManualUrl);
+                var absoluteUri = string.Format(Uris.Endpoints.ProductFiles.ManualUrlRequestTemplate, downloadEntry.ManualUrl);
                 manualUrls.Add(absoluteUri);
             }
 

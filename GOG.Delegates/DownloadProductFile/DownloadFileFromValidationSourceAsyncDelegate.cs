@@ -10,6 +10,8 @@ using Interfaces.Controllers.File;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 namespace GOG.Delegates.DownloadProductFile
@@ -25,6 +27,15 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
+			"Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
+			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
+			"Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate,Delegates",
+			"Delegates.Format.Uri.FormatValidationUriDelegate,Delegates",
+			"Controllers.File.FileController,Controllers",
+			"Delegates.Download.DownloadFromUriAsyncDelegate,Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public DownloadValidationFileAsyncDelegate(
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,

@@ -54,7 +54,7 @@ namespace Interfaces.Controllers.Data
 
 
     public interface IDataController<DataType> :
-        IItemizeAllAsyncDelegate<long>,
+        IItemizeAllAsyncDelegate<DataType>,
         ICountAsyncDelegate,
         IGetByIdAsyncDelegate<long, DataType>,
         IUpdateAsyncDelegate<DataType>,
