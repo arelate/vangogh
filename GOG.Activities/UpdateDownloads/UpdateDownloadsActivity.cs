@@ -19,6 +19,8 @@ using GOG.Models;
 
 namespace GOG.Activities.UpdateDownloads
 {
+    // TODO: This doesn't set specific enough type to track downloads just for this type.
+    // Entity tracked that before deprecation - need to reimpoment with types in the future
     public abstract class UpdateDownloadsActivity<Type> : Activity
         where Type: ProductCore
     {

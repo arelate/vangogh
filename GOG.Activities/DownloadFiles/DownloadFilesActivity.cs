@@ -14,21 +14,20 @@ using GOG.Interfaces.Delegates.DownloadProductFile;
 
 namespace GOG.Activities.DownloadProductFiles
 {
-    public class DownloadFilesActivity<Type> : Activity
+    // TODO: Same as UpdateDownloadsActivity - type is not granular enough 
+    // and needs to be updated to match previous functionality 
+    public abstract class DownloadFilesActivity<Type> : Activity
         where Type:ProductCore
     {
-        // Entity context;
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
 
         public DownloadFilesActivity(
-            // Entity context,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IStatusController statusController) :
             base(statusController)
         {
-            // this.context = context;
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
         }

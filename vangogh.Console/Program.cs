@@ -79,6 +79,7 @@ using GOG.Activities.Update;
 using GOG.Activities.Update.ProductTypes;
 using GOG.Activities.UpdateDownloads.ProductTypes;
 using GOG.Activities.DownloadProductFiles;
+using GOG.Activities.DownloadProductFiles.ProductTypes;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
 using GOG.Activities.Report;
@@ -645,22 +646,22 @@ namespace vangogh.Console
                 typeof(DownloadProductImageAsyncDelegate))
                 as DownloadProductImageAsyncDelegate;
 
-            var productsImagesDownloadActivity = new DownloadFilesActivity<Product>(
+            var productsImagesDownloadActivity = new DownloadProductImagesActivity(
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
-            var accountProductsImagesDownloadActivity = new DownloadFilesActivity<AccountProduct>(
+            var accountProductsImagesDownloadActivity = new DownloadAccountProductImagesActivity(
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
-            var screenshotsDownloadActivity = new DownloadFilesActivity<Models.ProductScreenshots.ProductScreenshots>(
+            var screenshotsDownloadActivity = new DownloadProductScreenshotsActivity(
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
-            var productFilesDownloadActivity = new DownloadFilesActivity<Product>(
+            var productFilesDownloadActivity = new DownloadProductFilesActivity(
                 productDownloadsDataController,
                 downloadManualUrlFileAsyncDelegate,
                 statusController);
