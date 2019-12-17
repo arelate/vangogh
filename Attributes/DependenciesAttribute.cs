@@ -11,7 +11,7 @@ namespace Attributes
         // to add references (that can produce cross-reference issues).
         // The implicit expectation is that dependencies would be resolved
         // inside the domain that has access to all the dependencies' assemblies
-        public string[] Dependencies { get; set; }
+        public string[] Dependencies { get; private set; }
 
         public DependenciesAttribute(params string[] dependencies)
         {

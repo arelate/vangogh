@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
 
@@ -12,19 +11,9 @@ namespace Interfaces.Controllers.Data
         Task<DataType> GetByIdAsync(IdentityType id, IStatus status);
     }
 
-    public interface IEnumerateKeysAsyncDelegate<T>
-    {
-        Task<IEnumerable<T>> EnumerateKeysAsync(IStatus status);
-    }
-
     public interface IUpdateAsyncDelegate<Type>
     {
         Task UpdateAsync(Type data, IStatus status);
-    }
-
-    public interface ICreateAsyncDelegate<Type>
-    {
-        Task CreateAsync(Type data, IStatus status);
     }
 
     public interface IDeleteAsyncDelegate<Type>
@@ -51,7 +40,6 @@ namespace Interfaces.Controllers.Data
     {
         Task CommitAsync(IStatus status);
     }
-
 
     public interface IDataController<DataType> :
         IItemizeAllAsyncDelegate<DataType>,
