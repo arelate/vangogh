@@ -1,10 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
-namespace GOG.Activities.Cleanup
+using Attributes;
+
+namespace GOG.Activities.Cleanup.ProductTypes
 {
     public class CleanupUpdatedActivity : Activity
     {
