@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Interfaces.Delegates.Respond;
 
@@ -38,10 +37,8 @@ namespace vangogh.Console
                     respondToRequestDelegateType)
                     as IRespondAsyncDelegate;
 
-                await respondToRequestDelegate.RespondAsync(request.Parameters);
+                await respondToRequestDelegate.RespondAsync(request.Parameters, applicationStatus);
             }
-
-            // TODO: Implement request handlers (will be done in the PR after implementationDependencies-prototype)
 
             System.Console.WriteLine("Press ENTER to exit...");
             System.Console.ReadLine();

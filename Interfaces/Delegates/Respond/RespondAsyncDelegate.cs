@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Interfaces.Status;
+
 namespace Interfaces.Delegates.Respond
 {
     public interface IRespondAsyncDelegate
     {
-        Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters);
+        Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters, IStatus status);
     }
 }
