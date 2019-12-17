@@ -8,6 +8,8 @@ using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.Uris;
 using Models.Settings;
 
@@ -19,6 +21,8 @@ namespace GOG.Delegates.Itemize
     {
         IDataController<GameDetails> gameDetailsDataController;
 
+		[Dependencies(
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers")]
         public ItemizeGameDetailsManualUrlsAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController)
         {

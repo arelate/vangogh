@@ -57,6 +57,7 @@ using GOG.Delegates.GetPageResults;
 using GOG.Delegates.GetPageResults.ProductTypes;
 using GOG.Delegates.FillGaps;
 using GOG.Delegates.GetDownloadSources;
+using GOG.Delegates.GetDownloadSources.ProductTypes;
 using GOG.Delegates.DownloadProductFile;
 using GOG.Delegates.GetImageUri;
 using GOG.Delegates.UpdateScreenshots;
@@ -92,6 +93,36 @@ namespace vangogh.Console
 {
     class Program
     {
+        static void PrintDependencies(params object[] items)
+        {
+            var knownAssemblies = new string[] {
+                "Delegates",
+                "Controllers",
+                "GOG.Delegates",
+                "GOG.Controllers"};
+
+            System.Console.WriteLine("\t\t[Dependencies(");
+            for (var ii=0;ii<items.Length;ii++)
+            {
+                var item = items[ii];
+                var assembly = string.Empty;
+                var type = item.GetType().ToString();
+                foreach (var a in knownAssemblies)
+                    if (type.StartsWith(a))
+                    {
+                        assembly = a;
+                        break;
+                    }
+
+                if (string.IsNullOrEmpty(assembly))
+                    throw new Exception();
+
+                if (ii != items.Length - 1) System.Console.WriteLine($"\t\t\t\"{type},{assembly}\",");
+                else System.Console.Write($"\t\t\t\"{type},{assembly}\"");
+            }
+            System.Console.WriteLine(")]");
+        }
+
         static async Task Main(string[] args)
         {
             var singletonInstancesController = new SingletonInstancesController();
@@ -527,58 +558,52 @@ namespace vangogh.Console
             var getProductImageUriDelegate = singletonInstancesController.GetInstance(
                 typeof(GetProductImageUriDelegate))
                 as GetProductImageUriDelegate;
-                
+
             var getAccountProductImageUriDelegate = singletonInstancesController.GetInstance(
                 typeof(GetAccountProductImageUriDelegate))
                 as GetAccountProductImageUriDelegate;
 
-            var getProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>(
-                updatedDataController,
-                productsDataController,
-                formatImagesUriDelegate,
-                getProductImageUriDelegate,
-                statusController);
+            var getProductsImagesDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(GetProductImagesDownloadSourcesAsyncDelegate))
+                as GetProductImagesDownloadSourcesAsyncDelegate;
 
-            var getAccountProductsImagesDownloadSourcesAsyncDelegate = new GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>(
-                updatedDataController,
-                accountProductsDataController,
-                formatImagesUriDelegate,
-                getAccountProductImageUriDelegate,
-                statusController);
+            var getAccountProductsImagesDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(GetAccountProductImagesDownloadSourcesAsyncDelegate))
+                as GetAccountProductImagesDownloadSourcesAsyncDelegate;
 
-            var getScreenshotsDownloadSourcesAsyncDelegate = new GetScreenshotsDownloadSourcesAsyncDelegate(
-                productScreenshotsDataController,
-                formatScreenshotsUriDelegate,
-                getScreenshotsDirectoryDelegate,
-                fileController,
-                statusController);
+            var getScreenshotsDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(GetScreenshotsDownloadSourcesAsyncDelegate))
+                as GetScreenshotsDownloadSourcesAsyncDelegate;
 
-            var routingController = new RoutingController(
-                productRoutesDataController,
-                statusController);
+            var routingController = singletonInstancesController.GetInstance(
+                typeof(RoutingController))
+                as RoutingController;
 
-            var itemizeGameDetailsManualUrlsAsyncDelegate = new ItemizeGameDetailsManualUrlsAsyncDelegate(
-                gameDetailsDataController);
+            var itemizeGameDetailsManualUrlsAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(ItemizeGameDetailsManualUrlsAsyncDelegate))
+                as ItemizeGameDetailsManualUrlsAsyncDelegate;          
 
-            var itemizeGameDetailsDirectoriesAsyncDelegate = new ItemizeGameDetailsDirectoriesAsyncDelegate(
-                itemizeGameDetailsManualUrlsAsyncDelegate,
-                getProductFilesDirectoryDelegate);
+            var itemizeGameDetailsDirectoriesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(ItemizeGameDetailsDirectoriesAsyncDelegate))
+                as ItemizeGameDetailsDirectoriesAsyncDelegate;
 
-            var itemizeGameDetailsFilesAsyncDelegate = new ItemizeGameDetailsFilesAsyncDelegate(
-                itemizeGameDetailsManualUrlsAsyncDelegate,
-                routingController,
-                getGameDetailsFilesPathDelegate,
-                statusController);
+            var itemizeGameDetailsFilesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(ItemizeGameDetailsFilesAsyncDelegate))
+                as ItemizeGameDetailsFilesAsyncDelegate;
 
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
-            var getManualUrlDownloadSourcesAsyncDelegate = new GetManualUrlDownloadSourcesAsyncDelegate(
-                updatedDataController,
-                gameDetailsDataController,
-                itemizeGameDetailsManualUrlsAsyncDelegate,
-                statusController);
+            var getManualUrlDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(GetManualUrlDownloadSourcesAsyncDelegate))
+                as GetManualUrlDownloadSourcesAsyncDelegate;
 
             // schedule download controllers
+
+            // PrintDependencies(
+            //     updatedDataController,
+            //     gameDetailsDataController,
+            //     itemizeGameDetailsManualUrlsAsyncDelegate,
+            //     statusController);             
 
             var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
                 Entity.ProductImages,

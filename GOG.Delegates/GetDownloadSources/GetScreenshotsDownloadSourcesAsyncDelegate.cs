@@ -12,6 +12,8 @@ using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
 using Interfaces.Status;
 
+using Attributes;
+
 using Models.ProductScreenshots;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
@@ -26,6 +28,12 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IFileController fileController;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
+			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
+			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
+			"Controllers.File.FileController,Controllers",
+			"Controllers.Status.StatusController,Controllers")]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,

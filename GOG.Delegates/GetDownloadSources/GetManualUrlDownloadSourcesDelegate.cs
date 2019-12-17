@@ -9,6 +9,8 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
+using Attributes;
+
 using GOG.Models;
 
 namespace GOG.Delegates.GetDownloadSources
@@ -20,6 +22,11 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public GetManualUrlDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,

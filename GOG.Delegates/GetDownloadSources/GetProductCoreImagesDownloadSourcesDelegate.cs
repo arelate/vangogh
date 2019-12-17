@@ -16,7 +16,7 @@ using GOG.Interfaces.Delegates.GetDownloadSources;
 
 namespace GOG.Delegates.GetDownloadSources
 {
-    public class GetProductCoreImagesDownloadSourcesAsyncDelegate<T> : IGetDownloadSourcesAsyncDelegate
+    public abstract class GetProductCoreImagesDownloadSourcesAsyncDelegate<T> : IGetDownloadSourcesAsyncDelegate
         where T : ProductCore
     {
         readonly IDataController<T> dataController;

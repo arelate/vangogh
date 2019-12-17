@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/vangogh.Console/bin/Debug/netcoreapp3.1/vangogh.dll",
+            "program": "${workspaceFolder}/vangogh.Console/bin/Debug/netcoreapp3.0/vangogh.dll",
             "args": ["update", "products", "apiproducts", "--id", "1", "2", "3"],
             "cwd": "${workspaceFolder}/vangogh.Console",
             "console": "internalConsole",
