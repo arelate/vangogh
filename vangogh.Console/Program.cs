@@ -77,7 +77,7 @@ using GOG.Activities.Help;
 using GOG.Activities.Authorize;
 using GOG.Activities.Update;
 using GOG.Activities.Update.ProductTypes;
-using GOG.Activities.UpdateDownloads;
+using GOG.Activities.UpdateDownloads.ProductTypes;
 using GOG.Activities.DownloadProductFiles;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
@@ -597,110 +597,81 @@ namespace vangogh.Console
                 typeof(GetManualUrlDownloadSourcesAsyncDelegate))
                 as GetManualUrlDownloadSourcesAsyncDelegate;
 
-            // schedule download controllers
+            // schedule download controllers             
 
-            // PrintDependencies(
-            //     updatedDataController,
-            //     gameDetailsDataController,
-            //     itemizeGameDetailsManualUrlsAsyncDelegate,
-            //     statusController);             
+            var updateProductsImagesDownloadsActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateProductImagesDownloadsActivity))
+                as UpdateProductImagesDownloadsActivity;           
 
-            var updateProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
-                Entity.ProductImages,
-                getProductsImagesDownloadSourcesAsyncDelegate,
-                getProductImagesDirectoryDelegate,
-                fileController,
-                productDownloadsDataController,
-                accountProductsDataController,
-                productsDataController,
-                statusController);
+            var updateAccountProductsImagesDownloadsActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateAccountProductImagesDownloadsActivity))
+                as UpdateAccountProductImagesDownloadsActivity;            
 
-            var updateAccountProductsImagesDownloadsActivity = new UpdateDownloadsActivity(
-                Entity.AccountProductImages,
-                getAccountProductsImagesDownloadSourcesAsyncDelegate,
-                getAccountProductImagesDirectoryDelegate,
-                fileController,
-                productDownloadsDataController,
-                accountProductsDataController,
-                productsDataController,
-                statusController);
+            var updateScreenshotsDownloadsActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateProductScreenshotsDownloadsActivity))
+                as UpdateProductScreenshotsDownloadsActivity;
 
-            var updateScreenshotsDownloadsActivity = new UpdateDownloadsActivity(
-                Entity.Screenshots,
-                getScreenshotsDownloadSourcesAsyncDelegate,
-                getScreenshotsDirectoryDelegate,
-                fileController,
-                productDownloadsDataController,
-                accountProductsDataController,
-                productsDataController,
-                statusController);
-
-            var updateProductFilesDownloadsActivity = new UpdateDownloadsActivity(
-                Entity.ProductFiles,
-                getManualUrlDownloadSourcesAsyncDelegate,
-                getProductFilesDirectoryDelegate,
-                fileController,
-                productDownloadsDataController,
-                accountProductsDataController,
-                productsDataController,
-                statusController);
+            var updateProductFilesDownloadsActivity = singletonInstancesController.GetInstance(
+                typeof(UpdateProductFilesDownloadsActivity))
+                as UpdateProductFilesDownloadsActivity;               
 
             // downloads processing
 
-            var formatUriRemoveSessionDelegate = new FormatUriRemoveSessionDelegate();
+            var formatUriRemoveSessionDelegate = singletonInstancesController.GetInstance(
+                typeof(FormatUriRemoveSessionDelegate))
+                as FormatUriRemoveSessionDelegate;
 
-            var confirmValidationExpectedDelegate = new ConfirmValidationExpectedDelegate();
+            var confirmValidationExpectedDelegate = singletonInstancesController.GetInstance(
+                typeof(ConfirmValidationExpectedDelegate))
+                as ConfirmValidationExpectedDelegate;
 
-            var formatValidationUriDelegate = new FormatValidationUriDelegate(
-                getValidationFilenameDelegate,
-                formatUriRemoveSessionDelegate);
+            var formatValidationUriDelegate = singletonInstancesController.GetInstance(
+                typeof(FormatValidationUriDelegate))
+                as FormatValidationUriDelegate;
 
-            var formatValidationFileDelegate = new FormatValidationFileDelegate(
-                getValidationPathDelegate);
+            var formatValidationFileDelegate = singletonInstancesController.GetInstance(
+                typeof(FormatValidationFileDelegate))
+                as FormatValidationFileDelegate;
 
-            var downloadValidationFileAsyncDelegate = new DownloadValidationFileAsyncDelegate(
-                formatUriRemoveSessionDelegate,
-                confirmValidationExpectedDelegate,
-                formatValidationFileDelegate,
-                getMd5DirectoryDelegate,
-                formatValidationUriDelegate,
-                fileController,
-                downloadFromUriAsyncDelegate,
-                statusController);
+            var downloadValidationFileAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(DownloadValidationFileAsyncDelegate))
+                as DownloadValidationFileAsyncDelegate;
 
-            var downloadManualUrlFileAsyncDelegate = new DownloadManualUrlFileAsyncDelegate(
-                networkController,
-                formatUriRemoveSessionDelegate,
-                routingController,
-                downloadFromResponseAsyncDelegate,
-                downloadValidationFileAsyncDelegate,
-                statusController);
+            var downloadManualUrlFileAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(DownloadManualUrlFileAsyncDelegate))
+                as DownloadManualUrlFileAsyncDelegate;          
 
-            var downloadProductImageAsyncDelegate = new DownloadProductImageAsyncDelegate(downloadFromUriAsyncDelegate);
+            var downloadProductImageAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(DownloadProductImageAsyncDelegate))
+                as DownloadProductImageAsyncDelegate;
 
-            var productsImagesDownloadActivity = new DownloadFilesActivity(
-                Entity.ProductImages,
+            var productsImagesDownloadActivity = new DownloadFilesActivity<Product>(
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
-            var accountProductsImagesDownloadActivity = new DownloadFilesActivity(
-                Entity.AccountProductImages,
+            var accountProductsImagesDownloadActivity = new DownloadFilesActivity<AccountProduct>(
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
-            var screenshotsDownloadActivity = new DownloadFilesActivity(
-                Entity.Screenshots,
+            var screenshotsDownloadActivity = new DownloadFilesActivity<Models.ProductScreenshots.ProductScreenshots>(
                 productDownloadsDataController,
                 downloadProductImageAsyncDelegate,
                 statusController);
 
-            var productFilesDownloadActivity = new DownloadFilesActivity(
-                Entity.ProductFiles,
+            var productFilesDownloadActivity = new DownloadFilesActivity<Product>(
                 productDownloadsDataController,
                 downloadManualUrlFileAsyncDelegate,
                 statusController);
+
+            // PrintDependencies(
+            //     networkController,
+            //     formatUriRemoveSessionDelegate,
+            //     routingController,
+            //     downloadFromResponseAsyncDelegate,
+            //     downloadValidationFileAsyncDelegate,
+            //     statusController); 
 
             // validation controllers
 

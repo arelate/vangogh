@@ -6,12 +6,16 @@ using Interfaces.Delegates.Download;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
+using Attributes;
+
 namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadProductImageAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
         readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
 
+        [Dependencies(
+            "Delegates.Download.DownloadFromUriAsyncDelegate,Delegates")]
         public DownloadProductImageAsyncDelegate(IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate)
         {
             this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;

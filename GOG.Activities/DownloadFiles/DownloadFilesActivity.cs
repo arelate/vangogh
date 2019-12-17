@@ -8,25 +8,27 @@ using Interfaces.Models.Entities;
 
 using Models.ProductDownloads;
 using Models.Separators;
+using Models.ProductCore;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 namespace GOG.Activities.DownloadProductFiles
 {
-    public class DownloadFilesActivity : Activity
+    public class DownloadFilesActivity<Type> : Activity
+        where Type:ProductCore
     {
-        Entity context;
+        // Entity context;
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
 
         public DownloadFilesActivity(
-            Entity context,
+            // Entity context,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IStatusController statusController) :
             base(statusController)
         {
-            this.context = context;
+            // this.context = context;
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
         }
@@ -34,7 +36,7 @@ namespace GOG.Activities.DownloadProductFiles
         public override async Task ProcessActivityAsync(IStatus status)
         {
             var processDownloadsTask = await statusController.CreateAsync(status,
-                $"Process updated {context} downloads");
+                $"Process updated {typeof(Type)} downloads");
 
             var current = 0;
             var total = await productDownloadsDataController.CountAsync(processDownloadsTask);
@@ -54,10 +56,10 @@ namespace GOG.Activities.DownloadProductFiles
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(
                     d =>
-                    d.Context == context).ToArray();
+                    d.Type == typeof(Type).ToString()).ToArray();
 
                 var processDownloadEntriesTask = await statusController.CreateAsync(processDownloadsTask,
-                    $"Download {context} entries");
+                    $"Download {typeof(Type)} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -82,7 +84,7 @@ namespace GOG.Activities.DownloadProductFiles
 
                     var removeEntryTask = await statusController.CreateAsync(
                         processDownloadEntriesTask,
-                        $"Remove scheduled {context} downloaded entry");
+                        $"Remove scheduled {typeof(Type)} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(productDownloads, removeEntryTask);
