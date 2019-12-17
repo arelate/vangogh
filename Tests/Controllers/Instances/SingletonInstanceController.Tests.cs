@@ -39,7 +39,9 @@ namespace Controllers.Instances.Tests
             return EnumerateTypesWithConstructorAttribute(typeof(TestDependenciesOverridesAttribute));
         }
 
-        private void CanInstantiateTypes(IInstancesController instanceController, params Type[] types)
+        private void CanInstantiateTypes(
+            IInstancesController instanceController,
+            params Type[] types)
         {
             Assert.NotEmpty(types);
             Assert.NotNull(types);
@@ -48,7 +50,30 @@ namespace Controllers.Instances.Tests
             Assert.NotNull(instances);
 
             foreach (var instance in instances)
-                Assert.NotNull(instance); 
+                Assert.NotNull(instance);
+        }
+
+        private void ConstructorParametersAndTypeMatchDependencies(
+            IInstancesController instancesController,
+            params Type[] types)
+        {
+            Assert.NotNull(types);
+            Assert.NotEmpty(types);
+
+            foreach (var type in types)
+            {
+                var constructorInfo = instancesController.GetInstantiationConstructorInfo(type);
+                var parameters = constructorInfo.GetParameters();
+                var dependenciesTypes =
+                    instancesController.GetTypesForConstructor(
+                        constructorInfo);
+                Assert.Equal(dependenciesTypes.Length, parameters.Length);
+                for (var ii = 0; ii < parameters.Length; ii++)
+                {
+                    var instance = instancesController.GetInstance(dependenciesTypes[ii]);
+                    Assert.IsAssignableFrom(parameters[ii].ParameterType, instance);
+                }
+            }
         }
 
         [Theory]
@@ -74,20 +99,34 @@ namespace Controllers.Instances.Tests
                 var constructorInfo = dependenciesInstancesController.GetInstantiationConstructorInfo(type);
                 Assert.NotNull(constructorInfo);
 
-                var dependenciesTypes = 
+                var dependenciesTypes =
                     dependenciesInstancesController.GetTypesForConstructor(
                         constructorInfo);
                 Assert.NotNull(dependenciesTypes);
                 Assert.NotEmpty(dependenciesTypes);
 
-                var testOverridesDependenciesTypes = 
+                var testOverridesDependenciesTypes =
                     testDependenciesOverridesInstancesController.GetTypesForConstructor(
                         constructorInfo);
                 Assert.NotNull(testOverridesDependenciesTypes);
                 Assert.NotEmpty(testOverridesDependenciesTypes);
-                
+
                 Assert.Equal(dependenciesTypes.Length, testOverridesDependenciesTypes.Length);
             }
+        }
+
+        [Theory]
+        [MemberData(nameof(EnumerateTypesWithDependencies))]
+        public void NumberOfDependenciesMatchesNumberOfConstructorParameters(params Type[] types)
+        {
+            ConstructorParametersAndTypeMatchDependencies(dependenciesInstancesController, types);
+        }
+
+        [Theory]
+        [MemberData(nameof(EnumerateTypesWithTestDependenciesOverrides))]
+        public void NumberOfTestDependenciesOverridesMatchesNumberOfConstructorParameters(params Type[] types)
+        {
+            ConstructorParametersAndTypeMatchDependencies(testDependenciesOverridesInstancesController, types);
         }
 
         [Fact]
