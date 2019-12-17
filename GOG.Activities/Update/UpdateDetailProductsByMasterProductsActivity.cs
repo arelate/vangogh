@@ -12,7 +12,7 @@ using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.FillGaps;
 
-using Models.ProductCore;
+using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 

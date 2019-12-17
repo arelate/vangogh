@@ -14,7 +14,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.ProductScreenshots;
+using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 

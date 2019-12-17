@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Models.ProductCore
+namespace Models.ProductTypes
 {
     [DataContract]
     public abstract class ProductCore

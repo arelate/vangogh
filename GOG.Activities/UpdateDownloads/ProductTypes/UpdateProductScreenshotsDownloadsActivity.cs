@@ -5,14 +5,12 @@ using Interfaces.Controllers.File;
 
 using Interfaces.Status;
 
-using Models.ProductDownloads;
-
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
 using Attributes;
 
 using GOG.Models;
-using Models.ProductScreenshots;
+using Models.ProductTypes;
 
 namespace GOG.Activities.UpdateDownloads.ProductTypes
 {

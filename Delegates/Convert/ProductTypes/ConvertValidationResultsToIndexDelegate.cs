@@ -1,4 +1,4 @@
-﻿using Models.ValidationResults;
+﻿using Models.ProductTypes;
 
 namespace Delegates.Convert.ProductTypes
 {

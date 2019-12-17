@@ -18,7 +18,7 @@ using Interfaces.ValidationResults;
 
 using Attributes;
 
-using Models.ValidationResults;
+using Models.ProductTypes;
 
 using GOG.Models;
 

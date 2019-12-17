@@ -71,7 +71,6 @@ using GOG.Delegates.Convert.UpdateIdentity;
 
 using GOG.Controllers.Authorization;
 
-using GOG.Activities.Help;
 using GOG.Activities.Authorize;
 using GOG.Activities.Update;
 using GOG.Activities.Update.ProductTypes;
@@ -80,11 +79,10 @@ using GOG.Activities.DownloadProductFiles;
 using GOG.Activities.DownloadProductFiles.ProductTypes;
 using GOG.Activities.Cleanup;
 using GOG.Activities.Validate;
-using GOG.Activities.Report;
 
 using Models.Status;
 using Models.QueryParameters;
-using Models.Records;
+using Models.ProductTypes;
 
 using Delegates.GetPath.ArgsDefinitions;
 
@@ -142,33 +140,33 @@ namespace vangogh.Console
             //     typeof(GetRecycleBinDirectoryDelegate))
             //     as GetRecycleBinDirectoryDelegate;
 
-            var getProductImagesDirectoryDelegate = singletonInstancesController.GetInstance(
-                typeof(GetProductImagesDirectoryDelegate))
-                as GetProductImagesDirectoryDelegate;
+            // var getProductImagesDirectoryDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetProductImagesDirectoryDelegate))
+            //     as GetProductImagesDirectoryDelegate;
 
-            var getAccountProductImagesDirectoryDelegate = singletonInstancesController.GetInstance(
-                typeof(GetAccountProductImagesDirectoryDelegate))
-                as GetAccountProductImagesDirectoryDelegate;
+            // var getAccountProductImagesDirectoryDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetAccountProductImagesDirectoryDelegate))
+            //     as GetAccountProductImagesDirectoryDelegate;
 
-            var getReportDirectoryDelegate = singletonInstancesController.GetInstance(
-                typeof(GetReportDirectoryDelegate))
-                as GetReportDirectoryDelegate;
+            // var getReportDirectoryDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetReportDirectoryDelegate))
+            //     as GetReportDirectoryDelegate;
 
-            var getMd5DirectoryDelegate = singletonInstancesController.GetInstance(
-                typeof(GetMd5DirectoryDelegate))
-                as GetMd5DirectoryDelegate;
+            // var getMd5DirectoryDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetMd5DirectoryDelegate))
+            //     as GetMd5DirectoryDelegate;
 
-            var getProductFilesRootDirectoryDelegate = singletonInstancesController.GetInstance(
-                typeof(GetProductFilesRootDirectoryDelegate))
-                as GetProductFilesRootDirectoryDelegate;
+            // var getProductFilesRootDirectoryDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetProductFilesRootDirectoryDelegate))
+            //     as GetProductFilesRootDirectoryDelegate;
 
-            var getScreenshotsDirectoryDelegate = singletonInstancesController.GetInstance(
-                typeof(GetScreenshotsDirectoryDelegate))
-                as GetScreenshotsDirectoryDelegate;
+            // var getScreenshotsDirectoryDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetScreenshotsDirectoryDelegate))
+            //     as GetScreenshotsDirectoryDelegate;
 
-            var getProductFilesDirectoryDelegate = singletonInstancesController.GetInstance(
-                typeof(GetProductFilesDirectoryDelegate))
-                as GetProductFilesDirectoryDelegate;
+            // var getProductFilesDirectoryDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetProductFilesDirectoryDelegate))
+            //     as GetProductFilesDirectoryDelegate;
 
             // var getArgsDefinitionsFilenameDelegate = dependenciesController.GetInstance(
             //     typeof(GetArgsDefinitionsFilenameDelegate))
@@ -202,17 +200,17 @@ namespace vangogh.Console
             //     typeof(GetUpdatedFilenameDelegate))
             //     as GetUpdatedFilenameDelegate;
 
-            var getUriFilenameDelegate = singletonInstancesController.GetInstance(
-                typeof(GetUriFilenameDelegate))
-                as GetUriFilenameDelegate;
+            // var getUriFilenameDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetUriFilenameDelegate))
+            //     as GetUriFilenameDelegate;
 
-            var getReportFilenameDelegate = singletonInstancesController.GetInstance(
-                typeof(GetReportFilenameDelegate))
-                as GetReportFilenameDelegate;
+            // var getReportFilenameDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetReportFilenameDelegate))
+            //     as GetReportFilenameDelegate;
 
-            var getValidationFilenameDelegate = singletonInstancesController.GetInstance(
-                typeof(GetValidationFilenameDelegate))
-                as GetValidationFilenameDelegate;
+            // var getValidationFilenameDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetValidationFilenameDelegate))
+            //     as GetValidationFilenameDelegate;
 
             // var getArgsDefinitionsPathDelegate = dependenciesController.GetInstance(
             //     typeof(GetArgsDefinitionsPathDelegate))
@@ -234,53 +232,53 @@ namespace vangogh.Console
             //     typeof(GetCookiesPathDelegate))
             //     as GetCookiesPathDelegate;
 
-            var getGameDetailsFilesPathDelegate = singletonInstancesController.GetInstance(
-                typeof(GetGameDetailsFilesPathDelegate))
-                as GetGameDetailsFilesPathDelegate;
+            // var getGameDetailsFilesPathDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetGameDetailsFilesPathDelegate))
+            //     as GetGameDetailsFilesPathDelegate;
 
-            var getValidationPathDelegate = singletonInstancesController.GetInstance(
-                typeof(GetValidationPathDelegate))
-                as GetValidationPathDelegate;
+            // var getValidationPathDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetValidationPathDelegate))
+            //     as GetValidationPathDelegate;
 
             var statusController = singletonInstancesController.GetInstance(
                 typeof(StatusController))
                 as StatusController;
 
-            var streamController = singletonInstancesController.GetInstance(
-                typeof(StreamController))
-                as StreamController;
+            // var streamController = singletonInstancesController.GetInstance(
+            //     typeof(StreamController))
+            //     as StreamController;
 
-            var fileController = singletonInstancesController.GetInstance(
-                typeof(FileController))
-                as FileController;
+            // var fileController = singletonInstancesController.GetInstance(
+            //     typeof(FileController))
+            //     as FileController;
 
             var directoryController = singletonInstancesController.GetInstance(
                 typeof(DirectoryController))
                 as DirectoryController;
 
-            var storageController = singletonInstancesController.GetInstance(
-                typeof(StorageController))
-                as StorageController;
+            // var storageController = singletonInstancesController.GetInstance(
+            //     typeof(StorageController))
+            //     as StorageController;
 
-            var jsonSerializationController = singletonInstancesController.GetInstance(
-                typeof(JSONSerializationController))
-                as JSONSerializationController;
+            // var jsonSerializationController = singletonInstancesController.GetInstance(
+            //     typeof(JSONSerializationController))
+            //     as JSONSerializationController;
 
             // var convertBytesToStringDelegate = dependenciesController.GetInstance(
             //     typeof(ConvertBytesToStringDelegate))
             //     as ConvertBytesToStringDelegate;
 
-            var convertBytesToMd5HashDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertBytesToMd5HashDelegate))
-                as ConvertBytesToMd5HashDelegate;
+            // var convertBytesToMd5HashDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ConvertBytesToMd5HashDelegate))
+            //     as ConvertBytesToMd5HashDelegate;
 
             // var convertStringToBytesDelegate = dependenciesController.GetInstance(
             //     typeof(ConvertStringToBytesDelegate))
             //     as ConvertStringToBytesDelegate;
 
-            var convertStringToMd5HashDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertStringToMd5HashDelegate))
-                as ConvertStringToMd5HashDelegate;
+            // var convertStringToMd5HashDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ConvertStringToMd5HashDelegate))
+            //     as ConvertStringToMd5HashDelegate;
 
             // var protoBufSerializedStorageController = dependenciesController.GetInstance(
             //     typeof(ProtoBufSerializedStorageController))
@@ -290,9 +288,9 @@ namespace vangogh.Console
             //     typeof(JSONSerializedStorageController))
             //     as JSONSerializedStorageController;
 
-            var argsDefinitionStashController = singletonInstancesController.GetInstance(
-                typeof(ArgsDefinitionsStashController))
-                as ArgsDefinitionsStashController;
+            // var argsDefinitionStashController = singletonInstancesController.GetInstance(
+            //     typeof(ArgsDefinitionsStashController))
+            //     as ArgsDefinitionsStashController;
 
             // var appTemplateStashController = dependenciesController.GetInstance(
             //     typeof(AppTemplateStashController))
@@ -314,9 +312,9 @@ namespace vangogh.Console
             //     typeof(FormatTextToFitConsoleWindowDelegate))
             //     as FormatTextToFitConsoleWindowDelegate;
 
-            var consoleInputOutputController = singletonInstancesController.GetInstance(
-                typeof(ConsoleInputOutputController))
-                as ConsoleInputOutputController;
+            // var consoleInputOutputController = singletonInstancesController.GetInstance(
+            //     typeof(ConsoleInputOutputController))
+            //     as ConsoleInputOutputController;
 
             // var formatBytesDelegate = dependenciesController.GetInstance(
             //     typeof(FormatBytesDelegate))
@@ -326,9 +324,9 @@ namespace vangogh.Console
             //     typeof(FormatSecondsDelegate))
             //     as FormatSecondsDelegate;
 
-            var collectionController = singletonInstancesController.GetInstance(
-                typeof(CollectionController))
-                as CollectionController;
+            // var collectionController = singletonInstancesController.GetInstance(
+            //     typeof(CollectionController))
+            //     as CollectionController;
 
             // var itemizeStatusChildrenDelegate = dependenciesController.GetInstance(
             //     typeof(ItemizeStatusChildrenDelegate))
@@ -338,9 +336,9 @@ namespace vangogh.Console
             //     typeof(ConvertStatusTreeToEnumerableDelegate))
             //     as ConvertStatusTreeToEnumerableDelegate;
 
-            var applicationStatus = singletonInstancesController.GetInstance(
-                typeof(Status))
-                as Status;
+            // var applicationStatus = singletonInstancesController.GetInstance(
+            //     typeof(Status))
+            //     as Status;
 
             // var appTemplateController = dependenciesController.GetInstance(
             //     typeof(AppTemplateController))
@@ -362,9 +360,9 @@ namespace vangogh.Console
             //     typeof(GetStatusReportViewModelDelegate))
             //     as GetStatusReportViewModelDelegate;
 
-            var getStatusViewUpdateDelegate = singletonInstancesController.GetInstance(
-                typeof(GetStatusViewUpdateDelegate))
-                as GetStatusViewUpdateDelegate;
+            // var getStatusViewUpdateDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetStatusViewUpdateDelegate))
+            //     as GetStatusViewUpdateDelegate;
 
             // var consoleNotifyStatusViewUpdateController = dependenciesController.GetInstance(
             //     typeof(NotifyStatusViewUpdateController))
@@ -386,9 +384,9 @@ namespace vangogh.Console
             //     typeof(ConstrainRequestRateAsyncDelegate))
             //     as ConstrainRequestRateAsyncDelegate;;
 
-            var uriController = singletonInstancesController.GetInstance(
-                typeof(UriController))
-                as UriController;
+            // var uriController = singletonInstancesController.GetInstance(
+            //     typeof(UriController))
+            //     as UriController;
 
             // var cookiesSerializationController = dependenciesController.GetInstance(
             //     typeof(CookiesSerializationController))
@@ -398,57 +396,57 @@ namespace vangogh.Console
             //     typeof(CookiesController))
             //     as CookiesController;
 
-            var networkController = singletonInstancesController.GetInstance(
-                typeof(NetworkController))
-                as NetworkController;
+            // var networkController = singletonInstancesController.GetInstance(
+            //     typeof(NetworkController))
+            //     as NetworkController;
 
-            var downloadFromResponseAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(DownloadFromResponseAsyncDelegate))
-                as DownloadFromResponseAsyncDelegate;
+            // var downloadFromResponseAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(DownloadFromResponseAsyncDelegate))
+            //     as DownloadFromResponseAsyncDelegate;
 
-            var downloadFromUriAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(DownloadFromUriAsyncDelegate))
-                as DownloadFromUriAsyncDelegate;
+            // var downloadFromUriAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(DownloadFromUriAsyncDelegate))
+            //     as DownloadFromUriAsyncDelegate;
 
-            var requestPageAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(RequestPageAsyncDelegate))
-                as RequestPageAsyncDelegate;
+            // var requestPageAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(RequestPageAsyncDelegate))
+            //     as RequestPageAsyncDelegate;
 
-            var languageController = singletonInstancesController.GetInstance(
-                typeof(LanguageController))
-                as LanguageController;
+            // var languageController = singletonInstancesController.GetInstance(
+            //     typeof(LanguageController))
+            //     as LanguageController;
 
-            var itemizeGOGDataDelegate = singletonInstancesController.GetInstance(
-                typeof(ItemizeGOGDataDelegate))
-                as ItemizeGOGDataDelegate;
+            // var itemizeGOGDataDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ItemizeGOGDataDelegate))
+            //     as ItemizeGOGDataDelegate;
 
-            var itemizeScreenshotsDelegate = singletonInstancesController.GetInstance(
-                typeof(ItemizeScreenshotsDelegate))
-                as ItemizeScreenshotsDelegate; ;
+            // var itemizeScreenshotsDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ItemizeScreenshotsDelegate))
+            //     as ItemizeScreenshotsDelegate; ;
 
-            var formatImagesUriDelegate = singletonInstancesController.GetInstance(
-                typeof(FormatImagesUriDelegate))
-                as FormatImagesUriDelegate;
+            // var formatImagesUriDelegate = singletonInstancesController.GetInstance(
+            //     typeof(FormatImagesUriDelegate))
+            //     as FormatImagesUriDelegate;
 
-            var formatScreenshotsUriDelegate = singletonInstancesController.GetInstance(
-                typeof(FormatScreenshotsUriDelegate))
-                as FormatScreenshotsUriDelegate;
+            // var formatScreenshotsUriDelegate = singletonInstancesController.GetInstance(
+            //     typeof(FormatScreenshotsUriDelegate))
+            //     as FormatScreenshotsUriDelegate;
 
             var recycleDelegate = singletonInstancesController.GetInstance(
                 typeof(RecycleDelegate))
                 as RecycleDelegate;
 
-            var wishlistedDataController = singletonInstancesController.GetInstance(
-                typeof(WishlistedDataController))
-                as WishlistedDataController;
+            // var wishlistedDataController = singletonInstancesController.GetInstance(
+            //     typeof(WishlistedDataController))
+            //     as WishlistedDataController;
 
             var updatedDataController = singletonInstancesController.GetInstance(
                 typeof(UpdatedDataController))
                 as UpdatedDataController;
 
-            var sessionRecordsController = singletonInstancesController.GetInstance(
-                typeof(SessionRecordsController))
-                as SessionRecordsController;
+            // var sessionRecordsController = singletonInstancesController.GetInstance(
+            //     typeof(SessionRecordsController))
+            //     as SessionRecordsController;
 
             // var convertProductRecordToIndexDelegate = dependenciesController.GetInstance(
             //     typeof(ConvertProductCoreToIndexDelegate<ProductRecords>))
@@ -460,77 +458,77 @@ namespace vangogh.Console
 
             // Controllers.Data
 
-            var productsDataController = singletonInstancesController.GetInstance(
-                typeof(ProductsDataController))
-                as ProductsDataController;
+            // var productsDataController = singletonInstancesController.GetInstance(
+            //     typeof(ProductsDataController))
+            //     as ProductsDataController;
 
-            var accountProductsDataController = singletonInstancesController.GetInstance(
-                typeof(AccountProductsDataController))
-                as AccountProductsDataController;
+            // var accountProductsDataController = singletonInstancesController.GetInstance(
+            //     typeof(AccountProductsDataController))
+            //     as AccountProductsDataController;
 
             var gameDetailsDataController = singletonInstancesController.GetInstance(
                 typeof(GameDetailsDataController))
                 as GameDetailsDataController;
 
-            var gameProductDataDataController = singletonInstancesController.GetInstance(
-                typeof(GameProductDataDataController))
-                as GameProductDataDataController;
+            // var gameProductDataDataController = singletonInstancesController.GetInstance(
+            //     typeof(GameProductDataDataController))
+            //     as GameProductDataDataController;
 
-            var apiProductsDataController = singletonInstancesController.GetInstance(
-                typeof(ApiProductsDataController))
-                as ApiProductsDataController;
+            // var apiProductsDataController = singletonInstancesController.GetInstance(
+            //     typeof(ApiProductsDataController))
+            //     as ApiProductsDataController;
 
-            var productScreenshotsDataController = singletonInstancesController.GetInstance(
-                typeof(ProductScreenshotsDataController))
-                as ProductScreenshotsDataController;
+            // var productScreenshotsDataController = singletonInstancesController.GetInstance(
+            //     typeof(ProductScreenshotsDataController))
+            //     as ProductScreenshotsDataController;
 
-            var productDownloadsDataController = singletonInstancesController.GetInstance(
-                typeof(ProductDownloadsDataController))
-                as ProductDownloadsDataController;
+            // var productDownloadsDataController = singletonInstancesController.GetInstance(
+            //     typeof(ProductDownloadsDataController))
+            //     as ProductDownloadsDataController;
 
-            var productRoutesDataController = singletonInstancesController.GetInstance(
-                typeof(ProductRoutesDataController))
-                as ProductRoutesDataController;
+            // var productRoutesDataController = singletonInstancesController.GetInstance(
+            //     typeof(ProductRoutesDataController))
+            //     as ProductRoutesDataController;
 
-            var validationResultsDataController = singletonInstancesController.GetInstance(
-                typeof(ValidationResultsDataController))
-                as ValidationResultsDataController;
+            // var validationResultsDataController = singletonInstancesController.GetInstance(
+            //     typeof(ValidationResultsDataController))
+            //     as ValidationResultsDataController;
 
             #region Activity Controllers
 
-            var authorizeActivity = singletonInstancesController.GetInstance(
-                typeof(AuthorizeActivity))
-                as AuthorizeActivity;
+            // var authorizeActivity = singletonInstancesController.GetInstance(
+            //     typeof(AuthorizeActivity))
+            //     as AuthorizeActivity;
 
-            var updateProductsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateProductsActivity))
-                as UpdateProductsActivity;
+            // var updateProductsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateProductsActivity))
+            //     as UpdateProductsActivity;
 
-            var updateAccountProductsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateAccountProductsActivity))
-                as UpdateAccountProductsActivity;
+            // var updateAccountProductsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateAccountProductsActivity))
+            //     as UpdateAccountProductsActivity;
 
-            var updateUpdatedActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateUpdatedActivity))
-                as UpdateUpdatedActivity;
+            // var updateUpdatedActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateUpdatedActivity))
+            //     as UpdateUpdatedActivity;
 
-            var updateWishlistedActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateWishlistedActivity))
-                as UpdateWishlistedActivity;
+            // var updateWishlistedActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateWishlistedActivity))
+            //     as UpdateWishlistedActivity;
 
-            var updateGameProductDataByProductsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateGameProductDataByProductsActivity))
-                as UpdateGameProductDataByProductsActivity;
+            // var updateGameProductDataByProductsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateGameProductDataByProductsActivity))
+            //     as UpdateGameProductDataByProductsActivity;
 
-            var updateApiProductsByProductsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateApiProductsByProductsActivity))
-                as UpdateApiProductsByProductsActivity;
+            // var updateApiProductsByProductsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateApiProductsByProductsActivity))
+            //     as UpdateApiProductsByProductsActivity;
 
             // await updateApiProductsByProductsActivity.ProcessActivityAsync(applicationStatus);
 
-            var updateGameDetailsByAccountProductsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateGameDetailsByAccountProductsActivity))
-                as UpdateGameDetailsByAccountProductsActivity;
+            // var updateGameDetailsByAccountProductsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateGameDetailsByAccountProductsActivity))
+            //     as UpdateGameDetailsByAccountProductsActivity;
 
             // var convertTypeDependenciesToStringsDelegate = singletonInstancesController.GetInstance(
             //     typeof(ConvertTypeDependenciesToStringsDelegate))
@@ -540,47 +538,41 @@ namespace vangogh.Console
             //     convertTypeDependenciesToStringsDelegate.Convert(typeof(UpdateGameDetailsByAccountProductsActivity)))
             //     System.Console.WriteLine(dependency);                
 
-            #region Update.Screenshots
-
             // var updateScreenshotsAsyncDelegate = singletonInstancesController.GetInstance(
             //     typeof(UpdateScreenshotsAsyncDelegate))
             //     as UpdateScreenshotsAsyncDelegate;
 
-            var updateScreenshotsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateScreenshotsActivity))
-                as UpdateScreenshotsActivity;
+            // var updateScreenshotsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateScreenshotsActivity))
+            //     as UpdateScreenshotsActivity;
 
-            #endregion
+            // var getProductImageUriDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetProductImageUriDelegate))
+            //     as GetProductImageUriDelegate;
 
-            // dependencies for download controllers
+            // var getAccountProductImageUriDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetAccountProductImageUriDelegate))
+            //     as GetAccountProductImageUriDelegate;
 
-            var getProductImageUriDelegate = singletonInstancesController.GetInstance(
-                typeof(GetProductImageUriDelegate))
-                as GetProductImageUriDelegate;
+            // var getProductsImagesDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetProductImagesDownloadSourcesAsyncDelegate))
+            //     as GetProductImagesDownloadSourcesAsyncDelegate;
 
-            var getAccountProductImageUriDelegate = singletonInstancesController.GetInstance(
-                typeof(GetAccountProductImageUriDelegate))
-                as GetAccountProductImageUriDelegate;
+            // var getAccountProductsImagesDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetAccountProductImagesDownloadSourcesAsyncDelegate))
+            //     as GetAccountProductImagesDownloadSourcesAsyncDelegate;
 
-            var getProductsImagesDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(GetProductImagesDownloadSourcesAsyncDelegate))
-                as GetProductImagesDownloadSourcesAsyncDelegate;
+            // var getScreenshotsDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetScreenshotsDownloadSourcesAsyncDelegate))
+            //     as GetScreenshotsDownloadSourcesAsyncDelegate;
 
-            var getAccountProductsImagesDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(GetAccountProductImagesDownloadSourcesAsyncDelegate))
-                as GetAccountProductImagesDownloadSourcesAsyncDelegate;
+            // var routingController = singletonInstancesController.GetInstance(
+            //     typeof(RoutingController))
+            //     as RoutingController;
 
-            var getScreenshotsDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(GetScreenshotsDownloadSourcesAsyncDelegate))
-                as GetScreenshotsDownloadSourcesAsyncDelegate;
-
-            var routingController = singletonInstancesController.GetInstance(
-                typeof(RoutingController))
-                as RoutingController;
-
-            var itemizeGameDetailsManualUrlsAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(ItemizeGameDetailsManualUrlsAsyncDelegate))
-                as ItemizeGameDetailsManualUrlsAsyncDelegate;          
+            // var itemizeGameDetailsManualUrlsAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ItemizeGameDetailsManualUrlsAsyncDelegate))
+            //     as ItemizeGameDetailsManualUrlsAsyncDelegate;          
 
             var itemizeGameDetailsDirectoriesAsyncDelegate = singletonInstancesController.GetInstance(
                 typeof(ItemizeGameDetailsDirectoriesAsyncDelegate))
@@ -592,91 +584,85 @@ namespace vangogh.Console
 
             // product files are driven through gameDetails manual urls
             // so this sources enumerates all manual urls for all updated game details
-            var getManualUrlDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(GetManualUrlDownloadSourcesAsyncDelegate))
-                as GetManualUrlDownloadSourcesAsyncDelegate;
+            // var getManualUrlDownloadSourcesAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(GetManualUrlDownloadSourcesAsyncDelegate))
+            //     as GetManualUrlDownloadSourcesAsyncDelegate;
 
-            // schedule download controllers             
+            // var updateProductsImagesDownloadsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateProductImagesDownloadsActivity))
+            //     as UpdateProductImagesDownloadsActivity;           
 
-            var updateProductsImagesDownloadsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateProductImagesDownloadsActivity))
-                as UpdateProductImagesDownloadsActivity;           
+            // var updateAccountProductsImagesDownloadsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateAccountProductImagesDownloadsActivity))
+            //     as UpdateAccountProductImagesDownloadsActivity;            
 
-            var updateAccountProductsImagesDownloadsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateAccountProductImagesDownloadsActivity))
-                as UpdateAccountProductImagesDownloadsActivity;            
+            // var updateScreenshotsDownloadsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateProductScreenshotsDownloadsActivity))
+            //     as UpdateProductScreenshotsDownloadsActivity;
 
-            var updateScreenshotsDownloadsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateProductScreenshotsDownloadsActivity))
-                as UpdateProductScreenshotsDownloadsActivity;
+            // var updateProductFilesDownloadsActivity = singletonInstancesController.GetInstance(
+            //     typeof(UpdateProductFilesDownloadsActivity))
+            //     as UpdateProductFilesDownloadsActivity;               
 
-            var updateProductFilesDownloadsActivity = singletonInstancesController.GetInstance(
-                typeof(UpdateProductFilesDownloadsActivity))
-                as UpdateProductFilesDownloadsActivity;               
+            // var formatUriRemoveSessionDelegate = singletonInstancesController.GetInstance(
+            //     typeof(FormatUriRemoveSessionDelegate))
+            //     as FormatUriRemoveSessionDelegate;
 
-            // downloads processing
+            // var confirmValidationExpectedDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ConfirmValidationExpectedDelegate))
+            //     as ConfirmValidationExpectedDelegate;
 
-            var formatUriRemoveSessionDelegate = singletonInstancesController.GetInstance(
-                typeof(FormatUriRemoveSessionDelegate))
-                as FormatUriRemoveSessionDelegate;
-
-            var confirmValidationExpectedDelegate = singletonInstancesController.GetInstance(
-                typeof(ConfirmValidationExpectedDelegate))
-                as ConfirmValidationExpectedDelegate;
-
-            var formatValidationUriDelegate = singletonInstancesController.GetInstance(
-                typeof(FormatValidationUriDelegate))
-                as FormatValidationUriDelegate;
+            // var formatValidationUriDelegate = singletonInstancesController.GetInstance(
+            //     typeof(FormatValidationUriDelegate))
+            //     as FormatValidationUriDelegate;
 
             var formatValidationFileDelegate = singletonInstancesController.GetInstance(
                 typeof(FormatValidationFileDelegate))
                 as FormatValidationFileDelegate;
 
-            var downloadValidationFileAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(DownloadValidationFileAsyncDelegate))
-                as DownloadValidationFileAsyncDelegate;
+            // var downloadValidationFileAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(DownloadValidationFileAsyncDelegate))
+            //     as DownloadValidationFileAsyncDelegate;
 
-            var downloadManualUrlFileAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(DownloadManualUrlFileAsyncDelegate))
-                as DownloadManualUrlFileAsyncDelegate;          
+            // var downloadManualUrlFileAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(DownloadManualUrlFileAsyncDelegate))
+            //     as DownloadManualUrlFileAsyncDelegate;          
 
-            var downloadProductImageAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(DownloadProductImageAsyncDelegate))
-                as DownloadProductImageAsyncDelegate;
+            // var downloadProductImageAsyncDelegate = singletonInstancesController.GetInstance(
+            //     typeof(DownloadProductImageAsyncDelegate))
+            //     as DownloadProductImageAsyncDelegate;
 
-            var productsImagesDownloadActivity = singletonInstancesController.GetInstance(
-                typeof(DownloadProductImagesActivity))
-                as DownloadProductImagesActivity;              
+            // var productsImagesDownloadActivity = singletonInstancesController.GetInstance(
+            //     typeof(DownloadProductImagesActivity))
+            //     as DownloadProductImagesActivity;              
 
-            var accountProductsImagesDownloadActivity = singletonInstancesController.GetInstance(
-                typeof(DownloadAccountProductImagesActivity))
-                as DownloadAccountProductImagesActivity;
+            // var accountProductsImagesDownloadActivity = singletonInstancesController.GetInstance(
+            //     typeof(DownloadAccountProductImagesActivity))
+            //     as DownloadAccountProductImagesActivity;
 
-            var screenshotsDownloadActivity = singletonInstancesController.GetInstance(
-                typeof(DownloadProductScreenshotsActivity))
-                as DownloadProductScreenshotsActivity;               
+            // var screenshotsDownloadActivity = singletonInstancesController.GetInstance(
+            //     typeof(DownloadProductScreenshotsActivity))
+            //     as DownloadProductScreenshotsActivity;               
 
-            var productFilesDownloadActivity = singletonInstancesController.GetInstance(
-                typeof(DownloadProductFilesActivity))
-                as DownloadProductFilesActivity;            
+            // var productFilesDownloadActivity = singletonInstancesController.GetInstance(
+            //     typeof(DownloadProductFilesActivity))
+            //     as DownloadProductFilesActivity;            
 
-            // validation controllers
+            // var validationResultController = singletonInstancesController.GetInstance(
+            //     typeof(ValidationResultController))
+            //     as ValidationResultController;
 
-            var validationResultController = singletonInstancesController.GetInstance(
-                typeof(ValidationResultController))
-                as ValidationResultController;
+            // var convertFileToMd5HashDelegate = singletonInstancesController.GetInstance(
+            //     typeof(ConvertFileToMd5HashDelegate))
+            //     as ConvertFileToMd5HashDelegate;             
 
-            var convertFileToMd5HashDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertFileToMd5HashDelegate))
-                as ConvertFileToMd5HashDelegate;             
+            // var productFileValidationController = singletonInstancesController.GetInstance(
+            //     typeof(FileValidationController))
+            //     as FileValidationController;             
 
-            var productFileValidationController = singletonInstancesController.GetInstance(
-                typeof(FileValidationController))
-                as FileValidationController;             
-
-            var validateProductFilesActivity = singletonInstancesController.GetInstance(
-                typeof(ValidateProductFilesActivity))
-                as ValidateProductFilesActivity;               
+            // var validateProductFilesActivity = singletonInstancesController.GetInstance(
+            //     typeof(ValidateProductFilesActivity))
+            //     as ValidateProductFilesActivity;               
 
             var itemizeAllGameDetailsDirectoriesAsyncDelegate = singletonInstancesController.GetInstance(
                 typeof(ItemizeAllGameDetailsDirectoriesAsyncDelegate))
@@ -716,7 +702,7 @@ namespace vangogh.Console
                     itemizeGameDetailsFilesAsyncDelegate,
                     statusController);
 
-            var itemizeAllUpdatedProductFilesAsyncDelegate =
+            var itemizeAllUpdatedProductFilesAsyncDelegate = 
                 new ItemizeAllUpdatedProductFilesAsyncDelegate(
                     updatedDataController,
                     gameDetailsDataController,
@@ -744,81 +730,13 @@ namespace vangogh.Console
 
             #region ArgsDefinition and args
 
-            var argsDefinitions = await argsDefinitionStashController.GetDataAsync(applicationStatus);
-
-            if (args == null ||
-                args.Length == 0)
-                args = argsDefinitions.DefaultArgs.Split(" ");
-
             var convertArgsToRequestsDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertArgsToRequestsDelegate))
                 as ConvertArgsToRequestsDelegate;
 
-            await foreach (var request in convertArgsToRequestsDelegate.ConvertAsync(args, applicationStatus))
-            {
-                System.Console.WriteLine($"{request.Method.ToUpper()} {request.Collection}");
-            }
+            // TODO: Implement request handlers (will be done in the PR after implementationDependencies-prototype)
 
             #endregion
-
-            #region Core Activities Loop
-
-            // foreach (var activityContext in activityContextQueue)
-            // {
-            //     if (!activityContextToActivityControllerMap.ContainsKey(activityContext))
-            //     {
-            //         await statusController.WarnAsync(
-            //             applicationStatus,
-            //             activityContextController.ToString(activityContext) + " is not mapped to an Activity.");
-            //         continue;
-            //     }
-
-            //     var activity = activityContextToActivityControllerMap[activityContext];
-            //     try
-            //     {
-            //         await activity.ProcessActivityAsync(applicationStatus);
-            //     }
-            //     catch (AggregateException ex)
-            //     {
-            //         var itemizeInnerExceptionsDelegate = new ItemizeInnerExceptionsDelegate();
-            //         var convertTreeToEnumerableDelegate = new ConvertTreeToEnumerableDelegate<Exception>(itemizeInnerExceptionsDelegate);
-
-            //         var errorMessages = new List<string>();
-            //         foreach (var innerException in convertTreeToEnumerableDelegate.Convert(ex))
-            //             errorMessages.Add(innerException.Message);
-
-            //         var combinedErrorMessages = string.Join(Models.Separators.Separators.Common.Comma, errorMessages);
-
-            //         await statusController.FailAsync(applicationStatus, combinedErrorMessages);
-
-            //         var failureDumpUri = "failureDump.json";
-            //         await jsonSerializedStorageController.SerializePushAsync(failureDumpUri, applicationStatus, applicationStatus);
-
-            //         await consoleInputOutputController.OutputOnRefreshAsync(
-            //             "GoodOfflineGames.exe has encountered fatal error(s): " +
-            //             combinedErrorMessages +
-            //             $".\nPlease refer to {failureDumpUri} for further details.\n" +
-            //             "Press ENTER to close the window...");
-
-            //         consoleController.ReadLine();
-
-            //         return;
-            //     }
-            // }
-
-            #endregion
-
-            // TODO: Present session results
-
-            if (applicationStatus.SummaryResults != null)
-            {
-                foreach (var line in applicationStatus.SummaryResults)
-                    await consoleInputOutputController.OutputOnRefreshAsync(string.Join(" ", applicationStatus.SummaryResults));
-            }
-            else
-            {
-                await consoleInputOutputController.OutputContinuousAsync(applicationStatus, string.Empty, "All tasks are complete. Press ENTER to exit...");
-            }
 
             System.Console.ReadLine();
         }

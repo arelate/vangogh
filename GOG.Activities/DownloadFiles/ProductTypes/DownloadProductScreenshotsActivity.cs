@@ -2,14 +2,12 @@
 
 using Interfaces.Status;
 
-using Models.ProductDownloads;
-
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 using Attributes;
 
 using GOG.Models;
-using Models.ProductScreenshots;
+using Models.ProductTypes;
 
 namespace GOG.Activities.DownloadProductFiles.ProductTypes
 {

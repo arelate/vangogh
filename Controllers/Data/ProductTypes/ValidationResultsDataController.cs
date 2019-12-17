@@ -10,7 +10,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.ValidationResults;
+using Models.ProductTypes;
 
 namespace Controllers.Data.ProductTypes
 {

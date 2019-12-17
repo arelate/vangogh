@@ -13,7 +13,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.ProductCore;
+using Models.ProductTypes;
 
 using GOG.Models;
 

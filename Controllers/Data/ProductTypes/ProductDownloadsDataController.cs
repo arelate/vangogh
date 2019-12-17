@@ -10,7 +10,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.ProductDownloads;
+using Models.ProductTypes;
 
 namespace Controllers.Data.ProductTypes
 {

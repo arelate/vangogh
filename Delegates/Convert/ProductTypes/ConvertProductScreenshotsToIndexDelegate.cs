@@ -1,4 +1,4 @@
-﻿using Models.ProductScreenshots;
+﻿using Models.ProductTypes;
 
 namespace Delegates.Convert.ProductTypes
 {

@@ -2,7 +2,7 @@
 
 using Interfaces.Status;
 
-using Models.ProductDownloads;
+using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
@@ -12,7 +12,7 @@ using GOG.Models;
 
 namespace GOG.Activities.DownloadProductFiles.ProductTypes
 {
-    public class DownloadProductFilesActivity : DownloadFilesActivity<Product>
+    public class DownloadProductFilesActivity : DownloadFilesActivity<ProductFile>
     {
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",

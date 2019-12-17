@@ -6,7 +6,7 @@ using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Serialization;
 using Interfaces.Status;
 
-using Models.ProductCore;
+using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 

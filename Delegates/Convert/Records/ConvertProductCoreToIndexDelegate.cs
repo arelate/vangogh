@@ -1,6 +1,6 @@
 ﻿using Interfaces.Delegates.Convert;
 
-using Models.Records;
+using Models.ProductTypes;
 
 namespace Delegates.Convert.Records
 {

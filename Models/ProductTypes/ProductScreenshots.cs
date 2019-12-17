@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Models.ProductScreenshots
+namespace Models.ProductTypes
 {
     [DataContract]
-    public class ProductScreenshots: ProductCore.ProductCore
+    public class ProductScreenshots: ProductCore
     {
         [DataMember(Name = "uris")]
         public List<string> Uris { get; set; }

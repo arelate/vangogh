@@ -1,4 +1,4 @@
-﻿using Models.ProductRoutes;
+﻿using Models.ProductTypes;
 
 namespace Delegates.Convert.ProductTypes
 {

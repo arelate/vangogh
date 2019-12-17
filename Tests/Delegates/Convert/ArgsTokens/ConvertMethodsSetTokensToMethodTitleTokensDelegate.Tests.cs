@@ -18,7 +18,6 @@ namespace Delegates.Convert.ArgsTokens.Tests
         private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
         private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertLikelyTypedToTypedTokensDelegate;
         private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertMethodsSetTokensToMethodTitleTokensDelegate;
-
         private Models.Status.Status testStatus;
 
         public ConvertMethodsSetTokensToMethodTitleTokensDelegateTests()
@@ -37,7 +36,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
                 typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))
                 as ConvertMethodsSetTokensToMethodTitleTokensDelegate;
 
-            var testStatus = new Models.Status.Status();
+            this.testStatus = new Models.Status.Status();
         }
 
         private async Task<List<(string, Tokens)>> ConvertTokensToTypedMethodTitleTokens(params string[] tokens)

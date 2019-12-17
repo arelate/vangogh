@@ -6,7 +6,7 @@ using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
-using Models.ProductCore;
+using Models.ProductTypes;
 
 namespace Delegates.Itemize.MasterDetail
 {

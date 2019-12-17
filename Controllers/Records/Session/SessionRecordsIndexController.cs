@@ -3,7 +3,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.Records;
+using Models.ProductTypes;
 
 namespace Controllers.Records.Session
 {

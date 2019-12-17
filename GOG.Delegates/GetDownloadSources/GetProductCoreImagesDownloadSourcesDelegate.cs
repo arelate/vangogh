@@ -9,7 +9,7 @@ using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
-using Models.ProductCore;
+using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetImageUri;
 using GOG.Interfaces.Delegates.GetDownloadSources;

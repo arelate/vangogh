@@ -7,7 +7,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.ProductScreenshots;
+using Models.ProductTypes;
 using Models.Dependencies;
 
 namespace Controllers.Stash.ProductTypes

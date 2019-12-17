@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Models.ProductDownloads
+namespace Models.ProductTypes
 {
     [DataContract]
-    public class ProductDownloads : ProductCore.ProductCore
+    public class ProductDownloads : ProductCore
     {
         [DataMember(Name = "downloads")]
         public List<ProductDownloadEntry> Downloads { get; set; }

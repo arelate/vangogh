@@ -7,7 +7,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.ProductRoutes;
+using Models.ProductTypes;
 using Models.Dependencies;
 
 namespace Controllers.Stash.ProductTypes

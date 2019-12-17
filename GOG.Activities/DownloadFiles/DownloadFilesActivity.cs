@@ -4,18 +4,14 @@ using System.Threading.Tasks;
 using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
-using Interfaces.Models.Entities;
 
-using Models.ProductDownloads;
+using Models.ProductTypes;
 using Models.Separators;
-using Models.ProductCore;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 namespace GOG.Activities.DownloadProductFiles
 {
-    // TODO: Same as UpdateDownloadsActivity - type is not granular enough 
-    // and needs to be updated to match previous functionality 
     public abstract class DownloadFilesActivity<Type> : Activity
         where Type:ProductCore
     {

@@ -1,4 +1,4 @@
-﻿using Models.ProductDownloads;
+﻿using Models.ProductTypes;
 
 namespace Delegates.Convert.ProductTypes
 {

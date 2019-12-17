@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Models.ProductRoutes
+namespace Models.ProductTypes
 {
     [DataContract]
-    public class ProductRoutes: ProductCore.ProductCore
+    public class ProductRoutes: ProductCore
     {
         [DataMember(Name = "routes")]
         public List<ProductRoutesEntry> Routes { get; set; }

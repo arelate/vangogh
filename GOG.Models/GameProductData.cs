@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-using Models.ProductCore;
+using Models.ProductTypes;
 
 namespace GOG.Models
 {

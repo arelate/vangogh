@@ -11,7 +11,7 @@ using Attributes;
 
 using GOG.Models;
 
-using Models.ProductScreenshots;
+using Models.ProductTypes;
 
 namespace GOG.Activities.Update
 {

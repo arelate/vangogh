@@ -17,7 +17,7 @@ using Interfaces.ValidationResults;
 using Attributes;
 
 using Models.Units;
-using Models.ValidationResults;
+using Models.ProductTypes;
 
 namespace Controllers.Validation
 {

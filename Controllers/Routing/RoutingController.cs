@@ -7,7 +7,7 @@ using Interfaces.Status;
 
 using Attributes;
 
-using Models.ProductRoutes;
+using Models.ProductTypes;
 
 namespace Controllers.Routing
 {

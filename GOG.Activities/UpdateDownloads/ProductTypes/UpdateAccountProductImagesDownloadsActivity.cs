@@ -5,7 +5,7 @@ using Interfaces.Controllers.File;
 
 using Interfaces.Status;
 
-using Models.ProductDownloads;
+using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -15,7 +15,7 @@ using GOG.Models;
 
 namespace GOG.Activities.UpdateDownloads.ProductTypes
 {
-    public class UpdateAccountProductImagesDownloadsActivity : UpdateDownloadsActivity<AccountProduct>
+    public class UpdateAccountProductImagesDownloadsActivity : UpdateDownloadsActivity<AccountProductImage>
     {
 		[Dependencies(
 			"GOG.Delegates.GetDownloadSources.ProductTypes.GetAccountProductImagesDownloadSourcesAsyncDelegate,GOG.Delegates",

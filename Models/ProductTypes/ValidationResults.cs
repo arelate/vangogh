@@ -2,7 +2,7 @@
 
 using Interfaces.ValidationResults;
 
-namespace Models.ValidationResults
+namespace Models.ProductTypes
 {
     [DataContract]
     public class ChunkValidation: IChunkValidation
@@ -41,7 +41,7 @@ namespace Models.ValidationResults
 
     [DataContract]
     [KnownType(typeof(FileValidation))]
-    public class ValidationResults: ProductCore.ProductCore, IValidationResults
+    public class ValidationResults: ProductCore, IValidationResults
     {
         [DataMember(Name = "files")]
         public IFileValidationResults[] Files { get; set; }
