@@ -14,6 +14,8 @@ using Interfaces.Validation;
 using Interfaces.Status;
 using Interfaces.ValidationResults;
 
+using Attributes;
+
 using Models.Units;
 using Models.ValidationResults;
 
@@ -29,6 +31,13 @@ namespace Controllers.Validation
         IValidationResultController validationResultController;
         IStatusController statusController;
 
+		[Dependencies(
+			"Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
+			"Controllers.File.FileController,Controllers",
+			"Controllers.Stream.StreamController,Controllers",
+			"Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
+			"Controllers.ValidationResult.ValidationResultController,Controllers",
+			"Controllers.Status.StatusController,Controllers")]
         public FileValidationController(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFileController fileController,

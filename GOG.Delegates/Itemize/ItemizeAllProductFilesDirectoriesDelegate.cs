@@ -8,6 +8,8 @@ using Interfaces.Controllers.Directory;
 
 using Interfaces.Status;
 
+using Attributes;
+
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllProductFilesDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
@@ -16,6 +18,10 @@ namespace GOG.Delegates.Itemize
         readonly IDirectoryController directoryController;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates",
+			"Controllers.Directory.DirectoryController,Controllers",
+			"Controllers.Status.StatusController,Controllers")]
         public ItemizeAllProductFilesDirectoriesAsyncDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate,
             IDirectoryController directoryController,

@@ -16,6 +16,8 @@ using Interfaces.Routing;
 using Interfaces.Status;
 using Interfaces.ValidationResults;
 
+using Attributes;
+
 using Models.ValidationResults;
 
 using GOG.Models;
@@ -34,6 +36,17 @@ namespace GOG.Activities.Validate
         readonly IDataController<long> updatedDataController;
         readonly IRoutingController routingController;
 
+		[Dependencies(
+			"Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
+			"Delegates.GetFilename.GetUriFilenameDelegate,Delegates",
+			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
+			"Controllers.Validation.FileValidationController,Controllers",
+			"Controllers.Data.ProductTypes.ValidationResultsDataController,Controllers",
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
+			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+			"Controllers.Routing.RoutingController,Controllers",
+			"Controllers.Status.StatusController,Controllers")]
         public ValidateProductFilesActivity(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,

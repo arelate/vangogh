@@ -14,6 +14,10 @@ namespace GOG.Activities.DownloadProductFiles.ProductTypes
 {
     public class DownloadProductImagesActivity : DownloadFilesActivity<Product>
     {
+		[Dependencies(
+			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
+			"GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public DownloadProductImagesActivity(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,

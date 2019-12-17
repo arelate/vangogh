@@ -8,6 +8,8 @@ using Interfaces.Controllers.Data;
 
 using Interfaces.Status;
 
+using Attributes;
+
 using GOG.Models;
 
 namespace GOG.Delegates.Itemize
@@ -18,6 +20,10 @@ namespace GOG.Delegates.Itemize
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
         readonly IStatusController statusController;
 
+		[Dependencies(
+			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
+			"Controllers.Status.StatusController,Controllers")]
         public ItemizeAllGameDetailsDirectoriesAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,

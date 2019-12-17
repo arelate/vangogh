@@ -644,75 +644,60 @@ namespace vangogh.Console
                 typeof(DownloadProductImageAsyncDelegate))
                 as DownloadProductImageAsyncDelegate;
 
-            var productsImagesDownloadActivity = new DownloadProductImagesActivity(
-                productDownloadsDataController,
-                downloadProductImageAsyncDelegate,
-                statusController);
+            var productsImagesDownloadActivity = singletonInstancesController.GetInstance(
+                typeof(DownloadProductImagesActivity))
+                as DownloadProductImagesActivity;              
 
-            var accountProductsImagesDownloadActivity = new DownloadAccountProductImagesActivity(
-                productDownloadsDataController,
-                downloadProductImageAsyncDelegate,
-                statusController);
+            var accountProductsImagesDownloadActivity = singletonInstancesController.GetInstance(
+                typeof(DownloadAccountProductImagesActivity))
+                as DownloadAccountProductImagesActivity;
 
-            var screenshotsDownloadActivity = new DownloadProductScreenshotsActivity(
-                productDownloadsDataController,
-                downloadProductImageAsyncDelegate,
-                statusController);
+            var screenshotsDownloadActivity = singletonInstancesController.GetInstance(
+                typeof(DownloadProductScreenshotsActivity))
+                as DownloadProductScreenshotsActivity;               
 
-            var productFilesDownloadActivity = new DownloadProductFilesActivity(
-                productDownloadsDataController,
-                downloadManualUrlFileAsyncDelegate,
-                statusController);
-
-            // PrintDependencies(
-            //     networkController,
-            //     formatUriRemoveSessionDelegate,
-            //     routingController,
-            //     downloadFromResponseAsyncDelegate,
-            //     downloadValidationFileAsyncDelegate,
-            //     statusController); 
+            var productFilesDownloadActivity = singletonInstancesController.GetInstance(
+                typeof(DownloadProductFilesActivity))
+                as DownloadProductFilesActivity;            
 
             // validation controllers
 
-            var validationResultController = new ValidationResultController();
+            var validationResultController = singletonInstancesController.GetInstance(
+                typeof(ValidationResultController))
+                as ValidationResultController;
 
-            var convertFileToMd5HashDelegate = new ConvertFileToMd5HashDelegate(
-                storageController,
-                convertStringToMd5HashDelegate);
+            var convertFileToMd5HashDelegate = singletonInstancesController.GetInstance(
+                typeof(ConvertFileToMd5HashDelegate))
+                as ConvertFileToMd5HashDelegate;             
 
-            var productFileValidationController = new FileValidationController(
-                confirmValidationExpectedDelegate,
-                fileController,
-                streamController,
-                convertBytesToMd5HashDelegate,
-                validationResultController,
-                statusController);
+            var productFileValidationController = singletonInstancesController.GetInstance(
+                typeof(FileValidationController))
+                as FileValidationController;             
 
-            var validateProductFilesActivity = new ValidateProductFilesActivity(
-                getProductFilesDirectoryDelegate,
-                getUriFilenameDelegate,
-                formatValidationFileDelegate,
-                productFileValidationController,
-                validationResultsDataController,
-                gameDetailsDataController,
-                itemizeGameDetailsManualUrlsAsyncDelegate,
-                updatedDataController,
-                routingController,
-                statusController);
+            var validateProductFilesActivity = singletonInstancesController.GetInstance(
+                typeof(ValidateProductFilesActivity))
+                as ValidateProductFilesActivity;               
 
-            #region Cleanup
+            var itemizeAllGameDetailsDirectoriesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(ItemizeAllGameDetailsDirectoriesAsyncDelegate))
+                as ItemizeAllGameDetailsDirectoriesAsyncDelegate;
 
-            var itemizeAllGameDetailsDirectoriesAsyncDelegate = new ItemizeAllGameDetailsDirectoriesAsyncDelegate(
-                gameDetailsDataController,
-                itemizeGameDetailsDirectoriesAsyncDelegate,
-                statusController);
+            var itemizeAllProductFilesDirectoriesAsyncDelegate = singletonInstancesController.GetInstance(
+                typeof(ItemizeAllProductFilesDirectoriesAsyncDelegate))
+                as ItemizeAllProductFilesDirectoriesAsyncDelegate;
 
-            var itemizeAllProductFilesDirectoriesAsyncDelegate = new ItemizeAllProductFilesDirectoriesAsyncDelegate(
-                getProductFilesRootDirectoryDelegate,
-                directoryController,
-                statusController);
+            var itemizeDirectoryFilesDelegate = singletonInstancesController.GetInstance(
+                typeof(ItemizeDirectoryFilesDelegate))
+                as ItemizeDirectoryFilesDelegate;
 
-            var itemizeDirectoryFilesDelegate = new ItemizeDirectoryFilesDelegate(directoryController);
+            // PrintDependencies(
+            //     itemizeAllGameDetailsDirectoriesAsyncDelegate, // expected items (directories for gameDetails)
+            //     itemizeAllProductFilesDirectoriesAsyncDelegate, // actual items (directories in productFiles)
+            //     itemizeDirectoryFilesDelegate, // detailed items (files in directory)
+            //     formatValidationFileDelegate, // supplementary items (validation files)
+            //     recycleDelegate,
+            //     directoryController,
+            //     statusController);
 
             var directoryCleanupActivity = new CleanupActivity(
                 Entity.Directories,
@@ -754,32 +739,6 @@ namespace vangogh.Console
             var cleanupUpdatedActivity = new CleanupUpdatedActivity(
                 updatedDataController,
                 statusController);
-
-            #endregion
-
-            #region Help
-
-            var helpActivity = new HelpActivity(
-                statusController);
-
-            #endregion
-
-            #region Report Task Status 
-
-            var reportFilePresentationController = new FilePresentationController(
-                getReportDirectoryDelegate,
-                getReportFilenameDelegate,
-                streamController);
-
-            var fileNotifyStatusViewUpdateController = new NotifyStatusViewUpdateController(
-                getStatusViewUpdateDelegate,
-                reportFilePresentationController);
-
-            var reportActivity = new ReportActivity(
-                fileNotifyStatusViewUpdateController,
-                statusController);
-
-            #endregion
 
             #endregion
 
