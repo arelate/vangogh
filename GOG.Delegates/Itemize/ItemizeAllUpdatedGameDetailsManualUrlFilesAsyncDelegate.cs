@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -21,49 +16,41 @@ namespace GOG.Delegates.Itemize
         readonly IDataController<long> updatedDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsFilesAsyncDelegate,GOG.Delegates",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ResponseLogController,Controllers")]
         public ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsFilesAsyncDelegate,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsFilesAsyncDelegate = itemizeGameDetailsFilesAsyncDelegate;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async IAsyncEnumerable<string> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<string> ItemizeAllAsync()
         {
-            var enumerateUpdateGameDetailsFilesTask = await statusController.CreateAsync(status, "Enumerate updated gameDetails files");
+            actionLogController.StartAction("Enumerate updated gameDetails files");
 
-            var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdateGameDetailsFilesTask);
-            var current = 0;
-            
-            await foreach (var id in updatedDataController.ItemizeAllAsync(enumerateUpdateGameDetailsFilesTask))
+            await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateUpdateGameDetailsFilesTask);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
-                await statusController.UpdateProgressAsync(
-                    enumerateUpdateGameDetailsFilesTask,
-                    ++current,
-                    updatedIdsCount,
-                    gameDetails.Title);
+                actionLogController.IncrementActionProgress();
 
                 foreach (var gameDetailsFile in await itemizeGameDetailsFilesAsyncDelegate.ItemizeAsync(
-                        gameDetails,
-                        enumerateUpdateGameDetailsFilesTask))
+                        gameDetails))
                         yield return gameDetailsFile;
             }
 
-            await statusController.CompleteAsync(enumerateUpdateGameDetailsFilesTask);
+            actionLogController.CompleteAction();
         }
     }
 }

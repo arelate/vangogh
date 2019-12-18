@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-
-using Interfaces.Status;
 
 using Attributes;
 
@@ -19,19 +18,19 @@ namespace Controllers.Data.ProductTypes
             "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.WishlistedRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public WishlistedDataController(
             IStashController<List<long>> wishlistedDataController,
             IConvertDelegate<long, long> convertPassthroughIndexDelegate,
             IRecordsController<long> wishlistedRecordsIndexController,
             ICollectionController collectionController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 wishlistedDataController,
                 convertPassthroughIndexDelegate,
                 wishlistedRecordsIndexController,
                 collectionController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

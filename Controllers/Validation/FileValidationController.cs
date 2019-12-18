@@ -9,9 +9,9 @@ using Interfaces.Delegates.Convert;
 
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Validation;
-using Interfaces.Status;
 using Interfaces.ValidationResults;
 
 using Attributes;
@@ -29,34 +29,34 @@ namespace Controllers.Validation
         XmlDocument validationXml;
         IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
         IValidationResultController validationResultController;
-        IStatusController statusController;
+        IActionLogController actionLogController;
 
-		[Dependencies(
-			"Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
-			"Controllers.File.FileController,Controllers",
-			"Controllers.Stream.StreamController,Controllers",
-			"Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
-			"Controllers.ValidationResult.ValidationResultController,Controllers",
-			"Controllers.Status.StatusController,Controllers")]
+        [Dependencies(
+            "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
+            "Controllers.File.FileController,Controllers",
+            "Controllers.Stream.StreamController,Controllers",
+            "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
+            "Controllers.ValidationResult.ValidationResultController,Controllers",
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public FileValidationController(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFileController fileController,
             IStreamController streamController,
             IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate,
             IValidationResultController validationResultController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
             this.fileController = fileController;
             this.streamController = streamController;
             this.convertBytesToHashDelegate = convertBytesToHashDelegate;
             this.validationResultController = validationResultController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
 
             validationXml = new XmlDocument { PreserveWhitespace = false };
         }
 
-        public async Task<IFileValidationResults> ValidateFileAsync(string productFileUri, string validationUri, IStatus status)
+        public async Task<IFileValidationResults> ValidateFileAsync(string productFileUri, string validationUri)
         {
             var fileValidation = new FileValidation
             {
@@ -150,28 +150,28 @@ namespace Controllers.Validation
                     length += (to - from);
                     expectedMd5 = chunkElement.FirstChild.Value;
 
-                    chunksValidation.Add(await VerifyChunkAsync(fileStream, from, to, expectedMd5, status));
+                    chunksValidation.Add(await VerifyChunkAsync(fileStream, from, to, expectedMd5));
 
-                    await statusController.UpdateProgressAsync(
-                        status,
-                        length,
-                        expectedSize,
-                        productFileUri,
-                        DataUnits.Bytes);
+                    // await statusController.UpdateProgressAsync(
+                    //     status,
+                    //     length,
+                    //     expectedSize,
+                    //     productFileUri,
+                    //     DataUnits.Bytes);
                 }
 
                 fileValidation.Chunks = chunksValidation.ToArray();
 
-                await statusController.UpdateProgressAsync(status, length, expectedSize, productFileUri);
+                // await statusController.UpdateProgressAsync(status, length, expectedSize, productFileUri);
             }
 
-            await statusController.InformAsync(status, $"Validation result: {productFileUri} is valid: " +
-                $"{validationResultController.ProductFileIsValid(fileValidation)}");
+            // await statusController.InformAsync(status, $"Validation result: {productFileUri} is valid: " +
+            //     $"{validationResultController.ProductFileIsValid(fileValidation)}");
 
             return fileValidation;
         }
 
-        public async Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5, IStatus status)
+        public async Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5)
         {
             if (!fileStream.CanSeek)
                 throw new Exception("Unable to seek in the file stream");
@@ -189,7 +189,7 @@ namespace Controllers.Validation
             byte[] buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
-            chunkValidation.ActualHash = await convertBytesToHashDelegate.ConvertAsync(buffer, status);
+            chunkValidation.ActualHash = await convertBytesToHashDelegate.ConvertAsync(buffer);
 
             return chunkValidation;
         }

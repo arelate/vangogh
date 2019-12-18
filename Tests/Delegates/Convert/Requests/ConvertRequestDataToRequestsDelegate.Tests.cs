@@ -20,7 +20,6 @@ namespace Delegates.Convert.Requests.Tests
     public class ConvertRequestDataToRequestsDelegateTests
     {
         private readonly IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate;
-        private readonly Models.Status.Status testStatus;
 
         public ConvertRequestDataToRequestsDelegateTests()
         {
@@ -29,8 +28,6 @@ namespace Delegates.Convert.Requests.Tests
             convertRequestsDataToRequestsDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertRequestsDataToRequestsDelegate))
                 as ConvertRequestsDataToRequestsDelegate;
-
-            testStatus = new Models.Status.Status();
         }
 
         [Theory]
@@ -48,8 +45,7 @@ namespace Delegates.Convert.Requests.Tests
             // Parameters are not part of the test, since they don't affect number of requests            
 
             var requests = convertRequestsDataToRequestsDelegate.ConvertAsync(
-                requestsData,
-                testStatus);
+                requestsData);
             
             var requestsCount = 0;
             await foreach (var request in requests)

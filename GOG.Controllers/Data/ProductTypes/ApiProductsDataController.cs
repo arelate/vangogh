@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-
-using Interfaces.Status;
 
 using Attributes;
 
@@ -23,19 +22,19 @@ namespace GOG.Controllers.Data.ProductTypes
             "GOG.Delegates.Convert.ProductTypes.ConvertApiProductToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.ApiProductsRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public ApiProductsDataController(
             IStashController<List<ApiProduct>> apiProductsStashController,
             IConvertDelegate<ApiProduct, long> convertApiProductsToIndexDelegate,
             IRecordsController<long> apiProductsRecordsIndexController,
             ICollectionController collectionController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 apiProductsStashController,
                 convertApiProductsToIndexDelegate,
                 apiProductsRecordsIndexController,
                 collectionController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

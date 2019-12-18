@@ -79,8 +79,7 @@ namespace Controllers.Data
             if (recordsController != null)
                 await recordsController.SetRecordAsync(
                     updatedDataId,
-                    recordType,
-                    status);
+                    recordType);
         }
 
         public async Task DeleteAsync(DataType deletedData)

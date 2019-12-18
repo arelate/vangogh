@@ -3,10 +3,9 @@ using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
-
-using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Interfaces.Delegates.FillGaps;
@@ -23,7 +22,7 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
             "GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatepsDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate,GOG.Delegates",
-            "Controllers.Status.StatusController,Controllers",
+            "Controllers.Logs.ResponseLogController,Controllers",
             "GOG.Delegates.FillGaps.FillGameDetailsGapsDelegate,GOG.Delegates")]
         public UpdateGameDetailsByAccountProductsActivity(
             IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
@@ -31,7 +30,7 @@ namespace GOG.Activities.Update.ProductTypes
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameDetails> getDeserializedGameDetailsAsyncDelegate,
-            IStatusController statusController,
+            IResponseLogController responseLogController,
             IFillGapsDelegate<GameDetails,AccountProduct> fillGameDetailsGapsDelegate):
             base(
                 getGameDetailsUpdateUriDelegate,
@@ -39,7 +38,7 @@ namespace GOG.Activities.Update.ProductTypes
                 gameDetailsDataController,
                 itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
                 getDeserializedGameDetailsAsyncDelegate,
-                statusController,
+                responseLogController,
                 fillGameDetailsGapsDelegate)
                 {
                     // ...

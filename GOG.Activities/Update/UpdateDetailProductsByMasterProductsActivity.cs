@@ -7,8 +7,9 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Logs;
 
-using Interfaces.Status;
+using Interfaces.Activity;
 
 using GOG.Interfaces.Delegates.FillGaps;
 
@@ -18,8 +19,7 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Activities.Update
 {
-    public abstract class UpdateDetailProductsByMasterProductsActivity<DetailType, MasterType> :
-        Activity
+    public abstract class UpdateDetailProductsByMasterProductsActivity<DetailType, MasterType> : IActivity
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
@@ -32,8 +32,8 @@ namespace GOG.Activities.Update
         readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
         private readonly IGetValueDelegate<string> getDetailUpdateUriDelegate;
+        private readonly IResponseLogController responseLogController;
 
-        readonly string updateTypeDescription;
 
         public UpdateDetailProductsByMasterProductsActivity(
             IGetValueDelegate<string> getDetailUpdateUriDelegate,
@@ -41,9 +41,8 @@ namespace GOG.Activities.Update
             IDataController<DetailType> detailDataController,
             IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate,
-            IStatusController statusController,
-            IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null) :
-            base(statusController)
+            IResponseLogController responseLogController,
+            IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null)
         {
             this.detailDataController = detailDataController;
             this.itemizeAllMasterDetailGapsAsyncDelegate = itemizeAllMasterDetailGapsAsyncDelegate;
@@ -54,48 +53,46 @@ namespace GOG.Activities.Update
             this.fillGapsDelegate = fillGapsDelegate;
 
             this.getDetailUpdateUriDelegate = getDetailUpdateUriDelegate;
-            updateTypeDescription = typeof(DetailType).Name;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
-            var updateProductsTask = await statusController.CreateAsync(status, $"Update {updateTypeDescription}");
+            responseLogController.OpenResponseLog($"Update {typeof(DetailType).Name}");
 
             // We'll limit detail updates to user specified ids.
             // if user didn't provide a list of ids - we'll use the details gaps 
             // (ids that exist in master list, but not detail) and updated
 
-            var currentProduct = 0;
-
-            await foreach (var masterProductWithoutDetail in itemizeAllMasterDetailGapsAsyncDelegate.ItemizeAllAsync(updateProductsTask))
+            await foreach (var masterProductWithoutDetail in
+                itemizeAllMasterDetailGapsAsyncDelegate.ItemizeAllAsync())
             {
-                await statusController.UpdateProgressAsync(
-                    updateProductsTask,
-                    ++currentProduct,
-                    0, // TODO: Probably need to figure a better way to report progress on unknown sets
-                    masterProductWithoutDetail.Title);
+                responseLogController.IncrementActionProgress();
 
-                var detailUpdateIdentity = convertMasterTypeToDetailUpdateIdentityDelegate.Convert(masterProductWithoutDetail);
+                var detailUpdateIdentity =
+                    convertMasterTypeToDetailUpdateIdentityDelegate.Convert(
+                        masterProductWithoutDetail);
+
                 if (string.IsNullOrEmpty(detailUpdateIdentity)) continue;
 
                 var detailUpdateUri = string.Format(
                     getDetailUpdateUriDelegate.GetValue(),
                     detailUpdateIdentity);
 
-                var detailData = await getDeserializedDetailAsyncDelegate.GetDeserializedAsync(updateProductsTask, detailUpdateUri);
+                var detailData = await getDeserializedDetailAsyncDelegate.GetDeserializedAsync(detailUpdateUri);
 
                 if (detailData != null)
                 {
                     if (fillGapsDelegate != null)
                         fillGapsDelegate.FillGaps(detailData, masterProductWithoutDetail);
 
-                    await detailDataController.UpdateAsync(detailData, updateProductsTask);
+                    await detailDataController.UpdateAsync(detailData);
                 }
             }
 
-            await detailDataController.CommitAsync(updateProductsTask);
+            await detailDataController.CommitAsync();
 
-            await statusController.CompleteAsync(updateProductsTask);
+            responseLogController.CloseResponseLog();
         }
     }
 }

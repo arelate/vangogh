@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Status;
+
 
 using Interfaces.Delegates.Download;
 
@@ -21,12 +21,11 @@ namespace GOG.Delegates.DownloadProductFile
             this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
         }
 
-        public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination, IStatus status)
+        public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
         {
             await downloadFromUriAsyncDelegate?.DownloadFromUriAsync(
                 sourceUri,
-                destination,
-                status);
+                destination);
         }
     }
 }

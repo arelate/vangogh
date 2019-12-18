@@ -6,7 +6,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 
-using Interfaces.Status;
+
 
 using Attributes;
 
@@ -29,7 +29,7 @@ namespace GOG.Delegates.Itemize
             this.gameDetailsDataController = gameDetailsDataController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails, IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails)
         {
             // STUB - need to pass download languages and OSes
             Settings settings = null;
@@ -70,7 +70,7 @@ namespace GOG.Delegates.Itemize
             // last but not least - recursively add DLCs
             if (gameDetails.DLCs != null)
                 foreach (var dlc in gameDetails.DLCs)
-                    manualUrls.AddRange(await ItemizeAsync(dlc, status));
+                    manualUrls.AddRange(await ItemizeAsync(dlc));
 
             return manualUrls;
         }

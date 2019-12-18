@@ -6,10 +6,11 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Models.RecordsTypes;
 
-using Interfaces.Status;
+using Interfaces.Activity;
 
 using Models.ProductTypes;
 
@@ -17,68 +18,64 @@ using GOG.Interfaces.Delegates.GetPageResults;
 
 namespace GOG.Activities.Update
 {
-    public abstract class UpdatePageResultActivity<PageType, DataType> : Activity
+    public abstract class UpdatePageResultActivity<PageType, DataType> : IActivity
         where PageType : Models.PageResult
         where DataType : ProductCore
     {
-
         readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
         readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
         readonly IDataController<DataType> dataController;
         readonly IRecordsController<string> activityRecordsController;
+        readonly IResponseLogController responseLogController;
 
         public UpdatePageResultActivity(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
             IRecordsController<string> activityRecordsController,
-            IStatusController statusController) :
-            base(statusController)
+            IResponseLogController responseLogController)
         {
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
             this.dataController = dataController;
             this.activityRecordsController = activityRecordsController;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
-            var updateAllProductsTask = await statusController.CreateAsync(status, $"Updating...");
+            responseLogController.OpenResponseLog($"Updating...");
 
             // TODO: Figure out better way to identify and activity
-            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started, updateAllProductsTask);
+            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started);
 
-            var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync(updateAllProductsTask);
+            var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync();
 
-            var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extracting...");
+            responseLogController.StartAction($"Extracting...");
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
-            await statusController.CompleteAsync(extractTask);
+            responseLogController.CompleteAction();
 
             if (newProducts.Any())
             {
-                var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Saving...");
-                var current = 0;
-                var updateProgressEvery = 10;
+                responseLogController.StartAction($"Saving...");
 
                 foreach (var product in newProducts)
                 {
-                    if (++current % updateProgressEvery == 0)
-                        await statusController.UpdateProgressAsync(updateTask, current, newProducts.Count(), product.Title);
-
-                    await dataController.UpdateAsync(product, updateTask);
+                    responseLogController.IncrementActionProgress();
+                    await dataController.UpdateAsync(product);
                 }
 
-                await statusController.CompleteAsync(updateTask);
+                responseLogController.CompleteAction();
             }
 
             // TODO: Figure out better way to identify and activity
-            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Completed, updateAllProductsTask);
+            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Completed);
 
-            await dataController.CommitAsync(updateAllProductsTask);
+            await dataController.CommitAsync();
 
-            await statusController.CompleteAsync(updateAllProductsTask);
+            responseLogController.CloseResponseLog();
         }
     }
 }

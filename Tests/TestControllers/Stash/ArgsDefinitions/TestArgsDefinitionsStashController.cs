@@ -2,8 +2,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Stash;
 
-using Interfaces.Status;
-
 using Models.ArgsDefinitions;
 
 namespace TestControllers.Stash.ArgsDefinitions
@@ -18,7 +16,7 @@ namespace TestControllers.Stash.ArgsDefinitions
             }
         }
 
-        public async Task<ArgsDefinition> GetDataAsync(IStatus status)
+        public async Task<ArgsDefinition> GetDataAsync()
         {
             return await Task.Run(() =>
             {
@@ -26,12 +24,12 @@ namespace TestControllers.Stash.ArgsDefinitions
             });
         }
 
-        public Task LoadAsync(IStatus status)
+        public Task LoadAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public Task SaveAsync(IStatus status)
+        public Task SaveAsync()
         {
             throw new System.NotImplementedException();
         }

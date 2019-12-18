@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Logs;
 
-using Interfaces.Status;
+using Interfaces.Activity;
 
 using Attributes;
 
@@ -13,50 +14,50 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Activities.Update.ProductTypes
 {
-    public class UpdateWishlistedActivity : Activity
+    public class UpdateWishlistedActivity : IActivity
     {
         readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
         readonly IDataController<long> wishlistedDataController;
+        readonly IResponseLogController responseLogController;
 
         [Dependencies(
             "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.WishlistedDataController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public UpdateWishlistedActivity(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,
-            IStatusController statusController) :
-            base(statusController)
+            IResponseLogController responseLogController)
         {
             this.getProductsPageResultDelegate = getProductsPageResultDelegate;
             this.wishlistedDataController = wishlistedDataController;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
-            var updateWishlistTask = await statusController.CreateAsync(status, "Update Wishlisted");
+            responseLogController.OpenResponseLog("Update Wishlisted");
 
-            var requestContentTask = await statusController.CreateAsync(updateWishlistTask, "Request content");
+            responseLogController.StartAction("Request content");
 
             var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserializedAsync(
-                requestContentTask,
                 Uris.Endpoints.Account.Wishlist);
 
-            await statusController.CompleteAsync(requestContentTask);
+            responseLogController.CompleteAction();
 
-            var saveDataTask = await statusController.CreateAsync(updateWishlistTask, "Save");
+            responseLogController.StartAction("Save");
 
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                await wishlistedDataController.UpdateAsync(product.Id, saveDataTask);
+                await wishlistedDataController.UpdateAsync(product.Id);
             }
 
-            await statusController.CompleteAsync(saveDataTask);
+            responseLogController.CompleteAction();
 
-            await wishlistedDataController.CommitAsync(updateWishlistTask);
+            await wishlistedDataController.CommitAsync();
 
-            await statusController.CompleteAsync(updateWishlistTask);
+            responseLogController.CloseResponseLog();
         }
     }
 }

@@ -14,7 +14,7 @@ using Interfaces.Controllers.Collection;
 
 using Interfaces.Controllers.Serialization;
 using Interfaces.Language;
-using Interfaces.Status;
+
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
@@ -79,7 +79,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             this.collectionController = collectionController;
         }
 
-        public async Task<GameDetails> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
+        public async Task<GameDetails> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
         {
             // GOG.com quirk
             // GameDetails as sent by GOG.com servers have an intersting data structure for downloads:
@@ -96,7 +96,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             // - deserialize downloads into OperatingSystemsDownloads collection
             // - assign languages, since we know we should have as many downloads array as languages
 
-            var data = await getResourceAsyncDelegate.GetResourceAsync(status, uri, parameters);
+            var data = await getResourceAsyncDelegate.GetResourceAsync(uri, parameters);
             var gameDetails = serializationController.Deserialize<GameDetails>(data);
 
             if (gameDetails == null) return null;

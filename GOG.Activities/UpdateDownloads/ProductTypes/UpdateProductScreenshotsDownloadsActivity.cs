@@ -2,8 +2,7 @@
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.File;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -16,14 +15,14 @@ namespace GOG.Activities.UpdateDownloads.ProductTypes
 {
     public class UpdateProductScreenshotsDownloadsActivity : UpdateDownloadsActivity<ProductScreenshots>
     {
-		[Dependencies(
-			"GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate,GOG.Delegates",
-			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-			"Controllers.File.FileController,Controllers",
-			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
-			"GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-			"GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
-			"Controllers.Status.StatusController,Controllers")]
+        [Dependencies(
+            "GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate,GOG.Delegates",
+            "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
+            "Controllers.File.FileController,Controllers",
+            "Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
+            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
+            "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public UpdateProductScreenshotsDownloadsActivity(
             IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getProductScreenshotsDirectoryDelegate,
@@ -31,7 +30,7 @@ namespace GOG.Activities.UpdateDownloads.ProductTypes
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
-            IStatusController statusController) :
+            IResponseLogController responseLogController) :
             base(
                 getProductScreenshotsDownloadSourcesAsyncDelegate,
                 getProductScreenshotsDirectoryDelegate,
@@ -39,7 +38,7 @@ namespace GOG.Activities.UpdateDownloads.ProductTypes
                 productDownloadsDataController,
                 accountProductsDataController,
                 productsDataController,
-                statusController)
+                responseLogController)
         {
             // ...
         }

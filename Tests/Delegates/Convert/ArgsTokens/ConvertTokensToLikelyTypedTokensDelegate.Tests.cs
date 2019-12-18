@@ -15,7 +15,6 @@ namespace Delegates.Convert.ArgsTokens.Tests
     public class ConvertTokensToLikelyTypedTokensDelegateTests
     {
         private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
-        private Models.Status.Status testStatus = new Models.Status.Status();
 
         public ConvertTokensToLikelyTypedTokensDelegateTests()
         {
@@ -29,9 +28,10 @@ namespace Delegates.Convert.ArgsTokens.Tests
         private async Task<List<(string, Tokens)>> ConvertTokensToLikelyTypedTokens(params string[] tokens)
         {
             var likelyTypedTokens = new List<(string, Tokens)>();
-            await foreach (var likelyTypedToken in convertTokensToLikelyTypedTokensDelegate.ConvertAsync(tokens, testStatus))
+            await foreach (var likelyTypedToken in
+                convertTokensToLikelyTypedTokensDelegate.ConvertAsync(tokens))
                 likelyTypedTokens.Add(likelyTypedToken);
-            
+
             return likelyTypedTokens;
         }
 

@@ -3,8 +3,7 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Directory;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -21,7 +20,7 @@ namespace GOG.Activities.Cleanup.ProductTypes
 			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
 			"Delegates.Recycle.RecycleDelegate,Delegates",
 			"Controllers.Directory.DirectoryController,Controllers",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ResponseLogController,Controllers")]
         public CleanupProductDirectoriesActivity(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedProductDirectoriesAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualProductDirectoriesAsyncDelegate,
@@ -29,7 +28,7 @@ namespace GOG.Activities.Cleanup.ProductTypes
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
             IDirectoryController directoryController,
-            IStatusController statusController) :
+            IResponseLogController responseLogController) :
             base(
                 itemizeAllExpectedProductDirectoriesAsyncDelegate,
                 itemizeAllActualProductDirectoriesAsyncDelegate,
@@ -37,7 +36,7 @@ namespace GOG.Activities.Cleanup.ProductTypes
                 formatSupplementaryItemDelegate,
                 recycleDelegate,
                 directoryController,
-                statusController)
+                responseLogController)
         {
             // ...
         }

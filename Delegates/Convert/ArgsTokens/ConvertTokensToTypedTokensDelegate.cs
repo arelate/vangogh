@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Status;
 
 using Attributes;
 
@@ -32,23 +31,20 @@ namespace Delegates.Convert.ArgsTokens
             this.convertLikelyTypedToTypedTokensDelegate = convertLikelyTypedToTypedTokensDelegate;
             this.convertMethodsSetTokensToMethodTitleTokensDelegate = convertMethodsSetTokensToMethodTitleTokensDelegate;
         }
-        public IAsyncEnumerable<(string, Tokens)> ConvertAsync(IEnumerable<string> tokens, IStatus status)
+        public IAsyncEnumerable<(string, Tokens)> ConvertAsync(IEnumerable<string> tokens)
         {
             // 1. Convert untyped tokens into a likely-typed tokens
             var likelyTypedTokens = 
                 convertTokensToLikelyTypedTokensDelegate.ConvertAsync(
-                    tokens,
-                    status);
+                    tokens);
             // 2. Resolve likely types into specific types
             var typedTokens = 
                 convertLikelyTypedToTypedTokensDelegate.ConvertAsync(
-                    likelyTypedTokens,
-                    status);
+                    likelyTypedTokens);
             // 3. Expand methods sets (if present)
             var expandedTypedTokens = 
                 convertMethodsSetTokensToMethodTitleTokensDelegate.ConvertAsync(
-                    typedTokens,
-                    status);
+                    typedTokens);
 
             return expandedTypedTokens;
         }

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Logs;
 
-using Interfaces.Status;
+using Interfaces.Activity;
 
 using Attributes;
 
@@ -16,31 +14,33 @@ using GOG.Models;
 
 namespace GOG.Activities.Update.ProductTypes
 {
-    public class UpdateUpdatedActivity: Activity
+    public class UpdateUpdatedActivity: IActivity
     {
         readonly IDataController<AccountProduct> accountProductDataController;
         readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
         readonly IDataController<long> updatedDataController;
+        readonly IResponseLogController responseLogController;
 
         [Dependencies(
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public UpdateUpdatedActivity(
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
             IDataController<long> updatedDataController,
-            IStatusController statusController): base(statusController)
+            IResponseLogController responseLogController)
         {
             this.accountProductDataController = accountProductDataController;
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
 
             this.updatedDataController = updatedDataController;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
             // This activity will centralize processing and marking updated account products.
             // Currently the process is the following:
@@ -53,9 +53,9 @@ namespace GOG.Activities.Update.ProductTypes
             // In the future additional heuristics can be employed - such as using products, not just 
             // account products and other. Currently they are considered as YAGNI
 
-            var updateDataUpdatedStatus = await statusController.CreateAsync(status, "Process updated account products");
+            responseLogController.OpenResponseLog("Process updated account products");
 
-            var addNewlyCreatedStatus = await statusController.CreateAsync(updateDataUpdatedStatus, "Add account products created since last data update");
+            responseLogController.StartAction("Add account products created since last data update");
 
             var accountProductsNewOrUpdated = new List<long>();
 
@@ -66,32 +66,26 @@ namespace GOG.Activities.Update.ProductTypes
 
             //accountProductsNewOrUpdated.AddRange(newlyCreatedAccountProducts);
 
-            await statusController.CompleteAsync(addNewlyCreatedStatus);
+            responseLogController.CompleteAction();
 
-            var addUpdatedAccountProductsStatus = await statusController.CreateAsync(updateDataUpdatedStatus, "Add updated account products");
+            responseLogController.StartAction("Add updated account products");
 
-            var current = 0;
-
-            await foreach (var accountProduct in accountProductDataController.ItemizeAllAsync(addUpdatedAccountProductsStatus))
+            await foreach (var accountProduct in accountProductDataController.ItemizeAllAsync())
             {
-                await statusController.UpdateProgressAsync(
-                    addUpdatedAccountProductsStatus,
-                    ++current,
-                    await accountProductDataController.CountAsync(addUpdatedAccountProductsStatus),
-                    accountProduct.Id.ToString());
+                responseLogController.IncrementActionProgress();
 
                 if (confirmAccountProductUpdatedDelegate.Confirm(accountProduct))
                     accountProductsNewOrUpdated.Add(accountProduct.Id);
             }
 
             foreach (var accountProduct in accountProductsNewOrUpdated)
-                await updatedDataController.UpdateAsync(accountProduct, addUpdatedAccountProductsStatus);
+                await updatedDataController.UpdateAsync(accountProduct);
 
-            await statusController.CompleteAsync(addUpdatedAccountProductsStatus);
+            responseLogController.CompleteAction();
 
-            await updatedDataController.CommitAsync(updateDataUpdatedStatus);
+            await updatedDataController.CommitAsync();
 
-            await statusController.CompleteAsync(updateDataUpdatedStatus);
+            responseLogController.CloseResponseLog();
 
         }
     }

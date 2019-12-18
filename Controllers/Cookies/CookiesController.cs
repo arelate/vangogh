@@ -21,7 +21,7 @@ namespace Controllers.Cookies
         [Dependencies(
             "Controllers.Stash.Cookies.CookiesStashController,Controllers",
             "Controllers.StrongTypeSerialization.Cookies.CookiesSerializationController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public CookiesController(
             IStashController<Dictionary<string, string>> cookieStashController,
             IStrongTypeSerializationController<(string, string), string> cookieSerializationController,

@@ -5,7 +5,7 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
 using Interfaces.Controllers.Serialization;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -23,19 +23,19 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             "Delegates.GetValue.QueryParameters.ProductTypes.GetAccountProductsUpdateQueryParametersDelegate,Delegates",
             "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
             Dependencies.JSONSerializationController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public GetAccountProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getAccountProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getAccountProductsQueryUpdateQueryParameters,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
             ISerializationController<string> serializationController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 getAccountProductsUpdateUriDelegate,
                 getAccountProductsQueryUpdateQueryParameters,
                 requestPageAsyncDelegate,
                 serializationController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

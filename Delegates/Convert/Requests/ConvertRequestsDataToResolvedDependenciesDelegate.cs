@@ -6,8 +6,6 @@ using Interfaces.Controllers.Stash;
 
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Status;
-
 using Attributes;
 
 using Models.Requests;
@@ -26,7 +24,7 @@ namespace Delegates.Convert.Requests
             "Controllers.Collection.CollectionController,Controllers")]
         [TestDependenciesOverrides(
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "")]            
+            "")]
         public ConvertRequestsDataToResolvedDependenciesDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
             ICollectionController collectionController)
@@ -34,11 +32,11 @@ namespace Delegates.Convert.Requests
             this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
             this.collectionController = collectionController;
         }
-        public async Task<RequestsData> ConvertAsync(RequestsData requestsData, IStatus status)
+        public async Task<RequestsData> ConvertAsync(RequestsData requestsData)
         {
             var requiredMethods = new List<string>();
             var requiredCollections = new List<string>();
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
+            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
 
             foreach (var method in requestsData.Methods)
             {

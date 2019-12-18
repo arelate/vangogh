@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Collection;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-
-using Interfaces.Status;
 
 using Attributes;
 
@@ -21,19 +20,19 @@ namespace Controllers.Data.ProductTypes
             "Delegates.Convert.ProductTypes.ConvertProductRoutesToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ProductRoutesRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public ProductRoutesDataController(
             IStashController<List<ProductRoutes>> productRoutesStashController,
             IConvertDelegate<ProductRoutes, long> convertProductRoutesToIndexDelegate,
             IRecordsController<long> productRoutesRecordsIndexController,
             ICollectionController collectionController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 productRoutesStashController,
                 convertProductRoutesToIndexDelegate,
                 productRoutesRecordsIndexController,
                 collectionController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

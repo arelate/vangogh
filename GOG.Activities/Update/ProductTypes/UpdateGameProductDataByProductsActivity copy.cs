@@ -3,10 +3,9 @@ using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
-
-using Interfaces.Status;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
@@ -22,21 +21,21 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.ApiProductsDataController,GOG.Controllers",
             "GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegatepsDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate,GOG.Delegates",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public UpdateApiProductsByProductsActivity(
             IGetValueDelegate<string> getApiProductsUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToApiProductUpdateIdentityDelegate,
             IDataController<ApiProduct> apiProductsDataController,
             IItemizeAllAsyncDelegate<Product> itemizeAllProductsApiProductsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<ApiProduct> getDeserializedApiProductAsyncDelegate,
-            IStatusController statusController):
+            IResponseLogController responseLogController):
             base(
                 getApiProductsUpdateUriDelegate,
                 convertProductToApiProductUpdateIdentityDelegate,
                 apiProductsDataController,
                 itemizeAllProductsApiProductsGapsAsyncDelegate,
                 getDeserializedApiProductAsyncDelegate,
-                statusController,
+                responseLogController,
                 null)
                 {
                     // ...

@@ -15,7 +15,6 @@ namespace Delegates.Convert.ArgsTokens.Tests
     public class ConvertTokensToTypedTokensDelegateTests
     {
         private readonly IConvertAsyncDelegate<IEnumerable<string>,IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate;
-        private readonly Models.Status.Status testStatus;
 
         public ConvertTokensToTypedTokensDelegateTests()
         {
@@ -24,14 +23,12 @@ namespace Delegates.Convert.ArgsTokens.Tests
             this.convertTokensToTypedTokensDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertTokensToTypedTokensDelegate))
                 as ConvertTokensToTypedTokensDelegate;
-                
-            testStatus = new Models.Status.Status();
         }
 
         private async Task<List<(string, Tokens)>> ConvertTokensToLikelyTypedTokens(params string[] tokens)
         {
             var likelyTypedTokens = new List<(string, Tokens)>();
-            await foreach (var likelyTypedToken in convertTokensToTypedTokensDelegate.ConvertAsync(tokens, testStatus))
+            await foreach (var likelyTypedToken in convertTokensToTypedTokensDelegate.ConvertAsync(tokens))
                 likelyTypedTokens.Add(likelyTypedToken);
             
             return likelyTypedTokens;

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Interfaces.Delegates.GetPath;
 
 using Interfaces.Controllers.SerializedStorage;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -18,15 +17,15 @@ namespace Controllers.Stash.Records
         [Dependencies(
             "Delegates.GetPath.Records.GetProductRoutesRecordsPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public ProductRoutesRecordsStashController(
             IGetPathDelegate getProductRoutesRecordsPathDelegate,
             ISerializedStorageController serializedStorageController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 getProductRoutesRecordsPathDelegate,
                 serializedStorageController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using System.Linq;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
+
+using Interfaces.Activity;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
 
@@ -15,65 +17,61 @@ using Models.ProductTypes;
 
 namespace GOG.Activities.Update
 {
-    public class UpdateScreenshotsActivity : Activity
+    public class UpdateScreenshotsActivity : IActivity
     {
         readonly IDataController<Product> productsDataController;
         readonly IDataController<ProductScreenshots> productScreenshotsDataController;
         readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
+        readonly IResponseLogController responseLogController;
 
         [Dependencies(
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
             "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",
-            "Controllers.Status.StatusController")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public UpdateScreenshotsActivity(
             IDataController<Product> productsDataController,
             IDataController<ProductScreenshots> productScreenshotsDataController,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
-            IStatusController statusController) :
-            base(statusController)
+            IResponseLogController responseLogController)
         {
             this.productsDataController = productsDataController;
             this.productScreenshotsDataController = productScreenshotsDataController;
             this.updateScreenshotsAsyncDelegate = updateScreenshotsAsyncDelegate;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
-            var updateProductsScreenshotsTask = await statusController.CreateAsync(status, "Update Screenshots");
+            responseLogController.OpenResponseLog("Update Screenshots");
 
-            var getUpdatesListTask = await statusController.CreateAsync(updateProductsScreenshotsTask, "Get updates");
+            responseLogController.StartAction("Get updates");
             var productsMissingScreenshots = new List<long>();
             // TODO: Properly enumerate productsMissingScreenshots
             // (productsDataController.ItemizeAllAsync(getUpdatesListTask)).Except(
             //     productScreenshotsDataController.ItemizeAllAsync(getUpdatesListTask));
-            await statusController.CompleteAsync(getUpdatesListTask);
+            responseLogController.CompleteAction();
 
-            var counter = 0;
-
+            responseLogController.StartAction("Update missing screenshots");
             foreach (var id in productsMissingScreenshots)
             {
-                var product = await productsDataController.GetByIdAsync(id, updateProductsScreenshotsTask);
+                var product = await productsDataController.GetByIdAsync(id);
 
                 if (product == null)
                 {
-                    await statusController.InformAsync(
-                        updateProductsScreenshotsTask,
-                        $"Product {id} was not found as product or accountProduct, but marked as missing screenshots");
+                    // await statusController.InformAsync(
+                    //     updateProductsScreenshotsTask,
+                    //     $"Product {id} was not found as product or accountProduct, but marked as missing screenshots");
                     continue;
                 }
 
-                await statusController.UpdateProgressAsync(
-                    updateProductsScreenshotsTask,
-                    ++counter,
-                    productsMissingScreenshots.Count(),
-                    product.Title);
+                responseLogController.IncrementActionProgress();
 
-                await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product, updateProductsScreenshotsTask);
-
+                await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product);
             }
+            responseLogController.CompleteAction();
 
-            await statusController.CompleteAsync(updateProductsScreenshotsTask);
+            responseLogController.CloseResponseLog();
         }
     }
 }

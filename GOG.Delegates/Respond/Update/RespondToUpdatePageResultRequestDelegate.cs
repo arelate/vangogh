@@ -12,8 +12,6 @@ using Interfaces.Models.Logs;
 
 using Interfaces.Models.RecordsTypes;
 
-using Interfaces.Status;
-
 using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetPageResults;
@@ -29,26 +27,26 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
         readonly IDataController<DataType> dataController;
         readonly IRecordsController<string> activityRecordsController;
-        private readonly ISessionLogController sessionLogController;
+        private readonly IResponseLogController responseLogController;
 
         public RespondToUpdatePageResultRequestDelegate(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
             IRecordsController<string> activityRecordsController,
-            ISessionLogController sessionLogController)
+            IResponseLogController responseLogController)
         {
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
             this.dataController = dataController;
             this.activityRecordsController = activityRecordsController;
-            this.sessionLogController = sessionLogController;
+            this.responseLogController = responseLogController;
         }
 
-        public async Task<ISessionLog> RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
+        public async Task<IResponseLog> RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            sessionLogController.StartSession("Updating products");
+            responseLogController.OpenResponseLog("Updating products");
 
             // TODO: Figure out better way to identify and activity
             await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started);
@@ -61,27 +59,23 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
             if (newProducts.Any())
             {
-                var updateTask = await statusController.CreateAsync(updateAllProductsTask, $"Saving...");
-                var current = 0;
-                var updateProgressEvery = 10;
+                responseLogController.StartAction("Saving new products");
 
                 foreach (var product in newProducts)
                 {
-                    if (++current % updateProgressEvery == 0)
-                        await statusController.UpdateProgressAsync(updateTask, current, newProducts.Count(), product.Title);
-
-                    await dataController.UpdateAsync(product, updateTask);
+                    responseLogController.IncrementActionProgress();
+                    await dataController.UpdateAsync(product);
                 }
 
-                await statusController.CompleteAsync(updateTask);
+                responseLogController.CompleteAction();
             }
 
             // TODO: Figure out better way to identify and activity
-            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Completed, updateAllProductsTask);
+            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Completed);
 
-            await dataController.CommitAsync(updateAllProductsTask);
+            await dataController.CommitAsync();
 
-            return sessionLogController.CompleteSession();
+            return responseLogController.CloseResponseLog();
         }
     }
 }

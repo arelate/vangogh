@@ -3,7 +3,7 @@
 using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Format;
 
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -13,38 +13,37 @@ namespace Delegates.Constrain
 {
     public class ConstrainExecutionAsyncDelegate : IConstrainAsyncDelegate<int>
     {
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
         [Dependencies(
-            "Controllers.Status.StatusController,Controllers",
+            "Controllers.Logs.ResponseLogController,Controllers",
             "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates")]
         public ConstrainExecutionAsyncDelegate(
-            IStatusController statusController,
+            IActionLogController actionLogController,
             IFormatDelegate<long, string> formatSecondsDelegate)
         {
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
             this.formatSecondsDelegate = formatSecondsDelegate;
         }
 
-        public async Task ConstrainAsync(int delaySeconds, IStatus status)
+        public async Task ConstrainAsync(int delaySeconds)
         {
-            var throttleTask = await statusController.CreateAsync(
-                status,
+            actionLogController.StartAction(
                 $"Sleeping {formatSecondsDelegate.Format(delaySeconds)} before next operation");
 
             for (var ii = 0; ii < delaySeconds; ii++)
             {
                 await Task.Delay(1000);
-                await statusController.UpdateProgressAsync(
-                    throttleTask,
-                    ii + 1,
-                    delaySeconds,
-                    "Countdown",
-                    TimeUnits.Seconds);
+                // await statusController.UpdateProgressAsync(
+                //     throttleTask,
+                //     ii + 1,
+                //     delaySeconds,
+                //     "Countdown",
+                //     TimeUnits.Seconds);
             }
 
-            await statusController.CompleteAsync(throttleTask);
+            actionLogController.CompleteAction();
         }
     }
 }

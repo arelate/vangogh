@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
 
-using Interfaces.Status;
-
 using Models.Separators;
 
 namespace Delegates.GetDirectory

@@ -6,8 +6,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Models.ProductTypes;
 
@@ -23,39 +22,33 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IDataController<long> updatedDataController;
         readonly IFormatDelegate<string, string> formatImagesUriDelegate;
         readonly IGetImageUriDelegate<T> getImageUriDelegate;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
         public GetProductCoreImagesDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<T> dataController,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<T> getImageUriDelegate,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.updatedDataController = updatedDataController;
             this.dataController = dataController;
             this.formatImagesUriDelegate = formatImagesUriDelegate;
             this.getImageUriDelegate = getImageUriDelegate;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            var getDownloadSourcesStatus = await statusController.CreateAsync(status, "Get download sources");
+           actionLogController.StartAction("Get download sources");
 
             var productImageSources = new Dictionary<long, IList<string>>();
-            var count = await updatedDataController.CountAsync(getDownloadSourcesStatus);
-            var current = 0;
 
-            await foreach (var id in updatedDataController.ItemizeAllAsync(getDownloadSourcesStatus))
+            await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
-                await statusController.UpdateProgressAsync(
-                    getDownloadSourcesStatus,
-                    ++current,
-                    count,
-                    id.ToString());
+                actionLogController.IncrementActionProgress();
 
-                var productCore = await dataController.GetByIdAsync(id, getDownloadSourcesStatus);
+                var productCore = await dataController.GetByIdAsync(id);
 
                 // not all updated products can be found with all dataControllers
                 if (productCore == null) continue;
@@ -71,7 +64,7 @@ namespace GOG.Delegates.GetDownloadSources
                     productImageSources[id].Add(source);
             }
 
-            await statusController.CompleteAsync(getDownloadSourcesStatus);
+            actionLogController.CompleteAction();
 
             return productImageSources;
         }

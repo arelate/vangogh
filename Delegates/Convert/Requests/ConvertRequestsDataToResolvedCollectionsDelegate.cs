@@ -7,8 +7,6 @@ using Interfaces.Controllers.Stash;
 
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Status;
-
 using Attributes;
 
 using Models.Requests;
@@ -36,10 +34,10 @@ namespace Delegates.Convert.Requests
             this.collectionController = collectionController;
         }
 
-        public async Task<RequestsData> ConvertAsync(RequestsData requestsData, IStatus status)
+        public async Task<RequestsData> ConvertAsync(RequestsData requestsData)
         {
             var defaultCollections = new List<string>();
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
+            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
 
             foreach (var method in requestsData.Methods)
             {

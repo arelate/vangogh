@@ -15,13 +15,7 @@ namespace vangogh.Console
     {
         static async Task Main(string[] args)
         {
-            var sessionLogController = new SessionLogController();
-
             var singletonInstancesController = new SingletonInstancesController();
-
-            var applicationStatus = singletonInstancesController.GetInstance(
-                typeof(Models.Status.Status))
-                as Models.Status.Status;
 
             var convertArgsToRequestsDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertArgsToRequestsDelegate))
@@ -31,7 +25,7 @@ namespace vangogh.Console
                 typeof(ConvertRequestToRespondDelegateTypeDelegate))
                 as ConvertRequestToRespondDelegateTypeDelegate;
 
-            await foreach (var request in convertArgsToRequestsDelegate.ConvertAsync(args, applicationStatus))
+            await foreach (var request in convertArgsToRequestsDelegate.ConvertAsync(args))
             {
                 var respondToRequestDelegateType = convertRequestToRespondDelegateTypeDelegate.Convert(request);
 
@@ -43,7 +37,7 @@ namespace vangogh.Console
                     respondToRequestDelegateType)
                     as IRespondAsyncDelegate;
 
-                await respondToRequestDelegate.RespondAsync(request.Parameters, applicationStatus);
+                await respondToRequestDelegate.RespondAsync(request.Parameters);
             }
 
             System.Console.WriteLine("Press ENTER to exit...");

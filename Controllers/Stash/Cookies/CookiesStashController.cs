@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 
-using Interfaces.Delegates.GetPath;
 using Interfaces.Controllers.SerializedStorage;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
+
+using Interfaces.Delegates.GetPath;
 
 using Attributes;
 
@@ -15,15 +16,15 @@ namespace Controllers.Stash.Cookies
         [Dependencies(
             "Delegates.GetPath.Json.GetCookiesPathDelegate,Delegates",
             Dependencies.JSONSerializedStorageController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public CookiesStashController(
             IGetPathDelegate getCookiePathDelegate,
             ISerializedStorageController jsonSerializedStorageController,
-            IStatusController statusController):
+            IActionLogController actionLogController):
             base(
                 getCookiePathDelegate,
                 jsonSerializedStorageController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
 
-using Interfaces.Status;
+
 
 using Attributes;
 
@@ -28,11 +28,11 @@ namespace GOG.Delegates.Itemize
             this.getDirectoryDelegate = getDirectoryDelegate;
         }
 
-        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails, IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails)
         {
             var gameDetailsDirectories = new List<string>();
 
-            foreach (var manualUrl in await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails, status))
+            foreach (var manualUrl in await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
             {
                 var directory = getDirectoryDelegate.GetDirectory(manualUrl);
 

@@ -11,8 +11,6 @@ using Interfaces.Controllers.Console;
 
 using Interfaces.Input;
 
-using Interfaces.Status;
-
 using Attributes;
 
 namespace Controllers.InputOutput
@@ -72,7 +70,7 @@ namespace Controllers.InputOutput
             });
         }
 
-        public async Task OutputContinuousAsync(IStatus status, params string[] data)
+        public async Task OutputContinuousAsync(params string[] data)
         {
             // Clear frame buffer
             fragmentBuffer.Clear();
@@ -99,7 +97,7 @@ namespace Controllers.InputOutput
             // Preserve the current position
             savedCursorTopPosition = consoleController.CursorTop;
             // Use regular continuous output
-            await OutputContinuousAsync(null, data);
+            await OutputContinuousAsync(data);
         }
 
         public async Task OutputFixedOnRefreshAsync(params string[] data)

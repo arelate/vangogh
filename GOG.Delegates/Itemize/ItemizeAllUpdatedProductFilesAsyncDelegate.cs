@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Directory;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Status;
 
 using Attributes;
 
@@ -20,56 +18,48 @@ namespace GOG.Delegates.Itemize
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
         readonly IDirectoryController directoryController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
 			"Controllers.Directory.DirectoryController,Controllers",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ResponseLogController,Controllers")]
         public ItemizeAllUpdatedProductFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
             IDirectoryController directoryController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
             this.directoryController = directoryController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async IAsyncEnumerable<string> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<string> ItemizeAllAsync()
         {
-            var enumerateUpdatedProductFilesTask = await statusController.CreateAsync(status, "Enumerate updated productFiles");
+            actionLogController.StartAction("Enumerate updated productFiles");
 
-            var updatedIdsCount = await updatedDataController.CountAsync(enumerateUpdatedProductFilesTask);
-            var current = 0;
-
-            await foreach (var id in updatedDataController.ItemizeAllAsync(enumerateUpdatedProductFilesTask))
+            await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, enumerateUpdatedProductFilesTask);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
-                await statusController.UpdateProgressAsync(
-                    enumerateUpdatedProductFilesTask,
-                    ++current,
-                    updatedIdsCount,
-                    gameDetails.Title);
+                actionLogController.IncrementActionProgress();
 
                 var gameDetailsDirectories =
                     await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
-                        gameDetails,
-                        enumerateUpdatedProductFilesTask);
+                        gameDetails);
 
                 foreach (var gameDetailDirectory in gameDetailsDirectories)
                     foreach (var updatedFile in directoryController.EnumerateFiles(gameDetailDirectory))
                         yield return updatedFile;
             }
 
-            await statusController.CompleteAsync(enumerateUpdatedProductFilesTask);
+            actionLogController.CompleteAction();
         }
     }
 }

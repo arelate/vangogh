@@ -6,8 +6,9 @@ using Interfaces.Delegates.GetDirectory;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.File;
+using Interfaces.Controllers.Logs;
 
-using Interfaces.Status;
+using Interfaces.Activity;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -16,7 +17,7 @@ using GOG.Models;
 
 namespace GOG.Activities.UpdateDownloads
 {
-    public abstract class UpdateDownloadsActivity<Type> : Activity
+    public abstract class UpdateDownloadsActivity<Type> : IActivity
         where Type: ProductCore
     {
         readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
@@ -25,6 +26,7 @@ namespace GOG.Activities.UpdateDownloads
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDataController<AccountProduct> accountProductsDataController;
         readonly IDataController<Product> productsDataController;
+        readonly IResponseLogController responseLogController;
 
         public UpdateDownloadsActivity(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
@@ -33,8 +35,7 @@ namespace GOG.Activities.UpdateDownloads
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
-            IStatusController statusController) :
-            base(statusController)
+            IResponseLogController responseLogController)
         {
             this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
@@ -42,23 +43,19 @@ namespace GOG.Activities.UpdateDownloads
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
             this.productsDataController = productsDataController;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
-            var updateDownloadsTask = await statusController.CreateAsync(
-                status,
+            responseLogController.OpenResponseLog(
                 $"Update {typeof(Type)} downloads");
 
-            var getSourcesTask = await statusController.CreateAsync(
-                updateDownloadsTask,
-                $"Get {typeof(Type)} download sources");
+            responseLogController.StartAction($"Get {typeof(Type)} download sources");
+            var downloadSources = await getDownloadSourcesAsyncDelegate.GetDownloadSourcesAsync();
+            responseLogController.CompleteAction();
 
-            var downloadSources = await getDownloadSourcesAsyncDelegate.GetDownloadSourcesAsync(getSourcesTask);
-            await statusController.CompleteAsync(getSourcesTask);
-
-            var counter = 0;
-
+            responseLogController.StartAction("Update individual downloads");
             foreach (var downloadSource in downloadSources)
             {
                 // don't perform expensive updates if there are no actual sources
@@ -67,28 +64,24 @@ namespace GOG.Activities.UpdateDownloads
 
                 var id = downloadSource.Key;
 
-                ProductCore product = await productsDataController.GetByIdAsync(id, updateDownloadsTask);
+                ProductCore product = await productsDataController.GetByIdAsync(id);
 
                 if (product == null)
                 {
-                    product = await accountProductsDataController.GetByIdAsync(id, updateDownloadsTask);
+                    product = await accountProductsDataController.GetByIdAsync(id);
 
                     if (product == null)
                     {
-                        await statusController.WarnAsync(
-                            updateDownloadsTask,
-                            $"Downloads are scheduled for the product/account product {id} that doesn't exist");
+                        // await statusController.WarnAsync(
+                        //     updateDownloadsTask,
+                        //     $"Downloads are scheduled for the product/account product {id} that doesn't exist");
                         continue;
                     }
                 }
 
-                await statusController.UpdateProgressAsync(
-                    updateDownloadsTask,
-                    ++counter,
-                    downloadSources.Count,
-                    product.Title);
+                responseLogController.IncrementActionProgress();
 
-                var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id, updateDownloadsTask);
+                var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
                 if (productDownloads == null)
                 {
                     productDownloads = new ProductDownloads
@@ -107,9 +100,7 @@ namespace GOG.Activities.UpdateDownloads
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
-                var scheduleDownloadsTask = await statusController.CreateAsync(
-                    updateDownloadsTask,
-                    "Schedule new downloads");
+                responseLogController.StartAction("Schedule new downloads");
 
                 foreach (var source in downloadSource.Value)
                 {
@@ -134,12 +125,13 @@ namespace GOG.Activities.UpdateDownloads
                     productDownloads.Downloads.Add(scheduledDownloadEntry);
                 }
 
-                await productDownloadsDataController.UpdateAsync(productDownloads, scheduleDownloadsTask);
+                await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                await statusController.CompleteAsync(scheduleDownloadsTask);
+                responseLogController.CompleteAction();
             }
+            responseLogController.CompleteAction();
 
-            await statusController.CompleteAsync(updateDownloadsTask);
+            responseLogController.CloseResponseLog();
         }
     }
 }

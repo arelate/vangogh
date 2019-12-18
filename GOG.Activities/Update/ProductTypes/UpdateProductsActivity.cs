@@ -1,19 +1,12 @@
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-
-using Interfaces.Models.RecordsTypes;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
-
-using Models.ProductTypes;
 
 using GOG.Models;
 
@@ -28,19 +21,19 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Delegates.Itemize.ItemizeProductsPageResultProductsDelegate,GOG.Delegates",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "Controllers.Records.Session.SessionRecordsController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public UpdateProductsActivity(
             IGetPageResultsAsyncDelegate<ProductsPageResult> getProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<ProductsPageResult>, Product> itemizeProductsPageResultsDelegate,
             IDataController<Product> productsDataController,
             IRecordsController<string> activityRecordsController,
-            IStatusController statusController) :
+            IResponseLogController responseLogController) :
             base(
                 getProductsPageResultsAsyncDelegate,
                 itemizeProductsPageResultsDelegate,
                 productsDataController,
                 activityRecordsController,
-                statusController)
+                responseLogController)
         {
             // ...
         }

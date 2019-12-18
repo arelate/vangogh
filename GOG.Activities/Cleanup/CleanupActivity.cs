@@ -7,15 +7,16 @@ using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
-using Interfaces.Controllers.Directory;
+using Interfaces.Activity;
 
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
+using Interfaces.Controllers.Directory;
 
 using Models.ProductTypes;
 
 namespace GOG.Activities.Cleanup
 {
-    public abstract class CleanupActivity<Type> : Activity
+    public abstract class CleanupActivity<Type> : IActivity
         where Type: ProductCore
     {
         readonly IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
@@ -24,6 +25,7 @@ namespace GOG.Activities.Cleanup
         readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
         readonly IRecycleDelegate recycleDelegate;
         readonly IDirectoryController directoryController;
+        readonly IResponseLogController responseLogController;
 
         public CleanupActivity(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
@@ -32,8 +34,7 @@ namespace GOG.Activities.Cleanup
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
             IDirectoryController directoryController,
-            IStatusController statusController) :
-            base(statusController)
+            IResponseLogController responseLogController)
         {
             this.itemizeAllExpectedItemsAsyncDelegate = itemizeAllExpectedItemsAsyncDelegate;
             this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
@@ -41,17 +42,18 @@ namespace GOG.Activities.Cleanup
             this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
             this.recycleDelegate = recycleDelegate;
             this.directoryController = directoryController;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
-            var cleanupTask = await statusController.CreateAsync(status, $"Cleanup {typeof(Type)}");
+            responseLogController.OpenResponseLog($"Cleanup {typeof(Type)}");
 
             var unexpectedItems = new List<string>();
-            await foreach (var actualItem in itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync(status))
+            await foreach (var actualItem in itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync())
                 unexpectedItems.Add(actualItem);
 
-            await foreach (var expectedItem in itemizeAllExpectedItemsAsyncDelegate.ItemizeAllAsync(status))
+            await foreach (var expectedItem in itemizeAllExpectedItemsAsyncDelegate.ItemizeAllAsync())
                 unexpectedItems.Remove(expectedItem);
 
             var cleanupItems = new List<string>();
@@ -63,19 +65,15 @@ namespace GOG.Activities.Cleanup
                     cleanupItems.Add(formatSupplementaryItemDelegate.Format(detailedItem));
                 }
 
-            var moveToRecycleBinTask = await statusController.CreateAsync(status, "Move unexpected items to recycle bin");
-            var current = 0;
+            responseLogController.StartAction("Move unexpected items to recycle bin");
 
             foreach (var item in cleanupItems)
             {
-                await statusController.UpdateProgressAsync(
-                    moveToRecycleBinTask,
-                    ++current,
-                    cleanupItems.Count,
-                    item);
-
+                responseLogController.IncrementActionProgress();
                 recycleDelegate.Recycle(item);
             }
+
+            responseLogController.CompleteAction();
 
             // check if any of the directories are left empty and delete
             var emptyDirectories = new List<string>();
@@ -91,7 +89,7 @@ namespace GOG.Activities.Cleanup
             foreach (var directory in emptyDirectories)
                 directoryController.Delete(directory);
 
-            await statusController.CompleteAsync(moveToRecycleBinTask);
+            responseLogController.CloseResponseLog();
         }
     }
 }

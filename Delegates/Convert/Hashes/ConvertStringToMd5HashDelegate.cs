@@ -2,8 +2,6 @@
 
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Status;
-
 using Attributes;
 
 namespace Delegates.Convert.Hashes
@@ -24,7 +22,7 @@ namespace Delegates.Convert.Hashes
             this.convertBytesToHashDelegate = convertBytesToHashDelegate;
         }
 
-        public async Task<string> ConvertAsync(string data, IStatus status)
+        public async Task<string> ConvertAsync(string data)
         {
             if (string.IsNullOrEmpty(data))
                 return string.Empty;
@@ -34,7 +32,7 @@ namespace Delegates.Convert.Hashes
             if (bytes == null) return string.Empty;
             if (bytes.Length == 0) return string.Empty;
 
-            return await convertBytesToHashDelegate.ConvertAsync(bytes, status);
+            return await convertBytesToHashDelegate.ConvertAsync(bytes);
         }
     }
 }

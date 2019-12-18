@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Confirm;
-using Interfaces.Status;
 
 using Attributes;
 
@@ -26,8 +25,7 @@ namespace Delegates.Convert.ArgsTokens
         }
 
         public async IAsyncEnumerable<(string, Tokens)> ConvertAsync(
-            IEnumerable<string> untypedTokens, 
-            IStatus status)
+            IEnumerable<string> untypedTokens)
         {
             if (untypedTokens == null) yield break;
 
@@ -57,7 +55,7 @@ namespace Delegates.Convert.ArgsTokens
                     new ValueTuple<string, Tokens>(currentToken, Tokens.Unknown);
 
                 foreach (var type in TokensGroups.ParsingExpectations[currentGroup])
-                    if (await confirmLikelyTokenTypeDelegate.ConfirmAsync((currentToken, type), status))
+                    if (await confirmLikelyTokenTypeDelegate.ConfirmAsync((currentToken, type)))
                     {
                         typedToken.Type = type;
                         yield return typedToken;

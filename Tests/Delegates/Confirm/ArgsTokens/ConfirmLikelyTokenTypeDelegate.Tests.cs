@@ -4,12 +4,10 @@ using System.Threading.Tasks;
 using Xunit;
 
 using Interfaces.Delegates.Confirm;
-using Interfaces.Status;
 
 using Controllers.Instances;
 
 using Models.ArgsTokens;
-using Models.Status;
 
 namespace Delegates.Confirm.ArgsTokens.Tests
 {
@@ -17,7 +15,6 @@ namespace Delegates.Confirm.ArgsTokens.Tests
     public class ConfirmLikelyTokenTypeDelegateTests
     {
         private IConfirmAsyncDelegate<(string Token, Tokens Type)> confirmLikelyTokenTypeDelegate;
-        private IStatus testStatus;
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
@@ -26,8 +23,6 @@ namespace Delegates.Confirm.ArgsTokens.Tests
             this.confirmLikelyTokenTypeDelegate = singletonInstancesController.GetInstance(
                 typeof(ConfirmLikelyTokenTypeDelegate))
                 as ConfirmLikelyTokenTypeDelegate;
-            
-            testStatus = new Status();
         }
 
         [Theory]
@@ -58,8 +53,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         {
             Assert.True(
                 await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
-                    (token, tokenType),
-                    testStatus));
+                    (token, tokenType)));
         }
 
         [Theory]
@@ -69,10 +63,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         {
             await Assert.ThrowsAsync<NotImplementedException>(
                 async () =>
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
-                    (string.Empty, tokenType),
-                    testStatus)
-            );
+                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync((string.Empty, tokenType)));
         }
 
         [Theory]
@@ -83,9 +74,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         public async Task CanConfirmWrongTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
         {
             Assert.False(
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
-                    (token, tokenType),
-                    testStatus));
+                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync((token, tokenType)));
         }
 
     }

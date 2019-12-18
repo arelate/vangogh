@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Logs;
 
-using Interfaces.Status;
+using Interfaces.Activity;
 
 using Models.ProductTypes;
 using Models.Separators;
@@ -12,49 +13,46 @@ using GOG.Interfaces.Delegates.DownloadProductFile;
 
 namespace GOG.Activities.DownloadProductFiles
 {
-    public abstract class DownloadFilesActivity<Type> : Activity
+    public abstract class DownloadFilesActivity<Type>: IActivity
         where Type:ProductCore
     {
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
+        readonly IResponseLogController responseLogController;
 
         public DownloadFilesActivity(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IStatusController statusController) :
-            base(statusController)
+            IResponseLogController responseLogController)
         {
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
-            var processDownloadsTask = await statusController.CreateAsync(status,
+            responseLogController.OpenResponseLog(
                 $"Process updated {typeof(Type)} downloads");
-
-            var current = 0;
-            var total = await productDownloadsDataController.CountAsync(processDownloadsTask);
 
             var emptyProductDownloads = new List<ProductDownloads>();
 
-            await foreach (var productDownloads in productDownloadsDataController.ItemizeAllAsync(processDownloadsTask))
+            await foreach (var productDownloads in productDownloadsDataController.ItemizeAllAsync())
             {
                 if (productDownloads == null) continue;
 
-                await statusController.UpdateProgressAsync(
-                    processDownloadsTask,
-                    ++current,
-                    total,
-                    productDownloads.Title);
+                // await statusController.UpdateProgressAsync(
+                //     processDownloadsTask,
+                //     ++current,
+                //     total,
+                //     productDownloads.Title);
 
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(
                     d =>
                     d.Type == typeof(Type).ToString()).ToArray();
 
-                var processDownloadEntriesTask = await statusController.CreateAsync(processDownloadsTask,
-                    $"Download {typeof(Type)} entries");
+                responseLogController.StartAction($"Download {typeof(Type)} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -64,44 +62,37 @@ namespace GOG.Activities.DownloadProductFiles
                     if (sanitizedUri.Contains(Separators.QueryString))
                         sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
 
-                    await statusController.UpdateProgressAsync(
-                        processDownloadEntriesTask,
-                        ii + 1,
-                        downloadEntries.Length,
-                        sanitizedUri);
+                   responseLogController.IncrementActionProgress();
 
                     await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
                         productDownloads.Id,
                         productDownloads.Title,
                         sanitizedUri,
-                        entry.Destination,
-                        processDownloadEntriesTask);
+                        entry.Destination);
 
-                    var removeEntryTask = await statusController.CreateAsync(
-                        processDownloadEntriesTask,
-                        $"Remove scheduled {typeof(Type)} downloaded entry");
+                    responseLogController.StartAction($"Remove scheduled {typeof(Type)} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
-                    await productDownloadsDataController.UpdateAsync(productDownloads, removeEntryTask);
+                    await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                    await statusController.CompleteAsync(removeEntryTask);
+                    responseLogController.CompleteAction();
                 }
 
                 // if there are no scheduled downloads left - mark file for removal
                 if (productDownloads.Downloads.Count == 0)
                     emptyProductDownloads.Add(productDownloads);
 
-                await statusController.CompleteAsync(processDownloadEntriesTask);
+                responseLogController.CompleteAction();
             }
 
-            var clearEmptyDownloadsTask = await statusController.CreateAsync(processDownloadsTask, "Clear empty downloads");
+            responseLogController.StartAction("Clear empty downloads");
 
             foreach (var productDownload in emptyProductDownloads)
-                await productDownloadsDataController.DeleteAsync(productDownload, clearEmptyDownloadsTask);
+                await productDownloadsDataController.DeleteAsync(productDownload);
 
-            await statusController.CompleteAsync(clearEmptyDownloadsTask);
+            responseLogController.CompleteAction();
 
-            await statusController.CompleteAsync(processDownloadsTask);
+            responseLogController.CloseResponseLog();
         }
     }
 }

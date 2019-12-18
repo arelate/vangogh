@@ -7,9 +7,10 @@ using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Network;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Routing;
-using Interfaces.Status;
+
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
@@ -23,7 +24,7 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         readonly IRoutingController routingController;
         readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
         readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
 
 		[Dependencies(
@@ -32,39 +33,39 @@ namespace GOG.Delegates.DownloadProductFile
 			"Controllers.Routing.RoutingController,Controllers",
 			"Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
 			"GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ResponseLogController,Controllers")]
         public DownloadManualUrlFileAsyncDelegate(
             INetworkController networkController,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IRoutingController routingController,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.networkController = networkController;
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.routingController = routingController;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
             this.downloadValidationFileAsyncDelegate = downloadValidationFileAsyncDelegate;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination, IStatus status)
+        public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
         {
-            var downloadTask = await statusController.CreateAsync(status, "Download game details manual url");
+           actionLogController.StartAction("Download game details manual url");
 
             HttpResponseMessage response;
             try
             {
-                response = await networkController.RequestResponseAsync(downloadTask, HttpMethod.Get, sourceUri);
+                response = await networkController.RequestResponseAsync(HttpMethod.Get, sourceUri);
             }
             catch (HttpRequestException ex)
             {
-                await statusController.FailAsync(
-                    downloadTask,
-                    $"Failed to get successful response for {sourceUri} for " +
-                    $"product {id}: {title}, message: {ex.Message}");
-                await statusController.CompleteAsync(downloadTask);
+                // await statusController.FailAsync(
+                //     downloadTask,
+                //     $"Failed to get successful response for {sourceUri} for " +
+                //     $"product {id}: {title}, message: {ex.Message}");
+                actionLogController.CompleteAction();
                 return;
             }
 
@@ -84,22 +85,20 @@ namespace GOG.Delegates.DownloadProductFile
                     id,
                     title,
                     sourceUri,
-                    uriSansSession,
-                    downloadTask);
+                    uriSansSession);
 
                 try
                 {
                     await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(
                         response, 
-                        destination, 
-                        downloadTask);
+                        destination);
                 }
                 catch (Exception ex)
                 {
-                    await statusController.FailAsync(
-                        downloadTask, 
-                        $"Couldn't download {sourceUri}, resolved as {resolvedUri} to {destination} " +
-                        $"for product {id}: {title}, error message: {ex.Message}");
+                    // await statusController.FailAsync(
+                    //     downloadTask, 
+                    //     $"Couldn't download {sourceUri}, resolved as {resolvedUri} to {destination} " +
+                    //     $"for product {id}: {title}, error message: {ex.Message}");
                 }
 
                 // GOG.com quirk
@@ -113,11 +112,10 @@ namespace GOG.Delegates.DownloadProductFile
                     id, 
                     title, 
                     resolvedUri,
-                    destination, 
-                    downloadTask);
+                    destination);
             }
 
-            await statusController.CompleteAsync(downloadTask);
+            actionLogController.CompleteAction();
         }
     }
 }

@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -20,54 +19,49 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IDataController<long> updatedDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ResponseLogController,Controllers")]
         public GetManualUrlDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsManualUrlsAsyncController = itemizeGameDetailsManualUrlsAsyncController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            var getDownloadSourcesStatus = await statusController.CreateAsync(status, "Get download sources");
+            actionLogController.StartAction("Get download sources");
 
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
-            var current = 0;
 
-            await foreach (var id in updatedDataController.ItemizeAllAsync(getDownloadSourcesStatus))
+            await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
-                await statusController.UpdateProgressAsync(
-                    getDownloadSourcesStatus,
-                    ++current,
-                    await updatedDataController.CountAsync(getDownloadSourcesStatus),
-                    id.ToString());
+                actionLogController.IncrementActionProgress();
 
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id, getDownloadSourcesStatus);
+                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
                 if (!gameDetailsDownloadSources.ContainsKey(id))
                     gameDetailsDownloadSources.Add(id, new List<string>());
 
                 foreach (var manualUrl in 
-                    await itemizeGameDetailsManualUrlsAsyncController.ItemizeAsync(gameDetails, status))
+                    await itemizeGameDetailsManualUrlsAsyncController.ItemizeAsync(gameDetails))
                 {
                     if (!gameDetailsDownloadSources[id].Contains(manualUrl))
                         gameDetailsDownloadSources[id].Add(manualUrl);
                 }
             }
 
-            await statusController.CompleteAsync(getDownloadSourcesStatus);
+            actionLogController.CompleteAction();
 
             return gameDetailsDownloadSources;
         }

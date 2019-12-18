@@ -6,7 +6,6 @@ using Interfaces.Delegates.Confirm;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
 using Interfaces.Models.Properties;
-using Interfaces.Status;
 
 using Attributes;
 
@@ -35,10 +34,10 @@ namespace Delegates.Confirm.ArgsTokens
             this.collectionController = collectionController;
         }
 
-        public async Task<bool> ConfirmAsync((string Token, Tokens Type) typedToken, IStatus status)
+        public async Task<bool> ConfirmAsync((string Token, Tokens Type) typedToken)
         {
             IEnumerable<ITitleProperty> titledItems = null;
-            var argsDefinitions = await getArgsDefinitionDataDelegate.GetDataAsync(status);
+            var argsDefinitions = await getArgsDefinitionDataDelegate.GetDataAsync();
 
             switch (typedToken.Type)
             {

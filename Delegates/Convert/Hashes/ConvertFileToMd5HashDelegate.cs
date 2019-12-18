@@ -3,7 +3,6 @@
 using Interfaces.Delegates.Convert;
 
 using Interfaces.Controllers.Storage;
-using Interfaces.Status;
 
 using Attributes;
 
@@ -25,10 +24,10 @@ namespace Delegates.Convert.Hashes
             this.convertStringToHashDelegate = convertStringToHashDelegate;
         }
 
-        public async Task<string> ConvertAsync(string uri, IStatus status)
+        public async Task<string> ConvertAsync(string uri)
         {
             var fileContent = await storageController.PullAsync(uri);
-            var fileHash = await convertStringToHashDelegate.ConvertAsync(fileContent, status);
+            var fileHash = await convertStringToHashDelegate.ConvertAsync(fileContent);
 
             return fileHash;
         }

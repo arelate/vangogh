@@ -1,14 +1,11 @@
 ﻿using Interfaces.Controllers.Data;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 using Attributes;
-
-using GOG.Models;
 
 namespace GOG.Activities.DownloadProductFiles.ProductTypes
 {
@@ -17,15 +14,15 @@ namespace GOG.Activities.DownloadProductFiles.ProductTypes
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
 			"GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ResponseLogController,Controllers")]
         public DownloadProductImagesActivity(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IStatusController statusController) :
+            IResponseLogController responseLogController) :
             base(
                 productDownloadsDataController,
                 downloadProductFileAsyncDelegate,
-                statusController)
+                responseLogController)
         {
             // ...
         }

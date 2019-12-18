@@ -20,7 +20,7 @@ namespace Controllers.Data.ProductTypes
             "Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ProductDownloadsRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public ProductDownloadsDataController(
             IStashController<List<ProductDownloads>> productDownloadsStashController,
             IConvertDelegate<ProductDownloads, long> convertProductDownloadsToIndexDelegate,

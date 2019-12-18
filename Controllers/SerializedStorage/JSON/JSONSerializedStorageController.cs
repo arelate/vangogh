@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Storage;
 using Interfaces.Controllers.Serialization;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-
-using Interfaces.Status;
 
 using Attributes;
 
@@ -18,15 +17,15 @@ namespace Controllers.SerializedStorage.JSON
         [Dependencies(
             "Controllers.Storage.StorageController,Controllers",
             Dependencies.JSONSerializationController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public JSONSerializedStorageController(
             IStorageController<string> storageController,
             ISerializationController<string> jsonSerializarionController,
-            IStatusController statusController):
+            IActionLogController actionLogController):
             base(
                 storageController,
                 jsonSerializarionController,
-                statusController)
+                actionLogController)
             {
                 // ...
             }

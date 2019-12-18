@@ -18,7 +18,6 @@ namespace Delegates.Convert.Requests.Tests
     public class ConvertArgsToRequestsDelegateTests
     {
         private readonly IConvertAsyncDelegate<string[], IAsyncEnumerable<Request>> convertArgsToRequestsDelegate;
-        private readonly Models.Status.Status testStatus;
 
         public ConvertArgsToRequestsDelegateTests()
         {
@@ -27,13 +26,11 @@ namespace Delegates.Convert.Requests.Tests
             this.convertArgsToRequestsDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertArgsToRequestsDelegate))
                 as ConvertArgsToRequestsDelegate;
-
-            testStatus = new Models.Status.Status();
         }
 
         private async Task<List<Request>> ConvertArgsToRequests(string args)
         {
-            var requests = convertArgsToRequestsDelegate.ConvertAsync(args.Split(" "), testStatus);
+            var requests = convertArgsToRequestsDelegate.ConvertAsync(args.Split(" "));
             var requestsList = new List<Request>();
 
             await foreach (var request in requests)

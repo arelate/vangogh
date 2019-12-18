@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
 
-using Interfaces.Status;
-
 namespace Delegates.GetDirectory
 {
     public class GetRelativeDirectoryDelegate : IGetDirectoryDelegate

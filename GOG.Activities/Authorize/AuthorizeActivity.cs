@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Controllers.Stash;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
+using Interfaces.Activity;
+
 
 using GOG.Interfaces.Controllers.Authorization;
 
@@ -11,22 +13,23 @@ using Models.Settings;
 
 namespace GOG.Activities.Authorize
 {
-    public class AuthorizeActivity : Activity
+    public class AuthorizeActivity : IActivity
     {
         readonly IAuthorizationController authorizationController;
+        readonly IResponseLogController responseLogController;
 
         [Dependencies(
             "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public AuthorizeActivity(
             IAuthorizationController authorizationController,
-            IStatusController statusController) :
-            base(statusController)
+            IResponseLogController responseLogController)
         {
             this.authorizationController = authorizationController;
+            this.responseLogController = responseLogController;
         }
 
-        public override async Task ProcessActivityAsync(IStatus status)
+        public async Task ProcessActivityAsync()
         {
 
             var username = string.Empty;
@@ -34,8 +37,7 @@ namespace GOG.Activities.Authorize
 
             await authorizationController.AuthorizeAsync(
                 username,
-                password,
-                status);
+                password);
         }
     }
 }

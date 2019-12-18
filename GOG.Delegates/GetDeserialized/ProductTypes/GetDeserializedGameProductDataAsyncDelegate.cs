@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Status;
+
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
@@ -22,9 +22,9 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             this.gogDataGetDeserializedDelegate = gogDataGetDeserializedDelegate;
         }
 
-        public async Task<GameProductData> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
+        public async Task<GameProductData> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
         {
-            var gogData = await gogDataGetDeserializedDelegate.GetDeserializedAsync(status, uri, parameters);
+            var gogData = await gogDataGetDeserializedDelegate.GetDeserializedAsync(uri, parameters);
             return gogData.GameProductData;
         }
     }

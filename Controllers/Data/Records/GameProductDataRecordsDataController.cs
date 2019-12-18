@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Data;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-
-using Interfaces.Status;
 
 using Attributes;
 
@@ -20,18 +19,18 @@ namespace Controllers.Data.Records
             "Controllers.Stash.Records.GameProductDataRecordsStashController,Controllers",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ResponseLogController,Controllers")]
         public GameProductDataRecordsDataController(
             IStashController<List<ProductRecords>> gameProductDataRecordsStashController,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             ICollectionController collectionController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 gameProductDataRecordsStashController,
                 convertProductRecordsToIndexDelegate,
                 null,
                 collectionController,
-                statusController)
+                actionLogController)
         {
             // ...
         }
