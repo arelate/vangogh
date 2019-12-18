@@ -5,8 +5,7 @@ using System.Net.Http;
 using Interfaces.Delegates.Download;
 
 using Interfaces.Controllers.Network;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -16,7 +15,7 @@ namespace Delegates.Download
     {
         readonly IRequestResponseAsyncDelegate requestResponseAsyncDelegate;
         readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "Controllers.Network.NetworkController,Controllers",
@@ -25,30 +24,31 @@ namespace Delegates.Download
         public DownloadFromUriAsyncDelegate(
             IRequestResponseAsyncDelegate requestResponseAsyncDelegate,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.requestResponseAsyncDelegate = requestResponseAsyncDelegate;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
 
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task DownloadFromUriAsync(string sourceUri, string destination, IStatus status)
+        public async Task DownloadFromUriAsync(string sourceUri, string destination)
         {
-            var downloadEntryTask = await statusController.CreateAsync(status, "Download from source");
+            actionLogController.StartAction("Download from source");
 
             try
             {
-                using (var response = await requestResponseAsyncDelegate.RequestResponseAsync(downloadEntryTask, HttpMethod.Get, sourceUri))
-                    await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(response, destination, downloadEntryTask);
+                using (var response = await requestResponseAsyncDelegate.RequestResponseAsync(HttpMethod.Get, sourceUri))
+                    await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(response, destination);
             }
             catch (Exception ex)
             {
-                await statusController.WarnAsync(downloadEntryTask, $"{sourceUri}: {ex.Message}");
+                // TODO: Replace statusController warnings
+                // await statusController.WarnAsync(downloadEntryTask, $"{sourceUri}: {ex.Message}");
             }
             finally
             {
-                await statusController.CompleteAsync(downloadEntryTask);
+                actionLogController.CompleteAction();
             }
         }
     }

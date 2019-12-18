@@ -1,34 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Controllers.Data;
-using Interfaces.Status;
-
 namespace Interfaces.Template
 {
     public interface IGetPrimaryTemplateTitleProperty
     {
-        Task<string> GetPrimaryTemplateTitleAsync(IStatus status);
+        Task<string> GetPrimaryTemplateTitleAsync();
     }
 
     public interface IResolveSubTemplatesAsyncDelegate
     {
-        Task<string> ResolveSubTemplatesAsync(string templateContent, IStatus status);
+        Task<string> ResolveSubTemplatesAsync(string templateContent);
     }
 
     public interface IResolveConditionalsAsyncDelegate
     {
-        Task<string> ResolveConditionalsAsync(string templateContent, IDictionary<string, string> viewModel, IStatus status);
+        Task<string> ResolveConditionalsAsync(string templateContent, IDictionary<string, string> viewModel);
     }
 
     public interface IGetContentByTitleAsyncDelegate
     {
-        Task<string> GetContentByTitleAsync(string templateTitle, IStatus status);
+        Task<string> GetContentByTitleAsync(string templateTitle);
     }
 
     public interface IBindAsyncDelegate
     {
-        Task<string> BindAsync(string templateTitle, IDictionary<string, string> viewModel, IStatus status);
+        Task<string> BindAsync(string templateTitle, IDictionary<string, string> viewModel);
     }
 
     public interface ITemplateController:

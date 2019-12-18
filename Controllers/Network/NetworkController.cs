@@ -9,8 +9,6 @@ using Interfaces.Delegates.Constrain;
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Cookies;
 
-using Interfaces.Status;
-
 using Attributes;
 
 using Models.Network;
@@ -49,13 +47,12 @@ namespace Controllers.Network
         }
 
         public async Task<string> GetResourceAsync(
-            IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null)
         {
             var uri = uriController.ConcatenateUriWithKeyValueParameters(baseUri, parameters);
 
-            using (var response = await RequestResponseAsync(status, HttpMethod.Get, uri))
+            using (var response = await RequestResponseAsync(HttpMethod.Get, uri))
             {
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -64,16 +61,15 @@ namespace Controllers.Network
         }
 
         public async Task<HttpResponseMessage> RequestResponseAsync(
-            IStatus status,
             HttpMethod method,
             string uri,
             HttpContent content = null)
         {
-            await constrainRequestRateAsyncDelegate.ConstrainAsync(uri, status);
+            await constrainRequestRateAsyncDelegate.ConstrainAsync(uri);
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
-            requestMessage.Headers.Add(Headers.Cookie, await cookieController.GetCookiesStringAsync(status));
+            requestMessage.Headers.Add(Headers.Cookie, await cookieController.GetCookiesStringAsync());
 
             if (content != null) requestMessage.Content = content;
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
@@ -81,13 +77,12 @@ namespace Controllers.Network
             response.EnsureSuccessStatusCode();
 
             if (response.Headers.Contains(Headers.SetCookie))
-                await cookieController.SetCookiesAsync(response.Headers.GetValues(Headers.SetCookie), status);
+                await cookieController.SetCookiesAsync(response.Headers.GetValues(Headers.SetCookie));
 
             return response;
         }
 
         public async Task<string> PostDataToResourceAsync(
-            IStatus status,
             string baseUri,
             IDictionary<string, string> parameters = null,
             string data = null)
@@ -97,7 +92,7 @@ namespace Controllers.Network
             if (data == null) data = string.Empty;
             var content = new StringContent(data, Encoding.UTF8, HeaderDefaultValues.ContentType);
 
-            using (var response = await RequestResponseAsync(status, HttpMethod.Post, uri, content))
+            using (var response = await RequestResponseAsync(HttpMethod.Post, uri, content))
             {
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream, Encoding.UTF8))

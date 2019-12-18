@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Status;
-
 namespace Interfaces.Controllers.Output
 {
     public interface ISetRefreshAsyncDelegate
@@ -26,7 +24,7 @@ namespace Interfaces.Controllers.Output
 
     public interface IOutputContinuousAsyncDelegate<T>
     {
-        Task OutputContinuousAsync(IStatus status, T data);
+        Task OutputContinuousAsync(T data);
     }
 
     public interface IOutputController<T> :

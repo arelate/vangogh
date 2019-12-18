@@ -4,8 +4,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -29,13 +28,13 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             IItemizeDelegate<IList<ProductsPageResult>, Product> itemizeProductsPageResultsDelegate,
             IDataController<Product> productsDataController,
             IRecordsController<string> activityRecordsController,
-            IStatusController statusController) :
+            ISessionLogController sessionLogController) :
             base(
                 getProductsPageResultsAsyncDelegate,
                 itemizeProductsPageResultsDelegate,
                 productsDataController,
                 activityRecordsController,
-                statusController)
+                sessionLogController)
         {
             // ...
         }

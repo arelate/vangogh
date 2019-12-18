@@ -7,6 +7,8 @@ using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
+using Interfaces.Controllers.Logs;
+using Interfaces.Models.Logs;
 
 using Interfaces.Models.RecordsTypes;
 
@@ -27,35 +29,35 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
         readonly IDataController<DataType> dataController;
         readonly IRecordsController<string> activityRecordsController;
-        private readonly IStatusController statusController;
+        private readonly ISessionLogController sessionLogController;
 
         public RespondToUpdatePageResultRequestDelegate(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
             IRecordsController<string> activityRecordsController,
-            IStatusController statusController)
+            ISessionLogController sessionLogController)
         {
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
             this.dataController = dataController;
             this.activityRecordsController = activityRecordsController;
-            this.statusController = statusController;
+            this.sessionLogController = sessionLogController;
         }
 
-        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters, IStatus status)
+        public async Task<ISessionLog> RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            var updateAllProductsTask = await statusController.CreateAsync(status, $"Updating...");
+            sessionLogController.StartSession("Updating products");
 
             // TODO: Figure out better way to identify and activity
-            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started, updateAllProductsTask);
+            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started);
 
-            var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync(updateAllProductsTask);
+            var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync();
 
-            var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extracting...");
+            // var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extracting...");
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
-            await statusController.CompleteAsync(extractTask);
+            // await statusController.CompleteAsync(extractTask);
 
             if (newProducts.Any())
             {
@@ -79,7 +81,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
             await dataController.CommitAsync(updateAllProductsTask);
 
-            await statusController.CompleteAsync(updateAllProductsTask);
+            return sessionLogController.CompleteSession();
         }
     }
 }

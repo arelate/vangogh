@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.ValidationResults;
-using Interfaces.Status;
 
 namespace Interfaces.Validation
 {
@@ -32,12 +31,12 @@ namespace Interfaces.Validation
 
     public interface IVerifyChunkAsyncDelegate
     {
-        Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5, IStatus status);
+        Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5);
     }
 
     public interface IValidateFileAsyncDelegate<T>
     {
-        Task<T> ValidateFileAsync(string uri, string validationSource, IStatus status);
+        Task<T> ValidateFileAsync(string uri, string validationSource);
     }
 
     public interface IFileValidationController:

@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 
-using Interfaces.Status;
-
 namespace Interfaces.Delegates.Itemize
 {
     public interface IItemizeAllAsyncDelegate<Output>
     {
-        IAsyncEnumerable<Output> ItemizeAllAsync(IStatus status);
+        IAsyncEnumerable<Output> ItemizeAllAsync();
     }
 
     public interface IItemizeAllDelegate<Output>

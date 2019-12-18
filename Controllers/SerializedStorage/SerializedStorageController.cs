@@ -3,8 +3,7 @@
 using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Storage;
 using Interfaces.Controllers.Serialization;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 namespace Controllers.SerializedStorage
 {
@@ -12,25 +11,25 @@ namespace Controllers.SerializedStorage
     {
         readonly IStorageController<string> storageController;
         readonly ISerializationController<string> serializarionController;
-        IStatusController statusController;
+        IActionLogController actionLogController;
 
         public SerializedStorageController(
             IStorageController<string> storageController,
             ISerializationController<string> serializarionController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.storageController = storageController;
             this.serializarionController = serializarionController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<T> DeserializePullAsync<T>(string uri, IStatus status)
+        public async Task<T> DeserializePullAsync<T>(string uri)
         {
             var serializedData = await storageController.PullAsync(uri);
             return serializarionController.Deserialize<T>(serializedData);
         }
 
-        public async Task SerializePushAsync<T>(string uri, T data, IStatus status)
+        public async Task SerializePushAsync<T>(string uri, T data)
         {
             var serializedData = serializarionController.Serialize(data);
             await storageController.PushAsync(uri, serializedData);

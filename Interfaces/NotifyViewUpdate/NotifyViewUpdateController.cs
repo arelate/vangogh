@@ -1,22 +1,20 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Status;
-
 namespace Interfaces.NotifyViewUpdate
 {
     public interface IGetViewUpdateAsyncDelegate<T>
     {
-        Task<T> GetViewUpdateAsync(IStatus status);
+        Task<T> GetViewUpdateAsync();
     }
 
     public interface INotifyViewUpdateOutputOnRefreshAsyncDelegate
     {
-        Task NotifyViewUpdateOutputOnRefreshAsync(IStatus status);
+        Task NotifyViewUpdateOutputOnRefreshAsync();
     }
 
     public interface INotifyViewUpdateOutputContinuousAsyncDelegate
     {
-        Task NotifyViewUpdateOutputContinuousAsync(IStatus status);
+        Task NotifyViewUpdateOutputContinuousAsync();
     }
 
     public interface INotifyViewUpdateController:

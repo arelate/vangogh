@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Interfaces.Status;
+using Interfaces.Models.Logs;
 
 namespace Interfaces.Delegates.Respond
 {
     public interface IRespondAsyncDelegate
     {
-        Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters, IStatus status);
+        Task<ISessionLog> RespondAsync(IDictionary<string, IEnumerable<string>> parameters);
     }
 }
