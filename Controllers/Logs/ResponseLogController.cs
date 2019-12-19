@@ -12,23 +12,23 @@ namespace Controllers.Logs
     // bytes transferred, read from disk, written to disk etc
     public class ActionLogController : IActionLogController
     {
-        private List<IActionLog> completedActions { get; set; } = new List<IActionLog>();
-        private Stack<IActionLog> ongoingActions { get; set; } = new Stack<IActionLog>();
+        private List<IActionLog> completedActionLogs { get; set; } = new List<IActionLog>();
+        private Stack<IActionLog> ongoingActionLogs { get; set; } = new Stack<IActionLog>();
 
         public IActionLog CurrentActionLog
         {
             get
             {
-                return ongoingActions.Peek();
+                return ongoingActionLogs.Peek();
             }
         }
 
         public void StartAction(string title)
         {
-            var action = new ActionLog() { Title = title };
-            action.Started = DateTime.UtcNow;
-            ongoingActions.Push(action);
-            System.Console.WriteLine($"Started action {action.Title}");
+            var actionLog = new ActionLog() { Title = title };
+            actionLog.Started = DateTime.UtcNow;
+            ongoingActionLogs.Push(actionLog);
+            System.Console.WriteLine($"Started action {actionLog.Title}");
         }
 
         public void SetActionTarget(int target)
@@ -39,16 +39,16 @@ namespace Controllers.Logs
         public void IncrementActionProgress(int increment = 1)
         {
             CurrentActionLog.Progress += increment;
-            System.Console.WriteLine($"Action {CurrentActionLog.Title} progress: {CurrentActionLog.Progress}");
+            System.Console.WriteLine($"{CurrentActionLog.Title} progress: {CurrentActionLog.Progress}");
         }
 
         public void CompleteAction()
         {
-            var action = ongoingActions.Pop();
-            action.Complete = true;
-            action.Completed = DateTime.UtcNow;
-            completedActions.Add(action);
-            System.Console.WriteLine($"Completed action {action.Title}");
+            var actionLog = ongoingActionLogs.Pop();
+            actionLog.Complete = true;
+            actionLog.Completed = DateTime.UtcNow;
+            completedActionLogs.Add(actionLog);
+            System.Console.WriteLine($"Completed action {actionLog.Title}");
         }
     }
 }
