@@ -11,7 +11,7 @@ namespace Controllers.Records.Session
     {
         [Dependencies(
             "Controllers.Data.Records.SessionRecordsDataController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public SessionRecordsIndexController(
             IDataController<ProductRecords> sessionRecordsController,
             IActionLogController actionLogController) :

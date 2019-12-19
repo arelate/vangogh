@@ -21,21 +21,21 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.GameProductDataDataController,GOG.Controllers",
             "GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsGameProductDataGapsAsyncDelegatepsDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameProductDataAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateGameProductDataByProductsActivity(
             IGetValueDelegate<string> getGameProductDataUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToGameProductDataUpdateIdentityDelegate,
             IDataController<GameProductData> gameProductDataDataController,
             IItemizeAllAsyncDelegate<Product> itemizeAllProductsGameProductDataGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameProductData> getDeserializedGameProductDataAsyncDelegate,
-            IResponseLogController responseLogController):
+            IActionLogController actionLogController):
             base(
                 getGameProductDataUpdateUriDelegate,
                 convertProductToGameProductDataUpdateIdentityDelegate,
                 gameProductDataDataController,
                 itemizeAllProductsGameProductDataGapsAsyncDelegate,
                 getDeserializedGameProductDataAsyncDelegate,
-                responseLogController,
+                actionLogController,
                 null)
                 {
                     // ...

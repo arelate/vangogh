@@ -14,15 +14,15 @@ namespace GOG.Activities.DownloadProductFiles.ProductTypes
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
 			"GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public DownloadProductImagesActivity(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IResponseLogController responseLogController) :
+            IActionLogController actionLogController) :
             base(
                 productDownloadsDataController,
                 downloadProductFileAsyncDelegate,
-                responseLogController)
+                actionLogController)
         {
             // ...
         }

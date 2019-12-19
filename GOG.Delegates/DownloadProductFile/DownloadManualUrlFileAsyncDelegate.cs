@@ -33,7 +33,7 @@ namespace GOG.Delegates.DownloadProductFile
 			"Controllers.Routing.RoutingController,Controllers",
 			"Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
 			"GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public DownloadManualUrlFileAsyncDelegate(
             INetworkController networkController,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,

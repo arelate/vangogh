@@ -18,7 +18,7 @@ namespace GOG.Controllers.Stash.ProductTypes
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetGameProductDataPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public GameProductDataStashController(
             IGetPathDelegate getGameProductDataPathDelegate,
             ISerializedStorageController serializedStorageController,

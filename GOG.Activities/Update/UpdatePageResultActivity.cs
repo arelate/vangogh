@@ -27,47 +27,47 @@ namespace GOG.Activities.Update
 
         readonly IDataController<DataType> dataController;
         readonly IRecordsController<string> activityRecordsController;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
         public UpdatePageResultActivity(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
             IRecordsController<string> activityRecordsController,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
             this.dataController = dataController;
             this.activityRecordsController = activityRecordsController;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
         {
-            responseLogController.OpenResponseLog($"Updating...");
+            actionLogController.StartAction($"Updating...");
 
             // TODO: Figure out better way to identify and activity
             await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started);
 
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync();
 
-            responseLogController.StartAction($"Extracting...");
+            actionLogController.StartAction($"Extracting...");
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
             if (newProducts.Any())
             {
-                responseLogController.StartAction($"Saving...");
+                actionLogController.StartAction($"Saving...");
 
                 foreach (var product in newProducts)
                 {
-                    responseLogController.IncrementActionProgress();
+                    actionLogController.IncrementActionProgress();
                     await dataController.UpdateAsync(product);
                 }
 
-                responseLogController.CompleteAction();
+                actionLogController.CompleteAction();
             }
 
             // TODO: Figure out better way to identify and activity
@@ -75,7 +75,7 @@ namespace GOG.Activities.Update
 
             await dataController.CommitAsync();
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
         }
     }
 }

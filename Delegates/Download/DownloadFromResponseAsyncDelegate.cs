@@ -27,7 +27,7 @@ namespace Delegates.Download
             "Controllers.Network.NetworkController,Controllers",
             "Controllers.Stream.StreamController,Controllers",
             "Controllers.File.FileController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromResponseAsyncDelegate(
             INetworkController networkController,
             IStreamController streamController,

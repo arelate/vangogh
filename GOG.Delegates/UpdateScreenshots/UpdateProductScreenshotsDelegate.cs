@@ -32,7 +32,7 @@ namespace GOG.Delegates.UpdateScreenshots
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
             "Controllers.Network.NetworkController,Controllers",
             "GOG.Delegates.Itemize.ItemizeScreenshotsDelegate,GOG.Delegates",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateScreenshotsAsyncDelegate(
             IGetValueDelegate<string> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,

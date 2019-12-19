@@ -18,21 +18,21 @@ namespace GOG.Activities.DownloadProductFiles
     {
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
         public DownloadFilesActivity(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
         {
-            responseLogController.OpenResponseLog(
+            actionLogController.StartAction(
                 $"Process updated {typeof(Type)} downloads");
 
             var emptyProductDownloads = new List<ProductDownloads>();
@@ -52,7 +52,7 @@ namespace GOG.Activities.DownloadProductFiles
                     d =>
                     d.Type == typeof(Type).ToString()).ToArray();
 
-                responseLogController.StartAction($"Download {typeof(Type)} entries");
+                actionLogController.StartAction($"Download {typeof(Type)} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -62,7 +62,7 @@ namespace GOG.Activities.DownloadProductFiles
                     if (sanitizedUri.Contains(Separators.QueryString))
                         sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
 
-                   responseLogController.IncrementActionProgress();
+                   actionLogController.IncrementActionProgress();
 
                     await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
                         productDownloads.Id,
@@ -70,29 +70,29 @@ namespace GOG.Activities.DownloadProductFiles
                         sanitizedUri,
                         entry.Destination);
 
-                    responseLogController.StartAction($"Remove scheduled {typeof(Type)} downloaded entry");
+                    actionLogController.StartAction($"Remove scheduled {typeof(Type)} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                    responseLogController.CompleteAction();
+                    actionLogController.CompleteAction();
                 }
 
                 // if there are no scheduled downloads left - mark file for removal
                 if (productDownloads.Downloads.Count == 0)
                     emptyProductDownloads.Add(productDownloads);
 
-                responseLogController.CompleteAction();
+                actionLogController.CompleteAction();
             }
 
-            responseLogController.StartAction("Clear empty downloads");
+            actionLogController.StartAction("Clear empty downloads");
 
             foreach (var productDownload in emptyProductDownloads)
                 await productDownloadsDataController.DeleteAsync(productDownload);
 
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
         }
     }
 }

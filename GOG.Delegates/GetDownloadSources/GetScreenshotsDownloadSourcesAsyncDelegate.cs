@@ -33,7 +33,7 @@ namespace GOG.Delegates.GetDownloadSources
 			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
 			"Controllers.File.FileController,Controllers",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,

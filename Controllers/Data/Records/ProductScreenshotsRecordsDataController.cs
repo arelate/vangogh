@@ -18,7 +18,7 @@ namespace Controllers.Data.Records
             "Controllers.Stash.Records.ProductScreenshotsRecordsStashController,Controllers",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ProductScreenshotsRecordsDataController(
             IStashController<List<ProductRecords>> productScreenshotsRecordsStashController,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,

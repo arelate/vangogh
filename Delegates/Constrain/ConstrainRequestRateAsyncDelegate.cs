@@ -27,7 +27,7 @@ namespace Delegates.Constrain
         [Dependencies(
             "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers",
+            "Controllers.Logs.ActionLogController,Controllers",
             "GOG.Delegates.Itemize.ItemizeAllRateConstrainedUrisDelegate,GOG.Delegates")]
         public ConstrainRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,

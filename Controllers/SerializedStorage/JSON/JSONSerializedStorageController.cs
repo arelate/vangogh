@@ -17,7 +17,7 @@ namespace Controllers.SerializedStorage.JSON
         [Dependencies(
             "Controllers.Storage.StorageController,Controllers",
             Dependencies.JSONSerializationController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public JSONSerializedStorageController(
             IStorageController<string> storageController,
             ISerializationController<string> jsonSerializarionController,

@@ -33,7 +33,7 @@ namespace GOG.Delegates.Itemize
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
 			"Controllers.Routing.RoutingController,Controllers",
 			"Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IRoutingController routingController,

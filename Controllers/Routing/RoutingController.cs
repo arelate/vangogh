@@ -18,7 +18,7 @@ namespace Controllers.Routing
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductRoutesDataController,Controllers",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public RoutingController(
             IDataController<ProductRoutes> productRoutesDataController,
             IActionLogController actionLogController)

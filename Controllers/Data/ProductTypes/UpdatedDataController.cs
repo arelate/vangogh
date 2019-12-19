@@ -18,7 +18,7 @@ namespace Controllers.Data.ProductTypes
             "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.UpdatedRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdatedDataController(
             IStashController<List<long>> updatedDataController,
             IConvertDelegate<long, long> convertPassthroughIndexDelegate,

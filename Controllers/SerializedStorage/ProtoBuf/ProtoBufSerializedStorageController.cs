@@ -22,7 +22,7 @@ namespace Controllers.SerializedStorage.ProtoBuf
         [Dependencies(
             "Controllers.File.FileController,Controllers",
             "Controllers.Stream.StreamController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ProtoBufSerializedStorageController(
             IFileController fileController,
             IStreamController streamController,

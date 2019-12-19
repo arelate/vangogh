@@ -16,7 +16,7 @@ namespace Controllers.Stash.Cookies
         [Dependencies(
             "Delegates.GetPath.Json.GetCookiesPathDelegate,Delegates",
             Dependencies.JSONSerializedStorageController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public CookiesStashController(
             IGetPathDelegate getCookiePathDelegate,
             ISerializedStorageController jsonSerializedStorageController,

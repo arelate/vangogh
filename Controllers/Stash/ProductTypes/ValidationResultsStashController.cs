@@ -18,7 +18,7 @@ namespace Controllers.Stash.ProductTypes
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetValidationResultsPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ValidationResultsStashController(
             IGetPathDelegate getValidationResultsPathDelegate,
             ISerializedStorageController serializedStorageController,

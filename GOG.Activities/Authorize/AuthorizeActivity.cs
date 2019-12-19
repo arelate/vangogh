@@ -16,17 +16,17 @@ namespace GOG.Activities.Authorize
     public class AuthorizeActivity : IActivity
     {
         readonly IAuthorizationController authorizationController;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public AuthorizeActivity(
             IAuthorizationController authorizationController,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.authorizationController = authorizationController;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()

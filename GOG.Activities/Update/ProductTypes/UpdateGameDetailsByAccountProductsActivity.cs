@@ -22,7 +22,7 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
             "GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatepsDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ResponseLogController,Controllers",
+            "Controllers.Logs.ActionLogController,Controllers",
             "GOG.Delegates.FillGaps.FillGameDetailsGapsDelegate,GOG.Delegates")]
         public UpdateGameDetailsByAccountProductsActivity(
             IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
@@ -30,7 +30,7 @@ namespace GOG.Activities.Update.ProductTypes
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameDetails> getDeserializedGameDetailsAsyncDelegate,
-            IResponseLogController responseLogController,
+            IActionLogController actionLogController,
             IFillGapsDelegate<GameDetails,AccountProduct> fillGameDetailsGapsDelegate):
             base(
                 getGameDetailsUpdateUriDelegate,
@@ -38,7 +38,7 @@ namespace GOG.Activities.Update.ProductTypes
                 gameDetailsDataController,
                 itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
                 getDeserializedGameDetailsAsyncDelegate,
-                responseLogController,
+                actionLogController,
                 fillGameDetailsGapsDelegate)
                 {
                     // ...

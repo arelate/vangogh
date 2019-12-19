@@ -18,34 +18,34 @@ namespace GOG.Activities.Update.ProductTypes
     {
         readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
         readonly IDataController<long> wishlistedDataController;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.WishlistedDataController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateWishlistedActivity(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.getProductsPageResultDelegate = getProductsPageResultDelegate;
             this.wishlistedDataController = wishlistedDataController;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
         {
-            responseLogController.OpenResponseLog("Update Wishlisted");
+            actionLogController.StartAction("Update Wishlisted");
 
-            responseLogController.StartAction("Request content");
+            actionLogController.StartAction("Request content");
 
             var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserializedAsync(
                 Uris.Endpoints.Account.Wishlist);
 
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
-            responseLogController.StartAction("Save");
+            actionLogController.StartAction("Save");
 
             foreach (var product in wishlistedProductPageResult.Products)
             {
@@ -53,11 +53,11 @@ namespace GOG.Activities.Update.ProductTypes
                 await wishlistedDataController.UpdateAsync(product.Id);
             }
 
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
             await wishlistedDataController.CommitAsync();
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
         }
     }
 }

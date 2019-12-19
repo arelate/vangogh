@@ -17,7 +17,7 @@ namespace Delegates.Constrain
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
         [Dependencies(
-            "Controllers.Logs.ResponseLogController,Controllers",
+            "Controllers.Logs.ActionLogController,Controllers",
             "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates")]
         public ConstrainExecutionAsyncDelegate(
             IActionLogController actionLogController,

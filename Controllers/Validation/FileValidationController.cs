@@ -37,7 +37,7 @@ namespace Controllers.Validation
             "Controllers.Stream.StreamController,Controllers",
             "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
             "Controllers.ValidationResult.ValidationResultController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public FileValidationController(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFileController fileController,

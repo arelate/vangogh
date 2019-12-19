@@ -7,6 +7,6 @@ namespace Interfaces.Delegates.Respond
 {
     public interface IRespondAsyncDelegate
     {
-        Task<IResponseLog> RespondAsync(IDictionary<string, IEnumerable<string>> parameters);
+        Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters);
     }
 }

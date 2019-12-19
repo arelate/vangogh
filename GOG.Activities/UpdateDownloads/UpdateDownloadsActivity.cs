@@ -26,7 +26,7 @@ namespace GOG.Activities.UpdateDownloads
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDataController<AccountProduct> accountProductsDataController;
         readonly IDataController<Product> productsDataController;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
         public UpdateDownloadsActivity(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
@@ -35,7 +35,7 @@ namespace GOG.Activities.UpdateDownloads
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
@@ -43,19 +43,19 @@ namespace GOG.Activities.UpdateDownloads
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
             this.productsDataController = productsDataController;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
         {
-            responseLogController.OpenResponseLog(
+            actionLogController.StartAction(
                 $"Update {typeof(Type)} downloads");
 
-            responseLogController.StartAction($"Get {typeof(Type)} download sources");
+            actionLogController.StartAction($"Get {typeof(Type)} download sources");
             var downloadSources = await getDownloadSourcesAsyncDelegate.GetDownloadSourcesAsync();
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
-            responseLogController.StartAction("Update individual downloads");
+            actionLogController.StartAction("Update individual downloads");
             foreach (var downloadSource in downloadSources)
             {
                 // don't perform expensive updates if there are no actual sources
@@ -79,7 +79,7 @@ namespace GOG.Activities.UpdateDownloads
                     }
                 }
 
-                responseLogController.IncrementActionProgress();
+                actionLogController.IncrementActionProgress();
 
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
                 if (productDownloads == null)
@@ -100,7 +100,7 @@ namespace GOG.Activities.UpdateDownloads
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
-                responseLogController.StartAction("Schedule new downloads");
+                actionLogController.StartAction("Schedule new downloads");
 
                 foreach (var source in downloadSource.Value)
                 {
@@ -127,11 +127,11 @@ namespace GOG.Activities.UpdateDownloads
 
                 await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                responseLogController.CompleteAction();
+                actionLogController.CompleteAction();
             }
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
         }
     }
 }

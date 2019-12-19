@@ -53,7 +53,7 @@ namespace GOG.Controllers.Authorization
             "Controllers.Uri.UriController,Controllers",
             "Controllers.Network.NetworkController,Controllers",
             Dependencies.JSONSerializationController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public GOGAuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
             ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate,

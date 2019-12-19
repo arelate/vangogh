@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Interfaces.Controllers.Logs;
 using Interfaces.Models.Logs;
@@ -9,74 +10,45 @@ namespace Controllers.Logs
 {
     // TODO: This can be used to track response and session aggregate metrics - 
     // bytes transferred, read from disk, written to disk etc
-    public class ResponseLogController : IResponseLogController
+    public class ActionLogController : IActionLogController
     {
-        private IResponseLog currentResponseLog;
-        private IActionLog currentActionLog
+        private List<IActionLog> completedActions { get; set; } = new List<IActionLog>();
+        private Stack<IActionLog> ongoingActions { get; set; } = new Stack<IActionLog>();
+
+        public IActionLog CurrentActionLog
         {
             get
             {
-                return currentResponseLog.OngoingActions.Peek();
+                return ongoingActions.Peek();
             }
-        }
-
-        public void OpenResponseLog(string title)
-        {
-            if (currentResponseLog != null &&
-                !currentResponseLog.Complete)
-                throw new System.InvalidOperationException();
-
-            currentResponseLog = new ResponseLog() { Title = title };
-            currentResponseLog.Started = DateTime.Now;
-            System.Console.WriteLine($"Started {currentResponseLog.Title}");
         }
 
         public void StartAction(string title)
         {
             var action = new ActionLog() { Title = title };
-            currentResponseLog.OngoingActions.Push(action);
+            action.Started = DateTime.UtcNow;
+            ongoingActions.Push(action);
             System.Console.WriteLine($"Started action {action.Title}");
         }
 
-        public void SetActionProgress(int progress)
+        public void SetActionTarget(int target)
         {
-            IActionLog currentLog = currentActionLog != null ?
-                currentActionLog :
-                currentResponseLog;
-
-            currentLog.Progress = progress;
-            System.Console.WriteLine($"Action {currentActionLog.Title} progress: {currentActionLog.Progress}");
+            CurrentActionLog.Target = target;
         }
 
-        public double GetActionProgressPercent(int total)
+        public void IncrementActionProgress(int increment = 1)
         {
-            return (double)currentActionLog.Progress / total;
-        }
-
-        public void IncrementActionProgress()
-        {
-            IActionLog currentLog = currentActionLog != null ?
-                currentActionLog :
-                currentResponseLog;
-
-            currentLog.Progress++;
-            System.Console.WriteLine($"Action {currentActionLog.Title} progress: {currentActionLog.Progress}");
+            CurrentActionLog.Progress += increment;
+            System.Console.WriteLine($"Action {CurrentActionLog.Title} progress: {CurrentActionLog.Progress}");
         }
 
         public void CompleteAction()
         {
-            var action = currentResponseLog.OngoingActions.Pop();
+            var action = ongoingActions.Pop();
             action.Complete = true;
-            currentResponseLog.CompletedActions.Add(action);
+            action.Completed = DateTime.UtcNow;
+            completedActions.Add(action);
             System.Console.WriteLine($"Completed action {action.Title}");
-        }
-
-        public IResponseLog CloseResponseLog()
-        {
-            currentResponseLog.Complete = true;
-            currentResponseLog.Completed = DateTime.Now;
-            System.Console.WriteLine($"Completed session {currentResponseLog.Title}");
-            return currentResponseLog;
         }
     }
 }

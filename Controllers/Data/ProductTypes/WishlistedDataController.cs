@@ -18,7 +18,7 @@ namespace Controllers.Data.ProductTypes
             "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.WishlistedRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public WishlistedDataController(
             IStashController<List<long>> wishlistedDataController,
             IConvertDelegate<long, long> convertPassthroughIndexDelegate,

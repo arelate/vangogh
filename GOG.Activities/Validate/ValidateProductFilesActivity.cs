@@ -37,7 +37,7 @@ namespace GOG.Activities.Validate
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
         readonly IDataController<long> updatedDataController;
         readonly IRoutingController routingController;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
 		[Dependencies(
 			"Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
@@ -49,7 +49,7 @@ namespace GOG.Activities.Validate
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"Controllers.Routing.RoutingController,Controllers",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public ValidateProductFilesActivity(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
@@ -60,7 +60,7 @@ namespace GOG.Activities.Validate
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IDataController<long> updatedDataController,
             IRoutingController routingController,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
             this.productFileFilenameDelegate = productFileFilenameDelegate;
@@ -72,12 +72,12 @@ namespace GOG.Activities.Validate
 
             this.updatedDataController = updatedDataController;
             this.routingController = routingController;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
         {
-            responseLogController.OpenResponseLog("Validate products");
+            actionLogController.StartAction("Validate products");
 
             await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
@@ -91,11 +91,11 @@ namespace GOG.Activities.Validate
                         Title = gameDetails.Title
                     };
 
-                responseLogController.IncrementActionProgress();
+                actionLogController.IncrementActionProgress();
 
                 var localFiles = new List<string>();
 
-                responseLogController.StartAction("Enumerate local product files");
+                actionLogController.StartAction("Enumerate local product files");
                 foreach (var manualUrl in 
                     await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
                 {
@@ -108,7 +108,7 @@ namespace GOG.Activities.Validate
 
                     localFiles.Add(localFile);
                 }
-                responseLogController.CompleteAction();
+                actionLogController.CompleteAction();
 
 
                 // check if current validation results allow us to skip validating current product
@@ -118,11 +118,11 @@ namespace GOG.Activities.Validate
 
                 var fileValidationResults = new List<IFileValidationResults>(localFiles.Count);
 
-                responseLogController.StartAction("Validate product files");
+                actionLogController.StartAction("Validate product files");
 
                 foreach (var localFile in localFiles)
                 {
-                    responseLogController.IncrementActionProgress();
+                    actionLogController.IncrementActionProgress();
 
                     var validationFile = formatValidationFileDelegate.Format(localFile);
 
@@ -139,16 +139,16 @@ namespace GOG.Activities.Validate
                     }
                 }
 
-                responseLogController.CompleteAction();
+                actionLogController.CompleteAction();
 
                 validationResults.Files = fileValidationResults.ToArray();
 
-                responseLogController.StartAction("Update validation results");
+                actionLogController.StartAction("Update validation results");
                 await validationResultsDataController.UpdateAsync(validationResults);
-                responseLogController.CompleteAction();
+                actionLogController.CompleteAction();
             }
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Controllers.Records.ProductTypes
     {
         [Dependencies(
             "Controllers.Data.Records.ProductScreenshotsRecordsDataController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ProductScreenshotsRecordsIndexController(
             IDataController<ProductRecords> productScreenshotsRecordsController,
             IActionLogController actionLogController) :

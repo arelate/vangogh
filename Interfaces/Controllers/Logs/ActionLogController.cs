@@ -7,19 +7,14 @@ namespace Interfaces.Controllers.Logs
         void StartAction(string title);
     }
 
-    public interface ISetActionProgressDelegate
+    public interface ISetActionTargetDelegate
     {
-        void SetActionProgress(int progress);
-    }
-
-    public interface IGetActionProgressPercentDelegate
-    {
-        double GetActionProgressPercent(int total);
+        void SetActionTarget(int target);
     }
 
     public interface IIncrementActionProgressDelegate
     {
-        void IncrementActionProgress();
+        void IncrementActionProgress(int increment = 1);
     }
 
     public interface ICompleteActionDelegate
@@ -29,8 +24,7 @@ namespace Interfaces.Controllers.Logs
 
     public interface IActionLogController:
         IStartActionDelegate,
-        ISetActionProgressDelegate,
-        IGetActionProgressPercentDelegate,
+        ISetActionTargetDelegate,
         IIncrementActionProgressDelegate,
         ICompleteActionDelegate
     {

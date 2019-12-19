@@ -17,7 +17,7 @@ namespace Controllers.Stash.Records
         [Dependencies(
             "Delegates.GetPath.Records.GetProductScreenshotsRecordsPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ProductScreenshotsRecordsStashController(
             IGetPathDelegate getProductScreenshotsRecordsPathDelegate,
             ISerializedStorageController serializedStorageController,

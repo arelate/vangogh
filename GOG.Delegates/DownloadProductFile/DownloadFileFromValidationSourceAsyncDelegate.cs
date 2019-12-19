@@ -34,7 +34,7 @@ namespace GOG.Delegates.DownloadProductFile
 			"Delegates.Format.Uri.FormatValidationUriDelegate,Delegates",
 			"Controllers.File.FileController,Controllers",
 			"Delegates.Download.DownloadFromUriAsyncDelegate,Delegates",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public DownloadValidationFileAsyncDelegate(
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,

@@ -22,7 +22,7 @@ namespace GOG.Controllers.Data.ProductTypes
             "GOG.Delegates.Convert.ProductTypes.ConvertApiProductToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.ApiProductsRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ApiProductsDataController(
             IStashController<List<ApiProduct>> apiProductsStashController,
             IConvertDelegate<ApiProduct, long> convertApiProductsToIndexDelegate,

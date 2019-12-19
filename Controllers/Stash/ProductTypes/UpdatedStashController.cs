@@ -16,7 +16,7 @@ namespace Controllers.Stash.ProductTypes
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetUpdatedPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdatedStashController(
             IGetPathDelegate getUpdatedPathDelegate,
             ISerializedStorageController serializedStorageController,

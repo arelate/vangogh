@@ -15,7 +15,7 @@ namespace Controllers.Stash.ArgsDefinitions
         [Dependencies(
             "Delegates.GetPath.ArgsDefinitions.GetArgsDefinitionsPathDelegate,Delegates",
             Dependencies.JSONSerializedStorageController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ArgsDefinitionsStashController(
             IGetPathDelegate getPathDelegate,
             ISerializedStorageController serializedStorageController,

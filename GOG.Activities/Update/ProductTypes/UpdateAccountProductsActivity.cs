@@ -21,19 +21,19 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate,GOG.Delegates",
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "Controllers.Records.Session.SessionRecordsController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateAccountProductsActivity(
             IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct> itemizeAccountProductsPageResultsDelegate,
             IDataController<AccountProduct> accountProductsDataController,
             IRecordsController<string> activityRecordsController,
-            IResponseLogController responseLogController) :
+            IActionLogController actionLogController) :
             base(
                 getAccountProductsPageResultsAsyncDelegate,
                 itemizeAccountProductsPageResultsDelegate,
                 accountProductsDataController,
                 activityRecordsController,
-                responseLogController)
+                actionLogController)
         {
             // ...
         }

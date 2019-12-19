@@ -20,7 +20,7 @@ namespace GOG.Delegates.Itemize
 		[Dependencies(
 			"Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates",
 			"Controllers.Directory.DirectoryController,Controllers",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public ItemizeAllProductFilesDirectoriesAsyncDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate,
             IDirectoryController directoryController,

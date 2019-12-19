@@ -20,7 +20,7 @@ namespace GOG.Activities.Cleanup.ProductTypes
 			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
 			"Delegates.Recycle.RecycleDelegate,Delegates",
 			"Controllers.Directory.DirectoryController,Controllers",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public CleanupProductFilesActivity(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedProductFilesAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualProductFilesAsyncDelegate,
@@ -28,7 +28,7 @@ namespace GOG.Activities.Cleanup.ProductTypes
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
             IDirectoryController directoryController,
-            IResponseLogController responseLogController) :
+            IActionLogController actionLogController) :
             base(
                 itemizeAllExpectedProductFilesAsyncDelegate,
                 itemizeAllActualProductFilesAsyncDelegate,
@@ -36,7 +36,7 @@ namespace GOG.Activities.Cleanup.ProductTypes
                 formatSupplementaryItemDelegate,
                 recycleDelegate,
                 directoryController,
-                responseLogController)
+                actionLogController)
         {
             // ...
         }

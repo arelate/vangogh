@@ -32,7 +32,7 @@ namespace GOG.Activities.Update
         readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
         private readonly IGetValueDelegate<string> getDetailUpdateUriDelegate;
-        private readonly IResponseLogController responseLogController;
+        private readonly IActionLogController actionLogController;
 
 
         public UpdateDetailProductsByMasterProductsActivity(
@@ -41,7 +41,7 @@ namespace GOG.Activities.Update
             IDataController<DetailType> detailDataController,
             IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate,
-            IResponseLogController responseLogController,
+            IActionLogController actionLogController,
             IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null)
         {
             this.detailDataController = detailDataController;
@@ -53,12 +53,12 @@ namespace GOG.Activities.Update
             this.fillGapsDelegate = fillGapsDelegate;
 
             this.getDetailUpdateUriDelegate = getDetailUpdateUriDelegate;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
         {
-            responseLogController.OpenResponseLog($"Update {typeof(DetailType).Name}");
+            actionLogController.StartAction($"Update {typeof(DetailType).Name}");
 
             // We'll limit detail updates to user specified ids.
             // if user didn't provide a list of ids - we'll use the details gaps 
@@ -67,7 +67,7 @@ namespace GOG.Activities.Update
             await foreach (var masterProductWithoutDetail in
                 itemizeAllMasterDetailGapsAsyncDelegate.ItemizeAllAsync())
             {
-                responseLogController.IncrementActionProgress();
+                actionLogController.IncrementActionProgress();
 
                 var detailUpdateIdentity =
                     convertMasterTypeToDetailUpdateIdentityDelegate.Convert(
@@ -92,7 +92,7 @@ namespace GOG.Activities.Update
 
             await detailDataController.CommitAsync();
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
         }
     }
 }

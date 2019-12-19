@@ -22,37 +22,37 @@ namespace GOG.Activities.Update
         readonly IDataController<Product> productsDataController;
         readonly IDataController<ProductScreenshots> productScreenshotsDataController;
         readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
             "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateScreenshotsActivity(
             IDataController<Product> productsDataController,
             IDataController<ProductScreenshots> productScreenshotsDataController,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.productsDataController = productsDataController;
             this.productScreenshotsDataController = productScreenshotsDataController;
             this.updateScreenshotsAsyncDelegate = updateScreenshotsAsyncDelegate;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
         {
-            responseLogController.OpenResponseLog("Update Screenshots");
+            actionLogController.StartAction("Update Screenshots");
 
-            responseLogController.StartAction("Get updates");
+            actionLogController.StartAction("Get updates");
             var productsMissingScreenshots = new List<long>();
             // TODO: Properly enumerate productsMissingScreenshots
             // (productsDataController.ItemizeAllAsync(getUpdatesListTask)).Except(
             //     productScreenshotsDataController.ItemizeAllAsync(getUpdatesListTask));
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
-            responseLogController.StartAction("Update missing screenshots");
+            actionLogController.StartAction("Update missing screenshots");
             foreach (var id in productsMissingScreenshots)
             {
                 var product = await productsDataController.GetByIdAsync(id);
@@ -65,13 +65,13 @@ namespace GOG.Activities.Update
                     continue;
                 }
 
-                responseLogController.IncrementActionProgress();
+                actionLogController.IncrementActionProgress();
 
                 await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product);
             }
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Controllers.Data.ProductTypes
             "Delegates.Convert.ProductTypes.ConvertValidationResultsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ValidationResultsRecordsIndexController,Controllers",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ValidationResultsDataController(
             IStashController<List<ValidationResults>> validationResultsStashController,
             IConvertDelegate<ValidationResults, long> convertValidationResultsToIndexDelegate,

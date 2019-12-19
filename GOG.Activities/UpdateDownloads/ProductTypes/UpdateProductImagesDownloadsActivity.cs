@@ -23,7 +23,7 @@ namespace GOG.Activities.UpdateDownloads.ProductTypes
             "Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateProductImagesDownloadsActivity(
             IGetDownloadSourcesAsyncDelegate getProductImagesDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getProductImagesDirectoryDelegate,
@@ -31,7 +31,7 @@ namespace GOG.Activities.UpdateDownloads.ProductTypes
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
-            IResponseLogController responseLogController) :
+            IActionLogController actionLogController) :
             base(
                 getProductImagesDownloadSourcesAsyncDelegate,
                 getProductImagesDirectoryDelegate,
@@ -39,7 +39,7 @@ namespace GOG.Activities.UpdateDownloads.ProductTypes
                 productDownloadsDataController,
                 accountProductsDataController,
                 productsDataController,
-                responseLogController)
+                actionLogController)
         {
             // ...
         }

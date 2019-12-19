@@ -23,7 +23,7 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             "Delegates.GetValue.QueryParameters.ProductTypes.GetAccountProductsUpdateQueryParametersDelegate,Delegates",
             "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
             Dependencies.JSONSerializationController,
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public GetAccountProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getAccountProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getAccountProductsQueryUpdateQueryParameters,

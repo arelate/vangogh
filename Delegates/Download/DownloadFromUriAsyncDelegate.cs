@@ -20,7 +20,7 @@ namespace Delegates.Download
         [Dependencies(
             "Controllers.Network.NetworkController,Controllers",
             "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromUriAsyncDelegate(
             IRequestResponseAsyncDelegate requestResponseAsyncDelegate,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,

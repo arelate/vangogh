@@ -20,7 +20,7 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
 			"GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
 			"Delegates.Format.Uri.FormatImagesUriDelegate,Delegates",
 			"GOG.Delegates.GetImageUri.GetAccountProductImageUriDelegate,GOG.Delegates",
-			"Controllers.Logs.ResponseLogController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public GetAccountProductImagesDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<AccountProduct> accountProductsDataController,

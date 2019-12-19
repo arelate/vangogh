@@ -11,14 +11,14 @@ namespace GOG.Activities.Cleanup.ProductTypes
     public class CleanupUpdatedActivity : IActivity
     {
         IDataController<long> updatedDataController;
-        IResponseLogController responseLogController;
+        IActionLogController actionLogController;
 
         public CleanupUpdatedActivity(
             IDataController<long> updatedDataController,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.updatedDataController = updatedDataController;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public Task ProcessActivityAsync()

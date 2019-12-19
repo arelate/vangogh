@@ -20,24 +20,24 @@ namespace GOG.Activities.Update.ProductTypes
         readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
         readonly IDataController<long> updatedDataController;
-        readonly IResponseLogController responseLogController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-            "Controllers.Logs.ResponseLogController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateUpdatedActivity(
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
             IDataController<long> updatedDataController,
-            IResponseLogController responseLogController)
+            IActionLogController actionLogController)
         {
             this.accountProductDataController = accountProductDataController;
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
 
             this.updatedDataController = updatedDataController;
-            this.responseLogController = responseLogController;
+            this.actionLogController = actionLogController;
         }
 
         public async Task ProcessActivityAsync()
@@ -53,9 +53,9 @@ namespace GOG.Activities.Update.ProductTypes
             // In the future additional heuristics can be employed - such as using products, not just 
             // account products and other. Currently they are considered as YAGNI
 
-            responseLogController.OpenResponseLog("Process updated account products");
+            actionLogController.StartAction("Process updated account products");
 
-            responseLogController.StartAction("Add account products created since last data update");
+            actionLogController.StartAction("Add account products created since last data update");
 
             var accountProductsNewOrUpdated = new List<long>();
 
@@ -66,13 +66,13 @@ namespace GOG.Activities.Update.ProductTypes
 
             //accountProductsNewOrUpdated.AddRange(newlyCreatedAccountProducts);
 
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
-            responseLogController.StartAction("Add updated account products");
+            actionLogController.StartAction("Add updated account products");
 
             await foreach (var accountProduct in accountProductDataController.ItemizeAllAsync())
             {
-                responseLogController.IncrementActionProgress();
+                actionLogController.IncrementActionProgress();
 
                 if (confirmAccountProductUpdatedDelegate.Confirm(accountProduct))
                     accountProductsNewOrUpdated.Add(accountProduct.Id);
@@ -81,11 +81,11 @@ namespace GOG.Activities.Update.ProductTypes
             foreach (var accountProduct in accountProductsNewOrUpdated)
                 await updatedDataController.UpdateAsync(accountProduct);
 
-            responseLogController.CompleteAction();
+            actionLogController.CompleteAction();
 
             await updatedDataController.CommitAsync();
 
-            responseLogController.CloseResponseLog();
+            actionLogController.CompleteAction();
 
         }
     }
