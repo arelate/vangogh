@@ -16,7 +16,7 @@ namespace vangogh.Console
         static async Task Main(string[] args)
         {
             // DEBUG
-            // args = new string[] { "update", "accountproducts" };
+            args = new string[] { "update", "accountproducts" };
 
             var singletonInstancesController = new SingletonInstancesController();
 
@@ -40,7 +40,7 @@ namespace vangogh.Console
                     respondToRequestDelegateType)
                     as IRespondAsyncDelegate;
 
-                await respondToRequestDelegate.RespondAsync(request.Parameters);
+                // await respondToRequestDelegate.RespondAsync(request.Parameters);
             }
 
             System.Console.WriteLine("Press ENTER to exit...");

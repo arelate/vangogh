@@ -39,7 +39,9 @@ namespace Delegates.Convert.Requests
                         as RespondsToRequests;
 
                     return (respondsToRequestAttribute.Method == request.Method &&
-                        respondsToRequestAttribute.Collection == request.Collection);
+                        respondsToRequestAttribute.Collection == request.Collection) ||
+                        (respondsToRequestAttribute.Method == request.Method &&
+                        string.IsNullOrEmpty(respondsToRequestAttribute.Collection) && string.IsNullOrEmpty(request.Collection));
                 });
 
             return respondDelegate;
