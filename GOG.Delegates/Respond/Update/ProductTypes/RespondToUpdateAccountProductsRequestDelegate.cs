@@ -16,7 +16,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 {
     // TODO: We should generate those files
     [RespondsToRequests(Method = "update", Collection = "accountproducts")]
-    public class RespondToUpdateAccountProductsRequestAsyncDelegate : 
+    public class RespondToUpdateAccountProductsRequestDelegate : 
         RespondToUpdatePageResultRequestDelegate<AccountProductsPageResult, AccountProduct>
     {
         [Dependencies(
@@ -25,7 +25,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "Controllers.Records.Session.SessionRecordsController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public RespondToUpdateAccountProductsRequestAsyncDelegate(
+        public RespondToUpdateAccountProductsRequestDelegate(
             IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct> itemizeAccountProductsPageResultsDelegate,
             IDataController<AccountProduct> accountProductsDataController,

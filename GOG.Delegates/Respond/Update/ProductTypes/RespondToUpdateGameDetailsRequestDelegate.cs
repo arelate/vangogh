@@ -11,10 +11,11 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Interfaces.Delegates.FillGaps;
 using GOG.Models;
 
-namespace GOG.Activities.Update.ProductTypes
+namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    public class UpdateGameDetailsByAccountProductsActivity :
-        UpdateDetailProductsByMasterProductsActivity<GameDetails, AccountProduct>
+    [RespondsToRequests(Method="update", Collection="gamedetails")]
+    public class RespondToUpdateGameDetailsRequestDelegate :
+        RespondToUpdateMasterDetailsRequestDelegate<GameDetails, AccountProduct>
     {
         [Dependencies(
             "Delegates.GetValue.Uri.ProductTypes.GetGameDetailsUpdateUriDelegate,Delegates",
@@ -24,14 +25,14 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers",
             "GOG.Delegates.FillGaps.FillGameDetailsGapsDelegate,GOG.Delegates")]
-        public UpdateGameDetailsByAccountProductsActivity(
+        public RespondToUpdateGameDetailsRequestDelegate(
             IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
             IConvertDelegate<AccountProduct, string> convertAccountProductToGameDetailsUpdateIdentityDelegate,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameDetails> getDeserializedGameDetailsAsyncDelegate,
             IActionLogController actionLogController,
-            IFillGapsDelegate<GameDetails,AccountProduct> fillGameDetailsGapsDelegate):
+            IFillGapsDelegate<GameDetails, AccountProduct> fillGameDetailsGapsDelegate) :
             base(
                 getGameDetailsUpdateUriDelegate,
                 convertAccountProductToGameDetailsUpdateIdentityDelegate,
@@ -40,8 +41,8 @@ namespace GOG.Activities.Update.ProductTypes
                 getDeserializedGameDetailsAsyncDelegate,
                 actionLogController,
                 fillGameDetailsGapsDelegate)
-                {
-                    // ...
-                }
+        {
+            // ...
+        }
     }
 }

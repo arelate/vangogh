@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Interfaces.Delegates.Respond;
+
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-
-using Interfaces.Activity;
 
 using Attributes;
 
@@ -12,9 +12,9 @@ using Models.Uris;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
-namespace GOG.Activities.Update.ProductTypes
+namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    public class UpdateWishlistedActivity : IActivity
+    public class RespondToUpdateWishlistedRequestDelegate : IRespondAsyncDelegate
     {
         readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
         readonly IDataController<long> wishlistedDataController;
@@ -24,7 +24,7 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.WishlistedDataController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public UpdateWishlistedActivity(
+        public RespondToUpdateWishlistedRequestDelegate(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IDataController<long> wishlistedDataController,
             IActionLogController actionLogController)
@@ -34,7 +34,7 @@ namespace GOG.Activities.Update.ProductTypes
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             actionLogController.StartAction("Update Wishlisted");
 

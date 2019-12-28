@@ -16,7 +16,7 @@ namespace vangogh.Console
         static async Task Main(string[] args)
         {
             // DEBUG
-            args = new string[] { "update", "accountproducts" };
+            // args = new string[] { "update", "accountproducts" };
 
             var singletonInstancesController = new SingletonInstancesController();
 

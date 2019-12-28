@@ -16,7 +16,7 @@ using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetPageResults;
 
-namespace GOG.Delegates.Respond.Update.ProductTypes
+namespace GOG.Delegates.Respond.Update
 {
     public abstract class RespondToUpdatePageResultRequestDelegate<PageType, DataType> : IRespondAsyncDelegate
         where PageType : Models.PageResult

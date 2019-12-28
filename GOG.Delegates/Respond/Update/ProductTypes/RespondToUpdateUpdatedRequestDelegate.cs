@@ -2,19 +2,19 @@
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-
-using Interfaces.Activity;
 
 using Attributes;
 
 using GOG.Models;
 
-namespace GOG.Activities.Update.ProductTypes
+namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    public class UpdateUpdatedActivity: IActivity
+    [RespondsToRequests(Method="update", Collection="updated")]
+    public class RespondToUpdateUpdatedRequestDelegate: IRespondAsyncDelegate
     {
         readonly IDataController<AccountProduct> accountProductDataController;
         readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
@@ -27,7 +27,7 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public UpdateUpdatedActivity(
+        public RespondToUpdateUpdatedRequestDelegate(
             IDataController<AccountProduct> accountProductDataController,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
             IDataController<long> updatedDataController,
@@ -40,7 +40,7 @@ namespace GOG.Activities.Update.ProductTypes
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             // This activity will centralize processing and marking updated account products.
             // Currently the process is the following:

@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-
-using Interfaces.Activity;
 
 using GOG.Interfaces.Delegates.FillGaps;
 
@@ -17,9 +15,9 @@ using Models.ProductTypes;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
-namespace GOG.Activities.Update
+namespace GOG.Delegates.Respond.Update
 {
-    public abstract class UpdateDetailProductsByMasterProductsActivity<DetailType, MasterType> : IActivity
+    public abstract class RespondToUpdateMasterDetailsRequestDelegate<DetailType, MasterType> : IRespondAsyncDelegate
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
@@ -34,8 +32,7 @@ namespace GOG.Activities.Update
         private readonly IGetValueDelegate<string> getDetailUpdateUriDelegate;
         private readonly IActionLogController actionLogController;
 
-
-        public UpdateDetailProductsByMasterProductsActivity(
+        public RespondToUpdateMasterDetailsRequestDelegate(
             IGetValueDelegate<string> getDetailUpdateUriDelegate,
             IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate,
             IDataController<DetailType> detailDataController,
@@ -56,13 +53,9 @@ namespace GOG.Activities.Update
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             actionLogController.StartAction($"Update {typeof(DetailType).Name}");
-
-            // We'll limit detail updates to user specified ids.
-            // if user didn't provide a list of ids - we'll use the details gaps 
-            // (ids that exist in master list, but not detail) and updated
 
             await foreach (var masterProductWithoutDetail in
                 itemizeAllMasterDetailGapsAsyncDelegate.ItemizeAllAsync())

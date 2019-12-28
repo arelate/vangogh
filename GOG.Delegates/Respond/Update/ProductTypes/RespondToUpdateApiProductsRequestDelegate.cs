@@ -10,10 +10,11 @@ using Attributes;
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
 
-namespace GOG.Activities.Update.ProductTypes
+namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    public class UpdateApiProductsByProductsActivity :
-        UpdateDetailProductsByMasterProductsActivity<ApiProduct, Product>
+    [RespondsToRequests(Method="update", Collection="apiproducts")]
+    public class RespondToUpdateApiProductsRequestDelegate :
+        RespondToUpdateMasterDetailsRequestDelegate<ApiProduct, Product>
     {
         [Dependencies(
             "Delegates.GetValue.Uri.ProductTypes.GetApiProductsUpdateUriDelegate,Delegates",
@@ -22,7 +23,7 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegatepsDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public UpdateApiProductsByProductsActivity(
+        public RespondToUpdateApiProductsRequestDelegate(
             IGetValueDelegate<string> getApiProductsUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToApiProductUpdateIdentityDelegate,
             IDataController<ApiProduct> apiProductsDataController,

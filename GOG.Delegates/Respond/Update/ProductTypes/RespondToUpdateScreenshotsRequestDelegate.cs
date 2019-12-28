@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using System.Linq;
 
+using Interfaces.Delegates.Respond;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-
-using Interfaces.Activity;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
 
@@ -15,9 +14,10 @@ using GOG.Models;
 
 using Models.ProductTypes;
 
-namespace GOG.Activities.Update
+namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    public class UpdateScreenshotsActivity : IActivity
+    [RespondsToRequests(Method="update", Collection="screenshots")]
+    public class RespondToUpdateScreenshotsRequestDelegate : IRespondAsyncDelegate
     {
         readonly IDataController<Product> productsDataController;
         readonly IDataController<ProductScreenshots> productScreenshotsDataController;
@@ -29,7 +29,7 @@ namespace GOG.Activities.Update
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
             "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public UpdateScreenshotsActivity(
+        public RespondToUpdateScreenshotsRequestDelegate(
             IDataController<Product> productsDataController,
             IDataController<ProductScreenshots> productScreenshotsDataController,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
@@ -41,7 +41,7 @@ namespace GOG.Activities.Update
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             actionLogController.StartAction("Update Screenshots");
 
