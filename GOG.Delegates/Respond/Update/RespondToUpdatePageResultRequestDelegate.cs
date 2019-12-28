@@ -46,20 +46,18 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction("Updating products");
+            actionLogController.StartAction("Update products");
 
-            // TODO: Figure out better way to identify and activity
-            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Started);
+            var activityDescription = $"Update {typeof(DataType)}";
+            await activityRecordsController.SetRecordAsync(activityDescription, RecordsTypes.Started);
 
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync();
 
-            // var extractTask = await statusController.CreateAsync(updateAllProductsTask, $"Extracting...");
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
-            // await statusController.CompleteAsync(extractTask);
 
             if (newProducts.Any())
             {
-                actionLogController.StartAction("Saving new products");
+                actionLogController.StartAction("Save new products");
 
                 foreach (var product in newProducts)
                 {
@@ -70,8 +68,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 actionLogController.CompleteAction();
             }
 
-            // TODO: Figure out better way to identify and activity
-            await activityRecordsController.SetRecordAsync("PageResultUpdateActivity", RecordsTypes.Completed);
+            await activityRecordsController.SetRecordAsync(activityDescription, RecordsTypes.Completed);
 
             await dataController.CommitAsync();
 

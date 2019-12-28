@@ -12,9 +12,12 @@ using GOG.Models;
 
 using GOG.Interfaces.Delegates.GetPageResults;
 
-namespace GOG.Activities.Update.ProductTypes
+namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    public class UpdateAccountProductsActivity : UpdatePageResultActivity<AccountProductsPageResult, AccountProduct>
+    // TODO: We should generate those files
+    [RespondsToRequests(Method = "update", Collection = "accountproducts")]
+    public class RespondToUpdateAccountProductsRequestAsyncDelegate : 
+        RespondToUpdatePageResultRequestDelegate<AccountProductsPageResult, AccountProduct>
     {
         [Dependencies(
             "GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate,GOG.Delegates",
@@ -22,7 +25,7 @@ namespace GOG.Activities.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "Controllers.Records.Session.SessionRecordsController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public UpdateAccountProductsActivity(
+        public RespondToUpdateAccountProductsRequestAsyncDelegate(
             IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct> itemizeAccountProductsPageResultsDelegate,
             IDataController<AccountProduct> accountProductsDataController,

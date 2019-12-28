@@ -14,8 +14,10 @@ using GOG.Interfaces.Delegates.GetPageResults;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
+    // TODO: We should generate those files
     [RespondsToRequests(Method = "update", Collection = "products")]
-    public class RespondToUpdateProductsRequestAsyncDelegate : RespondToUpdatePageResultRequestDelegate<ProductsPageResult, Product>
+    public class RespondToUpdateProductsRequestAsyncDelegate : 
+        RespondToUpdatePageResultRequestDelegate<ProductsPageResult, Product>
     {
         [Dependencies(
             "GOG.Delegates.GetPageResults.ProductTypes.GetProductsPageResultsAsyncDelegate,GOG.Delegates",

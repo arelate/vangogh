@@ -7,19 +7,12 @@
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
     <AssemblyName>vangogh</AssemblyName>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LangVersion>Latest</LangVersion>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\Delegates\Delegates.csproj" />
-    <!-- <ProjectReference Include="..\GOG.Activities\GOG.Activities.csproj" /> -->
     <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj" />
     <ProjectReference Include="..\GOG.Delegates\GOG.Delegates.csproj" />
     <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
