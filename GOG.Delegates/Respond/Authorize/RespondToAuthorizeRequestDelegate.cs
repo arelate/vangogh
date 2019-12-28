@@ -1,19 +1,17 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 
-using Interfaces.Controllers.Stash;
+using Interfaces.Delegates.Respond;
+
 using Interfaces.Controllers.Logs;
-using Interfaces.Activity;
-
 
 using GOG.Interfaces.Controllers.Authorization;
 
 using Attributes;
 
-using Models.Settings;
-
-namespace GOG.Activities.Authorize
+namespace GOG.Delegates.Respond.Authorize
 {
-    public class AuthorizeActivity : IActivity
+    public class RespondToAuthorizeRequestDelegate : IRespondAsyncDelegate
     {
         readonly IAuthorizationController authorizationController;
         readonly IActionLogController actionLogController;
@@ -21,7 +19,7 @@ namespace GOG.Activities.Authorize
         [Dependencies(
             "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public AuthorizeActivity(
+        public RespondToAuthorizeRequestDelegate(
             IAuthorizationController authorizationController,
             IActionLogController actionLogController)
         {
@@ -29,9 +27,8 @@ namespace GOG.Activities.Authorize
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-
             var username = string.Empty;
             var password = string.Empty;
 
