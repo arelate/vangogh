@@ -11,6 +11,7 @@ using Attributes;
 
 namespace GOG.Delegates.Respond.Authorize
 {
+    [RespondsToRequests(Method="authorize")]
     public class RespondToAuthorizeRequestDelegate : IRespondAsyncDelegate
     {
         readonly IAuthorizationController authorizationController;
