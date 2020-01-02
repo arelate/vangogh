@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
-
-using Interfaces.Activity;
+using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Logs;
 using Interfaces.Controllers.Directory;
 
 using Models.ProductTypes;
 
-namespace GOG.Activities.Cleanup
+namespace GOG.Delegates.Respond.Cleanup
 {
-    public abstract class CleanupActivity<Type> : IActivity
+    public abstract class RespondToCleanupRequestDelegate<Type> : IRespondAsyncDelegate
         where Type: ProductCore
     {
         readonly IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
@@ -27,7 +26,7 @@ namespace GOG.Activities.Cleanup
         readonly IDirectoryController directoryController;
         readonly IActionLogController actionLogController;
 
-        public CleanupActivity(
+        public RespondToCleanupRequestDelegate(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
@@ -45,7 +44,7 @@ namespace GOG.Activities.Cleanup
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             actionLogController.StartAction($"Cleanup {typeof(Type)}");
 

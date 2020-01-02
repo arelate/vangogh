@@ -1,21 +1,22 @@
 ﻿using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
 
+using Models.ProductTypes;
+
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 using Attributes;
 
-using Models.ProductTypes;
-
-namespace GOG.Activities.DownloadProductFiles.ProductTypes
+namespace GOG.Delegates.Respond.Download.ProductTypes
 {
-    public class DownloadProductScreenshotsActivity : DownloadFilesActivity<ProductScreenshots>
+    [RespondsToRequests(Method = "download", Collection = "productimages")]
+    public class RespondToDownloadProductImagesRequestDelegate : RespondToDownloadRequestDelegate<ProductImage>
     {
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
 			"GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]        
-        public DownloadProductScreenshotsActivity(
+			"Controllers.Logs.ActionLogController,Controllers")]
+        public RespondToDownloadProductImagesRequestDelegate(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IActionLogController actionLogController) :

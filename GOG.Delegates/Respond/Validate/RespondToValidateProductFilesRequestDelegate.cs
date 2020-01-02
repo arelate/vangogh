@@ -8,11 +8,11 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
 
-using Interfaces.Activity;
 using Interfaces.Validation;
 using Interfaces.Routing;
 
@@ -24,9 +24,10 @@ using Models.ProductTypes;
 
 using GOG.Models;
 
-namespace GOG.Activities.Validate
+namespace GOG.Delegates.Respond.Validate
 {
-    public class ValidateProductFilesActivity : IActivity
+    [RespondsToRequests(Method = "validate", Collection = "productfiles")]
+    public class RespondToValidateProductFilesRequestDelegate : IRespondAsyncDelegate
     {
         readonly IGetDirectoryDelegate productFileDirectoryDelegate;
         readonly IGetFilenameDelegate productFileFilenameDelegate;
@@ -39,18 +40,18 @@ namespace GOG.Activities.Validate
         readonly IRoutingController routingController;
         readonly IActionLogController actionLogController;
 
-		[Dependencies(
-			"Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
-			"Delegates.GetFilename.GetUriFilenameDelegate,Delegates",
-			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-			"Controllers.Validation.FileValidationController,Controllers",
-			"Controllers.Data.ProductTypes.ValidationResultsDataController,Controllers",
-			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-			"Controllers.Routing.RoutingController,Controllers",
-			"Controllers.Logs.ActionLogController,Controllers")]
-        public ValidateProductFilesActivity(
+        [Dependencies(
+            "Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
+            "Delegates.GetFilename.GetUriFilenameDelegate,Delegates",
+            "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
+            "Controllers.Validation.FileValidationController,Controllers",
+            "Controllers.Data.ProductTypes.ValidationResultsDataController,Controllers",
+            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
+            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+            "Controllers.Routing.RoutingController,Controllers",
+            "Controllers.Logs.ActionLogController,Controllers")]
+        public RespondToValidateProductFilesRequestDelegate(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
@@ -75,7 +76,7 @@ namespace GOG.Activities.Validate
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             actionLogController.StartAction("Validate products");
 
@@ -96,7 +97,7 @@ namespace GOG.Activities.Validate
                 var localFiles = new List<string>();
 
                 actionLogController.StartAction("Enumerate local product files");
-                foreach (var manualUrl in 
+                foreach (var manualUrl in
                     await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
                 {
                     var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl);

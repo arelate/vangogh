@@ -11,9 +11,12 @@ using Attributes;
 using GOG.Models;
 using Models.ProductTypes;
 
-namespace GOG.Activities.UpdateDownloads.ProductTypes
+namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
-    public class UpdateProductScreenshotsDownloadsActivity : UpdateDownloadsActivity<ProductScreenshots>
+    // TODO: productscreenshots or just screenshots?
+    [RespondsToRequests(Method = "updatedownloads", Collection = "productscreenshots")]
+    public class RespondToUpdateProductScreenshotsDownloadsRequestDelegate : 
+        RespondToUpdateDownloadsRequestDelegate<ProductScreenshots>
     {
         [Dependencies(
             "GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate,GOG.Delegates",
@@ -23,7 +26,7 @@ namespace GOG.Activities.UpdateDownloads.ProductTypes
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
-        public UpdateProductScreenshotsDownloadsActivity(
+        public RespondToUpdateProductScreenshotsDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getProductScreenshotsDirectoryDelegate,
             IFileController fileController,

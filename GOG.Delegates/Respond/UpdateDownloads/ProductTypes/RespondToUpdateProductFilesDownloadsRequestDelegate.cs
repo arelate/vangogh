@@ -12,29 +12,31 @@ using Attributes;
 
 using GOG.Models;
 
-namespace GOG.Activities.UpdateDownloads.ProductTypes
+namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
-    public class UpdateAccountProductImagesDownloadsActivity : UpdateDownloadsActivity<AccountProductImage>
+    [RespondsToRequests(Method = "updatedownloads", Collection = "productfiles")]
+    public class RespondToUpdateProductFilesDownloadsRequestDelegate : 
+        RespondToUpdateDownloadsRequestDelegate<ProductFile>
     {
 		[Dependencies(
-			"GOG.Delegates.GetDownloadSources.ProductTypes.GetAccountProductImagesDownloadSourcesAsyncDelegate,GOG.Delegates",
-			"Delegates.GetDirectory.ProductTypes.GetAccountProductImagesDirectoryDelegate,Delegates",
+			"GOG.Delegates.GetDownloadSources.GetManualUrlDownloadSourcesAsyncDelegate,GOG.Delegates",
+			"Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
 			"Controllers.File.FileController,Controllers",
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
 			"GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
 			"Controllers.Logs.ActionLogController,Controllers")]        
-        public UpdateAccountProductImagesDownloadsActivity(
-            IGetDownloadSourcesAsyncDelegate getAccountProductImagesDownloadSourcesAsyncDelegate,
-            IGetDirectoryDelegate getAccountProductImagesDirectoryDelegate,
+        public RespondToUpdateProductFilesDownloadsRequestDelegate(
+            IGetDownloadSourcesAsyncDelegate getProductFilesDownloadSourcesAsyncDelegate,
+            IGetDirectoryDelegate getProductFilesDirectoryDelegate,
             IFileController fileController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
             IActionLogController actionLogController) :
             base(
-                getAccountProductImagesDownloadSourcesAsyncDelegate,
-                getAccountProductImagesDirectoryDelegate,
+                getProductFilesDownloadSourcesAsyncDelegate,
+                getProductFilesDirectoryDelegate,
                 fileController,
                 productDownloadsDataController,
                 accountProductsDataController,

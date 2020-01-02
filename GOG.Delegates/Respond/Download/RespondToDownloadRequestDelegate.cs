@@ -1,26 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Interfaces.Delegates.Respond;
+
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-
-using Interfaces.Activity;
 
 using Models.ProductTypes;
 using Models.Separators;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
-namespace GOG.Activities.DownloadProductFiles
+namespace GOG.Delegates.Respond.Download
 {
-    public abstract class DownloadFilesActivity<Type>: IActivity
+    public abstract class RespondToDownloadRequestDelegate<Type>: IRespondAsyncDelegate
         where Type:ProductCore
     {
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
         readonly IActionLogController actionLogController;
 
-        public DownloadFilesActivity(
+        public RespondToDownloadRequestDelegate(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IActionLogController actionLogController)
@@ -30,7 +30,7 @@ namespace GOG.Activities.DownloadProductFiles
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             actionLogController.StartAction(
                 $"Process updated {typeof(Type)} downloads");

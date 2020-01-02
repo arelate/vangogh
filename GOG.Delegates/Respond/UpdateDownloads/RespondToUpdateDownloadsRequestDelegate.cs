@@ -3,21 +3,21 @@ using System.Threading.Tasks;
 using System.IO;
 
 using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Logs;
-
-using Interfaces.Activity;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
 using Models.ProductTypes;
 using GOG.Models;
 
-namespace GOG.Activities.UpdateDownloads
+// TODO: Should this be just update if collections don't overlap?
+namespace GOG.Delegates.Respond.UpdateDownloads
 {
-    public abstract class UpdateDownloadsActivity<Type> : IActivity
+    public abstract class RespondToUpdateDownloadsRequestDelegate<Type> : IRespondAsyncDelegate
         where Type: ProductCore
     {
         readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
@@ -28,7 +28,7 @@ namespace GOG.Activities.UpdateDownloads
         readonly IDataController<Product> productsDataController;
         readonly IActionLogController actionLogController;
 
-        public UpdateDownloadsActivity(
+        public RespondToUpdateDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
             IFileController fileController,
@@ -46,7 +46,7 @@ namespace GOG.Activities.UpdateDownloads
             this.actionLogController = actionLogController;
         }
 
-        public async Task ProcessActivityAsync()
+        public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
             actionLogController.StartAction(
                 $"Update {typeof(Type)} downloads");

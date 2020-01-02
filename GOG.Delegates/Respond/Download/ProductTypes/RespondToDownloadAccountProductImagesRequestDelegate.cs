@@ -9,15 +9,16 @@ using Attributes;
 
 using GOG.Models;
 
-namespace GOG.Activities.DownloadProductFiles.ProductTypes
+namespace GOG.Delegates.Respond.Download.ProductTypes
 {
-    public class DownloadAccountProductImagesActivity : DownloadFilesActivity<AccountProductImage>
+    [RespondsToRequests(Method = "download", Collection = "accountproductimages")]
+    public class RespondToDownloadAccountProductImagesRequestDelegate : RespondToDownloadRequestDelegate<AccountProductImage>
     {
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
 			"GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
 			"Controllers.Logs.ActionLogController,Controllers")]        
-        public DownloadAccountProductImagesActivity(
+        public RespondToDownloadAccountProductImagesRequestDelegate(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IActionLogController actionLogController) :
