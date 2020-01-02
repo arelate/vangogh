@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Status;
-
 namespace Interfaces.Delegates.Confirm
 {
     public interface IConfirmDelegate<T>
@@ -11,6 +9,6 @@ namespace Interfaces.Delegates.Confirm
 
     public interface IConfirmAsyncDelegate<T>
     {
-        Task<bool> ConfirmAsync(T data, IStatus status);
+        Task<bool> ConfirmAsync(T data);
     }
 }

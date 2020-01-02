@@ -6,8 +6,6 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Stash;
 
-using Interfaces.Status;
-
 using Attributes;
 
 using Models.ArgsTokens;
@@ -38,13 +36,12 @@ namespace Delegates.Convert.ArgsTokens
         }
 
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
-            IAsyncEnumerable<(string Token, Tokens Type)> likelyTypedTokens, 
-            IStatus status)
+            IAsyncEnumerable<(string Token, Tokens Type)> likelyTypedTokens)
         {
             if (likelyTypedTokens == null)
                 throw new ArgumentNullException();
 
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
+            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
 
             var currentParameterTitle = string.Empty;
             await foreach (var likelyTypedToken in likelyTypedTokens)

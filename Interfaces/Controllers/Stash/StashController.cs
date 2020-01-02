@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-using Interfaces.Status;
-
 namespace Interfaces.Controllers.Stash
 {
     public interface IDataAvailableDelegate
@@ -14,17 +12,17 @@ namespace Interfaces.Controllers.Stash
 
     public interface ILoadAsyncDelegate
     {
-        Task LoadAsync(IStatus status);
+        Task LoadAsync();
     }
 
     public interface ISaveAsyncDelegate
     {
-        Task SaveAsync(IStatus status);
+        Task SaveAsync();
     }
 
     public interface IGetDataAsyncDelegate<ModelType>
     {
-        Task<ModelType> GetDataAsync(IStatus status);
+        Task<ModelType> GetDataAsync();
     }
 
     public interface IStashController<ModelType>:

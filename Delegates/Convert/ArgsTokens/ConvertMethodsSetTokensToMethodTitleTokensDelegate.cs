@@ -4,8 +4,6 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Stash;
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Status;
-
 using Attributes;
 
 using Models.ArgsDefinitions;
@@ -35,10 +33,9 @@ namespace Delegates.Convert.ArgsTokens
             this.collectionController = collectionController;
         }
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
-            IAsyncEnumerable<(string Token, Tokens Type)> typedTokens,
-            IStatus status)
+            IAsyncEnumerable<(string Token, Tokens Type)> typedTokens)
         {
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
+            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
             await foreach (var typedToken in typedTokens)
             {
                 switch (typedToken.Type)

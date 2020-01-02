@@ -6,7 +6,7 @@ using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
 using Interfaces.Delegates.Sort;
 
-using Interfaces.Status;
+
 
 using Attributes;
 
@@ -33,9 +33,9 @@ namespace Delegates.Sort.Requests
             this.collectionController = collectionController;
         }
 
-        public async Task SortAsync(List<string> methods, IStatus status)
+        public async Task SortAsync(List<string> methods)
         {
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync(status);
+            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
 
             methods.Sort((string x, string y) =>
             {

@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Status;
-
 namespace Interfaces.Delegates.Convert
 {
     public interface IConvertDelegate<From, To>
@@ -11,7 +9,7 @@ namespace Interfaces.Delegates.Convert
 
     public interface IConvertAsyncDelegate<From, To>
     {
-        To ConvertAsync(From data, IStatus status);
+        To ConvertAsync(From data);
     }
 
 }

@@ -6,9 +6,9 @@ using System.Net.Http;
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Network;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Download;
-using Interfaces.Status;
 
 using Attributes;
 
@@ -21,27 +21,27 @@ namespace Delegates.Download
         INetworkController networkController;
         readonly IStreamController streamController;
         readonly IFileController fileController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "Controllers.Network.NetworkController,Controllers",
             "Controllers.Stream.StreamController,Controllers",
             "Controllers.File.FileController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromResponseAsyncDelegate(
             INetworkController networkController,
             IStreamController streamController,
             IFileController fileController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.networkController = networkController;
             this.streamController = streamController;
             this.fileController = fileController;
 
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task DownloadFromResponseAsync(HttpResponseMessage response, string destination, IStatus status)
+        public async Task DownloadFromResponseAsync(HttpResponseMessage response, string destination)
         {
             response.EnsureSuccessStatusCode();
 
@@ -57,9 +57,9 @@ namespace Delegates.Download
             if (fileController.Exists(fullPath) &&
                 fileController.GetSize(fullPath) == response.Content.Headers.ContentLength)
             {
-                await statusController.InformAsync(
-                    status, 
-                    $"File {fullPath} already exists and matches response size, will not be redownloading");
+                // await statusController.InformAsync(
+                //     status, 
+                //     $"File {fullPath} already exists and matches response size, will not be redownloading");
                 return;
             }
 
@@ -73,17 +73,17 @@ namespace Delegates.Download
                         (long) response.Content.Headers.ContentLength :
                         totalBytesRead;
                     await writeableStream.WriteAsync(buffer, 0, bytesRead);
-                    await statusController.UpdateProgressAsync(
-                        status,
-                        totalBytesRead,
-                        contentLength,
-                        filename,
-                        DataUnits.Bytes);
+                    // await statusController.UpdateProgressAsync(
+                    //     status,
+                    //     totalBytesRead,
+                    //     contentLength,
+                    //     filename,
+                    //     DataUnits.Bytes);
                 }
             }
         }
 
-        //public async Task DownloadFileFromSourceAsync(string sourceUri, string destination, IStatus status)
+        //public async Task DownloadFileFromSourceAsync(string sourceUri, string destination)
         //{
         //    var downloadEntryTask = await statusController.CreateAsync(status, "Download entry");
         //    try

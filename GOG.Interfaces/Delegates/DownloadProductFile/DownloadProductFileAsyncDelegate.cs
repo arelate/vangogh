@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Status;
-
 namespace GOG.Interfaces.Delegates.DownloadProductFile
 {
     public interface IDownloadProductFileAsyncDelegate
@@ -10,7 +8,6 @@ namespace GOG.Interfaces.Delegates.DownloadProductFile
             long id,
             string title,
             string sourceUri,
-            string destination,
-            IStatus status);
+            string destination);
     }
 }

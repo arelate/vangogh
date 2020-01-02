@@ -12,7 +12,6 @@ namespace Delegates.Sort.Requests.Tests
     public class MethodOrderCompareDelegateTests
     {
         private ISortAsyncDelegate<string> sortRequestsMethodsByOrderAsyncDelegate;
-        private readonly Models.Status.Status testStatus;
 
         public MethodOrderCompareDelegateTests()
         {
@@ -21,8 +20,6 @@ namespace Delegates.Sort.Requests.Tests
             sortRequestsMethodsByOrderAsyncDelegate = singletonInstancesController.GetInstance(
                 typeof(SortRequestsMethodsByOrderAsyncDelegate))
                 as SortRequestsMethodsByOrderAsyncDelegate;
-
-            testStatus = new Models.Status.Status();
         }
 
         [Theory]
@@ -32,8 +29,7 @@ namespace Delegates.Sort.Requests.Tests
         {
             var methods = new List<string>() { method1, method2 };
             await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
-                methods,
-                testStatus);
+                methods);
 
             var firstIndex = expectedOrder ? 0 : 1;
             var secondIndex = expectedOrder ? 1 : 0;
@@ -55,8 +51,7 @@ namespace Delegates.Sort.Requests.Tests
             await Assert.ThrowsAsync<InvalidOperationException>(
                 async () =>
                 await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
-                    methods,
-                    testStatus));
+                    methods));
         }
     }
 }

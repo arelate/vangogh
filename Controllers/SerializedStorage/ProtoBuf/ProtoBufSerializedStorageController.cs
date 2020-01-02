@@ -5,8 +5,7 @@ using System.Text;
 using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.File;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -18,25 +17,26 @@ namespace Controllers.SerializedStorage.ProtoBuf
     {
         readonly IFileController fileController;
         readonly IStreamController streamController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "Controllers.File.FileController,Controllers",
             "Controllers.Stream.StreamController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ProtoBufSerializedStorageController(
             IFileController fileController,
             IStreamController streamController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.fileController = fileController;
             this.streamController = streamController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<T> DeserializePullAsync<T>(string uri, IStatus status)
+        // TODO: Make async
+        public async Task<T> DeserializePullAsync<T>(string uri)
         {
-            var deserializePullTask = await statusController.CreateAsync(status, "Reading serialized data", false);
+            actionLogController.StartAction("Reading serialized data");
 
             T data = default(T);
 
@@ -46,19 +46,20 @@ namespace Controllers.SerializedStorage.ProtoBuf
                     data = Serializer.Deserialize<T>(readableStream);
             }
 
-            await statusController.CompleteAsync(deserializePullTask, false);
+            actionLogController.CompleteAction();
 
             return data;
         }
 
-        public async Task SerializePushAsync<T>(string uri, T data, IStatus status)
+        // TODO: Make async
+        public async Task SerializePushAsync<T>(string uri, T data)
         {
-            var serializePushTask = await statusController.CreateAsync(status, "Writing serialized data", false);
+            actionLogController.StartAction("Writing serialized data");
 
             using (var writableStream = streamController.OpenWritable(uri))
                 Serializer.Serialize<T>(writableStream, data);
 
-            await statusController.CompleteAsync(serializePushTask, false);
+            actionLogController.CompleteAction();
         }
     }
 }

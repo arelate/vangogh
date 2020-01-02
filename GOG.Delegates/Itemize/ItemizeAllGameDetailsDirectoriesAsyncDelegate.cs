@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -18,44 +17,36 @@ namespace GOG.Delegates.Itemize
     {
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
 		[Dependencies(
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public ItemizeAllGameDetailsDirectoriesAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async IAsyncEnumerable<string> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<string> ItemizeAllAsync()
         {
-            var enumerateGameDetailsDirectoriesTask = await statusController.CreateAsync(status, "Enumerate gameDetails directories");
+            actionLogController.StartAction("Enumerate gameDetails directories");
             
-            var current = 0;
-            var gameDetailsCount = await gameDetailsDataController.CountAsync(enumerateGameDetailsDirectoriesTask);
-
-            await foreach (var gameDetails in gameDetailsDataController.ItemizeAllAsync(enumerateGameDetailsDirectoriesTask))
+            await foreach (var gameDetails in gameDetailsDataController.ItemizeAllAsync())
             {
-                await statusController.UpdateProgressAsync(
-                    enumerateGameDetailsDirectoriesTask,
-                    ++current,
-                    gameDetailsCount,
-                    gameDetails.Title);
+                actionLogController.IncrementActionProgress();
 
                 foreach (var directory in await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
-                        gameDetails, 
-                        enumerateGameDetailsDirectoriesTask))
+                        gameDetails))
                         yield return directory;
             }
 
-            await statusController.CompleteAsync(enumerateGameDetailsDirectoriesTask);
+            actionLogController.CompleteAction();
         }
     }
 }

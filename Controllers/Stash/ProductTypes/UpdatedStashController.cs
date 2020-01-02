@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
-using Interfaces.Delegates.GetPath;
 using Interfaces.Controllers.SerializedStorage;
+using Interfaces.Controllers.Logs;
 
-using Interfaces.Status;
+using Interfaces.Delegates.GetPath;
 
 using Attributes;
 
@@ -16,15 +16,15 @@ namespace Controllers.Stash.ProductTypes
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetUpdatedPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public UpdatedStashController(
             IGetPathDelegate getUpdatedPathDelegate,
             ISerializedStorageController serializedStorageController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 getUpdatedPathDelegate,
                 serializedStorageController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

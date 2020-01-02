@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
-using Interfaces.Delegates.GetPath;
 using Interfaces.Controllers.SerializedStorage;
+using Interfaces.Controllers.Logs;
 
-using Interfaces.Status;
+using Interfaces.Delegates.GetPath;
 
 using Attributes;
 
@@ -18,15 +18,15 @@ namespace Controllers.Stash.ProductTypes
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetProductDownloadsPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ProductDownloadsStashController(
             IGetPathDelegate getProductDownloadsPathDelegate,
             ISerializedStorageController serializedStorageController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 getProductDownloadsPathDelegate,
                 serializedStorageController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

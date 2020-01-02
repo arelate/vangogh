@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Status;
-
 using Attributes;
 
 namespace Delegates.Convert.Hashes
@@ -22,7 +20,7 @@ namespace Delegates.Convert.Hashes
             this.byteToStringConversionController = byteToStringConversionController;
         }
 
-        public async Task<string> ConvertAsync(byte[] data, IStatus status)
+        public async Task<string> ConvertAsync(byte[] data)
         {
             return await Task.Run(() => {
                 if (data == null)

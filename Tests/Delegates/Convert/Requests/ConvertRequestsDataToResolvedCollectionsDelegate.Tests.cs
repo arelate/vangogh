@@ -19,7 +19,6 @@ namespace Delegates.Convert.Requests.Tests
     public class ConvertRequestsDataToResolvedCollectionsDelegateTests
     {
         private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate;
-        private readonly Models.Status.Status testStatus;
 
         public ConvertRequestsDataToResolvedCollectionsDelegateTests()
         {
@@ -28,8 +27,6 @@ namespace Delegates.Convert.Requests.Tests
             convertRequestsDataToResolvedCollectionsDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertRequestsDataToResolvedCollectionsDelegate))
                 as ConvertRequestsDataToResolvedCollectionsDelegate;
-                
-            testStatus = new Models.Status.Status();
         }
 
         [Theory]
@@ -49,8 +46,7 @@ namespace Delegates.Convert.Requests.Tests
 
             var requestsDataWithCollections =
                 await convertRequestsDataToResolvedCollectionsDelegate.ConvertAsync(
-                    requestsData,
-                    testStatus);
+                    requestsData);
 
             Assert.Equal(expectedCollectionsCount, requestsDataWithCollections.Collections.Count);
         }

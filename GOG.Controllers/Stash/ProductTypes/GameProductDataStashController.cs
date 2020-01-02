@@ -2,8 +2,7 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.GetPath;
 using Interfaces.Controllers.SerializedStorage;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -19,15 +18,15 @@ namespace GOG.Controllers.Stash.ProductTypes
         [Dependencies(
             "Delegates.GetPath.ProductTypes.GetGameProductDataPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public GameProductDataStashController(
             IGetPathDelegate getGameProductDataPathDelegate,
             ISerializedStorageController serializedStorageController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 getGameProductDataPathDelegate,
                 serializedStorageController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

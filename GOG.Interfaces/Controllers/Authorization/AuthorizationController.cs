@@ -1,42 +1,40 @@
 ﻿using System.Threading.Tasks;
 
-using Interfaces.Status;
-
 namespace GOG.Interfaces.Controllers.Authorization
 {
     public interface IAuthorizeAsyncDelegate
     {
-        Task AuthorizeAsync(string username, string password, IStatus status);
+        Task AuthorizeAsync(string username, string password);
     }
 
     public interface IAuthorizedAsyncDelegate
     {
-        Task<bool> AuthorizedAsync(IStatus status);
+        Task<bool> AuthorizedAsync();
     }
 
     public interface IGetAuthenticationTokenResponseAsyncDelegate
     {
-        Task<string> GetAuthenticationTokenResponseAsync(IStatus status);
+        Task<string> GetAuthenticationTokenResponseAsync();
     }
 
     public interface IGetLoginCheckResponseAsyncDelegate
     {
-        Task<string> GetLoginCheckResponseAsync(string authResponse, string username, string password, IStatus status);
+        Task<string> GetLoginCheckResponseAsync(string authResponse, string username, string password);
     }
 
     public interface IGetTwoStepLoginCheckResponseAsyncDelegate
     {
-        Task<string> GetTwoStepLoginCheckResponseAsync(string loginCheckResult, IStatus status);
+        Task<string> GetTwoStepLoginCheckResponseAsync(string loginCheckResult);
     }
 
     public interface ICheckAuthorizationSuccessAsyncDelegate
     {
-        Task<bool> CheckAuthorizationSuccessAsync(string response, IStatus status);
+        Task<bool> CheckAuthorizationSuccessAsync(string response);
     }
 
     public interface IThrowSecurityExceptionAsyncDelegate
     {
-        Task ThrowSecurityExceptionAsync(IStatus status, string message);
+        Task ThrowSecurityExceptionAsync(string message);
     }
 
 

@@ -1,5 +1,5 @@
 using Interfaces.Controllers.Data;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -11,13 +11,13 @@ namespace Controllers.Records.Session
     {
         [Dependencies(
             "Controllers.Data.Records.SessionRecordsDataController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public SessionRecordsIndexController(
             IDataController<ProductRecords> sessionRecordsController,
-            IStatusController statusController) :
+            IActionLogController actionLogController) :
             base(
                 sessionRecordsController,
-                statusController)
+                actionLogController)
         {
             // ...
         }

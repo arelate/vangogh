@@ -7,9 +7,9 @@ using Interfaces.Delegates.Correct;
 using Interfaces.Controllers.Uri;
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Serialization;
+using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Itemize;
-using Interfaces.Status;
 
 using Attributes;
 
@@ -41,7 +41,7 @@ namespace GOG.Controllers.Authorization
         IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate;
         IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
 
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
         [Dependencies(
             "Delegates.Correct.CorrectUsernamePasswordAsyncDelegate,Delegates",
@@ -53,7 +53,7 @@ namespace GOG.Controllers.Authorization
             "Controllers.Uri.UriController,Controllers",
             "Controllers.Network.NetworkController,Controllers",
             Dependencies.JSONSerializationController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public GOGAuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
             ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate,
@@ -65,7 +65,7 @@ namespace GOG.Controllers.Authorization
             INetworkController networkController,
             ISerializationController<string> serializationController,
             // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.correctUsernamePasswordAsyncDelegate = correctUsernamePasswordAsyncDelegate;
             this.correctSecurityCodeAsyncDelegate = correctSecurityCodeAsyncDelegate;
@@ -77,41 +77,42 @@ namespace GOG.Controllers.Authorization
             this.networkController = networkController;
             this.serializationController = serializationController;
             // this.attributeValuesItemizeDelegates = attributeValuesItemizeDelegates;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<bool> AuthorizedAsync(IStatus status)
+        public async Task<bool> AuthorizedAsync()
         {
-            var getUserDataTask = await statusController.CreateAsync(status, "Get userData.json");
+            actionLogController.StartAction("Get userData.json");
 
-            var userDataString = await networkController.GetResourceAsync(getUserDataTask, Uris.Endpoints.Authentication.UserData);
+            var userDataString = await networkController.GetResourceAsync(
+                Uris.Endpoints.Authentication.UserData);
+
             if (string.IsNullOrEmpty(userDataString)) return false;
 
             var userData = serializationController.Deserialize<Models.UserData>(userDataString);
 
-            await statusController.CompleteAsync(getUserDataTask);
+            actionLogController.CompleteAction();
 
             return userData.IsLoggedIn;
         }
 
-        public async Task<string> GetAuthenticationTokenResponseAsync(IStatus status)
+        public async Task<string> GetAuthenticationTokenResponseAsync()
         {
-            var getAuthenticationTokenResponseTask = await statusController.CreateAsync(status, "Get authorization token response");
+            actionLogController.StartAction("Get authorization token response");
 
             // request authorization token
             var authResponse = await networkController.GetResourceAsync(
-                status,
                 Uris.Endpoints.Authentication.Auth,
                 QueryParametersCollections.Authenticate);
 
-            await statusController.CompleteAsync(getAuthenticationTokenResponseTask);
+            actionLogController.CompleteAction();
 
             return authResponse;
         }
 
-        public async Task<string> GetLoginCheckResponseAsync(string authResponse, string username, string password, IStatus status)
+        public async Task<string> GetLoginCheckResponseAsync(string authResponse, string username, string password)
         {
-            var getLoginCheckResponseTask = await statusController.CreateAsync(status, "Get login check result");
+            actionLogController.StartAction("Get login check result");
 
             var loginToken = itemizeLoginTokenAttribueValueDelegate.Itemize(authResponse).First();
 
@@ -133,8 +134,7 @@ namespace GOG.Controllers.Authorization
             }
 
             var usernamePassword = await correctUsernamePasswordAsyncDelegate.CorrectAsync(
-                new string[] { username, password },
-                getLoginCheckResponseTask);
+                new string[] { username, password });
 
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
@@ -142,21 +142,23 @@ namespace GOG.Controllers.Authorization
 
             var loginData = uriController.ConcatenateQueryParameters(QueryParametersCollections.LoginAuthenticate);
 
-            var loginCheckResult = await networkController.PostDataToResourceAsync(getLoginCheckResponseTask, loginUri, null, loginData);
+            var loginCheckResult = await networkController.PostDataToResourceAsync(loginUri, null, loginData);
 
-            await statusController.CompleteAsync(getLoginCheckResponseTask);
+            actionLogController.CompleteAction();
 
             return loginCheckResult;
         }
 
-        public async Task<string> GetTwoStepLoginCheckResponseAsync(string loginCheckResult, IStatus status)
+        public async Task<string> GetTwoStepLoginCheckResponseAsync(string loginCheckResult)
         {
-            var getTwoStepLoginCheckResponseTask = await statusController.CreateAsync(status, "Get second step authentication result");
+            actionLogController.StartAction("Get second step authentication result");
 
             // 2FA is enabled for this user - ask for the code
-            var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null, getTwoStepLoginCheckResponseTask);
+            var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null);
 
-            var secondStepAuthenticationToken = itemizeSecondStepAuthenticationTokenAttributeValueDelegate.Itemize(loginCheckResult).First();
+            var secondStepAuthenticationToken = 
+                itemizeSecondStepAuthenticationTokenAttributeValueDelegate.Itemize(
+                    loginCheckResult).First();
 
             QueryParametersCollections.SecondStepAuthentication[
                 QueryParameters.SecondStepAuthenticationTokenLetter1] = securityCode[0].ToString();
@@ -169,34 +171,36 @@ namespace GOG.Controllers.Authorization
             QueryParametersCollections.SecondStepAuthentication[
                 QueryParameters.SecondStepAuthenticationToken] = secondStepAuthenticationToken;
 
-            var secondStepData = uriController.ConcatenateQueryParameters(QueryParametersCollections.SecondStepAuthentication);
+            var secondStepData = uriController.ConcatenateQueryParameters(
+                QueryParametersCollections.SecondStepAuthentication);
 
-            var secondStepLoginCheckResult = await networkController.PostDataToResourceAsync(status, Uris.Endpoints.Authentication.TwoStep, null, secondStepData);
+            var secondStepLoginCheckResult = await networkController.PostDataToResourceAsync(
+                Uris.Endpoints.Authentication.TwoStep, null, secondStepData);
 
-            await statusController.CompleteAsync(getTwoStepLoginCheckResponseTask);
+            actionLogController.CompleteAction();
 
             return secondStepLoginCheckResult;
         }
 
-        public async Task ThrowSecurityExceptionAsync(IStatus status, string message)
+        public async Task ThrowSecurityExceptionAsync(string message)
         {
-            await statusController.FailAsync(status, message);
+            // await statusController.FailAsync(status, message);
             throw new System.Security.SecurityException(message);
         }
 
-        public async Task<bool> CheckAuthorizationSuccessAsync(string response, IStatus status)
+        public async Task<bool> CheckAuthorizationSuccessAsync(string response)
         {
             if (response.Contains(gogData))
             {
-                await statusController.InformAsync(status, successfullyAuthorized);
-                await statusController.CompleteAsync(status);
+                // await statusController.InformAsync(status, successfullyAuthorized);
+                actionLogController.CompleteAction();
                 return true;
             }
 
             return false;
         }
 
-        public async Task AuthorizeAsync(string username, string password, IStatus status)
+        public async Task AuthorizeAsync(string username, string password)
         {
             // GOG.com quirk
             // Since introducing cookies support - it's expected that users need to authorize rarely.
@@ -206,32 +210,32 @@ namespace GOG.Controllers.Authorization
             // - We can also detect CAPTCHA and inform users what to do - this is typical for sales periods
             //   where it seems GOG.com tries to limit automated tools impact on the site
 
-            var authorizeTask = await statusController.CreateAsync(status, "Authorize on GOG.com");
+            actionLogController.StartAction("Authorize on GOG.com");
 
-            if (await AuthorizedAsync(status))
+            if (await AuthorizedAsync())
             {
-                await statusController.InformAsync(authorizeTask, "User has already been logged in");
-                await statusController.CompleteAsync(authorizeTask);
+                // await statusController.InformAsync(authorizeTask, "User has already been logged in");
+                actionLogController.CompleteAction();
                 return;
             }
 
-            var authResponse = await GetAuthenticationTokenResponseAsync(authorizeTask);
+            var authResponse = await GetAuthenticationTokenResponseAsync();
 
             if (authResponse.Contains(Uris.Roots.GoogleRecaptcha))
-                await ThrowSecurityExceptionAsync(authorizeTask, recaptchaDetected);
+                await ThrowSecurityExceptionAsync(recaptchaDetected);
 
-            var loginCheckResponse = await GetLoginCheckResponseAsync(authResponse, username, password, authorizeTask);
+            var loginCheckResponse = await GetLoginCheckResponseAsync(authResponse, username, password);
 
-            if (await CheckAuthorizationSuccessAsync(loginCheckResponse, authorizeTask)) return;
+            if (await CheckAuthorizationSuccessAsync(loginCheckResponse)) return;
 
             if (!loginCheckResponse.Contains(QueryParameters.SecondStepAuthenticationToken))
-                await ThrowSecurityExceptionAsync(authorizeTask, failedToAuthenticate);
+                await ThrowSecurityExceptionAsync(failedToAuthenticate);
 
-            var twoStepLoginCheckResponse = await GetTwoStepLoginCheckResponseAsync(loginCheckResponse, authorizeTask);
+            var twoStepLoginCheckResponse = await GetTwoStepLoginCheckResponseAsync(loginCheckResponse);
 
-            if (await CheckAuthorizationSuccessAsync(twoStepLoginCheckResponse, authorizeTask)) return;
+            if (await CheckAuthorizationSuccessAsync(twoStepLoginCheckResponse)) return;
 
-            await ThrowSecurityExceptionAsync(authorizeTask, failedToAuthenticate);
+            await ThrowSecurityExceptionAsync(failedToAuthenticate);
         }
     }
 }

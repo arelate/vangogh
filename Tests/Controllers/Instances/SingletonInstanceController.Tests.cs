@@ -23,10 +23,13 @@ namespace Controllers.Instances.Tests
         private static IEnumerable<object[]> EnumerateTypesWithConstructorAttribute(Type attributeType)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                foreach (var type in assembly.GetTypes())
+            {
+                if (assembly.GlobalAssemblyCache) continue;
+                foreach (var type in assembly.DefinedTypes)
                     foreach (var constructorInfo in type.GetConstructors())
                         if (constructorInfo.IsDefined(attributeType, true))
                             yield return new object[] { type };
+            }
         }
 
         public static IEnumerable<object[]> EnumerateTypesWithDependencies()

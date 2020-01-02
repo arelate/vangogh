@@ -8,8 +8,10 @@ using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.GetPath;
 using Interfaces.Delegates.Itemize;
 
+using Interfaces.Controllers.Logs;
+
 using Interfaces.Routing;
-using Interfaces.Status;
+
 
 using Attributes;
 
@@ -25,47 +27,46 @@ namespace GOG.Delegates.Itemize
         //private IGetDirectoryDelegate getDirectoryDelegate;
         //private IGetFilenameDelegate getFilenameDelegate;
         readonly IRoutingController routingController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
 		[Dependencies(
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
 			"Controllers.Routing.RoutingController,Controllers",
 			"Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IRoutingController routingController,
             IGetPathDelegate getPathDelegate,
             //IGetDirectoryDelegate getDirectoryDelegate,
             //IGetFilenameDelegate getFilenameDelegate,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.itemizeGameDetailsManualUrlsDelegate = itemizeGameDetailsManualUrlsDelegate;
             //this.getDirectoryDelegate = getDirectoryDelegate;
             //this.getFilenameDelegate = getFilenameDelegate;
             this.getPathDelegate = getPathDelegate;
             this.routingController = routingController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails, IStatus status)
+        public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails)
         {
-            var enumerateGameDetailsFilesStatus = await statusController.CreateAsync(status, "Enumerate game details files");
+            actionLogController.StartAction("Enumerate game details files");
 
             var gameDetailsFiles = new List<string>();
 
-            var gameDetailsManualUrls = await itemizeGameDetailsManualUrlsDelegate.ItemizeAsync(gameDetails, status);
+            var gameDetailsManualUrls = await itemizeGameDetailsManualUrlsDelegate.ItemizeAsync(gameDetails);
             var gameDetailsManualUrlsCount = gameDetailsManualUrls.Count();
             var gameDetailsResolvedUris = await routingController.TraceRoutesAsync(
                 gameDetails.Id, 
-                gameDetailsManualUrls, 
-                enumerateGameDetailsFilesStatus);
+                gameDetailsManualUrls);
 
             // that means that routes information is incomplete and 
             // it's not possible to map manualUrls to resolvedUrls
             if (gameDetailsManualUrlsCount != gameDetailsResolvedUris.Count)
             {
-                await statusController.CompleteAsync(enumerateGameDetailsFilesStatus);
+                actionLogController.CompleteAction();
                 throw new ArgumentException($"Product {gameDetails.Id} resolvedUris count doesn't match manualUrls count");
             }
 
@@ -88,7 +89,7 @@ namespace GOG.Delegates.Itemize
                 gameDetailsFiles.Add(localFilePath);
             }
 
-            await statusController.CompleteAsync(enumerateGameDetailsFilesStatus);
+            actionLogController.CompleteAction();
 
             if (gameDetailsManualUrlsCount != gameDetailsFiles.Count)
                 throw new ArgumentException($"Product {gameDetails.Id} files count doesn't match manualUrls count");

@@ -7,10 +7,9 @@ using Interfaces.Controllers.Records;
 
 using Interfaces.Models.RecordsTypes;
 
-using Interfaces.Status;
-
 namespace Controllers.Records
 {
+    // TODO: Figure out better way to store strings and not convert from a number
     public class StringRecordsController: IRecordsController<string>
     {
         readonly IRecordsController<long> indexRecordsController;
@@ -24,21 +23,21 @@ namespace Controllers.Records
             this.convertStringToIndexDelegate = convertStringToIndexDelegate;
         }
 
-        public async Task CommitAsync(IStatus status)
+        public async Task CommitAsync()
         {
-            await indexRecordsController.CommitAsync(status);
+            await indexRecordsController.CommitAsync();
         }
 
-        public async Task<DateTime> GetRecordAsync(string activity, RecordsTypes recordType, IStatus status)
+        public async Task<DateTime> GetRecordAsync(string activity, RecordsTypes recordType)
         {
             var index = convertStringToIndexDelegate.Convert(activity);
-            return await indexRecordsController.GetRecordAsync(index, recordType, status);
+            return await indexRecordsController.GetRecordAsync(index, recordType);
         }
 
-        public async Task SetRecordAsync(string activity, RecordsTypes recordType, IStatus status)
+        public async Task SetRecordAsync(string activity, RecordsTypes recordType)
         {
             var index = convertStringToIndexDelegate.Convert(activity);
-            await indexRecordsController.SetRecordAsync(index, recordType, status);
+            await indexRecordsController.SetRecordAsync(index, recordType);
         }
     }
 }

@@ -1,6 +1,7 @@
-using Interfaces.Delegates.GetPath;
 using Interfaces.Controllers.SerializedStorage;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
+
+using Interfaces.Delegates.GetPath;
 
 using Attributes;
 
@@ -14,12 +15,15 @@ namespace Controllers.Stash.ArgsDefinitions
         [Dependencies(
             "Delegates.GetPath.ArgsDefinitions.GetArgsDefinitionsPathDelegate,Delegates",
             Dependencies.JSONSerializedStorageController,
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public ArgsDefinitionsStashController(
             IGetPathDelegate getPathDelegate,
             ISerializedStorageController serializedStorageController,
-            IStatusController statusController):
-            base(getPathDelegate, serializedStorageController, statusController)
+            IActionLogController actionLogController):
+            base(
+                getPathDelegate, 
+                serializedStorageController, 
+                actionLogController)
         {
             // ...
         }

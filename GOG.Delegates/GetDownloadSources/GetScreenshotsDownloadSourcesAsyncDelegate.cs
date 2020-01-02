@@ -10,7 +10,7 @@ using Interfaces.Controllers.File;
 
 using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -26,51 +26,43 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
         readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
         readonly IFileController fileController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
 			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
 			"Controllers.File.FileController,Controllers",
-			"Controllers.Status.StatusController,Controllers")]
+			"Controllers.Logs.ActionLogController,Controllers")]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
             IFileController fileController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.screenshotsDataController = screenshotsDataController;
             this.formatScreenshotsUriDelegate = formatScreenshotsUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
             this.fileController = fileController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync(IStatus status)
+        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            var processUpdatesTask = await statusController.CreateAsync(status, "Process screenshots updates");
+            actionLogController.StartAction("Process screenshots updates");
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
-            var current = 0;
-            var total = await screenshotsDataController.CountAsync(processUpdatesTask);
 
-            var processProductsScreenshotsTask = await statusController.CreateAsync(processUpdatesTask, "Process product screenshots");
-
-            await foreach (var productScreenshots in screenshotsDataController.ItemizeAllAsync(processProductsScreenshotsTask))
+            await foreach (var productScreenshots in screenshotsDataController.ItemizeAllAsync())
             {
                 if (productScreenshots == null)
                 {
-                    await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {productScreenshots.Id} doesn't have screenshots");
+                    // await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {productScreenshots.Id} doesn't have screenshots");
                     continue;
                 }
 
-                await statusController.UpdateProgressAsync(
-                    processUpdatesTask, 
-                    ++current, 
-                    total,
-                    productScreenshots.Title);
+                actionLogController.IncrementActionProgress();
 
                 var currentProductScreenshotSources = new List<string>();
 
@@ -90,8 +82,7 @@ namespace GOG.Delegates.GetDownloadSources
                     screenshotsSources.Add(productScreenshots.Id, currentProductScreenshotSources);
             }
 
-            await statusController.CompleteAsync(processProductsScreenshotsTask);
-            await statusController.CompleteAsync(processUpdatesTask);
+            actionLogController.CompleteAction();
 
             return screenshotsSources;
         }

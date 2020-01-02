@@ -1,57 +1,43 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Status;
 
 namespace Interfaces.Controllers.Data
 {
     public interface IGetByIdAsyncDelegate<IdentityType, DataType>
     {
-        Task<DataType> GetByIdAsync(IdentityType id, IStatus status);
-    }
-
-    public interface IEnumerateKeysAsyncDelegate<T>
-    {
-        Task<IEnumerable<T>> EnumerateKeysAsync(IStatus status);
+        Task<DataType> GetByIdAsync(IdentityType id);
     }
 
     public interface IUpdateAsyncDelegate<Type>
     {
-        Task UpdateAsync(Type data, IStatus status);
-    }
-
-    public interface ICreateAsyncDelegate<Type>
-    {
-        Task CreateAsync(Type data, IStatus status);
+        Task UpdateAsync(Type data);
     }
 
     public interface IDeleteAsyncDelegate<Type>
     {
-        Task DeleteAsync(Type data, IStatus status);
+        Task DeleteAsync(Type data);
     }
 
     public interface IContainsAsyncDelegate<Type>
     {
-        Task<bool> ContainsAsync(Type data, IStatus status);
+        Task<bool> ContainsAsync(Type data);
     }
 
     public interface IContainsIdAsyncDelegate<IdentityType>
     {
-        Task<bool> ContainsIdAsync(IdentityType id, IStatus status);
+        Task<bool> ContainsIdAsync(IdentityType id);
     }
 
     public interface ICountAsyncDelegate
     {
-        Task<int> CountAsync(IStatus status);
+        Task<int> CountAsync();
     }
 
     public interface ICommitAsyncDelegate
     {
-        Task CommitAsync(IStatus status);
+        Task CommitAsync();
     }
-
 
     public interface IDataController<DataType> :
         IItemizeAllAsyncDelegate<DataType>,

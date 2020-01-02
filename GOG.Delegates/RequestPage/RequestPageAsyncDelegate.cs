@@ -5,8 +5,6 @@ using GOG.Interfaces.Delegates.RequestPage;
 
 using Interfaces.Controllers.Network;
 
-using Interfaces.Status;
-
 using Attributes;
 
 namespace GOG.Delegates.RequestPage
@@ -27,15 +25,14 @@ namespace GOG.Delegates.RequestPage
         public async Task<string> RequestPageAsync(
             string uri,
             IDictionary<string, string> parameters,
-            int page,
-            IStatus status)
+            int page)
         {
             if (!parameters.Keys.Contains(pageQueryParameter))
                 parameters.Add(pageQueryParameter, page.ToString());
 
             parameters[pageQueryParameter] = page.ToString();
 
-            var pageResponse = await networkController.GetResourceAsync(status, uri, parameters);
+            var pageResponse = await networkController.GetResourceAsync(uri, parameters);
 
             return pageResponse;
         }

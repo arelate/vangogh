@@ -5,7 +5,7 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
 using Interfaces.Controllers.Serialization;
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Models.Units;
 
@@ -22,14 +22,14 @@ namespace GOG.Delegates.GetPageResults
         readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
         readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
         readonly ISerializationController<string> serializationController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
 
         public GetPageResultsAsyncDelegate(
             IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
             ISerializationController<string> serializationController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.getPageResultsUpdateUriDelegate = getPageResultsUpdateUriDelegate;
             this.getPageResultsUpdateQueryParametersDelegate = getPageResultsUpdateQueryParametersDelegate;
@@ -37,10 +37,10 @@ namespace GOG.Delegates.GetPageResults
             this.requestPageAsyncDelegate = requestPageAsyncDelegate;
             this.serializationController = serializationController;
 
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<IList<T>> GetPageResultsAsync(IStatus status)
+        public async Task<IList<T>> GetPageResultsAsync()
         {
             // GOG.com quirk
             // Products, AccountProducts use server-side paginated results, similar to Wikipedia.
@@ -60,22 +60,16 @@ namespace GOG.Delegates.GetPageResults
             var requestUri = getPageResultsUpdateUriDelegate.GetValue();
             var requestParameters = getPageResultsUpdateQueryParametersDelegate.GetValue();
 
-            var getPagesTask = await statusController.CreateAsync(status, $"Request pages data");
+            actionLogController.StartAction($"Request pages data");
 
             do
             {
                 var response = await requestPageAsyncDelegate.RequestPageAsync(
                     requestUri, 
                     requestParameters, 
-                    currentPage,
-                    getPagesTask);
+                    currentPage);
 
-                await statusController.UpdateProgressAsync(
-                    getPagesTask,
-                    currentPage,
-                    totalPages,
-                    requestUri,
-                    PageUnits.Pages);
+                actionLogController.IncrementActionProgress();
 
                 pageResult = serializationController.Deserialize<T>(response);
 
@@ -87,7 +81,7 @@ namespace GOG.Delegates.GetPageResults
 
             } while (++currentPage <= totalPages);
 
-            await statusController.CompleteAsync(getPagesTask);
+            actionLogController.CompleteAction();
 
             return pageResults;
         }

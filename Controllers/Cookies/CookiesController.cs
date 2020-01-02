@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Controllers.Cookies;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.StrongTypeSerialization;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -17,25 +16,25 @@ namespace Controllers.Cookies
     {
         readonly IStashController<Dictionary<string, string>> cookieStashController;
         readonly IStrongTypeSerializationController<(string, string), string> cookieSerializationController;
-        IStatusController statusController;
+        IActionLogController actionLogController;
 
         [Dependencies(
             "Controllers.Stash.Cookies.CookiesStashController,Controllers",
             "Controllers.StrongTypeSerialization.Cookies.CookiesSerializationController,Controllers",
-            "Controllers.Status.StatusController,Controllers")]
+            "Controllers.Logs.ActionLogController,Controllers")]
         public CookiesController(
             IStashController<Dictionary<string, string>> cookieStashController,
             IStrongTypeSerializationController<(string, string), string> cookieSerializationController,
-            IStatusController statusController)
+            IActionLogController actionLogController)
         {
             this.cookieStashController = cookieStashController;
             this.cookieSerializationController = cookieSerializationController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
         }
 
-        public async Task<string> GetCookiesStringAsync(IStatus status)
+        public async Task<string> GetCookiesStringAsync()
         {
-            var storedCookies = await cookieStashController.GetDataAsync(status);
+            var storedCookies = await cookieStashController.GetDataAsync();
 
             var cookies = new List<string>();
             foreach (var cookieName in storedCookies.Keys)
@@ -46,9 +45,9 @@ namespace Controllers.Cookies
             return string.Join(Separators.Common.SemiColon, cookies);
         }
 
-        public async Task SetCookiesAsync(IEnumerable<string> cookies, IStatus status)
+        public async Task SetCookiesAsync(IEnumerable<string> cookies)
         {
-            var storedCookies = await cookieStashController.GetDataAsync(status);
+            var storedCookies = await cookieStashController.GetDataAsync();
 
             foreach (var cookie in cookies)
             {
@@ -59,7 +58,7 @@ namespace Controllers.Cookies
                 else storedCookies.Add(deserializedCookie.Item1, deserializedCookie.Item2);
             }
 
-            await cookieStashController.SaveAsync(status);
+            await cookieStashController.SaveAsync();
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Interfaces.Models.RecordsTypes
 {
+    // TODO: Split model record types and activity
     public enum RecordsTypes
     {
         Created = 0,

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Interfaces.Controllers.Network;
 
 using Interfaces.Controllers.Serialization;
-using Interfaces.Status;
 
 using Models.ProductTypes;
 
@@ -26,9 +25,9 @@ namespace GOG.Delegates.GetDeserialized
             this.serializationController = serializationController;
         }
 
-        public async Task<T> GetDeserializedAsync(IStatus status, string uri, IDictionary<string, string> parameters = null)
+        public async Task<T> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await getResourceAsyncDelegate.GetResourceAsync(status, uri, parameters);
+            var response = await getResourceAsyncDelegate.GetResourceAsync(uri, parameters);
 
             if (response == null) return default(T);
 

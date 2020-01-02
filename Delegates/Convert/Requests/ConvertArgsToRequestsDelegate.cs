@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Sort;
 
-using Interfaces.Status;
-
 using Attributes;
 
 using Models.Requests;
@@ -46,12 +44,12 @@ namespace Delegates.Convert.Requests
             this.convertRequestsDataToRequestsDelegate = convertRequestsDataToRequestsDelegate;
         }
 
-        public async IAsyncEnumerable<Request> ConvertAsync(string[] tokens, IStatus status)
+        public async IAsyncEnumerable<Request> ConvertAsync(string[] tokens)
         {
             #region Phase 1: Parse tokens into typed tokens
 
             var typedTokens = new List<(string, Tokens)>();
-            await foreach (var typedToken in convertTokensToTypedTokensDelegate.ConvertAsync(tokens, status))
+            await foreach (var typedToken in convertTokensToTypedTokensDelegate.ConvertAsync(tokens))
                 typedTokens.Add(typedToken);
 
             #endregion
@@ -64,25 +62,25 @@ namespace Delegates.Convert.Requests
 
             #region Phase 3: If there were no collections specified for a method - add all method collections
 
-            requestsData = await convertRequestsDataToResolvedCollectionsDelegate.ConvertAsync(requestsData, status);
+            requestsData = await convertRequestsDataToResolvedCollectionsDelegate.ConvertAsync(requestsData);
 
             #endregion
 
             #region Phase 4: Resolve dependencies some methods, collections might have
 
-            requestsData = await convertRequestsDataToResolvedDependenciesDelegate.ConvertAsync(requestsData, status);
+            requestsData = await convertRequestsDataToResolvedDependenciesDelegate.ConvertAsync(requestsData);
 
             #endregion
 
             #region Phase 5: Sort methods by order
 
-            await sortMethodsByOrderDelegate.SortAsync(requestsData.Methods, status);
+            await sortMethodsByOrderDelegate.SortAsync(requestsData.Methods);
 
             #endregion
 
             #region Phase 6: Convert requests data to requests
 
-            await foreach (var request in convertRequestsDataToRequestsDelegate.ConvertAsync(requestsData, status))
+            await foreach (var request in convertRequestsDataToRequestsDelegate.ConvertAsync(requestsData))
                 yield return request;
 
             #endregion

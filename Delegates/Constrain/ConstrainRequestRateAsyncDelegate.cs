@@ -7,8 +7,7 @@ using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Collection;
-
-using Interfaces.Status;
+using Interfaces.Controllers.Logs;
 
 using Attributes;
 
@@ -18,7 +17,7 @@ namespace Delegates.Constrain
     {
         readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
         readonly ICollectionController collectionController;
-        readonly IStatusController statusController;
+        readonly IActionLogController actionLogController;
         readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
         readonly IItemizeAllDelegate<string> itemizeRateContraindesUris;
         const int requestIntervalSeconds = 30;
@@ -28,17 +27,17 @@ namespace Delegates.Constrain
         [Dependencies(
             "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
             "Controllers.Collection.CollectionController,Controllers",
-            "Controllers.Status.StatusController,Controllers",
+            "Controllers.Logs.ActionLogController,Controllers",
             "GOG.Delegates.Itemize.ItemizeAllRateConstrainedUrisDelegate,GOG.Delegates")]
         public ConstrainRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
             ICollectionController collectionController,
-            IStatusController statusController,
+            IActionLogController actionLogController,
             IItemizeAllDelegate<string> itemizeRateContraindesUris)
         {
             this.constrainExecutionAsyncDelegate = constrainExecutionAsyncDelegate;
             this.collectionController = collectionController;
-            this.statusController = statusController;
+            this.actionLogController = actionLogController;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
             rateLimitRequestsCount = 0;
 
@@ -51,7 +50,7 @@ namespace Delegates.Constrain
                         DateTime.UtcNow - TimeSpan.FromSeconds(requestIntervalSeconds));
         }
 
-        public async Task ConstrainAsync(string uri, IStatus status)
+        public async Task ConstrainAsync(string uri)
         {
             var prefix = collectionController.Reduce(itemizeRateContraindesUris.ItemizeAll(), uri.StartsWith).SingleOrDefault();
             if (string.IsNullOrEmpty(prefix)) return;
@@ -63,9 +62,9 @@ namespace Delegates.Constrain
             var elapsed = (int)(now - lastRequestToUriPrefix[prefix]).TotalSeconds;
             if (elapsed < requestIntervalSeconds)
             {
-                var limitRateTask = await statusController.CreateAsync(status, "Limit request rate to avoid temporary server block");
-                await constrainExecutionAsyncDelegate.ConstrainAsync(requestIntervalSeconds - elapsed, status);
-                await statusController.CompleteAsync(limitRateTask);
+                actionLogController.StartAction("Limit request rate to avoid temporary server block");
+                await constrainExecutionAsyncDelegate.ConstrainAsync(requestIntervalSeconds - elapsed);
+                actionLogController.CompleteAction();
             }
 
             lastRequestToUriPrefix[prefix] = now;

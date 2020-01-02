@@ -4,8 +4,6 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 
-using Interfaces.Status;
-
 using Models.ProductTypes;
 
 namespace Delegates.Itemize.MasterDetail
@@ -26,10 +24,10 @@ namespace Delegates.Itemize.MasterDetail
             this.detailDataController = detailDataController;
         }
 
-        public async IAsyncEnumerable<MasterType> ItemizeAllAsync(IStatus status)
+        public async IAsyncEnumerable<MasterType> ItemizeAllAsync()
         {
-            await foreach (var masterDataValue in masterDataController.ItemizeAllAsync(status))
-                if (!await detailDataController.ContainsIdAsync(masterDataValue.Id, status))
+            await foreach (var masterDataValue in masterDataController.ItemizeAllAsync())
+                if (!await detailDataController.ContainsIdAsync(masterDataValue.Id))
                     yield return masterDataValue;
         }
     }
