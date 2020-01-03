@@ -18,6 +18,7 @@ namespace Controllers.Instances.Tests
     {
         private static IInstancesController dependenciesInstancesController;
         private static IInstancesController testDependenciesOverridesInstancesController;
+        private static IItemizeAllDelegate<Type> itemizeAllTypesDelegate = new ItemizeAllTypesDelegate();
 
         public SingletonInstancesControllerTests()
         {
@@ -25,23 +26,23 @@ namespace Controllers.Instances.Tests
             testDependenciesOverridesInstancesController = new SingletonInstancesController(true);
         }
 
-        private static IEnumerable<object[]> EnumerateTypesWithConstructorAttribute(Type attributeType)
+        private static IEnumerable<object[]> EnumerateTypesWithConstructorAttribute(IItemizeAllDelegate<Type> itemizeAllAttributeTypesDelegate)
         {
-            var itemizeAllTypesDelegate = new ItemizeAllTypesDelegate();
-            var itemizeAllDependenciesAttributeTypesDelegate = new ItemizeAllDependenciesAttributeTypesDelegate(itemizeAllTypesDelegate);
-
-            foreach (var type in itemizeAllDependenciesAttributeTypesDelegate.ItemizeAll())
+            foreach (var type in itemizeAllAttributeTypesDelegate.ItemizeAll())
                 yield return new object[] { type };
         }
 
         public static IEnumerable<object[]> EnumerateTypesWithDependencies()
         {
-            return EnumerateTypesWithConstructorAttribute(typeof(DependenciesAttribute));
+
+            var itemizeAllDependenciesAttributeTypesDelegate = new ItemizeAllDependenciesAttributeTypesDelegate(itemizeAllTypesDelegate);
+            return EnumerateTypesWithConstructorAttribute(itemizeAllDependenciesAttributeTypesDelegate);
         }
 
         public static IEnumerable<object[]> EnumerateTypesWithTestDependenciesOverrides()
         {
-            return EnumerateTypesWithConstructorAttribute(typeof(TestDependenciesOverridesAttribute));
+            var itemizeAllTestDependenciesOverridesAttributeTypesDelegate = new ItemizeAllTestDependenciesOverridesAttributeTypesDelegate(itemizeAllTypesDelegate);
+            return EnumerateTypesWithConstructorAttribute(itemizeAllTestDependenciesOverridesAttributeTypesDelegate);
         }
 
         private void CanInstantiateTypes(
