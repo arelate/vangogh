@@ -17,7 +17,7 @@ namespace Delegates.Convert.Requests
 
         [Dependencies(
             "Controllers.Collection.CollectionController,Controllers",
-            "GOG.Delegates.Itemize.Types.ItemizeAllRespondDelegateTypesDelegate,GOG.Delegates")]
+            "Delegates.Itemize.Types.Attributes.ItemizeAllRespondsToRequestsAttributeTypesDelegate,Delegates")]
         public ConvertRequestToRespondDelegateTypeDelegate(
             ICollectionController collectionController,
             IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate)

@@ -3,9 +3,14 @@ using System.Collections.Generic;
 
 using Xunit;
 
+using Interfaces.Delegates.Itemize;
+
 using Interfaces.Controllers.Instances;
 
 using Attributes;
+
+using Delegates.Itemize.Types;
+using Delegates.Itemize.Types.Attributes;
 
 namespace Controllers.Instances.Tests
 {
@@ -22,14 +27,11 @@ namespace Controllers.Instances.Tests
 
         private static IEnumerable<object[]> EnumerateTypesWithConstructorAttribute(Type attributeType)
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                if (assembly.GlobalAssemblyCache) continue;
-                foreach (var type in assembly.DefinedTypes)
-                    foreach (var constructorInfo in type.GetConstructors())
-                        if (constructorInfo.IsDefined(attributeType, true))
-                            yield return new object[] { type };
-            }
+            var itemizeAllTypesDelegate = new ItemizeAllTypesDelegate();
+            var itemizeAllDependenciesAttributeTypesDelegate = new ItemizeAllDependenciesAttributeTypesDelegate(itemizeAllTypesDelegate);
+
+            foreach (var type in itemizeAllDependenciesAttributeTypesDelegate.ItemizeAll())
+                yield return new object[] { type };
         }
 
         public static IEnumerable<object[]> EnumerateTypesWithDependencies()
