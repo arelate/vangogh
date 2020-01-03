@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xunit;
 
 using Interfaces.Delegates.Sort;
+using Interfaces.Models.Dependencies;
 
 using Controllers.Instances;
 
@@ -15,7 +16,7 @@ namespace Delegates.Sort.Requests.Tests
 
         public MethodOrderCompareDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
+            var singletonInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
 
             sortRequestsMethodsByOrderAsyncDelegate = singletonInstancesController.GetInstance(
                 typeof(SortRequestsMethodsByOrderAsyncDelegate))

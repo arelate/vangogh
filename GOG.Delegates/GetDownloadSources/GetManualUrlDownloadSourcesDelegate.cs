@@ -5,6 +5,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -22,6 +23,7 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
+            DependencyContext.Default,
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",

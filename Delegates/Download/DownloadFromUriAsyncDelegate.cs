@@ -6,6 +6,7 @@ using Interfaces.Delegates.Download;
 
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -18,6 +19,7 @@ namespace Delegates.Download
         readonly IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]

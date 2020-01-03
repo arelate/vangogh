@@ -8,6 +8,7 @@ using Interfaces.Delegates.Constrain;
 
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Cookies;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -25,6 +26,7 @@ namespace Controllers.Network
         IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Cookies.CookiesController,Controllers",
             "Controllers.Uri.UriController,Controllers",
             "Delegates.Constrain.ConstrainRequestRateAsyncDelegate,Delegates")]

@@ -5,6 +5,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Download;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Logs;
@@ -27,6 +28,7 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
+            DependencyContext.Default,
 			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
 			"Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
 			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",

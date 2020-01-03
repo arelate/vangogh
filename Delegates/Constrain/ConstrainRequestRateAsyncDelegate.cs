@@ -8,6 +8,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -25,6 +26,7 @@ namespace Delegates.Constrain
         int rateLimitRequestsCount;
 
         [Dependencies(
+            DependencyContext.Default,
             "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
             "Controllers.Collection.CollectionController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers",

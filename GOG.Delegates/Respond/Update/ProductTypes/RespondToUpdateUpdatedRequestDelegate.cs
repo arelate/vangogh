@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Respond;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
@@ -23,6 +24,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         readonly IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",

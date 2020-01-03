@@ -1,5 +1,6 @@
 ﻿using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
@@ -14,6 +15,7 @@ namespace GOG.Delegates.Respond.Download.ProductTypes
     public class RespondToDownloadProductScreenshotsRequestDelegate : RespondToDownloadRequestDelegate<ProductScreenshots>
     {
 		[Dependencies(
+            DependencyContext.Default,
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
 			"GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
 			"Controllers.Logs.ActionLogController,Controllers")]        

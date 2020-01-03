@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -12,7 +13,8 @@ namespace Delegates.Convert.Hashes
         readonly MD5 md5;
         readonly IConvertDelegate<byte[], string> byteToStringConversionController;
 
-        [Dependencies("Delegates.Convert.Bytes.ConvertBytesToStringDelegate,Delegates")]
+        [Dependencies(
+            DependencyContext.Default,"Delegates.Convert.Bytes.ConvertBytesToStringDelegate,Delegates")]
         public ConvertBytesToMd5HashDelegate(
             IConvertDelegate<byte[], string> byteToStringConversionController)
         {

@@ -1,5 +1,6 @@
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -10,6 +11,7 @@ namespace Controllers.Records.ProductTypes
     public class ProductRoutesRecordsIndexController : IndexRecordsController
     {
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Data.Records.ProductRoutesRecordsDataController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ProductRoutesRecordsIndexController(

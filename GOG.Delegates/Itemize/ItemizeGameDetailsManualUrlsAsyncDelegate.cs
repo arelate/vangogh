@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-
-
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -22,6 +21,7 @@ namespace GOG.Delegates.Itemize
         IDataController<GameDetails> gameDetailsDataController;
 
 		[Dependencies(
+            DependencyContext.Default,
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers")]
         public ItemizeGameDetailsManualUrlsAsyncDelegate(
             IDataController<GameDetails> gameDetailsDataController)

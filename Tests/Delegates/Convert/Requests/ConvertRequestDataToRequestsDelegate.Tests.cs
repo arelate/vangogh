@@ -8,6 +8,7 @@ using Xunit;
 using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Delegates.Convert.Requests;
 
@@ -23,7 +24,7 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertRequestDataToRequestsDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
+            var singletonInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
 
             convertRequestsDataToRequestsDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertRequestsDataToRequestsDelegate))

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Itemize;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
@@ -28,6 +29,7 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
 
 		[Dependencies(
+            DependencyContext.Default,
 			"Controllers.Network.NetworkController,Controllers",
 			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
 			"Controllers.Routing.RoutingController,Controllers",

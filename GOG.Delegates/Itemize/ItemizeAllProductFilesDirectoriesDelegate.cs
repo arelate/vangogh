@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Directory;
 using Interfaces.Controllers.Logs;
@@ -18,6 +19,7 @@ namespace GOG.Delegates.Itemize
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
+            DependencyContext.Default,
 			"Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates",
 			"Controllers.Directory.DirectoryController,Controllers",
 			"Controllers.Logs.ActionLogController,Controllers")]

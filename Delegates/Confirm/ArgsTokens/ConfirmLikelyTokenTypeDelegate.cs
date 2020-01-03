@@ -6,6 +6,7 @@ using Interfaces.Delegates.Confirm;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
 using Interfaces.Models.Properties;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -14,16 +15,18 @@ using Models.ArgsDefinitions;
 
 namespace Delegates.Confirm.ArgsTokens
 {
-    public class ConfirmLikelyTokenTypeDelegate : 
+    public class ConfirmLikelyTokenTypeDelegate :
         IConfirmAsyncDelegate<(string Token, Tokens Type)>
     {
         private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate;
         private readonly ICollectionController collectionController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
             "Controllers.Collection.CollectionController,Controllers")]
-        [TestDependenciesOverrides(
+        [Dependencies(
+            DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]
         public ConfirmLikelyTokenTypeDelegate(

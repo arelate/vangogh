@@ -8,6 +8,7 @@ using Interfaces.Delegates.Replace;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Collection;
@@ -42,6 +43,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         readonly ICollectionController collectionController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             Dependencies.JSONSerializationController,
             "Controllers.Language.LanguageController,Controllers",

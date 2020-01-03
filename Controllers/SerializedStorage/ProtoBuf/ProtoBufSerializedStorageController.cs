@@ -6,6 +6,7 @@ using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -20,6 +21,7 @@ namespace Controllers.SerializedStorage.ProtoBuf
         readonly IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.File.FileController,Controllers",
             "Controllers.Stream.StreamController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]

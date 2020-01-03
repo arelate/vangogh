@@ -7,6 +7,7 @@ using Interfaces.Delegates.GetValue;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
 
@@ -28,6 +29,7 @@ namespace GOG.Delegates.UpdateScreenshots
         readonly IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Delegates.GetValue.Uri.ProductTypes.GetScreenshotsUpdateUriDelegate,Delegates",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
             "Controllers.Network.NetworkController,Controllers",

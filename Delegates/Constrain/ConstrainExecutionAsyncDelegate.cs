@@ -2,6 +2,7 @@
 
 using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Format;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Logs;
 
@@ -17,6 +18,7 @@ namespace Delegates.Constrain
         readonly IFormatDelegate<long, string> formatSecondsDelegate;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Logs.ActionLogController,Controllers",
             "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates")]
         public ConstrainExecutionAsyncDelegate(

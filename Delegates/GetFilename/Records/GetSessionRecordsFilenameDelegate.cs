@@ -1,4 +1,5 @@
 using Interfaces.Delegates.GetFilename;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -8,7 +9,9 @@ namespace Delegates.GetFilename.Binary
 {
     public class GetSessionRecordsFilenameDelegate: GetFixedFilenameDelegate
     {
-        [Dependencies("Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
+        [Dependencies(
+            DependencyContext.Default,
+            "Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
         public GetSessionRecordsFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate):
             base(Filenames.Session, getFilenameExtensionDelegate)
         {

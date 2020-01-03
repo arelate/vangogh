@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 using Interfaces.Delegates.Confirm;
+using Interfaces.Models.Dependencies;
 
 using Controllers.Instances;
 
@@ -18,7 +19,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
+            var singletonInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
 
             this.confirmLikelyTokenTypeDelegate = singletonInstancesController.GetInstance(
                 typeof(ConfirmLikelyTokenTypeDelegate))

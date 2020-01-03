@@ -5,6 +5,7 @@ using Interfaces.Controllers.Cookies;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.StrongTypeSerialization;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -19,6 +20,7 @@ namespace Controllers.Cookies
         IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stash.Cookies.CookiesStashController,Controllers",
             "Controllers.StrongTypeSerialization.Cookies.CookiesSerializationController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]

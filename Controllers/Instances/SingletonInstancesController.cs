@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Instances;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -11,12 +13,12 @@ namespace Controllers.Instances
 
     public class SingletonInstancesController : IInstancesController
     {
-        private readonly Dictionary<Type, object> singletonInstancesCache = new Dictionary<Type, object>();
-        private readonly bool enableTestDependenciesOverrides;
+        private readonly Dictionary<Type, object> singletonInstancesContextualCache = new Dictionary<Type, object>();
+        private readonly DependencyContext context;
 
-        public SingletonInstancesController(bool enableTestDependenciesOverrides = false)
+        public SingletonInstancesController(DependencyContext context = DependencyContext.Default)
         {
-            this.enableTestDependenciesOverrides = enableTestDependenciesOverrides;
+            this.context = context;
         }
 
         // TODO: Create delegate? Convert delegate?
@@ -27,30 +29,27 @@ namespace Controllers.Instances
                 type.IsAbstract)
                 throw new ArgumentException($"Invalid type: {type.Name}: null, an interface or abstract");
 
-            if (!singletonInstancesCache.ContainsKey(type))
+            if (!singletonInstancesContextualCache.ContainsKey(type))
             {
-                var dependentConstructor = GetInstantiationConstructorInfo(type);
-
-                if (dependentConstructor == null)
+                var constructorWithDependencies = GetInstantiationConstructorInfo(type);
+                if (constructorWithDependencies == null)
                 {
-                    dependentConstructor = type.GetConstructor(Type.EmptyTypes);
+                    constructorWithDependencies = type.GetConstructor(Type.EmptyTypes);
 
-                    if (dependentConstructor == null)
+                    if (constructorWithDependencies == null)
                         throw new ArgumentException(
                             $@"Type {type.Name} cannot be instantiated as it does not
                             have constructor with specified dependencies or default constructor");
                 }
 
-                var dependentConstructorDependencies =
-                    GetTypesForConstructor(dependentConstructor);
+                var constructorDependencies = GetTypesForConstructor(constructorWithDependencies);
 
-                var instantiatedDependencies =
-                    GetInstances(dependentConstructorDependencies);
+                var instantiatedDependencies = GetInstances(constructorDependencies);
 
-                singletonInstancesCache[type] = dependentConstructor.Invoke(instantiatedDependencies);
+                singletonInstancesContextualCache[type] = constructorWithDependencies.Invoke(instantiatedDependencies);
             }
 
-            return singletonInstancesCache[type];
+            return singletonInstancesContextualCache[type];
         }
 
         // TODO: Same as above
@@ -68,15 +67,8 @@ namespace Controllers.Instances
         public ConstructorInfo GetInstantiationConstructorInfo(Type type)
         {
             foreach (var constructorInfo in type.GetConstructors())
-                if (constructorInfo.CustomAttributes != null)
-                {
-                    var declaredDependencies = constructorInfo.GetCustomAttribute(
-                        typeof(DependenciesAttribute))
-                        as DependenciesAttribute;
-                    if (declaredDependencies == null) continue;
-
+                if (constructorInfo.IsDefined(typeof(DependenciesAttribute)))
                     return constructorInfo;
-                }
 
             return null;
         }
@@ -89,42 +81,56 @@ namespace Controllers.Instances
             if (constructorInfo == null)
                 return Type.EmptyTypes;
 
-            var dependencies = constructorInfo.GetCustomAttribute(
-                typeof(DependenciesAttribute))
-                as DependenciesAttribute;
+            var dependenciesAttributes = constructorInfo.GetCustomAttributes(
+                typeof(DependenciesAttribute));
 
-            if (dependencies == null)
+            if (!dependenciesAttributes.Any())
                 return Type.EmptyTypes;
 
-            if (enableTestDependenciesOverrides)
+            var resolvedDependencies = new string[(dependenciesAttributes.First() as DependenciesAttribute).Dependencies.Length];
+            foreach (var attribute in dependenciesAttributes)
             {
-                var testDependenciesOverrides = constructorInfo.GetCustomAttribute(
-                    typeof(TestDependenciesOverridesAttribute))
-                    as TestDependenciesOverridesAttribute;
-
-                if (testDependenciesOverrides != null)
+                var dependenciesAttribute = attribute as DependenciesAttribute;
+                // Skip dependencies attributes for non-matching contexts
+                if (!context.HasFlag(dependenciesAttribute.Context)) continue;
+                for (var dd = 0; dd < dependenciesAttribute.Dependencies.Length; dd++)
                 {
-                    if (testDependenciesOverrides.TestDependenciesOverrides.Length !=
-                        dependencies.Dependencies.Length)
-                        throw new ArgumentOutOfRangeException(@"Test dependencies overrides should match the number of dependencies. 
-                        Use string.Empty to preserve dependency without specifying it.");
-
-                    for (var ii = 0; ii < testDependenciesOverrides.TestDependenciesOverrides.Length; ii++)
-                    {
-                        if (string.IsNullOrEmpty(testDependenciesOverrides.TestDependenciesOverrides[ii]))
-                            continue;
-
-                        dependencies.Dependencies[ii] = testDependenciesOverrides.TestDependenciesOverrides[ii];
-                    }
+                    if (string.IsNullOrEmpty(dependenciesAttribute.Dependencies[dd]) &&
+                        dependenciesAttribute.Context != DependencyContext.Default) continue;
+                    resolvedDependencies[dd] = dependenciesAttribute.Dependencies[dd];
                 }
             }
 
-            implementationTypeDependencies = new Type[dependencies.Dependencies.Length];
-            for (var ii = 0; ii < implementationTypeDependencies.Length; ii++)
+            // if (context)
+            // {
+            //     var testDependenciesOverrides = constructorInfo.GetCustomAttribute(
+            //         typeof(TestDependenciesOverridesAttribute))
+            //         as TestDependenciesOverridesAttribute;
+
+            //     if (testDependenciesOverrides != null)
+            //     {
+            //         if (testDependenciesOverrides.TestDependenciesOverrides.Length !=
+            //             dependencies.Dependencies.Length)
+            //             throw new ArgumentOutOfRangeException(@"Test dependencies overrides should match the number of dependencies. 
+            //             Use string.Empty to preserve dependency without specifying it.");
+
+            //         for (var ii = 0; ii < testDependenciesOverrides.TestDependenciesOverrides.Length; ii++)
+            //         {
+            //             if (string.IsNullOrEmpty(testDependenciesOverrides.TestDependenciesOverrides[ii]))
+            //                 continue;
+
+            //             dependencies.Dependencies[ii] = testDependenciesOverrides.TestDependenciesOverrides[ii];
+            //         }
+            //     }
+            // }
+
+            implementationTypeDependencies = new Type[resolvedDependencies.Length];
+            for (var rr = 0; rr < resolvedDependencies.Length; rr++)
             {
-                implementationTypeDependencies[ii] = Type.GetType(dependencies.Dependencies[ii]);
-                if (implementationTypeDependencies[ii] == null)
-                    throw new ArgumentNullException($"Couldn't find the dependency type: {dependencies.Dependencies[ii]}");
+                var type = Type.GetType(resolvedDependencies[rr]);
+                if (type == null)
+                    throw new ArgumentNullException($"Couldn't find the dependency type: {resolvedDependencies[rr]}");
+                implementationTypeDependencies[rr] = type;
             }
             return implementationTypeDependencies;
         }

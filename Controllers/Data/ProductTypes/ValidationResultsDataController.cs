@@ -6,6 +6,7 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -16,6 +17,7 @@ namespace Controllers.Data.ProductTypes
     public class ValidationResultsDataController : DataController<ValidationResults>
     {
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stash.ProductTypes.ValidationResultsStashController,Controllers",
             "Delegates.Convert.ProductTypes.ConvertValidationResultsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ValidationResultsRecordsIndexController,Controllers",

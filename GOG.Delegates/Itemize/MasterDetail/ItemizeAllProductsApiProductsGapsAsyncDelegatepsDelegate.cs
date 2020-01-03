@@ -1,4 +1,5 @@
 ﻿using Interfaces.Controllers.Data;
+using Interfaces.Models.Dependencies;
 
 using Delegates.Itemize.MasterDetail;
 
@@ -12,6 +13,7 @@ namespace GOG.Delegates.Itemize.MasterDetail
         ItemizeAllMasterDetailsGapsAsyncDelegate<Product,ApiProduct>
     {
         [Dependencies(
+            DependencyContext.Default,
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "GOG.Controllers.Data.ProductTypes.ApiProductsDataController,GOG.Controllers")]
         public ItemizeAllProductsApiProductsGapsAsyncDelegatepsDelegate(

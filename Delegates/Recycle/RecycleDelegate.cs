@@ -5,6 +5,7 @@ using Interfaces.Delegates.Recycle;
 
 using Interfaces.Controllers.Directory;
 using Interfaces.Controllers.File;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -17,6 +18,7 @@ namespace Delegates.Recycle
         IDirectoryController directoryController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Delegates.GetDirectory.ProductTypes.GetRecycleBinDirectoryDelegate,Delegates",
             "Controllers.File.FileController,Controllers",
             "Controllers.Directory.DirectoryController,Controllers")]

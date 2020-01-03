@@ -1,4 +1,5 @@
 using Interfaces.Delegates.GetFilename;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -8,7 +9,8 @@ namespace Delegates.GetFilename.ProductTypes
 {
     public class GetGameProductDataFilenameDelegate: GetFixedFilenameDelegate
     {
-        [Dependencies("Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
+        [Dependencies(
+            DependencyContext.Default,"Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
         public GetGameProductDataFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate):
             base(Filenames.GameProductData, getFilenameExtensionDelegate)
         {

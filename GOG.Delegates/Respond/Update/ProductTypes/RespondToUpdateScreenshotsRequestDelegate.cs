@@ -5,6 +5,7 @@ using System.Linq;
 using Interfaces.Delegates.Respond;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
 
@@ -25,6 +26,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         readonly IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
             "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",

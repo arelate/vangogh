@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GOG.Interfaces.Delegates.RequestPage;
 
 using Interfaces.Controllers.Network;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -15,7 +16,9 @@ namespace GOG.Delegates.RequestPage
 
         const string pageQueryParameter = "page";
 
-        [Dependencies("Controllers.Network.NetworkController,Controllers")]
+        [Dependencies(
+            DependencyContext.Default,
+            "Controllers.Network.NetworkController,Controllers")]
         public RequestPageAsyncDelegate(
             INetworkController networkController)
         {

@@ -3,6 +3,7 @@
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -19,6 +20,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         RespondToUpdateDownloadsRequestDelegate<ProductScreenshots>
     {
         [Dependencies(
+            DependencyContext.Default,
             "GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate,GOG.Delegates",
             "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
             "Controllers.File.FileController,Controllers",

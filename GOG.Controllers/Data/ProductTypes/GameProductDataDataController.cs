@@ -6,6 +6,7 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -18,6 +19,7 @@ namespace GOG.Controllers.Data.ProductTypes
     public class GameProductDataDataController : DataController<GameProductData>
     {
         [Dependencies(
+            DependencyContext.Default,
             "GOG.Controllers.Stash.ProductTypes.GameProductDataStashController,GOG.Controllers",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameProductDataToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.GameProductDataRecordsIndexController,Controllers",

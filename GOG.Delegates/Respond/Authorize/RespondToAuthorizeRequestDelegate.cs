@@ -5,6 +5,8 @@ using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Logs;
 
+using Interfaces.Models.Dependencies;
+
 using GOG.Interfaces.Controllers.Authorization;
 
 using Attributes;
@@ -18,6 +20,7 @@ namespace GOG.Delegates.Respond.Authorize
         readonly IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
         public RespondToAuthorizeRequestDelegate(

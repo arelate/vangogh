@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Controllers.Instances;
 
@@ -21,7 +22,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
         public ConvertMethodsSetTokensToMethodTitleTokensDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
+            var singletonInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
 
             this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertTokensToLikelyTypedTokensDelegate))

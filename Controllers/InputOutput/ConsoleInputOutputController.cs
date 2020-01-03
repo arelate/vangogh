@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Format;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Output;
 using Interfaces.Controllers.Console;
@@ -24,19 +25,16 @@ namespace Controllers.InputOutput
 
         StringBuilder fragmentBuffer;
 
-        IFormatDelegate<IEnumerable<string>, IEnumerable<string>> formatTextToFitConsoleWindowDelegate;
         readonly IConsoleController consoleController;
 
         [Dependencies(
-            "Delegates.Format.Text.FormatTextToFitConsoleWindowDelegate,Delegates",
+            DependencyContext.Default,
             "Controllers.Console.ConsoleController,Controllers")]
         public ConsoleInputOutputController(
-            IFormatDelegate<IEnumerable<string>, IEnumerable<string>> formatTextToFitConsoleWindowDelegate,
             IConsoleController consoleController)
         {
             fragmentBuffer = new StringBuilder();
 
-            this.formatTextToFitConsoleWindowDelegate = formatTextToFitConsoleWindowDelegate;
             this.consoleController = consoleController;
         }
 
@@ -75,7 +73,7 @@ namespace Controllers.InputOutput
             // Clear frame buffer
             fragmentBuffer.Clear();
             // Break the lines with new line separator, also wrap lines given the available console width
-            var fragmentWrappedLines = formatTextToFitConsoleWindowDelegate.Format(data);
+            var fragmentWrappedLines = data;
             // To build the buffer, we'll pad each line with spaces.
             // That takes care of previous frame lines that could have been longer
             foreach (var line in fragmentWrappedLines)

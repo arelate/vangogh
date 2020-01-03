@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Interfaces.Controllers.Directory;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Delegates.Itemize;
 
@@ -13,6 +14,7 @@ namespace Delegates.Itemize
         readonly IDirectoryController directoryController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Directory.DirectoryController,Controllers")]
         public ItemizeDirectoryFilesDelegate(
             IDirectoryController directoryController)

@@ -4,6 +4,7 @@ using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.GetPath;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -14,6 +15,7 @@ namespace Controllers.Stash.Cookies
     public class CookiesStashController: StashController<Dictionary<string, string>>
     {
         [Dependencies(
+            DependencyContext.Default,
             "Delegates.GetPath.Json.GetCookiesPathDelegate,Delegates",
             Dependencies.JSONSerializedStorageController,
             "Controllers.Logs.ActionLogController,Controllers")]

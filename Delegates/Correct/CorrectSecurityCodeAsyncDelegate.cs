@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Delegates.Correct;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Input;
 
@@ -14,7 +15,8 @@ namespace Delegates.Correct
             "Enter four digits security code that has been sent to your email:";
         readonly IRequestInputAsyncDelegate<string> requestInputDelegate;
 
-        [Dependencies("Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
+        [Dependencies(
+            DependencyContext.Default,"Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
         public CorrectSecurityCodeAsyncDelegate(IRequestInputAsyncDelegate<string> requestInputDelegate)
         {
             this.requestInputDelegate = requestInputDelegate;

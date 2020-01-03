@@ -5,6 +5,7 @@ using Interfaces.Controllers.Serialization;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -15,6 +16,7 @@ namespace Controllers.SerializedStorage.JSON
     public class JSONSerializedStorageController: SerializedStorageController
     {
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Storage.StorageController,Controllers",
             Dependencies.JSONSerializationController,
             "Controllers.Logs.ActionLogController,Controllers")]

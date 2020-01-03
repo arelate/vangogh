@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-
+using Interfaces.Models.Dependencies;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
@@ -15,7 +15,9 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     {
         readonly IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate;
 
-        [Dependencies("GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGOGDataAsyncDelegate,GOG.Delegates")]
+        [Dependencies(
+            DependencyContext.Default,
+            "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGOGDataAsyncDelegate,GOG.Delegates")]
         public GetDeserializedGameProductDataAsyncDelegate(
             IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate)
         {

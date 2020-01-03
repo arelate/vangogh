@@ -3,6 +3,7 @@
 using Interfaces.Delegates.Convert;
 
 using Interfaces.Controllers.Storage;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -14,6 +15,7 @@ namespace Delegates.Convert.Hashes
         readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
 
 		[Dependencies(
+            DependencyContext.Default,
 			"Controllers.Storage.StorageController,Controllers",
 			"Delegates.Convert.Hashes.ConvertStringToMd5HashDelegate,Delegates")]
         public ConvertFileToMd5HashDelegate(

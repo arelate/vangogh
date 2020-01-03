@@ -1,6 +1,7 @@
 using Interfaces.Controllers.Network;
 
 using Interfaces.Controllers.Serialization;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -12,6 +13,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     public class GetDeserializedApiProductAsyncDelegate : GetDeserializedProductCoreAsyncDelegate<ApiProduct>
     {
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             Dependencies.JSONSerializationController)]
         public GetDeserializedApiProductAsyncDelegate(

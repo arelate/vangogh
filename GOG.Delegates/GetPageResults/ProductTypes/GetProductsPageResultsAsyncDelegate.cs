@@ -4,6 +4,7 @@ using Interfaces.Delegates.GetValue;
 
 using Interfaces.Controllers.Serialization;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -17,6 +18,7 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
     public class GetProductsPageResultsAsyncDelegate : GetPageResultsAsyncDelegate<ProductsPageResult>
     {
         [Dependencies(
+            DependencyContext.Default,
             "Delegates.GetValue.Uri.ProductTypes.GetProductsUpdateUriDelegate,Delegates",
             "Delegates.GetValue.QueryParameters.ProductTypes.GetProductsUpdateQueryParametersDelegate,Delegates",
             "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",

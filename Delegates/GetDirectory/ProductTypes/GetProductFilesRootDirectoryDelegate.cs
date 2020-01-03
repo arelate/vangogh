@@ -1,4 +1,5 @@
 using Interfaces.Delegates.GetDirectory;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -8,7 +9,8 @@ namespace Delegates.GetDirectory.ProductTypes
 {
     public class GetProductFilesRootDirectoryDelegate : GetRelativeDirectoryDelegate
     {
-        [Dependencies("Delegates.GetDirectory.Root.GetDataDirectoryDelegate,Delegates")]
+        [Dependencies(
+            DependencyContext.Default,"Delegates.GetDirectory.Root.GetDataDirectoryDelegate,Delegates")]
         public GetProductFilesRootDirectoryDelegate(
             IGetDirectoryDelegate getDataDirectoryDelegate) :
             base(Directories.ProductFiles, getDataDirectoryDelegate)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Interfaces.Routing;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -17,6 +18,7 @@ namespace Controllers.Routing
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
+            DependencyContext.Default,
 			"Controllers.Data.ProductTypes.ProductRoutesDataController,Controllers",
 			"Controllers.Logs.ActionLogController,Controllers")]
         public RoutingController(

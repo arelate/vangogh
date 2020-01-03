@@ -10,6 +10,7 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Validation;
 using Interfaces.ValidationResults;
@@ -32,6 +33,7 @@ namespace Controllers.Validation
         IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
             "Controllers.File.FileController,Controllers",
             "Controllers.Stream.StreamController,Controllers",

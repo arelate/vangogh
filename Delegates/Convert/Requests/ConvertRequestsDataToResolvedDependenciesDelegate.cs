@@ -5,6 +5,7 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Stash;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -20,9 +21,11 @@ namespace Delegates.Convert.Requests
         private ICollectionController collectionController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
             "Controllers.Collection.CollectionController,Controllers")]
-        [TestDependenciesOverrides(
+            [Dependencies(
+            DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]
         public ConvertRequestsDataToResolvedDependenciesDelegate(

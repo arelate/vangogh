@@ -5,6 +5,7 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -15,6 +16,7 @@ namespace Controllers.Data.Records
     public class ProductScreenshotsRecordsDataController : DataController<ProductRecords>
     {
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stash.Records.ProductScreenshotsRecordsStashController,Controllers",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
             "Controllers.Collection.CollectionController,Controllers",

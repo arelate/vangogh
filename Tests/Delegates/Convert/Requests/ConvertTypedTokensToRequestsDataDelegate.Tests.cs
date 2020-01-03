@@ -6,21 +6,20 @@ using Xunit;
 using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Models.ArgsTokens;
 using Models.Requests;
-
-using TypedTokens = System.Collections.Generic.IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>;
 
 namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertTypedTokensToRequestsDataDelegateTests
     {
-        private IConvertDelegate<TypedTokens, RequestsData> convertTypedTokensToRequestsDataDelegate;
+        private IConvertDelegate<IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>, RequestsData> convertTypedTokensToRequestsDataDelegate;
 
         public ConvertTypedTokensToRequestsDataDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
+            var singletonInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
 
             this.convertTypedTokensToRequestsDataDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertTypedTokensToRequestsDataDelegate))

@@ -5,6 +5,7 @@ using System.IO;
 using Interfaces.Controllers.File;
 using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Storage;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -16,6 +17,7 @@ namespace Controllers.Storage
         readonly IFileController fileController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stream.StreamController,Controllers",
             "Controllers.File.FileController,Controllers")]
         public StorageController(

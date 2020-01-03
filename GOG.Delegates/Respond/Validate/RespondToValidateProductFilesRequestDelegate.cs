@@ -12,6 +12,7 @@ using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
+using Interfaces.Models.Dependencies;
 
 using Interfaces.Validation;
 using Interfaces.Routing;
@@ -41,6 +42,7 @@ namespace GOG.Delegates.Respond.Validate
         readonly IActionLogController actionLogController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
             "Delegates.GetFilename.GetUriFilenameDelegate,Delegates",
             "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",

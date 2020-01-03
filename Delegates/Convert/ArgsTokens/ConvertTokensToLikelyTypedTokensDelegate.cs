@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Confirm;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -17,7 +18,8 @@ namespace Delegates.Convert.ArgsTokens
     {
         private IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate;
 
-        [Dependencies("Delegates.Confirm.ArgsTokens.ConfirmLikelyTokenTypeDelegate,Delegates")]
+        [Dependencies(
+            DependencyContext.Default,"Delegates.Confirm.ArgsTokens.ConfirmLikelyTokenTypeDelegate,Delegates")]
         public ConvertTokensToLikelyTypedTokensDelegate(
             IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate)
         {

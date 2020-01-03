@@ -2,6 +2,7 @@ using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Serialization;
 
 using Interfaces.Delegates.Itemize;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -14,6 +15,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         GetDeserializedDataAsyncDelegate<ProductsPageResult>
     {
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             "GOG.Delegates.Itemize.ItemizeGOGDataDelegate,GOG.Delegates",
             Dependencies.JSONSerializationController)]

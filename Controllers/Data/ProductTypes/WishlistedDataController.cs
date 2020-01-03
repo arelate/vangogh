@@ -6,6 +6,7 @@ using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -14,6 +15,7 @@ namespace Controllers.Data.ProductTypes
     public class WishlistedDataController : DataController<long>
     {
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stash.ProductTypes.WishlistedStashController,Controllers",
             "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.WishlistedRecordsIndexController,Controllers",

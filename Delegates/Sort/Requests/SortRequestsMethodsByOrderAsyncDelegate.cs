@@ -5,8 +5,7 @@ using System;
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Collection;
 using Interfaces.Delegates.Sort;
-
-
+using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -20,9 +19,11 @@ namespace Delegates.Sort.Requests
         private ICollectionController collectionController;
 
         [Dependencies(
+            DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController",
             "Controllers.Collection.CollectionController")]
-        [TestDependenciesOverrides(
+            [Dependencies(
+            DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]
         public SortRequestsMethodsByOrderAsyncDelegate(
