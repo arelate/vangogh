@@ -1,3 +1,13 @@
+Technical Debt Reduction Plan
+=============================
+
+- Implement itemizeDelegate to itemize all attributed types (on class or constructor)
+- Implement context within instanceController instead on TestDependencies
+- Implement tests for RespondsToRequest attribute
+- Finalize controller/delegate consolidation
+- Cleanup TODOs
+- Resolve compiler warnings
+
 Backend
 =======
 
