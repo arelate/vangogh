@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Itemize;
 
-using Attributes;
-
 namespace Delegates.Itemize.Types
 {
     public abstract class ItemizeAllTypesWithConstructorAttributeDelegate<AttributeType> : IItemizeAllDelegate<Type>
@@ -16,6 +14,7 @@ namespace Delegates.Itemize.Types
         {
             this.itemizeAllTypesDelegate = itemizeAllTypesDelegate;
         }
+        
         public IEnumerable<Type> ItemizeAll()
         {
             foreach (var type in itemizeAllTypesDelegate.ItemizeAll())

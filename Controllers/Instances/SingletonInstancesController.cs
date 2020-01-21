@@ -101,29 +101,6 @@ namespace Controllers.Instances
                 }
             }
 
-            // if (context)
-            // {
-            //     var testDependenciesOverrides = constructorInfo.GetCustomAttribute(
-            //         typeof(TestDependenciesOverridesAttribute))
-            //         as TestDependenciesOverridesAttribute;
-
-            //     if (testDependenciesOverrides != null)
-            //     {
-            //         if (testDependenciesOverrides.TestDependenciesOverrides.Length !=
-            //             dependencies.Dependencies.Length)
-            //             throw new ArgumentOutOfRangeException(@"Test dependencies overrides should match the number of dependencies. 
-            //             Use string.Empty to preserve dependency without specifying it.");
-
-            //         for (var ii = 0; ii < testDependenciesOverrides.TestDependenciesOverrides.Length; ii++)
-            //         {
-            //             if (string.IsNullOrEmpty(testDependenciesOverrides.TestDependenciesOverrides[ii]))
-            //                 continue;
-
-            //             dependencies.Dependencies[ii] = testDependenciesOverrides.TestDependenciesOverrides[ii];
-            //         }
-            //     }
-            // }
-
             implementationTypeDependencies = new Type[resolvedDependencies.Length];
             for (var rr = 0; rr < resolvedDependencies.Length; rr++)
             {
