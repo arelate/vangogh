@@ -5,7 +5,7 @@ using Interfaces.Delegates.Itemize;
 
 namespace Delegates.Itemize.Types
 {
-    public class ItemizeAllTypesDelegate : IItemizeAllDelegate<Type>
+    public class ItemizeAllAppDomainTypesDelegate : IItemizeAllDelegate<Type>
     {
         public IEnumerable<Type> ItemizeAll()
         {

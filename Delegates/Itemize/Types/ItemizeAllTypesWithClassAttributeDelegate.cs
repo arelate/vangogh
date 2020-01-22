@@ -9,17 +9,17 @@ namespace Delegates.Itemize.Types
 {
     public abstract class ItemizeAllTypesWithClassAttributeDelegate<AttributeType> : IItemizeAllDelegate<Type>
     {
-        private readonly IItemizeAllDelegate<Type> itemizeAllTypesDelegate;
+        private readonly IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate;
 
         public ItemizeAllTypesWithClassAttributeDelegate(
-            IItemizeAllDelegate<Type> itemizeAllTypesDelegate)
+            IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate)
         {
-            this.itemizeAllTypesDelegate = itemizeAllTypesDelegate;
+            this.itemizeAllAppDomainTypesDelegate = itemizeAllAppDomainTypesDelegate;
         }
 
         public IEnumerable<Type> ItemizeAll()
         {
-            foreach (var type in itemizeAllTypesDelegate.ItemizeAll())
+            foreach (var type in itemizeAllAppDomainTypesDelegate.ItemizeAll())
                 if (type.IsDefined(typeof(AttributeType), false))
                     yield return type;
         }

@@ -7,17 +7,17 @@ namespace Delegates.Itemize.Types
 {
     public abstract class ItemizeAllTypesWithConstructorAttributeDelegate<AttributeType> : IItemizeAllDelegate<Type>
     {
-        private readonly IItemizeAllDelegate<Type> itemizeAllTypesDelegate;
+        private readonly IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate;
 
         public ItemizeAllTypesWithConstructorAttributeDelegate(
-            IItemizeAllDelegate<Type> itemizeAllTypesDelegate)
+            IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate)
         {
-            this.itemizeAllTypesDelegate = itemizeAllTypesDelegate;
+            this.itemizeAllAppDomainTypesDelegate = itemizeAllAppDomainTypesDelegate;
         }
         
         public IEnumerable<Type> ItemizeAll()
         {
-            foreach (var type in itemizeAllTypesDelegate.ItemizeAll())
+            foreach (var type in itemizeAllAppDomainTypesDelegate.ItemizeAll())
                 foreach (var constructorInfo in type.GetConstructors())
                     if (constructorInfo.IsDefined(typeof(AttributeType), true))
                         yield return type;

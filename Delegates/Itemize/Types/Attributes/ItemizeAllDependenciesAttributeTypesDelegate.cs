@@ -14,10 +14,10 @@ namespace Delegates.Itemize.Types.Attributes
     {
         [Dependencies(
             DependencyContext.Default,
-            "Delegates.Itemize.Types.ItemizeAllTypesDelegate,Delegates")]
+            "Delegates.Itemize.Types.ItemizeAllAppDomainTypesDelegate,Delegates")]
         public ItemizeAllDependenciesAttributeTypesDelegate(
-            IItemizeAllDelegate<Type> itemizeAllTypesDelegate) :
-            base(itemizeAllTypesDelegate)
+            IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate) :
+            base(itemizeAllAppDomainTypesDelegate)
         {
             // ...
         }

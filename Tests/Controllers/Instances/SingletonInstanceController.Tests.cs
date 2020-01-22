@@ -19,9 +19,11 @@ namespace Controllers.Instances.Tests
     {
         private static IInstancesController dependenciesInstancesController;
         private static IInstancesController testDependenciesInstancesController;
-        private static IItemizeAllDelegate<Type> itemizeAllTypesDelegate = new ItemizeAllTypesDelegate();
+        private static IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate = new ItemizeAllAppDomainTypesDelegate();
+        private static IItemizeDelegate<Type, DependenciesAttribute> itemizeDependenciesAttributesForTypeDelegate =
+            new ItemizeDependenciesAttributesForTypeDelegate();
         private static IItemizeAllDelegate<Type> itemizeAllDependenciesAttributeTypesDelegate =
-            new ItemizeAllDependenciesAttributeTypesDelegate(itemizeAllTypesDelegate);
+            new ItemizeAllDependenciesAttributeTypesDelegate(itemizeAllAppDomainTypesDelegate);
 
         public SingletonInstancesControllerTests()
         {
@@ -43,19 +45,12 @@ namespace Controllers.Instances.Tests
         {
             foreach (var type in itemizeAllDependenciesAttributeTypesDelegate.ItemizeAll())
             {
-                foreach (var constructor in type.GetConstructors())
-                {
-                    var dependenciesAttributes = constructor.GetCustomAttributes(typeof(DependenciesAttribute), true);
+                var hasTestDependencies = false;
+                foreach (var dependenciesAttribute in itemizeDependenciesAttributesForTypeDelegate.Itemize(type))
+                    if (dependenciesAttribute.Context == DependencyContext.Test) hasTestDependencies = true;
 
-                    var hasTestDependencies = false;
-                    foreach (var dependenciesAttribute in dependenciesAttributes)
-                    {
-                        if ((dependenciesAttribute as DependenciesAttribute).Context == DependencyContext.Test)
-                            hasTestDependencies = true;
-                    }
-                    if (!hasTestDependencies) continue;
-                    yield return new object[] { type };
-                }
+                if (!hasTestDependencies) continue;
+                yield return new object[] { type };
             }
         }
 
@@ -147,18 +142,9 @@ namespace Controllers.Instances.Tests
         {
             foreach (var type in types)
             {
-                var constructorInfo = dependenciesInstancesController.GetInstantiationConstructorInfo(type);
-                Assert.NotNull(constructorInfo);
-
-                var dependenciesAttributes = constructorInfo.GetCustomAttributes(typeof(DependenciesAttribute), true);
-
-                Assert.True(dependenciesAttributes.Length > 1);
-
                 var hasDefaultDependency = false;
-                foreach (var dependenciesAttribute in dependenciesAttributes)
-                {
+                foreach (var dependenciesAttribute in itemizeDependenciesAttributesForTypeDelegate.Itemize(type))
                     hasDefaultDependency |= (dependenciesAttribute as DependenciesAttribute).Context == DependencyContext.Default;
-                }
 
                 Assert.True(hasDefaultDependency);
             }
@@ -170,17 +156,10 @@ namespace Controllers.Instances.Tests
         {
             foreach (var type in types)
             {
-                var constructorInfo = dependenciesInstancesController.GetInstantiationConstructorInfo(type);
-                Assert.NotNull(constructorInfo);
-
-                var dependenciesAttributes = constructorInfo.GetCustomAttributes(typeof(DependenciesAttribute), true);
-
-                Assert.True(dependenciesAttributes.Length > 1);
-
                 DependenciesAttribute defaultDependencies = null;
                 DependenciesAttribute testDependencies = null;
 
-                foreach (var dependenciesAttribute in dependenciesAttributes)
+                foreach (var dependenciesAttribute in itemizeDependenciesAttributesForTypeDelegate.Itemize(type))
                 {
                     var dependencies = dependenciesAttribute as DependenciesAttribute;
                     switch (dependencies.Context)
