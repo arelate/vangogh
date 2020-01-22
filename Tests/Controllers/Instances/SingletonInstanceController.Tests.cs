@@ -20,9 +20,9 @@ namespace Controllers.Instances.Tests
         private static IInstancesController dependenciesInstancesController;
         private static IInstancesController testDependenciesInstancesController;
         private static IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate = new ItemizeAllAppDomainTypesDelegate();
-        private static IItemizeDelegate<Type, DependenciesAttribute> itemizeDependenciesAttributesForTypeDelegate =
+        private static IItemizeDelegate<Type, DependenciesAttribute> itemizeDependenciesAttributesForTypeDelegate = 
             new ItemizeDependenciesAttributesForTypeDelegate();
-        private static IItemizeAllDelegate<Type> itemizeAllDependenciesAttributeTypesDelegate =
+        private static IItemizeAllDelegate<Type> itemizeAllDependenciesAttributeTypesDelegate = 
             new ItemizeAllDependenciesAttributeTypesDelegate(itemizeAllAppDomainTypesDelegate);
 
         public SingletonInstancesControllerTests()
