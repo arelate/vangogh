@@ -7,7 +7,7 @@ using Interfaces.Controllers.Logs;
 
 namespace Controllers.SerializedStorage
 {
-    public class SerializedStorageController : ISerializedStorageController
+    public abstract class SerializedStorageController : ISerializedStorageController
     {
         readonly IStorageController<string> storageController;
         readonly ISerializationController<string> serializarionController;

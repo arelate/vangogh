@@ -11,8 +11,8 @@ namespace Delegates.GetFilename.ArgsDefinitions
     {
         [Dependencies(
             DependencyContext.Default,"Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
-        public GetArgsDefinitionsFilenameDelegate(IGetFilenameDelegate getFilenameDelegate):
-            base(Filenames.ArgsDefinitions, getFilenameDelegate)
+        public GetArgsDefinitionsFilenameDelegate(IGetFilenameDelegate getJsonFilenameDelegate):
+            base(Filenames.ArgsDefinitions, getJsonFilenameDelegate)
             {
                 // ...
             }

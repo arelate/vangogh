@@ -10,9 +10,9 @@ namespace Delegates.GetFilename.Json
     public class GetIndexFilenameDelegate: GetFixedFilenameDelegate
     {
         [Dependencies(
-            DependencyContext.Default,"Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
-        public GetIndexFilenameDelegate(IGetFilenameDelegate getJsonFilenameDelegate):
-            base(Filenames.Index, getJsonFilenameDelegate)
+            DependencyContext.Default,"Delegates.GetFilename.GetBinFilenameDelegate,Delegates")]
+        public GetIndexFilenameDelegate(IGetFilenameDelegate getBinFilenameDelegate):
+            base(Filenames.Index, getBinFilenameDelegate)
         {
             // ...
         }

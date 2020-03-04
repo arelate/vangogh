@@ -6,7 +6,7 @@ using Interfaces.Delegates.GetPath;
 
 namespace Delegates.GetPath
 {
-    public class GetPathDelegate: IGetPathDelegate
+    public abstract class GetPathDelegate: IGetPathDelegate
     {
         readonly IGetDirectoryDelegate getDirectoryDelegate;
         readonly IGetFilenameDelegate getFilenameDelegate;

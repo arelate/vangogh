@@ -8,7 +8,7 @@ using Models.Separators;
 
 namespace Delegates.GetDirectory
 {
-    public class GetUriDirectoryDelegate : IGetDirectoryDelegate
+    public abstract class GetUriDirectoryDelegate : IGetDirectoryDelegate
     {
         readonly IGetDirectoryDelegate baseDirectoryDelegate;
 

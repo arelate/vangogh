@@ -20,9 +20,9 @@ namespace Delegates.Sort.Requests
 
         [Dependencies(
             DependencyContext.Default,
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController",
-            "Controllers.Collection.CollectionController")]
-            [Dependencies(
+            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Controllers.Collection.CollectionController,Controllers")]
+        [Dependencies(
             DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]

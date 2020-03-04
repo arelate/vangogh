@@ -5,7 +5,7 @@ using Interfaces.Delegates.GetDirectory;
 
 namespace Delegates.GetDirectory
 {
-    public class GetRelativeDirectoryDelegate : IGetDirectoryDelegate
+    public abstract class GetRelativeDirectoryDelegate : IGetDirectoryDelegate
     {
         readonly string baseDirectory;
         readonly IGetDirectoryDelegate[] parentDirectories;

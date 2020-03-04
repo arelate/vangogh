@@ -5,7 +5,7 @@ using Interfaces.Delegates.Itemize;
 
 namespace Delegates.Itemize
 {
-    public class ItemizeAttributeValuesDelegate: IItemizeDelegate<string, string>
+    public abstract class ItemizeAttributeValuesDelegate: IItemizeDelegate<string, string>
     {
         readonly string pattern;
 

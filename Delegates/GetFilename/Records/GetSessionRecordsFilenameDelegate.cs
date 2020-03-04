@@ -7,13 +7,13 @@ using Models.Filenames;
 
 namespace Delegates.GetFilename.Binary
 {
-    public class GetSessionRecordsFilenameDelegate: GetFixedFilenameDelegate
+    public class GetSessionRecordsFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
             DependencyContext.Default,
-            "Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
-        public GetSessionRecordsFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate):
-            base(Filenames.Session, getFilenameExtensionDelegate)
+            "Delegates.GetFilename.GetBinFilenameDelegate,Delegates")]
+        public GetSessionRecordsFilenameDelegate(IGetFilenameDelegate GetBinFilenameDelegate) :
+            base(Filenames.Session, GetBinFilenameDelegate)
         {
             // ...
         }

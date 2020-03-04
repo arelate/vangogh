@@ -12,7 +12,7 @@ using Models.ProductTypes;
 
 namespace Controllers.Records
 {
-    public class IndexRecordsController : IRecordsController<long>
+    public abstract class IndexRecordsController : IRecordsController<long>
     {
         readonly IDataController<ProductRecords> productRecordsController;
         readonly IActionLogController actionLogController;

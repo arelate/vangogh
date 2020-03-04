@@ -10,9 +10,9 @@ namespace Delegates.GetFilename.ProductTypes
     public class GetWishlistedFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            DependencyContext.Default,"Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
-        public GetWishlistedFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate) :
-            base(Filenames.Wishlisted, getFilenameExtensionDelegate)
+            DependencyContext.Default,"Delegates.GetFilename.GetBinFilenameDelegate,Delegates")]
+        public GetWishlistedFilenameDelegate(IGetFilenameDelegate GetBinFilenameDelegate) :
+            base(Filenames.Wishlisted, GetBinFilenameDelegate)
         {
             // ...
         }

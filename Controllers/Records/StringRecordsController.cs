@@ -10,7 +10,7 @@ using Interfaces.Models.RecordsTypes;
 namespace Controllers.Records
 {
     // TODO: Figure out better way to store strings and not convert from a number
-    public class StringRecordsController: IRecordsController<string>
+    public abstract class StringRecordsController: IRecordsController<string>
     {
         readonly IRecordsController<long> indexRecordsController;
         readonly IConvertDelegate<string, long> convertStringToIndexDelegate;

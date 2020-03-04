@@ -10,9 +10,9 @@ namespace Delegates.GetFilename.ProductTypes
     public class GetGameDetailsFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            DependencyContext.Default,"Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
-        public GetGameDetailsFilenameDelegate(IGetFilenameDelegate getFilenameExtensionDelegate) :
-            base(Filenames.GameDetails, getFilenameExtensionDelegate)
+            DependencyContext.Default,"Delegates.GetFilename.GetBinFilenameDelegate,Delegates")]
+        public GetGameDetailsFilenameDelegate(IGetFilenameDelegate GetBinFilenameDelegate) :
+            base(Filenames.GameDetails, GetBinFilenameDelegate)
         {
             // ...
         }

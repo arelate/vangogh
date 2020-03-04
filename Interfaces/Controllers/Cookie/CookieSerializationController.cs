@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Data;
+using Interfaces.Controllers.Stash;
 
 namespace Interfaces.Cookies
 {
