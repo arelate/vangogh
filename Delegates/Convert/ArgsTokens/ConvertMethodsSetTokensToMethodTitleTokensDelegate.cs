@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Stash;
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -18,22 +18,22 @@ namespace Delegates.Convert.ArgsTokens
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
         private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private IFindDelegate<MethodsSet> findMethodsSetDelegate;
 
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
+            "Delegates.Find.ArgsDefinitions.FindMethodsSetDelegate,Delegates")]
             [Dependencies(
             DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]            
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IFindDelegate<MethodsSet> findMethodsSetDelegate)
         {
             this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.findMethodsSetDelegate = findMethodsSetDelegate;
         }
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
             IAsyncEnumerable<(string Token, Tokens Type)> typedTokens)
@@ -44,7 +44,7 @@ namespace Delegates.Convert.ArgsTokens
                 switch (typedToken.Type)
                 {
                     case Tokens.MethodsSet:
-                        var titledMethodsSet = collectionController.Find(
+                        var titledMethodsSet = findMethodsSetDelegate.Find(
                             argsDefinitions.MethodsSets,
                             methodsSet => methodsSet.Title == typedToken.Token);
                         if (titledMethodsSet == null)

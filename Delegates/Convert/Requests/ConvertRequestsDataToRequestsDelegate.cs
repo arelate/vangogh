@@ -2,10 +2,11 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Stash;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
+using Interfaces.Delegates.Intersect;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -19,22 +20,27 @@ namespace Delegates.Convert.Requests
         IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>>
     {
         private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private IFindDelegate<Method> findMethodDelegate;
+        private IIntersectDelegate<string> intersectStringDelegate;
 
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
+            "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates",
+            "Delegates.Intersect.System.IntersectStringDelegate,Delegates")]
             [Dependencies(
             DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "",
             "")]            
         public ConvertRequestsDataToRequestsDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IFindDelegate<Method> findMethodDelegate,
+            IIntersectDelegate<string> intersectStringDelegate)
         {
             this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.findMethodDelegate = findMethodDelegate;
+            this.intersectStringDelegate = intersectStringDelegate;
         }
 
         public async IAsyncEnumerable<Request> ConvertAsync(RequestsData requestsData)
@@ -44,14 +50,14 @@ namespace Delegates.Convert.Requests
 
             foreach (var method in requestsData.Methods)
             {
-                var methodDefinition = collectionController.Find(
+                var methodDefinition = findMethodDelegate.Find(
                     argsDefinitions.Methods,
                     m => m.Title == method);
 
                 if (methodDefinition == null)
                     throw new ArgumentException();
 
-                var methodCollections = collectionController.Intersect(
+                var methodCollections = intersectStringDelegate.Intersect(
                     requestsData.Collections,
                     methodDefinition.Collections);
 

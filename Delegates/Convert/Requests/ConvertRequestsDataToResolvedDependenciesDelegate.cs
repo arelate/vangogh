@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Stash;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
+using Interfaces.Delegates.Confirm;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -17,23 +18,28 @@ namespace Delegates.Convert.Requests
     public class ConvertRequestsDataToResolvedDependenciesDelegate :
         IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
+        private readonly IFindDelegate<Dependency> findDependencyDelegate;
+        private readonly IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExclusiveStringDelegate;
 
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
-            [Dependencies(
+            "Delegates.Find.ArgsDefinitions.FindDependencyDelegate,Delegates",
+            "Delegates.Confirm.System.ConfirmExclusiveStringDelegate,Delegates")]
+        [Dependencies(
             DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "",
             "")]
         public ConvertRequestsDataToResolvedDependenciesDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IFindDelegate<Dependency> findDependencyDelegate,
+            IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExclusiveStringDelegate)
         {
             this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.findDependencyDelegate = findDependencyDelegate;
+            this.confirmExclusiveStringDelegate = confirmExclusiveStringDelegate;
         }
         public async Task<RequestsData> ConvertAsync(RequestsData requestsData)
         {
@@ -43,15 +49,14 @@ namespace Delegates.Convert.Requests
 
             foreach (var method in requestsData.Methods)
             {
-                var dependency = collectionController.Find(
+                var dependency = findDependencyDelegate.Find(
                     argsDefinitions.Dependencies,
                     d => d.Method == method);
 
                 if (dependency == null) continue;
 
-                if (!collectionController.ConfirmExclusive(
-                    requestsData.Collections,
-                    dependency.Collections))
+                if (!confirmExclusiveStringDelegate.Confirm(
+                    (requestsData.Collections, dependency.Collections)))
                 {
                     foreach (var requirement in dependency.Requires)
                     {

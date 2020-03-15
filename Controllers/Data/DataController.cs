@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Stash;
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
 
 using Interfaces.Models.RecordsTypes;
 
@@ -18,20 +18,20 @@ namespace Controllers.Data
         readonly IStashController<List<DataType>> stashController;
         readonly IConvertDelegate<DataType, long> convertProductToIndexDelegate;
         readonly IRecordsController<long> recordsController;
-        readonly private ICollectionController collectionController;
+        readonly private IFindDelegate<DataType> findDelegate;
         readonly IActionLogController actionLogController;
 
         public DataController(
             IStashController<List<DataType>> stashController,
             IConvertDelegate<DataType, long> convertProductToIndexDelegate,
             IRecordsController<long> recordsController,
-            ICollectionController collectionController,
+            IFindDelegate<DataType> findDelegate,
             IActionLogController actionLogController)
         {
             this.stashController = stashController;
             this.convertProductToIndexDelegate = convertProductToIndexDelegate;
             this.recordsController = recordsController;
-            this.collectionController = collectionController;
+            this.findDelegate = findDelegate;
             this.actionLogController = actionLogController;
         }
 
@@ -49,7 +49,7 @@ namespace Controllers.Data
         public async Task<DataType> GetByIdAsync(long id)
         {
             var data = await stashController.GetDataAsync();
-            return collectionController.Find(data, item =>
+            return findDelegate.Find(data, item =>
             {
                 var index = convertProductToIndexDelegate.Convert(item);
                 return index == id;

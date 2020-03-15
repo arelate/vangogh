@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -23,19 +23,19 @@ namespace GOG.Controllers.Data.ProductTypes
             "GOG.Controllers.Stash.ProductTypes.ApiProductsStashController,GOG.Controllers",
             "GOG.Delegates.Convert.ProductTypes.ConvertApiProductToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.ApiProductsRecordsIndexController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers",
+            "GOG.Delegates.Find.ProductTypes.FindApiProductDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ApiProductsDataController(
             IStashController<List<ApiProduct>> apiProductsStashController,
             IConvertDelegate<ApiProduct, long> convertApiProductsToIndexDelegate,
             IRecordsController<long> apiProductsRecordsIndexController,
-            ICollectionController collectionController,
+            IFindDelegate<ApiProduct> findApiProductDelegate,
             IActionLogController actionLogController) :
             base(
                 apiProductsStashController,
                 convertApiProductsToIndexDelegate,
                 apiProductsRecordsIndexController,
-                collectionController,
+                findApiProductDelegate,
                 actionLogController)
         {
             // ...

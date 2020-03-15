@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Controllers.Collection;
+using Interfaces.Delegates.Find;
 using Interfaces.Controllers.Stash;
 using Interfaces.Models.Dependencies;
 
@@ -20,22 +20,27 @@ namespace Delegates.Convert.ArgsTokens
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
         private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private IFindDelegate<Method> findMethodDelegate;
+        private IFindDelegate<Parameter> findParameterDelegate;
 
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
+            "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates",
+            "Delegates.Find.ArgsDefinitions.FindParameterDelegate,Delegates")]
             [Dependencies(
             DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
+            "",
             "")]
         public ConvertLikelyTypedToTypedTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IFindDelegate<Method> findMethodDelegate,
+            IFindDelegate<Parameter> findParameterDelegate)
         {
             this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.findMethodDelegate = findMethodDelegate;
+            this.findParameterDelegate = findParameterDelegate;
         }
 
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
@@ -61,7 +66,7 @@ namespace Delegates.Convert.ArgsTokens
                                 Models.ArgsTokens.Prefixes.MethodsAbbrevation.Length);
                         foreach (var methodAbbrevation in methodsAbbrevations)
                         {
-                            var abbrevatedMethod = collectionController.Find(
+                            var abbrevatedMethod = findMethodDelegate.Find(
                                 argsDefinitions.Methods,
                                 method => method.Title.StartsWith(methodAbbrevation));
 
@@ -73,7 +78,7 @@ namespace Delegates.Convert.ArgsTokens
                     case Tokens.LikelyParameterValue:
                         var tokenType = Tokens.Unknown;
                         
-                        var titledParameter = collectionController.Find(
+                        var titledParameter = findParameterDelegate.Find(
                               argsDefinitions.Parameters,
                               parameter => parameter.Title == currentParameterTitle);
 

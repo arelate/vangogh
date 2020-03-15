@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Find;
 
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 using Interfaces.Models.Dependencies;
 
@@ -17,7 +17,7 @@ namespace Delegates.Constrain
     public class ConstrainRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
     {
         readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
-        readonly ICollectionController collectionController;
+        readonly IFindDelegate<string> findStringDelegate;
         readonly IActionLogController actionLogController;
         readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
         readonly IItemizeAllDelegate<string> itemizeRateContraindesUris;
@@ -28,17 +28,17 @@ namespace Delegates.Constrain
         [Dependencies(
             DependencyContext.Default,
             "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
-            "Controllers.Collection.CollectionController,Controllers",
+            "Delegates.Find.System.FindStringDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers",
             "GOG.Delegates.Itemize.ItemizeAllRateConstrainedUrisDelegate,GOG.Delegates")]
         public ConstrainRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
-            ICollectionController collectionController,
+            IFindDelegate<string> findStringDelegate,
             IActionLogController actionLogController,
             IItemizeAllDelegate<string> itemizeRateContraindesUris)
         {
             this.constrainExecutionAsyncDelegate = constrainExecutionAsyncDelegate;
-            this.collectionController = collectionController;
+            this.findStringDelegate = findStringDelegate;
             this.actionLogController = actionLogController;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
             rateLimitRequestsCount = 0;
@@ -54,7 +54,7 @@ namespace Delegates.Constrain
 
         public async Task ConstrainAsync(string uri)
         {
-            var prefix = collectionController.Reduce(itemizeRateContraindesUris.ItemizeAll(), uri.StartsWith).SingleOrDefault();
+            var prefix = findStringDelegate.Find(itemizeRateContraindesUris.ItemizeAll(), uri.StartsWith);
             if (string.IsNullOrEmpty(prefix)) return;
 
             // don't limit rate for the first N requests, even if they match rate limit prefix

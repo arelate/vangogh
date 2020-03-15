@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -21,19 +21,19 @@ namespace Controllers.Data.ProductTypes
             "Controllers.Stash.ProductTypes.ValidationResultsStashController,Controllers",
             "Delegates.Convert.ProductTypes.ConvertValidationResultsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ValidationResultsRecordsIndexController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers",
+            "Delegates.Find.ProductTypes.FindValidationResultsDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ValidationResultsDataController(
             IStashController<List<ValidationResults>> validationResultsStashController,
             IConvertDelegate<ValidationResults, long> convertValidationResultsToIndexDelegate,
             IRecordsController<long> validationResultsRecordsIndexController,
-            ICollectionController collectionController,
+            IFindDelegate<ValidationResults> findValidationResultsDelegate,
             IActionLogController actionLogController) :
             base(
                 validationResultsStashController,
                 convertValidationResultsToIndexDelegate,
                 validationResultsRecordsIndexController,
-                collectionController,
+                findValidationResultsDelegate,
                 actionLogController)
         {
             // ...

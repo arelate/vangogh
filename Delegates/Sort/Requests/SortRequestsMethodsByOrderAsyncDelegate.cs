@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using System;
 
 using Interfaces.Controllers.Stash;
-using Interfaces.Controllers.Collection;
 using Interfaces.Delegates.Sort;
+using Interfaces.Delegates.Find;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -16,22 +16,22 @@ namespace Delegates.Sort.Requests
     public class SortRequestsMethodsByOrderAsyncDelegate : ISortAsyncDelegate<string>
     {
         private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private IFindDelegate<Method> findMethodDelegate;
 
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
+            "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates")]
         [Dependencies(
             DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]
         public SortRequestsMethodsByOrderAsyncDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IFindDelegate<Method> findMethodDelegate)
         {
             this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.findMethodDelegate = findMethodDelegate;
         }
 
         public async Task SortAsync(List<string> methods)
@@ -40,8 +40,8 @@ namespace Delegates.Sort.Requests
 
             methods.Sort((string x, string y) =>
             {
-                var cx = collectionController.Find(argsDefinitions.Methods, c => c.Title == x);
-                var cy = collectionController.Find(argsDefinitions.Methods, c => c.Title == y);
+                var cx = findMethodDelegate.Find(argsDefinitions.Methods, c => c.Title == x);
+                var cy = findMethodDelegate.Find(argsDefinitions.Methods, c => c.Title == y);
 
                 if (cx == null || cy == null)
                     throw new InvalidOperationException();

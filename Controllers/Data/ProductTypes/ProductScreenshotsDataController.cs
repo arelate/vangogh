@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Collection;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -21,19 +21,19 @@ namespace Controllers.Data.ProductTypes
             "Controllers.Stash.ProductTypes.ProductScreenshotsStashController,Controllers",
             "Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ProductScreenshotsRecordsIndexController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers",
+            "Delegates.Find.ProductTypes.FindProductScreenshotsDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ProductScreenshotsDataController(
             IStashController<List<ProductScreenshots>> productScreenshotsStashController,
             IConvertDelegate<ProductScreenshots, long> convertProductScreenshotsToIndexDelegate,
             IRecordsController<long> productScreenshotsRecordsIndexController,
-            ICollectionController collectionController,
+            IFindDelegate<ProductScreenshots> findProductScreenshotsDelegate,
             IActionLogController actionLogController) :
             base(
                 productScreenshotsStashController,
                 convertProductScreenshotsToIndexDelegate,
                 productScreenshotsRecordsIndexController,
-                collectionController,
+                findProductScreenshotsDelegate,
                 actionLogController)
         {
             // ...

@@ -1,19 +1,19 @@
 using Interfaces.Delegates.Confirm;
 
-using Interfaces.Controllers.Collection;
+using Interfaces.Delegates.Map;
 
 namespace Delegates.Confirm
 {
     public abstract class ConfirmStringMatchesAllDelegate : IConfirmDelegate<string>
     {
         readonly string[] matches;
-        readonly ICollectionController collectionController;
+        private readonly IMapDelegate<string> mapDelegate;
 
         public ConfirmStringMatchesAllDelegate(
-            ICollectionController collectionController,
+            IMapDelegate<string> mapDelegate,
             params string[] matches)
         {
-            this.collectionController = collectionController;
+            this.mapDelegate = mapDelegate;
             this.matches = matches;
         }
 
@@ -21,7 +21,7 @@ namespace Delegates.Confirm
         {
             var matchesAll = true;
 
-            collectionController.Map(matches, match => matchesAll &= entry.Contains(match));
+            mapDelegate.Map(matches, match => matchesAll &= entry.Contains(match));
 
             return matchesAll;
         }

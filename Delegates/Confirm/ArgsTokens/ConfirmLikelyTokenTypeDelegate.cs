@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Find;
+
 using Interfaces.Controllers.Stash;
-using Interfaces.Controllers.Collection;
 using Interfaces.Models.Properties;
 using Interfaces.Models.Dependencies;
 
@@ -19,22 +20,22 @@ namespace Delegates.Confirm.ArgsTokens
         IConfirmAsyncDelegate<(string Token, Tokens Type)>
     {
         private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate;
-        private readonly ICollectionController collectionController;
+        private readonly IFindDelegate<ITitleProperty> findITitlePropertyDelegate;
 
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
+            "Delegates.Find.Properties.FindITitlePropertyDelegate,Delegates")]
         [Dependencies(
             DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]
         public ConfirmLikelyTokenTypeDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate,
-            ICollectionController collectionController)
+            IFindDelegate<ITitleProperty> findITitlePropertyDelegate)
         {
             this.getArgsDefinitionDataDelegate = getArgsDefinitionDataDelegate;
-            this.collectionController = collectionController;
+            this.findITitlePropertyDelegate = findITitlePropertyDelegate;
         }
 
         public async Task<bool> ConfirmAsync((string Token, Tokens Type) typedToken)
@@ -81,7 +82,7 @@ namespace Delegates.Confirm.ArgsTokens
             // Since all declared values are stored as ITitleProperty[]
             // we don't need collection specific code
             if (titledItems != null)
-                return collectionController.Find(
+                return findITitlePropertyDelegate.Find(
                     titledItems,
                     titledItem => titledItem.Title == typedToken.Token) != null;
 

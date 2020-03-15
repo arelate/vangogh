@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Stash;
-using Interfaces.Controllers.Collection;
+
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Find;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -20,18 +21,18 @@ namespace Controllers.Data.Records
             DependencyContext.Default,
             "Controllers.Stash.Records.GameProductDataRecordsStashController,Controllers",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
-            "Controllers.Collection.CollectionController,Controllers",
+            "Delegates.Find.ProductTypes.FindProductRecordsDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public GameProductDataRecordsDataController(
             IStashController<List<ProductRecords>> gameProductDataRecordsStashController,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
-            ICollectionController collectionController,
+            IFindDelegate<ProductRecords> findProductRecordsDelegate,
             IActionLogController actionLogController) :
             base(
                 gameProductDataRecordsStashController,
                 convertProductRecordsToIndexDelegate,
                 null,
-                collectionController,
+                findProductRecordsDelegate,
                 actionLogController)
         {
             // ...

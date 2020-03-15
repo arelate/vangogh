@@ -4,8 +4,11 @@ Technical Debt Reduction Plan
 - *[done]* Implement itemizeDelegate to itemize all attributed types (on class or constructor)
 - *[done]* Implement context within instanceController instead on TestDependencies
 - *[done]* Reimplement tests for dependencies test overrides
-- Implement tests for RespondsToRequest attribute
 - Finalize controller/delegate consolidation
+    - Deprecate all controllers and implement as delegates with clear explicitly dependencies (Controllers have hidden explicit dependencies)
+    - Review all delegates and look for opportunities to optimize
+    - Review namespaces to consolidate "area" delegates
+- Implement tests for RespondsToRequest attribute
 - Cleanup TODOs
 - Resolve compiler warnings
 

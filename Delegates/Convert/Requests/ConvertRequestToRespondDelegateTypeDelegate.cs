@@ -1,8 +1,8 @@
 using System;
 
-using Interfaces.Controllers.Collection;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Find;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -13,18 +13,18 @@ namespace Delegates.Convert.Requests
 {
     public class ConvertRequestToRespondDelegateTypeDelegate : IConvertDelegate<Request, Type>
     {
-        private readonly ICollectionController collectionController;
+        private readonly IFindDelegate<Type> findTypeDelegate;
         private readonly IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate;
 
         [Dependencies(
             DependencyContext.Default,
-            "Controllers.Collection.CollectionController,Controllers",
+            "Delegates.Find.System.FindTypeDelegate,Delegates",
             "Delegates.Itemize.Types.Attributes.ItemizeAllRespondsToRequestsAttributeTypesDelegate,Delegates")]
         public ConvertRequestToRespondDelegateTypeDelegate(
-            ICollectionController collectionController,
+            IFindDelegate<Type> findTypeDelegate,
             IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate)
         {
-            this.collectionController = collectionController;
+            this.findTypeDelegate = findTypeDelegate;
             this.itemizeAllRespondDelegateTypesDelegate = itemizeAllRespondDelegateTypesDelegate;
         }
 
@@ -32,7 +32,7 @@ namespace Delegates.Convert.Requests
         {
             var respondDelegateTypes = itemizeAllRespondDelegateTypesDelegate.ItemizeAll();
 
-            var respondDelegate = collectionController.Find(respondDelegateTypes,
+            var respondDelegate = findTypeDelegate.Find(respondDelegateTypes,
                 delegateType =>
                 {
                     var respondsToRequestAttribute = Attribute.GetCustomAttribute(

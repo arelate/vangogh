@@ -8,10 +8,10 @@ using Interfaces.Delegates.Replace;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Map;
 using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Collection;
 
 using Interfaces.Controllers.Serialization;
 using Interfaces.Language;
@@ -40,7 +40,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         readonly IConvertDelegate<
             OperatingSystemsDownloads[][],
             OperatingSystemsDownloads[]> convert2DArrayToArrayDelegate;
-        readonly ICollectionController collectionController;
+        readonly IMapDelegate<string> mapStringDelegate;
 
         [Dependencies(
             DependencyContext.Default,
@@ -53,7 +53,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             "GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadsDelegate,GOG.Delegates",
             "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate,GOG.Delegates",
-            "Controllers.Collection.CollectionController,Controllers")]
+            "Delegates.Map.System.MapStringDelegate,Delegates")]
         public GetDeserializedGameDetailsAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
             ISerializationController<string> serializationController,
@@ -66,7 +66,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             IConvertDelegate<
                 OperatingSystemsDownloads[][], 
                 OperatingSystemsDownloads[]> convert2DArrayToArrayDelegate,
-            ICollectionController collectionController)
+            IMapDelegate<string> mapStringDelegate)
         {
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
             this.serializationController = serializationController;
@@ -78,7 +78,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             this.itemizeGameDetailsDownloadsDelegate = itemizeGameDetailsDownloadsDelegate;
             this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
             this.convert2DArrayToArrayDelegate = convert2DArrayToArrayDelegate;
-            this.collectionController = collectionController;
+            this.mapStringDelegate = mapStringDelegate;
         }
 
         public async Task<GameDetails> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
@@ -134,7 +134,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
                 // map language downloads with the language code we extracted earlier
                 var languageDownloadIndex = 0;
 
-                collectionController.Map(downloadLanguages, language =>
+                mapStringDelegate.Map(downloadLanguages, language =>
                 {
                     var formattedLanguage = convertGameDetailsDownloadLanguagesToEmptyStringDelegate.Convert(language);
                     var languageCode = languageController.GetLanguageCode(formattedLanguage);
