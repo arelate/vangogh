@@ -14,8 +14,6 @@ using Interfaces.Models.Dependencies;
 using Interfaces.Controllers.Network;
 
 using Interfaces.Controllers.Serialization;
-using Interfaces.Language;
-
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
@@ -31,7 +29,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     {
         readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
         readonly ISerializationController<string> serializationController;
-        readonly ILanguageController languageController;
+        readonly IConvertDelegate<string,string> convertLanguageToCodeDelegate;
         readonly IConvertDelegate<string, string> convertGameDetailsDownloadLanguagesToEmptyStringDelegate;
         readonly IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
         readonly IItemizeDelegate<string, string> itemizeGameDetailsDownloadLanguagesDelegate;
@@ -46,7 +44,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             Dependencies.JSONSerializationController,
-            "Controllers.Language.LanguageController,Controllers",
+            "Delegates.Convert.ConvertLanguageToCodeDelegate,Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate,GOG.Delegates",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadLanguagesDelegate,GOG.Delegates",
@@ -57,7 +55,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         public GetDeserializedGameDetailsAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
             ISerializationController<string> serializationController,
-            ILanguageController languageController,
+            IConvertDelegate<string,string> convertLanguageToCodeDelegate,
             IConvertDelegate<string, string> convertGameDetailsDownloadLanguagesToEmptyStringDelegate,
             IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate,
             IItemizeDelegate<string, string> itemizeGameDetailsDownloadLanguagesDelegate,
@@ -70,7 +68,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         {
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
             this.serializationController = serializationController;
-            this.languageController = languageController;
+            this.convertLanguageToCodeDelegate = convertLanguageToCodeDelegate;
             this.convertGameDetailsDownloadLanguagesToEmptyStringDelegate = convertGameDetailsDownloadLanguagesToEmptyStringDelegate;
 
             this.confirmStringContainsLanguageDownloadsDelegate = confirmStringContainsLanguageDownloadsDelegate;
@@ -137,7 +135,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
                 mapStringDelegate.Map(downloadLanguages, language =>
                 {
                     var formattedLanguage = convertGameDetailsDownloadLanguagesToEmptyStringDelegate.Convert(language);
-                    var languageCode = languageController.GetLanguageCode(formattedLanguage);
+                    var languageCode = convertLanguageToCodeDelegate.Convert(formattedLanguage);
 
                     languageDownloads[languageDownloadIndex++].Language = languageCode;
                 });

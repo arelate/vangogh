@@ -5,7 +5,7 @@ using Interfaces.Delegates.Intersect;
 
 namespace Delegates.Intersect
 {
-    public class IntersectDelegate<T>: IIntersectDelegate<T>
+    public abstract class IntersectDelegate<T>: IIntersectDelegate<T>
     {
         private IFindAllDelegate<T> findAllDelegate;
         private IFindDelegate<T> findDelegate;

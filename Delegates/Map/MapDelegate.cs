@@ -5,7 +5,7 @@ using Interfaces.Delegates.Map;
 
 namespace Delegates.Map
 {
-    public class MapDelegate<T> : IMapDelegate<T>
+    public abstract class MapDelegate<T> : IMapDelegate<T>
     {
         public void Map(IEnumerable<T> collection, Action<T> map)
         {

@@ -42,11 +42,5 @@ namespace Controllers.Directory
                 fromUri,
                 destination);
         }
-
-        public void SetCurrentDirectory(string uri)
-        {
-            if (Exists(uri))
-                System.IO.Directory.SetCurrentDirectory(uri);
-        }
     }
 }

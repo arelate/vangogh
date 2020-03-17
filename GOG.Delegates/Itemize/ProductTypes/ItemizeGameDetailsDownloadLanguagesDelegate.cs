@@ -7,24 +7,18 @@ using Interfaces.Models.Dependencies;
 
 using Attributes;
 
-using Interfaces.Language;
-
 namespace GOG.Delegates.Itemize.ProductTypes
 {
     public class ItemizeGameDetailsDownloadLanguagesDelegate : IItemizeDelegate<string, string>
     {
-        ILanguageController languageController;
         IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
         [Dependencies(
             DependencyContext.Default,
-            "Controllers.Language.LanguageController,Controllers",
             "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates")]
         public ItemizeGameDetailsDownloadLanguagesDelegate(
-            ILanguageController languageController,
             IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
         {
-            this.languageController = languageController;
             this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
         }
 

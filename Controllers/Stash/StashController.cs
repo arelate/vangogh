@@ -11,7 +11,7 @@ using Interfaces.Delegates.GetPath;
 
 namespace Controllers.Stash
 {
-    public abstract class StashController<ModelType>: IStashController<ModelType> where ModelType : class, new()
+    public abstract class StashController<ModelType> : IStashController<ModelType> where ModelType : class, new()
     {
         readonly IGetPathDelegate getPathDelegate;
         readonly ISerializedStorageController serializedStorageController;
@@ -29,42 +29,36 @@ namespace Controllers.Stash
             this.actionLogController = actionLogController;
         }
 
-        public bool DataAvailable
-        {
-            get;
-            private set;
-        }
+        // public bool DataAvailable
+        // {
+        //     get;
+        //     private set;
+        // }
 
         public async Task<ModelType> GetDataAsync()
         {
-            if (!DataAvailable) await LoadAsync();
+            if (storedData == null)
+            {
+                actionLogController.StartAction("Load stored data");
+
+                var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
+
+                storedData = await serializedStorageController.DeserializePullAsync<ModelType>(storedDataUri);
+
+                if (storedData == null) storedData = new ModelType();
+
+                // DataAvailable = true;
+
+                actionLogController.CompleteAction();
+            }
 
             return storedData;
         }
 
-        public async Task LoadAsync()
+
+        public async Task PostDataAsync()
         {
-            actionLogController.StartAction("Load stored data");
-
-            var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
-
-            storedData = await serializedStorageController.DeserializePullAsync<ModelType>(storedDataUri);
-
-            if (storedData == null) storedData = new ModelType();
-
-            DataAvailable = true;
-
-            actionLogController.CompleteAction();
-        }
-
-        public async Task SaveAsync()
-        {
-            if (!DataAvailable) {
-                // TODO: Replce statusController warning
-                // await statusController.WarnAsync(status, 
-                //     "Attempted to save stashed data that has not been made available");
-                return;
-            };
+            await GetDataAsync();
 
             actionLogController.StartAction("Save stored data");
 

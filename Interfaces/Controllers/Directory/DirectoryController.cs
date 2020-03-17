@@ -35,8 +35,8 @@ namespace Interfaces.Controllers.Directory
         IExistsDelegate,
         IEnumerateFilesDelegate,
         IEnumerateDirectoriesDelegate,
-        IMoveDelegate,
-        ISetCurrentDirectory
+        IMoveDelegate
+        // ISetCurrentDirectory
     {
         // ...
     }

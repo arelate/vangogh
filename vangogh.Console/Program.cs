@@ -96,26 +96,40 @@ namespace vangogh.Console
 
             foreach (var type in types)
             {
+
+                if (!type.FullName.StartsWith("Delegates.") &&
+                    !type.FullName.StartsWith("Controllers."))
+                    continue;
+
                 var isRoot = !typesDependencies.Keys.Contains(type);
                 var isLeaf = !ContainsValue(typesDependencies, type);
                 var depsCount = CountValue(typesDependencies, type);
 
-                if (!isRoot || !isLeaf) continue;
-                if (type.IsAbstract) continue;
+                // if (!isRoot || !isLeaf) continue;
+                // if (type.IsAbstract) continue;
                 // if (depsCount < 2) continue;
 
                 var typeString = string.Empty;
                 if (isRoot) typeString += "[ROOT] ";
                 if (isLeaf) typeString += "[LEAF] ";
                 if (type.IsAbstract) typeString += "[ABSTRACT] ";
-                if (!isLeaf) typeString += $"[DEPS:{depsCount}] ";
+                if (!isLeaf) typeString += $"[DEPENDANTS:{depsCount}] ";
                 typeString += type.FullName;
-                System.Console.WriteLine(typeString);
 
                 if (!typesDependencies.ContainsKey(type)) continue;
 
+                var noGOGDeps = true;
                 foreach (var typeDependency in typesDependencies[type])
+                    noGOGDeps &= !typeDependency.FullName.StartsWith("GOG.");
+
+                if (noGOGDeps) continue;
+
+                System.Console.WriteLine(typeString);
+                foreach (var typeDependency in typesDependencies[type])
+                {
                     System.Console.WriteLine($"-{typeDependency.FullName}");
+                }
+
             }
 
 

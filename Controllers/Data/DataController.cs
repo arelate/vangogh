@@ -117,7 +117,7 @@ namespace Controllers.Data
             }
 
             actionLogController.StartAction("Commit items");
-            await stashController.SaveAsync();
+            await stashController.PostDataAsync();
             actionLogController.CompleteAction();
 
             actionLogController.CompleteAction();

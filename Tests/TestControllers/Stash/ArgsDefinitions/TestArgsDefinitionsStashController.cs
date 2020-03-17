@@ -8,13 +8,13 @@ namespace TestControllers.Stash.ArgsDefinitions
 {
     public class TestArgsDefinitionsStashController : IStashController<ArgsDefinition>
     {
-        public bool DataAvailable
-        {
-            get
-            {
-                return true;
-            }
-        }
+        // public bool DataAvailable
+        // {
+        //     get
+        //     {
+        //         return true;
+        //     }
+        // }
 
         public async Task<ArgsDefinition> GetDataAsync()
         {
@@ -24,12 +24,12 @@ namespace TestControllers.Stash.ArgsDefinitions
             });
         }
 
-        public Task LoadAsync()
-        {
-            throw new System.NotImplementedException();
-        }
+        // public Task LoadAsync()
+        // {
+        //     throw new System.NotImplementedException();
+        // }
 
-        public Task SaveAsync()
+        public Task PostDataAsync()
         {
             throw new System.NotImplementedException();
         }

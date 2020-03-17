@@ -60,7 +60,7 @@ namespace Controllers.Cookies
                 else storedCookies.Add(deserializedCookie.Item1, deserializedCookie.Item2);
             }
 
-            await cookieStashController.SaveAsync();
+            await cookieStashController.PostDataAsync();
         }
     }
 }

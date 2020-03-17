@@ -6,7 +6,7 @@ using Interfaces.Delegates.Confirm;
 
 namespace Delegates.Confirm
 {
-    public class ConfirmExclusiveDelegate<T> :
+    public abstract class ConfirmExclusiveDelegate<T> :
         IConfirmDelegate<(IEnumerable<T>, IEnumerable<T>)>
     {
         private IIntersectDelegate<T> intersectDelegate;
