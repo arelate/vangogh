@@ -7,8 +7,6 @@ using System.Xml;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Controllers.File;
-using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Logs;
 using Interfaces.Models.Dependencies;
 
@@ -25,8 +23,7 @@ namespace Controllers.Validation
     public class FileValidationController : IFileValidationController
     {
         IConfirmDelegate<string> confirmValidationExpectedDelegate;
-        readonly IFileController fileController;
-        IStreamController streamController;
+        private readonly IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate;
         XmlDocument validationXml;
         IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
         IValidationResultController validationResultController;
@@ -35,22 +32,19 @@ namespace Controllers.Validation
         [Dependencies(
             DependencyContext.Default,
             "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
-            "Controllers.File.FileController,Controllers",
-            "Controllers.Stream.StreamController,Controllers",
+            "Delegates.Convert.IO.ConvertUriToReadableStreamDelegate,Delegates",
             "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
             "Controllers.ValidationResult.ValidationResultController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
         public FileValidationController(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
-            IFileController fileController,
-            IStreamController streamController,
+            IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate,
             IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate,
             IValidationResultController validationResultController,
             IActionLogController actionLogController)
         {
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
-            this.fileController = fileController;
-            this.streamController = streamController;
+            this.convertUriToReadableStreamDelegate = convertUriToReadableStreamDelegate;
             this.convertBytesToHashDelegate = convertBytesToHashDelegate;
             this.validationResultController = validationResultController;
             this.actionLogController = actionLogController;
@@ -85,7 +79,7 @@ namespace Controllers.Validation
 
             try
             {
-                using (var xmlStream = streamController.OpenReadable(validationUri))
+                using (var xmlStream = convertUriToReadableStreamDelegate.Convert(validationUri))
                     validationXml.Load(xmlStream);
 
                 fileValidation.ValidationFileIsValid = true;
@@ -135,7 +129,7 @@ namespace Controllers.Validation
 
             var chunksValidation = new List<IChunkValidation>();
 
-            using (var fileStream = streamController.OpenReadable(productFileUri))
+            using (var fileStream = convertUriToReadableStreamDelegate.Convert(productFileUri))
             {
                 long length = 0;
 
@@ -208,17 +202,17 @@ namespace Controllers.Validation
 
         public bool VerifyProductFileExists(string productFileUri)
         {
-            return fileController.Exists(productFileUri);
+            return System.IO.File.Exists(productFileUri);
         }
 
         public bool VerifySize(string uri, long expectedSize)
         {
-            return fileController.GetSize(uri) == expectedSize;
+            return new FileInfo(uri).Length == expectedSize;
         }
 
         public bool VerifyValidationFileExists(string validationFileUri)
         {
-            return fileController.Exists(validationFileUri);
+            return System.IO.File.Exists(validationFileUri);
         }
     }
 }

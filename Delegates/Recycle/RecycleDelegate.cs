@@ -2,9 +2,8 @@
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Recycle;
+using Interfaces.Delegates.Move;
 
-using Interfaces.Controllers.Directory;
-using Interfaces.Controllers.File;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -14,22 +13,18 @@ namespace Delegates.Recycle
     public class RecycleDelegate : IRecycleDelegate
     {
         readonly IGetDirectoryDelegate getDirectoryDelegate;
-        readonly IFileController fileController;
-        IDirectoryController directoryController;
+        readonly IMoveDelegate<string> moveFileDelegate;
 
         [Dependencies(
             DependencyContext.Default,
             "Delegates.GetDirectory.ProductTypes.GetRecycleBinDirectoryDelegate,Delegates",
-            "Controllers.File.FileController,Controllers",
-            "Controllers.Directory.DirectoryController,Controllers")]
+            "Delegates.Move.IO.MoveFileDelegate,Delegates")]
         public RecycleDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
-            IFileController fileController,
-            IDirectoryController directoryController)
+            IMoveDelegate<string> moveFileDelegate)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;
-            this.fileController = fileController;
-            this.directoryController = directoryController;
+            this.moveFileDelegate = moveFileDelegate;
         }
 
         public void Recycle(string uri)
@@ -37,7 +32,7 @@ namespace Delegates.Recycle
             var recycleBinUri = Path.Combine(
                 getDirectoryDelegate.GetDirectory(string.Empty),
                 uri);
-            fileController.Move(uri, recycleBinUri);
+            moveFileDelegate.Move(uri, recycleBinUri);
         }
     }
 }

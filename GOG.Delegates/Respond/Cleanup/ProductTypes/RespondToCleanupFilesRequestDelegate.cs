@@ -2,7 +2,6 @@
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
-using Interfaces.Controllers.Directory;
 using Interfaces.Controllers.Logs;
 using Interfaces.Models.Dependencies;
 
@@ -22,7 +21,6 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
             "Delegates.Itemize.ItemizeDirectoryFilesDelegate,Delegates",
             "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
             "Delegates.Recycle.RecycleDelegate,Delegates",
-            "Controllers.Directory.DirectoryController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
         public RespondToCleanupFilesRequestDelegate(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedProductFilesAsyncDelegate,
@@ -30,7 +28,6 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
-            IDirectoryController directoryController,
             IActionLogController actionLogController) :
             base(
                 itemizeAllExpectedProductFilesAsyncDelegate,
@@ -38,7 +35,6 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
                 itemizeDetailsDelegate,
                 formatSupplementaryItemDelegate,
                 recycleDelegate,
-                directoryController,
                 actionLogController)
         {
             // ...

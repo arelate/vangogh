@@ -7,8 +7,6 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Models.Dependencies;
 
-using Interfaces.Controllers.File;
-
 using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
@@ -26,7 +24,6 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IDataController<ProductScreenshots> screenshotsDataController;
         readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
         readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
-        readonly IFileController fileController;
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
@@ -34,19 +31,16 @@ namespace GOG.Delegates.GetDownloadSources
 			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
 			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-			"Controllers.File.FileController,Controllers",
 			"Controllers.Logs.ActionLogController,Controllers")]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
-            IFileController fileController,
             IActionLogController actionLogController)
         {
             this.screenshotsDataController = screenshotsDataController;
             this.formatScreenshotsUriDelegate = formatScreenshotsUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
-            this.fileController = fileController;
             this.actionLogController = actionLogController;
         }
 
@@ -75,7 +69,7 @@ namespace GOG.Delegates.GetDownloadSources
                         screenshotsDirectoryDelegate.GetDirectory(string.Empty),
                         Path.GetFileName(sourceUri));
 
-                    if (fileController.Exists(destinationUri)) continue;
+                    if (File.Exists(destinationUri)) continue;
 
                     currentProductScreenshotSources.Add(sourceUri);
                 }

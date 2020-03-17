@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using System.IO;
 
-using Interfaces.Controllers.File;
-using Interfaces.Controllers.Stream;
+using Interfaces.Delegates.Convert;
 using Interfaces.Controllers.Storage;
 using Interfaces.Models.Dependencies;
 
@@ -13,19 +12,15 @@ namespace Controllers.Storage
 {
     public class StorageController : IStorageController<string>
     {
-        readonly IStreamController streamController;
-        readonly IFileController fileController;
+        readonly IConvertDelegate<string, System.IO.Stream> convertUriToReadableStream;
 
         [Dependencies(
             DependencyContext.Default,
-            "Controllers.Stream.StreamController,Controllers",
-            "Controllers.File.FileController,Controllers")]
+            "Delegates.Convert.IO.ConvertUriToReadableStreamDelegate,Delegates")]
         public StorageController(
-            IStreamController streamController,
-            IFileController fileController)
+            IConvertDelegate<string, System.IO.Stream> convertUriToReadableStream)
         {
-            this.streamController = streamController;
-            this.fileController = fileController;
+            this.convertUriToReadableStream = convertUriToReadableStream;
         }
 
         public async Task PushAsync(
@@ -34,7 +29,7 @@ namespace Controllers.Storage
         {
             var started = DateTime.Now;
 
-            using (var stream = streamController.OpenWritable(uri))
+            using (var stream = convertUriToReadableStream.Convert(uri))
             using (StreamWriter writer = new StreamWriter(stream))
                 await writer.WriteLineAsync(data);
 
@@ -47,10 +42,10 @@ namespace Controllers.Storage
             var started = DateTime.Now;
             var data = string.Empty;
 
-            if (fileController.Exists(uri))
+            if (System.IO.File.Exists(uri))
             {
 
-                using (var stream = streamController.OpenReadable(uri))
+                using (var stream = convertUriToReadableStream.Convert(uri))
                 using (StreamReader reader = new StreamReader(stream))
                     data = await reader.ReadToEndAsync();
             }

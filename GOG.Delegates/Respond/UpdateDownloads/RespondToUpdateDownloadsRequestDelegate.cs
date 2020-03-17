@@ -6,7 +6,6 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.File;
 using Interfaces.Controllers.Logs;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
@@ -22,7 +21,6 @@ namespace GOG.Delegates.Respond.UpdateDownloads
     {
         readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
         readonly IGetDirectoryDelegate getDirectoryDelegate;
-        readonly IFileController fileController;
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDataController<AccountProduct> accountProductsDataController;
         readonly IDataController<Product> productsDataController;
@@ -31,7 +29,6 @@ namespace GOG.Delegates.Respond.UpdateDownloads
         public RespondToUpdateDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
-            IFileController fileController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
@@ -39,7 +36,6 @@ namespace GOG.Delegates.Respond.UpdateDownloads
         {
             this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
-            this.fileController = fileController;
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
             this.productsDataController = productsDataController;
@@ -120,7 +116,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
                     // we won't schedule downloads for the already existing files
                     // we won't be able to resolve filename for productFiles, but that should cut off 
                     // number of images we constantly try to redownload
-                    if (fileController.Exists(destinationUri)) continue;
+                    if (File.Exists(destinationUri)) continue;
 
                     productDownloads.Downloads.Add(scheduledDownloadEntry);
                 }

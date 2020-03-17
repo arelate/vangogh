@@ -1,7 +1,6 @@
 ﻿using Interfaces.Delegates.GetDirectory;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.File;
 using Interfaces.Controllers.Logs;
 using Interfaces.Models.Dependencies;
 
@@ -23,7 +22,6 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             DependencyContext.Default,
             "GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate,GOG.Delegates",
             "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-            "Controllers.File.FileController,Controllers",
             "Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
@@ -31,7 +29,6 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         public RespondToUpdateProductScreenshotsDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getProductScreenshotsDirectoryDelegate,
-            IFileController fileController,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
@@ -39,7 +36,6 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             base(
                 getProductScreenshotsDownloadSourcesAsyncDelegate,
                 getProductScreenshotsDirectoryDelegate,
-                fileController,
                 productDownloadsDataController,
                 accountProductsDataController,
                 productsDataController,

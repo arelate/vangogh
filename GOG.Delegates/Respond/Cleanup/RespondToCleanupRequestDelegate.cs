@@ -9,7 +9,6 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Logs;
-using Interfaces.Controllers.Directory;
 
 using Models.ProductTypes;
 
@@ -23,7 +22,6 @@ namespace GOG.Delegates.Respond.Cleanup
         readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
         readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
         readonly IRecycleDelegate recycleDelegate;
-        readonly IDirectoryController directoryController;
         readonly IActionLogController actionLogController;
 
         public RespondToCleanupRequestDelegate(
@@ -32,7 +30,6 @@ namespace GOG.Delegates.Respond.Cleanup
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
-            IDirectoryController directoryController,
             IActionLogController actionLogController)
         {
             this.itemizeAllExpectedItemsAsyncDelegate = itemizeAllExpectedItemsAsyncDelegate;
@@ -40,7 +37,6 @@ namespace GOG.Delegates.Respond.Cleanup
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
             this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
             this.recycleDelegate = recycleDelegate;
-            this.directoryController = directoryController;
             this.actionLogController = actionLogController;
         }
 
@@ -80,13 +76,13 @@ namespace GOG.Delegates.Respond.Cleanup
             {
                 var directory = Path.GetDirectoryName(item);
                 if (!emptyDirectories.Contains(directory) &&
-                    !directoryController.EnumerateFiles(directory).Any()&&
-                    !directoryController.EnumerateDirectories(directory).Any())
+                    !Directory.EnumerateFiles(directory).Any()&&
+                    !Directory.EnumerateDirectories(directory).Any())
                     emptyDirectories.Add(directory);
             }
 
             foreach (var directory in emptyDirectories)
-                directoryController.Delete(directory);
+                Directory.Delete(directory);
 
             actionLogController.CompleteAction();
         }

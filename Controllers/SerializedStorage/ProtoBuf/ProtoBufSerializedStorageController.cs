@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Text;
+﻿using System.Threading.Tasks;
+using System.IO;
 
 using Interfaces.Controllers.SerializedStorage;
-using Interfaces.Controllers.Stream;
-using Interfaces.Controllers.File;
+using Interfaces.Delegates.Convert;
 using Interfaces.Controllers.Logs;
 using Interfaces.Models.Dependencies;
 
@@ -16,22 +14,22 @@ namespace Controllers.SerializedStorage.ProtoBuf
 {
     public class ProtoBufSerializedStorageController : ISerializedStorageController
     {
-        readonly IFileController fileController;
-        readonly IStreamController streamController;
+        private readonly IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate;
+        private readonly IConvertDelegate<string, System.IO.Stream> convertUriToWritableStreamDelegate;
         readonly IActionLogController actionLogController;
 
         [Dependencies(
             DependencyContext.Default,
-            "Controllers.File.FileController,Controllers",
-            "Controllers.Stream.StreamController,Controllers",
+            "Delegates.Convert.IO.ConvertUriToReadableStreamDelegate,Delegates",
+            "Delegates.Convert.IO.ConvertUriToWritableDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ProtoBufSerializedStorageController(
-            IFileController fileController,
-            IStreamController streamController,
+            IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate,
+            IConvertDelegate<string, System.IO.Stream> convertUriToWritableStreamDelegate,
             IActionLogController actionLogController)
         {
-            this.fileController = fileController;
-            this.streamController = streamController;
+            this.convertUriToReadableStreamDelegate = convertUriToReadableStreamDelegate;
+            this.convertUriToWritableStreamDelegate = convertUriToWritableStreamDelegate;
             this.actionLogController = actionLogController;
         }
 
@@ -42,9 +40,9 @@ namespace Controllers.SerializedStorage.ProtoBuf
 
             T data = default(T);
 
-            if (fileController.Exists(uri))
+            if (System.IO.File.Exists(uri))
             {
-                using (var readableStream = streamController.OpenReadable(uri))
+                using (var readableStream = convertUriToReadableStreamDelegate.Convert(uri))
                     data = Serializer.Deserialize<T>(readableStream);
             }
 
@@ -58,7 +56,7 @@ namespace Controllers.SerializedStorage.ProtoBuf
         {
             actionLogController.StartAction("Writing serialized data");
 
-            using (var writableStream = streamController.OpenWritable(uri))
+            using (var writableStream = convertUriToWritableStreamDelegate.Convert(uri))
                 Serializer.Serialize<T>(writableStream, data);
 
             actionLogController.CompleteAction();

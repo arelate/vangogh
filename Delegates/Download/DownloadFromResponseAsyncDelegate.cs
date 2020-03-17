@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
 
-using Interfaces.Controllers.File;
-using Interfaces.Controllers.Stream;
 using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Download;
+using Interfaces.Delegates.Convert;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -20,25 +19,21 @@ namespace Delegates.Download
     public class DownloadFromResponseAsyncDelegate : IDownloadFromResponseAsyncDelegate
     {
         INetworkController networkController;
-        readonly IStreamController streamController;
-        readonly IFileController fileController;
+        readonly IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream;
         readonly IActionLogController actionLogController;
 
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
-            "Controllers.Stream.StreamController,Controllers",
-            "Controllers.File.FileController,Controllers",
+            "Delegates.Convert.IO.ConvertUriToWritableDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromResponseAsyncDelegate(
             INetworkController networkController,
-            IStreamController streamController,
-            IFileController fileController,
+            IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream,
             IActionLogController actionLogController)
         {
             this.networkController = networkController;
-            this.streamController = streamController;
-            this.fileController = fileController;
+            this.convertUriToWritableRStream = convertUriToWritableRStream;
 
             this.actionLogController = actionLogController;
         }
@@ -56,8 +51,8 @@ namespace Delegates.Download
             long totalBytesRead = 0;
 
             // don't redownload file with the same name and size
-            if (fileController.Exists(fullPath) &&
-                fileController.GetSize(fullPath) == response.Content.Headers.ContentLength)
+            if (File.Exists(fullPath) &&
+                new FileInfo(fullPath).Length == response.Content.Headers.ContentLength)
             {
                 // await statusController.InformAsync(
                 //     status, 
@@ -65,7 +60,7 @@ namespace Delegates.Download
                 return;
             }
 
-            using (var writeableStream = streamController.OpenWritable(fullPath))
+            using (var writeableStream = convertUriToWritableRStream.Convert(fullPath))
             using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
                 while ((bytesRead = await responseStream.ReadAsync(buffer, 0, bufferSize)) > 0)

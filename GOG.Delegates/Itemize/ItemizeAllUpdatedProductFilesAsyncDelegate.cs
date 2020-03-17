@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Directory;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Itemize;
@@ -19,7 +19,6 @@ namespace GOG.Delegates.Itemize
         readonly IDataController<long> updatedDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
-        readonly IDirectoryController directoryController;
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
@@ -27,19 +26,16 @@ namespace GOG.Delegates.Itemize
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
-			"Controllers.Directory.DirectoryController,Controllers",
 			"Controllers.Logs.ActionLogController,Controllers")]
         public ItemizeAllUpdatedProductFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
-            IDirectoryController directoryController,
             IActionLogController actionLogController)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
-            this.directoryController = directoryController;
             this.actionLogController = actionLogController;
         }
 
@@ -58,7 +54,7 @@ namespace GOG.Delegates.Itemize
                         gameDetails);
 
                 foreach (var gameDetailDirectory in gameDetailsDirectories)
-                    foreach (var updatedFile in directoryController.EnumerateFiles(gameDetailDirectory))
+                    foreach (var updatedFile in Directory.EnumerateFiles(gameDetailDirectory))
                         yield return updatedFile;
             }
 

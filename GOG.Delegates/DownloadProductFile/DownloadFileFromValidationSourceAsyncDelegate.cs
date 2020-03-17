@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
@@ -7,7 +7,6 @@ using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Download;
 using Interfaces.Models.Dependencies;
 
-using Interfaces.Controllers.File;
 using Interfaces.Controllers.Logs;
 
 using Attributes;
@@ -23,7 +22,6 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IFormatDelegate<string, string> formatValidationFileDelegate;
         readonly IGetDirectoryDelegate validationDirectoryDelegate;
         readonly IFormatDelegate<string, string> formatValidationUriDelegate;
-        readonly IFileController fileController;
         readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
         readonly IActionLogController actionLogController;
 
@@ -34,7 +32,6 @@ namespace GOG.Delegates.DownloadProductFile
 			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate,Delegates",
 			"Delegates.Format.Uri.FormatValidationUriDelegate,Delegates",
-			"Controllers.File.FileController,Controllers",
 			"Delegates.Download.DownloadFromUriAsyncDelegate,Delegates",
 			"Controllers.Logs.ActionLogController,Controllers")]
         public DownloadValidationFileAsyncDelegate(
@@ -43,7 +40,6 @@ namespace GOG.Delegates.DownloadProductFile
             IFormatDelegate<string, string> formatValidationFileDelegate,
             IGetDirectoryDelegate validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
-            IFileController fileController,
             IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate,
             IActionLogController actionLogController)
         {
@@ -52,7 +48,6 @@ namespace GOG.Delegates.DownloadProductFile
             this.formatValidationFileDelegate = formatValidationFileDelegate;
             this.validationDirectoryDelegate = validationDirectoryDelegate;
             this.formatValidationUriDelegate = formatValidationUriDelegate;
-            this.fileController = fileController;
             this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
             this.actionLogController = actionLogController;
         }
@@ -67,7 +62,7 @@ namespace GOG.Delegates.DownloadProductFile
             // return early if validation is not expected for this file
             if (!confirmValidationExpectedDelegate.Confirm(sourceUriSansSession)) return;
 
-            if (fileController.Exists(destinationUri))
+            if (File.Exists(destinationUri))
             {
                 // await statusController.InformAsync(status, "Validation file already exists, will not be redownloading");
                 return;
