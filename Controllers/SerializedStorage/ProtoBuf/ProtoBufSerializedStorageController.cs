@@ -12,7 +12,7 @@ using ProtoBuf;
 
 namespace Controllers.SerializedStorage.ProtoBuf
 {
-    public class ProtoBufSerializedStorageController : ISerializedStorageController
+    public class ProtoBufSerializedStorageController<T> : ISerializedStorageController<T>
     {
         private readonly IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate;
         private readonly IConvertDelegate<string, System.IO.Stream> convertUriToWritableStreamDelegate;
@@ -34,7 +34,7 @@ namespace Controllers.SerializedStorage.ProtoBuf
         }
 
         // TODO: Make async
-        public async Task<T> DeserializePullAsync<T>(string uri)
+        public async Task<T> DeserializePullAsync(string uri)
         {
             actionLogController.StartAction("Reading serialized data");
 
@@ -52,7 +52,7 @@ namespace Controllers.SerializedStorage.ProtoBuf
         }
 
         // TODO: Make async
-        public async Task SerializePushAsync<T>(string uri, T data)
+        public async Task SerializePushAsync(string uri, T data)
         {
             actionLogController.StartAction("Writing serialized data");
 

@@ -1,7 +1,7 @@
 using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Serialization;
 
 using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Convert;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -18,15 +18,15 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             "GOG.Delegates.Itemize.ItemizeGOGDataDelegate,GOG.Delegates",
-            Dependencies.JSONSerializationController)]
+            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGOGDataDelegate,GOG.Delegates")]
         public GetDeserializedGOGDataAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
             IItemizeDelegate<string, string> itemizeGogDataDelegate,
-            ISerializationController<string> serializationController) :
+            IConvertDelegate<string, GOGData> convertJSONToGOGDataDelegate) :
             base(
                 getResourceAsyncDelegate,
                 itemizeGogDataDelegate,
-                serializationController)
+                convertJSONToGOGDataDelegate)
         {
             // ...
         }

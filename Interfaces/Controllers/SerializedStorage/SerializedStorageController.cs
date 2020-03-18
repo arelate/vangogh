@@ -2,19 +2,19 @@
 
 namespace Interfaces.Controllers.SerializedStorage
 {
-    public interface ISerializePushAsyncDelegate
+    public interface ISerializePushAsyncDelegate<T>
     {
-        Task SerializePushAsync<T>(string uri, T data);
+        Task SerializePushAsync(string uri, T data);
     }
 
-    public interface IDeserializePullAsyncDelegate
+    public interface IDeserializePullAsyncDelegate<T>
     {
-        Task<T> DeserializePullAsync<T>(string uri);
+        Task<T> DeserializePullAsync(string uri);
     }
 
-    public interface ISerializedStorageController:
-        IDeserializePullAsyncDelegate,
-        ISerializePushAsyncDelegate
+    public interface ISerializedStorageController<T>:
+        IDeserializePullAsyncDelegate<T>,
+        ISerializePushAsyncDelegate<T>
     {
         // ...
     }

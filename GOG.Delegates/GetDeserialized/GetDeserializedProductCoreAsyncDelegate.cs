@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 
 using Interfaces.Controllers.Network;
-
-using Interfaces.Controllers.Serialization;
+using Interfaces.Delegates.Convert;
 
 using Models.ProductTypes;
 
@@ -15,14 +14,14 @@ namespace GOG.Delegates.GetDeserialized
         where T : ProductCore
     {
         readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        readonly ISerializationController<string> serializationController;
+        readonly IConvertDelegate<string, T> convertJSONToProductCoreDelegate;
 
         public GetDeserializedProductCoreAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
-            ISerializationController<string> serializationController)
+            IConvertDelegate<string, T> convertJSONToProductCoreDelegate)
         {
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
-            this.serializationController = serializationController;
+            this.convertJSONToProductCoreDelegate = convertJSONToProductCoreDelegate;
         }
 
         public async Task<T> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
@@ -31,7 +30,7 @@ namespace GOG.Delegates.GetDeserialized
 
             if (response == null) return default(T);
 
-            return serializationController.Deserialize<T>(response);
+            return convertJSONToProductCoreDelegate.Convert(response);
         }
     }
 }

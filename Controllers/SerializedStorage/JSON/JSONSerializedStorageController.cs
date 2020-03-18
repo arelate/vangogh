@@ -1,35 +1,43 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
+using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Storage;
-using Interfaces.Controllers.Serialization;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
 
-using Attributes;
-
-using Models.Dependencies;
-
-namespace Controllers.SerializedStorage.JSON
+namespace Controllers.SerializedStorage
 {
-    public class JSONSerializedStorageController: SerializedStorageController
+    public abstract class JSONSerializedStorageController<T> : ISerializedStorageController<T>
     {
-        [Dependencies(
-            DependencyContext.Default,
-            "Controllers.Storage.StorageController,Controllers",
-            Dependencies.JSONSerializationController,
-            "Controllers.Logs.ActionLogController,Controllers")]
+        readonly IStorageController<string> storageController;
+        private readonly IConvertDelegate<T, string> convertTypeToJSONDelegate;
+        private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
+
+        IActionLogController actionLogController;
+
         public JSONSerializedStorageController(
             IStorageController<string> storageController,
-            ISerializationController<string> jsonSerializarionController,
-            IActionLogController actionLogController):
-            base(
-                storageController,
-                jsonSerializarionController,
-                actionLogController)
-            {
-                // ...
-            }
+            IConvertDelegate<T, string> convertTypeToJSONDelegate,
+            IConvertDelegate<string, T> convertJSONToTypeDelegate,
+            IActionLogController actionLogController)
+        {
+            this.storageController = storageController;
+            this.convertJSONToTypeDelegate = convertJSONToTypeDelegate;
+            this.convertTypeToJSONDelegate = convertTypeToJSONDelegate;
+            this.actionLogController = actionLogController;
+        }
+
+        public async Task<T> DeserializePullAsync(string uri)
+        {
+            var serializedData = await storageController.PullAsync(uri);
+            return convertJSONToTypeDelegate.Convert(serializedData);
+        }
+
+        public async Task SerializePushAsync(string uri, T data)
+        {
+            var serializedData = convertTypeToJSONDelegate.Convert(data);
+            await storageController.PushAsync(uri, serializedData);
+        }
     }
 }

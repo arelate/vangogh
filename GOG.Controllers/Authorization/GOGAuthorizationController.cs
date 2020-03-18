@@ -6,10 +6,10 @@ using Interfaces.Delegates.Correct;
 
 using Interfaces.Controllers.Uri;
 using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Serialization;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Convert;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -19,6 +19,8 @@ using Models.QueryParameters;
 using Models.Dependencies;
 
 using GOG.Interfaces.Controllers.Authorization;
+
+using GOG.Models;
 
 namespace GOG.Controllers.Authorization
 {
@@ -35,7 +37,7 @@ namespace GOG.Controllers.Authorization
         ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate;
         IUriController uriController;
         INetworkController networkController;
-        ISerializationController<string> serializationController;
+        private readonly IConvertDelegate<string, UserData> convertJSONToUserDataDelegate;
         // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates;
         IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate;
         IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate;
@@ -54,7 +56,7 @@ namespace GOG.Controllers.Authorization
             "Delegates.Itemize.Attributes.ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate,Delegates",
             "Controllers.Uri.UriController,Controllers",
             "Controllers.Network.NetworkController,Controllers",
-            Dependencies.JSONSerializationController,
+            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToUserDataDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public GOGAuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
@@ -65,7 +67,7 @@ namespace GOG.Controllers.Authorization
             IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate,
             IUriController uriController,
             INetworkController networkController,
-            ISerializationController<string> serializationController,
+            IConvertDelegate<string, UserData> convertJSONToUserDataDelegate,
             // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates,
             IActionLogController actionLogController)
         {
@@ -77,7 +79,7 @@ namespace GOG.Controllers.Authorization
             this.itemizeSecondStepAuthenticationTokenAttributeValueDelegate = itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
             this.uriController = uriController;
             this.networkController = networkController;
-            this.serializationController = serializationController;
+            this.convertJSONToUserDataDelegate = convertJSONToUserDataDelegate;
             // this.attributeValuesItemizeDelegates = attributeValuesItemizeDelegates;
             this.actionLogController = actionLogController;
         }
@@ -91,7 +93,7 @@ namespace GOG.Controllers.Authorization
 
             if (string.IsNullOrEmpty(userDataString)) return false;
 
-            var userData = serializationController.Deserialize<Models.UserData>(userDataString);
+            var userData = convertJSONToUserDataDelegate.Convert(userDataString);
 
             actionLogController.CompleteAction();
 

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
-using Interfaces.Controllers.Serialization;
 using Interfaces.Controllers.Logs;
 
 using Models.Units;
@@ -21,21 +20,21 @@ namespace GOG.Delegates.GetPageResults
         readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
         readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
         readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
-        readonly ISerializationController<string> serializationController;
+        private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
         readonly IActionLogController actionLogController;
 
         public GetPageResultsAsyncDelegate(
             IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
-            ISerializationController<string> serializationController,
+            IConvertDelegate<string, T> convertJSONToTypeDelegate,
             IActionLogController actionLogController)
         {
             this.getPageResultsUpdateUriDelegate = getPageResultsUpdateUriDelegate;
             this.getPageResultsUpdateQueryParametersDelegate = getPageResultsUpdateQueryParametersDelegate;
 
             this.requestPageAsyncDelegate = requestPageAsyncDelegate;
-            this.serializationController = serializationController;
+            this.convertJSONToTypeDelegate = convertJSONToTypeDelegate;
 
             this.actionLogController = actionLogController;
         }
@@ -71,7 +70,7 @@ namespace GOG.Delegates.GetPageResults
 
                 actionLogController.IncrementActionProgress();
 
-                pageResult = serializationController.Deserialize<T>(response);
+                pageResult = convertJSONToTypeDelegate.Convert(response);
 
                 if (pageResult == null) continue;
 

@@ -13,8 +13,6 @@ using Interfaces.Models.Dependencies;
 
 using Interfaces.Controllers.Network;
 
-using Interfaces.Controllers.Serialization;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 using Attributes;
@@ -28,7 +26,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     public class GetDeserializedGameDetailsAsyncDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {
         readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        readonly ISerializationController<string> serializationController;
+        private readonly IConvertDelegate<string,GameDetails> convertJSONToGameDetailsDelegate;
+        private readonly IConvertDelegate<string, OperatingSystemsDownloads[][]> convertJSONToOperatingSystemsDownloads2DArrayDelegate;
         readonly IConvertDelegate<string,string> convertLanguageToCodeDelegate;
         readonly IConvertDelegate<string, string> convertGameDetailsDownloadLanguagesToEmptyStringDelegate;
         readonly IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
@@ -43,7 +42,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
-            Dependencies.JSONSerializationController,
+            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate,GOG.Delegates",
+            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate,GOG.Delegates",
             "Delegates.Convert.ConvertLanguageToCodeDelegate,Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate,GOG.Delegates",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate,GOG.Delegates",
@@ -54,7 +54,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             "Delegates.Map.System.MapStringDelegate,Delegates")]
         public GetDeserializedGameDetailsAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
-            ISerializationController<string> serializationController,
+            IConvertDelegate<string,GameDetails> convertJSONToGameDetailsDelegate,
+            IConvertDelegate<string, OperatingSystemsDownloads[][]> convertJSONToOperatingSystemsDownloads2DArrayDelegate,
             IConvertDelegate<string,string> convertLanguageToCodeDelegate,
             IConvertDelegate<string, string> convertGameDetailsDownloadLanguagesToEmptyStringDelegate,
             IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate,
@@ -67,7 +68,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             IMapDelegate<string> mapStringDelegate)
         {
             this.getResourceAsyncDelegate = getResourceAsyncDelegate;
-            this.serializationController = serializationController;
+            this.convertJSONToGameDetailsDelegate = convertJSONToGameDetailsDelegate;
+            this.convertJSONToOperatingSystemsDownloads2DArrayDelegate = convertJSONToOperatingSystemsDownloads2DArrayDelegate;
             this.convertLanguageToCodeDelegate = convertLanguageToCodeDelegate;
             this.convertGameDetailsDownloadLanguagesToEmptyStringDelegate = convertGameDetailsDownloadLanguagesToEmptyStringDelegate;
 
@@ -97,7 +99,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             // - assign languages, since we know we should have as many downloads array as languages
 
             var data = await getResourceAsyncDelegate.GetResourceAsync(uri, parameters);
-            var gameDetails = serializationController.Deserialize<GameDetails>(data);
+            var gameDetails = convertJSONToGameDetailsDelegate.Convert(data);
 
             if (gameDetails == null) return null;
 
@@ -120,7 +122,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
 
                 // now it should be safe to deserialize langugage downloads
                 var downloads =
-                    serializationController.Deserialize<OperatingSystemsDownloads[][]>(
+                    convertJSONToOperatingSystemsDownloads2DArrayDelegate.Convert(
                     downloadsStringSansLanguages);
 
                 // and convert GOG two-dimensional array of downloads to single-dimensional array

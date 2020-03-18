@@ -1,6 +1,6 @@
 using Interfaces.Controllers.Network;
 
-using Interfaces.Controllers.Serialization;
+using Interfaces.Delegates.Convert;
 using Interfaces.Models.Dependencies;
 
 using Attributes;
@@ -15,13 +15,13 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
-            Dependencies.JSONSerializationController)]
+            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToApiProductDelegate,GOG.Delegates")]
         public GetDeserializedApiProductAsyncDelegate(
             IGetResourceAsyncDelegate getResourceAsyncDelegate,
-            ISerializationController<string> serializationController) :
+            IConvertDelegate<string, ApiProduct> convertJSONToApiProductDelegate) :
             base(
                 getResourceAsyncDelegate,
-                serializationController)
+                convertJSONToApiProductDelegate)
         {
             // ...
         }
