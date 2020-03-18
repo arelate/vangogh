@@ -11,13 +11,13 @@ using Interfaces.Delegates.GetPath;
 
 namespace Controllers.Stash
 {
-    public abstract class StashController<ModelType> : IStashController<ModelType> where ModelType : class, new()
+    public abstract class StashController<T> : IStashController<T> where T : class, new()
     {
         readonly IGetPathDelegate getPathDelegate;
         readonly ISerializedStorageController serializedStorageController;
         readonly IActionLogController actionLogController;
 
-        ModelType storedData;
+        // T storedData;
 
         public StashController(
             IGetPathDelegate getPathDelegate,
@@ -29,13 +29,9 @@ namespace Controllers.Stash
             this.actionLogController = actionLogController;
         }
 
-        // public bool DataAvailable
-        // {
-        //     get;
-        //     private set;
-        // }
+        T storedData;
 
-        public async Task<ModelType> GetDataAsync()
+        public async Task<T> GetDataAsync(string uri = "")
         {
             if (storedData == null)
             {
@@ -43,9 +39,9 @@ namespace Controllers.Stash
 
                 var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
 
-                storedData = await serializedStorageController.DeserializePullAsync<ModelType>(storedDataUri);
+                storedData = await serializedStorageController.DeserializePullAsync<T>(storedDataUri);
 
-                if (storedData == null) storedData = new ModelType();
+                if (storedData == null) storedData = new T();
 
                 // DataAvailable = true;
 
@@ -56,15 +52,13 @@ namespace Controllers.Stash
         }
 
 
-        public async Task PostDataAsync()
+        public async Task PostDataAsync(T data, string uri)
         {
-            await GetDataAsync();
-
             actionLogController.StartAction("Save stored data");
 
             var storedDataUri = getPathDelegate.GetPath(string.Empty, string.Empty);
 
-            await serializedStorageController.SerializePushAsync(storedDataUri, storedData);
+            await serializedStorageController.SerializePushAsync(storedDataUri, data);
 
             actionLogController.CompleteAction();
         }

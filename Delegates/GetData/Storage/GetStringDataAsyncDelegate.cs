@@ -1,38 +1,28 @@
-﻿using System;
 using System.Threading.Tasks;
 using System.IO;
 
-using Interfaces.Delegates.Convert;
-using Interfaces.Controllers.Storage;
-using Interfaces.Models.Dependencies;
-
 using Attributes;
 
-namespace Controllers.Storage
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.Convert;
+using Interfaces.Models.Dependencies;
+
+namespace Delegates.GetData.Storage
 {
-    public class StorageController : IStorageController<string>
+    public class GetStringDataAsyncDelegate : IGetDataAsyncDelegate<string>
     {
-        readonly IConvertDelegate<string, System.IO.Stream> convertUriToReadableStream;
+        private readonly IConvertDelegate<string, Stream> convertUriToReadableStream;
 
         [Dependencies(
             DependencyContext.Default,
             "Delegates.Convert.IO.ConvertUriToReadableStreamDelegate,Delegates")]
-        public StorageController(
-            IConvertDelegate<string, System.IO.Stream> convertUriToReadableStream)
+        public GetStringDataAsyncDelegate(
+            IConvertDelegate<string, Stream> convertUriToReadableStream)
         {
             this.convertUriToReadableStream = convertUriToReadableStream;
         }
 
-        public async Task PushAsync(
-            string uri,
-            string data)
-        {
-            using (var stream = convertUriToReadableStream.Convert(uri))
-            using (StreamWriter writer = new StreamWriter(stream))
-                await writer.WriteLineAsync(data);
-        }
-
-        public async Task<string> PullAsync(string uri)
+        public async Task<string> GetDataAsync(string uri = null)
         {
             var data = string.Empty;
 
