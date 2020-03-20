@@ -25,7 +25,7 @@ namespace Delegates.Download
         [Dependencies(
             DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
-            "Delegates.Convert.IO.ConvertUriToWritableDelegate,Delegates",
+            "Delegates.Convert.Streams.ConvertUriToWritableDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromResponseAsyncDelegate(
             INetworkController networkController,

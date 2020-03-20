@@ -32,7 +32,7 @@ namespace Controllers.Validation
         [Dependencies(
             DependencyContext.Default,
             "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
-            "Delegates.Convert.IO.ConvertUriToReadableStreamDelegate,Delegates",
+            "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates",
             "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
             "Controllers.ValidationResult.ValidationResultController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]

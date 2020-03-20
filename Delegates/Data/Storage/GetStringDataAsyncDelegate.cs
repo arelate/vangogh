@@ -15,7 +15,7 @@ namespace Delegates.GetData.Storage
 
         [Dependencies(
             DependencyContext.Default,
-            "Delegates.Convert.IO.ConvertUriToReadableStreamDelegate,Delegates")]
+            "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates")]
         public GetStringDataAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToReadableStream)
         {

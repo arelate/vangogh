@@ -20,8 +20,8 @@ namespace Controllers.SerializedStorage.ProtoBuf
 
         [Dependencies(
             DependencyContext.Default,
-            "Delegates.Convert.IO.ConvertUriToReadableStreamDelegate,Delegates",
-            "Delegates.Convert.IO.ConvertUriToWritableDelegate,Delegates",
+            "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates",
+            "Delegates.Convert.Streams.ConvertUriToWritableDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ProtoBufSerializedStorageController(
             IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate,

@@ -15,7 +15,7 @@ namespace Delegates.PostData.Storage
 
         [Dependencies(
             DependencyContext.Default,
-            "Delegates.Convert.IO.ConvertUriToWritableStreamDelegate,Delegates")]
+            "Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate,Delegates")]
         public PostStringDataAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToWritableStream)
         {
