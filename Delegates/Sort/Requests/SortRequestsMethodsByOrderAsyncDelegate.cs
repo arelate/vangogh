@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 
-using Interfaces.Controllers.Stash;
 using Interfaces.Delegates.Sort;
 using Interfaces.Delegates.Find;
-using Interfaces.Models.Dependencies;
+using Interfaces.Delegates.GetData;
+
 
 using Attributes;
 
@@ -15,28 +15,26 @@ namespace Delegates.Sort.Requests
 {
     public class SortRequestsMethodsByOrderAsyncDelegate : ISortAsyncDelegate<string>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
+        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
         private IFindDelegate<Method> findMethodDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates")]
         [Dependencies(
-            DependencyContext.Test,
             "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
             "")]
         public SortRequestsMethodsByOrderAsyncDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
             this.findMethodDelegate = findMethodDelegate;
         }
 
         public async Task SortAsync(List<string> methods)
         {
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
 
             methods.Sort((string x, string y) =>
             {

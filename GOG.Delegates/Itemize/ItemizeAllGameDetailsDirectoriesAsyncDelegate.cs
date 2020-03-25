@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
-using Interfaces.Models.Dependencies;
+
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
@@ -21,7 +21,6 @@ namespace GOG.Delegates.Itemize
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
-            DependencyContext.Default,
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
 			"Controllers.Logs.ActionLogController,Controllers")]

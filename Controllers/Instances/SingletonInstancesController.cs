@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Instances;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -14,11 +14,11 @@ namespace Controllers.Instances
     public class SingletonInstancesController : IInstancesController
     {
         private readonly Dictionary<Type, object> singletonInstancesContextualCache = new Dictionary<Type, object>();
-        private readonly DependencyContext context;
+        private readonly Dictionary<string, string> contextualTypeReplacementMap;
 
-        public SingletonInstancesController(DependencyContext context = DependencyContext.Default)
+        public SingletonInstancesController(Dictionary<string, string> contextualTypeReplacementMap = null)
         {
-            this.context = context;
+            this.contextualTypeReplacementMap = contextualTypeReplacementMap;
         }
 
         // TODO: Create delegate? Convert delegate?
@@ -92,12 +92,19 @@ namespace Controllers.Instances
             {
                 var dependenciesAttribute = attribute as DependenciesAttribute;
                 // Skip dependencies attributes for non-matching contexts
-                if (!context.HasFlag(dependenciesAttribute.Context)) continue;
                 for (var dd = 0; dd < dependenciesAttribute.Dependencies.Length; dd++)
                 {
-                    if (string.IsNullOrEmpty(dependenciesAttribute.Dependencies[dd]) &&
-                        dependenciesAttribute.Context != DependencyContext.Default) continue;
+                    if (string.IsNullOrEmpty(dependenciesAttribute.Dependencies[dd])) continue;
                     resolvedDependencies[dd] = dependenciesAttribute.Dependencies[dd];
+                }
+            }
+
+            if (contextualTypeReplacementMap != null) {
+                for (var ii=0; ii<resolvedDependencies.Length; ii++)
+                {
+                    var type = resolvedDependencies[ii];
+                    if (contextualTypeReplacementMap.ContainsKey(type))
+                        resolvedDependencies[ii] = contextualTypeReplacementMap[type];
                 }
             }
 

@@ -4,7 +4,7 @@ using Interfaces.Controllers.SerializedStorage;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.GetPath;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -17,7 +17,6 @@ namespace Controllers.Stash.ProductTypes
         StashController<List<ValidationResults>>
     {
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.GetPath.ProductTypes.GetValidationResultsPathDelegate,Delegates",
             Dependencies.DefaultSerializedStorageController,
             "Controllers.Logs.ActionLogController,Controllers")]

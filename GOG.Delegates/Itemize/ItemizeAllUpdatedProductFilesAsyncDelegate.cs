@@ -6,7 +6,7 @@ using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Itemize;
 
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -22,7 +22,6 @@ namespace GOG.Delegates.Itemize
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
-            DependencyContext.Default,
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",

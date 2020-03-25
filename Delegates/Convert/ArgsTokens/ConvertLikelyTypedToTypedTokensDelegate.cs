@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-using Interfaces.Controllers.Stash;
-using Interfaces.Models.Dependencies;
+using Interfaces.Delegates.GetData;
+
 
 using Attributes;
 
@@ -19,26 +19,20 @@ namespace Delegates.Convert.ArgsTokens
             IAsyncEnumerable<(string Token, Tokens Type)>, 
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
+        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
         private IFindDelegate<Method> findMethodDelegate;
         private IFindDelegate<Parameter> findParameterDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates",
             "Delegates.Find.ArgsDefinitions.FindParameterDelegate,Delegates")]
-            [Dependencies(
-            DependencyContext.Test,
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "",
-            "")]
         public ConvertLikelyTypedToTypedTokensDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,
             IFindDelegate<Parameter> findParameterDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
             this.findMethodDelegate = findMethodDelegate;
             this.findParameterDelegate = findParameterDelegate;
         }
@@ -49,7 +43,7 @@ namespace Delegates.Convert.ArgsTokens
             if (likelyTypedTokens == null)
                 throw new ArgumentNullException();
 
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
 
             var currentParameterTitle = string.Empty;
             await foreach (var likelyTypedToken in likelyTypedTokens)

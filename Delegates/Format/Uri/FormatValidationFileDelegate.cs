@@ -2,7 +2,7 @@
 
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.GetPath;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -13,7 +13,6 @@ namespace Delegates.Format.Uri
         readonly IGetPathDelegate getPathDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.GetPath.Json.GetValidationPathDelegate,Delegates")]
         public FormatValidationFileDelegate(IGetPathDelegate getPathDelegate)
         {

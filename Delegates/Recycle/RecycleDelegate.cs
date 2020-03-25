@@ -4,7 +4,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Move;
 
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -16,7 +16,6 @@ namespace Delegates.Recycle
         readonly IMoveDelegate<string> moveFileDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.GetDirectory.ProductTypes.GetRecycleBinDirectoryDelegate,Delegates",
             "Delegates.Move.IO.MoveFileDelegate,Delegates")]
         public RecycleDelegate(

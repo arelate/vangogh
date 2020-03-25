@@ -9,7 +9,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Map;
-using Interfaces.Models.Dependencies;
+
 
 using Interfaces.Controllers.Network;
 
@@ -40,7 +40,6 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         readonly IMapDelegate<string> mapStringDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate,GOG.Delegates",

@@ -6,7 +6,6 @@ using Xunit;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Instances;
-using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -18,7 +17,6 @@ namespace Controllers.Instances.Tests
     public class SingletonInstancesControllerTests
     {
         private static IInstancesController dependenciesInstancesController;
-        private static IInstancesController testDependenciesInstancesController;
         private static IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate = new ItemizeAllAppDomainTypesDelegate();
         private static IItemizeDelegate<Type, DependenciesAttribute> itemizeDependenciesAttributesForTypeDelegate = 
             new ItemizeDependenciesAttributesForTypeDelegate();
@@ -28,7 +26,6 @@ namespace Controllers.Instances.Tests
         public SingletonInstancesControllerTests()
         {
             dependenciesInstancesController = new SingletonInstancesController();
-            testDependenciesInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
         }
 
         private static IEnumerable<object[]> EnumerateTypesWithConstructorAttribute(IItemizeAllDelegate<Type> itemizeAllAttributeTypesDelegate)
@@ -39,19 +36,6 @@ namespace Controllers.Instances.Tests
         public static IEnumerable<object[]> EnumerateTypesWithDependencies()
         {
             return EnumerateTypesWithConstructorAttribute(itemizeAllDependenciesAttributeTypesDelegate);
-        }
-
-        public static IEnumerable<object[]> EnumerateTypesWithTestDependencies()
-        {
-            foreach (var type in itemizeAllDependenciesAttributeTypesDelegate.ItemizeAll())
-            {
-                var hasTestDependencies = false;
-                foreach (var dependenciesAttribute in itemizeDependenciesAttributesForTypeDelegate.Itemize(type))
-                    if (dependenciesAttribute.Context == DependencyContext.Test) hasTestDependencies = true;
-
-                if (!hasTestDependencies) continue;
-                yield return new object[] { type };
-            }
         }
 
         private void CanInstantiateTypes(
@@ -99,104 +83,10 @@ namespace Controllers.Instances.Tests
         }
 
         [Theory]
-        [MemberData(nameof(EnumerateTypesWithTestDependencies))]
-        public void InstancesControllerCanInitializeAllDeclaredTestDependenciesOverrides(params Type[] types)
-        {
-            CanInstantiateTypes(testDependenciesInstancesController, types);
-        }
-
-        [Theory]
-        [MemberData(nameof(EnumerateTypesWithTestDependencies))]
-        public void TestDependenciesDifferFromDefaultDependencies(params Type[] types)
-        {
-            foreach (var type in types)
-            {
-                var constructorInfo = dependenciesInstancesController.GetInstantiationConstructorInfo(type);
-                Assert.NotNull(constructorInfo);
-
-                var dependenciesTypes =
-                    dependenciesInstancesController.GetTypesForConstructor(
-                        constructorInfo);
-                Assert.NotNull(dependenciesTypes);
-                Assert.NotEmpty(dependenciesTypes);
-
-                var testDependenciesTypes =
-                    testDependenciesInstancesController.GetTypesForConstructor(
-                        constructorInfo);
-                Assert.NotNull(testDependenciesTypes);
-                Assert.NotEmpty(testDependenciesTypes);
-
-                Assert.Equal(dependenciesTypes.Length, testDependenciesTypes.Length);
-
-                var allDependenciesAreEqual = true;
-                for (var ii = 0; ii < dependenciesTypes.Length; ii++)
-                    allDependenciesAreEqual &= dependenciesTypes[ii] == testDependenciesTypes[ii];
-
-                Assert.False(allDependenciesAreEqual);
-            }
-        }
-
-        [Theory]
-        [MemberData(nameof(EnumerateTypesWithTestDependencies))]
-        public void TestDependenciesHaveDefaultDependenciesSpecified(params Type[] types)
-        {
-            foreach (var type in types)
-            {
-                var hasDefaultDependency = false;
-                foreach (var dependenciesAttribute in itemizeDependenciesAttributesForTypeDelegate.Itemize(type))
-                    hasDefaultDependency |= (dependenciesAttribute as DependenciesAttribute).Context == DependencyContext.Default;
-
-                Assert.True(hasDefaultDependency);
-            }
-        }
-
-        [Theory]
-        [MemberData(nameof(EnumerateTypesWithTestDependencies))]
-        public void TestDependenciesHaveSameNumberOfDependenciesAsDefault(params Type[] types)
-        {
-            foreach (var type in types)
-            {
-                DependenciesAttribute defaultDependencies = null;
-                DependenciesAttribute testDependencies = null;
-
-                foreach (var dependenciesAttribute in itemizeDependenciesAttributesForTypeDelegate.Itemize(type))
-                {
-                    var dependencies = dependenciesAttribute as DependenciesAttribute;
-                    switch (dependencies.Context)
-                    {
-                        case DependencyContext.Default:
-                            defaultDependencies = dependencies;
-                            break;
-                        case DependencyContext.Test:
-                            testDependencies = dependencies;
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
-                }
-
-                Assert.NotNull(defaultDependencies);
-                Assert.NotNull(testDependencies);
-
-                Assert.NotNull(defaultDependencies.Dependencies);
-                Assert.NotNull(testDependencies.Dependencies);
-
-                Assert.Equal(defaultDependencies.Dependencies.Length, testDependencies.Dependencies.Length);
-            }
-        }
-
-        [Theory]
         [MemberData(nameof(EnumerateTypesWithDependencies))]
         public void NumberOfDependenciesMatchesNumberOfConstructorParameters(params Type[] types)
         {
             ConstructorParametersAndTypeMatchDependencies(dependenciesInstancesController, types);
-        }
-
-        [Theory]
-        [MemberData(nameof(EnumerateTypesWithTestDependencies))]
-        public void NumberOfTestDependenciesOverridesMatchesNumberOfConstructorParameters(params Type[] types)
-        {
-            ConstructorParametersAndTypeMatchDependencies(testDependenciesInstancesController, types);
         }
 
         [Fact]

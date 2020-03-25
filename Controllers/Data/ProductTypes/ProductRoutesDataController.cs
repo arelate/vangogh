@@ -6,7 +6,7 @@ using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -17,7 +17,6 @@ namespace Controllers.Data.ProductTypes
     public class ProductRoutesDataController : DataController<ProductRoutes>
     {
         [Dependencies(
-            DependencyContext.Default,
             "Controllers.Stash.ProductTypes.ProductRoutesStashController,Controllers",
             "Delegates.Convert.ProductTypes.ConvertProductRoutesToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ProductRoutesRecordsIndexController,Controllers",

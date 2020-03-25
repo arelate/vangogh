@@ -5,7 +5,7 @@ using Attributes;
 
 using Interfaces.Delegates.PostData;
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
+
 
 namespace Delegates.PostData.Storage
 {
@@ -14,7 +14,6 @@ namespace Delegates.PostData.Storage
         private readonly IConvertDelegate<string, Stream> convertUriToWritableStream;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate,Delegates")]
         public PostStringDataAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToWritableStream)

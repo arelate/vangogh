@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -17,7 +17,6 @@ namespace GOG.Delegates.Itemize
         readonly IGetDirectoryDelegate getDirectoryDelegate;
 
 		[Dependencies(
-            DependencyContext.Default,
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates")]
         public ItemizeGameDetailsDirectoriesAsyncDelegate(

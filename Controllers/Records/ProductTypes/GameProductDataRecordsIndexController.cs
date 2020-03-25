@@ -1,6 +1,6 @@
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -11,7 +11,6 @@ namespace Controllers.Records.ProductTypes
     public class GameProductDataRecordsIndexController : IndexRecordsController
     {
         [Dependencies(
-            DependencyContext.Default,
             "Controllers.Data.Records.GameProductDataRecordsDataController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
         public GameProductDataRecordsIndexController(

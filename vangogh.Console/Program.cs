@@ -59,10 +59,7 @@ namespace vangogh.Console
                     {
                         var customDependencyAttribute = customAttribute as Attributes.DependenciesAttribute;
                         if (customDependencyAttribute == null) continue;
-                        if (customDependencyAttribute.Context == Interfaces.Models.Dependencies.DependencyContext.Default)
-                        {
-                            dependenciesAttribute = customDependencyAttribute;
-                        }
+                        dependenciesAttribute = customDependencyAttribute;
                     }
 
                     if (dependenciesAttribute == null) continue;

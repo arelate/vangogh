@@ -6,7 +6,7 @@ using Xunit;
 using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
+
 
 using Models.ArgsTokens;
 using Models.Requests;
@@ -19,7 +19,11 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertTypedTokensToRequestsDataDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
+            var singletonInstancesController = new SingletonInstancesController(
+                new Dictionary<string, string>() {{
+                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
+                }});
 
             this.convertTypedTokensToRequestsDataDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertTypedTokensToRequestsDataDelegate))
@@ -32,19 +36,19 @@ namespace Delegates.Convert.Requests.Tests
         [InlineData(Tokens.MethodsSet)]
         public void ConvertTypedTokensToRequestsDataDelegateThrowsOnUnsupportedTokenTypes(Tokens tokenType)
         {
-            var typedTokens = new (string, Tokens)[] {(string.Empty, tokenType)};
+            var typedTokens = new (string, Tokens)[] { (string.Empty, tokenType) };
             Assert.Throws<NotImplementedException>(
-                () => 
+                () =>
                 convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
         }
 
         [Fact]
         public void ConvertTypedTokensToRequestsDataDelegateThrowsWhenParameterValuePrecedesParameterTitle()
         {
-            var typedTokens = new (string, Tokens)[] {(string.Empty, Tokens.ParameterValue)};
+            var typedTokens = new (string, Tokens)[] { (string.Empty, Tokens.ParameterValue) };
             Assert.Throws<ArgumentException>(
-                () => 
-                convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));            
+                () =>
+                convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
         }
 
         [Theory]
@@ -59,7 +63,7 @@ namespace Delegates.Convert.Requests.Tests
 
             var requestData = convertTypedTokensToRequestsDataDelegate.Convert(typedTokens);
             List<string> collection = null;
-            switch (tokenType) 
+            switch (tokenType)
             {
                 case Tokens.MethodTitle:
                     collection = requestData.Methods;
@@ -79,17 +83,17 @@ namespace Delegates.Convert.Requests.Tests
         }
 
         [Theory]
-        [InlineData(1,2)]        
-        [InlineData(2,1)]
-        [InlineData(2,2)]
+        [InlineData(1, 2)]
+        [InlineData(2, 1)]
+        [InlineData(2, 2)]
         public void ConvertTypedTokensToRequestsDataDelegateCollectsParameters(int parameterTitles, int parameterValues)
         {
             var typedTokens = new List<(string, Tokens)>();
 
-            for (var tt=0; tt<parameterTitles; tt++)
+            for (var tt = 0; tt < parameterTitles; tt++)
             {
                 typedTokens.Add((tt.ToString(), Tokens.ParameterTitle));
-                for (var vv=0;vv<parameterValues; vv++)
+                for (var vv = 0; vv < parameterValues; vv++)
                     typedTokens.Add((vv.ToString(), Tokens.ParameterValue));
             }
 

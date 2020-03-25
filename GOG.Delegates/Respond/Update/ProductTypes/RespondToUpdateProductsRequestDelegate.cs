@@ -5,7 +5,7 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -21,7 +21,6 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         RespondToUpdatePageResultRequestDelegate<ProductsPageResult, Product>
     {
         [Dependencies(
-            DependencyContext.Default,
             "GOG.Delegates.GetPageResults.ProductTypes.GetProductsPageResultsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeProductsPageResultProductsDelegate,GOG.Delegates",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",

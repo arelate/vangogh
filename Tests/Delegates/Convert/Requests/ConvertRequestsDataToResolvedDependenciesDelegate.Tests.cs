@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Xunit;
 
 using Controllers.Instances;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
+
 
 using Models.Requests;
 
@@ -17,7 +18,11 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertRequestsDataToResolvedDependenciesDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(DependencyContext.Default | DependencyContext.Test);
+            var singletonInstancesController = new SingletonInstancesController(
+                new Dictionary<string, string>() {{
+                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
+                }});
 
             convertRequestsDataToResolvedDependenciesDelegate = singletonInstancesController.GetInstance(
                 typeof(ConvertRequestsDataToResolvedDependenciesDelegate))

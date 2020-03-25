@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Find;
+using Interfaces.Delegates.GetData;
 
-using Interfaces.Controllers.Stash;
 using Interfaces.Models.Properties;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -19,29 +19,24 @@ namespace Delegates.Confirm.ArgsTokens
     public class ConfirmLikelyTokenTypeDelegate :
         IConfirmAsyncDelegate<(string Token, Tokens Type)>
     {
-        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate;
+        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
         private readonly IFindDelegate<ITitleProperty> findITitlePropertyDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Find.Properties.FindITitlePropertyDelegate,Delegates")]
-        [Dependencies(
-            DependencyContext.Test,
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "")]
         public ConfirmLikelyTokenTypeDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionDataDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<ITitleProperty> findITitlePropertyDelegate)
         {
-            this.getArgsDefinitionDataDelegate = getArgsDefinitionDataDelegate;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
             this.findITitlePropertyDelegate = findITitlePropertyDelegate;
         }
 
         public async Task<bool> ConfirmAsync((string Token, Tokens Type) typedToken)
         {
             IEnumerable<ITitleProperty> titledItems = null;
-            var argsDefinitions = await getArgsDefinitionDataDelegate.GetDataAsync();
+            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
 
             switch (typedToken.Type)
             {

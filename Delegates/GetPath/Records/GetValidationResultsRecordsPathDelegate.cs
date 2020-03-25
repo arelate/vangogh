@@ -1,6 +1,6 @@
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -9,7 +9,6 @@ namespace Delegates.GetPath.Records
     public class GetValidationResultsRecordsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.GetDirectory.ProductTypes.GetRecordsDirectoryDelegate,Delegates",
             "Delegates.GetFilename.ProductTypes.GetValidationResultsFilenameDelegate,Delegates")]
         public GetValidationResultsRecordsPathDelegate(

@@ -8,7 +8,7 @@ using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
 
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Interfaces.Validation;
 using Interfaces.ValidationResults;
@@ -30,7 +30,6 @@ namespace Controllers.Validation
         IActionLogController actionLogController;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
             "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates",
             "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",

@@ -8,7 +8,7 @@ using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -23,7 +23,6 @@ namespace Delegates.Download
         readonly IActionLogController actionLogController;
 
         [Dependencies(
-            DependencyContext.Default,
             "Controllers.Network.NetworkController,Controllers",
             "Delegates.Convert.Streams.ConvertUriToWritableDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Format;
-using Interfaces.Models.Dependencies;
+
 
 using Interfaces.Controllers.Output;
 using Interfaces.Controllers.Console;
@@ -28,7 +28,6 @@ namespace Controllers.InputOutput
         readonly IConsoleController consoleController;
 
         [Dependencies(
-            DependencyContext.Default,
             "Controllers.Console.ConsoleController,Controllers")]
         public ConsoleInputOutputController(
             IConsoleController consoleController)

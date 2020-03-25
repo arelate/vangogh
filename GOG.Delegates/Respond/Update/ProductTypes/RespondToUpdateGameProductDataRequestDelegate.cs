@@ -4,7 +4,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -18,7 +18,6 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         RespondToUpdateMasterDetailsRequestDelegate<GameProductData, Product>
     {
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.GetValue.Uri.ProductTypes.GetGameProductDataUpdateUriDelegate,Delegates",
             "GOG.Delegates.Convert.UpdateIdentity.ConvertProductToGameProductDataUpdateIdentityDelegate,GOG.Delegates",
             "GOG.Controllers.Data.ProductTypes.GameProductDataDataController,GOG.Controllers",

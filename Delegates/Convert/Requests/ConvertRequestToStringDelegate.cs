@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -15,7 +15,6 @@ namespace Delegates.Convert.Requests
         private IConvertDelegate<IDictionary<string, IEnumerable<string>>, string> convertParametersToStringDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Convert.Requests.ConvertParametersToStringDelegate,Delegates")]
         public ConvertRequestToStringDelegate(
             IConvertDelegate<IDictionary<string, IEnumerable<string>>, string> convertParametersToStringDelegate)

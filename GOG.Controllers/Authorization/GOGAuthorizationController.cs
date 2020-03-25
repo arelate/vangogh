@@ -10,7 +10,7 @@ using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -47,7 +47,6 @@ namespace GOG.Controllers.Authorization
         readonly IActionLogController actionLogController;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Correct.CorrectUsernamePasswordAsyncDelegate,Delegates",
             "Delegates.Correct.CorrectSecurityCodeAsyncDelegate,Delegates",
             "Delegates.Itemize.Attributes.ItemizeLoginTokenAttributeValuesDelegate,Delegates",

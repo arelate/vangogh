@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Delegates.Correct;
-using Interfaces.Models.Dependencies;
+
 
 using Interfaces.Input;
 
@@ -16,7 +16,7 @@ namespace Delegates.Correct
         readonly IRequestInputAsyncDelegate<string> requestInputDelegate;
 
         [Dependencies(
-            DependencyContext.Default,"Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
+            "Controllers.InputOutput.ConsoleInputOutputController,Controllers")]
         public CorrectSecurityCodeAsyncDelegate(IRequestInputAsyncDelegate<string> requestInputDelegate)
         {
             this.requestInputDelegate = requestInputDelegate;

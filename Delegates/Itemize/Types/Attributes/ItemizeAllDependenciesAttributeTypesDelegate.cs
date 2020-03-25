@@ -1,7 +1,7 @@
 using System;
 
 using Interfaces.Delegates.Itemize;
-using Interfaces.Models.Dependencies;
+
 
 using Delegates.Itemize.Types;
 
@@ -13,7 +13,6 @@ namespace Delegates.Itemize.Types.Attributes
         ItemizeAllTypesWithConstructorAttributeDelegate<DependenciesAttribute>
     {
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Itemize.Types.ItemizeAllAppDomainTypesDelegate,Delegates")]
         public ItemizeAllDependenciesAttributeTypesDelegate(
             IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate) :

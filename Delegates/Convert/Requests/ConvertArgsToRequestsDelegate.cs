@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Sort;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -23,7 +23,6 @@ namespace Delegates.Convert.Requests
         private IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Convert.ArgsTokens.ConvertTokensToTypedTokensDelegate,Delegates",
             "Delegates.Convert.Requests.ConvertTypedTokensToRequestsDataDelegate,Delegates",
             "Delegates.Convert.Requests.ConvertRequestsDataToResolvedCollectionsDelegate,Delegates",

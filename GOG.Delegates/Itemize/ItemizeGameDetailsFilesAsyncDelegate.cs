@@ -7,7 +7,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.GetPath;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Models.Dependencies;
+
 
 using Interfaces.Controllers.Logs;
 
@@ -31,7 +31,6 @@ namespace GOG.Delegates.Itemize
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
-            DependencyContext.Default,
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
 			"Controllers.Routing.RoutingController,Controllers",
 			"Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",

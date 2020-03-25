@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 using Interfaces.Delegates.Replace;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -14,7 +14,6 @@ namespace GOG.Delegates.Itemize.ProductTypes
         IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates")]
         public ItemizeGameDetailsDownloadLanguagesDelegate(
             IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)

@@ -5,7 +5,7 @@ using System.Linq;
 
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-using Interfaces.Models.Dependencies;
+
 
 using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
@@ -27,7 +27,6 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IActionLogController actionLogController;
 
 		[Dependencies(
-            DependencyContext.Default,
 			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
 			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",

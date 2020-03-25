@@ -3,7 +3,7 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -15,7 +15,6 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
     public class RespondToCleanupFilesRequestDelegate : RespondToCleanupRequestDelegate<ProductFile>
     {
         [Dependencies(
-            DependencyContext.Default,
             "GOG.Delegates.Itemize.ItemizeAllGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeAllProductFilesDirectoriesAsyncDelegate,GOG.Delegates",
             "Delegates.Itemize.ItemizeDirectoryFilesDelegate,Delegates",

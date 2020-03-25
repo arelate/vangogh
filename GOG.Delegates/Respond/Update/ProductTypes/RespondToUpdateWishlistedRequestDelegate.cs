@@ -5,7 +5,7 @@ using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -22,7 +22,6 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         readonly IActionLogController actionLogController;
 
         [Dependencies(
-            DependencyContext.Default,
             "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.WishlistedDataController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]

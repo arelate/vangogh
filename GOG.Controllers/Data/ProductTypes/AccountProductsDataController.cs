@@ -6,7 +6,7 @@ using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -19,7 +19,6 @@ namespace GOG.Controllers.Data.ProductTypes
     public class AccountProductsDataController : DataController<AccountProduct>
     {
         [Dependencies(
-            DependencyContext.Default,
             "GOG.Controllers.Stash.ProductTypes.AccountProductsStashController,GOG.Controllers",
             "GOG.Delegates.Convert.ProductTypes.ConvertAccountProductToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.AccountProductsRecordsIndexController,Controllers",

@@ -1,5 +1,5 @@
 using Interfaces.Delegates.GetFilename;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -10,7 +10,7 @@ namespace Delegates.GetFilename.ArgsDefinitions
     public class GetArgsDefinitionsFilenameDelegate: GetFixedFilenameDelegate
     {
         [Dependencies(
-            DependencyContext.Default,"Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
+            "Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
         public GetArgsDefinitionsFilenameDelegate(IGetFilenameDelegate getJsonFilenameDelegate):
             base(Filenames.ArgsDefinitions, getJsonFilenameDelegate)
             {

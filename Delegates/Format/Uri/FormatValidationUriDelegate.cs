@@ -3,7 +3,7 @@ using System.IO;
 
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Format;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -15,7 +15,6 @@ namespace Delegates.Format.Uri
         readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
 
 		[Dependencies(
-            DependencyContext.Default,
 			"Delegates.GetFilename.GetValidationFilenameDelegate,Delegates",
 			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates")]
         public FormatValidationUriDelegate(

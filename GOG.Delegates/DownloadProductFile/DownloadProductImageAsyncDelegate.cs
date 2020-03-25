@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Interfaces.Delegates.Download;
-using Interfaces.Models.Dependencies;
+
 
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
@@ -14,7 +14,6 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Download.DownloadFromUriAsyncDelegate,Delegates")]
         public DownloadProductImageAsyncDelegate(IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate)
         {

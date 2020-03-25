@@ -6,7 +6,7 @@ using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -19,7 +19,6 @@ namespace GOG.Controllers.Data.ProductTypes
     public class ApiProductsDataController : DataController<ApiProduct>
     {
         [Dependencies(
-            DependencyContext.Default,
             "GOG.Controllers.Stash.ProductTypes.ApiProductsStashController,GOG.Controllers",
             "GOG.Delegates.Convert.ProductTypes.ConvertApiProductToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.ApiProductsRecordsIndexController,Controllers",

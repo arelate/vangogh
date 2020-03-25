@@ -3,7 +3,7 @@ using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -17,7 +17,6 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
         GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>
     {
         [Dependencies(
-            DependencyContext.Default,
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
 			"Delegates.Format.Uri.FormatImagesUriDelegate,Delegates",

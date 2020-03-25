@@ -6,7 +6,7 @@ using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -17,7 +17,6 @@ namespace Controllers.Data.Records
     public class WishlistedRecordsDataController : DataController<ProductRecords>
     {
         [Dependencies(
-            DependencyContext.Default,
             "Controllers.Stash.Records.WishlistedRecordsStashController,Controllers",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
             "Delegates.Find.ProductTypes.FindProductRecordsDelegate,Delegates",

@@ -5,7 +5,7 @@ using Attributes;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Find;
-using Interfaces.Models.Dependencies;
+
 
 namespace Delegates.Convert
 {
@@ -15,7 +15,6 @@ namespace Delegates.Convert
         private readonly IFindDelegate<KeyValuePair<string, string>> findLanguageCodeDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.GetValue.Languages.GetLanguageCodesDelegate,Delegates",
             "Delegates.Find.System.FindStringKeyStringValuePairDelegate,Delegates")]
         public ConvertLanguageToCodeDelegate(

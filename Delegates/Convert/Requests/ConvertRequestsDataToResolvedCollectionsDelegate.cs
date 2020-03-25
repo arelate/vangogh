@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Interfaces.Controllers.Stash;
-
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.GetData;
 using Interfaces.Delegates.Find;
 using Interfaces.Delegates.Confirm;
-using Interfaces.Models.Dependencies;
 
 using Attributes;
 
@@ -19,26 +17,20 @@ namespace Delegates.Convert.Requests
     public class ConvertRequestsDataToResolvedCollectionsDelegate :
         IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
     {
-        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
+        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
         private readonly IFindDelegate<Method> findMethodDelegate;
         private readonly IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExlusiveStringDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates",
             "Delegates.Confirm.System.ConfirmExclusiveStringDelegate,Delegates")]
-        [Dependencies(
-            DependencyContext.Test,
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "",
-            "")]
         public ConvertRequestsDataToResolvedCollectionsDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,
             IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExlusiveStringDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
             this.findMethodDelegate = findMethodDelegate;
             this.confirmExlusiveStringDelegate = confirmExlusiveStringDelegate;
         }
@@ -46,7 +38,7 @@ namespace Delegates.Convert.Requests
         public async Task<RequestsData> ConvertAsync(RequestsData requestsData)
         {
             var defaultCollections = new List<string>();
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
 
             foreach (var method in requestsData.Methods)
             {

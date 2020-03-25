@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Stash;
 
 using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.GetData;
 using Interfaces.Delegates.Find;
 using Interfaces.Delegates.Intersect;
-using Interfaces.Models.Dependencies;
+
 
 using Attributes;
 
@@ -19,26 +19,20 @@ namespace Delegates.Convert.Requests
     public class ConvertRequestsDataToRequestsDelegate :
         IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
+        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
         private IFindDelegate<Method> findMethodDelegate;
         private IIntersectDelegate<string> intersectStringDelegate;
 
         [Dependencies(
-            DependencyContext.Default,
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
+            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates",
-            "Delegates.Intersect.System.IntersectStringDelegate,Delegates")]
-            [Dependencies(
-            DependencyContext.Test,
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "",
-            "")]            
+            "Delegates.Intersect.System.IntersectStringDelegate,Delegates")]           
         public ConvertRequestsDataToRequestsDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,
             IIntersectDelegate<string> intersectStringDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
             this.findMethodDelegate = findMethodDelegate;
             this.intersectStringDelegate = intersectStringDelegate;
         }
@@ -46,7 +40,7 @@ namespace Delegates.Convert.Requests
         public async IAsyncEnumerable<Request> ConvertAsync(RequestsData requestsData)
         {
             var requests = new List<Request>();
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
 
             foreach (var method in requestsData.Methods)
             {

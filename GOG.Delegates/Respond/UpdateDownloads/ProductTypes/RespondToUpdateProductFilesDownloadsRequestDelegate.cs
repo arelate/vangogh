@@ -2,7 +2,7 @@
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Logs;
-using Interfaces.Models.Dependencies;
+
 
 using Models.ProductTypes;
 
@@ -19,7 +19,6 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         RespondToUpdateDownloadsRequestDelegate<ProductFile>
     {
 		[Dependencies(
-            DependencyContext.Default,
 			"GOG.Delegates.GetDownloadSources.GetManualUrlDownloadSourcesAsyncDelegate,GOG.Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",

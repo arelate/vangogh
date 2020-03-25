@@ -5,16 +5,15 @@ using Attributes;
 
 using Interfaces.Delegates.GetData;
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.Dependencies;
+
 
 namespace Delegates.GetData.Storage
 {
-    public class GetStringDataAsyncDelegate : IGetDataAsyncDelegate<string>
+    public sealed class GetStringDataAsyncDelegate : IGetDataAsyncDelegate<string>
     {
         private readonly IConvertDelegate<string, Stream> convertUriToReadableStream;
 
         [Dependencies(
-            DependencyContext.Default,
             "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates")]
         public GetStringDataAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToReadableStream)
