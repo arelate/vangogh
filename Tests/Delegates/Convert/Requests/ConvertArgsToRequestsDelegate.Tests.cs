@@ -10,7 +10,6 @@ using Models.Requests;
 
 using TestDelegates.Convert.Types;
 
-using TestModels.ArgsDefinitions;
 using TestModels.Requests;
 
 namespace Delegates.Convert.Requests.Tests

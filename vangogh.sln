@@ -9,13 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{F515F349-AFDF-40ED-8D3D-AD6412FAEAF0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controllers", "Controllers\Controllers.csproj", "{FAEB0675-90E1-466D-B180-304D7DA444F0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Interfaces", "GOG.Interfaces\GOG.Interfaces.csproj", "{3B3EBB50-435A-40C0-91E5-F2E9CFCC8DDA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Models", "GOG.Models\GOG.Models.csproj", "{2EA478E2-1461-4AC1-87CC-C6761895ADA1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Controllers", "GOG.Controllers\GOG.Controllers.csproj", "{0BC8D90C-1963-45CB-96C2-1798CD60DA7E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOG.Delegates", "GOG.Delegates\GOG.Delegates.csproj", "{8BF6C982-ECE3-4F76-9BFB-98E67D2C9BB6}"
 EndProject

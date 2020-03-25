@@ -4,7 +4,7 @@ using Interfaces.Delegates.Convert;
 
 namespace Delegates.Convert.Streams
 {
-    public class ConvertUriToWritableDelegate : IConvertDelegate<string, Stream>
+    public class ConvertUriToWritableStreamDelegate : IConvertDelegate<string, Stream>
     {
         public Stream Convert(string uri)
         {

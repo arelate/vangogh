@@ -7,13 +7,9 @@ using Xunit;
 
 using Interfaces.Delegates.Convert;
 
-using Delegates.Convert.Requests;
-
 using Models.Requests;
 
 using TestDelegates.Convert.Types;
-
-using TestModels.ArgsDefinitions;
 
 namespace Delegates.Convert.Requests.Tests
 {

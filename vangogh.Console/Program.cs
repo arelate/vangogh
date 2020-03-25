@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Respond;
 
-using Controllers.Logs;
-
 using Delegates.Convert.Requests;
 using Delegates.Convert.Types;
 
@@ -19,10 +17,10 @@ namespace vangogh.Console
         {
             var assemblies = new string[] {
                 // "Attributes",
-                "Controllers",
+                // "Controllers",
                 "Delegates",
-                "GOG.Controllers",
-                "GOG.Delegates", 
+                // "GOG.Controllers",
+                "GOG.Delegates"
                 // "GOG.Interfaces",
                 // "GOG.Models",
                 // "Interfaces",
@@ -30,7 +28,7 @@ namespace vangogh.Console
             };
 
             var types = new List<Type>();
-            var typesDependencies = new Dictionary<Type, List<Type>>();
+            var typesDependencies = new Dictionary<Type, List<string>>();
 
             // var projectsDependencies = new Dictionary<string, string[]> {
             //     { "Controllers", new string[] { "Delegates" } },
@@ -64,71 +62,37 @@ namespace vangogh.Console
 
                     if (dependenciesAttribute == null) continue;
 
-                    typesDependencies.Add(type, new List<Type>());
+                    typesDependencies.Add(type, new List<string>());
                     foreach (var typeDependency in dependenciesAttribute.Dependencies)
-                    {
-                        var dependencyType = Type.GetType(typeDependency);
-                        if (dependencyType == null)
-                            throw new ArgumentNullException();
-                        typesDependencies[type].Add(dependencyType);
-                    }
+                        typesDependencies[type].Add(typeDependency);
                 }
             }
 
-            bool ContainsValue<Type>(Dictionary<Type, List<Type>> dictionary, Type value)
-            {
-                foreach (var kvPair in dictionary)
-                    foreach (var dictionaryValue in kvPair.Value)
-                        if (dictionaryValue.Equals(value)) return true;
-                return false;
-            }
-
-            int CountValue<Type>(Dictionary<Type, List<Type>> dictionary, Type value)
-            {
-                var count = 0;
-                foreach (var kvPair in dictionary)
-                    if (kvPair.Value.Contains(value)) count++;
-                return count;
-            }
+            var delegateTypes = 0;
+            var controllerTypes = 0;
 
             foreach (var type in types)
             {
-
-                if (!type.FullName.StartsWith("Delegates.") &&
-                    !type.FullName.StartsWith("Controllers."))
-                    continue;
-
-                var isRoot = !typesDependencies.Keys.Contains(type);
-                var isLeaf = !ContainsValue(typesDependencies, type);
-                var depsCount = CountValue(typesDependencies, type);
-
-                // if (!isRoot || !isLeaf) continue;
-                // if (type.IsAbstract) continue;
-                // if (depsCount < 2) continue;
-
-                var typeString = string.Empty;
-                if (isRoot) typeString += "[ROOT] ";
-                if (isLeaf) typeString += "[LEAF] ";
-                if (type.IsAbstract) typeString += "[ABSTRACT] ";
-                if (!isLeaf) typeString += $"[DEPENDANTS:{depsCount}] ";
-                typeString += type.FullName;
+                var typeString = type.FullName;
+                var hasControllerDependencies = false;
 
                 if (!typesDependencies.ContainsKey(type)) continue;
+                // System.Console.WriteLine(typeString);
 
-                var noGOGDeps = true;
-                foreach (var typeDependency in typesDependencies[type])
-                    noGOGDeps &= !typeDependency.FullName.StartsWith("GOG.");
-
-                if (noGOGDeps) continue;
-
-                System.Console.WriteLine(typeString);
                 foreach (var typeDependency in typesDependencies[type])
                 {
-                    System.Console.WriteLine($"-{typeDependency.FullName}");
+                    if (typeDependency.StartsWith("Controllers") ||
+                        typeDependency.StartsWith("GOG.Controllers"))
+                        hasControllerDependencies = true;
+                    // System.Console.WriteLine($"-{typeDependency}");
                 }
 
+                delegateTypes += hasControllerDependencies ? 0 : 1;
+                controllerTypes += hasControllerDependencies ? 1 : 0;
             }
 
+            System.Console.WriteLine($"Delegate-only dependencies: {delegateTypes}");
+            System.Console.WriteLine($"Contains controller dependencies: {controllerTypes}");
 
             // // DEBUG
             // args = new string[] { "update", "accountproducts" };
