@@ -6,10 +6,9 @@ using Xunit;
 
 using Interfaces.Delegates.Convert;
 
-
-using Controllers.Instances;
-
 using Models.ArgsTokens;
+
+using TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
@@ -19,13 +18,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
         public ConvertTokensToTypedTokensDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(                
-                new Dictionary<string, string>() {{
-                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
-                }});
-
-            this.convertTokensToTypedTokensDelegate = singletonInstancesController.GetInstance(
+            this.convertTokensToTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
                 typeof(ConvertTokensToTypedTokensDelegate))
                 as ConvertTokensToTypedTokensDelegate;
         }

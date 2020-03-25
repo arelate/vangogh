@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 
 using Xunit;
 
-using Controllers.Instances;
-
 using Interfaces.Delegates.Convert;
-
 
 using Delegates.Convert.Requests;
 
 using Models.Requests;
+
+using TestDelegates.Convert.Types;
 
 using TestModels.ArgsDefinitions;
 
@@ -24,13 +23,7 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertRequestDataToRequestsDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(                
-                new Dictionary<string, string>() {{
-                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
-                }});
-
-            convertRequestsDataToRequestsDelegate = singletonInstancesController.GetInstance(
+            convertRequestsDataToRequestsDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
                 typeof(ConvertRequestsDataToRequestsDelegate))
                 as ConvertRequestsDataToRequestsDelegate;
         }

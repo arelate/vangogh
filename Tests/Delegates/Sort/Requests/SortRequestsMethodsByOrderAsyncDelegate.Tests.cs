@@ -5,8 +5,7 @@ using Xunit;
 
 using Interfaces.Delegates.Sort;
 
-
-using Controllers.Instances;
+using TestDelegates.Convert.Types;
 
 namespace Delegates.Sort.Requests.Tests
 {
@@ -16,13 +15,7 @@ namespace Delegates.Sort.Requests.Tests
 
         public MethodOrderCompareDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(
-                new Dictionary<string, string>() {{
-                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
-                }});
-
-            sortRequestsMethodsByOrderAsyncDelegate = singletonInstancesController.GetInstance(
+            sortRequestsMethodsByOrderAsyncDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
                 typeof(SortRequestsMethodsByOrderAsyncDelegate))
                 as SortRequestsMethodsByOrderAsyncDelegate;
         }

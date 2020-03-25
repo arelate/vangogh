@@ -21,9 +21,6 @@ namespace Delegates.Sort.Requests
         [Dependencies(
             "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates")]
-        [Dependencies(
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "")]
         public SortRequestsMethodsByOrderAsyncDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate)

@@ -1,14 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using Xunit;
 
 using Interfaces.Delegates.Confirm;
 
-using Controllers.Instances;
-
 using Models.ArgsTokens;
+
+using TestDelegates.Convert.Types;
 
 namespace Delegates.Confirm.ArgsTokens.Tests
 {
@@ -19,13 +18,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(
-                new Dictionary<string, string>() {{
-                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
-                }});
-
-            this.confirmLikelyTokenTypeDelegate = singletonInstancesController.GetInstance(
+            this.confirmLikelyTokenTypeDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
                 typeof(ConfirmLikelyTokenTypeDelegate))
                 as ConfirmLikelyTokenTypeDelegate;
         }

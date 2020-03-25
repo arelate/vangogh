@@ -7,10 +7,9 @@ using Xunit;
 
 using Interfaces.Delegates.Convert;
 
-
-using Controllers.Instances;
-
 using Models.ArgsTokens;
+
+using TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
@@ -21,17 +20,14 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
         public ConvertLikelyTypedToTypedTokensDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(                
-                new Dictionary<string, string>() {{
-                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
-                }});
+            // var singletonInstancesController = new SingletonInstancesController(                
+            //     TestModels.Dependencies.TestContextReplacements.Map);
 
-            this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
+            this.convertTokensToLikelyTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
                 typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
 
-            this.convertLikelyTypedToTypedTokensDelegate = singletonInstancesController.GetInstance(
+            this.convertLikelyTypedToTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
                 typeof(ConvertLikelyTypedToTypedTokensDelegate))
                 as ConvertLikelyTypedToTypedTokensDelegate;
         }

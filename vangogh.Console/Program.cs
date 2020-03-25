@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Respond;
 
-using Controllers.Instances;
 using Controllers.Logs;
 
 using Delegates.Convert.Requests;
+using Delegates.Convert.Types;
 
 namespace vangogh.Console
 {

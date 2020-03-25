@@ -3,12 +3,11 @@ using System.Collections.Generic;
 
 using Xunit;
 
-using Controllers.Instances;
-
 using Interfaces.Delegates.Convert;
 
-
 using Models.Requests;
+
+using TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.Requests.Tests
 {
@@ -18,13 +17,7 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertRequestsDataToResolvedDependenciesDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(
-                new Dictionary<string, string>() {{
-                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                    "TestControllers.Stash.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Delegates"
-                }});
-
-            convertRequestsDataToResolvedDependenciesDelegate = singletonInstancesController.GetInstance(
+            convertRequestsDataToResolvedDependenciesDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
                 typeof(ConvertRequestsDataToResolvedDependenciesDelegate))
                 as ConvertRequestsDataToResolvedDependenciesDelegate;
         }

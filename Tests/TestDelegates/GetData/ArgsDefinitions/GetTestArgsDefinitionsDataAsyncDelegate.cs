@@ -4,7 +4,7 @@ using Interfaces.Delegates.GetData;
 
 using Models.ArgsDefinitions;
 
-namespace TestControllers.Stash.ArgsDefinitions
+namespace TestDelegates.GetData.ArgsDefinitions
 {
     public class GetTestArgsDefinitionsDataAsyncDelegate : IGetDataAsyncDelegate<ArgsDefinition>
     {
