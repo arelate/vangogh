@@ -7,6 +7,7 @@ namespace Delegates.GetData.Storage
 {
     public abstract class GetJSONDataAsyncDelegate<T> : IGetDataAsyncDelegate<T>
     {
+        private T data;
         private readonly IGetDataAsyncDelegate<string> getStringDataAsyncDelegate;
         private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
 
@@ -20,8 +21,12 @@ namespace Delegates.GetData.Storage
 
         public async Task<T> GetDataAsync(string uri = null)
         {
-            var serializedData = await getStringDataAsyncDelegate.GetDataAsync(uri);
-            return convertJSONToTypeDelegate.Convert(serializedData);
+            if (data == null)
+            {
+                var serializedData = await getStringDataAsyncDelegate.GetDataAsync(uri);
+                data = convertJSONToTypeDelegate.Convert(serializedData);
+            }
+            return data;
         }
     }
 }

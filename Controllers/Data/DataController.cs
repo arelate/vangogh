@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.PostData;
 
 using Interfaces.Models.RecordsTypes;
 
@@ -15,20 +16,23 @@ namespace Controllers.Data
 {
     public abstract class DataController<DataType> : IDataController<DataType>
     {
-        readonly IStashController<List<DataType>> stashController;
+        private readonly IGetDataAsyncDelegate<List<DataType>> getDataAsyncDelegate;
+        private readonly IPostDataAsyncDelegate<List<DataType>> postDataAsyncDelegate;
         readonly IConvertDelegate<DataType, long> convertProductToIndexDelegate;
         readonly IRecordsController<long> recordsController;
         readonly private IFindDelegate<DataType> findDelegate;
         readonly IActionLogController actionLogController;
 
         public DataController(
-            IStashController<List<DataType>> stashController,
+            IGetDataAsyncDelegate<List<DataType>> getDataAsyncDelegate,
+            IPostDataAsyncDelegate<List<DataType>> postDataAsyncDelegate,
             IConvertDelegate<DataType, long> convertProductToIndexDelegate,
             IRecordsController<long> recordsController,
             IFindDelegate<DataType> findDelegate,
             IActionLogController actionLogController)
         {
-            this.stashController = stashController;
+            this.getDataAsyncDelegate = getDataAsyncDelegate;
+            this.postDataAsyncDelegate = postDataAsyncDelegate;
             this.convertProductToIndexDelegate = convertProductToIndexDelegate;
             this.recordsController = recordsController;
             this.findDelegate = findDelegate;
@@ -37,7 +41,7 @@ namespace Controllers.Data
 
         public async Task<bool> ContainsAsync(DataType item)
         {
-            var data = await stashController.GetDataAsync();
+            var data = await getDataAsyncDelegate.GetDataAsync();
             return data.Contains(item);
         }
 
@@ -48,7 +52,7 @@ namespace Controllers.Data
 
         public async Task<DataType> GetByIdAsync(long id)
         {
-            var data = await stashController.GetDataAsync();
+            var data = await getDataAsyncDelegate.GetDataAsync();
             return findDelegate.Find(data, item =>
             {
                 var index = convertProductToIndexDelegate.Convert(item);
@@ -58,7 +62,7 @@ namespace Controllers.Data
 
         public async Task<int> CountAsync()
         {
-            var data = await stashController.GetDataAsync();
+            var data = await getDataAsyncDelegate.GetDataAsync();
             return data.Count;
         }
 
@@ -73,7 +77,7 @@ namespace Controllers.Data
                 recordType = RecordsTypes.Updated;
             }
             
-            var data = await stashController.GetDataAsync();
+            var data = await getDataAsyncDelegate.GetDataAsync();
             data.Add(updatedData);
 
             if (recordsController != null)
@@ -88,7 +92,7 @@ namespace Controllers.Data
 
             if (!await ContainsIdAsync(index)) return;
 
-            var data = await stashController.GetDataAsync();
+            var data = await getDataAsyncDelegate.GetDataAsync();
             data.Remove(deletedData);
 
             if (recordsController != null)
@@ -99,7 +103,7 @@ namespace Controllers.Data
 
         public async IAsyncEnumerable<DataType> ItemizeAllAsync()
         {
-            var data = await stashController.GetDataAsync();
+            var data = await getDataAsyncDelegate.GetDataAsync();
             foreach (var dataValue in data)
                 yield return dataValue;
         }
@@ -117,7 +121,8 @@ namespace Controllers.Data
             }
 
             actionLogController.StartAction("Commit items");
-            await stashController.PostDataAsync();
+            var data = await getDataAsyncDelegate.GetDataAsync();
+            await postDataAsyncDelegate.PostDataAsync(data);
             actionLogController.CompleteAction();
 
             actionLogController.CompleteAction();
