@@ -8,6 +8,7 @@ Technical Debt Reduction Plan
     - Deprecate all controllers and implement as delegates with clear explicitly dependencies (Controllers have hidden explicit dependencies)
     - Review all delegates and look for opportunities to optimize
     - Review namespaces to consolidate "area" delegates
+- Consolidate ProductTypes in GOG.* namespaces
 - Implement tests for RespondsToRequest attribute
 - Cleanup TODOs
 - Resolve compiler warnings

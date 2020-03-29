@@ -7,8 +7,6 @@ using System.Net.Http;
 using Interfaces.Delegates.Constrain;
 
 using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Cookies;
-
 
 using Attributes;
 
@@ -21,26 +19,23 @@ namespace Controllers.Network
     public sealed class NetworkController : INetworkController
     {
         HttpClient client;
-        ICookiesController cookieController;
         readonly IUriController uriController;
         IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate;
 
         [Dependencies(
-            "Controllers.Cookies.CookiesController,Controllers",
             "Controllers.Uri.UriController,Controllers",
             "Delegates.Constrain.ConstrainRequestRateAsyncDelegate,Delegates")]
         public NetworkController(
-            ICookiesController cookieController,
             IUriController uriController,
             IConstrainAsyncDelegate<string> constrainRequestRateAsyncDelegate)
         {
-            this.cookieController = cookieController;
             this.uriController = uriController;
             this.constrainRequestRateAsyncDelegate = constrainRequestRateAsyncDelegate;
 
             var httpHandler = new HttpClientHandler
             {
-                UseDefaultCredentials = false
+                UseDefaultCredentials = false,
+                UseCookies = true
             };
             client = new HttpClient(httpHandler);
             client.DefaultRequestHeaders.ExpectContinue = false;
@@ -70,15 +65,11 @@ namespace Controllers.Network
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(Headers.Accept, HeaderDefaultValues.Accept);
-            requestMessage.Headers.Add(Headers.Cookie, await cookieController.GetCookiesStringAsync());
 
             if (content != null) requestMessage.Content = content;
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
-
-            if (response.Headers.Contains(Headers.SetCookie))
-                await cookieController.SetCookiesAsync(response.Headers.GetValues(Headers.SetCookie));
 
             return response;
         }

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.PostData;
 
 using Attributes;
 
@@ -19,19 +19,23 @@ namespace GOG.Controllers.Data.ProductTypes
     public class GameDetailsDataController : DataController<GameDetails>
     {
         [Dependencies(
+            "GOG.Delegates.GetData.Storage.ProductTypes.GetListGameDetailsDataFromPathAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.PostData.Storage.ProductTypes.PostListGameDetailsDataToPathAsyncDelegate,GOG.Delegates",            
             "GOG.Controllers.Stash.ProductTypes.GameDetailsStashController,GOG.Controllers",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.GameDetailsRecordsIndexController,Controllers",
             "GOG.Delegates.Find.ProductTypes.FindGameDetailsDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public GameDetailsDataController(
-            IStashController<List<GameDetails>> gameDetailsStashController,
+            IGetDataAsyncDelegate<List<GameDetails>> getListGameDetailsDataAsyncDelegate,
+            IPostDataAsyncDelegate<List<GameDetails>> postListGameDetailsDataAsyncDelegate,
             IConvertDelegate<GameDetails, long> convertGameDetailsToIndexDelegate,
             IRecordsController<long> gameDetailsRecordsIndexController,
             IFindDelegate<GameDetails> findGameDetailsDelegate,
             IActionLogController actionLogController) :
             base(
-                gameDetailsStashController,
+                getListGameDetailsDataAsyncDelegate,
+                postListGameDetailsDataAsyncDelegate,
                 convertGameDetailsToIndexDelegate,
                 gameDetailsRecordsIndexController,
                 findGameDetailsDelegate,

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Stash;
 using Interfaces.Controllers.Records;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.PostData;
 
 using Attributes;
 
@@ -17,19 +17,22 @@ namespace Controllers.Data.ProductTypes
     public class ProductScreenshotsDataController : DataController<ProductScreenshots>
     {
         [Dependencies(
-            "Controllers.Stash.ProductTypes.ProductScreenshotsStashController,Controllers",
+            "Delegates.GetData.Storage.ProductTypes.GetListProductScreenshotsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.PostData.Storage.ProductTypes.PostListProductScreenshotsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ProductScreenshotsRecordsIndexController,Controllers",
             "Delegates.Find.ProductTypes.FindProductScreenshotsDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ProductScreenshotsDataController(
-            IStashController<List<ProductScreenshots>> productScreenshotsStashController,
+            IGetDataAsyncDelegate<List<ProductScreenshots>> getProductScreenshotsDataAsyncDelegate,
+            IPostDataAsyncDelegate<List<ProductScreenshots>> postProductScreenshotsDataAsyncDelegate,
             IConvertDelegate<ProductScreenshots, long> convertProductScreenshotsToIndexDelegate,
             IRecordsController<long> productScreenshotsRecordsIndexController,
             IFindDelegate<ProductScreenshots> findProductScreenshotsDelegate,
             IActionLogController actionLogController) :
             base(
-                productScreenshotsStashController,
+                getProductScreenshotsDataAsyncDelegate,
+                postProductScreenshotsDataAsyncDelegate,
                 convertProductScreenshotsToIndexDelegate,
                 productScreenshotsRecordsIndexController,
                 findProductScreenshotsDelegate,

@@ -15,8 +15,8 @@ namespace Controllers.Data.ProductTypes
     public class UpdatedDataController : DataController<long>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.ProductTypes.GetUpdatedDataFromPathAsyncDelegate,Delegates",
-            "Delegates.PostData.Storage.ProductTypes.PostUpdatedDataToPathAsyncDelegate,Delegates",
+            "Delegates.GetData.Storage.ProductTypes.GetListUpdatedDataFromPathAsyncDelegate,Delegates",
+            "Delegates.PostData.Storage.ProductTypes.PostListUpdatedDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.UpdatedRecordsIndexController,Controllers",
             "Delegates.Find.System.FindLongDelegate,Delegates",
