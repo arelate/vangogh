@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Stash;
-
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.PostData;
 
 using Attributes;
 
@@ -17,17 +16,20 @@ namespace Controllers.Data.Records
     public class ProductRoutesRecordsDataController : DataController<ProductRecords>
     {
         [Dependencies(
-            "Controllers.Stash.Records.ProductRoutesRecordsStashController,Controllers",
+            "Delegates.GetData.Storage.Records.GetListProductRoutesRecordsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.PostData.Storage.Records.PostListProductRoutesRecordsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
             "Delegates.Find.ProductTypes.FindProductRecordsDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ProductRoutesRecordsDataController(
-            IStashController<List<ProductRecords>> productRoutesRecordsStashController,
+            IGetDataAsyncDelegate<List<ProductRecords>> getProductRoutesRecordsDataAsyncDelegate,
+            IPostDataAsyncDelegate<List<ProductRecords>> postProductRoutesRecordsDataAsyncDelegate,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             IFindDelegate<ProductRecords> findProductRecordsDelegate,
             IActionLogController actionLogController) :
             base(
-                productRoutesRecordsStashController,
+                getProductRoutesRecordsDataAsyncDelegate,
+                postProductRoutesRecordsDataAsyncDelegate,
                 convertProductRecordsToIndexDelegate,
                 null,
                 findProductRecordsDelegate,

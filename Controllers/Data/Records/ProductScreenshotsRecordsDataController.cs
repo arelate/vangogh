@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Stash;
-
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.PostData;
 
 using Attributes;
 
@@ -17,17 +16,20 @@ namespace Controllers.Data.Records
     public class ProductScreenshotsRecordsDataController : DataController<ProductRecords>
     {
         [Dependencies(
-            "Controllers.Stash.Records.ProductScreenshotsRecordsStashController,Controllers",
+            "Delegates.GetData.Storage.Records.GetListProductScreenshotsRecordsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.PostData.Storage.Records.PostListProductScreenshotsRecordsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
             "Delegates.Find.ProductTypes.FindProductRecordsDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ProductScreenshotsRecordsDataController(
-            IStashController<List<ProductRecords>> productScreenshotsRecordsStashController,
+            IGetDataAsyncDelegate<List<ProductRecords>> getProductScreenshotsRecordsDataAsyncDelegate,
+            IPostDataAsyncDelegate<List<ProductRecords>> postProductScreenshotsRecordsDataAsyncDelegate,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             IFindDelegate<ProductRecords> findProductRecordsDelegate,
             IActionLogController actionLogController) :
             base(
-                productScreenshotsRecordsStashController,
+                getProductScreenshotsRecordsDataAsyncDelegate,
+                postProductScreenshotsRecordsDataAsyncDelegate,
                 convertProductRecordsToIndexDelegate,
                 null,
                 findProductRecordsDelegate,

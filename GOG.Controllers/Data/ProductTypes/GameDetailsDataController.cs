@@ -21,7 +21,6 @@ namespace GOG.Controllers.Data.ProductTypes
         [Dependencies(
             "GOG.Delegates.GetData.Storage.ProductTypes.GetListGameDetailsDataFromPathAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.PostData.Storage.ProductTypes.PostListGameDetailsDataToPathAsyncDelegate,GOG.Delegates",            
-            "GOG.Controllers.Stash.ProductTypes.GameDetailsStashController,GOG.Controllers",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.GameDetailsRecordsIndexController,Controllers",
             "GOG.Delegates.Find.ProductTypes.FindGameDetailsDelegate,GOG.Delegates",

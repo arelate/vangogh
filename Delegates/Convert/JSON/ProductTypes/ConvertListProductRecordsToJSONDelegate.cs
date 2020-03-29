@@ -4,7 +4,7 @@ using Models.ProductTypes;
 
 namespace Delegates.Convert.JSON.ProductTypes
 {
-    public class ConvertJSONToListProductDownloadsDelegate: ConvertJSONToTypeDelegate<List<ProductDownloads>>
+    public class ConvertListProductRecordsToJSONDelegate : ConvertTypeToJSONDelegate<List<ProductRecords>>
     {
         // ...
     }

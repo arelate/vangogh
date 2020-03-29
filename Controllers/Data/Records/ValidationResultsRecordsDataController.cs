@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Stash;
-
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Find;
-
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.PostData;
 
 using Attributes;
 
@@ -17,17 +16,20 @@ namespace Controllers.Data.Records
     public class ValidationResultsRecordsDataController : DataController<ProductRecords>
     {
         [Dependencies(
-            "Controllers.Stash.Records.ValidationResultsRecordsStashController,Controllers",
+            "Delegates.GetData.Storage.Records.GetListValidationResultsRecordsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.PostData.Storage.Records.PostListValidationResultsRecordsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
             "Delegates.Find.ProductTypes.FindProductRecordsDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public ValidationResultsRecordsDataController(
-            IStashController<List<ProductRecords>> validationResultsRecordsStashController,
+            IGetDataAsyncDelegate<List<ProductRecords>> getValidationResultsRecordsDataAsyncDelegate,
+            IPostDataAsyncDelegate<List<ProductRecords>> postValidationResultsRecordsDataAsyncDelegate,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             IFindDelegate<ProductRecords> findProductRecordsDelegate,
             IActionLogController actionLogController) :
             base(
-                validationResultsRecordsStashController,
+                getValidationResultsRecordsDataAsyncDelegate,
+                postValidationResultsRecordsDataAsyncDelegate,
                 convertProductRecordsToIndexDelegate,
                 null,
                 findProductRecordsDelegate,
