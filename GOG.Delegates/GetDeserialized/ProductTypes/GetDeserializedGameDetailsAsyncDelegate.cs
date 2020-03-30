@@ -9,9 +9,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Map;
-
-
-using Interfaces.Controllers.Network;
+using Interfaces.Delegates.GetData;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
@@ -25,7 +23,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     // TODO: Refactor?
     public class GetDeserializedGameDetailsAsyncDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {
-        readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IConvertDelegate<(string, IDictionary<string,string>), string> convertUriParametersToUriDelegate;
         private readonly IConvertDelegate<string,GameDetails> convertJSONToGameDetailsDelegate;
         private readonly IConvertDelegate<string, OperatingSystemsDownloads[][]> convertJSONToOperatingSystemsDownloads2DArrayDelegate;
         readonly IConvertDelegate<string,string> convertLanguageToCodeDelegate;
@@ -40,7 +39,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         readonly IMapDelegate<string> mapStringDelegate;
 
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers",
+            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
+            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate,GOG.Delegates",
             "Delegates.Convert.ConvertLanguageToCodeDelegate,Delegates",
@@ -52,7 +52,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             "GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate,GOG.Delegates",
             "Delegates.Map.System.MapStringDelegate,Delegates")]
         public GetDeserializedGameDetailsAsyncDelegate(
-            IGetResourceAsyncDelegate getResourceAsyncDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,            
+            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IConvertDelegate<string,GameDetails> convertJSONToGameDetailsDelegate,
             IConvertDelegate<string, OperatingSystemsDownloads[][]> convertJSONToOperatingSystemsDownloads2DArrayDelegate,
             IConvertDelegate<string,string> convertLanguageToCodeDelegate,
@@ -66,12 +67,12 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
                 OperatingSystemsDownloads[]> convert2DArrayToArrayDelegate,
             IMapDelegate<string> mapStringDelegate)
         {
-            this.getResourceAsyncDelegate = getResourceAsyncDelegate;
+            this.convertUriParametersToUriDelegate = convertUriParametersToUriDelegate;
+            this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
             this.convertJSONToGameDetailsDelegate = convertJSONToGameDetailsDelegate;
             this.convertJSONToOperatingSystemsDownloads2DArrayDelegate = convertJSONToOperatingSystemsDownloads2DArrayDelegate;
             this.convertLanguageToCodeDelegate = convertLanguageToCodeDelegate;
             this.convertGameDetailsDownloadLanguagesToEmptyStringDelegate = convertGameDetailsDownloadLanguagesToEmptyStringDelegate;
-
             this.confirmStringContainsLanguageDownloadsDelegate = confirmStringContainsLanguageDownloadsDelegate;
             this.itemizeGameDetailsDownloadLanguagesDelegate = itemizeGameDetailsDownloadLanguagesDelegate;
             this.itemizeGameDetailsDownloadsDelegate = itemizeGameDetailsDownloadsDelegate;
@@ -97,7 +98,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             // - deserialize downloads into OperatingSystemsDownloads collection
             // - assign languages, since we know we should have as many downloads array as languages
 
-            var data = await getResourceAsyncDelegate.GetResourceAsync(uri, parameters);
+            var uriParameters = convertUriParametersToUriDelegate.Convert((uri, parameters));
+            var data = await getUriDataAsyncDelegate.GetDataAsync(uriParameters);
             var gameDetails = convertJSONToGameDetailsDelegate.Convert(data);
 
             if (gameDetails == null) return null;

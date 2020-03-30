@@ -18,22 +18,17 @@ namespace Delegates.Download
 {
     public class DownloadFromResponseAsyncDelegate : IDownloadFromResponseAsyncDelegate
     {
-        INetworkController networkController;
         readonly IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream;
         readonly IActionLogController actionLogController;
 
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers",
             "Delegates.Convert.Streams.ConvertUriToWritableDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromResponseAsyncDelegate(
-            INetworkController networkController,
             IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream,
             IActionLogController actionLogController)
         {
-            this.networkController = networkController;
             this.convertUriToWritableRStream = convertUriToWritableRStream;
-
             this.actionLogController = actionLogController;
         }
 
@@ -69,32 +64,8 @@ namespace Delegates.Download
                         (long) response.Content.Headers.ContentLength :
                         totalBytesRead;
                     await writeableStream.WriteAsync(buffer, 0, bytesRead);
-                    // await statusController.UpdateProgressAsync(
-                    //     status,
-                    //     totalBytesRead,
-                    //     contentLength,
-                    //     filename,
-                    //     DataUnits.Bytes);
                 }
             }
         }
-
-        //public async Task DownloadFileFromSourceAsync(string sourceUri, string destination)
-        //{
-        //    var downloadEntryTask = await statusController.CreateAsync(status, "Download entry");
-        //    try
-        //    {
-        //        using (var response = await networkController.RequestResponseAsync(downloadEntryTask, HttpMethod.Get, sourceUri))
-        //            await DownloadFileFromResponseAsync(response, destination, downloadEntryTask);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await statusController.WarnAsync(downloadEntryTask, $"{sourceUri}: {ex.Message}");
-        //    }
-        //    finally
-        //    {
-        //        await statusController.CompleteAsync(downloadEntryTask);
-        //    }
-        //}
     }
 }

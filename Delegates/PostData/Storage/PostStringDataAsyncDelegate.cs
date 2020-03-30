@@ -21,11 +21,13 @@ namespace Delegates.PostData.Storage
             this.convertUriToWritableStream = convertUriToWritableStream;
         }
 
-        public async Task PostDataAsync(string data, string uri = null)
+        public async Task<string> PostDataAsync(string data, string uri = null)
         {
             using (var stream = convertUriToWritableStream.Convert(uri))
             using (StreamWriter writer = new StreamWriter(stream))
                 await writer.WriteLineAsync(data);
+
+            return uri;
         }
     }
 }

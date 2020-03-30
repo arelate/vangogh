@@ -2,15 +2,13 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using Interfaces.Delegates.Correct;
-
-using Interfaces.Controllers.Uri;
-using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
-
+using Interfaces.Delegates.Correct;
+using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.PostData;
 
 using Attributes;
 
@@ -35,8 +33,10 @@ namespace GOG.Controllers.Authorization
 
         ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate;
         ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate;
-        IUriController uriController;
-        INetworkController networkController;
+        private readonly IConvertDelegate<IDictionary<string, string>, string> convertDictionaryParametersToStringDelegate;
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate;
+        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IPostDataAsyncDelegate<string> postUriDataAsyncDelegate;
         private readonly IConvertDelegate<string, UserData> convertJSONToUserDataDelegate;
         // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates;
         IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate;
@@ -53,8 +53,10 @@ namespace GOG.Controllers.Authorization
             "Delegates.Itemize.Attributes.ItemizeLoginIdAttributeValuesDelegate,Delegates",
             "Delegates.Itemize.Attributes.ItemizeLoginUsernameAttributeValuesDelegate,Delegates",
             "Delegates.Itemize.Attributes.ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate,Delegates",
-            "Controllers.Uri.UriController,Controllers",
-            "Controllers.Network.NetworkController,Controllers",
+            "Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate,Delegates",
+            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
+            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
+            "Delegates.PostData.Network.PostUriDataAsyncDelegate,Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToUserDataDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public GOGAuthorizationController(
@@ -64,10 +66,11 @@ namespace GOG.Controllers.Authorization
             IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate,
             IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate,
             IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate,
-            IUriController uriController,
-            INetworkController networkController,
+            IConvertDelegate<IDictionary<string, string>, string> convertDictionaryParametersToStringDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
+            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
+            IPostDataAsyncDelegate<string> postUriDataAsyncDelegate,
             IConvertDelegate<string, UserData> convertJSONToUserDataDelegate,
-            // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates,
             IActionLogController actionLogController)
         {
             this.correctUsernamePasswordAsyncDelegate = correctUsernamePasswordAsyncDelegate;
@@ -76,10 +79,10 @@ namespace GOG.Controllers.Authorization
             this.itemizeLoginIdAttributeValueDelegate = itemizeLoginIdAttributeValueDelegate;
             this.itemizeLoginUsernameAttributeValueDelegate = itemizeLoginUsernameAttributeValueDelegate;
             this.itemizeSecondStepAuthenticationTokenAttributeValueDelegate = itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
-            this.uriController = uriController;
-            this.networkController = networkController;
+            this.convertDictionaryParametersToStringDelegate = convertDictionaryParametersToStringDelegate;
+            this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
+            this.postUriDataAsyncDelegate = postUriDataAsyncDelegate;
             this.convertJSONToUserDataDelegate = convertJSONToUserDataDelegate;
-            // this.attributeValuesItemizeDelegates = attributeValuesItemizeDelegates;
             this.actionLogController = actionLogController;
         }
 
@@ -87,7 +90,7 @@ namespace GOG.Controllers.Authorization
         {
             actionLogController.StartAction("Get userData.json");
 
-            var userDataString = await networkController.GetResourceAsync(
+            var userDataString = await getUriDataAsyncDelegate.GetDataAsync(
                 Uris.Endpoints.Authentication.UserData);
 
             if (string.IsNullOrEmpty(userDataString)) return false;
@@ -103,10 +106,11 @@ namespace GOG.Controllers.Authorization
         {
             actionLogController.StartAction("Get authorization token response");
 
-            // request authorization token
-            var authResponse = await networkController.GetResourceAsync(
+            var uriParameters = convertUriParametersToUriDelegate.Convert((
                 Uris.Endpoints.Authentication.Auth,
-                QueryParametersCollections.Authenticate);
+                QueryParametersCollections.Authenticate));
+            // request authorization token
+            var authResponse = await getUriDataAsyncDelegate.GetDataAsync(uriParameters);
 
             actionLogController.CompleteAction();
 
@@ -143,9 +147,10 @@ namespace GOG.Controllers.Authorization
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginToken] = loginToken;
 
-            var loginData = uriController.ConcatenateQueryParameters(QueryParametersCollections.LoginAuthenticate);
+            var loginData = convertDictionaryParametersToStringDelegate.Convert(
+                QueryParametersCollections.LoginAuthenticate);
 
-            var loginCheckResult = await networkController.PostDataToResourceAsync(loginUri, null, loginData);
+            var loginCheckResult = await postUriDataAsyncDelegate.PostDataAsync(loginUri, loginData);
 
             actionLogController.CompleteAction();
 
@@ -174,11 +179,12 @@ namespace GOG.Controllers.Authorization
             QueryParametersCollections.SecondStepAuthentication[
                 QueryParameters.SecondStepAuthenticationToken] = secondStepAuthenticationToken;
 
-            var secondStepData = uriController.ConcatenateQueryParameters(
+            var secondStepData = convertDictionaryParametersToStringDelegate.Convert(
                 QueryParametersCollections.SecondStepAuthentication);
 
-            var secondStepLoginCheckResult = await networkController.PostDataToResourceAsync(
-                Uris.Endpoints.Authentication.TwoStep, null, secondStepData);
+            var secondStepLoginCheckResult = await postUriDataAsyncDelegate.PostDataAsync(
+                Uris.Endpoints.Authentication.TwoStep, 
+                secondStepData);
 
             actionLogController.CompleteAction();
 

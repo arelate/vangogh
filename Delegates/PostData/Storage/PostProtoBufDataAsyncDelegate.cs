@@ -18,13 +18,15 @@ namespace Delegates.PostData.Storage
             this.convertUriToWritableStreamDelegate = convertUriToWritableStreamDelegate;
         }
 
-        public async Task PostDataAsync(T data, string uri = null)
+        public async Task<string> PostDataAsync(T data, string uri = null)
         {
             await Task.Run(() =>
             {
                 using (var writableStream = convertUriToWritableStreamDelegate.Convert(uri))
                     Serializer.Serialize<T>(writableStream, data);
             });
+
+            return uri;
         }
     }
 }

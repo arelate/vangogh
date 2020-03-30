@@ -1,12 +1,6 @@
 using System.IO;
 
-using Attributes;
-
 using Interfaces.Delegates.Move;
-using Interfaces.Delegates.Confirm;
-using Interfaces.Delegates.Create;
-
-
 
 namespace Delegates.Move.IO
 {

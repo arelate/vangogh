@@ -21,9 +21,9 @@ namespace Delegates.PostData.Storage
             this.getPathDelegate = getPathDelegate;
         }
 
-        public async Task PostDataAsync(T data, string uri = null)
+        public async Task<string> PostDataAsync(T data, string uri = null)
         {
-            await postProtoBufDataAsyncDelegate.PostDataAsync(
+            return await postProtoBufDataAsyncDelegate.PostDataAsync(
                 data, 
                 getPathDelegate.GetPath(string.Empty, uri));
         }

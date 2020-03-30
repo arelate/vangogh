@@ -18,10 +18,10 @@ namespace Delegates.PostData.Storage
             this.convertTypeToJSONDelegate = convertTypeToJSONDelegate;
         }
 
-        public async Task PostDataAsync(T data, string uri = null)
+        public async Task<string> PostDataAsync(T data, string uri = null)
         {
             var serializedData = convertTypeToJSONDelegate.Convert(data);
-            await postStringDataAsyncDelegate.PostDataAsync(serializedData, uri);
+            return await postStringDataAsyncDelegate.PostDataAsync(serializedData, uri);
         }
     }
 }

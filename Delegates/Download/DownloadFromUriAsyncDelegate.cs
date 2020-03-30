@@ -29,7 +29,6 @@ namespace Delegates.Download
         {
             this.requestResponseAsyncDelegate = requestResponseAsyncDelegate;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
-
             this.actionLogController = actionLogController;
         }
 

@@ -1,7 +1,7 @@
-using Interfaces.Controllers.Network;
+using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
-
+using Interfaces.Delegates.GetData;
 
 using Attributes;
 
@@ -13,13 +13,16 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     public class GetDeserializedApiProductAsyncDelegate : GetDeserializedProductCoreAsyncDelegate<ApiProduct>
     {
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers",
+            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
+            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToApiProductDelegate,GOG.Delegates")]
         public GetDeserializedApiProductAsyncDelegate(
-            IGetResourceAsyncDelegate getResourceAsyncDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,            
+            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IConvertDelegate<string, ApiProduct> convertJSONToApiProductDelegate) :
             base(
-                getResourceAsyncDelegate,
+                convertUriParametersToUriDelegate,
+                getUriDataAsyncDelegate,
                 convertJSONToApiProductDelegate)
         {
             // ...

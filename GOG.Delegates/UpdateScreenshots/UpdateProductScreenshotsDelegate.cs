@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.GetData;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
-
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
 
@@ -23,7 +22,7 @@ namespace GOG.Delegates.UpdateScreenshots
     {
         readonly IGetValueDelegate<string> getUpdateUriDelegate;
         readonly IDataController<ProductScreenshots> screenshotsDataController;
-        readonly INetworkController networkController;
+        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
         readonly IItemizeDelegate<string, string> itemizeScreenshotsDelegates;
 
         readonly IActionLogController actionLogController;
@@ -31,19 +30,19 @@ namespace GOG.Delegates.UpdateScreenshots
         [Dependencies(
             "Delegates.GetValue.Uri.ProductTypes.GetScreenshotsUpdateUriDelegate,Delegates",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
-            "Controllers.Network.NetworkController,Controllers",
+            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
             "GOG.Delegates.Itemize.ItemizeScreenshotsDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateScreenshotsAsyncDelegate(
             IGetValueDelegate<string> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
-            INetworkController networkController,
+            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IItemizeDelegate<string, string> itemizeScreenshotsDelegates,
             IActionLogController actionLogController)
         {
             this.getUpdateUriDelegate = getUpdateUriDelegate;
             this.screenshotsDataController = screenshotsDataController;
-            this.networkController = networkController;
+            this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
             this.itemizeScreenshotsDelegates = itemizeScreenshotsDelegates;
             this.actionLogController = actionLogController;
         }
@@ -52,7 +51,7 @@ namespace GOG.Delegates.UpdateScreenshots
         {
             actionLogController.StartAction("Request product page containing screenshots information");
             var productPageUri = string.Format(getUpdateUriDelegate.GetValue(), product.Url);
-            var productPageContent = await networkController.GetResourceAsync(productPageUri);
+            var productPageContent = await getUriDataAsyncDelegate.GetDataAsync(productPageUri);
             actionLogController.CompleteAction();
 
             actionLogController.StartAction("Exract screenshots from the page");

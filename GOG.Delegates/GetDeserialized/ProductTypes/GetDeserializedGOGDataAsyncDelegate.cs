@@ -1,8 +1,8 @@
-using Interfaces.Controllers.Network;
+using System.Collections.Generic;
 
 using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.GetData;
 using Interfaces.Delegates.Convert;
-
 
 using Attributes;
 
@@ -15,15 +15,18 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         GetDeserializedDataAsyncDelegate<GOGData>
     {
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers",
+            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
+            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
             "GOG.Delegates.Itemize.ItemizeGOGDataDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGOGDataDelegate,GOG.Delegates")]
         public GetDeserializedGOGDataAsyncDelegate(
-            IGetResourceAsyncDelegate getResourceAsyncDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,            
+            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IItemizeDelegate<string, string> itemizeGogDataDelegate,
             IConvertDelegate<string, GOGData> convertJSONToGOGDataDelegate) :
             base(
-                getResourceAsyncDelegate,
+                convertUriParametersToUriDelegate,
+                getUriDataAsyncDelegate,
                 itemizeGogDataDelegate,
                 convertJSONToGOGDataDelegate)
         {
