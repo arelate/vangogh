@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Download;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Convert;
 
-
-using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Routing;
@@ -21,7 +19,8 @@ namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadManualUrlFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
-        readonly INetworkController networkController;
+        private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+            convertRequestToResponseAsyncDelegate;
         readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         readonly IRoutingController routingController;
         readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
@@ -29,21 +28,22 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
 
 		[Dependencies(
-			"Controllers.Network.NetworkController,Controllers",
+			"Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
 			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
 			"Controllers.Routing.RoutingController,Controllers",
 			"Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
 			"GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
 			"Controllers.Logs.ActionLogController,Controllers")]
         public DownloadManualUrlFileAsyncDelegate(
-            INetworkController networkController,
+            IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+                convertRequestToResponseAsyncDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IRoutingController routingController,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
             IActionLogController actionLogController)
         {
-            this.networkController = networkController;
+            this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.routingController = routingController;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
@@ -58,7 +58,8 @@ namespace GOG.Delegates.DownloadProductFile
             HttpResponseMessage response;
             try
             {
-                response = await networkController.RequestResponseAsync(HttpMethod.Get, sourceUri);
+                var request = new HttpRequestMessage(HttpMethod.Get, sourceUri);
+                response = await convertRequestToResponseAsyncDelegate.ConvertAsync(request);
             }
             catch (HttpRequestException ex)
             {

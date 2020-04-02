@@ -3,12 +3,10 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
 
-using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
-
 
 using Attributes;
 

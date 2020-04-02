@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 
 using Interfaces.Delegates.Download;
+using Interfaces.Delegates.Convert;
 
-using Interfaces.Controllers.Network;
 using Interfaces.Controllers.Logs;
 
 
@@ -14,20 +14,22 @@ namespace Delegates.Download
 {
     public class DownloadFromUriAsyncDelegate : IDownloadFromUriAsyncDelegate
     {
-        readonly IRequestResponseAsyncDelegate requestResponseAsyncDelegate;
+        private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+            convertRequestToResponseAsyncDelegate;
         readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
         readonly IActionLogController actionLogController;
 
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers",
+            "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
             "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromUriAsyncDelegate(
-            IRequestResponseAsyncDelegate requestResponseAsyncDelegate,
+            IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+                convertRequestToResponseAsyncDelegate,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
             IActionLogController actionLogController)
         {
-            this.requestResponseAsyncDelegate = requestResponseAsyncDelegate;
+            this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
             this.actionLogController = actionLogController;
         }
@@ -38,8 +40,9 @@ namespace Delegates.Download
 
             try
             {
-                using (var response = await requestResponseAsyncDelegate.RequestResponseAsync(HttpMethod.Get, sourceUri))
-                    await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(response, destination);
+                var request = new HttpRequestMessage(HttpMethod.Get, sourceUri);
+                using var response = await convertRequestToResponseAsyncDelegate.ConvertAsync(request);
+                await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(response, destination);
             }
             catch (Exception ex)
             {

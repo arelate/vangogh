@@ -15,7 +15,7 @@ namespace vangogh.Console
     {
         static async Task Main(string[] args)
         {
-            var assemblies = new string[] {
+            var assemblies = new[] {
                 // "Attributes",
                 // "Controllers",
                 "Delegates",
@@ -40,9 +40,8 @@ namespace vangogh.Console
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assembly.FullName.StartsWith("System.")) continue;
-                foreach (var type in assembly.ExportedTypes)
-                    types.Add(type);
+                if (assembly.FullName != null && assembly.FullName.StartsWith("System.")) continue;
+                types.AddRange(assembly.ExportedTypes);
             }
 
             foreach (var type in types)

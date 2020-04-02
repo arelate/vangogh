@@ -6,12 +6,12 @@ using Interfaces.Delegates.GetInstance;
 
 namespace Delegates.Convert.Network
 {
-    public class ConvertHttpRequestToHttpResponseAsyncDelegate :
+    public class ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate :
         IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
     {
         private readonly IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate;
 
-        public ConvertHttpRequestToHttpResponseAsyncDelegate(
+        public ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate(
             IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate)
         {
             this.getHttpClientInstanceDelegate = getHttpClientInstanceDelegate;
@@ -20,7 +20,10 @@ namespace Delegates.Convert.Network
         public async Task<HttpResponseMessage> ConvertAsync(HttpRequestMessage requestMessage)
         {
             var httpClient = getHttpClientInstanceDelegate.GetInstance();
-            var response = await httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+            
+            var response = await httpClient.SendAsync(
+                requestMessage, 
+                HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 

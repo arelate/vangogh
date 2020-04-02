@@ -2,47 +2,46 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.IO;
 using System.Text;
-
 using Attributes;
-
 using Interfaces.Delegates.PostData;
-using Interfaces.Delegates.GetInstance;
-
+using Interfaces.Delegates.Convert;
 using Models.Network;
 
 namespace Delegates.PostData.Network
 {
     public class PostUriDataAsyncDelegate : IPostDataAsyncDelegate<string>
     {
-        private readonly IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate;
+        private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+            convertRequestToResponseAsyncDelegate;
 
         [Dependencies(
             "Delegates.GetInstance.Network.GetHttpClientInstanceDelegate,Delegates")]
         public PostUriDataAsyncDelegate(
-            IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate)
+            IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+                convertRequestToResponseAsyncDelegate)
         {
-            this.getHttpClientInstanceDelegate = getHttpClientInstanceDelegate;
+            this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
         }
 
         public async Task<string> PostDataAsync(string data, string uri = null)
         {
             if (data == null) data = string.Empty;
-            var content = new StringContent(data, Encoding.UTF8, HeaderDefaultValues.ContentType);
-            var httpClient = getHttpClientInstanceDelegate.GetInstance();
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
-            if (content != null) requestMessage.Content = content;
-
-            using (var response = await httpClient.SendAsync(
-                requestMessage, 
-                HttpCompletionOption.ResponseHeadersRead))
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
-                response.EnsureSuccessStatusCode();
+                Content = new StringContent(
+                    data,
+                    Encoding.UTF8,
+                    HeaderDefaultValues.ContentType)
+            };
 
-                using (var stream = await response.Content.ReadAsStreamAsync())
-                using (var reader = new StreamReader(stream))
-                    return await reader.ReadToEndAsync();
-            }
+            using var response = await convertRequestToResponseAsyncDelegate.ConvertAsync(
+                requestMessage);
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(stream);
+
+            return await reader.ReadToEndAsync();
         }
     }
 }

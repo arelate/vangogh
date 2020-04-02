@@ -6,23 +6,39 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Cookie\CookieSerializationController.cs" />
+    <Compile Remove="Activity\**" />
+    <Compile Remove="Controllers\Hash\**" />
+    <Compile Remove="Controllers\Serialization\**" />
+    <Compile Remove="Controllers\SerializedStorage\**" />
+    <Compile Remove="Controllers\StrongTypeSerialization\**" />
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Activity\" />
-    <Folder Include="Controllers\Hash\" />
     <Folder Include="Delegates\GetPath\" />
     <Folder Include="Controllers\Records\" />
     <Folder Include="Models\RecordsTypes\" />
-    <Folder Include="Controllers\SerializedStorage\" />
     <Folder Include="Controllers\Storage\" />
-    <Folder Include="Controllers\Serialization\" />
-    <Folder Include="Controllers\StrongTypeSerialization\" />
     <Folder Include="Models\Entities\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Activity\**" />
+    <EmbeddedResource Remove="Controllers\Hash\**" />
+    <EmbeddedResource Remove="Controllers\Serialization\**" />
+    <EmbeddedResource Remove="Controllers\SerializedStorage\**" />
+    <EmbeddedResource Remove="Controllers\StrongTypeSerialization\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Activity\**" />
+    <None Remove="Controllers\Hash\**" />
+    <None Remove="Controllers\Serialization\**" />
+    <None Remove="Controllers\SerializedStorage\**" />
+    <None Remove="Controllers\StrongTypeSerialization\**" />
   </ItemGroup>
 
 </Project>
