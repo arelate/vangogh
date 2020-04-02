@@ -3,7 +3,6 @@
 using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Format;
 
-
 using Interfaces.Controllers.Logs;
 
 using Attributes;

@@ -1,6 +1,6 @@
 using Models.Patterns;
 
-namespace Delegates.Itemize.Attributes
+namespace Delegates.Itemize.HtmlAttributes
 {
     public class ItemizeLoginTokenAttributeValuesDelegate : ItemizeAttributeValuesDelegate
     {

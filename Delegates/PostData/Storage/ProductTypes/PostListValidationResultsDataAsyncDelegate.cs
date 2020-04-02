@@ -13,7 +13,7 @@ namespace Delegates.PostData.Storage.ProductTypes
     {
         [Dependencies(
             "Delegates.PostData.Storage.PostStringDataAsyncDelegate,Delegates",
-            "Delegates.Convert.JSON.System.ConvertListValidationResultsToJSONDelegate,Delegates")]        
+            "Delegates.Convert.JSON.ProductTypes.ConvertListValidationResultsToJSONDelegate,Delegates")]        
         public PostListValidationResultsDataAsyncDelegate(
             IPostDataAsyncDelegate<string> postStringDataAsyncDelegate, 
             IConvertDelegate<List<ValidationResults>, string> convertListValidationResultsToJSONDelegate) : 

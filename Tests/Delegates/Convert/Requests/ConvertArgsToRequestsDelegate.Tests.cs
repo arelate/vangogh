@@ -1,18 +1,14 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-
+using Delegates.Convert.Requests;
+using Interfaces.Delegates.Convert;
+using Models.Requests;
+using TestDelegates.Convert.Types;
+using TestModels.Requests;
 using Xunit;
 
-using Interfaces.Delegates.Convert;
-
-using Models.Requests;
-
-using TestDelegates.Convert.Types;
-
-using TestModels.Requests;
-
-namespace Delegates.Convert.Requests.Tests
+namespace Tests.Delegates.Convert.Requests
 {
     public class ConvertArgsToRequestsDelegateTests
     {
