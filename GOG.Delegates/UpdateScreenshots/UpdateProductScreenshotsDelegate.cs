@@ -30,7 +30,7 @@ namespace GOG.Delegates.UpdateScreenshots
         [Dependencies(
             "Delegates.GetValue.Uri.ProductTypes.GetScreenshotsUpdateUriDelegate,Delegates",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
-            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
+            "GOG.Delegates.GetData.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeScreenshotsDelegate,GOG.Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public UpdateScreenshotsAsyncDelegate(

@@ -40,7 +40,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
 
         [Dependencies(
             "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
+            "GOG.Delegates.GetData.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate,GOG.Delegates",
             "Delegates.Convert.ConvertLanguageToCodeDelegate,Delegates",

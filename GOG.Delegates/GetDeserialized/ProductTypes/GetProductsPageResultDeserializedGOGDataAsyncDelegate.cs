@@ -16,7 +16,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     {
         [Dependencies(
             "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
+            "GOG.Delegates.GetData.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeGOGDataDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToProductsPageResultDelegate,GOG.Delegates")]
         public GetProductsPageResultDeserializedGOGDataAsyncDelegate(

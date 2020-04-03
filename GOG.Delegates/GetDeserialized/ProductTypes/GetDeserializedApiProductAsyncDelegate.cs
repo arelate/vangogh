@@ -14,7 +14,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     {
         [Dependencies(
             "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
+            "GOG.Delegates.GetData.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToApiProductDelegate,GOG.Delegates")]
         public GetDeserializedApiProductAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,            
