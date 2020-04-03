@@ -24,19 +24,16 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             "GOG.Delegates.GetPageResults.ProductTypes.GetProductsPageResultsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeProductsPageResultProductsDelegate,GOG.Delegates",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
-            "Controllers.Records.Session.SessionRecordsController,Controllers",
             "Controllers.Logs.ActionLogController,Controllers")]
         public RespondToUpdateProductsRequestDelegate(
             IGetPageResultsAsyncDelegate<ProductsPageResult> getProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<ProductsPageResult>, Product> itemizeProductsPageResultsDelegate,
             IDataController<Product> productsDataController,
-            IRecordsController<string> activityRecordsController,
             IActionLogController actionLogController) :
             base(
                 getProductsPageResultsAsyncDelegate,
                 itemizeProductsPageResultsDelegate,
                 productsDataController,
-                activityRecordsController,
                 actionLogController)
         {
             // ...

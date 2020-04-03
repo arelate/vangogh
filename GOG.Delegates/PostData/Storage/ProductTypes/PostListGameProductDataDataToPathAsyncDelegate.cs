@@ -14,7 +14,7 @@ namespace GOG.Delegates.PostData.Storage.ProductTypes
     public class PostListGameProductDataDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<GameProductData>>
     {
         [Dependencies(
-            "Delegates.PostData.Storage.ProductTypes.PostListGameProductDataDataAsyncDelegate,Delegates",
+            "GOG.Delegates.PostData.Storage.ProductTypes.PostListGameProductDataDataAsyncDelegate,GOG.Delegates",
             "Delegates.GetPath.ProductTypes.GetGameProductDataPathDelegate,Delegates")]
         public PostListGameProductDataDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<GameProductData>> postListGameProductDataDataAsyncDelegate,

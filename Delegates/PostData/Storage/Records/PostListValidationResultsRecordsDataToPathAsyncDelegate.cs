@@ -12,8 +12,8 @@ namespace Delegates.PostData.Storage.Records
     public class PostListValidationResultsRecordsDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<ProductRecords>>
     {
         [Dependencies(
-            "Delegates.PostData.Storage.ProductTypes.PostListProductRecordsDataAsyncDelegate,Delegates",
-            "Delegates.GetPath.ProductTypes.GetValidationResultsRecordsPathDelegate,Delegates")]
+            "Delegates.PostData.Storage.Records.PostListProductRecordsDataAsyncDelegate,Delegates",
+            "Delegates.GetPath.Records.GetValidationResultsRecordsPathDelegate,Delegates")]
         public PostListValidationResultsRecordsDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<ProductRecords>> postListProductRecordsDataAsyncDelegate,
             IGetPathDelegate getValidationResultsRecordsPathDelegate) :

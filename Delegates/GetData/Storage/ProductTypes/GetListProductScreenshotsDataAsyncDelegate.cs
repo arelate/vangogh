@@ -13,7 +13,7 @@ namespace Delegates.GetData.Storage.ProductTypes
     {
         [Dependencies(
             "Delegates.GetData.Storage.GetStringDataAsyncDelegate,Delegates",
-            "Delegates.Convert.JSON.System.ConvertJSONToListProductScreenshotsDelegate,Delegates")]
+            "Delegates.Convert.JSON.ProductTypes.ConvertJSONToListProductScreenshotsDelegate,Delegates")]
         public GetListProductScreenshotsDataAsyncDelegate(
             IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
             IConvertDelegate<string, List<ProductScreenshots>> convertJSONToListProductScreenshotsDelegate) :

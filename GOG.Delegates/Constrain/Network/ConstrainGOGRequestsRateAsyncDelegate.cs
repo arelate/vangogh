@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Interfaces.Delegates.Constrain;
-using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Find;
-
-using Interfaces.Controllers.Logs;
-
-
 using Attributes;
+using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Constrain;
+using Interfaces.Delegates.Find;
+using Interfaces.Delegates.Itemize;
 
-namespace Delegates.Constrain
+namespace GOG.Delegates.Constrain.Network
 {
-    public class ConstrainRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
+    public class ConstrainGOGRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
     {
         readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
         readonly IFindDelegate<string> findStringDelegate;
@@ -30,7 +25,7 @@ namespace Delegates.Constrain
             "Delegates.Find.System.FindStringDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers",
             "GOG.Delegates.Itemize.ItemizeAllRateConstrainedUrisDelegate,GOG.Delegates")]
-        public ConstrainRequestRateAsyncDelegate(
+        public ConstrainGOGRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
             IFindDelegate<string> findStringDelegate,
             IActionLogController actionLogController,

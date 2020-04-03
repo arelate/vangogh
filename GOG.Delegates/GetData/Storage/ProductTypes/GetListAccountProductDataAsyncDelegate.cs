@@ -15,7 +15,7 @@ namespace GOG.Delegates.GetData.Storage.ProductTypes
     {
         [Dependencies(
             "Delegates.GetData.Storage.GetStringDataAsyncDelegate,Delegates",
-            "GOG.Delegates.Convert.JSON.System.ConvertJSONToListAccountProductDelegate,GOG.Delegates")]
+            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToListAccountProductDelegate,GOG.Delegates")]
         public GetListAccountProductDataAsyncDelegate(
             IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
             IConvertDelegate<string, List<AccountProduct>> convertJSONToListAccountProductDelegate) :

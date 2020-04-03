@@ -20,7 +20,7 @@ namespace Delegates.Download
         readonly IActionLogController actionLogController;
 
         [Dependencies(
-            "Delegates.Convert.Streams.ConvertUriToWritableDelegate,Delegates",
+            "Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate,Delegates",
             "Controllers.Logs.ActionLogController,Controllers")]
         public DownloadFromResponseAsyncDelegate(
             IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream,

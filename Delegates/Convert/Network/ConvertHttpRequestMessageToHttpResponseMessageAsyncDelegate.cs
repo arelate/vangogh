@@ -1,6 +1,8 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Attributes;
+
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetInstance;
 
@@ -11,13 +13,15 @@ namespace Delegates.Convert.Network
     {
         private readonly IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate;
 
+        [Dependencies(
+            "Delegates.GetInstance.Network.GetHttpClientInstanceDelegate,Delegates")]
         public ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate(
             IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate)
         {
             this.getHttpClientInstanceDelegate = getHttpClientInstanceDelegate;
         }
 
-        public async Task<HttpResponseMessage> ConvertAsync(HttpRequestMessage requestMessage)
+        public virtual async Task<HttpResponseMessage> ConvertAsync(HttpRequestMessage requestMessage)
         {
             var httpClient = getHttpClientInstanceDelegate.GetInstance();
             

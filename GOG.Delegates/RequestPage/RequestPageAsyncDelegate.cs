@@ -18,7 +18,8 @@ namespace GOG.Delegates.RequestPage
         const string pageQueryParameter = "page";
 
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers")]
+            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
+            "Delegates.GetData.Network.GetUriDataAsyncDelegate")]
         public RequestPageAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string,string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string> getUriDataAsyncDelegate)

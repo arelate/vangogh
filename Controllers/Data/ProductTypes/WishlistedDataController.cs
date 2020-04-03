@@ -16,7 +16,7 @@ namespace Controllers.Data.ProductTypes
     {
         [Dependencies(
             "Delegates.GetData.Storage.ProductTypes.GetListWishlistedDataFromPathAsyncDelegate,Delegates",
-            "Delegates.PostData.Storage.ProductTypes.PostListWishlistedDataToPathAsyncDelegate,Delegate",
+            "Delegates.PostData.Storage.ProductTypes.PostListWishlistedDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.WishlistedRecordsIndexController,Controllers",
             "Delegates.Find.System.FindLongDelegate,Delegates",

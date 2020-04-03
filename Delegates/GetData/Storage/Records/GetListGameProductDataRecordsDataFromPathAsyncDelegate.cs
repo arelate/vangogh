@@ -12,7 +12,7 @@ namespace Delegates.GetData.Storage.Records
     public class GetListGameProductDataRecordsDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<ProductRecords>>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.ProductTypes.GetListProductRecordsDataAsyncDelegate,Delegates",
+            "Delegates.GetData.Storage.Records.GetListProductRecordsDataAsyncDelegate,Delegates",
             "Delegates.GetPath.Records.GetGameProductDataRecordsPathDelegate,Delegates")]
         public GetListGameProductDataRecordsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductRecords>> getListProductRecordsDataAsyncDelegate, 

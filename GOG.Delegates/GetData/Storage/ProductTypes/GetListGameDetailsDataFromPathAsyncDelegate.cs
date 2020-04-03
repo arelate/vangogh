@@ -14,7 +14,7 @@ namespace GOG.Delegates.GetData.Storage.ProductTypes
     public class GetListGameDetailsDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<GameDetails>>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.ProductTypes.GetListGameDetailsDataAsyncDelegate,Delegates",
+            "GOG.Delegates.GetData.Storage.ProductTypes.GetListGameDetailsDataAsyncDelegate,GOG.Delegates",
             "Delegates.GetPath.ProductTypes.GetGameDetailsPathDelegate,Delegates")]
         public GetListGameDetailsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<GameDetails>> getListGameDetailsDataAsyncDelegate, 

@@ -14,14 +14,14 @@ namespace GOG.Delegates.GetData.Storage.ProductTypes
     public class GetListGameProductDataDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<GameProductData>>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.ProductTypes.GetListGameProductDataDataAsyncDelegate,Delegates",
+            "GOG.Delegates.GetData.Storage.ProductTypes.GetListGameProductDataDataAsyncDelegate,GOG.Delegates",
             "Delegates.GetPath.ProductTypes.GetGameProductDataPathDelegate,Delegates")]
         public GetListGameProductDataDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<GameProductData>> getListGameProductDataDataAsyncDelegate, 
-            IGetPathDelegate getGameProductDatasPathDelegate) : 
+            IGetPathDelegate getGameProductDataPathDelegate) : 
             base(
                 getListGameProductDataDataAsyncDelegate, 
-                getGameProductDatasPathDelegate)
+                getGameProductDataPathDelegate)
         {
             // ...
         }

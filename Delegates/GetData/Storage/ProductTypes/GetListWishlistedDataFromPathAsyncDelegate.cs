@@ -7,12 +7,12 @@ using Interfaces.Delegates.GetPath;
 
 namespace Delegates.GetData.Storage.ProductTypes
 {
-    public class GetWishlistedDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<long>>
+    public class GetListWishlistedDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<long>>
     {
         [Dependencies(
             "Delegates.GetData.Storage.ProductTypes.GetListWishlistedDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ProductTypes.GetWishlistedPathDelegate,Delegates")]
-        public GetWishlistedDataFromPathAsyncDelegate(
+        public GetListWishlistedDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<long>> getListWishlistedDataAsyncDelegate, 
             IGetPathDelegate getWishlistedPathDelegate) : 
             base(

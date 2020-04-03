@@ -15,7 +15,7 @@ namespace Delegates.PostData.Network
             convertRequestToResponseAsyncDelegate;
 
         [Dependencies(
-            "Delegates.GetInstance.Network.GetHttpClientInstanceDelegate,Delegates")]
+            "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates")]
         public PostUriDataAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate)

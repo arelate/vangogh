@@ -26,21 +26,18 @@ namespace GOG.Delegates.Respond.Update
         readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
         readonly IDataController<DataType> dataController;
-        readonly IRecordsController<string> activityRecordsController;
         private readonly IActionLogController actionLogController;
 
         public RespondToUpdatePageResultRequestDelegate(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IDataController<DataType> dataController,
-            IRecordsController<string> activityRecordsController,
             IActionLogController actionLogController)
         {
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
             this.dataController = dataController;
-            this.activityRecordsController = activityRecordsController;
             this.actionLogController = actionLogController;
         }
 
@@ -49,7 +46,6 @@ namespace GOG.Delegates.Respond.Update
             actionLogController.StartAction("Update products");
 
             var activityDescription = $"Update {typeof(DataType)}";
-            await activityRecordsController.SetRecordAsync(activityDescription, RecordsTypes.Started);
 
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync();
 
@@ -67,8 +63,6 @@ namespace GOG.Delegates.Respond.Update
 
                 actionLogController.CompleteAction();
             }
-
-            await activityRecordsController.SetRecordAsync(activityDescription, RecordsTypes.Completed);
 
             await dataController.CommitAsync();
 

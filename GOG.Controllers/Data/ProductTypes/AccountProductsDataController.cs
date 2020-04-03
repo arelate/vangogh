@@ -20,7 +20,7 @@ namespace GOG.Controllers.Data.ProductTypes
     {
         [Dependencies(
             "GOG.Delegates.GetData.Storage.ProductTypes.GetListAccountProductDataFromPathAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.PostData.Storage.ProductTypes.PostListAccountProductDataToPathAsyncDelegate,GOG.Delegate",
+            "GOG.Delegates.PostData.Storage.ProductTypes.PostListAccountProductDataToPathAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertAccountProductToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.AccountProductsRecordsIndexController,Controllers",
             "GOG.Delegates.Find.ProductTypes.FindAccountProductDelegate,GOG.Delegates",
