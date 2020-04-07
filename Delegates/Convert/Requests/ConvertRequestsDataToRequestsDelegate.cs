@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.Intersect;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Collections;
 
 
 using Attributes;
@@ -24,9 +24,9 @@ namespace Delegates.Convert.Requests
         private IIntersectDelegate<string> intersectStringDelegate;
 
         [Dependencies(
-            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates",
-            "Delegates.Intersect.System.IntersectStringDelegate,Delegates")]           
+            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
+            "Delegates.Collections.System.IntersectStringDelegate,Delegates")]           
         public ConvertRequestsDataToRequestsDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,

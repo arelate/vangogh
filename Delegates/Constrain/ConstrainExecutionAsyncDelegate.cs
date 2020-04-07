@@ -3,7 +3,7 @@
 using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Format;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Attributes;
 
@@ -13,23 +13,27 @@ namespace Delegates.Constrain
 {
     public class ConstrainExecutionAsyncDelegate : IConstrainAsyncDelegate<int>
     {
-        readonly IActionLogController actionLogController;
-        readonly IFormatDelegate<long, string> formatSecondsDelegate;
+        private readonly IFormatDelegate<long, string> formatSecondsDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Controllers.Logs.ActionLogController,Controllers",
-            "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates")]
+            "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public ConstrainExecutionAsyncDelegate(
-            IActionLogController actionLogController,
-            IFormatDelegate<long, string> formatSecondsDelegate)
+            IFormatDelegate<long, string> formatSecondsDelegate,
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.actionLogController = actionLogController;
             this.formatSecondsDelegate = formatSecondsDelegate;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task ConstrainAsync(int delaySeconds)
         {
-            actionLogController.StartAction(
+            startDelegate.Start(
                 $"Sleeping {formatSecondsDelegate.Format(delaySeconds)} before next operation");
 
             for (var ii = 0; ii < delaySeconds; ii++)
@@ -43,7 +47,7 @@ namespace Delegates.Constrain
                 //     TimeUnits.Seconds);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

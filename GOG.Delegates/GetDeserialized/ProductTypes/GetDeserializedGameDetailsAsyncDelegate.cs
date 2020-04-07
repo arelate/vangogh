@@ -8,8 +8,8 @@ using Interfaces.Delegates.Replace;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Map;
-using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 
@@ -40,7 +40,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
 
         [Dependencies(
             "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "GOG.Delegates.GetData.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate,GOG.Delegates",
             "Delegates.Convert.ConvertLanguageToCodeDelegate,Delegates",
@@ -50,7 +50,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             "GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadsDelegate,GOG.Delegates",
             "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate,GOG.Delegates",
-            "Delegates.Map.System.MapStringDelegate,Delegates")]
+            "Delegates.Collections.System.MapStringDelegate,Delegates")]
         public GetDeserializedGameDetailsAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,            
             IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,

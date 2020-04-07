@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Format;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -21,19 +21,25 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
 			"GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
 			"Delegates.Format.Uri.FormatImagesUriDelegate,Delegates",
 			"GOG.Delegates.GetImageUri.GetAccountProductImageUriDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public GetAccountProductImagesDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<AccountProduct> getAccountProductImageUriDelegate,
-            IActionLogController actionLogController):
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 updatedDataController,
                 accountProductsDataController,
                 formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

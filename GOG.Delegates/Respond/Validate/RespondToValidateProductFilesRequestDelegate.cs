@@ -11,7 +11,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Interfaces.Validation;
@@ -39,7 +39,9 @@ namespace GOG.Delegates.Respond.Validate
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
         readonly IDataController<long> updatedDataController;
         readonly IRoutingController routingController;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
             "Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
@@ -51,7 +53,9 @@ namespace GOG.Delegates.Respond.Validate
             "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
             "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
             "Controllers.Routing.RoutingController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToValidateProductFilesRequestDelegate(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
@@ -62,7 +66,9 @@ namespace GOG.Delegates.Respond.Validate
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IDataController<long> updatedDataController,
             IRoutingController routingController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
             this.productFileFilenameDelegate = productFileFilenameDelegate;
@@ -74,12 +80,15 @@ namespace GOG.Delegates.Respond.Validate
 
             this.updatedDataController = updatedDataController;
             this.routingController = routingController;
-            this.actionLogController = actionLogController;
+
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction("Validate products");
+            startDelegate.Start("Validate products");
 
             await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
@@ -93,11 +102,11 @@ namespace GOG.Delegates.Respond.Validate
                         Title = gameDetails.Title
                     };
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var localFiles = new List<string>();
 
-                actionLogController.StartAction("Enumerate local product files");
+                startDelegate.Start("Enumerate local product files");
                 foreach (var manualUrl in
                     await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
                 {
@@ -110,7 +119,7 @@ namespace GOG.Delegates.Respond.Validate
 
                     localFiles.Add(localFile);
                 }
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
 
 
                 // check if current validation results allow us to skip validating current product
@@ -120,11 +129,11 @@ namespace GOG.Delegates.Respond.Validate
 
                 var fileValidationResults = new List<IFileValidationResults>(localFiles.Count);
 
-                actionLogController.StartAction("Validate product files");
+                startDelegate.Start("Validate product files");
 
                 foreach (var localFile in localFiles)
                 {
-                    actionLogController.IncrementActionProgress();
+                    setProgressDelegate.SetProgress();
 
                     var validationFile = formatValidationFileDelegate.Format(localFile);
 
@@ -141,16 +150,16 @@ namespace GOG.Delegates.Respond.Validate
                     }
                 }
 
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
 
                 validationResults.Files = fileValidationResults.ToArray();
 
-                actionLogController.StartAction("Update validation results");
+                startDelegate.Start("Update validation results");
                 await validationResultsDataController.UpdateAsync(validationResults);
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

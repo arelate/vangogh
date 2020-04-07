@@ -3,7 +3,7 @@ using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -23,21 +23,27 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.GameProductDataDataController,GOG.Controllers",
             "GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsGameProductDataGapsAsyncDelegatepsDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameProductDataAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateGameProductDataRequestDelegate(
             IGetValueDelegate<string> getGameProductDataUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToGameProductDataUpdateIdentityDelegate,
             IDataController<GameProductData> gameProductDataDataController,
             IItemizeAllAsyncDelegate<Product> itemizeAllProductsGameProductDataGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameProductData> getDeserializedGameProductDataAsyncDelegate,
-            IActionLogController actionLogController):
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getGameProductDataUpdateUriDelegate,
                 convertProductToGameProductDataUpdateIdentityDelegate,
                 gameProductDataDataController,
                 itemizeAllProductsGameProductDataGapsAsyncDelegate,
                 getDeserializedGameProductDataAsyncDelegate,
-                actionLogController,
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate,
                 null)
                 {
                     // ...

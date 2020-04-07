@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Attributes;
 
-using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
 
 using GOG.Interfaces.Delegates.RequestPage;
@@ -19,7 +19,7 @@ namespace GOG.Delegates.RequestPage
 
         [Dependencies(
             "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "GOG.Delegates.GetData.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates")]
+            "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates")]
         public RequestPageAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string,string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string> getUriDataAsyncDelegate)

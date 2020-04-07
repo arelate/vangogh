@@ -3,7 +3,7 @@ using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -24,7 +24,9 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
             "GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatepsDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates",
             "GOG.Delegates.FillGaps.FillGameDetailsGapsDelegate,GOG.Delegates")]
         public RespondToUpdateGameDetailsRequestDelegate(
             IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
@@ -32,7 +34,9 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameDetails> getDeserializedGameDetailsAsyncDelegate,
-            IActionLogController actionLogController,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate,
             IFillGapsDelegate<GameDetails, AccountProduct> fillGameDetailsGapsDelegate) :
             base(
                 getGameDetailsUpdateUriDelegate,
@@ -40,7 +44,9 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 gameDetailsDataController,
                 itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
                 getDeserializedGameDetailsAsyncDelegate,
-                actionLogController,
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate,
                 fillGameDetailsGapsDelegate)
         {
             // ...

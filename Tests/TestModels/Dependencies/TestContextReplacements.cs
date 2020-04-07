@@ -7,8 +7,8 @@ namespace TestModels.Dependencies
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
             {
                 {
-                    "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                    "TestDelegates.GetData.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Tests"
+                    "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+                    "TestDelegates.Data.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Tests"
                 }
             };
     }

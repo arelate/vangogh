@@ -3,7 +3,7 @@
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -22,19 +22,25 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             "Delegates.GetValue.QueryParameters.ProductTypes.GetProductsUpdateQueryParametersDelegate,Delegates",
             "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToProductsPageResultDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public GetProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getProductsQueryUpdateQueryParameters,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
             IConvertDelegate<string, ProductsPageResult> convertJSONToProductsPageResultDelegate,
-            IActionLogController actionLogController):
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 getProductsUpdateUriDelegate,
                 getProductsQueryUpdateQueryParameters,
                 requestPageAsyncDelegate,
                 convertJSONToProductsPageResultDelegate,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

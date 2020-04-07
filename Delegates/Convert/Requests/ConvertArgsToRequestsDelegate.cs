@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Sort;
-
+using Interfaces.Delegates.Collections;
 
 using Attributes;
 
@@ -27,7 +26,7 @@ namespace Delegates.Convert.Requests
             "Delegates.Convert.Requests.ConvertTypedTokensToRequestsDataDelegate,Delegates",
             "Delegates.Convert.Requests.ConvertRequestsDataToResolvedCollectionsDelegate,Delegates",
             "Delegates.Convert.Requests.ConvertRequestsDataToResolvedDependenciesDelegate,Delegates",
-            "Delegates.Sort.Requests.SortRequestsMethodsByOrderAsyncDelegate,Delegates",
+            "Delegates.Collections.Requests.SortRequestsMethodsByOrderAsyncDelegate,Delegates",
             "Delegates.Convert.Requests.ConvertRequestsDataToRequestsDelegate,Delegates")]
         public ConvertArgsToRequestsDelegate(
             IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate,

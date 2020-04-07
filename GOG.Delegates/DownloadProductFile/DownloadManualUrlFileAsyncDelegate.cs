@@ -6,7 +6,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Routing;
 
@@ -24,8 +24,9 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         readonly IRoutingController routingController;
         readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        readonly IActionLogController actionLogController;
         readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
 		[Dependencies(
 			"Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
@@ -33,7 +34,8 @@ namespace GOG.Delegates.DownloadProductFile
 			"Controllers.Routing.RoutingController,Controllers",
 			"Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
 			"GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public DownloadManualUrlFileAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,
@@ -41,19 +43,21 @@ namespace GOG.Delegates.DownloadProductFile
             IRoutingController routingController,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.routingController = routingController;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
             this.downloadValidationFileAsyncDelegate = downloadValidationFileAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
         {
-           actionLogController.StartAction("Download game details manual url");
+           startDelegate.Start("Download game details manual url");
 
             HttpResponseMessage response;
             try
@@ -67,7 +71,7 @@ namespace GOG.Delegates.DownloadProductFile
                 //     downloadTask,
                 //     $"Failed to get successful response for {sourceUri} for " +
                 //     $"product {id}: {title}, message: {ex.Message}");
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
                 return;
             }
 
@@ -110,14 +114,15 @@ namespace GOG.Delegates.DownloadProductFile
                 // While the only difference validation files have - is additional extension.
                 // So instead we'll do a supplementary download using primary download information
 
-                await downloadValidationFileAsyncDelegate?.DownloadProductFileAsync(
-                    id, 
-                    title, 
-                    resolvedUri,
-                    destination);
+                if (downloadValidationFileAsyncDelegate != null)
+                    await downloadValidationFileAsyncDelegate?.DownloadProductFileAsync(
+                        id,
+                        title,
+                        resolvedUri,
+                        destination);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

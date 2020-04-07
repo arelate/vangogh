@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
-
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 using Attributes;
 
 using Controllers.Data;
@@ -19,26 +17,29 @@ namespace GOG.Controllers.Data.ProductTypes
     public class GameDetailsDataController : DataController<GameDetails>
     {
         [Dependencies(
-            "GOG.Delegates.GetData.Storage.ProductTypes.GetListGameDetailsDataFromPathAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.PostData.Storage.ProductTypes.PostListGameDetailsDataToPathAsyncDelegate,GOG.Delegates",            
+            "GOG.Delegates.Data.Storage.ProductTypes.GetListGameDetailsDataFromPathAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Storage.ProductTypes.PostListGameDetailsDataToPathAsyncDelegate,GOG.Delegates",            
             "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.GameDetailsRecordsIndexController,Controllers",
-            "GOG.Delegates.Find.ProductTypes.FindGameDetailsDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "GOG.Delegates.Collections.ProductTypes.FindGameDetailsDelegate,GOG.Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public GameDetailsDataController(
             IGetDataAsyncDelegate<List<GameDetails>> getListGameDetailsDataAsyncDelegate,
             IPostDataAsyncDelegate<List<GameDetails>> postListGameDetailsDataAsyncDelegate,
             IConvertDelegate<GameDetails, long> convertGameDetailsToIndexDelegate,
             IRecordsController<long> gameDetailsRecordsIndexController,
             IFindDelegate<GameDetails> findGameDetailsDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getListGameDetailsDataAsyncDelegate,
                 postListGameDetailsDataAsyncDelegate,
                 convertGameDetailsToIndexDelegate,
                 gameDetailsRecordsIndexController,
                 findGameDetailsDelegate,
-                actionLogController)
+                startDelegate,
+                completeDelegate)
         {
             // ...
         }

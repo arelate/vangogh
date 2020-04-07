@@ -6,7 +6,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Models.ProductTypes;
 
@@ -22,31 +22,37 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IDataController<long> updatedDataController;
         readonly IFormatDelegate<string, string> formatImagesUriDelegate;
         readonly IGetImageUriDelegate<T> getImageUriDelegate;
-        readonly IActionLogController actionLogController;
-
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
+        
         public GetProductCoreImagesDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<T> dataController,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<T> getImageUriDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.updatedDataController = updatedDataController;
             this.dataController = dataController;
             this.formatImagesUriDelegate = formatImagesUriDelegate;
             this.getImageUriDelegate = getImageUriDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-           actionLogController.StartAction("Get download sources");
+           startDelegate.Start("Get download sources");
 
             var productImageSources = new Dictionary<long, IList<string>>();
 
             await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var productCore = await dataController.GetByIdAsync(id);
 
@@ -64,7 +70,7 @@ namespace GOG.Delegates.GetDownloadSources
                     productImageSources[id].Add(source);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return productImageSources;
         }

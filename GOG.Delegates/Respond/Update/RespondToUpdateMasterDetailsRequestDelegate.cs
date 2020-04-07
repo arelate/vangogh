@@ -7,7 +7,7 @@ using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using GOG.Interfaces.Delegates.FillGaps;
 
@@ -30,7 +30,9 @@ namespace GOG.Delegates.Respond.Update
         readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
         private readonly IGetValueDelegate<string> getDetailUpdateUriDelegate;
-        private readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;        
 
         public RespondToUpdateMasterDetailsRequestDelegate(
             IGetValueDelegate<string> getDetailUpdateUriDelegate,
@@ -38,7 +40,9 @@ namespace GOG.Delegates.Respond.Update
             IDataController<DetailType> detailDataController,
             IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate,
-            IActionLogController actionLogController,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate,
             IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null)
         {
             this.detailDataController = detailDataController;
@@ -50,17 +54,20 @@ namespace GOG.Delegates.Respond.Update
             this.fillGapsDelegate = fillGapsDelegate;
 
             this.getDetailUpdateUriDelegate = getDetailUpdateUriDelegate;
-            this.actionLogController = actionLogController;
+            
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;            
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction($"Update {typeof(DetailType).Name}");
+            startDelegate.Start($"Update {typeof(DetailType).Name}");
 
             await foreach (var masterProductWithoutDetail in
                 itemizeAllMasterDetailGapsAsyncDelegate.ItemizeAllAsync())
             {
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var detailUpdateIdentity =
                     convertMasterTypeToDetailUpdateIdentityDelegate.Convert(
@@ -85,7 +92,7 @@ namespace GOG.Delegates.Respond.Update
 
             await detailDataController.CommitAsync();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

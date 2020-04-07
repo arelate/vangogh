@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
 
 using Interfaces.Models.RecordsTypes;
 
@@ -15,14 +14,11 @@ namespace Controllers.Records
     public abstract class IndexRecordsController : IRecordsController<long>
     {
         readonly IDataController<ProductRecords> productRecordsController;
-        readonly IActionLogController actionLogController;
 
         public IndexRecordsController(
-            IDataController<ProductRecords> productRecordsController,
-            IActionLogController actionLogController)
+            IDataController<ProductRecords> productRecordsController)
         {
             this.productRecordsController = productRecordsController;
-            this.actionLogController = actionLogController;
         }
 
         public async Task CommitAsync()

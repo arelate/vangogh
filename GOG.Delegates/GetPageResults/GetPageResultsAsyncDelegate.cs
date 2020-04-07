@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Models.Units;
 
@@ -21,14 +21,18 @@ namespace GOG.Delegates.GetPageResults
         readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
         readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
         private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public GetPageResultsAsyncDelegate(
             IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
             IConvertDelegate<string, T> convertJSONToTypeDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.getPageResultsUpdateUriDelegate = getPageResultsUpdateUriDelegate;
             this.getPageResultsUpdateQueryParametersDelegate = getPageResultsUpdateQueryParametersDelegate;
@@ -36,7 +40,9 @@ namespace GOG.Delegates.GetPageResults
             this.requestPageAsyncDelegate = requestPageAsyncDelegate;
             this.convertJSONToTypeDelegate = convertJSONToTypeDelegate;
 
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<IList<T>> GetPageResultsAsync()
@@ -59,7 +65,7 @@ namespace GOG.Delegates.GetPageResults
             var requestUri = getPageResultsUpdateUriDelegate.GetValue();
             var requestParameters = getPageResultsUpdateQueryParametersDelegate.GetValue();
 
-            actionLogController.StartAction($"Request pages data");
+            startDelegate.Start($"Request pages data");
 
             do
             {
@@ -68,7 +74,7 @@ namespace GOG.Delegates.GetPageResults
                     requestParameters, 
                     currentPage);
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 pageResult = convertJSONToTypeDelegate.Convert(response);
 
@@ -80,7 +86,7 @@ namespace GOG.Delegates.GetPageResults
 
             } while (++currentPage <= totalPages);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return pageResults;
         }

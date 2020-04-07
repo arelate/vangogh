@@ -1,5 +1,5 @@
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -11,14 +11,11 @@ namespace Controllers.Records.ProductTypes
     public class GameDetailsRecordsIndexController : IndexRecordsController
     {
         [Dependencies(
-            "Controllers.Data.Records.GameDetailsRecordsDataController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Controllers.Data.Records.GameDetailsRecordsDataController,Controllers")]
         public GameDetailsRecordsIndexController(
-            IDataController<ProductRecords> gameDetailsRecordsController,
-            IActionLogController actionLogController) :
+            IDataController<ProductRecords> gameDetailsRecordsController) :
             base(
-                gameDetailsRecordsController,
-                actionLogController)
+                gameDetailsRecordsController)
         {
             // ...
         }

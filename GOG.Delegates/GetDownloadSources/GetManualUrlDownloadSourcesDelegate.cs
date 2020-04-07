@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
@@ -20,34 +20,42 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IDataController<long> updatedDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public GetManualUrlDownloadSourcesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsManualUrlsAsyncController = itemizeGameDetailsManualUrlsAsyncController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            actionLogController.StartAction("Get download sources");
+            startDelegate.Start("Get download sources");
 
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 
             await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
@@ -62,7 +70,7 @@ namespace GOG.Delegates.GetDownloadSources
                 }
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return gameDetailsDownloadSources;
         }

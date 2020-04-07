@@ -2,14 +2,12 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Correct;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
-
+using Interfaces.Delegates.Data;
 using Attributes;
 
 using Models.Uris;
@@ -44,7 +42,8 @@ namespace GOG.Controllers.Authorization
         IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate;
         IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
 
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
             "Delegates.Correct.CorrectUsernamePasswordAsyncDelegate,Delegates",
@@ -55,10 +54,11 @@ namespace GOG.Controllers.Authorization
             "Delegates.Itemize.HtmlAttributes.ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate,Delegates",
             "Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate,Delegates",
             "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "Delegates.GetData.Network.GetUriDataAsyncDelegate,Delegates",
-            "Delegates.PostData.Network.PostUriDataAsyncDelegate,Delegates",
+            "Delegates.Data.Network.GetUriDataAsyncDelegate,Delegates",
+            "Delegates.Data.Network.PostUriDataAsyncDelegate,Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToUserDataDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public GOGAuthorizationController(
             ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
             ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate,
@@ -71,7 +71,8 @@ namespace GOG.Controllers.Authorization
             IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IPostDataAsyncDelegate<string> postUriDataAsyncDelegate,
             IConvertDelegate<string, UserData> convertJSONToUserDataDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.correctUsernamePasswordAsyncDelegate = correctUsernamePasswordAsyncDelegate;
             this.correctSecurityCodeAsyncDelegate = correctSecurityCodeAsyncDelegate;
@@ -83,12 +84,13 @@ namespace GOG.Controllers.Authorization
             this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
             this.postUriDataAsyncDelegate = postUriDataAsyncDelegate;
             this.convertJSONToUserDataDelegate = convertJSONToUserDataDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<bool> AuthorizedAsync()
         {
-            actionLogController.StartAction("Get userData.json");
+            startDelegate.Start("Get userData.json");
 
             var userDataString = await getUriDataAsyncDelegate.GetDataAsync(
                 Uris.Endpoints.Authentication.UserData);
@@ -97,14 +99,14 @@ namespace GOG.Controllers.Authorization
 
             var userData = convertJSONToUserDataDelegate.Convert(userDataString);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return userData.IsLoggedIn;
         }
 
         public async Task<string> GetAuthenticationTokenResponseAsync()
         {
-            actionLogController.StartAction("Get authorization token response");
+            startDelegate.Start("Get authorization token response");
 
             var uriParameters = convertUriParametersToUriDelegate.Convert((
                 Uris.Endpoints.Authentication.Auth,
@@ -112,14 +114,14 @@ namespace GOG.Controllers.Authorization
             // request authorization token
             var authResponse = await getUriDataAsyncDelegate.GetDataAsync(uriParameters);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return authResponse;
         }
 
         public async Task<string> GetLoginCheckResponseAsync(string authResponse, string username, string password)
         {
-            actionLogController.StartAction("Get login check result");
+            startDelegate.Start("Get login check result");
 
             var loginToken = itemizeLoginTokenAttribueValueDelegate.Itemize(authResponse).First();
 
@@ -152,14 +154,14 @@ namespace GOG.Controllers.Authorization
 
             var loginCheckResult = await postUriDataAsyncDelegate.PostDataAsync(loginUri, loginData);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return loginCheckResult;
         }
 
         public async Task<string> GetTwoStepLoginCheckResponseAsync(string loginCheckResult)
         {
-            actionLogController.StartAction("Get second step authentication result");
+            startDelegate.Start("Get second step authentication result");
 
             // 2FA is enabled for this user - ask for the code
             var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null);
@@ -186,7 +188,7 @@ namespace GOG.Controllers.Authorization
                 Uris.Endpoints.Authentication.TwoStep, 
                 secondStepData);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return secondStepLoginCheckResult;
         }
@@ -202,7 +204,7 @@ namespace GOG.Controllers.Authorization
             if (response.Contains(gogData))
             {
                 // await statusController.InformAsync(status, successfullyAuthorized);
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
                 return true;
             }
 
@@ -219,12 +221,12 @@ namespace GOG.Controllers.Authorization
             // - We can also detect CAPTCHA and inform users what to do - this is typical for sales periods
             //   where it seems GOG.com tries to limit automated tools impact on the site
 
-            actionLogController.StartAction("Authorize on GOG.com");
+            startDelegate.Start("Authorize on GOG.com");
 
             if (await AuthorizedAsync())
             {
                 // await statusController.InformAsync(authorizeTask, "User has already been logged in");
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
                 return;
             }
 

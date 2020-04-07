@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.Delegates.Respond;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 
@@ -17,17 +17,21 @@ namespace GOG.Delegates.Respond.Authorize
     public class RespondToAuthorizeRequestDelegate : IRespondAsyncDelegate
     {
         readonly IAuthorizationController authorizationController;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
             "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToAuthorizeRequestDelegate(
             IAuthorizationController authorizationController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.authorizationController = authorizationController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)

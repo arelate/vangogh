@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
-
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 using Attributes;
 
 using Controllers.Data;
@@ -19,26 +17,29 @@ namespace GOG.Controllers.Data.ProductTypes
     public class AccountProductsDataController : DataController<AccountProduct>
     {
         [Dependencies(
-            "GOG.Delegates.GetData.Storage.ProductTypes.GetListAccountProductDataFromPathAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.PostData.Storage.ProductTypes.PostListAccountProductDataToPathAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Storage.ProductTypes.GetListAccountProductDataFromPathAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Storage.ProductTypes.PostListAccountProductDataToPathAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertAccountProductToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.AccountProductsRecordsIndexController,Controllers",
-            "GOG.Delegates.Find.ProductTypes.FindAccountProductDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "GOG.Delegates.Collections.ProductTypes.FindAccountProductDelegate,GOG.Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public AccountProductsDataController(
             IGetDataAsyncDelegate<List<AccountProduct>> getListAccountProductDataAsyncDelegate,
             IPostDataAsyncDelegate<List<AccountProduct>> postListAccountProductDataAsyncDelegate,
             IConvertDelegate<AccountProduct, long> convertAccountProductsToIndexDelegate,
             IRecordsController<long> accountProductsRecordsIndexController,
             IFindDelegate<AccountProduct> findAccountProductDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getListAccountProductDataAsyncDelegate,
                 postListAccountProductDataAsyncDelegate,
                 convertAccountProductsToIndexDelegate,
                 accountProductsRecordsIndexController,
                 findAccountProductDelegate,
-                actionLogController)
+                startDelegate,
+                completeDelegate)
         {
             // ...
         }

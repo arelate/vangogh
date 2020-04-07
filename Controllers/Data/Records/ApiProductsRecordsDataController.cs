@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
-
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 using Attributes;
 
 using Models.ProductTypes;
@@ -16,24 +14,27 @@ namespace Controllers.Data.Records
     public class ApiProductsRecordsDataController : DataController<ProductRecords>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.Records.GetListApiProductsRecordsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.PostData.Storage.Records.PostListApiProductsRecordsDataToPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.Records.GetListApiProductsRecordsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.Records.PostListApiProductsRecordsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
-            "Delegates.Find.ProductTypes.FindProductRecordsDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Collections.ProductTypes.FindProductRecordsDelegate,Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public ApiProductsRecordsDataController(
             IGetDataAsyncDelegate<List<ProductRecords>> getApiProductsRecordsDataAsyncDelegate,
             IPostDataAsyncDelegate<List<ProductRecords>> postApiProductsRecordsDataAsyncDelegate,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             IFindDelegate<ProductRecords> findProductRecordsDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getApiProductsRecordsDataAsyncDelegate,
                 postApiProductsRecordsDataAsyncDelegate,
                 convertProductRecordsToIndexDelegate,
                 null,
                 findProductRecordsDelegate,
-                actionLogController)
+                startDelegate,
+                completeDelegate)
         {
             // ...
         }

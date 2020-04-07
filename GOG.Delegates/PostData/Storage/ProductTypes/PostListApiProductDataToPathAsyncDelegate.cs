@@ -1,20 +1,17 @@
 using System.Collections.Generic;
 
 using Attributes;
-
-using Interfaces.Delegates.PostData;
+using Delegates.Data.Storage;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.GetPath;
-
-using Delegates.PostData.Storage;
-
 using GOG.Models;
 
-namespace GOG.Delegates.PostData.Storage.ProductTypes
+namespace GOG.Delegates.Data.Storage.ProductTypes
 {
     public class PostListApiProductDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<ApiProduct>>
     {
         [Dependencies(
-            "GOG.Delegates.PostData.Storage.ProductTypes.PostListApiProductDataAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Storage.ProductTypes.PostListApiProductDataAsyncDelegate,GOG.Delegates",
             "Delegates.GetPath.ProductTypes.GetApiProductsPathDelegate,Delegates")]
         public PostListApiProductDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<ApiProduct>> postListApiProductDataAsyncDelegate,

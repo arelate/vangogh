@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Models.ProductTypes;
 using Models.Separators;
@@ -18,21 +18,27 @@ namespace GOG.Delegates.Respond.Download
     {
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public RespondToDownloadRequestDelegate(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.productDownloadsDataController = productDownloadsDataController;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction(
+            startDelegate.Start(
                 $"Process updated {typeof(Type)} downloads");
 
             var emptyProductDownloads = new List<ProductDownloads>();
@@ -52,7 +58,7 @@ namespace GOG.Delegates.Respond.Download
                     d =>
                     d.Type == typeof(Type).ToString()).ToArray();
 
-                actionLogController.StartAction($"Download {typeof(Type)} entries");
+                startDelegate.Start($"Download {typeof(Type)} entries");
 
                 for (var ii = 0; ii < downloadEntries.Length; ii++)
                 {
@@ -62,7 +68,7 @@ namespace GOG.Delegates.Respond.Download
                     if (sanitizedUri.Contains(Separators.QueryString))
                         sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
 
-                   actionLogController.IncrementActionProgress();
+                   setProgressDelegate.SetProgress();
 
                     await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
                         productDownloads.Id,
@@ -70,29 +76,29 @@ namespace GOG.Delegates.Respond.Download
                         sanitizedUri,
                         entry.Destination);
 
-                    actionLogController.StartAction($"Remove scheduled {typeof(Type)} downloaded entry");
+                    startDelegate.Start($"Remove scheduled {typeof(Type)} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
                     await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                    actionLogController.CompleteAction();
+                    completeDelegate.Complete();
                 }
 
                 // if there are no scheduled downloads left - mark file for removal
                 if (productDownloads.Downloads.Count == 0)
                     emptyProductDownloads.Add(productDownloads);
 
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
             }
 
-            actionLogController.StartAction("Clear empty downloads");
+            startDelegate.Start("Clear empty downloads");
 
             foreach (var productDownload in emptyProductDownloads)
                 await productDownloadsDataController.DeleteAsync(productDownload);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

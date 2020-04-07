@@ -8,7 +8,7 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Models.ProductTypes;
 
@@ -22,7 +22,9 @@ namespace GOG.Delegates.Respond.Cleanup
         readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
         readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
         readonly IRecycleDelegate recycleDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public RespondToCleanupRequestDelegate(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
@@ -30,19 +32,23 @@ namespace GOG.Delegates.Respond.Cleanup
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.itemizeAllExpectedItemsAsyncDelegate = itemizeAllExpectedItemsAsyncDelegate;
             this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
             this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
             this.recycleDelegate = recycleDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction($"Cleanup {typeof(Type)}");
+            startDelegate.Start($"Cleanup {typeof(Type)}");
 
             var unexpectedItems = new List<string>();
             await foreach (var actualItem in itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync())
@@ -60,15 +66,15 @@ namespace GOG.Delegates.Respond.Cleanup
                     cleanupItems.Add(formatSupplementaryItemDelegate.Format(detailedItem));
                 }
 
-            actionLogController.StartAction("Move unexpected items to recycle bin");
+            startDelegate.Start("Move unexpected items to recycle bin");
 
             foreach (var item in cleanupItems)
             {
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
                 recycleDelegate.Recycle(item);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             // check if any of the directories are left empty and delete
             var emptyDirectories = new List<string>();
@@ -84,7 +90,7 @@ namespace GOG.Delegates.Respond.Cleanup
             foreach (var directory in emptyDirectories)
                 Directory.Delete(directory);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

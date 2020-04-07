@@ -2,7 +2,7 @@ using System;
 
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Find;
+using Interfaces.Delegates.Collections;
 
 
 using Attributes;
@@ -17,7 +17,7 @@ namespace Delegates.Convert.Requests
         private readonly IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate;
 
         [Dependencies(
-            "Delegates.Find.System.FindTypeDelegate,Delegates",
+            "Delegates.Collections.System.FindTypeDelegate,Delegates",
             "Delegates.Itemize.Types.Attributes.ItemizeAllRespondsToRequestsAttributeTypesDelegate,Delegates")]
         public ConvertRequestToRespondDelegateTypeDelegate(
             IFindDelegate<Type> findTypeDelegate,

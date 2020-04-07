@@ -2,7 +2,7 @@
 using System.IO;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Delegates.Itemize;
 
@@ -19,34 +19,42 @@ namespace GOG.Delegates.Itemize
         readonly IDataController<long> updatedDataController;
         readonly IDataController<GameDetails> gameDetailsDataController;
         readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
 			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
 			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public ItemizeAllUpdatedProductFilesAsyncDelegate(
             IDataController<long> updatedDataController,
             IDataController<GameDetails> gameDetailsDataController,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.updatedDataController = updatedDataController;
             this.gameDetailsDataController = gameDetailsDataController;
             this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async IAsyncEnumerable<string> ItemizeAllAsync()
         {
-            actionLogController.StartAction("Enumerate updated productFiles");
+            startDelegate.Start("Enumerate updated productFiles");
 
             await foreach (var id in updatedDataController.ItemizeAllAsync())
             {
                 var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var gameDetailsDirectories =
                     await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
@@ -57,7 +65,7 @@ namespace GOG.Delegates.Itemize
                         yield return updatedFile;
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

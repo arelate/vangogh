@@ -1,20 +1,17 @@
 using System.Collections.Generic;
 
 using Attributes;
-
+using Delegates.Data.Storage;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetData;
-
-using Delegates.GetData.Storage;
-
+using Interfaces.Delegates.Data;
 using GOG.Models;
 
-namespace GOG.Delegates.GetData.Storage.ProductTypes
+namespace GOG.Delegates.Data.Storage.ProductTypes
 {
     public class GetListApiProductDataAsyncDelegate : GetJSONDataAsyncDelegate<List<ApiProduct>>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.GetStringDataAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToListApiProductDelegate,GOG.Delegates")]
         public GetListApiProductDataAsyncDelegate(
             IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,

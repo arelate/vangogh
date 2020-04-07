@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
+using Interfaces.Delegates.Collections;
 
 
 using Attributes;
@@ -21,8 +21,8 @@ namespace Delegates.Convert.ArgsTokens
         private IFindDelegate<MethodsSet> findMethodsSetDelegate;
 
         [Dependencies(
-            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Find.ArgsDefinitions.FindMethodsSetDelegate,Delegates")]         
+            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate,Delegates")]         
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<MethodsSet> findMethodsSetDelegate)

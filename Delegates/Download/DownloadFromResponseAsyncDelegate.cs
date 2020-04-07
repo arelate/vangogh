@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
@@ -17,17 +17,13 @@ namespace Delegates.Download
     public class DownloadFromResponseAsyncDelegate : IDownloadFromResponseAsyncDelegate
     {
         readonly IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream;
-        readonly IActionLogController actionLogController;
 
         [Dependencies(
-            "Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate,Delegates")]
         public DownloadFromResponseAsyncDelegate(
-            IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream,
-            IActionLogController actionLogController)
+            IConvertDelegate<string, System.IO.Stream> convertUriToWritableRStream)
         {
             this.convertUriToWritableRStream = convertUriToWritableRStream;
-            this.actionLogController = actionLogController;
         }
 
         public async Task DownloadFromResponseAsync(HttpResponseMessage response, string destination)

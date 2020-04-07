@@ -1,5 +1,5 @@
 
-using Interfaces.Delegates.Map;
+using Interfaces.Delegates.Collections;
 
 using Delegates.Confirm;
 
@@ -12,7 +12,7 @@ namespace GOG.Delegates.Confirm.ProductTypes
     public class ConfirmGameDetailsContainsLanguageDelegate : ConfirmStringMatchesAllDelegate
     {
         [Dependencies(
-            "Delegates.Map.System.MapStringDelegate,Delegates")]
+            "Delegates.Collections.System.MapStringDelegate,Delegates")]
         public ConfirmGameDetailsContainsLanguageDelegate(
             IMapDelegate<string> mapStringDelegate) :
             base(

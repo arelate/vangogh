@@ -3,8 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 
 
 using Attributes;
@@ -24,9 +24,9 @@ namespace Delegates.Convert.ArgsTokens
         private IFindDelegate<Parameter> findParameterDelegate;
 
         [Dependencies(
-            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Find.ArgsDefinitions.FindMethodDelegate,Delegates",
-            "Delegates.Find.ArgsDefinitions.FindParameterDelegate,Delegates")]
+            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
+            "Delegates.Collections.ArgsDefinitions.FindParameterDelegate,Delegates")]
         public ConvertLikelyTypedToTypedTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,

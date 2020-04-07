@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Confirm;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 
 using Interfaces.Models.Properties;
 
@@ -23,8 +23,8 @@ namespace Delegates.Confirm.ArgsTokens
         private readonly IFindDelegate<ITitleProperty> findITitlePropertyDelegate;
 
         [Dependencies(
-            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Find.Properties.FindITitlePropertyDelegate,Delegates")]
+            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Collections.Properties.FindITitlePropertyDelegate,Delegates")]
         public ConfirmLikelyTokenTypeDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<ITitleProperty> findITitlePropertyDelegate)

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.Find;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirm;
 
 using Attributes;
@@ -21,8 +21,8 @@ namespace Delegates.Convert.Requests
         private readonly IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExclusiveStringDelegate;
 
         [Dependencies(
-            "Delegates.GetData.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Find.ArgsDefinitions.FindDependencyDelegate,Delegates",
+            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Collections.ArgsDefinitions.FindDependencyDelegate,Delegates",
             "Delegates.Confirm.System.ConfirmExclusiveStringDelegate,Delegates")]
         public ConvertRequestsDataToResolvedDependenciesDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,

@@ -2,7 +2,7 @@
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -20,21 +20,27 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
             "Delegates.Itemize.ItemizePassthroughDelegate,Delegates",
             "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
             "Delegates.Recycle.RecycleDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToCleanupDirectoriesRequestDelegate(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedProductDirectoriesAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualProductDirectoriesAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 itemizeAllExpectedProductDirectoriesAsyncDelegate,
                 itemizeAllActualProductDirectoriesAsyncDelegate,
                 itemizeDetailsDelegate,
                 formatSupplementaryItemDelegate,
                 recycleDelegate,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

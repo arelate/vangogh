@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetData;
+using Interfaces.Delegates.Data;
 
 using GOG.Interfaces.Delegates.GetDeserialized;
 

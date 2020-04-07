@@ -7,7 +7,7 @@ using System.Xml;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Interfaces.Validation;
@@ -27,26 +27,22 @@ namespace Controllers.Validation
         XmlDocument validationXml;
         IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
         IValidationResultController validationResultController;
-        IActionLogController actionLogController;
 
         [Dependencies(
             "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
             "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates",
             "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
-            "Controllers.ValidationResult.ValidationResultController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Controllers.ValidationResult.ValidationResultController,Controllers")]
         public FileValidationController(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate,
             IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate,
-            IValidationResultController validationResultController,
-            IActionLogController actionLogController)
+            IValidationResultController validationResultController)
         {
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
             this.convertUriToReadableStreamDelegate = convertUriToReadableStreamDelegate;
             this.convertBytesToHashDelegate = convertBytesToHashDelegate;
             this.validationResultController = validationResultController;
-            this.actionLogController = actionLogController;
 
             validationXml = new XmlDocument { PreserveWhitespace = false };
         }

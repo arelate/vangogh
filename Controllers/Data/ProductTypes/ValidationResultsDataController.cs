@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
-
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Attributes;
 
 using Models.ProductTypes;
@@ -17,26 +15,29 @@ namespace Controllers.Data.ProductTypes
     public class ValidationResultsDataController : DataController<ValidationResults>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.ProductTypes.GetListValidationResultsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.PostData.Storage.ProductTypes.PostListValidationResultsDataToPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.ProductTypes.GetListValidationResultsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.ProductTypes.PostListValidationResultsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.ProductTypes.ConvertValidationResultsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ValidationResultsRecordsIndexController,Controllers",
-            "Delegates.Find.ProductTypes.FindValidationResultsDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Collections.ProductTypes.FindValidationResultsDelegate,Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public ValidationResultsDataController(
             IGetDataAsyncDelegate<List<ValidationResults>> getValidationResultsDataAsyncDelegate,
             IPostDataAsyncDelegate<List<ValidationResults>> postValidationResultsDataAsyncDelegate,
             IConvertDelegate<ValidationResults, long> convertValidationResultsToIndexDelegate,
             IRecordsController<long> validationResultsRecordsIndexController,
             IFindDelegate<ValidationResults> findValidationResultsDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getValidationResultsDataAsyncDelegate,
                 postValidationResultsDataAsyncDelegate,
                 convertValidationResultsToIndexDelegate,
                 validationResultsRecordsIndexController,
                 findValidationResultsDelegate,
-                actionLogController)
+                startDelegate,
+                completeDelegate)
         {
             // ...
         }

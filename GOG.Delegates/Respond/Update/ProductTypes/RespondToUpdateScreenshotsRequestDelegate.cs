@@ -4,7 +4,7 @@ using System.Linq;
 
 using Interfaces.Delegates.Respond;
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using GOG.Interfaces.Delegates.UpdateScreenshots;
@@ -23,37 +23,45 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         readonly IDataController<Product> productsDataController;
         readonly IDataController<ProductScreenshots> productScreenshotsDataController;
         readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
-        readonly IActionLogController actionLogController;
-
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
+        
         [Dependencies(
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
             "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateScreenshotsRequestDelegate(
             IDataController<Product> productsDataController,
             IDataController<ProductScreenshots> productScreenshotsDataController,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.productsDataController = productsDataController;
             this.productScreenshotsDataController = productScreenshotsDataController;
             this.updateScreenshotsAsyncDelegate = updateScreenshotsAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction("Update Screenshots");
+            startDelegate.Start("Update Screenshots");
 
-            actionLogController.StartAction("Get updates");
+            startDelegate.Start("Get updates");
             var productsMissingScreenshots = new List<long>();
             // TODO: Properly enumerate productsMissingScreenshots
             // (productsDataController.ItemizeAllAsync(getUpdatesListTask)).Except(
             //     productScreenshotsDataController.ItemizeAllAsync(getUpdatesListTask));
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.StartAction("Update missing screenshots");
+            startDelegate.Start("Update missing screenshots");
             foreach (var id in productsMissingScreenshots)
             {
                 var product = await productsDataController.GetByIdAsync(id);
@@ -66,13 +74,13 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                     continue;
                 }
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product);
             }
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

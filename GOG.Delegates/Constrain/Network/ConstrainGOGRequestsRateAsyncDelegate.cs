@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Attributes;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Constrain;
-using Interfaces.Delegates.Find;
+using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Itemize;
 
 namespace GOG.Delegates.Constrain.Network
@@ -13,7 +13,6 @@ namespace GOG.Delegates.Constrain.Network
     {
         readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
         readonly IFindDelegate<string> findStringDelegate;
-        readonly IActionLogController actionLogController;
         readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
         readonly IItemizeAllDelegate<string> itemizeRateContraindesUris;
         const int requestIntervalSeconds = 30;
@@ -22,18 +21,15 @@ namespace GOG.Delegates.Constrain.Network
 
         [Dependencies(
             "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
-            "Delegates.Find.System.FindStringDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers",
+            "Delegates.Collections.System.FindStringDelegate,Delegates",
             "GOG.Delegates.Itemize.ItemizeAllRateConstrainedUrisDelegate,GOG.Delegates")]
         public ConstrainGOGRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
             IFindDelegate<string> findStringDelegate,
-            IActionLogController actionLogController,
             IItemizeAllDelegate<string> itemizeRateContraindesUris)
         {
             this.constrainExecutionAsyncDelegate = constrainExecutionAsyncDelegate;
             this.findStringDelegate = findStringDelegate;
-            this.actionLogController = actionLogController;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
             rateLimitRequestsCount = 0;
 
@@ -57,11 +53,7 @@ namespace GOG.Delegates.Constrain.Network
             var now = DateTime.UtcNow;
             var elapsed = (int)(now - lastRequestToUriPrefix[prefix]).TotalSeconds;
             if (elapsed < requestIntervalSeconds)
-            {
-                actionLogController.StartAction("Limit request rate to avoid temporary server block");
                 await constrainExecutionAsyncDelegate.ConstrainAsync(requestIntervalSeconds - elapsed);
-                actionLogController.CompleteAction();
-            }
 
             lastRequestToUriPrefix[prefix] = now;
         }

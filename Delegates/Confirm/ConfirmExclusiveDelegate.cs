@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using Interfaces.Delegates.Intersect;
+using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirm;
 
 namespace Delegates.Confirm

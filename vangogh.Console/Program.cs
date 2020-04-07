@@ -80,8 +80,6 @@ namespace vangogh.Console
 
                 foreach (var typeDependency in typesDependencies[type])
                 {
-                    // if (typeDependency == "Controllers.Logs.ActionLogController,Controllers") continue;
-
                     if (typeDependency.StartsWith("Controllers") ||
                         typeDependency.StartsWith("GOG.Controllers"))
                         hasControllerDependencies = true;

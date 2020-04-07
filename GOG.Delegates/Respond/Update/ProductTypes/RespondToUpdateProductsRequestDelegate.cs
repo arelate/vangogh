@@ -4,7 +4,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -24,18 +24,23 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             "GOG.Delegates.GetPageResults.ProductTypes.GetProductsPageResultsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeProductsPageResultProductsDelegate,GOG.Delegates",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateProductsRequestDelegate(
             IGetPageResultsAsyncDelegate<ProductsPageResult> getProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<ProductsPageResult>, Product> itemizeProductsPageResultsDelegate,
             IDataController<Product> productsDataController,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 getProductsPageResultsAsyncDelegate,
                 itemizeProductsPageResultsDelegate,
                 productsDataController,
-                actionLogController)
-        {
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)        {
             // ...
         }
     }

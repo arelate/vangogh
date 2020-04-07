@@ -1,5 +1,5 @@
 ﻿using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Models.ProductTypes;
@@ -18,15 +18,21 @@ namespace GOG.Delegates.Respond.Download.ProductTypes
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
 			"GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]        
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]        
         public RespondToDownloadAccountProductImagesRequestDelegate(
             IDataController<ProductDownloads> productDownloadsDataController,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 productDownloadsDataController,
                 downloadProductFileAsyncDelegate,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

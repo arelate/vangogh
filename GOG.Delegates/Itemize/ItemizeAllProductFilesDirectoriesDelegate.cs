@@ -6,7 +6,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
 
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Attributes;
 
@@ -15,17 +15,13 @@ namespace GOG.Delegates.Itemize
     public class ItemizeAllProductFilesDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
         readonly IGetDirectoryDelegate productFilesDirectoryDelegate;
-        readonly IActionLogController actionLogController;
 
 		[Dependencies(
-			"Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+			"Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates")]
         public ItemizeAllProductFilesDirectoriesAsyncDelegate(
-            IGetDirectoryDelegate productFilesDirectoryDelegate,
-            IActionLogController actionLogController)
+            IGetDirectoryDelegate productFilesDirectoryDelegate)
         {
             this.productFilesDirectoryDelegate = productFilesDirectoryDelegate;
-            this.actionLogController = actionLogController;
         }
 
         public async IAsyncEnumerable<string> ItemizeAllAsync()

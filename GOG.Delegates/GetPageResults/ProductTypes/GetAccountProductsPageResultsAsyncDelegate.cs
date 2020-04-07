@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -23,19 +23,25 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             "Delegates.GetValue.QueryParameters.ProductTypes.GetAccountProductsUpdateQueryParametersDelegate,Delegates",
             "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToAccountProductsPageResultDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public GetAccountProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getAccountProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getAccountProductsQueryUpdateQueryParameters,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
             IConvertDelegate<string, AccountProductsPageResult> convertJSONToAccountProductsPageResultDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 getAccountProductsUpdateUriDelegate,
                 getAccountProductsQueryUpdateQueryParameters,
                 requestPageAsyncDelegate,
                 convertJSONToAccountProductsPageResultDelegate,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

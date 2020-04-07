@@ -9,7 +9,7 @@ using Interfaces.Delegates.GetFilename;
 
 using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Attributes;
 
@@ -24,28 +24,36 @@ namespace GOG.Delegates.GetDownloadSources
         readonly IDataController<ProductScreenshots> screenshotsDataController;
         readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
         readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
 			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
 			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IDataController<ProductScreenshots> screenshotsDataController,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.screenshotsDataController = screenshotsDataController;
             this.formatScreenshotsUriDelegate = formatScreenshotsUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            actionLogController.StartAction("Process screenshots updates");
+            startDelegate.Start("Process screenshots updates");
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
 
@@ -57,7 +65,7 @@ namespace GOG.Delegates.GetDownloadSources
                     continue;
                 }
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var currentProductScreenshotSources = new List<string>();
 
@@ -77,7 +85,7 @@ namespace GOG.Delegates.GetDownloadSources
                     screenshotsSources.Add(productScreenshots.Id, currentProductScreenshotSources);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return screenshotsSources;
         }

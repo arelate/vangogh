@@ -6,7 +6,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Respond;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
@@ -24,34 +24,39 @@ namespace GOG.Delegates.Respond.UpdateDownloads
         readonly IDataController<ProductDownloads> productDownloadsDataController;
         readonly IDataController<AccountProduct> accountProductsDataController;
         readonly IDataController<Product> productsDataController;
-        readonly IActionLogController actionLogController;
-
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
         public RespondToUpdateDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.productDownloadsDataController = productDownloadsDataController;
             this.accountProductsDataController = accountProductsDataController;
             this.productsDataController = productsDataController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction(
+            startDelegate.Start(
                 $"Update {typeof(Type)} downloads");
 
-            actionLogController.StartAction($"Get {typeof(Type)} download sources");
+            startDelegate.Start($"Get {typeof(Type)} download sources");
             var downloadSources = await getDownloadSourcesAsyncDelegate.GetDownloadSourcesAsync();
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.StartAction("Update individual downloads");
+            startDelegate.Start("Update individual downloads");
             foreach (var downloadSource in downloadSources)
             {
                 // don't perform expensive updates if there are no actual sources
@@ -75,7 +80,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
                     }
                 }
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
                 if (productDownloads == null)
@@ -96,7 +101,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
                 foreach (var download in existingDownloadsOfType)
                     productDownloads.Downloads.Remove(download);
 
-                actionLogController.StartAction("Schedule new downloads");
+                startDelegate.Start("Schedule new downloads");
 
                 foreach (var source in downloadSource.Value)
                 {
@@ -123,11 +128,12 @@ namespace GOG.Delegates.Respond.UpdateDownloads
 
                 await productDownloadsDataController.UpdateAsync(productDownloads);
 
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
             }
-            actionLogController.CompleteAction();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
+            
+            completeDelegate.Complete();
         }
     }
 }

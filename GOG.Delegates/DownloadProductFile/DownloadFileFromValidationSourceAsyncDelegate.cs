@@ -7,7 +7,7 @@ using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Download;
 
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Attributes;
 
@@ -23,7 +23,8 @@ namespace GOG.Delegates.DownloadProductFile
         readonly IGetDirectoryDelegate validationDirectoryDelegate;
         readonly IFormatDelegate<string, string> formatValidationUriDelegate;
         readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
 		[Dependencies(
 			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
@@ -32,7 +33,8 @@ namespace GOG.Delegates.DownloadProductFile
 			"Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate,Delegates",
 			"Delegates.Format.Uri.FormatValidationUriDelegate,Delegates",
 			"Delegates.Download.DownloadFromUriAsyncDelegate,Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public DownloadValidationFileAsyncDelegate(
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
@@ -40,7 +42,8 @@ namespace GOG.Delegates.DownloadProductFile
             IGetDirectoryDelegate validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
             IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
@@ -48,7 +51,8 @@ namespace GOG.Delegates.DownloadProductFile
             this.validationDirectoryDelegate = validationDirectoryDelegate;
             this.formatValidationUriDelegate = formatValidationUriDelegate;
             this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
@@ -69,13 +73,13 @@ namespace GOG.Delegates.DownloadProductFile
 
             var validationSourceUri = formatValidationUriDelegate.Format(sourceUri);
 
-            actionLogController.StartAction("Download validation file");
+            startDelegate.Start("Download validation file");
 
             await downloadFromUriAsyncDelegate.DownloadFromUriAsync(
                 validationSourceUri,
                 validationDirectoryDelegate.GetDirectory(string.Empty));
 
-           actionLogController.CompleteAction();
+           completeDelegate.Complete();
         }
     }
 }

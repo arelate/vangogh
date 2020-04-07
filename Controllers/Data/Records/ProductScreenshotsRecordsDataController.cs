@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
-
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 using Attributes;
 
 using Models.ProductTypes;
@@ -16,24 +14,27 @@ namespace Controllers.Data.Records
     public class ProductScreenshotsRecordsDataController : DataController<ProductRecords>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.Records.GetListProductScreenshotsRecordsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.PostData.Storage.Records.PostListProductScreenshotsRecordsDataToPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.Records.GetListProductScreenshotsRecordsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.Records.PostListProductScreenshotsRecordsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.Records.ConvertProductRecordsToIndexDelegate,Delegates",
-            "Delegates.Find.ProductTypes.FindProductRecordsDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Collections.ProductTypes.FindProductRecordsDelegate,Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public ProductScreenshotsRecordsDataController(
             IGetDataAsyncDelegate<List<ProductRecords>> getProductScreenshotsRecordsDataAsyncDelegate,
             IPostDataAsyncDelegate<List<ProductRecords>> postProductScreenshotsRecordsDataAsyncDelegate,
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             IFindDelegate<ProductRecords> findProductRecordsDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getProductScreenshotsRecordsDataAsyncDelegate,
                 postProductScreenshotsRecordsDataAsyncDelegate,
                 convertProductRecordsToIndexDelegate,
                 null,
                 findProductRecordsDelegate,
-                actionLogController)
+                startDelegate,
+                completeDelegate)
         {
             // ...
         }

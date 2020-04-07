@@ -1,18 +1,16 @@
 using GOG.Models;
 
 using Attributes;
+using Delegates.Collections;
+using Interfaces.Delegates.Collections;
 
-using Interfaces.Delegates.Find;
 
-
-using Delegates.Find;
-
-namespace GOG.Delegates.Find.ProductTypes
+namespace GOG.Delegates.Collections.ProductTypes
 {
     public class FindProductDelegate : FindDelegate<Product>
     {
         [Dependencies(
-            "GOG.Delegates.Find.ProductTypes.FindAllProductDelegate,GOG.Delegates")]
+            "GOG.Delegates.Collections.ProductTypes.FindAllProductDelegate,GOG.Delegates")]
         public FindProductDelegate(
             IFindAllDelegate<Product> findAllProductDelegate) :
             base(findAllProductDelegate)

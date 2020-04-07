@@ -3,13 +3,11 @@ using System.Threading.Tasks;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
-
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Interfaces.Models.RecordsTypes;
 
 namespace Controllers.Data
@@ -20,8 +18,9 @@ namespace Controllers.Data
         private readonly IPostDataAsyncDelegate<List<DataType>> postDataAsyncDelegate;
         readonly IConvertDelegate<DataType, long> convertProductToIndexDelegate;
         readonly IRecordsController<long> recordsController;
-        readonly private IFindDelegate<DataType> findDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IFindDelegate<DataType> findDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public DataController(
             IGetDataAsyncDelegate<List<DataType>> getDataAsyncDelegate,
@@ -29,14 +28,16 @@ namespace Controllers.Data
             IConvertDelegate<DataType, long> convertProductToIndexDelegate,
             IRecordsController<long> recordsController,
             IFindDelegate<DataType> findDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.getDataAsyncDelegate = getDataAsyncDelegate;
             this.postDataAsyncDelegate = postDataAsyncDelegate;
             this.convertProductToIndexDelegate = convertProductToIndexDelegate;
             this.recordsController = recordsController;
             this.findDelegate = findDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<bool> ContainsAsync(DataType item)
@@ -110,22 +111,22 @@ namespace Controllers.Data
 
         public async Task CommitAsync()
         {
-            actionLogController.StartAction("Commit updated data");
+            startDelegate.Start("Commit updated data");
 
             // commit records controller
             if (recordsController != null)
             {
-                actionLogController.StartAction("Commit records");
+                startDelegate.Start("Commit records");
                 await recordsController.CommitAsync();
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
             }
 
-            actionLogController.StartAction("Commit items");
+            startDelegate.Start("Commit items");
             var data = await getDataAsyncDelegate.GetDataAsync();
             await postDataAsyncDelegate.PostDataAsync(data);
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

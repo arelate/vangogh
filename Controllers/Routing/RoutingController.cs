@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Interfaces.Routing;
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -14,18 +14,22 @@ namespace Controllers.Routing
 {
     public class RoutingController : IRoutingController
     {
-        readonly IDataController<ProductRoutes> productRoutesDataController;
-        readonly IActionLogController actionLogController;
+        private readonly IDataController<ProductRoutes> productRoutesDataController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
 		[Dependencies(
 			"Controllers.Data.ProductTypes.ProductRoutesDataController,Controllers",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RoutingController(
             IDataController<ProductRoutes> productRoutesDataController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.productRoutesDataController = productRoutesDataController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         string TraceProductRoute(List<ProductRoutesEntry> productRoutes, string source)
@@ -43,35 +47,35 @@ namespace Controllers.Routing
 
         public async Task<string> TraceRouteAsync(long id, string source)
         {
-            actionLogController.StartAction("Trace route");
+            startDelegate.Start("Trace route");
 
             var productRoutes = await productRoutesDataController.GetByIdAsync(id);
 
             if (productRoutes == null)
                 return string.Empty;
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return TraceProductRoute(productRoutes.Routes, source);
         }
 
         public async Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources)
         {
-            actionLogController.StartAction("Trace routes");
+            startDelegate.Start("Trace routes");
 
             var destination = new List<string>();
 
             var productRoutes = await productRoutesDataController.GetByIdAsync(id);
             if (productRoutes == null)
             {
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
                 return destination;
             }
 
             foreach (var source in sources)
                 destination.Add(TraceProductRoute(productRoutes.Routes, source));
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return destination;
         } 
@@ -81,7 +85,7 @@ namespace Controllers.Routing
             if (source == destination)
                 throw new System.ArgumentException("Destination cannot be the same as source");
 
-            actionLogController.StartAction("Update route");
+            startDelegate.Start("Update route");
 
             var productRoutes = await productRoutesDataController.GetByIdAsync(id);
             if (productRoutes == null)
@@ -112,7 +116,7 @@ namespace Controllers.Routing
 
             await productRoutesDataController.UpdateAsync(productRoutes);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

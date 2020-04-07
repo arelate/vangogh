@@ -4,7 +4,7 @@ using Interfaces.Delegates.Itemize;
 
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using Attributes;
@@ -24,17 +24,23 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             "GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate,GOG.Delegates",
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateAccountProductsRequestDelegate(
             IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct> itemizeAccountProductsPageResultsDelegate,
             IDataController<AccountProduct> accountProductsDataController,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 getAccountProductsPageResultsAsyncDelegate,
                 itemizeAccountProductsPageResultsDelegate,
                 accountProductsDataController,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

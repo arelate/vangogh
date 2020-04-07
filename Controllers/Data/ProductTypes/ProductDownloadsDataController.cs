@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 
 using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
 
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Find;
-using Interfaces.Delegates.GetData;
-using Interfaces.Delegates.PostData;
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 
 using Attributes;
 
@@ -17,26 +16,29 @@ namespace Controllers.Data.ProductTypes
     public class ProductDownloadsDataController : DataController<ProductDownloads>
     {
         [Dependencies(
-            "Delegates.GetData.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.PostData.Storage.ProductTypes.PostListProductDownloadsDataToPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate,Delegates",
+            "Delegates.Data.Storage.ProductTypes.PostListProductDownloadsDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ProductDownloadsRecordsIndexController,Controllers",
-            "Delegates.Find.ProductTypes.FindProductDownloadsDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Collections.ProductTypes.FindProductDownloadsDelegate,Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public ProductDownloadsDataController(
             IGetDataAsyncDelegate<List<ProductDownloads>> getProductDownloadsDataAsyncDelegate,
             IPostDataAsyncDelegate<List<ProductDownloads>> postProductDownloadsDataAsyncDelegate,
             IConvertDelegate<ProductDownloads, long> convertProductDownloadsToIndexDelegate,
             IRecordsController<long> productDownloadsRecordsIndexController,
             IFindDelegate<ProductDownloads> productDownloadsFindDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getProductDownloadsDataAsyncDelegate,
                 postProductDownloadsDataAsyncDelegate,
                 convertProductDownloadsToIndexDelegate,
                 productDownloadsRecordsIndexController,
                 productDownloadsFindDelegate,
-                actionLogController)
+                startDelegate,
+                completeDelegate)
         {
             // ...
         }

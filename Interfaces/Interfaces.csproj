@@ -16,8 +16,6 @@
   <ItemGroup>
     <Folder Include="Delegates\GetPath\" />
     <Folder Include="Controllers\Records\" />
-    <Folder Include="Models\RecordsTypes\" />
-    <Folder Include="Models\Entities\" />
   </ItemGroup>
 
   <ItemGroup>

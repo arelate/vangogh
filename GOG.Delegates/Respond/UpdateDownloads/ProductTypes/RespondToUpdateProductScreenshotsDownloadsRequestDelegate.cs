@@ -1,7 +1,7 @@
 ﻿using Interfaces.Delegates.GetDirectory;
 
 using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
+using Interfaces.Delegates.Activities;
 
 
 using GOG.Interfaces.Delegates.GetDownloadSources;
@@ -24,21 +24,27 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             "Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
             "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Activities.SetProgressDelegate,Delegates",
+            "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateProductScreenshotsDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getProductScreenshotsDirectoryDelegate,
             IDataController<ProductDownloads> productDownloadsDataController,
             IDataController<AccountProduct> accountProductsDataController,
             IDataController<Product> productsDataController,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate):
             base(
                 getProductScreenshotsDownloadSourcesAsyncDelegate,
                 getProductScreenshotsDirectoryDelegate,
                 productDownloadsDataController,
                 accountProductsDataController,
                 productsDataController,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

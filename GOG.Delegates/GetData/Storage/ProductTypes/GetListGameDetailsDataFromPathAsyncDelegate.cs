@@ -1,20 +1,17 @@
 using System.Collections.Generic;
 
 using Attributes;
-
-using Interfaces.Delegates.GetData;
+using Delegates.Data.Storage;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.GetPath;
-
-using Delegates.GetData.Storage;
-
 using GOG.Models;
 
-namespace GOG.Delegates.GetData.Storage.ProductTypes
+namespace GOG.Delegates.Data.Storage.ProductTypes
 {
     public class GetListGameDetailsDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<GameDetails>>
     {
         [Dependencies(
-            "GOG.Delegates.GetData.Storage.ProductTypes.GetListGameDetailsDataAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Storage.ProductTypes.GetListGameDetailsDataAsyncDelegate,GOG.Delegates",
             "Delegates.GetPath.ProductTypes.GetGameDetailsPathDelegate,Delegates")]
         public GetListGameDetailsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<GameDetails>> getListGameDetailsDataAsyncDelegate, 
