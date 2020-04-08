@@ -18,10 +18,10 @@ namespace Interfaces.Controllers.Data
         Task DeleteAsync(Type data);
     }
 
-    public interface IContainsAsyncDelegate<Type>
-    {
-        Task<bool> ContainsAsync(Type data);
-    }
+    // public interface IContainsAsyncDelegate<Type>
+    // {
+    //     Task<bool> ContainsAsync(Type data);
+    // }
 
     public interface IContainsIdAsyncDelegate<IdentityType>
     {
@@ -44,7 +44,7 @@ namespace Interfaces.Controllers.Data
         IGetByIdAsyncDelegate<long, DataType>,
         IUpdateAsyncDelegate<DataType>,
         IDeleteAsyncDelegate<DataType>,
-        IContainsAsyncDelegate<DataType>,
+        // IContainsAsyncDelegate<DataType>,
         IContainsIdAsyncDelegate<long>,
         ICommitAsyncDelegate
     {

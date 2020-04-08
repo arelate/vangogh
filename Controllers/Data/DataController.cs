@@ -38,12 +38,6 @@ namespace Controllers.Data
             this.completeDelegate = completeDelegate;
         }
 
-        public async Task<bool> ContainsAsync(DataType item)
-        {
-            var data = await getDataAsyncDelegate.GetDataAsync();
-            return data.Contains(item);
-        }
-
         public async Task<bool> ContainsIdAsync(long id)
         {
             return await GetByIdAsync(id) != null;

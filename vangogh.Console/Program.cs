@@ -78,11 +78,15 @@ namespace vangogh.Console
                 foreach (var typeDependency in typesDependencies[type])
                     if (typeDependency.StartsWith("Controllers") ||
                         typeDependency.StartsWith("GOG.Controllers"))
+                    {
                         hasControllerDependencies = true;
-                // System.Console.WriteLine($"-{typeDependency}");
+                        System.Console.WriteLine($"-{typeDependency}");
+                    }
 
                 delegateTypes += hasControllerDependencies ? 0 : 1;
                 controllerTypes += hasControllerDependencies ? 1 : 0;
+                
+                if (hasControllerDependencies) System.Console.WriteLine(typeString);
             }
 
             System.Console.WriteLine($"Delegate-only dependencies: {delegateTypes}");
