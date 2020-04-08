@@ -1,7 +1,5 @@
 using System.Net.Http;
-
 using Interfaces.Delegates.GetInstance;
-
 using Models.Network;
 
 namespace Delegates.GetInstance.Network
@@ -9,6 +7,7 @@ namespace Delegates.GetInstance.Network
     public class GetHttpClientInstanceDelegate : IGetInstanceDelegate<HttpClient>
     {
         private HttpClient httpClient;
+
         public HttpClient GetInstance()
         {
             if (httpClient == null)

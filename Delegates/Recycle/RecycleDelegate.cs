@@ -1,19 +1,15 @@
 ﻿using System.IO;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Move;
-
-
-
 using Attributes;
 
 namespace Delegates.Recycle
 {
     public class RecycleDelegate : IRecycleDelegate
     {
-        readonly IGetDirectoryDelegate getDirectoryDelegate;
-        readonly IMoveDelegate<string> moveFileDelegate;
+        private readonly IGetDirectoryDelegate getDirectoryDelegate;
+        private readonly IMoveDelegate<string> moveFileDelegate;
 
         [Dependencies(
             "Delegates.GetDirectory.ProductTypes.GetRecycleBinDirectoryDelegate,Delegates",

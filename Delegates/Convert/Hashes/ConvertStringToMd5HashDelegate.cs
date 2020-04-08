@@ -1,16 +1,13 @@
 ﻿using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
-
-
 using Attributes;
 
 namespace Delegates.Convert.Hashes
 {
     public class ConvertStringToMd5HashDelegate : IConvertAsyncDelegate<string, Task<string>>
     {
-        readonly IConvertDelegate<string, byte[]> convertStringToBytesDelegate;
-        readonly IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
+        private readonly IConvertDelegate<string, byte[]> convertStringToBytesDelegate;
+        private readonly IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
 
         [Dependencies(
             "Delegates.Convert.Bytes.ConvertStringToBytesDelegate,Delegates",

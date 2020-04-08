@@ -3,18 +3,12 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
-
 using Interfaces.Delegates.Activities;
-
-
 using Interfaces.Validation;
 using Interfaces.ValidationResults;
-
 using Attributes;
-
 using Models.Units;
 using Models.ProductTypes;
 
@@ -22,11 +16,11 @@ namespace Controllers.Validation
 {
     public class FileValidationController : IFileValidationController
     {
-        IConfirmDelegate<string> confirmValidationExpectedDelegate;
-        private readonly IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate;
-        XmlDocument validationXml;
-        IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
-        IValidationResultController validationResultController;
+        private IConfirmDelegate<string> confirmValidationExpectedDelegate;
+        private readonly IConvertDelegate<string, Stream> convertUriToReadableStreamDelegate;
+        private XmlDocument validationXml;
+        private IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
+        private IValidationResultController validationResultController;
 
         [Dependencies(
             "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
@@ -35,7 +29,7 @@ namespace Controllers.Validation
             "Controllers.ValidationResult.ValidationResultController,Controllers")]
         public FileValidationController(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
-            IConvertDelegate<string, System.IO.Stream> convertUriToReadableStreamDelegate,
+            IConvertDelegate<string, Stream> convertUriToReadableStreamDelegate,
             IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate,
             IValidationResultController validationResultController)
         {
@@ -44,7 +38,7 @@ namespace Controllers.Validation
             this.convertBytesToHashDelegate = convertBytesToHashDelegate;
             this.validationResultController = validationResultController;
 
-            validationXml = new XmlDocument { PreserveWhitespace = false };
+            validationXml = new XmlDocument {PreserveWhitespace = false};
         }
 
         public async Task<IFileValidationResults> ValidateFileAsync(string productFileUri, string validationUri)
@@ -75,7 +69,9 @@ namespace Controllers.Validation
             try
             {
                 using (var xmlStream = convertUriToReadableStreamDelegate.Convert(validationUri))
+                {
                     validationXml.Load(xmlStream);
+                }
 
                 fileValidation.ValidationFileIsValid = true;
             }
@@ -134,11 +130,11 @@ namespace Controllers.Validation
                         continue;
 
                     long from, to = 0;
-                    string expectedMd5 = string.Empty;
+                    var expectedMd5 = string.Empty;
 
                     from = long.Parse(chunkElement.Attributes["from"]?.Value);
                     to = long.Parse(chunkElement.Attributes["to"]?.Value);
-                    length += (to - from);
+                    length += to - @from;
                     expectedMd5 = chunkElement.FirstChild.Value;
 
                     chunksValidation.Add(await VerifyChunkAsync(fileStream, from, to, expectedMd5));
@@ -162,7 +158,7 @@ namespace Controllers.Validation
             return fileValidation;
         }
 
-        public async Task<IChunkValidation> VerifyChunkAsync(System.IO.Stream fileStream, long from, long to, string expectedMd5)
+        public async Task<IChunkValidation> VerifyChunkAsync(Stream fileStream, long from, long to, string expectedMd5)
         {
             if (!fileStream.CanSeek)
                 throw new Exception("Unable to seek in the file stream");
@@ -176,8 +172,8 @@ namespace Controllers.Validation
 
             fileStream.Seek(from, SeekOrigin.Begin);
 
-            var length = (int)(to - from + 1);
-            byte[] buffer = new byte[length];
+            var length = (int) (to - from + 1);
+            var buffer = new byte[length];
             await fileStream.ReadAsync(buffer, 0, length);
 
             chunkValidation.ActualHash = await convertBytesToHashDelegate.ConvertAsync(buffer);
@@ -197,7 +193,7 @@ namespace Controllers.Validation
 
         public bool VerifyProductFileExists(string productFileUri)
         {
-            return System.IO.File.Exists(productFileUri);
+            return File.Exists(productFileUri);
         }
 
         public bool VerifySize(string uri, long expectedSize)
@@ -207,7 +203,7 @@ namespace Controllers.Validation
 
         public bool VerifyValidationFileExists(string validationFileUri)
         {
-            return System.IO.File.Exists(validationFileUri);
+            return File.Exists(validationFileUri);
         }
     }
 }

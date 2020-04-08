@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 
-
 namespace GOG.Interfaces.Delegates.RequestPage
 {
     public interface IRequestPageAsyncDelegate

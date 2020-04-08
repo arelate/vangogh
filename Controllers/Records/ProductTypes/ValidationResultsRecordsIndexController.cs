@@ -1,9 +1,6 @@
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using Models.ProductTypes;
 
 namespace Controllers.Records.ProductTypes

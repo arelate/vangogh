@@ -1,8 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using Attributes;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetInstance;
 
@@ -24,9 +22,9 @@ namespace Delegates.Convert.Network
         public virtual async Task<HttpResponseMessage> ConvertAsync(HttpRequestMessage requestMessage)
         {
             var httpClient = getHttpClientInstanceDelegate.GetInstance();
-            
+
             var response = await httpClient.SendAsync(
-                requestMessage, 
+                requestMessage,
                 HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();

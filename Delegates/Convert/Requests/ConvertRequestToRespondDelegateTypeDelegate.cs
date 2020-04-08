@@ -1,12 +1,8 @@
 using System;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Collections;
-
-
 using Attributes;
-
 using Models.Requests;
 
 namespace Delegates.Convert.Requests
@@ -35,14 +31,15 @@ namespace Delegates.Convert.Requests
                 delegateType =>
                 {
                     var respondsToRequestAttribute = Attribute.GetCustomAttribute(
-                        delegateType,
-                        typeof(RespondsToRequests))
+                            delegateType,
+                            typeof(RespondsToRequests))
                         as RespondsToRequests;
 
-                    return (respondsToRequestAttribute.Method == request.Method &&
-                        respondsToRequestAttribute.Collection == request.Collection) ||
-                        (respondsToRequestAttribute.Method == request.Method &&
-                        string.IsNullOrEmpty(respondsToRequestAttribute.Collection) && string.IsNullOrEmpty(request.Collection));
+                    return respondsToRequestAttribute.Method == request.Method &&
+                           respondsToRequestAttribute.Collection == request.Collection ||
+                           respondsToRequestAttribute.Method == request.Method &&
+                           string.IsNullOrEmpty(respondsToRequestAttribute.Collection) &&
+                           string.IsNullOrEmpty(request.Collection);
                 });
 
             return respondDelegate;

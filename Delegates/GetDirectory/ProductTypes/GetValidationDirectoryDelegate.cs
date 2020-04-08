@@ -1,8 +1,5 @@
 using Interfaces.Delegates.GetDirectory;
-
-
 using Attributes;
-
 using Models.Directories;
 
 namespace Delegates.GetDirectory.ProductTypes

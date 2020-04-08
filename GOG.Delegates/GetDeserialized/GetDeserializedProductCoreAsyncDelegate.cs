@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
-
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.GetDeserialized
@@ -14,11 +11,14 @@ namespace GOG.Delegates.GetDeserialized
         where T : ProductCore
     {
         private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
-        private readonly IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate;
-        readonly IConvertDelegate<string, T> convertJSONToProductCoreDelegate;
+
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
+            convertUriParametersToUriDelegate;
+
+        private readonly IConvertDelegate<string, T> convertJSONToProductCoreDelegate;
 
         public GetDeserializedProductCoreAsyncDelegate(
-            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,            
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IConvertDelegate<string, T> convertJSONToProductCoreDelegate)
         {

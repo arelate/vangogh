@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
 using Interfaces.Delegates.Itemize;
 
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeGOGDataDelegate : IItemizeDelegate<string, string>
     {
-        const string gogDataPrefix = "var gogData = ";
-        readonly Regex regex = new Regex(gogDataPrefix + "(.*)");
+        private const string gogDataPrefix = "var gogData = ";
+        private readonly Regex regex = new Regex(gogDataPrefix + "(.*)");
 
         public IEnumerable<string> Itemize(string data)
         {

@@ -1,32 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-
 using Interfaces.Delegates.Respond;
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using GOG.Interfaces.Delegates.UpdateScreenshots;
-
 using Attributes;
-
 using GOG.Models;
-
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="screenshots")]
+    [RespondsToRequests(Method = "update", Collection = "screenshots")]
     public class RespondToUpdateScreenshotsRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IDataController<Product> productsDataController;
-        readonly IDataController<ProductScreenshots> productScreenshotsDataController;
-        readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
+        private readonly IDataController<Product> productsDataController;
+        private readonly IDataController<ProductScreenshots> productScreenshotsDataController;
+        private readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
-        
+
         [Dependencies(
             "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
             "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
@@ -67,17 +61,16 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 var product = await productsDataController.GetByIdAsync(id);
 
                 if (product == null)
-                {
                     // await statusController.InformAsync(
                     //     updateProductsScreenshotsTask,
                     //     $"Product {id} was not found as product or accountProduct, but marked as missing screenshots");
                     continue;
-                }
 
                 setProgressDelegate.SetProgress();
 
                 await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product);
             }
+
             completeDelegate.Complete();
 
             completeDelegate.Complete();

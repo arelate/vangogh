@@ -1,5 +1,4 @@
 using System.IO;
-
 using Interfaces.Delegates.Convert;
 
 namespace Delegates.Convert.Streams
@@ -10,10 +9,8 @@ namespace Delegates.Convert.Streams
         {
             var directoryName = Path.GetDirectoryName(uri);
             if (!string.IsNullOrEmpty(directoryName) &&
-                !System.IO.Directory.Exists(directoryName))
-            {
-                System.IO.Directory.CreateDirectory(directoryName);
-            }
+                !Directory.Exists(directoryName))
+                Directory.CreateDirectory(directoryName);
 
             return new FileStream(uri, FileMode.Create, FileAccess.Write, FileShare.Read);
         }

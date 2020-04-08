@@ -3,5 +3,7 @@ using GOG.Models;
 
 namespace GOG.Delegates.Collections.ProductTypes
 {
-    public class FindAllApiProductDelegate : FindAllDelegate<ApiProduct> { }
+    public class FindAllApiProductDelegate : FindAllDelegate<ApiProduct>
+    {
+    }
 }

@@ -25,6 +25,7 @@ namespace Delegates.Data.Storage
                 var serializedData = await getStringDataAsyncDelegate.GetDataAsync(uri);
                 data = convertJSONToTypeDelegate.Convert(serializedData);
             }
+
             return data;
         }
     }

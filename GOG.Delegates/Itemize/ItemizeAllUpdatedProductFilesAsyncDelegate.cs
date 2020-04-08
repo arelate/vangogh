@@ -1,32 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using Interfaces.Delegates.Itemize;
-
-
-
 using Attributes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllUpdatedProductFilesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        readonly IDataController<long> updatedDataController;
-        readonly IDataController<GameDetails> gameDetailsDataController;
-        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
+        private readonly IDataController<long> updatedDataController;
+        private readonly IDataController<GameDetails> gameDetailsDataController;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
+        [Dependencies(
+            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+            "GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
@@ -61,8 +55,8 @@ namespace GOG.Delegates.Itemize
                         gameDetails);
 
                 foreach (var gameDetailDirectory in gameDetailsDirectories)
-                    foreach (var updatedFile in Directory.EnumerateFiles(gameDetailDirectory))
-                        yield return updatedFile;
+                foreach (var updatedFile in Directory.EnumerateFiles(gameDetailDirectory))
+                    yield return updatedFile;
             }
 
             completeDelegate.Complete();

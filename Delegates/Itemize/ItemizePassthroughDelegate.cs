@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using Interfaces.Delegates.Itemize;
 
 namespace Delegates.Itemize
@@ -8,7 +7,7 @@ namespace Delegates.Itemize
     {
         public IEnumerable<string> Itemize(string item)
         {
-            return new string[] { item };
+            return new string[] {item};
         }
     }
 }

@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Confirm;
-
-
 using Attributes;
-
 using Models.ArgsTokens;
 
 namespace Delegates.Convert.ArgsTokens
@@ -34,12 +30,8 @@ namespace Delegates.Convert.ArgsTokens
             var groups = new Queue<Groups>(TokensGroups.ParsingExpectations.Keys);
             var tokens = new Queue<string>(untypedTokens);
 
-            var currentGroup = groups.Count > 0 ?
-                groups.Dequeue() :
-                Groups.Unknown;
-            var currentToken = tokens.Count > 0 ?
-                tokens.Dequeue() :
-                null;
+            var currentGroup = groups.Count > 0 ? groups.Dequeue() : Groups.Unknown;
+            var currentToken = tokens.Count > 0 ? tokens.Dequeue() : null;
 
             // Determining token types makes few assumptions:
             // (1) All token type belong to one of the groups (TokensGroups.ParsingExpecations.Keys)
@@ -68,7 +60,10 @@ namespace Delegates.Convert.ArgsTokens
                 if (typedToken.Type == Tokens.Unknown)
                 {
                     // Progress to the next group, if there are more groups...
-                    if (groups.Count > 0) currentGroup = groups.Dequeue();
+                    if (groups.Count > 0)
+                    {
+                        currentGroup = groups.Dequeue();
+                    }
                     else
                     {
                         // ...or if no more groups are available - we need to return
@@ -89,9 +84,7 @@ namespace Delegates.Convert.ArgsTokens
                 // - progress to the next token
                 // - stop progression is there are no more token
                 if (typedToken.Type != Tokens.Unknown)
-                    currentToken = tokens.Count > 0 ?
-                        tokens.Dequeue() :
-                        null;
+                    currentToken = tokens.Count > 0 ? tokens.Dequeue() : null;
             }
         }
     }

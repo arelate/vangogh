@@ -11,8 +11,8 @@ namespace Delegates.Data.Storage.ArgsDefinitions
             "Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
             "Delegates.Convert.JSON.ArgsDefinitions.ConvertJSONToArgsDefinitionDelegate,Delegates")]
         public GetArgsDefinitionsDataAsyncDelegate(
-            IGetDataAsyncDelegate<string> getStringDataAsyncDelegate, 
-            IConvertDelegate<string, ArgsDefinition> convertJSONToTypeDelegate) : 
+            IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
+            IConvertDelegate<string, ArgsDefinition> convertJSONToTypeDelegate) :
             base(getStringDataAsyncDelegate, convertJSONToTypeDelegate)
         {
             // ...

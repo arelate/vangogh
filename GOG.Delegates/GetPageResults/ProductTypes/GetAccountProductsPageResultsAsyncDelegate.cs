@@ -1,16 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
-
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using GOG.Interfaces.Delegates.RequestPage;
-
 using Models.Dependencies;
 using GOG.Models;
 

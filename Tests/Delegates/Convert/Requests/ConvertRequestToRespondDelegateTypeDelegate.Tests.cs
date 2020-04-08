@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using Xunit;
 
 namespace Delegates.Convert.Requests.Tests
@@ -18,6 +17,5 @@ namespace Delegates.Convert.Requests.Tests
         // {
 
         // }
-
     }
 }

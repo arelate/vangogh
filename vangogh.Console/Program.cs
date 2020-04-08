@@ -3,19 +3,18 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Respond;
-
 using Delegates.Convert.Requests;
 using Delegates.Convert.Types;
 
 namespace vangogh.Console
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
-            var assemblies = new[] {
+            var assemblies = new[]
+            {
                 // "Attributes",
                 // "Controllers",
                 "Delegates",
@@ -45,26 +44,24 @@ namespace vangogh.Console
             }
 
             foreach (var type in types)
+            foreach (var constructorInfo in type.GetConstructors())
             {
-                foreach (var constructorInfo in type.GetConstructors())
+                var dependenciesAttributes =
+                    constructorInfo.GetCustomAttributes();
+
+                Attributes.DependenciesAttribute dependenciesAttribute = null;
+                foreach (var customAttribute in dependenciesAttributes)
                 {
-                    var dependenciesAttributes =
-                        constructorInfo.GetCustomAttributes();
-
-                    Attributes.DependenciesAttribute dependenciesAttribute = null;
-                    foreach (var customAttribute in dependenciesAttributes)
-                    {
-                        var customDependencyAttribute = customAttribute as Attributes.DependenciesAttribute;
-                        if (customDependencyAttribute == null) continue;
-                        dependenciesAttribute = customDependencyAttribute;
-                    }
-
-                    if (dependenciesAttribute == null) continue;
-
-                    typesDependencies.Add(type, new List<string>());
-                    foreach (var typeDependency in dependenciesAttribute.Dependencies)
-                        typesDependencies[type].Add(typeDependency);
+                    var customDependencyAttribute = customAttribute as Attributes.DependenciesAttribute;
+                    if (customDependencyAttribute == null) continue;
+                    dependenciesAttribute = customDependencyAttribute;
                 }
+
+                if (dependenciesAttribute == null) continue;
+
+                typesDependencies.Add(type, new List<string>());
+                foreach (var typeDependency in dependenciesAttribute.Dependencies)
+                    typesDependencies[type].Add(typeDependency);
             }
 
             var delegateTypes = 0;
@@ -79,12 +76,10 @@ namespace vangogh.Console
                 // System.Console.WriteLine(typeString);
 
                 foreach (var typeDependency in typesDependencies[type])
-                {
                     if (typeDependency.StartsWith("Controllers") ||
                         typeDependency.StartsWith("GOG.Controllers"))
                         hasControllerDependencies = true;
-                    // System.Console.WriteLine($"-{typeDependency}");
-                }
+                // System.Console.WriteLine($"-{typeDependency}");
 
                 delegateTypes += hasControllerDependencies ? 0 : 1;
                 controllerTypes += hasControllerDependencies ? 1 : 0;

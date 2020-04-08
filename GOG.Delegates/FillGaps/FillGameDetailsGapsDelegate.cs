@@ -1,5 +1,4 @@
 ﻿using GOG.Interfaces.Delegates.FillGaps;
-
 using GOG.Models;
 
 namespace GOG.Delegates.FillGaps

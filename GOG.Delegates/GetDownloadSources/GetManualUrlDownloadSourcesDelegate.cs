@@ -1,33 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using GOG.Interfaces.Delegates.GetDownloadSources;
-
 using Attributes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.GetDownloadSources
 {
     public class GetManualUrlDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        readonly IDataController<long> updatedDataController;
-        readonly IDataController<GameDetails> gameDetailsDataController;
-        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
+        private readonly IDataController<long> updatedDataController;
+        private readonly IDataController<GameDetails> gameDetailsDataController;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
+        [Dependencies(
+            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
@@ -62,12 +56,10 @@ namespace GOG.Delegates.GetDownloadSources
                 if (!gameDetailsDownloadSources.ContainsKey(id))
                     gameDetailsDownloadSources.Add(id, new List<string>());
 
-                foreach (var manualUrl in 
+                foreach (var manualUrl in
                     await itemizeGameDetailsManualUrlsAsyncController.ItemizeAsync(gameDetails))
-                {
                     if (!gameDetailsDownloadSources[id].Contains(manualUrl))
                         gameDetailsDownloadSources[id].Add(manualUrl);
-                }
             }
 
             completeDelegate.Complete();

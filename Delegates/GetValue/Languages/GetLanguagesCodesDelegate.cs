@@ -4,7 +4,7 @@ namespace Delegates.GetValue.Languages
 {
     public class GetLanguageCodesDelegate : GetConstValueDelegate<Dictionary<string, string>>
     {
-        public GetLanguageCodesDelegate() : 
+        public GetLanguageCodesDelegate() :
             base(Models.Languages.Codes.LanguageCodes)
         {
             // ...

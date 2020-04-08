@@ -12,10 +12,10 @@ namespace Delegates.Data.Storage.ProductTypes
             "Delegates.Data.Storage.ProductTypes.GetListProductRoutesDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ProductTypes.GetProductRoutesPathDelegate,Delegates")]
         public GetListProductRoutesDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<ProductRoutes>> getListProductRoutesDataAsyncDelegate, 
-            IGetPathDelegate getProductRoutesPathDelegate) : 
+            IGetDataAsyncDelegate<List<ProductRoutes>> getListProductRoutesDataAsyncDelegate,
+            IGetPathDelegate getProductRoutesPathDelegate) :
             base(
-                getListProductRoutesDataAsyncDelegate, 
+                getListProductRoutesDataAsyncDelegate,
                 getProductRoutesPathDelegate)
         {
             // ...

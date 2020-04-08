@@ -2,20 +2,13 @@
 using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.GetPath;
 using Interfaces.Delegates.Itemize;
-
-
 using Interfaces.Delegates.Activities;
-
 using Interfaces.Routing;
-
-
 using Attributes;
-
 using GOG.Models;
 using System;
 
@@ -23,16 +16,16 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsFilesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate;
-        readonly IGetPathDelegate getPathDelegate;
-        readonly IRoutingController routingController;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate;
+        private readonly IGetPathDelegate getPathDelegate;
+        private readonly IRoutingController routingController;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-			"Controllers.Routing.RoutingController,Controllers",
-			"Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",
+        [Dependencies(
+            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
+            "Controllers.Routing.RoutingController,Controllers",
+            "Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public ItemizeGameDetailsFilesAsyncDelegate(
@@ -58,7 +51,7 @@ namespace GOG.Delegates.Itemize
             var gameDetailsManualUrls = await itemizeGameDetailsManualUrlsDelegate.ItemizeAsync(gameDetails);
             var gameDetailsManualUrlsCount = gameDetailsManualUrls.Count();
             var gameDetailsResolvedUris = await routingController.TraceRoutesAsync(
-                gameDetails.Id, 
+                gameDetails.Id,
                 gameDetailsManualUrls);
 
             // that means that routes information is incomplete and 
@@ -66,7 +59,8 @@ namespace GOG.Delegates.Itemize
             if (gameDetailsManualUrlsCount != gameDetailsResolvedUris.Count)
             {
                 completeDelegate.Complete();
-                throw new ArgumentException($"Product {gameDetails.Id} resolvedUris count doesn't match manualUrls count");
+                throw new ArgumentException(
+                    $"Product {gameDetails.Id} resolvedUris count doesn't match manualUrls count");
             }
 
             for (var ii = 0; ii < gameDetailsResolvedUris.Count; ii++)

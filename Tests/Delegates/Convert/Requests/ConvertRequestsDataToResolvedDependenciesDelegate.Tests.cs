@@ -1,23 +1,20 @@
 using System.Threading.Tasks;
-
 using Xunit;
-
 using Interfaces.Delegates.Convert;
-
 using Models.Requests;
-
 using TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertRequestsDataToResolvedDependenciesDelegateTests
     {
-        private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedDependenciesDelegate;
+        private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
+            convertRequestsDataToResolvedDependenciesDelegate;
 
         public ConvertRequestsDataToResolvedDependenciesDelegateTests()
         {
             convertRequestsDataToResolvedDependenciesDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                typeof(ConvertRequestsDataToResolvedDependenciesDelegate))
+                    typeof(ConvertRequestsDataToResolvedDependenciesDelegate))
                 as ConvertRequestsDataToResolvedDependenciesDelegate;
         }
 
@@ -46,4 +43,5 @@ namespace Delegates.Convert.Requests.Tests
             Assert.Equal(expectedMethodsCount, requestsDataWithDependencies.Methods.Count);
             Assert.Equal(expectedCollectionsCount, requestsDataWithDependencies.Collections.Count);
         }
-    }}
+    }
+}

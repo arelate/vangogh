@@ -1,4 +1,6 @@
 namespace Delegates.Collections.System
 {
-    public class MapStringDelegate : MapDelegate<string> { }
+    public class MapStringDelegate : MapDelegate<string>
+    {
+    }
 }

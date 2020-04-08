@@ -1,23 +1,17 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Itemize;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using GOG.Models;
-
 using GOG.Interfaces.Delegates.GetPageResults;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
     // TODO: We should generate those files
     [RespondsToRequests(Method = "update", Collection = "products")]
-    public class RespondToUpdateProductsRequestDelegate : 
+    public class RespondToUpdateProductsRequestDelegate :
         RespondToUpdatePageResultRequestDelegate<ProductsPageResult, Product>
     {
         [Dependencies(
@@ -40,7 +34,8 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 productsDataController,
                 startDelegate,
                 setProgressDelegate,
-                completeDelegate)        {
+                completeDelegate)
+        {
             // ...
         }
     }

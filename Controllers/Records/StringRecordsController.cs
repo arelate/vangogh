@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
-
 using Interfaces.Controllers.Records;
-
 using Interfaces.Models.RecordsTypes;
 
 namespace Controllers.Records
 {
     // TODO: Figure out better way to store strings and not convert from a number
-    public abstract class StringRecordsController: IRecordsController<string>
+    public abstract class StringRecordsController : IRecordsController<string>
     {
-        readonly IRecordsController<long> indexRecordsController;
-        readonly IConvertDelegate<string, long> convertStringToIndexDelegate;
+        private readonly IRecordsController<long> indexRecordsController;
+        private readonly IConvertDelegate<string, long> convertStringToIndexDelegate;
 
         public StringRecordsController(
             IRecordsController<long> indexRecordsController,

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-
 using Interfaces.Controllers.Records;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
@@ -27,7 +25,7 @@ namespace Controllers.Data.ProductTypes
             IRecordsController<long> wishlistedRecordsIndexController,
             IFindDelegate<long> findLongDelegate,
             IStartDelegate startDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getWishlistedDataAsyncDelegate,
                 postWishlistedDataAsyncDelegate,

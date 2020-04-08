@@ -1,12 +1,8 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
-
-
 using Attributes;
-
 using Models.ArgsDefinitions;
 using Models.ArgsTokens;
 
@@ -22,7 +18,7 @@ namespace Delegates.Convert.ArgsTokens
 
         [Dependencies(
             "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate,Delegates")]         
+            "Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate,Delegates")]
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<MethodsSet> findMethodsSetDelegate)
@@ -30,12 +26,12 @@ namespace Delegates.Convert.ArgsTokens
             this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
             this.findMethodsSetDelegate = findMethodsSetDelegate;
         }
+
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
             IAsyncEnumerable<(string Token, Tokens Type)> typedTokens)
         {
             var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
             await foreach (var typedToken in typedTokens)
-            {
                 switch (typedToken.Type)
                 {
                     case Tokens.MethodsSet:
@@ -52,8 +48,6 @@ namespace Delegates.Convert.ArgsTokens
                         yield return typedToken;
                         break;
                 }
-            }
         }
     }
-
 }

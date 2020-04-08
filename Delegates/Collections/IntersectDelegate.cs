@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Collections;
 
 namespace Delegates.Collections
 {
-    public abstract class IntersectDelegate<T>: IIntersectDelegate<T>
+    public abstract class IntersectDelegate<T> : IIntersectDelegate<T>
     {
         private IFindAllDelegate<T> findAllDelegate;
         private IFindDelegate<T> findDelegate;
@@ -27,4 +26,3 @@ namespace Delegates.Collections
         }
     }
 }
-

@@ -1,16 +1,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Collections;
-
-
 using Attributes;
-
 using Models.ArgsDefinitions;
 using Models.Requests;
 
@@ -26,7 +21,7 @@ namespace Delegates.Convert.Requests
         [Dependencies(
             "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
-            "Delegates.Collections.System.IntersectStringDelegate,Delegates")]           
+            "Delegates.Collections.System.IntersectStringDelegate,Delegates")]
         public ConvertRequestsDataToRequestsDelegate(
             IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,

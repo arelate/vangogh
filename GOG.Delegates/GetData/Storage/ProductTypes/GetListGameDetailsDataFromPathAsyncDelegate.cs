@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using Attributes;
 using Delegates.Data.Storage;
 using Interfaces.Delegates.Data;
@@ -14,10 +13,10 @@ namespace GOG.Delegates.Data.Storage.ProductTypes
             "GOG.Delegates.Data.Storage.ProductTypes.GetListGameDetailsDataAsyncDelegate,GOG.Delegates",
             "Delegates.GetPath.ProductTypes.GetGameDetailsPathDelegate,Delegates")]
         public GetListGameDetailsDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<GameDetails>> getListGameDetailsDataAsyncDelegate, 
-            IGetPathDelegate getGameDetailssPathDelegate) : 
+            IGetDataAsyncDelegate<List<GameDetails>> getListGameDetailsDataAsyncDelegate,
+            IGetPathDelegate getGameDetailssPathDelegate) :
             base(
-                getListGameDetailsDataAsyncDelegate, 
+                getListGameDetailsDataAsyncDelegate,
                 getGameDetailssPathDelegate)
         {
             // ...

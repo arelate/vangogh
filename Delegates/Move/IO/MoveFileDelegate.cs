@@ -1,5 +1,4 @@
 using System.IO;
-
 using Interfaces.Delegates.Move;
 
 namespace Delegates.Move.IO

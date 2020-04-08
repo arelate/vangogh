@@ -1,22 +1,19 @@
 ﻿using System.Linq;
 using System.IO;
-
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Format;
-
-
 using Attributes;
 
 namespace Delegates.Format.Uri
 {
     public class FormatValidationUriDelegate : IFormatDelegate<string, string>
     {
-        readonly IGetFilenameDelegate getValidationFilenameDelegate;
-        readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        private readonly IGetFilenameDelegate getValidationFilenameDelegate;
+        private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
 
-		[Dependencies(
-			"Delegates.GetFilename.GetValidationFilenameDelegate,Delegates",
-			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates")]
+        [Dependencies(
+            "Delegates.GetFilename.GetValidationFilenameDelegate,Delegates",
+            "Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates")]
         public FormatValidationUriDelegate(
             IGetFilenameDelegate getValidationFilenameDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate)

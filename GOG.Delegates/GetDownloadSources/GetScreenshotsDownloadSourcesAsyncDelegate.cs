@@ -2,36 +2,30 @@
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-
-
 using Interfaces.Delegates.Format;
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using Attributes;
-
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
 namespace GOG.Delegates.GetDownloadSources
 {
     public class GetScreenshotsDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        readonly IDataController<ProductScreenshots> screenshotsDataController;
-        readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
-        readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
+        private readonly IDataController<ProductScreenshots> screenshotsDataController;
+        private readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
+        private readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
-			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
-			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
+        [Dependencies(
+            "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
+            "Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
+            "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
@@ -60,10 +54,8 @@ namespace GOG.Delegates.GetDownloadSources
             await foreach (var productScreenshots in screenshotsDataController.ItemizeAllAsync())
             {
                 if (productScreenshots == null)
-                {
                     // await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {productScreenshots.Id} doesn't have screenshots");
                     continue;
-                }
 
                 setProgressDelegate.SetProgress();
 

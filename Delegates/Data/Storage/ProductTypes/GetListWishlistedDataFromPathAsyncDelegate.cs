@@ -11,10 +11,10 @@ namespace Delegates.Data.Storage.ProductTypes
             "Delegates.Data.Storage.ProductTypes.GetListWishlistedDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ProductTypes.GetWishlistedPathDelegate,Delegates")]
         public GetListWishlistedDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<long>> getListWishlistedDataAsyncDelegate, 
-            IGetPathDelegate getWishlistedPathDelegate) : 
+            IGetDataAsyncDelegate<List<long>> getListWishlistedDataAsyncDelegate,
+            IGetPathDelegate getWishlistedPathDelegate) :
             base(
-                getListWishlistedDataAsyncDelegate, 
+                getListWishlistedDataAsyncDelegate,
                 getWishlistedPathDelegate)
         {
             // ...

@@ -1,20 +1,17 @@
 ﻿using System.Collections.Generic;
-
 using Interfaces.Delegates.Itemize;
-
 using Interfaces.Controllers.Data;
-
 using Models.ProductTypes;
 
 namespace Delegates.Itemize.MasterDetail
 {
-    public abstract class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType,DetailType> :
+    public abstract class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType, DetailType> :
         IItemizeAllAsyncDelegate<MasterType>
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
-        readonly IDataController<MasterType> masterDataController;
-        readonly IDataController<DetailType> detailDataController;
+        private readonly IDataController<MasterType> masterDataController;
+        private readonly IDataController<DetailType> detailDataController;
 
         public ItemizeAllMasterDetailsGapsAsyncDelegate(
             IDataController<MasterType> masterDataController,

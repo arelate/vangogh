@@ -11,6 +11,7 @@ namespace Delegates.GetValue
         {
             value = new T();
         }
+
         public T GetValue()
         {
             return value;

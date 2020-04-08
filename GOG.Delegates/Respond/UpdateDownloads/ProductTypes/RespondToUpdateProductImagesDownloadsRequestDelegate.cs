@@ -1,21 +1,15 @@
 ﻿using Interfaces.Delegates.GetDirectory;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetDownloadSources;
-
 using Attributes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
     [RespondsToRequests(Method = "updatedownloads", Collection = "productimages")]
-    public class RespondToUpdateProductImagesDownloadsRequestDelegate : 
+    public class RespondToUpdateProductImagesDownloadsRequestDelegate :
         RespondToUpdateDownloadsRequestDelegate<ProductImage>
     {
         [Dependencies(
@@ -35,7 +29,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             IDataController<Product> productsDataController,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getProductImagesDownloadSourcesAsyncDelegate,
                 getProductImagesDirectoryDelegate,

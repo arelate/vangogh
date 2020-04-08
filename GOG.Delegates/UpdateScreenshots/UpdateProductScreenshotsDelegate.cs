@@ -1,29 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Data;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using GOG.Interfaces.Delegates.UpdateScreenshots;
-
 using Attributes;
-
 using Models.ProductTypes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.UpdateScreenshots
 {
     public class UpdateScreenshotsAsyncDelegate : IUpdateScreenshotsAsyncDelegate<Product>
     {
-        readonly IGetValueDelegate<string> getUpdateUriDelegate;
-        readonly IDataController<ProductScreenshots> screenshotsDataController;
+        private readonly IGetValueDelegate<string> getUpdateUriDelegate;
+        private readonly IDataController<ProductScreenshots> screenshotsDataController;
         private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
-        readonly IItemizeDelegate<string, string> itemizeScreenshotsDelegates;
+        private readonly IItemizeDelegate<string, string> itemizeScreenshotsDelegates;
 
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;

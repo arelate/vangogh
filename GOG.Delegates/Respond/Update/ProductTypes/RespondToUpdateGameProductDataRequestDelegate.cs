@@ -1,19 +1,15 @@
 ﻿using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="gameproductdata")]
+    [RespondsToRequests(Method = "update", Collection = "gameproductdata")]
     public class RespondToUpdateGameProductDataRequestDelegate :
         RespondToUpdateMasterDetailsRequestDelegate<GameProductData, Product>
     {
@@ -34,7 +30,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             IGetDeserializedAsyncDelegate<GameProductData> getDeserializedGameProductDataAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getGameProductDataUpdateUriDelegate,
                 convertProductToGameProductDataUpdateIdentityDelegate,
@@ -45,8 +41,8 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 setProgressDelegate,
                 completeDelegate,
                 null)
-                {
-                    // ...
-                }
+        {
+            // ...
+        }
     }
 }

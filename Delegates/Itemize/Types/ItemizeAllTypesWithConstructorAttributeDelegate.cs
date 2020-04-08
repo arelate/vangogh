@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Itemize;
 
 namespace Delegates.Itemize.Types
@@ -14,13 +13,13 @@ namespace Delegates.Itemize.Types
         {
             this.itemizeAllAppDomainTypesDelegate = itemizeAllAppDomainTypesDelegate;
         }
-        
+
         public IEnumerable<Type> ItemizeAll()
         {
             foreach (var type in itemizeAllAppDomainTypesDelegate.ItemizeAll())
-                foreach (var constructorInfo in type.GetConstructors())
-                    if (constructorInfo.IsDefined(typeof(AttributeType), true))
-                        yield return type;
+            foreach (var constructorInfo in type.GetConstructors())
+                if (constructorInfo.IsDefined(typeof(AttributeType), true))
+                    yield return type;
         }
     }
 }

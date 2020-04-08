@@ -6,17 +6,17 @@ using Models.ProductTypes;
 
 namespace Delegates.Data.Storage.ProductTypes
 {
-    public class GetListValidationResultsDataFromPathAsyncDelegate : 
+    public class GetListValidationResultsDataFromPathAsyncDelegate :
         GetJSONDataFromPathAsyncDelegate<List<ValidationResults>>
     {
         [Dependencies(
             "Delegates.Data.Storage.ProductTypes.GetListValidationResultsDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ProductTypes.GetValidationResultsPathDelegate,Delegates")]
         public GetListValidationResultsDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<ValidationResults>> getListValidationResultsDataAsyncDelegate, 
-            IGetPathDelegate getValidationResultsPathDelegate) : 
+            IGetDataAsyncDelegate<List<ValidationResults>> getListValidationResultsDataAsyncDelegate,
+            IGetPathDelegate getValidationResultsPathDelegate) :
             base(
-                getListValidationResultsDataAsyncDelegate, 
+                getListValidationResultsDataAsyncDelegate,
                 getValidationResultsPathDelegate)
         {
             // ...

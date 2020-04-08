@@ -2,33 +2,32 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Xunit;
-
 using Interfaces.Delegates.Convert;
-
 using Models.ArgsTokens;
-
 using TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
     public class ConvertLikelyTypedToTypedTokensDelegateTests
     {
-        private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
-        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertLikelyTypedToTypedTokensDelegate;
+        private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
+            convertTokensToLikelyTypedTokensDelegate;
+
+        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>>
+            convertLikelyTypedToTypedTokensDelegate;
 
         public ConvertLikelyTypedToTypedTokensDelegateTests()
         {
             // var singletonInstancesController = new SingletonInstancesController(                
             //     TestModels.Dependencies.TestContextReplacements.Map);
 
-            this.convertTokensToLikelyTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                typeof(ConvertTokensToLikelyTypedTokensDelegate))
+            convertTokensToLikelyTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+                    typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
 
-            this.convertLikelyTypedToTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                typeof(ConvertLikelyTypedToTypedTokensDelegate))
+            convertLikelyTypedToTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+                    typeof(ConvertLikelyTypedToTypedTokensDelegate))
                 as ConvertLikelyTypedToTypedTokensDelegate;
         }
 
@@ -38,7 +37,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
             var typedTokens = new List<(string, Tokens)>();
 
-            await foreach (var typedToken in 
+            await foreach (var typedToken in
                 convertLikelyTypedToTypedTokensDelegate.ConvertAsync(likelyTypedTokes))
                 typedTokens.Add(typedToken);
 
@@ -106,7 +105,8 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [InlineData("--os", "bsd")]
         [InlineData("--lang", "klingon")]
         // [InlineData("", "")]
-        public async void ConvertParameterTitleAndLikelyParameterValuesReturnsUnknowns(string parameter, string likelyValue)
+        public async void ConvertParameterTitleAndLikelyParameterValuesReturnsUnknowns(string parameter,
+            string likelyValue)
         {
             var typedTokens = await ConvertTokensToTypedTokens(parameter, likelyValue);
 

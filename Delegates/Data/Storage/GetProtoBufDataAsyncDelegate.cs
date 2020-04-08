@@ -20,13 +20,13 @@ namespace Delegates.Data.Storage
         {
             return await Task.Run(() =>
             {
-                T data = default(T);
+                var data = default(T);
 
-                if (System.IO.File.Exists(uri))
-                {
+                if (File.Exists(uri))
                     using (var readableStream = convertUriToReadableStreamDelegate.Convert(uri))
+                    {
                         data = Serializer.Deserialize<T>(readableStream);
-                }
+                    }
 
                 return data;
             });

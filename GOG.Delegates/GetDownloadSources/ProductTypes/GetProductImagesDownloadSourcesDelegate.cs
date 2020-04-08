@@ -1,14 +1,9 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Format;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using GOG.Interfaces.Delegates.GetImageUri;
-
 using GOG.Models;
 
 namespace GOG.Delegates.GetDownloadSources.ProductTypes
@@ -31,7 +26,7 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
             IGetImageUriDelegate<Product> getProductImageUriDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 updatedDataController,
                 productsDataController,
@@ -43,6 +38,5 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
         {
             // ...
         }
-
     }
 }

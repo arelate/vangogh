@@ -11,10 +11,10 @@ namespace Delegates.Data.Storage.ProductTypes
             "Delegates.Data.Storage.ProductTypes.GetListUpdatedDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ProductTypes.GetUpdatedPathDelegate,Delegates")]
         public GetListUpdatedDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<long>> getListUpdatedDataAsyncDelegate, 
-            IGetPathDelegate getUpdatedPathDelegate) : 
+            IGetDataAsyncDelegate<List<long>> getListUpdatedDataAsyncDelegate,
+            IGetPathDelegate getUpdatedPathDelegate) :
             base(
-                getListUpdatedDataAsyncDelegate, 
+                getListUpdatedDataAsyncDelegate,
                 getUpdatedPathDelegate)
         {
             // ...

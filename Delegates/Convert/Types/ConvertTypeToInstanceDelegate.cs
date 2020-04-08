@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-
 using Interfaces.Delegates.Convert;
 
 namespace Delegates.Convert.Types
@@ -23,8 +22,8 @@ namespace Delegates.Convert.Types
         public object Convert(Type type)
         {
             if (type == null ||
-                 type.IsInterface ||
-                 type.IsAbstract)
+                type.IsInterface ||
+                type.IsAbstract)
                 throw new ArgumentException($"Invalid type: {type.Name}: null, an interface or abstract");
 
             if (!singletonInstances.ContainsKey(type))
@@ -44,7 +43,7 @@ namespace Delegates.Convert.Types
                     constructorWithDependencies);
 
                 var instantiatedDependencies = new object[constructorDependencies.Length];
-                for (var dd=0; dd<constructorDependencies.Length; dd++)
+                for (var dd = 0; dd < constructorDependencies.Length; dd++)
                     instantiatedDependencies[dd] = Convert(constructorDependencies[dd]);
 
                 singletonInstances[type] = constructorWithDependencies.Invoke(instantiatedDependencies);

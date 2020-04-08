@@ -1,20 +1,18 @@
 ﻿using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
-
 using Attributes;
 
 namespace Delegates.Convert.Hashes
 {
-    public class ConvertFileToMd5HashDelegate: IConvertAsyncDelegate<string, Task<string>>
+    public class ConvertFileToMd5HashDelegate : IConvertAsyncDelegate<string, Task<string>>
     {
         private readonly IGetDataAsyncDelegate<string> getStringDataAsyncDelegate;
-        readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
+        private readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
 
-		[Dependencies(
-			"Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
-			"Delegates.Convert.Hashes.ConvertStringToMd5HashDelegate,Delegates")]
+        [Dependencies(
+            "Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
+            "Delegates.Convert.Hashes.ConvertStringToMd5HashDelegate,Delegates")]
         public ConvertFileToMd5HashDelegate(
             IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
             IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate)

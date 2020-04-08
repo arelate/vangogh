@@ -1,19 +1,15 @@
 ﻿using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="apiproducts")]
+    [RespondsToRequests(Method = "update", Collection = "apiproducts")]
     public class RespondToUpdateApiProductsRequestDelegate :
         RespondToUpdateMasterDetailsRequestDelegate<ApiProduct, Product>
     {
@@ -45,8 +41,8 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 setProgressDelegate,
                 completeDelegate,
                 null)
-                {
-                    // ...
-                }
+        {
+            // ...
+        }
     }
 }

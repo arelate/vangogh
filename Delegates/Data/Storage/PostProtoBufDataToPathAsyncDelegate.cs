@@ -20,7 +20,7 @@ namespace Delegates.Data.Storage
         public async Task<string> PostDataAsync(T data, string uri = null)
         {
             return await postProtoBufDataAsyncDelegate.PostDataAsync(
-                data, 
+                data,
                 getPathDelegate.GetPath(string.Empty, uri));
         }
     }

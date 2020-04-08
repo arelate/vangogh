@@ -1,23 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Respond;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using Models.ProductTypes;
 using Models.Separators;
-
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 namespace GOG.Delegates.Respond.Download
 {
-    public abstract class RespondToDownloadRequestDelegate<Type>: IRespondAsyncDelegate
-        where Type:ProductCore
+    public abstract class RespondToDownloadRequestDelegate<Type> : IRespondAsyncDelegate
+        where Type : ProductCore
     {
-        readonly IDataController<ProductDownloads> productDownloadsDataController;
-        readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
+        private readonly IDataController<ProductDownloads> productDownloadsDataController;
+        private readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -56,7 +52,7 @@ namespace GOG.Delegates.Respond.Download
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(
                     d =>
-                    d.Type == typeof(Type).ToString()).ToArray();
+                        d.Type == typeof(Type).ToString()).ToArray();
 
                 startDelegate.Start($"Download {typeof(Type)} entries");
 
@@ -66,9 +62,10 @@ namespace GOG.Delegates.Respond.Download
 
                     var sanitizedUri = entry.SourceUri;
                     if (sanitizedUri.Contains(Separators.QueryString))
-                        sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
+                        sanitizedUri = sanitizedUri.Substring(0,
+                            sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
 
-                   setProgressDelegate.SetProgress();
+                    setProgressDelegate.SetProgress();
 
                     await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
                         productDownloads.Id,

@@ -10,12 +10,12 @@ namespace Delegates.Data.Storage.ProductTypes
     {
         [Dependencies(
             "Delegates.Data.Storage.PostStringDataAsyncDelegate,Delegates",
-            "Delegates.Convert.JSON.ProductTypes.ConvertListValidationResultsToJSONDelegate,Delegates")]        
+            "Delegates.Convert.JSON.ProductTypes.ConvertListValidationResultsToJSONDelegate,Delegates")]
         public PostListValidationResultsDataAsyncDelegate(
-            IPostDataAsyncDelegate<string> postStringDataAsyncDelegate, 
-            IConvertDelegate<List<ValidationResults>, string> convertListValidationResultsToJSONDelegate) : 
+            IPostDataAsyncDelegate<string> postStringDataAsyncDelegate,
+            IConvertDelegate<List<ValidationResults>, string> convertListValidationResultsToJSONDelegate) :
             base(
-                postStringDataAsyncDelegate, 
+                postStringDataAsyncDelegate,
                 convertListValidationResultsToJSONDelegate)
         {
             // ...

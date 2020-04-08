@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
 
 namespace Interfaces.Controllers.Data

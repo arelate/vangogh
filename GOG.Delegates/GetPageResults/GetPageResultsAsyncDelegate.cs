@@ -1,25 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
-
 using Interfaces.Delegates.Activities;
-
 using Models.Units;
-
 using GOG.Interfaces.Delegates.GetPageResults;
 using GOG.Interfaces.Delegates.RequestPage;
-
 using GOG.Models;
 
 namespace GOG.Delegates.GetPageResults
 {
     public abstract class GetPageResultsAsyncDelegate<T> : IGetPageResultsAsyncDelegate<T> where T : PageResult
     {
-        readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
-        readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
-        readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
+        private readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
+        private readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
+        private readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
         private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
@@ -70,8 +65,8 @@ namespace GOG.Delegates.GetPageResults
             do
             {
                 var response = await requestPageAsyncDelegate.RequestPageAsync(
-                    requestUri, 
-                    requestParameters, 
+                    requestUri,
+                    requestParameters,
                     currentPage);
 
                 setProgressDelegate.SetProgress();
@@ -83,7 +78,6 @@ namespace GOG.Delegates.GetPageResults
                 totalPages = pageResult.TotalPages;
 
                 pageResults.Add(pageResult);
-
             } while (++currentPage <= totalPages);
 
             completeDelegate.Complete();

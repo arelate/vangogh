@@ -1,13 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirm;
-
 using Attributes;
-
 using Models.Requests;
 using Models.ArgsDefinitions;
 
@@ -33,6 +30,7 @@ namespace Delegates.Convert.Requests
             this.findDependencyDelegate = findDependencyDelegate;
             this.confirmExclusiveStringDelegate = confirmExclusiveStringDelegate;
         }
+
         public async Task<RequestsData> ConvertAsync(RequestsData requestsData)
         {
             var requiredMethods = new List<string>();
@@ -49,13 +47,11 @@ namespace Delegates.Convert.Requests
 
                 if (!confirmExclusiveStringDelegate.Confirm(
                     (requestsData.Collections, dependency.Collections)))
-                {
                     foreach (var requirement in dependency.Requires)
                     {
                         requiredMethods.Add(requirement.Method);
                         requiredCollections.AddRange(requirement.Collections);
                     }
-                }
             }
 
             foreach (var requiredMethod in requiredMethods)

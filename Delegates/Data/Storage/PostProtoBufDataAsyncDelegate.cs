@@ -21,7 +21,9 @@ namespace Delegates.Data.Storage
             await Task.Run(() =>
             {
                 using (var writableStream = convertUriToWritableStreamDelegate.Convert(uri))
+                {
                     Serializer.Serialize<T>(writableStream, data);
+                }
             });
 
             return uri;

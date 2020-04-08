@@ -1,7 +1,5 @@
 using Attributes;
-
 using Interfaces.Delegates.Collections;
-
 using Models.ProductTypes;
 
 namespace Delegates.Collections.ProductTypes

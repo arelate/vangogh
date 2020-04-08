@@ -18,7 +18,7 @@ namespace Interfaces.Routing
         Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources);
     }
 
-    public interface IRoutingController:
+    public interface IRoutingController :
         IUpdateRouteAsyncDelegate,
         ITraceRouteAsyncDelegate,
         ITraceRoutesAsyncDelegate

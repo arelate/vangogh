@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-
 using Interfaces.Models.RecordsTypes;
-
 using Models.ProductTypes;
 
 namespace Controllers.Records
 {
     public abstract class IndexRecordsController : IRecordsController<long>
     {
-        readonly IDataController<ProductRecords> productRecordsController;
+        private readonly IDataController<ProductRecords> productRecordsController;
 
         public IndexRecordsController(
             IDataController<ProductRecords> productRecordsController)
@@ -34,9 +31,7 @@ namespace Controllers.Records
             if (productRecord == null ||
                 productRecord.Records == null) return minRecord;
 
-            return productRecord.Records.ContainsKey(recordType) ?
-                productRecord.Records[recordType] :
-                minRecord;
+            return productRecord.Records.ContainsKey(recordType) ? productRecord.Records[recordType] : minRecord;
         }
 
         public async Task SetRecordAsync(long id, RecordsTypes recordType)

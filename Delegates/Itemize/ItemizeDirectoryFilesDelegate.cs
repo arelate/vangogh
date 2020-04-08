@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
 using Interfaces.Delegates.Itemize;
 
 namespace Delegates.Itemize

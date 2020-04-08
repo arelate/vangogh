@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Collections;
 
 namespace Delegates.Collections
@@ -12,7 +11,8 @@ namespace Delegates.Collections
             if (collection == null) yield break;
 
             foreach (var item in collection)
-                if (reduce(item)) yield return item;
+                if (reduce(item))
+                    yield return item;
         }
     }
 }

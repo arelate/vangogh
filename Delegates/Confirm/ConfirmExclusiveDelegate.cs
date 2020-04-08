@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirm;
 

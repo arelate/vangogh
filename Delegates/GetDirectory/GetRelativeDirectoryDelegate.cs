@@ -1,14 +1,13 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.GetDirectory;
 
 namespace Delegates.GetDirectory
 {
     public abstract class GetRelativeDirectoryDelegate : IGetDirectoryDelegate
     {
-        readonly string baseDirectory;
-        readonly IGetDirectoryDelegate[] parentDirectories;
+        private readonly string baseDirectory;
+        private readonly IGetDirectoryDelegate[] parentDirectories;
 
         public GetRelativeDirectoryDelegate(string baseDirectory, params IGetDirectoryDelegate[] parentDirectories)
         {
@@ -23,7 +22,7 @@ namespace Delegates.GetDirectory
             if (parentDirectories != null)
                 foreach (var directoryDelegate in parentDirectories)
                     currentPath = Path.Combine(
-                        directoryDelegate.GetDirectory(string.Empty), 
+                        directoryDelegate.GetDirectory(string.Empty),
                         currentPath);
 
             if (relativeDirectory == null) relativeDirectory = string.Empty;

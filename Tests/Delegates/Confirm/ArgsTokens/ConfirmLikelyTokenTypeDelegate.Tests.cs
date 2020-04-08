@@ -1,25 +1,20 @@
 using System;
 using System.Threading.Tasks;
-
 using Xunit;
-
 using Interfaces.Delegates.Confirm;
-
 using Models.ArgsTokens;
-
 using TestDelegates.Convert.Types;
 
 namespace Delegates.Confirm.ArgsTokens.Tests
 {
-
     public class ConfirmLikelyTokenTypeDelegateTests
     {
         private IConfirmAsyncDelegate<(string Token, Tokens Type)> confirmLikelyTokenTypeDelegate;
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
-            this.confirmLikelyTokenTypeDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                typeof(ConfirmLikelyTokenTypeDelegate))
+            confirmLikelyTokenTypeDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+                    typeof(ConfirmLikelyTokenTypeDelegate))
                 as ConfirmLikelyTokenTypeDelegate;
         }
 
@@ -50,7 +45,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         public async Task CanConfirmLikelyTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
         {
             Assert.True(
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
+                await confirmLikelyTokenTypeDelegate.ConfirmAsync(
                     (token, tokenType)));
         }
 
@@ -61,7 +56,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         {
             await Assert.ThrowsAsync<NotImplementedException>(
                 async () =>
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync((string.Empty, tokenType)));
+                    await confirmLikelyTokenTypeDelegate.ConfirmAsync((string.Empty, tokenType)));
         }
 
         [Theory]
@@ -72,8 +67,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         public async Task CanConfirmWrongTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
         {
             Assert.False(
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync((token, tokenType)));
+                await confirmLikelyTokenTypeDelegate.ConfirmAsync((token, tokenType)));
         }
-
     }
 }

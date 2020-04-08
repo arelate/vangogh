@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-
 using Interfaces.Delegates.Itemize;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Itemize

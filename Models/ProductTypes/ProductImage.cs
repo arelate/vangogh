@@ -1,6 +1,6 @@
 namespace Models.ProductTypes
 {
-    public class ProductImage: ProductCore
+    public class ProductImage : ProductCore
     {
         // ...
     }

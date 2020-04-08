@@ -1,27 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Respond;
-
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using Attributes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="updated")]
-    public class RespondToUpdateUpdatedRequestDelegate: IRespondAsyncDelegate
+    [RespondsToRequests(Method = "update", Collection = "updated")]
+    public class RespondToUpdateUpdatedRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IDataController<AccountProduct> accountProductDataController;
-        readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
+        private readonly IDataController<AccountProduct> accountProductDataController;
+        private readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
-        readonly IDataController<long> updatedDataController;
-        
+        private readonly IDataController<long> updatedDataController;
+
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -45,10 +40,11 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
 
             this.updatedDataController = updatedDataController;
-            
+
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
-            this.completeDelegate = completeDelegate;        }
+            this.completeDelegate = completeDelegate;
+        }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
@@ -96,7 +92,6 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             await updatedDataController.CommitAsync();
 
             completeDelegate.Complete();
-
         }
     }
 }

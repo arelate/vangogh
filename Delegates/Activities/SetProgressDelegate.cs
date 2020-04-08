@@ -12,13 +12,13 @@ namespace Delegates.Activities
         private readonly IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate;
 
         [Dependencies(
-            "Delegates.GetValue.Activities.GetOngoingActivitiesValueDelegate,Delegates")]       
+            "Delegates.GetValue.Activities.GetOngoingActivitiesValueDelegate,Delegates")]
         public SetProgressDelegate(IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate)
         {
             this.getOngoingActivitiesValueDelegate = getOngoingActivitiesValueDelegate;
         }
 
-        public void SetProgress(int increment = 1, int target = Int32.MaxValue)
+        public void SetProgress(int increment = 1, int target = int.MaxValue)
         {
             var ongoingActivities = getOngoingActivitiesValueDelegate.GetValue();
             var currentActivity = ongoingActivities.Peek();
@@ -26,7 +26,7 @@ namespace Delegates.Activities
                 currentActivity.Target = target;
             currentActivity.Progress += increment;
 
-            System.Console.WriteLine($"{currentActivity.Title} progress: {currentActivity.Progress}");
+            Console.WriteLine($"{currentActivity.Title} progress: {currentActivity.Progress}");
         }
     }
 }

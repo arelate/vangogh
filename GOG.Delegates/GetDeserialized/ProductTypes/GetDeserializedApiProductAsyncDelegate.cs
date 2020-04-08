@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
-
 using Attributes;
-
 using Models.Dependencies;
 using GOG.Models;
 
@@ -17,7 +14,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToApiProductDelegate,GOG.Delegates")]
         public GetDeserializedApiProductAsyncDelegate(
-            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,            
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IConvertDelegate<string, ApiProduct> convertJSONToApiProductDelegate) :
             base(

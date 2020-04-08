@@ -1,10 +1,6 @@
-
 using Interfaces.Delegates.Collections;
-
 using Delegates.Confirm;
-
 using Attributes;
-
 using Models.Separators;
 
 namespace GOG.Delegates.Confirm.ProductTypes

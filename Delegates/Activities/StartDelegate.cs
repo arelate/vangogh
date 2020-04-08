@@ -8,7 +8,7 @@ using Models.Activities;
 
 namespace Delegates.Activities
 {
-    public class StartDelegate: IStartDelegate
+    public class StartDelegate : IStartDelegate
     {
         private readonly IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate;
 
@@ -18,15 +18,15 @@ namespace Delegates.Activities
         {
             this.getOngoingActivitiesValueDelegate = getOngoingActivitiesValueDelegate;
         }
-        
+
         public void Start(string title)
         {
-            var activity = new Activity() { Title = title, Started = DateTime.UtcNow };
-            
+            var activity = new Activity() {Title = title, Started = DateTime.UtcNow};
+
             var ongoingActivities = getOngoingActivitiesValueDelegate.GetValue();
             ongoingActivities.Push(activity);
-            
-            System.Console.WriteLine($"Started action {activity.Title}");
+
+            Console.WriteLine($"Started action {activity.Title}");
         }
     }
 }

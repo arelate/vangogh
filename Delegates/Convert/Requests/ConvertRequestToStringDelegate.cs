@@ -1,10 +1,6 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Convert;
-
-
 using Attributes;
-
 using Models.Requests;
 
 namespace Delegates.Convert.Requests
@@ -24,7 +20,8 @@ namespace Delegates.Convert.Requests
 
         public string Convert(Request request)
         {
-            return $"{request.Method.ToUpper()} /{request.Collection}{convertParametersToStringDelegate.Convert(request.Parameters)}";
+            return
+                $"{request.Method.ToUpper()} /{request.Collection}{convertParametersToStringDelegate.Convert(request.Parameters)}";
         }
     }
 }

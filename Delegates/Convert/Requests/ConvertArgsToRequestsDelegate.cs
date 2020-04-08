@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
-
 using Attributes;
-
 using Models.Requests;
 using Models.ArgsTokens;
 
@@ -13,10 +10,16 @@ namespace Delegates.Convert.Requests
 {
     public class ConvertArgsToRequestsDelegate : IConvertAsyncDelegate<string[], IAsyncEnumerable<Request>>
     {
-        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate;
+        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
+            convertTokensToTypedTokensDelegate;
+
         private IConvertDelegate<IEnumerable<(string, Tokens)>, RequestsData> convertTypedTokensToRequestsDataDelegate;
-        private IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate;
-        private IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedDependenciesDelegate;
+
+        private IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
+            convertRequestsDataToResolvedCollectionsDelegate;
+
+        private IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
+            convertRequestsDataToResolvedDependenciesDelegate;
 
         private ISortAsyncDelegate<string> sortMethodsByOrderDelegate;
         private IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate;
@@ -29,7 +32,8 @@ namespace Delegates.Convert.Requests
             "Delegates.Collections.Requests.SortRequestsMethodsByOrderAsyncDelegate,Delegates",
             "Delegates.Convert.Requests.ConvertRequestsDataToRequestsDelegate,Delegates")]
         public ConvertArgsToRequestsDelegate(
-            IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate,
+            IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
+                convertTokensToTypedTokensDelegate,
             IConvertDelegate<IEnumerable<(string, Tokens)>, RequestsData> convertTypedTokensToRequestsDataDelegate,
             IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate,
             IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedDependenciesDelegate,

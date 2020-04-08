@@ -11,5 +11,4 @@ namespace Interfaces.Delegates.Itemize
     {
         IEnumerable<Output> ItemizeAll();
     }
-
 }

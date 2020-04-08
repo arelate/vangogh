@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Respond;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using GOG.Interfaces.Delegates.FillGaps;
-
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.Respond.Update
@@ -21,18 +16,18 @@ namespace GOG.Delegates.Respond.Update
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
-        readonly IDataController<DetailType> detailDataController;
-        readonly IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate;
+        private readonly IDataController<DetailType> detailDataController;
+        private readonly IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate;
 
-        readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate;
+        private readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate;
 
-        readonly IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate;
-        readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
+        private readonly IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate;
+        private readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
         private readonly IGetValueDelegate<string> getDetailUpdateUriDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
-        private readonly ICompleteDelegate completeDelegate;        
+        private readonly ICompleteDelegate completeDelegate;
 
         public RespondToUpdateMasterDetailsRequestDelegate(
             IGetValueDelegate<string> getDetailUpdateUriDelegate,
@@ -54,10 +49,10 @@ namespace GOG.Delegates.Respond.Update
             this.fillGapsDelegate = fillGapsDelegate;
 
             this.getDetailUpdateUriDelegate = getDetailUpdateUriDelegate;
-            
+
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
-            this.completeDelegate = completeDelegate;            
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)

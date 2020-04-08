@@ -12,7 +12,7 @@ namespace Interfaces.Input
         Task<T> RequestPrivateInputAsync(string message);
     }
 
-    public interface IInputController<T>:
+    public interface IInputController<T> :
         IRequestInputAsyncDelegate<T>,
         IRequestPrivateInputAsyncDelegate<T>
     {

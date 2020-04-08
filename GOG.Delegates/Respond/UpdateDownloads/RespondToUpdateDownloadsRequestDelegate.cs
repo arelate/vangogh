@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Respond;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using GOG.Interfaces.Delegates.GetDownloadSources;
-
 using Models.ProductTypes;
 using GOG.Models;
 
@@ -17,16 +13,17 @@ using GOG.Models;
 namespace GOG.Delegates.Respond.UpdateDownloads
 {
     public abstract class RespondToUpdateDownloadsRequestDelegate<Type> : IRespondAsyncDelegate
-        where Type: ProductCore
+        where Type : ProductCore
     {
-        readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
-        readonly IGetDirectoryDelegate getDirectoryDelegate;
-        readonly IDataController<ProductDownloads> productDownloadsDataController;
-        readonly IDataController<AccountProduct> accountProductsDataController;
-        readonly IDataController<Product> productsDataController;
+        private readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
+        private readonly IGetDirectoryDelegate getDirectoryDelegate;
+        private readonly IDataController<ProductDownloads> productDownloadsDataController;
+        private readonly IDataController<AccountProduct> accountProductsDataController;
+        private readonly IDataController<Product> productsDataController;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
+
         public RespondToUpdateDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
@@ -72,26 +69,22 @@ namespace GOG.Delegates.Respond.UpdateDownloads
                     product = await accountProductsDataController.GetByIdAsync(id);
 
                     if (product == null)
-                    {
                         // await statusController.WarnAsync(
                         //     updateDownloadsTask,
                         //     $"Downloads are scheduled for the product/account product {id} that doesn't exist");
                         continue;
-                    }
                 }
 
                 setProgressDelegate.SetProgress();
 
                 var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
                 if (productDownloads == null)
-                {
                     productDownloads = new ProductDownloads
                     {
                         Id = product.Id,
                         Title = product.Title,
                         Downloads = new List<ProductDownloadEntry>()
                     };
-                }
 
                 // purge existing downloads for this download type as we'll always be scheduling all files we need to download
                 // and don't want to carry over any previously scheduled files that might not be relevant anymore
@@ -132,7 +125,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
             }
 
             completeDelegate.Complete();
-            
+
             completeDelegate.Complete();
         }
     }

@@ -1,12 +1,8 @@
 ﻿using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
-
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Cleanup.ProductTypes

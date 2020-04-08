@@ -1,13 +1,10 @@
 using System.Collections.Generic;
-
 using Interfaces.Controllers.Records;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
-
 using Models.ProductTypes;
 
 namespace Controllers.Data.ProductTypes
@@ -29,7 +26,7 @@ namespace Controllers.Data.ProductTypes
             IRecordsController<long> productScreenshotsRecordsIndexController,
             IFindDelegate<ProductScreenshots> findProductScreenshotsDelegate,
             IStartDelegate startDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getProductScreenshotsDataAsyncDelegate,
                 postProductScreenshotsDataAsyncDelegate,

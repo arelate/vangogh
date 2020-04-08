@@ -1,17 +1,13 @@
 ﻿using System.Threading.Tasks;
-
 using Interfaces.Delegates.Download;
-
-
 using GOG.Interfaces.Delegates.DownloadProductFile;
-
 using Attributes;
 
 namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadProductImageAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
-        readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
+        private readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
 
         [Dependencies(
             "Delegates.Download.DownloadFromUriAsyncDelegate,Delegates")]

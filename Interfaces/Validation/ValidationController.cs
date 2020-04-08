@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-
 using Interfaces.ValidationResults;
 
 namespace Interfaces.Validation
@@ -39,7 +38,7 @@ namespace Interfaces.Validation
         Task<T> ValidateFileAsync(string uri, string validationSource);
     }
 
-    public interface IFileValidationController:
+    public interface IFileValidationController :
         IVerifiyExpectedValidationDelegate,
         IVerifyValidationFileExistsDelegate,
         IVerifyProductFileExistsDelegate,

@@ -22,12 +22,12 @@ namespace Delegates.Data.Storage
         {
             var data = string.Empty;
 
-            if (System.IO.File.Exists(uri))
-            {
+            if (File.Exists(uri))
                 using (var stream = convertUriToReadableStream.Convert(uri))
-                using (StreamReader reader = new StreamReader(stream))
+                using (var reader = new StreamReader(stream))
+                {
                     data = await reader.ReadToEndAsync();
-            }
+                }
 
             return data;
         }

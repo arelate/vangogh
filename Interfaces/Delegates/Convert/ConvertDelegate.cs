@@ -11,5 +11,4 @@ namespace Interfaces.Delegates.Convert
     {
         public To ConvertAsync(From data);
     }
-
 }

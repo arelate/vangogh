@@ -3,26 +3,18 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Interfaces.Validation;
 using Interfaces.Routing;
-
 using Interfaces.ValidationResults;
-
 using Attributes;
-
 using Models.ProductTypes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Respond.Validate
@@ -30,15 +22,15 @@ namespace GOG.Delegates.Respond.Validate
     [RespondsToRequests(Method = "validate", Collection = "productfiles")]
     public class RespondToValidateProductFilesRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IGetDirectoryDelegate productFileDirectoryDelegate;
-        readonly IGetFilenameDelegate productFileFilenameDelegate;
-        readonly IFormatDelegate<string, string> formatValidationFileDelegate;
-        readonly IFileValidationController fileValidationController;
-        readonly IDataController<ValidationResults> validationResultsDataController;
-        readonly IDataController<GameDetails> gameDetailsDataController;
-        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        readonly IDataController<long> updatedDataController;
-        readonly IRoutingController routingController;
+        private readonly IGetDirectoryDelegate productFileDirectoryDelegate;
+        private readonly IGetFilenameDelegate productFileFilenameDelegate;
+        private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
+        private readonly IFileValidationController fileValidationController;
+        private readonly IDataController<ValidationResults> validationResultsDataController;
+        private readonly IDataController<GameDetails> gameDetailsDataController;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
+        private readonly IDataController<long> updatedDataController;
+        private readonly IRoutingController routingController;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -119,6 +111,7 @@ namespace GOG.Delegates.Respond.Validate
 
                     localFiles.Add(localFile);
                 }
+
                 completeDelegate.Complete();
 
 

@@ -14,7 +14,7 @@ namespace Interfaces.ValidationResults
         bool ProductFileIsValid(IFileValidationResults fileValidationResult);
     }
 
-    public interface IValidationResultController:
+    public interface IValidationResultController :
         IProductIsValidDelegate,
         IProductFileIsValidDelegate
     {

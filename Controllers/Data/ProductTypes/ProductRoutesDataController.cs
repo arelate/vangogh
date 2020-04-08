@@ -1,13 +1,10 @@
 using System.Collections.Generic;
-
 using Interfaces.Controllers.Records;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
-
 using Models.ProductTypes;
 
 namespace Controllers.Data.ProductTypes
@@ -19,7 +16,8 @@ namespace Controllers.Data.ProductTypes
             "Delegates.Data.Storage.ProductTypes.PostListProductRoutesDataToPathAsyncDelegate,Delegates",
             "Delegates.Convert.ProductTypes.ConvertProductRoutesToIndexDelegate,Delegates",
             "Controllers.Records.ProductTypes.ProductRoutesRecordsIndexController,Controllers",
-            "Delegates.Collections.ProductTypes.FindProductRoutesDelegate,Delegates",            "Delegates.Activities.StartDelegate,Delegates",
+            "Delegates.Collections.ProductTypes.FindProductRoutesDelegate,Delegates",
+            "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public ProductRoutesDataController(
             IGetDataAsyncDelegate<List<ProductRoutes>> getProductRoutesDataAsyncDelegate,
@@ -28,7 +26,7 @@ namespace Controllers.Data.ProductTypes
             IRecordsController<long> productRoutesRecordsIndexController,
             IFindDelegate<ProductRoutes> findProductRoutesDelegate,
             IStartDelegate startDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getProductRoutesDataAsyncDelegate,
                 postProductRoutesDataAsyncDelegate,

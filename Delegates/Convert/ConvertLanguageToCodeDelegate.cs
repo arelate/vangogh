@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-
 using Attributes;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Collections;
@@ -20,10 +18,10 @@ namespace Delegates.Convert
         public ConvertLanguageToCodeDelegate(
             IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate,
             IFindDelegate<KeyValuePair<string, string>> findLanguageCodeDelegate)
-            {
-                this.getLanguageCodesDelegate = getLanguageCodesDelegate;
-                this.findLanguageCodeDelegate = findLanguageCodeDelegate;
-            }
+        {
+            this.getLanguageCodesDelegate = getLanguageCodesDelegate;
+            this.findLanguageCodeDelegate = findLanguageCodeDelegate;
+        }
 
         public string Convert(string language)
         {

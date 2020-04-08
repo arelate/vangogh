@@ -1,7 +1,5 @@
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-
-
 using Attributes;
 
 namespace Delegates.GetPath.Records

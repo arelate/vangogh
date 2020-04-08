@@ -1,15 +1,11 @@
 using System.Collections.Generic;
-
 using Interfaces.Controllers.Records;
 using Interfaces.Delegates.Activities;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
 using Attributes;
-
 using Controllers.Data;
-
 using GOG.Models;
 
 namespace GOG.Controllers.Data.ProductTypes
@@ -31,7 +27,7 @@ namespace GOG.Controllers.Data.ProductTypes
             IRecordsController<long> gameProductDataRecordsIndexController,
             IFindDelegate<GameProductData> findGameProductDataDelegate,
             IStartDelegate startDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getListGameProductDataDataAsyncDelegate,
                 postListGameProductDataDataAsyncDelegate,

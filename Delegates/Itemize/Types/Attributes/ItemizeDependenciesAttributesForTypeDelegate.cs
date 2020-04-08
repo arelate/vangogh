@@ -1,7 +1,5 @@
 using System;
-
 using Interfaces.Delegates.Itemize;
-
 using Attributes;
 using System.Collections.Generic;
 

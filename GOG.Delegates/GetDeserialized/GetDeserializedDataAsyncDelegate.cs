@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.GetDeserialized
 {
     public abstract class GetDeserializedDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
     {
-        private readonly IConvertDelegate<(string, IDictionary<string,string>), string> convertUriParametersToUriDelegate;
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
+            convertUriParametersToUriDelegate;
+
         private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
-        readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;
+        private readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;
         private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
 
         public GetDeserializedDataAsyncDelegate(
-            IConvertDelegate<(string, IDictionary<string,string>), string> convertUriParametersToUriDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
             IItemizeDelegate<string, string> itemizeGogDataDelegate,
             IConvertDelegate<string, T> convertJSONToTypeDelegate)

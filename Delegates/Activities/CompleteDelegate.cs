@@ -32,8 +32,8 @@ namespace Delegates.Activities
 
             var completedActivities = getCompletedActivitiesValueDelegate.GetValue();
             completedActivities.Add(currentActivity);
-            
-            System.Console.WriteLine($"Completed action {currentActivity.Title}");
+
+            Console.WriteLine($"Completed action {currentActivity.Title}");
         }
     }
 }

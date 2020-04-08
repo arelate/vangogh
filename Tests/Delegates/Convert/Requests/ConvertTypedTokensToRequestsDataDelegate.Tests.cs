@@ -1,25 +1,22 @@
 using System;
 using System.Collections.Generic;
-
 using Xunit;
-
 using Interfaces.Delegates.Convert;
-
 using Models.ArgsTokens;
 using Models.Requests;
-
 using TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertTypedTokensToRequestsDataDelegateTests
     {
-        private IConvertDelegate<IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>, RequestsData> convertTypedTokensToRequestsDataDelegate;
+        private IConvertDelegate<IEnumerable<(string Token, Tokens Type)>, RequestsData>
+            convertTypedTokensToRequestsDataDelegate;
 
         public ConvertTypedTokensToRequestsDataDelegateTests()
         {
-            this.convertTypedTokensToRequestsDataDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                typeof(ConvertTypedTokensToRequestsDataDelegate))
+            convertTypedTokensToRequestsDataDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+                    typeof(ConvertTypedTokensToRequestsDataDelegate))
                 as ConvertTypedTokensToRequestsDataDelegate;
         }
 
@@ -29,26 +26,27 @@ namespace Delegates.Convert.Requests.Tests
         [InlineData(Tokens.MethodsSet)]
         public void ConvertTypedTokensToRequestsDataDelegateThrowsOnUnsupportedTokenTypes(Tokens tokenType)
         {
-            var typedTokens = new (string, Tokens)[] { (string.Empty, tokenType) };
+            var typedTokens = new (string, Tokens)[] {(string.Empty, tokenType)};
             Assert.Throws<NotImplementedException>(
                 () =>
-                convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
+                    convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
         }
 
         [Fact]
         public void ConvertTypedTokensToRequestsDataDelegateThrowsWhenParameterValuePrecedesParameterTitle()
         {
-            var typedTokens = new (string, Tokens)[] { (string.Empty, Tokens.ParameterValue) };
+            var typedTokens = new (string, Tokens)[] {(string.Empty, Tokens.ParameterValue)};
             Assert.Throws<ArgumentException>(
                 () =>
-                convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
+                    convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
         }
 
         [Theory]
         [InlineData(Tokens.MethodTitle, "1", "2", "3")]
         [InlineData(Tokens.CollectionTitle, "4", "5")]
         [InlineData(Tokens.Unknown, "6")]
-        public void ConvertTypedTokensToRequestsDataDelegatePassesTitlesToCollections(Tokens tokenType, params string[] tokens)
+        public void ConvertTypedTokensToRequestsDataDelegatePassesTitlesToCollections(Tokens tokenType,
+            params string[] tokens)
         {
             var typedTokens = new List<(string, Tokens)>(tokens.Length);
             foreach (var token in tokens)

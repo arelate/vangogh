@@ -1,15 +1,14 @@
 using System.IO;
 using System.Linq;
-
 using Interfaces.Delegates.Confirm;
-
 using Models.Extensions;
 
 namespace Delegates.Confirm
 {
     public class ConfirmValidationExpectedDelegate : IConfirmDelegate<string>
     {
-        readonly string[] extensionsWhitelist = {
+        private readonly string[] extensionsWhitelist =
+        {
             Extensions.EXE, // Windows
             Extensions.BIN, // Windows
             Extensions.DMG, // Mac

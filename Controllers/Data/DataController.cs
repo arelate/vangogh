@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Controllers.Records;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
@@ -16,8 +14,8 @@ namespace Controllers.Data
     {
         private readonly IGetDataAsyncDelegate<List<DataType>> getDataAsyncDelegate;
         private readonly IPostDataAsyncDelegate<List<DataType>> postDataAsyncDelegate;
-        readonly IConvertDelegate<DataType, long> convertProductToIndexDelegate;
-        readonly IRecordsController<long> recordsController;
+        private readonly IConvertDelegate<DataType, long> convertProductToIndexDelegate;
+        private readonly IRecordsController<long> recordsController;
         private readonly IFindDelegate<DataType> findDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -77,7 +75,7 @@ namespace Controllers.Data
                 await DeleteAsync(updatedData);
                 recordType = RecordsTypes.Updated;
             }
-            
+
             var data = await getDataAsyncDelegate.GetDataAsync();
             data.Add(updatedData);
 

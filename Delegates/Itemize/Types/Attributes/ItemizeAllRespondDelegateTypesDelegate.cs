@@ -1,10 +1,6 @@
 using System;
-
 using Interfaces.Delegates.Itemize;
-
-
 using Delegates.Itemize.Types;
-
 using Attributes;
 
 namespace Delegates.Itemize.Types.Attributes
@@ -15,7 +11,7 @@ namespace Delegates.Itemize.Types.Attributes
         [Dependencies(
             "Delegates.Itemize.Types.ItemizeAllAppDomainTypesDelegate,Delegates")]
         public ItemizeAllRespondsToRequestsAttributeTypesDelegate(
-            IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate):
+            IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate) :
             base(itemizeAllAppDomainTypesDelegate)
         {
             // ...

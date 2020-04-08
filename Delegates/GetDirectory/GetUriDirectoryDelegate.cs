@@ -1,16 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.GetDirectory;
-
 using Models.Separators;
 
 namespace Delegates.GetDirectory
 {
     public abstract class GetUriDirectoryDelegate : IGetDirectoryDelegate
     {
-        readonly IGetDirectoryDelegate baseDirectoryDelegate;
+        private readonly IGetDirectoryDelegate baseDirectoryDelegate;
 
         public GetUriDirectoryDelegate(IGetDirectoryDelegate baseDirectoryDelegate)
         {
@@ -24,12 +22,10 @@ namespace Delegates.GetDirectory
             if (!string.IsNullOrEmpty(source))
             {
                 var uriParts = source.Split(
-                    new string[] { Separators.UriPart },
+                    new string[] {Separators.UriPart},
                     StringSplitOptions.RemoveEmptyEntries);
 
-                directory = uriParts.Length >= 2 ?
-                    uriParts[uriParts.Length - 2] :
-                    source;
+                directory = uriParts.Length >= 2 ? uriParts[uriParts.Length - 2] : source;
             }
 
             var baseDirectory = string.Empty;

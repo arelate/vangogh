@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Activities;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
 using Attributes;
-
 using Models.ProductTypes;
 
 namespace Controllers.Data.Records
@@ -26,7 +23,7 @@ namespace Controllers.Data.Records
             IConvertDelegate<ProductRecords, long> convertProductRecordsToIndexDelegate,
             IFindDelegate<ProductRecords> findProductRecordsDelegate,
             IStartDelegate startDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getGameProductDataRecordsDataAsyncDelegate,
                 postGameProductDataRecordsDataAsyncDelegate,

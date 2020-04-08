@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-
 using Delegates.Collections.Requests;
 using Xunit;
-
 using Interfaces.Delegates.Collections;
-
 using TestDelegates.Convert.Types;
 
 namespace Delegates.Collections.Requests.Tests
@@ -17,7 +14,7 @@ namespace Delegates.Collections.Requests.Tests
         public MethodOrderCompareDelegateTests()
         {
             sortRequestsMethodsByOrderAsyncDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                typeof(SortRequestsMethodsByOrderAsyncDelegate))
+                    typeof(SortRequestsMethodsByOrderAsyncDelegate))
                 as SortRequestsMethodsByOrderAsyncDelegate;
         }
 
@@ -26,7 +23,7 @@ namespace Delegates.Collections.Requests.Tests
         [InlineData(true, "authorize", "update")]
         public async void CanCompareMethodOrder(bool expectedOrder, string method1, string method2)
         {
-            var methods = new List<string>() { method1, method2 };
+            var methods = new List<string>() {method1, method2};
             await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
                 methods);
 
@@ -45,12 +42,12 @@ namespace Delegates.Collections.Requests.Tests
         [InlineData(null, null)]
         public async void MethodOrderCompareDelegateThrowsForUnknownMethods(string method1, string method2)
         {
-            var methods = new List<string>() { method1, method2 };
+            var methods = new List<string>() {method1, method2};
 
             await Assert.ThrowsAsync<InvalidOperationException>(
                 async () =>
-                await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
-                    methods));
+                    await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
+                        methods));
         }
     }
 }

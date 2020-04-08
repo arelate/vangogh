@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirm;
-
 using Attributes;
-
 using Models.Requests;
 using Models.ArgsDefinitions;
 
@@ -49,7 +46,7 @@ namespace Delegates.Convert.Requests
                 if (methodDefinition == null) throw new ArgumentException();
 
                 if (confirmExlusiveStringDelegate.Confirm(
-                    (methodDefinition.Collections, requestsData.Collections)) &&
+                        (methodDefinition.Collections, requestsData.Collections)) &&
                     methodDefinition.Collections != null)
                     defaultCollections.AddRange(methodDefinition.Collections);
             }

@@ -38,7 +38,7 @@ namespace GOG.Interfaces.Controllers.Authorization
     }
 
 
-    public interface IAuthorizationController:
+    public interface IAuthorizationController :
         IAuthorizedAsyncDelegate,
         IGetAuthenticationTokenResponseAsyncDelegate,
         IGetLoginCheckResponseAsyncDelegate,

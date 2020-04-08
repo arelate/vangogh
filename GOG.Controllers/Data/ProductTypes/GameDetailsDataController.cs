@@ -1,15 +1,11 @@
 using System.Collections.Generic;
-
 using Interfaces.Controllers.Records;
 using Interfaces.Delegates.Activities;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
 using Attributes;
-
 using Controllers.Data;
-
 using GOG.Models;
 
 namespace GOG.Controllers.Data.ProductTypes
@@ -18,7 +14,7 @@ namespace GOG.Controllers.Data.ProductTypes
     {
         [Dependencies(
             "GOG.Delegates.Data.Storage.ProductTypes.GetListGameDetailsDataFromPathAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Storage.ProductTypes.PostListGameDetailsDataToPathAsyncDelegate,GOG.Delegates",            
+            "GOG.Delegates.Data.Storage.ProductTypes.PostListGameDetailsDataToPathAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsToIndexDelegate,GOG.Delegates",
             "Controllers.Records.ProductTypes.GameDetailsRecordsIndexController,Controllers",
             "GOG.Delegates.Collections.ProductTypes.FindGameDetailsDelegate,GOG.Delegates",
@@ -31,7 +27,7 @@ namespace GOG.Controllers.Data.ProductTypes
             IRecordsController<long> gameDetailsRecordsIndexController,
             IFindDelegate<GameDetails> findGameDetailsDelegate,
             IStartDelegate startDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getListGameDetailsDataAsyncDelegate,
                 postListGameDetailsDataAsyncDelegate,

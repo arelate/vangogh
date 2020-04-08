@@ -1,5 +1,4 @@
 using System.IO;
-
 using Interfaces.Delegates.Convert;
 
 namespace Delegates.Convert.Streams

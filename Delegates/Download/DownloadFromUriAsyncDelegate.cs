@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Net.Http;
-
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
-
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
 
 namespace Delegates.Download
@@ -16,7 +12,8 @@ namespace Delegates.Download
     {
         private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
             convertRequestToResponseAsyncDelegate;
-        readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
+
+        private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
 
         [Dependencies(
             "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",

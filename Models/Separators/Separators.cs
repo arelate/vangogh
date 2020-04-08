@@ -25,15 +25,22 @@
         // query parameters
         public const string UriPart = Common.ForwardSlash;
         public const string QueryString = Common.QuestionMark;
+
         public const string QueryStringParameters = Common.Ampersand;
+
         // key value
         public const string KeyValue = Common.Equality;
+
         // GameDetails downloads
         public const string GameDetailsDownloadsStart = Common.LeftSquareBracket + Common.LeftSquareBracket;
+
         public const string GameDetailsDownloadsEnd = Common.RightSquareBracket + Common.RightSquareBracket;
+
         // template
         public const string TemplatePrefix = Common.LeftCurlyBracket;
+
         public const string TemplateSuffix = Common.RightCurlyBracket;
+
         // headers
         public const string Headers = Common.NewLine;
     }

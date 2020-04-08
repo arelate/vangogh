@@ -1,13 +1,8 @@
 ﻿using Interfaces.Delegates.GetDirectory;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using GOG.Interfaces.Delegates.GetDownloadSources;
-
 using Attributes;
-
 using GOG.Models;
 using Models.ProductTypes;
 
@@ -15,7 +10,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
     // TODO: productscreenshots or just screenshots?
     [RespondsToRequests(Method = "updatedownloads", Collection = "productscreenshots")]
-    public class RespondToUpdateProductScreenshotsDownloadsRequestDelegate : 
+    public class RespondToUpdateProductScreenshotsDownloadsRequestDelegate :
         RespondToUpdateDownloadsRequestDelegate<ProductScreenshots>
     {
         [Dependencies(
@@ -35,7 +30,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             IDataController<Product> productsDataController,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
-            ICompleteDelegate completeDelegate):
+            ICompleteDelegate completeDelegate) :
             base(
                 getProductScreenshotsDownloadSourcesAsyncDelegate,
                 getProductScreenshotsDirectoryDelegate,

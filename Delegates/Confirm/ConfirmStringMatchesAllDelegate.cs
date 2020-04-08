@@ -1,12 +1,11 @@
 using Interfaces.Delegates.Confirm;
-
 using Interfaces.Delegates.Collections;
 
 namespace Delegates.Confirm
 {
     public abstract class ConfirmStringMatchesAllDelegate : IConfirmDelegate<string>
     {
-        readonly string[] matches;
+        private readonly string[] matches;
         private readonly IMapDelegate<string> mapDelegate;
 
         public ConfirmStringMatchesAllDelegate(

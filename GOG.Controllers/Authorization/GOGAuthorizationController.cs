@@ -1,53 +1,60 @@
 ﻿using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Activities;
-
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Correct;
 using Interfaces.Delegates.Data;
 using Attributes;
-
 using Models.Uris;
 using Models.QueryParameters;
-using Models.Dependencies;
-
 using GOG.Interfaces.Controllers.Authorization;
-
 using GOG.Models;
 
 namespace GOG.Controllers.Authorization
 {
     public class GOGAuthorizationController : IAuthorizationController
     {
-        const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
-        const string successfullyAuthorized = "Successfully authorized";
-        const string recaptchaDetected = "Login page contains reCAPTCHA.\n" +
-            "Please login in the browser, then export the galaxy-login-* cookies into ./cookies.json\n" +
-            "{INSTRUCTIONS}";
-        const string gogData = "gogData";
+        private const string failedToAuthenticate = "Failed to authenticate user with provided username and password.";
+        private const string successfullyAuthorized = "Successfully authorized";
 
-        ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate;
-        ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate;
-        private readonly IConvertDelegate<IDictionary<string, string>, string> convertDictionaryParametersToStringDelegate;
-        private readonly IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate;
+        private const string recaptchaDetected = "Login page contains reCAPTCHA.\n" +
+                                                 "Please login in the browser, then export the galaxy-login-* cookies into ./cookies.json\n" +
+                                                 "{INSTRUCTIONS}";
+
+        private const string securityCodeHasBeenSent =
+            "Enter four digits security code that has been sent to your email:";
+
+        private const string pleaseEnterUsername = "Please enter your GOG.com username (email):";
+        private const string pleaseEnterPassword = "Please enter password for {0}:";
+        private const string gogData = "gogData";
+
+        private readonly IGetDataDelegate<string> getLineDataDelegate;
+        private readonly IGetDataDelegate<string> getPrivateLineDataDelegate;
+
+        private readonly IConvertDelegate<IDictionary<string, string>, string>
+            convertDictionaryParametersToStringDelegate;
+
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
+            convertUriParametersToUriDelegate;
+
         private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
         private readonly IPostDataAsyncDelegate<string> postUriDataAsyncDelegate;
+
         private readonly IConvertDelegate<string, UserData> convertJSONToUserDataDelegate;
+
         // IDictionary<string, IItemizeDelegate<string, string>> attributeValuesItemizeDelegates;
-        IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate;
-        IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate;
-        IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate;
-        IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
+        private IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate;
+        private IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate;
+        private IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate;
+        private IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
 
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Correct.CorrectUsernamePasswordAsyncDelegate,Delegates",
-            "Delegates.Correct.CorrectSecurityCodeAsyncDelegate,Delegates",
+            "Delegates.Data.Console.GetLineDataDelegate,Delegates",
+            "Delegates.Data.Console.GetPrivateLineDataDelegate,Delegates",
             "Delegates.Itemize.HtmlAttributes.ItemizeLoginTokenAttributeValuesDelegate,Delegates",
             "Delegates.Itemize.HtmlAttributes.ItemizeLoginIdAttributeValuesDelegate,Delegates",
             "Delegates.Itemize.HtmlAttributes.ItemizeLoginUsernameAttributeValuesDelegate,Delegates",
@@ -60,8 +67,8 @@ namespace GOG.Controllers.Authorization
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public GOGAuthorizationController(
-            ICorrectAsyncDelegate<string[]> correctUsernamePasswordAsyncDelegate,
-            ICorrectAsyncDelegate<string> correctSecurityCodeAsyncDelegate,
+            IGetDataDelegate<string> getLineDataDelegate,
+            IGetDataDelegate<string> getPrivateLineDataDelegate,
             IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate,
             IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate,
             IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate,
@@ -74,12 +81,13 @@ namespace GOG.Controllers.Authorization
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.correctUsernamePasswordAsyncDelegate = correctUsernamePasswordAsyncDelegate;
-            this.correctSecurityCodeAsyncDelegate = correctSecurityCodeAsyncDelegate;
+            this.getLineDataDelegate = getLineDataDelegate;
+            this.getPrivateLineDataDelegate = getPrivateLineDataDelegate;
             this.itemizeLoginTokenAttribueValueDelegate = itemizeLoginTokenAttribueValueDelegate;
             this.itemizeLoginIdAttributeValueDelegate = itemizeLoginIdAttributeValueDelegate;
             this.itemizeLoginUsernameAttributeValueDelegate = itemizeLoginUsernameAttributeValueDelegate;
-            this.itemizeSecondStepAuthenticationTokenAttributeValueDelegate = itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
+            this.itemizeSecondStepAuthenticationTokenAttributeValueDelegate =
+                itemizeSecondStepAuthenticationTokenAttributeValueDelegate;
             this.convertDictionaryParametersToStringDelegate = convertDictionaryParametersToStringDelegate;
             this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
             this.postUriDataAsyncDelegate = postUriDataAsyncDelegate;
@@ -142,11 +150,15 @@ namespace GOG.Controllers.Authorization
                 loginUri = Uris.Endpoints.Authentication.LoginCheck;
             }
 
-            var usernamePassword = await correctUsernamePasswordAsyncDelegate.CorrectAsync(
-                new string[] { username, password });
+            if (string.IsNullOrEmpty(username))
+                username = getLineDataDelegate.GetData(pleaseEnterUsername);
 
-            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = usernamePassword[0];
-            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = usernamePassword[1];
+            if (string.IsNullOrEmpty(password))
+                password = getPrivateLineDataDelegate.GetData(
+                    string.Format(pleaseEnterPassword, username));
+
+            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginUsername] = username;
+            QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginPassword] = password;
             QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginToken] = loginToken;
 
             var loginData = convertDictionaryParametersToStringDelegate.Convert(
@@ -164,9 +176,9 @@ namespace GOG.Controllers.Authorization
             startDelegate.Start("Get second step authentication result");
 
             // 2FA is enabled for this user - ask for the code
-            var securityCode = await correctSecurityCodeAsyncDelegate.CorrectAsync(null);
+            var securityCode = getPrivateLineDataDelegate.GetData(securityCodeHasBeenSent);
 
-            var secondStepAuthenticationToken = 
+            var secondStepAuthenticationToken =
                 itemizeSecondStepAuthenticationTokenAttributeValueDelegate.Itemize(
                     loginCheckResult).First();
 
@@ -185,7 +197,7 @@ namespace GOG.Controllers.Authorization
                 QueryParametersCollections.SecondStepAuthentication);
 
             var secondStepLoginCheckResult = await postUriDataAsyncDelegate.PostDataAsync(
-                Uris.Endpoints.Authentication.TwoStep, 
+                Uris.Endpoints.Authentication.TwoStep,
                 secondStepData);
 
             completeDelegate.Complete();

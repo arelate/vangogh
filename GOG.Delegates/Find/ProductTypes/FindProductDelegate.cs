@@ -1,5 +1,4 @@
 using GOG.Models;
-
 using Attributes;
 using Delegates.Collections;
 using Interfaces.Delegates.Collections;

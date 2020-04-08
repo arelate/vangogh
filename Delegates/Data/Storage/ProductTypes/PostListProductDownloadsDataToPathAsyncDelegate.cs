@@ -6,7 +6,8 @@ using Models.ProductTypes;
 
 namespace Delegates.Data.Storage.ProductTypes
 {
-    public class PostListProductDownloadsDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<ProductDownloads>>
+    public class
+        PostListProductDownloadsDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<ProductDownloads>>
     {
         [Dependencies(
             "Delegates.Data.Storage.ProductTypes.PostListProductDownloadsDataAsyncDelegate,Delegates",

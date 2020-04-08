@@ -1,5 +1,4 @@
 ﻿using Interfaces.Delegates.Confirm;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Confirm.ProductTypes

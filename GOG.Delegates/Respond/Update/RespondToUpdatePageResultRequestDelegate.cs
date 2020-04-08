@@ -1,15 +1,11 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Respond;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetPageResults;
 
 namespace GOG.Delegates.Respond.Update
@@ -18,14 +14,14 @@ namespace GOG.Delegates.Respond.Update
         where PageType : Models.PageResult
         where DataType : ProductCore
     {
-        readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
-        readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
+        private readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
+        private readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
-        readonly IDataController<DataType> dataController;
+        private readonly IDataController<DataType> dataController;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
-        private readonly ICompleteDelegate completeDelegate; 
-        
+        private readonly ICompleteDelegate completeDelegate;
+
         public RespondToUpdatePageResultRequestDelegate(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,

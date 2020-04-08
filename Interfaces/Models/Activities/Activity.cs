@@ -1,10 +1,9 @@
 using System;
-
 using Interfaces.Models.Properties;
 
 namespace Interfaces.Models.Activities
 {
-    public interface IActivity: ITitleProperty
+    public interface IActivity : ITitleProperty
     {
         int Progress { get; set; }
         int Target { get; set; }

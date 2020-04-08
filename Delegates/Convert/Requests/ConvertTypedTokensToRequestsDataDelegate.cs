@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Convert;
-
 using Models.ArgsTokens;
 using Models.Requests;
 
@@ -17,7 +15,6 @@ namespace Delegates.Convert.Requests
             var currentParameterTitle = string.Empty;
 
             foreach (var typedToken in typedTokens)
-            {
                 switch (typedToken.Item2)
                 {
                     case Tokens.MethodTitle:
@@ -43,7 +40,6 @@ namespace Delegates.Convert.Requests
                     default:
                         throw new NotImplementedException();
                 }
-            }
 
             return requestsData;
         }

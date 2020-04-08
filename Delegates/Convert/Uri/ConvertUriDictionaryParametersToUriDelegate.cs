@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-
 using Attributes;
-
 using Interfaces.Delegates.Convert;
-
 using Models.Separators;
 
 namespace Delegates.Convert.Network
@@ -11,7 +8,8 @@ namespace Delegates.Convert.Network
     public class ConvertUriDictionaryParametersToUriDelegate :
         IConvertDelegate<(string Uri, IDictionary<string, string> Parameters), string>
     {
-        private readonly IConvertDelegate<IDictionary<string, string>, string> convertDictionaryParametersToStringDelegate;
+        private readonly IConvertDelegate<IDictionary<string, string>, string>
+            convertDictionaryParametersToStringDelegate;
 
         [Dependencies(
             "Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate,Delegates")]

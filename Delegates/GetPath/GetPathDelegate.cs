@@ -1,15 +1,14 @@
 ﻿using System.IO;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.GetPath;
 
 namespace Delegates.GetPath
 {
-    public abstract class GetPathDelegate: IGetPathDelegate
+    public abstract class GetPathDelegate : IGetPathDelegate
     {
-        readonly IGetDirectoryDelegate getDirectoryDelegate;
-        readonly IGetFilenameDelegate getFilenameDelegate;
+        private readonly IGetDirectoryDelegate getDirectoryDelegate;
+        private readonly IGetFilenameDelegate getFilenameDelegate;
 
         public GetPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,

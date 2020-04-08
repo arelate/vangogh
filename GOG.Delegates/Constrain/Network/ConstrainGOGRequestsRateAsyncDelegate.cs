@@ -11,13 +11,13 @@ namespace GOG.Delegates.Constrain.Network
 {
     public class ConstrainGOGRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
     {
-        readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
-        readonly IFindDelegate<string> findStringDelegate;
-        readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
-        readonly IItemizeAllDelegate<string> itemizeRateContraindesUris;
-        const int requestIntervalSeconds = 30;
-        const int passthroughCount = 100; // don't throttle first N requests
-        int rateLimitRequestsCount;
+        private readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
+        private readonly IFindDelegate<string> findStringDelegate;
+        private readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
+        private readonly IItemizeAllDelegate<string> itemizeRateContraindesUris;
+        private const int requestIntervalSeconds = 30;
+        private const int passthroughCount = 100; // don't throttle first N requests
+        private int rateLimitRequestsCount;
 
         [Dependencies(
             "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
@@ -51,7 +51,7 @@ namespace GOG.Delegates.Constrain.Network
             if (++rateLimitRequestsCount <= passthroughCount) return;
 
             var now = DateTime.UtcNow;
-            var elapsed = (int)(now - lastRequestToUriPrefix[prefix]).TotalSeconds;
+            var elapsed = (int) (now - lastRequestToUriPrefix[prefix]).TotalSeconds;
             if (elapsed < requestIntervalSeconds)
                 await constrainExecutionAsyncDelegate.ConstrainAsync(requestIntervalSeconds - elapsed);
 

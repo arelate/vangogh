@@ -1,12 +1,8 @@
 ﻿using System.Threading.Tasks;
-
 using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Format;
-
 using Interfaces.Delegates.Activities;
-
 using Attributes;
-
 using Models.Units;
 
 namespace Delegates.Constrain
@@ -37,15 +33,13 @@ namespace Delegates.Constrain
                 $"Sleeping {formatSecondsDelegate.Format(delaySeconds)} before next operation");
 
             for (var ii = 0; ii < delaySeconds; ii++)
-            {
                 await Task.Delay(1000);
-                // await statusController.UpdateProgressAsync(
-                //     throttleTask,
-                //     ii + 1,
-                //     delaySeconds,
-                //     "Countdown",
-                //     TimeUnits.Seconds);
-            }
+            // await statusController.UpdateProgressAsync(
+            //     throttleTask,
+            //     ii + 1,
+            //     delaySeconds,
+            //     "Countdown",
+            //     TimeUnits.Seconds);
 
             completeDelegate.Complete();
         }

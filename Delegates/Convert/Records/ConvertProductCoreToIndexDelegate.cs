@@ -1,5 +1,4 @@
 ﻿using Interfaces.Delegates.Convert;
-
 using Models.ProductTypes;
 
 namespace Delegates.Convert.Records

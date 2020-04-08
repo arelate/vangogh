@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using Interfaces.Delegates.Format;
 
 namespace Delegates.Format.Numbers
@@ -15,7 +14,7 @@ namespace Delegates.Format.Numbers
 
         public string Format(long value)
         {
-            var max = relativeOrders.Aggregate((long)1, (a, b) => a * b);
+            var max = relativeOrders.Aggregate((long) 1, (a, b) => a * b);
 
             for (var ii = 0; ii < relativeOrders.Length; ii++)
             {
@@ -31,6 +30,7 @@ namespace Delegates.Format.Numbers
 
                 max /= relativeOrders[ii];
             }
+
             return zero;
         }
     }

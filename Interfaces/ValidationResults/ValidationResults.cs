@@ -20,7 +20,7 @@
         string ActualHash { get; set; }
     }
 
-    public interface IChunkValidation:
+    public interface IChunkValidation :
         IFromProperty,
         IToProperty,
         IExpectedHashProperty,
@@ -69,7 +69,7 @@
         IChunkValidation[] Chunks { get; set; }
     }
 
-    public interface IFileValidationResults:
+    public interface IFileValidationResults :
         IFilenameProperty,
         IValidationExpectedProperty,
         IValidationFileExistsProperty,

@@ -1,22 +1,16 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Respond;
-
 using Interfaces.Delegates.Activities;
-
-
-
 using GOG.Interfaces.Controllers.Authorization;
-
 using Attributes;
 
 namespace GOG.Delegates.Respond.Authorize
 {
-    [RespondsToRequests(Method="authorize")]
+    [RespondsToRequests(Method = "authorize")]
     public class RespondToAuthorizeRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IAuthorizationController authorizationController;
+        private readonly IAuthorizationController authorizationController;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 

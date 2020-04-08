@@ -1,20 +1,16 @@
 ﻿using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
-
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Interfaces.Delegates.FillGaps;
 using GOG.Models;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="gamedetails")]
+    [RespondsToRequests(Method = "update", Collection = "gamedetails")]
     public class RespondToUpdateGameDetailsRequestDelegate :
         RespondToUpdateMasterDetailsRequestDelegate<GameDetails, AccountProduct>
     {

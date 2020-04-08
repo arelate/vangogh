@@ -13,7 +13,7 @@
 
         public static class Roots
         {
-            const string GOGcom = "gog.com";
+            private const string GOGcom = "gog.com";
             public const string Website = Protocols.Https + "www." + GOGcom;
             public const string Login = Protocols.Https + "login." + GOGcom;
             public const string Auth = Protocols.Https + "auth." + GOGcom;

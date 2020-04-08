@@ -1,5 +1,4 @@
 using Attributes;
-
 using Interfaces.Delegates.Collections;
 
 
@@ -10,7 +9,7 @@ namespace Delegates.Confirm.System
         [Dependencies(
             "Delegates.Collections.System.IntersectStringDelegate,Delegates")]
         public ConfirmExclusiveStringDelegate(
-            IIntersectDelegate<string> intersectStringDelegate) : 
+            IIntersectDelegate<string> intersectStringDelegate) :
             base(intersectStringDelegate)
         {
             // ...

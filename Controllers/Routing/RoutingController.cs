@@ -1,13 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
-
 using Interfaces.Routing;
 using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
-
-
 using Attributes;
-
 using Models.ProductTypes;
 
 namespace Controllers.Routing
@@ -18,8 +14,8 @@ namespace Controllers.Routing
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Controllers.Data.ProductTypes.ProductRoutesDataController,Controllers",
+        [Dependencies(
+            "Controllers.Data.ProductTypes.ProductRoutesDataController,Controllers",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public RoutingController(
@@ -32,15 +28,13 @@ namespace Controllers.Routing
             this.completeDelegate = completeDelegate;
         }
 
-        string TraceProductRoute(List<ProductRoutesEntry> productRoutes, string source)
+        private string TraceProductRoute(List<ProductRoutesEntry> productRoutes, string source)
         {
             if (productRoutes == null) return string.Empty;
 
             foreach (var route in productRoutes)
-            {
                 if (route.Source == source)
                     return route.Destination;
-            }
 
             return string.Empty;
         }
@@ -78,7 +72,7 @@ namespace Controllers.Routing
             completeDelegate.Complete();
 
             return destination;
-        } 
+        }
 
         public async Task UpdateRouteAsync(long id, string title, string source, string destination)
         {
@@ -89,14 +83,12 @@ namespace Controllers.Routing
 
             var productRoutes = await productRoutesDataController.GetByIdAsync(id);
             if (productRoutes == null)
-            {
                 productRoutes = new ProductRoutes
                 {
                     Id = id,
                     Title = title,
                     Routes = new List<ProductRoutesEntry>()
                 };
-            }
 
             var existingRouteUpdated = false;
             foreach (var route in productRoutes.Routes)

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Attributes;
-
 using Interfaces.Delegates.Collections;
 
 namespace Delegates.Collections.System

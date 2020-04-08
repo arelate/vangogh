@@ -1,8 +1,6 @@
 using System;
 using System.Reflection;
-
 using Attributes;
-
 using Interfaces.Delegates.Convert;
 
 namespace Delegates.Convert.Types

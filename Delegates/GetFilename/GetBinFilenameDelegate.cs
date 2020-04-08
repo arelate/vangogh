@@ -1,5 +1,4 @@
 ﻿using Interfaces.Delegates.GetFilename;
-
 using Models.Extensions;
 
 namespace Delegates.GetFilename

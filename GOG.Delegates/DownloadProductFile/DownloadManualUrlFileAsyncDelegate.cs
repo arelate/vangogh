@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
-
 using Interfaces.Delegates.Activities;
-
 using Interfaces.Routing;
-
-
 using GOG.Interfaces.Delegates.DownloadProductFile;
-
 using Attributes;
 
 namespace GOG.Delegates.DownloadProductFile
@@ -21,19 +15,20 @@ namespace GOG.Delegates.DownloadProductFile
     {
         private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
             convertRequestToResponseAsyncDelegate;
-        readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
-        readonly IRoutingController routingController;
-        readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
+
+        private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        private readonly IRoutingController routingController;
+        private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
+        private readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
-			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
-			"Controllers.Routing.RoutingController,Controllers",
-			"Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
-			"GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
+        [Dependencies(
+            "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
+            "Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
+            "Controllers.Routing.RoutingController,Controllers",
+            "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
+            "GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public DownloadManualUrlFileAsyncDelegate(
@@ -57,7 +52,7 @@ namespace GOG.Delegates.DownloadProductFile
 
         public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
         {
-           startDelegate.Start("Download game details manual url");
+            startDelegate.Start("Download game details manual url");
 
             HttpResponseMessage response;
             try
@@ -77,7 +72,6 @@ namespace GOG.Delegates.DownloadProductFile
 
             using (response)
             {
-
                 var resolvedUri = response.RequestMessage.RequestUri.ToString();
 
                 // GOG.com quirk
@@ -96,7 +90,7 @@ namespace GOG.Delegates.DownloadProductFile
                 try
                 {
                     await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(
-                        response, 
+                        response,
                         destination);
                 }
                 catch (Exception ex)

@@ -21,8 +21,10 @@ namespace Delegates.Data.Storage
         public async Task<string> PostDataAsync(string data, string uri = null)
         {
             using (var stream = convertUriToWritableStream.Convert(uri))
-            using (StreamWriter writer = new StreamWriter(stream))
+            using (var writer = new StreamWriter(stream))
+            {
                 await writer.WriteLineAsync(data);
+            }
 
             return uri;
         }

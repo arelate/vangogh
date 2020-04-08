@@ -16,8 +16,8 @@ namespace Tests.Delegates.Convert.Requests
 
         public ConvertArgsToRequestsDelegateTests()
         {
-            this.convertArgsToRequestsDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                typeof(ConvertArgsToRequestsDelegate))
+            convertArgsToRequestsDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+                    typeof(ConvertArgsToRequestsDelegate))
                 as ConvertArgsToRequestsDelegate;
         }
 

@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-
-
 using GOG.Interfaces.Delegates.GetDeserialized;
-
 using Attributes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
     public class GetDeserializedGameProductDataAsyncDelegate : IGetDeserializedAsyncDelegate<GameProductData>
     {
-        readonly IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate;
+        private readonly IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate;
 
         [Dependencies(
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGOGDataAsyncDelegate,GOG.Delegates")]
@@ -23,7 +18,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             this.gogDataGetDeserializedDelegate = gogDataGetDeserializedDelegate;
         }
 
-        public async Task<GameProductData> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
+        public async Task<GameProductData> GetDeserializedAsync(string uri,
+            IDictionary<string, string> parameters = null)
         {
             var gogData = await gogDataGetDeserializedDelegate.GetDeserializedAsync(uri, parameters);
             return gogData.GameProductData;

@@ -1,4 +1,3 @@
-
 using System;
 
 namespace Models.ArgsTokens
@@ -13,6 +12,6 @@ namespace Models.ArgsTokens
         CollectionTitle,
         ParameterTitle,
         LikelyParameterValue,
-        ParameterValue    
+        ParameterValue
     }
 }

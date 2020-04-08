@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using Attributes;
 using Delegates.Data.Storage;
 using Interfaces.Delegates.Convert;
@@ -12,12 +11,12 @@ namespace GOG.Delegates.Data.Storage.ProductTypes
     {
         [Dependencies(
             "Delegates.Data.Storage.PostStringDataAsyncDelegate,Delegates",
-            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertListApiProductToJSONDelegate,GOG.Delegates")]        
+            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertListApiProductToJSONDelegate,GOG.Delegates")]
         public PostListApiProductDataAsyncDelegate(
-            IPostDataAsyncDelegate<string> postStringDataAsyncDelegate, 
-            IConvertDelegate<List<ApiProduct>, string> convertListApiProductToJSONDelegate) : 
+            IPostDataAsyncDelegate<string> postStringDataAsyncDelegate,
+            IConvertDelegate<List<ApiProduct>, string> convertListApiProductToJSONDelegate) :
             base(
-                postStringDataAsyncDelegate, 
+                postStringDataAsyncDelegate,
                 convertListApiProductToJSONDelegate)
         {
             // ...

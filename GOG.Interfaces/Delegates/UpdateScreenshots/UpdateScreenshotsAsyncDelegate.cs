@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-
 namespace GOG.Interfaces.Delegates.UpdateScreenshots
 {
     public interface IUpdateScreenshotsAsyncDelegate<Type>

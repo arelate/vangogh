@@ -1,5 +1,4 @@
 using Attributes;
-
 using Interfaces.Delegates.Collections;
 
 namespace Delegates.Collections.System
@@ -10,8 +9,8 @@ namespace Delegates.Collections.System
             "Delegates.Collections.System.FindAllStringDelegate,Delegates",
             "Delegates.Collections.System.FindStringDelegate,Delegates")]
         public IntersectStringDelegate(
-            IFindAllDelegate<string> findAllStringDelegate, 
-            IFindDelegate<string> findStringDelegate) : 
+            IFindAllDelegate<string> findAllStringDelegate,
+            IFindDelegate<string> findStringDelegate) :
             base(findAllStringDelegate, findStringDelegate)
         {
             // ...

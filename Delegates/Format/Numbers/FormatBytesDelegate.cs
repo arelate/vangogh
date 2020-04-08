@@ -10,8 +10,9 @@ namespace Delegates.Format.Numbers
     {
         public FormatBytesDelegate()
         {
-            relativeOrders = new long[] { 1024, 1024, 1024, 1024, 1 };
-            orderTitles = new string[] {
+            relativeOrders = new long[] {1024, 1024, 1024, 1024, 1};
+            orderTitles = new string[]
+            {
                 DataUnits.Terabytes,
                 DataUnits.Gigabytes,
                 DataUnits.Megabytes,

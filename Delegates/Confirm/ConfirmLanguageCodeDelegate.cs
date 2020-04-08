@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-
 using Attributes;
-
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.GetValue;
 

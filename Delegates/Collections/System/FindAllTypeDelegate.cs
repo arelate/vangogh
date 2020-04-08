@@ -2,5 +2,7 @@ using System;
 
 namespace Delegates.Collections.System
 {
-    public class FindAllTypeDelegate : FindAllDelegate<Type> { }
+    public class FindAllTypeDelegate : FindAllDelegate<Type>
+    {
+    }
 }

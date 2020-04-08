@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
 using Interfaces.Delegates.Replace;
 using Interfaces.Delegates.Itemize;
-
-
 using Attributes;
 
 namespace GOG.Delegates.Itemize.ProductTypes
 {
     public class ItemizeGameDetailsDownloadLanguagesDelegate : IItemizeDelegate<string, string>
     {
-        IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        private IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
         [Dependencies(
             "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates")]

@@ -1,8 +1,5 @@
 using Interfaces.Delegates.GetFilename;
-
-
 using Attributes;
-
 using Models.Filenames;
 
 namespace Delegates.GetFilename.Binary

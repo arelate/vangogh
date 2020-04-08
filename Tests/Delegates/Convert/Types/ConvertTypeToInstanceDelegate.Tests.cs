@@ -32,19 +32,19 @@ namespace Tests.Delegates.Convert.Types
                 foreach (var type in itemizeTypesWithDependencies.ItemizeAll())
                     yield return new object[] {type};
         }
-        
+
         [Theory]
         [MemberData(nameof(EnumerateTypesWithDependencies))]
         public void InstancesControllerCanInitializeAllDeclaredDependencies(params Type[] types)
         {
             Assert.NotEmpty(types);
             Assert.NotNull(types);
-        
+
             var instances = new object[types.Length];
             for (var ii = 0; ii < types.Length; ii++)
                 instances[ii] = _convertTypeToInstanceDelegate.Convert(types[ii]);
             Assert.NotNull(instances);
-        
+
             foreach (var instance in instances)
                 Assert.NotNull(instance);
         }
