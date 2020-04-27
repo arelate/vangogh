@@ -14,7 +14,7 @@ namespace Delegates.Convert.Requests
     public class ConvertRequestsDataToResolvedCollectionsDelegate :
         IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
     {
-        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<ArgsDefinition,string> getArgsDefinitionsDataFromPathAsyncDelegate;
         private readonly IFindDelegate<Method> findMethodDelegate;
         private readonly IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExlusiveStringDelegate;
 
@@ -23,7 +23,7 @@ namespace Delegates.Convert.Requests
             "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
             "Delegates.Confirm.System.ConfirmExclusiveStringDelegate,Delegates")]
         public ConvertRequestsDataToResolvedCollectionsDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,
             IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExlusiveStringDelegate)
         {
@@ -35,7 +35,8 @@ namespace Delegates.Convert.Requests
         public async Task<RequestsData> ConvertAsync(RequestsData requestsData)
         {
             var defaultCollections = new List<string>();
-            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             foreach (var method in requestsData.Methods)
             {

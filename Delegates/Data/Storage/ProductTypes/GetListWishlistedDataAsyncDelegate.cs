@@ -11,7 +11,7 @@ namespace Delegates.Data.Storage.ProductTypes
             "Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
             "Delegates.Convert.JSON.System.ConvertJSONToListLongDelegate,Delegates")]
         public GetListWishlistedDataAsyncDelegate(
-            IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
+            IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,
             IConvertDelegate<string, List<long>> convertJSONToListLongDelegate) :
             base(
                 getStringDataAsyncDelegate,

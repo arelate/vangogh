@@ -13,7 +13,7 @@ namespace Delegates.Data.Storage.Records
             "Delegates.Data.Storage.Records.GetListProductRecordsDataAsyncDelegate,Delegates",
             "Delegates.GetPath.Records.GetWishlistedRecordsPathDelegate,Delegates")]
         public GetListWishlistedRecordsDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<ProductRecords>> getListProductRecordsDataAsyncDelegate,
+            IGetDataAsyncDelegate<List<ProductRecords>, string> getListProductRecordsDataAsyncDelegate,
             IGetPathDelegate getWishlistedRecordsPathDelegate) :
             base(
                 getListProductRecordsDataAsyncDelegate,

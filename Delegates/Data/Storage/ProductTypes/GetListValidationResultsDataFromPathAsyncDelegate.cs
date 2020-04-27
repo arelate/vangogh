@@ -13,7 +13,7 @@ namespace Delegates.Data.Storage.ProductTypes
             "Delegates.Data.Storage.ProductTypes.GetListValidationResultsDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ProductTypes.GetValidationResultsPathDelegate,Delegates")]
         public GetListValidationResultsDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<ValidationResults>> getListValidationResultsDataAsyncDelegate,
+            IGetDataAsyncDelegate<List<ValidationResults>, string> getListValidationResultsDataAsyncDelegate,
             IGetPathDelegate getValidationResultsPathDelegate) :
             base(
                 getListValidationResultsDataAsyncDelegate,

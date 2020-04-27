@@ -15,7 +15,7 @@ namespace Delegates.Convert.ArgsTokens
             IAsyncEnumerable<(string Token, Tokens Type)>,
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
         private IFindDelegate<Method> findMethodDelegate;
         private IFindDelegate<Parameter> findParameterDelegate;
 
@@ -24,7 +24,7 @@ namespace Delegates.Convert.ArgsTokens
             "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
             "Delegates.Collections.ArgsDefinitions.FindParameterDelegate,Delegates")]
         public ConvertLikelyTypedToTypedTokensDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,
             IFindDelegate<Parameter> findParameterDelegate)
         {
@@ -39,7 +39,8 @@ namespace Delegates.Convert.ArgsTokens
             if (likelyTypedTokens == null)
                 throw new ArgumentNullException();
 
-            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             var currentParameterTitle = string.Empty;
             await foreach (var likelyTypedToken in likelyTypedTokens)

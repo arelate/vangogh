@@ -11,7 +11,7 @@ namespace Delegates.Data.Storage.ArgsDefinitions
             "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ArgsDefinitions.GetArgsDefinitionsPathDelegate,Delegates")]
         public GetArgsDefinitionsDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getJSONDataAsyncDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition, string> getJSONDataAsyncDelegate,
             IGetPathDelegate getPathDelegate) :
             base(getJSONDataAsyncDelegate, getPathDelegate)
         {

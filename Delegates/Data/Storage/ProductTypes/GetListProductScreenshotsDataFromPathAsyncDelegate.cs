@@ -13,7 +13,7 @@ namespace Delegates.Data.Storage.ProductTypes
             "Delegates.Data.Storage.ProductTypes.GetListProductScreenshotsDataAsyncDelegate,Delegates",
             "Delegates.GetPath.ProductTypes.GetProductScreenshotsPathDelegate,Delegates")]
         public GetListProductScreenshotsDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<ProductScreenshots>> getListProductScreenshotsDataAsyncDelegate,
+            IGetDataAsyncDelegate<List<ProductScreenshots>, string> getListProductScreenshotsDataAsyncDelegate,
             IGetPathDelegate getProductScreenshotsPathDelegate) :
             base(
                 getListProductScreenshotsDataAsyncDelegate,

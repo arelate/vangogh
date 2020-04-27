@@ -13,14 +13,14 @@ namespace Delegates.Convert.ArgsTokens
             IAsyncEnumerable<(string Token, Tokens Type)>,
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
         private IFindDelegate<MethodsSet> findMethodsSetDelegate;
 
         [Dependencies(
             "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate,Delegates")]
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<MethodsSet> findMethodsSetDelegate)
         {
             this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
@@ -30,7 +30,8 @@ namespace Delegates.Convert.ArgsTokens
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
             IAsyncEnumerable<(string Token, Tokens Type)> typedTokens)
         {
-            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
+            var argsDefinitions =
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
             await foreach (var typedToken in typedTokens)
                 switch (typedToken.Type)
                 {

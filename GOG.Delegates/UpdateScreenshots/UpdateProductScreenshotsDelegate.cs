@@ -16,7 +16,7 @@ namespace GOG.Delegates.UpdateScreenshots
     {
         private readonly IGetValueDelegate<string> getUpdateUriDelegate;
         private readonly IDataController<ProductScreenshots> screenshotsDataController;
-        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
         private readonly IItemizeDelegate<string, string> itemizeScreenshotsDelegates;
 
         private readonly IStartDelegate startDelegate;
@@ -32,7 +32,7 @@ namespace GOG.Delegates.UpdateScreenshots
         public UpdateScreenshotsAsyncDelegate(
             IGetValueDelegate<string> getUpdateUriDelegate,
             IDataController<ProductScreenshots> screenshotsDataController,
-            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
+            IGetDataAsyncDelegate<string, string> getUriDataAsyncDelegate,
             IItemizeDelegate<string, string> itemizeScreenshotsDelegates,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)

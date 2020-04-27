@@ -13,13 +13,13 @@ namespace GOG.Delegates.GetDeserialized
         private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
             convertUriParametersToUriDelegate;
 
-        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
         private readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;
         private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
 
         public GetDeserializedDataAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
-            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
             IItemizeDelegate<string, string> itemizeGogDataDelegate,
             IConvertDelegate<string, T> convertJSONToTypeDelegate)
         {

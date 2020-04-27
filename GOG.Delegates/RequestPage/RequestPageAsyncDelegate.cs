@@ -12,7 +12,7 @@ namespace GOG.Delegates.RequestPage
         private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
             convertUriParametersToUriDelegate;
 
-        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
 
         private const string pageQueryParameter = "page";
 
@@ -21,7 +21,7 @@ namespace GOG.Delegates.RequestPage
             "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates")]
         public RequestPageAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
-            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate)
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate)
         {
             this.convertUriParametersToUriDelegate = convertUriParametersToUriDelegate;
             this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;

@@ -4,14 +4,14 @@ using Interfaces.Delegates.Data;
 
 namespace Delegates.Data.Storage
 {
-    public abstract class GetJSONDataAsyncDelegate<T> : IGetDataAsyncDelegate<T>
+    public abstract class GetJSONDataAsyncDelegate<T> : IGetDataAsyncDelegate<T, string>
     {
         private T data;
-        private readonly IGetDataAsyncDelegate<string> getStringDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate;
         private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
 
         public GetJSONDataAsyncDelegate(
-            IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
+            IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,
             IConvertDelegate<string, T> convertJSONToTypeDelegate)
         {
             this.getStringDataAsyncDelegate = getStringDataAsyncDelegate;

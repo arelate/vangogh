@@ -15,7 +15,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToApiProductDelegate,GOG.Delegates")]
         public GetDeserializedApiProductAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
-            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
             IConvertDelegate<string, ApiProduct> convertJSONToApiProductDelegate) :
             base(
                 convertUriParametersToUriDelegate,

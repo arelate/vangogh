@@ -1,30 +1,29 @@
 ﻿using System.Collections.Generic;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Confirm;
 using Models.ProductTypes;
 
 namespace Delegates.Itemize.MasterDetail
 {
-    public abstract class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType, DetailType> :
+    public abstract class ItemizeAllMasterDetailsGapsAsyncDelegate<MasterType> :
         IItemizeAllAsyncDelegate<MasterType>
         where MasterType : ProductCore
-        where DetailType : ProductCore
     {
-        private readonly IDataController<MasterType> masterDataController;
-        private readonly IDataController<DetailType> detailDataController;
+        private readonly IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDataAsyncDelegate;
+        private readonly IConfirmAsyncDelegate<long> confirmDetailDataContainsIdAsyncDelegate;
 
         public ItemizeAllMasterDetailsGapsAsyncDelegate(
-            IDataController<MasterType> masterDataController,
-            IDataController<DetailType> detailDataController)
+            IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDataAsyncDelegate,
+            IConfirmAsyncDelegate<long> confirmDetailDataContainsIdAsyncDelegate)
         {
-            this.masterDataController = masterDataController;
-            this.detailDataController = detailDataController;
+            this.itemizeAllMasterDataAsyncDelegate = itemizeAllMasterDataAsyncDelegate;
+            this.confirmDetailDataContainsIdAsyncDelegate = confirmDetailDataContainsIdAsyncDelegate;
         }
 
         public async IAsyncEnumerable<MasterType> ItemizeAllAsync()
         {
-            await foreach (var masterDataValue in masterDataController.ItemizeAllAsync())
-                if (!await detailDataController.ContainsIdAsync(masterDataValue.Id))
+            await foreach (var masterDataValue in itemizeAllMasterDataAsyncDelegate.ItemizeAllAsync())
+                if (!await confirmDetailDataContainsIdAsyncDelegate.ConfirmAsync(masterDataValue.Id))
                     yield return masterDataValue;
         }
     }

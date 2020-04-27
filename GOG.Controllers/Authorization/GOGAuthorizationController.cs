@@ -38,7 +38,7 @@ namespace GOG.Controllers.Authorization
         private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
             convertUriParametersToUriDelegate;
 
-        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
         private readonly IPostDataAsyncDelegate<string> postUriDataAsyncDelegate;
 
         private readonly IConvertDelegate<string, UserData> convertJSONToUserDataDelegate;
@@ -75,7 +75,7 @@ namespace GOG.Controllers.Authorization
             IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate,
             IConvertDelegate<IDictionary<string, string>, string> convertDictionaryParametersToStringDelegate,
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
-            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
             IPostDataAsyncDelegate<string> postUriDataAsyncDelegate,
             IConvertDelegate<string, UserData> convertJSONToUserDataDelegate,
             IStartDelegate startDelegate,

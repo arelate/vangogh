@@ -6,7 +6,7 @@ using Interfaces.Delegates.Data;
 
 namespace Delegates.Data.Storage
 {
-    public sealed class GetStringDataAsyncDelegate : IGetDataAsyncDelegate<string>
+    public sealed class GetStringDataAsyncDelegate : IGetDataAsyncDelegate<string, string>
     {
         private readonly IConvertDelegate<string, Stream> convertUriToReadableStream;
 

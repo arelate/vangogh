@@ -6,7 +6,7 @@ using ProtoBuf;
 
 namespace Delegates.Data.Storage
 {
-    public abstract class GetProtoBufDataAsyncDelegate<T> : IGetDataAsyncDelegate<T>
+    public abstract class GetProtoBufDataAsyncDelegate<T> : IGetDataAsyncDelegate<T, string>
     {
         private readonly IConvertDelegate<string, Stream> convertUriToReadableStreamDelegate;
 

@@ -14,7 +14,7 @@ namespace Delegates.Convert.Requests
     public class ConvertRequestsDataToRequestsDelegate :
         IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
         private IFindDelegate<Method> findMethodDelegate;
         private IIntersectDelegate<string> intersectStringDelegate;
 
@@ -23,7 +23,7 @@ namespace Delegates.Convert.Requests
             "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
             "Delegates.Collections.System.IntersectStringDelegate,Delegates")]
         public ConvertRequestsDataToRequestsDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,
             IIntersectDelegate<string> intersectStringDelegate)
         {
@@ -35,7 +35,8 @@ namespace Delegates.Convert.Requests
         public async IAsyncEnumerable<Request> ConvertAsync(RequestsData requestsData)
         {
             var requests = new List<Request>();
-            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             foreach (var method in requestsData.Methods)
             {

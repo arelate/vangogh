@@ -19,7 +19,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     // TODO: Refactor?
     public class GetDeserializedGameDetailsAsyncDelegate : IGetDeserializedAsyncDelegate<GameDetails>
     {
-        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
 
         private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
             convertUriParametersToUriDelegate;
@@ -57,7 +57,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
             "Delegates.Collections.System.MapStringDelegate,Delegates")]
         public GetDeserializedGameDetailsAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
-            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
             IConvertDelegate<string, GameDetails> convertJSONToGameDetailsDelegate,
             IConvertDelegate<string, OperatingSystemsDownloads[][]>
                 convertJSONToOperatingSystemsDownloads2DArrayDelegate,

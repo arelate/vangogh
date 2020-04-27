@@ -10,14 +10,14 @@ namespace Delegates.Collections.Requests
 {
     public class SortRequestsMethodsByOrderAsyncDelegate : ISortAsyncDelegate<string>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
         private IFindDelegate<Method> findMethodDelegate;
 
         [Dependencies(
             "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates")]
         public SortRequestsMethodsByOrderAsyncDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate)
         {
             this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
@@ -26,7 +26,8 @@ namespace Delegates.Collections.Requests
 
         public async Task SortAsync(List<string> methods)
         {
-            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             methods.Sort((string x, string y) =>
             {

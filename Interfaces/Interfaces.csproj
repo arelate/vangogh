@@ -15,7 +15,6 @@
   
   <ItemGroup>
     <Folder Include="Delegates\GetPath\" />
-    <Folder Include="Controllers\Records\" />
   </ItemGroup>
 
   <ItemGroup>

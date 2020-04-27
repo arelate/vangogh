@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace Interfaces.Delegates.Data
 {
-    public interface IGetDataAsyncDelegate<T>
+    public interface IGetDataAsyncDelegate<Type, in UriType>
     {
-        Task<T> GetDataAsync(string uri = null);
+        Task<Type> GetDataAsync(UriType uri);
     }
 }

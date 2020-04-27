@@ -14,14 +14,14 @@ namespace Delegates.Confirm.ArgsTokens
     public class ConfirmLikelyTokenTypeDelegate :
         IConfirmAsyncDelegate<(string Token, Tokens Type)>
     {
-        private readonly IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
         private readonly IFindDelegate<ITitleProperty> findITitlePropertyDelegate;
 
         [Dependencies(
             "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
             "Delegates.Collections.Properties.FindITitlePropertyDelegate,Delegates")]
         public ConfirmLikelyTokenTypeDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<ITitleProperty> findITitlePropertyDelegate)
         {
             this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
@@ -31,7 +31,8 @@ namespace Delegates.Confirm.ArgsTokens
         public async Task<bool> ConfirmAsync((string Token, Tokens Type) typedToken)
         {
             IEnumerable<ITitleProperty> titledItems = null;
-            var argsDefinitions = await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             switch (typedToken.Type)
             {

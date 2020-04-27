@@ -10,7 +10,7 @@ namespace GOG.Delegates.GetDeserialized
     public abstract class GetDeserializedProductCoreAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
         where T : ProductCore
     {
-        private readonly IGetDataAsyncDelegate<string> getUriDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
 
         private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
             convertUriParametersToUriDelegate;
@@ -19,7 +19,7 @@ namespace GOG.Delegates.GetDeserialized
 
         public GetDeserializedProductCoreAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
-            IGetDataAsyncDelegate<string> getUriDataAsyncDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
             IConvertDelegate<string, T> convertJSONToProductCoreDelegate)
         {
             this.convertUriParametersToUriDelegate = convertUriParametersToUriDelegate;

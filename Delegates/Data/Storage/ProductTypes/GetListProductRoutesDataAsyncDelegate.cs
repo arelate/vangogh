@@ -12,7 +12,7 @@ namespace Delegates.Data.Storage.ProductTypes
             "Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
             "Delegates.Convert.JSON.ProductTypes.ConvertJSONToListProductRoutesDelegate,Delegates")]
         public GetListProductRoutesDataAsyncDelegate(
-            IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
+            IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,
             IConvertDelegate<string, List<ProductRoutes>> convertJSONToListProductRoutesDelegate) :
             base(
                 getStringDataAsyncDelegate,

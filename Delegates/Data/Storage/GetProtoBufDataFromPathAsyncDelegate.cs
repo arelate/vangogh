@@ -4,13 +4,13 @@ using Interfaces.Delegates.GetPath;
 
 namespace Delegates.Data.Storage
 {
-    public abstract class GetProtoBufDataFromPathAsyncDelegate<T> : IGetDataAsyncDelegate<T>
+    public abstract class GetProtoBufDataFromPathAsyncDelegate<T> : IGetDataAsyncDelegate<T,string>
     {
-        private readonly IGetDataAsyncDelegate<T> getProtoBufDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<T, string> getProtoBufDataAsyncDelegate;
         private readonly IGetPathDelegate getPathDelegate;
 
         public GetProtoBufDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<T> getProtoBufDataAsyncDelegate,
+            IGetDataAsyncDelegate<T, string> getProtoBufDataAsyncDelegate,
             IGetPathDelegate getPathDelegate)
         {
             this.getProtoBufDataAsyncDelegate = getProtoBufDataAsyncDelegate;

@@ -7,14 +7,14 @@ namespace Delegates.Convert.Hashes
 {
     public class ConvertFileToMd5HashDelegate : IConvertAsyncDelegate<string, Task<string>>
     {
-        private readonly IGetDataAsyncDelegate<string> getStringDataAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate;
         private readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
 
         [Dependencies(
             "Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
             "Delegates.Convert.Hashes.ConvertStringToMd5HashDelegate,Delegates")]
         public ConvertFileToMd5HashDelegate(
-            IGetDataAsyncDelegate<string> getStringDataAsyncDelegate,
+            IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,
             IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate)
         {
             this.getStringDataAsyncDelegate = getStringDataAsyncDelegate;

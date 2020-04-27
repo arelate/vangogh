@@ -7,7 +7,7 @@ using Interfaces.Delegates.Data;
 
 namespace Delegates.Data.Network
 {
-    public class GetUriDataAsyncDelegate : IGetDataAsyncDelegate<string>
+    public class GetUriDataAsyncDelegate : IGetDataAsyncDelegate<string, string>
     {
         private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
             convertRequestToResponseAsyncDelegate;

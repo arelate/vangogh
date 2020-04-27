@@ -4,11 +4,14 @@ using Models.ArgsDefinitions;
 
 namespace TestDelegates.Data.ArgsDefinitions
 {
-    public class GetTestArgsDefinitionsDataAsyncDelegate : IGetDataAsyncDelegate<ArgsDefinition>
+    public class GetTestArgsDefinitionsDataAsyncDelegate : IGetDataAsyncDelegate<ArgsDefinition, string>
     {
         public async Task<ArgsDefinition> GetDataAsync(string uri = null)
         {
-            return await Task.Run(() => { return TestModels.ArgsDefinitions.ReferenceArgsDefinition.ArgsDefinition; });
+            return await Task.Run(() =>
+            {
+                return TestModels.ArgsDefinitions.ReferenceArgsDefinition.ArgsDefinition;
+            });
         }
     }
 }

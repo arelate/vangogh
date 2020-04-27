@@ -14,7 +14,7 @@ namespace Delegates.Data.Storage.Records
             "Delegates.Data.Storage.Records.GetListProductRecordsDataAsyncDelegate,Delegates",
             "Delegates.GetPath.Records.GetValidationResultsRecordsPathDelegate,Delegates")]
         public GetListValidationResultsRecordsDataFromPathAsyncDelegate(
-            IGetDataAsyncDelegate<List<ProductRecords>> getListProductRecordsDataAsyncDelegate,
+            IGetDataAsyncDelegate<List<ProductRecords>, string> getListProductRecordsDataAsyncDelegate,
             IGetPathDelegate getValidationResultsRecordsPathDelegate) :
             base(
                 getListProductRecordsDataAsyncDelegate,
