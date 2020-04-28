@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 
-namespace Delegates.Itemize.Models
+namespace Delegates.Itemize
 {
     public class ItemizeAllDataAsyncDelegate<Type>: IItemizeAllAsyncDelegate<Type>
     {

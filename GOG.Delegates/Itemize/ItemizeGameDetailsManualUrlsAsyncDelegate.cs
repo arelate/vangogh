@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Controllers.Data;
-using Attributes;
 using Models.Uris;
 using Models.Settings;
 using GOG.Models;
@@ -12,14 +10,8 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        private IDataController<GameDetails> gameDetailsDataController;
-
-        [Dependencies(
-            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers")]
-        public ItemizeGameDetailsManualUrlsAsyncDelegate(
-            IDataController<GameDetails> gameDetailsDataController)
+        public ItemizeGameDetailsManualUrlsAsyncDelegate()
         {
-            this.gameDetailsDataController = gameDetailsDataController;
         }
 
         public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails)

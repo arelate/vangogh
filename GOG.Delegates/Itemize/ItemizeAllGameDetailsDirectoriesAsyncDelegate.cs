@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Controllers.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
@@ -11,26 +10,26 @@ namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllGameDetailsDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        private readonly IDataController<GameDetails> gameDetailsDataController;
+        private readonly IItemizeAllAsyncDelegate<GameDetails> itemizeAllGameDetailsAsyncDelegate;
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
+            "GOG.Delegates.Itemize.ProductTypes.ItemizeAllGameDetailsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public ItemizeAllGameDetailsDirectoriesAsyncDelegate(
-            IDataController<GameDetails> gameDetailsDataController,
+            IItemizeAllAsyncDelegate<GameDetails> itemizeAllGameDetailsAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.gameDetailsDataController = gameDetailsDataController;
+            this.itemizeAllGameDetailsAsyncDelegate = itemizeAllGameDetailsAsyncDelegate;
             this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
@@ -41,7 +40,7 @@ namespace GOG.Delegates.Itemize
         {
             startDelegate.Start("Enumerate gameDetails directories");
 
-            await foreach (var gameDetails in gameDetailsDataController.ItemizeAllAsync())
+            await foreach (var gameDetails in itemizeAllGameDetailsAsyncDelegate.ItemizeAllAsync())
             {
                 setProgressDelegate.SetProgress();
 

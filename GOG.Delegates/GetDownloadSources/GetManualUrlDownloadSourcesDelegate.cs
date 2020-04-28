@@ -19,7 +19,7 @@ namespace GOG.Delegates.GetDownloadSources
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Itemize.Models.ProductTypes.ItemizeAllUpdatedAsyncDelegate,Delegates",
+            "Delegates.Itemize.ProductTypes.ItemizeAllUpdatedAsyncDelegate,Delegates",
             "GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",

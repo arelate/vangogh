@@ -1,18 +1,20 @@
 using System.Threading.Tasks;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Data;
+using Models.ProductTypes;
 
-namespace Delegates.Confirm.Models
+namespace Delegates.Confirm
 {
-    public class ConfirmContainsIdAsyncDelegate<Type>: IConfirmAsyncDelegate<long>
+    public class ConfirmDataContainsIdAsyncDelegate<Type> : IConfirmAsyncDelegate<long>
+        where Type : ProductCore
     {
         private readonly IGetDataAsyncDelegate<Type, long> getDataByIdAsyncDelegate;
 
-        public ConfirmContainsIdAsyncDelegate(IGetDataAsyncDelegate<Type, long> getDataByIdAsyncDelegate)
+        public ConfirmDataContainsIdAsyncDelegate(IGetDataAsyncDelegate<Type, long> getDataByIdAsyncDelegate)
         {
             this.getDataByIdAsyncDelegate = getDataByIdAsyncDelegate;
         }
-        
+
         public async Task<bool> ConfirmAsync(long id)
         {
             return await getDataByIdAsyncDelegate.GetDataAsync(id) != null;

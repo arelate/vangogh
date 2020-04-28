@@ -5,7 +5,7 @@ using System.Linq;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Format;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
@@ -15,7 +15,7 @@ namespace GOG.Delegates.GetDownloadSources
 {
     public class GetScreenshotsDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        private readonly IDataController<ProductScreenshots> screenshotsDataController;
+        private readonly IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate;
         private readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
         private readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
         private readonly IStartDelegate startDelegate;
@@ -23,21 +23,21 @@ namespace GOG.Delegates.GetDownloadSources
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
+            "Delegates.Itemize.ProductTypes.ItemizeAllProductScreenshotsAsyncDelegate,Delegates",
             "Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
             "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
-            IDataController<ProductScreenshots> screenshotsDataController,
+            IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.screenshotsDataController = screenshotsDataController;
+            this.itemizeAllProductScreenshotsAsyncDelegate = itemizeAllProductScreenshotsAsyncDelegate;
             this.formatScreenshotsUriDelegate = formatScreenshotsUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
             this.startDelegate = startDelegate;
@@ -51,7 +51,7 @@ namespace GOG.Delegates.GetDownloadSources
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
 
-            await foreach (var productScreenshots in screenshotsDataController.ItemizeAllAsync())
+            await foreach (var productScreenshots in itemizeAllProductScreenshotsAsyncDelegate.ItemizeAllAsync())
             {
                 if (productScreenshots == null)
                     // await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {productScreenshots.Id} doesn't have screenshots");

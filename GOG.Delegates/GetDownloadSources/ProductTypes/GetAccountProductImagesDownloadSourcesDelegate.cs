@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Format;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.GetImageUri;
@@ -12,24 +13,24 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
         GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>
     {
         [Dependencies(
-            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
+            "Delegates.Itemize.ProductTypes.ItemizeAllUpdatedAsyncDelegate,Delegates",
+            "GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate,GOG.Delegates",
             "Delegates.Format.Uri.FormatImagesUriDelegate,Delegates",
             "GOG.Delegates.GetImageUri.GetAccountProductImageUriDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public GetAccountProductImagesDownloadSourcesAsyncDelegate(
-            IDataController<long> updatedDataController,
-            IDataController<AccountProduct> accountProductsDataController,
+            IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
+            IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<AccountProduct> getAccountProductImageUriDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :
             base(
-                updatedDataController,
-                accountProductsDataController,
+                itemizeAllUpdatedAsyncDelegate,
+                getAccountProductByIdAsyncDelegate,
                 formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
                 startDelegate,

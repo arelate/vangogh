@@ -1,22 +1,23 @@
-﻿using Interfaces.Controllers.Data;
+﻿using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Confirm;
 using Delegates.Itemize.MasterDetail;
 using Attributes;
 using GOG.Models;
 
 namespace GOG.Delegates.Itemize.MasterDetail
 {
-    public class ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatepsDelegate :
-        ItemizeAllMasterDetailsGapsAsyncDelegate<AccountProduct, GameDetails>
+    public class ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatesDelegate :
+        ItemizeAllMasterDetailsGapsAsyncDelegate<AccountProduct>
     {
         [Dependencies(
-            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers")]
-        public ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatepsDelegate(
-            IDataController<AccountProduct> accountProductsDataController,
-            IDataController<GameDetails> gameDetailsDataController) :
+            "GOG.Delegates.Itemize.ProductTypes.ItemizeAllAccountProductsAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainIdAsyncDelegate,GOG.Delegates")]
+        public ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatesDelegate(
+            IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsAsyncDelegate,
+            IConfirmAsyncDelegate<long> confirmGameDetailsContainsIdAsyncDelegate) :
             base(
-                accountProductsDataController,
-                gameDetailsDataController)
+                itemizeAllAccountProductsAsyncDelegate,
+                confirmGameDetailsContainsIdAsyncDelegate)
         {
             // ...
         }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Data;
 using Attributes;
 
-namespace Delegates.Itemize.Models.ProductTypes
+namespace Delegates.Itemize.ProductTypes
 {
     public class ItemizeAllUpdatedAsyncDelegate: ItemizeAllDataAsyncDelegate<long>
     {
