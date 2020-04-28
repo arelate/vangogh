@@ -4,7 +4,7 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Respond;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.FillGaps;
 using Models.ProductTypes;
@@ -16,7 +16,8 @@ namespace GOG.Delegates.Respond.Update
         where MasterType : ProductCore
         where DetailType : ProductCore
     {
-        private readonly IDataController<DetailType> detailDataController;
+        private readonly IUpdateAsyncDelegate<DetailType> updateDetailDataAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitDetailDataAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate;
 
         private readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate;
@@ -32,7 +33,8 @@ namespace GOG.Delegates.Respond.Update
         public RespondToUpdateMasterDetailsRequestDelegate(
             IGetValueDelegate<string> getDetailUpdateUriDelegate,
             IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate,
-            IDataController<DetailType> detailDataController,
+            IUpdateAsyncDelegate<DetailType> updateDetailAsyncDelegate,
+            ICommitAsyncDelegate commitAsyncDelegate,
             IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate,
             IStartDelegate startDelegate,
@@ -40,7 +42,8 @@ namespace GOG.Delegates.Respond.Update
             ICompleteDelegate completeDelegate,
             IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null)
         {
-            this.detailDataController = detailDataController;
+            this.updateDetailDataAsyncDelegate = updateDetailAsyncDelegate;
+            this.commitDetailDataAsyncDelegate = commitAsyncDelegate;
             this.itemizeAllMasterDetailGapsAsyncDelegate = itemizeAllMasterDetailGapsAsyncDelegate;
 
             this.getDeserializedDetailAsyncDelegate = getDeserializedDetailAsyncDelegate;
@@ -81,11 +84,11 @@ namespace GOG.Delegates.Respond.Update
                     if (fillGapsDelegate != null)
                         fillGapsDelegate.FillGaps(detailData, masterProductWithoutDetail);
 
-                    await detailDataController.UpdateAsync(detailData);
+                    await updateDetailDataAsyncDelegate.UpdateAsync(detailData);
                 }
             }
 
-            await detailDataController.CommitAsync();
+            await commitDetailDataAsyncDelegate.CommitAsync();
 
             completeDelegate.Complete();
         }

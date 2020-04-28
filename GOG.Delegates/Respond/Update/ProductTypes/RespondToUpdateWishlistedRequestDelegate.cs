@@ -1,34 +1,39 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using Interfaces.Delegates.Respond;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.Uris;
 using GOG.Interfaces.Delegates.GetDeserialized;
+using Interfaces.Delegates.Data;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
     public class RespondToUpdateWishlistedRequestDelegate : IRespondAsyncDelegate
     {
         private readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
-        private readonly IDataController<long> wishlistedDataController;
+        private readonly IUpdateAsyncDelegate<long> updateWishlistedAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitWishlistedAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
             "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
-            "Controllers.Data.ProductTypes.WishlistedDataController,Controllers",
+            "Delegates.Data.Models.ProductTypes.UpdateWishlistedAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.CommitWishlistedAsyncDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateWishlistedRequestDelegate(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
-            IDataController<long> wishlistedDataController,
+            IUpdateAsyncDelegate<long> updateWishlistedAsyncDelegate,
+            ICommitAsyncDelegate commitWishlistedAsyncDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
             this.getProductsPageResultDelegate = getProductsPageResultDelegate;
-            this.wishlistedDataController = wishlistedDataController;
+            this.updateWishlistedAsyncDelegate = updateWishlistedAsyncDelegate;
+            this.commitWishlistedAsyncDelegate = commitWishlistedAsyncDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
         }
@@ -49,12 +54,12 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                await wishlistedDataController.UpdateAsync(product.Id);
+                await updateWishlistedAsyncDelegate.UpdateAsync(product.Id);
             }
 
             completeDelegate.Complete();
 
-            await wishlistedDataController.CommitAsync();
+            await commitWishlistedAsyncDelegate.CommitAsync();
 
             completeDelegate.Complete();
         }

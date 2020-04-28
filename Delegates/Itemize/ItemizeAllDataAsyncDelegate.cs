@@ -5,6 +5,7 @@ using Interfaces.Delegates.Data;
 
 namespace Delegates.Itemize
 {
+    // TODO: Deprecate as it's a trivial delegate, not adding value
     public class ItemizeAllDataAsyncDelegate<Type>: IItemizeAllAsyncDelegate<Type>
     {
         private readonly IGetDataAsyncDelegate<List<Type>, string> getDataCollectionAsyncDelegate;

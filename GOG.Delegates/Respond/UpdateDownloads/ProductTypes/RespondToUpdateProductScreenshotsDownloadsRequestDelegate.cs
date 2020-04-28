@@ -1,5 +1,5 @@
 ﻿using Interfaces.Delegates.GetDirectory;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.GetDownloadSources;
 using Attributes;
@@ -16,27 +16,33 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         [Dependencies(
             "GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate,GOG.Delegates",
             "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-            "Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
-            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-            "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
+            "GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate,GOG.Delegates",
+            "Delegates.Data.Models.ProductTypes.GetProductDownloadsByIdAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.UpdateProductDownloadsAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.CommitProductDownloadsAsyncDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateProductScreenshotsDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getProductScreenshotsDirectoryDelegate,
-            IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<AccountProduct> accountProductsDataController,
-            IDataController<Product> productsDataController,
+            IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
+            IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
+            IGetDataAsyncDelegate<ProductDownloads, long> getProductDownloadsByIdAsyncDelegate,
+            IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate,
+            ICommitAsyncDelegate commitProductDownloadsAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :
             base(
                 getProductScreenshotsDownloadSourcesAsyncDelegate,
                 getProductScreenshotsDirectoryDelegate,
-                productDownloadsDataController,
-                accountProductsDataController,
-                productsDataController,
+                getProductByIdAsyncDelegate,
+                getAccountProductByIdAsyncDelegate,
+                getProductDownloadsByIdAsyncDelegate,
+                updateProductDownloadsAsyncDelegate,
+                commitProductDownloadsAsyncDelegate,
                 startDelegate,
                 setProgressDelegate,
                 completeDelegate)

@@ -14,10 +14,10 @@ namespace GOG.Delegates.Data.Storage.ProductTypes
             "Delegates.GetPath.ProductTypes.GetGameDetailsPathDelegate,Delegates")]
         public GetListGameDetailsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<GameDetails>,string> getListGameDetailsDataAsyncDelegate,
-            IGetPathDelegate getGameDetailssPathDelegate) :
+            IGetPathDelegate getGameDetailsPathDelegate) :
             base(
                 getListGameDetailsDataAsyncDelegate,
-                getGameDetailssPathDelegate)
+                getGameDetailsPathDelegate)
         {
             // ...
         }

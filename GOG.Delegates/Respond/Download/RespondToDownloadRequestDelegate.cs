@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Respond;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using Models.Separators;
@@ -12,20 +13,26 @@ namespace GOG.Delegates.Respond.Download
     public abstract class RespondToDownloadRequestDelegate<Type> : IRespondAsyncDelegate
         where Type : ProductCore
     {
-        private readonly IDataController<ProductDownloads> productDownloadsDataController;
+        private readonly IItemizeAllAsyncDelegate<ProductDownloads> itemizeAllProductDownloadsAsyncDelegate;
+        private readonly IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate;
+        private readonly IDeleteAsyncDelegate<ProductDownloads> deleteProductDownloadsAsyncDelegate;
         private readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         public RespondToDownloadRequestDelegate(
-            IDataController<ProductDownloads> productDownloadsDataController,
+            IItemizeAllAsyncDelegate<ProductDownloads> itemizeAllProductDownloadsAsyncDelegate,
+            IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate,
+            IDeleteAsyncDelegate<ProductDownloads> deleteProductDownloadsAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.productDownloadsDataController = productDownloadsDataController;
+            this.itemizeAllProductDownloadsAsyncDelegate = itemizeAllProductDownloadsAsyncDelegate;
+            this.updateProductDownloadsAsyncDelegate = updateProductDownloadsAsyncDelegate;
+            this.deleteProductDownloadsAsyncDelegate = deleteProductDownloadsAsyncDelegate;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
@@ -39,15 +46,9 @@ namespace GOG.Delegates.Respond.Download
 
             var emptyProductDownloads = new List<ProductDownloads>();
 
-            await foreach (var productDownloads in productDownloadsDataController.ItemizeAllAsync())
+            await foreach (var productDownloads in itemizeAllProductDownloadsAsyncDelegate.ItemizeAllAsync())
             {
                 if (productDownloads == null) continue;
-
-                // await statusController.UpdateProgressAsync(
-                //     processDownloadsTask,
-                //     ++current,
-                //     total,
-                //     productDownloads.Title);
 
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(
@@ -56,10 +57,8 @@ namespace GOG.Delegates.Respond.Download
 
                 startDelegate.Start($"Download {typeof(Type)} entries");
 
-                for (var ii = 0; ii < downloadEntries.Length; ii++)
+                foreach (var entry in downloadEntries)
                 {
-                    var entry = downloadEntries[ii];
-
                     var sanitizedUri = entry.SourceUri;
                     if (sanitizedUri.Contains(Separators.QueryString))
                         sanitizedUri = sanitizedUri.Substring(0,
@@ -67,16 +66,17 @@ namespace GOG.Delegates.Respond.Download
 
                     setProgressDelegate.SetProgress();
 
-                    await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
-                        productDownloads.Id,
-                        productDownloads.Title,
-                        sanitizedUri,
-                        entry.Destination);
+                    if (downloadProductFileAsyncDelegate != null)
+                        await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
+                            productDownloads.Id,
+                            productDownloads.Title,
+                            sanitizedUri,
+                            entry.Destination);
 
                     startDelegate.Start($"Remove scheduled {typeof(Type)} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
-                    await productDownloadsDataController.UpdateAsync(productDownloads);
+                    await updateProductDownloadsAsyncDelegate.UpdateAsync(productDownloads);
 
                     completeDelegate.Complete();
                 }
@@ -91,7 +91,7 @@ namespace GOG.Delegates.Respond.Download
             startDelegate.Start("Clear empty downloads");
 
             foreach (var productDownload in emptyProductDownloads)
-                await productDownloadsDataController.DeleteAsync(productDownload);
+                await deleteProductDownloadsAsyncDelegate.DeleteAsync(productDownload);
 
             completeDelegate.Complete();
 

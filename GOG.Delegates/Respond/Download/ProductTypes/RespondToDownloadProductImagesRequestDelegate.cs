@@ -1,4 +1,5 @@
-﻿using Interfaces.Controllers.Data;
+﻿using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using GOG.Interfaces.Delegates.DownloadProductFile;
@@ -10,19 +11,25 @@ namespace GOG.Delegates.Respond.Download.ProductTypes
     public class RespondToDownloadProductImagesRequestDelegate : RespondToDownloadRequestDelegate<ProductImage>
     {
         [Dependencies(
-            "Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
+            "Delegates.Itemize.ProductTypes.ItemizeAllProductDownloadsAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.UpdateProductDownloadsAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.DeleteProductDownloadsAsyncDelegate,Delegates",
             "GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToDownloadProductImagesRequestDelegate(
-            IDataController<ProductDownloads> productDownloadsDataController,
+            IItemizeAllAsyncDelegate<ProductDownloads> itemizeAllProductDownloadsAsyncDelegate,
+            IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate,
+            IDeleteAsyncDelegate<ProductDownloads> deleteProductDownloadsAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :
             base(
-                productDownloadsDataController,
+                itemizeAllProductDownloadsAsyncDelegate,
+                updateProductDownloadsAsyncDelegate,
+                deleteProductDownloadsAsyncDelegate,
                 downloadProductFileAsyncDelegate,
                 startDelegate,
                 setProgressDelegate,

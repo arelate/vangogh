@@ -6,7 +6,6 @@ using Models.ProductTypes;
 namespace Delegates.Confirm
 {
     public class ConfirmDataContainsIdAsyncDelegate<Type> : IConfirmAsyncDelegate<long>
-        where Type : ProductCore
     {
         private readonly IGetDataAsyncDelegate<Type, long> getDataByIdAsyncDelegate;
 

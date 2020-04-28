@@ -1,7 +1,7 @@
 ﻿using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.GetDeserialized;
@@ -17,8 +17,9 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         [Dependencies(
             "Delegates.GetValue.Uri.ProductTypes.GetGameDetailsUpdateUriDelegate,Delegates",
             "GOG.Delegates.Convert.UpdateIdentity.ConvertAccountProductToGameDetailsUpdateIdentityDelegate,GOG.Delegates",
-            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-            "GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatepsDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Models.ProductTypes.UpdateGameDetailsAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Models.ProductTypes.CommitGameDetailsAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
@@ -27,7 +28,8 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         public RespondToUpdateGameDetailsRequestDelegate(
             IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
             IConvertDelegate<AccountProduct, string> convertAccountProductToGameDetailsUpdateIdentityDelegate,
-            IDataController<GameDetails> gameDetailsDataController,
+            IUpdateAsyncDelegate<GameDetails> updateGameDetailsAsyncDelegate,
+            ICommitAsyncDelegate commitGameDetailsAsyncDelegate,
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameDetails> getDeserializedGameDetailsAsyncDelegate,
             IStartDelegate startDelegate,
@@ -37,7 +39,8 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             base(
                 getGameDetailsUpdateUriDelegate,
                 convertAccountProductToGameDetailsUpdateIdentityDelegate,
-                gameDetailsDataController,
+                updateGameDetailsAsyncDelegate,
+                commitGameDetailsAsyncDelegate,
                 itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
                 getDeserializedGameDetailsAsyncDelegate,
                 startDelegate,

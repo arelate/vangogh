@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Respond;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using GOG.Interfaces.Delegates.GetPageResults;
@@ -17,7 +17,9 @@ namespace GOG.Delegates.Respond.Update
         private readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
         private readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
-        private readonly IDataController<DataType> dataController;
+        // private readonly IDataController<DataType> dataController;
+        private readonly IUpdateAsyncDelegate<DataType> updateDataAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitDataAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -25,7 +27,8 @@ namespace GOG.Delegates.Respond.Update
         public RespondToUpdatePageResultRequestDelegate(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
-            IDataController<DataType> dataController,
+            IUpdateAsyncDelegate<DataType> updateDataAsyncDelegate,
+            ICommitAsyncDelegate commitDataAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
@@ -33,7 +36,8 @@ namespace GOG.Delegates.Respond.Update
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
-            this.dataController = dataController;
+            this.updateDataAsyncDelegate = updateDataAsyncDelegate;
+            this.commitDataAsyncDelegate = commitDataAsyncDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
             this.completeDelegate = completeDelegate;
@@ -56,13 +60,13 @@ namespace GOG.Delegates.Respond.Update
                 foreach (var product in newProducts)
                 {
                     setProgressDelegate.SetProgress();
-                    await dataController.UpdateAsync(product);
+                    await updateDataAsyncDelegate.UpdateAsync(product);
                 }
 
                 completeDelegate.Complete();
             }
 
-            await dataController.CommitAsync();
+            await commitDataAsyncDelegate.CommitAsync();
 
             completeDelegate.Complete();
         }

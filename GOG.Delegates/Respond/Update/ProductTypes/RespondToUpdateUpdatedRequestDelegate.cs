@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Respond;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
@@ -12,34 +13,40 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
     [RespondsToRequests(Method = "update", Collection = "updated")]
     public class RespondToUpdateUpdatedRequestDelegate : IRespondAsyncDelegate
     {
-        private readonly IDataController<AccountProduct> accountProductDataController;
+        // private readonly IDataController<AccountProduct> accountProductDataController;
+        private readonly IItemizeAllAsyncDelegate<AccountProduct> itemizeAccountProductsAsyncDelegate;
         private readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
-        private readonly IDataController<long> updatedDataController;
+        // private readonly IDataController<long> updatedDataController;
+        private readonly IUpdateAsyncDelegate<long> updateUpdatedAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitUpdatedAsyncDelegate;
 
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
+            "GOG.Delegates.Itemize.ProductTypes.ItemizeAllAccountProductsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
-            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
+            "Delegates.Data.Models.ProductTypes.UpdateUpdatedAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.CommitUpdatedAsyncDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateUpdatedRequestDelegate(
-            IDataController<AccountProduct> accountProductDataController,
+            IItemizeAllAsyncDelegate<AccountProduct> itemizeAccountProductsAsyncDelegate,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
-            IDataController<long> updatedDataController,
+            IUpdateAsyncDelegate<long> updateUpdatedAsyncDelegate,
+            ICommitAsyncDelegate commitUpdatedAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.accountProductDataController = accountProductDataController;
+            this.itemizeAccountProductsAsyncDelegate = itemizeAccountProductsAsyncDelegate;
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
 
-            this.updatedDataController = updatedDataController;
+            this.updateUpdatedAsyncDelegate = updateUpdatedAsyncDelegate;
+            this.commitUpdatedAsyncDelegate = commitUpdatedAsyncDelegate;
 
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
@@ -76,7 +83,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
             startDelegate.Start("Add updated account products");
 
-            await foreach (var accountProduct in accountProductDataController.ItemizeAllAsync())
+            await foreach (var accountProduct in itemizeAccountProductsAsyncDelegate.ItemizeAllAsync())
             {
                 setProgressDelegate.SetProgress();
 
@@ -85,11 +92,11 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             }
 
             foreach (var accountProduct in accountProductsNewOrUpdated)
-                await updatedDataController.UpdateAsync(accountProduct);
+                await updateUpdatedAsyncDelegate.UpdateAsync(accountProduct);
 
             completeDelegate.Complete();
 
-            await updatedDataController.CommitAsync();
+            await commitUpdatedAsyncDelegate.CommitAsync();
 
             completeDelegate.Complete();
         }

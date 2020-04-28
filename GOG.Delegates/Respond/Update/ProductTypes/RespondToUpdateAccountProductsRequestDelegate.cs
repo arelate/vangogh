@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Records;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
@@ -17,22 +16,26 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         [Dependencies(
             "GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate,GOG.Delegates",
-            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
+            "GOG.Delegates.Data.Models.ProductTypes.UpdateAccountProductsAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Models.ProductTypes.CommitAccountProductsAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public RespondToUpdateAccountProductsRequestDelegate(
-            IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
+            IGetPageResultsAsyncDelegate<AccountProductsPageResult> 
+                getAccountProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct>
                 itemizeAccountProductsPageResultsDelegate,
-            IDataController<AccountProduct> accountProductsDataController,
+            IUpdateAsyncDelegate<AccountProduct> updateAccountProductsAsyncDelegate,
+            ICommitAsyncDelegate commitAccountProductsAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :
             base(
                 getAccountProductsPageResultsAsyncDelegate,
                 itemizeAccountProductsPageResultsDelegate,
-                accountProductsDataController,
+                updateAccountProductsAsyncDelegate,
+                commitAccountProductsAsyncDelegate,
                 startDelegate,
                 setProgressDelegate,
                 completeDelegate)

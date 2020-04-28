@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using System.IO;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Respond;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.GetDownloadSources;
 using Models.ProductTypes;
 using GOG.Models;
 
-// TODO: Should this be just update if collections don't overlap?
+// TODO: Should this be just update if collections don't overlap? e.g. update accountproductimages vs updatedownloads accountproductimages
 namespace GOG.Delegates.Respond.UpdateDownloads
 {
     public abstract class RespondToUpdateDownloadsRequestDelegate<Type> : IRespondAsyncDelegate
@@ -17,9 +17,11 @@ namespace GOG.Delegates.Respond.UpdateDownloads
     {
         private readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
         private readonly IGetDirectoryDelegate getDirectoryDelegate;
-        private readonly IDataController<ProductDownloads> productDownloadsDataController;
-        private readonly IDataController<AccountProduct> accountProductsDataController;
-        private readonly IDataController<Product> productsDataController;
+        private readonly IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<ProductDownloads, long> getProductDownloadsByIdAsyncDelegate;
+        private readonly IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitProductDownloadsAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -27,18 +29,22 @@ namespace GOG.Delegates.Respond.UpdateDownloads
         public RespondToUpdateDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate,
-            IDataController<ProductDownloads> productDownloadsDataController,
-            IDataController<AccountProduct> accountProductsDataController,
-            IDataController<Product> productsDataController,
+            IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
+            IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
+            IGetDataAsyncDelegate<ProductDownloads, long> getProductDownloadsByIdAsyncDelegate,
+            IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate,
+            ICommitAsyncDelegate commitProductDownloadsAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
             this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
-            this.productDownloadsDataController = productDownloadsDataController;
-            this.accountProductsDataController = accountProductsDataController;
-            this.productsDataController = productsDataController;
+            this.getProductByIdAsyncDelegate = getProductByIdAsyncDelegate;
+            this.getAccountProductByIdAsyncDelegate = getAccountProductByIdAsyncDelegate;
+            this.getProductDownloadsByIdAsyncDelegate = getProductDownloadsByIdAsyncDelegate;
+            this.updateProductDownloadsAsyncDelegate = updateProductDownloadsAsyncDelegate;
+            this.commitProductDownloadsAsyncDelegate = commitProductDownloadsAsyncDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
             this.completeDelegate = completeDelegate;
@@ -62,11 +68,11 @@ namespace GOG.Delegates.Respond.UpdateDownloads
 
                 var id = downloadSource.Key;
 
-                ProductCore product = await productsDataController.GetByIdAsync(id);
+                ProductCore product = await getProductByIdAsyncDelegate.GetDataAsync(id);
 
                 if (product == null)
                 {
-                    product = await accountProductsDataController.GetByIdAsync(id);
+                    product = await getAccountProductByIdAsyncDelegate.GetDataAsync(id);
 
                     if (product == null)
                         // await statusController.WarnAsync(
@@ -77,7 +83,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
 
                 setProgressDelegate.SetProgress();
 
-                var productDownloads = await productDownloadsDataController.GetByIdAsync(product.Id);
+                var productDownloads = await getProductDownloadsByIdAsyncDelegate.GetDataAsync(product.Id);
                 if (productDownloads == null)
                     productDownloads = new ProductDownloads
                     {
@@ -119,11 +125,13 @@ namespace GOG.Delegates.Respond.UpdateDownloads
                     productDownloads.Downloads.Add(scheduledDownloadEntry);
                 }
 
-                await productDownloadsDataController.UpdateAsync(productDownloads);
+                await updateProductDownloadsAsyncDelegate.UpdateAsync(productDownloads);
 
                 completeDelegate.Complete();
             }
 
+            await commitProductDownloadsAsyncDelegate.CommitAsync();
+            
             completeDelegate.Complete();
 
             completeDelegate.Complete();
