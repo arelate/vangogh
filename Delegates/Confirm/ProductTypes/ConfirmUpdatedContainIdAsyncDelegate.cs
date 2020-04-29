@@ -4,6 +4,7 @@ using Attributes;
 
 namespace Delegates.Confirm.ProductTypes
 {
+    // TODO: This and wishlisted should be a form of passthrough
     public class ConfirmUpdatedContainIdAsyncDelegate: ConfirmDataContainsIdAsyncDelegate<long>
     {
         [Dependencies(

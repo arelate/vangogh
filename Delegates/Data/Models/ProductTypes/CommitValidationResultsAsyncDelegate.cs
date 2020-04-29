@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Attributes;
+using Models.ProductTypes;
 
 namespace Delegates.Data.Models.ProductTypes
 {
-    public class CommitValidationResultsAsyncDelegate: CommitDataAsyncDelegate<long>
+    public class CommitValidationResultsAsyncDelegate: CommitDataAsyncDelegate<ValidationResults>
     {
         [Dependencies(
             "Delegates.Data.Storage.ProductTypes.GetListValidationResultsDataFromPathAsyncDelegate,Delegates",
@@ -13,8 +14,8 @@ namespace Delegates.Data.Models.ProductTypes
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate")]
         public CommitValidationResultsAsyncDelegate(
-            IGetDataAsyncDelegate<List<long>, string> getDataAsyncDelegate, 
-            IPostDataAsyncDelegate<List<long>> postDataAsyncDelegate, 
+            IGetDataAsyncDelegate<List<ValidationResults>, string> getDataAsyncDelegate, 
+            IPostDataAsyncDelegate<List<ValidationResults>> postDataAsyncDelegate, 
             IStartDelegate startDelegate, 
             ICompleteDelegate completeDelegate) : 
             base(

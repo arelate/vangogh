@@ -8,15 +8,15 @@ using Attributes;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
 {
-    public class DeleteProductsAsyncDelegate: DeleteAsyncDelegate<ApiProduct>
+    public class DeleteProductsAsyncDelegate: DeleteAsyncDelegate<Product>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Storage.ProductTypes.GetListApiProductDataFromPathAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.ProductTypes.ConvertApiProductToIndexDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Storage.ProductTypes.GetListProductDataFromPathAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Convert.ProductTypes.ConvertProductToIndexDelegate,GOG.Delegates",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmProductsContainIdAsyncDelegate,GOG.Delegates")]
         public DeleteProductsAsyncDelegate(
-            IGetDataAsyncDelegate<List<ApiProduct>, string> getDataCollectionAsyncDelegate, 
-            IConvertDelegate<ApiProduct, long> convertProductToIndexDelegate, 
+            IGetDataAsyncDelegate<List<Product>, string> getDataCollectionAsyncDelegate, 
+            IConvertDelegate<Product, long> convertProductToIndexDelegate, 
             IConfirmAsyncDelegate<long> confirmContainsAsyncDelegate) : 
             base(
                 getDataCollectionAsyncDelegate, 

@@ -6,13 +6,13 @@ using GOG.Models;
 
 namespace GOG.Delegates.Itemize.MasterDetail
 {
-    public class ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatesDelegate :
+    public class ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate :
         ItemizeAllMasterDetailsGapsAsyncDelegate<AccountProduct>
     {
         [Dependencies(
             "GOG.Delegates.Itemize.ProductTypes.ItemizeAllAccountProductsAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainIdAsyncDelegate,GOG.Delegates")]
-        public ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatesDelegate(
+        public ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate(
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsAsyncDelegate,
             IConfirmAsyncDelegate<long> confirmGameDetailsContainsIdAsyncDelegate) :
             base(

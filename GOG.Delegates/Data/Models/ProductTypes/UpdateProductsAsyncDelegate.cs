@@ -8,21 +8,21 @@ using Attributes;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
 {
-    public class UpdateProductsAsyncDelegate: UpdateDataAsyncDelegate<ApiProduct>
+    public class UpdateProductsAsyncDelegate: UpdateDataAsyncDelegate<Product>
     {
         [Dependencies(
             "GOG.Delegates.Data.Models.ProductTypes.DeleteProductsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.ProductTypes.ConvertApiProductToIndexDelegate,GOG.Delegates",
+            "GOG.Delegates.Convert.ProductTypes.ConvertProductToIndexDelegate,GOG.Delegates",
             "GOG.Delegates.Confirm.ProductTypes.ConfirmProductsContainIdAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Storage.ProductTypes.GetListApiProductDataFromPathAsyncDelegate,GOG.Delegates")]
+            "GOG.Delegates.Data.Storage.ProductTypes.GetListProductDataFromPathAsyncDelegate,GOG.Delegates")]
         public UpdateProductsAsyncDelegate(
-            IDeleteAsyncDelegate<ApiProduct> deleteProductsAsyncDelegate, 
-            IConvertDelegate<ApiProduct, long> convertApiProductToIndexDelegate, 
+            IDeleteAsyncDelegate<Product> deleteProductsAsyncDelegate, 
+            IConvertDelegate<Product, long> convertProductToIndexDelegate, 
             IConfirmAsyncDelegate<long> confirmProductsContainsIdAsyncDelegate, 
-            IGetDataAsyncDelegate<List<ApiProduct>, string> getProductsAsyncDelegate) : 
+            IGetDataAsyncDelegate<List<Product>, string> getProductsAsyncDelegate) : 
             base(
                 deleteProductsAsyncDelegate, 
-                convertApiProductToIndexDelegate,
+                convertProductToIndexDelegate,
                 confirmProductsContainsIdAsyncDelegate, 
                 getProductsAsyncDelegate)
         {

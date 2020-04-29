@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Attributes;
+using Models.ProductTypes;
 
 namespace Delegates.Data.Models.ProductTypes
 {
-    public class CommitProductRoutesAsyncDelegate: CommitDataAsyncDelegate<long>
+    public class CommitProductRoutesAsyncDelegate: CommitDataAsyncDelegate<ProductRoutes>
     {
         [Dependencies(
             "Delegates.Data.Storage.ProductTypes.GetListProductRoutesDataFromPathAsyncDelegate,Delegates",
@@ -13,8 +14,8 @@ namespace Delegates.Data.Models.ProductTypes
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate")]
         public CommitProductRoutesAsyncDelegate(
-            IGetDataAsyncDelegate<List<long>, string> getDataAsyncDelegate, 
-            IPostDataAsyncDelegate<List<long>> postDataAsyncDelegate, 
+            IGetDataAsyncDelegate<List<ProductRoutes>, string> getDataAsyncDelegate, 
+            IPostDataAsyncDelegate<List<ProductRoutes>> postDataAsyncDelegate, 
             IStartDelegate startDelegate, 
             ICompleteDelegate completeDelegate) : 
             base(

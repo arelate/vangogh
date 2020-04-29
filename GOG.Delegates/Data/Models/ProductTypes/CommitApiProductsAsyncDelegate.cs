@@ -10,7 +10,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
     public class CommitApiProductsAsyncDelegate : CommitDataAsyncDelegate<ApiProduct>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Models.ProductTypes.DeleteApiProductsAsyncDelegate,GOG.Delegates",
+            "GOG.Delegates.Data.Storage.ProductTypes.GetListApiProductDataFromPathAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Data.Storage.ProductTypes.PostListApiProductDataToPathAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
