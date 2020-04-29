@@ -11,6 +11,7 @@ using Interfaces.Routing;
 using Attributes;
 using GOG.Models;
 using System;
+using Models.ProductTypes;
 
 namespace GOG.Delegates.Itemize
 {
@@ -18,7 +19,7 @@ namespace GOG.Delegates.Itemize
     {
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate;
         private readonly IGetPathDelegate getPathDelegate;
-        private readonly IRoutingController routingController;
+        private readonly IRoutingController<ProductRoutes> routingController;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
@@ -30,7 +31,7 @@ namespace GOG.Delegates.Itemize
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
-            IRoutingController routingController,
+            IRoutingController<ProductRoutes> routingController,
             IGetPathDelegate getPathDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
@@ -50,9 +51,12 @@ namespace GOG.Delegates.Itemize
 
             var gameDetailsManualUrls = await itemizeGameDetailsManualUrlsDelegate.ItemizeAsync(gameDetails);
             var gameDetailsManualUrlsCount = gameDetailsManualUrls.Count();
-            var gameDetailsResolvedUris = await routingController.TraceRoutesAsync(
-                gameDetails.Id,
-                gameDetailsManualUrls);
+            var gameDetailsResolvedUris = new List<string>();
+            foreach (var manualUrl in gameDetailsManualUrls)
+                gameDetailsResolvedUris.Add(
+                    await routingController.GetDataAsync((
+                        gameDetails.Id, 
+                        manualUrl)));
 
             // that means that routes information is incomplete and 
             // it's not possible to map manualUrls to resolvedUrls

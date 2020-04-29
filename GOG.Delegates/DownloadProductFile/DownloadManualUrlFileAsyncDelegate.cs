@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Format;
@@ -8,6 +9,7 @@ using Interfaces.Delegates.Activities;
 using Interfaces.Routing;
 using GOG.Interfaces.Delegates.DownloadProductFile;
 using Attributes;
+using Models.ProductTypes;
 
 namespace GOG.Delegates.DownloadProductFile
 {
@@ -17,7 +19,7 @@ namespace GOG.Delegates.DownloadProductFile
             convertRequestToResponseAsyncDelegate;
 
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
-        private readonly IRoutingController routingController;
+        private readonly IRoutingController<ProductRoutes> routingController;
         private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
         private readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
         private readonly IStartDelegate startDelegate;
@@ -35,7 +37,7 @@ namespace GOG.Delegates.DownloadProductFile
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
-            IRoutingController routingController,
+            IRoutingController<ProductRoutes> routingController,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
             IStartDelegate startDelegate,
@@ -76,16 +78,25 @@ namespace GOG.Delegates.DownloadProductFile
 
                 // GOG.com quirk
                 // When resolving ManualUrl from GameDetails we get CDN Uri with the session key.
-                // Storing this key is pointless - it expries after some time and needs to be updated.
+                // Storing this key is pointless - it expires after some time and needs to be updated.
                 // So here we filter our this session key and store direct file Uri
 
                 var uriSansSession = formatUriRemoveSessionDelegate.Format(resolvedUri);
 
-                await routingController.UpdateRouteAsync(
-                    id,
-                    title,
-                    sourceUri,
-                    uriSansSession);
+                await routingController.UpdateAsync(
+                    new ProductRoutes()
+                    {
+                        Id = id,
+                        Title = title,
+                        Routes = new List<ProductRoutesEntry>()
+                        {
+                            new ProductRoutesEntry()
+                            {
+                                Source = sourceUri,
+                                Destination = uriSansSession
+                            }
+                        }
+                    });
 
                 try
                 {

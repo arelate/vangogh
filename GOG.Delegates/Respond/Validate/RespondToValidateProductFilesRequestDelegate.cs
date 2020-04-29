@@ -31,7 +31,7 @@ namespace GOG.Delegates.Respond.Validate
         private readonly IUpdateAsyncDelegate<ValidationResults> updateValidationResultsAsyncDelegate;
         private readonly ICommitAsyncDelegate commitValidationResultsAsyncDelegate;
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        private readonly IRoutingController routingController;
+        private readonly IRoutingController<ProductRoutes> routingController;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -62,7 +62,7 @@ namespace GOG.Delegates.Respond.Validate
             IUpdateAsyncDelegate<ValidationResults> updateValidationResultsAsyncDelegate,
             ICommitAsyncDelegate commitValidationResultsAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IRoutingController routingController,
+            IRoutingController<ProductRoutes> routingController,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
@@ -110,7 +110,7 @@ namespace GOG.Delegates.Respond.Validate
                 foreach (var manualUrl in
                     await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
                 {
-                    var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl);
+                    var resolvedUri = await routingController.GetDataAsync((id, manualUrl));
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(

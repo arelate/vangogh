@@ -9,7 +9,7 @@ using Models.ProductTypes;
 namespace Controllers.Routing
 {
     // TODO: This seems like another GetData/PostData delegate
-    public class RoutingController : IRoutingController
+    public class RoutingController : IRoutingController<ProductRoutes>
     {
         private readonly IGetDataAsyncDelegate<ProductRoutes, long> getProductRoutesByIdAsyncDelegate;
         private readonly IUpdateAsyncDelegate<ProductRoutes> updateProductRoutesAsyncDelegate;
@@ -37,86 +37,56 @@ namespace Controllers.Routing
             this.completeDelegate = completeDelegate;
         }
 
-        private string TraceProductRoute(List<ProductRoutesEntry> productRoutes, string source)
-        {
-            if (productRoutes == null) return string.Empty;
-
-            foreach (var route in productRoutes)
-                if (route.Source == source)
-                    return route.Destination;
-
-            return string.Empty;
-        }
-
-        public async Task<string> TraceRouteAsync(long id, string source)
+        public async Task<string> GetDataAsync((long Id, string Source) idSource)
         {
             startDelegate.Start("Trace route");
 
-            var productRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(id);
+            var productRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(idSource.Id);
 
             if (productRoutes == null)
                 return string.Empty;
 
             completeDelegate.Complete();
 
-            return TraceProductRoute(productRoutes.Routes, source);
+            if (productRoutes.Routes == null) return string.Empty;
+
+            foreach (var route in productRoutes.Routes)
+                if (route.Source == idSource.Source)
+                    return route.Destination;
+
+            return string.Empty;
         }
 
-        public async Task<IList<string>> TraceRoutesAsync(long id, IEnumerable<string> sources)
+        public async Task UpdateAsync(ProductRoutes newProductRoute)
         {
-            startDelegate.Start("Trace routes");
-
-            var destination = new List<string>();
-
-            var productRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(id);
-            if (productRoutes == null)
-            {
-                completeDelegate.Complete();
-                return destination;
-            }
-
-            foreach (var source in sources)
-                destination.Add(TraceProductRoute(productRoutes.Routes, source));
-
-            completeDelegate.Complete();
-
-            return destination;
-        }
-
-        public async Task UpdateRouteAsync(long id, string title, string source, string destination)
-        {
-            if (source == destination)
-                throw new System.ArgumentException("Destination cannot be the same as source");
-
+            // TODO: I patched this together for controller->delegate deprecation, but this should be rewritten
+            // probably using something like Associate delegate model where I'd associate two values together (manualUrl and resolvedUri)
             startDelegate.Start("Update route");
 
-            var productRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(id);
-            if (productRoutes == null)
-                productRoutes = new ProductRoutes
-                {
-                    Id = id,
-                    Title = title,
-                    Routes = new List<ProductRoutesEntry>()
-                };
+            var existingProductRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(newProductRoute.Id);
 
             var existingRouteUpdated = false;
-            foreach (var route in productRoutes.Routes)
-                if (route.Source == source)
-                {
-                    route.Destination = destination;
-                    existingRouteUpdated = true;
-                    break;
-                }
+            foreach (var newRoute in newProductRoute.Routes)
+            {
+                foreach (var route in existingProductRoutes.Routes)
+                    if (route.Source == newRoute.Source)
+                    {
+                        route.Destination = newRoute.Destination;
+                        existingRouteUpdated = true;
+                        break;
+                    }
+            }
 
             if (!existingRouteUpdated)
-                productRoutes.Routes.Add(new ProductRoutesEntry
-                {
-                    Source = source,
-                    Destination = destination
-                });
+                foreach (var newRoute in newProductRoute.Routes)
+                    existingProductRoutes.Routes.Add(new ProductRoutesEntry
+                    {
+                        Source = newRoute.Source,
+                        Destination = newRoute.Destination
+                    });
 
-            await updateProductRoutesAsyncDelegate.UpdateAsync(productRoutes);
-            
+            await updateProductRoutesAsyncDelegate.UpdateAsync(existingProductRoutes);
+
             await commitProductRoutesAsyncDelegate.CommitAsync();
 
             completeDelegate.Complete();
