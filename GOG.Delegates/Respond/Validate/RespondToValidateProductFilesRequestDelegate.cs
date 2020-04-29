@@ -10,7 +10,6 @@ using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Interfaces.Validation;
-using Interfaces.Routing;
 using Interfaces.ValidationResults;
 using Attributes;
 using Models.ProductTypes;
@@ -31,7 +30,7 @@ namespace GOG.Delegates.Respond.Validate
         private readonly IUpdateAsyncDelegate<ValidationResults> updateValidationResultsAsyncDelegate;
         private readonly ICommitAsyncDelegate commitValidationResultsAsyncDelegate;
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        private readonly IRoutingController<ProductRoutes> routingController;
+        private readonly IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -47,7 +46,7 @@ namespace GOG.Delegates.Respond.Validate
             "Delegates.Data.Models.ProductTypes.UpdateValidationResultsAsyncDelegate,Delegates",
             "Delegates.Data.Models.ProductTypes.CommitValidationResultsAsyncDelegate,Delegates",
             "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-            "Controllers.Routing.RoutingController,Controllers",
+            "Delegates.Data.Routes.GetRouteDataAsyncDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.SetProgressDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
@@ -62,7 +61,7 @@ namespace GOG.Delegates.Respond.Validate
             IUpdateAsyncDelegate<ValidationResults> updateValidationResultsAsyncDelegate,
             ICommitAsyncDelegate commitValidationResultsAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IRoutingController<ProductRoutes> routingController,
+            IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
@@ -78,7 +77,7 @@ namespace GOG.Delegates.Respond.Validate
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
 
             this.itemizeAllUpdatedAsyncDelegate = itemizeAllUpdatedAsyncDelegate;
-            this.routingController = routingController;
+            this.getRouteDataAsyncDelegate = getRouteDataAsyncDelegate;
 
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
@@ -110,7 +109,7 @@ namespace GOG.Delegates.Respond.Validate
                 foreach (var manualUrl in
                     await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
                 {
-                    var resolvedUri = await routingController.GetDataAsync((id, manualUrl));
+                    var resolvedUri = await getRouteDataAsyncDelegate.GetDataAsync((id, manualUrl));
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(

@@ -6,7 +6,7 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Activities;
-using Interfaces.Routing;
+using Interfaces.Delegates.Data;
 using GOG.Interfaces.Delegates.DownloadProductFile;
 using Attributes;
 using Models.ProductTypes;
@@ -19,7 +19,7 @@ namespace GOG.Delegates.DownloadProductFile
             convertRequestToResponseAsyncDelegate;
 
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
-        private readonly IRoutingController<ProductRoutes> routingController;
+        private readonly IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate;
         private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
         private readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
         private readonly IStartDelegate startDelegate;
@@ -28,7 +28,7 @@ namespace GOG.Delegates.DownloadProductFile
         [Dependencies(
             "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
             "Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
-            "Controllers.Routing.RoutingController,Controllers",
+            "Delegates.Data.Routes.UpdateRouteDataAsyncDelegate,Delegates",
             "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
             "GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
@@ -37,7 +37,7 @@ namespace GOG.Delegates.DownloadProductFile
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
-            IRoutingController<ProductRoutes> routingController,
+            IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
             IStartDelegate startDelegate,
@@ -45,7 +45,7 @@ namespace GOG.Delegates.DownloadProductFile
         {
             this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
-            this.routingController = routingController;
+            this.updateRouteDataAsyncDelegate = updateRouteDataAsyncDelegate;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
             this.downloadValidationFileAsyncDelegate = downloadValidationFileAsyncDelegate;
             this.startDelegate = startDelegate;
@@ -83,7 +83,7 @@ namespace GOG.Delegates.DownloadProductFile
 
                 var uriSansSession = formatUriRemoveSessionDelegate.Format(resolvedUri);
 
-                await routingController.UpdateAsync(
+                await updateRouteDataAsyncDelegate.UpdateAsync(
                     new ProductRoutes()
                     {
                         Id = id,

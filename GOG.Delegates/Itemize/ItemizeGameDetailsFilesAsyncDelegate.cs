@@ -7,10 +7,10 @@ using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.GetPath;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
-using Interfaces.Routing;
 using Attributes;
 using GOG.Models;
 using System;
+using Interfaces.Delegates.Data;
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Itemize
@@ -19,26 +19,26 @@ namespace GOG.Delegates.Itemize
     {
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate;
         private readonly IGetPathDelegate getPathDelegate;
-        private readonly IRoutingController<ProductRoutes> routingController;
+        private readonly IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
             "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-            "Controllers.Routing.RoutingController,Controllers",
+            "Delegates.Data.Routes.GetRouteDataAsyncDelegate,Delegates",
             "Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
-            IRoutingController<ProductRoutes> routingController,
+            IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate,
             IGetPathDelegate getPathDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
             this.itemizeGameDetailsManualUrlsDelegate = itemizeGameDetailsManualUrlsDelegate;
             this.getPathDelegate = getPathDelegate;
-            this.routingController = routingController;
+            this.getRouteDataAsyncDelegate = getRouteDataAsyncDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
         }
@@ -54,7 +54,7 @@ namespace GOG.Delegates.Itemize
             var gameDetailsResolvedUris = new List<string>();
             foreach (var manualUrl in gameDetailsManualUrls)
                 gameDetailsResolvedUris.Add(
-                    await routingController.GetDataAsync((
+                    await getRouteDataAsyncDelegate.GetDataAsync((
                         gameDetails.Id, 
                         manualUrl)));
 
