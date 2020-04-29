@@ -2,12 +2,12 @@
 
 namespace Interfaces.Delegates.Confirm
 {
-    public interface IConfirmDelegate<T>
+    public interface IConfirmDelegate<in T>
     {
         bool Confirm(T data);
     }
 
-    public interface IConfirmAsyncDelegate<T>
+    public interface IConfirmAsyncDelegate<in T>
     {
         Task<bool> ConfirmAsync(T data);
     }

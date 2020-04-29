@@ -157,53 +157,5 @@ namespace Controllers.Validation
 
             return fileValidation;
         }
-
-        public async Task<IChunkValidation> VerifyChunkAsync(Stream fileStream, long from, long to, string expectedMd5)
-        {
-            if (!fileStream.CanSeek)
-                throw new Exception("Unable to seek in the file stream");
-
-            var chunkValidation = new ChunkValidation
-            {
-                From = from,
-                To = to,
-                ExpectedHash = expectedMd5
-            };
-
-            fileStream.Seek(from, SeekOrigin.Begin);
-
-            var length = (int) (to - from + 1);
-            var buffer = new byte[length];
-            await fileStream.ReadAsync(buffer, 0, length);
-
-            chunkValidation.ActualHash = await convertBytesToHashDelegate.ConvertAsync(buffer);
-
-            return chunkValidation;
-        }
-
-        public bool VerifyExpectedValidation(string uri)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool VerifyFilename(string uri, string expectedFilename)
-        {
-            return Path.GetFileName(uri) == expectedFilename;
-        }
-
-        public bool VerifyProductFileExists(string productFileUri)
-        {
-            return File.Exists(productFileUri);
-        }
-
-        public bool VerifySize(string uri, long expectedSize)
-        {
-            return new FileInfo(uri).Length == expectedSize;
-        }
-
-        public bool VerifyValidationFileExists(string validationFileUri)
-        {
-            return File.Exists(validationFileUri);
-        }
     }
 }
