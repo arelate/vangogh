@@ -1,29 +1,38 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using Interfaces.Routing;
-using Interfaces.Controllers.Data;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
 
 namespace Controllers.Routing
 {
+    // TODO: This seems like another GetData/PostData delegate
     public class RoutingController : IRoutingController
     {
-        private readonly IDataController<ProductRoutes> productRoutesDataController;
+        private readonly IGetDataAsyncDelegate<ProductRoutes, long> getProductRoutesByIdAsyncDelegate;
+        private readonly IUpdateAsyncDelegate<ProductRoutes> updateProductRoutesAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitProductRoutesAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Controllers.Data.ProductTypes.ProductRoutesDataController,Controllers",
+            "Delegates.Data.Models.ProductTypes.GetProductRoutesByIdAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.UpdateProductRoutesAsyncDelegate,Delegates",
+            "Delegates.Data.Models.ProductTypes.CommitProductRoutesAsyncDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
             "Delegates.Activities.CompleteDelegate,Delegates")]
         public RoutingController(
-            IDataController<ProductRoutes> productRoutesDataController,
+            IGetDataAsyncDelegate<ProductRoutes, long> getProductRoutesByIdAsyncDelegate,
+            IUpdateAsyncDelegate<ProductRoutes> updateProductRoutesAsyncDelegate,
+            ICommitAsyncDelegate commitProductRoutesAsyncDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.productRoutesDataController = productRoutesDataController;
+            this.getProductRoutesByIdAsyncDelegate = getProductRoutesByIdAsyncDelegate;
+            this.updateProductRoutesAsyncDelegate = updateProductRoutesAsyncDelegate;
+            this.commitProductRoutesAsyncDelegate = commitProductRoutesAsyncDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
         }
@@ -43,7 +52,7 @@ namespace Controllers.Routing
         {
             startDelegate.Start("Trace route");
 
-            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+            var productRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(id);
 
             if (productRoutes == null)
                 return string.Empty;
@@ -59,7 +68,7 @@ namespace Controllers.Routing
 
             var destination = new List<string>();
 
-            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+            var productRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(id);
             if (productRoutes == null)
             {
                 completeDelegate.Complete();
@@ -81,7 +90,7 @@ namespace Controllers.Routing
 
             startDelegate.Start("Update route");
 
-            var productRoutes = await productRoutesDataController.GetByIdAsync(id);
+            var productRoutes = await getProductRoutesByIdAsyncDelegate.GetDataAsync(id);
             if (productRoutes == null)
                 productRoutes = new ProductRoutes
                 {
@@ -106,7 +115,9 @@ namespace Controllers.Routing
                     Destination = destination
                 });
 
-            await productRoutesDataController.UpdateAsync(productRoutes);
+            await updateProductRoutesAsyncDelegate.UpdateAsync(productRoutes);
+            
+            await commitProductRoutesAsyncDelegate.CommitAsync();
 
             completeDelegate.Complete();
         }

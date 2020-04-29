@@ -13,7 +13,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
         [Dependencies(
             "GOG.Delegates.Data.Models.ProductTypes.DeleteGameProductDataAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Convert.ProductTypes.ConvertGameProductDataToIndexDelegate,GOG.Delegates",
-            "GOG.Delegates.Confirm.ProductTypes.ConfirmGameProductDataContainIdAsyncDelegate.GOG.Delegates",
+            "GOG.Delegates.Confirm.ProductTypes.ConfirmGameProductDataContainIdAsyncDelegate,GOG.Delegates",
             "GOG.Delegates.Data.Storage.ProductTypes.GetListGameProductDataDataFromPathAsyncDelegate,GOG.Delegates")]
         public UpdateGameProductDataAsyncDelegate(
             IDeleteAsyncDelegate<GameProductData> deleteGameProductDataAsyncDelegate, 
