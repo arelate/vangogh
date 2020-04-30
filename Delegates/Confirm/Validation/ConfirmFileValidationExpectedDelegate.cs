@@ -3,9 +3,9 @@ using System.Linq;
 using Interfaces.Delegates.Confirm;
 using Models.Extensions;
 
-namespace Delegates.Confirm
+namespace Delegates.Confirm.Validation
 {
-    public class ConfirmValidationExpectedDelegate : IConfirmDelegate<string>
+    public class ConfirmFileValidationSupportedDelegate : IConfirmDelegate<string>
     {
         private readonly string[] extensionsWhitelist =
         {

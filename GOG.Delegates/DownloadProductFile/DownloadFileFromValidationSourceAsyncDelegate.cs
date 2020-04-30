@@ -23,7 +23,7 @@ namespace GOG.Delegates.DownloadProductFile
 
         [Dependencies(
             "Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
-            "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
+            "Delegates.Confirm.Validation.ConfirmFileValidationSupportedDelegate,Delegates",
             "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
             "Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate,Delegates",
             "Delegates.Format.Uri.FormatValidationUriDelegate,Delegates",

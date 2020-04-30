@@ -9,11 +9,10 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using Interfaces.Validation;
-using Interfaces.ValidationResults;
 using Attributes;
 using Models.ProductTypes;
 using GOG.Models;
+using Interfaces.Delegates.Confirm;
 
 namespace GOG.Delegates.Respond.Validate
 {
@@ -23,12 +22,9 @@ namespace GOG.Delegates.Respond.Validate
         private readonly IGetDirectoryDelegate productFileDirectoryDelegate;
         private readonly IGetFilenameDelegate productFileFilenameDelegate;
         private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
-        private readonly IFileValidationController fileValidationController;
+        private readonly IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
         private readonly IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate;
-        private readonly IGetDataAsyncDelegate<ValidationResults, long> getValidationResultsByIdAsyncDelegate;
-        private readonly IUpdateAsyncDelegate<ValidationResults> updateValidationResultsAsyncDelegate;
-        private readonly ICommitAsyncDelegate commitValidationResultsAsyncDelegate;
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
         private readonly IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate;
         private readonly IStartDelegate startDelegate;
@@ -39,12 +35,9 @@ namespace GOG.Delegates.Respond.Validate
             "Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
             "Delegates.GetFilename.GetUriFilenameDelegate,Delegates",
             "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-            "Controllers.Validation.FileValidationController,Controllers",
+            "Delegates.Confirm.Validation.ConfirmFileValidationExpectationsAsyncDelegate,Delegates",
             "Delegates.Itemize.ProductTypes.ItemizeAllUpdatedAsyncDelegate,Delegates",
             "GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate,GOG.Delegates",
-            "Delegates.Data.Models.ProductTypes.GetValidationResultsByIdAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.UpdateValidationResultsAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.CommitValidationResultsAsyncDelegate,Delegates",
             "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
             "Delegates.Data.Routes.GetRouteDataAsyncDelegate,Delegates",
             "Delegates.Activities.StartDelegate,Delegates",
@@ -54,12 +47,9 @@ namespace GOG.Delegates.Respond.Validate
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
-            IFileValidationController fileValidationController,
+            IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate,
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,
-            IGetDataAsyncDelegate<ValidationResults, long> getValidationResultsByIdAsyncDelegate,
-            IUpdateAsyncDelegate<ValidationResults> updateValidationResultsAsyncDelegate,
-            ICommitAsyncDelegate commitValidationResultsAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate,
             IStartDelegate startDelegate,
@@ -69,11 +59,8 @@ namespace GOG.Delegates.Respond.Validate
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
             this.productFileFilenameDelegate = productFileFilenameDelegate;
             this.formatValidationFileDelegate = formatValidationFileDelegate;
-            this.fileValidationController = fileValidationController;
+            this.confirmFileValidationExpectationsAsyncDelegate = confirmFileValidationExpectationsAsyncDelegate;
             this.getGameDetailsByIdAsyncDelegate = getGameDetailsByIdAsyncDelegate;
-            this.getValidationResultsByIdAsyncDelegate = getValidationResultsByIdAsyncDelegate;
-            this.updateValidationResultsAsyncDelegate = updateValidationResultsAsyncDelegate;
-            this.commitValidationResultsAsyncDelegate = commitValidationResultsAsyncDelegate;
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
 
             this.itemizeAllUpdatedAsyncDelegate = itemizeAllUpdatedAsyncDelegate;
@@ -92,14 +79,6 @@ namespace GOG.Delegates.Respond.Validate
             await foreach (var id in itemizeAllUpdatedAsyncDelegate.ItemizeAllAsync())
             {
                 var gameDetails = await getGameDetailsByIdAsyncDelegate.GetDataAsync(id);
-                var validationResults = await getValidationResultsByIdAsyncDelegate.GetDataAsync(id);
-
-                if (validationResults == null)
-                    validationResults = new ValidationResults
-                    {
-                        Id = id,
-                        Title = gameDetails.Title
-                    };
 
                 setProgressDelegate.SetProgress();
 
@@ -127,8 +106,6 @@ namespace GOG.Delegates.Respond.Validate
 
                 // ...
 
-                var fileValidationResults = new List<IFileValidationResults>(localFiles.Count);
-
                 startDelegate.Start("Validate product files");
 
                 foreach (var localFile in localFiles)
@@ -139,9 +116,10 @@ namespace GOG.Delegates.Respond.Validate
 
                     try
                     {
-                        fileValidationResults.Add(await fileValidationController.ValidateFileAsync(
+                        if (!await confirmFileValidationExpectationsAsyncDelegate.ConfirmAsync(
                             localFile,
-                            validationFile));
+                            validationFile))
+                            throw new InvalidDataException();
                     }
                     catch (Exception ex)
                     {
@@ -151,15 +129,8 @@ namespace GOG.Delegates.Respond.Validate
                 }
 
                 completeDelegate.Complete();
-
-                validationResults.Files = fileValidationResults.ToArray();
-
-                startDelegate.Start("Update validation results");
-                await updateValidationResultsAsyncDelegate.UpdateAsync(validationResults);
-                completeDelegate.Complete();
             }
 
-            await commitValidationResultsAsyncDelegate.CommitAsync();
             completeDelegate.Complete();
         }
     }

@@ -6,65 +6,67 @@ using System.Xml;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Activities;
-using Interfaces.Validation;
-using Interfaces.ValidationResults;
 using Attributes;
 using Models.Units;
 using Models.ProductTypes;
 
-namespace Controllers.Validation
+namespace Delegates.Confirm.Validation
 {
-    public class FileValidationController : IFileValidationController
+    // TODO: This needs to be refactored into smaller delegates
+    public class ConfirmFileValidationExpectationsAsyncDelegate : IConfirmExpectationAsyncDelegate<string, string>
     {
-        private IConfirmDelegate<string> confirmValidationExpectedDelegate;
+        private readonly IConfirmDelegate<string> confirmValidationExpectedDelegate;
+        private readonly IConfirmDelegate<string> confirmFileExistsDelegate;
+        private readonly IConfirmExpectationDelegate<string, string> confirmFilenameExpectationDelegate;
+        private readonly IConfirmExpectationDelegate<string, long> confirmFileSizeExpectationDelegate;
+
+        private readonly IConfirmExpectationAsyncDelegate<(Stream FileStream, long From, long To), string>
+            confirmChunkHashExpectationAsyncDelegate;
+        
         private readonly IConvertDelegate<string, Stream> convertUriToReadableStreamDelegate;
         private XmlDocument validationXml;
         private IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
-        private IValidationResultController validationResultController;
 
         [Dependencies(
-            "Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
+            "Delegates.Confirm.Validation.ConfirmFileValidationSupportedDelegate,Delegates",
+            "Delegates.Confirm.Validation.ConfirmFileExistsDelegate,Delegates",
+            "Delegates.Confirm.Validation.ConfirmFilenameExpectationDelegate,Delegates",
+            "Delegates.Confirm.Validation.ConfirmSizeExpectationDelegate,Delegates",
+            "Delegates.Confirm.Validation.ConfirmChunkHashExpectationAsyncDelegate,Delegates",
             "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates",
-            "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates",
-            "Controllers.ValidationResult.ValidationResultController,Controllers")]
-        public FileValidationController(
+            "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates")]
+        public ConfirmFileValidationExpectationsAsyncDelegate(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
+            IConfirmDelegate<string> confirmFileExistsDelegate,
+            IConfirmExpectationDelegate<string, string> confirmFilenameExpectationDelegate,
+            IConfirmExpectationDelegate<string, long> confirmFileSizeExpectationDelegate,
+            IConfirmExpectationAsyncDelegate<(Stream FileStream, long From, long To), string>
+                confirmChunkHashExpectationAsyncDelegate,
             IConvertDelegate<string, Stream> convertUriToReadableStreamDelegate,
-            IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate,
-            IValidationResultController validationResultController)
+            IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate)
         {
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
+            this.confirmFileExistsDelegate = confirmFileExistsDelegate;
+            this.confirmFilenameExpectationDelegate = confirmFilenameExpectationDelegate;
+            this.confirmFileSizeExpectationDelegate = confirmFileSizeExpectationDelegate;
+            this.confirmChunkHashExpectationAsyncDelegate = confirmChunkHashExpectationAsyncDelegate;
+            
             this.convertUriToReadableStreamDelegate = convertUriToReadableStreamDelegate;
             this.convertBytesToHashDelegate = convertBytesToHashDelegate;
-            this.validationResultController = validationResultController;
 
             validationXml = new XmlDocument {PreserveWhitespace = false};
         }
 
-        public async Task<IFileValidationResults> ValidateFileAsync(string productFileUri, string validationUri)
+        public async Task<bool> ConfirmAsync(string productFileUri, string validationUri)
         {
-            var fileValidation = new FileValidation
-            {
-                Filename = productFileUri
-            };
-
-            if (string.IsNullOrEmpty(productFileUri))
+            if (string.IsNullOrEmpty(productFileUri) ||
+                string.IsNullOrEmpty(validationUri))
                 throw new ArgumentNullException();
 
-            if (string.IsNullOrEmpty(validationUri))
-                throw new ArgumentNullException();
+            if (!confirmValidationExpectedDelegate.Confirm(productFileUri)) return true;
 
-            fileValidation.ValidationExpected = confirmValidationExpectedDelegate.Confirm(productFileUri);
-
-            if (!fileValidation.ValidationExpected)
-                return fileValidation;
-
-            fileValidation.ValidationFileExists = VerifyValidationFileExists(validationUri);
-            fileValidation.ProductFileExists = VerifyProductFileExists(productFileUri);
-
-            if (!fileValidation.ValidationFileExists ||
-                !fileValidation.ProductFileExists)
-                return fileValidation;
+            if (!confirmFileExistsDelegate.Confirm(validationUri)) return false;
+            if (!confirmFileExistsDelegate.Confirm(productFileUri)) return false;
 
             try
             {
@@ -72,13 +74,10 @@ namespace Controllers.Validation
                 {
                     validationXml.Load(xmlStream);
                 }
-
-                fileValidation.ValidationFileIsValid = true;
             }
             catch
             {
-                fileValidation.ValidationFileIsValid = false;
-                return fileValidation;
+                return false;
             }
 
             var fileElement = validationXml.GetElementsByTagName("file");
@@ -87,8 +86,7 @@ namespace Controllers.Validation
                 fileElement[0] == null ||
                 fileElement[0].Attributes == null)
             {
-                fileValidation.ValidationFileIsValid = false;
-                return fileValidation;
+                return false;
             }
 
             long expectedSize;
@@ -111,14 +109,11 @@ namespace Controllers.Validation
             }
             catch
             {
-                fileValidation.ValidationFileIsValid = false;
-                return fileValidation;
+                return false;
             }
 
-            fileValidation.FilenameVerified = VerifyFilename(productFileUri, expectedName);
-            fileValidation.SizeVerified = VerifySize(productFileUri, expectedSize);
-
-            var chunksValidation = new List<IChunkValidation>();
+            if (!confirmFilenameExpectationDelegate.Confirm(productFileUri, expectedName)) return false;
+            if (!confirmFileSizeExpectationDelegate.Confirm(productFileUri, expectedSize)) return false;
 
             using (var fileStream = convertUriToReadableStreamDelegate.Convert(productFileUri))
             {
@@ -137,7 +132,9 @@ namespace Controllers.Validation
                     length += to - @from;
                     expectedMd5 = chunkElement.FirstChild.Value;
 
-                    chunksValidation.Add(await VerifyChunkAsync(fileStream, from, to, expectedMd5));
+                    if (!await confirmChunkHashExpectationAsyncDelegate.ConfirmAsync(
+                        (fileStream, from, to), 
+                        expectedMd5)) return false;
 
                     // await statusController.UpdateProgressAsync(
                     //     status,
@@ -147,15 +144,13 @@ namespace Controllers.Validation
                     //     DataUnits.Bytes);
                 }
 
-                fileValidation.Chunks = chunksValidation.ToArray();
-
                 // await statusController.UpdateProgressAsync(status, length, expectedSize, productFileUri);
             }
 
             // await statusController.InformAsync(status, $"Validation result: {productFileUri} is valid: " +
             //     $"{validationResultController.ProductFileIsValid(fileValidation)}");
 
-            return fileValidation;
+            return true;
         }
     }
 }
