@@ -42,8 +42,8 @@ namespace GOG.Delegates.Respond.Update
             ICompleteDelegate completeDelegate,
             IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null)
         {
-            this.updateDetailDataAsyncDelegate = updateDetailAsyncDelegate;
-            this.commitDetailDataAsyncDelegate = commitAsyncDelegate;
+            updateDetailDataAsyncDelegate = updateDetailAsyncDelegate;
+            commitDetailDataAsyncDelegate = commitAsyncDelegate;
             this.itemizeAllMasterDetailGapsAsyncDelegate = itemizeAllMasterDetailGapsAsyncDelegate;
 
             this.getDeserializedDetailAsyncDelegate = getDeserializedDetailAsyncDelegate;

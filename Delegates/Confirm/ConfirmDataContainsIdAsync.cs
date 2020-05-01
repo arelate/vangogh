@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Data;
-using Models.ProductTypes;
 
 namespace Delegates.Confirm
 {

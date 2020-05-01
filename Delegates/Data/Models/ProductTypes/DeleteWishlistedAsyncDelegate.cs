@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
-using Models.ProductTypes;
 using Attributes;
 
 namespace Delegates.Data.Models.ProductTypes
@@ -11,7 +10,7 @@ namespace Delegates.Data.Models.ProductTypes
     {
         [Dependencies(
             typeof(Delegates.Data.Storage.ProductTypes.GetListWishlistedDataFromPathAsyncDelegate),
-            typeof(Delegates.Convert.ConvertPassthroughIndexDelegate),
+            typeof(Convert.ConvertPassthroughIndexDelegate),
             typeof(Delegates.Confirm.ProductTypes.ConfirmWishlistedContainIdAsyncDelegate))]
         public DeleteWishlistedAsyncDelegate(
             IGetDataAsyncDelegate<List<long>, string> getDataCollectionAsyncDelegate,

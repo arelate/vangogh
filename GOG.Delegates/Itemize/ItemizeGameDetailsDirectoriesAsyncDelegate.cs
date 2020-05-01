@@ -14,7 +14,7 @@ namespace GOG.Delegates.Itemize
         private readonly IGetDirectoryDelegate getDirectoryDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(ItemizeGameDetailsManualUrlsAsyncDelegate),
             typeof(GetProductFilesDirectoryDelegate))]
         public ItemizeGameDetailsDirectoriesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,

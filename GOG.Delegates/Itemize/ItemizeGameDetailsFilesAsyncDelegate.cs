@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using System.IO;
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.GetPath;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
@@ -11,7 +8,6 @@ using Attributes;
 using GOG.Models;
 using System;
 using Interfaces.Delegates.Data;
-using Models.ProductTypes;
 using Delegates.Data.Routes;
 using Delegates.GetPath.Json;
 using Delegates.Activities;
@@ -27,7 +23,7 @@ namespace GOG.Delegates.Itemize
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(ItemizeGameDetailsManualUrlsAsyncDelegate),
             typeof(GetRouteDataAsyncDelegate),
             typeof(GetGameDetailsFilesPathDelegate),
             typeof(StartDelegate),

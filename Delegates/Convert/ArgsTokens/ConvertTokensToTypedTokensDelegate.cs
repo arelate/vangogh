@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Attributes;
 using Models.ArgsTokens;
@@ -21,9 +20,9 @@ namespace Delegates.Convert.ArgsTokens
             convertMethodsSetTokensToMethodTitleTokensDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.ArgsTokens.ConvertTokensToLikelyTypedTokensDelegate),
-            typeof(Delegates.Convert.ArgsTokens.ConvertLikelyTypedToTypedTokensDelegate),
-            typeof(Delegates.Convert.ArgsTokens.ConvertMethodsSetTokensToMethodTitleTokensDelegate))]
+            typeof(ConvertTokensToLikelyTypedTokensDelegate),
+            typeof(ConvertLikelyTypedToTypedTokensDelegate),
+            typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))]
         public ConvertTokensToTypedTokensDelegate(
             IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
                 convertTokensToLikelyTypedTokensDelegate,

@@ -4,7 +4,6 @@ using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using GOG.Interfaces.Delegates.DownloadProductFile;
 using Attributes;
-using GOG.Models;
 using Delegates.Activities;
 using Delegates.Data.Models.ProductTypes;
 using Delegates.Itemize.ProductTypes;
@@ -18,7 +17,7 @@ namespace GOG.Delegates.Respond.Download.ProductTypes
             typeof(ItemizeAllProductDownloadsAsyncDelegate),
             typeof(UpdateProductDownloadsAsyncDelegate),
             typeof(DeleteProductDownloadsAsyncDelegate),
-            typeof(GOG.Delegates.DownloadProductFile.DownloadManualUrlFileAsyncDelegate),
+            typeof(DownloadProductFile.DownloadManualUrlFileAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]

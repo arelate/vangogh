@@ -11,7 +11,7 @@ namespace Delegates.Data.Storage.Records
         >
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.Records.GetListProductRecordsDataAsyncDelegate),
+            typeof(GetListProductRecordsDataAsyncDelegate),
             typeof(Delegates.GetPath.Records.GetValidationResultsRecordsPathDelegate))]
         public GetListValidationResultsRecordsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductRecords>, string> getListProductRecordsDataAsyncDelegate,

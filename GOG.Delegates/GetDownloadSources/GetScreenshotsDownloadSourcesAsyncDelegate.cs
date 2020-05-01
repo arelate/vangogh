@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
 using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;

@@ -10,7 +10,7 @@ namespace Delegates.Data.Storage.Records
         GetListProductRoutesRecordsDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<ProductRecords>>
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.Records.GetListProductRecordsDataAsyncDelegate),
+            typeof(GetListProductRecordsDataAsyncDelegate),
             typeof(Delegates.GetPath.Records.GetProductRoutesRecordsPathDelegate))]
         public GetListProductRoutesRecordsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductRecords>, string> getListProductRecordsDataAsyncDelegate,

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
-using Interfaces.Delegates.Collections;
 using Attributes;
+using Delegates.Collections.ArgsDefinitions;
 using Models.ArgsDefinitions;
 using Models.Requests;
 
@@ -19,8 +19,8 @@ namespace Delegates.Convert.Requests
         private IIntersectDelegate<string> intersectStringDelegate;
 
         [Dependencies(
-            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
-            typeof(Delegates.Collections.ArgsDefinitions.FindMethodDelegate),
+            typeof(Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(FindMethodDelegate),
             typeof(Delegates.Collections.System.IntersectStringDelegate))]
         public ConvertRequestsDataToRequestsDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,

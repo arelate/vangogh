@@ -10,7 +10,7 @@ namespace Delegates.Data.Models.ProductTypes
     public class UpdateProductScreenshotsAsyncDelegate: UpdateDataAsyncDelegate<ProductScreenshots>
     {
         [Dependencies(
-            typeof(Delegates.Data.Models.ProductTypes.DeleteProductScreenshotsAsyncDelegate),
+            typeof(DeleteProductScreenshotsAsyncDelegate),
             typeof(Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate),
             typeof(Delegates.Confirm.ProductTypes.ConfirmProductScreenshotsContainIdAsyncDelegate),
             typeof(Delegates.Data.Storage.ProductTypes.GetListProductScreenshotsDataFromPathAsyncDelegate))]

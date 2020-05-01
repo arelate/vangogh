@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Delegates.Data.Storage.ArgsDefinitions;
-using Tests.TestDelegates.Data.ArgsDefinitions;
+using Tests.TestDelegates.GetData.ArgsDefinitions;
 
 namespace Tests.TestModels.Dependencies
 {

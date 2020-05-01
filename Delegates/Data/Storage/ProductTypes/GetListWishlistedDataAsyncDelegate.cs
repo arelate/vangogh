@@ -8,7 +8,7 @@ namespace Delegates.Data.Storage.ProductTypes
     public class GetListWishlistedDataAsyncDelegate : GetJSONDataAsyncDelegate<List<long>>
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.GetStringDataAsyncDelegate),
+            typeof(GetStringDataAsyncDelegate),
             typeof(Delegates.Convert.JSON.System.ConvertJSONToListLongDelegate))]
         public GetListWishlistedDataAsyncDelegate(
             IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,

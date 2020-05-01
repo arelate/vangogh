@@ -1,6 +1,4 @@
-using System;
-
-namespace Interfaces.Models.RecordsTypes
+namespace Interfaces.Models.RecordTypes
 {
     // TODO: Split model record types and activity
     public enum RecordsTypes

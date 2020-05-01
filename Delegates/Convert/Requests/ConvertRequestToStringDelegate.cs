@@ -11,7 +11,7 @@ namespace Delegates.Convert.Requests
         private IConvertDelegate<IDictionary<string, IEnumerable<string>>, string> convertParametersToStringDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.Requests.ConvertParametersToStringDelegate))]
+            typeof(ConvertParametersToStringDelegate))]
         public ConvertRequestToStringDelegate(
             IConvertDelegate<IDictionary<string, IEnumerable<string>>, string> convertParametersToStringDelegate)
         {

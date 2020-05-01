@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Interfaces.Delegates.Itemize;
-using Attributes;
 
 namespace Delegates.Itemize.Types
 {

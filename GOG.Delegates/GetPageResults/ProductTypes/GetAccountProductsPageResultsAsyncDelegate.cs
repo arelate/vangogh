@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.RequestPage;
-using Models.Dependencies;
 using GOG.Models;
 using Delegates.GetValue.Uri.ProductTypes;
 using Delegates.GetValue.QueryParameters.ProductTypes;
@@ -18,7 +16,7 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
         [Dependencies(
             typeof(GetAccountProductsUpdateUriDelegate),
             typeof(GetAccountProductsUpdateQueryParametersDelegate),
-            typeof(GOG.Delegates.RequestPage.RequestPageAsyncDelegate),
+            typeof(RequestPage.RequestPageAsyncDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToAccountProductsPageResultDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Xunit;
-
-namespace Delegates.Convert.Requests.Tests
+namespace Tests.Delegates.Convert.Requests
 {
     public class ConvertRequestToRespondDelegateTypeDelegateTests
     {

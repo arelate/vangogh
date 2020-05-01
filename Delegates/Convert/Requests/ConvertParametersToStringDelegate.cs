@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Convert;
-using Models.Requests;
 
 namespace Delegates.Convert.Requests
 {

@@ -11,8 +11,8 @@ namespace Delegates.Data.Models.ProductTypes
         [Dependencies(
             typeof(Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate),
             typeof(Delegates.Data.Storage.ProductTypes.PostListProductDownloadsDataToPathAsyncDelegate),
-            typeof(Delegates.Activities.StartDelegate),
-            typeof(Delegates.Activities.CompleteDelegate))]
+            typeof(Activities.StartDelegate),
+            typeof(Activities.CompleteDelegate))]
         public CommitProductDownloadsAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductDownloads>, string> getDataAsyncDelegate, 
             IPostDataAsyncDelegate<List<ProductDownloads>> postDataAsyncDelegate, 

@@ -5,7 +5,7 @@ using Delegates.Convert.Requests;
 using Interfaces.Delegates.Convert;
 using Models.Requests;
 using Tests.TestDelegates.Convert.Types;
-using TestModels.Requests;
+using Tests.TestModels.Requests;
 using Xunit;
 
 namespace Tests.Delegates.Convert.Requests

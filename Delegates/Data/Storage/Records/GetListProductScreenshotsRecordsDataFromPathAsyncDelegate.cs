@@ -11,7 +11,7 @@ namespace Delegates.Data.Storage.Records
             List<ProductRecords>>
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.Records.GetListProductRecordsDataAsyncDelegate),
+            typeof(GetListProductRecordsDataAsyncDelegate),
             typeof(Delegates.GetPath.Records.GetProductScreenshotsRecordsPathDelegate))]
         public GetListProductScreenshotsRecordsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductRecords>, string> getListProductRecordsDataAsyncDelegate,

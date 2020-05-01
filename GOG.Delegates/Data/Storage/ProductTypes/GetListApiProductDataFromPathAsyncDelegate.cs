@@ -11,7 +11,7 @@ namespace GOG.Delegates.Data.Storage.ProductTypes
     public class GetListApiProductDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<List<ApiProduct>>
     {
         [Dependencies(
-            typeof(GOG.Delegates.Data.Storage.ProductTypes.GetListApiProductDataAsyncDelegate),
+            typeof(GetListApiProductDataAsyncDelegate),
             typeof(GetApiProductsPathDelegate))]
         public GetListApiProductDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ApiProduct>,string> getListApiProductDataAsyncDelegate,

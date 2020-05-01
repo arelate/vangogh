@@ -8,7 +8,7 @@ namespace Delegates.Data.Storage.ProductTypes
     public class PostListWishlistedDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<long>>
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.ProductTypes.PostListWishlistedDataAsyncDelegate),
+            typeof(PostListWishlistedDataAsyncDelegate),
             typeof(Delegates.GetPath.ProductTypes.GetWishlistedPathDelegate))]
         public PostListWishlistedDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<long>> postListWishlistedDataAsyncDelegate,

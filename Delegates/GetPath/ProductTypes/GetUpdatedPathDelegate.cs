@@ -7,7 +7,7 @@ namespace Delegates.GetPath.ProductTypes
     public class GetUpdatedPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate),
+            typeof(GetDirectory.Root.GetDataDirectoryDelegate),
             typeof(Delegates.GetFilename.ProductTypes.GetUpdatedFilenameDelegate))]
         public GetUpdatedPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,

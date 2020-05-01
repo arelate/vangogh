@@ -10,8 +10,8 @@ namespace Delegates.Convert.Hashes
         private readonly IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.Bytes.ConvertStringToBytesDelegate),
-            typeof(Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate))]
+            typeof(Bytes.ConvertStringToBytesDelegate),
+            typeof(ConvertBytesToMd5HashDelegate))]
         public ConvertStringToMd5HashDelegate(
             IConvertDelegate<string, byte[]> convertStringToBytesDelegate,
             IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate)

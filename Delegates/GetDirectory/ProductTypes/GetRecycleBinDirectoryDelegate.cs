@@ -7,7 +7,7 @@ namespace Delegates.GetDirectory.ProductTypes
     public class GetRecycleBinDirectoryDelegate : GetRelativeDirectoryDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate))]
+            typeof(Root.GetDataDirectoryDelegate))]
         public GetRecycleBinDirectoryDelegate(
             IGetDirectoryDelegate getDataDirectoryDelegate) :
             base(Directories.RecycleBin, getDataDirectoryDelegate)

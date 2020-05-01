@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
 using Models.ArgsDefinitions;
 
-namespace Tests.TestDelegates.Data.ArgsDefinitions
+namespace Tests.TestDelegates.GetData.ArgsDefinitions
 {
     public class TestArgsDefinitionsDataAsyncDelegate : IGetDataAsyncDelegate<ArgsDefinition, string>
     {

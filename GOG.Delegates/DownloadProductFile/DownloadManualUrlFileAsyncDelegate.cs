@@ -35,7 +35,7 @@ namespace GOG.Delegates.DownloadProductFile
             typeof(FormatUriRemoveSessionDelegate),
             typeof(UpdateRouteDataAsyncDelegate),
             typeof(DownloadFromResponseAsyncDelegate),
-            typeof(GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate),
+            typeof(DownloadValidationFileAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public DownloadManualUrlFileAsyncDelegate(

@@ -6,9 +6,9 @@ using Interfaces.Delegates.Convert;
 using Models.Uris;
 using Models.QueryParameters;
 using Attributes;
-using Delegates.Convert.Network;
 using Delegates.Data.Network;
 using Delegates.Activities;
+using Delegates.Convert.Uri;
 
 namespace GOG.Delegates.Data.Authorization
 {

@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xunit;
+using Delegates.Convert.Requests;
 using Interfaces.Delegates.Convert;
 using Models.Requests;
 using Tests.TestDelegates.Convert.Types;
+using Xunit;
 
-namespace Delegates.Convert.Requests.Tests
+namespace Tests.Delegates.Convert.Requests
 {
     public class ConvertRequestsDataToResolvedCollectionsDelegateTests
     {

@@ -6,7 +6,6 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.Uris;
 using GOG.Interfaces.Delegates.GetDeserialized;
-using Interfaces.Delegates.Data;
 using Delegates.Data.Models.ProductTypes;
 using Delegates.Activities; 
 

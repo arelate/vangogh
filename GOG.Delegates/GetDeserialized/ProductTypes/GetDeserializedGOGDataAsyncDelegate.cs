@@ -3,9 +3,8 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
 using Attributes;
-using Models.Dependencies;
 using GOG.Models;
-using Delegates.Convert.Network;
+using Delegates.Convert.Uri;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
@@ -14,8 +13,8 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
     {
         [Dependencies(
             typeof(ConvertUriDictionaryParametersToUriDelegate),
-            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.ItemizeGOGDataDelegate),
+            typeof(Data.Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(Itemize.ItemizeGOGDataDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGOGDataDelegate))]
         public GetDeserializedGOGDataAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,

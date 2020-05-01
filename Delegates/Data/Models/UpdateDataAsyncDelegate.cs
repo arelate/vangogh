@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
-using Interfaces.Models.RecordsTypes;
+using Interfaces.Models.RecordTypes;
 
 namespace Delegates.Data.Models
 {

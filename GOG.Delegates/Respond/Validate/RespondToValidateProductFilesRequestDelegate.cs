@@ -10,7 +10,6 @@ using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
-using Models.ProductTypes;
 using GOG.Models;
 using Interfaces.Delegates.Confirm;
 using Delegates.GetDirectory.ProductTypes;
@@ -45,7 +44,7 @@ namespace GOG.Delegates.Respond.Validate
             typeof(ConfirmFileValidationExpectationsAsyncDelegate),
             typeof(ItemizeAllUpdatedAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
             typeof(GetRouteDataAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),

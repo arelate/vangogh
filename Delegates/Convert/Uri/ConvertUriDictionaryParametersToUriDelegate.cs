@@ -3,7 +3,7 @@ using Attributes;
 using Interfaces.Delegates.Convert;
 using Models.Separators;
 
-namespace Delegates.Convert.Network
+namespace Delegates.Convert.Uri
 {
     public class ConvertUriDictionaryParametersToUriDelegate :
         IConvertDelegate<(string Uri, IDictionary<string, string> Parameters), string>
@@ -12,7 +12,7 @@ namespace Delegates.Convert.Network
             convertDictionaryParametersToStringDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate))]
+            typeof(ConvertDictionaryParametersToStringDelegate))]
         public ConvertUriDictionaryParametersToUriDelegate(
             IConvertDelegate<IDictionary<string, string>, string> convertDictionaryParametersToStringDelegate)
         {

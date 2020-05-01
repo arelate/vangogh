@@ -27,8 +27,8 @@ namespace GOG.Delegates.UpdateScreenshots
         [Dependencies(
             typeof(GetScreenshotsUpdateUriDelegate),
             typeof(UpdateProductScreenshotsAsyncDelegate),
-            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.ItemizeScreenshotsDelegate),
+            typeof(Data.Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(Itemize.ItemizeScreenshotsDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public UpdateScreenshotsAsyncDelegate(

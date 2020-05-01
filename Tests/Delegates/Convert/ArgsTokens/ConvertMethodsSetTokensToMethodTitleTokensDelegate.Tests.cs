@@ -1,13 +1,13 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
+using Delegates.Convert.ArgsTokens;
 using Interfaces.Delegates.Convert;
 using Models.ArgsTokens;
 using Tests.TestDelegates.Convert.Types;
+using Xunit;
 
-namespace Delegates.Convert.ArgsTokens.Tests
+namespace Tests.Delegates.Convert.ArgsTokens
 {
     public class ConvertMethodsSetTokensToMethodTitleTokensDelegateTests
     {

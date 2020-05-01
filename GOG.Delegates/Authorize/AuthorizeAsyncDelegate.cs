@@ -8,6 +8,7 @@ using Models.QueryParameters;
 using Attributes;
 using Interfaces.Delegates.Data;
 using Delegates.Activities;
+using GOG.Delegates.Data.Authorization;
 
 namespace GOG.Delegates.Authorize
 {
@@ -30,11 +31,11 @@ namespace GOG.Delegates.Authorize
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.Confirm.Authorization.ConfirmUserIsLoggedInAsyncDelegate),
-            typeof(GOG.Delegates.Confirm.Authorization.ConfirmSuccessfulAuthorizationDelegate),
-            typeof(GOG.Delegates.Data.Authorization.GetAuthenticationTokenDataAsyncDelegate),
-            typeof(GOG.Delegates.Data.Authorization.GetLoginCheckDataAsyncDelegate),
-            typeof(Authorization.GetTwoStepLoginCheckDataAsyncDelegate),
+            typeof(Confirm.Authorization.ConfirmUserIsLoggedInAsyncDelegate),
+            typeof(Confirm.Authorization.ConfirmSuccessfulAuthorizationDelegate),
+            typeof(GetAuthenticationTokenDataAsyncDelegate),
+            typeof(GetLoginCheckDataAsyncDelegate),
+            typeof(GetTwoStepLoginCheckDataAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public AuthorizeAsyncDelegate(

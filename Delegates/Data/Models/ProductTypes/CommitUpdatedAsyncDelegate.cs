@@ -10,8 +10,8 @@ namespace Delegates.Data.Models.ProductTypes
         [Dependencies(
             typeof(Delegates.Data.Storage.ProductTypes.GetListUpdatedDataFromPathAsyncDelegate),
             typeof(Delegates.Data.Storage.ProductTypes.PostListUpdatedDataToPathAsyncDelegate),
-            typeof(Delegates.Activities.StartDelegate),
-            typeof(Delegates.Activities.CompleteDelegate))]
+            typeof(Activities.StartDelegate),
+            typeof(Activities.CompleteDelegate))]
         public CommitUpdatedAsyncDelegate(
             IGetDataAsyncDelegate<List<long>, string> getDataAsyncDelegate, 
             IPostDataAsyncDelegate<List<long>> postDataAsyncDelegate, 

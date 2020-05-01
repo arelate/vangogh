@@ -16,7 +16,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         RespondToUpdateDownloadsRequestDelegate<ProductFile>
     {
         [Dependencies(
-            typeof(GOG.Delegates.GetDownloadSources.GetManualUrlDownloadSourcesAsyncDelegate),
+            typeof(GetDownloadSources.GetManualUrlDownloadSourcesAsyncDelegate),
             typeof(GetProductFilesDirectoryDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate),

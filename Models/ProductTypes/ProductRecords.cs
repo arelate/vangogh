@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Interfaces.Models.RecordsTypes;
+using Interfaces.Models.RecordTypes;
 using ProtoBuf;
 
 namespace Models.ProductTypes

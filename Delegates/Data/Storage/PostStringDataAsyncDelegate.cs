@@ -11,7 +11,7 @@ namespace Delegates.Data.Storage
         private readonly IConvertDelegate<string, Stream> convertUriToWritableStream;
 
         [Dependencies(
-            typeof(Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate))]
+            typeof(Convert.Streams.ConvertUriToWritableStreamDelegate))]
         public PostStringDataAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToWritableStream)
         {

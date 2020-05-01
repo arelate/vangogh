@@ -7,7 +7,7 @@ namespace Delegates.GetPath.ProductTypes
     public class GetGameDetailsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate),
+            typeof(GetDirectory.Root.GetDataDirectoryDelegate),
             typeof(Delegates.GetFilename.ProductTypes.GetGameDetailsFilenameDelegate))]
         public GetGameDetailsPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,

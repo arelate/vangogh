@@ -1,7 +1,7 @@
 using Delegates.Collections;
 using GOG.Models;
 
-namespace GOG.Delegates.Collections.ProductTypes
+namespace GOG.Delegates.Find.ProductTypes
 {
     public class FindAllGameDetailsDelegate : FindAllDelegate<GameDetails>
     {

@@ -8,7 +8,7 @@ namespace Delegates.GetPath.Json
     {
         [Dependencies(
             typeof(Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate),
-            typeof(Delegates.GetFilename.GetUriFilenameDelegate))]
+            typeof(GetFilename.GetUriFilenameDelegate))]
         public GetGameDetailsFilesPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate) :

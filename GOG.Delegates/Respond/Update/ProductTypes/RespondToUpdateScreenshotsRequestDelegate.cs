@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.UpdateScreenshots;
 using Attributes;
 using GOG.Models;
-using Models.ProductTypes;
 using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
@@ -23,7 +21,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
         [Dependencies(
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
-            typeof(GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate),
+            typeof(UpdateScreenshots.UpdateScreenshotsAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]

@@ -8,7 +8,7 @@ namespace Delegates.Data.Storage.ArgsDefinitions
     public class GetArgsDefinitionsDataAsyncDelegate : GetJSONDataAsyncDelegate<ArgsDefinition>
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.GetStringDataAsyncDelegate),
+            typeof(GetStringDataAsyncDelegate),
             typeof(Delegates.Convert.JSON.ArgsDefinitions.ConvertJSONToArgsDefinitionDelegate))]
         public GetArgsDefinitionsDataAsyncDelegate(
             IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,

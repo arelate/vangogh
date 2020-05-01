@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Activities;
-using Models.Units;
 using GOG.Interfaces.Delegates.GetPageResults;
 using GOG.Interfaces.Delegates.RequestPage;
 using GOG.Models;

@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Activities;
 using Attributes;
-using Models.Units;
-using Models.ProductTypes;
-using Delegates.Confirm.Validation;
 using Delegates.Convert.Streams;
 using Delegates.Convert.Hashes;
 
@@ -84,8 +79,7 @@ namespace Delegates.Confirm.Validation
             }
 
             var fileElement = validationXml.GetElementsByTagName("file");
-            if (fileElement == null ||
-                fileElement.Count < 1 ||
+            if (fileElement.Count < 1 ||
                 fileElement[0] == null ||
                 fileElement[0].Attributes == null)
             {

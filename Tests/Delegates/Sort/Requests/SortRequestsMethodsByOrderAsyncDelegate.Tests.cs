@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Delegates.Collections.Requests;
-using Xunit;
 using Interfaces.Delegates.Collections;
 using Tests.TestDelegates.Convert.Types;
+using Xunit;
 
-namespace Delegates.Collections.Requests.Tests
+namespace Tests.Delegates.Sort.Requests
 {
     public class MethodOrderCompareDelegateTests
     {

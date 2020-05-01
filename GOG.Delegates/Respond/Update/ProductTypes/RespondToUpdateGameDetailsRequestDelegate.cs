@@ -18,15 +18,15 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
     {
         [Dependencies(
             typeof(GetGameDetailsUpdateUriDelegate),
-            typeof(GOG.Delegates.Convert.UpdateIdentity.ConvertAccountProductToGameDetailsUpdateIdentityDelegate),
+            typeof(Convert.UpdateIdentity.ConvertAccountProductToGameDetailsUpdateIdentityDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateGameDetailsAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.CommitGameDetailsAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate),
+            typeof(Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate),
             typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate),
-            typeof(GOG.Delegates.FillGaps.FillGameDetailsGapsDelegate))]
+            typeof(FillGaps.FillGameDetailsGapsDelegate))]
         public RespondToUpdateGameDetailsRequestDelegate(
             IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
             IConvertDelegate<AccountProduct, string> convertAccountProductToGameDetailsUpdateIdentityDelegate,

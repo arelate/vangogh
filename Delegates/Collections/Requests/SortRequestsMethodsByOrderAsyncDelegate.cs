@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Attributes;
+using Delegates.Collections.ArgsDefinitions;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
 using Models.ArgsDefinitions;
 using Delegates.Data.Storage.ArgsDefinitions;
-using Delegates.Collections.ArgsDefinitions;
 
 namespace Delegates.Collections.Requests
 {
@@ -31,7 +31,7 @@ namespace Delegates.Collections.Requests
             var argsDefinitions = 
                 await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
-            methods.Sort((string x, string y) =>
+            methods.Sort((x, y) =>
             {
                 var cx = findMethodDelegate.Find(argsDefinitions.Methods, c => c.Title == x);
                 var cy = findMethodDelegate.Find(argsDefinitions.Methods, c => c.Title == y);

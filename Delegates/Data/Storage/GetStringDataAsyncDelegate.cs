@@ -11,7 +11,7 @@ namespace Delegates.Data.Storage
         private readonly IConvertDelegate<string, Stream> convertUriToReadableStream;
 
         [Dependencies(
-            typeof(Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate))]
+            typeof(Convert.Streams.ConvertUriToReadableStreamDelegate))]
         public GetStringDataAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToReadableStream)
         {

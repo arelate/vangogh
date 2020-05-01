@@ -1,5 +1,4 @@
 using Interfaces.Delegates.Data;
-using Models.ProductTypes;
 using Attributes;
 using Delegates.Data.Models.ProductTypes;
 

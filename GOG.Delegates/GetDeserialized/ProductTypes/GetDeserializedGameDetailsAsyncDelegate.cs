@@ -4,19 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Replace;
-using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
 using GOG.Interfaces.Delegates.GetDeserialized;
 using Attributes;
-using Models.Dependencies;
 using GOG.Models;
-using Delegates.Convert.Network;
 using Delegates.Convert;
 using Delegates.Replace;
 using Delegates.Collections.System;
+using Delegates.Convert.Uri;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
@@ -48,7 +46,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
 
         [Dependencies(
             typeof(ConvertUriDictionaryParametersToUriDelegate),
-            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(Data.Network.GetUriDataRateLimitedAsyncDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate),
             typeof(ConvertLanguageToCodeDelegate),

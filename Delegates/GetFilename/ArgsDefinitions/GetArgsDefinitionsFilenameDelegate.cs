@@ -7,7 +7,7 @@ namespace Delegates.GetFilename.ArgsDefinitions
     public class GetArgsDefinitionsFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetFilename.GetJsonFilenameDelegate))]
+            typeof(GetJsonFilenameDelegate))]
         public GetArgsDefinitionsFilenameDelegate(IGetFilenameDelegate getJsonFilenameDelegate) :
             base(Filenames.ArgsDefinitions, getJsonFilenameDelegate)
         {

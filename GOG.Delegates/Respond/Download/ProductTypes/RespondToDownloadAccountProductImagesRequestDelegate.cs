@@ -18,7 +18,7 @@ namespace GOG.Delegates.Respond.Download.ProductTypes
             typeof(ItemizeAllProductDownloadsAsyncDelegate),
             typeof(UpdateProductDownloadsAsyncDelegate),
             typeof(DeleteProductDownloadsAsyncDelegate),
-            typeof(GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate),
+            typeof(DownloadProductFile.DownloadProductImageAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]

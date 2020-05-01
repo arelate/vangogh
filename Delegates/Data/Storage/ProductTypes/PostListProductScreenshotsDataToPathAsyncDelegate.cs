@@ -10,7 +10,7 @@ namespace Delegates.Data.Storage.ProductTypes
         PostListProductScreenshotsDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<ProductScreenshots>>
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.ProductTypes.PostListProductScreenshotsDataAsyncDelegate),
+            typeof(PostListProductScreenshotsDataAsyncDelegate),
             typeof(Delegates.GetPath.ProductTypes.GetProductScreenshotsPathDelegate))]
         public PostListProductScreenshotsDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<ProductScreenshots>> postListProductScreenshotsDataAsyncDelegate,

@@ -7,7 +7,7 @@ namespace Delegates.GetDirectory.ProductTypes
     public class GetMd5DirectoryDelegate : GetRelativeDirectoryDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate))]
+            typeof(Root.GetDataDirectoryDelegate))]
         public GetMd5DirectoryDelegate(
             IGetDirectoryDelegate getDataDirectoryDelegate) :
             base(Directories.Md5, getDataDirectoryDelegate)

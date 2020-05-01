@@ -15,8 +15,8 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
     public class RespondToCleanupFilesRequestDelegate : RespondToCleanupRequestDelegate<ProductFile>
     {
         [Dependencies(
-            typeof(GOG.Delegates.Itemize.ItemizeAllGameDetailsDirectoriesAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.ItemizeAllProductFilesDirectoriesAsyncDelegate),
+            typeof(Itemize.ItemizeAllGameDetailsDirectoriesAsyncDelegate),
+            typeof(Itemize.ItemizeAllProductFilesDirectoriesAsyncDelegate),
             typeof(ItemizeDirectoryFilesDelegate),
             typeof(FormatValidationFileDelegate),
             typeof(RecycleDelegate),

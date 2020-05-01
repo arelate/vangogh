@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
-using Interfaces.Models.RecordsTypes;
+using Interfaces.Models.RecordTypes;
 using Models.ProductTypes;
 
 namespace Delegates.Data.Records

@@ -11,7 +11,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
     public class UpdateApiProductsAsyncDelegate: UpdateDataAsyncDelegate<ApiProduct>
     {
         [Dependencies(
-            typeof(GOG.Delegates.Data.Models.ProductTypes.DeleteApiProductsAsyncDelegate),
+            typeof(DeleteApiProductsAsyncDelegate),
             typeof(GOG.Delegates.Convert.ProductTypes.ConvertApiProductToIndexDelegate),
             typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmApiProductsContainIdAsyncDelegate),
             typeof(GOG.Delegates.Data.Storage.ProductTypes.GetListApiProductDataFromPathAsyncDelegate))]

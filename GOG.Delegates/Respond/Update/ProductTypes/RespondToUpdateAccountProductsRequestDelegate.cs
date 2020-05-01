@@ -16,7 +16,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
     {
         [Dependencies(
             typeof(GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate),
+            typeof(Itemize.ItemizeAccountProductsPageResultProductsDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateAccountProductsAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.CommitAccountProductsAsyncDelegate),
             typeof(StartDelegate),

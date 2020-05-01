@@ -3,6 +3,7 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Attributes;
+using Delegates.Collections.ArgsDefinitions;
 using Models.ArgsDefinitions;
 using Models.ArgsTokens;
 
@@ -17,8 +18,8 @@ namespace Delegates.Convert.ArgsTokens
         private IFindDelegate<MethodsSet> findMethodsSetDelegate;
 
         [Dependencies(
-            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
-            typeof(Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate))]
+            typeof(Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(FindMethodsSetDelegate))]
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<MethodsSet> findMethodsSetDelegate)

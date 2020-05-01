@@ -1,8 +1,7 @@
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Attributes;
-using Delegates.GetDirectory.ProductTypes;
-using Delegates.GetFilename.ProductTypes;
+using Delegates.GetFilename.Records;
 
 namespace Delegates.GetPath.Records
 {
@@ -10,7 +9,7 @@ namespace Delegates.GetPath.Records
     {
         [Dependencies(
             typeof(Delegates.GetDirectory.ProductTypes.GetRecordsDirectoryDelegate),
-            typeof(Delegates.GetFilename.Binary.GetSessionRecordsFilenameDelegate))]
+            typeof(GetSessionRecordsFilenameDelegate))]
         public GetSessionRecordsPathDelegate(
             IGetDirectoryDelegate getRecordsDirectoryDelegate,
             IGetFilenameDelegate getSessionRecordsFilenameDelegate) :

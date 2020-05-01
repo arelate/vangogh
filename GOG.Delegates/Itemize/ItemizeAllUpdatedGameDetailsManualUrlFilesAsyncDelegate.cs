@@ -21,7 +21,7 @@ namespace GOG.Delegates.Itemize
         [Dependencies(
             typeof(ItemizeAllUpdatedAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsFilesAsyncDelegate),
+            typeof(ItemizeGameDetailsFilesAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]

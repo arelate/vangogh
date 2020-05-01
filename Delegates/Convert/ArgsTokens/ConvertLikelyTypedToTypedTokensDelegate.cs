@@ -5,6 +5,7 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Data;
 using Attributes;
+using Delegates.Collections.ArgsDefinitions;
 using Models.ArgsTokens;
 using Models.ArgsDefinitions;
 
@@ -20,9 +21,9 @@ namespace Delegates.Convert.ArgsTokens
         private IFindDelegate<Parameter> findParameterDelegate;
 
         [Dependencies(
-            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
-            typeof(Delegates.Collections.ArgsDefinitions.FindMethodDelegate),
-            typeof(Delegates.Collections.ArgsDefinitions.FindParameterDelegate))]
+            typeof(Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(FindMethodDelegate),
+            typeof(FindParameterDelegate))]
         public ConvertLikelyTypedToTypedTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,

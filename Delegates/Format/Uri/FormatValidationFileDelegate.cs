@@ -10,7 +10,7 @@ namespace Delegates.Format.Uri
         private readonly IGetPathDelegate getPathDelegate;
 
         [Dependencies(
-            typeof(Delegates.GetPath.Json.GetValidationPathDelegate))]
+            typeof(GetPath.Json.GetValidationPathDelegate))]
         public FormatValidationFileDelegate(IGetPathDelegate getPathDelegate)
         {
             this.getPathDelegate = getPathDelegate;

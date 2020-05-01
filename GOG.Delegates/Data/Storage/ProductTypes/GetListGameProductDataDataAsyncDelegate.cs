@@ -4,7 +4,6 @@ using Delegates.Data.Storage;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using GOG.Models;
-using Delegates.Data.Storage;
 
 namespace GOG.Delegates.Data.Storage.ProductTypes
 {

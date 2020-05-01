@@ -5,6 +5,7 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirm;
 using Attributes;
+using Delegates.Collections.ArgsDefinitions;
 using Models.Requests;
 using Models.ArgsDefinitions;
 
@@ -18,8 +19,8 @@ namespace Delegates.Convert.Requests
         private readonly IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExclusiveStringDelegate;
 
         [Dependencies(
-            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
-            typeof(Delegates.Collections.ArgsDefinitions.FindDependencyDelegate),
+            typeof(Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(FindDependencyDelegate),
             typeof(Delegates.Confirm.System.ConfirmExclusiveStringDelegate))]
         public ConvertRequestsDataToResolvedDependenciesDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,

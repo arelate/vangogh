@@ -2,7 +2,6 @@
 using Interfaces.Delegates.Respond;
 using Delegates.Convert.Requests;
 using Delegates.Convert.Types;
-using Delegates.Itemize.Types;
 
 namespace vangogh.Console
 {

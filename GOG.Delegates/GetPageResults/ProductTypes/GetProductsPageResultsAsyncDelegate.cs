@@ -4,7 +4,6 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.RequestPage;
-using Models.Dependencies;
 using GOG.Models;
 using Delegates.GetValue.Uri.ProductTypes;
 using Delegates.GetValue.QueryParameters.ProductTypes;
@@ -17,7 +16,7 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
         [Dependencies(
             typeof(GetProductsUpdateUriDelegate),
             typeof(GetProductsUpdateQueryParametersDelegate),
-            typeof(GOG.Delegates.RequestPage.RequestPageAsyncDelegate),
+            typeof(RequestPage.RequestPageAsyncDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToProductsPageResultDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),

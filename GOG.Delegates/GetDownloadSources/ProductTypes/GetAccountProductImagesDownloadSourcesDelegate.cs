@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Itemize;
@@ -19,7 +18,7 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
             typeof(ItemizeAllUpdatedAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate),
             typeof(FormatImagesUriDelegate),
-            typeof(GOG.Delegates.GetImageUri.GetAccountProductImageUriDelegate),
+            typeof(GetImageUri.GetAccountProductImageUriDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]

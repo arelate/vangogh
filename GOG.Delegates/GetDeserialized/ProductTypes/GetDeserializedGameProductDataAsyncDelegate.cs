@@ -11,7 +11,7 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         private readonly IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGOGDataAsyncDelegate))]
+            typeof(GetDeserializedGOGDataAsyncDelegate))]
         public GetDeserializedGameProductDataAsyncDelegate(
             IGetDeserializedAsyncDelegate<GOGData> gogDataGetDeserializedDelegate)
         {

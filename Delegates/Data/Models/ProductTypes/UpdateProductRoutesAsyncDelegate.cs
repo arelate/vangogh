@@ -10,7 +10,7 @@ namespace Delegates.Data.Models.ProductTypes
     public class UpdateProductRoutesAsyncDelegate: UpdateDataAsyncDelegate<ProductRoutes>
     {
         [Dependencies(
-            typeof(Delegates.Data.Models.ProductTypes.DeleteProductRoutesAsyncDelegate),
+            typeof(DeleteProductRoutesAsyncDelegate),
             typeof(Delegates.Convert.ProductTypes.ConvertProductRoutesToIndexDelegate),
             typeof(Delegates.Confirm.ProductTypes.ConfirmProductRoutesContainIdAsyncDelegate),
             typeof(Delegates.Data.Storage.ProductTypes.GetListProductRoutesDataFromPathAsyncDelegate))]

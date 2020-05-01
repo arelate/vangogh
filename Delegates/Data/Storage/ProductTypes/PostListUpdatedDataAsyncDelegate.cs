@@ -8,7 +8,7 @@ namespace Delegates.Data.Storage.ProductTypes
     public class PostListUpdatedDataAsyncDelegate : PostJSONDataAsyncDelegate<List<long>>
     {
         [Dependencies(
-            typeof(Delegates.Data.Storage.PostStringDataAsyncDelegate),
+            typeof(PostStringDataAsyncDelegate),
             typeof(Delegates.Convert.JSON.System.ConvertListLongToJSONDelegate))]
         public PostListUpdatedDataAsyncDelegate(
             IPostDataAsyncDelegate<string> postStringDataAsyncDelegate,

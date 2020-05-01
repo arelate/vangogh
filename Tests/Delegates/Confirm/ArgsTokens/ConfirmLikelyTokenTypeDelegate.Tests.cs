@@ -1,11 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using Xunit;
+using Delegates.Confirm.ArgsTokens;
 using Interfaces.Delegates.Confirm;
 using Models.ArgsTokens;
 using Tests.TestDelegates.Convert.Types;
+using Xunit;
 
-namespace Delegates.Confirm.ArgsTokens.Tests
+namespace Tests.Delegates.Confirm.ArgsTokens
 {
     public class ConfirmLikelyTokenTypeDelegateTests
     {

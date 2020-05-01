@@ -10,7 +10,7 @@ namespace Delegates.Data.Models.ProductTypes
     public class UpdateProductDownloadsAsyncDelegate: UpdateDataAsyncDelegate<ProductDownloads>
     {
         [Dependencies(
-            typeof(Delegates.Data.Models.ProductTypes.DeleteProductDownloadsAsyncDelegate),
+            typeof(DeleteProductDownloadsAsyncDelegate),
             typeof(Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate),
             typeof(Delegates.Confirm.ProductTypes.ConfirmProductDownloadsContainIdAsyncDelegate),
             typeof(Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate))]

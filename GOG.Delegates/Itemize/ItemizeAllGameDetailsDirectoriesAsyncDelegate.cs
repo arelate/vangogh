@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
@@ -18,8 +16,8 @@ namespace GOG.Delegates.Itemize
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeAllGameDetailsAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate),
+            typeof(ProductTypes.ItemizeAllGameDetailsAsyncDelegate),
+            typeof(ItemizeGameDetailsDirectoriesAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]

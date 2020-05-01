@@ -8,7 +8,7 @@ namespace Delegates.GetPath.Json
     {
         [Dependencies(
             typeof(Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate),
-            typeof(Delegates.GetFilename.GetValidationFilenameDelegate))]
+            typeof(GetFilename.GetValidationFilenameDelegate))]
         public GetValidationPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate) :

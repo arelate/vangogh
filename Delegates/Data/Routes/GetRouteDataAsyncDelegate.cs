@@ -13,9 +13,9 @@ namespace Delegates.Data.Routes
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(Delegates.Data.Models.ProductTypes.GetProductRoutesByIdAsyncDelegate),
-            typeof(Delegates.Activities.StartDelegate),
-            typeof(Delegates.Activities.CompleteDelegate))]
+            typeof(Models.ProductTypes.GetProductRoutesByIdAsyncDelegate),
+            typeof(Activities.StartDelegate),
+            typeof(Activities.CompleteDelegate))]
         public GetRouteDataAsyncDelegate(
             IGetDataAsyncDelegate<ProductRoutes, long> getProductRoutesByIdAsyncDelegate,
             IStartDelegate startDelegate,

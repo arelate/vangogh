@@ -17,10 +17,10 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
     {
         [Dependencies(
             typeof(GetApiProductsUpdateUriDelegate),
-            typeof(GOG.Delegates.Convert.UpdateIdentity.ConvertProductToApiProductUpdateIdentityDelegate),
+            typeof(Convert.UpdateIdentity.ConvertProductToApiProductUpdateIdentityDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateApiProductsAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.CommitApiProductsAsyncDelegate),
-            typeof(GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegate),
+            typeof(Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegate),
             typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),

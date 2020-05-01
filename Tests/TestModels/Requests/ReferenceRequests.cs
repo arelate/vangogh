@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Models.Requests;
 
-namespace TestModels.Requests
+namespace Tests.TestModels.Requests
 {
     public static class ReferenceRequests
     {

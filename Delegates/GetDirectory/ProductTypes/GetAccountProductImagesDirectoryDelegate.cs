@@ -7,7 +7,7 @@ namespace Delegates.GetDirectory.ProductTypes
     public class GetAccountProductImagesDirectoryDelegate : GetRelativeDirectoryDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate))]
+            typeof(Root.GetDataDirectoryDelegate))]
         public GetAccountProductImagesDirectoryDelegate(
             IGetDirectoryDelegate getDataDirectoryDelegate) :
             base(Directories.AccountProductImages, getDataDirectoryDelegate)

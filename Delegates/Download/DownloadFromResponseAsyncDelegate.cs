@@ -2,11 +2,9 @@
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
-using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
 using Attributes;
-using Models.Units;
 
 namespace Delegates.Download
 {
@@ -15,7 +13,7 @@ namespace Delegates.Download
         private readonly IConvertDelegate<string, Stream> convertUriToWritableRStream;
 
         [Dependencies(
-            typeof(Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate))]
+            typeof(Convert.Streams.ConvertUriToWritableStreamDelegate))]
         public DownloadFromResponseAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToWritableRStream)
         {

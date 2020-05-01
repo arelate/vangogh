@@ -10,7 +10,7 @@ namespace GOG.Delegates.Itemize.MasterDetail
         ItemizeAllMasterDetailsGapsAsyncDelegate<AccountProduct>
     {
         [Dependencies(
-            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeAllAccountProductsAsyncDelegate),
+            typeof(ProductTypes.ItemizeAllAccountProductsAsyncDelegate),
             typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainIdAsyncDelegate))]
         public ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate(
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsAsyncDelegate,

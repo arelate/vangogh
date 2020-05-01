@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using GOG.Interfaces.Models;
 
 namespace GOG.Models
 {

@@ -1,20 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Attributes;
+using Delegates.Activities;
+using Delegates.Convert.Uri;
+using Delegates.Data.Console;
+using Delegates.Data.Network;
+using Delegates.Itemize.HtmlAttributes;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
-using Attributes;
-using Models.Uris;
+using Interfaces.Delegates.Itemize;
 using Models.QueryParameters;
-using Delegates.Data.Console;
-using Delegates.Itemize.HtmlAttributes;
-using Delegates.Convert.Uri;
-using Delegates.Data.Network;
-using Delegates.Activities;
+using Models.Uris;
 
-namespace GOG.Delegates.Authorization
+namespace GOG.Delegates.Data.Authorization
 {
     public class GetTwoStepLoginCheckDataAsyncDelegate: IGetDataAsyncDelegate<string, string>
     {

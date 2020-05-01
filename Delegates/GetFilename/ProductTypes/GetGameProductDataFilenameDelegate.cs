@@ -7,7 +7,7 @@ namespace Delegates.GetFilename.ProductTypes
     public class GetGameProductDataFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetFilename.GetBinFilenameDelegate))]
+            typeof(GetBinFilenameDelegate))]
         public GetGameProductDataFilenameDelegate(IGetFilenameDelegate GetBinFilenameDelegate) :
             base(Filenames.GameProductData, GetBinFilenameDelegate)
         {

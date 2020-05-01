@@ -11,8 +11,8 @@ namespace Delegates.Convert.Hashes
         private readonly IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate;
 
         [Dependencies(
-            typeof(Delegates.Data.Storage.GetStringDataAsyncDelegate),
-            typeof(Delegates.Convert.Hashes.ConvertStringToMd5HashDelegate))]
+            typeof(Data.Storage.GetStringDataAsyncDelegate),
+            typeof(ConvertStringToMd5HashDelegate))]
         public ConvertFileToMd5HashDelegate(
             IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,
             IConvertAsyncDelegate<string, Task<string>> convertStringToHashDelegate)

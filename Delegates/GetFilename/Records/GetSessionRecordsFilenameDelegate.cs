@@ -1,13 +1,13 @@
-using Interfaces.Delegates.GetFilename;
 using Attributes;
+using Interfaces.Delegates.GetFilename;
 using Models.Filenames;
 
-namespace Delegates.GetFilename.Binary
+namespace Delegates.GetFilename.Records
 {
     public class GetSessionRecordsFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetFilename.GetBinFilenameDelegate))]
+            typeof(GetBinFilenameDelegate))]
         public GetSessionRecordsFilenameDelegate(IGetFilenameDelegate GetBinFilenameDelegate) :
             base(Filenames.Session, GetBinFilenameDelegate)
         {

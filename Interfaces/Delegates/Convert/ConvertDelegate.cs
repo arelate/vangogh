@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Interfaces.Delegates.Convert
+﻿namespace Interfaces.Delegates.Convert
 {
     public interface IConvertDelegate<From, To>
     {

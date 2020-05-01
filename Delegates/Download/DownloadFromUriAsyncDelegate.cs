@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Activities;
 using Attributes;
 
 namespace Delegates.Download
@@ -16,8 +15,8 @@ namespace Delegates.Download
         private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate),
-            typeof(Delegates.Download.DownloadFromResponseAsyncDelegate))]
+            typeof(Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate),
+            typeof(DownloadFromResponseAsyncDelegate))]
         public DownloadFromUriAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,

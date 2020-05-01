@@ -25,12 +25,12 @@ namespace Delegates.Convert.Requests
         private IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>> convertRequestsDataToRequestsDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.ArgsTokens.ConvertTokensToTypedTokensDelegate),
-            typeof(Delegates.Convert.Requests.ConvertTypedTokensToRequestsDataDelegate),
-            typeof(Delegates.Convert.Requests.ConvertRequestsDataToResolvedCollectionsDelegate),
-            typeof(Delegates.Convert.Requests.ConvertRequestsDataToResolvedDependenciesDelegate),
+            typeof(ArgsTokens.ConvertTokensToTypedTokensDelegate),
+            typeof(ConvertTypedTokensToRequestsDataDelegate),
+            typeof(ConvertRequestsDataToResolvedCollectionsDelegate),
+            typeof(ConvertRequestsDataToResolvedDependenciesDelegate),
             typeof(Delegates.Collections.Requests.SortRequestsMethodsByOrderAsyncDelegate),
-            typeof(Delegates.Convert.Requests.ConvertRequestsDataToRequestsDelegate))]
+            typeof(ConvertRequestsDataToRequestsDelegate))]
         public ConvertArgsToRequestsDelegate(
             IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
                 convertTokensToTypedTokensDelegate,
