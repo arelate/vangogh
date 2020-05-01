@@ -1,15 +1,10 @@
 Technical Debt Reduction Plan
 =============================
 
-- *[done]* Implement itemizeDelegate to itemize all attributed types (on class or constructor)
-- *[done]* Implement context within instanceController instead on TestDependencies
-- *[done]* Reimplement tests for dependencies test overrides
-- Finalize controller/delegate consolidation
-    - Deprecate all controllers and implement as delegates with clear explicitly dependencies (Controllers have hidden explicit dependencies)
-    - Review all delegates and look for opportunities to optimize
-    - Review namespaces to consolidate "area" delegates
+- Review all delegates and look for opportunities to optimize, especially GOG.Delegates that are almost certainly not needed
+- Review namespaces to consolidate "area" delegates - e.g. Data, Collections
 - Consolidate ProductTypes in GOG.* namespaces
-- Implement tests for RespondsToRequest attribute
+- Try to generate derrived type specific classes based on abstract classes - https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/
 - Cleanup TODOs
 - Resolve compiler warnings
 
