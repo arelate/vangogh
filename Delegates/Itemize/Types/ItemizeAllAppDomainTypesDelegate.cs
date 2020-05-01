@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Interfaces.Delegates.Itemize;
 
 namespace Delegates.Itemize.Types
@@ -8,9 +9,7 @@ namespace Delegates.Itemize.Types
     {
         public IEnumerable<Type> ItemizeAll()
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            foreach (var type in assembly.GetTypes())
-                yield return type;
+            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes());
         }
     }
 }

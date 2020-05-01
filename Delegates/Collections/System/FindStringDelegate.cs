@@ -6,7 +6,7 @@ namespace Delegates.Collections.System
     public class FindStringDelegate : FindDelegate<string>
     {
         [Dependencies(
-            typeof(FindAllStringDelegate))]
+            typeof(FindAllDelegate<string>))]
         public FindStringDelegate(
             IFindAllDelegate<string> findAllStringDelegate) :
             base(findAllStringDelegate)

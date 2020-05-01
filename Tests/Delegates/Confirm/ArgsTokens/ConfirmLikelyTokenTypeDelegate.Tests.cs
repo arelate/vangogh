@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Interfaces.Delegates.Confirm;
 using Models.ArgsTokens;
-using TestDelegates.Convert.Types;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Confirm.ArgsTokens.Tests
 {
@@ -13,7 +13,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
-            confirmLikelyTokenTypeDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            confirmLikelyTokenTypeDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConfirmLikelyTokenTypeDelegate))
                 as ConfirmLikelyTokenTypeDelegate;
         }

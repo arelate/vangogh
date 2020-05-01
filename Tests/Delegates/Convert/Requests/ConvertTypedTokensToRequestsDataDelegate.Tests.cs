@@ -4,7 +4,7 @@ using Xunit;
 using Interfaces.Delegates.Convert;
 using Models.ArgsTokens;
 using Models.Requests;
-using TestDelegates.Convert.Types;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.Requests.Tests
 {
@@ -15,7 +15,7 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertTypedTokensToRequestsDataDelegateTests()
         {
-            convertTypedTokensToRequestsDataDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            convertTypedTokensToRequestsDataDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConvertTypedTokensToRequestsDataDelegate))
                 as ConvertTypedTokensToRequestsDataDelegate;
         }

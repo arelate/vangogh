@@ -17,7 +17,8 @@ namespace Delegates.Itemize.Types
 
         public IEnumerable<Type> ItemizeAll()
         {
-            foreach (var type in itemizeAllAppDomainTypesDelegate.ItemizeAll())
+            var types = itemizeAllAppDomainTypesDelegate.ItemizeAll();
+            foreach (var type in types)
                 if (type.IsDefined(typeof(AttributeType), false))
                     yield return type;
         }

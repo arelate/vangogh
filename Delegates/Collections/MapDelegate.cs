@@ -4,7 +4,7 @@ using Interfaces.Delegates.Collections;
 
 namespace Delegates.Collections
 {
-    public abstract class MapDelegate<T> : IMapDelegate<T>
+    public class MapDelegate<T> : IMapDelegate<T>
     {
         public void Map(IEnumerable<T> collection, Action<T> map)
         {

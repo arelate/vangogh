@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Interfaces.Delegates.Convert;
 using Models.ArgsTokens;
-using TestDelegates.Convert.Types;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
@@ -22,15 +22,18 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
         public ConvertMethodsSetTokensToMethodTitleTokensDelegateTests()
         {
-            convertTokensToLikelyTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            convertTokensToLikelyTypedTokensDelegate = 
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
 
-            convertLikelyTypedToTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            convertLikelyTypedToTypedTokensDelegate = 
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConvertLikelyTypedToTypedTokensDelegate))
                 as ConvertLikelyTypedToTypedTokensDelegate;
 
-            convertMethodsSetTokensToMethodTitleTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            convertMethodsSetTokensToMethodTitleTokensDelegate = 
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))
                 as ConvertMethodsSetTokensToMethodTitleTokensDelegate;
         }

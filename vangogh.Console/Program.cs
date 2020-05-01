@@ -1,16 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using Interfaces.Delegates.Respond;
-using Interfaces.Delegates.Convert;
 using Delegates.Convert.Requests;
 using Delegates.Convert.Types;
+using Delegates.Itemize.Types;
 
 namespace vangogh.Console
 {
-    internal class Program
+    internal static class Program
     {
         private static async Task Main(string[] args)
         {

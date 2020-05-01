@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Interfaces.Delegates.Convert;
 using Models.Requests;
-using TestDelegates.Convert.Types;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.Requests.Tests
 {
@@ -15,7 +15,7 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertRequestsDataToResolvedCollectionsDelegateTests()
         {
-            convertRequestsDataToResolvedCollectionsDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            convertRequestsDataToResolvedCollectionsDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConvertRequestsDataToResolvedCollectionsDelegate))
                 as ConvertRequestsDataToResolvedCollectionsDelegate;
         }

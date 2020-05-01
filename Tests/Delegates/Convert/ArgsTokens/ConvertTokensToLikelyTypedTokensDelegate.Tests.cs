@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Interfaces.Delegates.Convert;
 using Models.ArgsTokens;
-using TestDelegates.Convert.Types;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
@@ -15,7 +15,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
         public ConvertTokensToLikelyTypedTokensDelegateTests()
         {
-            convertTokensToLikelyTypedTokensDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            convertTokensToLikelyTypedTokensDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
         }

@@ -1,32 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Xunit;
-using Interfaces.Delegates.Convert;
-using Delegates.Convert.Types;
 using Delegates.Itemize.Types.Attributes;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Tests.Delegates.Convert.Types
 {
     public class ConvertTypeToInstanceDelegateTests
     {
-        private static IConvertDelegate<Type, ConstructorInfo> _convertTypeToDependenciesConstructorInfoDelegate =
-            new ConvertTypeToDependenciesConstructorInfoDelegate();
-
-        private static IConvertDelegate<ConstructorInfo, Type[]> _convertConstructorInfoToDependenciesTypesDelegate =
-            new ConvertConstructorInfoToDependenciesTypesDelegate(
-                TestModels.Dependencies.TestContextReplacements.Map);
-
-        private static IConvertDelegate<Type, object> _convertTypeToInstanceDelegate =
-            new ConvertTypeToInstanceDelegate(
-                _convertTypeToDependenciesConstructorInfoDelegate,
-                _convertConstructorInfoToDependenciesTypesDelegate);
-
         public static IEnumerable<object[]> EnumerateTypesWithDependencies()
         {
             var itemizeTypesWithDependencies =
                 (ItemizeAllDependenciesAttributeTypesDelegate)
-                _convertTypeToInstanceDelegate.Convert(typeof(ItemizeAllDependenciesAttributeTypesDelegate));
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ItemizeAllDependenciesAttributeTypesDelegate));
 
             if (itemizeTypesWithDependencies != null)
                 foreach (var type in itemizeTypesWithDependencies.ItemizeAll())
@@ -42,7 +29,7 @@ namespace Tests.Delegates.Convert.Types
 
             var instances = new object[types.Length];
             for (var ii = 0; ii < types.Length; ii++)
-                instances[ii] = _convertTypeToInstanceDelegate.Convert(types[ii]);
+                instances[ii] = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(types[ii]);
             Assert.NotNull(instances);
 
             foreach (var instance in instances)
@@ -58,14 +45,16 @@ namespace Tests.Delegates.Convert.Types
 
             foreach (var type in types)
             {
-                var constructorInfo = _convertTypeToDependenciesConstructorInfoDelegate.Convert(type);
+                var constructorInfo =
+                    DelegatesInstances.TestConvertTypeToDependenciesConstructorInfoDelegate.Convert(type);
                 var parameters = constructorInfo.GetParameters();
                 var dependenciesTypes =
-                    _convertConstructorInfoToDependenciesTypesDelegate.Convert(constructorInfo);
+                    DelegatesInstances.TestConvertConstructorInfoToDependenciesTypesDelegate.Convert(constructorInfo);
                 Assert.Equal(dependenciesTypes.Length, parameters.Length);
                 for (var ii = 0; ii < parameters.Length; ii++)
                 {
-                    var instance = _convertTypeToInstanceDelegate.Convert(dependenciesTypes[ii]);
+                    var instance =
+                        DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(dependenciesTypes[ii]);
                     Assert.IsAssignableFrom(parameters[ii].ParameterType, instance);
                 }
             }

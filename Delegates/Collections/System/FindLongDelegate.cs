@@ -6,7 +6,7 @@ namespace Delegates.Collections.System
     public class FindLongDelegate : FindDelegate<long>
     {
         [Dependencies(
-            typeof(FindAllLongDelegate))]
+            typeof(FindAllDelegate<long>))]
         public FindLongDelegate(
             IFindAllDelegate<long> findAllLongDelegate) :
             base(findAllLongDelegate)

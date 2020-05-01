@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Delegates.Collections.Requests;
 using Xunit;
 using Interfaces.Delegates.Collections;
-using TestDelegates.Convert.Types;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Collections.Requests.Tests
 {
@@ -13,9 +13,10 @@ namespace Delegates.Collections.Requests.Tests
 
         public MethodOrderCompareDelegateTests()
         {
-            sortRequestsMethodsByOrderAsyncDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
-                    typeof(SortRequestsMethodsByOrderAsyncDelegate))
-                as SortRequestsMethodsByOrderAsyncDelegate;
+            sortRequestsMethodsByOrderAsyncDelegate =
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                        typeof(SortRequestsMethodsByOrderAsyncDelegate))
+                    as SortRequestsMethodsByOrderAsyncDelegate;
         }
 
         [Theory]

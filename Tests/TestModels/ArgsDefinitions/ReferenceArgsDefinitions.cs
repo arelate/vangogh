@@ -1,6 +1,6 @@
 using Models.ArgsDefinitions;
 
-namespace TestModels.ArgsDefinitions
+namespace Tests.TestModels.ArgsDefinitions
 {
     public static class ReferenceArgsDefinition
     {

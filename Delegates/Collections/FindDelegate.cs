@@ -4,7 +4,7 @@ using Interfaces.Delegates.Collections;
 
 namespace Delegates.Collections
 {
-    public abstract class FindDelegate<T> : IFindDelegate<T>
+    public class FindDelegate<T> : IFindDelegate<T>
     {
         private IFindAllDelegate<T> findAllDelegate;
 

@@ -27,4 +27,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="definitions.json" />
+    <Content Include="definitions.json" />
+  </ItemGroup>
+
 </Project>

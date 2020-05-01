@@ -6,7 +6,7 @@ namespace Delegates.Collections.System
     public class IntersectStringDelegate : IntersectDelegate<string>
     {
         [Dependencies(
-            typeof(FindAllStringDelegate),
+            typeof(FindAllDelegate<string>),
             typeof(FindStringDelegate))]
         public IntersectStringDelegate(
             IFindAllDelegate<string> findAllStringDelegate,

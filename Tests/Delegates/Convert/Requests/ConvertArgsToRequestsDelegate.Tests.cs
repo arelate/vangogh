@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Delegates.Convert.Requests;
 using Interfaces.Delegates.Convert;
 using Models.Requests;
-using TestDelegates.Convert.Types;
+using Tests.TestDelegates.Convert.Types;
 using TestModels.Requests;
 using Xunit;
 
@@ -16,14 +16,15 @@ namespace Tests.Delegates.Convert.Requests
 
         public ConvertArgsToRequestsDelegateTests()
         {
-            convertArgsToRequestsDelegate = ConvertTypeToInstanceDelegateInstances.Test.Convert(
+            convertArgsToRequestsDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
                     typeof(ConvertArgsToRequestsDelegate))
                 as ConvertArgsToRequestsDelegate;
         }
 
         private async Task<List<Request>> ConvertArgsToRequests(string args)
         {
-            var requests = convertArgsToRequestsDelegate.ConvertAsync(args.Split(" "));
+            var requests = 
+                convertArgsToRequestsDelegate.ConvertAsync(args.Split(" "));
             var requestsList = new List<Request>();
 
             await foreach (var request in requests)
