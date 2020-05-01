@@ -4,6 +4,7 @@ using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.Authorize;
 using Attributes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Authorize
 {
@@ -15,9 +16,9 @@ namespace GOG.Delegates.Respond.Authorize
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Delegates.Authorize.AuthorizeAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.Authorize.AuthorizeAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public RespondToAuthorizeRequestDelegate(
             IAuthorizeAsyncDelegate authorizeAsyncDelegate,
             IStartDelegate startDelegate,

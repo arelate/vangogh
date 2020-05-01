@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Convert;
 using Attributes;
+using Delegates.Convert.Hashes;
 
 namespace Delegates.Confirm.Validation
 {
@@ -12,7 +13,7 @@ namespace Delegates.Confirm.Validation
         private IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashAsyncDelegate;
 
         [Dependencies(
-            "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates")]
+            typeof(ConvertBytesToMd5HashDelegate))]
         public ConfirmChunkHashExpectationAsyncDelegate(
             IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashAsyncDelegate)
         {

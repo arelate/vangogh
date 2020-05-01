@@ -7,6 +7,8 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
+using Delegates.Data.Models.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -26,13 +28,13 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Delegates.Itemize.ProductTypes.ItemizeAllAccountProductsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
-            "Delegates.Data.Models.ProductTypes.UpdateUpdatedAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.CommitUpdatedAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeAllAccountProductsAsyncDelegate),
+            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate),
+            typeof(UpdateUpdatedAsyncDelegate),
+            typeof(CommitUpdatedAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateUpdatedRequestDelegate(
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAccountProductsAsyncDelegate,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,

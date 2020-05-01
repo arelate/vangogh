@@ -7,7 +7,7 @@ namespace Delegates.Collections.System
     public class FindStringKeyStringValuePairDelegate : FindDelegate<KeyValuePair<string, string>>
     {
         [Dependencies(
-            "Delegates.Collections.System.FindAllStringKeyStringValuePairDelegate,Delegates")]
+            typeof(FindAllStringKeyStringValuePairDelegate))]
         public FindStringKeyStringValuePairDelegate(
             IFindAllDelegate<KeyValuePair<string, string>> findAllStringKeyStringValuePairDelegate) :
             base(findAllStringKeyStringValuePairDelegate)

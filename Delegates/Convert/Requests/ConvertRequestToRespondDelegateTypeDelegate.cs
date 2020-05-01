@@ -13,8 +13,8 @@ namespace Delegates.Convert.Requests
         private readonly IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate;
 
         [Dependencies(
-            "Delegates.Collections.System.FindTypeDelegate,Delegates",
-            "Delegates.Itemize.Types.Attributes.ItemizeAllRespondsToRequestsAttributeTypesDelegate,Delegates")]
+            typeof(Delegates.Collections.System.FindTypeDelegate),
+            typeof(Delegates.Itemize.Types.Attributes.ItemizeAllRespondsToRequestsAttributeTypesDelegate))]
         public ConvertRequestToRespondDelegateTypeDelegate(
             IFindDelegate<Type> findTypeDelegate,
             IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate)

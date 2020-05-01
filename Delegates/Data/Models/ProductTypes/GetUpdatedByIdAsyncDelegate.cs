@@ -11,9 +11,9 @@ namespace Delegates.Data.Models.ProductTypes
         GetDataByIdAsyncDelegate<long>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.GetListUpdatedDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ProductTypes.FindUpdatedDelegate,Delegates",
-            "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.GetListUpdatedDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ProductTypes.FindUpdatedDelegate),
+            typeof(Delegates.Convert.ConvertPassthroughIndexDelegate))]
         public GetUpdatedByIdAsyncDelegate(
             IGetDataAsyncDelegate<List<long>, string> getDataCollectionAsyncDelegate, 
             IFindDelegate<long> findDelegate, 

@@ -15,7 +15,7 @@ namespace Delegates.Convert.ArgsTokens
         private IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate;
 
         [Dependencies(
-            "Delegates.Confirm.ArgsTokens.ConfirmLikelyTokenTypeDelegate,Delegates")]
+            typeof(Delegates.Confirm.ArgsTokens.ConfirmLikelyTokenTypeDelegate))]
         public ConvertTokensToLikelyTypedTokensDelegate(
             IConfirmAsyncDelegate<(string, Tokens)> confirmLikelyTokenTypeDelegate)
         {

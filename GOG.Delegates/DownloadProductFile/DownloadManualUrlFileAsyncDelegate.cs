@@ -10,6 +10,11 @@ using Interfaces.Delegates.Data;
 using GOG.Interfaces.Delegates.DownloadProductFile;
 using Attributes;
 using Models.ProductTypes;
+using Delegates.Convert.Network;
+using Delegates.Format.Uri;
+using Delegates.Data.Routes;
+using Delegates.Download;
+using Delegates.Activities;
 
 namespace GOG.Delegates.DownloadProductFile
 {
@@ -26,13 +31,13 @@ namespace GOG.Delegates.DownloadProductFile
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
-            "Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
-            "Delegates.Data.Routes.UpdateRouteDataAsyncDelegate,Delegates",
-            "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
-            "GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate),
+            typeof(FormatUriRemoveSessionDelegate),
+            typeof(UpdateRouteDataAsyncDelegate),
+            typeof(DownloadFromResponseAsyncDelegate),
+            typeof(GOG.Delegates.DownloadProductFile.DownloadValidationFileAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public DownloadManualUrlFileAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,

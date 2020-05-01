@@ -10,9 +10,9 @@ namespace Delegates.Data.Models.ProductTypes
     public class DeleteProductDownloadsAsyncDelegate : DeleteAsyncDelegate<ProductDownloads>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate,Delegates",
-            "Delegates.Confirm.ProductTypes.ConfirmProductDownloadsContainIdAsyncDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate),
+            typeof(Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate),
+            typeof(Delegates.Confirm.ProductTypes.ConfirmProductDownloadsContainIdAsyncDelegate))]
         public DeleteProductDownloadsAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductDownloads>, string> getDataCollectionAsyncDelegate,
             IConvertDelegate<ProductDownloads, long> convertProductToIndexDelegate,

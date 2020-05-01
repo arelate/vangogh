@@ -4,6 +4,7 @@ using Attributes;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Models.Activities;
+using Delegates.GetValue.Activities;
 
 namespace Delegates.Activities
 {
@@ -13,8 +14,8 @@ namespace Delegates.Activities
         private readonly IGetValueDelegate<List<IActivity>> getCompletedActivitiesValueDelegate;
 
         [Dependencies(
-            "Delegates.GetValue.Activities.GetOngoingActivitiesValueDelegate,Delegates",
-            "Delegates.GetValue.Activities.GetCompletedActivitiesDelegate,Delegates")]
+            typeof(GetOngoingActivitiesValueDelegate),
+            typeof(GetCompletedActivitiesDelegate))]
         public CompleteDelegate(
             IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate,
             IGetValueDelegate<List<IActivity>> getCompletedActivitiesValueDelegate)

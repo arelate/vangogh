@@ -11,9 +11,9 @@ namespace Delegates.Data.Models.ProductTypes
         GetDataByIdAsyncDelegate<ProductScreenshots>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.GetListProductScreenshotsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ProductTypes.FindProductScreenshotsDelegate,Delegates",
-            "Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.GetListProductScreenshotsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ProductTypes.FindProductScreenshotsDelegate),
+            typeof(Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate))]
         public GetProductScreenshotsByIdAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductScreenshots>, string> getDataCollectionAsyncDelegate, 
             IFindDelegate<ProductScreenshots> findDelegate, 

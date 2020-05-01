@@ -7,7 +7,7 @@ namespace Delegates.GetDirectory.ProductTypes
     public class GetRecordsDirectoryDelegate : GetRelativeDirectoryDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.Root.GetDataDirectoryDelegate,Delegates")]
+            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate))]
         public GetRecordsDirectoryDelegate(
             IGetDirectoryDelegate getDataDirectoryDelegate) :
             base(Directories.Records, getDataDirectoryDelegate)

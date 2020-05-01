@@ -1,13 +1,14 @@
 using Attributes;
 using Interfaces.Delegates.Collections;
 using Models.ArgsDefinitions;
+using Delegates.Collections.ArgsDefinitions;
 
 namespace Delegates.Collections.ArgsDefinitions
 {
     public class FindParameterDelegate : FindDelegate<Parameter>
     {
         [Dependencies(
-            "Delegates.Collections.ArgsDefinitions.FindAllParameterDelegate,Delegates")]
+            typeof(FindAllParameterDelegate))]
         public FindParameterDelegate(
             IFindAllDelegate<Parameter> findAllParameterDelegate) :
             base(findAllParameterDelegate)

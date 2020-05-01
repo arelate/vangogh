@@ -4,6 +4,10 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
+using Delegates.Itemize;
+using Delegates.Format.Uri;
+using Delegates.Recycle;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Cleanup.ProductTypes
 {
@@ -11,14 +15,14 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
     public class RespondToCleanupDirectoriesRequestDelegate : RespondToCleanupRequestDelegate<ProductDirectory>
     {
         [Dependencies(
-            "GOG.Delegates.Itemize.ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeAllUpdatedProductFilesAsyncDelegate,GOG.Delegates",
-            "Delegates.Itemize.ItemizePassthroughDelegate,Delegates",
-            "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-            "Delegates.Recycle.RecycleDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.Itemize.ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeAllUpdatedProductFilesAsyncDelegate),
+            typeof(ItemizePassthroughDelegate),
+            typeof(FormatValidationFileDelegate),
+            typeof(RecycleDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToCleanupDirectoriesRequestDelegate(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedProductDirectoriesAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualProductDirectoriesAsyncDelegate,

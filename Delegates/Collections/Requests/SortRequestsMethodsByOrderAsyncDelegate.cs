@@ -5,6 +5,8 @@ using Attributes;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
 using Models.ArgsDefinitions;
+using Delegates.Data.Storage.ArgsDefinitions;
+using Delegates.Collections.ArgsDefinitions;
 
 namespace Delegates.Collections.Requests
 {
@@ -14,8 +16,8 @@ namespace Delegates.Collections.Requests
         private IFindDelegate<Method> findMethodDelegate;
 
         [Dependencies(
-            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates")]
+            typeof(GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(FindMethodDelegate))]
         public SortRequestsMethodsByOrderAsyncDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate)

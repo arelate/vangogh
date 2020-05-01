@@ -3,7 +3,7 @@ using System.Linq;
 using Attributes;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.GetValue;
-
+using Delegates.GetValue.Languages;
 
 namespace Delegates.Confirm
 {
@@ -12,7 +12,7 @@ namespace Delegates.Confirm
         private readonly IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate;
 
         [Dependencies(
-            "Delegates.GetValue.Languages.GetLanguageCodesDelegate,Delegates")]
+            typeof(GetLanguageCodesDelegate))]
         public ConfirmLanguageCodeDelegate(
             IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate)
         {

@@ -6,6 +6,8 @@ using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Constrain;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Itemize;
+using Delegates.Constrain;
+using Delegates.Collections.System;
 
 namespace GOG.Delegates.Constrain.Network
 {
@@ -20,9 +22,9 @@ namespace GOG.Delegates.Constrain.Network
         private int rateLimitRequestsCount;
 
         [Dependencies(
-            "Delegates.Constrain.ConstrainExecutionAsyncDelegate,Delegates",
-            "Delegates.Collections.System.FindStringDelegate,Delegates",
-            "GOG.Delegates.Itemize.ItemizeAllRateConstrainedUrisDelegate,GOG.Delegates")]
+            typeof(ConstrainExecutionAsyncDelegate),
+            typeof(FindStringDelegate),
+            typeof(Itemize.ItemizeAllRateConstrainedUrisDelegate))]
         public ConstrainGOGRequestRateAsyncDelegate(
             IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
             IFindDelegate<string> findStringDelegate,

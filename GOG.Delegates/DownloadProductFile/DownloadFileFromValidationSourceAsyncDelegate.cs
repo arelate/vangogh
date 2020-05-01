@@ -7,6 +7,11 @@ using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.DownloadProductFile;
+using Delegates.Format.Uri;
+using Delegates.Confirm.Validation;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.Download;
+using Delegates.Activities;
 
 namespace GOG.Delegates.DownloadProductFile
 {
@@ -22,14 +27,14 @@ namespace GOG.Delegates.DownloadProductFile
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
-            "Delegates.Confirm.Validation.ConfirmFileValidationSupportedDelegate,Delegates",
-            "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-            "Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate,Delegates",
-            "Delegates.Format.Uri.FormatValidationUriDelegate,Delegates",
-            "Delegates.Download.DownloadFromUriAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(FormatUriRemoveSessionDelegate),
+            typeof(ConfirmFileValidationSupportedDelegate),
+            typeof(FormatValidationFileDelegate),
+            typeof(GetMd5DirectoryDelegate),
+            typeof(FormatValidationUriDelegate),
+            typeof(DownloadFromUriAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public DownloadValidationFileAsyncDelegate(
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,

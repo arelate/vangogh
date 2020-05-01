@@ -12,8 +12,8 @@ namespace Delegates.Format.Uri
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
 
         [Dependencies(
-            "Delegates.GetFilename.GetValidationFilenameDelegate,Delegates",
-            "Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates")]
+            typeof(Delegates.GetFilename.GetValidationFilenameDelegate),
+            typeof(Delegates.Format.Uri.FormatUriRemoveSessionDelegate))]
         public FormatValidationUriDelegate(
             IGetFilenameDelegate getValidationFilenameDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate)

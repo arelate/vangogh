@@ -5,6 +5,7 @@ using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Models.Activities;
 using Models.Activities;
+using Delegates.GetValue.Activities;
 
 namespace Delegates.Activities
 {
@@ -13,7 +14,7 @@ namespace Delegates.Activities
         private readonly IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate;
 
         [Dependencies(
-            "Delegates.GetValue.Activities.GetOngoingActivitiesValueDelegate,Delegates")]
+            typeof(GetOngoingActivitiesValueDelegate))]
         public StartDelegate(IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate)
         {
             this.getOngoingActivitiesValueDelegate = getOngoingActivitiesValueDelegate;

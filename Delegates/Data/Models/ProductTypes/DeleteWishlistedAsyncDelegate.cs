@@ -10,9 +10,9 @@ namespace Delegates.Data.Models.ProductTypes
     public class DeleteWishlistedAsyncDelegate : DeleteAsyncDelegate<long>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.GetListWishlistedDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
-            "Delegates.Confirm.ProductTypes.ConfirmWishlistedContainIdAsyncDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.GetListWishlistedDataFromPathAsyncDelegate),
+            typeof(Delegates.Convert.ConvertPassthroughIndexDelegate),
+            typeof(Delegates.Confirm.ProductTypes.ConfirmWishlistedContainIdAsyncDelegate))]
         public DeleteWishlistedAsyncDelegate(
             IGetDataAsyncDelegate<List<long>, string> getDataCollectionAsyncDelegate,
             IConvertDelegate<long, long> convertProductToIndexDelegate,

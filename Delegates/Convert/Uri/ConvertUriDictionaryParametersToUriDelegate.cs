@@ -12,7 +12,7 @@ namespace Delegates.Convert.Network
             convertDictionaryParametersToStringDelegate;
 
         [Dependencies(
-            "Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate,Delegates")]
+            typeof(Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate))]
         public ConvertUriDictionaryParametersToUriDelegate(
             IConvertDelegate<IDictionary<string, string>, string> convertDictionaryParametersToStringDelegate)
         {

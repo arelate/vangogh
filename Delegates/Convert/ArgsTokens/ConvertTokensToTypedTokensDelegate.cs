@@ -21,9 +21,9 @@ namespace Delegates.Convert.ArgsTokens
             convertMethodsSetTokensToMethodTitleTokensDelegate;
 
         [Dependencies(
-            "Delegates.Convert.ArgsTokens.ConvertTokensToLikelyTypedTokensDelegate,Delegates",
-            "Delegates.Convert.ArgsTokens.ConvertLikelyTypedToTypedTokensDelegate,Delegates",
-            "Delegates.Convert.ArgsTokens.ConvertMethodsSetTokensToMethodTitleTokensDelegate,Delegates")]
+            typeof(Delegates.Convert.ArgsTokens.ConvertTokensToLikelyTypedTokensDelegate),
+            typeof(Delegates.Convert.ArgsTokens.ConvertLikelyTypedToTypedTokensDelegate),
+            typeof(Delegates.Convert.ArgsTokens.ConvertMethodsSetTokensToMethodTitleTokensDelegate))]
         public ConvertTokensToTypedTokensDelegate(
             IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
                 convertTokensToLikelyTypedTokensDelegate,

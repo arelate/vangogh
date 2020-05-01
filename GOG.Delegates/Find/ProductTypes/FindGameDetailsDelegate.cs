@@ -9,7 +9,7 @@ namespace GOG.Delegates.Collections.ProductTypes
     public class FindGameDetailsDelegate : FindDelegate<GameDetails>
     {
         [Dependencies(
-            "GOG.Delegates.Collections.ProductTypes.FindAllGameDetailsDelegate,GOG.Delegates")]
+            typeof(GOG.Delegates.Collections.ProductTypes.FindAllGameDetailsDelegate))]
         public FindGameDetailsDelegate(
             IFindAllDelegate<GameDetails> findAllGameDetailsDelegate) :
             base(findAllGameDetailsDelegate)

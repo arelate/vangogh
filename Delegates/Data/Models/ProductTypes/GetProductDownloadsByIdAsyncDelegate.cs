@@ -11,9 +11,9 @@ namespace Delegates.Data.Models.ProductTypes
         GetDataByIdAsyncDelegate<ProductDownloads>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ProductTypes.FindProductDownloadsDelegate,Delegates",
-            "Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ProductTypes.FindProductDownloadsDelegate),
+            typeof(Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate))]
         public GetProductDownloadsByIdAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductDownloads>, string> getDataCollectionAsyncDelegate, 
             IFindDelegate<ProductDownloads> findDelegate, 

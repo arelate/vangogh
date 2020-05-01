@@ -8,8 +8,8 @@ namespace Delegates.Data.Storage.ProductTypes
     public class PostListUpdatedDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<long>>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.PostListUpdatedDataAsyncDelegate,Delegates",
-            "Delegates.GetPath.ProductTypes.GetUpdatedPathDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.PostListUpdatedDataAsyncDelegate),
+            typeof(Delegates.GetPath.ProductTypes.GetUpdatedPathDelegate))]
         public PostListUpdatedDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<long>> postListUpdatedDataAsyncDelegate,
             IGetPathDelegate getUpdatedPathDelegate) :

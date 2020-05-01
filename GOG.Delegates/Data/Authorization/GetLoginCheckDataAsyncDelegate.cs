@@ -8,14 +8,21 @@ using Interfaces.Delegates.Convert;
 using Models.QueryParameters;
 using Models.Uris;
 using Attributes;
+using Delegates.Data.Console;
+using Delegates.Itemize.HtmlAttributes;
+using Delegates.Convert.Uri;
+using Delegates.Data.Network;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Data.Authorization
 {
-    public class GetLoginCheckDataAsyncDelegate: IGetDataAsyncDelegate<string, (string AuthResponse, string Username, string Password)>
+    public class
+        GetLoginCheckDataAsyncDelegate : IGetDataAsyncDelegate<string, (string AuthResponse, string Username, string
+            Password)>
     {
         private const string pleaseEnterUsername = "Please enter your GOG.com username (email):";
         private const string pleaseEnterPassword = "Please enter password for {0}:";
-        
+
         private IItemizeDelegate<string, string> itemizeLoginTokenAttribueValueDelegate;
         private IItemizeDelegate<string, string> itemizeLoginIdAttributeValueDelegate;
         private IItemizeDelegate<string, string> itemizeLoginUsernameAttributeValueDelegate;
@@ -25,21 +32,22 @@ namespace GOG.Delegates.Data.Authorization
 
         private readonly IConvertDelegate<IDictionary<string, string>, string>
             convertDictionaryParametersToStringDelegate;
+
         private readonly IPostDataAsyncDelegate<string> postUriDataAsyncDelegate;
-        
+
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Data.Console.GetLineDataDelegate,Delegates",
-            "Delegates.Data.Console.GetPrivateLineDataDelegate,Delegates",
-            "Delegates.Itemize.HtmlAttributes.ItemizeLoginTokenAttributeValuesDelegate,Delegates",
-            "Delegates.Itemize.HtmlAttributes.ItemizeLoginIdAttributeValuesDelegate,Delegates",
-            "Delegates.Itemize.HtmlAttributes.ItemizeLoginUsernameAttributeValuesDelegate,Delegates",
-            "Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate,Delegates",
-            "Delegates.Data.Network.PostUriDataAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetLineDataDelegate),
+            typeof(GetPrivateLineDataDelegate),
+            typeof(ItemizeLoginTokenAttributeValuesDelegate),
+            typeof(ItemizeLoginIdAttributeValuesDelegate),
+            typeof(ItemizeLoginUsernameAttributeValuesDelegate),
+            typeof(ConvertDictionaryParametersToStringDelegate),
+            typeof(PostUriDataAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public GetLoginCheckDataAsyncDelegate(
             IGetDataDelegate<string> getLineDataDelegate,
             IGetDataDelegate<string> getPrivateLineDataDelegate,
@@ -61,7 +69,7 @@ namespace GOG.Delegates.Data.Authorization
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
         }
-        
+
         public async Task<string> GetDataAsync((string AuthResponse, string Username, string Password) loginRequestData)
         {
             startDelegate.Start("Get login check result");
@@ -77,7 +85,8 @@ namespace GOG.Delegates.Data.Authorization
                 QueryParametersCollections.LoginAuthenticate[QueryParameters.LoginId] = loginId;
                 loginUri = Uris.Endpoints.Authentication.Login;
 
-                loginRequestData.Username = itemizeLoginUsernameAttributeValueDelegate.Itemize(loginRequestData.AuthResponse).First();
+                loginRequestData.Username = itemizeLoginUsernameAttributeValueDelegate
+                    .Itemize(loginRequestData.AuthResponse).First();
             }
             else
             {

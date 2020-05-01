@@ -7,6 +7,8 @@ using Attributes;
 using Models.Uris;
 using GOG.Interfaces.Delegates.GetDeserialized;
 using Interfaces.Delegates.Data;
+using Delegates.Data.Models.ProductTypes;
+using Delegates.Activities; 
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -19,11 +21,11 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
-            "Delegates.Data.Models.ProductTypes.UpdateWishlistedAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.CommitWishlistedAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate),
+            typeof(UpdateWishlistedAsyncDelegate),
+            typeof(CommitWishlistedAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateWishlistedRequestDelegate(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
             IUpdateAsyncDelegate<long> updateWishlistedAsyncDelegate,

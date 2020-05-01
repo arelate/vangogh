@@ -9,8 +9,8 @@ namespace Delegates.Data.Storage.Records
     public class PostListProductsRecordsDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<ProductRecords>>
     {
         [Dependencies(
-            "Delegates.Data.Storage.Records.PostListProductRecordsDataAsyncDelegate,Delegates",
-            "Delegates.GetPath.Records.GetProductsRecordsPathDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.Records.PostListProductRecordsDataAsyncDelegate),
+            typeof(Delegates.GetPath.Records.GetProductsRecordsPathDelegate))]
         public PostListProductsRecordsDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<ProductRecords>> postListProductRecordsDataAsyncDelegate,
             IGetPathDelegate getProductsRecordsPathDelegate) :

@@ -7,7 +7,7 @@ namespace Delegates.GetFilename.Json
     public class GetIndexFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            "Delegates.GetFilename.GetBinFilenameDelegate,Delegates")]
+            typeof(Delegates.GetFilename.GetBinFilenameDelegate))]
         public GetIndexFilenameDelegate(IGetFilenameDelegate getBinFilenameDelegate) :
             base(Filenames.Index, getBinFilenameDelegate)
         {

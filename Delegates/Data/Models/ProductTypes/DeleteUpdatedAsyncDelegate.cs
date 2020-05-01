@@ -10,9 +10,9 @@ namespace Delegates.Data.Models.ProductTypes
     public class DeleteUpdatedAsyncDelegate : DeleteAsyncDelegate<long>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.GetListUpdatedDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Convert.ConvertPassthroughIndexDelegate,Delegates",
-            "Delegates.Confirm.ProductTypes.ConfirmUpdatedContainIdAsyncDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.GetListUpdatedDataFromPathAsyncDelegate),
+            typeof(Delegates.Convert.ConvertPassthroughIndexDelegate),
+            typeof(Delegates.Confirm.ProductTypes.ConfirmUpdatedContainIdAsyncDelegate))]
         public DeleteUpdatedAsyncDelegate(
             IGetDataAsyncDelegate<List<long>, string> getDataCollectionAsyncDelegate,
             IConvertDelegate<long, long> convertProductToIndexDelegate,

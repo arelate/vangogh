@@ -17,8 +17,8 @@ namespace Delegates.Convert.ArgsTokens
         private IFindDelegate<MethodsSet> findMethodsSetDelegate;
 
         [Dependencies(
-            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate))]
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<MethodsSet> findMethodsSetDelegate)

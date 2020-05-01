@@ -12,6 +12,9 @@ using GOG.Models;
 using System;
 using Interfaces.Delegates.Data;
 using Models.ProductTypes;
+using Delegates.Data.Routes;
+using Delegates.GetPath.Json;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Itemize
 {
@@ -24,11 +27,11 @@ namespace GOG.Delegates.Itemize
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-            "Delegates.Data.Routes.GetRouteDataAsyncDelegate,Delegates",
-            "Delegates.GetPath.Json.GetGameDetailsFilesPathDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(GetRouteDataAsyncDelegate),
+            typeof(GetGameDetailsFilesPathDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate,

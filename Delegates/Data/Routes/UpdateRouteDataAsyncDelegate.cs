@@ -15,11 +15,11 @@ namespace Delegates.Data.Routes
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Data.Models.ProductTypes.GetProductRoutesByIdAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.UpdateProductRoutesAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.CommitProductRoutesAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(Delegates.Data.Models.ProductTypes.GetProductRoutesByIdAsyncDelegate),
+            typeof(Delegates.Data.Models.ProductTypes.UpdateProductRoutesAsyncDelegate),
+            typeof(Delegates.Data.Models.ProductTypes.CommitProductRoutesAsyncDelegate),
+            typeof(Delegates.Activities.StartDelegate),
+            typeof(Delegates.Activities.CompleteDelegate))]
         public UpdateRouteDataAsyncDelegate(
             IGetDataAsyncDelegate<ProductRoutes, long> getProductRoutesByIdAsyncDelegate,
             IUpdateAsyncDelegate<ProductRoutes> updateProductRoutesAsyncDelegate,

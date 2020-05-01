@@ -7,8 +7,8 @@ namespace Delegates.GetPath.ArgsDefinitions
     public class GetArgsDefinitionsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.Root.GetEmptyDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.ArgsDefinitions.GetArgsDefinitionsFilenameDelegate,Delegates")]
+            typeof(Delegates.GetDirectory.Root.GetEmptyDirectoryDelegate),
+            typeof(Delegates.GetFilename.ArgsDefinitions.GetArgsDefinitionsFilenameDelegate))]
         public GetArgsDefinitionsPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getFilenameDelegate) :

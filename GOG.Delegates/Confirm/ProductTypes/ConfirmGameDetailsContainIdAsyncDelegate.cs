@@ -8,7 +8,7 @@ namespace GOG.Delegates.Confirm.ProductTypes
     public class ConfirmGameDetailsContainIdAsyncDelegate : ConfirmDataContainsIdAsyncDelegate<GameDetails>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate,GOG.Delegates")]
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate))]
         public ConfirmGameDetailsContainIdAsyncDelegate(
             IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate) :
             base(getGameDetailsByIdAsyncDelegate)

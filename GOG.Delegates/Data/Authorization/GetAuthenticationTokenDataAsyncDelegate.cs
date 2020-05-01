@@ -6,6 +6,9 @@ using Interfaces.Delegates.Convert;
 using Models.Uris;
 using Models.QueryParameters;
 using Attributes;
+using Delegates.Convert.Network;
+using Delegates.Data.Network;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Data.Authorization
 {
@@ -19,10 +22,10 @@ namespace GOG.Delegates.Data.Authorization
         private readonly ICompleteDelegate completeDelegate;
         
         [Dependencies(
-            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "Delegates.Data.Network.GetUriDataAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(ConvertUriDictionaryParametersToUriDelegate),
+            typeof(GetUriDataAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public GetAuthenticationTokenDataAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string>
                 convertUriParametersToUriDelegate,

@@ -13,8 +13,8 @@ namespace Delegates.Convert
         private readonly IFindDelegate<KeyValuePair<string, string>> findLanguageCodeDelegate;
 
         [Dependencies(
-            "Delegates.GetValue.Languages.GetLanguageCodesDelegate,Delegates",
-            "Delegates.Collections.System.FindStringKeyStringValuePairDelegate,Delegates")]
+            typeof(Delegates.GetValue.Languages.GetLanguageCodesDelegate),
+            typeof(Delegates.Collections.System.FindStringKeyStringValuePairDelegate))]
         public ConvertLanguageToCodeDelegate(
             IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate,
             IFindDelegate<KeyValuePair<string, string>> findLanguageCodeDelegate)

@@ -10,6 +10,10 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
 using GOG.Interfaces.Delegates.GetDownloadSources;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Format.Uri;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.GetDownloadSources
 {
@@ -23,12 +27,12 @@ namespace GOG.Delegates.GetDownloadSources
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Itemize.ProductTypes.ItemizeAllProductScreenshotsAsyncDelegate,Delegates",
-            "Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
-            "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(ItemizeAllProductScreenshotsAsyncDelegate),
+            typeof(FormatScreenshotsUriDelegate),
+            typeof(GetScreenshotsDirectoryDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,

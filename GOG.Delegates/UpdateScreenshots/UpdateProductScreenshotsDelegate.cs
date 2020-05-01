@@ -8,6 +8,9 @@ using GOG.Interfaces.Delegates.UpdateScreenshots;
 using Attributes;
 using Models.ProductTypes;
 using GOG.Models;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.Data.Models.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.UpdateScreenshots
 {
@@ -22,12 +25,12 @@ namespace GOG.Delegates.UpdateScreenshots
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.GetValue.Uri.ProductTypes.GetScreenshotsUpdateUriDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.UpdateProductScreenshotsAsyncDelegate,Delegates",
-            "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeScreenshotsDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetScreenshotsUpdateUriDelegate),
+            typeof(UpdateProductScreenshotsAsyncDelegate),
+            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeScreenshotsDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public UpdateScreenshotsAsyncDelegate(
             IGetValueDelegate<string> getUpdateUriDelegate,
             IUpdateAsyncDelegate<ProductScreenshots> updateProductScreenshotsAsyncDelegate,

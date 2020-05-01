@@ -1,14 +1,16 @@
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Attributes;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.GetFilename.ProductTypes;
 
 namespace Delegates.GetPath.Records
 {
     public class GetAccountProductsRecordsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.ProductTypes.GetRecordsDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.ProductTypes.GetAccountProductsFilenameDelegate,Delegates")]
+            typeof(GetRecordsDirectoryDelegate),
+            typeof(GetAccountProductsFilenameDelegate))]
         public GetAccountProductsRecordsPathDelegate(
             IGetDirectoryDelegate getRecordsDirectoryDelegate,
             IGetFilenameDelegate getAccountProductsFilenameDelegate) :

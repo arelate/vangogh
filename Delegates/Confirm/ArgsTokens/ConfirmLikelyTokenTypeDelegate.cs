@@ -8,6 +8,8 @@ using Interfaces.Models.Properties;
 using Attributes;
 using Models.ArgsTokens;
 using Models.ArgsDefinitions;
+using Delegates.Data.Storage.ArgsDefinitions;
+using Delegates.Collections.Properties;
 
 namespace Delegates.Confirm.ArgsTokens
 {
@@ -18,8 +20,8 @@ namespace Delegates.Confirm.ArgsTokens
         private readonly IFindDelegate<ITitleProperty> findITitlePropertyDelegate;
 
         [Dependencies(
-            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.Properties.FindITitlePropertyDelegate,Delegates")]
+            typeof(GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(FindITitlePropertyDelegate))]
         public ConfirmLikelyTokenTypeDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<ITitleProperty> findITitlePropertyDelegate)

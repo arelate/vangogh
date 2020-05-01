@@ -8,6 +8,7 @@ using GOG.Interfaces.Delegates.UpdateScreenshots;
 using Attributes;
 using GOG.Models;
 using Models.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -21,11 +22,11 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
+            typeof(GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateScreenshotsRequestDelegate(
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,

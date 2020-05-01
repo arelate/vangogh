@@ -13,6 +13,13 @@ using Attributes;
 using Models.ProductTypes;
 using GOG.Models;
 using Interfaces.Delegates.Confirm;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.GetFilename;
+using Delegates.Format.Uri;
+using Delegates.Confirm.Validation;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Data.Routes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Validate
 {
@@ -32,17 +39,17 @@ namespace GOG.Delegates.Respond.Validate
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.GetUriFilenameDelegate,Delegates",
-            "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-            "Delegates.Confirm.Validation.ConfirmFileValidationExpectationsAsyncDelegate,Delegates",
-            "Delegates.Itemize.ProductTypes.ItemizeAllUpdatedAsyncDelegate,Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-            "Delegates.Data.Routes.GetRouteDataAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetProductFilesDirectoryDelegate),
+            typeof(GetUriFilenameDelegate),
+            typeof(FormatValidationFileDelegate),
+            typeof(ConfirmFileValidationExpectationsAsyncDelegate),
+            typeof(ItemizeAllUpdatedAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(GetRouteDataAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToValidateProductFilesRequestDelegate(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,

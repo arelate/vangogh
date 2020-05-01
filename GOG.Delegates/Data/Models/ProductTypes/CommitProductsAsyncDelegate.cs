@@ -4,16 +4,17 @@ using GOG.Models;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Attributes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
 {
     public class CommitProductsAsyncDelegate : CommitDataAsyncDelegate<ApiProduct>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Storage.ProductTypes.GetListApiProductDataFromPathAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Storage.ProductTypes.PostListApiProductDataToPathAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.Data.Storage.ProductTypes.GetListApiProductDataFromPathAsyncDelegate),
+            typeof(GOG.Delegates.Data.Storage.ProductTypes.PostListApiProductDataToPathAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public CommitProductsAsyncDelegate(
             IGetDataAsyncDelegate<List<ApiProduct>, string> getDataAsyncDelegate,
             IPostDataAsyncDelegate<List<ApiProduct>> postDataAsyncDelegate,

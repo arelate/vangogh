@@ -6,6 +6,8 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -14,15 +16,15 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         RespondToUpdateMasterDetailsRequestDelegate<ApiProduct, Product>
     {
         [Dependencies(
-            "Delegates.GetValue.Uri.ProductTypes.GetApiProductsUpdateUriDelegate,Delegates",
-            "GOG.Delegates.Convert.UpdateIdentity.ConvertProductToApiProductUpdateIdentityDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.UpdateApiProductsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.CommitApiProductsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetApiProductsUpdateUriDelegate),
+            typeof(GOG.Delegates.Convert.UpdateIdentity.ConvertProductToApiProductUpdateIdentityDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateApiProductsAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitApiProductsAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegate),
+            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateApiProductsRequestDelegate(
             IGetValueDelegate<string> getApiProductsUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToApiProductUpdateIdentityDelegate,

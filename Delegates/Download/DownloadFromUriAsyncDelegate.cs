@@ -16,8 +16,8 @@ namespace Delegates.Download
         private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
 
         [Dependencies(
-            "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates",
-            "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates")]
+            typeof(Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate),
+            typeof(Delegates.Download.DownloadFromResponseAsyncDelegate))]
         public DownloadFromUriAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,

@@ -3,6 +3,8 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Move;
 using Attributes;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.Move.IO;
 
 namespace Delegates.Recycle
 {
@@ -12,8 +14,8 @@ namespace Delegates.Recycle
         private readonly IMoveDelegate<string> moveFileDelegate;
 
         [Dependencies(
-            "Delegates.GetDirectory.ProductTypes.GetRecycleBinDirectoryDelegate,Delegates",
-            "Delegates.Move.IO.MoveFileDelegate,Delegates")]
+            typeof(GetRecycleBinDirectoryDelegate),
+            typeof(MoveFileDelegate))]
         public RecycleDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IMoveDelegate<string> moveFileDelegate)

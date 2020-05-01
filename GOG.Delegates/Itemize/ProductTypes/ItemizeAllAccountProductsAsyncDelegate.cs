@@ -9,7 +9,7 @@ namespace GOG.Delegates.Itemize.ProductTypes
     public class ItemizeAllAccountProductsAsyncDelegate : ItemizeAllDataAsyncDelegate<AccountProduct>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Storage.ProductTypes.GetListAccountProductDataFromPathAsyncDelegate,GOG.Delegates")]
+            typeof(GOG.Delegates.Data.Storage.ProductTypes.GetListAccountProductDataFromPathAsyncDelegate))]
         public ItemizeAllAccountProductsAsyncDelegate(
             IGetDataAsyncDelegate<List<AccountProduct>, string> getListAccountProductsAsyncDelegate) :
             base(getListAccountProductsAsyncDelegate)

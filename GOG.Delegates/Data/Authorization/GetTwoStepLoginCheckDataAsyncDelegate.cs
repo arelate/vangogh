@@ -8,6 +8,11 @@ using Interfaces.Delegates.Data;
 using Attributes;
 using Models.Uris;
 using Models.QueryParameters;
+using Delegates.Data.Console;
+using Delegates.Itemize.HtmlAttributes;
+using Delegates.Convert.Uri;
+using Delegates.Data.Network;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Authorization
 {
@@ -32,12 +37,12 @@ namespace GOG.Delegates.Authorization
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Data.Console.GetPrivateLineDataDelegate,Delegates",
-            "Delegates.Itemize.HtmlAttributes.ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate,Delegates",
-            "Delegates.Convert.Uri.ConvertDictionaryParametersToStringDelegate,Delegates",
-            "Delegates.Data.Network.PostUriDataAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetPrivateLineDataDelegate),
+            typeof(ItemizeSecondStepAuthenticationTokenAttributeValuesDelegate),
+            typeof(ConvertDictionaryParametersToStringDelegate),
+            typeof(PostUriDataAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public GetTwoStepLoginCheckDataAsyncDelegate(
             IGetDataDelegate<string> getPrivateLineDataDelegate,
             IItemizeDelegate<string, string> itemizeSecondStepAuthenticationTokenAttributeValueDelegate,

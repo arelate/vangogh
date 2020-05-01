@@ -11,10 +11,10 @@ namespace GOG.Delegates.Data.Models.ProductTypes
     public class UpdateGameDetailsAsyncDelegate: UpdateDataAsyncDelegate<GameDetails>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Models.ProductTypes.DeleteGameDetailsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsToIndexDelegate,GOG.Delegates",
-            "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainIdAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Storage.ProductTypes.GetListGameDetailsDataFromPathAsyncDelegate,GOG.Delegates")]
+            typeof(GOG.Delegates.Data.Models.ProductTypes.DeleteGameDetailsAsyncDelegate),
+            typeof(GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsToIndexDelegate),
+            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainIdAsyncDelegate),
+            typeof(GOG.Delegates.Data.Storage.ProductTypes.GetListGameDetailsDataFromPathAsyncDelegate))]
         public UpdateGameDetailsAsyncDelegate(
             IDeleteAsyncDelegate<GameDetails> deleteGameDetailsAsyncDelegate, 
             IConvertDelegate<GameDetails, long> convertGameDetailsToIndexDelegate, 

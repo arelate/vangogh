@@ -5,6 +5,7 @@ using Interfaces.Delegates.Convert;
 using Attributes;
 using Models.Dependencies;
 using GOG.Models;
+using Delegates.Convert.Network;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
@@ -12,10 +13,10 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         GetDeserializedDataAsyncDelegate<GOGData>
     {
         [Dependencies(
-            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeGOGDataDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGOGDataDelegate,GOG.Delegates")]
+            typeof(ConvertUriDictionaryParametersToUriDelegate),
+            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeGOGDataDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGOGDataDelegate))]
         public GetDeserializedGOGDataAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,

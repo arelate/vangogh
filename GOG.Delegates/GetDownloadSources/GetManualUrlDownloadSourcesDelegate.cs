@@ -6,6 +6,8 @@ using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.GetDownloadSources;
 using Attributes;
 using GOG.Models;
+using Delegates.Activities;
+using Delegates.Itemize.ProductTypes;
 
 namespace GOG.Delegates.GetDownloadSources
 {
@@ -19,12 +21,12 @@ namespace GOG.Delegates.GetDownloadSources
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Itemize.ProductTypes.ItemizeAllUpdatedAsyncDelegate,Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(ItemizeAllUpdatedAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public GetManualUrlDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,

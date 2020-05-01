@@ -7,8 +7,8 @@ namespace Delegates.GetPath.ProductTypes
     public class GetProductRoutesPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.Root.GetDataDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.ProductTypes.GetProductRoutesFilenameDelegate,Delegates")]
+            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate),
+            typeof(Delegates.GetFilename.ProductTypes.GetProductRoutesFilenameDelegate))]
         public GetProductRoutesPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getProductRoutesFilenameDelegate) :

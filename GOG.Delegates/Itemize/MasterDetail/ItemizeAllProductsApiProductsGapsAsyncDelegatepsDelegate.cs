@@ -10,8 +10,8 @@ namespace GOG.Delegates.Itemize.MasterDetail
         ItemizeAllMasterDetailsGapsAsyncDelegate<Product>
     {
         [Dependencies(
-            "GOG.Delegates.Itemize.ProductTypes.ItemizeAllProductsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Confirm.ProductTypes.ConfirmApiProductsContainIdAsyncDelegate,GOG.Delegates")]
+            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeAllProductsAsyncDelegate),
+            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmApiProductsContainIdAsyncDelegate))]
         public ItemizeAllProductsApiProductsGapsAsyncDelegate(
             IItemizeAllAsyncDelegate<Product> itemizeAllProductsAsyncDelegate,
             IConfirmAsyncDelegate<long> confirmApiProductsContainIdAsyncDelegate) :

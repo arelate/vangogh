@@ -4,6 +4,7 @@ using Attributes;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
 using GOG.Interfaces.Delegates.RequestPage;
+using Delegates.Convert.Network;
 
 namespace GOG.Delegates.RequestPage
 {
@@ -17,8 +18,8 @@ namespace GOG.Delegates.RequestPage
         private const string pageQueryParameter = "page";
 
         [Dependencies(
-            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates")]
+            typeof(ConvertUriDictionaryParametersToUriDelegate),
+            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate))]
         public RequestPageAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate)

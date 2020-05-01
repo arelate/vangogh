@@ -4,6 +4,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
 using Attributes;
 using GOG.Models;
+using Delegates.GetDirectory.ProductTypes;
 
 namespace GOG.Delegates.Itemize
 {
@@ -13,8 +14,8 @@ namespace GOG.Delegates.Itemize
         private readonly IGetDirectoryDelegate getDirectoryDelegate;
 
         [Dependencies(
-            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-            "Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates")]
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(GetProductFilesDirectoryDelegate))]
         public ItemizeGameDetailsDirectoriesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate)

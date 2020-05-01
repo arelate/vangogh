@@ -9,7 +9,7 @@ namespace Delegates.Itemize.Types.Attributes
         ItemizeAllTypesWithClassAttributeDelegate<RespondsToRequests>
     {
         [Dependencies(
-            "Delegates.Itemize.Types.ItemizeAllAppDomainTypesDelegate,Delegates")]
+            typeof(ItemizeAllAppDomainTypesDelegate))]
         public ItemizeAllRespondsToRequestsAttributeTypesDelegate(
             IItemizeAllDelegate<Type> itemizeAllAppDomainTypesDelegate) :
             base(itemizeAllAppDomainTypesDelegate)

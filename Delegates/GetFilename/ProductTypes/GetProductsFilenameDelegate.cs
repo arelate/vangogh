@@ -7,7 +7,7 @@ namespace Delegates.GetFilename.ProductTypes
     public class GetProductsFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            "Delegates.GetFilename.GetBinFilenameDelegate,Delegates")]
+            typeof(Delegates.GetFilename.GetBinFilenameDelegate))]
         public GetProductsFilenameDelegate(IGetFilenameDelegate GetBinFilenameDelegate) :
             base(Filenames.Products, GetBinFilenameDelegate)
         {

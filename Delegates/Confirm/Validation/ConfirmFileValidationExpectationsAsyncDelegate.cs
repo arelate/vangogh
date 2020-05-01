@@ -9,6 +9,9 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.Units;
 using Models.ProductTypes;
+using Delegates.Confirm.Validation;
+using Delegates.Convert.Streams;
+using Delegates.Convert.Hashes;
 
 namespace Delegates.Confirm.Validation
 {
@@ -28,13 +31,13 @@ namespace Delegates.Confirm.Validation
         private IConvertAsyncDelegate<byte[], Task<string>> convertBytesToHashDelegate;
 
         [Dependencies(
-            "Delegates.Confirm.Validation.ConfirmFileValidationSupportedDelegate,Delegates",
-            "Delegates.Confirm.Validation.ConfirmFileExistsDelegate,Delegates",
-            "Delegates.Confirm.Validation.ConfirmFilenameExpectationDelegate,Delegates",
-            "Delegates.Confirm.Validation.ConfirmSizeExpectationDelegate,Delegates",
-            "Delegates.Confirm.Validation.ConfirmChunkHashExpectationAsyncDelegate,Delegates",
-            "Delegates.Convert.Streams.ConvertUriToReadableStreamDelegate,Delegates",
-            "Delegates.Convert.Hashes.ConvertBytesToMd5HashDelegate,Delegates")]
+            typeof(ConfirmFileValidationSupportedDelegate),
+            typeof(ConfirmFileExistsDelegate),
+            typeof(ConfirmFilenameExpectationDelegate),
+            typeof(ConfirmSizeExpectationDelegate),
+            typeof(ConfirmChunkHashExpectationAsyncDelegate),
+            typeof(ConvertUriToReadableStreamDelegate),
+            typeof(ConvertBytesToMd5HashDelegate))]
         public ConfirmFileValidationExpectationsAsyncDelegate(
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IConfirmDelegate<string> confirmFileExistsDelegate,

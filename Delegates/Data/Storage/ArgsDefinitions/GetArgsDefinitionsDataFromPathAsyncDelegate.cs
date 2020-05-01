@@ -8,8 +8,8 @@ namespace Delegates.Data.Storage.ArgsDefinitions
     public class GetArgsDefinitionsDataFromPathAsyncDelegate : GetJSONDataFromPathAsyncDelegate<ArgsDefinition>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataAsyncDelegate,Delegates",
-            "Delegates.GetPath.ArgsDefinitions.GetArgsDefinitionsPathDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataAsyncDelegate),
+            typeof(Delegates.GetPath.ArgsDefinitions.GetArgsDefinitionsPathDelegate))]
         public GetArgsDefinitionsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getJSONDataAsyncDelegate,
             IGetPathDelegate getPathDelegate) :

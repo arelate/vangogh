@@ -5,6 +5,7 @@ using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
+using Delegates.GetDirectory.ProductTypes;
 
 namespace GOG.Delegates.Itemize
 {
@@ -13,7 +14,7 @@ namespace GOG.Delegates.Itemize
         private readonly IGetDirectoryDelegate productFilesDirectoryDelegate;
 
         [Dependencies(
-            "Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates")]
+            typeof(GetProductFilesRootDirectoryDelegate))]
         public ItemizeAllProductFilesDirectoriesAsyncDelegate(
             IGetDirectoryDelegate productFilesDirectoryDelegate)
         {

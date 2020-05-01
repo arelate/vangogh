@@ -11,9 +11,9 @@ namespace GOG.Delegates.Data.Models.ProductTypes
     public class GetGameProductDataByIdAsyncDelegate: GetDataByIdAsyncDelegate<GameProductData>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Storage.ProductTypes.GetListGameProductDataDataFromPathAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Collections.ProductTypes.FindGameProductDataDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.ProductTypes.ConvertGameProductDataToIndexDelegate,GOG.Delegates")]
+            typeof(GOG.Delegates.Data.Storage.ProductTypes.GetListGameProductDataDataFromPathAsyncDelegate),
+            typeof(GOG.Delegates.Collections.ProductTypes.FindGameProductDataDelegate),
+            typeof(GOG.Delegates.Convert.ProductTypes.ConvertGameProductDataToIndexDelegate))]
         public GetGameProductDataByIdAsyncDelegate(
             IGetDataAsyncDelegate<List<GameProductData>, string> getListGameProductDataAsyncDelegate, 
             IFindDelegate<GameProductData> findDelegate, 

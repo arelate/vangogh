@@ -13,7 +13,7 @@ namespace Delegates.Data.Network
             convertRequestToResponseAsyncDelegate;
 
         [Dependencies(
-            "Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate,Delegates")]
+            typeof(Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate))]
         public GetUriDataAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate)

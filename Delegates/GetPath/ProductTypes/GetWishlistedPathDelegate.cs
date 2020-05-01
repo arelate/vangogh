@@ -7,8 +7,8 @@ namespace Delegates.GetPath.ProductTypes
     public class GetWishlistedPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.Root.GetDataDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.ProductTypes.GetWishlistedFilenameDelegate,Delegates")]
+            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate),
+            typeof(Delegates.GetFilename.ProductTypes.GetWishlistedFilenameDelegate))]
         public GetWishlistedPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getWishlistedFilenameDelegate) :

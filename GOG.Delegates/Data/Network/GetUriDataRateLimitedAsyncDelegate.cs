@@ -10,7 +10,7 @@ namespace GOG.Delegates.Data.Network
         GetUriDataAsyncDelegate
     {
         [Dependencies(
-            "GOG.Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMethodRateLimitedAsyncDelegate,GOG.Delegates")]
+            typeof(GOG.Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMethodRateLimitedAsyncDelegate))]
         public GetUriDataRateLimitedAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>> convertRequestToResponseAsyncDelegate)
             :

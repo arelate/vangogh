@@ -7,7 +7,7 @@ namespace Delegates.GetFilename.Json
     public class GetCookiesFilenameDelegate : GetFixedFilenameDelegate
     {
         [Dependencies(
-            "Delegates.GetFilename.GetJsonFilenameDelegate,Delegates")]
+            typeof(Delegates.GetFilename.GetJsonFilenameDelegate))]
         public GetCookiesFilenameDelegate(IGetFilenameDelegate getJsonFilenameDelegate) :
             base(Filenames.Cookies, getJsonFilenameDelegate)
         {

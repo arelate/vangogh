@@ -6,19 +6,22 @@ using Attributes;
 using GOG.Interfaces.Delegates.RequestPage;
 using Models.Dependencies;
 using GOG.Models;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.GetValue.QueryParameters.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.GetPageResults.ProductTypes
 {
     public class GetProductsPageResultsAsyncDelegate : GetPageResultsAsyncDelegate<ProductsPageResult>
     {
         [Dependencies(
-            "Delegates.GetValue.Uri.ProductTypes.GetProductsUpdateUriDelegate,Delegates",
-            "Delegates.GetValue.QueryParameters.ProductTypes.GetProductsUpdateQueryParametersDelegate,Delegates",
-            "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToProductsPageResultDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetProductsUpdateUriDelegate),
+            typeof(GetProductsUpdateQueryParametersDelegate),
+            typeof(GOG.Delegates.RequestPage.RequestPageAsyncDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToProductsPageResultDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public GetProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getProductsQueryUpdateQueryParameters,

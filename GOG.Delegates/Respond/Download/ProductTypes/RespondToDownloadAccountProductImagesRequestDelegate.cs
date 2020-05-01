@@ -4,7 +4,9 @@ using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using GOG.Interfaces.Delegates.DownloadProductFile;
 using Attributes;
-using GOG.Models;
+using Delegates.Activities;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Data.Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Download.ProductTypes
 {
@@ -13,13 +15,13 @@ namespace GOG.Delegates.Respond.Download.ProductTypes
         RespondToDownloadAccountProductImagesRequestDelegate : RespondToDownloadRequestDelegate<AccountProductImage>
     {
         [Dependencies(
-            "Delegates.Itemize.ProductTypes.ItemizeAllProductDownloadsAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.UpdateProductDownloadsAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.DeleteProductDownloadsAsyncDelegate,Delegates",
-            "GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(ItemizeAllProductDownloadsAsyncDelegate),
+            typeof(UpdateProductDownloadsAsyncDelegate),
+            typeof(DeleteProductDownloadsAsyncDelegate),
+            typeof(GOG.Delegates.DownloadProductFile.DownloadProductImageAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToDownloadAccountProductImagesRequestDelegate(
             IItemizeAllAsyncDelegate<ProductDownloads> itemizeAllProductDownloadsAsyncDelegate,
             IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate,

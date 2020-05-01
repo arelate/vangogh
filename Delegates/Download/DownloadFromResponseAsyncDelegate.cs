@@ -15,7 +15,7 @@ namespace Delegates.Download
         private readonly IConvertDelegate<string, Stream> convertUriToWritableRStream;
 
         [Dependencies(
-            "Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate,Delegates")]
+            typeof(Delegates.Convert.Streams.ConvertUriToWritableStreamDelegate))]
         public DownloadFromResponseAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToWritableRStream)
         {

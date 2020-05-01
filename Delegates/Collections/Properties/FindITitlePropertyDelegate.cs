@@ -7,7 +7,7 @@ namespace Delegates.Collections.Properties
     public class FindITitlePropertyDelegate : FindDelegate<ITitleProperty>
     {
         [Dependencies(
-            "Delegates.Collections.Properties.FindAllITitlePropertyDelegate,Delegates")]
+            typeof(FindAllITitlePropertyDelegate))]
         public FindITitlePropertyDelegate(
             IFindAllDelegate<ITitleProperty> findAllITitlePropertyDelegate) :
             base(findAllITitlePropertyDelegate)

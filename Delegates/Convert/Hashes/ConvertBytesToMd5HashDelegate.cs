@@ -11,7 +11,7 @@ namespace Delegates.Convert.Hashes
         private readonly IConvertDelegate<byte[], string> byteToStringConversionController;
 
         [Dependencies(
-            "Delegates.Convert.Bytes.ConvertBytesToStringDelegate,Delegates")]
+            typeof(Delegates.Convert.Bytes.ConvertBytesToStringDelegate))]
         public ConvertBytesToMd5HashDelegate(
             IConvertDelegate<byte[], string> byteToStringConversionController)
         {

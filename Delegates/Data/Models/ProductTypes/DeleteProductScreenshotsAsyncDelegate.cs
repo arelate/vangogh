@@ -10,9 +10,9 @@ namespace Delegates.Data.Models.ProductTypes
     public class DeleteProductScreenshotsAsyncDelegate : DeleteAsyncDelegate<ProductScreenshots>
     {
         [Dependencies(
-            "Delegates.Data.Storage.ProductTypes.GetListProductScreenshotsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate,Delegates",
-            "Delegates.Confirm.ProductTypes.ConfirmProductScreenshotsContainIdAsyncDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ProductTypes.GetListProductScreenshotsDataFromPathAsyncDelegate),
+            typeof(Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate),
+            typeof(Delegates.Confirm.ProductTypes.ConfirmProductScreenshotsContainIdAsyncDelegate))]
         public DeleteProductScreenshotsAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductScreenshots>, string> getDataCollectionAsyncDelegate,
             IConvertDelegate<ProductScreenshots, long> convertProductToIndexDelegate,

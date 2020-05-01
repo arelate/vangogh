@@ -1,6 +1,7 @@
 using Interfaces.Delegates.Data;
 using Models.ProductTypes;
 using Attributes;
+using Delegates.Data.Models.ProductTypes;
 
 namespace Delegates.Confirm.ProductTypes
 {
@@ -8,7 +9,7 @@ namespace Delegates.Confirm.ProductTypes
         ConfirmDataContainsIdAsyncDelegate<ProductDownloads>
     {
         [Dependencies(
-            "Delegates.Data.Models.ProductTypes.GetProductDownloadsByIdAsyncDelegate,Delegates")]
+            typeof(GetProductDownloadsByIdAsyncDelegate))]
         public ConfirmProductDownloadsContainIdAsyncDelegate(
             IGetDataAsyncDelegate<ProductDownloads, long> getDataByIdAsyncDelegate) : 
             base(getDataByIdAsyncDelegate)

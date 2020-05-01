@@ -1,13 +1,14 @@
 using Attributes;
 using Interfaces.Delegates.Collections;
 using Models.ProductTypes;
+using Delegates.Collections.ProductTypes;
 
 namespace Delegates.Collections.ProductTypes
 {
     public class FindUpdatedDelegate : FindDelegate<long>
     {
         [Dependencies(
-            "Delegates.Collections.ProductTypes.FindAllUpdatedDelegate,Delegates")]
+            typeof(FindAllUpdatedDelegate))]
         public FindUpdatedDelegate(
             IFindAllDelegate<long> findAllUpdatedDelegate) :
             base(findAllUpdatedDelegate)

@@ -4,6 +4,8 @@ using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.Units;
+using Delegates.Format.Numbers;
+using Delegates.Activities;
 
 namespace Delegates.Constrain
 {
@@ -14,9 +16,9 @@ namespace Delegates.Constrain
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Format.Numbers.FormatSecondsDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(FormatSecondsDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public ConstrainExecutionAsyncDelegate(
             IFormatDelegate<long, string> formatSecondsDelegate,
             IStartDelegate startDelegate,

@@ -13,6 +13,10 @@ using GOG.Interfaces.Delegates.GetDeserialized;
 using Attributes;
 using Models.Dependencies;
 using GOG.Models;
+using Delegates.Convert.Network;
+using Delegates.Convert;
+using Delegates.Replace;
+using Delegates.Collections.System;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
@@ -43,18 +47,18 @@ namespace GOG.Delegates.GetDeserialized.ProductTypes
         private readonly IMapDelegate<string> mapStringDelegate;
 
         [Dependencies(
-            "Delegates.Convert.Network.ConvertUriDictionaryParametersToUriDelegate,Delegates",
-            "GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate,GOG.Delegates",
-            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate,GOG.Delegates",
-            "Delegates.Convert.ConvertLanguageToCodeDelegate,Delegates",
-            "GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate,GOG.Delegates",
-            "GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadLanguagesDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadsDelegate,GOG.Delegates",
-            "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates",
-            "GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate,GOG.Delegates",
-            "Delegates.Collections.System.MapStringDelegate,Delegates")]
+            typeof(ConvertUriDictionaryParametersToUriDelegate),
+            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate),
+            typeof(ConvertLanguageToCodeDelegate),
+            typeof(GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate),
+            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate),
+            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadLanguagesDelegate),
+            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadsDelegate),
+            typeof(ReplaceMultipleStringsDelegate),
+            typeof(GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate),
+            typeof(MapStringDelegate))]
         public GetDeserializedGameDetailsAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,

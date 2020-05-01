@@ -19,9 +19,9 @@ namespace Delegates.Convert.Requests
         private readonly IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExlusiveStringDelegate;
 
         [Dependencies(
-            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
-            "Delegates.Confirm.System.ConfirmExclusiveStringDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindMethodDelegate),
+            typeof(Delegates.Confirm.System.ConfirmExclusiveStringDelegate))]
         public ConvertRequestsDataToResolvedCollectionsDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,

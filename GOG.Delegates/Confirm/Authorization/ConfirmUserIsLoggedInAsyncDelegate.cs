@@ -6,6 +6,8 @@ using Interfaces.Delegates.Activities;
 using Models.Uris;
 using GOG.Models;
 using Attributes;
+using Delegates.Data.Network;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Confirm.Authorization
 {
@@ -18,10 +20,10 @@ namespace GOG.Delegates.Confirm.Authorization
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Data.Network.GetUriDataAsyncDelegate,Delegates",
-            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToUserDataDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetUriDataAsyncDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToUserDataDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public ConfirmUserIsLoggedInAsyncDelegate(
             IGetDataAsyncDelegate<string, string> getUriDataAsyncDelegate,
             IConvertDelegate<string, UserData> convertJSONToUserDataDelegate,

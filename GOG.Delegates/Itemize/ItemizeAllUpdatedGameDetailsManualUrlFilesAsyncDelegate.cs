@@ -4,6 +4,8 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Itemize
 {
@@ -17,12 +19,12 @@ namespace GOG.Delegates.Itemize
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.Itemize.ProductTypes.ItemizeAllUpdatedAsyncDelegate,Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeGameDetailsFilesAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(ItemizeAllUpdatedAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsFilesAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,

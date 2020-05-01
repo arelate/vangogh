@@ -2,6 +2,7 @@
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Replace;
 using Attributes;
+using Delegates.Replace;
 
 namespace GOG.Delegates.Convert.ProductTypes
 {
@@ -10,7 +11,7 @@ namespace GOG.Delegates.Convert.ProductTypes
         private readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
         [Dependencies(
-            "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates")]
+            typeof(ReplaceMultipleStringsDelegate))]
         public ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate(
             IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
         {

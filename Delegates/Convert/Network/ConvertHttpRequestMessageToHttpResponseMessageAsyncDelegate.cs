@@ -12,7 +12,7 @@ namespace Delegates.Convert.Network
         private readonly IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate;
 
         [Dependencies(
-            "Delegates.GetInstance.Network.GetHttpClientInstanceDelegate,Delegates")]
+            typeof(Delegates.GetInstance.Network.GetHttpClientInstanceDelegate))]
         public ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate(
             IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate)
         {

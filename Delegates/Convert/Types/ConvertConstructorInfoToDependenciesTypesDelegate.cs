@@ -9,58 +9,38 @@ namespace Delegates.Convert.Types
 {
     public sealed class ConvertConstructorInfoToDependenciesTypesDelegate : IConvertDelegate<ConstructorInfo, Type[]>
     {
-        private readonly Dictionary<string, string> contextualTypeReplacementMap;
+        private readonly Dictionary<Type, Type> contextualTypeReplacements;
 
         public ConvertConstructorInfoToDependenciesTypesDelegate(
-            Dictionary<string, string> contextualTypeReplacementMap = null)
+            Dictionary<Type, Type> contextualTypeReplacements = null)
         {
-            this.contextualTypeReplacementMap = contextualTypeReplacementMap;
+            this.contextualTypeReplacements = contextualTypeReplacements;
         }
 
         public Type[] Convert(ConstructorInfo constructorInfo)
         {
-            Type[] implementationTypeDependencies = null;
-
             if (constructorInfo == null)
                 return Type.EmptyTypes;
 
-            var dependenciesAttributes = constructorInfo.GetCustomAttributes(
-                typeof(DependenciesAttribute));
+            var dependenciesAttribute = constructorInfo.GetCustomAttribute(
+                typeof(DependenciesAttribute))
+                as DependenciesAttribute;
 
-            if (!dependenciesAttributes.Any())
-                return Type.EmptyTypes;
+            if (dependenciesAttribute == null) return Type.EmptyTypes;
 
-            var resolvedDependencies =
-                new string[(dependenciesAttributes.First() as DependenciesAttribute).Dependencies.Length];
-            foreach (var attribute in dependenciesAttributes)
+            var resolvedDependencies = new Type[dependenciesAttribute.Dependencies.Length];
+            dependenciesAttribute.Dependencies.CopyTo(resolvedDependencies, 0);
+
+            if (contextualTypeReplacements == null) return resolvedDependencies;
+            
+            for (var ii = 0; ii < resolvedDependencies.Length; ii++)
             {
-                var dependenciesAttribute = attribute as DependenciesAttribute;
-                // Skip dependencies attributes for non-matching contexts
-                for (var dd = 0; dd < dependenciesAttribute.Dependencies.Length; dd++)
-                {
-                    if (string.IsNullOrEmpty(dependenciesAttribute.Dependencies[dd])) continue;
-                    resolvedDependencies[dd] = dependenciesAttribute.Dependencies[dd];
-                }
+                var type = resolvedDependencies[ii];
+                if (contextualTypeReplacements.ContainsKey(type))
+                    resolvedDependencies[ii] = contextualTypeReplacements[type];
             }
 
-            if (contextualTypeReplacementMap != null)
-                for (var ii = 0; ii < resolvedDependencies.Length; ii++)
-                {
-                    var type = resolvedDependencies[ii];
-                    if (contextualTypeReplacementMap.ContainsKey(type))
-                        resolvedDependencies[ii] = contextualTypeReplacementMap[type];
-                }
-
-            implementationTypeDependencies = new Type[resolvedDependencies.Length];
-            for (var rr = 0; rr < resolvedDependencies.Length; rr++)
-            {
-                var type = Type.GetType(resolvedDependencies[rr]);
-                if (type == null)
-                    throw new ArgumentNullException($"Couldn't find the dependency type: {resolvedDependencies[rr]}");
-                implementationTypeDependencies[rr] = type;
-            }
-
-            return implementationTypeDependencies;
+            return resolvedDependencies;
         }
     }
 }

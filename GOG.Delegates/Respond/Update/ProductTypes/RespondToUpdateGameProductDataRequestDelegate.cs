@@ -6,6 +6,8 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -14,15 +16,15 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         RespondToUpdateMasterDetailsRequestDelegate<GameProductData, Product>
     {
         [Dependencies(
-            "Delegates.GetValue.Uri.ProductTypes.GetGameProductDataUpdateUriDelegate,Delegates",
-            "GOG.Delegates.Convert.UpdateIdentity.ConvertProductToGameProductDataUpdateIdentityDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.UpdateGameProductDataAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.CommitGameProductDataAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsGameProductDataGapsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameProductDataAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GetGameProductDataUpdateUriDelegate),
+            typeof(GOG.Delegates.Convert.UpdateIdentity.ConvertProductToGameProductDataUpdateIdentityDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateGameProductDataAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitGameProductDataAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsGameProductDataGapsAsyncDelegate),
+            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameProductDataAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateGameProductDataRequestDelegate(
             IGetValueDelegate<string> getGameProductDataUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToGameProductDataUpdateIdentityDelegate,

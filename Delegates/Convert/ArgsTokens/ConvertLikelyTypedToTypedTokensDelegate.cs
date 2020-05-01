@@ -20,9 +20,9 @@ namespace Delegates.Convert.ArgsTokens
         private IFindDelegate<Parameter> findParameterDelegate;
 
         [Dependencies(
-            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
-            "Delegates.Collections.ArgsDefinitions.FindParameterDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindMethodDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindParameterDelegate))]
         public ConvertLikelyTypedToTypedTokensDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,

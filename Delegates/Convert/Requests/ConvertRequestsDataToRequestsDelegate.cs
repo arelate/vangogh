@@ -19,9 +19,9 @@ namespace Delegates.Convert.Requests
         private IIntersectDelegate<string> intersectStringDelegate;
 
         [Dependencies(
-            "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-            "Delegates.Collections.ArgsDefinitions.FindMethodDelegate,Delegates",
-            "Delegates.Collections.System.IntersectStringDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindMethodDelegate),
+            typeof(Delegates.Collections.System.IntersectStringDelegate))]
         public ConvertRequestsDataToRequestsDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
             IFindDelegate<Method> findMethodDelegate,

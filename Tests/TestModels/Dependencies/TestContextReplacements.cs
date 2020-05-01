@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
+using TestDelegates.Data.ArgsDefinitions;
+using Delegates.Data.Storage.ArgsDefinitions;
 
 namespace TestModels.Dependencies
 {
     public static class TestContextReplacements
     {
-        public static Dictionary<string, string> Map = new Dictionary<string, string>()
+        public static Dictionary<Type, Type> Map = new Dictionary<Type, Type>()
         {
             {
-                "Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate,Delegates",
-                "TestDelegates.Data.ArgsDefinitions.GetTestArgsDefinitionsDataAsyncDelegate,Tests"
+                typeof(GetArgsDefinitionsDataFromPathAsyncDelegate),
+                typeof(GetTestArgsDefinitionsDataAsyncDelegate)
             }
         };
     }

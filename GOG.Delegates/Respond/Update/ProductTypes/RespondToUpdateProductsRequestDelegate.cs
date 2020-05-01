@@ -6,6 +6,7 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
 using GOG.Interfaces.Delegates.GetPageResults;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -15,13 +16,13 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         RespondToUpdatePageResultRequestDelegate<ProductsPageResult, Product>
     {
         [Dependencies(
-            "GOG.Delegates.GetPageResults.ProductTypes.GetProductsPageResultsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeProductsPageResultProductsDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.UpdateProductsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.CommitProductsAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.GetPageResults.ProductTypes.GetProductsPageResultsAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeProductsPageResultProductsDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateProductsAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitProductsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateProductsRequestDelegate(
             IGetPageResultsAsyncDelegate<ProductsPageResult> getProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<ProductsPageResult>, Product> itemizeProductsPageResultsDelegate,

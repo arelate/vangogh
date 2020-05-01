@@ -4,14 +4,15 @@ using Delegates.Data.Storage;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.GetPath;
 using GOG.Models;
+using Delegates.GetPath.ProductTypes;
 
 namespace GOG.Delegates.Data.Storage.ProductTypes
 {
     public class PostListGameProductDataDataToPathAsyncDelegate : PostJSONDataToPathAsyncDelegate<List<GameProductData>>
     {
         [Dependencies(
-            "GOG.Delegates.Data.Storage.ProductTypes.PostListGameProductDataDataAsyncDelegate,GOG.Delegates",
-            "Delegates.GetPath.ProductTypes.GetGameProductDataPathDelegate,Delegates")]
+            typeof(GOG.Delegates.Data.Storage.ProductTypes.PostListGameProductDataDataAsyncDelegate),
+            typeof(GetGameProductDataPathDelegate))]
         public PostListGameProductDataDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<GameProductData>> postListGameProductDataDataAsyncDelegate,
             IGetPathDelegate getGameProductDataPathDelegate) :

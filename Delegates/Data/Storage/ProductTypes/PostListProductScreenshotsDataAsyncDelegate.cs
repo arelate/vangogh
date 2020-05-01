@@ -9,8 +9,8 @@ namespace Delegates.Data.Storage.ProductTypes
     public class PostListProductScreenshotsDataAsyncDelegate : PostJSONDataAsyncDelegate<List<ProductScreenshots>>
     {
         [Dependencies(
-            "Delegates.Data.Storage.PostStringDataAsyncDelegate,Delegates",
-            "Delegates.Convert.JSON.ProductTypes.ConvertListProductScreenshotsToJSONDelegate,Delegates")]
+            typeof(Delegates.Data.Storage.PostStringDataAsyncDelegate),
+            typeof(Delegates.Convert.JSON.ProductTypes.ConvertListProductScreenshotsToJSONDelegate))]
         public PostListProductScreenshotsDataAsyncDelegate(
             IPostDataAsyncDelegate<string> postStringDataAsyncDelegate,
             IConvertDelegate<List<ProductScreenshots>, string> convertListProductScreenshotsToJSONDelegate) :

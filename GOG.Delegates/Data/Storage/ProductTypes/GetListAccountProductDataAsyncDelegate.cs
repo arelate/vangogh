@@ -4,14 +4,15 @@ using Delegates.Data.Storage;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using GOG.Models;
+using Delegates.Data.Storage;
 
 namespace GOG.Delegates.Data.Storage.ProductTypes
 {
     public class GetListAccountProductDataAsyncDelegate : GetJSONDataAsyncDelegate<List<AccountProduct>>
     {
         [Dependencies(
-            "Delegates.Data.Storage.GetStringDataAsyncDelegate,Delegates",
-            "GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToListAccountProductDelegate,GOG.Delegates")]
+            typeof(GetStringDataAsyncDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToListAccountProductDelegate))]
         public GetListAccountProductDataAsyncDelegate(
             IGetDataAsyncDelegate<string,string> getStringDataAsyncDelegate,
             IConvertDelegate<string, List<AccountProduct>> convertJSONToListAccountProductDelegate) :

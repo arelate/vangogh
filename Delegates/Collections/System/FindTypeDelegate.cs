@@ -7,7 +7,7 @@ namespace Delegates.Collections.System
     public class FindTypeDelegate : FindDelegate<Type>
     {
         [Dependencies(
-            "Delegates.Collections.System.FindAllTypeDelegate,Delegates")]
+            typeof(FindAllTypeDelegate))]
         public FindTypeDelegate(
             IFindAllDelegate<Type> findAllTypeDelegate) :
             base(findAllTypeDelegate)

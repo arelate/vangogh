@@ -5,6 +5,9 @@ using GOG.Interfaces.Delegates.GetDownloadSources;
 using Attributes;
 using GOG.Models;
 using Models.ProductTypes;
+using Delegates.Data.Models.ProductTypes;
+using Delegates.Activities;
+using Delegates.GetDirectory.ProductTypes;
 
 namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
@@ -14,16 +17,16 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         RespondToUpdateDownloadsRequestDelegate<ProductScreenshots>
     {
         [Dependencies(
-            "GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate,GOG.Delegates",
-            "Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate,GOG.Delegates",
-            "Delegates.Data.Models.ProductTypes.GetProductDownloadsByIdAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.UpdateProductDownloadsAsyncDelegate,Delegates",
-            "Delegates.Data.Models.ProductTypes.CommitProductDownloadsAsyncDelegate,Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate),
+            typeof(GetScreenshotsDirectoryDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate),
+            typeof(GetProductDownloadsByIdAsyncDelegate),
+            typeof(UpdateProductDownloadsAsyncDelegate),
+            typeof(CommitProductDownloadsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateProductScreenshotsDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
             IGetDirectoryDelegate getProductScreenshotsDirectoryDelegate,

@@ -5,6 +5,7 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
 using GOG.Interfaces.Delegates.GetPageResults;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -14,13 +15,13 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         RespondToUpdatePageResultRequestDelegate<AccountProductsPageResult, AccountProduct>
     {
         [Dependencies(
-            "GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.UpdateAccountProductsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Data.Models.ProductTypes.CommitAccountProductsAsyncDelegate,GOG.Delegates",
-            "Delegates.Activities.StartDelegate,Delegates",
-            "Delegates.Activities.SetProgressDelegate,Delegates",
-            "Delegates.Activities.CompleteDelegate,Delegates")]
+            typeof(GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateAccountProductsAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitAccountProductsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateAccountProductsRequestDelegate(
             IGetPageResultsAsyncDelegate<AccountProductsPageResult> 
                 getAccountProductsPageResultsAsyncDelegate,

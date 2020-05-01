@@ -7,7 +7,7 @@ namespace Delegates.GetDirectory.ProductTypes
     public class GetProductFilesDirectoryDelegate : GetUriDirectoryDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates")]
+            typeof(Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate))]
         public GetProductFilesDirectoryDelegate(
             IGetDirectoryDelegate getProductFilesRootDirectoryDelegate) :
             base(getProductFilesRootDirectoryDelegate)

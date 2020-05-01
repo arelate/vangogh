@@ -4,6 +4,7 @@ using Attributes;
 using Interfaces.Delegates.GetInstance;
 using Interfaces.Delegates.Constrain;
 using Delegates.Convert.Network;
+using Delegates.GetInstance.Network;
 
 namespace GOG.Delegates.Convert.Network
 {
@@ -13,8 +14,8 @@ namespace GOG.Delegates.Convert.Network
         private readonly IConstrainAsyncDelegate<string> constrainUriAsyncDelegate;
 
         [Dependencies(
-            "Delegates.GetInstance.Network.GetHttpClientInstanceDelegate,Delegates",
-            "GOG.Delegates.Constrain.Network.ConstrainGOGRequestRateAsyncDelegate,GOG.Delegates")]
+            typeof(GetHttpClientInstanceDelegate),
+            typeof(GOG.Delegates.Constrain.Network.ConstrainGOGRequestRateAsyncDelegate))]
         public ConvertHttpRequestMessageToHttpResponseMethodRateLimitedAsyncDelegate(
             IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate,
             IConstrainAsyncDelegate<string> constrainUriAsyncDelegate) :

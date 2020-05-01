@@ -2,6 +2,7 @@
 using Interfaces.Delegates.Download;
 using GOG.Interfaces.Delegates.DownloadProductFile;
 using Attributes;
+using Delegates.Download;
 
 namespace GOG.Delegates.DownloadProductFile
 {
@@ -10,7 +11,7 @@ namespace GOG.Delegates.DownloadProductFile
         private readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
 
         [Dependencies(
-            "Delegates.Download.DownloadFromUriAsyncDelegate,Delegates")]
+            typeof(DownloadFromUriAsyncDelegate))]
         public DownloadProductImageAsyncDelegate(IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate)
         {
             this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
@@ -18,9 +19,10 @@ namespace GOG.Delegates.DownloadProductFile
 
         public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
         {
-            await downloadFromUriAsyncDelegate?.DownloadFromUriAsync(
-                sourceUri,
-                destination);
+            if (downloadFromUriAsyncDelegate != null)
+                await downloadFromUriAsyncDelegate?.DownloadFromUriAsync(
+                    sourceUri,
+                    destination);
         }
     }
 }
