@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-
+using Delegates.Collections.Requests;
 using Xunit;
+using Interfaces.Delegates.Collections;
+using Tests.TestDelegates.Convert.Types;
 
-using Interfaces.Delegates.Sort;
-
-using Controllers.Instances;
-
-namespace Delegates.Sort.Requests.Tests
+namespace Delegates.Collections.Requests.Tests
 {
     public class MethodOrderCompareDelegateTests
     {
@@ -15,11 +13,10 @@ namespace Delegates.Sort.Requests.Tests
 
         public MethodOrderCompareDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            sortRequestsMethodsByOrderAsyncDelegate = singletonInstancesController.GetInstance(
-                typeof(SortRequestsMethodsByOrderAsyncDelegate))
-                as SortRequestsMethodsByOrderAsyncDelegate;
+            sortRequestsMethodsByOrderAsyncDelegate =
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                        typeof(SortRequestsMethodsByOrderAsyncDelegate))
+                    as SortRequestsMethodsByOrderAsyncDelegate;
         }
 
         [Theory]
@@ -27,7 +24,7 @@ namespace Delegates.Sort.Requests.Tests
         [InlineData(true, "authorize", "update")]
         public async void CanCompareMethodOrder(bool expectedOrder, string method1, string method2)
         {
-            var methods = new List<string>() { method1, method2 };
+            var methods = new List<string>() {method1, method2};
             await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
                 methods);
 
@@ -46,12 +43,12 @@ namespace Delegates.Sort.Requests.Tests
         [InlineData(null, null)]
         public async void MethodOrderCompareDelegateThrowsForUnknownMethods(string method1, string method2)
         {
-            var methods = new List<string>() { method1, method2 };
+            var methods = new List<string>() {method1, method2};
 
             await Assert.ThrowsAsync<InvalidOperationException>(
                 async () =>
-                await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
-                    methods));
+                    await sortRequestsMethodsByOrderAsyncDelegate.SortAsync(
+                        methods));
         }
     }
 }

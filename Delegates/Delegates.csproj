@@ -5,9 +5,9 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Attributes\Attributes.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Attributes\Attributes.csproj" />
   </ItemGroup>
   
 </Project>

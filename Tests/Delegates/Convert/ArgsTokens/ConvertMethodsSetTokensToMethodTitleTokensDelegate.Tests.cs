@@ -2,37 +2,39 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Xunit;
-
 using Interfaces.Delegates.Convert;
-
-using Controllers.Instances;
-
 using Models.ArgsTokens;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
     public class ConvertMethodsSetTokensToMethodTitleTokensDelegateTests
     {
-        private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
-        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertLikelyTypedToTypedTokensDelegate;
-        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>> convertMethodsSetTokensToMethodTitleTokensDelegate;
+        private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
+            convertTokensToLikelyTypedTokensDelegate;
+
+        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>>
+            convertLikelyTypedToTypedTokensDelegate;
+
+        private readonly IConvertAsyncDelegate<IAsyncEnumerable<(string, Tokens)>, IAsyncEnumerable<(string, Tokens)>>
+            convertMethodsSetTokensToMethodTitleTokensDelegate;
 
         public ConvertMethodsSetTokensToMethodTitleTokensDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertTokensToLikelyTypedTokensDelegate))
+            convertTokensToLikelyTypedTokensDelegate = 
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
 
-            this.convertLikelyTypedToTypedTokensDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertLikelyTypedToTypedTokensDelegate))
+            convertLikelyTypedToTypedTokensDelegate = 
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertLikelyTypedToTypedTokensDelegate))
                 as ConvertLikelyTypedToTypedTokensDelegate;
 
-            this.convertMethodsSetTokensToMethodTitleTokensDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))
+            convertMethodsSetTokensToMethodTitleTokensDelegate = 
+                DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertMethodsSetTokensToMethodTitleTokensDelegate))
                 as ConvertMethodsSetTokensToMethodTitleTokensDelegate;
         }
 
@@ -43,7 +45,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
 
             var typedTokens = convertLikelyTypedToTypedTokensDelegate.ConvertAsync(
                 likelyTypedTokes);
-            
+
             var methodTitleTokens = convertMethodsSetTokensToMethodTitleTokensDelegate.ConvertAsync(
                 typedTokens);
 
@@ -60,7 +62,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
         public async Task CanConvertMethodsSetTokensToMethodTitleTokens(string token)
         {
             var typedTokens = await ConvertTokensToTypedMethodTitleTokens(
-                new string[] { token });
+                new string[] {token});
 
             Assert.Equal(3, typedTokens.Count());
             foreach (var typedToken in typedTokens)
@@ -76,7 +78,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
         public async void ConvertMethodsSetTokensToMethodTitleTokensDelegatePassesThroughOtherTypes(string token)
         {
             var typedTokens = await ConvertTokensToTypedMethodTitleTokens(
-                new string[] { token });
+                new string[] {token});
 
             Assert.Single(typedTokens);
             Assert.NotEqual(Tokens.MethodsSet, typedTokens.ElementAt(0).Item2);

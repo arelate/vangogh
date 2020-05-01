@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Convert;
-
 using Models.Requests;
 
 namespace Delegates.Convert.Requests
 {
-    public class ConvertParametersToStringDelegate : 
+    public class ConvertParametersToStringDelegate :
         IConvertDelegate<IDictionary<string, IEnumerable<string>>, string>
     {
         public string Convert(IDictionary<string, IEnumerable<string>> parameters)
@@ -15,9 +13,7 @@ namespace Delegates.Convert.Requests
             foreach (var parameter in parameters)
                 parameterValues.Add($"{parameter.Key}={string.Join(",", parameter.Value)}");
 
-            return parameterValues.Count > 0 ?
-                "?" + string.Join("&", parameterValues) :
-                string.Empty;
+            return parameterValues.Count > 0 ? "?" + string.Join("&", parameterValues) : string.Empty;
         }
     }
 }

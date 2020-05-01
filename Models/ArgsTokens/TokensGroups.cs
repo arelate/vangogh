@@ -13,24 +13,33 @@ namespace Models.ArgsTokens
         // If the current group doesn't contain expected tokens we can saely advance to the next groups
 
         public static IDictionary<Groups, Tokens[]> ParsingExpectations =
-        new Dictionary<Groups, Tokens[]>()
-        {
-            { 
-                Groups.Methods, 
-                new Tokens[] { 
-                    Tokens.LikelyMethodsAbbrevation,
-                    Tokens.MethodsSet, 
-                    Tokens.MethodTitle }},
-            { 
-                Groups.Collections, 
-                new Tokens[] { 
-                    Tokens.CollectionTitle }},
-            { 
-                Groups.ParametersValues, 
-                new Tokens[] {
-                    Tokens.ParameterTitle, 
-                    Tokens.LikelyParameterValue }}
-        };
+            new Dictionary<Groups, Tokens[]>()
+            {
+                {
+                    Groups.Methods,
+                    new Tokens[]
+                    {
+                        Tokens.LikelyMethodsAbbrevation,
+                        Tokens.MethodsSet,
+                        Tokens.MethodTitle
+                    }
+                },
+                {
+                    Groups.Collections,
+                    new Tokens[]
+                    {
+                        Tokens.CollectionTitle
+                    }
+                },
+                {
+                    Groups.ParametersValues,
+                    new Tokens[]
+                    {
+                        Tokens.ParameterTitle,
+                        Tokens.LikelyParameterValue
+                    }
+                }
+            };
 
         // public static ArgsTokenGroup StartArgsTokenGroup = ArgsTokenGroup.Methods;
     }

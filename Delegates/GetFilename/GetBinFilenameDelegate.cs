@@ -1,14 +1,13 @@
 ﻿using Interfaces.Delegates.GetFilename;
+using Models.Extensions;
 
 namespace Delegates.GetFilename
 {
     public class GetBinFilenameDelegate : IGetFilenameDelegate
     {
-        const string extension = ".bin";
-
         public string GetFilename(string source = null)
         {
-            return source + extension;
+            return source + Extensions.BIN;
         }
     }
 }

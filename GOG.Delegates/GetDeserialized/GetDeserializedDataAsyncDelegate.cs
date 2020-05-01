@@ -1,35 +1,38 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Serialization;
-
+using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Data;
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.GetDeserialized
 {
     public abstract class GetDeserializedDataAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
     {
-        readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;
-        readonly ISerializationController<string> serializationController;
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
+            convertUriParametersToUriDelegate;
+
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
+        private readonly IItemizeDelegate<string, string> itemizeGogDataDelegate;
+        private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
 
         public GetDeserializedDataAsyncDelegate(
-            IGetResourceAsyncDelegate getResourceAsyncDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
             IItemizeDelegate<string, string> itemizeGogDataDelegate,
-            ISerializationController<string> serializationController)
+            IConvertDelegate<string, T> convertJSONToTypeDelegate)
         {
-            this.getResourceAsyncDelegate = getResourceAsyncDelegate;
+            this.convertUriParametersToUriDelegate = convertUriParametersToUriDelegate;
+            this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
             this.itemizeGogDataDelegate = itemizeGogDataDelegate;
-            this.serializationController = serializationController;
+            this.convertJSONToTypeDelegate = convertJSONToTypeDelegate;
         }
 
         public async Task<T> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await getResourceAsyncDelegate.GetResourceAsync(uri, parameters);
+            var uriParameters = convertUriParametersToUriDelegate.Convert((uri, parameters));
+            var response = await getUriDataAsyncDelegate.GetDataAsync(uriParameters);
 
             var dataCollection = itemizeGogDataDelegate.Itemize(response);
 
@@ -38,7 +41,7 @@ namespace GOG.Delegates.GetDeserialized
 
             var content = dataCollection.Single();
 
-            var gogData = serializationController.Deserialize<T>(content);
+            var gogData = convertJSONToTypeDelegate.Convert(content);
             return gogData;
         }
     }

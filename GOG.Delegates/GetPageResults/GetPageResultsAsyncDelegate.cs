@@ -1,43 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
-
-using Interfaces.Controllers.Serialization;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Activities;
 using Models.Units;
-
 using GOG.Interfaces.Delegates.GetPageResults;
 using GOG.Interfaces.Delegates.RequestPage;
-
 using GOG.Models;
 
 namespace GOG.Delegates.GetPageResults
 {
     public abstract class GetPageResultsAsyncDelegate<T> : IGetPageResultsAsyncDelegate<T> where T : PageResult
     {
-        readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
-        readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
-        readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
-        readonly ISerializationController<string> serializationController;
-        readonly IActionLogController actionLogController;
+        private readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
+        private readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
+        private readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
+        private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public GetPageResultsAsyncDelegate(
             IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
-            ISerializationController<string> serializationController,
-            IActionLogController actionLogController)
+            IConvertDelegate<string, T> convertJSONToTypeDelegate,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.getPageResultsUpdateUriDelegate = getPageResultsUpdateUriDelegate;
             this.getPageResultsUpdateQueryParametersDelegate = getPageResultsUpdateQueryParametersDelegate;
 
             this.requestPageAsyncDelegate = requestPageAsyncDelegate;
-            this.serializationController = serializationController;
+            this.convertJSONToTypeDelegate = convertJSONToTypeDelegate;
 
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<IList<T>> GetPageResultsAsync()
@@ -60,28 +60,27 @@ namespace GOG.Delegates.GetPageResults
             var requestUri = getPageResultsUpdateUriDelegate.GetValue();
             var requestParameters = getPageResultsUpdateQueryParametersDelegate.GetValue();
 
-            actionLogController.StartAction($"Request pages data");
+            startDelegate.Start($"Request pages data");
 
             do
             {
                 var response = await requestPageAsyncDelegate.RequestPageAsync(
-                    requestUri, 
-                    requestParameters, 
+                    requestUri,
+                    requestParameters,
                     currentPage);
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
-                pageResult = serializationController.Deserialize<T>(response);
+                pageResult = convertJSONToTypeDelegate.Convert(response);
 
                 if (pageResult == null) continue;
 
                 totalPages = pageResult.TotalPages;
 
                 pageResults.Add(pageResult);
-
             } while (++currentPage <= totalPages);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return pageResults;
         }

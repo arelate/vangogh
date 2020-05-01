@@ -1,98 +1,101 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Respond;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using Models.Separators;
-
 using GOG.Interfaces.Delegates.DownloadProductFile;
 
 namespace GOG.Delegates.Respond.Download
 {
-    public abstract class RespondToDownloadRequestDelegate<Type>: IRespondAsyncDelegate
-        where Type:ProductCore
+    public abstract class RespondToDownloadRequestDelegate<Type> : IRespondAsyncDelegate
+        where Type : ProductCore
     {
-        readonly IDataController<ProductDownloads> productDownloadsDataController;
-        readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IItemizeAllAsyncDelegate<ProductDownloads> itemizeAllProductDownloadsAsyncDelegate;
+        private readonly IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate;
+        private readonly IDeleteAsyncDelegate<ProductDownloads> deleteProductDownloadsAsyncDelegate;
+        private readonly IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public RespondToDownloadRequestDelegate(
-            IDataController<ProductDownloads> productDownloadsDataController,
+            IItemizeAllAsyncDelegate<ProductDownloads> itemizeAllProductDownloadsAsyncDelegate,
+            IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate,
+            IDeleteAsyncDelegate<ProductDownloads> deleteProductDownloadsAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.productDownloadsDataController = productDownloadsDataController;
+            this.itemizeAllProductDownloadsAsyncDelegate = itemizeAllProductDownloadsAsyncDelegate;
+            this.updateProductDownloadsAsyncDelegate = updateProductDownloadsAsyncDelegate;
+            this.deleteProductDownloadsAsyncDelegate = deleteProductDownloadsAsyncDelegate;
             this.downloadProductFileAsyncDelegate = downloadProductFileAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction(
+            startDelegate.Start(
                 $"Process updated {typeof(Type)} downloads");
 
             var emptyProductDownloads = new List<ProductDownloads>();
 
-            await foreach (var productDownloads in productDownloadsDataController.ItemizeAllAsync())
+            await foreach (var productDownloads in itemizeAllProductDownloadsAsyncDelegate.ItemizeAllAsync())
             {
                 if (productDownloads == null) continue;
-
-                // await statusController.UpdateProgressAsync(
-                //     processDownloadsTask,
-                //     ++current,
-                //     total,
-                //     productDownloads.Title);
 
                 // we'll need to remove successfully downloaded files, copying collection
                 var downloadEntries = productDownloads.Downloads.FindAll(
                     d =>
-                    d.Type == typeof(Type).ToString()).ToArray();
+                        d.Type == typeof(Type).ToString()).ToArray();
 
-                actionLogController.StartAction($"Download {typeof(Type)} entries");
+                startDelegate.Start($"Download {typeof(Type)} entries");
 
-                for (var ii = 0; ii < downloadEntries.Length; ii++)
+                foreach (var entry in downloadEntries)
                 {
-                    var entry = downloadEntries[ii];
-
                     var sanitizedUri = entry.SourceUri;
                     if (sanitizedUri.Contains(Separators.QueryString))
-                        sanitizedUri = sanitizedUri.Substring(0, sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
+                        sanitizedUri = sanitizedUri.Substring(0,
+                            sanitizedUri.IndexOf(Separators.QueryString, System.StringComparison.Ordinal));
 
-                   actionLogController.IncrementActionProgress();
+                    setProgressDelegate.SetProgress();
 
-                    await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
-                        productDownloads.Id,
-                        productDownloads.Title,
-                        sanitizedUri,
-                        entry.Destination);
+                    if (downloadProductFileAsyncDelegate != null)
+                        await downloadProductFileAsyncDelegate?.DownloadProductFileAsync(
+                            productDownloads.Id,
+                            productDownloads.Title,
+                            sanitizedUri,
+                            entry.Destination);
 
-                    actionLogController.StartAction($"Remove scheduled {typeof(Type)} downloaded entry");
+                    startDelegate.Start($"Remove scheduled {typeof(Type)} downloaded entry");
 
                     productDownloads.Downloads.Remove(entry);
-                    await productDownloadsDataController.UpdateAsync(productDownloads);
+                    await updateProductDownloadsAsyncDelegate.UpdateAsync(productDownloads);
 
-                    actionLogController.CompleteAction();
+                    completeDelegate.Complete();
                 }
 
                 // if there are no scheduled downloads left - mark file for removal
                 if (productDownloads.Downloads.Count == 0)
                     emptyProductDownloads.Add(productDownloads);
 
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
             }
 
-            actionLogController.StartAction("Clear empty downloads");
+            startDelegate.Start("Clear empty downloads");
 
             foreach (var productDownload in emptyProductDownloads)
-                await productDownloadsDataController.DeleteAsync(productDownload);
+                await deleteProductDownloadsAsyncDelegate.DeleteAsync(productDownload);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

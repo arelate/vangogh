@@ -1,41 +1,46 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Format;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using GOG.Interfaces.Delegates.GetImageUri;
-
 using GOG.Models;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Format.Uri;
+using Delegates.Activities;
 
 namespace GOG.Delegates.GetDownloadSources.ProductTypes
 {
-    public class GetAccountProductImagesDownloadSourcesAsyncDelegate : 
+    public class GetAccountProductImagesDownloadSourcesAsyncDelegate :
         GetProductCoreImagesDownloadSourcesAsyncDelegate<AccountProduct>
     {
         [Dependencies(
-			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-			"GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-			"Delegates.Format.Uri.FormatImagesUriDelegate,Delegates",
-			"GOG.Delegates.GetImageUri.GetAccountProductImageUriDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+            typeof(ItemizeAllUpdatedAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate),
+            typeof(FormatImagesUriDelegate),
+            typeof(GOG.Delegates.GetImageUri.GetAccountProductImageUriDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public GetAccountProductImagesDownloadSourcesAsyncDelegate(
-            IDataController<long> updatedDataController,
-            IDataController<AccountProduct> accountProductsDataController,
+            IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
+            IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
             IFormatDelegate<string, string> formatImagesUriDelegate,
             IGetImageUriDelegate<AccountProduct> getAccountProductImageUriDelegate,
-            IActionLogController actionLogController):
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
-                updatedDataController,
-                accountProductsDataController,
+                itemizeAllUpdatedAsyncDelegate,
+                getAccountProductByIdAsyncDelegate,
                 formatImagesUriDelegate,
                 getAccountProductImageUriDelegate,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }
-
     }
 }

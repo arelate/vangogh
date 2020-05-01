@@ -1,32 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Controllers.Data;
-
-
-
-using Attributes;
-
 using Models.Uris;
 using Models.Settings;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsManualUrlsAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        IDataController<GameDetails> gameDetailsDataController;
-
-		[Dependencies(
-			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers")]
-        public ItemizeGameDetailsManualUrlsAsyncDelegate(
-            IDataController<GameDetails> gameDetailsDataController)
+        public ItemizeGameDetailsManualUrlsAsyncDelegate()
         {
-            this.gameDetailsDataController = gameDetailsDataController;
         }
 
         public async Task<IEnumerable<string>> ItemizeAsync(GameDetails gameDetails)
@@ -37,7 +22,8 @@ namespace GOG.Delegates.Itemize
             if (settings == null ||
                 settings.DownloadsLanguages == null ||
                 settings.DownloadsOperatingSystems == null)
-                throw new System.InvalidOperationException("Cannot enumerate game details without settings (even default).");
+                throw new System.InvalidOperationException(
+                    "Cannot enumerate game details without settings (even default).");
 
             var manualUrls = new List<string>();
 
@@ -63,7 +49,8 @@ namespace GOG.Delegates.Itemize
 
             foreach (var downloadEntry in gameDetailsDownloadEntries)
             {
-                var absoluteUri = string.Format(Uris.Endpoints.ProductFiles.ManualUrlRequestTemplate, downloadEntry.ManualUrl);
+                var absoluteUri = string.Format(Uris.Endpoints.ProductFiles.ManualUrlRequestTemplate,
+                    downloadEntry.ManualUrl);
                 manualUrls.Add(absoluteUri);
             }
 
@@ -74,6 +61,5 @@ namespace GOG.Delegates.Itemize
 
             return manualUrls;
         }
-
     }
 }

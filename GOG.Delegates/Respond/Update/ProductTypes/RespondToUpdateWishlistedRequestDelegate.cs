@@ -1,63 +1,69 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Respond;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using Models.Uris;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
+using Interfaces.Delegates.Data;
+using Delegates.Data.Models.ProductTypes;
+using Delegates.Activities; 
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
     public class RespondToUpdateWishlistedRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
-        readonly IDataController<long> wishlistedDataController;
-        readonly IActionLogController actionLogController;
+        private readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
+        private readonly IUpdateAsyncDelegate<long> updateWishlistedAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitWishlistedAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate,GOG.Delegates",
-            "Controllers.Data.ProductTypes.WishlistedDataController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate),
+            typeof(UpdateWishlistedAsyncDelegate),
+            typeof(CommitWishlistedAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateWishlistedRequestDelegate(
             IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
-            IDataController<long> wishlistedDataController,
-            IActionLogController actionLogController)
+            IUpdateAsyncDelegate<long> updateWishlistedAsyncDelegate,
+            ICommitAsyncDelegate commitWishlistedAsyncDelegate,
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.getProductsPageResultDelegate = getProductsPageResultDelegate;
-            this.wishlistedDataController = wishlistedDataController;
-            this.actionLogController = actionLogController;
+            this.updateWishlistedAsyncDelegate = updateWishlistedAsyncDelegate;
+            this.commitWishlistedAsyncDelegate = commitWishlistedAsyncDelegate;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction("Update Wishlisted");
+            startDelegate.Start("Update Wishlisted");
 
-            actionLogController.StartAction("Request content");
+            startDelegate.Start("Request content");
 
             var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserializedAsync(
                 Uris.Endpoints.Account.Wishlist);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.StartAction("Save");
+            startDelegate.Start("Save");
 
             foreach (var product in wishlistedProductPageResult.Products)
             {
                 if (product == null) continue;
-                await wishlistedDataController.UpdateAsync(product.Id);
+                await updateWishlistedAsyncDelegate.UpdateAsync(product.Id);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            await wishlistedDataController.CommitAsync();
+            await commitWishlistedAsyncDelegate.CommitAsync();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

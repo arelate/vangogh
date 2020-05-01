@@ -1,6 +1,5 @@
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-
 using Attributes;
 
 namespace Delegates.GetPath.ProductTypes
@@ -8,8 +7,8 @@ namespace Delegates.GetPath.ProductTypes
     public class GetUpdatedPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.Root.GetDataDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.ProductTypes.GetUpdatedFilenameDelegate,Delegates")]
+            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate),
+            typeof(Delegates.GetFilename.ProductTypes.GetUpdatedFilenameDelegate))]
         public GetUpdatedPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getUpdatedFilenameDelegate) :

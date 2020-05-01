@@ -1,20 +1,19 @@
-using Interfaces.Controllers.Collection;
-
+using Interfaces.Delegates.Collections;
 using Delegates.Confirm;
-
 using Attributes;
-
 using Models.Separators;
+using Delegates.Collections.System;
 
 namespace GOG.Delegates.Confirm.ProductTypes
 {
     public class ConfirmGameDetailsContainsLanguageDelegate : ConfirmStringMatchesAllDelegate
     {
-        [Dependencies("Controllers.Collection.CollectionController,Controllers")]
+        [Dependencies(
+            typeof(MapStringDelegate))]
         public ConfirmGameDetailsContainsLanguageDelegate(
-            ICollectionController collectionController) :
+            IMapDelegate<string> mapStringDelegate) :
             base(
-                collectionController,
+                mapStringDelegate,
                 Separators.GameDetailsDownloadsStart,
                 Separators.GameDetailsDownloadsEnd)
         {

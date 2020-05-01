@@ -1,14 +1,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
-using Interfaces.Controllers.Collection;
-using Interfaces.Controllers.Stash;
-
 using Interfaces.Delegates.Convert;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Collections;
 using Attributes;
-
 using Models.ArgsDefinitions;
 using Models.Requests;
 
@@ -17,38 +14,40 @@ namespace Delegates.Convert.Requests
     public class ConvertRequestsDataToRequestsDelegate :
         IConvertAsyncDelegate<RequestsData, IAsyncEnumerable<Request>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private IFindDelegate<Method> findMethodDelegate;
+        private IIntersectDelegate<string> intersectStringDelegate;
 
         [Dependencies(
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
-        [TestDependenciesOverrides(
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "")]            
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindMethodDelegate),
+            typeof(Delegates.Collections.System.IntersectStringDelegate))]
         public ConvertRequestsDataToRequestsDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IFindDelegate<Method> findMethodDelegate,
+            IIntersectDelegate<string> intersectStringDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
+            this.findMethodDelegate = findMethodDelegate;
+            this.intersectStringDelegate = intersectStringDelegate;
         }
 
         public async IAsyncEnumerable<Request> ConvertAsync(RequestsData requestsData)
         {
             var requests = new List<Request>();
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             foreach (var method in requestsData.Methods)
             {
-                var methodDefinition = collectionController.Find(
+                var methodDefinition = findMethodDelegate.Find(
                     argsDefinitions.Methods,
                     m => m.Title == method);
 
                 if (methodDefinition == null)
                     throw new ArgumentException();
 
-                var methodCollections = collectionController.Intersect(
+                var methodCollections = intersectStringDelegate.Intersect(
                     requestsData.Collections,
                     methodDefinition.Collections);
 

@@ -1,6 +1,6 @@
 namespace Models.ProductTypes
 {
-    public class ProductDirectory: ProductCore
+    public class ProductDirectory : ProductCore
     {
         // ...
     }

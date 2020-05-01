@@ -19,6 +19,7 @@
         public static string ProductRoutes = "productRoutes";
         public static string ApiProducts = "apiProducts";
         public static string ValidationResults = "validationResults";
+
         public static string Session = "session";
         // public static string Activity = "activity";
     }

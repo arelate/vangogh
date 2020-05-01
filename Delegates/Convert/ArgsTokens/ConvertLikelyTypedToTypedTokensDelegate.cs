@@ -1,13 +1,10 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Convert;
-using Interfaces.Controllers.Collection;
-using Interfaces.Controllers.Stash;
-
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Data;
 using Attributes;
-
 using Models.ArgsTokens;
 using Models.ArgsDefinitions;
 
@@ -15,24 +12,25 @@ namespace Delegates.Convert.ArgsTokens
 {
     public class ConvertLikelyTypedToTypedTokensDelegate :
         IConvertAsyncDelegate<
-            IAsyncEnumerable<(string Token, Tokens Type)>, 
+            IAsyncEnumerable<(string Token, Tokens Type)>,
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private IFindDelegate<Method> findMethodDelegate;
+        private IFindDelegate<Parameter> findParameterDelegate;
 
         [Dependencies(
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
-        [TestDependenciesOverrides(
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "")]
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindMethodDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindParameterDelegate))]
         public ConvertLikelyTypedToTypedTokensDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IFindDelegate<Method> findMethodDelegate,
+            IFindDelegate<Parameter> findParameterDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
+            this.findMethodDelegate = findMethodDelegate;
+            this.findParameterDelegate = findParameterDelegate;
         }
 
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
@@ -41,57 +39,63 @@ namespace Delegates.Convert.ArgsTokens
             if (likelyTypedTokens == null)
                 throw new ArgumentNullException();
 
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             var currentParameterTitle = string.Empty;
             await foreach (var likelyTypedToken in likelyTypedTokens)
             {
                 if (string.IsNullOrEmpty(likelyTypedToken.Token)) continue;
-                
+
                 switch (likelyTypedToken.Type)
                 {
                     case Tokens.LikelyMethodsAbbrevation:
-                        var methodsAbbrevations = 
-                            string.IsNullOrEmpty(likelyTypedToken.Token) ? 
-                            string.Empty :
-                            likelyTypedToken.Token.Substring(
-                                Models.ArgsTokens.Prefixes.MethodsAbbrevation.Length);
+                        var methodsAbbrevations =
+                            string.IsNullOrEmpty(likelyTypedToken.Token)
+                                ? string.Empty
+                                : likelyTypedToken.Token.Substring(
+                                    Prefixes.MethodsAbbrevation.Length);
                         foreach (var methodAbbrevation in methodsAbbrevations)
                         {
-                            var abbrevatedMethod = collectionController.Find(
+                            var abbrevatedMethod = findMethodDelegate.Find(
                                 argsDefinitions.Methods,
                                 method => method.Title.StartsWith(methodAbbrevation));
 
-                            yield return abbrevatedMethod == null ?
-                                (methodAbbrevation.ToString(), Tokens.Unknown) :
-                                (abbrevatedMethod.Title, Tokens.MethodTitle);
+                            yield return abbrevatedMethod == null
+                                ? (methodAbbrevation.ToString(), Tokens.Unknown)
+                                : (abbrevatedMethod.Title, Tokens.MethodTitle);
                         }
+
                         break;
                     case Tokens.LikelyParameterValue:
                         var tokenType = Tokens.Unknown;
-                        
-                        var titledParameter = collectionController.Find(
-                              argsDefinitions.Parameters,
-                              parameter => parameter.Title == currentParameterTitle);
 
-                        if (titledParameter == null) tokenType = Tokens.Unknown;
+                        var titledParameter = findParameterDelegate.Find(
+                            argsDefinitions.Parameters,
+                            parameter => parameter.Title == currentParameterTitle);
+
+                        if (titledParameter == null)
+                        {
+                            tokenType = Tokens.Unknown;
+                        }
                         else
                         {
                             if (titledParameter.Values == null) tokenType = Tokens.ParameterValue;
-                            else tokenType =
-                                titledParameter.Values.Contains(likelyTypedToken.Token) ?
-                                    Tokens.ParameterValue :
-                                    Tokens.Unknown;
+                            else
+                                tokenType =
+                                    titledParameter.Values.Contains(likelyTypedToken.Token)
+                                        ? Tokens.ParameterValue
+                                        : Tokens.Unknown;
                         }
 
                         yield return (likelyTypedToken.Token, tokenType);
                         break;
                     case Tokens.ParameterTitle:
                         currentParameterTitle =
-                            string.IsNullOrEmpty(likelyTypedToken.Token) ?
-                            string.Empty :
-                            likelyTypedToken.Token.Substring(
-                                Models.ArgsTokens.Prefixes.ParameterTitle.Length);
+                            string.IsNullOrEmpty(likelyTypedToken.Token)
+                                ? string.Empty
+                                : likelyTypedToken.Token.Substring(
+                                    Prefixes.ParameterTitle.Length);
                         yield return (currentParameterTitle, Tokens.ParameterTitle);
                         break;
                     default:

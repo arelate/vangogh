@@ -1,45 +1,53 @@
 ﻿using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="apiproducts")]
+    [RespondsToRequests(Method = "update", Collection = "apiproducts")]
     public class RespondToUpdateApiProductsRequestDelegate :
         RespondToUpdateMasterDetailsRequestDelegate<ApiProduct, Product>
     {
         [Dependencies(
-            "Delegates.GetValue.Uri.ProductTypes.GetApiProductsUpdateUriDelegate,Delegates",
-            "GOG.Delegates.Convert.UpdateIdentity.ConvertProductToApiProductUpdateIdentityDelegate,GOG.Delegates",
-            "GOG.Controllers.Data.ProductTypes.ApiProductsDataController,GOG.Controllers",
-            "GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegatepsDelegate,GOG.Delegates",
-            "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GetApiProductsUpdateUriDelegate),
+            typeof(GOG.Delegates.Convert.UpdateIdentity.ConvertProductToApiProductUpdateIdentityDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateApiProductsAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitApiProductsAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegate),
+            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateApiProductsRequestDelegate(
             IGetValueDelegate<string> getApiProductsUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToApiProductUpdateIdentityDelegate,
-            IDataController<ApiProduct> apiProductsDataController,
+            IUpdateAsyncDelegate<ApiProduct> updateApiProductsAsyncDelegate,
+            ICommitAsyncDelegate commitApiProductsAsyncDelegate,
             IItemizeAllAsyncDelegate<Product> itemizeAllProductsApiProductsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<ApiProduct> getDeserializedApiProductAsyncDelegate,
-            IActionLogController actionLogController):
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 getApiProductsUpdateUriDelegate,
                 convertProductToApiProductUpdateIdentityDelegate,
-                apiProductsDataController,
+                updateApiProductsAsyncDelegate,
+                commitApiProductsAsyncDelegate,
                 itemizeAllProductsApiProductsGapsAsyncDelegate,
                 getDeserializedApiProductAsyncDelegate,
-                actionLogController,
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate,
                 null)
-                {
-                    // ...
-                }
+        {
+            // ...
+        }
     }
 }

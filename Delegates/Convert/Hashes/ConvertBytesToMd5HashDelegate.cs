@@ -1,18 +1,17 @@
 ﻿using System.Security.Cryptography;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Convert;
-
 using Attributes;
 
 namespace Delegates.Convert.Hashes
 {
-    public class ConvertBytesToMd5HashDelegate: IConvertAsyncDelegate<byte[], Task<string>>
+    public class ConvertBytesToMd5HashDelegate : IConvertAsyncDelegate<byte[], Task<string>>
     {
-        readonly MD5 md5;
-        readonly IConvertDelegate<byte[], string> byteToStringConversionController;
+        private readonly MD5 md5;
+        private readonly IConvertDelegate<byte[], string> byteToStringConversionController;
 
-        [Dependencies("Delegates.Convert.Bytes.ConvertBytesToStringDelegate,Delegates")]
+        [Dependencies(
+            typeof(Delegates.Convert.Bytes.ConvertBytesToStringDelegate))]
         public ConvertBytesToMd5HashDelegate(
             IConvertDelegate<byte[], string> byteToStringConversionController)
         {
@@ -22,12 +21,13 @@ namespace Delegates.Convert.Hashes
 
         public async Task<string> ConvertAsync(byte[] data)
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 if (data == null)
                     return string.Empty;
 
                 var hashData = md5.ComputeHash(data);
-                return byteToStringConversionController.Convert(hashData);    
+                return byteToStringConversionController.Convert(hashData);
             });
         }
     }

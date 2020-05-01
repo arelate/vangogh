@@ -1,31 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Xunit;
-
-using Controllers.Instances;
-
 using Interfaces.Delegates.Convert;
-
-using Delegates.Convert.Requests;
-
 using Models.Requests;
-
-using TestModels.ArgsDefinitions;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertRequestsDataToResolvedCollectionsDelegateTests
     {
-        private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>> convertRequestsDataToResolvedCollectionsDelegate;
+        private readonly IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
+            convertRequestsDataToResolvedCollectionsDelegate;
 
         public ConvertRequestsDataToResolvedCollectionsDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            convertRequestsDataToResolvedCollectionsDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertRequestsDataToResolvedCollectionsDelegate))
+            convertRequestsDataToResolvedCollectionsDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertRequestsDataToResolvedCollectionsDelegate))
                 as ConvertRequestsDataToResolvedCollectionsDelegate;
         }
 
@@ -37,7 +28,7 @@ namespace Delegates.Convert.Requests.Tests
         [InlineData(1, "authorize", "products")] // not applicable collection
         public async void CanConvertRequestsDataToResolvedCollections(
             int expectedCollectionsCount,
-            string method, 
+            string method,
             params string[] collections)
         {
             var requestsData = new RequestsData();

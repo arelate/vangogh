@@ -1,6 +1,6 @@
 namespace Models.ProductTypes
 {
-    public class ProductFile: ProductCore
+    public class ProductFile : ProductCore
     {
         // ...
     }

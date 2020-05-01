@@ -1,106 +1,101 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
-using Interfaces.Validation;
-using Interfaces.Routing;
-
-using Interfaces.ValidationResults;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using Models.ProductTypes;
-
 using GOG.Models;
+using Interfaces.Delegates.Confirm;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.GetFilename;
+using Delegates.Format.Uri;
+using Delegates.Confirm.Validation;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Data.Routes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Validate
 {
     [RespondsToRequests(Method = "validate", Collection = "productfiles")]
     public class RespondToValidateProductFilesRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IGetDirectoryDelegate productFileDirectoryDelegate;
-        readonly IGetFilenameDelegate productFileFilenameDelegate;
-        readonly IFormatDelegate<string, string> formatValidationFileDelegate;
-        readonly IFileValidationController fileValidationController;
-        readonly IDataController<ValidationResults> validationResultsDataController;
-        readonly IDataController<GameDetails> gameDetailsDataController;
-        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        readonly IDataController<long> updatedDataController;
-        readonly IRoutingController routingController;
-        readonly IActionLogController actionLogController;
+        private readonly IGetDirectoryDelegate productFileDirectoryDelegate;
+        private readonly IGetFilenameDelegate productFileFilenameDelegate;
+        private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
+        private readonly IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate;
+        private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.GetUriFilenameDelegate,Delegates",
-            "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-            "Controllers.Validation.FileValidationController,Controllers",
-            "Controllers.Data.ProductTypes.ValidationResultsDataController,Controllers",
-            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-            "GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-            "Controllers.Routing.RoutingController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GetProductFilesDirectoryDelegate),
+            typeof(GetUriFilenameDelegate),
+            typeof(FormatValidationFileDelegate),
+            typeof(ConfirmFileValidationExpectationsAsyncDelegate),
+            typeof(ItemizeAllUpdatedAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(GetRouteDataAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToValidateProductFilesRequestDelegate(
             IGetDirectoryDelegate productFileDirectoryDelegate,
             IGetFilenameDelegate productFileFilenameDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
-            IFileValidationController fileValidationController,
-            IDataController<ValidationResults> validationResultsDataController,
-            IDataController<GameDetails> gameDetailsDataController,
+            IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate,
+            IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
+            IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IDataController<long> updatedDataController,
-            IRoutingController routingController,
-            IActionLogController actionLogController)
+            IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
             this.productFileFilenameDelegate = productFileFilenameDelegate;
             this.formatValidationFileDelegate = formatValidationFileDelegate;
-            this.fileValidationController = fileValidationController;
-            this.validationResultsDataController = validationResultsDataController;
-            this.gameDetailsDataController = gameDetailsDataController;
+            this.confirmFileValidationExpectationsAsyncDelegate = confirmFileValidationExpectationsAsyncDelegate;
+            this.getGameDetailsByIdAsyncDelegate = getGameDetailsByIdAsyncDelegate;
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
 
-            this.updatedDataController = updatedDataController;
-            this.routingController = routingController;
-            this.actionLogController = actionLogController;
+            this.itemizeAllUpdatedAsyncDelegate = itemizeAllUpdatedAsyncDelegate;
+            this.getRouteDataAsyncDelegate = getRouteDataAsyncDelegate;
+
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction("Validate products");
+            startDelegate.Start("Validate products");
 
-            await foreach (var id in updatedDataController.ItemizeAllAsync())
+            // TODO: Should this be itemizeAllUpdatedGameDetails instead?
+            await foreach (var id in itemizeAllUpdatedAsyncDelegate.ItemizeAllAsync())
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
-                var validationResults = await validationResultsDataController.GetByIdAsync(id);
+                var gameDetails = await getGameDetailsByIdAsyncDelegate.GetDataAsync(id);
 
-                if (validationResults == null)
-                    validationResults = new ValidationResults
-                    {
-                        Id = id,
-                        Title = gameDetails.Title
-                    };
-
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var localFiles = new List<string>();
 
-                actionLogController.StartAction("Enumerate local product files");
+                startDelegate.Start("Enumerate local product files");
                 foreach (var manualUrl in
                     await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
                 {
-                    var resolvedUri = await routingController.TraceRouteAsync(id, manualUrl);
+                    var resolvedUri = await getRouteDataAsyncDelegate.GetDataAsync((id, manualUrl));
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
@@ -109,7 +104,8 @@ namespace GOG.Delegates.Respond.Validate
 
                     localFiles.Add(localFile);
                 }
-                actionLogController.CompleteAction();
+
+                completeDelegate.Complete();
 
 
                 // check if current validation results allow us to skip validating current product
@@ -117,21 +113,20 @@ namespace GOG.Delegates.Respond.Validate
 
                 // ...
 
-                var fileValidationResults = new List<IFileValidationResults>(localFiles.Count);
-
-                actionLogController.StartAction("Validate product files");
+                startDelegate.Start("Validate product files");
 
                 foreach (var localFile in localFiles)
                 {
-                    actionLogController.IncrementActionProgress();
+                    setProgressDelegate.SetProgress();
 
                     var validationFile = formatValidationFileDelegate.Format(localFile);
 
                     try
                     {
-                        fileValidationResults.Add(await fileValidationController.ValidateFileAsync(
+                        if (!await confirmFileValidationExpectationsAsyncDelegate.ConfirmAsync(
                             localFile,
-                            validationFile));
+                            validationFile))
+                            throw new InvalidDataException();
                     }
                     catch (Exception ex)
                     {
@@ -140,16 +135,10 @@ namespace GOG.Delegates.Respond.Validate
                     }
                 }
 
-                actionLogController.CompleteAction();
-
-                validationResults.Files = fileValidationResults.ToArray();
-
-                actionLogController.StartAction("Update validation results");
-                await validationResultsDataController.UpdateAsync(validationResults);
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

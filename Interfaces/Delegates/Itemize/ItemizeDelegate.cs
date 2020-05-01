@@ -13,5 +13,5 @@ namespace Interfaces.Delegates.Itemize
     {
         // TODO: IAsyncEnumerable
         Task<IEnumerable<Output>> ItemizeAsync(Input item);
-    }    
+    }
 }

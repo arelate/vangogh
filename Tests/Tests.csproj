@@ -13,11 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\Delegates\Delegates.csproj" />
     <ProjectReference Include="..\GOG.Delegates\GOG.Delegates.csproj" />
-    <ProjectReference Include="..\GOG.Controllers\GOG.Controllers.csproj" />
-    <ProjectReference Include="..\GOG.Activities\GOG.Activities.csproj" />
   </ItemGroup>
 
 </Project>

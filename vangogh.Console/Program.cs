@@ -1,31 +1,35 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
+﻿using System.Threading.Tasks;
 using Interfaces.Delegates.Respond;
-
-using Controllers.Instances;
-using Controllers.Logs;
-
 using Delegates.Convert.Requests;
+using Delegates.Convert.Types;
+using Delegates.Itemize.Types;
 
 namespace vangogh.Console
 {
-    class Program
+    internal static class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             // DEBUG
-            args = new string[] { "update", "accountproducts" };
+            args = new string[] {"update", "products"};
 
-            var singletonInstancesController = new SingletonInstancesController();
+            var convertTypeToDependenciesConstructorInfoDelegate =
+                new ConvertTypeToDependenciesConstructorInfoDelegate();
 
-            var convertArgsToRequestsDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertArgsToRequestsDelegate))
+            var convertConstructorInfoToDependenciesTypesDelegate =
+                new ConvertConstructorInfoToDependenciesTypesDelegate();
+
+            var convertTypeToInstanceDelegate =
+                new ConvertTypeToInstanceDelegate(
+                    convertTypeToDependenciesConstructorInfoDelegate,
+                    convertConstructorInfoToDependenciesTypesDelegate);
+
+            var convertArgsToRequestsDelegate = convertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertArgsToRequestsDelegate))
                 as ConvertArgsToRequestsDelegate;
 
-            var convertRequestToRespondDelegateTypeDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertRequestToRespondDelegateTypeDelegate))
+            var convertRequestToRespondDelegateTypeDelegate = convertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertRequestToRespondDelegateTypeDelegate))
                 as ConvertRequestToRespondDelegateTypeDelegate;
 
             await foreach (var request in convertArgsToRequestsDelegate.ConvertAsync(args))
@@ -36,11 +40,11 @@ namespace vangogh.Console
                     throw new System.InvalidOperationException(
                         $"No respond delegate registered for request: {request.Method} {request.Collection}");
 
-                var respondToRequestDelegate = singletonInstancesController.GetInstance(
-                    respondToRequestDelegateType)
+                var respondToRequestDelegate = convertTypeToInstanceDelegate.Convert(
+                        respondToRequestDelegateType)
                     as IRespondAsyncDelegate;
 
-                // await respondToRequestDelegate.RespondAsync(request.Parameters);
+                await respondToRequestDelegate.RespondAsync(request.Parameters);
             }
 
             System.Console.WriteLine("Press ENTER to exit...");

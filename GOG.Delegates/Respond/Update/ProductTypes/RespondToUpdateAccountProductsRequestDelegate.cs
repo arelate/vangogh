@@ -1,42 +1,45 @@
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using GOG.Models;
-
 using GOG.Interfaces.Delegates.GetPageResults;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
     // TODO: We should generate those files
     [RespondsToRequests(Method = "update", Collection = "accountproducts")]
-    public class RespondToUpdateAccountProductsRequestDelegate : 
+    public class RespondToUpdateAccountProductsRequestDelegate :
         RespondToUpdatePageResultRequestDelegate<AccountProductsPageResult, AccountProduct>
     {
         [Dependencies(
-            "GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate,GOG.Delegates",
-            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-            "Controllers.Records.Session.SessionRecordsController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeAccountProductsPageResultProductsDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateAccountProductsAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitAccountProductsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateAccountProductsRequestDelegate(
-            IGetPageResultsAsyncDelegate<AccountProductsPageResult> getAccountProductsPageResultsAsyncDelegate,
-            IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct> itemizeAccountProductsPageResultsDelegate,
-            IDataController<AccountProduct> accountProductsDataController,
-            IRecordsController<string> activityRecordsController,
-            IActionLogController actionLogController) :
+            IGetPageResultsAsyncDelegate<AccountProductsPageResult> 
+                getAccountProductsPageResultsAsyncDelegate,
+            IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct>
+                itemizeAccountProductsPageResultsDelegate,
+            IUpdateAsyncDelegate<AccountProduct> updateAccountProductsAsyncDelegate,
+            ICommitAsyncDelegate commitAccountProductsAsyncDelegate,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 getAccountProductsPageResultsAsyncDelegate,
                 itemizeAccountProductsPageResultsDelegate,
-                accountProductsDataController,
-                activityRecordsController,
-                actionLogController)
+                updateAccountProductsAsyncDelegate,
+                commitAccountProductsAsyncDelegate,
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

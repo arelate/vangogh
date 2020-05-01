@@ -1,17 +1,17 @@
 ﻿using System.Text.RegularExpressions;
-
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Replace;
-
 using Attributes;
+using Delegates.Replace;
 
 namespace GOG.Delegates.Convert.ProductTypes
 {
     public class ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate : IConvertDelegate<string, string>
     {
-        readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        private readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
-        [Dependencies("Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates")]
+        [Dependencies(
+            typeof(ReplaceMultipleStringsDelegate))]
         public ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate(
             IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
         {
@@ -23,7 +23,7 @@ namespace GOG.Delegates.Convert.ProductTypes
             downloadLanguage = replaceMultipleStringsDelegate.ReplaceMultiple(
                 downloadLanguage,
                 string.Empty,
-                new string[] { "\"", "," });
+                new string[] {"\"", ","});
 
             downloadLanguage = Regex.Unescape(downloadLanguage);
 

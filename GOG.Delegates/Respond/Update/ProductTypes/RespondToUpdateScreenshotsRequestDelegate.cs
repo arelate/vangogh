@@ -1,77 +1,76 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-
 using Interfaces.Delegates.Respond;
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.UpdateScreenshots;
-
 using Attributes;
-
 using GOG.Models;
-
 using Models.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="screenshots")]
+    [RespondsToRequests(Method = "update", Collection = "screenshots")]
     public class RespondToUpdateScreenshotsRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IDataController<Product> productsDataController;
-        readonly IDataController<ProductScreenshots> productScreenshotsDataController;
-        readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate;
+        private readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
-            "Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
-            "GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
+            typeof(GOG.Delegates.UpdateScreenshots.UpdateScreenshotsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateScreenshotsRequestDelegate(
-            IDataController<Product> productsDataController,
-            IDataController<ProductScreenshots> productScreenshotsDataController,
+            IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.productsDataController = productsDataController;
-            this.productScreenshotsDataController = productScreenshotsDataController;
+            this.getProductByIdAsyncDelegate = getProductByIdAsyncDelegate;
             this.updateScreenshotsAsyncDelegate = updateScreenshotsAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction("Update Screenshots");
+            startDelegate.Start("Update Screenshots");
 
-            actionLogController.StartAction("Get updates");
+            startDelegate.Start("Get updates");
             var productsMissingScreenshots = new List<long>();
             // TODO: Properly enumerate productsMissingScreenshots
             // (productsDataController.ItemizeAllAsync(getUpdatesListTask)).Except(
             //     productScreenshotsDataController.ItemizeAllAsync(getUpdatesListTask));
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.StartAction("Update missing screenshots");
+            startDelegate.Start("Update missing screenshots");
             foreach (var id in productsMissingScreenshots)
             {
-                var product = await productsDataController.GetByIdAsync(id);
+                var product = await getProductByIdAsyncDelegate.GetDataAsync(id);
 
                 if (product == null)
-                {
                     // await statusController.InformAsync(
                     //     updateProductsScreenshotsTask,
                     //     $"Product {id} was not found as product or accountProduct, but marked as missing screenshots");
                     continue;
-                }
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product);
             }
-            actionLogController.CompleteAction();
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
+
+            completeDelegate.Complete();
         }
     }
 }

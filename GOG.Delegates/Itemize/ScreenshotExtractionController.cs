@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
 using Interfaces.Delegates.Itemize;
 
 namespace GOG.Delegates.Itemize
 {
-    public class ItemizeScreenshotsDelegate: IItemizeDelegate<string, string>
+    public class ItemizeScreenshotsDelegate : IItemizeDelegate<string, string>
     {
-        const string attributePrefix = "data-src=\"";
-        readonly Regex regex = new Regex(attributePrefix + "\\S*\"");
+        private const string attributePrefix = "data-src=\"";
+        private readonly Regex regex = new Regex(attributePrefix + "\\S*\"");
 
         public IEnumerable<string> Itemize(string pageContent)
         {

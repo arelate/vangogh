@@ -2,9 +2,9 @@
 
 namespace Delegates.GetFilename
 {
-    public class GetFixedFilenameDelegate : IGetFilenameDelegate
+    public abstract class GetFixedFilenameDelegate : IGetFilenameDelegate
     {
-        readonly string fixedFilename;
+        private readonly string fixedFilename;
 
         public GetFixedFilenameDelegate(string fixedFilename, IGetFilenameDelegate getFilenameDelegate)
         {

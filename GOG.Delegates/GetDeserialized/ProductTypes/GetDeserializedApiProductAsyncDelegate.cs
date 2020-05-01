@@ -1,25 +1,27 @@
-using Interfaces.Controllers.Network;
-
-using Interfaces.Controllers.Serialization;
-
+using System.Collections.Generic;
+using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Data;
 using Attributes;
-
 using Models.Dependencies;
 using GOG.Models;
+using Delegates.Convert.Network;
 
 namespace GOG.Delegates.GetDeserialized.ProductTypes
 {
     public class GetDeserializedApiProductAsyncDelegate : GetDeserializedProductCoreAsyncDelegate<ApiProduct>
     {
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers",
-            Dependencies.JSONSerializationController)]
+            typeof(ConvertUriDictionaryParametersToUriDelegate),
+            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToApiProductDelegate))]
         public GetDeserializedApiProductAsyncDelegate(
-            IGetResourceAsyncDelegate getResourceAsyncDelegate,
-            ISerializationController<string> serializationController) :
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
+            IConvertDelegate<string, ApiProduct> convertJSONToApiProductDelegate) :
             base(
-                getResourceAsyncDelegate,
-                serializationController)
+                convertUriParametersToUriDelegate,
+                getUriDataAsyncDelegate,
+                convertJSONToApiProductDelegate)
         {
             // ...
         }

@@ -1,6 +1,5 @@
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-
 using Attributes;
 
 namespace Delegates.GetPath.ProductTypes
@@ -8,8 +7,8 @@ namespace Delegates.GetPath.ProductTypes
     public class GetGameProductDataPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            "Delegates.GetDirectory.Root.GetDataDirectoryDelegate,Delegates",
-            "Delegates.GetFilename.ProductTypes.GetGameProductDataFilenameDelegate,Delegates")]
+            typeof(Delegates.GetDirectory.Root.GetDataDirectoryDelegate),
+            typeof(Delegates.GetFilename.ProductTypes.GetGameProductDataFilenameDelegate))]
         public GetGameProductDataPathDelegate(
             IGetDirectoryDelegate getDirectoryDelegate,
             IGetFilenameDelegate getGameProductDataFilenameDelegate) :

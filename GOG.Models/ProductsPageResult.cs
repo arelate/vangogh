@@ -3,9 +3,8 @@
 namespace GOG.Models
 {
     [DataContract]
-    public class ProductsPageResult: PageResult
+    public class ProductsPageResult : PageResult
     {
-        [DataMember(Name = "products")]
-        public Product[] Products { get; set; }
+        [DataMember(Name = "products")] public Product[] Products { get; set; }
     }
 }

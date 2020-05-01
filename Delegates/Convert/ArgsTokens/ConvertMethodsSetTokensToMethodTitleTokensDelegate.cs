@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-
-using Interfaces.Controllers.Collection;
-using Interfaces.Controllers.Stash;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Convert;
-
+using Interfaces.Delegates.Collections;
 using Attributes;
-
 using Models.ArgsDefinitions;
 using Models.ArgsTokens;
 
@@ -16,32 +13,30 @@ namespace Delegates.Convert.ArgsTokens
             IAsyncEnumerable<(string Token, Tokens Type)>,
             IAsyncEnumerable<(string Token, Tokens Type)>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private IFindDelegate<MethodsSet> findMethodsSetDelegate;
 
         [Dependencies(
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
-        [TestDependenciesOverrides(
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "")]            
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindMethodsSetDelegate))]
         public ConvertMethodsSetTokensToMethodTitleTokensDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IFindDelegate<MethodsSet> findMethodsSetDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
+            this.findMethodsSetDelegate = findMethodsSetDelegate;
         }
+
         public async IAsyncEnumerable<(string Token, Tokens Type)> ConvertAsync(
             IAsyncEnumerable<(string Token, Tokens Type)> typedTokens)
         {
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions =
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
             await foreach (var typedToken in typedTokens)
-            {
                 switch (typedToken.Type)
                 {
                     case Tokens.MethodsSet:
-                        var titledMethodsSet = collectionController.Find(
+                        var titledMethodsSet = findMethodsSetDelegate.Find(
                             argsDefinitions.MethodsSets,
                             methodsSet => methodsSet.Title == typedToken.Token);
                         if (titledMethodsSet == null)
@@ -54,8 +49,6 @@ namespace Delegates.Convert.ArgsTokens
                         yield return typedToken;
                         break;
                 }
-            }
         }
     }
-
 }

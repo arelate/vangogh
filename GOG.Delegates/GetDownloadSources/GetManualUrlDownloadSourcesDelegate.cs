@@ -1,67 +1,70 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.GetDownloadSources;
-
 using Attributes;
-
 using GOG.Models;
+using Delegates.Activities;
+using Delegates.Itemize.ProductTypes;
 
 namespace GOG.Delegates.GetDownloadSources
 {
     public class GetManualUrlDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        readonly IDataController<long> updatedDataController;
-        readonly IDataController<GameDetails> gameDetailsDataController;
-        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
-        readonly IActionLogController actionLogController;
+        private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+        [Dependencies(
+            typeof(ItemizeAllUpdatedAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public GetManualUrlDownloadSourcesAsyncDelegate(
-            IDataController<long> updatedDataController,
-            IDataController<GameDetails> gameDetailsDataController,
+            IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
+            IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.updatedDataController = updatedDataController;
-            this.gameDetailsDataController = gameDetailsDataController;
+            this.itemizeAllUpdatedAsyncDelegate = itemizeAllUpdatedAsyncDelegate;
+            this.getGameDetailsByIdAsyncDelegate = getGameDetailsByIdAsyncDelegate;
             this.itemizeGameDetailsManualUrlsAsyncController = itemizeGameDetailsManualUrlsAsyncController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            actionLogController.StartAction("Get download sources");
+            startDelegate.Start("Get download sources");
 
             var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 
-            await foreach (var id in updatedDataController.ItemizeAllAsync())
+            await foreach (var id in itemizeAllUpdatedAsyncDelegate.ItemizeAllAsync())
             {
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+                var gameDetails = await getGameDetailsByIdAsyncDelegate.GetDataAsync(id);
 
                 if (!gameDetailsDownloadSources.ContainsKey(id))
                     gameDetailsDownloadSources.Add(id, new List<string>());
 
-                foreach (var manualUrl in 
+                foreach (var manualUrl in
                     await itemizeGameDetailsManualUrlsAsyncController.ItemizeAsync(gameDetails))
-                {
                     if (!gameDetailsDownloadSources[id].Contains(manualUrl))
                         gameDetailsDownloadSources[id].Add(manualUrl);
-                }
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return gameDetailsDownloadSources;
         }

@@ -1,45 +1,39 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Net.Http;
-
 using Interfaces.Delegates.Download;
-
-using Interfaces.Controllers.Network;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Activities;
 using Attributes;
 
 namespace Delegates.Download
 {
     public class DownloadFromUriAsyncDelegate : IDownloadFromUriAsyncDelegate
     {
-        readonly IRequestResponseAsyncDelegate requestResponseAsyncDelegate;
-        readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+            convertRequestToResponseAsyncDelegate;
+
+        private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
 
         [Dependencies(
-            "Controllers.Network.NetworkController,Controllers",
-            "Delegates.Download.DownloadFromResponseAsyncDelegate,Delegates",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate),
+            typeof(Delegates.Download.DownloadFromResponseAsyncDelegate))]
         public DownloadFromUriAsyncDelegate(
-            IRequestResponseAsyncDelegate requestResponseAsyncDelegate,
-            IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
-            IActionLogController actionLogController)
+            IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
+                convertRequestToResponseAsyncDelegate,
+            IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate)
         {
-            this.requestResponseAsyncDelegate = requestResponseAsyncDelegate;
+            this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
-
-            this.actionLogController = actionLogController;
         }
 
         public async Task DownloadFromUriAsync(string sourceUri, string destination)
         {
-            actionLogController.StartAction("Download from source");
-
             try
             {
-                using (var response = await requestResponseAsyncDelegate.RequestResponseAsync(HttpMethod.Get, sourceUri))
-                    await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(response, destination);
+                var request = new HttpRequestMessage(HttpMethod.Get, sourceUri);
+                using var response = await convertRequestToResponseAsyncDelegate.ConvertAsync(request);
+                await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(response, destination);
             }
             catch (Exception ex)
             {
@@ -48,7 +42,6 @@ namespace Delegates.Download
             }
             finally
             {
-                actionLogController.CompleteAction();
             }
         }
     }

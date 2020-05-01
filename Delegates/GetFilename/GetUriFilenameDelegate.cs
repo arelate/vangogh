@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-
 using Interfaces.Delegates.GetFilename;
-
 using Models.Separators;
 
 namespace Delegates.GetFilename
@@ -21,7 +19,7 @@ namespace Delegates.GetFilename
                 return filename;
 
             var uriParts = filename.Split(
-                new string[] { Separators.UriPart },
+                new string[] {Separators.UriPart},
                 StringSplitOptions.RemoveEmptyEntries);
 
             // filename is the last uri part
@@ -31,7 +29,7 @@ namespace Delegates.GetFilename
                 return filenameWithQueryString;
 
             var filenameParts = filenameWithQueryString.Split(
-                new string[] { Separators.QueryString },
+                new string[] {Separators.QueryString},
                 StringSplitOptions.RemoveEmptyEntries);
 
             // filename without querystring is the first uri part

@@ -9,7 +9,6 @@ namespace Interfaces.Delegates.Convert
 
     public interface IConvertAsyncDelegate<From, To>
     {
-        To ConvertAsync(From data);
+        public To ConvertAsync(From data);
     }
-
 }

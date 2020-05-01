@@ -1,43 +1,58 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Respond;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using GOG.Models;
+using Delegates.Data.Models.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="updated")]
-    public class RespondToUpdateUpdatedRequestDelegate: IRespondAsyncDelegate
+    [RespondsToRequests(Method = "update", Collection = "updated")]
+    public class RespondToUpdateUpdatedRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IDataController<AccountProduct> accountProductDataController;
-        readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
+        // private readonly IDataController<AccountProduct> accountProductDataController;
+        private readonly IItemizeAllAsyncDelegate<AccountProduct> itemizeAccountProductsAsyncDelegate;
+        private readonly IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate;
 
-        readonly IDataController<long> updatedDataController;
-        readonly IActionLogController actionLogController;
+        // private readonly IDataController<long> updatedDataController;
+        private readonly IUpdateAsyncDelegate<long> updateUpdatedAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitUpdatedAsyncDelegate;
+
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Controllers.Data.ProductTypes.AccountProductsDataController,GOG.Controllers",
-            "GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate,GOG.Delegates",
-            "Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeAllAccountProductsAsyncDelegate),
+            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductUpdatedDelegate),
+            typeof(UpdateUpdatedAsyncDelegate),
+            typeof(CommitUpdatedAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToUpdateUpdatedRequestDelegate(
-            IDataController<AccountProduct> accountProductDataController,
+            IItemizeAllAsyncDelegate<AccountProduct> itemizeAccountProductsAsyncDelegate,
             IConfirmDelegate<AccountProduct> confirmAccountProductUpdatedDelegate,
-            IDataController<long> updatedDataController,
-            IActionLogController actionLogController)
+            IUpdateAsyncDelegate<long> updateUpdatedAsyncDelegate,
+            ICommitAsyncDelegate commitUpdatedAsyncDelegate,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.accountProductDataController = accountProductDataController;
+            this.itemizeAccountProductsAsyncDelegate = itemizeAccountProductsAsyncDelegate;
             this.confirmAccountProductUpdatedDelegate = confirmAccountProductUpdatedDelegate;
 
-            this.updatedDataController = updatedDataController;
-            this.actionLogController = actionLogController;
+            this.updateUpdatedAsyncDelegate = updateUpdatedAsyncDelegate;
+            this.commitUpdatedAsyncDelegate = commitUpdatedAsyncDelegate;
+
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
@@ -53,9 +68,9 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             // In the future additional heuristics can be employed - such as using products, not just 
             // account products and other. Currently they are considered as YAGNI
 
-            actionLogController.StartAction("Process updated account products");
+            startDelegate.Start("Process updated account products");
 
-            actionLogController.StartAction("Add account products created since last data update");
+            startDelegate.Start("Add account products created since last data update");
 
             var accountProductsNewOrUpdated = new List<long>();
 
@@ -66,27 +81,26 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
             //accountProductsNewOrUpdated.AddRange(newlyCreatedAccountProducts);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            actionLogController.StartAction("Add updated account products");
+            startDelegate.Start("Add updated account products");
 
-            await foreach (var accountProduct in accountProductDataController.ItemizeAllAsync())
+            await foreach (var accountProduct in itemizeAccountProductsAsyncDelegate.ItemizeAllAsync())
             {
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 if (confirmAccountProductUpdatedDelegate.Confirm(accountProduct))
                     accountProductsNewOrUpdated.Add(accountProduct.Id);
             }
 
             foreach (var accountProduct in accountProductsNewOrUpdated)
-                await updatedDataController.UpdateAsync(accountProduct);
+                await updateUpdatedAsyncDelegate.UpdateAsync(accountProduct);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
-            await updatedDataController.CommitAsync();
+            await commitUpdatedAsyncDelegate.CommitAsync();
 
-            actionLogController.CompleteAction();
-
+            completeDelegate.Complete();
         }
     }
 }

@@ -1,27 +1,22 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Xunit;
-
 using Interfaces.Delegates.Convert;
-
-using Controllers.Instances;
-
 using Models.ArgsTokens;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
     public class ConvertTokensToLikelyTypedTokensDelegateTests
     {
-        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>> convertTokensToLikelyTypedTokensDelegate;
+        private IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
+            convertTokensToLikelyTypedTokensDelegate;
 
         public ConvertTokensToLikelyTypedTokensDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            this.convertTokensToLikelyTypedTokensDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertTokensToLikelyTypedTokensDelegate))
+            convertTokensToLikelyTypedTokensDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertTokensToLikelyTypedTokensDelegate))
                 as ConvertTokensToLikelyTypedTokensDelegate;
         }
 
@@ -52,7 +47,8 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [InlineData("update", "updated")]
         [InlineData("update", "wishlisted")]
         [InlineData("update", "screenshots")]
-        public async void CanConvertTokensToLikelyTypedTokensDelegateMethodTitlesCollectionTitles(params string[] tokens)
+        public async void CanConvertTokensToLikelyTypedTokensDelegateMethodTitlesCollectionTitles(
+            params string[] tokens)
         {
             var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
 
@@ -86,7 +82,9 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [InlineData("productimages", "download")]
         [InlineData("productimages", "prepare")]
         [InlineData("products", "update")]
-        public async void CanConvertTokensToLikelyTypedTokensDelegateWrongOrderOfValidTokensProducesLikelyParameterValues(params string[] tokens)
+        public async void
+            CanConvertTokensToLikelyTypedTokensDelegateWrongOrderOfValidTokensProducesLikelyParameterValues(
+                params string[] tokens)
         {
             var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
 
@@ -99,7 +97,8 @@ namespace Delegates.Convert.ArgsTokens.Tests
         [Theory]
         [InlineData("")]
         [InlineData("arbitrarystring")]
-        public async void CanConvertTokensToLikelyTypedTokensDelegateRandomInputProducesLikelyParameterValues(params string[] tokens)
+        public async void CanConvertTokensToLikelyTypedTokensDelegateRandomInputProducesLikelyParameterValues(
+            params string[] tokens)
         {
             var likelyTypedTokens = await ConvertTokensToLikelyTypedTokens(tokens);
 

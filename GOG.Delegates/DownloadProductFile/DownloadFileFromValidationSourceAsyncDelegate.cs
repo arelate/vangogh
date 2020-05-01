@@ -1,58 +1,58 @@
-﻿using System.Linq;
+﻿using System.IO;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Download;
-
-using Interfaces.Controllers.File;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using GOG.Interfaces.Delegates.DownloadProductFile;
+using Delegates.Format.Uri;
+using Delegates.Confirm.Validation;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.Download;
+using Delegates.Activities;
 
 namespace GOG.Delegates.DownloadProductFile
 {
     public class DownloadValidationFileAsyncDelegate : IDownloadProductFileAsyncDelegate
     {
-        readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
-        readonly IConfirmDelegate<string> confirmValidationExpectedDelegate;
-        readonly IFormatDelegate<string, string> formatValidationFileDelegate;
-        readonly IGetDirectoryDelegate validationDirectoryDelegate;
-        readonly IFormatDelegate<string, string> formatValidationUriDelegate;
-        readonly IFileController fileController;
-        readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
-        readonly IActionLogController actionLogController;
+        private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        private readonly IConfirmDelegate<string> confirmValidationExpectedDelegate;
+        private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
+        private readonly IGetDirectoryDelegate validationDirectoryDelegate;
+        private readonly IFormatDelegate<string, string> formatValidationUriDelegate;
+        private readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Delegates.Format.Uri.FormatUriRemoveSessionDelegate,Delegates",
-			"Delegates.Confirm.ConfirmValidationExpectedDelegate,Delegates",
-			"Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-			"Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate,Delegates",
-			"Delegates.Format.Uri.FormatValidationUriDelegate,Delegates",
-			"Controllers.File.FileController,Controllers",
-			"Delegates.Download.DownloadFromUriAsyncDelegate,Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]
+        [Dependencies(
+            typeof(FormatUriRemoveSessionDelegate),
+            typeof(ConfirmFileValidationSupportedDelegate),
+            typeof(FormatValidationFileDelegate),
+            typeof(GetMd5DirectoryDelegate),
+            typeof(FormatValidationUriDelegate),
+            typeof(DownloadFromUriAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public DownloadValidationFileAsyncDelegate(
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
             IGetDirectoryDelegate validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
-            IFileController fileController,
             IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
             this.formatValidationFileDelegate = formatValidationFileDelegate;
             this.validationDirectoryDelegate = validationDirectoryDelegate;
             this.formatValidationUriDelegate = formatValidationUriDelegate;
-            this.fileController = fileController;
             this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
@@ -61,25 +61,23 @@ namespace GOG.Delegates.DownloadProductFile
 
             var sourceUriSansSession = formatUriRemoveSessionDelegate.Format(sourceUri);
             var destinationUri = formatValidationFileDelegate.Format(sourceUriSansSession);
-            
+
             // return early if validation is not expected for this file
             if (!confirmValidationExpectedDelegate.Confirm(sourceUriSansSession)) return;
 
-            if (fileController.Exists(destinationUri))
-            {
+            if (File.Exists(destinationUri))
                 // await statusController.InformAsync(status, "Validation file already exists, will not be redownloading");
                 return;
-            }
 
             var validationSourceUri = formatValidationUriDelegate.Format(sourceUri);
 
-            actionLogController.StartAction("Download validation file");
+            startDelegate.Start("Download validation file");
 
             await downloadFromUriAsyncDelegate.DownloadFromUriAsync(
                 validationSourceUri,
                 validationDirectoryDelegate.GetDirectory(string.Empty));
 
-           actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

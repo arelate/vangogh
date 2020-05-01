@@ -1,29 +1,22 @@
 using System;
 using System.Collections.Generic;
-
 using Xunit;
-
-using Controllers.Instances;
-
 using Interfaces.Delegates.Convert;
-
 using Models.ArgsTokens;
 using Models.Requests;
-
-using TypedTokens = System.Collections.Generic.IEnumerable<(string Token, Models.ArgsTokens.Tokens Type)>;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.Requests.Tests
 {
     public class ConvertTypedTokensToRequestsDataDelegateTests
     {
-        private IConvertDelegate<TypedTokens, RequestsData> convertTypedTokensToRequestsDataDelegate;
+        private IConvertDelegate<IEnumerable<(string Token, Tokens Type)>, RequestsData>
+            convertTypedTokensToRequestsDataDelegate;
 
         public ConvertTypedTokensToRequestsDataDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            this.convertTypedTokensToRequestsDataDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertTypedTokensToRequestsDataDelegate))
+            convertTypedTokensToRequestsDataDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertTypedTokensToRequestsDataDelegate))
                 as ConvertTypedTokensToRequestsDataDelegate;
         }
 
@@ -35,8 +28,8 @@ namespace Delegates.Convert.Requests.Tests
         {
             var typedTokens = new (string, Tokens)[] {(string.Empty, tokenType)};
             Assert.Throws<NotImplementedException>(
-                () => 
-                convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
+                () =>
+                    convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
         }
 
         [Fact]
@@ -44,15 +37,16 @@ namespace Delegates.Convert.Requests.Tests
         {
             var typedTokens = new (string, Tokens)[] {(string.Empty, Tokens.ParameterValue)};
             Assert.Throws<ArgumentException>(
-                () => 
-                convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));            
+                () =>
+                    convertTypedTokensToRequestsDataDelegate.Convert(typedTokens));
         }
 
         [Theory]
         [InlineData(Tokens.MethodTitle, "1", "2", "3")]
         [InlineData(Tokens.CollectionTitle, "4", "5")]
         [InlineData(Tokens.Unknown, "6")]
-        public void ConvertTypedTokensToRequestsDataDelegatePassesTitlesToCollections(Tokens tokenType, params string[] tokens)
+        public void ConvertTypedTokensToRequestsDataDelegatePassesTitlesToCollections(Tokens tokenType,
+            params string[] tokens)
         {
             var typedTokens = new List<(string, Tokens)>(tokens.Length);
             foreach (var token in tokens)
@@ -60,7 +54,7 @@ namespace Delegates.Convert.Requests.Tests
 
             var requestData = convertTypedTokensToRequestsDataDelegate.Convert(typedTokens);
             List<string> collection = null;
-            switch (tokenType) 
+            switch (tokenType)
             {
                 case Tokens.MethodTitle:
                     collection = requestData.Methods;
@@ -80,17 +74,17 @@ namespace Delegates.Convert.Requests.Tests
         }
 
         [Theory]
-        [InlineData(1,2)]        
-        [InlineData(2,1)]
-        [InlineData(2,2)]
+        [InlineData(1, 2)]
+        [InlineData(2, 1)]
+        [InlineData(2, 2)]
         public void ConvertTypedTokensToRequestsDataDelegateCollectsParameters(int parameterTitles, int parameterValues)
         {
             var typedTokens = new List<(string, Tokens)>();
 
-            for (var tt=0; tt<parameterTitles; tt++)
+            for (var tt = 0; tt < parameterTitles; tt++)
             {
                 typedTokens.Add((tt.ToString(), Tokens.ParameterTitle));
-                for (var vv=0;vv<parameterValues; vv++)
+                for (var vv = 0; vv < parameterValues; vv++)
                     typedTokens.Add((vv.ToString(), Tokens.ParameterValue));
             }
 

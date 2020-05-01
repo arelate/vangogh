@@ -1,27 +1,22 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Xunit;
-
 using Interfaces.Delegates.Convert;
-
-using Controllers.Instances;
-
 using Models.ArgsTokens;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Convert.ArgsTokens.Tests
 {
     public class ConvertTokensToTypedTokensDelegateTests
     {
-        private readonly IConvertAsyncDelegate<IEnumerable<string>,IAsyncEnumerable<(string, Tokens)>> convertTokensToTypedTokensDelegate;
+        private readonly IConvertAsyncDelegate<IEnumerable<string>, IAsyncEnumerable<(string, Tokens)>>
+            convertTokensToTypedTokensDelegate;
 
         public ConvertTokensToTypedTokensDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            this.convertTokensToTypedTokensDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertTokensToTypedTokensDelegate))
+            convertTokensToTypedTokensDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertTokensToTypedTokensDelegate))
                 as ConvertTokensToTypedTokensDelegate;
         }
 
@@ -30,7 +25,7 @@ namespace Delegates.Convert.ArgsTokens.Tests
             var likelyTypedTokens = new List<(string, Tokens)>();
             await foreach (var likelyTypedToken in convertTokensToTypedTokensDelegate.ConvertAsync(tokens))
                 likelyTypedTokens.Add(likelyTypedToken);
-            
+
             return likelyTypedTokens;
         }
 

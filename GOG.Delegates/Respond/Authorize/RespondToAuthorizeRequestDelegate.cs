@@ -1,31 +1,32 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
-
 using Interfaces.Delegates.Respond;
-
-using Interfaces.Controllers.Logs;
-
-using GOG.Interfaces.Controllers.Authorization;
-
+using Interfaces.Delegates.Activities;
+using GOG.Interfaces.Delegates.Authorize;
 using Attributes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Authorize
 {
-    [RespondsToRequests(Method="authorize")]
+    [RespondsToRequests(Method = "authorize")]
     public class RespondToAuthorizeRequestDelegate : IRespondAsyncDelegate
     {
-        readonly IAuthorizationController authorizationController;
-        readonly IActionLogController actionLogController;
+        private readonly IAuthorizeAsyncDelegate authorizeAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            "GOG.Controllers.Authorization.GOGAuthorizationController,GOG.Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GOG.Delegates.Authorize.AuthorizeAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(CompleteDelegate))]
         public RespondToAuthorizeRequestDelegate(
-            IAuthorizationController authorizationController,
-            IActionLogController actionLogController)
+            IAuthorizeAsyncDelegate authorizeAsyncDelegate,
+            IStartDelegate startDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.authorizationController = authorizationController;
-            this.actionLogController = actionLogController;
+            this.authorizeAsyncDelegate = authorizeAsyncDelegate;
+            this.startDelegate = startDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
@@ -33,7 +34,7 @@ namespace GOG.Delegates.Respond.Authorize
             var username = string.Empty;
             var password = string.Empty;
 
-            await authorizationController.AuthorizeAsync(
+            await authorizeAsyncDelegate.AuthorizeAsync(
                 username,
                 password);
         }

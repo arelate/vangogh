@@ -1,39 +1,43 @@
 ﻿using System.Collections.Generic;
-
 using Interfaces.Delegates.GetValue;
-
-using Interfaces.Controllers.Serialization;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using GOG.Interfaces.Delegates.RequestPage;
-
 using Models.Dependencies;
 using GOG.Models;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.GetValue.QueryParameters.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.GetPageResults.ProductTypes
 {
     public class GetProductsPageResultsAsyncDelegate : GetPageResultsAsyncDelegate<ProductsPageResult>
     {
         [Dependencies(
-            "Delegates.GetValue.Uri.ProductTypes.GetProductsUpdateUriDelegate,Delegates",
-            "Delegates.GetValue.QueryParameters.ProductTypes.GetProductsUpdateQueryParametersDelegate,Delegates",
-            "GOG.Delegates.RequestPage.RequestPageAsyncDelegate,GOG.Delegates",
-            Dependencies.JSONSerializationController,
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GetProductsUpdateUriDelegate),
+            typeof(GetProductsUpdateQueryParametersDelegate),
+            typeof(GOG.Delegates.RequestPage.RequestPageAsyncDelegate),
+            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToProductsPageResultDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public GetProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getProductsQueryUpdateQueryParameters,
             IRequestPageAsyncDelegate requestPageAsyncDelegate,
-            ISerializationController<string> serializationController,
-            IActionLogController actionLogController):
+            IConvertDelegate<string, ProductsPageResult> convertJSONToProductsPageResultDelegate,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 getProductsUpdateUriDelegate,
                 getProductsQueryUpdateQueryParameters,
                 requestPageAsyncDelegate,
-                serializationController,
-                actionLogController)
+                convertJSONToProductsPageResultDelegate,
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

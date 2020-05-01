@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
 using Interfaces.Delegates.Itemize;
 
 namespace Delegates.Itemize
 {
-    public class ItemizeAttributeValuesDelegate: IItemizeDelegate<string, string>
+    public abstract class ItemizeAttributeValuesDelegate : IItemizeDelegate<string, string>
     {
-        readonly string pattern;
+        private readonly string pattern;
 
         public ItemizeAttributeValuesDelegate(string pattern)
         {
@@ -20,8 +19,9 @@ namespace Delegates.Itemize
             var match = regex.Match(data);
             while (match.Success)
             {
-                string valueAttribute = "value=\"";
-                var start = match.Value.IndexOf(valueAttribute, System.StringComparison.Ordinal) + valueAttribute.Length;
+                var valueAttribute = "value=\"";
+                var start = match.Value.IndexOf(valueAttribute, System.StringComparison.Ordinal) +
+                            valueAttribute.Length;
                 yield return match.Value.Substring(start, match.Value.Length - start - 1);
 
                 match = match.NextMatch();

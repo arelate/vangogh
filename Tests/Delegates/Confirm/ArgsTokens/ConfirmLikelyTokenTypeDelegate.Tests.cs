@@ -1,27 +1,20 @@
 using System;
 using System.Threading.Tasks;
-
 using Xunit;
-
 using Interfaces.Delegates.Confirm;
-
-using Controllers.Instances;
-
 using Models.ArgsTokens;
+using Tests.TestDelegates.Convert.Types;
 
 namespace Delegates.Confirm.ArgsTokens.Tests
 {
-
     public class ConfirmLikelyTokenTypeDelegateTests
     {
         private IConfirmAsyncDelegate<(string Token, Tokens Type)> confirmLikelyTokenTypeDelegate;
 
         public ConfirmLikelyTokenTypeDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            this.confirmLikelyTokenTypeDelegate = singletonInstancesController.GetInstance(
-                typeof(ConfirmLikelyTokenTypeDelegate))
+            confirmLikelyTokenTypeDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConfirmLikelyTokenTypeDelegate))
                 as ConfirmLikelyTokenTypeDelegate;
         }
 
@@ -52,7 +45,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         public async Task CanConfirmLikelyTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
         {
             Assert.True(
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync(
+                await confirmLikelyTokenTypeDelegate.ConfirmAsync(
                     (token, tokenType)));
         }
 
@@ -63,7 +56,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         {
             await Assert.ThrowsAsync<NotImplementedException>(
                 async () =>
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync((string.Empty, tokenType)));
+                    await confirmLikelyTokenTypeDelegate.ConfirmAsync((string.Empty, tokenType)));
         }
 
         [Theory]
@@ -74,8 +67,7 @@ namespace Delegates.Confirm.ArgsTokens.Tests
         public async Task CanConfirmWrongTokenTypeForReferenceArgsDefinition(string token, Tokens tokenType)
         {
             Assert.False(
-                await this.confirmLikelyTokenTypeDelegate.ConfirmAsync((token, tokenType)));
+                await confirmLikelyTokenTypeDelegate.ConfirmAsync((token, tokenType)));
         }
-
     }
 }

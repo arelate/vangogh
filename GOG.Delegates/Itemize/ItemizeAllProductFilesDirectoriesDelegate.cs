@@ -1,40 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using System.IO;
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Controllers.Directory;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Activities;
 using Attributes;
+using Delegates.GetDirectory.ProductTypes;
 
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllProductFilesDirectoriesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        readonly IGetDirectoryDelegate productFilesDirectoryDelegate;
-        readonly IDirectoryController directoryController;
-        readonly IActionLogController actionLogController;
+        private readonly IGetDirectoryDelegate productFilesDirectoryDelegate;
 
-		[Dependencies(
-			"Delegates.GetDirectory.ProductTypes.GetProductFilesRootDirectoryDelegate,Delegates",
-			"Controllers.Directory.DirectoryController,Controllers",
-			"Controllers.Logs.ActionLogController,Controllers")]
+        [Dependencies(
+            typeof(GetProductFilesRootDirectoryDelegate))]
         public ItemizeAllProductFilesDirectoriesAsyncDelegate(
-            IGetDirectoryDelegate productFilesDirectoryDelegate,
-            IDirectoryController directoryController,
-            IActionLogController actionLogController)
+            IGetDirectoryDelegate productFilesDirectoryDelegate)
         {
             this.productFilesDirectoryDelegate = productFilesDirectoryDelegate;
-            this.directoryController = directoryController;
-            this.actionLogController = actionLogController;
         }
 
         public async IAsyncEnumerable<string> ItemizeAllAsync()
         {
             var productFilesDirectory = productFilesDirectoryDelegate.GetDirectory(string.Empty);
-            foreach (var directory in directoryController.EnumerateDirectories(productFilesDirectory))
+            foreach (var directory in Directory.EnumerateDirectories(productFilesDirectory))
                 yield return directory;
         }
     }

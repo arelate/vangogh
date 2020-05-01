@@ -1,13 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Interfaces.Controllers.Collection;
-using Interfaces.Controllers.Stash;
-
 using Interfaces.Delegates.Convert;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Collections;
+using Interfaces.Delegates.Confirm;
 using Attributes;
-
 using Models.Requests;
 using Models.ArgsDefinitions;
 
@@ -16,46 +13,46 @@ namespace Delegates.Convert.Requests
     public class ConvertRequestsDataToResolvedDependenciesDelegate :
         IConvertAsyncDelegate<RequestsData, Task<RequestsData>>
     {
-        private IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate;
-        private ICollectionController collectionController;
+        private readonly IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate;
+        private readonly IFindDelegate<Dependency> findDependencyDelegate;
+        private readonly IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExclusiveStringDelegate;
 
         [Dependencies(
-            "Controllers.Stash.ArgsDefinitions.ArgsDefinitionsStashController,Controllers",
-            "Controllers.Collection.CollectionController,Controllers")]
-        [TestDependenciesOverrides(
-            "TestControllers.Stash.ArgsDefinitions.TestArgsDefinitionsStashController,Tests",
-            "")]
+            typeof(Delegates.Data.Storage.ArgsDefinitions.GetArgsDefinitionsDataFromPathAsyncDelegate),
+            typeof(Delegates.Collections.ArgsDefinitions.FindDependencyDelegate),
+            typeof(Delegates.Confirm.System.ConfirmExclusiveStringDelegate))]
         public ConvertRequestsDataToResolvedDependenciesDelegate(
-            IGetDataAsyncDelegate<ArgsDefinition> getArgsDefinitionsDelegate,
-            ICollectionController collectionController)
+            IGetDataAsyncDelegate<ArgsDefinition, string> getArgsDefinitionsDataFromPathAsyncDelegate,
+            IFindDelegate<Dependency> findDependencyDelegate,
+            IConfirmDelegate<(IEnumerable<string>, IEnumerable<string>)> confirmExclusiveStringDelegate)
         {
-            this.getArgsDefinitionsDelegate = getArgsDefinitionsDelegate;
-            this.collectionController = collectionController;
+            this.getArgsDefinitionsDataFromPathAsyncDelegate = getArgsDefinitionsDataFromPathAsyncDelegate;
+            this.findDependencyDelegate = findDependencyDelegate;
+            this.confirmExclusiveStringDelegate = confirmExclusiveStringDelegate;
         }
+
         public async Task<RequestsData> ConvertAsync(RequestsData requestsData)
         {
             var requiredMethods = new List<string>();
             var requiredCollections = new List<string>();
-            var argsDefinitions = await getArgsDefinitionsDelegate.GetDataAsync();
+            var argsDefinitions = 
+                await getArgsDefinitionsDataFromPathAsyncDelegate.GetDataAsync(string.Empty);
 
             foreach (var method in requestsData.Methods)
             {
-                var dependency = collectionController.Find(
+                var dependency = findDependencyDelegate.Find(
                     argsDefinitions.Dependencies,
                     d => d.Method == method);
 
                 if (dependency == null) continue;
 
-                if (!collectionController.ConfirmExclusive(
-                    requestsData.Collections,
-                    dependency.Collections))
-                {
+                if (!confirmExclusiveStringDelegate.Confirm(
+                    (requestsData.Collections, dependency.Collections)))
                     foreach (var requirement in dependency.Requires)
                     {
                         requiredMethods.Add(requirement.Method);
                         requiredCollections.AddRange(requirement.Collections);
                     }
-                }
             }
 
             foreach (var requiredMethod in requiredMethods)

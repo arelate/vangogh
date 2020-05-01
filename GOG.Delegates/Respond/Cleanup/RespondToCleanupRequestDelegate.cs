@@ -2,29 +2,26 @@
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
-
-using Interfaces.Controllers.Logs;
-using Interfaces.Controllers.Directory;
-
+using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Cleanup
 {
     public abstract class RespondToCleanupRequestDelegate<Type> : IRespondAsyncDelegate
-        where Type: ProductCore
+        where Type : ProductCore
     {
-        readonly IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
-        readonly IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
-        readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
-        readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
-        readonly IRecycleDelegate recycleDelegate;
-        readonly IDirectoryController directoryController;
-        readonly IActionLogController actionLogController;
+        private readonly IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
+        private readonly IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
+        private readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
+        private readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
+        private readonly IRecycleDelegate recycleDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public RespondToCleanupRequestDelegate(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
@@ -32,21 +29,23 @@ namespace GOG.Delegates.Respond.Cleanup
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
-            IDirectoryController directoryController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.itemizeAllExpectedItemsAsyncDelegate = itemizeAllExpectedItemsAsyncDelegate;
             this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
             this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
             this.recycleDelegate = recycleDelegate;
-            this.directoryController = directoryController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction($"Cleanup {typeof(Type)}");
+            startDelegate.Start($"Cleanup {typeof(Type)}");
 
             var unexpectedItems = new List<string>();
             await foreach (var actualItem in itemizeAllActualItemsAsyncDelegate.ItemizeAllAsync())
@@ -58,21 +57,21 @@ namespace GOG.Delegates.Respond.Cleanup
             var cleanupItems = new List<string>();
 
             foreach (var unexpectedItem in unexpectedItems)
-                foreach (var detailedItem in itemizeDetailsDelegate.Itemize(unexpectedItem))
-                {
-                    cleanupItems.Add(detailedItem);
-                    cleanupItems.Add(formatSupplementaryItemDelegate.Format(detailedItem));
-                }
+            foreach (var detailedItem in itemizeDetailsDelegate.Itemize(unexpectedItem))
+            {
+                cleanupItems.Add(detailedItem);
+                cleanupItems.Add(formatSupplementaryItemDelegate.Format(detailedItem));
+            }
 
-            actionLogController.StartAction("Move unexpected items to recycle bin");
+            startDelegate.Start("Move unexpected items to recycle bin");
 
             foreach (var item in cleanupItems)
             {
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
                 recycleDelegate.Recycle(item);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             // check if any of the directories are left empty and delete
             var emptyDirectories = new List<string>();
@@ -80,15 +79,15 @@ namespace GOG.Delegates.Respond.Cleanup
             {
                 var directory = Path.GetDirectoryName(item);
                 if (!emptyDirectories.Contains(directory) &&
-                    !directoryController.EnumerateFiles(directory).Any()&&
-                    !directoryController.EnumerateDirectories(directory).Any())
+                    !Directory.EnumerateFiles(directory).Any() &&
+                    !Directory.EnumerateDirectories(directory).Any())
                     emptyDirectories.Add(directory);
             }
 
             foreach (var directory in emptyDirectories)
-                directoryController.Delete(directory);
+                Directory.Delete(directory);
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

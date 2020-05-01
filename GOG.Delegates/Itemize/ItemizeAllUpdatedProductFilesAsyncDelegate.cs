@@ -1,65 +1,67 @@
 ﻿using System.Collections.Generic;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Directory;
-using Interfaces.Controllers.Logs;
-
+using System.IO;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Itemize;
-
 using Attributes;
-
 using GOG.Models;
+using Delegates.Activities;
+using Delegates.Itemize.ProductTypes;
 
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeAllUpdatedProductFilesAsyncDelegate : IItemizeAllAsyncDelegate<string>
     {
-        readonly IDataController<long> updatedDataController;
-        readonly IDataController<GameDetails> gameDetailsDataController;
-        readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
-        readonly IDirectoryController directoryController;
-        readonly IActionLogController actionLogController;
+        private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Controllers.Data.ProductTypes.UpdatedDataController,Controllers",
-			"GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-			"GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
-			"Controllers.Directory.DirectoryController,Controllers",
-			"Controllers.Logs.ActionLogController,Controllers")]
+        [Dependencies(
+            typeof(ItemizeAllUpdatedAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsDirectoriesAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public ItemizeAllUpdatedProductFilesAsyncDelegate(
-            IDataController<long> updatedDataController,
-            IDataController<GameDetails> gameDetailsDataController,
+            IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
+            IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsDirectoriesAsyncDelegate,
-            IDirectoryController directoryController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.updatedDataController = updatedDataController;
-            this.gameDetailsDataController = gameDetailsDataController;
+            this.itemizeAllUpdatedAsyncDelegate = itemizeAllUpdatedAsyncDelegate;
+            this.getGameDetailsByIdAsyncDelegate = getGameDetailsByIdAsyncDelegate;
             this.itemizeGameDetailsDirectoriesAsyncDelegate = itemizeGameDetailsDirectoriesAsyncDelegate;
-            this.directoryController = directoryController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async IAsyncEnumerable<string> ItemizeAllAsync()
         {
-            actionLogController.StartAction("Enumerate updated productFiles");
+            startDelegate.Start("Enumerate updated productFiles");
 
-            await foreach (var id in updatedDataController.ItemizeAllAsync())
+            await foreach (var id in itemizeAllUpdatedAsyncDelegate.ItemizeAllAsync())
             {
-                var gameDetails = await gameDetailsDataController.GetByIdAsync(id);
+                var gameDetails = await getGameDetailsByIdAsyncDelegate.GetDataAsync(id);
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var gameDetailsDirectories =
                     await itemizeGameDetailsDirectoriesAsyncDelegate.ItemizeAsync(
                         gameDetails);
 
                 foreach (var gameDetailDirectory in gameDetailsDirectories)
-                    foreach (var updatedFile in directoryController.EnumerateFiles(gameDetailDirectory))
-                        yield return updatedFile;
+                foreach (var updatedFile in Directory.EnumerateFiles(gameDetailDirectory))
+                    yield return updatedFile;
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

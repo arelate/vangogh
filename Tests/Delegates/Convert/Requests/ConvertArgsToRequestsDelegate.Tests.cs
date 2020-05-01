@@ -1,19 +1,14 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-
+using Delegates.Convert.Requests;
+using Interfaces.Delegates.Convert;
+using Models.Requests;
+using Tests.TestDelegates.Convert.Types;
+using TestModels.Requests;
 using Xunit;
 
-using Controllers.Instances;
-
-using Interfaces.Delegates.Convert;
-
-using Models.Requests;
-
-using TestModels.ArgsDefinitions;
-using TestModels.Requests;
-
-namespace Delegates.Convert.Requests.Tests
+namespace Tests.Delegates.Convert.Requests
 {
     public class ConvertArgsToRequestsDelegateTests
     {
@@ -21,16 +16,15 @@ namespace Delegates.Convert.Requests.Tests
 
         public ConvertArgsToRequestsDelegateTests()
         {
-            var singletonInstancesController = new SingletonInstancesController(true);
-
-            this.convertArgsToRequestsDelegate = singletonInstancesController.GetInstance(
-                typeof(ConvertArgsToRequestsDelegate))
+            convertArgsToRequestsDelegate = DelegatesInstances.TestConvertTypeToInstanceDelegate.Convert(
+                    typeof(ConvertArgsToRequestsDelegate))
                 as ConvertArgsToRequestsDelegate;
         }
 
         private async Task<List<Request>> ConvertArgsToRequests(string args)
         {
-            var requests = convertArgsToRequestsDelegate.ConvertAsync(args.Split(" "));
+            var requests = 
+                convertArgsToRequestsDelegate.ConvertAsync(args.Split(" "));
             var requestsList = new List<Request>();
 
             await foreach (var request in requests)

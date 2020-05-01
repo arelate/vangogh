@@ -1,25 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.Itemize;
-
-
-
 using Attributes;
-
 using GOG.Models;
+using Delegates.GetDirectory.ProductTypes;
 
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsDirectoriesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
-        readonly IItemizeAsyncDelegate<GameDetails,string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        readonly IGetDirectoryDelegate getDirectoryDelegate;
+        private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
+        private readonly IGetDirectoryDelegate getDirectoryDelegate;
 
-		[Dependencies(
-			"GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate,GOG.Delegates",
-			"Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate,Delegates")]
+        [Dependencies(
+            typeof(GOG.Delegates.Itemize.ItemizeGameDetailsManualUrlsAsyncDelegate),
+            typeof(GetProductFilesDirectoryDelegate))]
         public ItemizeGameDetailsDirectoriesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
             IGetDirectoryDelegate getDirectoryDelegate)

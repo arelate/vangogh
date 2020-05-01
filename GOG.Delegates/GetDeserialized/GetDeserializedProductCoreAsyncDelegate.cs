@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Interfaces.Controllers.Network;
-
-using Interfaces.Controllers.Serialization;
-
+using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Data;
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.GetDeserialized
@@ -14,24 +10,31 @@ namespace GOG.Delegates.GetDeserialized
     public abstract class GetDeserializedProductCoreAsyncDelegate<T> : IGetDeserializedAsyncDelegate<T>
         where T : ProductCore
     {
-        readonly IGetResourceAsyncDelegate getResourceAsyncDelegate;
-        readonly ISerializationController<string> serializationController;
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
+
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
+            convertUriParametersToUriDelegate;
+
+        private readonly IConvertDelegate<string, T> convertJSONToProductCoreDelegate;
 
         public GetDeserializedProductCoreAsyncDelegate(
-            IGetResourceAsyncDelegate getResourceAsyncDelegate,
-            ISerializationController<string> serializationController)
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
+            IConvertDelegate<string, T> convertJSONToProductCoreDelegate)
         {
-            this.getResourceAsyncDelegate = getResourceAsyncDelegate;
-            this.serializationController = serializationController;
+            this.convertUriParametersToUriDelegate = convertUriParametersToUriDelegate;
+            this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
+            this.convertJSONToProductCoreDelegate = convertJSONToProductCoreDelegate;
         }
 
         public async Task<T> GetDeserializedAsync(string uri, IDictionary<string, string> parameters = null)
         {
-            var response = await getResourceAsyncDelegate.GetResourceAsync(uri, parameters);
+            var uriParameters = convertUriParametersToUriDelegate.Convert((uri, parameters));
+            var response = await getUriDataAsyncDelegate.GetDataAsync(uriParameters);
 
             if (response == null) return default(T);
 
-            return serializationController.Deserialize<T>(response);
+            return convertJSONToProductCoreDelegate.Convert(response);
         }
     }
 }

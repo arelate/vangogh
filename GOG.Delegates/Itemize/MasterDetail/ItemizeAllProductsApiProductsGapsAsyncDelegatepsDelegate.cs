@@ -1,27 +1,25 @@
-﻿using Interfaces.Controllers.Data;
-
+﻿using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Confirm;
 using Delegates.Itemize.MasterDetail;
-
 using Attributes;
-
 using GOG.Models;
 
 namespace GOG.Delegates.Itemize.MasterDetail
 {
-    public class ItemizeAllProductsApiProductsGapsAsyncDelegatepsDelegate :
-        ItemizeAllMasterDetailsGapsAsyncDelegate<Product,ApiProduct>
+    public class ItemizeAllProductsApiProductsGapsAsyncDelegate :
+        ItemizeAllMasterDetailsGapsAsyncDelegate<Product>
     {
         [Dependencies(
-            "GOG.Controllers.Data.ProductTypes.ProductsDataController,GOG.Controllers",
-            "GOG.Controllers.Data.ProductTypes.ApiProductsDataController,GOG.Controllers")]
-        public ItemizeAllProductsApiProductsGapsAsyncDelegatepsDelegate(
-            IDataController<Product> productsDataController,
-            IDataController<ApiProduct> apiProductsDataController):
+            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeAllProductsAsyncDelegate),
+            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmApiProductsContainIdAsyncDelegate))]
+        public ItemizeAllProductsApiProductsGapsAsyncDelegate(
+            IItemizeAllAsyncDelegate<Product> itemizeAllProductsAsyncDelegate,
+            IConfirmAsyncDelegate<long> confirmApiProductsContainIdAsyncDelegate) :
             base(
-                productsDataController,
-                apiProductsDataController)
-                {
-                    // ...
-                }
+                itemizeAllProductsAsyncDelegate,
+                confirmApiProductsContainIdAsyncDelegate)
+        {
+            // ...
+        }
     }
 }

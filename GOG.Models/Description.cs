@@ -5,9 +5,7 @@ namespace GOG.Models
     [DataContract]
     public class Description
     {
-        [DataMember(Name = "full")]
-        public string Full { get; set; }
-        [DataMember(Name = "lead")]
-        public string Lead { get; set; }
+        [DataMember(Name = "full")] public string Full { get; set; }
+        [DataMember(Name = "lead")] public string Lead { get; set; }
     }
 }

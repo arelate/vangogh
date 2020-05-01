@@ -1,31 +1,43 @@
-﻿using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+﻿using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.DownloadProductFile;
-
 using Attributes;
-
 using GOG.Models;
+using Delegates.Activities;
+using Delegates.Data.Models.ProductTypes;
+using Delegates.Itemize.ProductTypes;
 
 namespace GOG.Delegates.Respond.Download.ProductTypes
 {
     [RespondsToRequests(Method = "download", Collection = "productfiles")]
     public class RespondToDownloadProductFilesRequestDelegate : RespondToDownloadRequestDelegate<ProductFile>
     {
-		[Dependencies(
-			"Controllers.Data.ProductTypes.ProductDownloadsDataController,Controllers",
-			"GOG.Delegates.DownloadProductFile.DownloadManualUrlFileAsyncDelegate,GOG.Delegates",
-			"Controllers.Logs.ActionLogController,Controllers")]        
+        [Dependencies(
+            typeof(ItemizeAllProductDownloadsAsyncDelegate),
+            typeof(UpdateProductDownloadsAsyncDelegate),
+            typeof(DeleteProductDownloadsAsyncDelegate),
+            typeof(GOG.Delegates.DownloadProductFile.DownloadManualUrlFileAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToDownloadProductFilesRequestDelegate(
-            IDataController<ProductDownloads> productDownloadsDataController,
+            IItemizeAllAsyncDelegate<ProductDownloads> itemizeAllProductDownloadsAsyncDelegate,
+            IUpdateAsyncDelegate<ProductDownloads> updateProductDownloadsAsyncDelegate,
+            IDeleteAsyncDelegate<ProductDownloads> deleteProductDownloadsAsyncDelegate,
             IDownloadProductFileAsyncDelegate downloadProductFileAsyncDelegate,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
-                productDownloadsDataController,
+                itemizeAllProductDownloadsAsyncDelegate,
+                updateProductDownloadsAsyncDelegate,
+                deleteProductDownloadsAsyncDelegate,
                 downloadProductFileAsyncDelegate,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

@@ -10,6 +10,5 @@ namespace Models.Extensions
         public static string DMG = ".dmg";
         public static string PKG = ".pkg";
         public static string SH = ".sh";
-
     }
 }

@@ -1,13 +1,13 @@
 ﻿using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
-
-using Interfaces.Controllers.Directory;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using Models.ProductTypes;
+using Delegates.Format.Uri;
+using Delegates.Recycle;
+using Delegates.Activities;
+using Delegates.Itemize;
 
 namespace GOG.Delegates.Respond.Cleanup.ProductTypes
 {
@@ -15,29 +15,32 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
     public class RespondToCleanupFilesRequestDelegate : RespondToCleanupRequestDelegate<ProductFile>
     {
         [Dependencies(
-            "GOG.Delegates.Itemize.ItemizeAllGameDetailsDirectoriesAsyncDelegate,GOG.Delegates",
-            "GOG.Delegates.Itemize.ItemizeAllProductFilesDirectoriesAsyncDelegate,GOG.Delegates",
-            "Delegates.Itemize.ItemizeDirectoryFilesDelegate,Delegates",
-            "Delegates.Format.Uri.FormatValidationFileDelegate,Delegates",
-            "Delegates.Recycle.RecycleDelegate,Delegates",
-            "Controllers.Directory.DirectoryController,Controllers",
-            "Controllers.Logs.ActionLogController,Controllers")]
+            typeof(GOG.Delegates.Itemize.ItemizeAllGameDetailsDirectoriesAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.ItemizeAllProductFilesDirectoriesAsyncDelegate),
+            typeof(ItemizeDirectoryFilesDelegate),
+            typeof(FormatValidationFileDelegate),
+            typeof(RecycleDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public RespondToCleanupFilesRequestDelegate(
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedProductFilesAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualProductFilesAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
             IRecycleDelegate recycleDelegate,
-            IDirectoryController directoryController,
-            IActionLogController actionLogController) :
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate) :
             base(
                 itemizeAllExpectedProductFilesAsyncDelegate,
                 itemizeAllActualProductFilesAsyncDelegate,
                 itemizeDetailsDelegate,
                 formatSupplementaryItemDelegate,
                 recycleDelegate,
-                directoryController,
-                actionLogController)
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate)
         {
             // ...
         }

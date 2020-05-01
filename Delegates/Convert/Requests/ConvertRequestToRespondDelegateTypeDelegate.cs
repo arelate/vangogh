@@ -1,28 +1,25 @@
 using System;
-
-using Interfaces.Controllers.Collection;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Itemize;
-
+using Interfaces.Delegates.Collections;
 using Attributes;
-
 using Models.Requests;
 
 namespace Delegates.Convert.Requests
 {
     public class ConvertRequestToRespondDelegateTypeDelegate : IConvertDelegate<Request, Type>
     {
-        private readonly ICollectionController collectionController;
+        private readonly IFindDelegate<Type> findTypeDelegate;
         private readonly IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate;
 
         [Dependencies(
-            "Controllers.Collection.CollectionController,Controllers",
-            "GOG.Delegates.Itemize.Types.ItemizeAllRespondDelegateTypesDelegate,GOG.Delegates")]
+            typeof(Delegates.Collections.System.FindTypeDelegate),
+            typeof(Delegates.Itemize.Types.Attributes.ItemizeAllRespondsToRequestsAttributeTypesDelegate))]
         public ConvertRequestToRespondDelegateTypeDelegate(
-            ICollectionController collectionController,
+            IFindDelegate<Type> findTypeDelegate,
             IItemizeAllDelegate<Type> itemizeAllRespondDelegateTypesDelegate)
         {
-            this.collectionController = collectionController;
+            this.findTypeDelegate = findTypeDelegate;
             this.itemizeAllRespondDelegateTypesDelegate = itemizeAllRespondDelegateTypesDelegate;
         }
 
@@ -30,18 +27,19 @@ namespace Delegates.Convert.Requests
         {
             var respondDelegateTypes = itemizeAllRespondDelegateTypesDelegate.ItemizeAll();
 
-            var respondDelegate = collectionController.Find(respondDelegateTypes,
+            var respondDelegate = findTypeDelegate.Find(respondDelegateTypes,
                 delegateType =>
                 {
                     var respondsToRequestAttribute = Attribute.GetCustomAttribute(
-                        delegateType,
-                        typeof(RespondsToRequests))
+                            delegateType,
+                            typeof(RespondsToRequests))
                         as RespondsToRequests;
 
-                    return (respondsToRequestAttribute.Method == request.Method &&
-                        respondsToRequestAttribute.Collection == request.Collection) ||
-                        (respondsToRequestAttribute.Method == request.Method &&
-                        string.IsNullOrEmpty(respondsToRequestAttribute.Collection) && string.IsNullOrEmpty(request.Collection));
+                    return respondsToRequestAttribute.Method == request.Method &&
+                           respondsToRequestAttribute.Collection == request.Collection ||
+                           respondsToRequestAttribute.Method == request.Method &&
+                           string.IsNullOrEmpty(respondsToRequestAttribute.Collection) &&
+                           string.IsNullOrEmpty(request.Collection);
                 });
 
             return respondDelegate;

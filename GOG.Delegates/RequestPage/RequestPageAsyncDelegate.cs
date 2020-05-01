@@ -1,25 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using GOG.Interfaces.Delegates.RequestPage;
-
-using Interfaces.Controllers.Network;
-
 using Attributes;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Convert;
+using GOG.Interfaces.Delegates.RequestPage;
+using Delegates.Convert.Network;
 
 namespace GOG.Delegates.RequestPage
 {
-    public class RequestPageAsyncDelegate: IRequestPageAsyncDelegate
+    public class RequestPageAsyncDelegate : IRequestPageAsyncDelegate
     {
-        readonly INetworkController networkController;
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
+            convertUriParametersToUriDelegate;
 
-        const string pageQueryParameter = "page";
+        private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
 
-        [Dependencies("Controllers.Network.NetworkController,Controllers")]
+        private const string pageQueryParameter = "page";
+
+        [Dependencies(
+            typeof(ConvertUriDictionaryParametersToUriDelegate),
+            typeof(GOG.Delegates.Data.Network.GetUriDataRateLimitedAsyncDelegate))]
         public RequestPageAsyncDelegate(
-            INetworkController networkController)
+            IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate)
         {
-            this.networkController = networkController;
+            this.convertUriParametersToUriDelegate = convertUriParametersToUriDelegate;
+            this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
         }
 
         public async Task<string> RequestPageAsync(
@@ -32,7 +38,8 @@ namespace GOG.Delegates.RequestPage
 
             parameters[pageQueryParameter] = page.ToString();
 
-            var pageResponse = await networkController.GetResourceAsync(uri, parameters);
+            var uriParameters = convertUriParametersToUriDelegate.Convert((uri, parameters));
+            var pageResponse = await getUriDataAsyncDelegate.GetDataAsync(uriParameters);
 
             return pageResponse;
         }

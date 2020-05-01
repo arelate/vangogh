@@ -2,67 +2,66 @@
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-
 using Interfaces.Delegates.GetDirectory;
 using Interfaces.Delegates.GetFilename;
-
-using Interfaces.Controllers.File;
-
 using Interfaces.Delegates.Format;
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetDownloadSources;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Format.Uri;
+using Delegates.GetDirectory.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.GetDownloadSources
 {
     public class GetScreenshotsDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
     {
-        readonly IDataController<ProductScreenshots> screenshotsDataController;
-        readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
-        readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
-        readonly IFileController fileController;
-        readonly IActionLogController actionLogController;
+        private readonly IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate;
+        private readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
+        private readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
-		[Dependencies(
-			"Controllers.Data.ProductTypes.ProductScreenshotsDataController,Controllers",
-			"Delegates.Format.Uri.FormatScreenshotsUriDelegate,Delegates",
-			"Delegates.GetDirectory.ProductTypes.GetScreenshotsDirectoryDelegate,Delegates",
-			"Controllers.File.FileController,Controllers",
-			"Controllers.Logs.ActionLogController,Controllers")]
+        [Dependencies(
+            typeof(ItemizeAllProductScreenshotsAsyncDelegate),
+            typeof(FormatScreenshotsUriDelegate),
+            typeof(GetScreenshotsDirectoryDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate))]
         public GetScreenshotsDownloadSourcesAsyncDelegate(
-            IDataController<ProductScreenshots> screenshotsDataController,
+            IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetDirectoryDelegate screenshotsDirectoryDelegate,
-            IFileController fileController,
-            IActionLogController actionLogController)
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
-            this.screenshotsDataController = screenshotsDataController;
+            this.itemizeAllProductScreenshotsAsyncDelegate = itemizeAllProductScreenshotsAsyncDelegate;
             this.formatScreenshotsUriDelegate = formatScreenshotsUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
-            this.fileController = fileController;
-            this.actionLogController = actionLogController;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
         {
-            actionLogController.StartAction("Process screenshots updates");
+            startDelegate.Start("Process screenshots updates");
 
             var screenshotsSources = new Dictionary<long, IList<string>>();
 
-            await foreach (var productScreenshots in screenshotsDataController.ItemizeAllAsync())
+            await foreach (var productScreenshots in itemizeAllProductScreenshotsAsyncDelegate.ItemizeAllAsync())
             {
                 if (productScreenshots == null)
-                {
                     // await statusController.WarnAsync(processProductsScreenshotsTask, $"Product {productScreenshots.Id} doesn't have screenshots");
                     continue;
-                }
 
-                actionLogController.IncrementActionProgress();
+                setProgressDelegate.SetProgress();
 
                 var currentProductScreenshotSources = new List<string>();
 
@@ -73,7 +72,7 @@ namespace GOG.Delegates.GetDownloadSources
                         screenshotsDirectoryDelegate.GetDirectory(string.Empty),
                         Path.GetFileName(sourceUri));
 
-                    if (fileController.Exists(destinationUri)) continue;
+                    if (File.Exists(destinationUri)) continue;
 
                     currentProductScreenshotSources.Add(sourceUri);
                 }
@@ -82,7 +81,7 @@ namespace GOG.Delegates.GetDownloadSources
                     screenshotsSources.Add(productScreenshots.Id, currentProductScreenshotSources);
             }
 
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
 
             return screenshotsSources;
         }

@@ -1,19 +1,11 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Respond;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Records;
-using Interfaces.Controllers.Logs;
-using Interfaces.Models.Logs;
-
-using Interfaces.Models.RecordsTypes;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
-
 using GOG.Interfaces.Delegates.GetPageResults;
 
 namespace GOG.Delegates.Respond.Update
@@ -22,34 +14,40 @@ namespace GOG.Delegates.Respond.Update
         where PageType : Models.PageResult
         where DataType : ProductCore
     {
-        readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
-        readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
+        private readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
+        private readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
-        readonly IDataController<DataType> dataController;
-        readonly IRecordsController<string> activityRecordsController;
-        private readonly IActionLogController actionLogController;
+        // private readonly IDataController<DataType> dataController;
+        private readonly IUpdateAsyncDelegate<DataType> updateDataAsyncDelegate;
+        private readonly ICommitAsyncDelegate commitDataAsyncDelegate;
+        private readonly IStartDelegate startDelegate;
+        private readonly ISetProgressDelegate setProgressDelegate;
+        private readonly ICompleteDelegate completeDelegate;
 
         public RespondToUpdatePageResultRequestDelegate(
             IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
-            IDataController<DataType> dataController,
-            IRecordsController<string> activityRecordsController,
-            IActionLogController actionLogController)
+            IUpdateAsyncDelegate<DataType> updateDataAsyncDelegate,
+            ICommitAsyncDelegate commitDataAsyncDelegate,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate)
         {
             this.getPageResultsAsyncDelegate = getPageResultsAsyncDelegate;
             this.itemizePageResultsDelegate = itemizePageResultsDelegate;
 
-            this.dataController = dataController;
-            this.activityRecordsController = activityRecordsController;
-            this.actionLogController = actionLogController;
+            this.updateDataAsyncDelegate = updateDataAsyncDelegate;
+            this.commitDataAsyncDelegate = commitDataAsyncDelegate;
+            this.startDelegate = startDelegate;
+            this.setProgressDelegate = setProgressDelegate;
+            this.completeDelegate = completeDelegate;
         }
 
         public async Task RespondAsync(IDictionary<string, IEnumerable<string>> parameters)
         {
-            actionLogController.StartAction("Update products");
+            startDelegate.Start("Update products");
 
             var activityDescription = $"Update {typeof(DataType)}";
-            await activityRecordsController.SetRecordAsync(activityDescription, RecordsTypes.Started);
 
             var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync();
 
@@ -57,22 +55,20 @@ namespace GOG.Delegates.Respond.Update
 
             if (newProducts.Any())
             {
-                actionLogController.StartAction("Save new products");
+                startDelegate.Start("Save new products");
 
                 foreach (var product in newProducts)
                 {
-                    actionLogController.IncrementActionProgress();
-                    await dataController.UpdateAsync(product);
+                    setProgressDelegate.SetProgress();
+                    await updateDataAsyncDelegate.UpdateAsync(product);
                 }
 
-                actionLogController.CompleteAction();
+                completeDelegate.Complete();
             }
 
-            await activityRecordsController.SetRecordAsync(activityDescription, RecordsTypes.Completed);
+            await commitDataAsyncDelegate.CommitAsync();
 
-            await dataController.CommitAsync();
-
-            actionLogController.CompleteAction();
+            completeDelegate.Complete();
         }
     }
 }

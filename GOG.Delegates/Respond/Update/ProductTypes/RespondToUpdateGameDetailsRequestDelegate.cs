@@ -1,45 +1,53 @@
 ﻿using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Itemize;
-
-using Interfaces.Controllers.Data;
-using Interfaces.Controllers.Logs;
-
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Activities;
 using Attributes;
-
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Interfaces.Delegates.FillGaps;
 using GOG.Models;
+using Delegates.GetValue.Uri.ProductTypes;
+using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
-    [RespondsToRequests(Method="update", Collection="gamedetails")]
+    [RespondsToRequests(Method = "update", Collection = "gamedetails")]
     public class RespondToUpdateGameDetailsRequestDelegate :
         RespondToUpdateMasterDetailsRequestDelegate<GameDetails, AccountProduct>
     {
         [Dependencies(
-            "Delegates.GetValue.Uri.ProductTypes.GetGameDetailsUpdateUriDelegate,Delegates",
-            "GOG.Delegates.Convert.UpdateIdentity.ConvertAccountProductToGameDetailsUpdateIdentityDelegate,GOG.Delegates",
-            "GOG.Controllers.Data.ProductTypes.GameDetailsDataController,GOG.Controllers",
-            "GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegatepsDelegate,GOG.Delegates",
-            "GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate,GOG.Delegates",
-            "Controllers.Logs.ActionLogController,Controllers",
-            "GOG.Delegates.FillGaps.FillGameDetailsGapsDelegate,GOG.Delegates")]
+            typeof(GetGameDetailsUpdateUriDelegate),
+            typeof(GOG.Delegates.Convert.UpdateIdentity.ConvertAccountProductToGameDetailsUpdateIdentityDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateGameDetailsAsyncDelegate),
+            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitGameDetailsAsyncDelegate),
+            typeof(GOG.Delegates.Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate),
+            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate),
+            typeof(StartDelegate),
+            typeof(SetProgressDelegate),
+            typeof(CompleteDelegate),
+            typeof(GOG.Delegates.FillGaps.FillGameDetailsGapsDelegate))]
         public RespondToUpdateGameDetailsRequestDelegate(
             IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
             IConvertDelegate<AccountProduct, string> convertAccountProductToGameDetailsUpdateIdentityDelegate,
-            IDataController<GameDetails> gameDetailsDataController,
+            IUpdateAsyncDelegate<GameDetails> updateGameDetailsAsyncDelegate,
+            ICommitAsyncDelegate commitGameDetailsAsyncDelegate,
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
             IGetDeserializedAsyncDelegate<GameDetails> getDeserializedGameDetailsAsyncDelegate,
-            IActionLogController actionLogController,
+            IStartDelegate startDelegate,
+            ISetProgressDelegate setProgressDelegate,
+            ICompleteDelegate completeDelegate,
             IFillGapsDelegate<GameDetails, AccountProduct> fillGameDetailsGapsDelegate) :
             base(
                 getGameDetailsUpdateUriDelegate,
                 convertAccountProductToGameDetailsUpdateIdentityDelegate,
-                gameDetailsDataController,
+                updateGameDetailsAsyncDelegate,
+                commitGameDetailsAsyncDelegate,
                 itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
                 getDeserializedGameDetailsAsyncDelegate,
-                actionLogController,
+                startDelegate,
+                setProgressDelegate,
+                completeDelegate,
                 fillGameDetailsGapsDelegate)
         {
             // ...

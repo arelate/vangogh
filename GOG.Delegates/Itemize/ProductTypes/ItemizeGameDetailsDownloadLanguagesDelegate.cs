@@ -1,28 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
 using Interfaces.Delegates.Replace;
 using Interfaces.Delegates.Itemize;
-
 using Attributes;
-
-using Interfaces.Language;
+using Delegates.Replace;
 
 namespace GOG.Delegates.Itemize.ProductTypes
 {
     public class ItemizeGameDetailsDownloadLanguagesDelegate : IItemizeDelegate<string, string>
     {
-        ILanguageController languageController;
-        IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        private IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
 
         [Dependencies(
-            "Controllers.Language.LanguageController,Controllers",
-            "Delegates.Replace.ReplaceMultipleStringsDelegate,Delegates")]
+            typeof(ReplaceMultipleStringsDelegate))]
         public ItemizeGameDetailsDownloadLanguagesDelegate(
-            ILanguageController languageController,
             IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
         {
-            this.languageController = languageController;
             this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
         }
 
