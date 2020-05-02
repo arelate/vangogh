@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.UpdateScreenshots;
 using Attributes;
 using GOG.Models;
+using Models.ProductTypes;
 using Delegates.Activities;
+using Delegates.Data.Models.ProductTypes;
+using GOG.Delegates.Data.Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -14,26 +16,30 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
     public class RespondToUpdateScreenshotsRequestDelegate : IRespondAsyncDelegate
     {
         private readonly IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate;
-        private readonly IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<ProductScreenshots, Product> getScreenshotsByProductAsyncDelegate;
+        private readonly IUpdateAsyncDelegate<ProductScreenshots> updateProductScreenshotsAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
-            typeof(UpdateScreenshots.UpdateScreenshotsAsyncDelegate),
+            typeof(GetProductByIdAsyncDelegate),
+            typeof(GetProductScreenshotsByProductAsyncDelegate),
+            typeof(UpdateProductScreenshotsAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public RespondToUpdateScreenshotsRequestDelegate(
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
-            IUpdateScreenshotsAsyncDelegate<Product> updateScreenshotsAsyncDelegate,
+            IGetDataAsyncDelegate<ProductScreenshots, Product> getScreenshotsByProductAsyncDelegate,
+            IUpdateAsyncDelegate<ProductScreenshots> updateProductScreenshotsAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
             this.getProductByIdAsyncDelegate = getProductByIdAsyncDelegate;
-            this.updateScreenshotsAsyncDelegate = updateScreenshotsAsyncDelegate;
+            this.getScreenshotsByProductAsyncDelegate = getScreenshotsByProductAsyncDelegate;
+            this.updateProductScreenshotsAsyncDelegate = updateProductScreenshotsAsyncDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
             this.completeDelegate = completeDelegate;
@@ -63,7 +69,12 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
                 setProgressDelegate.SetProgress();
 
-                await updateScreenshotsAsyncDelegate.UpdateScreenshotsAsync(product);
+                // 
+                var productScreenshots = await getScreenshotsByProductAsyncDelegate.GetDataAsync(product);
+                
+                startDelegate.Start("Add product screenshots");
+                await updateProductScreenshotsAsyncDelegate.UpdateAsync(productScreenshots);
+                completeDelegate.Complete();
             }
 
             completeDelegate.Complete();

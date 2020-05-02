@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace GOG.Interfaces.Delegates.Authorize
+namespace Interfaces.Delegates.Authorization
 {
     public interface IAuthorizeAsyncDelegate
     {

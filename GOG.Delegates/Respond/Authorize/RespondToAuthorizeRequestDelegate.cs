@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.Authorize;
+using Interfaces.Delegates.Authorization;
 using Attributes;
 using Delegates.Activities;
 

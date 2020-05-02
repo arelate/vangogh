@@ -1,4 +1,4 @@
-﻿namespace GOG.Interfaces.Models
+﻿namespace Interfaces.Models.PageResult
 {
     public interface IPageResult
     {

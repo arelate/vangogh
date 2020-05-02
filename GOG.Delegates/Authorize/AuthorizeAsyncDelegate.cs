@@ -2,7 +2,7 @@ using System.Security;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.Authorize;
+using Interfaces.Delegates.Authorization;
 using Models.Uris;
 using Models.QueryParameters;
 using Attributes;

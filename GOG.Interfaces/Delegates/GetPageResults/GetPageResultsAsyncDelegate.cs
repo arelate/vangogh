@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using GOG.Interfaces.Models;
+using Interfaces.Models.PageResult;
 
 namespace GOG.Interfaces.Delegates.GetPageResults
 {
