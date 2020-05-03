@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
@@ -25,13 +25,13 @@ namespace GOG.Delegates.Respond.Update
         private readonly IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate;
         private readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
-        private readonly IGetValueDelegate<string> getDetailUpdateUriDelegate;
+        private readonly IGetValueDelegate<string, string> getDetailUpdateUriDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         public RespondToUpdateMasterDetailsRequestDelegate(
-            IGetValueDelegate<string> getDetailUpdateUriDelegate,
+            IGetValueDelegate<string, string> getDetailUpdateUriDelegate,
             IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate,
             IUpdateAsyncDelegate<DetailType> updateDetailAsyncDelegate,
             ICommitAsyncDelegate commitAsyncDelegate,
@@ -74,7 +74,7 @@ namespace GOG.Delegates.Respond.Update
                 if (string.IsNullOrEmpty(detailUpdateIdentity)) continue;
 
                 var detailUpdateUri = string.Format(
-                    getDetailUpdateUriDelegate.GetValue(),
+                    getDetailUpdateUriDelegate.GetValue(string.Empty),
                     detailUpdateIdentity);
 
                 var detailData = await getDeserializedDetailAsyncDelegate.GetDeserializedAsync(detailUpdateUri);

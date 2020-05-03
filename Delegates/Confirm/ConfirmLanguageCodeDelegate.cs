@@ -1,27 +1,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using Attributes;
+using Delegates.Values.Languages;
 using Interfaces.Delegates.Confirm;
-using Interfaces.Delegates.GetValue;
-using Delegates.GetValue.Languages;
+using Interfaces.Delegates.Values;
 
 namespace Delegates.Confirm
 {
     public class ConfirmLanguageCodeDelegate : IConfirmDelegate<string>
     {
-        private readonly IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate;
+        private readonly IGetValueDelegate<Dictionary<string, string>, string> getLanguageCodesDelegate;
 
         [Dependencies(
             typeof(GetLanguageCodesDelegate))]
         public ConfirmLanguageCodeDelegate(
-            IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate)
+            IGetValueDelegate<Dictionary<string, string>, string> getLanguageCodesDelegate)
         {
             this.getLanguageCodesDelegate = getLanguageCodesDelegate;
         }
 
         public bool Confirm(string code)
         {
-            var languageCodes = getLanguageCodesDelegate.GetValue();
+            var languageCodes = getLanguageCodesDelegate.GetValue(string.Empty);
             return languageCodes.Keys.Contains(code);
         }
     }

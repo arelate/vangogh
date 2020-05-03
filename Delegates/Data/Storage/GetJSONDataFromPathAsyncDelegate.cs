@@ -1,17 +1,17 @@
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 
 namespace Delegates.Data.Storage
 {
     public abstract class GetJSONDataFromPathAsyncDelegate<T> : IGetDataAsyncDelegate<T, string>
     {
         private readonly IGetDataAsyncDelegate<T, string> getJSONDataAsyncDelegate;
-        private readonly IGetPathDelegate getPathDelegate;
+        private readonly IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate;
 
         public GetJSONDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<T, string> getJSONDataAsyncDelegate,
-            IGetPathDelegate getPathDelegate)
+            IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate)
         {
             this.getJSONDataAsyncDelegate = getJSONDataAsyncDelegate;
             this.getPathDelegate = getPathDelegate;
@@ -20,7 +20,7 @@ namespace Delegates.Data.Storage
         public async Task<T> GetDataAsync(string uri = null)
         {
             return await getJSONDataAsyncDelegate.GetDataAsync(
-                getPathDelegate.GetPath(string.Empty, uri));
+                getPathDelegate.GetValue((string.Empty, uri)));
         }
     }
 }

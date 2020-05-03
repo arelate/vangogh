@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.Root;
+using Delegates.Values.Filenames.ProductTypes;
 
 namespace Delegates.GetPath.ProductTypes
 {
     public class GetUpdatedPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(GetDirectory.Root.GetDataDirectoryDelegate),
-            typeof(Delegates.GetFilename.ProductTypes.GetUpdatedFilenameDelegate))]
+            typeof(GetDataDirectoryDelegate),
+            typeof(GetUpdatedFilenameDelegate))]
         public GetUpdatedPathDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getUpdatedFilenameDelegate) :
+            IGetValueDelegate<string,string> getDirectoryDelegate,
+            IGetValueDelegate<string, string> getUpdatedFilenameDelegate) :
             base(
                 getDirectoryDelegate,
                 getUpdatedFilenameDelegate)

@@ -2,8 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
@@ -12,21 +11,21 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
 using Interfaces.Delegates.Confirm;
-using Delegates.GetDirectory.ProductTypes;
-using Delegates.GetFilename;
 using Delegates.Format.Uri;
 using Delegates.Confirm.Validation;
 using Delegates.Itemize.ProductTypes;
 using Delegates.Data.Routes;
 using Delegates.Activities;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames;
 
 namespace GOG.Delegates.Respond.Validate
 {
     [RespondsToRequests(Method = "validate", Collection = "productfiles")]
     public class RespondToValidateProductFilesRequestDelegate : IRespondAsyncDelegate
     {
-        private readonly IGetDirectoryDelegate productFileDirectoryDelegate;
-        private readonly IGetFilenameDelegate productFileFilenameDelegate;
+        private readonly IGetValueDelegate<string,string> productFileDirectoryDelegate;
+        private readonly IGetValueDelegate<string,string> getProductFileFilenameDelegate;
         private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
         private readonly IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
@@ -50,8 +49,8 @@ namespace GOG.Delegates.Respond.Validate
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public RespondToValidateProductFilesRequestDelegate(
-            IGetDirectoryDelegate productFileDirectoryDelegate,
-            IGetFilenameDelegate productFileFilenameDelegate,
+            IGetValueDelegate<string,string> productFileDirectoryDelegate,
+            IGetValueDelegate<string,string> getProductFileFilenameDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
             IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate,
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
@@ -63,7 +62,7 @@ namespace GOG.Delegates.Respond.Validate
             ICompleteDelegate completeDelegate)
         {
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
-            this.productFileFilenameDelegate = productFileFilenameDelegate;
+            this.getProductFileFilenameDelegate = getProductFileFilenameDelegate;
             this.formatValidationFileDelegate = formatValidationFileDelegate;
             this.confirmFileValidationExpectationsAsyncDelegate = confirmFileValidationExpectationsAsyncDelegate;
             this.getGameDetailsByIdAsyncDelegate = getGameDetailsByIdAsyncDelegate;
@@ -98,8 +97,8 @@ namespace GOG.Delegates.Respond.Validate
 
                     // use directory from source and file from resolved URI
                     var localFile = Path.Combine(
-                        productFileDirectoryDelegate.GetDirectory(manualUrl),
-                        productFileFilenameDelegate.GetFilename(resolvedUri));
+                        productFileDirectoryDelegate.GetValue(manualUrl),
+                        getProductFileFilenameDelegate.GetValue(resolvedUri));
 
                     localFiles.Add(localFile);
                 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
@@ -17,7 +17,7 @@ namespace GOG.Delegates.Itemize
     public class ItemizeGameDetailsFilesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate;
-        private readonly IGetPathDelegate getPathDelegate;
+        private readonly IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate;
         private readonly IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -31,7 +31,7 @@ namespace GOG.Delegates.Itemize
         public ItemizeGameDetailsFilesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsDelegate,
             IGetDataAsyncDelegate<string, (long Id, string Source)> getRouteDataAsyncDelegate,
-            IGetPathDelegate getPathDelegate,
+            IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
@@ -75,12 +75,12 @@ namespace GOG.Delegates.Itemize
                     continue;
 
                 //var localFileUri = Path.Combine(
-                //    getDirectoryDelegate.GetDirectory(gameDetailsManualUrls.ElementAt(ii)),
+                //    GetValueDelegate.GetValue(gameDetailsManualUrls.ElementAt(ii)),
                 //getFilenameDelegate.GetFilename(gameDetailsResolvedUris[ii]));
 
-                var localFilePath = getPathDelegate.GetPath(
+                var localFilePath = getPathDelegate.GetValue((
                     gameDetailsManualUrls.ElementAt(ii),
-                    gameDetailsResolvedUris[ii]);
+                    gameDetailsResolvedUris[ii]));
 
                 gameDetailsFiles.Add(localFilePath);
             }

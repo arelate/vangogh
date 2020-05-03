@@ -1,17 +1,17 @@
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 
 namespace Delegates.Data.Storage
 {
     public abstract class GetProtoBufDataFromPathAsyncDelegate<T> : IGetDataAsyncDelegate<T,string>
     {
         private readonly IGetDataAsyncDelegate<T, string> getProtoBufDataAsyncDelegate;
-        private readonly IGetPathDelegate getPathDelegate;
+        private readonly IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate;
 
         public GetProtoBufDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<T, string> getProtoBufDataAsyncDelegate,
-            IGetPathDelegate getPathDelegate)
+            IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate)
         {
             this.getProtoBufDataAsyncDelegate = getProtoBufDataAsyncDelegate;
             this.getPathDelegate = getPathDelegate;
@@ -20,7 +20,7 @@ namespace Delegates.Data.Storage
         public async Task<T> GetDataAsync(string uri = null)
         {
             return await getProtoBufDataAsyncDelegate.GetDataAsync(
-                getPathDelegate.GetPath(string.Empty, uri));
+                getPathDelegate.GetValue((string.Empty, uri)));
         }
     }
 }

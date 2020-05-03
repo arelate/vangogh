@@ -1,26 +1,26 @@
 ﻿using System.IO;
 using Interfaces.Delegates.Format;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 using Attributes;
 
 namespace Delegates.Format.Uri
 {
     public class FormatValidationFileDelegate : IFormatDelegate<string, string>
     {
-        private readonly IGetPathDelegate getPathDelegate;
+        private readonly IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate;
 
         [Dependencies(
             typeof(GetPath.Json.GetValidationPathDelegate))]
-        public FormatValidationFileDelegate(IGetPathDelegate getPathDelegate)
+        public FormatValidationFileDelegate(IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate)
         {
             this.getPathDelegate = getPathDelegate;
         }
 
         public string Format(string uri)
         {
-            return getPathDelegate.GetPath(
+            return getPathDelegate.GetValue((
                 string.Empty,
-                Path.GetFileName(uri));
+                Path.GetFileName(uri)));
         }
     }
 }

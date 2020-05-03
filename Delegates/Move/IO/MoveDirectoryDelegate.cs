@@ -8,8 +8,9 @@ namespace Delegates.Move.IO
         public void Move(string fromUri, string toUri)
         {
             var destination = Path.Combine(toUri, fromUri);
-            if (!Directory.Exists(Path.GetDirectoryName(destination)))
-                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+            var destinationDirectory = Path.GetDirectoryName(destination);
+            if (!Directory.Exists(destinationDirectory))
+                Directory.CreateDirectory(destinationDirectory);
             Directory.Move(
                 fromUri,
                 destination);

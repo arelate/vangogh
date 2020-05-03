@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Data;
 using GOG.Models;
 using Models.QueryParameters;
@@ -14,8 +13,8 @@ namespace GOG.Delegates.GetPageResults
         IGetDataAsyncDelegate<IList<T>, string> 
         where T : PageResult
     {
-        private readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
-        private readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
+        private readonly IGetValueDelegate<string, string> getPageResultsUpdateUriDelegate;
+        private readonly IGetValueDelegate<Dictionary<string, string>, string> getPageResultsUpdateQueryParametersDelegate;
         private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
             convertUriParametersToUriDelegate;
 
@@ -26,8 +25,8 @@ namespace GOG.Delegates.GetPageResults
         private readonly ICompleteDelegate completeDelegate;
         
         public GetPageResultsAsyncDelegate(
-            IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
-            IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
+            IGetValueDelegate<string, string> getPageResultsUpdateUriDelegate,
+            IGetValueDelegate<Dictionary<string, string>, string> getPageResultsUpdateQueryParametersDelegate,
             IConvertDelegate<(string, IDictionary<string, string>), string>
                 convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,            
@@ -65,8 +64,10 @@ namespace GOG.Delegates.GetPageResults
             var totalPages = 1;
             T pageResult = null;
 
-            var requestUri = getPageResultsUpdateUriDelegate.GetValue();
-            var requestParameters = getPageResultsUpdateQueryParametersDelegate.GetValue();
+            var requestUri = getPageResultsUpdateUriDelegate.GetValue(
+                string.Empty);
+            var requestParameters = getPageResultsUpdateQueryParametersDelegate.GetValue(
+                string.Empty);
 
             startDelegate.Start($"Request pages data");
 

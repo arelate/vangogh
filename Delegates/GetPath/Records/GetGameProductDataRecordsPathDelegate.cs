@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames.ProductTypes;
 
 namespace Delegates.GetPath.Records
 {
     public class GetGameProductDataRecordsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.ProductTypes.GetRecordsDirectoryDelegate),
-            typeof(Delegates.GetFilename.ProductTypes.GetGameProductDataFilenameDelegate))]
+            typeof(GetRecordsDirectoryDelegate),
+            typeof(GetGameProductDataFilenameDelegate))]
         public GetGameProductDataRecordsPathDelegate(
-            IGetDirectoryDelegate getRecordsDirectoryDelegate,
-            IGetFilenameDelegate getGameProductDataFilenameDelegate) :
+            IGetValueDelegate<string,string> getRecordsDirectoryDelegate,
+            IGetValueDelegate<string, string> getGameProductDataFilenameDelegate) :
             base(
                 getRecordsDirectoryDelegate,
                 getGameProductDataFilenameDelegate)

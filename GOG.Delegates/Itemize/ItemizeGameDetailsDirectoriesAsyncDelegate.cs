@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Itemize;
 using Attributes;
+using Delegates.Values.Directories.ProductTypes;
 using GOG.Models;
-using Delegates.GetDirectory.ProductTypes;
 
 namespace GOG.Delegates.Itemize
 {
     public class ItemizeGameDetailsDirectoriesAsyncDelegate : IItemizeAsyncDelegate<GameDetails, string>
     {
         private readonly IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate;
-        private readonly IGetDirectoryDelegate getDirectoryDelegate;
+        private readonly IGetValueDelegate<string,string> getDirectoryDelegate;
 
         [Dependencies(
             typeof(ItemizeGameDetailsManualUrlsAsyncDelegate),
             typeof(GetProductFilesDirectoryDelegate))]
         public ItemizeGameDetailsDirectoriesAsyncDelegate(
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncDelegate,
-            IGetDirectoryDelegate getDirectoryDelegate)
+            IGetValueDelegate<string,string> getDirectoryDelegate)
         {
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
@@ -30,7 +30,7 @@ namespace GOG.Delegates.Itemize
 
             foreach (var manualUrl in await itemizeGameDetailsManualUrlsAsyncDelegate.ItemizeAsync(gameDetails))
             {
-                var directory = getDirectoryDelegate.GetDirectory(manualUrl);
+                var directory = getDirectoryDelegate.GetValue(manualUrl);
 
                 if (!gameDetailsDirectories.Contains(directory))
                     gameDetailsDirectories.Add(directory);

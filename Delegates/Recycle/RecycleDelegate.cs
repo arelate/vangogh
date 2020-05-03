@@ -1,23 +1,23 @@
 ﻿using System.IO;
-using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Recycle;
 using Interfaces.Delegates.Move;
 using Attributes;
-using Delegates.GetDirectory.ProductTypes;
 using Delegates.Move.IO;
+using Delegates.Values.Directories.ProductTypes;
 
 namespace Delegates.Recycle
 {
     public class RecycleDelegate : IRecycleDelegate
     {
-        private readonly IGetDirectoryDelegate getDirectoryDelegate;
+        private readonly IGetValueDelegate<string,string> getDirectoryDelegate;
         private readonly IMoveDelegate<string> moveFileDelegate;
 
         [Dependencies(
             typeof(GetRecycleBinDirectoryDelegate),
             typeof(MoveFileDelegate))]
         public RecycleDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetValueDelegate<string,string> getDirectoryDelegate,
             IMoveDelegate<string> moveFileDelegate)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;
@@ -27,7 +27,7 @@ namespace Delegates.Recycle
         public void Recycle(string uri)
         {
             var recycleBinUri = Path.Combine(
-                getDirectoryDelegate.GetDirectory(string.Empty),
+                getDirectoryDelegate.GetValue(string.Empty),
                 uri);
             moveFileDelegate.Move(uri, recycleBinUri);
         }

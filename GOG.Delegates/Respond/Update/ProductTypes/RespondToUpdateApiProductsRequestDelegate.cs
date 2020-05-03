@@ -1,13 +1,13 @@
 ﻿using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
-using Delegates.GetValue.Uri.ProductTypes;
 using Delegates.Activities;
+using Delegates.Values.Uri.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -26,7 +26,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public RespondToUpdateApiProductsRequestDelegate(
-            IGetValueDelegate<string> getApiProductsUpdateUriDelegate,
+            IGetValueDelegate<string, string> getApiProductsUpdateUriDelegate,
             IConvertDelegate<Product, string> convertProductToApiProductUpdateIdentityDelegate,
             IUpdateAsyncDelegate<ApiProduct> updateApiProductsAsyncDelegate,
             ICommitAsyncDelegate commitApiProductsAsyncDelegate,

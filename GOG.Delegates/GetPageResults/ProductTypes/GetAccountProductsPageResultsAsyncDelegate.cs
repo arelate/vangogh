@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Interfaces.Delegates.Data;
 using GOG.Models;
-using Delegates.GetValue.Uri.ProductTypes;
-using Delegates.GetValue.QueryParameters.ProductTypes;
 using Delegates.Activities;
 using Delegates.Convert.Uri;
 using Delegates.Data.Network;
+using Delegates.Values.QueryParameters.ProductTypes;
+using Delegates.Values.Uri.ProductTypes;
 
 namespace GOG.Delegates.GetPageResults.ProductTypes
 {
@@ -25,8 +25,8 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public GetAccountProductsPageResultsAsyncDelegate(
-            IGetValueDelegate<string> getAccountProductsUpdateUriDelegate,
-            IGetValueDelegate<Dictionary<string, string>> getAccountProductsQueryUpdateQueryParameters,
+            IGetValueDelegate<string, string> getAccountProductsUpdateUriDelegate,
+            IGetValueDelegate<Dictionary<string, string>, string> getAccountProductsQueryUpdateQueryParameters,
             IConvertDelegate<(string, IDictionary<string, string>), string>
                 convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,            

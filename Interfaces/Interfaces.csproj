@@ -12,10 +12,6 @@
     <Compile Remove="Controllers\SerializedStorage\**" />
     <Compile Remove="Controllers\StrongTypeSerialization\**" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Delegates\GetPath\" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />

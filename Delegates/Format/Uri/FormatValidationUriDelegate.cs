@@ -1,20 +1,21 @@
 ﻿using System.IO;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Format;
 using Attributes;
+using Delegates.Values.Filenames;
 
 namespace Delegates.Format.Uri
 {
     public class FormatValidationUriDelegate : IFormatDelegate<string, string>
     {
-        private readonly IGetFilenameDelegate getValidationFilenameDelegate;
+        private readonly IGetValueDelegate<string, string> getValidationFilenameDelegate;
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
 
         [Dependencies(
-            typeof(GetFilename.GetValidationFilenameDelegate),
+            typeof(GetValidationFilenameDelegate),
             typeof(FormatUriRemoveSessionDelegate))]
         public FormatValidationUriDelegate(
-            IGetFilenameDelegate getValidationFilenameDelegate,
+            IGetValueDelegate<string, string> getValidationFilenameDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate)
         {
             this.getValidationFilenameDelegate = getValidationFilenameDelegate;
@@ -25,7 +26,7 @@ namespace Delegates.Format.Uri
         {
             var sourceUriSansSession = formatUriRemoveSessionDelegate.Format(sourceUri);
             var sourceFilename = Path.GetFileName(sourceUriSansSession);
-            var validationFilename = getValidationFilenameDelegate.GetFilename(sourceFilename);
+            var validationFilename = getValidationFilenameDelegate.GetValue(sourceFilename);
 
             return sourceUri.Replace(sourceFilename, validationFilename);
         }

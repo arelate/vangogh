@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Attributes;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 using Models.ProductTypes;
 
 namespace Delegates.Data.Storage.Records
@@ -14,7 +14,7 @@ namespace Delegates.Data.Storage.Records
             typeof(Delegates.GetPath.Records.GetAccountProductsRecordsPathDelegate))]
         public PostListAccountProductsRecordsDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<ProductRecords>> postListProductRecordsDataAsyncDelegate,
-            IGetPathDelegate getAccountProductsRecordsPathDelegate) :
+            IGetValueDelegate<string,(string Directory,string Filename)> getAccountProductsRecordsPathDelegate) :
             base(
                 postListProductRecordsDataAsyncDelegate,
                 getAccountProductsRecordsPathDelegate)

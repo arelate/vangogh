@@ -1,18 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
-using Delegates.GetFilename.Records;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames.Records;
 
 namespace Delegates.GetPath.Records
 {
     public class GetSessionRecordsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.ProductTypes.GetRecordsDirectoryDelegate),
+            typeof(GetRecordsDirectoryDelegate),
             typeof(GetSessionRecordsFilenameDelegate))]
         public GetSessionRecordsPathDelegate(
-            IGetDirectoryDelegate getRecordsDirectoryDelegate,
-            IGetFilenameDelegate getSessionRecordsFilenameDelegate) :
+            IGetValueDelegate<string,string> getRecordsDirectoryDelegate,
+            IGetValueDelegate<string, string> getSessionRecordsFilenameDelegate) :
             base(getRecordsDirectoryDelegate, getSessionRecordsFilenameDelegate)
         {
             // ...

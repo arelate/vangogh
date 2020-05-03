@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames;
 
 namespace Delegates.GetPath.Json
 {
     public class GetGameDetailsFilesPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.ProductTypes.GetProductFilesDirectoryDelegate),
-            typeof(GetFilename.GetUriFilenameDelegate))]
+            typeof(GetProductFilesDirectoryDelegate),
+            typeof(GetUriFilenameDelegate))]
         public GetGameDetailsFilesPathDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate) :
+            IGetValueDelegate<string,string> getDirectoryDelegate,
+            IGetValueDelegate<string, string> getFilenameDelegate) :
             base(getDirectoryDelegate, getFilenameDelegate)
         {
             // ...

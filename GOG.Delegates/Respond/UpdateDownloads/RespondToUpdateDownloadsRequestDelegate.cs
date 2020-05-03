@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
-using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
@@ -16,7 +16,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
         where Type : ProductCore
     {
         private readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
-        private readonly IGetDirectoryDelegate getDirectoryDelegate;
+        private readonly IGetValueDelegate<string,string> getDirectoryDelegate;
         private readonly IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate;
         private readonly IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate;
         private readonly IGetDataAsyncDelegate<ProductDownloads, long> getProductDownloadsByIdAsyncDelegate;
@@ -28,7 +28,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
 
         public RespondToUpdateDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
-            IGetDirectoryDelegate getDirectoryDelegate,
+            IGetValueDelegate<string,string> getDirectoryDelegate,
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
             IGetDataAsyncDelegate<ProductDownloads, long> getProductDownloadsByIdAsyncDelegate,
@@ -104,7 +104,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
 
                 foreach (var source in downloadSource.Value)
                 {
-                    var destinationDirectory = getDirectoryDelegate?.GetDirectory(source);
+                    var destinationDirectory = getDirectoryDelegate?.GetValue(source);
 
                     var scheduledDownloadEntry = new ProductDownloadEntry
                     {

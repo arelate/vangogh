@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
 using GOG.Models;
-using Delegates.GetValue.Uri.ProductTypes;
 using Delegates.Activities;
+using Delegates.Values.Uri.ProductTypes;
 using GOG.Delegates.Data.Network;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
 {
     public class GetProductScreenshotsByProductAsyncDelegate : IGetDataAsyncDelegate<ProductScreenshots, Product>
     {
-        private readonly IGetValueDelegate<string> getUpdateUriDelegate;
+        private readonly IGetValueDelegate<string, string> getUpdateUriDelegate;
         private readonly IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate;
         private readonly IItemizeDelegate<string, string> itemizeScreenshotsDelegates;
 
@@ -29,7 +29,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public GetProductScreenshotsByProductAsyncDelegate(
-            IGetValueDelegate<string> getUpdateUriDelegate,
+            IGetValueDelegate<string, string> getUpdateUriDelegate,
             IGetDataAsyncDelegate<string, string> getUriDataAsyncDelegate,
             IItemizeDelegate<string, string> itemizeScreenshotsDelegates,
             IStartDelegate startDelegate,
@@ -47,7 +47,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
             startDelegate.Start("Request product page containing screenshots information");
             
             var productPageUri = string.Format(
-                getUpdateUriDelegate.GetValue(), 
+                getUpdateUriDelegate.GetValue(string.Empty), 
                 product.Url);
             
             var productPageContent = await getUriDataAsyncDelegate.GetDataAsync(

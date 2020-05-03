@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Attributes;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 using Models.ProductTypes;
 
 namespace Delegates.Data.Storage.Records
@@ -14,7 +14,7 @@ namespace Delegates.Data.Storage.Records
             typeof(Delegates.GetPath.Records.GetWishlistedRecordsPathDelegate))]
         public GetListWishlistedRecordsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductRecords>, string> getListProductRecordsDataAsyncDelegate,
-            IGetPathDelegate getWishlistedRecordsPathDelegate) :
+            IGetValueDelegate<string,(string Directory,string Filename)> getWishlistedRecordsPathDelegate) :
             base(
                 getListProductRecordsDataAsyncDelegate,
                 getWishlistedRecordsPathDelegate)

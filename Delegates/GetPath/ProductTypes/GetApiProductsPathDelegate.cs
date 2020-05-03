@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.Root;
+using Delegates.Values.Filenames.ProductTypes;
 
 namespace Delegates.GetPath.ProductTypes
 {
     public class GetApiProductsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(GetDirectory.Root.GetDataDirectoryDelegate),
-            typeof(Delegates.GetFilename.ProductTypes.GetApiProductsFilenameDelegate))]
+            typeof(GetDataDirectoryDelegate),
+            typeof(GetApiProductsFilenameDelegate))]
         public GetApiProductsPathDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getApiProductsFilenameDelegate) :
+            IGetValueDelegate<string,string> getDirectoryDelegate,
+            IGetValueDelegate<string, string> getApiProductsFilenameDelegate) :
             base(
                 getDirectoryDelegate,
                 getApiProductsFilenameDelegate)

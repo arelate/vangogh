@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Attributes;
+using Delegates.Values.Languages;
 using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Collections;
 
 
@@ -9,14 +10,14 @@ namespace Delegates.Convert
 {
     public class ConvertLanguageToCodeDelegate : IConvertDelegate<string, string>
     {
-        private readonly IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate;
+        private readonly IGetValueDelegate<Dictionary<string, string>, string> getLanguageCodesDelegate;
         private readonly IFindDelegate<KeyValuePair<string, string>> findLanguageCodeDelegate;
 
         [Dependencies(
-            typeof(GetValue.Languages.GetLanguageCodesDelegate),
+            typeof(GetLanguageCodesDelegate),
             typeof(Delegates.Collections.System.FindStringKeyStringValuePairDelegate))]
         public ConvertLanguageToCodeDelegate(
-            IGetValueDelegate<Dictionary<string, string>> getLanguageCodesDelegate,
+            IGetValueDelegate<Dictionary<string, string>, string> getLanguageCodesDelegate,
             IFindDelegate<KeyValuePair<string, string>> findLanguageCodeDelegate)
         {
             this.getLanguageCodesDelegate = getLanguageCodesDelegate;
@@ -25,7 +26,7 @@ namespace Delegates.Convert
 
         public string Convert(string language)
         {
-            var languageCodes = getLanguageCodesDelegate.GetValue();
+            var languageCodes = getLanguageCodesDelegate.GetValue(string.Empty);
             return findLanguageCodeDelegate.Find(languageCodes, lc => lc.Value == language).Key;
         }
     }

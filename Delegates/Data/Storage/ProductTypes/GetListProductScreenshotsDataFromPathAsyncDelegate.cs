@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Attributes;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 using Models.ProductTypes;
 
 namespace Delegates.Data.Storage.ProductTypes
@@ -14,7 +14,7 @@ namespace Delegates.Data.Storage.ProductTypes
             typeof(Delegates.GetPath.ProductTypes.GetProductScreenshotsPathDelegate))]
         public GetListProductScreenshotsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductScreenshots>, string> getListProductScreenshotsDataAsyncDelegate,
-            IGetPathDelegate getProductScreenshotsPathDelegate) :
+            IGetValueDelegate<string,(string Directory,string Filename)> getProductScreenshotsPathDelegate) :
             base(
                 getListProductScreenshotsDataAsyncDelegate,
                 getProductScreenshotsPathDelegate)

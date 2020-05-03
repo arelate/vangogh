@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
 using Attributes;
+using Delegates.Values.Activities;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Models.Activities;
 using Models.Activities;
-using Delegates.GetValue.Activities;
 
 namespace Delegates.Activities
 {
     public class StartDelegate : IStartDelegate
     {
-        private readonly IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate;
+        private readonly IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate;
 
         [Dependencies(
             typeof(GetOngoingActivitiesValueDelegate))]
-        public StartDelegate(IGetValueDelegate<Stack<IActivity>> getOngoingActivitiesValueDelegate)
+        public StartDelegate(IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate)
         {
             this.getOngoingActivitiesValueDelegate = getOngoingActivitiesValueDelegate;
         }
@@ -24,7 +24,7 @@ namespace Delegates.Activities
         {
             var activity = new Activity() {Title = title, Started = DateTime.UtcNow};
 
-            var ongoingActivities = getOngoingActivitiesValueDelegate.GetValue();
+            var ongoingActivities = getOngoingActivitiesValueDelegate.GetValue(string.Empty);
             ongoingActivities.Push(activity);
 
             Console.WriteLine($"Started action {activity.Title}");

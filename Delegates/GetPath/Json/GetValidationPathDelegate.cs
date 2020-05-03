@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames;
 
 namespace Delegates.GetPath.Json
 {
     public class GetValidationPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.ProductTypes.GetMd5DirectoryDelegate),
-            typeof(GetFilename.GetValidationFilenameDelegate))]
+            typeof(GetMd5DirectoryDelegate),
+            typeof(GetValidationFilenameDelegate))]
         public GetValidationPathDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate) :
+            IGetValueDelegate<string,string> getDirectoryDelegate,
+            IGetValueDelegate<string, string> getFilenameDelegate) :
             base(getDirectoryDelegate, getFilenameDelegate)
         {
             // ...

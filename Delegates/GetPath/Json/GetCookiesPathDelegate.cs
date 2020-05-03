@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.Root;
+using Delegates.Values.Filenames.Json;
 
 namespace Delegates.GetPath.Json
 {
     public class GetCookiesPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(GetDirectory.Root.GetEmptyDirectoryDelegate),
-            typeof(Delegates.GetFilename.Json.GetCookiesFilenameDelegate))]
+            typeof(GetEmptyDirectoryDelegate),
+            typeof(GetCookiesFilenameDelegate))]
         public GetCookiesPathDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate) :
+            IGetValueDelegate<string,string> getDirectoryDelegate,
+            IGetValueDelegate<string, string> getFilenameDelegate) :
             base(getDirectoryDelegate, getFilenameDelegate)
         {
             // ...

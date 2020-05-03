@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Download;
@@ -9,9 +9,9 @@ using Attributes;
 using GOG.Interfaces.Delegates.DownloadProductFile;
 using Delegates.Format.Uri;
 using Delegates.Confirm.Validation;
-using Delegates.GetDirectory.ProductTypes;
 using Delegates.Download;
 using Delegates.Activities;
+using Delegates.Values.Directories.ProductTypes;
 
 namespace GOG.Delegates.DownloadProductFile
 {
@@ -20,7 +20,7 @@ namespace GOG.Delegates.DownloadProductFile
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private readonly IConfirmDelegate<string> confirmValidationExpectedDelegate;
         private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
-        private readonly IGetDirectoryDelegate validationDirectoryDelegate;
+        private readonly IGetValueDelegate<string,string> validationDirectoryDelegate;
         private readonly IFormatDelegate<string, string> formatValidationUriDelegate;
         private readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
         private readonly IStartDelegate startDelegate;
@@ -39,7 +39,7 @@ namespace GOG.Delegates.DownloadProductFile
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
-            IGetDirectoryDelegate validationDirectoryDelegate,
+            IGetValueDelegate<string,string> validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
             IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate,
             IStartDelegate startDelegate,
@@ -75,7 +75,7 @@ namespace GOG.Delegates.DownloadProductFile
 
             await downloadFromUriAsyncDelegate.DownloadFromUriAsync(
                 validationSourceUri,
-                validationDirectoryDelegate.GetDirectory(string.Empty));
+                validationDirectoryDelegate.GetValue(string.Empty));
 
             completeDelegate.Complete();
         }

@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames.ProductTypes;
 
 namespace Delegates.GetPath.Records
 {
     public class GetWishlistedRecordsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.ProductTypes.GetRecordsDirectoryDelegate),
-            typeof(Delegates.GetFilename.ProductTypes.GetWishlistedFilenameDelegate))]
+            typeof(GetRecordsDirectoryDelegate),
+            typeof(GetWishlistedFilenameDelegate))]
         public GetWishlistedRecordsPathDelegate(
-            IGetDirectoryDelegate getRecordsDirectoryDelegate,
-            IGetFilenameDelegate getWishlistedFilenameDelegate) :
+            IGetValueDelegate<string,string> getRecordsDirectoryDelegate,
+            IGetValueDelegate<string, string> getWishlistedFilenameDelegate) :
             base(
                 getRecordsDirectoryDelegate,
                 getWishlistedFilenameDelegate)

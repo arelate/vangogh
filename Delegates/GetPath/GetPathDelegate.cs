@@ -1,28 +1,26 @@
 ﻿using System.IO;
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 
 namespace Delegates.GetPath
 {
-    public abstract class GetPathDelegate : IGetPathDelegate
+    public abstract class GetPathDelegate : IGetValueDelegate<string,(string Directory,string Filename)>
     {
-        private readonly IGetDirectoryDelegate getDirectoryDelegate;
-        private readonly IGetFilenameDelegate getFilenameDelegate;
+        private readonly IGetValueDelegate<string,string> getDirectoryDelegate;
+        private readonly IGetValueDelegate<string, string> getFilenameDelegate;
 
         public GetPathDelegate(
-            IGetDirectoryDelegate getDirectoryDelegate,
-            IGetFilenameDelegate getFilenameDelegate)
+            IGetValueDelegate<string,string> getDirectoryDelegate,
+            IGetValueDelegate<string, string> getFilenameDelegate)
         {
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getFilenameDelegate = getFilenameDelegate;
         }
 
-        public string GetPath(string directoryInput, string filenameInput)
+        public string GetValue((string Directory, string Filename) directoryFilename)
         {
             return Path.Combine(
-                getDirectoryDelegate.GetDirectory(directoryInput),
-                getFilenameDelegate.GetFilename(filenameInput));
+                getDirectoryDelegate.GetValue(directoryFilename.Directory),
+                getFilenameDelegate.GetValue(directoryFilename.Filename));
         }
     }
 }

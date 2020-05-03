@@ -1,8 +1,7 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
-using Delegates.GetDirectory.ProductTypes;
-using Delegates.GetFilename.ProductTypes;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames.ProductTypes;
 
 namespace Delegates.GetPath.Records
 {
@@ -12,8 +11,8 @@ namespace Delegates.GetPath.Records
             typeof(GetRecordsDirectoryDelegate),
             typeof(GetApiProductsFilenameDelegate))]
         public GetApiProductsRecordsPathDelegate(
-            IGetDirectoryDelegate getRecordsDirectoryDelegate,
-            IGetFilenameDelegate getApiProductsFilenameDelegate) :
+            IGetValueDelegate<string,string> getRecordsDirectoryDelegate,
+            IGetValueDelegate<string, string> getApiProductsFilenameDelegate) :
             base(
                 getRecordsDirectoryDelegate,
                 getApiProductsFilenameDelegate)

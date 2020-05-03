@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Attributes;
 using Delegates.Data.Storage;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 using GOG.Models;
 using Delegates.GetPath.ProductTypes;
 
@@ -15,7 +15,7 @@ namespace GOG.Delegates.Data.Storage.ProductTypes
             typeof(GetGameDetailsPathDelegate))]
         public PostListGameDetailsDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<GameDetails>> postListGameDetailsDataAsyncDelegate,
-            IGetPathDelegate getGameDetailsPathDelegate) :
+            IGetValueDelegate<string,(string Directory,string Filename)> getGameDetailsPathDelegate) :
             base(
                 postListGameDetailsDataAsyncDelegate,
                 getGameDetailsPathDelegate)

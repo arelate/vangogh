@@ -1,17 +1,18 @@
-using Interfaces.Delegates.GetDirectory;
-using Interfaces.Delegates.GetFilename;
+using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Directories.ProductTypes;
+using Delegates.Values.Filenames.ProductTypes;
 
 namespace Delegates.GetPath.Records
 {
     public class GetValidationResultsRecordsPathDelegate : GetPathDelegate
     {
         [Dependencies(
-            typeof(Delegates.GetDirectory.ProductTypes.GetRecordsDirectoryDelegate),
-            typeof(Delegates.GetFilename.ProductTypes.GetValidationResultsFilenameDelegate))]
+            typeof(GetRecordsDirectoryDelegate),
+            typeof(GetValidationResultsFilenameDelegate))]
         public GetValidationResultsRecordsPathDelegate(
-            IGetDirectoryDelegate getRecordsDirectoryDelegate,
-            IGetFilenameDelegate getValidationResultsFilenameDelegate) :
+            IGetValueDelegate<string,string> getRecordsDirectoryDelegate,
+            IGetValueDelegate<string, string> getValidationResultsFilenameDelegate) :
             base(
                 getRecordsDirectoryDelegate,
                 getValidationResultsFilenameDelegate)

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Attributes;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.GetPath;
+using Interfaces.Delegates.Values;
 
 namespace Delegates.Data.Storage.ProductTypes
 {
@@ -12,7 +12,7 @@ namespace Delegates.Data.Storage.ProductTypes
             typeof(Delegates.GetPath.ProductTypes.GetUpdatedPathDelegate))]
         public GetListUpdatedDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<long>, string> getListUpdatedDataAsyncDelegate,
-            IGetPathDelegate getUpdatedPathDelegate) :
+            IGetValueDelegate<string,(string Directory,string Filename)> getUpdatedPathDelegate) :
             base(
                 getListUpdatedDataAsyncDelegate,
                 getUpdatedPathDelegate)

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-using Interfaces.Delegates.GetDirectory;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
@@ -11,8 +11,8 @@ using Models.ProductTypes;
 using GOG.Interfaces.Delegates.GetDownloadSources;
 using Delegates.Itemize.ProductTypes;
 using Delegates.Format.Uri;
-using Delegates.GetDirectory.ProductTypes;
 using Delegates.Activities;
+using Delegates.Values.Directories.ProductTypes;
 
 namespace GOG.Delegates.GetDownloadSources
 {
@@ -20,7 +20,7 @@ namespace GOG.Delegates.GetDownloadSources
     {
         private readonly IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate;
         private readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
-        private readonly IGetDirectoryDelegate screenshotsDirectoryDelegate;
+        private readonly IGetValueDelegate<string,string> screenshotsDirectoryDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -35,7 +35,7 @@ namespace GOG.Delegates.GetDownloadSources
         public GetScreenshotsDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
-            IGetDirectoryDelegate screenshotsDirectoryDelegate,
+            IGetValueDelegate<string,string> screenshotsDirectoryDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
@@ -68,7 +68,7 @@ namespace GOG.Delegates.GetDownloadSources
                 {
                     var sourceUri = formatScreenshotsUriDelegate.Format(uri);
                     var destinationUri = Path.Combine(
-                        screenshotsDirectoryDelegate.GetDirectory(string.Empty),
+                        screenshotsDirectoryDelegate.GetValue(string.Empty),
                         Path.GetFileName(sourceUri));
 
                     if (File.Exists(destinationUri)) continue;

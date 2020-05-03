@@ -1,4 +1,4 @@
-﻿using Interfaces.Delegates.GetDirectory;
+﻿using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.GetDownloadSources;
@@ -7,7 +7,7 @@ using GOG.Models;
 using Models.ProductTypes;
 using Delegates.Data.Models.ProductTypes;
 using Delegates.Activities;
-using Delegates.GetDirectory.ProductTypes;
+using Delegates.Values.Directories.ProductTypes;
 
 namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
@@ -29,7 +29,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             typeof(CompleteDelegate))]
         public RespondToUpdateProductScreenshotsDownloadsRequestDelegate(
             IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
-            IGetDirectoryDelegate getProductScreenshotsDirectoryDelegate,
+            IGetValueDelegate<string,string> getProductScreenshotsDirectoryDelegate,
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
             IGetDataAsyncDelegate<ProductDownloads, long> getProductDownloadsByIdAsyncDelegate,

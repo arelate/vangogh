@@ -1,5 +1,5 @@
 ﻿using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.GetValue;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
@@ -7,8 +7,8 @@ using Attributes;
 using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Interfaces.Delegates.FillGaps;
 using GOG.Models;
-using Delegates.GetValue.Uri.ProductTypes;
 using Delegates.Activities;
+using Delegates.Values.Uri.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -28,7 +28,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             typeof(CompleteDelegate),
             typeof(FillGaps.FillGameDetailsGapsDelegate))]
         public RespondToUpdateGameDetailsRequestDelegate(
-            IGetValueDelegate<string> getGameDetailsUpdateUriDelegate,
+            IGetValueDelegate<string, string> getGameDetailsUpdateUriDelegate,
             IConvertDelegate<AccountProduct, string> convertAccountProductToGameDetailsUpdateIdentityDelegate,
             IUpdateAsyncDelegate<GameDetails> updateGameDetailsAsyncDelegate,
             ICommitAsyncDelegate commitGameDetailsAsyncDelegate,
