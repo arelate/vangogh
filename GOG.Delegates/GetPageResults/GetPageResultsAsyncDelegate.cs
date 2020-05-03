@@ -3,26 +3,34 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.GetPageResults;
-using GOG.Interfaces.Delegates.RequestPage;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Data;
 using GOG.Models;
+using Models.QueryParameters;
 
 namespace GOG.Delegates.GetPageResults
 {
-    public abstract class GetPageResultsAsyncDelegate<T> : IGetPageResultsAsyncDelegate<T> where T : PageResult
+    public abstract class GetPageResultsAsyncDelegate<T> : 
+        IGetDataAsyncDelegate<IList<T>, string> 
+        where T : PageResult
     {
         private readonly IGetValueDelegate<string> getPageResultsUpdateUriDelegate;
         private readonly IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate;
-        private readonly IRequestPageAsyncDelegate requestPageAsyncDelegate;
+        private readonly IConvertDelegate<(string, IDictionary<string, string>), string>
+            convertUriParametersToUriDelegate;
+
+        private readonly IGetDataAsyncDelegate<string, string> getUriDataAsyncDelegate;
         private readonly IConvertDelegate<string, T> convertJSONToTypeDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
-
+        
         public GetPageResultsAsyncDelegate(
             IGetValueDelegate<string> getPageResultsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getPageResultsUpdateQueryParametersDelegate,
-            IRequestPageAsyncDelegate requestPageAsyncDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string>
+                convertUriParametersToUriDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,            
             IConvertDelegate<string, T> convertJSONToTypeDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
@@ -30,8 +38,9 @@ namespace GOG.Delegates.GetPageResults
         {
             this.getPageResultsUpdateUriDelegate = getPageResultsUpdateUriDelegate;
             this.getPageResultsUpdateQueryParametersDelegate = getPageResultsUpdateQueryParametersDelegate;
+            this.convertUriParametersToUriDelegate = convertUriParametersToUriDelegate;
 
-            this.requestPageAsyncDelegate = requestPageAsyncDelegate;
+            this.getUriDataAsyncDelegate = getUriDataAsyncDelegate;
             this.convertJSONToTypeDelegate = convertJSONToTypeDelegate;
 
             this.startDelegate = startDelegate;
@@ -39,7 +48,7 @@ namespace GOG.Delegates.GetPageResults
             this.completeDelegate = completeDelegate;
         }
 
-        public async Task<IList<T>> GetPageResultsAsync()
+        public async Task<IList<T>> GetDataAsync(string uri)
         {
             // GOG.com quirk
             // Products, AccountProducts use server-side paginated results, similar to Wikipedia.
@@ -63,10 +72,16 @@ namespace GOG.Delegates.GetPageResults
 
             do
             {
-                var response = await requestPageAsyncDelegate.RequestPageAsync(
-                    requestUri,
-                    requestParameters,
-                    currentPage);
+                if (!requestParameters.ContainsKey(QueryParameters.Page))
+                    requestParameters.Add(
+                        QueryParameters.Page, 
+                        currentPage.ToString());
+
+                requestParameters[QueryParameters.Page] = currentPage.ToString();
+                
+                var uriParameters = convertUriParametersToUriDelegate.Convert((requestUri, requestParameters));
+                
+                var response = await getUriDataAsyncDelegate.GetDataAsync(uriParameters);
 
                 setProgressDelegate.SetProgress();
 

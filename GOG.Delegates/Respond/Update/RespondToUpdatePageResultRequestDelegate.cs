@@ -6,7 +6,6 @@ using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
-using GOG.Interfaces.Delegates.GetPageResults;
 
 namespace GOG.Delegates.Respond.Update
 {
@@ -14,7 +13,7 @@ namespace GOG.Delegates.Respond.Update
         where PageType : Models.PageResult
         where DataType : ProductCore
     {
-        private readonly IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<IList<PageType>, string> getPageResultsAsyncDelegate;
         private readonly IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate;
 
         // private readonly IDataController<DataType> dataController;
@@ -25,7 +24,7 @@ namespace GOG.Delegates.Respond.Update
         private readonly ICompleteDelegate completeDelegate;
 
         public RespondToUpdatePageResultRequestDelegate(
-            IGetPageResultsAsyncDelegate<PageType> getPageResultsAsyncDelegate,
+            IGetDataAsyncDelegate<IList<PageType>, string> getPageResultsAsyncDelegate,
             IItemizeDelegate<IList<PageType>, DataType> itemizePageResultsDelegate,
             IUpdateAsyncDelegate<DataType> updateDataAsyncDelegate,
             ICommitAsyncDelegate commitDataAsyncDelegate,
@@ -49,7 +48,8 @@ namespace GOG.Delegates.Respond.Update
 
             var activityDescription = $"Update {typeof(DataType)}";
 
-            var productsPageResults = await getPageResultsAsyncDelegate.GetPageResultsAsync();
+            var productsPageResults = 
+                await getPageResultsAsyncDelegate.GetDataAsync(string.Empty);
 
             var newProducts = itemizePageResultsDelegate.Itemize(productsPageResults);
 

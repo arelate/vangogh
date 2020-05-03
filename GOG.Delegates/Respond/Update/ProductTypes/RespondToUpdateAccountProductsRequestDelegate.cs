@@ -4,7 +4,6 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
-using GOG.Interfaces.Delegates.GetPageResults;
 using Delegates.Activities;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
@@ -23,7 +22,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public RespondToUpdateAccountProductsRequestDelegate(
-            IGetPageResultsAsyncDelegate<AccountProductsPageResult> 
+            IGetDataAsyncDelegate<IList<AccountProductsPageResult>, string> 
                 getAccountProductsPageResultsAsyncDelegate,
             IItemizeDelegate<IList<AccountProductsPageResult>, AccountProduct>
                 itemizeAccountProductsPageResultsDelegate,

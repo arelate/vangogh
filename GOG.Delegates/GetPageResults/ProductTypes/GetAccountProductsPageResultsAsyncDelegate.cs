@@ -3,11 +3,13 @@ using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.GetValue;
 using Interfaces.Delegates.Activities;
 using Attributes;
-using GOG.Interfaces.Delegates.RequestPage;
+using Interfaces.Delegates.Data;
 using GOG.Models;
 using Delegates.GetValue.Uri.ProductTypes;
 using Delegates.GetValue.QueryParameters.ProductTypes;
 using Delegates.Activities;
+using Delegates.Convert.Uri;
+using Delegates.Data.Network;
 
 namespace GOG.Delegates.GetPageResults.ProductTypes
 {
@@ -16,7 +18,8 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
         [Dependencies(
             typeof(GetAccountProductsUpdateUriDelegate),
             typeof(GetAccountProductsUpdateQueryParametersDelegate),
-            typeof(RequestPage.RequestPageAsyncDelegate),
+            typeof(ConvertUriDictionaryParametersToUriDelegate),
+            typeof(GetUriDataAsyncDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToAccountProductsPageResultDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
@@ -24,7 +27,9 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
         public GetAccountProductsPageResultsAsyncDelegate(
             IGetValueDelegate<string> getAccountProductsUpdateUriDelegate,
             IGetValueDelegate<Dictionary<string, string>> getAccountProductsQueryUpdateQueryParameters,
-            IRequestPageAsyncDelegate requestPageAsyncDelegate,
+            IConvertDelegate<(string, IDictionary<string, string>), string>
+                convertUriParametersToUriDelegate,
+            IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,            
             IConvertDelegate<string, AccountProductsPageResult> convertJSONToAccountProductsPageResultDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
@@ -32,7 +37,8 @@ namespace GOG.Delegates.GetPageResults.ProductTypes
             base(
                 getAccountProductsUpdateUriDelegate,
                 getAccountProductsQueryUpdateQueryParameters,
-                requestPageAsyncDelegate,
+                convertUriParametersToUriDelegate,
+                getUriDataAsyncDelegate,
                 convertJSONToAccountProductsPageResultDelegate,
                 startDelegate,
                 setProgressDelegate,
