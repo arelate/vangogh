@@ -10,28 +10,28 @@ namespace Delegates.Activities
 {
     public class CompleteDelegate : ICompleteDelegate
     {
-        private readonly IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate;
-        private readonly IGetValueDelegate<List<IActivity>, string> getCompletedActivitiesValueDelegate;
+        private readonly IGetInstanceDelegate<Stack<IActivity>> getOngoingActivitiesInstanceDelegate;
+        private readonly IGetInstanceDelegate<List<IActivity>> getCompletedActivitiesInstanceDelegate;
 
         [Dependencies(
-            typeof(GetOngoingActivitiesValueDelegate),
-            typeof(GetCompletedActivitiesDelegate))]
+            typeof(GetOngoingActivitiesInstanceDelegate),
+            typeof(GetCompletedActivitiesInstanceDelegate))]
         public CompleteDelegate(
-            IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate,
-            IGetValueDelegate<List<IActivity>, string> getCompletedActivitiesValueDelegate)
+            IGetInstanceDelegate<Stack<IActivity>> getOngoingActivitiesInstanceDelegate,
+            IGetInstanceDelegate<List<IActivity>> getCompletedActivitiesInstanceDelegate)
         {
-            this.getOngoingActivitiesValueDelegate = getOngoingActivitiesValueDelegate;
-            this.getCompletedActivitiesValueDelegate = getCompletedActivitiesValueDelegate;
+            this.getOngoingActivitiesInstanceDelegate = getOngoingActivitiesInstanceDelegate;
+            this.getCompletedActivitiesInstanceDelegate = getCompletedActivitiesInstanceDelegate;
         }
 
         public void Complete()
         {
-            var ongoingActivities = getOngoingActivitiesValueDelegate.GetValue(string.Empty);
+            var ongoingActivities = getOngoingActivitiesInstanceDelegate.GetInstance();
             var currentActivity = ongoingActivities.Pop();
             currentActivity.Complete = true;
             currentActivity.Completed = DateTime.UtcNow;
 
-            var completedActivities = getCompletedActivitiesValueDelegate.GetValue(string.Empty);
+            var completedActivities = getCompletedActivitiesInstanceDelegate.GetInstance();
             completedActivities.Add(currentActivity);
 
             Console.WriteLine($"Completed action {currentActivity.Title}");

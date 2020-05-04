@@ -10,18 +10,18 @@ namespace Delegates.Activities
 {
     public class SetProgressDelegate : ISetProgressDelegate
     {
-        private readonly IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate;
+        private readonly IGetInstanceDelegate<Stack<IActivity>> getOngoingActivitiesInstanceDelegate;
 
         [Dependencies(
-            typeof(GetOngoingActivitiesValueDelegate))]
-        public SetProgressDelegate(IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate)
+            typeof(GetOngoingActivitiesInstanceDelegate))]
+        public SetProgressDelegate(IGetInstanceDelegate<Stack<IActivity>> getOngoingActivitiesInstanceDelegate)
         {
-            this.getOngoingActivitiesValueDelegate = getOngoingActivitiesValueDelegate;
+            this.getOngoingActivitiesInstanceDelegate = getOngoingActivitiesInstanceDelegate;
         }
 
         public void SetProgress(int increment = 1, int target = int.MaxValue)
         {
-            var ongoingActivities = getOngoingActivitiesValueDelegate.GetValue(string.Empty);
+            var ongoingActivities = getOngoingActivitiesInstanceDelegate.GetInstance();
             var currentActivity = ongoingActivities.Peek();
             if (target != int.MaxValue)
                 currentActivity.Target = target;

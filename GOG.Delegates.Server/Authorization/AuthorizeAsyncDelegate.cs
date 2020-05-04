@@ -16,7 +16,7 @@ namespace GOG.Delegates.Server.Authorization
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.Authorize.AuthorizeAsyncDelegate),
+            typeof(Delegates.Authorization.AuthorizeAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public AuthorizeAsyncDelegate(

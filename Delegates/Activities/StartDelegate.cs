@@ -11,20 +11,20 @@ namespace Delegates.Activities
 {
     public class StartDelegate : IStartDelegate
     {
-        private readonly IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate;
+        private readonly IGetInstanceDelegate<Stack<IActivity>> getOngoingActivitiesInstanceDelegate;
 
         [Dependencies(
-            typeof(GetOngoingActivitiesValueDelegate))]
-        public StartDelegate(IGetValueDelegate<Stack<IActivity>, string> getOngoingActivitiesValueDelegate)
+            typeof(GetOngoingActivitiesInstanceDelegate))]
+        public StartDelegate(IGetInstanceDelegate<Stack<IActivity>> getOngoingActivitiesInstanceDelegate)
         {
-            this.getOngoingActivitiesValueDelegate = getOngoingActivitiesValueDelegate;
+            this.getOngoingActivitiesInstanceDelegate = getOngoingActivitiesInstanceDelegate;
         }
 
         public void Start(string title)
         {
             var activity = new Activity() {Title = title, Started = DateTime.UtcNow};
 
-            var ongoingActivities = getOngoingActivitiesValueDelegate.GetValue(string.Empty);
+            var ongoingActivities = getOngoingActivitiesInstanceDelegate.GetInstance();
             ongoingActivities.Push(activity);
 
             Console.WriteLine($"Started action {activity.Title}");

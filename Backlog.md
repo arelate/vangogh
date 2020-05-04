@@ -1,8 +1,8 @@
 Technical Debt Reduction Plan
 =============================
 
-- Review all delegates and look for opportunities to optimize, especially GOG.Delegates that are almost certainly not needed
-- Review namespaces to consolidate "area" delegates - e.g. Data, Collections
+- [done] Review all delegates and look for opportunities to optimize, especially GOG.Delegates that are almost certainly not needed
+- [done] Review namespaces to consolidate "area" delegates - e.g. Data, Collections
 - Consolidate ProductTypes in GOG.* namespaces
 - Try to generate derrived type specific classes based on abstract classes - https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/
 - Cleanup TODOs
