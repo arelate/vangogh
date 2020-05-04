@@ -6,7 +6,6 @@ using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.FillGaps;
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update
@@ -22,7 +21,6 @@ namespace GOG.Delegates.Respond.Update
         private readonly IGetDataAsyncDelegate<DetailType, string> getDeserializedDetailAsyncDelegate;
 
         private readonly IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate;
-        private readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
 
         private readonly IGetValueDelegate<string, string> getDetailUpdateUriDelegate;
         private readonly IStartDelegate startDelegate;
@@ -38,8 +36,7 @@ namespace GOG.Delegates.Respond.Update
             IGetDataAsyncDelegate<DetailType, string> getDeserializedDetailAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
-            ICompleteDelegate completeDelegate,
-            IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate = null)
+            ICompleteDelegate completeDelegate)
         {
             updateDetailDataAsyncDelegate = updateDetailAsyncDelegate;
             commitDetailDataAsyncDelegate = commitAsyncDelegate;
@@ -48,7 +45,6 @@ namespace GOG.Delegates.Respond.Update
             this.getDeserializedDetailAsyncDelegate = getDeserializedDetailAsyncDelegate;
 
             this.convertMasterTypeToDetailUpdateIdentityDelegate = convertMasterTypeToDetailUpdateIdentityDelegate;
-            this.fillGapsDelegate = fillGapsDelegate;
 
             this.getDetailUpdateUriDelegate = getDetailUpdateUriDelegate;
 
@@ -80,8 +76,13 @@ namespace GOG.Delegates.Respond.Update
 
                 if (detailData != null)
                 {
-                    if (fillGapsDelegate != null)
-                        fillGapsDelegate.FillGaps(detailData, masterProductWithoutDetail);
+                    // GOG.com quirk
+                    // GameDetails are requested using xxxxxxxxx.json Uri, 
+                    // where xxxxxxxxx is Id that comes from AccountProduct.
+                    // Actual GameDetails payload doesn't contain Id,
+                    // so this delegate "associates" GameDetails to AccountProduct
+                    if (detailData.Id == 0)
+                        detailData.Id = masterProductWithoutDetail.Id;
 
                     await updateDetailDataAsyncDelegate.UpdateAsync(detailData);
                 }

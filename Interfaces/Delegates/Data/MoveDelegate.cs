@@ -1,4 +1,4 @@
-namespace Interfaces.Delegates.Move
+namespace Interfaces.Delegates.Data
 {
     public interface IMoveDelegate<T>
     {

@@ -1,21 +1,22 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Activities;
 using Attributes;
-using GOG.Interfaces.Delegates.DownloadProductFile;
 using Delegates.Format.Uri;
 using Delegates.Confirm.Validation;
 using Delegates.Download;
 using Delegates.Activities;
 using Delegates.Values.Directories.ProductTypes;
+using GOG.Models;
 
-namespace GOG.Delegates.DownloadProductFile
+namespace GOG.Delegates.Data.Models
 {
-    public class DownloadValidationFileAsyncDelegate : IDownloadProductFileAsyncDelegate
+    public class GetValidationFileAsyncDelegate : IGetDataAsyncDelegate<string, ProductFileDownloadManifest>
     {
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private readonly IConfirmDelegate<string> confirmValidationExpectedDelegate;
@@ -35,7 +36,7 @@ namespace GOG.Delegates.DownloadProductFile
             typeof(DownloadFromUriAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
-        public DownloadValidationFileAsyncDelegate(
+        public GetValidationFileAsyncDelegate(
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
             IFormatDelegate<string, string> formatValidationFileDelegate,
@@ -55,21 +56,21 @@ namespace GOG.Delegates.DownloadProductFile
             this.completeDelegate = completeDelegate;
         }
 
-        public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
+        public async Task<string> GetDataAsync(ProductFileDownloadManifest downloadManifest)
         {
-            if (string.IsNullOrEmpty(sourceUri)) return;
+            if (string.IsNullOrEmpty(downloadManifest.Source)) return string.Empty;
 
-            var sourceUriSansSession = formatUriRemoveSessionDelegate.Format(sourceUri);
+            var sourceUriSansSession = formatUriRemoveSessionDelegate.Format(downloadManifest.Source);
             var destinationUri = formatValidationFileDelegate.Format(sourceUriSansSession);
 
             // return early if validation is not expected for this file
-            if (!confirmValidationExpectedDelegate.Confirm(sourceUriSansSession)) return;
+            if (!confirmValidationExpectedDelegate.Confirm(sourceUriSansSession)) return string.Empty;
 
             if (File.Exists(destinationUri))
                 // await statusController.InformAsync(status, "Validation file already exists, will not be redownloading");
-                return;
+                return string.Empty;
 
-            var validationSourceUri = formatValidationUriDelegate.Format(sourceUri);
+            var validationSourceUri = formatValidationUriDelegate.Format(downloadManifest.Source);
 
             startDelegate.Start("Download validation file");
 
@@ -78,6 +79,8 @@ namespace GOG.Delegates.DownloadProductFile
                 validationDirectoryDelegate.GetValue(string.Empty));
 
             completeDelegate.Complete();
+
+            return downloadManifest.Destination;
         }
     }
 }

@@ -44,8 +44,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 getDeserializedGameProductDataAsyncDelegate,
                 startDelegate,
                 setProgressDelegate,
-                completeDelegate,
-                null)
+                completeDelegate)
         {
             // ...
         }

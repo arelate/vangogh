@@ -2,31 +2,32 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Attributes;
 using Interfaces.Delegates.GetInstance;
-using Interfaces.Delegates.Constrain;
+using Interfaces.Delegates.Throttling;
 using Delegates.Convert.Network;
 using Delegates.GetInstance.Network;
+using GOG.Delegates.Throttling.Network;
 
 namespace GOG.Delegates.Convert.Network
 {
-    public class ConvertHttpRequestMessageToHttpResponseMethodRateLimitedAsyncDelegate :
+    public class ConvertHttpRequestMessageToHttpResponseMethodPolitelyAsyncDelegate :
         ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate
     {
-        private readonly IConstrainAsyncDelegate<string> constrainUriAsyncDelegate;
+        private readonly IThrottleAsyncDelegate<string> throttleUriAsyncDelegate;
 
         [Dependencies(
             typeof(GetHttpClientInstanceDelegate),
-            typeof(GOG.Delegates.Constrain.Network.ConstrainGOGRequestRateAsyncDelegate))]
-        public ConvertHttpRequestMessageToHttpResponseMethodRateLimitedAsyncDelegate(
+            typeof(ThrottleGOGRequestRateAsyncDelegate))]
+        public ConvertHttpRequestMessageToHttpResponseMethodPolitelyAsyncDelegate(
             IGetInstanceDelegate<HttpClient> getHttpClientInstanceDelegate,
-            IConstrainAsyncDelegate<string> constrainUriAsyncDelegate) :
+            IThrottleAsyncDelegate<string> throttleUriAsyncDelegate) :
             base(getHttpClientInstanceDelegate)
         {
-            this.constrainUriAsyncDelegate = constrainUriAsyncDelegate;
+            this.throttleUriAsyncDelegate = throttleUriAsyncDelegate;
         }
 
         public override async Task<HttpResponseMessage> ConvertAsync(HttpRequestMessage request)
         {
-            await constrainUriAsyncDelegate.ConstrainAsync(request.RequestUri.AbsoluteUri);
+            await throttleUriAsyncDelegate.ThrottleAsync(request.RequestUri.AbsoluteUri);
 
             return await base.ConvertAsync(request);
         }

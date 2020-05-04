@@ -1,7 +1,7 @@
 using System.IO;
-using Interfaces.Delegates.Move;
+using Interfaces.Delegates.Data;
 
-namespace Delegates.Move.IO
+namespace Delegates.Data.Storage
 {
     public class MoveDirectoryDelegate : IMoveDelegate<string>
     {

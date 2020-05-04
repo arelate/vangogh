@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
-using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Values;
-using Interfaces.Delegates.Activities;
 using Attributes;
-using Interfaces.Delegates.Data;
-using GOG.Models;
 using Delegates.Activities;
 using Delegates.Convert.Uri;
 using Delegates.Data.Network;
 using Delegates.Values.QueryParameters.ProductTypes;
 using Delegates.Values.Uri.ProductTypes;
+using GOG.Models;
+using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Values;
 
-namespace GOG.Delegates.GetPageResults.ProductTypes
+namespace GOG.Delegates.Data.Models.ProductTypes
 {
     public class GetAccountProductsPageResultsAsyncDelegate : GetPageResultsAsyncDelegate<AccountProductsPageResult>
     {

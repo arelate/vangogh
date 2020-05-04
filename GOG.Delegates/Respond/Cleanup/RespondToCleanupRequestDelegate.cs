@@ -2,7 +2,7 @@
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Recycle;
+using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
@@ -18,7 +18,7 @@ namespace GOG.Delegates.Respond.Cleanup
         private readonly IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
         private readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
         private readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
-        private readonly IRecycleDelegate recycleDelegate;
+        private readonly IDeleteDelegate<string> deleteDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -28,7 +28,7 @@ namespace GOG.Delegates.Respond.Cleanup
             IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
-            IRecycleDelegate recycleDelegate,
+            IDeleteDelegate<string> deleteDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
@@ -37,7 +37,7 @@ namespace GOG.Delegates.Respond.Cleanup
             this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
             this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
-            this.recycleDelegate = recycleDelegate;
+            this.deleteDelegate = deleteDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
             this.completeDelegate = completeDelegate;
@@ -68,7 +68,7 @@ namespace GOG.Delegates.Respond.Cleanup
             foreach (var item in cleanupItems)
             {
                 setProgressDelegate.SetProgress();
-                recycleDelegate.Recycle(item);
+                deleteDelegate.Delete(item);
             }
 
             completeDelegate.Complete();

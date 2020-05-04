@@ -40,7 +40,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
         private readonly IMapDelegate<string> mapStringDelegate;
 
         [Dependencies(
-            typeof(Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(Network.GetUriDataPolitelyAsyncDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate),
             typeof(ConvertLanguageToCodeDelegate),

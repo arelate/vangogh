@@ -7,7 +7,6 @@ using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
-using GOG.Interfaces.Delegates.DownloadProductFile;
 using Attributes;
 using Models.ProductTypes;
 using Delegates.Convert.Network;
@@ -15,10 +14,11 @@ using Delegates.Format.Uri;
 using Delegates.Data.Routes;
 using Delegates.Download;
 using Delegates.Activities;
+using GOG.Models;
 
-namespace GOG.Delegates.DownloadProductFile
+namespace GOG.Delegates.Data.Models
 {
-    public class DownloadManualUrlFileAsyncDelegate : IDownloadProductFileAsyncDelegate
+    public class GetManualUrlFileAsyncDelegate : IGetDataAsyncDelegate<string, ProductFileDownloadManifest>
     {
         private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
             convertRequestToResponseAsyncDelegate;
@@ -26,7 +26,7 @@ namespace GOG.Delegates.DownloadProductFile
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private readonly IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate;
         private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
-        private readonly IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<string, ProductFileDownloadManifest> getValidationFileAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
@@ -35,16 +35,16 @@ namespace GOG.Delegates.DownloadProductFile
             typeof(FormatUriRemoveSessionDelegate),
             typeof(UpdateRouteDataAsyncDelegate),
             typeof(DownloadFromResponseAsyncDelegate),
-            typeof(DownloadValidationFileAsyncDelegate),
+            typeof(GetValidationFileAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
-        public DownloadManualUrlFileAsyncDelegate(
+        public GetManualUrlFileAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate,
             IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
-            IDownloadProductFileAsyncDelegate downloadValidationFileAsyncDelegate,
+            IGetDataAsyncDelegate<string, ProductFileDownloadManifest> getValidationFileAsyncDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
@@ -52,19 +52,19 @@ namespace GOG.Delegates.DownloadProductFile
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.updateRouteDataAsyncDelegate = updateRouteDataAsyncDelegate;
             this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
-            this.downloadValidationFileAsyncDelegate = downloadValidationFileAsyncDelegate;
+            this.getValidationFileAsyncDelegate = getValidationFileAsyncDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
         }
 
-        public async Task DownloadProductFileAsync(long id, string title, string sourceUri, string destination)
+        public async Task<string> GetDataAsync(ProductFileDownloadManifest productFileDownloadManifest)
         {
             startDelegate.Start("Download game details manual url");
 
             HttpResponseMessage response;
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, sourceUri);
+                var request = new HttpRequestMessage(HttpMethod.Get, productFileDownloadManifest.Source);
                 response = await convertRequestToResponseAsyncDelegate.ConvertAsync(request);
             }
             catch (HttpRequestException ex)
@@ -74,7 +74,7 @@ namespace GOG.Delegates.DownloadProductFile
                 //     $"Failed to get successful response for {sourceUri} for " +
                 //     $"product {id}: {title}, message: {ex.Message}");
                 completeDelegate.Complete();
-                return;
+                return string.Empty;
             }
 
             using (response)
@@ -91,13 +91,13 @@ namespace GOG.Delegates.DownloadProductFile
                 await updateRouteDataAsyncDelegate.UpdateAsync(
                     new ProductRoutes()
                     {
-                        Id = id,
-                        Title = title,
+                        Id = productFileDownloadManifest.Id,
+                        Title = productFileDownloadManifest.Title,
                         Routes = new List<ProductRoutesEntry>()
                         {
                             new ProductRoutesEntry()
                             {
-                                Source = sourceUri,
+                                Source = productFileDownloadManifest.Source,
                                 Destination = uriSansSession
                             }
                         }
@@ -107,7 +107,7 @@ namespace GOG.Delegates.DownloadProductFile
                 {
                     await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(
                         response,
-                        destination);
+                        productFileDownloadManifest.Destination);
                 }
                 catch (Exception ex)
                 {
@@ -124,15 +124,20 @@ namespace GOG.Delegates.DownloadProductFile
                 // While the only difference validation files have - is additional extension.
                 // So instead we'll do a supplementary download using primary download information
 
-                if (downloadValidationFileAsyncDelegate != null)
-                    await downloadValidationFileAsyncDelegate?.DownloadProductFileAsync(
-                        id,
-                        title,
-                        resolvedUri,
-                        destination);
+                if (getValidationFileAsyncDelegate != null)
+                {
+                    await getValidationFileAsyncDelegate.GetDataAsync(
+                        new ProductFileDownloadManifest(
+                            productFileDownloadManifest.Id,
+                            productFileDownloadManifest.Title,
+                            resolvedUri,
+                            productFileDownloadManifest.Destination));
+                }
             }
 
             completeDelegate.Complete();
+
+            return productFileDownloadManifest.Destination;
         }
     }
 }

@@ -5,6 +5,7 @@ using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
 using Delegates.Activities;
+using GOG.Delegates.Data.Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -14,7 +15,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         RespondToUpdatePageResultRequestDelegate<AccountProductsPageResult, AccountProduct>
     {
         [Dependencies(
-            typeof(GOG.Delegates.GetPageResults.ProductTypes.GetAccountProductsPageResultsAsyncDelegate),
+            typeof(GetAccountProductsPageResultsAsyncDelegate),
             typeof(Itemize.ItemizeAccountProductsPageResultProductsDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateAccountProductsAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.CommitAccountProductsAsyncDelegate),

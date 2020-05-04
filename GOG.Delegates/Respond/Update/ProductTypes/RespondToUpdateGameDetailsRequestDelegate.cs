@@ -4,7 +4,6 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
-using GOG.Interfaces.Delegates.FillGaps;
 using GOG.Models;
 using Delegates.Activities;
 using Delegates.Values.Uri.ProductTypes;
@@ -25,8 +24,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             typeof(GetDeserializedGameDetailsAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
-            typeof(CompleteDelegate),
-            typeof(FillGaps.FillGameDetailsGapsDelegate))]
+            typeof(CompleteDelegate))]
         public RespondToUpdateGameDetailsRequestDelegate(
             IGetValueDelegate<string, string> getGameDetailsUpdateUriDelegate,
             IConvertDelegate<AccountProduct, string> convertAccountProductToGameDetailsUpdateIdentityDelegate,
@@ -36,8 +34,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             IGetDataAsyncDelegate<GameDetails, string> getDeserializedGameDetailsAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
-            ICompleteDelegate completeDelegate,
-            IFillGapsDelegate<GameDetails, AccountProduct> fillGameDetailsGapsDelegate) :
+            ICompleteDelegate completeDelegate) :
             base(
                 getGameDetailsUpdateUriDelegate,
                 convertAccountProductToGameDetailsUpdateIdentityDelegate,
@@ -47,8 +44,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
                 getDeserializedGameDetailsAsyncDelegate,
                 startDelegate,
                 setProgressDelegate,
-                completeDelegate,
-                fillGameDetailsGapsDelegate)
+                completeDelegate)
         {
             // ...
         }

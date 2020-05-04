@@ -13,7 +13,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
     {
         [Dependencies(
             typeof(ConvertUriDictionaryParametersToUriDelegate),
-            typeof(Network.GetUriDataRateLimitedAsyncDelegate),
+            typeof(Network.GetUriDataPolitelyAsyncDelegate),
             typeof(Itemize.ItemizeGOGDataDelegate),
             typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGOGDataDelegate))]
         public GetDeserializedGOGDataAsyncDelegate(

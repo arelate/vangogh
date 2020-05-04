@@ -24,7 +24,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
 
         [Dependencies(
             typeof(GetScreenshotsUpdateUriDelegate),
-            typeof(GetUriDataRateLimitedAsyncDelegate),
+            typeof(GetUriDataPolitelyAsyncDelegate),
             typeof(Itemize.ItemizeScreenshotsDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]

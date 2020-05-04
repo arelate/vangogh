@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Attributes;
-using Interfaces.Delegates.Constrain;
+using Interfaces.Delegates.Throttling;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Itemize;
-using Delegates.Constrain;
+using Delegates.Throttling;
 using Delegates.Collections.System;
 
-namespace GOG.Delegates.Constrain.Network
+namespace GOG.Delegates.Throttling.Network
 {
-    public class ConstrainGOGRequestRateAsyncDelegate : IConstrainAsyncDelegate<string>
+    public class ThrottleGOGRequestRateAsyncDelegate : IThrottleAsyncDelegate<string>
     {
-        private readonly IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate;
+        private readonly IThrottleAsyncDelegate<int> throttleExecutionAsyncDelegate;
         private readonly IFindDelegate<string> findStringDelegate;
         private readonly Dictionary<string, DateTime> lastRequestToUriPrefix;
         private readonly IItemizeAllDelegate<string> itemizeRateContraindesUris;
@@ -21,15 +21,15 @@ namespace GOG.Delegates.Constrain.Network
         private int rateLimitRequestsCount;
 
         [Dependencies(
-            typeof(ConstrainExecutionAsyncDelegate),
+            typeof(ThrottleAsyncDelegate),
             typeof(FindStringDelegate),
             typeof(Itemize.ItemizeAllRateConstrainedUrisDelegate))]
-        public ConstrainGOGRequestRateAsyncDelegate(
-            IConstrainAsyncDelegate<int> constrainExecutionAsyncDelegate,
+        public ThrottleGOGRequestRateAsyncDelegate(
+            IThrottleAsyncDelegate<int> throttleExecutionAsyncDelegate,
             IFindDelegate<string> findStringDelegate,
             IItemizeAllDelegate<string> itemizeRateContraindesUris)
         {
-            this.constrainExecutionAsyncDelegate = constrainExecutionAsyncDelegate;
+            this.throttleExecutionAsyncDelegate = throttleExecutionAsyncDelegate;
             this.findStringDelegate = findStringDelegate;
             lastRequestToUriPrefix = new Dictionary<string, DateTime>();
             rateLimitRequestsCount = 0;
@@ -43,7 +43,7 @@ namespace GOG.Delegates.Constrain.Network
                         DateTime.UtcNow - TimeSpan.FromSeconds(requestIntervalSeconds));
         }
 
-        public async Task ConstrainAsync(string uri)
+        public async Task ThrottleAsync(string uri)
         {
             var prefix = findStringDelegate.Find(itemizeRateContraindesUris.ItemizeAll(), uri.StartsWith);
             if (string.IsNullOrEmpty(prefix)) return;
@@ -54,7 +54,7 @@ namespace GOG.Delegates.Constrain.Network
             var now = DateTime.UtcNow;
             var elapsed = (int) (now - lastRequestToUriPrefix[prefix]).TotalSeconds;
             if (elapsed < requestIntervalSeconds)
-                await constrainExecutionAsyncDelegate.ConstrainAsync(requestIntervalSeconds - elapsed);
+                await throttleExecutionAsyncDelegate.ThrottleAsync(requestIntervalSeconds - elapsed);
 
             lastRequestToUriPrefix[prefix] = now;
         }

@@ -1,13 +1,13 @@
-﻿using Interfaces.Delegates.Recycle;
-using Interfaces.Delegates.Itemize;
+﻿using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
 using Delegates.Format.Uri;
-using Delegates.Recycle;
+using Delegates.Data.Storage;
 using Delegates.Activities;
 using Delegates.Itemize;
+using Interfaces.Delegates.Data;
 
 namespace GOG.Delegates.Respond.Cleanup.ProductTypes
 {
@@ -19,7 +19,7 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
             typeof(Itemize.ItemizeAllProductFilesDirectoriesAsyncDelegate),
             typeof(ItemizeDirectoryFilesDelegate),
             typeof(FormatValidationFileDelegate),
-            typeof(RecycleDelegate),
+            typeof(DeleteToRecycleDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
@@ -28,7 +28,7 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
             IItemizeAllAsyncDelegate<string> itemizeAllActualProductFilesAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
             IFormatDelegate<string, string> formatSupplementaryItemDelegate,
-            IRecycleDelegate recycleDelegate,
+            IDeleteDelegate<string> deleteDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :
@@ -37,7 +37,7 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
                 itemizeAllActualProductFilesAsyncDelegate,
                 itemizeDetailsDelegate,
                 formatSupplementaryItemDelegate,
-                recycleDelegate,
+                deleteDelegate,
                 startDelegate,
                 setProgressDelegate,
                 completeDelegate)

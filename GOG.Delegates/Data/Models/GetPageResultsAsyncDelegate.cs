@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Values;
-using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Data;
 using GOG.Models;
+using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Values;
 using Models.QueryParameters;
 
-namespace GOG.Delegates.GetPageResults
+namespace GOG.Delegates.Data.Models
 {
     public abstract class GetPageResultsAsyncDelegate<T> : 
         IGetDataAsyncDelegate<IList<T>, string> 
