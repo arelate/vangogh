@@ -1,19 +1,19 @@
-using Interfaces.Delegates.Format;
-using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
 using Attributes;
-using Interfaces.Delegates.Values;
-using GOG.Models;
-using Delegates.Format.Uri;
 using Delegates.Activities;
+using Delegates.Format.Uri;
 using Delegates.Itemize.ProductTypes;
 using GOG.Delegates.Values.Images;
+using GOG.Models;
+using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Values;
 
-namespace GOG.Delegates.GetDownloadSources.ProductTypes
+namespace GOG.Delegates.Itemize.ProductTypes
 {
-    public class GetProductImagesDownloadSourcesAsyncDelegate :
-        GetProductCoreImagesDownloadSourcesAsyncDelegate<Product>
+    public class ItemizeAllProductImagesDownloadSourcesAsyncDelegate :
+        ItemizeAllProductCoreImagesDownloadSourcesAsyncDelegate<Product>
     {
         [Dependencies(
             typeof(ItemizeAllUpdatedAsyncDelegate),
@@ -23,7 +23,7 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
-        public GetProductImagesDownloadSourcesAsyncDelegate(
+        public ItemizeAllProductImagesDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IFormatDelegate<string, string> formatImagesUriDelegate,

@@ -5,9 +5,9 @@ using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.GetDownloadSources;
 using Models.ProductTypes;
 using GOG.Models;
+using Interfaces.Delegates.Itemize;
 
 // TODO: Should this be just update if collections don't overlap? e.g. update accountproductimages vs updatedownloads accountproductimages
 namespace GOG.Delegates.Respond.UpdateDownloads
@@ -15,7 +15,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
     public abstract class RespondToUpdateDownloadsRequestDelegate<Type> : IRespondAsyncDelegate
         where Type : ProductCore
     {
-        private readonly IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate;
+        private readonly IItemizeAllAsyncDelegate<(long Id, IList<string> Downloads)> itemizeAllDownloadSourcesAsyncDelegate;
         private readonly IGetValueDelegate<string,string> getDirectoryDelegate;
         private readonly IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate;
         private readonly IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate;
@@ -27,7 +27,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
         private readonly ICompleteDelegate completeDelegate;
 
         public RespondToUpdateDownloadsRequestDelegate(
-            IGetDownloadSourcesAsyncDelegate getDownloadSourcesAsyncDelegate,
+            IItemizeAllAsyncDelegate<(long, IList<string>)> itemizeAllDownloadSourcesAsyncDelegate,
             IGetValueDelegate<string,string> getDirectoryDelegate,
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
@@ -38,7 +38,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.getDownloadSourcesAsyncDelegate = getDownloadSourcesAsyncDelegate;
+            this.itemizeAllDownloadSourcesAsyncDelegate = itemizeAllDownloadSourcesAsyncDelegate;
             this.getDirectoryDelegate = getDirectoryDelegate;
             this.getProductByIdAsyncDelegate = getProductByIdAsyncDelegate;
             this.getAccountProductByIdAsyncDelegate = getAccountProductByIdAsyncDelegate;
@@ -56,17 +56,14 @@ namespace GOG.Delegates.Respond.UpdateDownloads
                 $"Update {typeof(Type)} downloads");
 
             startDelegate.Start($"Get {typeof(Type)} download sources");
-            var downloadSources = await getDownloadSourcesAsyncDelegate.GetDownloadSourcesAsync();
+            var downloadSources = itemizeAllDownloadSourcesAsyncDelegate.ItemizeAllAsync();
             completeDelegate.Complete();
 
             startDelegate.Start("Update individual downloads");
-            foreach (var downloadSource in downloadSources)
+            await foreach (var downloadSource in downloadSources)
             {
                 // don't perform expensive updates if there are no actual sources
-                if (downloadSource.Value != null &&
-                    downloadSource.Value.Count == 0) continue;
-
-                var id = downloadSource.Key;
+                var id = downloadSource.Id;
 
                 ProductCore product = await getProductByIdAsyncDelegate.GetDataAsync(id);
 
@@ -102,7 +99,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads
 
                 startDelegate.Start("Schedule new downloads");
 
-                foreach (var source in downloadSource.Value)
+                foreach (var source in downloadSource.Downloads)
                 {
                     var destinationDirectory = getDirectoryDelegate?.GetValue(source);
 

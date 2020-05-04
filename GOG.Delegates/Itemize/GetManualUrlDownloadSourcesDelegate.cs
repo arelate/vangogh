@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.GetDownloadSources;
 using Attributes;
-using GOG.Models;
 using Delegates.Activities;
 using Delegates.Itemize.ProductTypes;
+using GOG.Models;
+using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemize;
 
-namespace GOG.Delegates.GetDownloadSources
+namespace GOG.Delegates.Itemize
 {
-    public class GetManualUrlDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
+    public class ItemizeAllManualUrlDownloadSourcesAsyncDelegate : 
+        IItemizeAllAsyncDelegate<(long, IList<string>)>
     {
         private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
         private readonly IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate;
@@ -27,7 +26,7 @@ namespace GOG.Delegates.GetDownloadSources
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
-        public GetManualUrlDownloadSourcesAsyncDelegate(
+        public ItemizeAllManualUrlDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,
             IItemizeAsyncDelegate<GameDetails, string> itemizeGameDetailsManualUrlsAsyncController,
@@ -43,11 +42,9 @@ namespace GOG.Delegates.GetDownloadSources
             this.completeDelegate = completeDelegate;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+        public async IAsyncEnumerable<(long, IList<string>)> ItemizeAllAsync()
         {
             startDelegate.Start("Get download sources");
-
-            var gameDetailsDownloadSources = new Dictionary<long, IList<string>>();
 
             await foreach (var id in itemizeAllUpdatedAsyncDelegate.ItemizeAllAsync())
             {
@@ -55,18 +52,13 @@ namespace GOG.Delegates.GetDownloadSources
 
                 var gameDetails = await getGameDetailsByIdAsyncDelegate.GetDataAsync(id);
 
-                if (!gameDetailsDownloadSources.ContainsKey(id))
-                    gameDetailsDownloadSources.Add(id, new List<string>());
-
-                foreach (var manualUrl in
-                    await itemizeGameDetailsManualUrlsAsyncController.ItemizeAsync(gameDetails))
-                    if (!gameDetailsDownloadSources[id].Contains(manualUrl))
-                        gameDetailsDownloadSources[id].Add(manualUrl);
+                yield return (
+                    id, 
+                    new List<string>(
+                        await itemizeGameDetailsManualUrlsAsyncController.ItemizeAsync(gameDetails)));
             }
 
             completeDelegate.Complete();
-
-            return gameDetailsDownloadSources;
         }
     }
 }

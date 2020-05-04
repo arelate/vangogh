@@ -1,13 +1,15 @@
-﻿using Interfaces.Delegates.Values;
+﻿using System.Collections.Generic;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
-using GOG.Interfaces.Delegates.GetDownloadSources;
 using Attributes;
 using GOG.Models;
 using Delegates.Data.Models.ProductTypes;
 using Delegates.Activities;
 using Delegates.Values.Directories.ProductTypes;
+using GOG.Delegates.Itemize;
+using Interfaces.Delegates.Itemize;
 
 namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
@@ -16,7 +18,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         RespondToUpdateDownloadsRequestDelegate<ProductFile>
     {
         [Dependencies(
-            typeof(GetDownloadSources.GetManualUrlDownloadSourcesAsyncDelegate),
+            typeof(ItemizeAllManualUrlDownloadSourcesAsyncDelegate),
             typeof(GetProductFilesDirectoryDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate),
@@ -27,7 +29,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public RespondToUpdateProductFilesDownloadsRequestDelegate(
-            IGetDownloadSourcesAsyncDelegate getProductFilesDownloadSourcesAsyncDelegate,
+            IItemizeAllAsyncDelegate<(long, IList<string>)> itemizeAllProductFilesDownloadSourcesAsyncDelegate,
             IGetValueDelegate<string,string> getProductFilesDirectoryDelegate,
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
@@ -38,7 +40,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :
             base(
-                getProductFilesDownloadSourcesAsyncDelegate,
+                itemizeAllProductFilesDownloadSourcesAsyncDelegate,
                 getProductFilesDirectoryDelegate,
                 getProductByIdAsyncDelegate,
                 getAccountProductByIdAsyncDelegate,

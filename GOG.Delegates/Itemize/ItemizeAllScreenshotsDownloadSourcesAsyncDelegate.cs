@@ -1,22 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-using Interfaces.Delegates.Values;
+using Attributes;
+using Delegates.Activities;
+using Delegates.Format.Uri;
+using Delegates.Itemize.ProductTypes;
+using Delegates.Values.Directories.ProductTypes;
+using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Activities;
-using Attributes;
+using Interfaces.Delegates.Values;
 using Models.ProductTypes;
-using GOG.Interfaces.Delegates.GetDownloadSources;
-using Delegates.Itemize.ProductTypes;
-using Delegates.Format.Uri;
-using Delegates.Activities;
-using Delegates.Values.Directories.ProductTypes;
 
-namespace GOG.Delegates.GetDownloadSources
+namespace GOG.Delegates.Itemize
 {
-    public class GetScreenshotsDownloadSourcesAsyncDelegate : IGetDownloadSourcesAsyncDelegate
+    public class ItemizeAllScreenshotsDownloadSourcesAsyncDelegate : IItemizeAllAsyncDelegate<(long, IList<string>)>
     {
         private readonly IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate;
         private readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
@@ -32,7 +30,7 @@ namespace GOG.Delegates.GetDownloadSources
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
-        public GetScreenshotsDownloadSourcesAsyncDelegate(
+        public ItemizeAllScreenshotsDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate,
             IFormatDelegate<string, string> formatScreenshotsUriDelegate,
             IGetValueDelegate<string,string> screenshotsDirectoryDelegate,
@@ -48,11 +46,9 @@ namespace GOG.Delegates.GetDownloadSources
             this.completeDelegate = completeDelegate;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+        public async IAsyncEnumerable<(long, IList<string>)> ItemizeAllAsync()
         {
             startDelegate.Start("Process screenshots updates");
-
-            var screenshotsSources = new Dictionary<long, IList<string>>();
 
             await foreach (var productScreenshots in itemizeAllProductScreenshotsAsyncDelegate.ItemizeAllAsync())
             {
@@ -77,12 +73,10 @@ namespace GOG.Delegates.GetDownloadSources
                 }
 
                 if (currentProductScreenshotSources.Any())
-                    screenshotsSources.Add(productScreenshots.Id, currentProductScreenshotSources);
+                    yield return (productScreenshots.Id, currentProductScreenshotSources);
             }
 
             completeDelegate.Complete();
-
-            return screenshotsSources;
         }
     }
 }

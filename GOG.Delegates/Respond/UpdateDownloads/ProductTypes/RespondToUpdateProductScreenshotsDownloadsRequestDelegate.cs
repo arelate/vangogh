@@ -1,13 +1,15 @@
-﻿using Interfaces.Delegates.Values;
+﻿using System.Collections.Generic;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using GOG.Interfaces.Delegates.GetDownloadSources;
+using Interfaces.Delegates.Itemize;
 using Attributes;
 using GOG.Models;
 using Models.ProductTypes;
 using Delegates.Data.Models.ProductTypes;
 using Delegates.Activities;
 using Delegates.Values.Directories.ProductTypes;
+using GOG.Delegates.Itemize;
 
 namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {
@@ -17,7 +19,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
         RespondToUpdateDownloadsRequestDelegate<ProductScreenshots>
     {
         [Dependencies(
-            typeof(GetDownloadSources.GetScreenshotsDownloadSourcesAsyncDelegate),
+            typeof(ItemizeAllScreenshotsDownloadSourcesAsyncDelegate),
             typeof(GetScreenshotsDirectoryDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate),
@@ -28,7 +30,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public RespondToUpdateProductScreenshotsDownloadsRequestDelegate(
-            IGetDownloadSourcesAsyncDelegate getProductScreenshotsDownloadSourcesAsyncDelegate,
+            IItemizeAllAsyncDelegate<(long, IList<string>)> itemizeAllProductScreenshotsDownloadSourcesAsyncDelegate,
             IGetValueDelegate<string,string> getProductScreenshotsDirectoryDelegate,
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
@@ -39,7 +41,7 @@ namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :
             base(
-                getProductScreenshotsDownloadSourcesAsyncDelegate,
+                itemizeAllProductScreenshotsDownloadSourcesAsyncDelegate,
                 getProductScreenshotsDirectoryDelegate,
                 getProductByIdAsyncDelegate,
                 getAccountProductByIdAsyncDelegate,

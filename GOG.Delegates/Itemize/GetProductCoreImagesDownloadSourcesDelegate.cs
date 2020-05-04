@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Interfaces.Delegates.Format;
-using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
-using Models.ProductTypes;
+using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Values;
-using GOG.Interfaces.Delegates.GetDownloadSources;
+using Models.ProductTypes;
 
-namespace GOG.Delegates.GetDownloadSources
+namespace GOG.Delegates.Itemize
 {
-    public abstract class GetProductCoreImagesDownloadSourcesAsyncDelegate<T> : IGetDownloadSourcesAsyncDelegate
+    public abstract class ItemizeAllProductCoreImagesDownloadSourcesAsyncDelegate<T> : 
+        IItemizeAllAsyncDelegate<(long, IList<string>)>
         where T : ProductCore
     {
         private readonly IGetDataAsyncDelegate<T, long> getDataByIdAsyncDelegate;
@@ -21,7 +20,7 @@ namespace GOG.Delegates.GetDownloadSources
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
-        protected GetProductCoreImagesDownloadSourcesAsyncDelegate(
+        protected ItemizeAllProductCoreImagesDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<T, long> getDataByIdAsyncDelegate,
             IFormatDelegate<string, string> formatImagesUriDelegate,
@@ -39,11 +38,9 @@ namespace GOG.Delegates.GetDownloadSources
             this.completeDelegate = completeDelegate;
         }
 
-        public async Task<IDictionary<long, IList<string>>> GetDownloadSourcesAsync()
+        public async IAsyncEnumerable<(long, IList<string>)> ItemizeAllAsync()
         {
             startDelegate.Start("Get download sources");
-
-            var productImageSources = new Dictionary<long, IList<string>>();
 
             await foreach (var id in itemizeAllUpdatedAsyncDelegate.ItemizeAllAsync())
             {
@@ -60,16 +57,10 @@ namespace GOG.Delegates.GetDownloadSources
                         getImageUriDelegate.GetValue(productCore))
                 };
 
-                if (!productImageSources.ContainsKey(id))
-                    productImageSources.Add(id, new List<string>());
-
-                foreach (var source in imageSources)
-                    productImageSources[id].Add(source);
+                yield return (id, imageSources);
             }
 
             completeDelegate.Complete();
-
-            return productImageSources;
         }
     }
 }
