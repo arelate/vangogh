@@ -4,10 +4,10 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
-using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Models;
 using Delegates.Activities;
 using Delegates.Values.Uri.ProductTypes;
+using GOG.Delegates.Data.Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -18,10 +18,10 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         [Dependencies(
             typeof(GetApiProductsUpdateUriDelegate),
             typeof(Convert.UpdateIdentity.ConvertProductToApiProductUpdateIdentityDelegate),
-            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateApiProductsAsyncDelegate),
-            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitApiProductsAsyncDelegate),
+            typeof(UpdateApiProductsAsyncDelegate),
+            typeof(CommitApiProductsAsyncDelegate),
             typeof(Itemize.MasterDetail.ItemizeAllProductsApiProductsGapsAsyncDelegate),
-            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedApiProductAsyncDelegate),
+            typeof(GetDeserializedApiProductAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
@@ -31,7 +31,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             IUpdateAsyncDelegate<ApiProduct> updateApiProductsAsyncDelegate,
             ICommitAsyncDelegate commitApiProductsAsyncDelegate,
             IItemizeAllAsyncDelegate<Product> itemizeAllProductsApiProductsGapsAsyncDelegate,
-            IGetDeserializedAsyncDelegate<ApiProduct> getDeserializedApiProductAsyncDelegate,
+            IGetDataAsyncDelegate<ApiProduct, string> getDeserializedApiProductAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :

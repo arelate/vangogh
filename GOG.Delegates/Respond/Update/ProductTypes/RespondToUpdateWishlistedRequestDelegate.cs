@@ -5,28 +5,28 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.Uris;
-using GOG.Interfaces.Delegates.GetDeserialized;
 using Delegates.Data.Models.ProductTypes;
-using Delegates.Activities; 
+using Delegates.Activities;
+using GOG.Delegates.Data.Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
     public class RespondToUpdateWishlistedRequestDelegate : IRespondAsyncDelegate
     {
-        private readonly IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate;
+        private readonly IGetDataAsyncDelegate<Models.ProductsPageResult, string> getProductsPageResultDelegate;
         private readonly IUpdateAsyncDelegate<long> updateWishlistedAsyncDelegate;
         private readonly ICommitAsyncDelegate commitWishlistedAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetProductsPageResultDeserializedGOGDataAsyncDelegate),
+            typeof(GetProductsPageResultDeserializedGOGDataAsyncDelegate),
             typeof(UpdateWishlistedAsyncDelegate),
             typeof(CommitWishlistedAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public RespondToUpdateWishlistedRequestDelegate(
-            IGetDeserializedAsyncDelegate<Models.ProductsPageResult> getProductsPageResultDelegate,
+            IGetDataAsyncDelegate<Models.ProductsPageResult, string> getProductsPageResultDelegate,
             IUpdateAsyncDelegate<long> updateWishlistedAsyncDelegate,
             ICommitAsyncDelegate commitWishlistedAsyncDelegate,
             IStartDelegate startDelegate,
@@ -45,7 +45,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
 
             startDelegate.Start("Request content");
 
-            var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDeserializedAsync(
+            var wishlistedProductPageResult = await getProductsPageResultDelegate.GetDataAsync(
                 Uris.Endpoints.Account.Wishlist);
 
             completeDelegate.Complete();

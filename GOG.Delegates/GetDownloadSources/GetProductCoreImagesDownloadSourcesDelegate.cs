@@ -5,7 +5,7 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
-using GOG.Interfaces.Delegates.GetImageUri;
+using Interfaces.Delegates.Values;
 using GOG.Interfaces.Delegates.GetDownloadSources;
 
 namespace GOG.Delegates.GetDownloadSources
@@ -16,7 +16,7 @@ namespace GOG.Delegates.GetDownloadSources
         private readonly IGetDataAsyncDelegate<T, long> getDataByIdAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
         private readonly IFormatDelegate<string, string> formatImagesUriDelegate;
-        private readonly IGetImageUriDelegate<T> getImageUriDelegate;
+        private readonly IGetValueDelegate<string, T> getImageUriDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -25,7 +25,7 @@ namespace GOG.Delegates.GetDownloadSources
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<T, long> getDataByIdAsyncDelegate,
             IFormatDelegate<string, string> formatImagesUriDelegate,
-            IGetImageUriDelegate<T> getImageUriDelegate,
+            IGetValueDelegate<string, T> getImageUriDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
@@ -57,7 +57,7 @@ namespace GOG.Delegates.GetDownloadSources
                 var imageSources = new List<string>
                 {
                     formatImagesUriDelegate.Format(
-                        getImageUriDelegate.GetImageUri(productCore))
+                        getImageUriDelegate.GetValue(productCore))
                 };
 
                 if (!productImageSources.ContainsKey(id))

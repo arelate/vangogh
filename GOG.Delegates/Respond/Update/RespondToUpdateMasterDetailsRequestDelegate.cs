@@ -8,7 +8,6 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using GOG.Interfaces.Delegates.FillGaps;
 using Models.ProductTypes;
-using GOG.Interfaces.Delegates.GetDeserialized;
 
 namespace GOG.Delegates.Respond.Update
 {
@@ -20,7 +19,7 @@ namespace GOG.Delegates.Respond.Update
         private readonly ICommitAsyncDelegate commitDetailDataAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate;
 
-        private readonly IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate;
+        private readonly IGetDataAsyncDelegate<DetailType, string> getDeserializedDetailAsyncDelegate;
 
         private readonly IConvertDelegate<MasterType, string> convertMasterTypeToDetailUpdateIdentityDelegate;
         private readonly IFillGapsDelegate<DetailType, MasterType> fillGapsDelegate;
@@ -36,7 +35,7 @@ namespace GOG.Delegates.Respond.Update
             IUpdateAsyncDelegate<DetailType> updateDetailAsyncDelegate,
             ICommitAsyncDelegate commitAsyncDelegate,
             IItemizeAllAsyncDelegate<MasterType> itemizeAllMasterDetailGapsAsyncDelegate,
-            IGetDeserializedAsyncDelegate<DetailType> getDeserializedDetailAsyncDelegate,
+            IGetDataAsyncDelegate<DetailType, string> getDeserializedDetailAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate,
@@ -77,7 +76,7 @@ namespace GOG.Delegates.Respond.Update
                     getDetailUpdateUriDelegate.GetValue(string.Empty),
                     detailUpdateIdentity);
 
-                var detailData = await getDeserializedDetailAsyncDelegate.GetDeserializedAsync(detailUpdateUri);
+                var detailData = await getDeserializedDetailAsyncDelegate.GetDataAsync(detailUpdateUri);
 
                 if (detailData != null)
                 {

@@ -3,11 +3,12 @@ using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Itemize;
 using Attributes;
-using GOG.Interfaces.Delegates.GetImageUri;
+using Interfaces.Delegates.Values;
 using GOG.Models;
 using Delegates.Format.Uri;
 using Delegates.Activities;
 using Delegates.Itemize.ProductTypes;
+using GOG.Delegates.Values.Images;
 
 namespace GOG.Delegates.GetDownloadSources.ProductTypes
 {
@@ -18,7 +19,7 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
             typeof(ItemizeAllUpdatedAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetProductByIdAsyncDelegate),
             typeof(FormatImagesUriDelegate),
-            typeof(GetImageUri.GetProductImageUriDelegate),
+            typeof(GetProductImageUriDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
@@ -26,7 +27,7 @@ namespace GOG.Delegates.GetDownloadSources.ProductTypes
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<Product, long> getProductByIdAsyncDelegate,
             IFormatDelegate<string, string> formatImagesUriDelegate,
-            IGetImageUriDelegate<Product> getProductImageUriDelegate,
+            IGetValueDelegate<string, Product> getProductImageUriDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate) :

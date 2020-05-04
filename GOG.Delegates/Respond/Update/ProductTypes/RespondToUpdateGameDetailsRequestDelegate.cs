@@ -4,11 +4,11 @@ using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
-using GOG.Interfaces.Delegates.GetDeserialized;
 using GOG.Interfaces.Delegates.FillGaps;
 using GOG.Models;
 using Delegates.Activities;
 using Delegates.Values.Uri.ProductTypes;
+using GOG.Delegates.Data.Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {
@@ -19,10 +19,10 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
         [Dependencies(
             typeof(GetGameDetailsUpdateUriDelegate),
             typeof(Convert.UpdateIdentity.ConvertAccountProductToGameDetailsUpdateIdentityDelegate),
-            typeof(GOG.Delegates.Data.Models.ProductTypes.UpdateGameDetailsAsyncDelegate),
-            typeof(GOG.Delegates.Data.Models.ProductTypes.CommitGameDetailsAsyncDelegate),
+            typeof(UpdateGameDetailsAsyncDelegate),
+            typeof(CommitGameDetailsAsyncDelegate),
             typeof(Itemize.MasterDetail.ItemizeAllAccountProductsGameDetailsGapsAsyncDelegate),
-            typeof(GOG.Delegates.GetDeserialized.ProductTypes.GetDeserializedGameDetailsAsyncDelegate),
+            typeof(GetDeserializedGameDetailsAsyncDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate),
@@ -33,7 +33,7 @@ namespace GOG.Delegates.Respond.Update.ProductTypes
             IUpdateAsyncDelegate<GameDetails> updateGameDetailsAsyncDelegate,
             ICommitAsyncDelegate commitGameDetailsAsyncDelegate,
             IItemizeAllAsyncDelegate<AccountProduct> itemizeAllAccountProductsGameDetailsGapsAsyncDelegate,
-            IGetDeserializedAsyncDelegate<GameDetails> getDeserializedGameDetailsAsyncDelegate,
+            IGetDataAsyncDelegate<GameDetails, string> getDeserializedGameDetailsAsyncDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate,
