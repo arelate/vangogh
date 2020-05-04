@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Attributes;
 using Delegates.Data.Storage;
+using GOG.Delegates.Conversions.JSON.ProductTypes;
 using Interfaces.Delegates.Data;
 using GOG.Models;
 using Interfaces.Delegates.Conversions;
@@ -11,7 +12,7 @@ namespace GOG.Delegates.Data.Storage.ProductTypes
     {
         [Dependencies(
             typeof(GetStringDataAsyncDelegate),
-            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToListApiProductDelegate))]
+            typeof(ConvertJSONToListApiProductDelegate))]
         public GetListApiProductDataAsyncDelegate(
             IGetDataAsyncDelegate<string,string> getStringDataAsyncDelegate,
             IConvertDelegate<string, List<ApiProduct>> convertJSONToListApiProductDelegate) :

@@ -9,6 +9,7 @@ using GOG.Models;
 using Delegates.Activities;
 using Delegates.Values.Uri.ProductTypes;
 using GOG.Delegates.Data.Network;
+using GOG.Delegates.Itemizations;
 using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
@@ -25,7 +26,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
         [Dependencies(
             typeof(GetScreenshotsUpdateUriDelegate),
             typeof(GetUriDataPolitelyAsyncDelegate),
-            typeof(Itemize.ItemizeScreenshotsDelegate),
+            typeof(ItemizeScreenshotsDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public GetProductScreenshotsByProductAsyncDelegate(

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Delegates.Conversions.Requests;
 using Delegates.Conversions.Types;
-using Interfaces.Delegates.Respond;
+using Interfaces.Delegates.Server;
 
 namespace vangogh.Console
 {
@@ -41,9 +41,9 @@ namespace vangogh.Console
 
                 var respondToRequestDelegate = convertTypeToInstanceDelegate.Convert(
                         respondToRequestDelegateType)
-                    as IRespondAsyncDelegate;
+                    as IProcessAsyncDelegate;
 
-                await respondToRequestDelegate.RespondAsync(request.Parameters);
+                await respondToRequestDelegate.ProcessAsync(request.Parameters);
             }
 
             System.Console.WriteLine("Press ENTER to exit...");

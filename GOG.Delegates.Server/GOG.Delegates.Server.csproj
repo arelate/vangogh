@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Attributes\Attributes.csproj" />
+      <ProjectReference Include="..\Delegates\Delegates.csproj" />
+      <ProjectReference Include="..\GOG.Delegates\GOG.Delegates.csproj" />
+      <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
+      <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+      <ProjectReference Include="..\Models\Models.csproj" />
+    </ItemGroup>
+
+</Project>

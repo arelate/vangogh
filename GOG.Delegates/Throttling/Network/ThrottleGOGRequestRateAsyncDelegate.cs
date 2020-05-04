@@ -6,6 +6,7 @@ using Interfaces.Delegates.Throttling;
 using Interfaces.Delegates.Collections;
 using Delegates.Throttling;
 using Delegates.Collections.System;
+using GOG.Delegates.Itemizations;
 using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Throttling.Network
@@ -23,7 +24,7 @@ namespace GOG.Delegates.Throttling.Network
         [Dependencies(
             typeof(ThrottleAsyncDelegate),
             typeof(FindStringDelegate),
-            typeof(Itemize.ItemizeAllRateConstrainedUrisDelegate))]
+            typeof(ItemizeAllRateConstrainedUrisDelegate))]
         public ThrottleGOGRequestRateAsyncDelegate(
             IThrottleAsyncDelegate<int> throttleExecutionAsyncDelegate,
             IFindDelegate<string> findStringDelegate,

@@ -1,4 +1,5 @@
 using Attributes;
+using GOG.Delegates.Conversions.JSON.ProductTypes;
 using GOG.Models;
 using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
@@ -9,7 +10,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
     {
         [Dependencies(
             typeof(Network.GetUriDataPolitelyAsyncDelegate),
-            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToApiProductDelegate))]
+            typeof(ConvertJSONToApiProductDelegate))]
         public GetDeserializedApiProductAsyncDelegate(
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,
             IConvertDelegate<string, ApiProduct> convertJSONToApiProductDelegate) :

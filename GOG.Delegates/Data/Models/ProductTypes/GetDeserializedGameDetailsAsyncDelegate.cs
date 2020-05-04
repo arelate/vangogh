@@ -6,6 +6,10 @@ using Attributes;
 using Delegates.Collections.System;
 using Delegates.Conversions;
 using Delegates.Conversions.Strings;
+using GOG.Delegates.Confirmations.ProductTypes;
+using GOG.Delegates.Conversions.JSON.ProductTypes;
+using GOG.Delegates.Conversions.ProductTypes;
+using GOG.Delegates.Itemizations.ProductTypes;
 using GOG.Models;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirmations;
@@ -41,15 +45,15 @@ namespace GOG.Delegates.Data.Models.ProductTypes
 
         [Dependencies(
             typeof(Network.GetUriDataPolitelyAsyncDelegate),
-            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGameDetailsDelegate),
-            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToOperatingSystemsDownloads2DArrayDelegate),
+            typeof(ConvertJSONToGameDetailsDelegate),
+            typeof(ConvertJSONToOperatingSystemsDownloads2DArrayDelegate),
             typeof(ConvertLanguageToCodeDelegate),
-            typeof(GOG.Delegates.Convert.ProductTypes.ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate),
-            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate),
-            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadLanguagesDelegate),
-            typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadsDelegate),
+            typeof(ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate),
+            typeof(ConfirmGameDetailsContainsLanguageDelegate),
+            typeof(ItemizeGameDetailsDownloadLanguagesDelegate),
+            typeof(ItemizeGameDetailsDownloadsDelegate),
             typeof(ConvertStringToReplaceMarkersWithEmptyStringDelegate),
-            typeof(GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate),
+            typeof(ConvertOperatingSystemsDownloads2DArrayToArrayDelegate),
             typeof(MapStringDelegate))]
         public GetDeserializedGameDetailsAsyncDelegate(
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,

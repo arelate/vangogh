@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Attributes;
 using Delegates.Conversions.Uris;
+using GOG.Delegates.Conversions.JSON.ProductTypes;
+using GOG.Delegates.Itemizations;
 using GOG.Models;
 using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
@@ -14,8 +16,8 @@ namespace GOG.Delegates.Data.Models.ProductTypes
         [Dependencies(
             typeof(ConvertUriDictionaryParametersToUriDelegate),
             typeof(Network.GetUriDataPolitelyAsyncDelegate),
-            typeof(Itemize.ItemizeGOGDataDelegate),
-            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToGOGDataDelegate))]
+            typeof(ItemizeGOGDataDelegate),
+            typeof(ConvertJSONToGOGDataDelegate))]
         public GetDeserializedGOGDataAsyncDelegate(
             IConvertDelegate<(string, IDictionary<string, string>), string> convertUriParametersToUriDelegate,
             IGetDataAsyncDelegate<string,string> getUriDataAsyncDelegate,

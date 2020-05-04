@@ -7,6 +7,7 @@ using Models.QueryParameters;
 using Attributes;
 using Interfaces.Delegates.Data;
 using Delegates.Activities;
+using GOG.Delegates.Confirmations.Authorization;
 using GOG.Delegates.Data.Authorization;
 using Interfaces.Delegates.Confirmations;
 
@@ -31,8 +32,8 @@ namespace GOG.Delegates.Authorize
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(Confirm.Authorization.ConfirmUserIsLoggedInAsyncDelegate),
-            typeof(Confirm.Authorization.ConfirmSuccessfulAuthorizationDelegate),
+            typeof(ConfirmUserIsLoggedInAsyncDelegate),
+            typeof(ConfirmSuccessfulAuthorizationDelegate),
             typeof(GetAuthenticationTokenDataAsyncDelegate),
             typeof(GetLoginCheckDataAsyncDelegate),
             typeof(GetTwoStepLoginCheckDataAsyncDelegate),

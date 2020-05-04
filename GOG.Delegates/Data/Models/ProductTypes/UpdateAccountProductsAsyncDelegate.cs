@@ -3,6 +3,8 @@ using Delegates.Data.Models;
 using GOG.Models;
 using Interfaces.Delegates.Data;
 using Attributes;
+using GOG.Delegates.Confirmations.ProductTypes;
+using GOG.Delegates.Conversions.ProductTypes;
 using Interfaces.Delegates.Confirmations;
 using Interfaces.Delegates.Conversions;
 
@@ -12,8 +14,8 @@ namespace GOG.Delegates.Data.Models.ProductTypes
     {
         [Dependencies(
             typeof(DeleteAccountProductsAsyncDelegate),
-            typeof(GOG.Delegates.Convert.ProductTypes.ConvertAccountProductToIndexDelegate),
-            typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmAccountProductsContainIdAsyncDelegate),
+            typeof(ConvertAccountProductToIndexDelegate),
+            typeof(ConfirmAccountProductsContainIdAsyncDelegate),
             typeof(GOG.Delegates.Data.Storage.ProductTypes.GetListAccountProductDataFromPathAsyncDelegate))]
         public UpdateAccountProductsAsyncDelegate(
             IDeleteAsyncDelegate<AccountProduct> deleteAccountProductsAsyncDelegate, 

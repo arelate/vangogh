@@ -5,6 +5,7 @@ using Delegates.Conversions.Uris;
 using Delegates.Data.Network;
 using Delegates.Values.QueryParameters.ProductTypes;
 using Delegates.Values.Uri.ProductTypes;
+using GOG.Delegates.Conversions.JSON.ProductTypes;
 using GOG.Models;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Conversions;
@@ -20,7 +21,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
             typeof(GetProductsUpdateQueryParametersDelegate),
             typeof(ConvertUriDictionaryParametersToUriDelegate),
             typeof(GetUriDataAsyncDelegate),
-            typeof(GOG.Delegates.Convert.JSON.ProductTypes.ConvertJSONToProductsPageResultDelegate),
+            typeof(ConvertJSONToProductsPageResultDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
