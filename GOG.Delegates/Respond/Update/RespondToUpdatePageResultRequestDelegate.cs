@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Itemizations;
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update

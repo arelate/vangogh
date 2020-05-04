@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Interfaces.Delegates.Replace;
-using Interfaces.Delegates.Itemize;
 using Attributes;
 using Delegates.Replace;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize.ProductTypes
 {

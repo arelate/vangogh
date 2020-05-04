@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using GOG.Models;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
 using Models.QueryParameters;

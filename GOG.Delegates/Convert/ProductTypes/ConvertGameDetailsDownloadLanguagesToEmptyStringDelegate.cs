@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Replace;
 using Attributes;
 using Delegates.Replace;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Convert.ProductTypes
 {

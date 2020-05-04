@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Attributes;
+using Delegates.Values.Paths.ProductTypes;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
 using Models.ProductTypes;
@@ -10,7 +11,7 @@ namespace Delegates.Data.Storage.ProductTypes
     {
         [Dependencies(
             typeof(GetListProductRoutesDataAsyncDelegate),
-            typeof(Delegates.GetPath.ProductTypes.GetProductRoutesPathDelegate))]
+            typeof(GetProductRoutesPathDelegate))]
         public GetListProductRoutesDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductRoutes>, string> getListProductRoutesDataAsyncDelegate,
             IGetValueDelegate<string,(string Directory,string Filename)> getProductRoutesPathDelegate) :

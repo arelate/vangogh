@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Collections;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 
 namespace Delegates.Data.Models
 {

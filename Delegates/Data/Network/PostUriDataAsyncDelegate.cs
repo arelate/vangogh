@@ -3,7 +3,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Attributes;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.Network;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Models.Network;
 
@@ -15,7 +16,7 @@ namespace Delegates.Data.Network
             convertRequestToResponseAsyncDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate))]
+            typeof(ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate))]
         public PostUriDataAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate)

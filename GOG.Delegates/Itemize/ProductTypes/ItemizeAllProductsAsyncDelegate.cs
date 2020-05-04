@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Delegates.Itemize;
 using GOG.Models;
 using Interfaces.Delegates.Data;
 using Attributes;
+using Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize.ProductTypes
 {

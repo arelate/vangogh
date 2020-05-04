@@ -2,7 +2,7 @@
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Format;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 using Interfaces.Delegates.Values;
 using Models.ProductTypes;
 

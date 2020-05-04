@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Interfaces.Delegates.Itemize;
 using GOG.Models;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize
 {

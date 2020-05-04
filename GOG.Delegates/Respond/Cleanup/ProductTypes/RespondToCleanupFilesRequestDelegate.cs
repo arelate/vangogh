@@ -1,13 +1,13 @@
-﻿using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Format;
+﻿using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
 using Delegates.Format.Uri;
 using Delegates.Data.Storage;
 using Delegates.Activities;
-using Delegates.Itemize;
+using Delegates.Itemizations;
 using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Respond.Cleanup.ProductTypes
 {

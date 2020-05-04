@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 using Models.Separators;
 
 namespace GOG.Delegates.Itemize.ProductTypes

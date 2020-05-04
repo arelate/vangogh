@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Values;
-using Interfaces.Delegates.Itemize;
 using Attributes;
 using Delegates.Values.Directories.ProductTypes;
 using GOG.Models;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize
 {

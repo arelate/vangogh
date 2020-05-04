@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
 using Delegates.Data.Models.ProductTypes;
 using Delegates.Activities;
+using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {

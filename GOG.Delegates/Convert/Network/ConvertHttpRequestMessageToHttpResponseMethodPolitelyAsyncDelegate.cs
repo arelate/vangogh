@@ -1,10 +1,10 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Attributes;
-using Interfaces.Delegates.GetInstance;
+using Delegates.Conversions.Network;
+using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Throttling;
-using Delegates.Convert.Network;
-using Delegates.GetInstance.Network;
+using Delegates.Values.Network;
 using GOG.Delegates.Throttling.Network;
 
 namespace GOG.Delegates.Convert.Network

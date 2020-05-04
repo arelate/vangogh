@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Delegates.Convert.ArgsTokens;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.ArgsTokens;
+using Interfaces.Delegates.Conversions;
 using Models.ArgsTokens;
 using Tests.TestDelegates.Convert.Types;
 using Xunit;

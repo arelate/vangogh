@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
+using Interfaces.Delegates.Confirmations;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Conversions;
 
 namespace Delegates.Data.Models
 {

@@ -1,6 +1,5 @@
 using System.Security;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Authorization;
 using Models.Uris;
@@ -9,6 +8,7 @@ using Attributes;
 using Interfaces.Delegates.Data;
 using Delegates.Activities;
 using GOG.Delegates.Data.Authorization;
+using Interfaces.Delegates.Confirmations;
 
 namespace GOG.Delegates.Authorize
 {

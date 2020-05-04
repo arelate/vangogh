@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 using Models.Uris;
 
 namespace GOG.Delegates.Itemize

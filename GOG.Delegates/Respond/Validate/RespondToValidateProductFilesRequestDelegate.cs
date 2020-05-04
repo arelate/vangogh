@@ -3,21 +3,21 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Values;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
-using Interfaces.Delegates.Confirm;
 using Delegates.Format.Uri;
-using Delegates.Confirm.Validation;
-using Delegates.Itemize.ProductTypes;
 using Delegates.Data.Routes;
 using Delegates.Activities;
+using Delegates.Confirmations.Validation;
+using Delegates.Itemizations.ProductTypes;
 using Delegates.Values.Directories.ProductTypes;
 using Delegates.Values.Filenames;
+using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Respond.Validate
 {

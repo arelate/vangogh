@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Attributes;
 using Delegates.Collections.System;
-using Delegates.Convert;
+using Delegates.Conversions;
 using Delegates.Replace;
 using GOG.Models;
 using Interfaces.Delegates.Collections;
-using Interfaces.Delegates.Confirm;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 using Interfaces.Delegates.Replace;
 
 namespace GOG.Delegates.Data.Models.ProductTypes

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
@@ -10,6 +9,7 @@ using GOG.Models;
 using Delegates.Activities;
 using Delegates.Values.Uri.ProductTypes;
 using GOG.Delegates.Data.Network;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
 {

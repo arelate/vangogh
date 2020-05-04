@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Delegates.Conversions.Requests;
+using Delegates.Conversions.Types;
 using Interfaces.Delegates.Respond;
-using Delegates.Convert.Requests;
-using Delegates.Convert.Types;
 
 namespace vangogh.Console
 {

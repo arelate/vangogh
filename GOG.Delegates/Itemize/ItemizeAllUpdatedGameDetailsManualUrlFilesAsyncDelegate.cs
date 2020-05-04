@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
-using Delegates.Itemize.ProductTypes;
 using Delegates.Activities;
+using Delegates.Itemizations.ProductTypes;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize
 {

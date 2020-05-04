@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Collections;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using Attributes;
+using Delegates.Conversions;
+using Interfaces.Delegates.Conversions;
 
 namespace Delegates.Data.Models.ProductTypes
 {
@@ -12,7 +13,7 @@ namespace Delegates.Data.Models.ProductTypes
         [Dependencies(
             typeof(Delegates.Data.Storage.ProductTypes.GetListUpdatedDataFromPathAsyncDelegate),
             typeof(Delegates.Collections.ProductTypes.FindUpdatedDelegate),
-            typeof(Convert.ConvertPassthroughIndexDelegate))]
+            typeof(ConvertPassthroughIndexDelegate))]
         public GetUpdatedByIdAsyncDelegate(
             IGetDataAsyncDelegate<List<long>, string> getDataCollectionAsyncDelegate, 
             IFindDelegate<long> findDelegate, 

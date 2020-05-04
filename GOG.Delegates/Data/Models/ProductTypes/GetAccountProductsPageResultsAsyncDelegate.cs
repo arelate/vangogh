@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Attributes;
 using Delegates.Activities;
-using Delegates.Convert.Uri;
+using Delegates.Conversions.Uri;
 using Delegates.Data.Network;
 using Delegates.Values.QueryParameters.ProductTypes;
 using Delegates.Values.Uri.ProductTypes;
 using GOG.Models;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
 

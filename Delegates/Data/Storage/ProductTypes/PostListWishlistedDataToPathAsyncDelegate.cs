@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Attributes;
+using Delegates.Values.Paths.ProductTypes;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
 
@@ -9,7 +10,7 @@ namespace Delegates.Data.Storage.ProductTypes
     {
         [Dependencies(
             typeof(PostListWishlistedDataAsyncDelegate),
-            typeof(Delegates.GetPath.ProductTypes.GetWishlistedPathDelegate))]
+            typeof(GetWishlistedPathDelegate))]
         public PostListWishlistedDataToPathAsyncDelegate(
             IPostDataAsyncDelegate<List<long>> postListWishlistedDataAsyncDelegate,
             IGetValueDelegate<string,(string Directory,string Filename)> getWishlistedPathDelegate) :

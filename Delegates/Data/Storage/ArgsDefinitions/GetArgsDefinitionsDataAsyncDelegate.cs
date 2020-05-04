@@ -1,5 +1,6 @@
 using Attributes;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.JSON.ArgsDefinitions;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Models.ArgsDefinitions;
 
@@ -9,7 +10,7 @@ namespace Delegates.Data.Storage.ArgsDefinitions
     {
         [Dependencies(
             typeof(GetStringDataAsyncDelegate),
-            typeof(Delegates.Convert.JSON.ArgsDefinitions.ConvertJSONToArgsDefinitionDelegate))]
+            typeof(ConvertJSONToArgsDefinitionDelegate))]
         public GetArgsDefinitionsDataAsyncDelegate(
             IGetDataAsyncDelegate<string, string> getStringDataAsyncDelegate,
             IConvertDelegate<string, ArgsDefinition> convertJSONToTypeDelegate) :

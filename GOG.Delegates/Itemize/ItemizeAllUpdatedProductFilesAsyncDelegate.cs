@@ -2,11 +2,11 @@
 using System.IO;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Itemize;
 using Attributes;
 using GOG.Models;
 using Delegates.Activities;
-using Delegates.Itemize.ProductTypes;
+using Delegates.Itemizations.ProductTypes;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize
 {

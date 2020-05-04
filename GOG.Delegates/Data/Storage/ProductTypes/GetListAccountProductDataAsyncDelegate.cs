@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Attributes;
 using Delegates.Data.Storage;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using GOG.Models;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Data.Storage.ProductTypes
 {

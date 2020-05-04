@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Convert;
 using Models.QueryParameters;
 using Models.Uris;
 using Attributes;
 using Delegates.Data.Console;
-using Delegates.Itemize.HtmlAttributes;
-using Delegates.Convert.Uri;
 using Delegates.Data.Network;
 using Delegates.Activities;
+using Delegates.Conversions.Uri;
+using Delegates.Itemizations.HtmlAttributes;
+using Interfaces.Delegates.Conversions;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Data.Authorization
 {

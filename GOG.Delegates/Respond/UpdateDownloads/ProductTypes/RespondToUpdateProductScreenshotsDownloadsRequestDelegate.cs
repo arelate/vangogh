@@ -2,7 +2,6 @@
 using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Itemize;
 using Attributes;
 using GOG.Models;
 using Models.ProductTypes;
@@ -10,6 +9,7 @@ using Delegates.Data.Models.ProductTypes;
 using Delegates.Activities;
 using Delegates.Values.Directories.ProductTypes;
 using GOG.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Respond.UpdateDownloads.ProductTypes
 {

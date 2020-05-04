@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Conversions;
+using Interfaces.Delegates.Itemizations;
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Update

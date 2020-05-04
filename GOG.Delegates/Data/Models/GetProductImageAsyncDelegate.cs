@@ -1,27 +1,27 @@
 ﻿using System.Threading.Tasks;
-using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Data;
 using Attributes;
-using Delegates.Download;
+using Delegates.Data.Network;
 using GOG.Models;
 
 namespace GOG.Delegates.Data.Models
 {
     public class GetProductImageAsyncDelegate : IGetDataAsyncDelegate<string, ProductFileDownloadManifest>
     {
-        private readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
+        private readonly IGetDataToDestinationAsyncDelegate<string,string> getUriDataToDestinationAsyncDelegate;
 
         [Dependencies(
-            typeof(DownloadFromUriAsyncDelegate))]
-        public GetProductImageAsyncDelegate(IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate)
+            typeof(GetUriDataToDestinationAsyncDelegate))]
+        public GetProductImageAsyncDelegate(
+            IGetDataToDestinationAsyncDelegate<string,string> getUriDataToDestinationAsyncDelegate)
         {
-            this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
+            this.getUriDataToDestinationAsyncDelegate = getUriDataToDestinationAsyncDelegate;
         }
 
         public async Task<string> GetDataAsync(ProductFileDownloadManifest productFileDownloadManifest)
         {
-            if (downloadFromUriAsyncDelegate != null)
-                await downloadFromUriAsyncDelegate?.DownloadFromUriAsync(
+            if (getUriDataToDestinationAsyncDelegate != null)
+                await getUriDataToDestinationAsyncDelegate.GetDataToDestinationAsyncDelegate(
                     productFileDownloadManifest.Source,
                     productFileDownloadManifest.Destination);
 

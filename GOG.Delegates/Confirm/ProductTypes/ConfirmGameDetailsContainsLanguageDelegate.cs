@@ -1,8 +1,8 @@
 using Interfaces.Delegates.Collections;
-using Delegates.Confirm;
 using Attributes;
 using Models.Separators;
 using Delegates.Collections.System;
+using Delegates.Confirmations;
 
 namespace GOG.Delegates.Confirm.ProductTypes
 {

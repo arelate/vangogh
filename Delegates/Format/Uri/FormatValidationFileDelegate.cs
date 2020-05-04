@@ -2,6 +2,7 @@
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Values;
 using Attributes;
+using Delegates.Values.Paths.Json;
 
 namespace Delegates.Format.Uri
 {
@@ -10,7 +11,7 @@ namespace Delegates.Format.Uri
         private readonly IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate;
 
         [Dependencies(
-            typeof(GetPath.Json.GetValidationPathDelegate))]
+            typeof(GetValidationPathDelegate))]
         public FormatValidationFileDelegate(IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate)
         {
             this.getPathDelegate = getPathDelegate;

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Data.Models
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Delegates.Confirm.ArgsTokens;
-using Interfaces.Delegates.Confirm;
+using Delegates.Confirmations.ArgsTokens;
+using Interfaces.Delegates.Confirmations;
 using Models.ArgsTokens;
 using Tests.TestDelegates.Convert.Types;
 using Xunit;

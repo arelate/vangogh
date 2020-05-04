@@ -2,7 +2,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Attributes;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.Network;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 
 namespace Delegates.Data.Network
@@ -13,7 +14,7 @@ namespace Delegates.Data.Network
             convertRequestToResponseAsyncDelegate;
 
         [Dependencies(
-            typeof(Delegates.Convert.Network.ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate))]
+            typeof(ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate))]
         public GetUriDataAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate)

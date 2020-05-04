@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using GOG.Models;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Itemizations;
 using Models.ProductTypes;
 using Models.Separators;
 

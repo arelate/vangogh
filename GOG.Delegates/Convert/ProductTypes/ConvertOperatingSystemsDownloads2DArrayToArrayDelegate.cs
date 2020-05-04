@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Interfaces.Delegates.Convert;
 using GOG.Models;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Convert.ProductTypes
 {

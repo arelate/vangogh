@@ -2,8 +2,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Attributes;
 using Delegates.Data.Network;
-using Interfaces.Delegates.Convert;
 using GOG.Delegates.Convert.Network;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Data.Network
 {

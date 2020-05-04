@@ -1,7 +1,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Attributes;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.Streams;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 
 namespace Delegates.Data.Storage
@@ -11,7 +12,7 @@ namespace Delegates.Data.Storage
         private readonly IConvertDelegate<string, Stream> convertUriToReadableStream;
 
         [Dependencies(
-            typeof(Convert.Streams.ConvertUriToReadableStreamDelegate))]
+            typeof(ConvertUriToReadableStreamDelegate))]
         public GetStringDataAsyncDelegate(
             IConvertDelegate<string, Stream> convertUriToReadableStream)
         {

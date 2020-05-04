@@ -1,7 +1,6 @@
 using Attributes;
-using Delegates.Convert.Uri;
 using GOG.Models;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 
 namespace GOG.Delegates.Data.Models.ProductTypes

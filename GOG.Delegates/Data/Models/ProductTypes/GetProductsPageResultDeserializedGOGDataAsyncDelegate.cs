@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using Attributes;
-using Delegates.Convert.Uri;
+using Delegates.Conversions.Uri;
 using GOG.Models;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
 {

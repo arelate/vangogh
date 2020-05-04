@@ -1,7 +1,7 @@
-using Delegates.Confirm;
 using GOG.Models;
 using Interfaces.Delegates.Data;
 using Attributes;
+using Delegates.Confirmations;
 
 namespace GOG.Delegates.Confirm.ProductTypes
 {

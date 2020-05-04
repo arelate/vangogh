@@ -1,13 +1,13 @@
 ﻿using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using Attributes;
 using Delegates.Activities;
-using Delegates.Itemize.ProductTypes;
 using Delegates.Data.Models.ProductTypes;
+using Delegates.Itemizations.ProductTypes;
 using GOG.Delegates.Data.Models;
 using GOG.Models;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Respond.Download.ProductTypes
 {

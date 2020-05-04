@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Attributes;
 using Interfaces.Delegates.Throttling;
 using Interfaces.Delegates.Collections;
-using Interfaces.Delegates.Itemize;
 using Delegates.Throttling;
 using Delegates.Collections.System;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Throttling.Network
 {

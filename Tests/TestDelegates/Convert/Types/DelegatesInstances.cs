@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
-using Interfaces.Delegates.Convert;
-using Delegates.Convert.Types;
+using Delegates.Conversions.Types;
+using Interfaces.Delegates.Conversions;
 
 namespace Tests.TestDelegates.Convert.Types
 {

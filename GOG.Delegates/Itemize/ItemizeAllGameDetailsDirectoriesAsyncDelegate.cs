@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
 using Delegates.Activities;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize
 {

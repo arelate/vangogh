@@ -7,7 +7,7 @@ using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Models.ProductTypes;
 using GOG.Models;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 
 // TODO: Should this be just update if collections don't overlap? e.g. update accountproductimages vs updatedownloads accountproductimages
 namespace GOG.Delegates.Respond.UpdateDownloads

@@ -1,8 +1,8 @@
-﻿using Interfaces.Delegates.Itemize;
-using Interfaces.Delegates.Confirm;
-using Delegates.Itemize.MasterDetail;
-using Attributes;
+﻿using Attributes;
+using Delegates.Itemizations.MasterDetail;
 using GOG.Models;
+using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize.MasterDetail
 {

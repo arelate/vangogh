@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
-using Interfaces.Delegates.Confirm;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Activities;
 using Models.Uris;
 using GOG.Models;
 using Attributes;
 using Delegates.Data.Network;
 using Delegates.Activities;
+using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Confirm.Authorization
 {

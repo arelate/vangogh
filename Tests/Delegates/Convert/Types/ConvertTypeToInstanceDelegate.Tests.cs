@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Delegates.Itemizations.Types.Attributes;
 using Xunit;
-using Delegates.Itemize.Types.Attributes;
 using Tests.TestDelegates.Convert.Types;
 
 namespace Tests.Delegates.Convert.Types

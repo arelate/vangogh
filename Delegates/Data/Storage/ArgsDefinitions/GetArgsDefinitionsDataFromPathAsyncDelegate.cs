@@ -1,4 +1,5 @@
 using Attributes;
+using Delegates.Values.Paths.ArgsDefinitions;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
 using Models.ArgsDefinitions;
@@ -9,7 +10,7 @@ namespace Delegates.Data.Storage.ArgsDefinitions
     {
         [Dependencies(
             typeof(GetArgsDefinitionsDataAsyncDelegate),
-            typeof(Delegates.GetPath.ArgsDefinitions.GetArgsDefinitionsPathDelegate))]
+            typeof(GetArgsDefinitionsPathDelegate))]
         public GetArgsDefinitionsDataFromPathAsyncDelegate(
             IGetDataAsyncDelegate<ArgsDefinition, string> getJSONDataAsyncDelegate,
             IGetValueDelegate<string,(string Directory,string Filename)> getPathDelegate) :

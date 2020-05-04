@@ -2,13 +2,13 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Convert;
 using Models.Uris;
 using Models.QueryParameters;
 using Attributes;
 using Delegates.Data.Network;
 using Delegates.Activities;
-using Delegates.Convert.Uri;
+using Delegates.Conversions.Uri;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Data.Authorization
 {

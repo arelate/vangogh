@@ -3,10 +3,10 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
 using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Itemizations;
 using Models.ProductTypes;
 
 namespace GOG.Delegates.Respond.Cleanup

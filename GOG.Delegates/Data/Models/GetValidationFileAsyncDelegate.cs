@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Format;
-using Interfaces.Delegates.Confirm;
-using Interfaces.Delegates.Download;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using Delegates.Format.Uri;
-using Delegates.Confirm.Validation;
-using Delegates.Download;
+using Delegates.Data.Network;
 using Delegates.Activities;
+using Delegates.Confirmations.Validation;
 using Delegates.Values.Directories.ProductTypes;
 using GOG.Models;
+using Interfaces.Delegates.Confirmations;
 
 namespace GOG.Delegates.Data.Models
 {
@@ -23,7 +22,7 @@ namespace GOG.Delegates.Data.Models
         private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
         private readonly IGetValueDelegate<string,string> validationDirectoryDelegate;
         private readonly IFormatDelegate<string, string> formatValidationUriDelegate;
-        private readonly IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate;
+        private readonly IGetDataToDestinationAsyncDelegate<string,string> getUriDataToDestinationAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
@@ -33,7 +32,7 @@ namespace GOG.Delegates.Data.Models
             typeof(FormatValidationFileDelegate),
             typeof(GetMd5DirectoryDelegate),
             typeof(FormatValidationUriDelegate),
-            typeof(DownloadFromUriAsyncDelegate),
+            typeof(GetUriDataToDestinationAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public GetValidationFileAsyncDelegate(
@@ -42,7 +41,7 @@ namespace GOG.Delegates.Data.Models
             IFormatDelegate<string, string> formatValidationFileDelegate,
             IGetValueDelegate<string,string> validationDirectoryDelegate,
             IFormatDelegate<string, string> formatValidationUriDelegate,
-            IDownloadFromUriAsyncDelegate downloadFromUriAsyncDelegate,
+            IGetDataToDestinationAsyncDelegate<string,string> getUriDataToDestinationAsyncDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
@@ -51,7 +50,7 @@ namespace GOG.Delegates.Data.Models
             this.formatValidationFileDelegate = formatValidationFileDelegate;
             this.validationDirectoryDelegate = validationDirectoryDelegate;
             this.formatValidationUriDelegate = formatValidationUriDelegate;
-            this.downloadFromUriAsyncDelegate = downloadFromUriAsyncDelegate;
+            this.getUriDataToDestinationAsyncDelegate = getUriDataToDestinationAsyncDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
         }
@@ -74,7 +73,7 @@ namespace GOG.Delegates.Data.Models
 
             startDelegate.Start("Download validation file");
 
-            await downloadFromUriAsyncDelegate.DownloadFromUriAsync(
+            await getUriDataToDestinationAsyncDelegate.GetDataToDestinationAsyncDelegate(
                 validationSourceUri,
                 validationDirectoryDelegate.GetValue(string.Empty));
 

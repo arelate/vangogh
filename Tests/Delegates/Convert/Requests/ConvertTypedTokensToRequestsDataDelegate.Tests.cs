@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Delegates.Convert.Requests;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.Requests;
+using Interfaces.Delegates.Conversions;
 using Models.ArgsTokens;
 using Models.Requests;
 using Tests.TestDelegates.Convert.Types;

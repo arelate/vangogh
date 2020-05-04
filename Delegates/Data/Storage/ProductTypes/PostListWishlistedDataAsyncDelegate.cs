@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Attributes;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.JSON.System;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 
 namespace Delegates.Data.Storage.ProductTypes
@@ -9,7 +10,7 @@ namespace Delegates.Data.Storage.ProductTypes
     {
         [Dependencies(
             typeof(PostStringDataAsyncDelegate),
-            typeof(Delegates.Convert.JSON.System.ConvertListLongToJSONDelegate))]
+            typeof(ConvertListLongToJSONDelegate))]
         public PostListWishlistedDataAsyncDelegate(
             IPostDataAsyncDelegate<string> postStringDataAsyncDelegate,
             IConvertDelegate<List<long>, string> convertListLongToJSONDelegate) :

@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Format;
-using Interfaces.Delegates.Download;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Attributes;
 using Models.ProductTypes;
-using Delegates.Convert.Network;
 using Delegates.Format.Uri;
 using Delegates.Data.Routes;
-using Delegates.Download;
 using Delegates.Activities;
+using Delegates.Conversions.Network;
+using Delegates.Data.Network;
 using GOG.Models;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Data.Models
 {
@@ -25,7 +24,8 @@ namespace GOG.Delegates.Data.Models
 
         private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
         private readonly IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate;
-        private readonly IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate;
+        private readonly IGetDataToDestinationAsyncDelegate<HttpResponseMessage, string> 
+            getHttpResponseMethodToDestinationAsyncDelegate;
         private readonly IGetDataAsyncDelegate<string, ProductFileDownloadManifest> getValidationFileAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
@@ -34,7 +34,7 @@ namespace GOG.Delegates.Data.Models
             typeof(ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate),
             typeof(FormatUriRemoveSessionDelegate),
             typeof(UpdateRouteDataAsyncDelegate),
-            typeof(DownloadFromResponseAsyncDelegate),
+            typeof(GetHttpResponseMessageToDestinationAsyncDelegate),
             typeof(GetValidationFileAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
@@ -43,7 +43,8 @@ namespace GOG.Delegates.Data.Models
                 convertRequestToResponseAsyncDelegate,
             IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
             IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate,
-            IDownloadFromResponseAsyncDelegate downloadFromResponseAsyncDelegate,
+            IGetDataToDestinationAsyncDelegate<HttpResponseMessage, string> 
+                getHttpResponseMethodToDestinationAsyncDelegate,
             IGetDataAsyncDelegate<string, ProductFileDownloadManifest> getValidationFileAsyncDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
@@ -51,7 +52,7 @@ namespace GOG.Delegates.Data.Models
             this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
             this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
             this.updateRouteDataAsyncDelegate = updateRouteDataAsyncDelegate;
-            this.downloadFromResponseAsyncDelegate = downloadFromResponseAsyncDelegate;
+            this.getHttpResponseMethodToDestinationAsyncDelegate = getHttpResponseMethodToDestinationAsyncDelegate;
             this.getValidationFileAsyncDelegate = getValidationFileAsyncDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
@@ -105,7 +106,7 @@ namespace GOG.Delegates.Data.Models
 
                 try
                 {
-                    await downloadFromResponseAsyncDelegate.DownloadFromResponseAsync(
+                    await getHttpResponseMethodToDestinationAsyncDelegate.GetDataToDestinationAsyncDelegate(
                         response,
                         productFileDownloadManifest.Destination);
                 }

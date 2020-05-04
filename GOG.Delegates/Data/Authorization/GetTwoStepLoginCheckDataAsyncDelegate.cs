@@ -3,14 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Attributes;
 using Delegates.Activities;
-using Delegates.Convert.Uri;
+using Delegates.Conversions.Uri;
 using Delegates.Data.Console;
 using Delegates.Data.Network;
-using Delegates.Itemize.HtmlAttributes;
+using Delegates.Itemizations.HtmlAttributes;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 using Models.QueryParameters;
 using Models.Uris;
 

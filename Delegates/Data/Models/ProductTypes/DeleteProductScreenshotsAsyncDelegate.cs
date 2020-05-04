@@ -1,9 +1,11 @@
 using System.Collections.Generic;
-using Interfaces.Delegates.Confirm;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using Models.ProductTypes;
 using Attributes;
+using Delegates.Confirmations.ProductTypes;
+using Delegates.Conversions.ProductTypes;
+using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Conversions;
 
 namespace Delegates.Data.Models.ProductTypes
 {
@@ -11,8 +13,8 @@ namespace Delegates.Data.Models.ProductTypes
     {
         [Dependencies(
             typeof(Delegates.Data.Storage.ProductTypes.GetListProductScreenshotsDataFromPathAsyncDelegate),
-            typeof(Delegates.Convert.ProductTypes.ConvertProductScreenshotsToIndexDelegate),
-            typeof(Delegates.Confirm.ProductTypes.ConfirmProductScreenshotsContainIdAsyncDelegate))]
+            typeof(ConvertProductScreenshotsToIndexDelegate),
+            typeof(ConfirmProductScreenshotsContainIdAsyncDelegate))]
         public DeleteProductScreenshotsAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductScreenshots>, string> getDataCollectionAsyncDelegate,
             IConvertDelegate<ProductScreenshots, long> convertProductToIndexDelegate,

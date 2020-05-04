@@ -1,6 +1,4 @@
-﻿using Interfaces.Delegates.Convert;
-using Interfaces.Delegates.Values;
-using Interfaces.Delegates.Itemize;
+﻿using Interfaces.Delegates.Values;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
@@ -8,6 +6,8 @@ using GOG.Models;
 using Delegates.Activities;
 using Delegates.Values.Uri.ProductTypes;
 using GOG.Delegates.Data.Models.ProductTypes;
+using Interfaces.Delegates.Conversions;
+using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Respond.Update.ProductTypes
 {

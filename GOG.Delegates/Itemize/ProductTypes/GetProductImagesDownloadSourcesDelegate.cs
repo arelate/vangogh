@@ -1,13 +1,13 @@
 using Attributes;
 using Delegates.Activities;
 using Delegates.Format.Uri;
-using Delegates.Itemize.ProductTypes;
+using Delegates.Itemizations.ProductTypes;
 using GOG.Delegates.Values.Images;
 using GOG.Models;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Format;
-using Interfaces.Delegates.Itemize;
+using Interfaces.Delegates.Itemizations;
 using Interfaces.Delegates.Values;
 
 namespace GOG.Delegates.Itemize.ProductTypes

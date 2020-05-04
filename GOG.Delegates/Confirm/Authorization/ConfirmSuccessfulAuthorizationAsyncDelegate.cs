@@ -1,4 +1,4 @@
-using Interfaces.Delegates.Confirm;
+using Interfaces.Delegates.Confirmations;
 
 namespace GOG.Delegates.Confirm.Authorization
 {

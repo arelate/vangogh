@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Interfaces.Delegates.Convert;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Models.ProductTypes;
 

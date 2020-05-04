@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using Interfaces.Delegates.Collections;
-using Interfaces.Delegates.Convert;
 using Interfaces.Delegates.Data;
 using Models.ProductTypes;
 using Attributes;
+using Delegates.Conversions.ProductTypes;
+using Interfaces.Delegates.Conversions;
 
 namespace Delegates.Data.Models.ProductTypes
 {
@@ -13,7 +14,7 @@ namespace Delegates.Data.Models.ProductTypes
         [Dependencies(
             typeof(Delegates.Data.Storage.ProductTypes.GetListProductDownloadsDataFromPathAsyncDelegate),
             typeof(Delegates.Collections.ProductTypes.FindProductDownloadsDelegate),
-            typeof(Delegates.Convert.ProductTypes.ConvertProductDownloadsToIndexDelegate))]
+            typeof(ConvertProductDownloadsToIndexDelegate))]
         public GetProductDownloadsByIdAsyncDelegate(
             IGetDataAsyncDelegate<List<ProductDownloads>, string> getDataCollectionAsyncDelegate, 
             IFindDelegate<ProductDownloads> findDelegate, 

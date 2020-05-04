@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Attributes;
-using Interfaces.Delegates.Convert;
+using Delegates.Conversions.JSON.Records;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Models.ProductTypes;
 
@@ -10,7 +11,7 @@ namespace Delegates.Data.Storage.Records
     {
         [Dependencies(
             typeof(PostStringDataAsyncDelegate),
-            typeof(Delegates.Convert.JSON.Records.ConvertListProductRecordsToJSONDelegate))]
+            typeof(ConvertListProductRecordsToJSONDelegate))]
         public PostListProductRecordsDataAsyncDelegate(
             IPostDataAsyncDelegate<string> postStringDataAsyncDelegate,
             IConvertDelegate<List<ProductRecords>, string> convertListProductRecordsToJSONDelegate) :
