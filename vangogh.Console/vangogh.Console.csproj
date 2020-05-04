@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Delegates\Delegates.csproj" />
+    <ProjectReference Include="..\GOG.Delegates.Server\GOG.Delegates.Server.csproj" />
     <ProjectReference Include="..\GOG.Delegates\GOG.Delegates.csproj" />
     <ProjectReference Include="..\GOG.Models\GOG.Models.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />

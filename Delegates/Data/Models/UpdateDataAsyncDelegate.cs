@@ -4,6 +4,7 @@ using Interfaces.Delegates.Confirmations;
 using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Interfaces.Models.RecordTypes;
+using Interfaces.Delegates.Server;
 
 namespace Delegates.Data.Models
 {

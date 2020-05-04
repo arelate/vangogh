@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Delegates.Conversions.Requests;
 using Delegates.Conversions.Types;
+using GOG.Delegates.Server.Update;
 using Interfaces.Delegates.Server;
 
 namespace vangogh.Console
@@ -26,24 +27,22 @@ namespace vangogh.Console
             var convertArgsToRequestsDelegate = convertTypeToInstanceDelegate.Convert(
                     typeof(ConvertArgsToRequestsDelegate))
                 as ConvertArgsToRequestsDelegate;
-
-            var convertRequestToRespondDelegateTypeDelegate = convertTypeToInstanceDelegate.Convert(
-                    typeof(ConvertRequestToRespondDelegateTypeDelegate))
-                as ConvertRequestToRespondDelegateTypeDelegate;
-
+            
             await foreach (var request in convertArgsToRequestsDelegate.ConvertAsync(args))
             {
-                var respondToRequestDelegateType = convertRequestToRespondDelegateTypeDelegate.Convert(request);
+                var processAsyncDelegate = convertTypeToInstanceDelegate.Convert(
+                    typeof(UpdateProductsAsyncDelegate))
+                    as UpdateProductsAsyncDelegate;
 
-                if (respondToRequestDelegateType == null)
-                    throw new System.InvalidOperationException(
-                        $"No respond delegate registered for request: {request.Method} {request.Collection}");
-
-                var respondToRequestDelegate = convertTypeToInstanceDelegate.Convert(
-                        respondToRequestDelegateType)
-                    as IProcessAsyncDelegate;
-
-                await respondToRequestDelegate.ProcessAsync(request.Parameters);
+                // if (respondToRequestDelegateType == null)
+                //     throw new System.InvalidOperationException(
+                //         $"No respond delegate registered for request: {request.Method} {request.Collection}");
+                //
+                // var respondToRequestDelegate = convertTypeToInstanceDelegate.Convert(
+                //         respondToRequestDelegateType)
+                //     as IProcessAsyncDelegate;
+                //
+                await processAsyncDelegate.ProcessAsync(request.Parameters);
             }
 
             System.Console.WriteLine("Press ENTER to exit...");
