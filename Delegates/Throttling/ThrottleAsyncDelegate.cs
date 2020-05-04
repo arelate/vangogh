@@ -1,29 +1,29 @@
 ﻿using System.Threading.Tasks;
 using Interfaces.Delegates.Throttling;
-using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Activities;
 using Attributes;
-using Delegates.Format.Numbers;
+using Delegates.Conversions.Units;
 using Delegates.Activities;
 
 namespace Delegates.Throttling
 {
     public class ThrottleAsyncDelegate : IThrottleAsyncDelegate<int>
     {
-        private readonly IFormatDelegate<long, string> formatSecondsDelegate;
+        private readonly IConvertDelegate<long, string> convertSecondsToStringDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(FormatSecondsDelegate),
+            typeof(ConvertSecondsToStringDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public ThrottleAsyncDelegate(
-            IFormatDelegate<long, string> formatSecondsDelegate,
+            IConvertDelegate<long, string> convertSecondsToStringDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.formatSecondsDelegate = formatSecondsDelegate;
+            this.convertSecondsToStringDelegate = convertSecondsToStringDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
         }
@@ -31,7 +31,7 @@ namespace Delegates.Throttling
         public async Task ThrottleAsync(int delaySeconds)
         {
             startDelegate.Start(
-                $"Sleeping {formatSecondsDelegate.Format(delaySeconds)} before next operation");
+                $"Sleeping {convertSecondsToStringDelegate.Convert(delaySeconds)} before next operation");
 
             for (var ii = 0; ii < delaySeconds; ii++)
                 await Task.Delay(1000);

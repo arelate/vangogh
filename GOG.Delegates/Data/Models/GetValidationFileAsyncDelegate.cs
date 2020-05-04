@@ -2,54 +2,54 @@
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Values;
-using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Conversions;
 using Attributes;
-using Delegates.Format.Uri;
 using Delegates.Data.Network;
 using Delegates.Activities;
 using Delegates.Confirmations.Validation;
+using Delegates.Conversions.Uris;
 using Delegates.Values.Directories.ProductTypes;
 using GOG.Models;
-using Interfaces.Delegates.Confirmations;
 
 namespace GOG.Delegates.Data.Models
 {
     public class GetValidationFileAsyncDelegate : IGetDataAsyncDelegate<string, ProductFileDownloadManifest>
     {
-        private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        private readonly IConvertDelegate<string, string> convertSessionUriToUriSansSessionDelegate;
         private readonly IConfirmDelegate<string> confirmValidationExpectedDelegate;
-        private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
+        private readonly IConvertDelegate<string, string> convertFilePathToValidationFilePathDelegate;
         private readonly IGetValueDelegate<string,string> validationDirectoryDelegate;
-        private readonly IFormatDelegate<string, string> formatValidationUriDelegate;
+        private readonly IConvertDelegate<string, string> convertUriToValidationFileUriDelegate;
         private readonly IGetDataToDestinationAsyncDelegate<string,string> getUriDataToDestinationAsyncDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ICompleteDelegate completeDelegate;
 
         [Dependencies(
-            typeof(FormatUriRemoveSessionDelegate),
+            typeof(ConvertSessionUriToUriSansSessionDelegate),
             typeof(ConfirmFileValidationSupportedDelegate),
-            typeof(FormatValidationFileDelegate),
+            typeof(ConvertFilePathToValidationFilePathDelegate),
             typeof(GetMd5DirectoryDelegate),
-            typeof(FormatValidationUriDelegate),
+            typeof(ConvertUriToValidationFileUriDelegate),
             typeof(GetUriDataToDestinationAsyncDelegate),
             typeof(StartDelegate),
             typeof(CompleteDelegate))]
         public GetValidationFileAsyncDelegate(
-            IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
+            IConvertDelegate<string, string> convertSessionUriToUriSansSessionDelegate,
             IConfirmDelegate<string> confirmValidationExpectedDelegate,
-            IFormatDelegate<string, string> formatValidationFileDelegate,
+            IConvertDelegate<string, string> convertFilePathToValidationFilePathDelegate,
             IGetValueDelegate<string,string> validationDirectoryDelegate,
-            IFormatDelegate<string, string> formatValidationUriDelegate,
+            IConvertDelegate<string, string> convertUriToValidationFileUriDelegate,
             IGetDataToDestinationAsyncDelegate<string,string> getUriDataToDestinationAsyncDelegate,
             IStartDelegate startDelegate,
             ICompleteDelegate completeDelegate)
         {
-            this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
+            this.convertSessionUriToUriSansSessionDelegate = convertSessionUriToUriSansSessionDelegate;
             this.confirmValidationExpectedDelegate = confirmValidationExpectedDelegate;
-            this.formatValidationFileDelegate = formatValidationFileDelegate;
+            this.convertFilePathToValidationFilePathDelegate = convertFilePathToValidationFilePathDelegate;
             this.validationDirectoryDelegate = validationDirectoryDelegate;
-            this.formatValidationUriDelegate = formatValidationUriDelegate;
+            this.convertUriToValidationFileUriDelegate = convertUriToValidationFileUriDelegate;
             this.getUriDataToDestinationAsyncDelegate = getUriDataToDestinationAsyncDelegate;
             this.startDelegate = startDelegate;
             this.completeDelegate = completeDelegate;
@@ -59,8 +59,8 @@ namespace GOG.Delegates.Data.Models
         {
             if (string.IsNullOrEmpty(downloadManifest.Source)) return string.Empty;
 
-            var sourceUriSansSession = formatUriRemoveSessionDelegate.Format(downloadManifest.Source);
-            var destinationUri = formatValidationFileDelegate.Format(sourceUriSansSession);
+            var sourceUriSansSession = convertSessionUriToUriSansSessionDelegate.Convert(downloadManifest.Source);
+            var destinationUri = convertFilePathToValidationFilePathDelegate.Convert(sourceUriSansSession);
 
             // return early if validation is not expected for this file
             if (!confirmValidationExpectedDelegate.Confirm(sourceUriSansSession)) return string.Empty;
@@ -69,7 +69,7 @@ namespace GOG.Delegates.Data.Models
                 // await statusController.InformAsync(status, "Validation file already exists, will not be redownloading");
                 return string.Empty;
 
-            var validationSourceUri = formatValidationUriDelegate.Format(downloadManifest.Source);
+            var validationSourceUri = convertUriToValidationFileUriDelegate.Convert(downloadManifest.Source);
 
             startDelegate.Start("Download validation file");
 

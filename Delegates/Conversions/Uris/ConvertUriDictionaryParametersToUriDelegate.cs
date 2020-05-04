@@ -3,7 +3,7 @@ using Attributes;
 using Interfaces.Delegates.Conversions;
 using Models.Separators;
 
-namespace Delegates.Conversions.Uri
+namespace Delegates.Conversions.Uris
 {
     public class ConvertUriDictionaryParametersToUriDelegate :
         IConvertDelegate<(string Uri, IDictionary<string, string> Parameters), string>

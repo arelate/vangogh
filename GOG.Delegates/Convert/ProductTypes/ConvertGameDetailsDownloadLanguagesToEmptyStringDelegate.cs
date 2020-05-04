@@ -1,29 +1,30 @@
 ﻿using System.Text.RegularExpressions;
-using Interfaces.Delegates.Replace;
 using Attributes;
-using Delegates.Replace;
+using Delegates.Conversions.Strings;
 using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Convert.ProductTypes
 {
     public class ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate : IConvertDelegate<string, string>
     {
-        private readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        private readonly IConvertDelegate<(string, string[]), string> 
+            convertStringToReplaceMarkersWithEmptyStringDelegate;
 
         [Dependencies(
-            typeof(ReplaceMultipleStringsDelegate))]
+            typeof(ConvertStringToReplaceMarkersWithEmptyStringDelegate))]
         public ConvertGameDetailsDownloadLanguagesToEmptyStringDelegate(
-            IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
+            IConvertDelegate<(string, string[]), string> 
+                convertStringToReplaceMarkersWithEmptyStringDelegate)
         {
-            this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
+            this.convertStringToReplaceMarkersWithEmptyStringDelegate = 
+                convertStringToReplaceMarkersWithEmptyStringDelegate;
         }
 
         public string Convert(string downloadLanguage)
         {
-            downloadLanguage = replaceMultipleStringsDelegate.ReplaceMultiple(
-                downloadLanguage,
-                string.Empty,
-                new string[] {"\"", ","});
+            downloadLanguage = convertStringToReplaceMarkersWithEmptyStringDelegate.Convert(
+                (downloadLanguage,
+                new string[] {"\"", ","}));
 
             downloadLanguage = Regex.Unescape(downloadLanguage);
 

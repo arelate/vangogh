@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemizations;
 using Interfaces.Delegates.Values;
 using Models.ProductTypes;
@@ -14,7 +14,7 @@ namespace GOG.Delegates.Itemize
     {
         private readonly IGetDataAsyncDelegate<T, long> getDataByIdAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
-        private readonly IFormatDelegate<string, string> formatImagesUriDelegate;
+        private readonly IConvertDelegate<string, string> convertImagesUriTemplateToUriDelegate;
         private readonly IGetValueDelegate<string, T> getImageUriDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
@@ -23,7 +23,7 @@ namespace GOG.Delegates.Itemize
         protected ItemizeAllProductCoreImagesDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<T, long> getDataByIdAsyncDelegate,
-            IFormatDelegate<string, string> formatImagesUriDelegate,
+            IConvertDelegate<string, string> convertImagesUriTemplateToUriDelegate,
             IGetValueDelegate<string, T> getImageUriDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
@@ -31,7 +31,7 @@ namespace GOG.Delegates.Itemize
         {
             this.itemizeAllUpdatedAsyncDelegate = itemizeAllUpdatedAsyncDelegate;
             this.getDataByIdAsyncDelegate = getDataByIdAsyncDelegate;
-            this.formatImagesUriDelegate = formatImagesUriDelegate;
+            this.convertImagesUriTemplateToUriDelegate = convertImagesUriTemplateToUriDelegate;
             this.getImageUriDelegate = getImageUriDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
@@ -53,7 +53,7 @@ namespace GOG.Delegates.Itemize
 
                 var imageSources = new List<string>
                 {
-                    formatImagesUriDelegate.Format(
+                    convertImagesUriTemplateToUriDelegate.Convert(
                         getImageUriDelegate.GetValue(productCore))
                 };
 

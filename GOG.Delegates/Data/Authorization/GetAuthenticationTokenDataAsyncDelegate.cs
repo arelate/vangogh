@@ -7,7 +7,7 @@ using Models.QueryParameters;
 using Attributes;
 using Delegates.Data.Network;
 using Delegates.Activities;
-using Delegates.Conversions.Uri;
+using Delegates.Conversions.Uris;
 using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Data.Authorization

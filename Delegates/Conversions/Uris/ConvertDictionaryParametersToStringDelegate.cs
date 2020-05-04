@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Interfaces.Delegates.Conversions;
 using Models.Separators;
 
-namespace Delegates.Conversions.Uri
+namespace Delegates.Conversions.Uris
 {
     public class ConvertDictionaryParametersToStringDelegate : IConvertDelegate<IDictionary<string, string>, string>
     {

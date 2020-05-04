@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Conversions;
 
-namespace Delegates.Format.Numbers
+namespace Delegates.Conversions.Units
 {
-    public abstract class FormatNumbersDelegate : IFormatDelegate<long, string>
+    public abstract class ConvertNumberToStringDelegate : IConvertDelegate<long, string>
     {
         protected long[] relativeOrders;
         protected string[] orderTitles;
@@ -12,7 +12,7 @@ namespace Delegates.Format.Numbers
         protected string zero;
         protected bool roundValue;
 
-        public string Format(long value)
+        public string Convert(long value)
         {
             var max = relativeOrders.Aggregate((long) 1, (a, b) => a * b);
 

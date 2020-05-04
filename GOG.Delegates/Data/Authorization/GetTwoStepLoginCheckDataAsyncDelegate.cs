@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Attributes;
 using Delegates.Activities;
-using Delegates.Conversions.Uri;
+using Delegates.Conversions.Uris;
 using Delegates.Data.Console;
 using Delegates.Data.Network;
 using Delegates.Itemizations.HtmlAttributes;

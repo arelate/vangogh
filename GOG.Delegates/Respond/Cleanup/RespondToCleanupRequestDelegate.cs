@@ -3,7 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Itemizations;
@@ -17,7 +17,7 @@ namespace GOG.Delegates.Respond.Cleanup
         private readonly IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate;
         private readonly IItemizeDelegate<string, string> itemizeDetailsDelegate;
-        private readonly IFormatDelegate<string, string> formatSupplementaryItemDelegate;
+        private readonly IConvertDelegate<string, string> convertFilePathToValidationFilePathDelegate;
         private readonly IDeleteDelegate<string> deleteDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
@@ -27,7 +27,7 @@ namespace GOG.Delegates.Respond.Cleanup
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedItemsAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualItemsAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
-            IFormatDelegate<string, string> formatSupplementaryItemDelegate,
+            IConvertDelegate<string, string> convertFilePathToValidationFilePathDelegate,
             IDeleteDelegate<string> deleteDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
@@ -36,7 +36,7 @@ namespace GOG.Delegates.Respond.Cleanup
             this.itemizeAllExpectedItemsAsyncDelegate = itemizeAllExpectedItemsAsyncDelegate;
             this.itemizeAllActualItemsAsyncDelegate = itemizeAllActualItemsAsyncDelegate;
             this.itemizeDetailsDelegate = itemizeDetailsDelegate;
-            this.formatSupplementaryItemDelegate = formatSupplementaryItemDelegate;
+            this.convertFilePathToValidationFilePathDelegate = convertFilePathToValidationFilePathDelegate;
             this.deleteDelegate = deleteDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
@@ -60,7 +60,7 @@ namespace GOG.Delegates.Respond.Cleanup
             foreach (var detailedItem in itemizeDetailsDelegate.Itemize(unexpectedItem))
             {
                 cleanupItems.Add(detailedItem);
-                cleanupItems.Add(formatSupplementaryItemDelegate.Format(detailedItem));
+                cleanupItems.Add(convertFilePathToValidationFilePathDelegate.Convert(detailedItem));
             }
 
             startDelegate.Start("Move unexpected items to recycle bin");

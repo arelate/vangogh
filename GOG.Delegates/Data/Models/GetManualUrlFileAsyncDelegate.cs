@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Activities;
 using Interfaces.Delegates.Data;
 using Attributes;
 using Models.ProductTypes;
-using Delegates.Format.Uri;
 using Delegates.Data.Routes;
 using Delegates.Activities;
 using Delegates.Conversions.Network;
+using Delegates.Conversions.Uris;
 using Delegates.Data.Network;
 using GOG.Models;
 using Interfaces.Delegates.Conversions;
@@ -22,7 +22,7 @@ namespace GOG.Delegates.Data.Models
         private readonly IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
             convertRequestToResponseAsyncDelegate;
 
-        private readonly IFormatDelegate<string, string> formatUriRemoveSessionDelegate;
+        private readonly IConvertDelegate<string, string> convertSessionUriToUriSansSessionDelegate;
         private readonly IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate;
         private readonly IGetDataToDestinationAsyncDelegate<HttpResponseMessage, string> 
             getHttpResponseMethodToDestinationAsyncDelegate;
@@ -32,7 +32,7 @@ namespace GOG.Delegates.Data.Models
 
         [Dependencies(
             typeof(ConvertHttpRequestMessageToHttpResponseMessageAsyncDelegate),
-            typeof(FormatUriRemoveSessionDelegate),
+            typeof(ConvertSessionUriToUriSansSessionDelegate),
             typeof(UpdateRouteDataAsyncDelegate),
             typeof(GetHttpResponseMessageToDestinationAsyncDelegate),
             typeof(GetValidationFileAsyncDelegate),
@@ -41,7 +41,7 @@ namespace GOG.Delegates.Data.Models
         public GetManualUrlFileAsyncDelegate(
             IConvertAsyncDelegate<HttpRequestMessage, Task<HttpResponseMessage>>
                 convertRequestToResponseAsyncDelegate,
-            IFormatDelegate<string, string> formatUriRemoveSessionDelegate,
+            IConvertDelegate<string, string> convertSessionUriToUriSansSessionDelegate,
             IUpdateAsyncDelegate<ProductRoutes> updateRouteDataAsyncDelegate,
             IGetDataToDestinationAsyncDelegate<HttpResponseMessage, string> 
                 getHttpResponseMethodToDestinationAsyncDelegate,
@@ -50,7 +50,7 @@ namespace GOG.Delegates.Data.Models
             ICompleteDelegate completeDelegate)
         {
             this.convertRequestToResponseAsyncDelegate = convertRequestToResponseAsyncDelegate;
-            this.formatUriRemoveSessionDelegate = formatUriRemoveSessionDelegate;
+            this.convertSessionUriToUriSansSessionDelegate = convertSessionUriToUriSansSessionDelegate;
             this.updateRouteDataAsyncDelegate = updateRouteDataAsyncDelegate;
             this.getHttpResponseMethodToDestinationAsyncDelegate = getHttpResponseMethodToDestinationAsyncDelegate;
             this.getValidationFileAsyncDelegate = getValidationFileAsyncDelegate;
@@ -87,7 +87,7 @@ namespace GOG.Delegates.Data.Models
                 // Storing this key is pointless - it expires after some time and needs to be updated.
                 // So here we filter our this session key and store direct file Uri
 
-                var uriSansSession = formatUriRemoveSessionDelegate.Format(resolvedUri);
+                var uriSansSession = convertSessionUriToUriSansSessionDelegate.Convert(resolvedUri);
 
                 await updateRouteDataAsyncDelegate.UpdateAsync(
                     new ProductRoutes()

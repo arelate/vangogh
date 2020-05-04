@@ -3,20 +3,20 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Interfaces.Delegates.Values;
-using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Respond;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Activities;
 using Attributes;
 using GOG.Models;
-using Delegates.Format.Uri;
 using Delegates.Data.Routes;
 using Delegates.Activities;
 using Delegates.Confirmations.Validation;
+using Delegates.Conversions.Uris;
 using Delegates.Itemizations.ProductTypes;
 using Delegates.Values.Directories.ProductTypes;
 using Delegates.Values.Filenames;
 using Interfaces.Delegates.Confirmations;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Respond.Validate
@@ -26,7 +26,7 @@ namespace GOG.Delegates.Respond.Validate
     {
         private readonly IGetValueDelegate<string,string> productFileDirectoryDelegate;
         private readonly IGetValueDelegate<string,string> getProductFileFilenameDelegate;
-        private readonly IFormatDelegate<string, string> formatValidationFileDelegate;
+        private readonly IConvertDelegate<string, string> convertFilePathToValidationFilePathDelegate;
         private readonly IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate;
         private readonly IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate;
         private readonly IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate;
@@ -39,7 +39,7 @@ namespace GOG.Delegates.Respond.Validate
         [Dependencies(
             typeof(GetProductFilesDirectoryDelegate),
             typeof(GetUriFilenameDelegate),
-            typeof(FormatValidationFileDelegate),
+            typeof(ConvertFilePathToValidationFilePathDelegate),
             typeof(ConfirmFileValidationExpectationsAsyncDelegate),
             typeof(ItemizeAllUpdatedAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetGameDetailsByIdAsyncDelegate),
@@ -51,7 +51,7 @@ namespace GOG.Delegates.Respond.Validate
         public RespondToValidateProductFilesRequestDelegate(
             IGetValueDelegate<string,string> productFileDirectoryDelegate,
             IGetValueDelegate<string,string> getProductFileFilenameDelegate,
-            IFormatDelegate<string, string> formatValidationFileDelegate,
+            IConvertDelegate<string, string> convertFilePathToValidationFilePathDelegate,
             IConfirmExpectationAsyncDelegate<string, string> confirmFileValidationExpectationsAsyncDelegate,
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<GameDetails, long> getGameDetailsByIdAsyncDelegate,
@@ -63,7 +63,7 @@ namespace GOG.Delegates.Respond.Validate
         {
             this.productFileDirectoryDelegate = productFileDirectoryDelegate;
             this.getProductFileFilenameDelegate = getProductFileFilenameDelegate;
-            this.formatValidationFileDelegate = formatValidationFileDelegate;
+            this.convertFilePathToValidationFilePathDelegate = convertFilePathToValidationFilePathDelegate;
             this.confirmFileValidationExpectationsAsyncDelegate = confirmFileValidationExpectationsAsyncDelegate;
             this.getGameDetailsByIdAsyncDelegate = getGameDetailsByIdAsyncDelegate;
             this.itemizeGameDetailsManualUrlsAsyncDelegate = itemizeGameDetailsManualUrlsAsyncDelegate;
@@ -117,7 +117,7 @@ namespace GOG.Delegates.Respond.Validate
                 {
                     setProgressDelegate.SetProgress();
 
-                    var validationFile = formatValidationFileDelegate.Format(localFile);
+                    var validationFile = convertFilePathToValidationFilePathDelegate.Convert(localFile);
 
                     try
                     {

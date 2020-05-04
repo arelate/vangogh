@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Attributes;
 using Delegates.Activities;
-using Delegates.Conversions.Uri;
+using Delegates.Conversions.Uris;
 using Delegates.Data.Network;
 using Delegates.Values.QueryParameters.ProductTypes;
 using Delegates.Values.Uri.ProductTypes;

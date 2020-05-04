@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Attributes;
-using Delegates.Conversions.Uri;
+using Delegates.Conversions.Uris;
 using GOG.Models;
 using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;

@@ -1,12 +1,12 @@
 using Attributes;
 using Delegates.Activities;
-using Delegates.Format.Uri;
+using Delegates.Conversions.Uris;
 using Delegates.Itemizations.ProductTypes;
 using GOG.Delegates.Values.Images;
 using GOG.Models;
 using Interfaces.Delegates.Activities;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
-using Interfaces.Delegates.Format;
 using Interfaces.Delegates.Itemizations;
 using Interfaces.Delegates.Values;
 
@@ -18,7 +18,7 @@ namespace GOG.Delegates.Itemize.ProductTypes
         [Dependencies(
             typeof(ItemizeAllUpdatedAsyncDelegate),
             typeof(GOG.Delegates.Data.Models.ProductTypes.GetAccountProductByIdAsyncDelegate),
-            typeof(FormatImagesUriDelegate),
+            typeof(ConvertImagesUriTemplateToUriDelegate),
             typeof(GetAccountProductImageUriDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
@@ -26,7 +26,7 @@ namespace GOG.Delegates.Itemize.ProductTypes
         public ItemizeAllAccountProductImagesDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<long> itemizeAllUpdatedAsyncDelegate,
             IGetDataAsyncDelegate<AccountProduct, long> getAccountProductByIdAsyncDelegate,
-            IFormatDelegate<string, string> formatImagesUriDelegate,
+            IConvertDelegate<string, string> convertImagesUriTemplateToUriDelegate,
             IGetValueDelegate<string, AccountProduct> getAccountProductImageUriDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
@@ -34,7 +34,7 @@ namespace GOG.Delegates.Itemize.ProductTypes
             base(
                 itemizeAllUpdatedAsyncDelegate,
                 getAccountProductByIdAsyncDelegate,
-                formatImagesUriDelegate,
+                convertImagesUriTemplateToUriDelegate,
                 getAccountProductImageUriDelegate,
                 startDelegate,
                 setProgressDelegate,

@@ -9,7 +9,7 @@ using Attributes;
 using Delegates.Data.Console;
 using Delegates.Data.Network;
 using Delegates.Activities;
-using Delegates.Conversions.Uri;
+using Delegates.Conversions.Uris;
 using Delegates.Itemizations.HtmlAttributes;
 using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Itemizations;

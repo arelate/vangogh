@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using Attributes;
 using Delegates.Collections.System;
 using Delegates.Conversions;
-using Delegates.Replace;
+using Delegates.Conversions.Strings;
 using GOG.Models;
 using Interfaces.Delegates.Collections;
 using Interfaces.Delegates.Confirmations;
 using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Itemizations;
-using Interfaces.Delegates.Replace;
+using Interfaces.Delegates.Conversions;
 
 namespace GOG.Delegates.Data.Models.ProductTypes
 {
@@ -31,7 +31,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
         private readonly IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate;
         private readonly IItemizeDelegate<string, string> itemizeGameDetailsDownloadLanguagesDelegate;
         private readonly IItemizeDelegate<string, string> itemizeGameDetailsDownloadsDelegate;
-        private readonly IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
+        private readonly IConvertDelegate<(string, string[]), string> convertStringToReplaceMarkersWithEmptyStringDelegate;
 
         private readonly IConvertDelegate<
             OperatingSystemsDownloads[][],
@@ -48,7 +48,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
             typeof(GOG.Delegates.Confirm.ProductTypes.ConfirmGameDetailsContainsLanguageDelegate),
             typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadLanguagesDelegate),
             typeof(GOG.Delegates.Itemize.ProductTypes.ItemizeGameDetailsDownloadsDelegate),
-            typeof(ReplaceMultipleStringsDelegate),
+            typeof(ConvertStringToReplaceMarkersWithEmptyStringDelegate),
             typeof(GOG.Delegates.Convert.ProductTypes.ConvertOperatingSystemsDownloads2DArrayToArrayDelegate),
             typeof(MapStringDelegate))]
         public GetDeserializedGameDetailsAsyncDelegate(
@@ -61,7 +61,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
             IConfirmDelegate<string> confirmStringContainsLanguageDownloadsDelegate,
             IItemizeDelegate<string, string> itemizeGameDetailsDownloadLanguagesDelegate,
             IItemizeDelegate<string, string> itemizeGameDetailsDownloadsDelegate,
-            IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate,
+            IConvertDelegate<(string, string[]), string> convertStringToReplaceMarkersWithEmptyStringDelegate,
             IConvertDelegate<
                 OperatingSystemsDownloads[][],
                 OperatingSystemsDownloads[]> convert2DArrayToArrayDelegate,
@@ -77,7 +77,7 @@ namespace GOG.Delegates.Data.Models.ProductTypes
             this.confirmStringContainsLanguageDownloadsDelegate = confirmStringContainsLanguageDownloadsDelegate;
             this.itemizeGameDetailsDownloadLanguagesDelegate = itemizeGameDetailsDownloadLanguagesDelegate;
             this.itemizeGameDetailsDownloadsDelegate = itemizeGameDetailsDownloadsDelegate;
-            this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
+            this.convertStringToReplaceMarkersWithEmptyStringDelegate = convertStringToReplaceMarkersWithEmptyStringDelegate;
             this.convert2DArrayToArrayDelegate = convert2DArrayToArrayDelegate;
             this.mapStringDelegate = mapStringDelegate;
         }
@@ -117,10 +117,9 @@ namespace GOG.Delegates.Data.Models.ProductTypes
                         "Cannot find any download languages or download language format changed.");
 
                 // ... and remove download lanugage strings from downloads
-                var downloadsStringSansLanguages = replaceMultipleStringsDelegate.ReplaceMultiple(
-                    downloadString,
-                    string.Empty,
-                    downloadLanguages.ToArray());
+                var downloadsStringSansLanguages = convertStringToReplaceMarkersWithEmptyStringDelegate.Convert(
+                    (downloadString,
+                    downloadLanguages.ToArray()));
 
                 // now it should be safe to deserialize langugage downloads
                 var downloads =

@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using Attributes;
 using Delegates.Activities;
-using Delegates.Format.Uri;
+using Delegates.Conversions.Uris;
 using Delegates.Itemizations.ProductTypes;
 using Delegates.Values.Directories.ProductTypes;
 using Interfaces.Delegates.Activities;
-using Interfaces.Delegates.Format;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Itemizations;
 using Interfaces.Delegates.Values;
 using Models.ProductTypes;
@@ -17,7 +17,7 @@ namespace GOG.Delegates.Itemize
     public class ItemizeAllScreenshotsDownloadSourcesAsyncDelegate : IItemizeAllAsyncDelegate<(long, IList<string>)>
     {
         private readonly IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate;
-        private readonly IFormatDelegate<string, string> formatScreenshotsUriDelegate;
+        private readonly IConvertDelegate<string, string> convertScreenshotsUriTemplateToUriDelegate;
         private readonly IGetValueDelegate<string,string> screenshotsDirectoryDelegate;
         private readonly IStartDelegate startDelegate;
         private readonly ISetProgressDelegate setProgressDelegate;
@@ -25,21 +25,21 @@ namespace GOG.Delegates.Itemize
 
         [Dependencies(
             typeof(ItemizeAllProductScreenshotsAsyncDelegate),
-            typeof(FormatScreenshotsUriDelegate),
+            typeof(ConvertScreenshotsUriTemplateToUriDelegate),
             typeof(GetScreenshotsDirectoryDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
             typeof(CompleteDelegate))]
         public ItemizeAllScreenshotsDownloadSourcesAsyncDelegate(
             IItemizeAllAsyncDelegate<ProductScreenshots> itemizeAllProductScreenshotsAsyncDelegate,
-            IFormatDelegate<string, string> formatScreenshotsUriDelegate,
+            IConvertDelegate<string, string> convertScreenshotsUriTemplateToUriDelegate,
             IGetValueDelegate<string,string> screenshotsDirectoryDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
             ICompleteDelegate completeDelegate)
         {
             this.itemizeAllProductScreenshotsAsyncDelegate = itemizeAllProductScreenshotsAsyncDelegate;
-            this.formatScreenshotsUriDelegate = formatScreenshotsUriDelegate;
+            this.convertScreenshotsUriTemplateToUriDelegate = convertScreenshotsUriTemplateToUriDelegate;
             this.screenshotsDirectoryDelegate = screenshotsDirectoryDelegate;
             this.startDelegate = startDelegate;
             this.setProgressDelegate = setProgressDelegate;
@@ -62,7 +62,7 @@ namespace GOG.Delegates.Itemize
 
                 foreach (var uri in productScreenshots.Uris)
                 {
-                    var sourceUri = formatScreenshotsUriDelegate.Format(uri);
+                    var sourceUri = convertScreenshotsUriTemplateToUriDelegate.Convert(uri);
                     var destinationUri = Path.Combine(
                         screenshotsDirectoryDelegate.GetValue(string.Empty),
                         Path.GetFileName(sourceUri));

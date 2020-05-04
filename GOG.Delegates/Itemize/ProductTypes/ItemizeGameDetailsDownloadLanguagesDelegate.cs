@@ -1,24 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Interfaces.Delegates.Replace;
 using Attributes;
-using Delegates.Replace;
 using Interfaces.Delegates.Itemizations;
 
 namespace GOG.Delegates.Itemize.ProductTypes
 {
     public class ItemizeGameDetailsDownloadLanguagesDelegate : IItemizeDelegate<string, string>
     {
-        private IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate;
-
-        [Dependencies(
-            typeof(ReplaceMultipleStringsDelegate))]
-        public ItemizeGameDetailsDownloadLanguagesDelegate(
-            IReplaceMultipleDelegate<string> replaceMultipleStringsDelegate)
-        {
-            this.replaceMultipleStringsDelegate = replaceMultipleStringsDelegate;
-        }
-
         public IEnumerable<string> Itemize(string data)
         {
             const string languagePattern = @"\[""[\w\\ ]*"",";

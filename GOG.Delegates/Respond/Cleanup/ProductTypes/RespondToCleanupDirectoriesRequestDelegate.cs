@@ -1,11 +1,11 @@
-﻿using Interfaces.Delegates.Format;
-using Interfaces.Delegates.Activities;
+﻿using Interfaces.Delegates.Activities;
 using Attributes;
 using Models.ProductTypes;
-using Delegates.Format.Uri;
 using Delegates.Data.Storage;
 using Delegates.Activities;
+using Delegates.Conversions.Uris;
 using Delegates.Itemizations;
+using Interfaces.Delegates.Conversions;
 using Interfaces.Delegates.Data;
 using Interfaces.Delegates.Itemizations;
 
@@ -18,7 +18,7 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
             typeof(Itemize.ItemizeAllUpdatedGameDetailsManualUrlFilesAsyncDelegate),
             typeof(Itemize.ItemizeAllUpdatedProductFilesAsyncDelegate),
             typeof(ItemizePassthroughDelegate),
-            typeof(FormatValidationFileDelegate),
+            typeof(ConvertFilePathToValidationFilePathDelegate),
             typeof(DeleteToRecycleDelegate),
             typeof(StartDelegate),
             typeof(SetProgressDelegate),
@@ -27,7 +27,7 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
             IItemizeAllAsyncDelegate<string> itemizeAllExpectedProductDirectoriesAsyncDelegate,
             IItemizeAllAsyncDelegate<string> itemizeAllActualProductDirectoriesAsyncDelegate,
             IItemizeDelegate<string, string> itemizeDetailsDelegate,
-            IFormatDelegate<string, string> formatSupplementaryItemDelegate,
+            IConvertDelegate<string, string> convertFilePathToValidationFilePathDelegate,
             IDeleteDelegate<string> deleteDelegate,
             IStartDelegate startDelegate,
             ISetProgressDelegate setProgressDelegate,
@@ -36,7 +36,7 @@ namespace GOG.Delegates.Respond.Cleanup.ProductTypes
                 itemizeAllExpectedProductDirectoriesAsyncDelegate,
                 itemizeAllActualProductDirectoriesAsyncDelegate,
                 itemizeDetailsDelegate,
-                formatSupplementaryItemDelegate,
+                convertFilePathToValidationFilePathDelegate,
                 deleteDelegate,
                 startDelegate,
                 setProgressDelegate,
