@@ -60,12 +60,12 @@ func DefaultHeaders(req *http.Request) {
 
 func getAuthToken(client *http.Client) string {
 
-	client_id := "46755278331571209"
-	redirect_uri := "https://www.gog.com/on_login_success"
-	response_type := "code"
+	clientId := "46755278331571209"
+	redirectUri := "https://www.gog.com/on_login_success"
+	responseType := "code"
 	layout := "default"
 	brand := "gog"
-	gog_lc := "en-US"
+	gogLc := "en-US"
 
 	authURL := url.URL{
 		Scheme: scheme,
@@ -73,12 +73,12 @@ func getAuthToken(client *http.Client) string {
 		Path:   authPath,
 	}
 	q := authURL.Query()
-	q.Set("client_id", client_id)
-	q.Set("redirect_uri", redirect_uri)
-	q.Set("response_type", response_type)
+	q.Set("client_id", clientId)
+	q.Set("redirect_uri", redirectUri)
+	q.Set("response_type", responseType)
 	q.Set("layout", layout)
 	q.Set("brand", brand)
-	q.Set("gog_lc", gog_lc)
+	q.Set("gog_lc", gogLc)
 	authURL.RawQuery = q.Encode()
 
 	req, _ := http.NewRequest(http.MethodGet, authURL.String(), nil)
@@ -129,7 +129,7 @@ func Authorize(client *http.Client, username, password string) {
 		"login[login_flow]": {"default"},
 		"login[_token]":     {token},
 	}
-	sdata := data.Encode()
+	s := data.Encode()
 
 	loginCheckURL := url.URL{
 		Scheme: scheme,
@@ -137,7 +137,7 @@ func Authorize(client *http.Client, username, password string) {
 		Path:   loginCheckPath,
 	}
 
-	req, _ := http.NewRequest(http.MethodPost, loginCheckURL.String(), strings.NewReader(sdata))
+	req, _ := http.NewRequest(http.MethodPost, loginCheckURL.String(), strings.NewReader(s))
 	DefaultHeaders(req)
 	req.Host = loginHost
 	req.Header.Set("Referer", "https://login.gog.com/auth?brand=gog&client_id=46755278331571209&layout=default&redirect_uri=https%3A%2F%2Fwww.gog.com%2Fon_login_success&response_type=code")
@@ -154,7 +154,7 @@ func Authorize(client *http.Client, username, password string) {
 
 		// Server is requesting second factor authentication
 		token = GetAttrVal(
-			GetElementByTagAttrVal(doc, "input", "name", "second_step_authentication[_token]"), "val")
+			GetElementByTagAttrVal(doc, "input", "name", "second_step_authentication[_token]"), "value")
 		fmt.Println(token)
 
 		code := ""
@@ -169,7 +169,7 @@ func Authorize(client *http.Client, username, password string) {
 			"second_step_authentication[token][letter_4]": {string(code[3])},
 			"second_step_authentication[_token]":          {token},
 		}
-		sdata = data.Encode()
+		s = data.Encode()
 
 		loginTwoStepURL := url.URL{
 			Scheme: scheme,
@@ -177,7 +177,7 @@ func Authorize(client *http.Client, username, password string) {
 			Path:   loginTwoStepPath,
 		}
 
-		req, _ := http.NewRequest(http.MethodPost, loginTwoStepURL.String(), strings.NewReader(sdata))
+		req, _ := http.NewRequest(http.MethodPost, loginTwoStepURL.String(), strings.NewReader(s))
 		DefaultHeaders(req)
 		req.Host = "login.gog.com"
 		req.Header.Set("Referer", loginTwoStepURL.String())
@@ -215,40 +215,40 @@ func IsLoggedIn(client *http.Client) bool {
 func main() {
 
 	cookieJar, _ := cookiejar.New(nil)
-	cookieJar.SetCookies(&url.URL{Scheme: scheme, Host: gogHost}, []*http.Cookie{
-		{
-			Name:     "gog-al",
-			Value:    "45kzx5nx3HT1j0jgyu_3WytbksBOsNFbxz-490OjV-p8EKRYhnj4URb4yekZpZgFRofW35Jw7tEm2kqe9YeGtwWRYi9Gyd7cu7h8UDdJ2i3DHxGvyCriaVUYtQD-bQ2s",
-			Path:     "/",
-			Domain:   ".gog.com",
-			Secure:   true,
-			HttpOnly: true,
-		},
-		{
-			Name:     "cart_token",
-			Value:    "a07df5d1b29af0d7",
-			Path:     "/",
-			Domain:   ".gog.com",
-			Secure:   true,
-			HttpOnly: true,
-		},
-		{
-			Name:     "gog_us",
-			Value:    "m1fe170k233t6906s5qa2c6bq3",
-			Path:     "/",
-			Domain:   ".gog.com",
-			Secure:   true,
-			HttpOnly: true,
-		},
-		{
-			Name:     "gog_lc",
-			Value:    "en-US",
-			Path:     "/",
-			Domain:   ".gog.com",
-			Secure:   true,
-			HttpOnly: true,
-		},
-	})
+	//cookieJar.SetCookies(&url.URL{Scheme: scheme, Host: gogHost}, []*http.Cookie{
+	//	{
+	//		Name:     "gog-al",
+	//		Value:    "45kzx5nx3HT1j0jgyu_3WytbksBOsNFbxz-490OjV-p8EKRYhnj4URb4yekZpZgFRofW35Jw7tEm2kqe9YeGtwWRYi9Gyd7cu7h8UDdJ2i3DHxGvyCriaVUYtQD-bQ2s",
+	//		Path:     "/",
+	//		Domain:   ".gog.com",
+	//		Secure:   true,
+	//		HttpOnly: true,
+	//	},
+	//	{
+	//		Name:     "cart_token",
+	//		Value:    "a07df5d1b29af0d7",
+	//		Path:     "/",
+	//		Domain:   ".gog.com",
+	//		Secure:   true,
+	//		HttpOnly: true,
+	//	},
+	//	{
+	//		Name:     "gog_us",
+	//		Value:    "m1fe170k233t6906s5qa2c6bq3",
+	//		Path:     "/",
+	//		Domain:   ".gog.com",
+	//		Secure:   true,
+	//		HttpOnly: true,
+	//	},
+	//	{
+	//		Name:     "gog_lc",
+	//		Value:    "en-US",
+	//		Path:     "/",
+	//		Domain:   ".gog.com",
+	//		Secure:   true,
+	//		HttpOnly: true,
+	//	},
+	//})
 
 	client := http.Client{
 		Timeout: time.Minute * 2,
