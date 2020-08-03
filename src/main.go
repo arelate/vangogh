@@ -13,11 +13,14 @@ import (
 )
 
 const (
-	loginHost = "https://login.gog.com"
-	loginURL = loginHost + "/login"
-	loginCheckURL = loginHost + "/login_check"
-	loginTwoStepURL = loginHost + "/login/two_step"
-	userDataURL = "https://gog.com/userData.json"
+	scheme           = "https"
+	gogHost          = "gog.com"
+	authHost         = "auth." + gogHost
+	loginHost        = "login." + gogHost
+	authPath         = "/auth"
+	loginCheckPath   = "/login_check"
+	loginTwoStepPath = "/login/two_step"
+	userDataURL      = scheme + "://www." + gogHost + "/userData.json"
 )
 
 func GetAttrVal(node *html.Node, key string) string {
@@ -55,11 +58,32 @@ func DefaultHeaders(req *http.Request) {
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15")
 }
 
-func AuthToken(client *http.Client) string {
+func getAuthToken(client *http.Client) string {
 
-	req, _ := http.NewRequest(http.MethodGet, loginURL, nil)
+	client_id := "46755278331571209"
+	redirect_uri := "https://www.gog.com/on_login_success"
+	response_type := "code"
+	layout := "default"
+	brand := "gog"
+	gog_lc := "en-US"
+
+	authURL := url.URL{
+		Scheme: scheme,
+		Host:   authHost,
+		Path:   authPath,
+	}
+	q := authURL.Query()
+	q.Set("client_id", client_id)
+	q.Set("redirect_uri", redirect_uri)
+	q.Set("response_type", response_type)
+	q.Set("layout", layout)
+	q.Set("brand", brand)
+	q.Set("gog_lc", gog_lc)
+	authURL.RawQuery = q.Encode()
+
+	req, _ := http.NewRequest(http.MethodGet, authURL.String(), nil)
 	DefaultHeaders(req)
-	req.Host = "login.gog.com"
+	req.Host = authHost
 
 	resp, _ := client.Do(req)
 
@@ -73,7 +97,12 @@ func AuthToken(client *http.Client) string {
 	}
 
 	return GetAttrVal(
-		GetElementByTagAttrVal(doc, "input", "name", "login[_token]"), "value")
+		GetElementByTagAttrVal(
+			doc,
+			"input",
+			"name",
+			"login[_token]"),
+		"value")
 }
 
 func GetUserData(prompt string) string {
@@ -85,7 +114,7 @@ func GetUserData(prompt string) string {
 
 func Authorize(client *http.Client, username, password string) {
 
-	token := AuthToken(client)
+	token := getAuthToken(client)
 
 	if username == "" {
 		username = GetUserData("Please enter your GOG.com username:")
@@ -94,19 +123,25 @@ func Authorize(client *http.Client, username, password string) {
 		password = GetUserData("Please enter password for " + username + ": ")
 	}
 
-	data := url.Values {
-		"login[username]": {username},
-		"login[password]": {password},
+	data := url.Values{
+		"login[username]":   {username},
+		"login[password]":   {password},
 		"login[login_flow]": {"default"},
-		"login[_token]": {token},
+		"login[_token]":     {token},
 	}
 	sdata := data.Encode()
 
-	req, _ := http.NewRequest(http.MethodPost, loginCheckURL, strings.NewReader(sdata))
+	loginCheckURL := url.URL{
+		Scheme: scheme,
+		Host:   loginHost,
+		Path:   loginCheckPath,
+	}
+
+	req, _ := http.NewRequest(http.MethodPost, loginCheckURL.String(), strings.NewReader(sdata))
 	DefaultHeaders(req)
-	req.Host = "login.gog.com"
-	req.Header.Set("Referer", loginURL)
-	req.Header.Set("Origin", "https://login.gog.com")
+	req.Host = loginHost
+	req.Header.Set("Referer", "https://login.gog.com/auth?brand=gog&client_id=46755278331571209&layout=default&redirect_uri=https%3A%2F%2Fwww.gog.com%2Fon_login_success&response_type=code")
+	req.Header.Set("Origin", scheme+"://"+loginHost)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, _ := client.Do(req)
@@ -122,35 +157,37 @@ func Authorize(client *http.Client, username, password string) {
 			GetElementByTagAttrVal(doc, "input", "name", "second_step_authentication[_token]"), "val")
 		fmt.Println(token)
 
-		code := "";
+		code := ""
 		for len(code) != 4 {
 			code = GetUserData("Please enter 2FA code (check your inbox):")
 		}
 
-		data = url.Values {
+		data = url.Values{
 			"second_step_authentication[token][letter_1]": {string(code[0])},
 			"second_step_authentication[token][letter_2]": {string(code[1])},
 			"second_step_authentication[token][letter_3]": {string(code[2])},
 			"second_step_authentication[token][letter_4]": {string(code[3])},
-			"second_step_authentication[_token]": {token},
+			"second_step_authentication[_token]":          {token},
 		}
 		sdata = data.Encode()
 
-		req, _ := http.NewRequest(http.MethodPost, loginTwoStepURL, strings.NewReader(sdata))
+		loginTwoStepURL := url.URL{
+			Scheme: scheme,
+			Host:   loginHost,
+			Path:   loginTwoStepPath,
+		}
+
+		req, _ := http.NewRequest(http.MethodPost, loginTwoStepURL.String(), strings.NewReader(sdata))
 		DefaultHeaders(req)
 		req.Host = "login.gog.com"
-		req.Header.Set("Referer", loginTwoStepURL)
+		req.Header.Set("Referer", loginTwoStepURL.String())
 		req.Header.Set("Origin", loginHost)
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 		client.Do(req)
-
-		fmt.Println(IsLoggedIn(client))
-
-		return
 	}
 
-	fmt.Println(IsLoggedIn(client))
+	fmt.Println("User is logged in: ", IsLoggedIn(client))
 }
 
 type UserData struct {
@@ -168,10 +205,6 @@ func IsLoggedIn(client *http.Client) bool {
 
 	respBody, _ := ioutil.ReadAll(resp.Body)
 
-	fmt.Println(string(respBody))
-
-	//return false
-
 	var userData UserData
 
 	json.Unmarshal(respBody, &userData)
@@ -182,17 +215,53 @@ func IsLoggedIn(client *http.Client) bool {
 func main() {
 
 	cookieJar, _ := cookiejar.New(nil)
+	cookieJar.SetCookies(&url.URL{Scheme: scheme, Host: gogHost}, []*http.Cookie{
+		{
+			Name:     "gog-al",
+			Value:    "45kzx5nx3HT1j0jgyu_3WytbksBOsNFbxz-490OjV-p8EKRYhnj4URb4yekZpZgFRofW35Jw7tEm2kqe9YeGtwWRYi9Gyd7cu7h8UDdJ2i3DHxGvyCriaVUYtQD-bQ2s",
+			Path:     "/",
+			Domain:   ".gog.com",
+			Secure:   true,
+			HttpOnly: true,
+		},
+		{
+			Name:     "cart_token",
+			Value:    "a07df5d1b29af0d7",
+			Path:     "/",
+			Domain:   ".gog.com",
+			Secure:   true,
+			HttpOnly: true,
+		},
+		{
+			Name:     "gog_us",
+			Value:    "m1fe170k233t6906s5qa2c6bq3",
+			Path:     "/",
+			Domain:   ".gog.com",
+			Secure:   true,
+			HttpOnly: true,
+		},
+		{
+			Name:     "gog_lc",
+			Value:    "en-US",
+			Path:     "/",
+			Domain:   ".gog.com",
+			Secure:   true,
+			HttpOnly: true,
+		},
+	})
 
 	client := http.Client{
-		Timeout: time.Minute * 1,
-		Jar: cookieJar,
+		Timeout: time.Minute * 2,
+		Jar:     cookieJar,
 	}
 
-	Authorize(&client, "", "")
+	if !IsLoggedIn(&client) {
+		Authorize(&client, "", "")
+	}
 
 	// test output - we'll need to preserve cookies in the future between sessions
 	// which also should allow to reuse browser cookies
-	for _, cookie := range client.Jar.Cookies(&url.URL{Scheme: "https", Host: "login.gog.com"}) {
+	for _, cookie := range client.Jar.Cookies(&url.URL{Scheme: "https", Host: "gog.com"}) {
 		fmt.Println(cookie)
 	}
 }
