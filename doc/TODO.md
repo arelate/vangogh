@@ -7,9 +7,10 @@ Project:
 - identify key directories (esp. going forward for docker - want to split files/metadata)
 
 Finish authorization:
-- clean up HTML element search with filter
+- [done] clean up HTML element search with filter
 - add tests
-- save/loadCookies
+- [done] save/loadCookies
+- [done] better captcha detection
 - document adding cookies from the browser
 
 Download products/accountProducts/gameDetails:
@@ -23,3 +24,4 @@ Download product files:
 
 Server:
 - create endpoints for products/accountProducts/gameDetails
+- understand Go html templating

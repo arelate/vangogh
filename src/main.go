@@ -10,22 +10,23 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 )
 
 const (
-	scheme           = "https"
+	httpsScheme      = "https"
 	gogHost          = "gog.com"
 	authHost         = "auth." + gogHost
 	loginHost        = "login." + gogHost
 	authPath         = "/auth"
 	loginCheckPath   = "/login_check"
 	loginTwoStepPath = "/login/two_step"
-	userDataURL      = scheme + "://www." + gogHost + "/userData.json"
+	userDataURL      = httpsScheme + "://www." + gogHost + "/userData.json"
 )
 
-func GetAttrVal(node *html.Node, key string) string {
+func AttrVal(node *html.Node, key string) string {
 	if node == nil {
 		return ""
 	}
@@ -37,13 +38,11 @@ func GetAttrVal(node *html.Node, key string) string {
 	return ""
 }
 
-func GetElementByTagAttrVal(doc *html.Node, data, key, val string) *html.Node {
+func GetElementByFilter(doc *html.Node, filter func(node *html.Node) bool) *html.Node {
 	var f func(*html.Node) *html.Node
 	f = func(n *html.Node) *html.Node {
-		if n.Type == html.ElementNode && n.Data == data {
-			if GetAttrVal(n, key) == val {
-				return n
-			}
+		if filter(n) {
+			return n
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			val := f(c)
@@ -56,6 +55,48 @@ func GetElementByTagAttrVal(doc *html.Node, data, key, val string) *html.Node {
 	return f(doc)
 }
 
+func filterInputLoginToken(n *html.Node) bool {
+	return n != nil &&
+		n.Type == html.ElementNode &&
+		n.Data == "input" &&
+		AttrVal(n, "name") == "login[_token]"
+}
+
+func filterInputSecondStepAuthToken(n *html.Node) bool {
+	return n != nil &&
+		n.Type == html.ElementNode &&
+		n.Data == "input" &&
+		AttrVal(n, "name") == "second_step_authentication[_token]"
+}
+
+func filterScriptReCaptcha(n *html.Node) bool {
+	return n != nil &&
+		n.Type == html.ElementNode &&
+		n.Data == "script" &&
+		strings.HasPrefix(
+			AttrVal(n, "src"),
+			"https://www.recaptcha.net/recaptcha/api.js")
+}
+
+//func GetElementByTagAttrVal(doc *html.Node, data, key, val string) *html.Node {
+//	var f func(*html.Node) *html.Node
+//	f = func(n *html.Node) *html.Node {
+//		if n.Type == html.ElementNode && n.Data == data {
+//			if GetAttrVal(n, key) == val {
+//				return n
+//			}
+//		}
+//		for c := n.FirstChild; c != nil; c = c.NextSibling {
+//			val := f(c)
+//			if val != nil {
+//				return val
+//			}
+//		}
+//		return nil
+//	}
+//	return f(doc)
+//}
+
 func DefaultHeaders(req *http.Request) {
 	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 	req.Header.Set("Accept-Language", "en-us")
@@ -63,18 +104,18 @@ func DefaultHeaders(req *http.Request) {
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15")
 }
 
-func getAuthTokenAttrVal(doc *html.Node) string {
-	input := GetElementByTagAttrVal(doc, "input", "name", "login[_token]")
-	return GetAttrVal(input, "value")
+func getLoginToken(doc *html.Node) string {
+	input := GetElementByFilter(doc, filterInputLoginToken)
+	return AttrVal(input, "value")
 }
 
-func getSecondStepAuthTokenAttrVal(doc *html.Node) string {
-	input := GetElementByTagAttrVal(doc, "input", "name", "second_step_authentication[_token]")
-	return GetAttrVal(input, "value")
+func getSecondStepAuthToken(doc *html.Node) string {
+	input := GetElementByFilter(doc, filterInputSecondStepAuthToken)
+	return AttrVal(input, "value")
 }
 
-func getCaptchaElement(doc *html.Node) *html.Node {
-	return GetElementByTagAttrVal(doc, "div", "class", "g-recaptcha form__recaptcha")
+func containsRecaptcha(doc *html.Node) bool {
+	return GetElementByFilter(doc, filterScriptReCaptcha) != nil
 }
 
 func getAuthURL(host string) *url.URL {
@@ -89,7 +130,7 @@ func getAuthURL(host string) *url.URL {
 	)
 
 	authURL := url.URL{
-		Scheme: scheme,
+		Scheme: httpsScheme,
 		Host:   host,
 		Path:   authPath,
 	}
@@ -126,19 +167,22 @@ func getAuthToken(client *http.Client) (token string, error error) {
 		return "", err
 	}
 
-	doc, err := html.Parse(resp.Body)
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	doc, err := html.Parse(strings.NewReader(string(body)))
 
 	if err != nil {
 		return "", err
 	}
 
 	// check for captcha presence
-	if getCaptchaElement(doc) != nil {
-		// TODO: When cookie persistence is implemented - add reference to allow user to unblock themselves
-		return "", errors.New("captcha present on the page")
+	if containsRecaptcha(doc) {
+		// TODO: Write how to add cookie from the browser and reference to allow user to unblock themselves
+		fmt.Println("reCAPTCHA detected on the page.\nYou'll need to add your browser session cookie 'gog_al' to cookies.json.\nPlease see {URL} for details.")
+		return "", errors.New("reCAPTCHA present on the page")
 	}
 
-	return getAuthTokenAttrVal(doc), nil
+	return getLoginToken(doc), nil
 }
 
 func requestUserData(prompt string) string {
@@ -156,7 +200,7 @@ func authorizeSecondStep(body io.ReadCloser, client *http.Client) error {
 	if err != nil {
 		return err
 	}
-	token := getSecondStepAuthTokenAttrVal(doc)
+	token := getSecondStepAuthToken(doc)
 
 	for token != "" && attempts > 0 {
 
@@ -177,7 +221,7 @@ func authorizeSecondStep(body io.ReadCloser, client *http.Client) error {
 		s := data.Encode()
 
 		loginTwoStepURL := url.URL{
-			Scheme: scheme,
+			Scheme: httpsScheme,
 			Host:   loginHost,
 			Path:   loginTwoStepPath,
 		}
@@ -200,7 +244,7 @@ func authorizeSecondStep(body io.ReadCloser, client *http.Client) error {
 			return err
 		}
 
-		token = getSecondStepAuthTokenAttrVal(doc)
+		token = getSecondStepAuthToken(doc)
 
 		resp.Body.Close()
 	}
@@ -233,7 +277,7 @@ func Authorize(client *http.Client, username, password string) error {
 	s := data.Encode()
 
 	loginCheckURL := url.URL{
-		Scheme: scheme,
+		Scheme: httpsScheme,
 		Host:   loginHost,
 		Path:   loginCheckPath,
 	}
@@ -249,7 +293,7 @@ func Authorize(client *http.Client, username, password string) error {
 	// GOG.com redirects initial auth request from authHost to loginHost.
 	loginAuthURL := getAuthURL(loginHost)
 	req.Header.Set("Referer", loginAuthURL.String())
-	u := url.URL{Scheme: scheme, Host: loginHost}
+	u := url.URL{Scheme: httpsScheme, Host: loginHost}
 	req.Header.Set("Origin", u.String())
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -291,13 +335,57 @@ func IsLoggedIn(client *http.Client) bool {
 	return userData.IsLoggedIn
 }
 
+func saveCookies(cookies []*http.Cookie) error {
+	cookieBytes, err := json.Marshal(cookies)
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile("cookies.json", cookieBytes, 0644)
+}
+
+func loadCookies() (cookies []*http.Cookie, err error) {
+
+	cookies = nil
+
+	if _, err = os.Stat("cookies.json"); err == nil {
+
+		cookieBytes, _ := ioutil.ReadFile("cookies.json")
+		json.Unmarshal(cookieBytes, &cookies)
+
+		// TODO: continue tracking https://github.com/golang/go/issues/39420
+		// hoping we can remove that cookie init code
+		for _, cookie := range cookies {
+			cookie.Domain = gogHost
+			cookie.Path = "/"
+			cookie.Secure = true
+			cookie.HttpOnly = true
+			cookie.Expires = time.Now().Add(time.Hour * 24 * 30)
+		}
+
+	} else if os.IsNotExist(err) {
+		// path/to/whatever does *not* exist
+		err = os.ErrNotExist
+
+	} else {
+		// Schrodinger: file may or may not exist. See err for details.
+		// Therefore, do *NOT* use !os.IsNotExist(err) to test for file existence
+	}
+
+	return cookies, err
+}
+
 func main() {
 
-	cookieJar, _ := cookiejar.New(nil)
+	cookies, _ := loadCookies()
+
+	jar, _ := cookiejar.New(nil)
+	if cookies != nil {
+		jar.SetCookies(&url.URL{Scheme: httpsScheme, Host: gogHost}, cookies)
+	}
 
 	client := http.Client{
 		Timeout: time.Minute * 2,
-		Jar:     cookieJar,
+		Jar:     jar,
 	}
 
 	if !IsLoggedIn(&client) {
@@ -311,9 +399,5 @@ func main() {
 
 	fmt.Printf("User %s logged in\n", status)
 
-	// test output - we'll need to preserve cookies in the future between sessions
-	// which also should allow to reuse browser cookies
-	for _, cookie := range client.Jar.Cookies(&url.URL{Scheme: "https", Host: "gog.com"}) {
-		fmt.Println(cookie)
-	}
+	saveCookies(client.Jar.Cookies(&url.URL{Scheme: httpsScheme, Host: gogHost}))
 }
