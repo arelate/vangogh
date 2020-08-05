@@ -31,6 +31,8 @@ const (
 	cookiesFilename = "cookies.json"
 )
 
+var sessionAuthed = false
+
 func AttrVal(node *html.Node, key string) string {
 	if node == nil {
 		return ""
@@ -246,7 +248,7 @@ func authorizeSecondStep(body io.ReadCloser, client *http.Client) error {
 	return nil
 }
 
-// Authorize username on GOG.com for account related queries
+// Authorize username on GOG.com for account data queries
 func Authorize(client *http.Client, username, password string) error {
 
 	token, err := getAuthToken(client)
@@ -311,27 +313,33 @@ type userData struct {
 
 func confirmLoggedIn(client *http.Client) (bool, error) {
 
-	resp, err := client.Get(userDataURL)
+	if !sessionAuthed {
 
-	if err != nil {
-		return false, err
+		//fmt.Println("Requesting userData.json...")
+		resp, err := client.Get(userDataURL)
+
+		if err != nil {
+			return false, err
+		}
+
+		defer resp.Body.Close()
+
+		respBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return false, err
+		}
+
+		var ud userData
+
+		err = json.Unmarshal(respBody, &ud)
+		if err != nil {
+			return false, err
+		}
+
+		sessionAuthed = ud.IsLoggedIn
 	}
 
-	defer resp.Body.Close()
-
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return false, err
-	}
-
-	var ud userData
-
-	err = json.Unmarshal(respBody, &ud)
-	if err != nil {
-		return false, err
-	}
-
-	return ud.IsLoggedIn, nil
+	return sessionAuthed, nil
 }
 
 func saveCookies(cookies []*http.Cookie) error {
@@ -421,21 +429,27 @@ func main() {
 		Jar:     jar,
 	}
 
-	for i, id := range getLicences(&client) {
-		if i == 10 {
-			break
-		}
-		getGameDetails(&client, id)
+	//for i, id := range getLicences(&client) {
+	//	if i == 10 {
+	//		break
+	//	}
+	//	getGameDetails(&client, id)
+	//}
+
+	sessionAuthed, err := confirmLoggedIn(&client)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(2)
 	}
 
-	//sessionAuthed, err := confirmLoggedIn(&client)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	os.Exit(2)
-	//}
-	//if !sessionAuthed {
-	//	Authorize(&client, "", "")
-	//}
+	for i := 0; i < 10; i++ {
+		sa, _ := confirmLoggedIn(&client)
+		fmt.Println(sa)
+	}
+
+	if !sessionAuthed {
+		Authorize(&client, "", "")
+	}
 
 	//fmt.Println(getGameDetails(&client, 1308814788))
 

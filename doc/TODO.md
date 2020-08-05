@@ -11,7 +11,7 @@ Finish authorization:
 - add tests
 - [done] save/loadCookies
 - [done] better captcha detection
-- document adding cookies from the browser
+- [started] document adding cookies from the browser
 
 Download products/accountProducts/gameDetails:
 - download whole pages and map product id to page id
