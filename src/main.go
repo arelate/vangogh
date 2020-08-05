@@ -11,19 +11,24 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
 const (
+	// GOG.com API endpoints
 	httpsScheme      = "https"
 	gogHost          = "gog.com"
 	authHost         = "auth." + gogHost
 	loginHost        = "login." + gogHost
+	menuHost         = "menu." + gogHost
 	authPath         = "/auth"
 	loginCheckPath   = "/login_check"
 	loginTwoStepPath = "/login/two_step"
 	userDataURL      = httpsScheme + "://www." + gogHost + "/userData.json"
+	// Special filenames
+	cookiesFilename = "cookies.json"
 )
 
 func AttrVal(node *html.Node, key string) string {
@@ -78,30 +83,21 @@ func filterScriptReCaptcha(n *html.Node) bool {
 			"https://www.recaptcha.net/recaptcha/api.js")
 }
 
-//func GetElementByTagAttrVal(doc *html.Node, data, key, val string) *html.Node {
-//	var f func(*html.Node) *html.Node
-//	f = func(n *html.Node) *html.Node {
-//		if n.Type == html.ElementNode && n.Data == data {
-//			if GetAttrVal(n, key) == val {
-//				return n
-//			}
-//		}
-//		for c := n.FirstChild; c != nil; c = c.NextSibling {
-//			val := f(c)
-//			if val != nil {
-//				return val
-//			}
-//		}
-//		return nil
-//	}
-//	return f(doc)
-//}
-
-func DefaultHeaders(req *http.Request) {
-	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-	req.Header.Set("Accept-Language", "en-us")
-	req.Header.Set("Connection", "keep-alive")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15")
+func setDefaultHeaders(req *http.Request) {
+	const (
+		acceptHeader         = "text/html"
+		acceptLanguageHeader = "en-us"
+		connectionHeader     = "keep-alive"
+		userAgentHeader      = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) " +
+			"AppleWebKit/537.36 (KHTML, like Gecko) " +
+			"Chrome/84.0.4147.105 " +
+			"Safari/537.36 " +
+			"Edg/84.0.522.52" // Microsoft Edge 84 UA string
+	)
+	req.Header.Set("Accept", acceptHeader)
+	req.Header.Set("Accept-Language", acceptLanguageHeader)
+	req.Header.Set("Connection", connectionHeader)
+	req.Header.Set("User-Agent", userAgentHeader)
 }
 
 func getLoginToken(doc *html.Node) string {
@@ -157,7 +153,7 @@ func getAuthToken(client *http.Client) (token string, error error) {
 		return "", err
 	}
 
-	DefaultHeaders(req)
+	setDefaultHeaders(req)
 	req.Host = authHost
 
 	resp, err := client.Do(req)
@@ -178,7 +174,9 @@ func getAuthToken(client *http.Client) (token string, error error) {
 	// check for captcha presence
 	if containsRecaptcha(doc) {
 		// TODO: Write how to add cookie from the browser and reference to allow user to unblock themselves
-		fmt.Println("reCAPTCHA detected on the page.\nYou'll need to add your browser session cookie 'gog_al' to cookies.json.\nPlease see {URL} for details.")
+		fmt.Println("reCAPTCHA detected on the page.\n" +
+			"You'll need to add your browser session cookie 'gog_al' to " + cookiesFilename + ".\n" +
+			"Please see {URL} for details.")
 		return "", errors.New("reCAPTCHA present on the page")
 	}
 
@@ -194,18 +192,14 @@ func requestUserData(prompt string) string {
 
 func authorizeSecondStep(body io.ReadCloser, client *http.Client) error {
 
-	attempts := 3
-
 	doc, err := html.Parse(body)
 	if err != nil {
 		return err
 	}
 	token := getSecondStepAuthToken(doc)
 
-	for token != "" && attempts > 0 {
-
+	for token != "" {
 		// Server is requesting second factor authentication
-		attempts--
 		code := ""
 		for len(code) != 4 {
 			code = requestUserData("Please enter 2FA code (check your inbox):")
@@ -227,7 +221,7 @@ func authorizeSecondStep(body io.ReadCloser, client *http.Client) error {
 		}
 
 		req, _ := http.NewRequest(http.MethodPost, loginTwoStepURL.String(), strings.NewReader(s))
-		DefaultHeaders(req)
+		setDefaultHeaders(req)
 		req.Host = "login.gog.com"
 		req.Header.Set("Referer", loginTwoStepURL.String())
 		req.Header.Set("Origin", loginHost)
@@ -262,10 +256,10 @@ func Authorize(client *http.Client, username, password string) error {
 	}
 
 	if username == "" {
-		username = requestUserData("Please enter your username:")
+		username = requestUserData("Please enter username:")
 	}
 	if password == "" {
-		password = requestUserData("Hello, " + username + "! Please enter your password:")
+		password = requestUserData("Hey, " + username + "! Please enter password:")
 	}
 
 	data := url.Values{
@@ -288,7 +282,7 @@ func Authorize(client *http.Client, username, password string) error {
 		return err
 	}
 
-	DefaultHeaders(req)
+	setDefaultHeaders(req)
 	req.Host = loginHost
 	// GOG.com redirects initial auth request from authHost to loginHost.
 	loginAuthURL := getAuthURL(loginHost)
@@ -308,31 +302,36 @@ func Authorize(client *http.Client, username, password string) error {
 		return err
 	}
 
-	//fmt.Println("User is logged in: ", IsLoggedIn(client))
-
 	return nil
 }
 
-type UserData struct {
+type userData struct {
 	IsLoggedIn bool `json:"isLoggedIn"`
 }
 
-func IsLoggedIn(client *http.Client) bool {
+func confirmLoggedIn(client *http.Client) (bool, error) {
 
-	req, _ := http.NewRequest(http.MethodGet, userDataURL, nil)
-	DefaultHeaders(req)
+	resp, err := client.Get(userDataURL)
 
-	resp, _ := client.Do(req)
+	if err != nil {
+		return false, err
+	}
 
 	defer resp.Body.Close()
 
-	respBody, _ := ioutil.ReadAll(resp.Body)
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return false, err
+	}
 
-	var userData UserData
+	var ud userData
 
-	json.Unmarshal(respBody, &userData)
+	err = json.Unmarshal(respBody, &ud)
+	if err != nil {
+		return false, err
+	}
 
-	return userData.IsLoggedIn
+	return ud.IsLoggedIn, nil
 }
 
 func saveCookies(cookies []*http.Cookie) error {
@@ -340,17 +339,22 @@ func saveCookies(cookies []*http.Cookie) error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile("cookies.json", cookieBytes, 0644)
+	return ioutil.WriteFile(cookiesFilename, cookieBytes, 0644)
 }
 
 func loadCookies() (cookies []*http.Cookie, err error) {
-
 	cookies = nil
 
-	if _, err = os.Stat("cookies.json"); err == nil {
+	if _, e := os.Stat(cookiesFilename); e == nil {
 
-		cookieBytes, _ := ioutil.ReadFile("cookies.json")
-		json.Unmarshal(cookieBytes, &cookies)
+		cookieBytes, err := ioutil.ReadFile(cookiesFilename)
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal(cookieBytes, &cookies)
+		if err != nil {
+			return nil, err
+		}
 
 		// TODO: continue tracking https://github.com/golang/go/issues/39420
 		// hoping we can remove that cookie init code
@@ -361,17 +365,46 @@ func loadCookies() (cookies []*http.Cookie, err error) {
 			cookie.HttpOnly = true
 			cookie.Expires = time.Now().Add(time.Hour * 24 * 30)
 		}
-
-	} else if os.IsNotExist(err) {
-		// path/to/whatever does *not* exist
-		err = os.ErrNotExist
-
-	} else {
-		// Schrodinger: file may or may not exist. See err for details.
-		// Therefore, do *NOT* use !os.IsNotExist(err) to test for file existence
 	}
 
-	return cookies, err
+	return cookies, nil
+}
+
+func getLicences(client *http.Client) []int {
+	licencesURL := url.URL{
+		Scheme: httpsScheme,
+		Host:   menuHost,
+		Path:   "/v1/account/licences",
+	}
+
+	resp, _ := client.Get(licencesURL.String())
+	defer resp.Body.Close()
+
+	var licences []string = nil
+	body, _ := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(body, &licences)
+
+	ids := make([]int, len(licences))
+	for i, l := range licences {
+		ids[i], _ = strconv.Atoi(l)
+	}
+
+	return ids
+}
+
+func getGameDetails(client *http.Client, id int) {
+	gameDetailsFilename := fmt.Sprintf("%v.json", id)
+	gameDetailsURL := url.URL{
+		Scheme: httpsScheme,
+		Host:   gogHost,
+		Path:   fmt.Sprintf("/account/gameDetails/" + gameDetailsFilename),
+	}
+	resp, _ := client.Get(gameDetailsURL.String())
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	ioutil.WriteFile(gameDetailsFilename, body, 0644)
 }
 
 func main() {
@@ -384,20 +417,27 @@ func main() {
 	}
 
 	client := http.Client{
-		Timeout: time.Minute * 2,
+		Timeout: time.Minute * 5,
 		Jar:     jar,
 	}
 
-	if !IsLoggedIn(&client) {
-		Authorize(&client, "", "")
+	for i, id := range getLicences(&client) {
+		if i == 10 {
+			break
+		}
+		getGameDetails(&client, id)
 	}
 
-	status := "isn't"
-	if IsLoggedIn(&client) {
-		status = "is"
-	}
+	//sessionAuthed, err := confirmLoggedIn(&client)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	os.Exit(2)
+	//}
+	//if !sessionAuthed {
+	//	Authorize(&client, "", "")
+	//}
 
-	fmt.Printf("User %s logged in\n", status)
+	//fmt.Println(getGameDetails(&client, 1308814788))
 
 	saveCookies(client.Jar.Cookies(&url.URL{Scheme: httpsScheme, Host: gogHost}))
 }
