@@ -1,41 +1,21 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/boggydigital/vangogh/internal/gog/auth"
+	"github.com/boggydigital/vangogh/internal/gog/gamedetails"
 	"github.com/boggydigital/vangogh/internal/gog/session"
+	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
 	"time"
 
-	"github.com/boggydigital/vangogh/internal/gog/auth"
-	"github.com/boggydigital/vangogh/internal/gog/urls"
+	"github.com/boggydigital/vangogh/internal/cli"
 )
 
-//
-//func getLicences(client *http.Client) []int {
-//	licencesURL := url.URL{
-//		Scheme: httpsScheme,
-//		Host:   menuHost,
-//		Path:   "/v1/account/licences",
-//	}
-//
-//	resp, _ := client.Get(licencesURL.String())
-//	defer resp.Body.Close()
-//
-//	var licences []string = nil
-//	body, _ := ioutil.ReadAll(resp.Body)
-//	json.Unmarshal(body, &licences)
-//
-//	ids := make([]int, len(licences))
-//	for i, l := range licences {
-//		ids[i], _ = strconv.Atoi(l)
-//	}
-//
-//	return ids
-//}
-
 func main() {
-
 	cookies, _ := session.Load()
 
 	jar, _ := cookiejar.New(nil)
@@ -44,21 +24,19 @@ func main() {
 		jar.SetCookies(gogHost, cookies)
 	}
 
-	client := http.Client{
+	client := &http.Client{
 		Timeout: time.Minute * 5,
 		Jar:     jar,
 	}
 
-	//for i, id := range getLicences(&client) {
-	//	if i == 10 {
-	//		break
-	//	}
-	//	getGameDetails(&client, id)
-	//}
+	if li, err := auth.LoggedIn(client); !li && err == nil {
+		username, password, _ := cli.Credentials()
+		auth.LogIn(client, username, password)
+	}
 
-	auth.LogIn(&client, "", "")
-
-	//fmt.Println(getGameDetails(&client, 1308814788))
+	gd, _ := gamedetails.Get(client, 1207659212)
+	gdjson, _ := json.Marshal(gd)
+	fmt.Println(string(gdjson))
 
 	session.Save(client.Jar.Cookies(gogHost))
 }

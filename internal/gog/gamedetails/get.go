@@ -1,18 +1,28 @@
 package gamedetails
 
 import (
-	"github.com/boggydigital/vangogh/internal/gog/filenames"
+	"encoding/json"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"io/ioutil"
 	"net/http"
 )
 
-func Get(client *http.Client, id int) {
+func Get(client *http.Client, id int) (GameDetails, error) {
 
 	resp, _ := client.Get(urls.GameDetails(id).String())
 	defer resp.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return GameDetails{}, err
+	}
 
-	ioutil.WriteFile(filenames.GameDetails(id), body, 0644)
+	var gd GameDetails
+
+	err = json.Unmarshal(respBody, &gd)
+	if err != nil {
+		return GameDetails{}, err
+	}
+
+	return gd, nil
 }
