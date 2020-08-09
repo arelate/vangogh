@@ -2,20 +2,7 @@ package urls
 
 import "net/url"
 
-const (
-	// GOG.com API endpoints
-	HttpsScheme      = "https"
-	GogHost          = "gog.com"
-	AuthHost         = "auth." + GogHost
-	LoginHost        = "login." + GogHost
-	MenuHost         = "menu." + GogHost
-	AuthPath         = "/auth"
-	LoginCheckPath   = "/login_check"
-	LoginTwoStepPath = "/login/two_step"
-	UserDataURL      = HttpsScheme + "://www." + GogHost + "/userData.json"
-)
-
-func AuthURL(host string) *url.URL {
+func Auth(host string) *url.URL {
 
 	const (
 		clientId     = "46755278331571209"

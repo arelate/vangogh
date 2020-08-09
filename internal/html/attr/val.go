@@ -1,13 +1,13 @@
-package html
+package attr
 
 import "golang.org/x/net/html"
 
-func AttrVal(node *html.Node, key string) string {
+func Val(node *html.Node, attribute string) string {
 	if node == nil {
 		return ""
 	}
 	for _, attr := range node.Attr {
-		if attr.Key == key {
+		if attr.Key == attribute {
 			return attr.Val
 		}
 	}

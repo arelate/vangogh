@@ -1,14 +1,14 @@
 package main
 
 import (
+	"github.com/boggydigital/vangogh/internal/gog/session"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
 	"time"
 
-	"github.com/boggydigital/vangogh/pkg/gog/auth"
-	"github.com/boggydigital/vangogh/pkg/gog/urls"
-	"github.com/boggydigital/vangogh/pkg/net/cookies"
+	"github.com/boggydigital/vangogh/internal/gog/auth"
+	"github.com/boggydigital/vangogh/internal/gog/urls"
 )
 
 //
@@ -33,30 +33,15 @@ import (
 //
 //	return ids
 //}
-//
-//func getGameDetails(client *http.Client, id int) {
-//	gameDetailsFilename := fmt.Sprintf("%v.json", id)
-//	gameDetailsURL := url.URL{
-//		Scheme: httpsScheme,
-//		Host:   gogHost,
-//		Path:   fmt.Sprintf("/account/gameDetails/" + gameDetailsFilename),
-//	}
-//	resp, _ := client.Get(gameDetailsURL.String())
-//	defer resp.Body.Close()
-//
-//	body, _ := ioutil.ReadAll(resp.Body)
-//
-//	ioutil.WriteFile(gameDetailsFilename, body, 0644)
-//}
 
 func main() {
 
-	cks, _ := cookies.Load()
+	cookies, _ := session.Load()
 
 	jar, _ := cookiejar.New(nil)
 	gogHost := &url.URL{Scheme: urls.HttpsScheme, Host: urls.GogHost}
-	if cks != nil {
-		jar.SetCookies(gogHost, cks)
+	if cookies != nil {
+		jar.SetCookies(gogHost, cookies)
 	}
 
 	client := http.Client{
@@ -75,5 +60,5 @@ func main() {
 
 	//fmt.Println(getGameDetails(&client, 1308814788))
 
-	cookies.Save(client.Jar.Cookies(gogHost))
+	session.Save(client.Jar.Cookies(gogHost))
 }

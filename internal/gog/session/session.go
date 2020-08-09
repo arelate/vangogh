@@ -1,4 +1,4 @@
-package cookies
+package session
 
 import (
 	"encoding/json"
