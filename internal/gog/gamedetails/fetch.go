@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func Get(client *http.Client, id int) (GameDetails, error) {
+func Fetch(client *http.Client, id int) (GameDetails, error) {
 
 	resp, _ := client.Get(urls.GameDetails(id).String())
 	defer resp.Body.Close()

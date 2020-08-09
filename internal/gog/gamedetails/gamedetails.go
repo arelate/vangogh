@@ -48,10 +48,11 @@ type GameDetails struct {
 	Features         []interface{} `json:"features"`
 }
 
-// Not planning to marshal the following properties:
-//SimpleGalaxyInstallers []struct {
-//	Path string `json:"path"`
-//	Os   string `json:"os"`
-//} `json:"simpleGalaxyInstallers"`
-//MissingBaseProduct     interface{}   `json:"missingBaseProduct"`
-//IsBaseProductMissing   bool          `json:"isBaseProductMissing"`
+// NOTE: Not marshalling the following properties:
+//
+// SimpleGalaxyInstallers []struct {
+// 	Path string `json:"path"`
+// 	Os   string `json:"os"`
+// } `json:"simpleGalaxyInstallers"`
+// MissingBaseProduct     interface{}   `json:"missingBaseProduct"`
+// IsBaseProductMissing   bool          `json:"isBaseProductMissing"`

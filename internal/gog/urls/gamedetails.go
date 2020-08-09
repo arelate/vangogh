@@ -2,7 +2,7 @@ package urls
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/filenames"
+	"github.com/boggydigital/vangogh/internal/gog/paths/filenames"
 	"net/url"
 )
 
