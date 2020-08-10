@@ -12,6 +12,7 @@ const (
 	LoginCheckPath   = "/login_check"
 	LoginTwoStepPath = "/login/two_step"
 	GameDetailsPath  = "/account/gameDetails/"
+	ProductPagesPath = "/games/ajax/filtered"
 	// URLs
 	UserDataURL  = HttpsScheme + "://www." + GogHost + "/userData.json"
 	ReCaptchaURL = "https://www.recaptcha.net/recaptcha/api.js"

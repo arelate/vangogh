@@ -2,10 +2,15 @@ package auth
 
 import (
 	"encoding/json"
-	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/boggydigital/vangogh/internal/gog/urls"
 )
+
+type userData struct {
+	IsLoggedIn bool `json:"isLoggedIn"`
+}
 
 func LoggedIn(client *http.Client) (bool, error) {
 

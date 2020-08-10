@@ -2,6 +2,7 @@ package cfg
 
 import (
 	"encoding/json"
+
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
@@ -9,11 +10,13 @@ const (
 	configFilename = "config.json"
 )
 
+type ConfigDirs struct {
+	Data  string `json:"formData"`
+	Files string `json:"files"`
+}
+
 type Config struct {
-	Dirs struct {
-		Data  string `json:"data"`
-		Files string `json:"files"`
-	} `json:"dirs"`
+	Dirs ConfigDirs `json:"dirs"`
 }
 
 func Save(cfg Config) error {

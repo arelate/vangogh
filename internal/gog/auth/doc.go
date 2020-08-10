@@ -1,6 +1,6 @@
 /*
 
-Package vangogh/gog/auth implements authentication flow for GOG.com account data access
+Package vangogh/gog/auth implements authentication flow for GOG.com account formData access
 
 */
 

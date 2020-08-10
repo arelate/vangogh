@@ -3,7 +3,7 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/urls/data"
+	"github.com/boggydigital/vangogh/internal/gog/urls/formData"
 	"github.com/boggydigital/vangogh/internal/html/attr"
 	"github.com/boggydigital/vangogh/internal/html/query"
 	"golang.org/x/net/html"
@@ -67,7 +67,7 @@ func secondStepAuth(body io.ReadCloser, client *http.Client) error {
 			code = requestUserData(secondStepCodePrompt)
 		}
 
-		data := data.SecondStep(code, token)
+		data := formData.SecondStep(code, token)
 
 		req, _ := http.NewRequest(http.MethodPost, urls.LoginTwoStep().String(), strings.NewReader(data))
 		headers.Default(req, urls.LoginHost)
@@ -94,7 +94,7 @@ func secondStepAuth(body io.ReadCloser, client *http.Client) error {
 
 /*
 
-LogIn to GOG.com for account data queries using username and password
+LogIn to GOG.com for account formData queries using username and password
 
 Overall flow is:
 - Get auth token from the page (this would check for reCaptcha as well)
@@ -110,7 +110,7 @@ func LogIn(client *http.Client, username, password string) error {
 		return err
 	}
 
-	data := data.LogIn(username, password, token)
+	data := formData.LogIn(username, password, token)
 
 	req, err := http.NewRequest(http.MethodPost, urls.LoginCheck().String(), strings.NewReader(data))
 	if err != nil {

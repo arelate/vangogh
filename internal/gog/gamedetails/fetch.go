@@ -17,12 +17,12 @@ func Fetch(client *http.Client, id int) (GameDetails, error) {
 		return GameDetails{}, err
 	}
 
-	var gd GameDetails
+	var gameDetails GameDetails
 
-	err = json.Unmarshal(respBody, &gd)
+	err = json.Unmarshal(respBody, &gameDetails)
 	if err != nil {
 		return GameDetails{}, err
 	}
 
-	return gd, nil
+	return gameDetails, nil
 }
