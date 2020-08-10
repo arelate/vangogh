@@ -11,7 +11,7 @@ const (
 )
 
 type ConfigDirs struct {
-	Data  string `json:"formData"`
+	Data  string `json:"data"`
 	Files string `json:"files"`
 }
 

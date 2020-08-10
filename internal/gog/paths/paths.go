@@ -15,3 +15,13 @@ func GameDetails(id int) string {
 		dirs.GameDetails,
 		filenames.GameDetails(id))
 }
+
+func Product(id int, mediaType string) string {
+	cfg, _ := cfg.Current()
+
+	return path.Join(
+		cfg.Dirs.Data,
+		dirs.Products,
+		mediaType,
+		filenames.Product(id))
+}

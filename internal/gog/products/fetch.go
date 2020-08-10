@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	mediaTypeGame  = "game"
-	mediaTypeMovie = "movie"
+	MediaTypeGame  = "game"
+	MediaTypeMovie = "movie"
 )
 
-func FetchPage(client *http.Client, mediaType string, page int) (*ProductPage, error) {
+func fetchPage(client *http.Client, mediaType string, page int) (*ProductPage, error) {
 	resp, _ := client.Get(urls.ProductsPageURL(mediaType, page).String())
 	defer resp.Body.Close()
 
@@ -33,17 +33,18 @@ func FetchPage(client *http.Client, mediaType string, page int) (*ProductPage, e
 
 }
 
-func fetch(client *http.Client, mediaType string) (*[]Product, error) {
+func Fetch(client *http.Client, mediaType string) (*[]Product, error) {
 	var products []Product
-	firstPage, err := FetchPage(client, mediaType, 1)
+	firstPage, err := fetchPage(client, mediaType, 1)
 	fmt.Println("Fetched first page...")
 	if err != nil {
 		return nil, err
 	}
 	products = append(products, firstPage.Products...)
 
+	// TODO: obviously we'd want to do that concurrently
 	for p := 2; p < firstPage.TotalPages; p++ {
-		page, err := FetchPage(client, mediaType, p)
+		page, err := fetchPage(client, mediaType, p)
 		if err != nil {
 			return &products, err
 		}
@@ -52,12 +53,4 @@ func fetch(client *http.Client, mediaType string) (*[]Product, error) {
 	}
 
 	return &products, nil
-}
-
-func FetchGames(client *http.Client) (*[]Product, error) {
-	return fetch(client, mediaTypeGame)
-}
-
-func FetchMovies(client *http.Client) (*[]Product, error) {
-	return fetch(client, mediaTypeMovie)
 }

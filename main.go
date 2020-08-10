@@ -38,9 +38,12 @@ func main() {
 	//gamedetails.Save(gd, id)
 	//
 
-	products, _ := products.FetchMovies(client)
-	for _, p := range *products {
-		fmt.Println(p.Title)
+	ps, _ := products.Fetch(client, products.MediaTypeGame)
+	for _, p := range *ps {
+		err := products.Save(p, products.MediaTypeGame)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	session.Save(client.Jar.Cookies(gogHost))
