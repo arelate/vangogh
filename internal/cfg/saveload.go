@@ -10,15 +10,6 @@ const (
 	configFilename = "config.json"
 )
 
-type ConfigDirs struct {
-	Data  string `json:"data"`
-	Files string `json:"files"`
-}
-
-type Config struct {
-	Dirs ConfigDirs `json:"dirs"`
-}
-
 func Save(cfg Config) error {
 	return storage.Save(cfg, configFilename)
 }

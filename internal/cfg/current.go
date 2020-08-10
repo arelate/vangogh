@@ -4,6 +4,10 @@ var currentCfg *Config
 
 func def() *Config {
 	return &Config{
+		Account: ConfigAccount{
+			Username: "",
+			Password: "",
+		},
 		Dirs: ConfigDirs{
 			Data:  "formData",
 			Files: "files",

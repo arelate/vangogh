@@ -1,4 +1,8 @@
 {
+  "account": {
+    "username": "",
+    "password": ""
+  },
   "dirs": {
     "data": "data",
     "files": "files"
