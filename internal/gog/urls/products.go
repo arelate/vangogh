@@ -2,12 +2,11 @@ package urls
 
 import (
 	"net/url"
-	"strconv"
 )
 
-const sortNew = "new"
+const newestFirst = "release_desc"
 
-func ProductsPageURL(mediaType string, page int) *url.URL {
+func ProductsPageURL(mediaType string) *url.URL {
 	productsPage := &url.URL{
 		Scheme: HttpsScheme,
 		Host:   GogHost,
@@ -15,8 +14,8 @@ func ProductsPageURL(mediaType string, page int) *url.URL {
 	}
 	q := productsPage.Query()
 	q.Add("mediaType", mediaType)
-	q.Add("sort", sortNew)
-	q.Add("page", strconv.Itoa(page))
+	q.Add("sort", newestFirst)
+	//q.Add("page", strconv.Itoa(page))
 	productsPage.RawQuery = q.Encode()
 
 	return productsPage

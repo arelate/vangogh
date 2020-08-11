@@ -30,5 +30,6 @@ func Load(filename string) (data []byte, err error) {
 			return data, err
 		}
 	}
+	// TODO: Add generic unmarshal support
 	return data, nil
 }

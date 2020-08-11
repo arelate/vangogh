@@ -14,6 +14,7 @@ const (
 	GameDetailsPath         = "/account/gameDetails/"
 	ProductPagesPath        = "/games/ajax/filtered"
 	AccountProductPagesPath = "/account/getFilteredProducts"
+	WishlistPath            = "/account/wishlist/search"
 	// URLs
 	UserDataURL  = HttpsScheme + "://www." + GogHost + "/userData.json"
 	ReCaptchaURL = "https://www.recaptcha.net/recaptcha/api.js"

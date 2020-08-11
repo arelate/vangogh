@@ -1,11 +1,9 @@
 package products
 
+import "github.com/boggydigital/vangogh/internal/gog/pages"
+
 type ProductPage struct {
-	Products         []Product   `json:"products"`
-	Ts               interface{} `json:"ts"`
-	Page             int         `json:"page"`
-	TotalPages       int         `json:"totalPages"`
-	TotalResults     string      `json:"totalResults"`
-	TotalGamesFound  int         `json:"totalGamesFound"`
-	TotalMoviesFound int         `json:"totalMoviesFound"`
+	pages.Page
+	Ts       interface{} `json:"ts"`
+	Products []Product   `json:"products"`
 }

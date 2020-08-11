@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/products"
+	"github.com/boggydigital/vangogh/internal/gog/accountProducts"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
+	"github.com/boggydigital/vangogh/internal/gog/wishlist"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -38,12 +39,14 @@ func main() {
 	//gamedetails.Save(gd, id)
 	//
 
-	ps, _ := products.Fetch(client, products.MediaTypeGame)
-	for _, p := range *ps {
-		err := products.Save(p, products.MediaTypeGame)
-		if err != nil {
-			fmt.Println(err)
-		}
+	//ps, _ := products.Fetch(client, products.MediaTypeMovie, 1)
+	//for _, p := range ps.Products {
+	//	fmt.Printf("%v %v\n",p.ID, p.Title)
+	//}
+
+	ps, _ := wishlist.Fetch(client, accountProducts.MediaTypeGame, false, 1)
+	for _, p := range ps.Products {
+		fmt.Printf("%v %v\n", p.ID, p.Title)
 	}
 
 	session.Save(client.Jar.Cookies(gogHost))

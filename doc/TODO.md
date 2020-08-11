@@ -1,8 +1,8 @@
 # vangogh TODO
 
 Project:
-- [done] <del>establish better project structure</del>
-- [done] <del>extract GOG code into gog package</del>
+- [done] establish better project structure
+- [done] extract GOG code into gog package
 - [dont] create configuration file
 - [started] identify key directories (esp. going forward for docker - want to split files/metadata)
 
@@ -11,19 +11,28 @@ Finish authorization:
 - [done] save/loadCookies
 - [done] better captcha detection
 - [started] document adding cookies from the browser
-- add tests
+- tests :-)
 
 Download products/accountProducts/gameDetails:
 - [cut] download whole pages and map product id to page id
-- [started] download individual game details
-- [started] download account products
+- [done] download individual game details
+- [done] download account products
+- [done] download wishlist games
 - [done] download products
 - download images
 - download screenshots
+- tests
 
 Download product files:
 - for a given OS/Language
 - additionally, download XML with validation data
+- validate product files, consider downloading from validation file
+
+Open issues:
+- Index files for enumeration (files in a dir?), search
+
+CLI apps:
+- ?
 
 Server:
 - create endpoints for products/accountProducts/gameDetails
