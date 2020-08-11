@@ -1,8 +1,8 @@
 package accountProducts
 
 const (
-	MediaTypeGame  = 1
-	MediaTypeMovie = 2
+	MediaTypeGame int = iota + 1
+	MediaTypeMovie
 )
 
 type AccountProduct struct {

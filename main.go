@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/accountProducts"
+	"github.com/boggydigital/vangogh/internal/gog/products"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
-	"github.com/boggydigital/vangogh/internal/gog/wishlist"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -44,9 +43,13 @@ func main() {
 	//	fmt.Printf("%v %v\n",p.ID, p.Title)
 	//}
 
-	ps, _ := wishlist.Fetch(client, accountProducts.MediaTypeGame, false, 1)
+	ps, _ := products.Fetch(client, products.MediaTypeGame, 1)
 	for _, p := range ps.Products {
 		fmt.Printf("%v %v\n", p.ID, p.Title)
+		fmt.Println(p.Image)
+		for _, i := range p.Gallery {
+			fmt.Println(i)
+		}
 	}
 
 	session.Save(client.Jar.Cookies(gogHost))

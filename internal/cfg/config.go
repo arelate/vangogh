@@ -6,8 +6,9 @@ type ConfigAccount struct {
 }
 
 type ConfigDirs struct {
-	Data  string `json:"data"`
-	Files string `json:"files"`
+	Data   string `json:"data"`
+	Images string `json:"images"`
+	Files  string `json:"files"`
 }
 
 type Config struct {
