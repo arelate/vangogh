@@ -43,13 +43,11 @@ func main() {
 	//	fmt.Printf("%v %v\n",p.ID, p.Title)
 	//}
 
-	ps, _ := products.Fetch(client, products.MediaTypeGame, 1)
-	for _, p := range ps.Products {
-		fmt.Printf("%v %v\n", p.ID, p.Title)
-		fmt.Println(p.Image)
-		for _, i := range p.Gallery {
-			fmt.Println(i)
-		}
+	p, _ := products.Load(1073954123, urls.Game)
+	fmt.Printf("%v %v\n", p.ID, p.Title)
+	fmt.Println("Image:" + p.Image)
+	for _, i := range p.Gallery {
+		fmt.Println("Gallery:" + i)
 	}
 
 	session.Save(client.Jar.Cookies(gogHost))

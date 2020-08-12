@@ -1,10 +1,5 @@
 package accountProducts
 
-const (
-	MediaTypeGame int = iota + 1
-	MediaTypeMovie
-)
-
 type AccountProduct struct {
 	IsGalaxyCompatible bool          `json:"isGalaxyCompatible"`
 	Tags               []interface{} `json:"tags"`

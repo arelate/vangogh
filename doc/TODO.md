@@ -19,8 +19,10 @@ Download products/accountProducts/gameDetails:
 - [done] download account products
 - [done] download wishlist games
 - [done] download products
-- download images
-- download screenshots
+- enumerate and download cover images using GOG.com sizes 1x: 196, 2x: 392
+- enumerate and download screenshots using GOG.com sizes 1x: 271, 2x: 542
+- add politeness support for account queries (port from vangogh) 
+- add some politeness for other gog.com queries
 - tests
 
 Download product files:
@@ -29,7 +31,8 @@ Download product files:
 - validate product files, consider downloading from validation file
 
 Open issues:
-- Index files for enumeration (files in a dir?), search
+- Index files for enumeration (files in a dir?)
+- Search
 
 CLI apps:
 - ?

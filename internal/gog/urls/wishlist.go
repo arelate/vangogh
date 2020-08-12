@@ -7,7 +7,7 @@ import (
 
 const dateAdded = "date_added"
 
-func WishlistPageURL(mediaType int, hidden bool) *url.URL {
+func WishlistPageURL(mediaType MediaType, hidden bool) *url.URL {
 	wishlistPage := &url.URL{
 		Scheme: HttpsScheme,
 		Host:   GogHost,
@@ -18,7 +18,7 @@ func WishlistPageURL(mediaType int, hidden bool) *url.URL {
 		hiddenFlag = "1"
 	}
 	q := wishlistPage.Query()
-	q.Add("mediaType", strconv.Itoa(mediaType))
+	q.Add("mediaType", strconv.Itoa(int(mediaType)))
 	q.Add("sortBy", dateAdded)
 	q.Add("hiddenFlag", hiddenFlag)
 	wishlistPage.RawQuery = q.Encode()

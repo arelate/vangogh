@@ -7,12 +7,7 @@ import (
 	"net/http"
 )
 
-const (
-	MediaTypeGame  = "game"
-	MediaTypeMovie = "movie"
-)
-
-func Fetch(client *http.Client, mediaType string, page int) (*ProductPage, error) {
+func Fetch(client *http.Client, mediaType urls.MediaType, page int) (*ProductPage, error) {
 	respBody, err := pages.Fetch(client, urls.ProductsPageURL(mediaType), page)
 	if err != nil {
 		return &ProductPage{}, err

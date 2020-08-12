@@ -7,7 +7,7 @@ import (
 
 const sortDatePurchased = "date_purchased"
 
-func AccountProductsPageURL(mediaType int, updated bool, hidden bool) *url.URL {
+func AccountProductsPageURL(mediaType MediaType, updated bool, hidden bool) *url.URL {
 
 	accountProductsPage := &url.URL{
 		Scheme: HttpsScheme,
@@ -22,7 +22,7 @@ func AccountProductsPageURL(mediaType int, updated bool, hidden bool) *url.URL {
 		updatedFlag = "1"
 	}
 	q := accountProductsPage.Query()
-	q.Add("mediaType", strconv.Itoa(mediaType))
+	q.Add("mediaType", strconv.Itoa(int(mediaType)))
 	q.Add("sortBy", sortDatePurchased)
 	//q.Add("page", strconv.Itoa(page))
 	q.Add("hiddenFlag", hiddenFlag)

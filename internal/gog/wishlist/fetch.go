@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func Fetch(client *http.Client, mediaType int, hidden bool, page int) (*WishlistPage, error) {
+func Fetch(client *http.Client, mediaType urls.MediaType, hidden bool, page int) (*WishlistPage, error) {
 	respBody, err := pages.Fetch(client, urls.WishlistPageURL(mediaType, hidden), page)
 	if err != nil {
 		return &WishlistPage{}, err

@@ -4,6 +4,7 @@ import (
 	"github.com/boggydigital/vangogh/internal/cfg"
 	"github.com/boggydigital/vangogh/internal/gog/paths/dirs"
 	"github.com/boggydigital/vangogh/internal/gog/paths/filenames"
+	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"path"
 )
 
@@ -16,12 +17,12 @@ func GameDetails(id int) string {
 		filenames.GameDetails(id))
 }
 
-func Product(id int, mediaType string) string {
+func Product(id int, mediaType urls.MediaType) string {
 	cfg, _ := cfg.Current()
 
 	return path.Join(
 		cfg.Dirs.Data,
 		dirs.Products,
-		mediaType,
+		mediaType.String(),
 		filenames.Product(id))
 }
