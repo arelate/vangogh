@@ -1,13 +1,14 @@
 package urls
 
 import (
+	"github.com/boggydigital/vangogh/internal/gog/media"
 	"net/url"
 	"strconv"
 )
 
 const sortDatePurchased = "date_purchased"
 
-func AccountProductsPageURL(mediaType MediaType, updated bool, hidden bool) *url.URL {
+func AccountProductsPageURL(mt media.Type, updated bool, hidden bool) *url.URL {
 
 	accountProductsPage := &url.URL{
 		Scheme: HttpsScheme,
@@ -22,7 +23,7 @@ func AccountProductsPageURL(mediaType MediaType, updated bool, hidden bool) *url
 		updatedFlag = "1"
 	}
 	q := accountProductsPage.Query()
-	q.Add("mediaType", strconv.Itoa(int(mediaType)))
+	q.Add("mediaType", strconv.Itoa(int(mt)))
 	q.Add("sortBy", sortDatePurchased)
 	//q.Add("page", strconv.Itoa(page))
 	q.Add("hiddenFlag", hiddenFlag)

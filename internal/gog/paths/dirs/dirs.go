@@ -4,4 +4,5 @@ const (
 	GameDetails     = "gameDetails"
 	Products        = "products"
 	AccountProducts = "accountProducts"
+	Wishlist        = "wishlist"
 )

@@ -1,13 +1,13 @@
-package urls
+package media
 
-type MediaType int
+type Type int
 
 const (
-	Game MediaType = iota + 1
+	Game Type = iota + 1
 	Movie
 )
 
-func (mt MediaType) String() string {
+func (mt Type) String() string {
 	switch mt {
 	case Game:
 		return "game"

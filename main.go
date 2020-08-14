@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/gamedetails"
+	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
+	"github.com/boggydigital/vangogh/internal/gog/wishlist"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -31,20 +32,26 @@ func main() {
 	//	auth.LogIn(client, username, password)
 	//}
 
-	// SUPERHOT: MIND CONTROL DELETE
-	id := 1823091894
-	gd, _ := gamedetails.Load(id)
-	if gd == nil {
-		gd, _ = gamedetails.Fetch(client, id)
-		gamedetails.Save(gd, id)
-	}
-	fmt.Println(gd.Title)
+	//// SUPERHOT: MIND CONTROL DELETE
+	//id := 1823091894
+	//gd, _ := gamedetails.Load(id)
+	//if gd == nil {
+	//	gd, _ = gamedetails.Fetch(client, id)
+	//	gamedetails.Save(gd, id)
+	//}
+	//fmt.Println(gd.Title)
 
 	//aps, _ := accountProducts.Fetch(client, urls.Movie, false, false, 1)
 	//for _, ap := range aps.Products {
 	//	fmt.Printf("%v %v\n",ap.ID, ap.Title)
 	//	accountProducts.Save(ap, urls.Movie)
 	//}
+
+	wps, _ := wishlist.Fetch(client, media.Game, false, 4)
+	for _, wp := range wps.Products {
+		wishlist.Save(&wp, media.Game)
+		fmt.Printf("Saved %d: %s.\n", wp.ID, wp.Title)
+	}
 
 	//ap, _ := accountproducts.Load(1073954123, urls.Game)
 	//fmt.Printf("%v %v\n", p.ID, p.Title)

@@ -1,4 +1,4 @@
-package accountProducts
+package wishlist
 
 import (
 	media "github.com/boggydigital/vangogh/internal/gog/media"
@@ -6,6 +6,6 @@ import (
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
-func Save(ap *AccountProduct, mt media.Type) error {
-	return storage.Save(ap, paths.AccountProduct(ap.ID, mt))
+func Save(wp *WishlistProduct, mt media.Type) error {
+	return storage.Save(wp, paths.Wishlist(wp.ID, mt))
 }

@@ -2,21 +2,12 @@ package cfg
 
 import (
 	"encoding/json"
-
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
-const (
-	configFilename = "config.json"
-)
-
-func Save(cfg Config) error {
-	return storage.Save(cfg, configFilename)
-}
-
 func Load() (cfg *Config, err error) {
 	cfg = nil
-	cfgBytes, err := storage.Load(configFilename)
+	cfgBytes, err := storage.Load(filename)
 	if err != nil {
 		return cfg, err
 	}

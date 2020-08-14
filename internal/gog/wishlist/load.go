@@ -1,4 +1,4 @@
-package accountProducts
+package wishlist
 
 import (
 	"encoding/json"
@@ -7,14 +7,14 @@ import (
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
-func Load(id int, mt media.Type) (ap *AccountProduct, err error) {
-	apBytes, err := storage.Load(paths.AccountProduct(id, mt))
+func Load(id int, mt media.Type) (wp *WishlistProduct, err error) {
+	apBytes, err := storage.Load(paths.Wishlist(id, mt))
 
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(apBytes, &ap)
+	err = json.Unmarshal(apBytes, &wp)
 
-	return ap, err
+	return wp, err
 }
