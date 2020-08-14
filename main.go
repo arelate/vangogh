@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/products"
+	"github.com/boggydigital/vangogh/internal/gog/gamedetails"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"net/http"
@@ -31,24 +31,27 @@ func main() {
 	//	auth.LogIn(client, username, password)
 	//}
 
-	//id := 1207659212
+	// SUPERHOT: MIND CONTROL DELETE
+	id := 1823091894
 	//gameDetails, _ := gamedetails.Load(id)
 	//fmt.Println(gameDetails.Title)
-	//gd, _ := gamedetails.Fetch(client, id)
-	//gamedetails.Save(gd, id)
-	//
+	gd, _ := gamedetails.Fetch(client, id)
+	gamedetails.Save(gd, id)
 
-	//ps, _ := products.Fetch(client, products.MediaTypeMovie, 1)
-	//for _, p := range ps.Products {
-	//	fmt.Printf("%v %v\n",p.ID, p.Title)
+	fmt.Println(gd.Changelog)
+
+	//aps, _ := accountProducts.Fetch(client, urls.Movie, false, false, 1)
+	//for _, ap := range aps.Products {
+	//	fmt.Printf("%v %v\n",ap.ID, ap.Title)
+	//	accountProducts.Save(ap, urls.Movie)
 	//}
 
-	p, _ := products.Load(1073954123, urls.Game)
-	fmt.Printf("%v %v\n", p.ID, p.Title)
-	fmt.Println("Image:" + p.Image)
-	for _, i := range p.Gallery {
-		fmt.Println("Gallery:" + i)
-	}
+	//ap, _ := accountproducts.Load(1073954123, urls.Game)
+	//fmt.Printf("%v %v\n", p.ID, p.Title)
+	//fmt.Println("Image:" + p.Image)
+	//for _, i := range p.Gallery {
+	//	fmt.Println("Gallery:" + i)
+	//}
 
 	session.Save(client.Jar.Cookies(gogHost))
 

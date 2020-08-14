@@ -1,6 +1,7 @@
 package dirs
 
 const (
-	GameDetails = "gamedetails"
-	Products    = "products"
+	GameDetails     = "gameDetails"
+	Products        = "products"
+	AccountProducts = "accountProducts"
 )

@@ -19,10 +19,11 @@ Download products/accountProducts/gameDetails:
 - [done] download account products
 - [done] download wishlist games
 - [done] download products
+- add changes - timestamps when product was fetched, added, updated, etc.
 - enumerate and download cover images using GOG.com sizes 1x: 196, 2x: 392
 - enumerate and download screenshots using GOG.com sizes 1x: 271, 2x: 542
 - add politeness support for account queries (port from vangogh) 
-- add some politeness for other gog.com queries
+- add some politeness for other gog.com queries (fetched >= 24 hours for example)
 - tests
 
 Download product files:

@@ -7,14 +7,14 @@ import (
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
-func Load(id int, mediaType urls.MediaType) (product *Product, err error) {
+func Load(id int, mediaType urls.MediaType) (p *Product, err error) {
 	pBytes, err := storage.Load(paths.Product(id, mediaType))
 
 	if err != nil {
-		return product, err
+		return p, err
 	}
 
-	err = json.Unmarshal(pBytes, &product)
+	err = json.Unmarshal(pBytes, &p)
 
-	return product, err
+	return p, err
 }

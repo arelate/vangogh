@@ -1,4 +1,4 @@
-package products
+package accountProducts
 
 import (
 	"github.com/boggydigital/vangogh/internal/gog/paths"
@@ -6,6 +6,6 @@ import (
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
-func Save(p Product, mt urls.MediaType) error {
-	return storage.Save(p, paths.Product(p.ID, mt))
+func Save(ap AccountProduct, mt urls.MediaType) error {
+	return storage.Save(ap, paths.AccountProduct(ap.ID, mt))
 }
