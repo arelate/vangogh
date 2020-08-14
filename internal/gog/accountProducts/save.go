@@ -6,6 +6,6 @@ import (
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
-func Save(ap AccountProduct, mt urls.MediaType) error {
+func Save(ap *AccountProduct, mt urls.MediaType) error {
 	return storage.Save(ap, paths.AccountProduct(ap.ID, mt))
 }

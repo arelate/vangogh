@@ -33,12 +33,12 @@ func main() {
 
 	// SUPERHOT: MIND CONTROL DELETE
 	id := 1823091894
-	//gameDetails, _ := gamedetails.Load(id)
-	//fmt.Println(gameDetails.Title)
-	gd, _ := gamedetails.Fetch(client, id)
-	gamedetails.Save(gd, id)
-
-	fmt.Println(gd.Changelog)
+	gd, _ := gamedetails.Load(id)
+	if gd == nil {
+		gd, _ = gamedetails.Fetch(client, id)
+		gamedetails.Save(gd, id)
+	}
+	fmt.Println(gd.Title)
 
 	//aps, _ := accountProducts.Fetch(client, urls.Movie, false, false, 1)
 	//for _, ap := range aps.Products {

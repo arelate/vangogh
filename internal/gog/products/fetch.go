@@ -15,6 +15,6 @@ func Fetch(client *http.Client, mediaType urls.MediaType, page int) (*ProductPag
 
 	var productPage ProductPage
 
-	err = json.Unmarshal(respBody, &productPage)
+	err = json.Unmarshal(*respBody, &productPage)
 	return &productPage, err
 }

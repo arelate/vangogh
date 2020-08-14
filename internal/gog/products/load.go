@@ -11,7 +11,7 @@ func Load(id int, mediaType urls.MediaType) (p *Product, err error) {
 	pBytes, err := storage.Load(paths.Product(id, mediaType))
 
 	if err != nil {
-		return p, err
+		return nil, err
 	}
 
 	err = json.Unmarshal(pBytes, &p)

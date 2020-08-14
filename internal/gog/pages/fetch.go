@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func Fetch(client *http.Client, url *url.URL, page int) ([]byte, error) {
+func Fetch(client *http.Client, url *url.URL, page int) (*[]byte, error) {
 	q := url.Query()
 	q.Add("page", strconv.Itoa(page))
 	url.RawQuery = q.Encode()
@@ -16,5 +16,5 @@ func Fetch(client *http.Client, url *url.URL, page int) ([]byte, error) {
 	defer resp.Body.Close()
 
 	respBody, err := ioutil.ReadAll(resp.Body)
-	return respBody, err
+	return &respBody, err
 }

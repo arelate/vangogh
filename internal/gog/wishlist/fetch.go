@@ -15,7 +15,7 @@ func Fetch(client *http.Client, mediaType urls.MediaType, hidden bool, page int)
 
 	var wishlistPage WishlistPage
 
-	err = json.Unmarshal(respBody, &wishlistPage)
+	err = json.Unmarshal(*respBody, &wishlistPage)
 	return &wishlistPage, err
 
 }
