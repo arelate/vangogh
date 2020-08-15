@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/media"
+	"github.com/boggydigital/vangogh/internal/changes"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
-	"github.com/boggydigital/vangogh/internal/gog/wishlist"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -14,6 +13,7 @@ import (
 
 func main() {
 
+	changes.Load()
 	cookies, _ := session.Load()
 
 	jar, _ := cookiejar.New(nil)
@@ -26,13 +26,18 @@ func main() {
 		Timeout: time.Minute * 5,
 		Jar:     jar,
 	}
+
+	files := changes.Modified(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC), time.Now())
+	for _, f := range *files {
+		fmt.Println(f)
+	}
 	//
 	//if li, err := auth.LoggedIn(client); !li && err == nil {
 	//	username, password, _ := cli.Credentials()
 	//	auth.LogIn(client, username, password)
 	//}
 
-	//// SUPERHOT: MIND CONTROL DELETE
+	// SUPERHOT: MIND CONTROL DELETE
 	//id := 1823091894
 	//gd, _ := gamedetails.Load(id)
 	//if gd == nil {
@@ -47,11 +52,11 @@ func main() {
 	//	accountProducts.Save(ap, urls.Movie)
 	//}
 
-	wps, _ := wishlist.Fetch(client, media.Game, false, 4)
-	for _, wp := range wps.Products {
-		wishlist.Save(&wp, media.Game)
-		fmt.Printf("Saved %d: %s.\n", wp.ID, wp.Title)
-	}
+	//wps, _ := wishlist.Fetch(client, media.Movie, false, 1)
+	//for _, wp := range wps.Products {
+	//	wishlist.Save(&wp, media.Movie)
+	//	fmt.Printf("Saved %d: %s.\n", wp.ID, wp.Title)
+	//}
 
 	//ap, _ := accountproducts.Load(1073954123, urls.Game)
 	//fmt.Printf("%v %v\n", p.ID, p.Title)
@@ -61,5 +66,6 @@ func main() {
 	//}
 
 	session.Save(client.Jar.Cookies(gogHost))
+	changes.Save()
 
 }
