@@ -8,12 +8,17 @@ import (
 	"path"
 )
 
-func Product(id int, mt media.Type) string {
+func ProductDir() string {
 	cfg, _ := cfg.Current()
 
 	return path.Join(
 		cfg.Dirs.Data,
-		dirs.Products,
+		dirs.Products)
+}
+
+func Product(id int, mt media.Type) string {
+	return path.Join(
+		ProductDir(),
 		mt.String(),
 		filenames.Product(id))
 }

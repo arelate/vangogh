@@ -1,5 +1,5 @@
 package filenames
 
-func GameDetails(id int) string {
+func Details(id int) string {
 	return Product(id)
 }

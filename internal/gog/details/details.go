@@ -1,12 +1,12 @@
-package gamedetails
+package details
 
-type GameDetails struct {
-	Title           string          `json:"title"`
-	BackgroundImage string          `json:"backgroundImage"`
-	CdKey           string          `json:"cdKey"`
-	TextInformation string          `json:"textInformation"`
-	Downloads       [][]interface{} `json:"downloads"`
-	GalaxyDownloads []interface{}   `json:"galaxyDownloads"`
+type Details struct {
+	Title           string        `json:"title"`
+	BackgroundImage string        `json:"backgroundImage"`
+	CdKey           string        `json:"cdKey"`
+	TextInformation string        `json:"textInformation"`
+	Downloads       []interface{} `json:"downloads"`
+	GalaxyDownloads []interface{} `json:"galaxyDownloads"`
 	Extras          []struct {
 		ManualURL string `json:"manualUrl"`
 		Name      string `json:"name"`

@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/boggydigital/vangogh/internal/changes"
+	"github.com/boggydigital/vangogh/internal/gog/details"
+	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"net/http"
@@ -27,10 +29,12 @@ func main() {
 		Jar:     jar,
 	}
 
-	files := changes.Modified(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC), time.Now())
-	for _, f := range *files {
-		fmt.Println(f)
-	}
+	//files := changes.Modified(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC), time.Now())
+	//for _, f := range *files {
+	//	//fmt.Println(f)
+	//	id, mt, _ := wishlist.Parse(f)
+	//	fmt.Printf("%s %d\n", mt, id)
+	//}
 	//
 	//if li, err := auth.LoggedIn(client); !li && err == nil {
 	//	username, password, _ := cli.Credentials()
@@ -38,13 +42,14 @@ func main() {
 	//}
 
 	// SUPERHOT: MIND CONTROL DELETE
-	//id := 1823091894
-	//gd, _ := gamedetails.Load(id)
-	//if gd == nil {
-	//	gd, _ = gamedetails.Fetch(client, id)
-	//	gamedetails.Save(gd, id)
-	//}
-	//fmt.Println(gd.Title)
+	id := 1823091894
+	mt := media.Game
+	gd, _ := details.Load(id, mt)
+	if gd == nil {
+		gd, _ = details.Fetch(client, id, mt)
+		details.Save(gd, id, mt)
+	}
+	fmt.Println(gd.Title)
 
 	//aps, _ := accountProducts.Fetch(client, urls.Movie, false, false, 1)
 	//for _, ap := range aps.Products {

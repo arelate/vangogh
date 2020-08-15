@@ -2,21 +2,18 @@ package session
 
 import (
 	"encoding/json"
+	"github.com/boggydigital/vangogh/internal/filenames"
 	"github.com/boggydigital/vangogh/internal/storage"
 	"net/http"
 	"time"
 )
 
-const (
-	cookiesFilename = "cookies.json"
-)
-
 func Save(cookies []*http.Cookie) error {
-	return storage.Save(cookies, cookiesFilename)
+	return storage.Save(cookies, filenames.Cookies)
 }
 
 func Load() (cookies []*http.Cookie, err error) {
-	cookieBytes, err := storage.Load(cookiesFilename)
+	cookieBytes, err := storage.Load(filenames.Cookies)
 	if err != nil {
 		return cookies, err
 	}

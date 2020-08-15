@@ -11,7 +11,7 @@ const (
 	AuthPath                = "/auth"
 	LoginCheckPath          = "/login_check"
 	LoginTwoStepPath        = "/login/two_step"
-	GameDetailsPath         = "/account/gameDetails/"
+	DetailsPath             = "/account/{mediaType}Details/"
 	ProductPagesPath        = "/games/ajax/filtered"
 	AccountProductPagesPath = "/account/getFilteredProducts"
 	WishlistPath            = "/account/wishlist/search"

@@ -8,12 +8,17 @@ import (
 	"path"
 )
 
-func Wishlist(id int, mt media.Type) string {
+func WishlistDir() string {
 	cfg, _ := cfg.Current()
 
 	return path.Join(
 		cfg.Dirs.Data,
-		dirs.Wishlist,
+		dirs.Wishlist)
+}
+
+func Wishlist(id int, mt media.Type) string {
+	return path.Join(
+		WishlistDir(),
 		mt.String(),
 		filenames.Wishlist(id))
 }

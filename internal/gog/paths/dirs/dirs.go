@@ -1,7 +1,7 @@
 package dirs
 
 const (
-	GameDetails     = "gameDetails"
+	Details         = "details"
 	Products        = "products"
 	AccountProducts = "accountProducts"
 	Wishlist        = "wishlist"
