@@ -16,6 +16,12 @@ func DetailsDir() string {
 		dirs.Details)
 }
 
+func DetailsIndex() string {
+	return path.Join(
+		DetailsDir(),
+		filenames.Index)
+}
+
 func Details(id int, mt media.Type) string {
 	return path.Join(
 		DetailsDir(),

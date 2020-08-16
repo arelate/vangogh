@@ -16,6 +16,12 @@ func AccountProductDir() string {
 		dirs.AccountProducts)
 }
 
+func AccountProductIndex() string {
+	return path.Join(
+		AccountProductDir(),
+		filenames.Index)
+}
+
 func AccountProduct(id int, mt media.Type) string {
 	return path.Join(
 		AccountProductDir(),

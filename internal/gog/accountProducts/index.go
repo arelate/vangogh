@@ -1,4 +1,4 @@
-package products
+package accountProducts
 
 import "github.com/boggydigital/vangogh/internal/gog/index"
 

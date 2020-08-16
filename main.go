@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/media"
+	"github.com/boggydigital/vangogh/internal/gog/accountProducts"
+	"github.com/boggydigital/vangogh/internal/gog/index"
+	"github.com/boggydigital/vangogh/internal/gog/paths"
 	"github.com/boggydigital/vangogh/internal/gog/products"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
@@ -27,37 +29,49 @@ func main() {
 		Jar:     jar,
 	}
 
-	err := products.LoadIndex()
+	err := index.Load(paths.AccountProductIndex(), &accountProducts.Indexes)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	mt := media.Game
-	for _, i := range *products.Ids(mt) {
-		p, _ := products.Load(i, mt)
-		fmt.Printf("%d: %s\n", p.ID, p.Title)
+	err = index.Load(paths.ProductIndex(), &products.Indexes)
+	if err != nil {
+		fmt.Println(err)
 	}
-	fmt.Println()
 
 	//mt := media.Game
+
+	////for _, api := range *accountProducts.Ids(mt) {
+	//for _, api := range *index.Ids(accountProducts.Indexes, mt) {
+	//	ap, _ := accountProducts.Load(api, mt)
+	//	if index.Has(products.Indexes, api) {
+	//		fmt.Printf("P+AP %d: %s\n", ap.ID, ap.Title)
+	//	} else {
+	//		fmt.Printf("AP %d: %s\n", ap.ID, ap.Title)
+	//	}
+	//}
+	////ap, _ := accountProducts.Load(i, mt)
+	////fmt.Printf("%d: %s\n", ap.ID, ap.Title)
+	//fmt.Println()
+
 	//totalPages := 1
 	//total := 0
-	//started := time.Now()
+	////started := time.Now()
 	//
 	//for i := 0; i < totalPages; i++ {
-	//	ps, err := products.Fetch(client, mt, i+1)
+	//	aps, err := accountProducts.Fetch(client, mt, false, false, i+1)
 	//	if err != nil {
 	//		fmt.Println(err)
 	//	}
-	//	totalPages = ps.TotalPages
-	//	total += len(ps.Products)
-	//	fmt.Printf("Fetched page %d out of %d, got %d products, %d total\n", i+1, totalPages, len(ps.Products), total)
-	//	for _, p := range ps.Products {
+	//	totalPages = aps.TotalPages
+	//	total += len(aps.Products)
+	//	fmt.Printf("Fetched page %d out of %d, got %d products, %d total\n", i+1, totalPages, len(aps.Products), total)
+	//	for _, ap := range aps.Products {
 	//		//fmt.Printf("%d: %s\n", p.ID, p.Title)
-	//		products.Save(&p, mt)
+	//		accountProducts.Save(&ap, mt)
 	//	}
 	//}
-	//err = products.SaveIndex()
+	//err = accountProducts.SaveIndex()
 	//if err != nil {
 	//	fmt.Println(err)
 	//}

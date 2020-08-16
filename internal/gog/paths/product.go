@@ -16,15 +16,15 @@ func ProductDir() string {
 		dirs.Products)
 }
 
+func ProductIndex() string {
+	return path.Join(
+		ProductDir(),
+		filenames.Index)
+}
+
 func Product(id int, mt media.Type) string {
 	return path.Join(
 		ProductDir(),
 		mt.String(),
 		filenames.Product(id))
-}
-
-func ProductIndex() string {
-	return path.Join(
-		ProductDir(),
-		filenames.Index)
 }

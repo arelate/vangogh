@@ -16,6 +16,12 @@ func WishlistDir() string {
 		dirs.Wishlist)
 }
 
+func WishlistIndex() string {
+	return path.Join(
+		WishlistDir(),
+		filenames.Index)
+}
+
 func Wishlist(id int, mt media.Type) string {
 	return path.Join(
 		WishlistDir(),

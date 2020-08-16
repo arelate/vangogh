@@ -5,6 +5,7 @@
   },
   "dirs": {
     "data": "data",
+    "images": "images",
     "files": "files"
   }
 }

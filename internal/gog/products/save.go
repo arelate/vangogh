@@ -13,12 +13,8 @@ func Save(p *Product, mt media.Type) error {
 	if err != nil {
 		return err
 	}
-	if index.Update(indexes, p.ID, mt, sha) {
+	if index.Update(Indexes, p.ID, mt, sha) {
 		return storage.Save(bytes, paths.Product(p.ID, mt))
 	}
 	return nil
-}
-
-func SaveIndex() error {
-	return index.Save(&indexes, paths.ProductIndex())
 }
