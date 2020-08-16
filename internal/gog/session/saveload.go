@@ -3,13 +3,18 @@ package session
 import (
 	"encoding/json"
 	"github.com/boggydigital/vangogh/internal/filenames"
+	"github.com/boggydigital/vangogh/internal/jsonsha"
 	"github.com/boggydigital/vangogh/internal/storage"
 	"net/http"
 	"time"
 )
 
 func Save(cookies []*http.Cookie) error {
-	return storage.Save(cookies, filenames.Cookies)
+	cookieBytes, _, err := jsonsha.Marshal(cookies)
+	if err != nil {
+		return err
+	}
+	return storage.Save(cookieBytes, filenames.Cookies)
 }
 
 func Load() (cookies []*http.Cookie, err error) {

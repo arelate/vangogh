@@ -22,3 +22,9 @@ func Product(id int, mt media.Type) string {
 		mt.String(),
 		filenames.Product(id))
 }
+
+func ProductIndex() string {
+	return path.Join(
+		ProductDir(),
+		filenames.Index)
+}
