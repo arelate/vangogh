@@ -15,6 +15,7 @@ func Update(filename string, hash string) bool {
 		if ch.Hash != hash {
 			ch.Hash = hash
 			ch.Modified = time.Now().Unix()
+			changes[filename] = ch
 			return true
 		}
 		return false

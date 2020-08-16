@@ -1,11 +1,10 @@
 package products
 
 type Product struct {
-	CustomAttributes []interface{} `json:"customAttributes"`
-	Developer        string        `json:"developer"`
-	Publisher        string        `json:"publisher"`
-	Gallery          []string      `json:"gallery"`
-	Video            struct {
+	Developer string   `json:"developer"`
+	Publisher string   `json:"publisher"`
+	Gallery   []string `json:"gallery"`
+	Video     struct {
 		ID       string `json:"id"`
 		Provider string `json:"provider"`
 	} `json:"video"`
@@ -72,3 +71,6 @@ type Product struct {
 	Slug             string `json:"slug"`
 	IsWishlistable   bool   `json:"isWishlistable"`
 }
+
+// NOTE: Not marshalling the following fields
+// CustomAttributes []interface{} `json:"customAttributes"`
