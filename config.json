@@ -1,7 +1,16 @@
 {
-  "account": {
-    "username": "",
-    "password": ""
+  "mongodb":  {
+    "schema": "mongodb",
+    "user": "vangogh",
+    "pwd": "emwurAFGMZBVEqQvG8gxanjbFDPXCELFL4V",
+    "host": "tokyo.anothermedium.com",
+    "path": "/",
+    "port": 27017,
+    "query": "authSource=admin&readPreference=primary&ssl=false"
+  },
+  "gog": {
+    "user": "",
+    "pwd": ""
   },
   "dirs": {
     "data": "data",

@@ -22,7 +22,7 @@ Download metadata:
 - [done] add changes - timestamps when product was created, modified, etc.
 - [done] enumerate changes in the interval (after, until)
 - [done] parse filenames (that changes track) back to id, media type 
-- [started] enumerate ids - index?
+- [done] enumerate ids - index?
 - add politeness support for account queries (port from vangogh) 
 - add some politeness for other gog.com queries (fetched >= 24 hours for example)
 - enumerate and download cover images using GOG.com sizes 1x: 196, 2x: 392

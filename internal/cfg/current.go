@@ -4,12 +4,12 @@ var currentCfg *Config
 
 func def() *Config {
 	return &Config{
-		Account: ConfigAccount{
-			Username: "",
-			Password: "",
+		GOG: ConfigGOG{
+			User: "",
+			Pwd:  "",
 		},
 		Dirs: ConfigDirs{
-			Data:  "formData",
+			Data:  "data",
 			Files: "files",
 		},
 	}

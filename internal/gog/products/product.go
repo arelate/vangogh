@@ -28,7 +28,7 @@ type Product struct {
 	} `json:"price"`
 	IsDiscounted    bool `json:"isDiscounted"`
 	IsInDevelopment bool `json:"isInDevelopment"`
-	ID              int  `json:"id"`
+	ID              int  `json:"id" bson:"_id"`
 	ReleaseDate     int  `json:"releaseDate"`
 	Availability    struct {
 		IsAvailable          bool `json:"isAvailable"`
@@ -65,12 +65,12 @@ type Product struct {
 	Rating           int    `json:"rating"`
 	Type             int    `json:"type"`
 	IsComingSoon     bool   `json:"isComingSoon"`
-	IsPriceVisible   bool   `json:"isPriceVisible"`
-	IsMovie          bool   `json:"isMovie"`
-	IsGame           bool   `json:"isGame"`
 	Slug             string `json:"slug"`
-	IsWishlistable   bool   `json:"isWishlistable"`
 }
 
-// NOTE: Not marshalling the following fields
+// NOTE: Not marshalling the following fields:
 // CustomAttributes []interface{} `json:"customAttributes"`
+// IsWishlistable   bool   `json:"isWishlistable"`
+// IsPriceVisible   bool   `json:"isPriceVisible"`
+// IsMovie          bool   `json:"isMovie"`
+// IsGame           bool   `json:"isGame"`

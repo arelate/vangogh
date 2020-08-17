@@ -1,12 +1,18 @@
 package storage
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path"
 )
 
-func Save(bytes []byte, filename string) error {
+func Save(data interface{}, filename string) error {
+
+	bytes, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
 
 	dir := path.Dir(filename)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {

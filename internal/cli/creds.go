@@ -9,20 +9,26 @@ import (
 	"syscall"
 )
 
-func Credentials() (username string, password string, err error) {
+func Credentials(user string) (username string, password string, err error) {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("Enter username: ")
-	username, _ = reader.ReadString('\n')
-	username = strings.TrimSpace(username)
+	if user == "" {
+		fmt.Print("Enter username: ")
+		username, _ = reader.ReadString('\n')
+		username = strings.TrimSpace(username)
+	} else {
+		username = user
+	}
 
-	fmt.Print("Enter password:")
+	fmt.Printf("Enter password for %s:", username)
 	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return username, "", err
 	}
 
 	password = strings.TrimSpace(string(bytePassword))
+
+	fmt.Println()
 
 	return username, password, nil
 }

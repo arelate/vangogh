@@ -5,14 +5,18 @@ import (
 	"github.com/boggydigital/vangogh/internal/storage"
 )
 
+const filename = "config.json"
+
 func Load() (cfg *Config, err error) {
-	cfg = nil
 	cfgBytes, err := storage.Load(filename)
 	if err != nil {
-		return cfg, err
+		return nil, err
 	}
 
 	err = json.Unmarshal(cfgBytes, &cfg)
+	if err != nil {
+		return nil, err
+	}
 
-	return cfg, err
+	return cfg, nil
 }

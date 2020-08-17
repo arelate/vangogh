@@ -2,19 +2,48 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/accountProducts"
-	"github.com/boggydigital/vangogh/internal/gog/index"
-	"github.com/boggydigital/vangogh/internal/gog/paths"
-	"github.com/boggydigital/vangogh/internal/gog/products"
+	"github.com/boggydigital/vangogh/internal/dbclient"
+	"github.com/boggydigital/vangogh/internal/gog/details"
+	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"os"
 	"time"
 )
 
 func main() {
+
+	mongoClient, err := dbclient.New()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(2)
+	}
+
+	ctx, cancel, err := dbclient.Connect(mongoClient)
+	defer dbclient.Disconnect(ctx, cancel, mongoClient)
+
+	//collection := mongoClient.Database("vangogh").Collection("products")
+	//cur, err := collection.Find(ctx, bson.M{})
+	//
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer cur.Close(ctx)
+	//for cur.Next(ctx) {
+	//	var result products.Product
+	//	err := cur.Decode(&result)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//	// do something with result....
+	//	fmt.Println(result.Title)
+	//}
+	//if err := cur.Err(); err != nil {
+	//	log.Fatal(err)
+	//}
 
 	cookies, _ := session.Load()
 
@@ -24,20 +53,40 @@ func main() {
 		jar.SetCookies(gogHost, cookies)
 	}
 
-	client := &http.Client{
+	httpClient := &http.Client{
 		Timeout: time.Minute * 5,
 		Jar:     jar,
 	}
 
-	err := index.Load(paths.AccountProductIndex(), &accountProducts.Indexes)
+	mt := media.Game
+	//aps, err := accountProducts.Fetch(httpClient, mt, false, false,1)
+
+	db := mongoClient.Database("vangogh")
+	col := db.Collection("details")
+
+	d, _ := details.Fetch(httpClient, 1157070047, mt)
+
+	_, err = col.InsertOne(ctx, d)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	err = index.Load(paths.ProductIndex(), &products.Indexes)
-	if err != nil {
-		fmt.Println(err)
-	}
+	//for _, ap := range aps.Products {
+	//	_, err := col.InsertOne(ctx, ap)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//}
+
+	//err = index.Load(paths.AccountProductIndex(), &accountProducts.Indexes)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//
+	//err = index.Load(paths.ProductIndex(), &products.Indexes)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 
 	//mt := media.Game
 
@@ -88,5 +137,5 @@ func main() {
 	//	fmt.Println(f)
 	//}
 
-	session.Save(client.Jar.Cookies(gogHost))
+	session.Save(httpClient.Jar.Cookies(gogHost))
 }

@@ -3,7 +3,7 @@ package accountProducts
 type AccountProduct struct {
 	IsGalaxyCompatible bool          `json:"isGalaxyCompatible"`
 	Tags               []interface{} `json:"tags"`
-	ID                 int           `json:"id"`
+	ID                 int           `json:"id" bson:"_id"`
 	Availability       struct {
 		IsAvailable          bool `json:"isAvailable"`
 		IsAvailableInAccount bool `json:"isAvailableInAccount"`

@@ -25,5 +25,8 @@ func Fetch(client *http.Client, id int, mt media.Type) (*Details, error) {
 		return nil, err
 	}
 
+	// GOG.com uses filename as an id and doesn't have id in the schema
+	details.ID = id
+
 	return &details, nil
 }

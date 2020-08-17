@@ -1,8 +1,18 @@
 package cfg
 
-type ConfigAccount struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+type ConfigMongoDB struct {
+	Schema string `json:"schema"`
+	User   string `json:"user"`
+	Pwd    string `json:"pwd"`
+	Host   string `json:"host"`
+	Path   string `json:"path"`
+	Port   int    `json:"port"`
+	Query  string `json:"query"`
+}
+
+type ConfigGOG struct {
+	User string `json:"user"`
+	Pwd  string `json:"pwd"`
 }
 
 type ConfigDirs struct {
@@ -12,6 +22,7 @@ type ConfigDirs struct {
 }
 
 type Config struct {
-	Account ConfigAccount `json:"account"`
+	MongoDB ConfigMongoDB `json:"mongodb"`
+	GOG     ConfigGOG     `json:"gog"`
 	Dirs    ConfigDirs    `json:"dirs"`
 }

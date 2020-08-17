@@ -1,6 +1,7 @@
 package details
 
 type Details struct {
+	ID              int           `json:"id" bson:"_id"`
 	Title           string        `json:"title"`
 	BackgroundImage string        `json:"backgroundImage"`
 	CdKey           string        `json:"cdKey"`

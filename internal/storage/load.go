@@ -5,15 +5,15 @@ import (
 	"os"
 )
 
-func Load(filename string) (data []byte, err error) {
-	data = nil
+func Load(filename string) (bytes []byte, err error) {
 	if _, e := os.Stat(filename); e == nil {
 
-		data, err = ioutil.ReadFile(filename)
+		bytes, err = ioutil.ReadFile(filename)
 		if err != nil {
-			return data, err
+			return nil, err
 		}
 	}
+
 	// TODO: Add generic unmarshal support
-	return data, nil
+	return bytes, nil
 }

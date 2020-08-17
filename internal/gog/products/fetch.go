@@ -19,3 +19,7 @@ func Fetch(client *http.Client, mt media.Type, page int) (*ProductPage, error) {
 	err = json.Unmarshal(*respBody, &productPage)
 	return &productPage, err
 }
+
+//func FetchImage(p *Product) error {
+//
+//}
