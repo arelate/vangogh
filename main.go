@@ -7,6 +7,7 @@ import (
 	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
+	"go.mongodb.org/mongo-driver/bson"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -65,10 +66,25 @@ func main() {
 	col := db.Collection("details")
 
 	d, _ := details.Fetch(httpClient, 1157070047, mt)
+	//d.Title = "x" + d.Title
 
-	_, err = col.InsertOne(ctx, d)
+	count, err := col.CountDocuments(ctx, bson.M{"_id": 1157070047})
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	if count > 0 {
+		result, err := col.ReplaceOne(ctx, bson.M{"_id": 1157070047}, d)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(result.ModifiedCount)
+	} else {
+		result, err := col.InsertOne(ctx, d)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(result)
 	}
 
 	//for _, ap := range aps.Products {

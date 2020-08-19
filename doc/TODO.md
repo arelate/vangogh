@@ -23,26 +23,36 @@ Download metadata:
 - [done] enumerate changes in the interval (after, until)
 - [done] parse filenames (that changes track) back to id, media type 
 - [done] enumerate ids - index?
-- add politeness support for account queries (port from vangogh) 
-- add some politeness for other gog.com queries (fetched >= 24 hours for example)
-- enumerate and download cover images using GOG.com sizes 1x: 196, 2x: 392
-- enumerate and download screenshots using GOG.com sizes 1x: 271, 2x: 542
+- add politeness support for account queries (port from vangogh)
 - sort by ... - index?
 - search - index?
 - tests :-)
 
-Download product files:
-- for a given OS/Language
-- additionally, download XML with validation data
-- validate product files, consider downloading from validation file
+Misc.:
+- use connection string, not URL parts for MongoDB
+- add support for file as password and connection string
+- think about exporting JSON for product/accountProduct/details
 
-Open issues:
-- Index files for enumeration (files in a dir?)
-- Search
+Download images:
+- enumerate and download cover images using GOG.com sizes 1x: 196, 2x: 392
+- enumerate and download screenshots using GOG.com sizes 1x: 271, 2x: 542
+
+Download product files:
+- for a given []OS/[]Language
+- additionally, download XML with validation data
+- store association between GOG url and resolved url path to get filename (resolvedUrls)
+- validate product files
+- consider downloading from validation file
 
 CLI apps:
-- ?
+- fetch products, accountProducts, wishlist
+- fetch details(id int)
+- download image(id int)
+- download gallery(id int)
+- download files(id int, []os, []lang)
+- validate files
+- cleanup files
 
 Server:
-- create endpoints for products/accountProducts/gameDetails
+- create endpoints for products/accountProducts/details
 - understand Go html templating
