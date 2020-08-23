@@ -1,14 +1,14 @@
 {
   "mongo":  {
     "conn": "",
-    "connFile": "mongoConn.txt"
+    "connFile": "../secrets/mongoConn.txt"
 
   },
   "gog": {
     "user": "",
-    "userFile": "gogUser.txt",
+    "userFile": "../secrets/gogUser.txt",
     "pwd": "",
-    "pwdFile": "gogPwd.txt"
+    "pwdFile": "../secrets/gogPwd.txt"
   },
   "dirs": {
     "images": "images",

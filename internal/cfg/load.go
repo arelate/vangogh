@@ -26,6 +26,14 @@ func Load() (cfg *Config, err error) {
 		cfg.Mongo.Conn = string(mongoConnBytes)
 	}
 
+	if cfg.GOG.UserFile != "" {
+		gogUserBytes, err := ioutil.ReadFile(cfg.GOG.UserFile)
+		if err != nil {
+			return cfg, err
+		}
+		cfg.GOG.User = string(gogUserBytes)
+	}
+
 	if cfg.GOG.PwdFile != "" {
 		gogPwdBytes, err := ioutil.ReadFile(cfg.GOG.PwdFile)
 		if err != nil {

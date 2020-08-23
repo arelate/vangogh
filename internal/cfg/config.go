@@ -6,9 +6,10 @@ type MongoCfg struct {
 }
 
 type GOGCfg struct {
-	User    string `json:"user"`
-	Pwd     string `json:"pwd"`
-	PwdFile string `json:"pwdFile"`
+	User     string `json:"user"`
+	UserFile string `json:"userFile"`
+	Pwd      string `json:"pwd"`
+	PwdFile  string `json:"pwdFile"`
 }
 
 type DirsCfg struct {
