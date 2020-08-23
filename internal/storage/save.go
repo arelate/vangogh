@@ -7,7 +7,7 @@ import (
 	"path"
 )
 
-func Save(data interface{}, filename string) error {
+func Write(data interface{}, filename string) error {
 
 	bytes, err := json.Marshal(data)
 	if err != nil {

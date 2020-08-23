@@ -1,28 +1,23 @@
 package cfg
 
-type ConfigMongoDB struct {
-	Schema string `json:"schema"`
-	User   string `json:"user"`
-	Pwd    string `json:"pwd"`
-	Host   string `json:"host"`
-	Path   string `json:"path"`
-	Port   int    `json:"port"`
-	Query  string `json:"query"`
+type MongoCfg struct {
+	Conn     string `json:"conn"`
+	ConnFile string `json:"connFile"`
 }
 
-type ConfigGOG struct {
-	User string `json:"user"`
-	Pwd  string `json:"pwd"`
+type GOGCfg struct {
+	User    string `json:"user"`
+	Pwd     string `json:"pwd"`
+	PwdFile string `json:"pwdFile"`
 }
 
-type ConfigDirs struct {
-	Data   string `json:"data"`
+type DirsCfg struct {
 	Images string `json:"images"`
 	Files  string `json:"files"`
 }
 
 type Config struct {
-	MongoDB ConfigMongoDB `json:"mongodb"`
-	GOG     ConfigGOG     `json:"gog"`
-	Dirs    ConfigDirs    `json:"dirs"`
+	Mongo MongoCfg `json:"mongo"`
+	GOG   GOGCfg   `json:"gog"`
+	Dirs  DirsCfg  `json:"dirs"`
 }

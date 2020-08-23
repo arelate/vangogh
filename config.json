@@ -1,19 +1,16 @@
 {
-  "mongodb":  {
-    "schema": "mongodb",
-    "user": "vangogh",
-    "pwd": "emwurAFGMZBVEqQvG8gxanjbFDPXCELFL4V",
-    "host": "tokyo.anothermedium.com",
-    "path": "/",
-    "port": 27017,
-    "query": "authSource=admin&readPreference=primary&ssl=false"
+  "mongo":  {
+    "conn": "",
+    "connFile": "mongoConn.txt"
+
   },
   "gog": {
     "user": "",
-    "pwd": ""
+    "userFile": "gogUser.txt",
+    "pwd": "",
+    "pwdFile": "gogPwd.txt"
   },
   "dirs": {
-    "data": "data",
     "images": "images",
     "files": "files"
   }

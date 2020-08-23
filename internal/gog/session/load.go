@@ -2,13 +2,13 @@ package session
 
 import (
 	"encoding/json"
-	"github.com/boggydigital/vangogh/internal/storage"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
 
 func Load() (cookies []*http.Cookie, err error) {
-	cookieBytes, err := storage.Load(cookiesFilename)
+	cookieBytes, err := ioutil.ReadFile(cookiesFilename)
 	if err != nil {
 		return nil, err
 	}

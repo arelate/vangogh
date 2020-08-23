@@ -10,5 +10,5 @@ func Save(indexes *map[int]Index, filename string) error {
 	if err != nil {
 		return err
 	}
-	return storage.Save(bytes, filename)
+	return storage.Write(bytes, filename)
 }

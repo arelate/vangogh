@@ -2,3 +2,6 @@
 cookies.json
 changes.json
 data/*
+gogUser.txt
+gogPwd.txt
+mongoConn.txt
