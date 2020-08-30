@@ -1,13 +1,12 @@
-package dbclient
+package mongocl
 
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
-	"time"
 )
 
 func Connect(client *mongo.Client) (context.Context, context.CancelFunc, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithCancel(context.Background())
 	err := client.Connect(ctx)
 	return ctx, cancel, err
 }

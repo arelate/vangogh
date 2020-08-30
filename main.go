@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/dbclient"
-	"github.com/boggydigital/vangogh/internal/gog/details"
+	"github.com/boggydigital/vangogh/cmd"
 	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/boggydigital/vangogh/internal/mongoclient"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -17,14 +16,14 @@ import (
 
 func main() {
 
-	mongoClient, err := dbclient.New()
+	mongoClient, err := mongocl.New()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)
 	}
 
-	ctx, cancel, err := dbclient.Connect(mongoClient)
-	defer dbclient.Disconnect(ctx, cancel, mongoClient)
+	//ctx, cancel, err := dbclient.Connect(mongoClient)
+	//defer dbclient.Disconnect(ctx, cancel, mongoClient)
 
 	//collection := mongoClient.Database("vangogh").Collection("products")
 	//cur, err := collection.Find(ctx, bson.M{})
@@ -60,32 +59,34 @@ func main() {
 	}
 
 	mt := media.Game
-	//aps, err := accountProducts.Fetch(httpClient, mt, false, false,1)
-
-	db := mongoClient.Database("vangogh")
-	col := db.Collection("details")
-
-	d, _ := details.Fetch(httpClient, 1157070047, mt)
-	//d.Title = "x" + d.Title
-
-	count, err := col.CountDocuments(ctx, bson.M{"_id": 1157070047})
+	err = cmd.FetchProducts(httpClient, mongoClient, mt)
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
 	}
+	//aps, err := accountProducts.Fetch(httpClient, mt, false, false,1)
 
-	if count > 0 {
-		result, err := col.ReplaceOne(ctx, bson.M{"_id": 1157070047}, d)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(result.ModifiedCount)
-	} else {
-		result, err := col.InsertOne(ctx, d)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(result)
-	}
+	//d, _ := details.Fetch(httpClient, 1157070047, mt)
+	////d.Title = "x" + d.Title
+	//
+	//count, err := col.CountDocuments(ctx, bson.M{"_id": 1157070047})
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+
+	//if count > 0 {
+	//	result, err := col.ReplaceOne(ctx, bson.M{"_id": 1157070047}, d)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	fmt.Println(result.ModifiedCount)
+	//} else {
+	//	result, err := col.InsertOne(ctx, d)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	fmt.Println(result)
+	//}
 
 	//for _, ap := range aps.Products {
 	//	_, err := col.InsertOne(ctx, ap)

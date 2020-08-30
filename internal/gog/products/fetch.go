@@ -9,17 +9,13 @@ import (
 )
 
 func Fetch(client *http.Client, mt media.Type, page int) (*ProductPage, error) {
+	productPage := ProductPage{}
+
 	respBody, err := pages.Fetch(client, urls.ProductsPageURL(mt), page)
 	if err != nil {
-		return &ProductPage{}, err
+		return &productPage, err
 	}
-
-	var productPage ProductPage
 
 	err = json.Unmarshal(*respBody, &productPage)
 	return &productPage, err
 }
-
-//func FetchImage(p *Product) error {
-//
-//}
