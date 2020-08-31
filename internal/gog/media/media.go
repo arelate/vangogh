@@ -6,4 +6,5 @@ const (
 	Unknown Type = iota
 	Game
 	Movie
+	All
 )

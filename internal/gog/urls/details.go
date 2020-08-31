@@ -3,7 +3,6 @@ package urls
 import (
 	"fmt"
 	"github.com/boggydigital/vangogh/internal/gog/media"
-	"github.com/boggydigital/vangogh/internal/gog/paths/filenames"
 	"net/url"
 	"strings"
 )
@@ -13,6 +12,6 @@ func Details(id int, mt media.Type) *url.URL {
 	return &url.URL{
 		Scheme: HttpsScheme,
 		Host:   GogHost,
-		Path:   fmt.Sprintf(path + filenames.Details(id)),
+		Path:   path + fmt.Sprintf("%d.json", id),
 	}
 }

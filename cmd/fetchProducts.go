@@ -2,43 +2,27 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/products"
-	"github.com/boggydigital/vangogh/internal/mongoclient"
-	"go.mongodb.org/mongo-driver/mongo"
-	"net/http"
+	"github.com/boggydigital/vangogh/internal/mongocl"
 )
 
-func FetchProducts(httpClient *http.Client, mongoClient *mongo.Client, mt media.Type) error {
-
-	ctx, cancel, err := mongocl.Connect(mongoClient)
-	defer mongocl.Disconnect(ctx, cancel, mongoClient)
-
+func fetchProductsPage(deps FetchDeps, page int) (totalPages int, err error) {
+	ps, err := products.Fetch(deps.HttpClient, deps.Media, page)
 	if err != nil {
-		return err
+		return 1, err
 	}
 
-	totalPages := 1
-
-	for page := 1; page <= totalPages; page++ {
-
-		fmt.Printf("Fetching page %3d of %3d", page, totalPages)
-		prods, err := products.Fetch(httpClient, mt, page)
-
+	for _, p := range ps.Products {
+		err = mongocl.Update(deps.MongoClient, deps.Ctx, deps.Collection, p.ID, p)
 		if err != nil {
-			return err
+			return 1, err
 		}
-
-		for _, prod := range prods.Products {
-			err := mongocl.Update(mongoClient, ctx, mongocl.ProductsCollection, prod.ID, prod)
-			if err != nil {
-				return err
-			}
-			fmt.Print(".")
-		}
-
-		totalPages = prods.TotalPages
+		fmt.Print(".")
 	}
 
-	return nil
+	return ps.TotalPages, nil
+}
+
+func FetchProducts(deps FetchDeps) error {
+	return fetchPages(deps, fetchProductsPage)
 }

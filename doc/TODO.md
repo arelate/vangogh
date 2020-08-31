@@ -52,13 +52,13 @@ Download product files:
 
 CLI apps:
 
-- fetch products, accountProducts, wishlist
+- [started] fetch products, accountProducts, wishlist
 - fetch details(id int)
 - download image(id int)
 - download gallery(id int)
 - download files(id int, []os, []lang)
 - validate files
-- cleanup files
+- cleanup files, folders
 
 Server:
 

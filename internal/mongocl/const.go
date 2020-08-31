@@ -1,7 +1,9 @@
 package mongocl
 
 const (
-	vangoghDatabase    = "vangogh"
-	ProductsCollection = "products"
-	changesSuffix      = "Changes"
+	vangoghDatabase           = "vangogh"
+	ProductsCollection        = "products"
+	AccountProductsCollection = "accountProducts"
+	WishlistCollection        = "wishlist"
+	changesSuffix             = "Changes"
 )
