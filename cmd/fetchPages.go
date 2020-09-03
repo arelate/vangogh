@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/mongocl"
+	"log"
 	"time"
 )
 
@@ -12,39 +13,46 @@ type fetchPage func(deps FetchDeps, page int) (totalPages int, err error)
 
 func fetchPages(deps FetchDeps, fetchPage fetchPage) error {
 
+	log.Printf("fetchPages(%s,%s,%s)\n", deps.Media.String(), deps.Product, deps.Collection)
+
 	if deps.Media == media.Unknown {
 		return errors.New(fmt.Sprintf("cannot fetch %s of type 'unknown'", deps.Product))
 	}
 
-	if deps.Media == media.All {
-		deps.Media = media.Game
-		if err := fetchPages(deps, fetchPage); err != nil {
-			return err
-		}
-		deps.Media = media.Movie
-		return fetchPages(deps, fetchPage)
+	mtypes := make([]media.Type, 0)
+
+	if deps.Media != media.All {
+		mtypes = append(mtypes, deps.Media)
+	} else {
+		mtypes = append(mtypes, media.Game, media.Movie)
 	}
 
 	start := time.Now().Unix()
-	totalPages := 1
 
-	fmt.Printf("Fetching %s of type %s.\n", deps.Product, deps.Media.String())
-	for page := 1; page <= totalPages; page++ {
+	for _, mt := range mtypes {
 
-		fmt.Printf("Page %d/%d", page, totalPages)
-		tp, err := fetchPage(deps, page)
+		totalPages := 1
+
+		fmt.Printf("Fetching %s of type %s.\n", deps.Product, mt.String())
+		for page := 1; page <= totalPages; page++ {
+
+			fmt.Printf("Page %d/%d", page, totalPages)
+
+			deps.Media = mt
+			tp, err := fetchPage(deps, page)
+			if err != nil {
+				return err
+			}
+			totalPages = tp
+			fmt.Println()
+		}
+
+		ad, mod, err := mongocl.ChangedSince(deps.MongoClient, deps.Ctx, deps.Collection, start)
 		if err != nil {
 			return err
 		}
-		totalPages = tp
-		fmt.Println()
+		fmt.Printf("Added %d, modified %d %s of type %s.\n", len(ad), len(mod), deps.Product, mt.String())
 	}
-
-	ad, mod, err := mongocl.ChangedSince(deps.MongoClient, deps.Ctx, deps.Collection, start)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Added %d, modified %d %s of type %s.\n", len(ad), len(mod), deps.Product, deps.Media)
 
 	return nil
 }

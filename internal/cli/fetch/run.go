@@ -7,6 +7,7 @@ import (
 	"github.com/boggydigital/vangogh/cmd"
 	"github.com/boggydigital/vangogh/internal/cfg"
 	"github.com/boggydigital/vangogh/internal/gog/auth"
+	"github.com/boggydigital/vangogh/internal/gog/changes"
 	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/mongocl"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -62,11 +63,13 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, args []string) erro
 		return err
 	}
 
+	changes.Init(mongoClient, ctx)
+
 	fetchFlagSet := flag.NewFlagSet(Cmd, flag.ExitOnError)
 	fetchProducts := fetchFlagSet.String(ProductsFlag, "", ProductsUsage)
 	fetchAccountProducts := fetchFlagSet.String(AccountProductsFlag, "", AccountProductsUsage)
 	fetchWishlist := fetchFlagSet.String(WishlistFlag, "", WishlistUsage)
-	fetchDetails := fetchFlagSet.Bool(Details, false, DetailsUsage)
+	fetchDetails := fetchFlagSet.String(Details, "", DetailsUsage)
 	fetchAll := fetchFlagSet.Bool(AllFlag, false, AllUsage)
 
 	fetchFlagSet.Parse(args[2:])
@@ -93,7 +96,7 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, args []string) erro
 		}
 		fetchDeps.Media = mt
 		fetchDeps.Collection = mongocl.ProductsCollection
-		fetchDeps.Product = "product"
+		fetchDeps.Product = "products"
 		if err := cmd.FetchProducts(fetchDeps); err != nil {
 			return err
 		}
@@ -109,7 +112,7 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, args []string) erro
 		}
 		fetchDeps.Media = mt
 		fetchDeps.Collection = mongocl.AccountProductsCollection
-		fetchDeps.Product = "account product"
+		fetchDeps.Product = "account products"
 		if err := cmd.FetchAccountProducts(fetchDeps); err != nil {
 			return err
 		}
@@ -125,23 +128,20 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, args []string) erro
 		}
 		fetchDeps.Media = mt
 		fetchDeps.Collection = mongocl.WishlistCollection
-		fetchDeps.Product = "wishlist product"
+		fetchDeps.Product = "wishlist products"
 		if err := cmd.FetchWishlist(fetchDeps); err != nil {
 			return err
 		}
 	}
 
-	if *fetchDetails {
-		if len(fetchFlagSet.Args()) == 0 {
-			return errors.New("details expects at least one account product id")
-		}
-		fmt.Println("vangogh fetch details ", fetchFlagSet.Args())
+	if *fetchDetails != "" {
+		fmt.Println("vangogh fetch details", *fetchDetails)
 	}
 
 	if *fetchProducts == "" &&
 		*fetchAccountProducts == "" &&
 		*fetchWishlist == "" &&
-		!*fetchDetails {
+		*fetchDetails == "" {
 		fmt.Println("vangogh fetch - need to specify what product , accountproduct, wishlist media or details id")
 	}
 

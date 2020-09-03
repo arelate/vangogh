@@ -10,24 +10,16 @@ import (
 
 func Update(mongoClient *mongo.Client, ctx context.Context, colName string, id int, data interface{}) error {
 
-	col := mongoClient.Database(vangoghDatabase).Collection(colName)
-	changesCol := mongoClient.Database(vangoghDatabase).Collection(colName + changesSuffix)
+	col := mongoClient.Database(VangoghDB).Collection(colName)
 
 	h, err := hash.Sha256(data)
 	if err != nil {
 		return err
 	}
 
-	var chg changes.Change
-	err = changesCol.FindOne(ctx, bson.M{"_id": id}).Decode(&chg)
+	chg, err := changes.Get(colName, id)
 	if err != nil {
-		switch err {
-		case mongo.ErrNoDocuments:
-			// No document has been found - silently handle the error
-			break
-		default:
-			return err
-		}
+		return err
 	}
 
 	switch chg.Hash {
@@ -36,7 +28,7 @@ func Update(mongoClient *mongo.Client, ctx context.Context, colName string, id i
 		if err != nil {
 			return err
 		}
-		changesCol.InsertOne(ctx, changes.New(id, h))
+		return changes.Insert(colName, changes.New(id, h))
 	case h:
 		// data unchanged. Do nothing.
 	default:
@@ -45,10 +37,7 @@ func Update(mongoClient *mongo.Client, ctx context.Context, colName string, id i
 			return err
 		}
 
-		_, err = changesCol.ReplaceOne(ctx, bson.M{"_id": id}, chg.Update(h))
-		if err != nil {
-			return err
-		}
+		return changes.Replace(colName, id, chg.Update(h))
 	}
 
 	return nil

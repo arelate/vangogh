@@ -11,7 +11,7 @@ func ChangedSince(mongoClient *mongo.Client, ctx context.Context, colName string
 
 	added, modified = make([]int, 0), make([]int, 0)
 
-	changesCol := mongoClient.Database(vangoghDatabase).Collection(colName + changesSuffix)
+	changesCol := mongoClient.Database("vangogh").Collection(colName + "Changes")
 
 	modCur, err := changesCol.Find(ctx, bson.M{"modified": bson.M{"$gt": timestamp}})
 	if err != nil {
