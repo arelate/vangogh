@@ -1,4 +1,4 @@
-package products
+package schema
 
 type Product struct {
 	Developer string   `json:"developer"`

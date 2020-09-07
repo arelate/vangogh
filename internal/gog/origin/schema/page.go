@@ -1,4 +1,4 @@
-package pages
+package schema
 
 type Page struct {
 	Page             int    `json:"page"`

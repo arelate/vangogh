@@ -1,9 +1,7 @@
-package products
-
-import "github.com/boggydigital/vangogh/internal/gog/pages"
+package schema
 
 type ProductPage struct {
-	pages.Page
+	Page
 	Ts       interface{} `json:"ts"`
 	Products []Product   `json:"products"`
 }

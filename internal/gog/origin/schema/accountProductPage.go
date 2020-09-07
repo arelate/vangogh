@@ -1,11 +1,7 @@
-package accountProducts
-
-import (
-	"github.com/boggydigital/vangogh/internal/gog/pages"
-)
+package schema
 
 type AccountProductPage struct {
-	pages.Page
+	Page
 	Products                   []AccountProduct `json:"products"`
 	ProductsPerPage            int              `json:"productsPerPage"`
 	ContentSystemCompatibility interface{}      `json:"contentSystemCompatibility"`

@@ -1,4 +1,4 @@
-package details
+package schema
 
 type Details struct {
 	ID              int           `json:"id" bson:"_id"`

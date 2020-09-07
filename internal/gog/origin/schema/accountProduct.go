@@ -1,4 +1,4 @@
-package accountProducts
+package schema
 
 type AccountProduct struct {
 	IsGalaxyCompatible bool          `json:"isGalaxyCompatible"`
