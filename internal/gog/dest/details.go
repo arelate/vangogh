@@ -2,7 +2,7 @@ package dest
 
 import (
 	"encoding/json"
-	"github.com/boggydigital/vangogh/internal/gog/schemas"
+	"github.com/boggydigital/vangogh/internal/gog/origin/schema"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
