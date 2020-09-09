@@ -1,4 +1,4 @@
-package dest
+package local
 
 import (
 	"context"
@@ -12,28 +12,13 @@ type Dest struct {
 	Collection  string
 }
 
-func NewDest(client *mongo.Client, db string, col string) *Dest {
+func NewDest(client *mongo.Client, ctx context.Context, db string, col string) *Dest {
 	return &Dest{
 		MongoClient: client,
+		Ctx:         ctx,
 		DB:          db,
 		Collection:  col,
 	}
-}
-
-func (dest *Dest) connected() error {
-	return dest.MongoClient.Ping(dest.Ctx, nil)
-}
-
-func (dest *Dest) Connect() error {
-	if dest.connected() != nil {
-		dest.Ctx = context.Background()
-		return dest.MongoClient.Connect(dest.Ctx)
-	}
-	return nil
-}
-
-func (dest *Dest) Disconnect() error {
-	return dest.MongoClient.Disconnect(dest.Ctx)
 }
 
 func (dest *Dest) Set(data interface{}) error {

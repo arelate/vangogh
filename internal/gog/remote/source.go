@@ -1,4 +1,4 @@
-package origin
+package remote
 
 import (
 	"io/ioutil"

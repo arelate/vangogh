@@ -1,8 +1,8 @@
-package origin
+package remote
 
 import (
 	"encoding/json"
-	"github.com/boggydigital/vangogh/internal/gog/dest"
+	"github.com/boggydigital/vangogh/internal/gog/local"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -29,7 +29,7 @@ func (pageSource *Page) Get(page int) (*[]byte, error) {
 	return pageSource.Source.Get(page)
 }
 
-func (pageSource *Page) FetchPage(page int, setter dest.Setter) (totalPages int, err error) {
+func (pageSource *Page) FetchPage(page int, setter local.Setter) (totalPages int, err error) {
 
 	bytes, _ := pageSource.Get(page)
 

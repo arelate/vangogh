@@ -1,8 +1,9 @@
-package dest
+package local
 
 import (
+	"context"
 	"encoding/json"
-	"github.com/boggydigital/vangogh/internal/gog/origin/schema"
+	"github.com/boggydigital/vangogh/internal/gog/remote/schema"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -10,9 +11,9 @@ type Details struct {
 	*Dest
 }
 
-func NewDetails(client *mongo.Client) *Details {
+func NewDetails(client *mongo.Client, ctx context.Context) *Details {
 	return &Details{
-		Dest: NewDest(client, DB, DetailsCol),
+		Dest: NewDest(client, ctx, DB, DetailsCol),
 	}
 }
 

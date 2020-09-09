@@ -1,4 +1,4 @@
-package origin
+package remote
 
 import (
 	"github.com/boggydigital/vangogh/internal/gog/media"

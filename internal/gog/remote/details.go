@@ -1,8 +1,8 @@
-package origin
+package remote
 
 import (
 	"encoding/json"
-	"github.com/boggydigital/vangogh/internal/gog/dest"
+	"github.com/boggydigital/vangogh/internal/gog/local"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -28,7 +28,7 @@ func (detailsSource *Details) Get(id int) (*[]byte, error) {
 	return detailsSource.Source.Get(id)
 }
 
-func (detailsSource *Details) Transfer(id int, setter dest.Setter) error {
+func (detailsSource *Details) Transfer(id int, setter local.Setter) error {
 	bytes, _ := detailsSource.Get(id)
 
 	var det map[string]interface{}

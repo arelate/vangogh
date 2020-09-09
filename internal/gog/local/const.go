@@ -1,4 +1,4 @@
-package dest
+package local
 
 const (
 	DB          = "vangogh"

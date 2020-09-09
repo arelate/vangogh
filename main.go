@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/boggydigital/vangogh/internal/cfg"
-	"github.com/boggydigital/vangogh/internal/gog/dest"
+	"github.com/boggydigital/vangogh/internal/gog/local"
 	"github.com/boggydigital/vangogh/internal/gog/media"
-	"github.com/boggydigital/vangogh/internal/gog/origin"
+	"github.com/boggydigital/vangogh/internal/gog/remote"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/net/context"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
@@ -62,14 +63,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	gameDetailsOrigin := origin.NewDetails(httpClient, urls.Details(media.Game))
-	gameProductsOrigin := origin.NewProductPage(httpClient, media.Game)
+	ctx := context.Background()
+	_ = mongoClient.Connect(ctx)
 
-	detailsDest := dest.NewDetails(mongoClient)
-	_ = detailsDest.Connect()
+	gameDetailsOrigin := remote.NewDetails(httpClient, urls.Details(media.Game))
+	gameProductsOrigin := remote.NewProductPage(httpClient, media.Game)
 
-	productsDest := dest.NewProducts(mongoClient)
-	_ = productsDest.Connect()
+	detailsDest := local.NewDetails(mongoClient, ctx)
+	productsDest := local.NewProducts(mongoClient, ctx)
 
 	tp, _ := gameProductsOrigin.FetchPage(1, productsDest)
 	fmt.Println(tp)
@@ -78,8 +79,7 @@ func main() {
 
 	//bytes, _ := gameDetailsOrigin.Get(1304291300)
 
-	_ = detailsDest.Disconnect()
-	_ = productsDest.Disconnect()
+	_ = mongoClient.Disconnect(ctx)
 
 	//fmt.Println(string(*bytes))
 
