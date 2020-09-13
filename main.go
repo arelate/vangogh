@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/boggydigital/vangogh/cmd"
 	"github.com/boggydigital/vangogh/internal/cfg"
-	"github.com/boggydigital/vangogh/internal/gog/local"
-	"github.com/boggydigital/vangogh/internal/gog/media"
-	"github.com/boggydigital/vangogh/internal/gog/remote"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,7 +14,6 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"os"
-	"path/filepath"
 	"time"
 )
 
@@ -27,15 +24,15 @@ const (
 
 func main() {
 
-	f, err := os.Create(filepath.Join(os.TempDir(), logFile))
-	log.SetOutput(f)
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-	log.Println("Started new session")
+	//f, err := os.Create(filepath.Join(os.TempDir(), logFile))
+	//log.SetOutput(f)
+	//log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	//log.Println("Started new session")
 
 	cookies, err := session.Load()
 	if err != nil {
 		fmt.Println("Cannot load session cookies.", checkLog)
-		log.Fatalln(err)
+		//log.Fatalln(err)
 	}
 
 	jar, err := cookiejar.New(nil)
@@ -54,7 +51,6 @@ func main() {
 		Jar:     jar,
 	}
 
-	//
 	conf, _ := cfg.Current()
 	mongoClient, err := mongo.NewClient(
 		options.Client().ApplyURI(conf.Mongo.Conn))
@@ -66,24 +62,26 @@ func main() {
 	ctx := context.Background()
 	_ = mongoClient.Connect(ctx)
 
-	gameDetailsOrigin := remote.NewDetails(httpClient, urls.Details(media.Game))
-	gameProductsOrigin := remote.NewProductPage(httpClient, media.Game)
+	err = cmd.Run(httpClient, mongoClient, ctx, os.Args)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
-	detailsDest := local.NewDetails(mongoClient, ctx)
-	productsDest := local.NewProducts(mongoClient, ctx)
-
-	tp, _ := gameProductsOrigin.FetchPage(1, productsDest)
-	fmt.Println(tp)
-
-	_ = gameDetailsOrigin.Transfer(1304291300, detailsDest)
-
-	//bytes, _ := gameDetailsOrigin.Get(1304291300)
-
-	_ = mongoClient.Disconnect(ctx)
-
-	//fmt.Println(string(*bytes))
-
-	os.Exit(1)
+	//gameDetailsOrigin := remote.NewDetails(httpClient, urls.Details(media.Game))
+	//gameProductsOrigin := remote.NewProductPage(httpClient, media.Game)
+	//
+	//detailsDest := local.NewDetails(mongoClient, ctx)
+	//productsDest := local.NewProducts(mongoClient, ctx)
+	//
+	//tp, _ := gameProductsOrigin.FetchPage(1, productsDest)
+	//fmt.Println(tp)
+	//
+	//_ = gameDetailsOrigin.Transfer(1304291300, detailsDest)
+	//
+	//_ = mongoClient.Disconnect(ctx)
+	//
+	//os.Exit(1)
 
 	//mongoClient, err := mongocl.New()
 	//if err != nil {

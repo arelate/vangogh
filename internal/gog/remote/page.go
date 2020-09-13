@@ -29,16 +29,19 @@ func (pageSource *Page) Get(page int) (*[]byte, error) {
 	return pageSource.Source.Get(page)
 }
 
-func (pageSource *Page) FetchPage(page int, setter local.Setter) (totalPages int, err error) {
+func (pageSource *Page) TransferPage(page int, setter local.Setter, itemSet func(int)) (totalPages int, err error) {
 
 	bytes, _ := pageSource.Get(page)
 
 	var pageData map[string]interface{}
 	_ = json.Unmarshal(*bytes, &pageData)
 
-	for _, p := range pageData["products"].([]interface{}) {
+	for i, p := range pageData["products"].([]interface{}) {
 		pjson, _ := json.Marshal(p)
 		_ = setter.Set(pjson)
+		if itemSet != nil {
+			itemSet(i)
+		}
 	}
 
 	return int(pageData["totalPages"].(float64)), nil

@@ -1,7 +1,9 @@
 package local
 
 const (
-	DB          = "vangogh"
-	ProductsCol = "products"
-	DetailsCol  = "details"
+	DB                 = "vangogh"
+	ProductsCol        = "products"
+	AccountProductsCol = "accountProducts"
+	WishlistCol        = "wishlist"
+	DetailsCol         = "details"
 )
