@@ -8,5 +8,5 @@ import (
 const cookiesFilename = "cookies.json"
 
 func Save(cookies []*http.Cookie) error {
-	return storage.Write(cookies, cookiesFilename)
+	return storage.Save(cookies, cookiesFilename)
 }

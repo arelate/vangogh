@@ -1,6 +1,7 @@
 package changes
 
 import (
+	"github.com/boggydigital/vangogh/internal/gog/local/schema"
 	"time"
 )
 
