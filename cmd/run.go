@@ -7,43 +7,44 @@ import (
 	"github.com/boggydigital/vangogh/cmd/fetchall"
 	"github.com/boggydigital/vangogh/cmd/help"
 	"github.com/boggydigital/vangogh/cmd/version"
+	"github.com/boggydigital/vangogh/internal/gog/const/aliases"
+	"github.com/boggydigital/vangogh/internal/gog/const/cmds"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 )
 
 func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context, args []string) error {
 
-	// Show general help if no arguments have been provided
-	if len(args) < 2 {
-		args = make([]string, 2)
-		args[1] = help.Cmd
+	ok, err := help.Intercept("", args[1:])
+	if ok || err != nil {
+		return err
 	}
 
 	switch args[1] {
 	// version
-	case version.Alias:
+	case aliases.Version:
 		fallthrough
-	case version.Cmd:
+	case cmds.Version:
 		return version.Run()
 	// help
-	case help.Alias:
+	case aliases.Help:
 		fallthrough
-	case help.Cmd:
+	case cmds.Help:
 		return help.Run(args[2:])
 	// fetch
-	case fetch.Alias:
+	case aliases.Fetch:
 		fallthrough
-	case fetch.Cmd:
+	case cmds.Fetch:
 		return fetch.Run(httpClient, mongoClient, ctx, args[2:])
 	// fetch all
-	case fetchall.Alias:
+	case aliases.FetchAll:
 		fallthrough
-	case fetchall.Cmd:
+	case cmds.FetchAll:
 		return fetchall.Run(httpClient, mongoClient, ctx, args[2:])
 	// download
-	case download.Alias:
+	case aliases.Download:
 		fallthrough
-	case download.Cmd:
+	case cmds.Download:
 		return download.Run(httpClient, mongoClient, ctx, args[2:])
 	// unknown
 	default:

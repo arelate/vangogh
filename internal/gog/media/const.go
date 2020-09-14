@@ -8,4 +8,7 @@ const (
 	games     = "games"
 	gameAbbr  = "g"
 	unknown   = "unknown"
+	Flag      = "media"
+	FlagAlias = "m"
+	FlagDesc  = "media type to fetch: games, movies"
 )

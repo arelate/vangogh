@@ -21,15 +21,15 @@ func NewDetails(httpClient *http.Client, urlTemplate *url.URL) *Details {
 	}
 }
 
-func (detailsSource *Details) Get(id int) (*[]byte, error) {
+func (details *Details) Get(id int) (*[]byte, error) {
 	// use id
-	detailsSource.URL.Path = strings.Replace(detailsSource.URL.Path, idPlaceholder, strconv.Itoa(id), 1)
+	details.URL.Path = strings.Replace(details.URL.Path, idPlaceholder, strconv.Itoa(id), 1)
 
-	return detailsSource.Source.Get(id)
+	return details.Source.Get(id)
 }
 
-func (detailsSource *Details) Transfer(id int, setter local.Setter) error {
-	bytes, _ := detailsSource.Get(id)
+func (details *Details) Transfer(id int, setter local.Setter) error {
+	bytes, _ := details.Get(id)
 
 	var det map[string]interface{}
 	_ = json.Unmarshal(*bytes, &det)
@@ -39,5 +39,4 @@ func (detailsSource *Details) Transfer(id int, setter local.Setter) error {
 	_ = setter.Set(djson)
 
 	return nil
-
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/boggydigital/vangogh/cmd/help"
+	"github.com/boggydigital/vangogh/internal/gog/const/cmds"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 )
@@ -12,10 +13,10 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context
 
 	if len(args) < 1 {
 		args = make([]string, 1)
-		args[0] = Cmd
+		args[0] = cmds.Download
 		return help.Run(args)
 	}
 
-	fmt.Println(Cmd, args)
+	fmt.Println(cmds.Download, args)
 	return nil
 }

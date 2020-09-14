@@ -3,6 +3,7 @@ package local
 import (
 	"context"
 	"encoding/json"
+	"github.com/boggydigital/vangogh/internal/gog/const/names"
 	"github.com/boggydigital/vangogh/internal/gog/remote/schema"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -13,7 +14,7 @@ type Products struct {
 
 func NewProducts(client *mongo.Client, ctx context.Context) *Products {
 	return &Products{
-		Dest: NewDest(client, ctx, DB, ProductsCol),
+		Dest: NewDest(client, ctx, names.DB, names.Products),
 	}
 }
 

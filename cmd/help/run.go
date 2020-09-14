@@ -1,8 +1,11 @@
 package help
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/boggydigital/vangogh/internal/gog/const/cmds"
+)
 
 func Run(args []string) error {
-	fmt.Println(Cmd, args)
+	fmt.Println(cmds.Help, args)
 	return nil
 }

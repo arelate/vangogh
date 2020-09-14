@@ -5,5 +5,5 @@ import (
 )
 
 type Transferor interface {
-	Transfer(id int, dest *local.Dest) error
+	Transfer(id int, setter local.Setter) error
 }
