@@ -1,8 +1,10 @@
 package changes
 
-import "time"
+import (
+	"time"
+)
 
-func (chg *Change) Update(hash string) *Change {
+func (chg *schema.Change) Update(hash string) *schema.Change {
 	if chg != nil {
 		chg.Hash = hash
 		chg.Modified = time.Now().Unix()

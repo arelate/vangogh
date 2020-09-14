@@ -2,21 +2,21 @@ package media
 
 func Parse(mt string) Type {
 	switch mt {
-	// Section: game
-	case "g":
+	// game
+	case gameAbbr:
 		fallthrough
-	case "game":
+	case game:
 		fallthrough
-	case "games":
+	case games:
 		return Game
-	// Section: movie
-	case "m":
+	// movie
+	case movieAbbr:
 		fallthrough
-	case "movie":
+	case movie:
 		fallthrough
-	case "movies":
+	case movies:
 		return Movie
-	// Section: unknown
+	// unknown
 	default:
 		return Unknown
 	}

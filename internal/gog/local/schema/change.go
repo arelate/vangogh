@@ -1,4 +1,4 @@
-package changes
+package schema
 
 type Change struct {
 	ID       int    `json:"id" bson:"_id"`

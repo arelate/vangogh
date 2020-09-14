@@ -3,13 +3,11 @@ package media
 func (mt Type) String() string {
 	switch mt {
 	case Unknown:
-		return "unknown"
-	//case All:
-	//	return "all"
+		return unknown
 	case Game:
-		return "game"
+		return game
 	case Movie:
-		return "movie"
+		return movie
 	default:
 		return ""
 	}

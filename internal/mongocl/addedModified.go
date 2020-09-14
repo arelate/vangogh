@@ -2,7 +2,7 @@ package mongocl
 
 import (
 	"context"
-	"github.com/boggydigital/vangogh/internal/gog/changes"
+	"github.com/boggydigital/vangogh/internal/gog/local/schema"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -19,7 +19,7 @@ func ChangedSince(mongoClient *mongo.Client, ctx context.Context, colName string
 	}
 
 	for modCur.Next(ctx) {
-		var chg changes.Change
+		var chg schema.Change
 		modCur.Decode(&chg)
 		if chg.Added > timestamp {
 			added = append(added, chg.ID)

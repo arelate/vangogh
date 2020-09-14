@@ -1,21 +1,16 @@
 package cfg
 
 import (
-	"encoding/json"
+	"github.com/boggydigital/vangogh/internal/storage"
 	"io/ioutil"
 )
 
 const filename = "config.json"
 
 func Load() (cfg *Config, err error) {
-	cfgBytes, err := ioutil.ReadFile(filename)
+	err = storage.Load(filename, &cfg)
 	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(cfgBytes, &cfg)
-	if err != nil {
-		return nil, err
+		return cfg, err
 	}
 
 	if cfg.Mongo.ConnFile != "" {

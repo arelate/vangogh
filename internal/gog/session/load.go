@@ -1,19 +1,13 @@
 package session
 
 import (
-	"encoding/json"
-	"io/ioutil"
+	"github.com/boggydigital/vangogh/internal/storage"
 	"net/http"
 	"time"
 )
 
 func Load() (cookies []*http.Cookie, err error) {
-	cookieBytes, err := ioutil.ReadFile(cookiesFilename)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(cookieBytes, &cookies)
+	err = storage.Load(cookiesFilename, &cookies)
 	if err != nil {
 		return cookies, err
 	}
