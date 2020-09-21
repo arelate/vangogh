@@ -31,26 +31,26 @@ func Parse(mt string) Type {
 	}
 }
 
-func ParseArgs(cmd string, args []string) (Type, error) {
+func ParseArgs(cmd string, args []string) (Type, []string, error) {
 
 	var mediaFlag string
 	mt := Game
 
-	fetchFlags := flag.NewFlagSet(cmd, flag.ExitOnError)
-	fetchFlags.StringVar(&mediaFlag, Flag, "", FlagDesc)
-	fetchFlags.StringVar(&mediaFlag, FlagAlias, "", FlagDesc)
+	flagSet := flag.NewFlagSet(cmd, flag.ExitOnError)
+	flagSet.StringVar(&mediaFlag, Flag, "", FlagDesc)
+	flagSet.StringVar(&mediaFlag, FlagAlias, "", FlagDesc)
 
-	err := fetchFlags.Parse(args)
+	err := flagSet.Parse(args)
 	if err != nil {
-		return Unknown, err
+		return Unknown, nil, err
 	}
 
 	if mediaFlag != "" {
 		mt = Parse(mediaFlag)
 		if mt == Unknown {
-			return Unknown, errors.New("unknown media type: " + mediaFlag)
+			return Unknown, flagSet.Args(), errors.New("unknown media type: " + mediaFlag)
 		}
 	}
 
-	return mt, nil
+	return mt, flagSet.Args(), nil
 }

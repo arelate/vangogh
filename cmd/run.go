@@ -11,8 +11,8 @@ import (
 	"github.com/boggydigital/vangogh/cmd/fetchall"
 	"github.com/boggydigital/vangogh/cmd/help"
 	"github.com/boggydigital/vangogh/cmd/version"
-	"github.com/boggydigital/vangogh/internal/gog/const/aliases"
-	"github.com/boggydigital/vangogh/internal/gog/const/cmds"
+	"github.com/boggydigital/vangogh/internal/strings/aliases"
+	"github.com/boggydigital/vangogh/internal/strings/cmds"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 )

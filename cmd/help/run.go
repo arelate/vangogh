@@ -6,7 +6,7 @@ package help
 
 import (
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/const/cmds"
+	"github.com/boggydigital/vangogh/internal/strings/cmds"
 )
 
 func Run(args []string) error {

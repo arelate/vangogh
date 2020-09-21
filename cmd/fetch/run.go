@@ -9,15 +9,16 @@ import (
 	"errors"
 	"fmt"
 	"github.com/boggydigital/vangogh/cmd/help"
-	"github.com/boggydigital/vangogh/internal/gog/const/aliases"
-	"github.com/boggydigital/vangogh/internal/gog/const/cmds"
-	"github.com/boggydigital/vangogh/internal/gog/const/names"
 	"github.com/boggydigital/vangogh/internal/gog/local"
 	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/remote"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
+	"github.com/boggydigital/vangogh/internal/strings/aliases"
+	"github.com/boggydigital/vangogh/internal/strings/cmds"
+	"github.com/boggydigital/vangogh/internal/strings/names"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
+	"strconv"
 )
 
 func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context, args []string) error {
@@ -27,15 +28,31 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context
 		return err
 	}
 
-	mt, err := media.ParseArgs(cmds.Fetch, args[1:])
+	mt, targs, err := media.ParseArgs(cmds.Fetch, args[1:])
 	if err != nil {
 		return err
+	}
+
+	ids := make([]int, 0)
+	invalidIds := make([]string, 0)
+	for _, arg := range targs {
+		id, err := strconv.Atoi(arg)
+		if err != nil {
+			invalidIds = append(invalidIds, arg)
+		} else {
+			ids = append(ids, id)
+		}
+	}
+	if len(invalidIds) > 0 {
+		fmt.Println("NOTE: Invalid ids format or value: ", invalidIds)
 	}
 
 	var transferor remote.Transferor
 	var setter local.Setter
 
-	switch args[0] {
+	scope := args[0]
+
+	switch scope {
 	case aliases.Details:
 		fallthrough
 	case names.Details:
@@ -50,11 +67,14 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context
 		return errors.New("error creating source or destination for " + cmds.Fetch)
 	}
 
-	err = transferor.Transfer(1, setter)
-	if err != nil {
-		return err
+	for i, id := range ids {
+		err = transferor.Transfer(id, setter)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(cmds.Fetch, names.Full(scope), "id =", id, ";", i+1, "of", len(ids))
 	}
 
-	fmt.Println(cmds.Fetch, args)
 	return nil
 }

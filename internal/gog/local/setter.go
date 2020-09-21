@@ -8,8 +8,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/boggydigital/vangogh/internal/gog/const/aliases"
-	"github.com/boggydigital/vangogh/internal/gog/const/names"
+	"github.com/boggydigital/vangogh/internal/strings/aliases"
+	"github.com/boggydigital/vangogh/internal/strings/names"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

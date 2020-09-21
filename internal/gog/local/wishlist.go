@@ -7,8 +7,8 @@ package local
 import (
 	"context"
 	"encoding/json"
-	"github.com/boggydigital/vangogh/internal/gog/const/names"
 	"github.com/boggydigital/vangogh/internal/gog/remote/schema"
+	"github.com/boggydigital/vangogh/internal/strings/names"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
