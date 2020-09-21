@@ -42,7 +42,7 @@ func (pageSource *Page) TransferPage(page int, setter local.Setter, itemSet func
 
 	for i, p := range pageData["products"].([]interface{}) {
 		pjson, _ := json.Marshal(p)
-		_ = setter.Set(pjson)
+		_ = setter.Set(page, pjson)
 		if itemSet != nil {
 			itemSet(i)
 		}

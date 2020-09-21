@@ -22,9 +22,9 @@ func NewProducts(client *mongo.Client, ctx context.Context) *Products {
 	}
 }
 
-func (psdest *Products) Set(pjson interface{}) error {
+func (psdest *Products) Set(id int, pjson interface{}) error {
 	var product schema.Product
 	_ = json.Unmarshal(pjson.([]byte), &product)
 
-	return psdest.Dest.Set(product)
+	return psdest.Dest.Set(id, product)
 }

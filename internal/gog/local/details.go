@@ -22,9 +22,9 @@ func NewDetails(client *mongo.Client, ctx context.Context) *Details {
 	}
 }
 
-func (dsdest *Details) Set(djson interface{}) error {
+func (dsdest *Details) Set(id int, djson interface{}) error {
 	var det schema.Details
 	_ = json.Unmarshal(djson.([]byte), &det)
 
-	return dsdest.Dest.Set(det)
+	return dsdest.Dest.Set(id, det)
 }

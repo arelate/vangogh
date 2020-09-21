@@ -22,9 +22,9 @@ func NewAccountProducts(client *mongo.Client, ctx context.Context) *AccountProdu
 	}
 }
 
-func (apsdest *AccountProducts) Set(apjson interface{}) error {
+func (apsdest *AccountProducts) Set(id int, apjson interface{}) error {
 	var ap schema.AccountProduct
 	_ = json.Unmarshal(apjson.([]byte), &ap)
 
-	return apsdest.Dest.Set(ap)
+	return apsdest.Dest.Set(id, ap)
 }

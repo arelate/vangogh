@@ -22,9 +22,9 @@ func NewWishlist(client *mongo.Client, ctx context.Context) *Wishlist {
 	}
 }
 
-func (wdest *Wishlist) Set(wjson interface{}) error {
+func (wdest *Wishlist) Set(id int, wjson interface{}) error {
 	var wp schema.Product
 	_ = json.Unmarshal(wjson.([]byte), &wp)
 
-	return wdest.Dest.Set(wp)
+	return wdest.Dest.Set(id, wp)
 }

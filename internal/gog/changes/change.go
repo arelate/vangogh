@@ -2,7 +2,7 @@
 // Use of this source code is governed by an MIT-style license that can be
 // found in the LICENSE file.
 
-package schema
+package changes
 
 type Change struct {
 	ID       int    `json:"id" bson:"_id"`

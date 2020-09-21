@@ -14,7 +14,7 @@ import (
 )
 
 type Setter interface {
-	Set(data interface{}) error
+	Set(id int, data interface{}) error
 }
 
 func GetSetterByName(name string, mongoClient *mongo.Client, ctx context.Context) (Setter, error) {

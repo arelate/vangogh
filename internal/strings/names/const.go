@@ -10,4 +10,5 @@ const (
 	AccountProducts = "accountproducts"
 	Wishlist        = "wishlist"
 	Details         = "details"
+	ChangesSuffix   = "Changes"
 )

@@ -6,6 +6,10 @@ package local
 
 import (
 	"context"
+	"github.com/boggydigital/vangogh/internal/gog/changes"
+	"github.com/boggydigital/vangogh/internal/hash"
+	"github.com/boggydigital/vangogh/internal/strings/names"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -25,36 +29,47 @@ func NewDest(client *mongo.Client, ctx context.Context, db string, col string) *
 	}
 }
 
-func (dest *Dest) Set(data interface{}) error {
+func (dest *Dest) Set(id int, data interface{}) error {
 
 	col := dest.MongoClient.Database(dest.DB).Collection(dest.Collection)
+	changesCol := dest.MongoClient.Database(dest.DB).Collection(names.Changes(dest.Collection))
 
-	//h, err := hash.Sha256(data)
-	//if err != nil {
-	//	return err
-	//}
-
-	//chg, err := changes.Get(colName, id)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//switch chg.Hash {
-	//case "":
-	_, err := col.InsertOne(dest.Ctx, data)
+	h, err := hash.Sha256(data)
 	if err != nil {
 		return err
 	}
-	//	return changes.Set(colName, changes.New(id, h))
-	//case h:
-	//	// data unchanged. Do nothing.
-	//default:
-	//	_, err = col.ReplaceOne(ctx, bson.M{"_id": id}, data)
-	//	if err != nil {
-	//		return err
-	//	}
-	//
-	//	return changes.Replace(colName, id, chg.Update(h))
-	//}
+
+	var chg changes.Change
+	err = changesCol.FindOne(dest.Ctx, bson.M{"_id": id}).Decode(&chg)
+	if err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			// No document has been found - silently handle the error
+			break
+		default:
+			return err
+		}
+	}
+
+	switch chg.Hash {
+	case h:
+		// data unchanged. Do nothing.
+	case "":
+		_, err = col.InsertOne(dest.Ctx, data)
+		if err != nil {
+			return err
+		}
+
+		_, err = changesCol.InsertOne(dest.Ctx, changes.New(id, h))
+		return err
+	default:
+		_, err = col.ReplaceOne(dest.Ctx, bson.M{"_id": id}, data)
+		if err != nil {
+			return err
+		}
+
+		_, err = changesCol.ReplaceOne(dest.Ctx, bson.M{"_id": id}, chg.Update(h))
+		return err
+	}
 	return nil
 }

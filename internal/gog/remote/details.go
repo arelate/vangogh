@@ -40,7 +40,7 @@ func (details *Details) Transfer(id int, setter local.Setter) error {
 	det["id"] = id
 
 	djson, _ := json.Marshal(det)
-	_ = setter.Set(djson)
+	_ = setter.Set(id, djson)
 
 	return nil
 }
