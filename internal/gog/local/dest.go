@@ -6,7 +6,7 @@ package local
 
 import (
 	"context"
-	"github.com/boggydigital/vangogh/internal/gog/changes"
+	"github.com/boggydigital/vangogh/internal/changes"
 	"github.com/boggydigital/vangogh/internal/hash"
 	"github.com/boggydigital/vangogh/internal/strings/names"
 	"go.mongodb.org/mongo-driver/bson"
@@ -29,6 +29,13 @@ func NewDest(client *mongo.Client, ctx context.Context, db string, col string) *
 	}
 }
 
+// Set data into local database and update changed timestamp as needed.
+// General flow of setting the data:
+// 1. Calculate SHA256 hash of the data
+// 2. Find change entry in the Changes collection
+// 3. If the change hash is empty (entry not found) - insert new data entry and change entry
+// 4. If the change hash matches computed hash - do nothing, there is already up to date data
+// 5. If the change hash is not empty and different from the data - replace the data and update change entry
 func (dest *Dest) Set(id int, data interface{}) error {
 
 	col := dest.MongoClient.Database(dest.DB).Collection(dest.Collection)
@@ -53,7 +60,7 @@ func (dest *Dest) Set(id int, data interface{}) error {
 
 	switch chg.Hash {
 	case h:
-		// data unchanged. Do nothing.
+		// Do nothing. Data has not changed
 	case "":
 		_, err = col.InsertOne(dest.Ctx, data)
 		if err != nil {

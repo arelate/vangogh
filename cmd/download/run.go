@@ -6,6 +6,7 @@ package download
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"github.com/boggydigital/vangogh/cmd/help"
 	"github.com/boggydigital/vangogh/internal/strings/cmds"
@@ -21,6 +22,15 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context
 		return help.Run(args)
 	}
 
-	fmt.Println(cmds.Download, args)
+	downloadFlags := flag.NewFlagSet(cmds.Download, flag.ExitOnError)
+	osFlag := downloadFlags.String("os", "", "comma-separated list of operating systems, no spaces: windows, linux, macos")
+	langFlag := downloadFlags.String("lang", "", "comma-separated list of language codes, no spaces")
+
+	err := downloadFlags.Parse(args)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(cmds.Download, *osFlag, *langFlag)
 	return nil
 }

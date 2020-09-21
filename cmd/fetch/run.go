@@ -13,12 +13,12 @@ import (
 	"github.com/boggydigital/vangogh/internal/gog/media"
 	"github.com/boggydigital/vangogh/internal/gog/remote"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
+	"github.com/boggydigital/vangogh/internal/ids"
 	"github.com/boggydigital/vangogh/internal/strings/aliases"
 	"github.com/boggydigital/vangogh/internal/strings/cmds"
 	"github.com/boggydigital/vangogh/internal/strings/names"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
-	"strconv"
 )
 
 func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context, args []string) error {
@@ -33,18 +33,9 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context
 		return err
 	}
 
-	ids := make([]int, 0)
-	invalidIds := make([]string, 0)
-	for _, arg := range targs {
-		id, err := strconv.Atoi(arg)
-		if err != nil {
-			invalidIds = append(invalidIds, arg)
-		} else {
-			ids = append(ids, id)
-		}
-	}
-	if len(invalidIds) > 0 {
-		fmt.Println("NOTE: Invalid ids format or value: ", invalidIds)
+	idargs, err := ids.Parse(targs)
+	if err != nil {
+		return err
 	}
 
 	var transferor remote.Transferor
@@ -67,13 +58,13 @@ func Run(httpClient *http.Client, mongoClient *mongo.Client, ctx context.Context
 		return errors.New("error creating source or destination for " + cmds.Fetch)
 	}
 
-	for i, id := range ids {
+	for i, id := range idargs {
 		err = transferor.Transfer(id, setter)
 		if err != nil {
 			return err
 		}
 
-		fmt.Println(cmds.Fetch, names.Full(scope), "id =", id, ";", i+1, "of", len(ids))
+		fmt.Println(cmds.Fetch, names.Full(scope), "id =", id, ";", i+1, "of", len(idargs))
 	}
 
 	return nil
