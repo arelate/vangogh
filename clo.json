@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "env-prefix": "VG",
+  "app": "vangogh",
+  "hint": "CLI GOG.com client",
+  "desc": "CLI GOG.com client to download products with metadata",
+  "flags": [
+    {
+      "token": "verbose",
+      "abbr": "v",
+      "hint": "show more info when available",
+      "desc": "show additional information, like examples, where available"
+    }
+  ],
+  "commands": [
+    {
+      "token": "fetch",
+      "abbr": "f",
+      "hint": "fetch product data",
+      "desc": "fetch product data by media and type",
+      "arguments": [
+        "media",
+        "type"
+      ]
+    },
+    {
+      "token": "download",
+      "abbr": "d",
+      "hint": "download files",
+      "desc": "download product files and images",
+      "arguments": [
+        "os",
+        "lang"
+      ]
+    }
+  ],
+  "arguments": [
+    {
+      "token": "media",
+      "abbr": "m",
+      "hint": "media type",
+      "desc": "media type - games or movies",
+      "env": true,
+      "required": true,
+      "values": [
+        "movies",
+        "games"
+      ]
+    },
+    {
+      "token": "type",
+      "abbr": "t",
+      "hint": "product type",
+      "desc": "product type available remotely",
+      "default": true,
+      "required": true,
+      "values": [
+        "products",
+        "account-products",
+        "game-details"
+      ]
+    },
+    {
+      "token": "os",
+      "hint": "operating system",
+      "desc": "operating system for the product files",
+      "values": [
+        "windows",
+        "macos",
+        "linux"
+      ]
+    },
+    {
+      "token": "lang",
+      "hint": "language",
+      "desc": "product files language",
+      "values": [
+        "en",
+        "ru"
+      ]
+    }
+  ],
+  "values": []
+}

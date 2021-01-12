@@ -1,9 +1,4 @@
 {
-  "mongo":  {
-    "conn": "",
-    "connFile": "../secrets/mongoConn.txt"
-
-  },
   "gog": {
     "user": "",
     "userFile": "../secrets/gogUser.txt",

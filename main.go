@@ -6,24 +6,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/cmd"
-	"github.com/boggydigital/vangogh/internal/cfg"
 	"github.com/boggydigital/vangogh/internal/gog/session"
 	"github.com/boggydigital/vangogh/internal/gog/urls"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"golang.org/x/net/context"
 	"log"
-	"net/http"
 	"net/http/cookiejar"
 	"net/url"
 	"os"
-	"time"
-)
-
-const (
-	logFile  = "vangogh.log"
-	checkLog = "Please check $TMPDIR/" + logFile + " for details."
 )
 
 func main() {
@@ -35,13 +25,12 @@ func main() {
 
 	cookies, err := session.Load()
 	if err != nil {
-		fmt.Println("Cannot load session cookies.", checkLog)
-		//log.Fatalln(err)
+		fmt.Println("cannot load session cookies")
 	}
 
 	jar, err := cookiejar.New(nil)
 	if err != nil {
-		fmt.Println("Cannot create cookie jar.", checkLog)
+		fmt.Println("cannot create cookie jar")
 		log.Fatalln(err)
 	}
 
@@ -50,27 +39,28 @@ func main() {
 		jar.SetCookies(gogHost, cookies)
 	}
 
-	httpClient := &http.Client{
-		Timeout: time.Minute * 5,
-		Jar:     jar,
-	}
-
-	conf, _ := cfg.Current()
-	mongoClient, err := mongo.NewClient(
-		options.Client().ApplyURI(conf.Mongo.Conn))
+	req, err := clo.Parse(os.Args[1:])
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Println(err.Error())
+		return
 	}
 
-	ctx := context.Background()
-	_ = mongoClient.Connect(ctx)
-
-	err = cmd.Run(httpClient, mongoClient, ctx, os.Args)
+	err = cmd.Route(req)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Println(err.Error())
+		return
 	}
+
+	//httpClient := &http.Client{
+	//	Timeout: time.Minute * 5,
+	//	Jar:     jar,
+	//}
+
+	//err = cmd.Run(httpClient, mongoClient, ctx, os.Args)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	os.Exit(1)
+	//}
 
 	//gameDetailsOrigin := remote.NewDetails(httpClient, urls.Details(media.Game))
 	//gameProductsOrigin := remote.NewProductPage(httpClient, media.Game)

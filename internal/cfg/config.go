@@ -4,11 +4,6 @@
 
 package cfg
 
-type MongoCfg struct {
-	Conn     string `json:"conn"`
-	ConnFile string `json:"connFile"`
-}
-
 type GOGCfg struct {
 	User     string `json:"user"`
 	UserFile string `json:"userFile"`
@@ -22,7 +17,6 @@ type DirsCfg struct {
 }
 
 type Config struct {
-	Mongo MongoCfg `json:"mongo"`
-	GOG   GOGCfg   `json:"gog"`
-	Dirs  DirsCfg  `json:"dirs"`
+	GOG  GOGCfg  `json:"gog"`
+	Dirs DirsCfg `json:"dirs"`
 }
