@@ -19,8 +19,12 @@
       "hint": "fetch product data",
       "desc": "fetch product data by media and type",
       "arguments": [
+        "username",
+        "username-file",
+        "password",
+        "password-file",
         "media",
-        "type"
+        "fetch-type"
       ]
     },
     {
@@ -29,12 +33,38 @@
       "hint": "download files",
       "desc": "download product files and images",
       "arguments": [
+        "username",
+        "username-file",
         "os",
-        "lang"
+        "lang",
+        "media",
+        "download-type"
       ]
     }
   ],
   "arguments": [
+    {
+      "token": "username",
+      "abbr": "u",
+      "hint": "GOG.com username"
+    },
+    {
+      "token": "username-file",
+      "abbr": "uf",
+      "hint": "path to a file containing GOG.com username",
+      "env": true
+    },
+    {
+      "token": "password",
+      "abbr": "p",
+      "hint": "GOG.com password"
+    },
+    {
+      "token": "password-file",
+      "abbr": "pf",
+      "hint": "path to a file containing GOG.com password",
+      "env": true
+    },
     {
       "token": "media",
       "abbr": "m",
@@ -48,16 +78,29 @@
       ]
     },
     {
-      "token": "type",
-      "abbr": "t",
+      "token": "fetch-type",
+      "abbr": "ft",
       "hint": "product type",
-      "desc": "product type available remotely",
+      "env": true,
       "default": true,
       "required": true,
       "values": [
         "products",
         "account-products",
         "game-details"
+      ]
+    },
+    {
+      "token": "download-type",
+      "abbr": "dt",
+      "hint": "download product type",
+      "env": true,
+      "default": true,
+      "required": true,
+      "values": [
+        "product-files",
+        "images",
+        "screenshots"
       ]
     },
     {
