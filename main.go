@@ -8,11 +8,6 @@ import (
 	"fmt"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/cmd"
-	"github.com/boggydigital/vangogh/internal/gog/session"
-	"github.com/boggydigital/vangogh/internal/gog/urls"
-	"log"
-	"net/http/cookiejar"
-	"net/url"
 	"os"
 )
 
@@ -23,21 +18,21 @@ func main() {
 	//log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	//log.Println("Started new session")
 
-	cookies, err := session.Load()
-	if err != nil {
-		fmt.Println("cannot load session cookies")
-	}
-
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		fmt.Println("cannot create cookie jar")
-		log.Fatalln(err)
-	}
-
-	gogHost := &url.URL{Scheme: urls.HttpsScheme, Host: urls.GogHost}
-	if jar != nil && cookies != nil {
-		jar.SetCookies(gogHost, cookies)
-	}
+	//cookies, err := session.Load()
+	//if err != nil {
+	//	fmt.Println("cannot load session cookies")
+	//}
+	//
+	//jar, err := cookiejar.New(nil)
+	//if err != nil {
+	//	fmt.Println("cannot create cookie jar")
+	//	log.Fatalln(err)
+	//}
+	//
+	//gogHost := &url.URL{Scheme: urls.HttpsScheme, Host: urls.GogHost}
+	//if jar != nil && cookies != nil {
+	//	jar.SetCookies(gogHost, cookies)
+	//}
 
 	req, err := clo.Parse(os.Args[1:])
 	if err != nil {
