@@ -3,8 +3,8 @@ module github.com/boggydigital/vangogh
 go 1.15
 
 require (
-	github.com/boggydigital/clo v1.0.2
-	go.mongodb.org/mongo-driver v1.4.4
-	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
-	golang.org/x/net v0.0.0-20200707034311-ab3426394381
+	github.com/arelate/gogtypes v0.1.0-alpha
+	github.com/arelate/gogurls v0.1.0-alpha
+	github.com/boggydigital/clo v0.2.1-alpha
+	github.com/boggydigital/kvas v0.1.1-alpha
 )

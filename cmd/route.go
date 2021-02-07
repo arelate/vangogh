@@ -4,15 +4,15 @@ import (
 	"github.com/boggydigital/clo"
 )
 
-func Route(req *clo.Request) error {
+func Route(req *clo.Request, defs *clo.Definitions) error {
 	if req == nil {
-		return clo.Route(nil)
+		return clo.Route(nil, defs)
 	}
 	switch req.Command {
 	case "fetch":
-		productType, media := req.GetValue("type"), req.GetValue("media")
-		return Fetch(productType, media)
+		ftype, media := req.ArgVal("type"), req.ArgVal("media")
+		return Fetch(ftype, media)
 	default:
-		return clo.Route(req)
+		return clo.Route(req, defs)
 	}
 }

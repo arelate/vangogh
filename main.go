@@ -5,9 +5,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/cmd"
+	"log"
 	"os"
 )
 
@@ -34,16 +34,19 @@ func main() {
 	//	jar.SetCookies(gogHost, cookies)
 	//}
 
-	req, err := clo.Parse(os.Args[1:])
+	defs, err := clo.LoadDefault("clo.json")
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		log.Fatal(err)
 	}
 
-	err = cmd.Route(req)
+	req, err := defs.Parse(os.Args[1:])
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		log.Fatal(err)
+	}
+
+	err = cmd.Route(req, defs)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	//httpClient := &http.Client{
