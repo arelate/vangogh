@@ -1,24 +1,25 @@
 {
   "version": 1,
   "cmd": {
+    "auth": [
+      "username",
+      "password"
+    ],
     "fetch": [
       "type_!=products,account-products,wishlist,details",
       "media=game_,movie",
-      "username",
-      "password",
       "id..."
     ],
     "download": [
       "type_!=file,image",
       "media=game_,movie",
-      "username",
-      "password",
       "os=current!,windows,macos,linux",
       "lang=en!,ru",
       "id..."
     ]
   },
   "help": {
+    "auth": "authenticate on GOG.com and save session",
     "fetch": "fetch product data by media, type",
     "fetch:id": "details ID",
     "download": "download product files by media, type",
