@@ -2,66 +2,110 @@ package cmd
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/arelate/gogtypes"
 	"github.com/arelate/gogurls"
 	"github.com/boggydigital/kvas"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
-func Fetch(productType string, media string) error {
-	fmt.Println("fetch ", productType, media)
-
-	loc := "data"
-
+func paginated(productType string) bool {
 	switch productType {
 	case "products":
-		loc += "/productPages"
+		fallthrough
 	case "account-products":
-		loc += "/accountProductPages"
+		fallthrough
 	case "wishlist":
-		loc += "/wishlistPages"
-	case "details":
-		loc += "/details"
+		return true
 	default:
-
+		return false
 	}
+}
 
+func requiresAuth(productType string) bool {
+	switch productType {
+	case "account-products":
+		fallthrough
+	case "wishlist":
+		fallthrough
+	case "details":
+		return true
+	default:
+		return false
+	}
+}
+
+func fetchPages(productType string, media string, sourceUrl func(int, gogtypes.Media) *url.URL, destUrl string) error {
 	totalPages := 1
 	for pp := 1; pp <= totalPages; pp++ {
 
-		fmt.Printf("fetching %s page %d/%d\n", productType, pp, totalPages)
+		log.Printf("fetching %s %s page %d/%d\n", productType, media, pp, totalPages)
 
-		pageUrl := gogurls.ProductsPage(pp, gogtypes.Game, gogtypes.ProductsSortByNewestFirst)
-
-		resp, err := http.Get(pageUrl.String())
+		resp, err := http.Get(sourceUrl(pp, gogtypes.Parse(media)).String())
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		bytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
-		vs, err := kvas.NewClient(loc, ".json", false)
+		if err = resp.Body.Close(); err != nil {
+			return err
+		}
+
+		vs, err := kvas.NewClient(destUrl, ".json", false)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		if err = vs.Set(strconv.Itoa(pp), bytes); err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		var page gogtypes.Page
 		if err = json.Unmarshal(bytes, &page); err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		totalPages = page.TotalPages
+	}
+
+	return nil
+}
+
+func Fetch(productType string, media string) error {
+
+	destUrl := "data"
+	var sourceUrl func(int, gogtypes.Media) *url.URL
+
+	switch productType {
+	case "products":
+		destUrl += "/productPages/"
+		sourceUrl = gogurls.DefaultProductsPage
+	case "account-products":
+		destUrl += "/accountProductPages/"
+		sourceUrl = gogurls.DefaultAccountProductsPage
+	case "wishlist":
+		destUrl += "/wishlistPages/"
+		sourceUrl = gogurls.DefaultWishlistPage
+	case "details":
+		destUrl += "/details/"
+		sourceUrl = gogurls.Details
+	default:
+		log.Fatalf("unknown product type %s\n", productType)
+	}
+
+	destUrl += media
+
+	if paginated(productType) {
+		return fetchPages(productType, media, sourceUrl, destUrl)
+	} else {
+		log.Fatalf("fetching %s is not supported yet\n", productType)
 	}
 
 	return nil

@@ -1,7 +1,7 @@
-github.com/arelate/gogtypes v0.1.0-alpha h1:JnWS2C8N3DvfdmbNW//XCWr1q0O9ZCWM7Qkwsdu1IhI=
-github.com/arelate/gogtypes v0.1.0-alpha/go.mod h1:lKWNNzP8Iar+V5gtRIcWA18X9H35gb/2TnoYMLWM65E=
-github.com/arelate/gogurls v0.1.0-alpha h1:R6kCt+CB0BzBRuQvz0SC1eME/CuKzgwEcti+mF+TW3M=
-github.com/arelate/gogurls v0.1.0-alpha/go.mod h1:wg9qrDHOLbctpnPD9yO6k9vCHYXqz2DSCXt52g7QROk=
+github.com/arelate/gogtypes v0.1.2-alpha h1:6VL5TQLx+72hNu2Xkq40PnYF5QyRodld5VDiZl7NiRg=
+github.com/arelate/gogtypes v0.1.2-alpha/go.mod h1:lKWNNzP8Iar+V5gtRIcWA18X9H35gb/2TnoYMLWM65E=
+github.com/arelate/gogurls v0.1.1-alpha h1:oBqbzAZrDpyTT3ydqu/5mQ5wrsJw/pzYEHSvB0ZLwd0=
+github.com/arelate/gogurls v0.1.1-alpha/go.mod h1:LnigoLY4n4oD0GXsHS80BUTOvDYa5Ra9HSSCJJS2q8w=
 github.com/boggydigital/clo v0.2.1-alpha h1:qiIaprqpv5qNpTPNbai0qUpqV7TcfrqOtjYJHzw5/Hw=
 github.com/boggydigital/clo v0.2.1-alpha/go.mod h1:Vd6WItzFzxrzpV7PRwytJwRHi7FaPs4zzVoaDYaNB68=
 github.com/boggydigital/kvas v0.1.1-alpha h1:Ft6XUuDSHcUOfh9rlZtITNTCD1A7SxAb/ZSuOtKjrEA=
