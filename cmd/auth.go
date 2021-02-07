@@ -2,91 +2,13 @@ package cmd
 
 import (
 	"bufio"
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/arelate/gogauth"
-	"github.com/arelate/gogurls"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/vangogh/internal"
 	"net/http"
-	"net/http/cookiejar"
-	"net/url"
 	"os"
 	"time"
 )
-
-const cookiesKey = "cookies"
-
-var gogHost = &url.URL{Scheme: gogurls.HttpsScheme, Host: gogurls.GogHost}
-
-func hydrate(ckv map[string]string) []*http.Cookie {
-	cookies := make([]*http.Cookie, 0, len(ckv))
-	for k, v := range ckv {
-		cookie := &http.Cookie{
-			Name:     k,
-			Value:    v,
-			Path:     "/",
-			Domain:   "." + gogurls.GogHost,
-			Expires:  time.Now().Add(time.Hour * 24 * 30),
-			Secure:   true,
-			HttpOnly: true,
-		}
-		cookies = append(cookies, cookie)
-	}
-	return cookies
-}
-
-func dehydrate(cookies []*http.Cookie) map[string]string {
-	ckv := make(map[string]string, len(cookies))
-	for _, c := range cookies {
-		ckv[c.Name] = c.Value
-	}
-	return ckv
-}
-
-func loadCookieJar() (*cookiejar.Jar, error) {
-
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, err
-	}
-
-	kvCookies, err := kvas.NewClient("", ".json")
-	if err != nil {
-		return nil, err
-	}
-
-	if kvCookies.Contains(cookiesKey) {
-		cr, err := kvCookies.Get(cookiesKey)
-		if err != nil {
-			return nil, err
-		}
-
-		var ckv map[string]string
-		if err := json.NewDecoder(cr).Decode(&ckv); err != nil {
-			return nil, err
-		}
-
-		jar.SetCookies(gogHost, hydrate(ckv))
-	}
-
-	return jar, nil
-}
-
-func saveCookieJar(jar *cookiejar.Jar) error {
-
-	kvCookies, err := kvas.NewClient("", ".json")
-	if err != nil {
-		return err
-	}
-
-	var b bytes.Buffer
-	if err := json.NewEncoder(&b).Encode(dehydrate(jar.Cookies(gogHost))); err != nil {
-		return err
-	}
-
-	return kvCookies.Set(cookiesKey, &b)
-}
 
 func requestText(prompt string) string {
 	fmt.Print(prompt)
@@ -99,7 +21,7 @@ func requestText(prompt string) string {
 
 func Authenticate(username, password string) error {
 
-	jar, err := loadCookieJar()
+	jar, err := internal.LoadCookieJar()
 	if err != nil {
 		return err
 	}
@@ -118,10 +40,9 @@ func Authenticate(username, password string) error {
 		return nil
 	}
 
-	// login
 	if err := gogauth.Login(httpClient, username, password, requestText); err != nil {
 		return err
 	}
 
-	return saveCookieJar(jar)
+	return internal.SaveCookieJar(jar)
 }

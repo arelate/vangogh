@@ -4,8 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/arelate/gogauth"
 	"github.com/arelate/gogtypes"
 	"github.com/arelate/gogurls"
+	"github.com/boggydigital/vangogh/internal"
+	"time"
+
 	//"github.com/arelate/gogauth"
 	"github.com/boggydigital/kvas"
 	"io"
@@ -16,6 +20,8 @@ import (
 )
 
 type getUrl func(string, gogtypes.Media) *url.URL
+
+var httpClient *http.Client
 
 func paginated(productType string) bool {
 	switch productType {
@@ -80,7 +86,7 @@ func destinationUrl(productType, media string) (string, error) {
 
 func fetchItem(id string, media gogtypes.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
 	u := sourceUrl(id, media)
-	resp, err := http.Get(u.String())
+	resp, err := httpClient.Get(u.String())
 	if err != nil {
 		return nil, err
 	}
@@ -157,13 +163,25 @@ func fetchItems(
 
 func Fetch(ids []string, productType, media string) error {
 
-	//httpClient := &http.Client{
-	//	Jar:           nil,
-	//	Timeout:       3 * time.Minute,
-	//}
+	jar, err := internal.LoadCookieJar()
+	if err != nil {
+		return err
+	}
+
+	httpClient = &http.Client{
+		Timeout: time.Minute * 3,
+		Jar:     jar,
+	}
 
 	if requiresAuthentication(productType) {
-		log.Fatalf("fetching type %s requires authentication\n", productType)
+		li, err := gogauth.LoggedIn(httpClient)
+		if err != nil {
+			return err
+		}
+
+		if !li {
+			log.Fatalf("fetching type %s requires authenticated session. See \"help auth\" for details\n", productType)
+		}
 	}
 
 	destUrl, err := destinationUrl(productType, media)
