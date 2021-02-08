@@ -1,12 +1,18 @@
 # vangogh backlog
 
-- check downloaded data (details) to fill types TODOs
+- investigate "list wishlist" issues
+  - root caused to not closing files after a kvas.Get
+  - convert all returned io.Reader to io.ReadCloser (should work with remote kvas as well) 
+- add "id..." parameter to "list" to be used for status updates
+- split vangogh types into a separate module
+- split vangogh URLs into a separate module
 - add operations log
 - print report at the end of operations - changed, new
 - track updated account products (new, modified, updated)
 - figure out throttling situation for downloading many details at once (do they send headers we can check? figure out other heuristics)
 - add search objective to print ID, title
 - download product types: images, screenshots, videos, product files
+- "sync" objective that does all remote data fetching in one command
 
 ## DONE
 
@@ -19,3 +25,4 @@
 - ~~split fetched paginated media~~
 - ~~fetch missing details with delay between downloads~~
 - ~~add list objective to print ID, title~~
+- ~~check downloaded data (details) to fill types TODOs~~

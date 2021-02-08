@@ -11,7 +11,10 @@ type title struct {
 }
 
 func List(pt, media string) error {
-	dstUrl, _ := destinationUrl(pt, media)
+	dstUrl, err := destinationUrl(pt, media)
+	if err != nil {
+		return err
+	}
 
 	kv, err := kvas.NewClient(dstUrl, ".json")
 	if err != nil {
@@ -19,9 +22,15 @@ func List(pt, media string) error {
 	}
 
 	for _, id := range kv.All() {
-		reader, _ := kv.Get(id)
+		reader, err := kv.Get(id)
+		if err != nil {
+			return err
+		}
 		var tt title
-		_ = json.NewDecoder(reader).Decode(&tt)
+		err = json.NewDecoder(reader).Decode(&tt)
+		if err != nil {
+			return err
+		}
 		fmt.Println(id, tt.Title)
 	}
 

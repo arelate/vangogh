@@ -24,7 +24,7 @@ func split(mainPt string, media string) error {
 
 	for _, pp := range kvMain.All() {
 
-		log.Printf("splitting page #%s\n", pp)
+		log.Printf("splitting %s (%s) page #%s\n", mainPt, media, pp)
 
 		pageReader, err := kvMain.Get(pp)
 		if err != nil {
