@@ -6,9 +6,10 @@
       "password"
     ],
     "fetch": [
-      "type_!=products,account-products,wishlist,details",
+      "type_!=products-pages,account-products-pages,wishlist-pages,details",
       "media=game_,movie",
-      "id..."
+      "id...",
+      "missing"
     ],
     "download": [
       "type_!=file,image",
@@ -16,11 +17,17 @@
       "os=current!,windows,macos,linux",
       "lang=en!,ru",
       "id..."
-    ]
+    ],
+    "list": [
+      "type_!=products,account-products,wishlist,details",
+      "media=game_,movie"
+    ],
+    "test": []
   },
   "help": {
     "auth": "authenticate on GOG.com and save session",
-    "fetch": "fetch product data by media, type",
+    "fetch": "fetch remote product data by media, type",
+    "list": "list local product data by media, type",
     "fetch:id": "details ID",
     "download": "download product files by media, type",
     "download:id": "account product ID",

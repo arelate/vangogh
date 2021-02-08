@@ -25,11 +25,11 @@ var httpClient *http.Client
 
 func paginated(productType string) bool {
 	switch productType {
-	case "products":
+	case "products-pages":
 		fallthrough
-	case "account-products":
+	case "account-products-pages":
 		fallthrough
-	case "wishlist":
+	case "wishlist-pages":
 		return true
 	default:
 		return false
@@ -38,9 +38,9 @@ func paginated(productType string) bool {
 
 func requiresAuthentication(productType string) bool {
 	switch productType {
-	case "account-products":
+	case "account-products-pages":
 		fallthrough
-	case "wishlist":
+	case "wishlist-pages":
 		fallthrough
 	case "details":
 		return true
@@ -49,42 +49,73 @@ func requiresAuthentication(productType string) bool {
 	}
 }
 
-func sourceUrl(productType string) (getUrl, error) {
-	switch productType {
-	case "products":
+func sourceUrl(pt string) (getUrl, error) {
+	switch pt {
+	case "products-pages":
 		return gogurls.DefaultProductsPage, nil
-	case "account-products":
+	case "account-products-pages":
 		return gogurls.DefaultAccountProductsPage, nil
-	case "wishlist":
+	case "wishlist-pages":
 		return gogurls.DefaultWishlistPage, nil
 	case "details":
 		return gogurls.Details, nil
 	default:
-		return nil, fmt.Errorf("unknown product type %s\n", productType)
+		return nil, fmt.Errorf("cannot provide a source url for a type %s\n", pt)
 	}
 }
 
 func destinationUrl(productType, media string) (string, error) {
-	destUrl := "data"
+	dstUrl := "data"
 
 	switch productType {
-	case "products":
-		destUrl += "/productPages/"
-	case "account-products":
-		destUrl += "/accountProductPages/"
-	case "wishlist":
-		destUrl += "/wishlistPages/"
+	case "products-pages":
+		dstUrl += "/productPages/"
+	case "account-products-pages":
+		dstUrl += "/accountProductPages/"
+	case "wishlist-pages":
+		dstUrl += "/wishlistPages/"
 	case "details":
-		destUrl += "/details/"
+		dstUrl += "/details/"
+	case "products":
+		dstUrl += "/products/"
+	case "account-products":
+		dstUrl += "/accountProducts/"
+	case "wishlist":
+		dstUrl += "/wishlist/"
 	default:
 		return "", fmt.Errorf("unknown product type %s\n", productType)
 	}
 
-	destUrl += media
-	return destUrl, nil
+	dstUrl += media
+	return dstUrl, nil
 }
 
-func fetchItem(id string, media gogtypes.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
+func mainProductType(productType string) string {
+	switch productType {
+	case "details":
+		return "account-products"
+	default:
+		return ""
+	}
+}
+
+func detailProductType(pt string) string {
+	switch pt {
+	case "products-pages":
+		return "products"
+	case "account-products-pages":
+		return "account-products"
+	case "wishlist-pages":
+		return "wishlist"
+	default:
+		return ""
+	}
+}
+
+func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
+
+	log.Printf("fetching %s (%s) #%s\n", pt, media, id)
+
 	u := sourceUrl(id, media)
 	resp, err := httpClient.Get(u.String())
 	if err != nil {
@@ -118,9 +149,7 @@ func fetchPages(productType string, media gogtypes.Media, sourceUrl getUrl, dest
 	totalPages := 1
 	for pp := 1; pp <= totalPages; pp++ {
 
-		log.Printf("fetching %s %s page %d/%d\n", productType, media, pp, totalPages)
-
-		rdr, err := fetchItem(strconv.Itoa(pp), media, sourceUrl, destUrl)
+		rdr, err := fetchItem(strconv.Itoa(pp), productType, media, sourceUrl, destUrl)
 		if err != nil {
 			return err
 		}
@@ -131,6 +160,36 @@ func fetchPages(productType string, media gogtypes.Media, sourceUrl getUrl, dest
 		}
 
 		totalPages = page.TotalPages
+	}
+
+	return nil
+}
+
+func fetchMissing(
+	productType string,
+	mt gogtypes.Media,
+	sourceUrl getUrl,
+	mainDestUrl, detailDestUrl string) error {
+	kvMain, err := kvas.NewClient(mainDestUrl, ".json")
+	if err != nil {
+		return err
+	}
+
+	kvDetail, err := kvas.NewClient(detailDestUrl, ".json")
+	if err != nil {
+		return err
+	}
+	missingIds := make([]string, 0)
+	for _, id := range kvMain.All() {
+		if !kvDetail.Contains(id) {
+			missingIds = append(missingIds, id)
+		}
+	}
+
+	if len(missingIds) > 0 {
+		if err := fetchItems(missingIds, productType, mt, sourceUrl, detailDestUrl); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -151,9 +210,7 @@ func fetchItems(
 	}
 
 	for _, id := range ids {
-		log.Printf("fetching %s %s id %s\n", productType, mt.String(), id)
-
-		_, err := fetchItem(id, mt, sourceUrl, destUrl)
+		_, err := fetchItem(id, productType, mt, sourceUrl, destUrl)
 		if err != nil {
 			return err
 		}
@@ -161,7 +218,7 @@ func fetchItems(
 	return nil
 }
 
-func Fetch(ids []string, productType, media string) error {
+func Fetch(ids []string, productType, media string, missing bool) error {
 
 	jar, err := internal.LoadCookieJar()
 	if err != nil {
@@ -180,14 +237,15 @@ func Fetch(ids []string, productType, media string) error {
 		}
 
 		if !li {
-			log.Fatalf("fetching type %s requires authenticated session. See \"help auth\" for details\n", productType)
+			log.Fatalf("fetching type %s requires authenticated session", productType)
 		}
 	}
 
-	destUrl, err := destinationUrl(productType, media)
+	dstUrl, err := destinationUrl(productType, media)
 	if err != nil {
 		return err
 	}
+
 	srcUrl, err := sourceUrl(productType)
 	if err != nil {
 		return err
@@ -196,8 +254,20 @@ func Fetch(ids []string, productType, media string) error {
 	mt := gogtypes.Parse(media)
 
 	if paginated(productType) {
-		return fetchPages(productType, mt, srcUrl, destUrl)
+		if err := fetchPages(productType, mt, srcUrl, dstUrl); err != nil {
+			return err
+		}
+
+		return split(productType, media)
 	} else {
-		return fetchItems(ids, productType, mt, srcUrl, destUrl)
+		if missing {
+			mainDstUrl, err := destinationUrl(mainProductType(productType), media)
+			if err != nil {
+				return err
+			}
+			return fetchMissing(productType, mt, srcUrl, mainDstUrl, dstUrl)
+		} else {
+			return fetchItems(ids, productType, mt, srcUrl, dstUrl)
+		}
 	}
 }

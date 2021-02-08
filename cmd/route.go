@@ -17,7 +17,14 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		ids := req.ArgValues("id")
 		productType := req.ArgVal("type")
 		media := req.ArgVal("media")
-		return Fetch(ids, productType, media)
+		missing := req.Flag("missing")
+		return Fetch(ids, productType, media, missing)
+	case "list":
+		productType := req.ArgVal("type")
+		media := req.ArgVal("media")
+		return List(productType, media)
+	case "test":
+		return Test()
 	default:
 		return clo.Route(req, defs)
 	}

@@ -1,10 +1,12 @@
-github.com/arelate/gogauth v0.1.1-alpha h1:TByNAnObpFR4zRjUae7dU9HfC71CNojZ7FsdUIBO7U8=
-github.com/arelate/gogauth v0.1.1-alpha/go.mod h1:GlAPeXjYtd/FYw0IbXTFdkXu7EbVOfCCtRUZx8E7h34=
+github.com/arelate/gogauth v0.1.2-alpha h1:gr3pNw8jnufANMf0/TM5u2W4wfWas/i9EqXaXG400ac=
+github.com/arelate/gogauth v0.1.2-alpha/go.mod h1:GlAPeXjYtd/FYw0IbXTFdkXu7EbVOfCCtRUZx8E7h34=
 github.com/arelate/gogauthurls v0.1.0-alpha h1:80tvJgfL0m9eBYnC92euaaYISUTeAvTa7dt8TyuCtF4=
 github.com/arelate/gogauthurls v0.1.0-alpha/go.mod h1:eR2p+JDni4miWUBo+h4XNomUMbvAryFZaa7EzwBmPqw=
 github.com/arelate/gogtypes v0.1.0-alpha/go.mod h1:lKWNNzP8Iar+V5gtRIcWA18X9H35gb/2TnoYMLWM65E=
 github.com/arelate/gogtypes v0.1.2-alpha h1:6VL5TQLx+72hNu2Xkq40PnYF5QyRodld5VDiZl7NiRg=
 github.com/arelate/gogtypes v0.1.2-alpha/go.mod h1:lKWNNzP8Iar+V5gtRIcWA18X9H35gb/2TnoYMLWM65E=
+github.com/arelate/gogtypes v0.1.5-alpha h1:nnclLKBMkCEtP6KpBpfIrshNSAhxaOA/tgQPX6+5PEI=
+github.com/arelate/gogtypes v0.1.5-alpha/go.mod h1:lKWNNzP8Iar+V5gtRIcWA18X9H35gb/2TnoYMLWM65E=
 github.com/arelate/gogurls v0.1.0-alpha/go.mod h1:wg9qrDHOLbctpnPD9yO6k9vCHYXqz2DSCXt52g7QROk=
 github.com/arelate/gogurls v0.1.3-alpha h1:Nx9slnUrL5/Az6qKt5OZAH2r5kcjwJp7dx7adhSI87M=
 github.com/arelate/gogurls v0.1.3-alpha/go.mod h1:LnigoLY4n4oD0GXsHS80BUTOvDYa5Ra9HSSCJJS2q8w=
