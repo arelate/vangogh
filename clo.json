@@ -6,7 +6,7 @@
       "password"
     ],
     "fetch": [
-      "type_!=products-pages,account-products-pages,wishlist-pages,details",
+      "type_!=products,account-products,wishlist,details",
       "media=game_,movie",
       "id...",
       "missing"
@@ -20,6 +20,11 @@
     ],
     "list": [
       "type_!=products,account-products,wishlist,details",
+      "media=game_,movie",
+      "id...",
+      "title"
+    ],
+    "sync": [
       "media=game_,movie"
     ],
     "test": []

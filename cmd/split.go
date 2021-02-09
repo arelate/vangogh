@@ -17,7 +17,7 @@ func split(mainPt string, media string) error {
 		return err
 	}
 
-	kvMain, err := kvas.NewClient(mainDstUrl, ".json")
+	kvMain, err := kvas.NewLocal(mainDstUrl, ".json")
 	if err != nil {
 		return err
 	}
@@ -26,12 +26,16 @@ func split(mainPt string, media string) error {
 
 		log.Printf("splitting %s (%s) page #%s\n", mainPt, media, pp)
 
-		pageReader, err := kvMain.Get(pp)
+		pageRc, err := kvMain.Get(pp)
 		if err != nil {
 			return err
 		}
 
-		if err := splitPage(pageReader, mainPt, media); err != nil {
+		if err := splitPage(pageRc, mainPt, media); err != nil {
+			return err
+		}
+
+		if err := pageRc.Close(); err != nil {
 			return err
 		}
 	}
@@ -48,7 +52,7 @@ func splitPage(pageReader io.Reader, mainPt string, media string) error {
 		return nil
 	}
 
-	kvDetail, err := kvas.NewClient(detailDstUrl, ".json")
+	kvDetail, err := kvas.NewLocal(detailDstUrl, ".json")
 	if err != nil {
 		return err
 	}

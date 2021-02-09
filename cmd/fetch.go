@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/gogtypes"
 	"github.com/arelate/gogurls"
 	"github.com/boggydigital/vangogh/internal"
+	"strings"
 	"time"
 
 	//"github.com/arelate/gogauth"
@@ -23,17 +24,8 @@ type getUrl func(string, gogtypes.Media) *url.URL
 
 var httpClient *http.Client
 
-func paginated(productType string) bool {
-	switch productType {
-	case "products-pages":
-		fallthrough
-	case "account-products-pages":
-		fallthrough
-	case "wishlist-pages":
-		return true
-	default:
-		return false
-	}
+func paginated(pt string) bool {
+	return strings.HasSuffix(pt, "-pages")
 }
 
 func requiresAuthentication(productType string) bool {
@@ -112,6 +104,19 @@ func detailProductType(pt string) string {
 	}
 }
 
+func paginatedProductType(pt string) string {
+	switch pt {
+	case "products":
+		return "products-pages"
+	case "account-products":
+		return "account-products-pages"
+	case "wishlist":
+		return "wishlist-pages"
+	default:
+		return pt
+	}
+}
+
 func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
 
 	log.Printf("fetching %s (%s) #%s\n", pt, media, id)
@@ -126,7 +131,7 @@ func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, des
 		return nil, fmt.Errorf("error fetching read closer at %s: %s", u.String(), resp.Status)
 	}
 
-	vs, err := kvas.NewClient(destUrl, ".json")
+	vs, err := kvas.NewLocal(destUrl, ".json")
 	if err != nil {
 		return resp.Body, err
 	}
@@ -170,12 +175,12 @@ func fetchMissing(
 	mt gogtypes.Media,
 	sourceUrl getUrl,
 	mainDestUrl, detailDestUrl string) error {
-	kvMain, err := kvas.NewClient(mainDestUrl, ".json")
+	kvMain, err := kvas.NewLocal(mainDestUrl, ".json")
 	if err != nil {
 		return err
 	}
 
-	kvDetail, err := kvas.NewClient(detailDestUrl, ".json")
+	kvDetail, err := kvas.NewLocal(detailDestUrl, ".json")
 	if err != nil {
 		return err
 	}
@@ -218,7 +223,7 @@ func fetchItems(
 	return nil
 }
 
-func Fetch(ids []string, productType, media string, missing bool) error {
+func Fetch(ids []string, pt, media string, missing bool) error {
 
 	jar, err := internal.LoadCookieJar()
 	if err != nil {
@@ -230,44 +235,49 @@ func Fetch(ids []string, productType, media string, missing bool) error {
 		Jar:     jar,
 	}
 
-	if requiresAuthentication(productType) {
+	if requiresAuthentication(pt) {
 		li, err := gogauth.LoggedIn(httpClient)
 		if err != nil {
 			return err
 		}
 
 		if !li {
-			log.Fatalf("fetching type %s requires authenticated session", productType)
+			log.Fatalf("fetching type %s requires authenticated session", pt)
 		}
 	}
 
-	dstUrl, err := destinationUrl(productType, media)
+	// clo.json specifies "normal" type, in order to get it we need to:
+	// - fetch individual pages of paginated type = product-type + "-pages"
+	// - split fetched pages into individual blocks
+	pt = paginatedProductType(pt)
+
+	dstUrl, err := destinationUrl(pt, media)
 	if err != nil {
 		return err
 	}
 
-	srcUrl, err := sourceUrl(productType)
+	srcUrl, err := sourceUrl(pt)
 	if err != nil {
 		return err
 	}
 
 	mt := gogtypes.Parse(media)
 
-	if paginated(productType) {
-		if err := fetchPages(productType, mt, srcUrl, dstUrl); err != nil {
+	if paginated(pt) {
+		if err := fetchPages(pt, mt, srcUrl, dstUrl); err != nil {
 			return err
 		}
 
-		return split(productType, media)
+		return split(pt, media)
 	} else {
 		if missing {
-			mainDstUrl, err := destinationUrl(mainProductType(productType), media)
+			mainDstUrl, err := destinationUrl(mainProductType(pt), media)
 			if err != nil {
 				return err
 			}
-			return fetchMissing(productType, mt, srcUrl, mainDstUrl, dstUrl)
+			return fetchMissing(pt, mt, srcUrl, mainDstUrl, dstUrl)
 		} else {
-			return fetchItems(ids, productType, mt, srcUrl, dstUrl)
+			return fetchItems(ids, pt, mt, srcUrl, dstUrl)
 		}
 	}
 }

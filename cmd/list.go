@@ -4,33 +4,49 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/boggydigital/kvas"
+	"strings"
 )
 
-type title struct {
+type titled struct {
 	Title string `json:"title"`
 }
 
-func List(pt, media string) error {
+func List(ids []string, title string, pt, media string) error {
 	dstUrl, err := destinationUrl(pt, media)
 	if err != nil {
 		return err
 	}
 
-	kv, err := kvas.NewClient(dstUrl, ".json")
+	kv, err := kvas.NewLocal(dstUrl, ".json")
 	if err != nil {
 		return err
 	}
 
-	for _, id := range kv.All() {
-		reader, err := kv.Get(id)
+	if len(ids) == 0 {
+		ids = kv.All()
+	}
+
+	for _, id := range ids {
+		rc, err := kv.Get(id)
 		if err != nil {
 			return err
 		}
-		var tt title
-		err = json.NewDecoder(reader).Decode(&tt)
+		var tt titled
+		err = json.NewDecoder(rc).Decode(&tt)
 		if err != nil {
 			return err
 		}
+
+		if err := rc.Close(); err != nil {
+			return err
+		}
+
+		if title != "" && !strings.Contains(
+			strings.ToLower(tt.Title),
+			strings.ToLower(title)) {
+			continue
+		}
+
 		fmt.Println(id, tt.Title)
 	}
 

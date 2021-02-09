@@ -1,9 +1,5 @@
 # vangogh backlog
 
-- investigate "list wishlist" issues
-  - root caused to not closing files after a kvas.Get
-  - convert all returned io.Reader to io.ReadCloser (should work with remote kvas as well) 
-- add "id..." parameter to "list" to be used for status updates
 - split vangogh types into a separate module
 - split vangogh URLs into a separate module
 - add operations log
@@ -26,3 +22,8 @@
 - ~~fetch missing details with delay between downloads~~
 - ~~add list objective to print ID, title~~
 - ~~check downloaded data (details) to fill types TODOs~~
+- ~~add "id..." parameter to "list" to be used for status updates~~
+- ~~investigate "list wishlist" issues~~
+  - ~~root caused to not closing files after a kvas.Get~~
+  - ~~convert all returned io.Reader to io.ReadCloser (should work with remote kvas as well)~~
+  - ~~use file.Create instead of OpenFile for kvas.Set~~

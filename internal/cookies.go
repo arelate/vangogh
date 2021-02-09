@@ -47,23 +47,27 @@ func LoadCookieJar() (*cookiejar.Jar, error) {
 		return nil, err
 	}
 
-	kvCookies, err := kvas.NewClient("", ".json")
+	kvCookies, err := kvas.NewLocal("", ".json")
 	if err != nil {
 		return nil, err
 	}
 
 	if kvCookies.Contains(cookiesKey) {
-		cr, err := kvCookies.Get(cookiesKey)
+		crc, err := kvCookies.Get(cookiesKey)
 		if err != nil {
 			return nil, err
 		}
 
 		var ckv map[string]string
-		if err := json.NewDecoder(cr).Decode(&ckv); err != nil {
+		if err := json.NewDecoder(crc).Decode(&ckv); err != nil {
 			return nil, err
 		}
 
 		jar.SetCookies(gogHost, hydrate(ckv))
+
+		if err := crc.Close(); err != nil {
+			return jar, err
+		}
 	}
 
 	return jar, nil
@@ -71,7 +75,7 @@ func LoadCookieJar() (*cookiejar.Jar, error) {
 
 func SaveCookieJar(jar *cookiejar.Jar) error {
 
-	kvCookies, err := kvas.NewClient("", ".json")
+	kvCookies, err := kvas.NewLocal("", ".json")
 	if err != nil {
 		return err
 	}

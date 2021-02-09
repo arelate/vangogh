@@ -2,7 +2,7 @@ package cmd
 
 func Test() error {
 	//dstUrl, _ := destinationUrl("details", gogtypes.Game.String())
-	//kv, _ := kvas.NewClient(dstUrl, ".json")
+	//kv, _ := kvas.NewLocal(dstUrl, ".json")
 	//
 	//for _, id := range kv.All() {
 	//
