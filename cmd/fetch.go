@@ -195,6 +195,8 @@ func fetchMissing(
 		if err := fetchItems(missingIds, productType, mt, sourceUrl, detailDestUrl); err != nil {
 			return err
 		}
+	} else {
+		log.Printf("no products of type %s (%s) are missing\n", productType, mt)
 	}
 
 	return nil
