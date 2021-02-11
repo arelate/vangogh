@@ -1,5 +1,7 @@
 # vangogh backlog
 
+- kvas separate index extension from content extension (allow protobuf index, png files)
+- add protobuf support for local types instead of JSON  
 - split vangogh types into a separate module
 - split vangogh URLs into a separate module
 - add operations log
