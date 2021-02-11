@@ -24,7 +24,7 @@ func split(mainPt string, media string) error {
 
 	for _, pp := range kvMain.All() {
 
-		log.Printf("splitting %s (%s) page #%s\n", mainPt, media, pp)
+		log.Printf("splitting %s (%s) page %s\n", mainPt, media, pp)
 
 		pageRc, err := kvMain.Get(pp)
 		if err != nil {
@@ -58,11 +58,11 @@ func splitPage(pageReader io.Reader, mainPt string, media string) error {
 	}
 
 	switch mainPt {
-	case "products-pages":
+	case Store:
 		return splitProductsPage(pageReader, kvDetail.Set)
-	case "account-products-pages":
+	case Account:
 		return splitAccountProductsPage(pageReader, kvDetail.Set)
-	case "wishlist-pages":
+	case Wishlist:
 		return splitWishlistPage(pageReader, kvDetail.Set)
 	default:
 		return fmt.Errorf("splitting page is not supported for type %s", mainPt)

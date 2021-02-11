@@ -8,7 +8,6 @@ import (
 	"github.com/arelate/gogtypes"
 	"github.com/arelate/gogurls"
 	"github.com/boggydigital/vangogh/internal"
-	"strings"
 	"time"
 
 	//"github.com/arelate/gogauth"
@@ -20,21 +19,48 @@ import (
 	"strconv"
 )
 
+const (
+	Store            = "store"
+	Account          = "account"
+	Wishlist         = "wishlist"
+	Details          = "details"
+	Products         = "products"
+	AccountProducts  = "account-products"
+	WishlistProducts = "wishlist-products"
+)
+
 type getUrl func(string, gogtypes.Media) *url.URL
 
 var httpClient *http.Client
 
 func paginated(pt string) bool {
-	return strings.HasSuffix(pt, "-pages")
+	switch pt {
+	case Store:
+		fallthrough
+	case Account:
+		fallthrough
+	case Wishlist:
+		return true
+	default:
+		return false
+	}
+}
+
+func singular(pt string) string {
+	if paginated(pt) {
+		return "page"
+	} else {
+		return ""
+	}
 }
 
 func requiresAuthentication(productType string) bool {
 	switch productType {
-	case "account-products-pages":
+	case Account:
 		fallthrough
-	case "wishlist-pages":
+	case Wishlist:
 		fallthrough
-	case "details":
+	case Details:
 		return true
 	default:
 		return false
@@ -43,49 +69,27 @@ func requiresAuthentication(productType string) bool {
 
 func sourceUrl(pt string) (getUrl, error) {
 	switch pt {
-	case "products-pages":
+	case Store:
 		return gogurls.DefaultProductsPage, nil
-	case "account-products-pages":
+	case Account:
 		return gogurls.DefaultAccountProductsPage, nil
-	case "wishlist-pages":
+	case Wishlist:
 		return gogurls.DefaultWishlistPage, nil
-	case "details":
+	case Details:
 		return gogurls.Details, nil
 	default:
 		return nil, fmt.Errorf("cannot provide a source url for a type %s\n", pt)
 	}
 }
 
-func destinationUrl(productType, media string) (string, error) {
-	dstUrl := "data"
-
-	switch productType {
-	case "products-pages":
-		dstUrl += "/productPages/"
-	case "account-products-pages":
-		dstUrl += "/accountProductPages/"
-	case "wishlist-pages":
-		dstUrl += "/wishlistPages/"
-	case "details":
-		dstUrl += "/details/"
-	case "products":
-		dstUrl += "/products/"
-	case "account-products":
-		dstUrl += "/accountProducts/"
-	case "wishlist":
-		dstUrl += "/wishlist/"
-	default:
-		return "", fmt.Errorf("unknown product type %s\n", productType)
-	}
-
-	dstUrl += media
-	return dstUrl, nil
+func destinationUrl(pt, media string) (string, error) {
+	return fmt.Sprintf("data/%s/%s", pt, media), nil
 }
 
 func mainProductType(productType string) string {
 	switch productType {
-	case "details":
-		return "account-products"
+	case Details:
+		return AccountProducts
 	default:
 		return ""
 	}
@@ -93,12 +97,12 @@ func mainProductType(productType string) string {
 
 func detailProductType(pt string) string {
 	switch pt {
-	case "products-pages":
-		return "products"
-	case "account-products-pages":
-		return "account-products"
-	case "wishlist-pages":
-		return "wishlist"
+	case Store:
+		return Products
+	case Account:
+		return AccountProducts
+	case Wishlist:
+		return WishlistProducts
 	default:
 		return ""
 	}
@@ -106,12 +110,12 @@ func detailProductType(pt string) string {
 
 func paginatedProductType(pt string) string {
 	switch pt {
-	case "products":
-		return "products-pages"
-	case "account-products":
-		return "account-products-pages"
-	case "wishlist":
-		return "wishlist-pages"
+	case Products:
+		return Store
+	case AccountProducts:
+		return Account
+	case WishlistProducts:
+		return Wishlist
 	default:
 		return pt
 	}
@@ -119,7 +123,7 @@ func paginatedProductType(pt string) string {
 
 func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
 
-	log.Printf("fetching %s (%s) #%s\n", pt, media, id)
+	log.Printf("fetching %s (%s) %s %-s\n", pt, media, singular(pt), id)
 
 	u := sourceUrl(id, media)
 	resp, err := httpClient.Get(u.String())
@@ -196,7 +200,7 @@ func fetchMissing(
 			return err
 		}
 	} else {
-		log.Printf("no products of type %s (%s) are missing\n", productType, mt)
+		log.Printf("no missing %s (%s)\n", productType, mt)
 	}
 
 	return nil

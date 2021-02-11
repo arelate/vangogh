@@ -24,6 +24,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "list":
 		title := req.ArgVal("title")
 		return List(ids, title, productType, media)
+	case "download":
+		kind := req.ArgVal("kind")
+		return Download(ids, productType, media, kind)
 	case "sync":
 		return Sync(media)
 	case "test":

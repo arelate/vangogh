@@ -6,20 +6,21 @@
       "password"
     ],
     "fetch": [
-      "type_!=products,account-products,wishlist,details",
+      "type_!=store,account,wishlist,details",
       "media=game_,movie",
       "id...",
       "missing"
     ],
     "download": [
-      "type_!=file,image",
+      "type_!=store-products,account-products,wishlist-products,details",
+      "kind!=image",
       "media=game_,movie",
-      "os=current!,windows,macos,linux",
-      "lang=en!,ru",
+      "os=current_,windows,macos,linux",
+      "lang=en_,ru",
       "id..."
     ],
     "list": [
-      "type_!=products,account-products,wishlist,details",
+      "type_!=store-products,account-products,wishlist-products,details",
       "media=game_,movie",
       "id...",
       "title"

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type titled struct {
+type productTitle struct {
 	Title string `json:"title"`
 }
 
@@ -31,7 +31,7 @@ func List(ids []string, title string, pt, media string) error {
 		if err != nil {
 			return err
 		}
-		var tt titled
+		var tt productTitle
 		err = json.NewDecoder(rc).Decode(&tt)
 		if err != nil {
 			return err
