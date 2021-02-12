@@ -1,7 +1,10 @@
 # vangogh backlog
 
-- kvas separate index extension from content extension (allow protobuf index, png files)
 - add protobuf support for local types instead of JSON  
+- index files should be protobuf (so no index selection)
+- create NewLocalJsonClient and NewLocalProtoClient that only take URL
+- Bug: "list store-p" is not an error
+- Store-products are stored in "products"
 - split vangogh types into a separate module
 - split vangogh URLs into a separate module
 - add operations log
@@ -29,3 +32,4 @@
   - ~~root caused to not closing files after a kvas.Get~~
   - ~~convert all returned io.Reader to io.ReadCloser (should work with remote kvas as well)~~
   - ~~use file.Create instead of OpenFile for kvas.Set~~
+- ~~kvas separate index extension from content extension (allow protobuf index, png files)~~

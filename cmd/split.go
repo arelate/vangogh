@@ -17,7 +17,7 @@ func split(mainPt string, media string) error {
 		return err
 	}
 
-	kvMain, err := kvas.NewLocal(mainDstUrl, ".json")
+	kvMain, err := kvas.NewLocal(mainDstUrl, jsonExt, jsonExt)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func splitPage(pageReader io.Reader, mainPt string, media string) error {
 		return nil
 	}
 
-	kvDetail, err := kvas.NewLocal(detailDstUrl, ".json")
+	kvDetail, err := kvas.NewLocal(detailDstUrl, jsonExt, jsonExt)
 	if err != nil {
 		return err
 	}

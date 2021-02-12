@@ -47,7 +47,7 @@ func LoadCookieJar() (*cookiejar.Jar, error) {
 		return nil, err
 	}
 
-	kvCookies, err := kvas.NewLocal("", ".json")
+	kvCookies, err := kvas.NewLocal("", ".json", ".json")
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func LoadCookieJar() (*cookiejar.Jar, error) {
 
 func SaveCookieJar(jar *cookiejar.Jar) error {
 
-	kvCookies, err := kvas.NewLocal("", ".json")
+	kvCookies, err := kvas.NewLocal("", ".json", ".json")
 	if err != nil {
 		return err
 	}

@@ -17,7 +17,7 @@ func List(ids []string, title string, pt, media string) error {
 		return err
 	}
 
-	kv, err := kvas.NewLocal(dstUrl, ".json")
+	kv, err := kvas.NewLocal(dstUrl, jsonExt, jsonExt)
 	if err != nil {
 		return err
 	}

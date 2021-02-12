@@ -3,8 +3,10 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/arelate/gogurls"
 	"github.com/boggydigital/kvas"
 	"log"
+	"net/url"
 )
 
 type productImage struct {
@@ -49,12 +51,15 @@ func downloadImages(ids []string, pt, media string) error {
 		return err
 	}
 
-	kvProductImages, err := kvas.NewLocal(dstUrl, ".json")
+	kvProductImages, err := kvas.NewLocal(dstUrl, jsonExt, jsonExt)
 	if err != nil {
 		return err
 	}
 
 	for _, id := range ids {
+
+		fmt.Printf("downloading image for %s (%s) id %s\n", pt, media, id)
+
 		imgRc, err := kvProductImages.Get(id)
 		if err != nil {
 			return err
@@ -65,7 +70,15 @@ func downloadImages(ids []string, pt, media string) error {
 			return err
 		}
 
-		fmt.Println(ii.Image)
+		// this should be gogurls func
+		u, err := url.Parse(ii.Image)
+		if err != nil {
+			return err
+		}
+		u.Scheme = gogurls.HttpsScheme
+		u.Path += ".png"
+
+		// TODO: add file downloader here
 
 		if err := imgRc.Close(); err != nil {
 			return err

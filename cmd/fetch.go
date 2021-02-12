@@ -29,6 +29,8 @@ const (
 	WishlistProducts = "wishlist-products"
 )
 
+const jsonExt = ".json"
+
 type getUrl func(string, gogtypes.Media) *url.URL
 
 var httpClient *http.Client
@@ -135,7 +137,7 @@ func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, des
 		return nil, fmt.Errorf("error fetching read closer at %s: %s", u.String(), resp.Status)
 	}
 
-	vs, err := kvas.NewLocal(destUrl, ".json")
+	vs, err := kvas.NewLocal(destUrl, jsonExt, jsonExt)
 	if err != nil {
 		return resp.Body, err
 	}
@@ -179,12 +181,12 @@ func fetchMissing(
 	mt gogtypes.Media,
 	sourceUrl getUrl,
 	mainDestUrl, detailDestUrl string) error {
-	kvMain, err := kvas.NewLocal(mainDestUrl, ".json")
+	kvMain, err := kvas.NewLocal(mainDestUrl, jsonExt, jsonExt)
 	if err != nil {
 		return err
 	}
 
-	kvDetail, err := kvas.NewLocal(detailDestUrl, ".json")
+	kvDetail, err := kvas.NewLocal(detailDestUrl, jsonExt, jsonExt)
 	if err != nil {
 		return err
 	}
