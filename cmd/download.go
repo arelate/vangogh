@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/arelate/gog_urls"
+	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/vangogh/internal"
 	"log"
-	"net/url"
 )
 
 type productImage struct {
@@ -60,12 +61,12 @@ func downloadImages(ids []string, pt, media string, all bool) error {
 		return nil
 	}
 
-	//httpClient, err := internal.HttpClient()
-	//if err != nil {
-	//	return err
-	//}
+	httpClient, err := internal.HttpClient()
+	if err != nil {
+		return err
+	}
 
-	//dc := dolo.NewClient(httpClient, nil)
+	dc := dolo.NewClient(httpClient, 5, nil)
 
 	for _, id := range ids {
 
@@ -82,18 +83,16 @@ func downloadImages(ids []string, pt, media string, all bool) error {
 		}
 
 		// this should be gog_urls func
-		u, err := url.Parse(ii.Image)
+		imgUrl, err := gog_urls.Image(ii.Image)
 		if err != nil {
 			return err
 		}
-		u.Scheme = gog_urls.HttpsScheme
-		u.Path += ".png"
 
-		fmt.Println(u.String())
+		//fmt.Println(imgUrl.String())
 
-		//if err := dc.Download(u, "images", false); err != nil {
-		//	return err
-		//}
+		if err := dc.Download(imgUrl, "images", false); err != nil {
+			return err
+		}
 
 		if err := imgRc.Close(); err != nil {
 			return err

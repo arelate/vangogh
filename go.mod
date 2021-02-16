@@ -5,9 +5,9 @@ go 1.15
 require (
 	github.com/arelate/gog_auth v0.1.3-alpha
 	github.com/arelate/gog_types v0.1.6-alpha
-	github.com/arelate/gog_urls v0.1.4-alpha
+	github.com/arelate/gog_urls v0.1.6-alpha
 	github.com/boggydigital/clo v1.0.3
-	github.com/boggydigital/dolo v0.1.0-alpha
+	github.com/boggydigital/dolo v0.1.2-alpha
 	github.com/boggydigital/kvas v0.1.8-alpha
 )
 
