@@ -3,7 +3,7 @@ package internal
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/arelate/gogurls"
+	"github.com/arelate/gog_urls"
 	"github.com/boggydigital/kvas"
 	"net/http"
 	"net/http/cookiejar"
@@ -13,7 +13,7 @@ import (
 
 const cookiesKey = "cookies"
 
-var gogHost = &url.URL{Scheme: gogurls.HttpsScheme, Host: gogurls.GogHost}
+var gogHost = &url.URL{Scheme: gog_urls.HttpsScheme, Host: gog_urls.GogHost}
 
 func hydrate(ckv map[string]string) []*http.Cookie {
 	cookies := make([]*http.Cookie, 0, len(ckv))
@@ -22,7 +22,7 @@ func hydrate(ckv map[string]string) []*http.Cookie {
 			Name:     k,
 			Value:    v,
 			Path:     "/",
-			Domain:   "." + gogurls.GogHost,
+			Domain:   "." + gog_urls.GogHost,
 			Expires:  time.Now().Add(time.Hour * 24 * 30),
 			Secure:   true,
 			HttpOnly: true,
@@ -47,7 +47,7 @@ func LoadCookieJar() (*cookiejar.Jar, error) {
 		return nil, err
 	}
 
-	kvCookies, err := kvas.NewLocal("", ".json", ".json")
+	kvCookies, err := kvas.NewJsonLocal("")
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +73,9 @@ func LoadCookieJar() (*cookiejar.Jar, error) {
 	return jar, nil
 }
 
-func SaveCookieJar(jar *cookiejar.Jar) error {
+func SaveCookieJar(jar http.CookieJar) error {
 
-	kvCookies, err := kvas.NewLocal("", ".json", ".json")
+	kvCookies, err := kvas.NewJsonLocal("")
 	if err != nil {
 		return err
 	}

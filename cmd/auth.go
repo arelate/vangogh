@@ -3,11 +3,9 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"github.com/arelate/gogauth"
+	"github.com/arelate/gog_auth"
 	"github.com/boggydigital/vangogh/internal"
-	"net/http"
 	"os"
-	"time"
 )
 
 func requestText(prompt string) string {
@@ -21,17 +19,12 @@ func requestText(prompt string) string {
 
 func Authenticate(username, password string) error {
 
-	jar, err := internal.LoadCookieJar()
+	httpClient, err := internal.HttpClient()
 	if err != nil {
 		return err
 	}
 
-	httpClient := &http.Client{
-		Timeout: time.Minute * 3,
-		Jar:     jar,
-	}
-
-	li, err := gogauth.LoggedIn(httpClient)
+	li, err := gog_auth.LoggedIn(httpClient)
 	if err != nil {
 		return err
 	}
@@ -40,9 +33,9 @@ func Authenticate(username, password string) error {
 		return nil
 	}
 
-	if err := gogauth.Login(httpClient, username, password, requestText); err != nil {
+	if err := gog_auth.Login(httpClient, username, password, requestText); err != nil {
 		return err
 	}
 
-	return internal.SaveCookieJar(jar)
+	return internal.SaveCookieJar(httpClient.Jar)
 }

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/arelate/gogtypes"
+	"github.com/arelate/gog_types"
 	"github.com/boggydigital/kvas"
 	"io"
 	"log"
@@ -17,7 +17,7 @@ func split(mainPt string, media string) error {
 		return err
 	}
 
-	kvMain, err := kvas.NewLocal(mainDstUrl, jsonExt, jsonExt)
+	kvMain, err := kvas.NewJsonLocal(mainDstUrl)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func splitPage(pageReader io.Reader, mainPt string, media string) error {
 		return nil
 	}
 
-	kvDetail, err := kvas.NewLocal(detailDstUrl, jsonExt, jsonExt)
+	kvDetail, err := kvas.NewJsonLocal(detailDstUrl)
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func splitPage(pageReader io.Reader, mainPt string, media string) error {
 
 // TODO: rewrite this with generics when available
 func splitProductsPage(pageReader io.Reader, set func(string, io.Reader) error) error {
-	var productsPage gogtypes.ProductsPage
+	var productsPage gog_types.ProductsPage
 	if err := json.NewDecoder(pageReader).Decode(&productsPage); err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func splitProductsPage(pageReader io.Reader, set func(string, io.Reader) error) 
 
 // TODO: rewrite this with generics when available
 func splitAccountProductsPage(pageReader io.Reader, set func(string, io.Reader) error) error {
-	var accountProductsPage gogtypes.AccountProductsPage
+	var accountProductsPage gog_types.AccountProductsPage
 	if err := json.NewDecoder(pageReader).Decode(&accountProductsPage); err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func splitAccountProductsPage(pageReader io.Reader, set func(string, io.Reader) 
 
 // TODO: rewrite this with generics when available
 func splitWishlistPage(pageReader io.Reader, set func(string, io.Reader) error) error {
-	var wishlistPage gogtypes.WishlistPage
+	var wishlistPage gog_types.WishlistPage
 	if err := json.NewDecoder(pageReader).Decode(&wishlistPage); err != nil {
 		return err
 	}

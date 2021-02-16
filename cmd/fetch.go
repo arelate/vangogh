@@ -4,17 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/arelate/gogauth"
-	"github.com/arelate/gogtypes"
-	"github.com/arelate/gogurls"
+	"github.com/arelate/gog_auth"
+	"github.com/arelate/gog_types"
+	"github.com/arelate/gog_urls"
 	"github.com/boggydigital/vangogh/internal"
-	"time"
-
-	//"github.com/arelate/gogauth"
+	//"github.com/arelate/gog_auth"
 	"github.com/boggydigital/kvas"
 	"io"
 	"log"
-	"net/http"
 	"net/url"
 	"strconv"
 )
@@ -24,16 +21,12 @@ const (
 	Account          = "account"
 	Wishlist         = "wishlist"
 	Details          = "details"
-	Products         = "products"
+	StoreProducts    = "store-products"
 	AccountProducts  = "account-products"
 	WishlistProducts = "wishlist-products"
 )
 
-const jsonExt = ".json"
-
-type getUrl func(string, gogtypes.Media) *url.URL
-
-var httpClient *http.Client
+type getUrl func(string, gog_types.Media) *url.URL
 
 func paginated(pt string) bool {
 	switch pt {
@@ -72,13 +65,13 @@ func requiresAuthentication(productType string) bool {
 func sourceUrl(pt string) (getUrl, error) {
 	switch pt {
 	case Store:
-		return gogurls.DefaultProductsPage, nil
+		return gog_urls.DefaultProductsPage, nil
 	case Account:
-		return gogurls.DefaultAccountProductsPage, nil
+		return gog_urls.DefaultAccountProductsPage, nil
 	case Wishlist:
-		return gogurls.DefaultWishlistPage, nil
+		return gog_urls.DefaultWishlistPage, nil
 	case Details:
-		return gogurls.Details, nil
+		return gog_urls.Details, nil
 	default:
 		return nil, fmt.Errorf("cannot provide a source url for a type %s\n", pt)
 	}
@@ -100,7 +93,7 @@ func mainProductType(productType string) string {
 func detailProductType(pt string) string {
 	switch pt {
 	case Store:
-		return Products
+		return StoreProducts
 	case Account:
 		return AccountProducts
 	case Wishlist:
@@ -112,7 +105,7 @@ func detailProductType(pt string) string {
 
 func paginatedProductType(pt string) string {
 	switch pt {
-	case Products:
+	case StoreProducts:
 		return Store
 	case AccountProducts:
 		return Account
@@ -123,9 +116,14 @@ func paginatedProductType(pt string) string {
 	}
 }
 
-func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
+func fetchItem(id string, pt string, media gog_types.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
 
 	log.Printf("fetching %s (%s) %s %-s\n", pt, media, singular(pt), id)
+
+	httpClient, err := internal.HttpClient()
+	if err != nil {
+		return nil, err
+	}
 
 	u := sourceUrl(id, media)
 	resp, err := httpClient.Get(u.String())
@@ -137,7 +135,7 @@ func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, des
 		return nil, fmt.Errorf("error fetching read closer at %s: %s", u.String(), resp.Status)
 	}
 
-	vs, err := kvas.NewLocal(destUrl, jsonExt, jsonExt)
+	vs, err := kvas.NewJsonLocal(destUrl)
 	if err != nil {
 		return resp.Body, err
 	}
@@ -156,7 +154,7 @@ func fetchItem(id string, pt string, media gogtypes.Media, sourceUrl getUrl, des
 	return &b, nil
 }
 
-func fetchPages(productType string, media gogtypes.Media, sourceUrl getUrl, destUrl string) error {
+func fetchPages(productType string, media gog_types.Media, sourceUrl getUrl, destUrl string) error {
 	totalPages := 1
 	for pp := 1; pp <= totalPages; pp++ {
 
@@ -165,7 +163,7 @@ func fetchPages(productType string, media gogtypes.Media, sourceUrl getUrl, dest
 			return err
 		}
 
-		var page gogtypes.Page
+		var page gog_types.Page
 		if err = json.NewDecoder(rdr).Decode(&page); err != nil {
 			return err
 		}
@@ -178,15 +176,15 @@ func fetchPages(productType string, media gogtypes.Media, sourceUrl getUrl, dest
 
 func fetchMissing(
 	productType string,
-	mt gogtypes.Media,
+	mt gog_types.Media,
 	sourceUrl getUrl,
 	mainDestUrl, detailDestUrl string) error {
-	kvMain, err := kvas.NewLocal(mainDestUrl, jsonExt, jsonExt)
+	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
 	if err != nil {
 		return err
 	}
 
-	kvDetail, err := kvas.NewLocal(detailDestUrl, jsonExt, jsonExt)
+	kvDetail, err := kvas.NewJsonLocal(detailDestUrl)
 	if err != nil {
 		return err
 	}
@@ -211,7 +209,7 @@ func fetchMissing(
 func fetchItems(
 	ids []string,
 	productType string,
-	mt gogtypes.Media,
+	mt gog_types.Media,
 	sourceUrl getUrl,
 	destUrl string) error {
 
@@ -233,18 +231,13 @@ func fetchItems(
 
 func Fetch(ids []string, pt, media string, missing bool) error {
 
-	jar, err := internal.LoadCookieJar()
+	httpClient, err := internal.HttpClient()
 	if err != nil {
 		return err
 	}
 
-	httpClient = &http.Client{
-		Timeout: time.Minute * 3,
-		Jar:     jar,
-	}
-
 	if requiresAuthentication(pt) {
-		li, err := gogauth.LoggedIn(httpClient)
+		li, err := gog_auth.LoggedIn(httpClient)
 		if err != nil {
 			return err
 		}
@@ -269,7 +262,7 @@ func Fetch(ids []string, pt, media string, missing bool) error {
 		return err
 	}
 
-	mt := gogtypes.Parse(media)
+	mt := gog_types.Parse(media)
 
 	if paginated(pt) {
 		if err := fetchPages(pt, mt, srcUrl, dstUrl); err != nil {

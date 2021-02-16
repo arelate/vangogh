@@ -17,7 +17,8 @@
       "media=game_,movie",
       "os=current_,windows,macos,linux",
       "lang=en_,ru",
-      "id..."
+      "id...",
+      "all"
     ],
     "list": [
       "type_!=store-products,account-products,wishlist-products,details",

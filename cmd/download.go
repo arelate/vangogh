@@ -3,7 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/arelate/gogurls"
+	"github.com/arelate/gog_urls"
 	"github.com/boggydigital/kvas"
 	"log"
 	"net/url"
@@ -19,31 +19,26 @@ func hasImages(pt string) bool {
 		fallthrough
 	case AccountProducts:
 		fallthrough
-	case Products:
+	case StoreProducts:
 		return true
 	default:
 		return false
 	}
 }
 
-func Download(ids []string, pt, media, kind string) error {
+func Download(ids []string, pt, media, kind string, all bool) error {
 	switch kind {
 	case "image":
-		return downloadImages(ids, pt, media)
+		return downloadImages(ids, pt, media, all)
 	default:
 		fmt.Println("download", pt, media, kind, ids)
 	}
 	return nil
 }
 
-func downloadImages(ids []string, pt, media string) error {
+func downloadImages(ids []string, pt, media string, all bool) error {
 	if !hasImages(pt) {
 		return fmt.Errorf("type %s (%s) doesn't contain images", pt, media)
-	}
-
-	if len(ids) == 0 {
-		log.Printf("no ids specified to download")
-		return nil
 	}
 
 	dstUrl, err := destinationUrl(pt, media)
@@ -51,10 +46,26 @@ func downloadImages(ids []string, pt, media string) error {
 		return err
 	}
 
-	kvProductImages, err := kvas.NewLocal(dstUrl, jsonExt, jsonExt)
+	kvProductImages, err := kvas.NewJsonLocal(dstUrl)
 	if err != nil {
 		return err
 	}
+
+	if all {
+		ids = kvProductImages.All()
+	}
+
+	if len(ids) == 0 {
+		log.Printf("no ids specified to download")
+		return nil
+	}
+
+	//httpClient, err := internal.HttpClient()
+	//if err != nil {
+	//	return err
+	//}
+
+	//dc := dolo.NewClient(httpClient, nil)
 
 	for _, id := range ids {
 
@@ -70,15 +81,19 @@ func downloadImages(ids []string, pt, media string) error {
 			return err
 		}
 
-		// this should be gogurls func
+		// this should be gog_urls func
 		u, err := url.Parse(ii.Image)
 		if err != nil {
 			return err
 		}
-		u.Scheme = gogurls.HttpsScheme
+		u.Scheme = gog_urls.HttpsScheme
 		u.Path += ".png"
 
-		// TODO: add file downloader here
+		fmt.Println(u.String())
+
+		//if err := dc.Download(u, "images", false); err != nil {
+		//	return err
+		//}
 
 		if err := imgRc.Close(); err != nil {
 			return err
