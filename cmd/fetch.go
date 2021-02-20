@@ -24,6 +24,7 @@ const (
 	StoreProducts    = "store-products"
 	AccountProducts  = "account-products"
 	WishlistProducts = "wishlist-products"
+	ApiProducts      = "api-products"
 )
 
 type getUrl func(string, gog_types.Media) *url.URL
@@ -38,14 +39,6 @@ func paginated(pt string) bool {
 		return true
 	default:
 		return false
-	}
-}
-
-func singular(pt string) string {
-	if paginated(pt) {
-		return "page"
-	} else {
-		return ""
 	}
 }
 
@@ -72,21 +65,25 @@ func sourceUrl(pt string) (getUrl, error) {
 		return gog_urls.DefaultWishlistPage, nil
 	case Details:
 		return gog_urls.Details, nil
+	case ApiProducts:
+		return gog_urls.ApiProduct, nil
 	default:
 		return nil, fmt.Errorf("cannot provide a source url for a type %s\n", pt)
 	}
 }
 
 func destinationUrl(pt, media string) (string, error) {
-	return fmt.Sprintf("data/%s/%s", pt, media), nil
+	return fmt.Sprintf("metadata/%s/%s", pt, media), nil
 }
 
-func mainProductType(productType string) string {
+func mainProductTypes(productType string) []string {
 	switch productType {
 	case Details:
-		return AccountProducts
+		return []string{AccountProducts}
+	case ApiProducts:
+		return []string{StoreProducts, AccountProducts}
 	default:
-		return ""
+		return []string{}
 	}
 }
 
@@ -103,22 +100,48 @@ func detailProductType(pt string) string {
 	}
 }
 
-func paginatedProductType(pt string) string {
+func mediaSupported(pt string, media string) bool {
+	mt := gog_types.Parse(media)
+	if mt == gog_types.Unknown {
+		return false
+	}
+
 	switch pt {
+	case Store:
+		fallthrough
+	case Account:
+		fallthrough
+	case Wishlist:
+		fallthrough
 	case StoreProducts:
-		return Store
+		fallthrough
 	case AccountProducts:
-		return Account
+		fallthrough
 	case WishlistProducts:
-		return Wishlist
+		return true
+	case ApiProducts:
+		return mt == gog_types.Game
 	default:
-		return pt
+		return false
 	}
 }
 
+//func paginatedProductType(pt string) string {
+//	switch pt {
+//	case StoreProducts:
+//		return Store
+//	case AccountProducts:
+//		return Account
+//	case WishlistProducts:
+//		return Wishlist
+//	default:
+//		return pt
+//	}
+//}
+
 func fetchItem(id string, pt string, media gog_types.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
 
-	log.Printf("fetching %s (%s) %s %-s\n", pt, media, singular(pt), id)
+	log.Printf("fetching %s (%s) %s\n", pt, media, id)
 
 	httpClient, err := internal.HttpClient()
 	if err != nil {
@@ -214,7 +237,9 @@ func fetchItems(
 	destUrl string) error {
 
 	switch productType {
-	case "details":
+	case Details:
+		break
+	case ApiProducts:
 		break
 	default:
 		return fmt.Errorf("fetching items of type %s is not supported", productType)
@@ -247,10 +272,10 @@ func Fetch(ids []string, pt, media string, missing bool) error {
 		}
 	}
 
-	// clo.json specifies "normal" type, in order to get it we need to:
-	// - fetch individual pages of paginated type = product-type + "-pages"
-	// - split fetched pages into individual blocks
-	pt = paginatedProductType(pt)
+	//// clo.json specifies "normal" type, in order to get it we need to:
+	//// - fetch individual pages of paginated type = product-type + "-pages"
+	//// - split fetched pages into individual blocks
+	//pt = paginatedProductType(pt)
 
 	dstUrl, err := destinationUrl(pt, media)
 	if err != nil {
@@ -272,11 +297,16 @@ func Fetch(ids []string, pt, media string, missing bool) error {
 		return split(pt, media)
 	} else {
 		if missing {
-			mainDstUrl, err := destinationUrl(mainProductType(pt), media)
-			if err != nil {
-				return err
+			for _, mpt := range mainProductTypes(pt) {
+				mainDstUrl, err := destinationUrl(mpt, media)
+				if err != nil {
+					return err
+				}
+				if err = fetchMissing(pt, mt, srcUrl, mainDstUrl, dstUrl); err != nil {
+					return err
+				}
 			}
-			return fetchMissing(pt, mt, srcUrl, mainDstUrl, dstUrl)
+			return nil
 		} else {
 			return fetchItems(ids, pt, mt, srcUrl, dstUrl)
 		}

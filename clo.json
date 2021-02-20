@@ -6,7 +6,7 @@
       "password"
     ],
     "fetch": [
-      "type_!=store,account,wishlist,details",
+      "type_!=store,account,wishlist,details,api-products",
       "media=game_,movie",
       "id...",
       "missing"

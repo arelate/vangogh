@@ -1,17 +1,16 @@
 package internal
 
 import (
-	"bytes"
 	"encoding/json"
 	"github.com/arelate/gog_urls"
-	"github.com/boggydigital/kvas"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"os"
 	"time"
 )
 
-const cookiesKey = "cookies"
+const cookiesFilename = "cookies.json"
 
 var gogHost = &url.URL{Scheme: gog_urls.HttpsScheme, Host: gog_urls.GogHost}
 
@@ -41,49 +40,35 @@ func dehydrate(cookies []*http.Cookie) map[string]string {
 }
 
 func LoadCookieJar() (*cookiejar.Jar, error) {
-
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, err
 	}
 
-	kvCookies, err := kvas.NewJsonLocal("")
+	cookiesFile, err := os.Open(cookiesFilename)
 	if err != nil {
+		return jar, err
+	}
+
+	defer cookiesFile.Close()
+
+	var ckv map[string]string
+	if err := json.NewDecoder(cookiesFile).Decode(&ckv); err != nil {
 		return nil, err
 	}
 
-	if kvCookies.Contains(cookiesKey) {
-		crc, err := kvCookies.Get(cookiesKey)
-		if err != nil {
-			return nil, err
-		}
-
-		var ckv map[string]string
-		if err := json.NewDecoder(crc).Decode(&ckv); err != nil {
-			return nil, err
-		}
-
-		jar.SetCookies(gogHost, hydrate(ckv))
-
-		if err := crc.Close(); err != nil {
-			return jar, err
-		}
-	}
+	jar.SetCookies(gogHost, hydrate(ckv))
 
 	return jar, nil
 }
 
 func SaveCookieJar(jar http.CookieJar) error {
-
-	kvCookies, err := kvas.NewJsonLocal("")
+	cookiesFile, err := os.Create(cookiesFilename)
 	if err != nil {
 		return err
 	}
 
-	var b bytes.Buffer
-	if err := json.NewEncoder(&b).Encode(dehydrate(jar.Cookies(gogHost))); err != nil {
-		return err
-	}
+	defer cookiesFile.Close()
 
-	return kvCookies.Set(cookiesKey, &b)
+	return json.NewEncoder(cookiesFile).Encode(dehydrate(jar.Cookies(gogHost)))
 }
