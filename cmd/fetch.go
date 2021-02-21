@@ -6,149 +6,30 @@ import (
 	"fmt"
 	"github.com/arelate/gog_auth"
 	"github.com/arelate/gog_types"
-	"github.com/arelate/gog_urls"
-	"github.com/boggydigital/vangogh/internal"
-	//"github.com/arelate/gog_auth"
+	"github.com/arelate/vangogh_types"
+	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/vangogh/internal"
 	"io"
 	"log"
-	"net/url"
 	"strconv"
 )
 
-const (
-	Store            = "store"
-	Account          = "account"
-	Wishlist         = "wishlist"
-	Details          = "details"
-	StoreProducts    = "store-products"
-	AccountProducts  = "account-products"
-	WishlistProducts = "wishlist-products"
-	ApiProducts      = "api-products"
-)
+func fetchItem(
+	id string,
+	pt vangogh_types.ProductType,
+	mt gog_types.Media,
+	sourceUrl vangogh_urls.ProductTypeUrl,
+	destUrl string) (io.Reader, error) {
 
-type getUrl func(string, gog_types.Media) *url.URL
-
-func paginated(pt string) bool {
-	switch pt {
-	case Store:
-		fallthrough
-	case Account:
-		fallthrough
-	case Wishlist:
-		return true
-	default:
-		return false
-	}
-}
-
-func requiresAuthentication(productType string) bool {
-	switch productType {
-	case Account:
-		fallthrough
-	case Wishlist:
-		fallthrough
-	case Details:
-		return true
-	default:
-		return false
-	}
-}
-
-func sourceUrl(pt string) (getUrl, error) {
-	switch pt {
-	case Store:
-		return gog_urls.DefaultProductsPage, nil
-	case Account:
-		return gog_urls.DefaultAccountProductsPage, nil
-	case Wishlist:
-		return gog_urls.DefaultWishlistPage, nil
-	case Details:
-		return gog_urls.Details, nil
-	case ApiProducts:
-		return gog_urls.ApiProduct, nil
-	default:
-		return nil, fmt.Errorf("cannot provide a source url for a type %s\n", pt)
-	}
-}
-
-func destinationUrl(pt, media string) (string, error) {
-	return fmt.Sprintf("metadata/%s/%s", pt, media), nil
-}
-
-func mainProductTypes(productType string) []string {
-	switch productType {
-	case Details:
-		return []string{AccountProducts}
-	case ApiProducts:
-		return []string{StoreProducts, AccountProducts}
-	default:
-		return []string{}
-	}
-}
-
-func detailProductType(pt string) string {
-	switch pt {
-	case Store:
-		return StoreProducts
-	case Account:
-		return AccountProducts
-	case Wishlist:
-		return WishlistProducts
-	default:
-		return ""
-	}
-}
-
-func mediaSupported(pt string, media string) bool {
-	mt := gog_types.Parse(media)
-	if mt == gog_types.Unknown {
-		return false
-	}
-
-	switch pt {
-	case Store:
-		fallthrough
-	case Account:
-		fallthrough
-	case Wishlist:
-		fallthrough
-	case StoreProducts:
-		fallthrough
-	case AccountProducts:
-		fallthrough
-	case WishlistProducts:
-		return true
-	case ApiProducts:
-		return mt == gog_types.Game
-	default:
-		return false
-	}
-}
-
-//func paginatedProductType(pt string) string {
-//	switch pt {
-//	case StoreProducts:
-//		return Store
-//	case AccountProducts:
-//		return Account
-//	case WishlistProducts:
-//		return Wishlist
-//	default:
-//		return pt
-//	}
-//}
-
-func fetchItem(id string, pt string, media gog_types.Media, sourceUrl getUrl, destUrl string) (io.Reader, error) {
-
-	log.Printf("fetching %s (%s) %s\n", pt, media, id)
+	log.Printf("fetching %s (%s) %s\n", pt, mt, id)
 
 	httpClient, err := internal.HttpClient()
 	if err != nil {
 		return nil, err
 	}
 
-	u := sourceUrl(id, media)
+	u := sourceUrl(id, mt)
 	resp, err := httpClient.Get(u.String())
 	if err != nil {
 		return nil, err
@@ -177,11 +58,15 @@ func fetchItem(id string, pt string, media gog_types.Media, sourceUrl getUrl, de
 	return &b, nil
 }
 
-func fetchPages(productType string, media gog_types.Media, sourceUrl getUrl, destUrl string) error {
+func fetchPages(
+	pt vangogh_types.ProductType,
+	mt gog_types.Media,
+	sourceUrl vangogh_urls.ProductTypeUrl,
+	destUrl string) error {
 	totalPages := 1
 	for pp := 1; pp <= totalPages; pp++ {
 
-		rdr, err := fetchItem(strconv.Itoa(pp), productType, media, sourceUrl, destUrl)
+		rdr, err := fetchItem(strconv.Itoa(pp), pt, mt, sourceUrl, destUrl)
 		if err != nil {
 			return err
 		}
@@ -198,9 +83,9 @@ func fetchPages(productType string, media gog_types.Media, sourceUrl getUrl, des
 }
 
 func fetchMissing(
-	productType string,
+	pt vangogh_types.ProductType,
 	mt gog_types.Media,
-	sourceUrl getUrl,
+	sourceUrl vangogh_urls.ProductTypeUrl,
 	mainDestUrl, detailDestUrl string) error {
 	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
 	if err != nil {
@@ -219,11 +104,12 @@ func fetchMissing(
 	}
 
 	if len(missingIds) > 0 {
-		if err := fetchItems(missingIds, productType, mt, sourceUrl, detailDestUrl); err != nil {
+		if err := fetchItems(missingIds, pt, mt, sourceUrl, detailDestUrl); err != nil {
+			//log.Println(err)
 			return err
 		}
 	} else {
-		log.Printf("no missing %s (%s)\n", productType, mt)
+		log.Printf("no missing %s (%s)\n", pt, mt)
 	}
 
 	return nil
@@ -231,37 +117,41 @@ func fetchMissing(
 
 func fetchItems(
 	ids []string,
-	productType string,
+	pt vangogh_types.ProductType,
 	mt gog_types.Media,
-	sourceUrl getUrl,
+	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string) error {
 
-	switch productType {
-	case Details:
+	switch pt {
+	case vangogh_types.Details:
 		break
-	case ApiProducts:
+	case vangogh_types.ApiProducts:
 		break
 	default:
-		return fmt.Errorf("fetching items of type %s is not supported", productType)
+		return fmt.Errorf("fetching items of type %s is not supported", pt)
 	}
 
 	for _, id := range ids {
-		_, err := fetchItem(id, productType, mt, sourceUrl, destUrl)
+		_, err := fetchItem(id, pt, mt, sourceUrl, destUrl)
 		if err != nil {
-			return err
+			log.Println(err)
+			//return err
 		}
 	}
 	return nil
 }
 
-func Fetch(ids []string, pt, media string, missing bool) error {
+func Fetch(ids []string, productType, media string, missing bool) error {
+
+	pt := vangogh_types.ParseProductType(productType)
+	mt := gog_types.Parse(media)
 
 	httpClient, err := internal.HttpClient()
 	if err != nil {
 		return err
 	}
 
-	if requiresAuthentication(pt) {
+	if vangogh_types.RequiresAuth(pt) {
 		li, err := gog_auth.LoggedIn(httpClient)
 		if err != nil {
 			return err
@@ -272,33 +162,26 @@ func Fetch(ids []string, pt, media string, missing bool) error {
 		}
 	}
 
-	//// clo.json specifies "normal" type, in order to get it we need to:
-	//// - fetch individual pages of paginated type = product-type + "-pages"
-	//// - split fetched pages into individual blocks
-	//pt = paginatedProductType(pt)
-
-	dstUrl, err := destinationUrl(pt, media)
+	dstUrl, err := vangogh_urls.DestinationUrl(pt, mt)
 	if err != nil {
 		return err
 	}
 
-	srcUrl, err := sourceUrl(pt)
+	srcUrl, err := vangogh_urls.SourceUrl(pt)
 	if err != nil {
 		return err
 	}
 
-	mt := gog_types.Parse(media)
-
-	if paginated(pt) {
+	if vangogh_types.HasPages(pt) {
 		if err := fetchPages(pt, mt, srcUrl, dstUrl); err != nil {
 			return err
 		}
 
-		return split(pt, media)
+		return split(pt, mt)
 	} else {
 		if missing {
-			for _, mpt := range mainProductTypes(pt) {
-				mainDstUrl, err := destinationUrl(mpt, media)
+			for _, mpt := range vangogh_types.MainProductTypes(pt) {
+				mainDstUrl, err := vangogh_urls.DestinationUrl(mpt, mt)
 				if err != nil {
 					return err
 				}

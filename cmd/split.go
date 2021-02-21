@@ -5,14 +5,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/arelate/gog_types"
+	"github.com/arelate/vangogh_types"
+	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
 	"io"
 	"log"
 	"strconv"
 )
 
-func split(mainPt string, media string) error {
-	mainDstUrl, err := destinationUrl(mainPt, media)
+func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
+
+	mainDstUrl, err := vangogh_urls.DestinationUrl(mainPt, mt)
 	if err != nil {
 		return err
 	}
@@ -24,14 +27,14 @@ func split(mainPt string, media string) error {
 
 	for _, pp := range kvMain.All() {
 
-		log.Printf("splitting %s (%s) page %s\n", mainPt, media, pp)
+		log.Printf("splitting %s (%s) page %s\n", mainPt, mt, pp)
 
 		pageRc, err := kvMain.Get(pp)
 		if err != nil {
 			return err
 		}
 
-		if err := splitPage(pageRc, mainPt, media); err != nil {
+		if err := splitPage(pageRc, mainPt, mt); err != nil {
 			return err
 		}
 
@@ -43,11 +46,11 @@ func split(mainPt string, media string) error {
 	return nil
 }
 
-func splitPage(pageReader io.Reader, mainPt string, media string) error {
+func splitPage(pageReader io.Reader, mainPt vangogh_types.ProductType, mt gog_types.Media) error {
 
-	detailPt := detailProductType(mainPt)
+	detailPt := vangogh_types.DetailProductType(mainPt)
 
-	detailDstUrl, err := destinationUrl(detailPt, media)
+	detailDstUrl, err := vangogh_urls.DestinationUrl(detailPt, mt)
 	if err != nil {
 		return nil
 	}
@@ -58,11 +61,11 @@ func splitPage(pageReader io.Reader, mainPt string, media string) error {
 	}
 
 	switch mainPt {
-	case Store:
+	case vangogh_types.Store:
 		return splitProductsPage(pageReader, kvDetail.Set)
-	case Account:
+	case vangogh_types.Account:
 		return splitAccountProductsPage(pageReader, kvDetail.Set)
-	case Wishlist:
+	case vangogh_types.Wishlist:
 		return splitWishlistPage(pageReader, kvDetail.Set)
 	default:
 		return fmt.Errorf("splitting page is not supported for type %s", mainPt)

@@ -11,7 +11,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 
 	ids := req.ArgValues("id")
 	media := req.ArgVal("media")
-	productType := req.ArgVal("type")
+	productType := req.ArgVal("product-type")
 
 	switch req.Command {
 	case "auth":
@@ -25,9 +25,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		title := req.ArgVal("title")
 		return List(ids, title, productType, media)
 	case "download":
-		kind := req.ArgVal("kind")
+		downloadType := req.ArgVal("download-type")
 		all := req.Flag("all")
-		return Download(ids, productType, media, kind, all)
+		return Download(ids, productType, media, downloadType, all)
 	case "sync":
 		return Sync(media)
 	case "test":

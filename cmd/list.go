@@ -3,6 +3,9 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/arelate/gog_types"
+	"github.com/arelate/vangogh_types"
+	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
 	"strings"
 )
@@ -11,8 +14,11 @@ type productTitle struct {
 	Title string `json:"title"`
 }
 
-func List(ids []string, title string, pt, media string) error {
-	dstUrl, err := destinationUrl(pt, media)
+func List(ids []string, title string, productType, media string) error {
+	pt := vangogh_types.ParseProductType(productType)
+	mt := gog_types.Parse(media)
+
+	dstUrl, err := vangogh_urls.DestinationUrl(pt, mt)
 	if err != nil {
 		return err
 	}
