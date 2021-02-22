@@ -144,7 +144,7 @@ func fetchItems(
 func Fetch(ids []string, productType, media string, missing bool) error {
 
 	pt := vangogh_types.ParseProductType(productType)
-	mt := gog_types.Parse(media)
+	mt := gog_types.ParseMedia(media)
 
 	httpClient, err := internal.HttpClient()
 	if err != nil {
@@ -162,12 +162,12 @@ func Fetch(ids []string, productType, media string, missing bool) error {
 		}
 	}
 
-	dstUrl, err := vangogh_urls.DestinationUrl(pt, mt)
+	dstUrl, err := vangogh_urls.DstProductTypeUrl(pt, mt)
 	if err != nil {
 		return err
 	}
 
-	srcUrl, err := vangogh_urls.SourceUrl(pt)
+	srcUrl, err := vangogh_urls.SrcProductTypeUrl(pt)
 	if err != nil {
 		return err
 	}
@@ -181,7 +181,7 @@ func Fetch(ids []string, productType, media string, missing bool) error {
 	} else {
 		if missing {
 			for _, mpt := range vangogh_types.MainProductTypes(pt) {
-				mainDstUrl, err := vangogh_urls.DestinationUrl(mpt, mt)
+				mainDstUrl, err := vangogh_urls.DstProductTypeUrl(mpt, mt)
 				if err != nil {
 					return err
 				}

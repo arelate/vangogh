@@ -15,7 +15,7 @@ import (
 
 func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
 
-	mainDstUrl, err := vangogh_urls.DestinationUrl(mainPt, mt)
+	mainDstUrl, err := vangogh_urls.DstProductTypeUrl(mainPt, mt)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func splitPage(pageReader io.Reader, mainPt vangogh_types.ProductType, mt gog_ty
 
 	detailPt := vangogh_types.DetailProductType(mainPt)
 
-	detailDstUrl, err := vangogh_urls.DestinationUrl(detailPt, mt)
+	detailDstUrl, err := vangogh_urls.DstProductTypeUrl(detailPt, mt)
 	if err != nil {
 		return nil
 	}

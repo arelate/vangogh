@@ -21,12 +21,16 @@
       "all"
     ],
     "list": [
-      "product-type_!=store-products,account-products,wishlist-products,details",
+      "product-type_!=store-products,account-products,wishlist-products,api-products,details",
       "media=game_,movie",
       "id...",
       "title"
     ],
     "sync": [
+      "media=game_,movie"
+    ],
+    "summarize": [
+      "product-type_!=store-products,account-products,wishlist-products,api-products,details",
       "media=game_,movie"
     ],
     "test": []

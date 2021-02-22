@@ -9,9 +9,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return clo.Route(nil, defs)
 	}
 
-	ids := req.ArgValues("id")
-	media := req.ArgVal("media")
 	productType := req.ArgVal("product-type")
+	media := req.ArgVal("media")
+	ids := req.ArgValues("id")
 
 	switch req.Command {
 	case "auth":
@@ -30,6 +30,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Download(ids, productType, media, downloadType, all)
 	case "sync":
 		return Sync(media)
+	case "summarize":
+		return Summarize(productType, media)
 	case "test":
 		return Test()
 	default:

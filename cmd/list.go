@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"encoding/json"
+	"encoding/gob"
 	"fmt"
 	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
+	"os"
 	"strings"
 )
 
@@ -16,9 +17,23 @@ type productTitle struct {
 
 func List(ids []string, title string, productType, media string) error {
 	pt := vangogh_types.ParseProductType(productType)
-	mt := gog_types.Parse(media)
+	mt := gog_types.ParseMedia(media)
 
-	dstUrl, err := vangogh_urls.DestinationUrl(pt, mt)
+	summaryPath := "metadata/_summary.gob"
+	// TODO: check if exists
+	summaryFile, err := os.Open(summaryPath)
+	if err != nil {
+		return err
+	}
+	defer summaryFile.Close()
+
+	var summary map[string]map[string]string
+
+	if err := gob.NewDecoder(summaryFile).Decode(&summary); err != nil {
+		return err
+	}
+
+	dstUrl, err := vangogh_urls.DstProductTypeUrl(pt, mt)
 	if err != nil {
 		return err
 	}
@@ -33,27 +48,19 @@ func List(ids []string, title string, productType, media string) error {
 	}
 
 	for _, id := range ids {
-		rc, err := kv.Get(id)
-		if err != nil {
-			return err
-		}
-		var tt productTitle
-		err = json.NewDecoder(rc).Decode(&tt)
-		if err != nil {
-			return err
-		}
 
-		if err := rc.Close(); err != nil {
-			return err
-		}
+		if sum, ok := summary[id]; ok {
 
-		if title != "" && !strings.Contains(
-			strings.ToLower(tt.Title),
-			strings.ToLower(title)) {
-			continue
-		}
+			sTitle := sum["title"]
 
-		fmt.Println(id, tt.Title)
+			if title != "" && !strings.Contains(
+				strings.ToLower(sTitle),
+				strings.ToLower(title)) {
+				continue
+			}
+
+			fmt.Println(id, sTitle)
+		}
 	}
 
 	return nil

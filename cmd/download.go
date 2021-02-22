@@ -19,7 +19,7 @@ type productImage struct {
 
 func Download(ids []string, productType, media, downloadType string, all bool) error {
 	pt := vangogh_types.ParseProductType(productType)
-	mt := gog_types.Parse(media)
+	mt := gog_types.ParseMedia(media)
 	dt := vangogh_types.ParseDownloadType(downloadType)
 
 	switch dt {
@@ -41,7 +41,7 @@ func downloadProductImages(
 		return fmt.Errorf("type %s (%s) doesn't contain %s", pt, mt, dt)
 	}
 
-	dstUrl, err := vangogh_urls.DestinationUrl(pt, mt)
+	dstUrl, err := vangogh_urls.DstProductTypeUrl(pt, mt)
 	if err != nil {
 		return err
 	}
