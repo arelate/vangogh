@@ -83,8 +83,9 @@ func fetchPages(
 }
 
 func fetchMissing(
-	pt vangogh_types.ProductType,
+	pt, mainPt vangogh_types.ProductType,
 	mt gog_types.Media,
+	denyIds []string,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	mainDestUrl, detailDestUrl string) error {
 	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
@@ -98,7 +99,8 @@ func fetchMissing(
 	}
 	missingIds := make([]string, 0)
 	for _, id := range kvMain.All() {
-		if !kvDetail.Contains(id) {
+		if !kvDetail.Contains(id) &&
+			!internal.StringsContain(denyIds, id) {
 			missingIds = append(missingIds, id)
 		}
 	}
@@ -109,7 +111,7 @@ func fetchMissing(
 			return err
 		}
 	} else {
-		log.Printf("no missing %s (%s)\n", pt, mt)
+		log.Printf("no missing %s for %s (%s)\n", pt, mainPt, mt)
 	}
 
 	return nil
@@ -141,10 +143,7 @@ func fetchItems(
 	return nil
 }
 
-func Fetch(ids []string, productType, media string, missing bool) error {
-
-	pt := vangogh_types.ParseProductType(productType)
-	mt := gog_types.ParseMedia(media)
+func Fetch(ids []string, denyIds []string, pt vangogh_types.ProductType, mt gog_types.Media, missing bool) error {
 
 	httpClient, err := internal.HttpClient()
 	if err != nil {
@@ -185,7 +184,7 @@ func Fetch(ids []string, productType, media string, missing bool) error {
 				if err != nil {
 					return err
 				}
-				if err = fetchMissing(pt, mt, srcUrl, mainDstUrl, dstUrl); err != nil {
+				if err = fetchMissing(pt, mpt, mt, denyIds, srcUrl, mainDstUrl, dstUrl); err != nil {
 					return err
 				}
 			}

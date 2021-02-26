@@ -1,76 +1,88 @@
+Summarization:
+	- productize the code
+	- add more properties
+	- add output format to "list" to allow listing fields to output (default "{{id}} {{title}}")
+	- add "search" objective to print ID, title
+	- only process api-products (as a proxy for store-products and account-products)
+	- remove product-type parameter from clo.json
+	- continue trying to figure out games/movies situation for api-products
+	- write custom code for movies based on store-products if needed
+
+Ignore IDs:
+	- add a parameter to ignore certain ids
+
 Improve verbosity:
-- add module that produced log.Print to the log output
-- add a "verbose" flag to every module
--  use log.Print for errors and info, fmt.Print for progress
+	- add module that produced log.Print to the log output
+	- add a "verbose" flag to every module
+	-  use log.Print for errors and info, fmt.Print for progress
 
 Fix bugs:
-- fix api-products title for "list"
-- "failed to fill arguments default values" when run with no arguments
-- "list store-p" is not an error
+	- fix api-products title for "list" @done(2021-02-21)
+	- "failed to fill arguments default values" when run with no arguments
+	- "list store-p" is not an error
 
-Add operations log:
-- add operations log
-- print report at the end of operations - changed, new
-- track updated account products (new, modified, updated)
+Operations log:
+	- add operations log
+	- print report at the end of operations - changed, new
+	- track updated account products (new, modified, updated)
 
 Download product types:
-- images @start
-	- product-image @start
-	- box-art
-	- background
-	- screenshots
-- videos
-	- youtube-dl
-- product files
+	- images @start
+		- product-image @start
+		- box-art
+		- background
+		- screenshots
+	- videos
+		- youtube-dl
+	- product files
 
 Additional features/improvements:
-- add bulk Set operation to kvas (io.Reader enumerator?)
-- add output format to "list" to allow listing fields to output (default "{{id}} {{title}}")  
-- add "search" objective to print ID, title
+	- add bulk Set operation to kvas (io.Reader enumerator?) for more efficient split
 
 Documentation:
-- update modules documentation:
-	- clo
-	- kvas
-	- dolo
+	- update modules documentation:
+		- clo
+		- kvas
+		- dolo
 
 Tests:
-- add test coverage for modules:
-	- kvas
-	- dolo
+	- add test coverage for modules:
+		- kvas
+		- dolo
+	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
-- split vangogh types into a separate module @done(2021-02-20)
-- add productType + mediaType valid check @done(2021-02-20)
-- split vangogh dstURLs into a separate module @done(2021-02-20)
-- add gob support for local types in addition to JSON  @done
-- enumerate and add image types @done
-- add helper funcs to parse media. Need this to pass media to gog_urls from clo @done
-- add "default" page gog_urls that take page, media, sort for the fetch func switch flow @done
-- transition gog_urls to use string in place of ids @done
-- only add hidden / updated flag if specified @done
-- fix 2FA message to use GOG.com language @done
-- re-implement cookies using kvas @done
-- split fetched paginated media @done
-- fetch missing details with delay between downloads @done
-- add list objective to print ID, title @done
-- check downloaded data (details) to fill types TODOs @done
-- add "id..." parameter to "list" to be used for status updates @done
-- investigate "list wishlist" issues @done
-- root caused to not closing files after a kvas.Get @done
-- convert all returned io.Reader to io.ReadCloser (should work with remote kvas as well) @done
-- ue file.Create instead of OpenFile for kvas.Set @done
-- kvas separate index extension from content extension (allow protobuf index, png files) @done
-- don't use global httpClient in cmds @done
-- create NewLocalJsonClient and NewLocalProtoClient that only take URL @done
-- add "all" flag to download images @done
-- Store-products are stored in "products" @done
-- "sync" objective that does all remote data fetching in one command @done
-- figure out throttling situation for downloading many details at once (do they send headers we can check? figure out other heuristics) @done
-^ Seems like there is no throttling anymore - I was able to download all details without encountering any throttling
-- default !overwrite check should be "fast" - only check if the file exists @done
-- move all dolo options to constructor, Download should take two parameters - source, destination @done
-- add api-products: https://api.gog.com/v2/games/{id} @done
-- index files should be gob (so no index selection) @done
-- don't use kvas for cookies.json @done
-- docs/images.md @done
+	- split vangogh types into a separate module @done(2021-02-20)
+	- add productType + mediaType valid check @done(2021-02-20)
+	- split vangogh dstURLs into a separate module @done(2021-02-20)
+	- add gob support for local types in addition to JSON  @done
+	- enumerate and add image types @done
+	- add helper funcs to parse media. Need this to pass media to gog_urls from clo @done
+	- add "default" page gog_urls that take page, media, sort for the fetch func switch flow @done
+	- transition gog_urls to use string in place of ids @done
+	- only add hidden / updated flag if specified @done
+	- fix 2FA message to use GOG.com language @done
+	- re-implement cookies using kvas @done
+	- split fetched paginated media @done
+	- fetch missing details with delay between downloads @done
+	- add list objective to print ID, title @done
+	- check downloaded data (details) to fill types TODOs @done
+	- add "id..." parameter to "list" to be used for status updates @done
+	- investigate "list wishlist" issues @done
+	- root caused to not closing files after a kvas.Get @done
+	- convert all returned io.Reader to io.ReadCloser (should work with remote kvas as well) @done
+	- ue file.Create instead of OpenFile for kvas.Set @done
+	- kvas separate index extension from content extension (allow protobuf index, png files) @done
+	- don't use global httpClient in cmds @done
+	- create NewLocalJsonClient and NewLocalProtoClient that only take URL @done
+	- add "all" flag to download images @done
+	- Store-products are stored in "products" @done
+	- "sync" objective that does all remote data fetching in one command @done
+	- figure out throttling situation for downloading many details at once (do they send headers we can check? figure out other heuristics) @done
+	^ Seems like there is no throttling anymore - I was able to download all details without encountering any throttling
+	- default !overwrite check should be "fast" - only check if the file exists @done
+	- move all dolo options to constructor, Download should take two parameters - source, destination @done
+	- add api-products: https://api.gog.com/v2/games/{id} @done
+	- index files should be gob (so no index selection) @done
+	- don't use kvas for cookies.json @done
+	- docs/images.md @done

@@ -1,3 +1,4 @@
 .idea
 cookies.json
-data/*
+metadata/*
+images/*
