@@ -6,7 +6,7 @@
       "password"
     ],
     "fetch": [
-      "product-type_!=store,account,wishlist,details,api-products",
+      "product-type_!=store,account,wishlist,details,api-products-v2,api-products",
       "media=game_,movie",
       "id...",
       "missing",
@@ -22,7 +22,7 @@
       "all"
     ],
     "list": [
-      "product-type_!=store-products,account-products,wishlist-products,api-products,details",
+      "product-type_!=store-products,account-products,wishlist-products,api-products-v2,api-products,details",
       "media=game_,movie",
       "id...",
       "title"
@@ -31,10 +31,9 @@
       "media=game_,movie"
     ],
     "summarize": [
-      "product-type_!=store-products,account-products,wishlist-products,api-products,details",
+      "product-type_!=store-products,account-products,wishlist-products,api-products-v2,api-products,details",
       "media=game_,movie"
-    ],
-    "test": []
+    ]
   },
   "help": {
     "auth": "authenticate on GOG.com and save session",

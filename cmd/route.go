@@ -14,10 +14,11 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 
 	productType := req.ArgVal("product-type")
 	media := req.ArgVal("media")
-	ids := req.ArgValues("id")
 
 	pt := vangogh_types.ParseProductType(productType)
 	mt := gog_types.ParseMedia(media)
+
+	ids := req.ArgValues("id")
 
 	switch req.Command {
 	case "auth":
@@ -30,11 +31,12 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Fetch(ids, internal.ReadLines(denyIdsFile), pt, mt, missing)
 	case "list":
 		title := req.ArgVal("title")
-		return List(ids, title, productType, media)
+		return List(ids, title, pt, mt)
 	case "download":
 		downloadType := req.ArgVal("download-type")
+		dt := vangogh_types.ParseDownloadType(downloadType)
 		all := req.Flag("all")
-		return Download(ids, productType, media, downloadType, all)
+		return Download(ids, pt, mt, dt, all)
 	case "sync":
 		return Sync(mt)
 	case "summarize":

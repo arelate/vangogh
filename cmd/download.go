@@ -17,16 +17,17 @@ type productImage struct {
 	Image string `json:"image"`
 }
 
-func Download(ids []string, productType, media, downloadType string, all bool) error {
-	pt := vangogh_types.ParseProductType(productType)
-	mt := gog_types.ParseMedia(media)
-	dt := vangogh_types.ParseDownloadType(downloadType)
-
+func Download(
+	ids []string,
+	pt vangogh_types.ProductType,
+	mt gog_types.Media,
+	dt vangogh_types.DownloadType,
+	all bool) error {
 	switch dt {
 	case vangogh_types.ProductImage:
 		return downloadProductImages(ids, pt, mt, dt, all)
 	default:
-		fmt.Println("download", pt, mt, downloadType, ids)
+		fmt.Println("download", pt, mt, dt, ids)
 	}
 	return nil
 }

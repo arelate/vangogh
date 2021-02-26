@@ -11,15 +11,11 @@ import (
 	"strings"
 )
 
-type productTitle struct {
-	Title string `json:"title"`
-}
+func List(ids []string, title string, pt vangogh_types.ProductType, mt gog_types.Media) error {
 
-func List(ids []string, title string, productType, media string) error {
-	pt := vangogh_types.ParseProductType(productType)
-	mt := gog_types.ParseMedia(media)
-
+	// TODO: move filepath to vangogh_urls
 	summaryPath := "metadata/_summary.gob"
+
 	// TODO: check if exists
 	summaryFile, err := os.Open(summaryPath)
 	if err != nil {
