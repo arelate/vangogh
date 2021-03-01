@@ -38,10 +38,27 @@ func loadMemories(pt vangogh_types.ProductType, mt gog_types.Media, property str
 
 func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, title, developer, publisher string) error {
 
+	developerMemories := make(map[string]string, 0)
+	publisherMemories := make(map[string]string, 0)
+
 	titleMemories, err := loadMemories(pt, mt, vangogh_types.TitleProperty)
 	if err != nil {
 		return err
 	}
+
+	//if developer != "" {
+	developerMemories, err = loadMemories(pt, mt, vangogh_types.DeveloperProperty)
+	if err != nil {
+		return err
+	}
+	//}
+
+	//if publisher != "" {
+	publisherMemories, err = loadMemories(pt, mt, vangogh_types.PublisherProperty)
+	if err != nil {
+		return err
+	}
+	//}
 
 	dstUrl, err := vangogh_urls.DstProductTypeUrl(pt, mt)
 	if err != nil {
@@ -59,16 +76,40 @@ func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, title,
 
 	for _, id := range ids {
 
-		if titleMemory, ok := titleMemories[id]; ok {
-
-			if title != "" && !strings.Contains(
-				strings.ToLower(titleMemory),
-				strings.ToLower(title)) {
-				continue
-			}
-
-			fmt.Println(id, titleMemory)
+		titleMemory, ok := titleMemories[id]
+		if !ok {
+			continue
 		}
+
+		dev := developerMemories[id]
+		pub := publisherMemories[id]
+
+		if title != "" && !strings.Contains(
+			strings.ToLower(titleMemory),
+			strings.ToLower(title)) {
+			continue
+		}
+
+		if developer != "" &&
+			dev != "" &&
+			!strings.Contains(strings.ToLower(dev), strings.ToLower(developer)) {
+			continue
+		}
+
+		if publisher != "" &&
+			pub != "" &&
+			!strings.Contains(strings.ToLower(pub), strings.ToLower(publisher)) {
+			continue
+		}
+
+		fmt.Printf("%s %s", id, titleMemory)
+		if developer != "" && dev != "" {
+			fmt.Printf(", Developer:%s", dev)
+		}
+		if publisher != "" && pub != "" {
+			fmt.Printf(", Publisher:%s", pub)
+		}
+		fmt.Println()
 	}
 
 	return nil

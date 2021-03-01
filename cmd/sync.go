@@ -34,7 +34,11 @@ func Sync(mt gog_types.Media) error {
 		vangogh_types.ApiProductsV1,
 		vangogh_types.ApiProductsV2,
 	}
-	properties := []string{"title"}
+	properties := []string{
+		vangogh_types.TitleProperty,
+		vangogh_types.DeveloperProperty,
+		vangogh_types.PublisherProperty,
+	}
 	for _, pt := range productTypes {
 		if err := Memorize(pt, mt, properties); err != nil {
 			return err

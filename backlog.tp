@@ -1,15 +1,9 @@
-Summarization:
-	- productize the code
-	- add more properties
-	- add output format to "list" to allow listing fields to output (default "{{id}} {{title}}")
-	- add "search" objective to print ID, title
-	- only process api-products (as a proxy for store-products and account-products)
-	- remove product-type parameter from clo.json
-	- continue trying to figure out games/movies situation for api-products
-	- write custom code for movies based on store-products if needed
+Finalize gob transition:
+	- use gob to store data
+	- new objective "export" + format "json" to print in human readable form 
 
-Ignore IDs:
-	- add a parameter to ignore certain ids
+List improvements:
+	- add sort options
 
 Improve verbosity:
 	- add module that produced log.Print to the log output
@@ -17,11 +11,7 @@ Improve verbosity:
 	-  use log.Print for errors and info, fmt.Print for progress
 
 Fix bugs:
-	- fix api-products title for "list" @done(2021-02-21)
-	- "failed to fill arguments default values" when run with no arguments
-	- "list store-p" is not an error
-	- json: cannot unmarshal object into Go struct field Details.downloads of type []interface {}
-	
+No known at the moment
 
 Operations log:
 	- add operations log
@@ -54,6 +44,24 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- add output format to "list" to allow listing fields to output (defaults to specified properties, e.g. "{{id}} {{title}}") @done(2021-03-01) @project(List improvements)
+	- Output additional properties if used to filter, e.g. publisher, developer @done(2021-03-01) @project(List improvements)
+	Search: @done(2021-03-01)
+		- add "search" objective to print ID, title @done(2021-03-01)
+		- this objective should allow using almost every field in the data @done(2021-03-01)
+	Memorization: @done(2021-03-01)
+		- productize the code @done(2021-03-01)
+		- add more properties @done(2021-03-01)
+	- "failed to fill arguments default values" when run with no arguments @done(2021-03-01) @project(Fix bugs)
+	- "list store-p" is not an error @done(2021-02-28) @project(Fix bugs)
+	- json: cannot unmarshal object into Go struct field Details.downloads of type []interface {} @done(2021-02-28) @project(Fix bugs)
+	Ignore IDs: @done(2021-02-28)
+	- add a parameter to ignore certain ids @done(2021-02-28) @project(Ignore IDs)
+	- only process api-products (as a proxy for store-products and account-products) @done(2021-02-28) @project(Memorization)
+	- remove product-type parameter from clo.json @done(2021-02-28) @project(Memorization)
+	- continue trying to figure out games/movies situation for api-products @done(2021-02-28) @project(Memorization)
+	- write custom code for movies based on store-products if needed @done(2021-02-28) @project(Memorization)
+	- fix api-products title for "list" @done(2021-02-21) @project(Fix bugs)
 	- split vangogh types into a separate module @done(2021-02-20)
 	- add productType + mediaType valid check @done(2021-02-20)
 	- split vangogh dstURLs into a separate module @done(2021-02-20)

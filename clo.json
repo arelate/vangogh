@@ -39,6 +39,7 @@
     ]
   },
   "help": {
+    "vangogh": "CLI utility to sync and process GOG.com metadata, images and files",
     "auth": "authenticate on GOG.com and save session",
     "fetch": "fetch remote product data by media, type",
     "list": "list local product data by media, type",
