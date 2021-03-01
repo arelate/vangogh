@@ -47,16 +47,20 @@ func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, title,
 	}
 
 	//if developer != "" {
-	developerMemories, err = loadMemories(pt, mt, vangogh_types.DeveloperProperty)
-	if err != nil {
-		return err
+	if vangogh_types.SupportsProperty(pt, vangogh_types.DeveloperProperty) {
+		developerMemories, err = loadMemories(pt, mt, vangogh_types.DeveloperProperty)
+		if err != nil {
+			return err
+		}
 	}
 	//}
 
 	//if publisher != "" {
-	publisherMemories, err = loadMemories(pt, mt, vangogh_types.PublisherProperty)
-	if err != nil {
-		return err
+	if vangogh_types.SupportsProperty(pt, vangogh_types.PublisherProperty) {
+		publisherMemories, err = loadMemories(pt, mt, vangogh_types.PublisherProperty)
+		if err != nil {
+			return err
+		}
 	}
 	//}
 

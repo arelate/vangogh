@@ -5,6 +5,11 @@ Finalize gob transition:
 List improvements:
 	- add sort options
 
+Report:
+	- add various reports:
+		- total product per type and media
+		- all publishers, developers and number of games they have
+
 Improve verbosity:
 	- add module that produced log.Print to the log output
 	- add a "verbose" flag to every module
