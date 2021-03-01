@@ -74,12 +74,12 @@ func splitPage(pageReader io.Reader, mainPt vangogh_types.ProductType, mt gog_ty
 
 // TODO: rewrite this with generics when available
 func splitProductsPage(pageReader io.Reader, set func(string, io.Reader) error) error {
-	var productsPage gog_types.ProductsPage
-	if err := json.NewDecoder(pageReader).Decode(&productsPage); err != nil {
+	var storeProductsPage gog_types.StoreProductsPage
+	if err := json.NewDecoder(pageReader).Decode(&storeProductsPage); err != nil {
 		return err
 	}
 
-	for _, product := range productsPage.Products {
+	for _, product := range storeProductsPage.Products {
 		if err := setEncoded(product.Id, product, set); err != nil {
 			return err
 		}

@@ -30,6 +30,7 @@ func fetchItem(
 	}
 
 	u := sourceUrl(id, mt)
+
 	resp, err := httpClient.Get(u.String())
 	if err != nil {
 		return nil, err
@@ -124,10 +125,13 @@ func fetchItems(
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string) error {
 
+	// TODO: move to vangogh_types
 	switch pt {
 	case vangogh_types.Details:
 		break
-	case vangogh_types.ApiProducts:
+	case vangogh_types.ApiProductsV1:
+		break
+	case vangogh_types.ApiProductsV2:
 		break
 	default:
 		return fmt.Errorf("fetching items of type %s is not supported", pt)
@@ -144,6 +148,11 @@ func fetchItems(
 }
 
 func Fetch(ids []string, denyIds []string, pt vangogh_types.ProductType, mt gog_types.Media, missing bool) error {
+
+	if !vangogh_types.SupportsMedia(pt, mt) {
+		log.Printf("product type %s doesn't support %s media\n", pt, mt)
+		return nil
+	}
 
 	httpClient, err := internal.HttpClient()
 	if err != nil {

@@ -13,19 +13,21 @@ import (
 
 func List(ids []string, title string, pt vangogh_types.ProductType, mt gog_types.Media) error {
 
-	// TODO: move filepath to vangogh_urls
-	summaryPath := "metadata/_summary.gob"
-
-	// TODO: check if exists
-	summaryFile, err := os.Open(summaryPath)
+	titleMemoriesUrl, err := vangogh_urls.MemoriesUrl(pt, mt, "title")
 	if err != nil {
 		return err
 	}
-	defer summaryFile.Close()
 
-	var summary map[string]map[string]string
+	// TODO: check if exists
+	titleMemoriesFile, err := os.Open(titleMemoriesUrl)
+	if err != nil {
+		return err
+	}
+	defer titleMemoriesFile.Close()
 
-	if err := gob.NewDecoder(summaryFile).Decode(&summary); err != nil {
+	var titleMemories map[string]string
+
+	if err := gob.NewDecoder(titleMemoriesFile).Decode(&titleMemories); err != nil {
 		return err
 	}
 
@@ -45,17 +47,15 @@ func List(ids []string, title string, pt vangogh_types.ProductType, mt gog_types
 
 	for _, id := range ids {
 
-		if sum, ok := summary[id]; ok {
-
-			sTitle := sum["title"]
+		if titleMemory, ok := titleMemories[id]; ok {
 
 			if title != "" && !strings.Contains(
-				strings.ToLower(sTitle),
+				strings.ToLower(titleMemory),
 				strings.ToLower(title)) {
 				continue
 			}
 
-			fmt.Println(id, sTitle)
+			fmt.Println(id, titleMemory)
 		}
 	}
 

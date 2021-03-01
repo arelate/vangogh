@@ -39,10 +39,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Download(ids, pt, mt, dt, all)
 	case "sync":
 		return Sync(mt)
-	case "summarize":
-		return Summarize(productType, media)
-	case "test":
-		return Test()
+	case "memorize":
+		properties := req.ArgValues("property")
+		return Memorize(pt, mt, properties)
 	default:
 		return clo.Route(req, defs)
 	}
