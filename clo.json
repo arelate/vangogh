@@ -25,7 +25,9 @@
       "product-type_!=store-products,account-products,wishlist-products,api-products-v2,api-products,details",
       "media=game_,movie",
       "id...",
-      "title"
+      "title",
+      "developer",
+      "publisher"
     ],
     "sync": [
       "media=game_,movie"

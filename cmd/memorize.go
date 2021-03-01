@@ -10,12 +10,7 @@ import (
 	"github.com/boggydigital/kvas"
 	"io"
 	"os"
-)
-
-const (
-	titleProp     = "title"
-	developerProp = "developer"
-	publisherProp = "publisher"
+	"strings"
 )
 
 func Memorize(pt vangogh_types.ProductType, mt gog_types.Media, properties []string) error {
@@ -71,6 +66,9 @@ func Memorize(pt vangogh_types.ProductType, mt gog_types.Media, properties []str
 	}
 
 	for _, prop := range properties {
+		if !vangogh_types.SupportsProperty(pt, prop) {
+			continue
+		}
 		propertyMemories := make(map[string]string, 0)
 		for _, id := range kvProductType.All() {
 			propertyMemories[id] = memories[id][prop]
@@ -106,6 +104,9 @@ func memorizeStoreProduct(spReader io.Reader, properties []string) (map[string]s
 	}
 
 	for _, prop := range properties {
+		if !vangogh_types.SupportsProperty(vangogh_types.StoreProducts, prop) {
+			continue
+		}
 		memories[prop] = memorizeStoreProductProperty(storeProduct, prop)
 	}
 
@@ -117,8 +118,12 @@ func memorizeStoreProductProperty(storeProduct *gog_types.StoreProduct, property
 		return ""
 	}
 	switch property {
-	case titleProp:
+	case vangogh_types.TitleProperty:
 		return storeProduct.Title
+	case vangogh_types.PublisherProperty:
+		return storeProduct.Publisher
+	case vangogh_types.DeveloperProperty:
+		return storeProduct.Developer
 	default:
 		return ""
 	}
@@ -132,6 +137,9 @@ func memorizeAccountProduct(spReader io.Reader, properties []string) (map[string
 	}
 
 	for _, prop := range properties {
+		if !vangogh_types.SupportsProperty(vangogh_types.AccountProducts, prop) {
+			continue
+		}
 		memories[prop] = memorizeAccountProductProperty(accountProduct, prop)
 	}
 
@@ -143,7 +151,7 @@ func memorizeAccountProductProperty(accountProduct *gog_types.AccountProduct, pr
 		return ""
 	}
 	switch property {
-	case titleProp:
+	case vangogh_types.TitleProperty:
 		return accountProduct.Title
 	default:
 		return ""
@@ -158,6 +166,9 @@ func memorizeDetails(spReader io.Reader, properties []string) (map[string]string
 	}
 
 	for _, prop := range properties {
+		if !vangogh_types.SupportsProperty(vangogh_types.Details, prop) {
+			continue
+		}
 		memories[prop] = memorizeDetailsProperty(details, prop)
 	}
 
@@ -169,7 +180,7 @@ func memorizeDetailsProperty(details *gog_types.Details, property string) string
 		return ""
 	}
 	switch property {
-	case titleProp:
+	case vangogh_types.TitleProperty:
 		return details.Title
 	default:
 		return ""
@@ -184,6 +195,9 @@ func memorizeApiProductV1(apv2Reader io.Reader, properties []string) (map[string
 	}
 
 	for _, prop := range properties {
+		if !vangogh_types.SupportsProperty(vangogh_types.ApiProductsV1, prop) {
+			continue
+		}
 		memories[prop] = memorizeApiProductV1Property(apiProductV1, prop)
 	}
 
@@ -195,7 +209,7 @@ func memorizeApiProductV1Property(apiProductV1 *gog_types.ApiProductV1, property
 		return ""
 	}
 	switch property {
-	case titleProp:
+	case vangogh_types.TitleProperty:
 		return apiProductV1.Title
 	default:
 		return ""
@@ -210,6 +224,9 @@ func memorizeApiProductV2(apv2Reader io.Reader, properties []string) (map[string
 	}
 
 	for _, prop := range properties {
+		if !vangogh_types.SupportsProperty(vangogh_types.ApiProductsV2, prop) {
+			continue
+		}
 		memories[prop] = memorizeApiProductV2Property(apiProductV2, prop)
 	}
 
@@ -221,8 +238,16 @@ func memorizeApiProductV2Property(apiProductV2 *gog_types.ApiProductV2, property
 		return ""
 	}
 	switch property {
-	case titleProp:
+	case vangogh_types.TitleProperty:
 		return apiProductV2.Embedded.Product.Title
+	case vangogh_types.PublisherProperty:
+		return apiProductV2.Embedded.Publisher.Name
+	case vangogh_types.DeveloperProperty:
+		devs := make([]string, 0, len(apiProductV2.Embedded.Developers))
+		for _, dev := range apiProductV2.Embedded.Developers {
+			devs = append(devs, dev.Name)
+		}
+		return strings.Join(devs, ", ")
 	default:
 		return ""
 	}

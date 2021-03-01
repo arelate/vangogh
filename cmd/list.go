@@ -7,33 +7,39 @@ import (
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
-	"log"
 	"os"
 	"strings"
 )
 
-func List(ids []string, title string, pt vangogh_types.ProductType, mt gog_types.Media) error {
+func loadMemories(pt vangogh_types.ProductType, mt gog_types.Media, property string) (map[string]string, error) {
+	memories := make(map[string]string, 0)
 
-	titleMemoriesUrl, err := vangogh_urls.MemoriesUrl(pt, mt, "title")
+	memoriesUrl, err := vangogh_urls.MemoriesUrl(pt, mt, property)
 	if err != nil {
-		return err
+		return memories, err
 	}
 
-	if _, err := os.Stat(titleMemoriesUrl); os.IsNotExist(err) {
-		log.Printf("vangogh: no memories for product type %s, media %s, property %s", pt, mt, "title, see help for 'memorize' command")
-		return nil
+	if _, err := os.Stat(memoriesUrl); os.IsNotExist(err) {
+		return memories, fmt.Errorf("vangogh: no memories for product type %s, media %s, property %s", pt, mt, property)
 	}
 
-	// TODO: check if exists
-	titleMemoriesFile, err := os.Open(titleMemoriesUrl)
+	memoriesFile, err := os.Open(memoriesUrl)
 	if err != nil {
-		return err
+		return memories, err
 	}
-	defer titleMemoriesFile.Close()
+	defer memoriesFile.Close()
 
-	var titleMemories map[string]string
+	if err := gob.NewDecoder(memoriesFile).Decode(&memories); err != nil {
+		return memories, err
+	}
 
-	if err := gob.NewDecoder(titleMemoriesFile).Decode(&titleMemories); err != nil {
+	return memories, nil
+}
+
+func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, title, developer, publisher string) error {
+
+	titleMemories, err := loadMemories(pt, mt, vangogh_types.TitleProperty)
+	if err != nil {
 		return err
 	}
 

@@ -31,7 +31,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Fetch(ids, internal.ReadLines(denyIdsFile), pt, mt, missing)
 	case "list":
 		title := req.ArgVal("title")
-		return List(ids, title, pt, mt)
+		developer := req.ArgVal("developer")
+		publisher := req.ArgVal("publisher")
+		return List(ids, pt, mt, title, developer, publisher)
 	case "download":
 		downloadType := req.ArgVal("download-type")
 		dt := vangogh_types.ParseDownloadType(downloadType)
