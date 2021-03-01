@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
+	"log"
 	"os"
 	"strings"
 )
@@ -16,6 +17,11 @@ func List(ids []string, title string, pt vangogh_types.ProductType, mt gog_types
 	titleMemoriesUrl, err := vangogh_urls.MemoriesUrl(pt, mt, "title")
 	if err != nil {
 		return err
+	}
+
+	if _, err := os.Stat(titleMemoriesUrl); os.IsNotExist(err) {
+		log.Printf("vangogh: no memories for product type %s, media %s, property %s", pt, mt, "title, see help for 'memorize' command")
+		return nil
 	}
 
 	// TODO: check if exists

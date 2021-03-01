@@ -12,8 +12,6 @@ import (
 	"os"
 )
 
-const summaryFilename = "_summary.gob"
-
 const (
 	titleProp     = "title"
 	developerProp = "developer"

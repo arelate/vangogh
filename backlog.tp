@@ -20,6 +20,8 @@ Fix bugs:
 	- fix api-products title for "list" @done(2021-02-21)
 	- "failed to fill arguments default values" when run with no arguments
 	- "list store-p" is not an error
+	- json: cannot unmarshal object into Go struct field Details.downloads of type []interface {}
+	
 
 Operations log:
 	- add operations log
