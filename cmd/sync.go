@@ -26,24 +26,24 @@ func Sync(mt gog_types.Media) error {
 	}
 
 	// memorize properties
-	productTypes = []vangogh_types.ProductType{
-		vangogh_types.StoreProducts,
-		vangogh_types.AccountProducts,
-		vangogh_types.WishlistProducts,
-		vangogh_types.Details,
-		vangogh_types.ApiProductsV1,
-		vangogh_types.ApiProductsV2,
-	}
-	properties := []string{
-		vangogh_types.TitleProperty,
-		vangogh_types.DeveloperProperty,
-		vangogh_types.PublisherProperty,
-	}
-	for _, pt := range productTypes {
-		if err := Memorize(pt, mt, properties); err != nil {
-			return err
-		}
-	}
+	//productTypes = []vangogh_types.ProductType{
+	//	vangogh_types.StoreProducts,
+	//	vangogh_types.AccountProducts,
+	//	vangogh_types.WishlistProducts,
+	//	vangogh_types.Details,
+	//	vangogh_types.ApiProductsV1,
+	//	vangogh_types.ApiProductsV2,
+	//}
+	//properties := []string{
+	//	vangogh_types.TitleProperty,
+	//	vangogh_types.DeveloperProperty,
+	//	vangogh_types.PublisherProperty,
+	//}
+	//for _, pt := range productTypes {
+	//	if err := Memorize(pt, mt, properties); err != nil {
+	//		return err
+	//	}
+	//}
 
 	return nil
 }

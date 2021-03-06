@@ -39,6 +39,7 @@ func downloadProductImages(
 	dt vangogh_types.DownloadType,
 	all bool) error {
 	if !vangogh_types.SupportsDownloadType(pt, vangogh_types.ProductImage) {
+		// TODO: that shouldn't be an error
 		return fmt.Errorf("type %s (%s) doesn't contain %s", pt, mt, dt)
 	}
 
@@ -53,6 +54,7 @@ func downloadProductImages(
 	}
 
 	if all {
+		// TODO: log warning if user provided ids that would be overwritten
 		ids = kvProductImages.All()
 	}
 
@@ -70,11 +72,18 @@ func downloadProductImages(
 		&dolo.ClientOptions{
 			Retries:         5,
 			ResumeDownloads: true,
+			Verbose:         true,
 		})
+
+	// TODO: add id to params to allow creating destination URL for product files
+	dtDst, err := vangogh_urls.DstDownloadTypeUrl(dt)
+	if err != nil {
+		return err
+	}
 
 	for _, id := range ids {
 
-		fmt.Printf("downloading image for %s (%s) id %s\n", pt, mt, id)
+		fmt.Printf("downloading %s for %s (%s) id %s\n", dt, pt, mt, id)
 
 		imgRc, err := kvProductImages.Get(id)
 		if err != nil {
@@ -94,7 +103,7 @@ func downloadProductImages(
 
 		//fmt.Println(imgUrl.String())
 
-		if err := dc.Download(imgUrl, "images"); err != nil {
+		if err := dc.Download(imgUrl, dtDst); err != nil {
 			return err
 		}
 

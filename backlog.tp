@@ -2,13 +2,36 @@ Finalize gob transition:
 	- use gob to store data
 	- new objective "export" + format "json" to print in human readable form 
 
+ReadLines:
+	- add comments and skip those on read
+	- annotate the products that are denylisted
+
+dolo:
+	- MkdirAll for the destination url
+
 List improvements:
-	- add sort options
+	- add sort options (using memories)
+	- add simple format ("id title")
+
+Search:
+	- add search objective that filters ids feeding them into list for display 
+	- move title, developer, publisher from list to search
+	- add other properties
+
+Reverse-lookup:
+	- Add objective to reverse find all product types from download artifact name (e.g. product-image)
 
 Report:
 	- add various reports:
 		- total product per type and media
 		- all publishers, developers and number of games they have
+
+Split objectives into modules:
+	- fetch
+	- download
+	- list
+	- search
+	- ...
 
 Improve verbosity:
 	- add module that produced log.Print to the log output

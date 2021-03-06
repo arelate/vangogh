@@ -6,9 +6,8 @@ import (
 	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
-	"github.com/boggydigital/kvas"
+
 	"os"
-	"strings"
 )
 
 func loadMemories(pt vangogh_types.ProductType, mt gog_types.Media, property string) (map[string]string, error) {
@@ -38,83 +37,74 @@ func loadMemories(pt vangogh_types.ProductType, mt gog_types.Media, property str
 
 func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, title, developer, publisher string) error {
 
-	developerMemories := make(map[string]string, 0)
-	publisherMemories := make(map[string]string, 0)
-
-	titleMemories, err := loadMemories(pt, mt, vangogh_types.TitleProperty)
-	if err != nil {
-		return err
-	}
-
-	//if developer != "" {
-	if vangogh_types.SupportsProperty(pt, vangogh_types.DeveloperProperty) {
-		developerMemories, err = loadMemories(pt, mt, vangogh_types.DeveloperProperty)
-		if err != nil {
-			return err
-		}
-	}
+	//developerMemories := make(map[string]string, 0)
+	//publisherMemories := make(map[string]string, 0)
+	//
+	//titleMemories, err := loadMemories(pt, mt, vangogh_types.TitleProperty)
+	//if err != nil {
+	//	return err
 	//}
-
-	//if publisher != "" {
-	if vangogh_types.SupportsProperty(pt, vangogh_types.PublisherProperty) {
-		publisherMemories, err = loadMemories(pt, mt, vangogh_types.PublisherProperty)
-		if err != nil {
-			return err
-		}
-	}
+	//
+	//if vangogh_types.SupportsProperty(pt, vangogh_types.DeveloperProperty) {
+	//	developerMemories, err = loadMemories(pt, mt, vangogh_types.DeveloperProperty)
+	//	if err != nil {
+	//		return err
+	//	}
 	//}
-
-	dstUrl, err := vangogh_urls.DstProductTypeUrl(pt, mt)
-	if err != nil {
-		return err
-	}
-
-	kv, err := kvas.NewJsonLocal(dstUrl)
-	if err != nil {
-		return err
-	}
-
-	if len(ids) == 0 {
-		ids = kv.All()
-	}
-
-	for _, id := range ids {
-
-		titleMemory, ok := titleMemories[id]
-		if !ok {
-			continue
-		}
-
-		dev := developerMemories[id]
-		pub := publisherMemories[id]
-
-		if title != "" && !strings.Contains(
-			strings.ToLower(titleMemory),
-			strings.ToLower(title)) {
-			continue
-		}
-
-		if developer != "" &&
-			dev != "" &&
-			!strings.Contains(strings.ToLower(dev), strings.ToLower(developer)) {
-			continue
-		}
-
-		if publisher != "" &&
-			pub != "" &&
-			!strings.Contains(strings.ToLower(pub), strings.ToLower(publisher)) {
-			continue
-		}
-
-		fmt.Printf("%s %s", id, titleMemory)
-		if developer != "" && dev != "" {
-			fmt.Printf(", Developer:%s", dev)
-		}
-		if publisher != "" && pub != "" {
-			fmt.Printf(", Publisher:%s", pub)
-		}
-		fmt.Println()
-	}
+	//
+	//if vangogh_types.SupportsProperty(pt, vangogh_types.PublisherProperty) {
+	//	publisherMemories, err = loadMemories(pt, mt, vangogh_types.PublisherProperty)
+	//	if err != nil {
+	//		return err
+	//	}
+	//}
+	//
+	//vr, err := vangogh_values.NewReader(pt, mt)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//if len(ids) == 0 {
+	//	ids = vr.All()
+	//}
+	//
+	//for _, id := range ids {
+	//
+	//	titleMemory, ok := titleMemories[id]
+	//	if !ok {
+	//		continue
+	//	}
+	//
+	//	devMemory := developerMemories[id]
+	//	pubMemory := publisherMemories[id]
+	//
+	//	if title != "" &&
+	//		titleMemory != "" &&
+	//		!strings.Contains(strings.ToLower(titleMemory),strings.ToLower(title)) {
+	//		continue
+	//	}
+	//
+	//	if developer != "" &&
+	//		devMemory != "" &&
+	//		!strings.Contains(strings.ToLower(devMemory), strings.ToLower(developer)) {
+	//		continue
+	//	}
+	//
+	//	if publisher != "" &&
+	//		pubMemory != "" &&
+	//		!strings.Contains(strings.ToLower(pubMemory), strings.ToLower(publisher)) {
+	//		continue
+	//	}
+	//
+	//	fmt.Printf("%s %s", id, titleMemory)
+	//	if developer != "" && devMemory != "" {
+	//		fmt.Printf(", Developer:%s", devMemory)
+	//	}
+	//	if publisher != "" && pubMemory != "" {
+	//		fmt.Printf(", Publisher:%s", pubMemory)
+	//	}
+	//	fmt.Println()
+	//}
 
 	return nil
 }
