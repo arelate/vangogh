@@ -12,6 +12,7 @@ require (
 	github.com/arelate/vangogh_values v0.1.2-alpha
 	github.com/boggydigital/clo v0.2.2-alpha
 	github.com/boggydigital/dolo v0.1.4-alpha
+	github.com/boggydigital/froth v0.1.0-alpha
 	github.com/boggydigital/kvas v0.1.9-alphago
 )
 
@@ -26,4 +27,5 @@ replace (
 	github.com/boggydigital/clo => ../clo
 	github.com/boggydigital/dolo => ../dolo
 	github.com/boggydigital/kvas => ../kvas
+	github.com/boggydigital/froth => ../froth
 )

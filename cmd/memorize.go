@@ -5,7 +5,9 @@ import (
 	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
+	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/froth"
 )
 
 func Memorize(pt vangogh_types.ProductType, mt gog_types.Media, properties []string) error {
@@ -27,6 +29,13 @@ func memorizeProperty(pt vangogh_types.ProductType, mt gog_types.Media, property
 
 	fmt.Printf("memorizing %s (%s) %s\n", pt, mt, property)
 
+	memoriesDst, err := vangogh_urls.MemoriesUrl(pt, mt)
+	if err != nil {
+		return err
+	}
+
+	memoriesStash, err := froth.NewStash(memoriesDst, property)
+
 	vr, err := vangogh_values.NewReader(pt, mt)
 	if err != nil {
 		return err
@@ -41,14 +50,18 @@ func memorizeProperty(pt vangogh_types.ProductType, mt gog_types.Media, property
 		return fmt.Errorf("vangogh: unsupported property %s", property)
 	}
 
-	for _, id := range vr.All() {
+	all := vr.All()
+
+	propertyValues := make(map[string]string, len(all))
+
+	for _, id := range all {
 		prop, err := propertyGetter(id, pt, mt)
 		if err != nil {
 			return err
 		}
 
-		fmt.Println(id, prop)
+		propertyValues[id] = prop
 	}
 
-	return nil
+	return memoriesStash.SetMany(propertyValues)
 }
