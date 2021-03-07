@@ -61,11 +61,11 @@ func splitPage(pageReader io.Reader, mainPt vangogh_types.ProductType, mt gog_ty
 	}
 
 	switch mainPt {
-	case vangogh_types.Store:
+	case vangogh_types.StorePage:
 		return splitProductsPage(pageReader, kvDetail.Set)
-	case vangogh_types.Account:
+	case vangogh_types.AccountPage:
 		return splitAccountProductsPage(pageReader, kvDetail.Set)
-	case vangogh_types.Wishlist:
+	case vangogh_types.WishlistPage:
 		return splitWishlistPage(pageReader, kvDetail.Set)
 	default:
 		return fmt.Errorf("splitting page is not supported for type %s", mainPt)
