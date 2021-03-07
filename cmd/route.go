@@ -30,7 +30,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		denyIdsFile := req.ArgVal("deny-ids-file")
 		return Fetch(ids, internal.ReadLines(denyIdsFile), pt, mt, missing)
 	case "list":
-		return List(ids, pt, mt)
+		properties := req.ArgValues("property")
+		return List(ids, pt, mt, properties...)
 	case "download":
 		downloadType := req.ArgVal("download-type")
 		dt := vangogh_types.ParseDownloadType(downloadType)
@@ -38,9 +39,12 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Download(ids, pt, mt, dt, all)
 	case "sync":
 		return Sync(mt)
-	case "memorize":
+	case "stash":
 		properties := req.ArgValues("property")
-		return Memorize(pt, mt, properties)
+		return Stash(pt, mt, properties)
+	case "distill":
+		properties := req.ArgValues("property")
+		return Distill(pt, mt, properties)
 	default:
 		return clo.Route(req, defs)
 	}

@@ -12,6 +12,16 @@
       "missing",
       "deny-ids-file"
     ],
+    "stash": [
+      "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
+      "media=game_,movie",
+      "property...=title,developer,publisher"
+    ],
+    "distill": [
+      "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
+      "media=game_,movie",
+      "property...=title,developer,publisher"
+    ],
     "download": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "download-type!=product-image,box-art,background,screenshots",
@@ -24,15 +34,11 @@
     "list": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
-      "id..."
+      "id...",
+      "property...=id_,title_,developer,publisher"
     ],
     "sync": [
       "media=game_,movie"
-    ],
-    "memorize": [
-      "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
-      "media=game_,movie",
-      "property...=title,developer,publisher"
     ]
   },
   "help": {

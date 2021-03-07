@@ -1,24 +1,17 @@
-Finalize gob transition:
-	- use gob to store data
-	- new objective "export" + format "json" to print in human readable form 
-
-split:
-	- use GetId() and propertyGetting pattern for DRY
-
 Memorization completion:
-	- memorize publisher, developer
+	- memorize publisher, developer for search
 
-dolo:
-	- MkdirAll for the destination url
-
-List improvements:
-	- add sort options (using memories)
-	- add simple format ("id title")
+Aggregate memories:
+	- combine all available information into a single list by id to allow all product-types to leverage that
 
 Search:
 	- add search objective that filters ids feeding them into list for display 
 	- move title, developer, publisher from list to search
 	- add other properties
+
+List improvements:
+	- add sort options (using memories)
+	- add simple format ("id title")
 
 Reverse-lookup:
 	- Add objective to reverse find all product types from download artifact name (e.g. product-image)
@@ -27,13 +20,6 @@ Report:
 	- add various reports:
 		- total product per type and media
 		- all publishers, developers and number of games they have
-
-Split objectives into modules:
-	- fetch
-	- download
-	- list
-	- search
-	- ...
 
 Improve verbosity:
 	- add module that produced log.Print to the log output
@@ -74,6 +60,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	dolo: @done(2021-03-06)
+		- MkdirAll for the destination url @done(2021-03-06)
+	split: @done(2021-03-06)
+		- use GetId() and propertyGetting pattern for DRY @done(2021-03-06)
 	ReadLines: @done(2021-03-06)
 		- add comments and skip those on read @done(2021-03-06)
 		- annotate the products that are denylisted @done(2021-03-06)
