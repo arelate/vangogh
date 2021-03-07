@@ -50,11 +50,16 @@ func memorizeProperty(pt vangogh_types.ProductType, mt gog_types.Media, property
 		return fmt.Errorf("vangogh: unsupported property %s", property)
 	}
 
-	all := vr.All()
+	missing := make([]string, 0)
+	for _, id := range vr.All() {
+		if val, ok := memoriesStash.Get(id); !ok || val == "" {
+			missing = append(missing, id)
+		}
+	}
 
-	propertyValues := make(map[string]string, len(all))
+	propertyValues := make(map[string]string, len(missing))
 
-	for _, id := range all {
+	for _, id := range missing {
 		prop, err := propertyGetter(id, pt, mt)
 		if err != nil {
 			return err
