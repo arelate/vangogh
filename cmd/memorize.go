@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/froth"
+	"log"
 )
 
 func Memorize(pt vangogh_types.ProductType, mt gog_types.Media, properties []string) error {
@@ -55,6 +56,11 @@ func memorizeProperty(pt vangogh_types.ProductType, mt gog_types.Media, property
 		if val, ok := memoriesStash.Get(id); !ok || val == "" {
 			missing = append(missing, id)
 		}
+	}
+
+	if len(missing) == 0 {
+		log.Printf("no missing %s (%s) to memorize\n", pt, mt)
+		return nil
 	}
 
 	propertyValues := make(map[string]string, len(missing))

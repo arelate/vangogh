@@ -6,14 +6,14 @@
       "password"
     ],
     "fetch": [
-      "product-type_!=store,account,wishlist,details,api-products-v2,api-products",
+      "product-type_!=store-page,account-page,wishlist-page,details,api-products-v1,api-products-v2",
       "media=game_,movie",
       "id...",
       "missing",
       "deny-ids-file"
     ],
     "download": [
-      "product-type_!=store-products,account-products,wishlist-products,details",
+      "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "download-type!=product-image,box-art,background,screenshots",
       "media=game_,movie",
       "os=current_,windows,macos,linux",
@@ -22,7 +22,7 @@
       "all"
     ],
     "list": [
-      "product-type_!=store-products,account-products,wishlist-products,api-products-v2,api-products,details",
+      "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
       "id..."
     ],
@@ -30,7 +30,7 @@
       "media=game_,movie"
     ],
     "memorize": [
-      "product-type_!=store-products,account-products,wishlist-products,api-products-v2,api-products,details",
+      "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
       "property...=title,developer,publisher"
     ]

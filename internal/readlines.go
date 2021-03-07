@@ -3,7 +3,10 @@ package internal
 import (
 	"bufio"
 	"os"
+	"strings"
 )
+
+const commentPrefix = "//"
 
 func ReadLines(filepath string) []string {
 	lines := make([]string, 0)
@@ -19,6 +22,10 @@ func ReadLines(filepath string) []string {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, commentPrefix) {
+			continue
+		}
 		lines = append(lines, scanner.Text())
 	}
 

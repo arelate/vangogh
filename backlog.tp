@@ -2,9 +2,11 @@ Finalize gob transition:
 	- use gob to store data
 	- new objective "export" + format "json" to print in human readable form 
 
-ReadLines:
-	- add comments and skip those on read
-	- annotate the products that are denylisted
+split:
+	- use GetId() and propertyGetting pattern for DRY
+
+Memorization completion:
+	- memorize publisher, developer
 
 dolo:
 	- MkdirAll for the destination url
@@ -72,6 +74,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	ReadLines: @done(2021-03-06)
+		- add comments and skip those on read @done(2021-03-06)
+		- annotate the products that are denylisted @done(2021-03-06)
 	- add output format to "list" to allow listing fields to output (defaults to specified properties, e.g. "{{id}} {{title}}") @done(2021-03-01) @project(List improvements)
 	- Output additional properties if used to filter, e.g. publisher, developer @done(2021-03-01) @project(List improvements)
 	Search: @done(2021-03-01)

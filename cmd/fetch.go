@@ -89,6 +89,8 @@ func fetchMissing(
 	denyIds []string,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	mainDestUrl, detailDestUrl string) error {
+	fmt.Printf("fetching missing %s (%s) for %s\n", pt, mt, mainPt)
+
 	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
 	if err != nil {
 		return err
@@ -112,7 +114,7 @@ func fetchMissing(
 			return err
 		}
 	} else {
-		log.Printf("no missing %s for %s (%s)\n", pt, mainPt, mt)
+		log.Printf("no missing %s for %s (%s) to fetch\n", pt, mainPt, mt)
 	}
 
 	return nil
