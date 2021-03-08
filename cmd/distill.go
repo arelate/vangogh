@@ -45,11 +45,13 @@ func distillProperty(pt vangogh_types.ProductType, mt gog_types.Media, property 
 		return err
 	}
 
+	distStashValues := make(map[string]string, len(prodPropStash.All()))
+
 	for _, id := range prodPropStash.All() {
 		distVal, distOk := propDistStash.Get(id)
 
 		prodPropVal, prodOk := prodPropStash.Get(id)
-		if !prodOk || prodPropVal == "" {
+		if !prodOk {
 			log.Fatalf("vangogh: stash doesn't contain property %s for %s (%s) %s", property, pt, mt, id)
 		}
 
@@ -61,10 +63,8 @@ func distillProperty(pt vangogh_types.ProductType, mt gog_types.Media, property 
 			continue
 		}
 
-		if err := propDistStash.Set(id, prodPropVal); err != nil {
-			return err
-		}
+		distStashValues[id] = prodPropVal
 	}
 
-	return nil
+	return propDistStash.SetMany(distStashValues)
 }

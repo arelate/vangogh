@@ -101,6 +101,10 @@ func propertyToUrls(dt vangogh_types.DownloadType, prop string) ([]*url.URL, err
 		fallthrough
 	case vangogh_types.BoxArt:
 		fallthrough
+	case vangogh_types.BackgroundImage:
+		fallthrough
+	case vangogh_types.GalaxyBackgroundImage:
+		fallthrough
 	case vangogh_types.Logo:
 		fallthrough
 	case vangogh_types.Icon:

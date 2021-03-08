@@ -17,7 +17,6 @@ import (
 var cloBytes []byte
 
 func main() {
-
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
 	defs, err := clo.Load(bytesBuffer)

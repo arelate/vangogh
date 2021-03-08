@@ -33,7 +33,8 @@ Download product types:
 		- box-art @done(2021-03-07)
 		- background
 		- galaxyBackground
-		- icon
+		- logo @done(2021-03-08)
+		- icon @done(2021-03-08)
 		- screenshots
 	- videos
 		- youtube-dl
