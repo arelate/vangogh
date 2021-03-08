@@ -15,16 +15,16 @@
     "stash": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
-      "property...=title,developer,publisher"
+      "property...=title,developer,publisher,image,box-art,logo,icon"
     ],
     "distill": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
-      "property...=title,developer,publisher"
+      "property...=title,developer,publisher,image,box-art,logo,icon"
     ],
     "download": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
-      "download-type!=image,box-art,background,screenshots",
+      "download-type!=image,box-art,logo,icon",
       "media=game_,movie",
       "os=current_,windows,macos,linux",
       "lang=en_,ru",

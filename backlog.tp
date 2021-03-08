@@ -29,13 +29,18 @@ Operations log:
 
 Download product types:
 	- images @start
-		- product-image @start
-		- box-art
+		- product-image @done(2021-03-07)
+		- box-art @done(2021-03-07)
 		- background
+		- galaxyBackground
+		- icon
 		- screenshots
 	- videos
 		- youtube-dl
 	- product files
+
+clo:
+	- don't allow ambiguous abbreviations
 
 Additional features/improvements:
 	- add bulk Set operation to kvas (io.Reader enumerator?) for more efficient split

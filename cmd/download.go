@@ -22,7 +22,7 @@ func Download(
 	all bool) error {
 
 	if !vangogh_types.SupportsDownloadType(pt, dt) {
-		log.Printf("type %s (%s) doesn't contain %s", pt, mt, dt)
+		log.Printf("vangogh: type %s (%s) doesn't contain %s", pt, mt, dt)
 		return nil
 	}
 
@@ -59,6 +59,8 @@ func Download(
 			Verbose:         true,
 		})
 
+	//fmt.Println(dlClient)
+
 	// TODO: add id to params to allow creating destination URL for product files
 	dstDir, err := vangogh_urls.DstDownloadTypeUrl(dt)
 	if err != nil {
@@ -69,8 +71,9 @@ func Download(
 		fmt.Printf("downloading %s for %s (%s) id %s\n", dt, pt, mt, id)
 
 		prop, ok := propStash.Get(id)
-		if !ok {
+		if !ok || prop == "" {
 			// TODO: log missing property
+			log.Printf("vangogh: missing %s for %s (%s) %s\n", dt, pt, mt, id)
 			continue
 		}
 
@@ -80,7 +83,7 @@ func Download(
 		}
 
 		for _, srcUrl := range srcUrls {
-			//fmt.Println(srcUrl.String())
+			//fmt.Println(srcUrl.String(), dstDir)
 			if err := dlClient.Download(srcUrl, dstDir); err != nil {
 				return err
 			}
@@ -95,11 +98,17 @@ func propertyToUrls(dt vangogh_types.DownloadType, prop string) ([]*url.URL, err
 
 	switch dt {
 	case vangogh_types.Image:
-		imgUrl, err := gog_urls.Image(prop)
+		fallthrough
+	case vangogh_types.BoxArt:
+		fallthrough
+	case vangogh_types.Logo:
+		fallthrough
+	case vangogh_types.Icon:
+		boxArtUrl, err := gog_urls.Image(prop)
 		if err != nil {
 			return urls, err
 		}
-		urls = append(urls, imgUrl)
+		urls = append(urls, boxArtUrl)
 	}
 
 	return urls, nil
