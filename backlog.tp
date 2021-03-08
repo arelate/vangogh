@@ -1,9 +1,3 @@
-Memorization completion:
-	- memorize publisher, developer for search
-
-Aggregate memories:
-	- combine all available information into a single list by id to allow all product-types to leverage that
-
 Search:
 	- add search objective that filters ids feeding them into list for display 
 	- move title, developer, publisher from list to search
@@ -11,7 +5,6 @@ Search:
 
 List improvements:
 	- add sort options (using memories)
-	- add simple format ("id title")
 
 Reverse-lookup:
 	- Add objective to reverse find all product types from download artifact name (e.g. product-image)
@@ -60,6 +53,11 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- add simple format ("id title") @done(2021-03-07) @project(List improvements)
+	Memorization completion: @done(2021-03-07)
+		- memorize publisher, developer for search @done(2021-03-07)
+	Distill stash: @done(2021-03-07)
+		- combine all available stashes into a single list by id to allow all product-types to leverage that @done(2021-03-07)
 	dolo: @done(2021-03-06)
 		- MkdirAll for the destination url @done(2021-03-06)
 	split: @done(2021-03-06)

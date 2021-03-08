@@ -66,10 +66,7 @@ func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, proper
 				output[i] = ""
 			}
 
-			if strings.Contains(val, " ") {
-				val = fmt.Sprintf("\"%s\"", val)
-			}
-			output[i] = val
+			output[i] = fmt.Sprintf("\"%s\"", val)
 		}
 
 		fmt.Println(strings.Join(output, sep))
