@@ -36,7 +36,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		downloadType := req.ArgVal("download-type")
 		dt := vangogh_types.ParseDownloadType(downloadType)
 		all := req.Flag("all")
-		return Download(ids, pt, mt, dt, all)
+		return Download(ids, mt, dt, all)
 	case "sync":
 		return Sync(mt)
 	case "stash":

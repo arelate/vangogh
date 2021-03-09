@@ -13,6 +13,12 @@ import (
 )
 
 func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, properties ...string) error {
+	if !vangogh_types.ValidProductType(pt) {
+		return fmt.Errorf("vangogh: can't list invalid product type %s", pt)
+	}
+	if !gog_types.ValidMedia(mt) {
+		return fmt.Errorf("vangogh: can't list invalid media %s", mt)
+	}
 
 	if len(properties) == 0 {
 		properties = []string{vangogh_properties.IdProperty, vangogh_properties.TitleProperty}

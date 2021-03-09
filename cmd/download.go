@@ -16,16 +16,23 @@ import (
 
 func Download(
 	ids []string,
+	mt gog_types.Media,
+	dt vangogh_types.DownloadType,
+	all bool) error {
+	for _, pt := range vangogh_types.SupportingProductTypes(dt) {
+		if err := downloadProductType(ids, pt, mt, dt, all); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func downloadProductType(
+	ids []string,
 	pt vangogh_types.ProductType,
 	mt gog_types.Media,
 	dt vangogh_types.DownloadType,
 	all bool) error {
-
-	if !vangogh_types.SupportsDownloadType(pt, dt) {
-		log.Printf("vangogh: type %s (%s) doesn't contain %s", pt, mt, dt)
-		return nil
-	}
-
 	stashUrl, err := vangogh_urls.ProductTypeStashUrl(pt, mt)
 	if err != nil {
 		return err
@@ -89,7 +96,6 @@ func Download(
 			}
 		}
 	}
-
 	return nil
 }
 

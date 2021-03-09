@@ -20,9 +20,9 @@ func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
 
 	for _, page := range vrMain.All() {
 
-		detailPt := vangogh_types.DetailProductType(mainPt)
+		splitPt := vangogh_types.SplitProductType(mainPt)
 
-		fmt.Printf("splitting %s (%s) page %s into %s\n", mainPt, mt, page, detailPt)
+		fmt.Printf("splitting %s (%s) page %s into %s\n", mainPt, mt, page, splitPt)
 
 		var productsGetter gog_types.ProductsGetter
 
@@ -41,7 +41,7 @@ func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
 			return err
 		}
 
-		detailDstUrl, err := vangogh_urls.DstProductTypeUrl(detailPt, mt)
+		detailDstUrl, err := vangogh_urls.DstProductTypeUrl(splitPt, mt)
 		if err != nil {
 			return nil
 		}

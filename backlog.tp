@@ -1,3 +1,7 @@
+download objective should only use download-type, not product type:
+	- create SupportingProductTypes helper
+	- iterate and download all artifacts of that download type
+
 Search:
 	- add search objective that filters ids feeding them into list for display 
 	- move title, developer, publisher from list to search
@@ -29,12 +33,6 @@ Operations log:
 
 Download product types:
 	- images @start
-		- product-image @done(2021-03-07)
-		- box-art @done(2021-03-07)
-		- background
-		- galaxyBackground
-		- logo @done(2021-03-08)
-		- icon @done(2021-03-08)
 		- screenshots
 	- videos
 		- youtube-dl
@@ -59,6 +57,12 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- product-image @done(2021-03-07) @project(Download product types)
+	- box-art @done(2021-03-07) @project(Download product types)
+	- background @done(2021-03-08) @project(Download product types)
+	- galaxyBackground @done(2021-03-08) @project(Download product types)
+	- logo @done(2021-03-08) @project(Download product types)
+	- icon @done(2021-03-08) @project(Download product types)
 	- add simple format ("id title") @done(2021-03-07) @project(List improvements)
 	Memorization completion: @done(2021-03-07)
 		- memorize publisher, developer for search @done(2021-03-07)

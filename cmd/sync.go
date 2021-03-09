@@ -35,11 +35,9 @@ func Sync(mt gog_types.Media) error {
 	}
 
 	// download images
-	for _, pt := range vangogh_types.AllLocalProductTypes() {
-		for _, dt := range vangogh_types.AllImageDownloadTypes() {
-			if err := Download(nil, pt, mt, dt, true); err != nil {
-				return err
-			}
+	for _, dt := range vangogh_types.AllImageDownloadTypes() {
+		if err := Download(nil, mt, dt, true); err != nil {
+			return err
 		}
 	}
 
