@@ -1,48 +1,57 @@
-download objective should only use download-type, not product type:
-	- create SupportingProductTypes helper
-	- iterate and download all artifacts of that download type
-
 Search:
 	- add search objective that filters ids feeding them into list for display 
 	- move title, developer, publisher from list to search
 	- add other properties
 
+Combine stash and distill into a single objective:
+	- Perform efficient stashing and distill at the same time to avoid reading files twice
+
 List improvements:
 	- add sort options (using memories)
 
-Reverse-lookup:
-	- Add objective to reverse find all product types from download artifact name (e.g. product-image)
+Standartize directories:
+	- opt/vangogh, etc/vangogh, etc.
+	- provide flags for operations to specify non-defaults
 
-Report:
-	- add various reports:
-		- total product per type and media
-		- all publishers, developers and number of games they have
+Work on gaugin can start:
+	- Publish vangogh on GitHub
 
-Improve verbosity:
-	- add module that produced log.Print to the log output
-	- add a "verbose" flag to every module
-	-  use log.Print for errors and info, fmt.Print for progress
+Sync improvements:
+	- Don't sync remote data if synced in the last N hours
+	- Add force flag to sync either way
+	- Provide control over what syncs, perhaps as exclusion flags (-no-screenshots, etc)
 
 Fix bugs:
 No known at the moment
+
+Download product types:
+	- images @start
+		- screenshots @start
+	- videos
+		- youtube-dl
+	- product files by OS, language
 
 Operations log:
 	- add operations log
 	- print report at the end of operations - changed, new
 	- track updated account products (new, modified, updated)
 
-Download product types:
-	- images @start
-		- screenshots
-	- videos
-		- youtube-dl
-	- product files
+Improve verbosity:
+	- add module that produced log.Print to the log output
+	- add a "verbose" flag to every module
+	-  use log.Print for errors and info, fmt.Print for progress
+
+Additional objectives ideas:
+	- open download type
+	- reveal download type 
+
+Report:
+	- add various reports:
+		- total product per type and media
+		- all publishers, developers and number of games they have
 
 clo:
 	- don't allow ambiguous abbreviations
-
-Additional features/improvements:
-	- add bulk Set operation to kvas (io.Reader enumerator?) for more efficient split
 
 Documentation:
 	- update modules documentation:
@@ -57,6 +66,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	download objective should only use download-type, not product type: @done(2021-03-08)
+		- create SupportingProductTypes helper @done(2021-03-08)
+		- iterate and download all artifacts of that download type @done(2021-03-08)
 	- product-image @done(2021-03-07) @project(Download product types)
 	- box-art @done(2021-03-07) @project(Download product types)
 	- background @done(2021-03-08) @project(Download product types)

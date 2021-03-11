@@ -23,7 +23,7 @@
       "property...=title,developer,publisher,image,box-art,logo,icon"
     ],
     "download": [
-      "download-type_!=image,box-art,logo,icon,background-image,galaxy-background-image",
+      "download-type_!=image,box-art,logo,icon,background-image,galaxy-background-image,screenshots",
       "media=game_,movie",
       "os=current_,windows,macos,linux",
       "lang=en_,ru",
@@ -34,9 +34,22 @@
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
       "id...",
-      "property...=id_,title_,developer,publisher,image,box-art,logo,icon,background-image,galaxy-background-image"
+      "property...=id_,title_,developer,publisher,image,box-art,logo,icon,background-image,galaxy-background-image,screenshots"
     ],
-    "search": [],
+    "search": [
+      "media=game_,movie",
+      "title...",
+      "developer...",
+      "publisher...",
+      "image...",
+      "box-art...",
+      "logo...",
+      "icon...",
+      "background-image...",
+      "galaxy-background-image...",
+      "screenshots...",
+      "property...=id_,title_,developer,publisher,image,box-art,logo,icon,background-image,galaxy-background-image,screenshots"
+    ],
     "sync": [
       "media=game_,movie"
     ]

@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_types"
-	"github.com/arelate/gog_urls"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
@@ -11,7 +10,6 @@ import (
 	"github.com/boggydigital/froth"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
-	"net/url"
 )
 
 func Download(
@@ -44,13 +42,14 @@ func downloadProductType(
 	}
 
 	if all {
-		// TODO: log warning if user provided ids that would be overwritten
+		if len(ids) > 0 {
+			log.Printf("vangogh: provided would be overwritten by the 'all' flag")
+		}
 		ids = propStash.All()
 	}
 
 	if len(ids) == 0 {
-		log.Printf("no ids specified to download")
-
+		log.Printf("vangogh: no ids specified to download for %s, %s (%s)", dt, pt, mt)
 		return nil
 	}
 
@@ -84,42 +83,20 @@ func downloadProductType(
 			continue
 		}
 
-		srcUrls, err := propertyToUrls(dt, prop)
+		srcUrls, err := vangogh_urls.PropDownloadUrl(prop, dt)
 		if err != nil {
 			return err
 		}
 
-		for _, srcUrl := range srcUrls {
+		for i, srcUrl := range srcUrls {
 			//fmt.Println(srcUrl.String(), dstDir)
+			if len(srcUrls) > 1 {
+				fmt.Printf("- downloading %s file %d/%d\n", dt, i+1, len(srcUrls))
+			}
 			if err := dlClient.Download(srcUrl, dstDir); err != nil {
 				return err
 			}
 		}
 	}
 	return nil
-}
-
-func propertyToUrls(dt vangogh_types.DownloadType, prop string) ([]*url.URL, error) {
-	urls := make([]*url.URL, 0)
-
-	switch dt {
-	case vangogh_types.Image:
-		fallthrough
-	case vangogh_types.BoxArt:
-		fallthrough
-	case vangogh_types.BackgroundImage:
-		fallthrough
-	case vangogh_types.GalaxyBackgroundImage:
-		fallthrough
-	case vangogh_types.Logo:
-		fallthrough
-	case vangogh_types.Icon:
-		boxArtUrl, err := gog_urls.Image(prop)
-		if err != nil {
-			return urls, err
-		}
-		urls = append(urls, boxArtUrl)
-	}
-
-	return urls, nil
 }

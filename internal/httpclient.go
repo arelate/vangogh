@@ -12,7 +12,7 @@ func HttpClient() (*http.Client, error) {
 	}
 
 	return &http.Client{
-		Timeout: time.Minute * 1,
+		Timeout: time.Minute * 3,
 		Jar:     jar,
 	}, nil
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/arelate/gog_types"
+	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/internal"
@@ -45,6 +46,16 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "distill":
 		properties := req.ArgValues("property")
 		return Distill(pt, mt, properties)
+	case "search":
+		properties := req.ArgValues("property")
+		// TODO: filter argValue to AllProperties
+		query := make(map[string][]string, 0)
+		for _, prop := range vangogh_properties.AllStashedProperties() {
+			if values, ok := req.Arguments[prop]; ok {
+				query[prop] = values
+			}
+		}
+		return Search(mt, query, properties)
 	default:
 		return clo.Route(req, defs)
 	}

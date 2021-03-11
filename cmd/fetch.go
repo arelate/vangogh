@@ -161,7 +161,7 @@ func Fetch(ids []string, denyIds []string, pt vangogh_types.ProductType, mt gog_
 		return err
 	}
 
-	if vangogh_types.RequiresAuth(pt) {
+	if vangogh_types.ProductTypeRequiresAuth(pt) {
 		li, err := gog_auth.LoggedIn(httpClient)
 		if err != nil {
 			return err
