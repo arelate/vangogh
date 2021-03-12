@@ -3,7 +3,7 @@ Search:
 	- move title, developer, publisher from list to search
 	- add other properties
 
-Combine stash and distill into a single objective:
+Combine stash and distill into a single objective (extract?):
 	- Perform efficient stashing and distill at the same time to avoid reading files twice
 
 List improvements:

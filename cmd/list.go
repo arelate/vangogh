@@ -5,10 +5,7 @@ import (
 	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
-	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
-	"github.com/boggydigital/froth"
-	"log"
 	"strings"
 )
 
@@ -21,25 +18,14 @@ func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, proper
 	}
 
 	if len(properties) == 0 {
-		properties = []string{vangogh_properties.IdProperty, vangogh_properties.TitleProperty}
+		properties = []string{
+			vangogh_properties.IdProperty,
+			vangogh_properties.TitleProperty}
 	}
 
-	distStashUrl := vangogh_urls.DistilledStashUrl()
-
-	propStashes := make(map[string]*froth.Stash, len(properties))
-	for _, prop := range properties {
-		if prop == vangogh_properties.IdProperty {
-			continue
-		}
-		if !vangogh_properties.ValidProperty(prop) {
-			log.Printf("vangogh: invalid property %s", prop)
-			continue
-		}
-		stash, err := froth.NewStash(distStashUrl, prop)
-		if err != nil {
-			return err
-		}
-		propStashes[prop] = stash
+	propStashes, err := vangogh_properties.PropStashes(properties)
+	if err != nil {
+		return err
 	}
 
 	vr, err := vangogh_values.NewReader(pt, mt)
