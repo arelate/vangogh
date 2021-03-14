@@ -9,7 +9,8 @@ import (
 	"strings"
 )
 
-func Search(mt gog_types.Media, query map[string][]string, properties []string) error {
+func Search(pts []vangogh_types.ProductType, mt gog_types.Media, query map[string][]string, properties []string) error {
+
 	ps := make([]string, 0, len(query))
 	for p, values := range query {
 		ps = append(ps, p)
@@ -23,7 +24,11 @@ func Search(mt gog_types.Media, query map[string][]string, properties []string) 
 		return err
 	}
 
-	for _, pt := range vangogh_types.AllLocalProductTypes() {
+	if len(pts) == 0 {
+		pts = vangogh_types.AllLocalProductTypes()
+	}
+
+	for _, pt := range pts {
 
 		matchIds := make([]string, 0)
 
@@ -56,8 +61,6 @@ func Search(mt gog_types.Media, query map[string][]string, properties []string) 
 				if !matchesAll {
 					break
 				}
-
-				//fmt.Println(id, pp, val)
 			}
 
 			if matchesAll {

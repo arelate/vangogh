@@ -17,27 +17,35 @@ import (
 var cloBytes []byte
 
 func main() {
-	//vr, err := vangogh_values.NewReader(vangogh_types.StoreProducts, gog_types.Game)
+
+	//vr, err := vangogh_values.NewReader(vangogh_types.ApiProductsV2, gog_types.Game)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//limit := 2
+	//limit := 99999
 	//current := 0
 	//
 	//for _, id := range vr.All() {
-	//	current += 1
+	//
+	//	current++
 	//	if current == limit {
 	//		break
 	//	}
-	//	sp, err := vr.StoreProduct(id)
+	//
+	//	apv2, err := vr.ApiProductV2(id)
 	//	if err != nil {
-	//		log.Fatal(err)
+	//		log.Fatal(id + " " + err.Error())
 	//	}
-	//	for _, shot := range sp.Gallery {
-	//		fmt.Println(shot)
+	//
+	//	if apv2.Embedded.Bonuses != nil {
+	//		fmt.Println(id, apv2.Embedded.Bonuses)
 	//	}
-	//	//fmt.Println(sp.GetScreenshots())
+	//
+	//	//if len(apv2.Embedded.Editions) > 0 {
+	//	//
+	//	//	fmt.Println(id, apv2.Embedded.Editions)
+	//	//}
 	//}
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)

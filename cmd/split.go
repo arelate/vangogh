@@ -22,7 +22,7 @@ func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
 
 		splitPt := vangogh_types.SplitProductType(mainPt)
 
-		fmt.Printf("splitting %s (%s) page %s into %s\n", mainPt, mt, page, splitPt)
+		fmt.Printf("split %s (%s) %s into %s\n", mainPt, mt, page, splitPt)
 
 		var productsGetter gog_types.ProductsGetter
 

@@ -8,23 +8,23 @@ import (
 	"github.com/boggydigital/vangogh/internal"
 )
 
-func Sync(mt gog_types.Media) error {
-	//sync paginated product types
+func Sync(mt gog_types.Media, verbose bool) error {
+	// get paginated data
 	for _, pt := range vangogh_types.AllPagedProductTypes() {
-		if err := Fetch(nil, nil, pt, mt, false); err != nil {
+		if err := GetData(nil, nil, pt, mt, false, verbose); err != nil {
 			return err
 		}
 	}
 
-	//sync main - detail missing product types
+	// get main - detail data
 	for _, pt := range vangogh_types.AllDetailProductTypes() {
 		denyIds := internal.ReadLines(vangogh_urls.DenylistUrl(pt))
-		if err := Fetch(nil, denyIds, pt, mt, true); err != nil {
+		if err := GetData(nil, denyIds, pt, mt, true, verbose); err != nil {
 			return err
 		}
 	}
 
-	// stash and distill properties
+	// extract data
 	for _, pt := range vangogh_types.AllLocalProductTypes() {
 		if err := Stash(pt, mt, vangogh_properties.AllStashedProperties()); err != nil {
 			return err
@@ -34,9 +34,9 @@ func Sync(mt gog_types.Media) error {
 		}
 	}
 
-	// download images
+	// get images
 	for _, dt := range vangogh_types.AllImageDownloadTypes() {
-		if err := Download(nil, mt, dt, true); err != nil {
+		if err := GetImages(nil, mt, dt, true); err != nil {
 			return err
 		}
 	}

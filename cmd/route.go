@@ -13,6 +13,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return clo.Route(nil, defs)
 	}
 
+	verbose := req.Flag("verbose")
+
 	productType := req.ArgVal("product-type")
 	media := req.ArgVal("media")
 
@@ -26,20 +28,23 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		username := req.ArgVal("username")
 		password := req.ArgVal("password")
 		return Authenticate(username, password)
-	case "fetch":
+	case "get-data":
 		missing := req.Flag("missing")
 		denyIdsFile := req.ArgVal("deny-ids-file")
-		return Fetch(ids, internal.ReadLines(denyIdsFile), pt, mt, missing)
+		denyIds := internal.ReadLines(denyIdsFile)
+		return GetData(ids, denyIds, pt, mt, missing, verbose)
 	case "list":
 		properties := req.ArgValues("property")
 		return List(ids, pt, mt, properties...)
-	case "download":
+	case "get-images":
 		downloadType := req.ArgVal("download-type")
 		dt := vangogh_types.ParseDownloadType(downloadType)
 		all := req.Flag("all")
-		return Download(ids, mt, dt, all)
+		return GetImages(ids, mt, dt, all)
 	case "sync":
-		return Sync(mt)
+		return Sync(mt, verbose)
+	case "extract":
+		return Extract()
 	case "stash":
 		properties := req.ArgValues("property")
 		return Stash(pt, mt, properties)
@@ -55,7 +60,16 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 				query[prop] = values
 			}
 		}
-		return Search(mt, query, properties)
+		productTypes := req.ArgValues("product-type")
+		pts := make([]vangogh_types.ProductType, 0, len(productTypes))
+		for _, productType := range productTypes {
+			ppt := vangogh_types.ParseProductType(productType)
+			if ppt == vangogh_types.UnknownProductType {
+				continue
+			}
+			pts = append(pts, ppt)
+		}
+		return Search(pts, mt, query, properties)
 	default:
 		return clo.Route(req, defs)
 	}

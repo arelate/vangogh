@@ -1,12 +1,11 @@
-Search:
-	- add search objective that filters ids feeding them into list for display 
-	- move title, developer, publisher from list to search
-	- add other properties
+Downloads throttling:
+	- Images server is throttling - port delay heuristic from C# vangogh to avoid that
 
 Combine stash and distill into a single objective (extract?):
 	- Perform efficient stashing and distill at the same time to avoid reading files twice
 
 List improvements:
+	- display id, title then "-" prefixed individual properties with a property prefix, e.g. - developer:"..."
 	- add sort options (using memories)
 
 Standartize directories:
@@ -66,6 +65,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Search: @done(2021-03-11)
+		- add search objective that filters ids feeding them into list for display @done(2021-03-11)
+		- move title, developer, publisher from list to search @done(2021-03-11)
+		- add other properties @done(2021-03-11)
 	download objective should only use download-type, not product type: @done(2021-03-08)
 		- create SupportingProductTypes helper @done(2021-03-08)
 		- iterate and download all artifacts of that download type @done(2021-03-08)

@@ -12,7 +12,7 @@ import (
 	"log"
 )
 
-func Download(
+func GetImages(
 	ids []string,
 	mt gog_types.Media,
 	dt vangogh_types.DownloadType,
@@ -60,9 +60,11 @@ func downloadProductType(
 
 	dlClient := dolo.NewClient(httpClient, nil,
 		&dolo.ClientOptions{
-			Retries:         5,
+			Attempts:        2,
+			DelayAttempts:   5,
 			ResumeDownloads: true,
-			Verbose:         true,
+			//CheckContentLength: true,
+			Verbose: true,
 		})
 
 	//fmt.Println(dlClient)
@@ -89,11 +91,12 @@ func downloadProductType(
 		}
 
 		for i, srcUrl := range srcUrls {
-			//fmt.Println(srcUrl.String(), dstDir)
+			//log.Println(srcUrl)
 			if len(srcUrls) > 1 {
 				fmt.Printf("- downloading %s file %d/%d\n", dt, i+1, len(srcUrls))
 			}
-			if err := dlClient.Download(srcUrl, dstDir); err != nil {
+			_, err := dlClient.Download(srcUrl, dstDir)
+			if err != nil {
 				return err
 			}
 		}
