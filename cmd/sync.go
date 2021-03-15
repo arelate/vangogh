@@ -34,8 +34,8 @@ func Sync(mt gog_types.Media, verbose bool) error {
 	}
 
 	// get images
-	for _, dt := range vangogh_types.AllImageDownloadTypes() {
-		if err := GetImages(nil, mt, dt, true); err != nil {
+	for _, it := range vangogh_types.AllImageTypes() {
+		if err := GetImages(nil, mt, it, true); err != nil {
 			return err
 		}
 	}

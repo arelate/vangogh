@@ -1,5 +1,5 @@
 Rewrite local images store:
-	- use image-id, not full URL to store image metadata
+	- use image-id, not full URL to store image metadata @done(2021-03-14)
 	- store in one folder (images) like at origin
 	- partition to have limited number of images per folder (seems like two letters are good choice - confirm options with data)
 	- download types -> image types

@@ -37,10 +37,10 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValues("property")
 		return List(ids, pt, mt, properties...)
 	case "get-images":
-		downloadType := req.ArgVal("download-type")
-		dt := vangogh_types.ParseDownloadType(downloadType)
+		imageType := req.ArgVal("image-type")
+		it := vangogh_types.ParseImageType(imageType)
 		all := req.Flag("all")
-		return GetImages(ids, mt, dt, all)
+		return GetImages(ids, mt, it, all)
 	case "sync":
 		return Sync(mt, verbose)
 	case "extract":

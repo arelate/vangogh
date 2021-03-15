@@ -22,7 +22,7 @@
       "media=game_,movie"
     ],
     "get-images": [
-      "download-type_!=image,box-art,logo,icon,background-image,galaxy-background-image,screenshots",
+      "image-type_!=image,box-art,logo,icon,background,galaxy-background,screenshots",
       "media=game_,movie",
       "id...",
       "all"
@@ -35,7 +35,7 @@
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
       "id...",
-      "property...=id_,title_,developer,publisher,image,box-art,logo,icon,background-image,galaxy-background-image,screenshots"
+      "property...=developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots"
     ],
     "search": [
       "product-type...=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
@@ -49,26 +49,11 @@
       "icon...",
       "background-image...",
       "galaxy-background-image...",
-      "screenshots...",
-      "property...=id_,title_,developer,publisher,image,box-art,logo,icon,background-image,galaxy-background-image,screenshots"
+      "screenshots..."
     ],
     "sync": [
       "media=game_,movie"
     ]
   },
-  "help": {
-    "vangogh": "CLI utility to sync and process GOG.com metadata, images and files",
-    "auth": "authenticate on GOG.com and save session",
-    "fetch": "fetch remote product data by media, type",
-    "list": "list local product data by media, type",
-    "fetch:id": "details ID",
-    "download": "download product files by media, type",
-    "download:id": "account product ID",
-    "username": "GOG.com username",
-    "password": "GOG.com password",
-    "media": "media type - games or movies",
-    "type": "GOG.com product type",
-    "os": "operating system",
-    "lang": "product files language"
-  }
+  "help": {}
 }
