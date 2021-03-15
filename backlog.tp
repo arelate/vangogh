@@ -1,5 +1,8 @@
-Downloads throttling:
-	- Images server is throttling - port delay heuristic from C# vangogh to avoid that
+Rewrite local images store:
+	- use image-id, not full URL to store image metadata
+	- store in one folder (images) like at origin
+	- partition to have limited number of images per folder (seems like two letters are good choice - confirm options with data)
+	- download types -> image types
 
 Combine stash and distill into a single objective (extract?):
 	- Perform efficient stashing and distill at the same time to avoid reading files twice
@@ -65,6 +68,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Downloads throttling: @done(2021-03-14)
+		- Images server is throttling - port delay heuristic from C# vangogh to avoid that @done(2021-03-14)
 	Search: @done(2021-03-11)
 		- add search objective that filters ids feeding them into list for display @done(2021-03-11)
 		- move title, developer, publisher from list to search @done(2021-03-11)

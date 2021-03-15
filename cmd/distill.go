@@ -11,8 +11,8 @@ import (
 	"strings"
 )
 
-func Distill(pt vangogh_types.ProductType, mt gog_types.Media, properties []string) error {
-	for _, property := range properties {
+func Distill(pt vangogh_types.ProductType, mt gog_types.Media) error {
+	for _, property := range vangogh_properties.AllStashedProperties() {
 		if err := distillProperty(pt, mt, property); err != nil {
 			return err
 		}

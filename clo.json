@@ -15,13 +15,11 @@
     ],
     "stash": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
-      "media=game_,movie",
-      "property...=title,developer,publisher,image,box-art,logo,icon"
+      "media=game_,movie"
     ],
     "distill": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
-      "media=game_,movie",
-      "property...=title,developer,publisher,image,box-art,logo,icon"
+      "media=game_,movie"
     ],
     "get-images": [
       "download-type_!=image,box-art,logo,icon,background-image,galaxy-background-image,screenshots",

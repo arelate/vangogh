@@ -11,8 +11,8 @@ import (
 	"log"
 )
 
-func Stash(pt vangogh_types.ProductType, mt gog_types.Media, properties []string) error {
-	for _, property := range properties {
+func Stash(pt vangogh_types.ProductType, mt gog_types.Media) error {
+	for _, property := range vangogh_properties.AllStashedProperties() {
 		if !vangogh_properties.SupportsProperty(pt, property) {
 			log.Printf("vangogh: %s (%s) doesn't support property %s\n", pt, mt, property)
 			continue

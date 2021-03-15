@@ -46,11 +46,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "extract":
 		return Extract()
 	case "stash":
-		properties := req.ArgValues("property")
-		return Stash(pt, mt, properties)
+		return Stash(pt, mt)
 	case "distill":
-		properties := req.ArgValues("property")
-		return Distill(pt, mt, properties)
+		return Distill(pt, mt)
 	case "search":
 		properties := req.ArgValues("property")
 		// TODO: filter argValue to AllProperties

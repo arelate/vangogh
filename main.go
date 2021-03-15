@@ -38,14 +38,9 @@ func main() {
 	//		log.Fatal(id + " " + err.Error())
 	//	}
 	//
-	//	if apv2.Embedded.Bonuses != nil {
-	//		fmt.Println(id, apv2.Embedded.Bonuses)
-	//	}
-	//
-	//	//if len(apv2.Embedded.Editions) > 0 {
-	//	//
-	//	//	fmt.Println(id, apv2.Embedded.Editions)
-	//	//}
+	//	srcImg := gog_urls.ImageId(apv2.GetImage())
+	//	imgUrl, _ := gog_urls.Image(srcImg)
+	//	fmt.Println(srcImg, imgUrl)
 	//}
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
