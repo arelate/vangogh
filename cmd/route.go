@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/arelate/gog_types"
-	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/internal"
@@ -50,24 +49,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "distill":
 		return Distill(pt, mt)
 	case "search":
-		properties := req.ArgValues("property")
-		// TODO: filter argValue to AllProperties
-		query := make(map[string][]string, 0)
-		for _, prop := range vangogh_properties.AllStashedProperties() {
-			if values, ok := req.Arguments[prop]; ok {
-				query[prop] = values
-			}
-		}
-		productTypes := req.ArgValues("product-type")
-		pts := make([]vangogh_types.ProductType, 0, len(productTypes))
-		for _, productType := range productTypes {
-			ppt := vangogh_types.ParseProductType(productType)
-			if ppt == vangogh_types.UnknownProductType {
-				continue
-			}
-			pts = append(pts, ppt)
-		}
-		return Search(pts, mt, query, properties)
+		text := req.ArgVal("text")
+		imageId := req.ArgVal("image-id")
+		return Search(mt, text, imageId)
 	default:
 		return clo.Route(req, defs)
 	}

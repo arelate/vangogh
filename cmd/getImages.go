@@ -69,12 +69,6 @@ func downloadProductType(
 
 	//fmt.Println(dlClient)
 
-	// TODO: add id to params to allow creating destination URL for product files
-	dstDir, err := vangogh_urls.DstImageTypeUrl(it)
-	if err != nil {
-		return err
-	}
-
 	for _, id := range ids {
 		fmt.Printf("downloading %s for %s (%s) id %s\n", it, pt, mt, id)
 
@@ -85,20 +79,27 @@ func downloadProductType(
 			continue
 		}
 
+		dstDir, err := vangogh_urls.DstImageUrl(prop)
+		if err != nil {
+			return err
+		}
+
 		srcUrls, err := vangogh_urls.PropImageUrl(prop, it)
 		if err != nil {
 			return err
 		}
 
 		for i, srcUrl := range srcUrls {
-			//log.Println(srcUrl)
 			if len(srcUrls) > 1 {
 				fmt.Printf("- downloading %s file %d/%d\n", it, i+1, len(srcUrls))
 			}
+
 			_, err := dlClient.Download(srcUrl, dstDir)
 			if err != nil {
 				return err
 			}
+
+			//fmt.Println(srcUrl, dstDir)
 		}
 	}
 	return nil

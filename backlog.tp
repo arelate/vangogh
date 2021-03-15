@@ -1,11 +1,17 @@
 Rewrite local images store:
-	- use image-id, not full URL to store image metadata @done(2021-03-14)
-	- store in one folder (images) like at origin
-	- partition to have limited number of images per folder (seems like two letters are good choice - confirm options with data)
-	- download types -> image types
+	- download using distilled stash only
 
 Combine stash and distill into a single objective (extract?):
-	- Perform efficient stashing and distill at the same time to avoid reading files twice
+	- Perform efficient stashing of all properties
+	- Distill at the same time to avoid reading files twice
+	- Output of extract is just a distill stash, deprecate individual stashes, no need for them
+
+Search improvements:
+	- deprecate individual image types in search - use only "image", search all image properties
+	- Same for other text properties - use "text" to search all text properties
+	- Individual properties of certain type (text, image-id) are combined with OR
+	- same goes for both text and image-id - they're combined with OR (unlikely a given product would match both image-id (that is specific) and text)
+	- to display that result - show the property that matched 
 
 List improvements:
 	- display id, title then "-" prefixed individual properties with a property prefix, e.g. - developer:"..."
@@ -68,6 +74,13 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- use image-id, not full URL to store image metadata @done(2021-03-14) @project(Rewrite local images store)
+	- store in one folder (images) like at origin @done(2021-03-14) @project(Rewrite local images store)
+	- partition to have limited number of images per folder (seems like two letters are good choice - confirm options with data) @done(2021-03-14) @project(Rewrite local images store)
+	Two letters produce 256 top level folders and ~300 items per folder for ~75K images, seems like it'll work great! @done(2021-03-14) @project(Rewrite local images store)
+	- move all existing files to a new partitioned location @done(2021-03-14) @project(Rewrite local images store)
+	- download types -> image types @done(2021-03-14) @project(Rewrite local images store)
+	- create a new destination url func to partition @done(2021-03-14) @project(Rewrite local images store)
 	Downloads throttling: @done(2021-03-14)
 		- Images server is throttling - port delay heuristic from C# vangogh to avoid that @done(2021-03-14)
 	Search: @done(2021-03-11)
