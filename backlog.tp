@@ -1,10 +1,6 @@
-Rewrite local images store:
-	- download using distilled stash only
-
-Combine stash and distill into a single objective (extract?):
-	- Perform efficient stashing of all properties
-	- Distill at the same time to avoid reading files twice
-	- Output of extract is just a distill stash, deprecate individual stashes, no need for them
+List improvements:
+	- display id, title then "-" prefixed individual properties with a property prefix, e.g. - developer:"..."
+	- add sort options (using memories)
 
 Search improvements:
 	- deprecate individual image types in search - use only "image", search all image properties
@@ -12,10 +8,6 @@ Search improvements:
 	- Individual properties of certain type (text, image-id) are combined with OR
 	- same goes for both text and image-id - they're combined with OR (unlikely a given product would match both image-id (that is specific) and text)
 	- to display that result - show the property that matched 
-
-List improvements:
-	- display id, title then "-" prefixed individual properties with a property prefix, e.g. - developer:"..."
-	- add sort options (using memories)
 
 Standartize directories:
 	- opt/vangogh, etc/vangogh, etc.
@@ -74,6 +66,14 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Info objective: @done(2021-03-16)
+		- display all known properties for a product of any type by id @done(2021-03-16)
+	Combine stash and distill into a single objective (extract?): @done(2021-03-15)
+		- Perform efficient stashing of all properties @done(2021-03-15)
+		- Distill at the same time to avoid reading files twice @done(2021-03-15)
+		- Output of extract is just a distill stash, deprecate individual stashes, no need for them @done(2021-03-15)
+	Rewrite local images store: @done(2021-03-15)
+		- download using distilled stash only @done(2021-03-15)
 	- use image-id, not full URL to store image metadata @done(2021-03-14) @project(Rewrite local images store)
 	- store in one folder (images) like at origin @done(2021-03-14) @project(Rewrite local images store)
 	- partition to have limited number of images per folder (seems like two letters are good choice - confirm options with data) @done(2021-03-14) @project(Rewrite local images store)

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
@@ -14,29 +13,16 @@ import (
 
 func GetImages(
 	ids []string,
-	mt gog_types.Media,
 	it vangogh_types.ImageType,
 	all bool) error {
-	for _, pt := range vangogh_types.ProductTypesSupportingImageType(it) {
-		if err := downloadProductType(ids, pt, mt, it, all); err != nil {
-			return err
-		}
-	}
-	return nil
-}
 
-func downloadProductType(
-	ids []string,
-	pt vangogh_types.ProductType,
-	mt gog_types.Media,
-	it vangogh_types.ImageType,
-	all bool) error {
-	stashUrl, err := vangogh_urls.ProductTypeStashUrl(pt, mt)
-	if err != nil {
-		return err
+	if !vangogh_types.ValidImageType(it) {
+		return fmt.Errorf("vangogh: invalid image type %s", it)
 	}
 
-	propStash, err := froth.NewStash(stashUrl, vangogh_properties.FromImageType(it))
+	propExtracts, err := froth.NewStash(
+		vangogh_urls.Extracts(),
+		vangogh_properties.FromImageType(it))
 	if err != nil {
 		return err
 	}
@@ -45,11 +31,11 @@ func downloadProductType(
 		if len(ids) > 0 {
 			log.Printf("vangogh: provided would be overwritten by the 'all' flag")
 		}
-		ids = propStash.All()
+		ids = propExtracts.All()
 	}
 
 	if len(ids) == 0 {
-		log.Printf("vangogh: no ids specified to download for %s, %s (%s)", it, pt, mt)
+		log.Printf("vangogh: missing ids to get images for %s", it)
 		return nil
 	}
 
@@ -70,12 +56,12 @@ func downloadProductType(
 	//fmt.Println(dlClient)
 
 	for _, id := range ids {
-		fmt.Printf("downloading %s for %s (%s) id %s\n", it, pt, mt, id)
+		log.Printf("vangogh: get %s id %s", it, id)
 
-		prop, ok := propStash.Get(id)
+		prop, ok := propExtracts.Get(id)
 		if !ok || prop == "" {
 			// TODO: log missing property
-			log.Printf("vangogh: missing %s for %s (%s) %s\n", it, pt, mt, id)
+			log.Printf("vangogh: missing %s id %s", it, id)
 			continue
 		}
 
@@ -91,7 +77,7 @@ func downloadProductType(
 
 		for i, srcUrl := range srcUrls {
 			if len(srcUrls) > 1 {
-				fmt.Printf("- downloading %s file %d/%d\n", it, i+1, len(srcUrls))
+				log.Printf("vangogh: get %s id %s file %d/%d", it, id, i+1, len(srcUrls))
 			}
 
 			_, err := dlClient.Download(srcUrl, dstDir)

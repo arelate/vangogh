@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/arelate/gog_types"
+	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/vangogh/internal"
@@ -24,18 +25,13 @@ func Sync(mt gog_types.Media, verbose bool) error {
 	}
 
 	// extract data
-	for _, pt := range vangogh_types.AllLocalProductTypes() {
-		if err := Stash(pt, mt); err != nil {
-			return err
-		}
-		if err := Distill(pt, mt); err != nil {
-			return err
-		}
+	if err := Extract(mt, vangogh_properties.AllExtractedProperties()); err != nil {
+		return err
 	}
 
 	// get images
 	for _, it := range vangogh_types.AllImageTypes() {
-		if err := GetImages(nil, mt, it, true); err != nil {
+		if err := GetImages(nil, it, true); err != nil {
 			return err
 		}
 	}

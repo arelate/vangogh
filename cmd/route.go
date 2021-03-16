@@ -39,19 +39,19 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		imageType := req.ArgVal("image-type")
 		it := vangogh_types.ParseImageType(imageType)
 		all := req.Flag("all")
-		return GetImages(ids, mt, it, all)
+		return GetImages(ids, it, all)
 	case "sync":
 		return Sync(mt, verbose)
 	case "extract":
-		return Extract()
-	case "stash":
-		return Stash(pt, mt)
-	case "distill":
-		return Distill(pt, mt)
+		properties := req.ArgValues("properties")
+		return Extract(mt, properties)
 	case "search":
 		text := req.ArgVal("text")
 		imageId := req.ArgVal("image-id")
 		return Search(mt, text, imageId)
+	case "info":
+		images := req.Flag("images")
+		return Info(ids, mt, images)
 	default:
 		return clo.Route(req, defs)
 	}

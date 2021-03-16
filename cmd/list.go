@@ -23,7 +23,7 @@ func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, proper
 			vangogh_properties.TitleProperty}
 	}
 
-	propStashes, err := vangogh_properties.PropStashes(properties)
+	propExtracts, err := vangogh_properties.PropExtracts(properties)
 	if err != nil {
 		return err
 	}
@@ -50,10 +50,10 @@ func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, proper
 				output[i] = id
 				continue
 			}
-			if propStashes[prop] == nil {
+			if propExtracts[prop] == nil {
 				output[i] = ""
 			}
-			val, ok := propStashes[prop].Get(id)
+			val, ok := propExtracts[prop].Get(id)
 			if !ok || val == "" {
 				output[i] = ""
 			}
