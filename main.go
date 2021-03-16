@@ -9,14 +9,44 @@ import (
 	_ "embed"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/cmd"
+	"io/ioutil"
 	"log"
 	"os"
+	"path"
+	"strings"
 )
 
 //go:embed "clo.json"
 var cloBytes []byte
 
 func main() {
+
+	rootDir := "images"
+	dirs, err := ioutil.ReadDir(rootDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, dir := range dirs {
+		if strings.HasPrefix(dir.Name(), ".") {
+			continue
+		}
+		files, err := ioutil.ReadDir(path.Join(rootDir, dir.Name()))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, file := range files {
+			if file.Name()[0:2] != dir.Name() {
+				oldPath := path.Join(rootDir, dir.Name(), file.Name())
+				newPath := path.Join(rootDir, file.Name()[0:2], file.Name())
+				if err := os.Rename(oldPath, newPath); err != nil {
+					log.Fatal(err)
+				}
+			}
+		}
+	}
+
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
 	defs, err := clo.Load(bytesBuffer)

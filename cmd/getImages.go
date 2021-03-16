@@ -60,14 +60,8 @@ func GetImages(
 
 		prop, ok := propExtracts.Get(id)
 		if !ok || prop == "" {
-			// TODO: log missing property
 			log.Printf("vangogh: missing %s id %s", it, id)
 			continue
-		}
-
-		dstDir, err := vangogh_urls.DstImageUrl(prop)
-		if err != nil {
-			return err
 		}
 
 		srcUrls, err := vangogh_urls.PropImageUrl(prop, it)
@@ -76,11 +70,14 @@ func GetImages(
 		}
 
 		for i, srcUrl := range srcUrls {
+
+			dstDir, err := vangogh_urls.DstImageUrl(srcUrl.Path)
+
 			if len(srcUrls) > 1 {
 				log.Printf("vangogh: get %s id %s file %d/%d", it, id, i+1, len(srcUrls))
 			}
 
-			_, err := dlClient.Download(srcUrl, dstDir)
+			_, err = dlClient.Download(srcUrl, dstDir)
 			if err != nil {
 				return err
 			}
