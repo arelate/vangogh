@@ -9,6 +9,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/kvas"
+	"log"
 	"strconv"
 )
 
@@ -22,7 +23,7 @@ func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
 
 		splitPt := vangogh_types.SplitProductType(mainPt)
 
-		fmt.Printf("split %s (%s) %s into %s\n", mainPt, mt, page, splitPt)
+		log.Printf("split %s (%s) %s into %s\n", mainPt, mt, page, splitPt)
 
 		var productsGetter gog_types.ProductsGetter
 
@@ -41,7 +42,7 @@ func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
 			return err
 		}
 
-		detailDstUrl, err := vangogh_urls.DstProductTypeUrl(splitPt, mt)
+		detailDstUrl, err := vangogh_urls.LocalProductsDir(splitPt, mt)
 		if err != nil {
 			return nil
 		}

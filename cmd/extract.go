@@ -22,7 +22,7 @@ func Extract(mt gog_types.Media, properties []string) error {
 
 	for _, pt := range vangogh_types.AllLocalProductTypes() {
 
-		log.Printf("vangogh: extract %s", pt)
+		log.Printf("extract %s", pt)
 
 		vr, err := vangogh_values.NewReader(pt, mt)
 		if err != nil {

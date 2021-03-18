@@ -44,12 +44,12 @@ func GetData(ids []string, denyIds []string, pt vangogh_types.ProductType, mt go
 		}
 	}
 
-	srcUrl, err := vangogh_urls.SrcProductTypeUrl(pt)
+	srcUrl, err := vangogh_urls.RemoteProductsUrl(pt)
 	if err != nil {
 		return err
 	}
 
-	dstUrl, err := vangogh_urls.DstProductTypeUrl(pt, mt)
+	dstUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func GetData(ids []string, denyIds []string, pt vangogh_types.ProductType, mt go
 	} else {
 		if missing {
 			for _, mpt := range vangogh_types.MainProductTypes(pt) {
-				mainDstUrl, err := vangogh_urls.DstProductTypeUrl(mpt, mt)
+				mainDstUrl, err := vangogh_urls.LocalProductsDir(mpt, mt)
 				if err != nil {
 					return err
 				}

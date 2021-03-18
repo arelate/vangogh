@@ -32,26 +32,36 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		denyIdsFile := req.ArgVal("deny-ids-file")
 		denyIds := internal.ReadLines(denyIdsFile)
 		return GetData(ids, denyIds, pt, mt, missing, verbose)
+	case "info":
+		images := req.Flag("images")
+		return Info(ids, images)
 	case "list":
 		properties := req.ArgValues("property")
 		return List(ids, pt, mt, properties...)
+	case "search":
+		text := req.ArgVal("text")
+		title := req.ArgVal("title")
+		developer := req.ArgVal("developer")
+		publisher := req.ArgVal("publisher")
+		imageId := req.ArgVal("image-id")
+		return Search(text, title, developer, publisher, imageId)
 	case "get-images":
 		imageType := req.ArgVal("image-type")
 		it := vangogh_types.ParseImageType(imageType)
 		all := req.Flag("all")
 		return GetImages(ids, it, all)
 	case "sync":
-		return Sync(mt, verbose)
+		images := req.Flag("images")
+		screenshots := req.Flag("screenshots")
+		all := req.Flag("all")
+		if all {
+			images = true
+			screenshots = true
+		}
+		return Sync(mt, images, screenshots, verbose)
 	case "extract":
 		properties := req.ArgValues("properties")
 		return Extract(mt, properties)
-	case "search":
-		text := req.ArgVal("text")
-		imageId := req.ArgVal("image-id")
-		return Search(mt, text, imageId)
-	case "info":
-		images := req.Flag("images")
-		return Info(ids, mt, images)
 	default:
 		return clo.Route(req, defs)
 	}

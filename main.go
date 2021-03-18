@@ -9,43 +9,90 @@ import (
 	_ "embed"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/cmd"
-	"io/ioutil"
 	"log"
 	"os"
-	"path"
-	"strings"
 )
 
 //go:embed "clo.json"
 var cloBytes []byte
 
 func main() {
+	//propExtracts, err := vangogh_properties.PropExtracts(vangogh_properties.AllImageIdProperties())
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//count := 0
+	//for prop, extracts := range propExtracts {
+	//	if prop == vangogh_properties.ScreenshotsProperty {
+	//		for _, id := range extracts.All() {
+	//			scr, ok := extracts.Get(id)
+	//			if !ok || scr == "" {
+	//				continue
+	//			}
+	//			count += len(strings.Split(scr, ","))
+	//		}
+	//	} else {
+	//		count += len(extracts.All())
+	//	}
+	//}
+	//
+	//fmt.Println(count)
 
-	rootDir := "images"
-	dirs, err := ioutil.ReadDir(rootDir)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//scrExtracts, err := froth.NewStash(vangogh_urls.Extracts(), vangogh_properties.ScreenshotsProperty)
+	//if err != nil{
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, id := range scrExtracts.All() {
+	//	scrString, ok := scrExtracts.Get(id)
+	//	if !ok || scrString == "" {
+	//		continue
+	//	}
+	//
+	//	for _, scr := range strings.Split(scrString,",") {
+	//
+	//		dstImg, err := vangogh_urls.DstImageUrl(scr)
+	//		if err != nil {
+	//			log.Fatal(err)
+	//		}
+	//		scrPath := path.Join(dstImg, scr + ".png")
+	//
+	//		if _, err := os.Stat(scrPath); err != nil {
+	//			continue
+	//		}
+	//
+	//		if err = os.Remove(scrPath); err != nil {
+	//			log.Fatal(err)
+	//		}
+	//	}
+	//}
 
-	for _, dir := range dirs {
-		if strings.HasPrefix(dir.Name(), ".") {
-			continue
-		}
-		files, err := ioutil.ReadDir(path.Join(rootDir, dir.Name()))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		for _, file := range files {
-			if file.Name()[0:2] != dir.Name() {
-				oldPath := path.Join(rootDir, dir.Name(), file.Name())
-				newPath := path.Join(rootDir, file.Name()[0:2], file.Name())
-				if err := os.Rename(oldPath, newPath); err != nil {
-					log.Fatal(err)
-				}
-			}
-		}
-	}
+	//rootDir := "images"
+	//dirs, err := ioutil.ReadDir(rootDir)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, dir := range dirs {
+	//	if strings.HasPrefix(dir.Name(), ".") {
+	//		continue
+	//	}
+	//	files, err := ioutil.ReadDir(path.Join(rootDir, dir.Name()))
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	for _, file := range files {
+	//		if file.Name()[0:2] != dir.Name() {
+	//			oldPath := path.Join(rootDir, dir.Name(), file.Name())
+	//			newPath := path.Join(rootDir, file.Name()[0:2], file.Name())
+	//			if err := os.Rename(oldPath, newPath); err != nil {
+	//				log.Fatal(err)
+	//			}
+	//		}
+	//	}
+	//}
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 

@@ -1,13 +1,19 @@
-List improvements:
-	- display id, title then "-" prefixed individual properties with a property prefix, e.g. - developer:"..."
-	- add sort options (using memories)
+dolo improvements:
+	- consider only moving .download to final if the content length meets expectations
 
-Search improvements:
-	- deprecate individual image types in search - use only "image", search all image properties
-	- Same for other text properties - use "text" to search all text properties
-	- Individual properties of certain type (text, image-id) are combined with OR
-	- same goes for both text and image-id - they're combined with OR (unlikely a given product would match both image-id (that is specific) and text)
-	- to display that result - show the property that matched 
+printInfo improvements:
+	- when printing with any properties - print what type(s) id is available in
+	- print screenshots one per line prefixed
+
+Info improvements:
+	- when id is not present in the data - log
+
+List improvements:
+	- add sort options (using memories)
+		- title
+		- release date
+		- added date
+		- rating
 
 Standartize directories:
 	- opt/vangogh, etc/vangogh, etc.
@@ -16,17 +22,10 @@ Standartize directories:
 Work on gaugin can start:
 	- Publish vangogh on GitHub
 
-Sync improvements:
-	- Don't sync remote data if synced in the last N hours
-	- Add force flag to sync either way
-	- Provide control over what syncs, perhaps as exclusion flags (-no-screenshots, etc)
-
 Fix bugs:
 No known at the moment
 
 Download product types:
-	- images @start
-		- screenshots @start
 	- videos
 		- youtube-dl
 	- product files by OS, language
@@ -41,17 +40,10 @@ Improve verbosity:
 	- add a "verbose" flag to every module
 	-  use log.Print for errors and info, fmt.Print for progress
 
-Additional objectives ideas:
-	- open download type
-	- reveal download type 
-
-Report:
-	- add various reports:
-		- total product per type and media
-		- all publishers, developers and number of games they have
-
 clo:
 	- don't allow ambiguous abbreviations
+	- bug: default attribute must be the first in the list to be considered default
+	
 
 Documentation:
 	- update modules documentation:
@@ -65,7 +57,26 @@ Tests:
 		- dolo
 	- Make sure every closer is closed - validate errors, etc.
 
+Report:
+	- add various reports:
+		- total product per type and media
+		- all publishers, developers and number of games they have
+
 Archive:
+	Sync improvements: @done(2021-03-18)
+		-  add flags to enable certain types of data (e.g. -images, -screenshots) @done(2021-03-18)
+	- images @done(2021-03-17) @project(Download product types)
+		- screenshots @done(2021-03-17)
+	Search improvements: @done(2021-03-17)
+		- deprecate individual image types in search - use only "image", search all image properties @done(2021-03-17)
+		- Add "text" to search all text properties, and keep individual properties (title, developer, publisher) @done(2021-03-17)
+		- Individual properties of certain type (text, image-id) are combined with OR @done(2021-03-17)
+		- same goes for both text and image-id - they're combined with OR (unlikely a given product would match both image-id (that is specific) and text) @done(2021-03-17)
+		- to display that result - show the property that matched @done(2021-03-17)
+	Misc: @done(2021-03-17)
+		- rename Screenshot URL func to ScreenshotJpeg @done(2021-03-17)
+	- display id, title then "-" prefixed individual properties with a property prefix, e.g. - developer:"..." @done(2021-03-16) @project(List improvements)
+	- unifiy printing products based on property extracts @done(2021-03-16) @project(List improvements)
 	Info objective: @done(2021-03-16)
 		- display all known properties for a product of any type by id @done(2021-03-16)
 	Combine stash and distill into a single objective (extract?): @done(2021-03-15)
