@@ -31,7 +31,7 @@ func printInfo(id string, properties []string, propExtracts map[string]*froth.St
 	if ok {
 		fmt.Printf("%s \"%s\"\n", id, title)
 	} else {
-		fmt.Printf("%s\n", id)
+		fmt.Printf("no information for id %s\n", id)
 	}
 
 	for _, prop := range properties {
@@ -43,9 +43,8 @@ func printInfo(id string, properties []string, propExtracts map[string]*froth.St
 			continue
 		}
 		if prop == vangogh_properties.ScreenshotsProperty {
-			fmt.Printf(" %s:\n", prop)
 			for _, scr := range strings.Split(val, ",") {
-				fmt.Printf("  \"%s\"\n", scr)
+				fmt.Printf(" %s:\"%s\"\n", prop, scr)
 			}
 		} else {
 			fmt.Printf(" %s:\"%s\"\n", prop, val)

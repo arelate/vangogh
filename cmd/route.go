@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh_types"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/internal"
+	"time"
 )
 
 func Route(req *clo.Request, defs *clo.Definitions) error {
@@ -31,7 +32,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		missing := req.Flag("missing")
 		denyIdsFile := req.ArgVal("deny-ids-file")
 		denyIds := internal.ReadLines(denyIdsFile)
-		return GetData(ids, denyIds, pt, mt, missing, verbose)
+		return GetData(ids, denyIds, pt, mt, time.Now().Unix(), missing, verbose)
 	case "info":
 		images := req.Flag("images")
 		return Info(ids, images)
@@ -53,12 +54,13 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "sync":
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")
+		noData := req.Flag("no-data")
 		all := req.Flag("all")
 		if all {
 			images = true
 			screenshots = true
 		}
-		return Sync(mt, images, screenshots, verbose)
+		return Sync(mt, noData, images, screenshots, verbose)
 	case "extract":
 		properties := req.ArgValues("properties")
 		return Extract(mt, properties)

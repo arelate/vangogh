@@ -11,28 +11,30 @@ import (
 	"time"
 )
 
-func Sync(mt gog_types.Media, images, screenshots, verbose bool) error {
+func Sync(mt gog_types.Media, noData, images, screenshots, verbose bool) error {
 
 	syncStart := time.Now().Unix()
 
-	// get paginated data
-	for _, pt := range vangogh_types.AllPagedProductTypes() {
-		if err := GetData(nil, nil, pt, mt, false, verbose); err != nil {
+	if !noData {
+		// get paginated data
+		for _, pt := range vangogh_types.AllPagedProductTypes() {
+			if err := GetData(nil, nil, pt, mt, syncStart, false, verbose); err != nil {
+				return err
+			}
+		}
+
+		// get main - detail data
+		for _, pt := range vangogh_types.AllDetailProductTypes() {
+			denyIds := internal.ReadLines(vangogh_urls.Denylist(pt))
+			if err := GetData(nil, denyIds, pt, mt, syncStart, true, verbose); err != nil {
+				return err
+			}
+		}
+
+		// extract data
+		if err := Extract(mt, vangogh_properties.AllExtractedProperties()); err != nil {
 			return err
 		}
-	}
-
-	// get main - detail data
-	for _, pt := range vangogh_types.AllDetailProductTypes() {
-		denyIds := internal.ReadLines(vangogh_urls.Denylist(pt))
-		if err := GetData(nil, denyIds, pt, mt, true, verbose); err != nil {
-			return err
-		}
-	}
-
-	// extract data
-	if err := Extract(mt, vangogh_properties.AllExtractedProperties()); err != nil {
-		return err
 	}
 
 	// get images

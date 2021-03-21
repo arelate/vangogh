@@ -1,49 +1,72 @@
-dolo improvements:
-	- consider only moving .download to final if the content length meets expectations
-
-printInfo improvements:
+info improvements:
 	- when printing with any properties - print what type(s) id is available in
-	- print screenshots one per line prefixed
 
-Info improvements:
-	- when id is not present in the data - log
+split improvements:
+	- don't split pages that have not been modified since the sync start
+	
+get-data improvements:
+	- create kvas helper that sets multiple pages concurently
+	
+dolo improvements:
+	- rewrite dolo to support concurrent ranges downloads
+	- return report that contains:
+		- files that were successfully downloaded with sizes
+		- files that were not attempted to be downloaded
+
+clo improvements:
+	- refactor defined* to return only one value and error
+
+verbosity improvements:
+	- add flags to functions to be optionally verbose
+	
+history.txt:
+	- add a file that collects results of sync operations over time
+	- consider adding information on the downloaded files:
+		- products that contributed to downloaded files
+		- files with sizes
+		- overall amount of data downloaded that session
+	
+Download files:
+	- videos
+		- youtube-dl
+	- product files by OS, language:
+		- create helper for Details that returns collection of strucutred data per language 
+	
+get-images improvements:
+	- set lowest size constraints for image type to filter out bad images:
+		- create image of that size in editor with same color or transparent pixels - use that as lower bound
+		- track those sizes in code, no need to configure
+	- use that size to determine whether to keep download variant
+	- consider adding backup format (png -> jpg and vice a versa)
 
 List improvements:
 	- add sort options (using memories)
-		- title
+		- title (default)
 		- release date
 		- added date
 		- rating
 
 Standartize directories:
 	- opt/vangogh, etc/vangogh, etc.
-	- provide flags for operations to specify non-defaults
+	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
+
+Fix bugs:
+	- search -text owlcat and search -developer owlcat have very different results
+	- running with no params shows an error, should show help
+	- clo bug: default attribute must be the first in the list to be considered default
+	- search higurashi and search -text higurashi have very different results
 
 Work on gaugin can start:
 	- Publish vangogh on GitHub
 
-Fix bugs:
-No known at the moment
-
-Download product types:
-	- videos
-		- youtube-dl
-	- product files by OS, language
-
 Operations log:
-	- add operations log
-	- print report at the end of operations - changed, new
+	- add operations log or last success timestamp
 	- track updated account products (new, modified, updated)
 
 Improve verbosity:
 	- add module that produced log.Print to the log output
 	- add a "verbose" flag to every module
 	-  use log.Print for errors and info, fmt.Print for progress
-
-clo:
-	- don't allow ambiguous abbreviations
-	- bug: default attribute must be the first in the list to be considered default
-	
 
 Documentation:
 	- update modules documentation:
@@ -63,6 +86,13 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- print screenshots one per line prefixed @done(2021-03-19) @project(printInfo improvements)
+	- print report at the end of operations - changed, new @done(2021-03-19) @project(Operations log)
+	- don't allow ambiguous abbreviations @done(2021-03-19) @project(clo)
+	Info improvements: @done(2021-03-19)
+		- when id is not present in the data - log @done(2021-03-19)
+	dolo improvements: @done(2021-03-19)
+		- consider only moving .download to final if the content length meets expectations @done(2021-03-19)
 	Sync improvements: @done(2021-03-18)
 		-  add flags to enable certain types of data (e.g. -images, -screenshots) @done(2021-03-18)
 	- images @done(2021-03-17) @project(Download product types)

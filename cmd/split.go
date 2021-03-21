@@ -13,13 +13,19 @@ import (
 	"strconv"
 )
 
-func split(mainPt vangogh_types.ProductType, mt gog_types.Media) error {
+func split(mainPt vangogh_types.ProductType, mt gog_types.Media, timestamp int64) error {
 	vrMain, err := vangogh_values.NewReader(mainPt, mt)
 	if err != nil {
 		return err
 	}
 
-	for _, page := range vrMain.All() {
+	modifiedPageIds := vrMain.ModifiedAfter(timestamp)
+	if len(modifiedPageIds) == 0 {
+		log.Printf("skip split for not modified %s (%s) pages", mainPt, mt)
+		return nil
+	}
+
+	for _, page := range modifiedPageIds {
 
 		splitPt := vangogh_types.SplitProductType(mainPt)
 

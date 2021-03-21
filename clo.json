@@ -46,6 +46,7 @@
     ],
     "sync": [
       "media=game_,movie",
+      "no-data",
       "images",
       "screenshots",
       "all"

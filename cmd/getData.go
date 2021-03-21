@@ -15,7 +15,19 @@ import (
 	"strconv"
 )
 
-func GetData(ids []string, denyIds []string, pt vangogh_types.ProductType, mt gog_types.Media, missing bool, verbose bool) error {
+func GetData(
+	ids []string,
+	denyIds []string,
+	pt vangogh_types.ProductType,
+	mt gog_types.Media,
+	timestamp int64,
+	missing bool,
+	verbose bool) error {
+
+	if !vangogh_types.ValidProductType(pt) {
+		log.Printf("%s is not a valid product type", pt)
+		return nil
+	}
 
 	if !vangogh_types.SupportsMedia(pt, mt) {
 		if verbose {
@@ -58,7 +70,7 @@ func GetData(ids []string, denyIds []string, pt vangogh_types.ProductType, mt go
 		if err := fetchPages(pt, mt, srcUrl, dstUrl, verbose); err != nil {
 			return err
 		}
-		return split(pt, mt)
+		return split(pt, mt, timestamp)
 	} else {
 		if missing {
 			for _, mpt := range vangogh_types.MainProductTypes(pt) {

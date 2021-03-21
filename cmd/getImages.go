@@ -46,11 +46,11 @@ func GetImages(
 
 	dlClient := dolo.NewClient(httpClient, nil,
 		&dolo.ClientOptions{
-			Attempts:        2,
+			Attempts:        3,
 			DelayAttempts:   5,
 			ResumeDownloads: true,
 			//CheckContentLength: true,
-			//Verbose: true,
+			Verbose: true,
 		})
 
 	//fmt.Println(dlClient)

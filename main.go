@@ -17,6 +17,22 @@ import (
 var cloBytes []byte
 
 func main() {
+
+	//vr, err := vangogh_values.NewReader(vangogh_types.Details, gog_types.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//details, err := vr.Details("1")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, dl := range details.Downloads {
+	//	downloads :=dl.([]interface{})
+	//	log.Println(downloads[1])
+	//}
+
 	//propExtracts, err := vangogh_properties.PropExtracts(vangogh_properties.AllImageIdProperties())
 	//if err != nil {
 	//	log.Fatal(err)
