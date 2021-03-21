@@ -1,9 +1,6 @@
 info improvements:
 	- when printing with any properties - print what type(s) id is available in
 
-split improvements:
-	- don't split pages that have not been modified since the sync start
-	
 get-data improvements:
 	- create kvas helper that sets multiple pages concurently
 	
@@ -12,9 +9,6 @@ dolo improvements:
 	- return report that contains:
 		- files that were successfully downloaded with sizes
 		- files that were not attempted to be downloaded
-
-clo improvements:
-	- refactor defined* to return only one value and error
 
 verbosity improvements:
 	- add flags to functions to be optionally verbose
@@ -52,7 +46,7 @@ Standartize directories:
 
 Fix bugs:
 	- search -text owlcat and search -developer owlcat have very different results
-	- running with no params shows an error, should show help
+	- running with no params shows an error, should show help @done(2021-03-20)
 	- clo bug: default attribute must be the first in the list to be considered default
 	- search higurashi and search -text higurashi have very different results
 
@@ -86,6 +80,11 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	clo improvements: @done(2021-03-20)
+		- refactor defined* to return only one value and error @done(2021-03-20)
+	split improvements: @done(2021-03-20)
+		- don't split pages that have not been modified since the sync start @done(2021-03-20)
+		
 	- print screenshots one per line prefixed @done(2021-03-19) @project(printInfo improvements)
 	- print report at the end of operations - changed, new @done(2021-03-19) @project(Operations log)
 	- don't allow ambiguous abbreviations @done(2021-03-19) @project(clo)
