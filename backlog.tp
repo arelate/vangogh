@@ -1,5 +1,6 @@
-info improvements:
-	- when printing with any properties - print what type(s) id is available in
+data quality improvements:
+	- add command to list products that are not in pages
+	- add command to remove product
 
 types improvements:
 	- split vangogh_types to _products and _images 
@@ -48,8 +49,8 @@ Standartize directories:
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
 Fix bugs:
-	- search -text owlcat and search -developer owlcat have very different results
-
+	- data issue: investigate why so many entries have "TEST DEVELOPER"/"TEST PUBLISHER" (search test)
+	
 Work on gaugin can start:
 	- Publish vangogh on GitHub
 
@@ -80,6 +81,9 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	info improvements: @done(2021-03-20)
+		- when printing with any properties - print what type(s) id is available in @done(2021-03-20)
+	- search -text owlcat and search -developer owlcat have very different results @done(2021-03-20) @project(Fix bugs)
 	- running with no params shows an error, should show help @done(2021-03-20) @project(Fix bugs)
 	- clo bug: default attribute must be the first in the list to be considered default @done(2021-03-20) @project(Fix bugs)
 	- search higurashi and search -text higurashi have very different results (fixed by default attribute bug) @done(2021-03-20) @project(Fix bugs)

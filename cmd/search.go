@@ -35,7 +35,8 @@ func Search(query map[string]string) error {
 	}
 
 	for id, props := range matchingIdsProps {
-		printInfo(id, props, propExtracts)
+		// passing term of the -image-id query to allow filtering screenshots values
+		printInfo(id, query[vangogh_properties.AllImageIdProperties], props, propExtracts, nil)
 	}
 
 	return nil

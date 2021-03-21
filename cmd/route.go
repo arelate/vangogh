@@ -36,7 +36,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return GetData(ids, denyIds, pt, mt, time.Now().Unix(), missing, verbose)
 	case "info":
 		images := req.Flag("images")
-		return Info(ids, images)
+		return Info(ids, mt, images)
 	case "list":
 		properties := req.ArgValues("property")
 		return List(ids, pt, mt, properties...)

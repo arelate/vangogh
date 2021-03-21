@@ -49,7 +49,7 @@ func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, proper
 	}
 
 	for _, id := range ids {
-		printInfo(id, properties, propExtracts)
+		printInfo(id, "", properties, propExtracts, nil)
 	}
 
 	return nil
