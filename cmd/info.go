@@ -8,9 +8,9 @@ import (
 )
 
 func Info(ids []string, images bool) error {
-	properties := vangogh_properties.AllTextProperties()
+	properties := vangogh_properties.AllText()
 	if images {
-		properties = append(properties, vangogh_properties.AllImageIdProperties()...)
+		properties = append(properties, vangogh_properties.AllImageId()...)
 	}
 
 	propExtracts, err := vangogh_properties.PropExtracts(properties)

@@ -32,7 +32,7 @@ func Sync(mt gog_types.Media, noData, images, screenshots, verbose bool) error {
 		}
 
 		// extract data
-		if err := Extract(mt, vangogh_properties.AllExtractedProperties()); err != nil {
+		if err := Extract(mt, vangogh_properties.AllExtracted()); err != nil {
 			return err
 		}
 	}

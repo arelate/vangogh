@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/arelate/gog_types"
+	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/internal"
@@ -40,12 +41,18 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValues("property")
 		return List(ids, pt, mt, properties...)
 	case "search":
-		text := req.ArgVal("text")
-		title := req.ArgVal("title")
-		developer := req.ArgVal("developer")
-		publisher := req.ArgVal("publisher")
-		imageId := req.ArgVal("image-id")
-		return Search(text, title, developer, publisher, imageId)
+		supportedProperties := []string{
+			vangogh_properties.AllTextProperties,
+			vangogh_properties.AllImageIdProperties}
+		supportedProperties = append(supportedProperties,
+			vangogh_properties.AllText()...)
+		query := make(map[string]string)
+		for _, prop := range supportedProperties {
+			if values, ok := req.Arguments[prop]; ok && len(values) > 0 {
+				query[prop] = values[0]
+			}
+		}
+		return Search(query)
 	case "get-images":
 		imageType := req.ArgVal("image-type")
 		it := vangogh_types.ParseImageType(imageType)

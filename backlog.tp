@@ -1,6 +1,9 @@
 info improvements:
 	- when printing with any properties - print what type(s) id is available in
 
+types improvements:
+	- split vangogh_types to _products and _images 
+
 get-data improvements:
 	- create kvas helper that sets multiple pages concurently
 	
@@ -46,9 +49,6 @@ Standartize directories:
 
 Fix bugs:
 	- search -text owlcat and search -developer owlcat have very different results
-	- running with no params shows an error, should show help @done(2021-03-20)
-	- clo bug: default attribute must be the first in the list to be considered default
-	- search higurashi and search -text higurashi have very different results
 
 Work on gaugin can start:
 	- Publish vangogh on GitHub
@@ -80,6 +80,9 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- running with no params shows an error, should show help @done(2021-03-20) @project(Fix bugs)
+	- clo bug: default attribute must be the first in the list to be considered default @done(2021-03-20) @project(Fix bugs)
+	- search higurashi and search -text higurashi have very different results (fixed by default attribute bug) @done(2021-03-20) @project(Fix bugs)
 	clo improvements: @done(2021-03-20)
 		- refactor defined* to return only one value and error @done(2021-03-20)
 	split improvements: @done(2021-03-20)

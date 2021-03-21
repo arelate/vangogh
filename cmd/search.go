@@ -6,14 +6,19 @@ import (
 	"strings"
 )
 
-func Search(text, title, developer, publisher, imageId string) error {
+var queryProperties = map[string][]string{
+	vangogh_properties.AllTextProperties:    vangogh_properties.AllText(),
+	vangogh_properties.AllImageIdProperties: vangogh_properties.AllImageId(),
+	vangogh_properties.TitleProperty:        {vangogh_properties.TitleProperty},
+	vangogh_properties.DeveloperProperty:    {vangogh_properties.DeveloperProperty},
+	vangogh_properties.PublisherProperty:    {vangogh_properties.PublisherProperty},
+}
+
+func Search(query map[string]string) error {
 
 	properties := []string{vangogh_properties.TitleProperty}
-	if text != "" {
-		properties = append(properties, vangogh_properties.AllTextProperties()...)
-	}
-	if imageId != "" {
-		properties = append(properties, vangogh_properties.AllImageIdProperties()...)
+	for prop, _ := range query {
+		properties = mergeProperties(properties, queryProperties[prop])
 	}
 
 	propExtracts, err := vangogh_properties.PropExtracts(properties)
@@ -23,19 +28,10 @@ func Search(text, title, developer, publisher, imageId string) error {
 
 	matchingIdsProps := make(map[string][]string, 0)
 
-	if text != "" {
-		matchingIdsProps = matchingIds(text, vangogh_properties.AllTextProperties(), propExtracts)
-	}
-
-	if imageId != "" {
-		imageMatchingIdsProps := matchingIds(imageId, vangogh_properties.AllImageIdProperties(), propExtracts)
-		for id, props := range imageMatchingIdsProps {
-			if _, ok := matchingIdsProps[id]; !ok {
-				matchingIdsProps[id] = props
-			} else {
-				matchingIdsProps[id] = append(matchingIdsProps[id], props...)
-			}
-		}
+	for prop, term := range query {
+		mergeMatchingIdsProps(
+			matchingIdsProps,
+			matchingIds(term, queryProperties[prop], propExtracts))
 	}
 
 	for id, props := range matchingIdsProps {
@@ -43,6 +39,32 @@ func Search(text, title, developer, publisher, imageId string) error {
 	}
 
 	return nil
+}
+
+func mergeProperties(properties []string, newProperties []string) []string {
+	for _, newProp := range newProperties {
+		contains := false
+		for _, prop := range properties {
+			if prop == newProp {
+				contains = true
+				break
+			}
+		}
+		if !contains {
+			properties = append(properties, newProp)
+		}
+	}
+	return properties
+}
+
+func mergeMatchingIdsProps(matchingIdsProps map[string][]string, newIdsProps map[string][]string) {
+	for id, props := range newIdsProps {
+		if _, ok := matchingIdsProps[id]; !ok {
+			matchingIdsProps[id] = props
+		} else {
+			matchingIdsProps[id] = append(matchingIdsProps[id], props...)
+		}
+	}
 }
 
 func matchingIds(term string, properties []string, propExtracts map[string]*froth.Stash) map[string][]string {

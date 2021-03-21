@@ -12,7 +12,7 @@ import (
 func Extract(mt gog_types.Media, properties []string) error {
 
 	if len(properties) == 0 {
-		properties = vangogh_properties.AllExtractedProperties()
+		properties = vangogh_properties.AllExtracted()
 	}
 
 	propExtracts, err := vangogh_properties.PropExtracts(properties)
