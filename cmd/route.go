@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/arelate/gog_types"
+	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/boggydigital/clo"
@@ -20,7 +20,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	media := req.ArgVal("media")
 
 	pt := vangogh_types.ParseProductType(productType)
-	mt := gog_types.ParseMedia(media)
+	mt := gog_media.Parse(media)
 
 	ids := req.ArgValues("id")
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/arelate/gog_media"
 	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
@@ -13,7 +14,7 @@ import (
 	"strconv"
 )
 
-func split(mainPt vangogh_types.ProductType, mt gog_types.Media, timestamp int64) error {
+func split(mainPt vangogh_types.ProductType, mt gog_media.Media, timestamp int64) error {
 	vrMain, err := vangogh_values.NewReader(mainPt, mt)
 	if err != nil {
 		return err

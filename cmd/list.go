@@ -2,17 +2,17 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/arelate/gog_types"
+	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_values"
 )
 
-func List(ids []string, pt vangogh_types.ProductType, mt gog_types.Media, properties ...string) error {
+func List(ids []string, pt vangogh_types.ProductType, mt gog_media.Media, properties ...string) error {
 	if !vangogh_types.ValidProductType(pt) {
 		return fmt.Errorf("can't list invalid product type %s", pt)
 	}
-	if !gog_types.ValidMedia(mt) {
+	if !gog_media.Valid(mt) {
 		return fmt.Errorf("can't list invalid media %s", mt)
 	}
 

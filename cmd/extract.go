@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/arelate/gog_types"
+	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_values"
@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-func Extract(mt gog_types.Media, properties []string) error {
+func Extract(mt gog_media.Media, properties []string) error {
 
 	if len(properties) == 0 {
 		properties = vangogh_properties.AllExtracted()

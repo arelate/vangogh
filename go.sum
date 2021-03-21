@@ -1,5 +1,7 @@
 github.com/arelate/gog_auth_urls v0.1.2-alpha h1:BCbaclpWzELEbmRpKFqlkYJLvATEd81vEDVflizBXws=
 github.com/arelate/gog_auth_urls v0.1.2-alpha/go.mod h1:a3x2OtBMTwzRkhjQoADLfvSrNZzdRNF/1irRY2lFgEM=
+github.com/arelate/gog_media v0.1.2-alpha h1:S9tG2kNsExMKk6OSE1o76ePspUL6WoTJSDWSGqT69i0=
+github.com/arelate/gog_media v0.1.2-alpha/go.mod h1:uXU5ypkdc+M9Abdcv2BUm4djqf2DZcLZC/VIZZJ1RSs=
 github.com/boggydigital/froth v0.1.0-alpha h1:sWP6m3faGKkZ/clk7wuIvXo1cByEurax56r2PNogn/k=
 github.com/boggydigital/froth v0.1.0-alpha/go.mod h1:Te1qtL5WyiHT0jFmrTp7PwKAJL8tbXNjVySeqMj/q2Y=
 golang.org/x/net v0.0.0-20210119194325-5f4716e94777 h1:003p0dJM77cxMSyCPFphvZf/Y5/NXf5fzg6ufd1/Oew=

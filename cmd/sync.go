@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/arelate/gog_types"
+	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Sync(mt gog_types.Media, noData, images, screenshots, verbose bool) error {
+func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 
 	syncStart := time.Now().Unix()
 
@@ -55,7 +55,7 @@ func Sync(mt gog_types.Media, noData, images, screenshots, verbose bool) error {
 
 }
 
-func reportCreatedModifiedAfter(timestamp int64, mt gog_types.Media) error {
+func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
 	for _, pt := range vangogh_types.AllLocalProductTypes() {
 		vr, err := vangogh_values.NewReader(pt, mt)
 		if err != nil {

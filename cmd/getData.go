@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/arelate/gog_auth"
+	"github.com/arelate/gog_media"
 	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
@@ -19,7 +20,7 @@ func GetData(
 	ids []string,
 	denyIds []string,
 	pt vangogh_types.ProductType,
-	mt gog_types.Media,
+	mt gog_media.Media,
 	timestamp int64,
 	missing bool,
 	verbose bool) error {
@@ -92,7 +93,7 @@ func GetData(
 func fetchItem(
 	id string,
 	pt vangogh_types.ProductType,
-	mt gog_types.Media,
+	mt gog_media.Media,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
 	verbose bool) (io.Reader, error) {
@@ -142,7 +143,7 @@ func fetchItem(
 
 func fetchPages(
 	pt vangogh_types.ProductType,
-	mt gog_types.Media,
+	mt gog_media.Media,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
 	verbose bool) error {
@@ -167,7 +168,7 @@ func fetchPages(
 
 func fetchMissing(
 	detailPt, mainPt vangogh_types.ProductType,
-	mt gog_types.Media,
+	mt gog_media.Media,
 	denyIds []string,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	mainDestUrl, detailDestUrl string,
@@ -210,7 +211,7 @@ func fetchMissing(
 func fetchItems(
 	ids []string,
 	pt vangogh_types.ProductType,
-	mt gog_types.Media,
+	mt gog_media.Media,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
 	verbose bool) error {

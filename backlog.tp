@@ -1,12 +1,14 @@
-data quality improvements:
-	- add command to list products that are not in pages
-	- add command to remove product
-
 types improvements:
 	- split vangogh_types to _products and _images 
+	- split Media to gog_media from gog_types
 
+data quality improvements:
+	- add command to list products that are not in pages
+	- add command to remove products
+	
 get-data improvements:
 	- create kvas helper that sets multiple pages concurently
+	- measure performance improvement and settle on number of concurrent requests
 	
 dolo improvements:
 	- rewrite dolo to support concurrent ranges downloads
@@ -16,13 +18,6 @@ dolo improvements:
 
 verbosity improvements:
 	- add flags to functions to be optionally verbose
-	
-history.txt:
-	- add a file that collects results of sync operations over time
-	- consider adding information on the downloaded files:
-		- products that contributed to downloaded files
-		- files with sizes
-		- overall amount of data downloaded that session
 	
 Download files:
 	- videos
@@ -36,6 +31,13 @@ get-images improvements:
 		- track those sizes in code, no need to configure
 	- use that size to determine whether to keep download variant
 	- consider adding backup format (png -> jpg and vice a versa)
+
+history.txt:
+	- add a file that collects results of sync operations over time
+	- consider adding information on the downloaded files:
+		- products that contributed to downloaded files
+		- files with sizes
+		- overall amount of data downloaded that session
 
 List improvements:
 	- add sort options (using memories)

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/arelate/gog_types"
+	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_values"
@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func Info(ids []string, mt gog_types.Media, images bool) error {
+func Info(ids []string, mt gog_media.Media, images bool) error {
 	var err error
 	productTypeReaders := make(map[vangogh_types.ProductType]*vangogh_values.ValueReader)
 	for _, pt := range vangogh_types.AllLocalProductTypes() {
