@@ -216,15 +216,7 @@ func fetchItems(
 	destUrl string,
 	verbose bool) error {
 
-	// TODO: move to vangogh_products
-	switch pt {
-	case vangogh_products.Details:
-		break
-	case vangogh_products.ApiProductsV1:
-		break
-	case vangogh_products.ApiProductsV2:
-		break
-	default:
+	if !vangogh_products.SupportsFetch(pt) {
 		return fmt.Errorf("getting %s data is not supported", pt)
 	}
 
