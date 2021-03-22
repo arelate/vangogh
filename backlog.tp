@@ -1,7 +1,3 @@
-types improvements:
-	- split vangogh_types to _products and _images 
-	- split Media to gog_media from gog_types @done(2021-03-21)
-
 data quality improvements:
 	- add command to list products that are not in pages
 	- add command to remove products
@@ -83,6 +79,9 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	types improvements: @done(2021-03-21)
+		- split vangogh_types to _products and _images @done(2021-03-21)
+		- split Media to gog_media from gog_types @done(2021-03-21)
 	info improvements: @done(2021-03-20)
 		- when printing with any properties - print what type(s) id is available in @done(2021-03-20)
 	- search -text owlcat and search -developer owlcat have very different results @done(2021-03-20) @project(Fix bugs)

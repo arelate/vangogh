@@ -45,6 +45,10 @@
       "publisher",
       "image-id"
     ],
+    "scrub-data": [
+      "media=game_,movie",
+      "remove-surplus"
+    ],
     "sync": [
       "media=game_,movie",
       "no-data",

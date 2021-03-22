@@ -59,6 +59,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		it := vangogh_images.Parse(imageType)
 		all := req.Flag("all")
 		return GetImages(ids, it, all)
+	case "scrub-data":
+		removeSurplus := req.Flag("remove-surplus")
+		return ScrubData(mt, removeSurplus)
 	case "sync":
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")
