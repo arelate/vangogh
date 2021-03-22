@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/froth"
@@ -13,10 +13,10 @@ import (
 
 func GetImages(
 	ids []string,
-	it vangogh_types.ImageType,
+	it vangogh_images.ImageType,
 	all bool) error {
 
-	if !vangogh_types.ValidImageType(it) {
+	if !vangogh_images.Valid(it) {
 		return fmt.Errorf("invalid image type %s", it)
 	}
 

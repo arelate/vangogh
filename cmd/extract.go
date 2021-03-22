@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/froth"
 	"log"
@@ -20,7 +20,7 @@ func Extract(mt gog_media.Media, properties []string) error {
 		return err
 	}
 
-	for _, pt := range vangogh_types.AllLocalProductTypes() {
+	for _, pt := range vangogh_products.AllLocal() {
 
 		log.Printf("extract %s", pt)
 
@@ -61,7 +61,7 @@ func Extract(mt gog_media.Media, properties []string) error {
 	return nil
 }
 
-func missingProperties(pt vangogh_types.ProductType, propStashes map[string]*froth.Stash, id string) []string {
+func missingProperties(pt vangogh_products.ProductType, propStashes map[string]*froth.Stash, id string) []string {
 	missingProps := make([]string, 0)
 	for prop, stash := range propStashes {
 		if _, ok := stash.Get(id); !ok && vangogh_properties.SupportsProperty(pt, prop) {

@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_images"
+	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_types"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/internal"
 	"time"
@@ -19,7 +20,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	productType := req.ArgVal("product-type")
 	media := req.ArgVal("media")
 
-	pt := vangogh_types.ParseProductType(productType)
+	pt := vangogh_products.Parse(productType)
 	mt := gog_media.Parse(media)
 
 	ids := req.ArgValues("id")
@@ -55,7 +56,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Search(query)
 	case "get-images":
 		imageType := req.ArgVal("image-type")
-		it := vangogh_types.ParseImageType(imageType)
+		it := vangogh_images.Parse(imageType)
 		all := req.Flag("all")
 		return GetImages(ids, it, all)
 	case "sync":

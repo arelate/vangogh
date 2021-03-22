@@ -1,6 +1,6 @@
 types improvements:
 	- split vangogh_types to _products and _images 
-	- split Media to gog_media from gog_types
+	- split Media to gog_media from gog_types @done(2021-03-21)
 
 data quality improvements:
 	- add command to list products that are not in pages

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/gog_types"
-	"github.com/arelate/vangogh_types"
+	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/kvas"
@@ -14,7 +14,7 @@ import (
 	"strconv"
 )
 
-func split(mainPt vangogh_types.ProductType, mt gog_media.Media, timestamp int64) error {
+func split(mainPt vangogh_products.ProductType, mt gog_media.Media, timestamp int64) error {
 	vrMain, err := vangogh_values.NewReader(mainPt, mt)
 	if err != nil {
 		return err
@@ -28,18 +28,18 @@ func split(mainPt vangogh_types.ProductType, mt gog_media.Media, timestamp int64
 
 	for _, page := range modifiedPageIds {
 
-		splitPt := vangogh_types.SplitProductType(mainPt)
+		splitPt := vangogh_products.SplitType(mainPt)
 
 		log.Printf("split %s (%s) %s into %s\n", mainPt, mt, page, splitPt)
 
 		var productsGetter gog_types.ProductsGetter
 
 		switch mainPt {
-		case vangogh_types.StorePage:
+		case vangogh_products.StorePage:
 			productsGetter, err = vrMain.StorePage(page)
-		case vangogh_types.AccountPage:
+		case vangogh_products.AccountPage:
 			productsGetter, err = vrMain.AccountStorePage(page)
-		case vangogh_types.WishlistPage:
+		case vangogh_products.WishlistPage:
 			productsGetter, err = vrMain.WishlistPage(page)
 		default:
 			return fmt.Errorf("splitting page is not supported for type %s", mainPt)

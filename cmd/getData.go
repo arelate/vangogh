@@ -7,7 +7,7 @@ import (
 	"github.com/arelate/gog_auth"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/gog_types"
-	"github.com/arelate/vangogh_types"
+	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/vangogh/internal"
@@ -19,18 +19,18 @@ import (
 func GetData(
 	ids []string,
 	denyIds []string,
-	pt vangogh_types.ProductType,
+	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	timestamp int64,
 	missing bool,
 	verbose bool) error {
 
-	if !vangogh_types.ValidProductType(pt) {
+	if !vangogh_products.Valid(pt) {
 		log.Printf("%s is not a valid product type", pt)
 		return nil
 	}
 
-	if !vangogh_types.SupportsMedia(pt, mt) {
+	if !vangogh_products.SupportsMedia(pt, mt) {
 		if verbose {
 			log.Printf("%s doesn't support %s media", pt, mt)
 		}
@@ -42,7 +42,7 @@ func GetData(
 		return err
 	}
 
-	if vangogh_types.ProductTypeRequiresAuth(pt) {
+	if vangogh_products.RequiresAuth(pt) {
 		if verbose {
 			log.Printf("%s requires authenticated session, checking if user is logged in...", pt)
 		}
@@ -67,14 +67,14 @@ func GetData(
 		return err
 	}
 
-	if vangogh_types.HasPages(pt) {
+	if vangogh_products.Paginated(pt) {
 		if err := fetchPages(pt, mt, srcUrl, dstUrl, verbose); err != nil {
 			return err
 		}
 		return split(pt, mt, timestamp)
 	} else {
 		if missing {
-			for _, mpt := range vangogh_types.MainProductTypes(pt) {
+			for _, mpt := range vangogh_products.MainTypes(pt) {
 				mainDstUrl, err := vangogh_urls.LocalProductsDir(mpt, mt)
 				if err != nil {
 					return err
@@ -92,7 +92,7 @@ func GetData(
 
 func fetchItem(
 	id string,
-	pt vangogh_types.ProductType,
+	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
@@ -142,7 +142,7 @@ func fetchItem(
 }
 
 func fetchPages(
-	pt vangogh_types.ProductType,
+	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
@@ -167,7 +167,7 @@ func fetchPages(
 }
 
 func fetchMissing(
-	detailPt, mainPt vangogh_types.ProductType,
+	detailPt, mainPt vangogh_products.ProductType,
 	mt gog_media.Media,
 	denyIds []string,
 	sourceUrl vangogh_urls.ProductTypeUrl,
@@ -210,19 +210,19 @@ func fetchMissing(
 
 func fetchItems(
 	ids []string,
-	pt vangogh_types.ProductType,
+	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
 	verbose bool) error {
 
-	// TODO: move to vangogh_types
+	// TODO: move to vangogh_products
 	switch pt {
-	case vangogh_types.Details:
+	case vangogh_products.Details:
 		break
-	case vangogh_types.ApiProductsV1:
+	case vangogh_products.ApiProductsV1:
 		break
-	case vangogh_types.ApiProductsV2:
+	case vangogh_products.ApiProductsV2:
 		break
 	default:
 		return fmt.Errorf("getting %s data is not supported", pt)

@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_types"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/froth"
 	"strings"
@@ -12,8 +12,8 @@ import (
 
 func Info(ids []string, mt gog_media.Media, images bool) error {
 	var err error
-	productTypeReaders := make(map[vangogh_types.ProductType]*vangogh_values.ValueReader)
-	for _, pt := range vangogh_types.AllLocalProductTypes() {
+	productTypeReaders := make(map[vangogh_products.ProductType]*vangogh_values.ValueReader)
+	for _, pt := range vangogh_products.AllLocal() {
 		productTypeReaders[pt], err = vangogh_values.NewReader(pt, mt)
 		if err != nil {
 			return err
@@ -41,7 +41,7 @@ func printInfo(
 	value string,
 	properties []string,
 	propExtracts map[string]*froth.Stash,
-	productTypeReaders map[vangogh_types.ProductType]*vangogh_values.ValueReader) {
+	productTypeReaders map[vangogh_products.ProductType]*vangogh_values.ValueReader) {
 
 	titleExtracts := propExtracts[vangogh_properties.TitleProperty]
 	title, ok := titleExtracts.Get(id)
