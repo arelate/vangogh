@@ -29,7 +29,7 @@ func Extract(mt gog_media.Media, properties []string) error {
 			return err
 		}
 
-		missingPropExtracts := make(map[string]map[string]string, 0)
+		missingPropExtracts := make(map[string]map[string]interface{}, 0)
 
 		for _, id := range vr.All() {
 
@@ -38,14 +38,14 @@ func Extract(mt gog_media.Media, properties []string) error {
 				continue
 			}
 
-			propValues, err := vangogh_properties.GetProperties(id, vr, pt, missingProps)
+			propValues, err := vangogh_properties.GetProperties(id, vr, missingProps)
 			if err != nil {
 				return err
 			}
 
 			for prop, value := range propValues {
 				if _, ok := missingPropExtracts[prop]; !ok {
-					missingPropExtracts[prop] = make(map[string]string, 0)
+					missingPropExtracts[prop] = make(map[string]interface{}, 0)
 				}
 				missingPropExtracts[prop][id] = value
 			}

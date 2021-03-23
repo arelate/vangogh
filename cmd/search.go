@@ -83,7 +83,7 @@ func matchingIds(term string, properties []string, propExtracts map[string]*frot
 					continue
 				}
 
-				if strings.Contains(strings.ToLower(val), term) {
+				if strings.Contains(strings.ToLower(val.(string)), term) {
 					ids[id] = append(ids[id], prop)
 				}
 			}

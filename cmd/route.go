@@ -60,8 +60,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		all := req.Flag("all")
 		return GetImages(ids, it, all)
 	case "scrub-data":
-		removeSurplus := req.Flag("remove-surplus")
-		return ScrubData(mt, removeSurplus)
+		fix := req.Flag("fix")
+		return ScrubData(mt, fix)
 	case "sync":
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")

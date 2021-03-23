@@ -72,7 +72,7 @@ func printInfo(
 			continue
 		}
 		if prop == vangogh_properties.ScreenshotsProperty {
-			for _, scr := range strings.Split(val, ",") {
+			for _, scr := range val.([]string) {
 				if value != "" && !strings.Contains(scr, value) {
 					continue
 				}

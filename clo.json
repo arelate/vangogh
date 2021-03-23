@@ -47,7 +47,7 @@
     ],
     "scrub-data": [
       "media=game_,movie",
-      "remove-surplus"
+      "fix"
     ],
     "sync": [
       "media=game_,movie",

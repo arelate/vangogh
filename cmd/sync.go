@@ -76,14 +76,7 @@ func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
 		modifiedIds := vr.CreatedAfter(timestamp)
 		modifiedNotCreatedIds := make([]string, 0)
 		for _, modId := range modifiedIds {
-			modifiedByCreation := false
-			for _, crId := range createdIds {
-				if modId == crId {
-					modifiedByCreation = true
-					break
-				}
-			}
-			if !modifiedByCreation {
+			if !stringsContain(createdIds, modId) {
 				modifiedNotCreatedIds = append(modifiedNotCreatedIds, modId)
 			}
 		}

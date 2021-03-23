@@ -64,7 +64,7 @@ func GetImages(
 			continue
 		}
 
-		srcUrls, err := vangogh_urls.PropImageUrls(prop, it)
+		srcUrls, err := vangogh_urls.PropImageUrls(prop.(string), it)
 		if err != nil {
 			return err
 		}
