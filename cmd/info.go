@@ -46,7 +46,7 @@ func printInfo(
 	titleExtracts := propExtracts[vangogh_properties.TitleProperty]
 	title, ok := titleExtracts.Get(id)
 	if ok {
-		fmt.Printf("%s \"%s\"\n", id, title)
+		fmt.Printf("%s %s\n", id, title)
 	} else {
 		fmt.Printf("no information for id %s\n", id)
 	}
@@ -76,10 +76,10 @@ func printInfo(
 				if value != "" && !strings.Contains(scr, value) {
 					continue
 				}
-				fmt.Printf(" %s:\"%s\"\n", prop, scr)
+				fmt.Printf(" %s:%s\n", prop, scr)
 			}
 		} else {
-			fmt.Printf(" %s:\"%s\"\n", prop, val)
+			fmt.Printf(" %s:%v\n", prop, val)
 		}
 	}
 }

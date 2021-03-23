@@ -3,15 +3,19 @@ package cmd
 import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/froth"
+	"log"
+	"strconv"
 	"strings"
 )
 
+// TODO: move to properties
 var queryProperties = map[string][]string{
 	vangogh_properties.AllTextProperties:    vangogh_properties.AllText(),
 	vangogh_properties.AllImageIdProperties: vangogh_properties.AllImageId(),
 	vangogh_properties.TitleProperty:        {vangogh_properties.TitleProperty},
 	vangogh_properties.DeveloperProperty:    {vangogh_properties.DeveloperProperty},
 	vangogh_properties.PublisherProperty:    {vangogh_properties.PublisherProperty},
+	vangogh_properties.RatingProperty:       {vangogh_properties.RatingProperty},
 }
 
 func Search(query map[string]string) error {
@@ -83,8 +87,18 @@ func matchingIds(term string, properties []string, propExtracts map[string]*frot
 					continue
 				}
 
-				if strings.Contains(strings.ToLower(val.(string)), term) {
-					ids[id] = append(ids[id], prop)
+				if property == vangogh_properties.RatingProperty {
+					iterm, err := strconv.Atoi(term)
+					if err != nil {
+						log.Fatal(err)
+					}
+					if val.(int) >= iterm {
+						ids[id] = append(ids[id], prop)
+					}
+				} else {
+					if strings.Contains(strings.ToLower(val.(string)), term) {
+						ids[id] = append(ids[id], prop)
+					}
 				}
 			}
 		}

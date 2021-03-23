@@ -42,11 +42,14 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValues("property")
 		return List(ids, pt, mt, properties...)
 	case "search":
+		// TODO: move to properties
 		supportedProperties := []string{
 			vangogh_properties.AllTextProperties,
 			vangogh_properties.AllImageIdProperties}
 		supportedProperties = append(supportedProperties,
 			vangogh_properties.AllText()...)
+		supportedProperties = append(supportedProperties,
+			vangogh_properties.RatingProperty)
 		query := make(map[string]string)
 		for _, prop := range supportedProperties {
 			if values, ok := req.Arguments[prop]; ok && len(values) > 0 {

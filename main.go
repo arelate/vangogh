@@ -18,6 +18,23 @@ var cloBytes []byte
 
 func main() {
 
+	//vr, err := vangogh_values.NewReader(
+	//	vangogh_products.StoreProducts,
+	//	gog_media.Game)
+	//
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, id := range vr.All() {
+	//	sp, err := vr.StoreProduct(id)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	fmt.Println(sp.Title, sp.Rating)
+	//}
+
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
 	defs, err := clo.Load(bytesBuffer)
