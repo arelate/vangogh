@@ -75,6 +75,10 @@ func mergeMatchingIdsProps(matchingIdsProps map[string][]string, newIdsProps map
 func matchingIds(term string, properties []string, propExtracts map[string]*froth.Stash) map[string][]string {
 	ids := make(map[string][]string, 0)
 	term = strings.ToLower(term)
+	iterm, err := strconv.Atoi(term)
+	if err != nil {
+		log.Fatal(err)
+	}
 	for prop, extracts := range propExtracts {
 		for _, property := range properties {
 			if prop != property {
@@ -88,10 +92,6 @@ func matchingIds(term string, properties []string, propExtracts map[string]*frot
 				}
 
 				if property == vangogh_properties.RatingProperty {
-					iterm, err := strconv.Atoi(term)
-					if err != nil {
-						log.Fatal(err)
-					}
 					if val.(int) >= iterm {
 						ids[id] = append(ids[id], prop)
 					}

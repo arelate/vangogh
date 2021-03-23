@@ -49,8 +49,9 @@ func GetImages(
 			Attempts:        3,
 			DelayAttempts:   5,
 			ResumeDownloads: true,
+			MinSizeComplete: 512,
 			//CheckContentLength: true,
-			Verbose: true,
+			//Verbose: true,
 		})
 
 	//fmt.Println(dlClient)
@@ -64,7 +65,7 @@ func GetImages(
 			continue
 		}
 
-		srcUrls, err := vangogh_urls.PropImageUrls(prop.(string), it)
+		srcUrls, err := vangogh_urls.PropImageUrls(prop, it)
 		if err != nil {
 			return err
 		}

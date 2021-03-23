@@ -44,6 +44,7 @@ Standartize directories:
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
 Fix bugs:
+	- get-images need to be updated to support screenshots as []string
 	- "list wishlist-prod" doesn't work as expected
 	- data issue: investigate why so many entries have "TEST DEVELOPER"/"TEST PUBLISHER" (search test)
 	
