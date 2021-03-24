@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/gog_auth"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/gog_types"
+	"github.com/arelate/vangogh_pages"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
@@ -68,9 +69,12 @@ func GetData(
 	}
 
 	if vangogh_products.Paginated(pt) {
-		if err := fetchPages(pt, mt, srcUrl, dstUrl, verbose); err != nil {
+		if err := vangogh_pages.GetAllPages(httpClient, pt, mt); err != nil {
 			return err
 		}
+		//if err := fetchPages(pt, mt, srcUrl, dstUrl, verbose); err != nil {
+		//	return err
+		//}
 		return split(pt, mt, timestamp)
 	} else {
 		if missing {

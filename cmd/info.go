@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/froth"
+	"sort"
 	"strings"
 )
 
@@ -58,6 +59,7 @@ func printInfo(
 				ptStrings = append(ptStrings, pt.String())
 			}
 		}
+		sort.Strings(ptStrings)
 		if len(ptStrings) > 0 {
 			fmt.Printf(" types:%s\n", strings.Join(ptStrings, ","))
 		}
@@ -72,7 +74,7 @@ func printInfo(
 			continue
 		}
 		if prop == vangogh_properties.ScreenshotsProperty {
-			for _, scr := range val.([]string) {
+			for _, scr := range strings.Split(val, ",") {
 				if value != "" && !strings.Contains(scr, value) {
 					continue
 				}

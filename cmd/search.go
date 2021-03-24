@@ -3,8 +3,6 @@ package cmd
 import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/froth"
-	"log"
-	"strconv"
 	"strings"
 )
 
@@ -75,10 +73,6 @@ func mergeMatchingIdsProps(matchingIdsProps map[string][]string, newIdsProps map
 func matchingIds(term string, properties []string, propExtracts map[string]*froth.Stash) map[string][]string {
 	ids := make(map[string][]string, 0)
 	term = strings.ToLower(term)
-	iterm, err := strconv.Atoi(term)
-	if err != nil {
-		log.Fatal(err)
-	}
 	for prop, extracts := range propExtracts {
 		for _, property := range properties {
 			if prop != property {
@@ -91,15 +85,10 @@ func matchingIds(term string, properties []string, propExtracts map[string]*frot
 					continue
 				}
 
-				if property == vangogh_properties.RatingProperty {
-					if val.(int) >= iterm {
-						ids[id] = append(ids[id], prop)
-					}
-				} else {
-					if strings.Contains(strings.ToLower(val.(string)), term) {
-						ids[id] = append(ids[id], prop)
-					}
+				if strings.Contains(strings.ToLower(val), term) {
+					ids[id] = append(ids[id], prop)
 				}
+
 			}
 		}
 	}

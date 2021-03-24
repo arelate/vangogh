@@ -43,8 +43,7 @@
       "title",
       "developer",
       "publisher",
-      "image-id",
-      "rating"
+      "image-id"
     ],
     "scrub-data": [
       "media=game_,movie",
