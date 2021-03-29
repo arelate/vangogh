@@ -1,3 +1,16 @@
+wishlist management command:
+	- Add: GET /user/wishlist/add/{product_id}
+	- Remove: GET /user/wishlist/remove/{product_id}
+	- List: reuse list command
+
+tags management command:
+	- Create: POST /account/tags/add?name={tag_name}
+	- Delete: POST /account/tags/delete?tag_id={tag_id}
+	- Edit: POST /account/tags/update?tags={tags_json}
+	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
+	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
+	- List: ?
+
 rationalize working with times:
 	- common method to product timestamps based on minutes, hours, days
 	- common output for times
