@@ -61,7 +61,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		imageType := req.ArgVal("image-type")
 		it := vangogh_images.Parse(imageType)
 		all := req.Flag("all")
-		return GetImages(ids, it, all)
+		return GetImages(ids, it, nil, all)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)

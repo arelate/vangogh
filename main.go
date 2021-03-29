@@ -18,6 +18,8 @@ var cloBytes []byte
 
 func main() {
 
+	//fmt.Println(len(imageIds))
+
 	//vr, err := vangogh_values.NewReader(
 	//	vangogh_products.StoreProducts,
 	//	gog_media.Game)

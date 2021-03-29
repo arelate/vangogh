@@ -9,11 +9,13 @@ import (
 	"github.com/boggydigital/froth"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
+	"strings"
 )
 
 func GetImages(
 	ids []string,
 	it vangogh_images.ImageType,
+	localImageIds map[string]bool,
 	all bool) error {
 
 	if !vangogh_images.Valid(it) {
@@ -31,11 +33,18 @@ func GetImages(
 		if len(ids) > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
-		ids = propExtracts.All()
+		ids, err = findIdsMissingImages(it, propExtracts, localImageIds)
+		if err != nil {
+			return err
+		}
 	}
 
 	if len(ids) == 0 {
-		log.Printf("missing ids to get images for %s", it)
+		if all {
+			log.Printf("all %s images are available locally", it)
+		} else {
+			log.Printf("missing ids to get images for %s", it)
+		}
 		return nil
 	}
 
@@ -87,4 +96,42 @@ func GetImages(
 		}
 	}
 	return nil
+}
+
+func findIdsMissingImages(it vangogh_images.ImageType, propExtracts *froth.Stash, localImageIds map[string]bool) (ids []string, err error) {
+
+	ids = make([]string, 0)
+
+	// filter ids to only the ones that miss that particular image type
+	if localImageIds == nil {
+		localImageIds, err = vangogh_urls.LocalImageIds()
+		if err != nil {
+			return ids, err
+		}
+	}
+
+	for _, id := range propExtracts.All() {
+		prop, ok := propExtracts.Get(id)
+		if prop == "" || !ok {
+			continue
+		}
+		if localImageIds[prop] {
+			continue
+		}
+		if it == vangogh_images.Screenshots {
+			haveAllScr := true
+			for _, scr := range strings.Split(prop, ",") {
+				if !localImageIds[scr] {
+					haveAllScr = false
+					break
+				}
+			}
+			if haveAllScr {
+				continue
+			}
+		}
+		ids = append(ids, id)
+	}
+
+	return ids, err
 }

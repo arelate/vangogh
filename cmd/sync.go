@@ -38,13 +38,17 @@ func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 		}
 	}
 
+	localImageIds, err := vangogh_urls.LocalImageIds()
+	if err != nil {
+		return err
+	}
 	// get images
 	for _, it := range vangogh_images.All() {
 		if !images ||
 			(!screenshots && it == vangogh_images.Screenshots) {
 			continue
 		}
-		if err := GetImages(nil, it, true); err != nil {
+		if err := GetImages(nil, it, localImageIds, true); err != nil {
 			return err
 		}
 	}
@@ -90,5 +94,7 @@ func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
 			log.Printf("no %s (%s) modified this sync", pt, mt)
 		}
 	}
+
+	log.Println("sync took:", time.Since(time.Unix(timestamp, 0)).String())
 	return nil
 }

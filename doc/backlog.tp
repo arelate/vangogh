@@ -1,6 +1,16 @@
-get-data improvements:
-	- create kvas helper that sets multiple pages concurently
-	- measure performance improvement and settle on number of concurrent requests
+Download files:
+	- videos
+		- youtube-dl?
+	- product files by OS, language:
+		- create helper for Details that returns collection of strucutred data per language 
+
+concurrency improvements:
+	- rewrite get-data pipeline to be concurrent:
+		- getItems
+		- getPages
+		- split
+		- extract
+		- search
 	
 dolo improvements:
 	- rewrite dolo to support concurrent ranges downloads
@@ -10,20 +20,13 @@ dolo improvements:
 
 verbosity improvements:
 	- add flags to functions to be optionally verbose
-	
-Download files:
-	- videos
-		- youtube-dl
-	- product files by OS, language:
-		- create helper for Details that returns collection of strucutred data per language 
+	- when verbose - use log.Print
+	- when not - continue using fmt.Print
 	
 get-images improvements:
 	- show titles, not ids when downloading
-	- set lowest size constraints for image type to filter out bad images:
-		- create image of that size in editor with same color or transparent pixels - use that as lower bound
-		- track those sizes in code, no need to configure
-	- use that size to determine whether to keep download variant
 	- consider adding backup format (png -> jpg and vice a versa)
+	- checking existing files is way too verbose - consider checking if there are missing files for product - show only then
 
 history.txt:
 	- add a file that collects results of sync operations over time
@@ -78,6 +81,13 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- create kvas helper that sets multiple pages concurently @done(2021-03-26) @project(concurrency improvements)
+	- measure performance improvement and settle on number of concurrent requests @done(2021-03-26) @project(concurrency improvements)
+		- currently getting the data with no writes is 1m45s -> 20s @done(2021-03-26)
+	- set lowest size constraints for image type to filter out bad images: @done(2021-03-24) @project(get-images improvements)
+		- create image of that size in editor with same color or transparent pixels - use that as lower bound @done(2021-03-24)
+		- track those sizes in code, no need to configure @done(2021-03-24)
+	- use that size to determine whether to keep download variant @done(2021-03-24) @project(get-images improvements)
 	data quality improvements: @done(2021-03-21)
 		- add command to list products that are not in pages @done(2021-03-21)
 		- add func to remove products @done(2021-03-21)
