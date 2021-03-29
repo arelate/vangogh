@@ -1,3 +1,7 @@
+rationalize working with times:
+	- common method to product timestamps based on minutes, hours, days
+	- common output for times
+
 Download files:
 	- videos
 		- youtube-dl?
@@ -36,7 +40,6 @@ history.txt:
 		- overall amount of data downloaded that session
 
 List improvements:
-	- add ability to list recently created/modified items
 	- add sort options (using memories)
 		- title (default)
 		- release date
@@ -82,6 +85,7 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- add ability to list recently created/modified items @done(2021-03-29) @project(List improvements)
 	- create kvas helper that sets multiple pages concurently @done(2021-03-26) @project(concurrency improvements)
 	- measure performance improvement and settle on number of concurrent requests @done(2021-03-26) @project(concurrency improvements)
 		- currently getting the data with no writes is 1m45s -> 20s @done(2021-03-26)
