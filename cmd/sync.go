@@ -70,7 +70,7 @@ func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
 		createdIds := vr.CreatedAfter(timestamp)
 		if len(createdIds) > 0 {
 			log.Printf("%s (%s) created this sync:", pt, mt)
-			if err := List(createdIds, pt, mt); err != nil {
+			if err := List(nil, timestamp, pt, mt); err != nil {
 				return err
 			}
 		} else {
@@ -87,7 +87,7 @@ func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
 
 		if len(modifiedNotCreatedIds) > 0 {
 			log.Printf("%s (%s) modified this sync:", pt, mt)
-			if err := List(modifiedNotCreatedIds, pt, mt); err != nil {
+			if err := List(nil, timestamp, pt, mt); err != nil {
 				return err
 			}
 		} else {

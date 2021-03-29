@@ -36,6 +36,7 @@ history.txt:
 		- overall amount of data downloaded that session
 
 List improvements:
+	- add ability to list recently created/modified items
 	- add sort options (using memories)
 		- title (default)
 		- release date

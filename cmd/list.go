@@ -6,9 +6,12 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"log"
+	"math"
+	"time"
 )
 
-func List(ids []string, pt vangogh_products.ProductType, mt gog_media.Media, properties ...string) error {
+func List(ids []string, createdAfter int64, pt vangogh_products.ProductType, mt gog_media.Media, properties ...string) error {
 	if !vangogh_products.Valid(pt) {
 		return fmt.Errorf("can't list invalid product type %s", pt)
 	}
@@ -44,7 +47,16 @@ func List(ids []string, pt vangogh_products.ProductType, mt gog_media.Media, pro
 		return err
 	}
 
-	if len(ids) == 0 {
+	if createdAfter > 0 {
+		if len(ids) > 0 {
+			// TODO: log warning
+		}
+		ids = vr.CreatedAfter(createdAfter)
+		if len(ids) == 0 {
+			hours := math.Round(time.Now().Sub(time.Unix(createdAfter, 0)).Hours())
+			log.Printf("no %s (%s) created in the last %v hour(s)", pt, mt, hours)
+		}
+	} else if len(ids) == 0 {
 		ids = vr.All()
 	}
 

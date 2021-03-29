@@ -35,7 +35,8 @@
     "list": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
-      "property...=developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating"
+      "property...=developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating",
+      "created-hours-ago"
     ],
     "search": [
       "media=game_,movie",

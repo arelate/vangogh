@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/internal"
+	"strconv"
 	"time"
 )
 
@@ -39,8 +40,13 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		images := req.Flag("images")
 		return Info(ids, mt, images)
 	case "list":
+		createdHoursAgoStr := req.ArgVal("created-hours-ago")
+		hoursAgo, err := strconv.Atoi(createdHoursAgoStr)
+		if err != nil {
+			return err
+		}
 		properties := req.ArgValues("property")
-		return List(ids, pt, mt, properties...)
+		return List(ids, time.Now().Add(-time.Hour*time.Duration(hoursAgo)).Unix(), pt, mt, properties...)
 	case "search":
 		// TODO: move to properties
 		supportedProperties := []string{
