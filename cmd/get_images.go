@@ -22,6 +22,10 @@ func GetImages(
 		return fmt.Errorf("invalid image type %s", it)
 	}
 
+	titleExtracts, err := froth.NewStash(
+		vangogh_urls.ExtractsDir(),
+		vangogh_properties.TitleProperty)
+
 	propExtracts, err := froth.NewStash(
 		vangogh_urls.ExtractsDir(),
 		vangogh_properties.FromImageType(it))
@@ -66,11 +70,15 @@ func GetImages(
 	//fmt.Println(dlClient)
 
 	for _, id := range ids {
-		log.Printf("get %s id %s", it, id)
+		title, ok := titleExtracts.Get(id)
+		if !ok {
+			title = id
+		}
+		log.Printf("get %s for %s (%s)", it, title, id)
 
 		prop, ok := propExtracts.Get(id)
 		if !ok || prop == "" {
-			log.Printf("missing %s id %s", it, id)
+			log.Printf("missing %s for %s (%s)", it, title, id)
 			continue
 		}
 
@@ -84,7 +92,7 @@ func GetImages(
 			dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
 
 			if len(srcUrls) > 1 {
-				log.Printf("get %s id %s file %d/%d", it, id, i+1, len(srcUrls))
+				log.Printf("get %s for %s (%s) file %d/%d", it, title, id, i+1, len(srcUrls))
 			}
 
 			_, err = dlClient.Download(srcUrl, dstDir)
