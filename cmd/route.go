@@ -40,13 +40,17 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		images := req.Flag("images")
 		return Info(ids, mt, images)
 	case "list":
+		var since int64 = 0
 		createdHoursAgoStr := req.ArgVal("created-hours-ago")
-		hoursAgo, err := strconv.Atoi(createdHoursAgoStr)
-		if err != nil {
-			return err
+		if createdHoursAgoStr != "" {
+			hoursAgo, err := strconv.Atoi(createdHoursAgoStr)
+			if err != nil {
+				return err
+			}
+			since = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
 		}
 		properties := req.ArgValues("property")
-		return List(ids, time.Now().Add(-time.Hour*time.Duration(hoursAgo)).Unix(), pt, mt, properties...)
+		return List(ids, since, pt, mt, properties...)
 	case "search":
 		// TODO: move to properties
 		supportedProperties := []string{
