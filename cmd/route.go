@@ -89,9 +89,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValues("properties")
 		return Extract(mt, properties)
 	case "wishlist":
-		add := req.ArgValues("add")
-		remove := req.ArgValues("remove")
-		return Wishlist(mt, add, remove)
+		addProductIds := req.ArgValues("add_product_ids")
+		removeProductIds := req.ArgValues("remove_product_ids")
+		return Wishlist(mt, addProductIds, removeProductIds)
 	default:
 		return clo.Route(req, defs)
 	}

@@ -15,7 +15,7 @@ import (
 	"net/url"
 )
 
-func Wishlist(mt gog_media.Media, add, remove []string) error {
+func Wishlist(mt gog_media.Media, addProductIds, removeProductIds []string) error {
 	httpClient, err := internal.HttpClient()
 	if err != nil {
 		return err
@@ -34,10 +34,10 @@ func Wishlist(mt gog_media.Media, add, remove []string) error {
 	}
 
 	if err := wishlistCommand(
-		"add",
-		"to",
-		add,
+		addProductIds,
 		gog_urls.AddToWishlist,
+		addError,
+		addProgress,
 		httpClient,
 		vrStoreProducts,
 		titleExtracts); err != nil {
@@ -45,10 +45,10 @@ func Wishlist(mt gog_media.Media, add, remove []string) error {
 	}
 
 	if err := wishlistCommand(
-		"remove",
-		"from",
-		remove,
+		removeProductIds,
 		gog_urls.RemoveFromWishlist,
+		removeError,
+		removeProgress,
 		httpClient,
 		vrStoreProducts,
 		titleExtracts); err != nil {
@@ -58,24 +58,40 @@ func Wishlist(mt gog_media.Media, add, remove []string) error {
 	return nil
 }
 
+func addError(id string) string {
+	return fmt.Sprintf("can't add invalid id %s to the wishlist", id)
+}
+
+func removeError(id string) string {
+	return fmt.Sprintf("can't remove invalid id %s from the wishlist", id)
+}
+
+func addProgress(title, id string) string {
+	return fmt.Sprintf("add %s (%s) to the wishlist", title, id)
+}
+
+func removeProgress(title, id string) string {
+	return fmt.Sprintf("remove %s (%s) from the wishlist", title, id)
+}
+
 func wishlistCommand(
-	op, dir string,
 	ids []string,
 	wishlistUrl func(string) *url.URL,
+	fmtError func(string) string,
+	fmtProgress func(string, string) string,
 	httpClient *http.Client,
 	vr *vangogh_values.ValueReader,
 	titleExtracts *froth.Stash) error {
 	for _, id := range ids {
 		if !vr.Contains(id) {
-			// TODO: log
-			log.Printf("vangogh: can't %s invalid id %s %s the wishlist", op, id, dir)
+			log.Printf("vangogh: %s", fmtError(id))
 			continue
 		}
 		title, ok := titleExtracts.Get(id)
 		if !ok {
 			title = id
 		}
-		fmt.Printf("%s %s (%s) %s wishlist\n", op, title, id, dir)
+		fmt.Println(fmtProgress(title, id))
 		addUrl := wishlistUrl(id)
 		resp, err := httpClient.Get(addUrl.String())
 		if err != nil {

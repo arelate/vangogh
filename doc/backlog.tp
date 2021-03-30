@@ -1,7 +1,5 @@
 wishlist management command:
-	- Add: GET /user/wishlist/add/{product_id}
-	- Remove: GET /user/wishlist/remove/{product_id}
-	- List: reuse list command
+	- should we also perform local operations to avoid roundtrips and make list more precise?
 
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
@@ -98,6 +96,9 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- Add: GET /user/wishlist/add/{product_id} @done(2021-03-29) @project(wishlist management command)
+	- Remove: GET /user/wishlist/remove/{product_id} @done(2021-03-29) @project(wishlist management command)
+	- List: reuse list command @done(2021-03-29) @project(wishlist management command)
 	- add ability to list recently created/modified items @done(2021-03-29) @project(List improvements)
 	- create kvas helper that sets multiple pages concurently @done(2021-03-26) @project(concurrency improvements)
 	- measure performance improvement and settle on number of concurrent requests @done(2021-03-26) @project(concurrency improvements)

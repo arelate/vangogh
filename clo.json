@@ -59,8 +59,8 @@
     ],
     "wishlist": [
       "media=game_,movie",
-      "add...",
-      "remove..."
+      "add_product_ids...",
+      "remove_product_ids..."
     ]
   },
   "help": {}
