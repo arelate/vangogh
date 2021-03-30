@@ -88,6 +88,10 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "extract":
 		properties := req.ArgValues("properties")
 		return Extract(mt, properties)
+	case "wishlist":
+		add := req.ArgValues("add")
+		remove := req.ArgValues("remove")
+		return Wishlist(mt, add, remove)
 	default:
 		return clo.Route(req, defs)
 	}

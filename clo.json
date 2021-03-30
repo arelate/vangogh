@@ -56,6 +56,11 @@
       "images",
       "screenshots",
       "all"
+    ],
+    "wishlist": [
+      "media=game_,movie",
+      "add...",
+      "remove..."
     ]
   },
   "help": {}
