@@ -9,6 +9,8 @@ import (
 )
 
 func ScrubData(mt gog_media.Media, fix bool) error {
+
+	fmt.Println("split products missing from the paged data:")
 	for _, pagedPt := range vangogh_products.AllPaged() {
 
 		pagedIds := make([]string, 0)
@@ -49,7 +51,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 				}
 			} else {
 				fmt.Printf("%s not present in %s:\n", splitPt, pagedPt)
-				if err := List(splitIds, 0, splitPt, mt); err != nil {
+				if err := List(splitIds, 0, 0, splitPt, mt); err != nil {
 					return err
 				}
 			}
@@ -57,6 +59,10 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			fmt.Printf("%s and %s have all the same products\n", splitPt, pagedPt)
 		}
 	}
+
+	// fmt.Println("products with values different from extracts:")
+	// fmt.Println("images that are not linked to a product:")
+
 	return nil
 }
 

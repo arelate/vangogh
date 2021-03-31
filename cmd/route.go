@@ -33,24 +33,37 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Authenticate(username, password)
 	case "get-data":
 		missing := req.Flag("missing")
+		updated := req.Flag("updated")
+		since := time.Now().Unix()
+		if updated {
+			since = time.Now().Add(-time.Hour * 24).Unix()
+		}
 		denyIdsFile := req.ArgVal("deny-ids-file")
 		denyIds := internal.ReadLines(denyIdsFile)
-		return GetData(ids, denyIds, pt, mt, time.Now().Unix(), missing, verbose)
+		return GetData(ids, denyIds, pt, mt, since, missing, updated, verbose)
 	case "info":
 		images := req.Flag("images")
 		return Info(ids, mt, images)
 	case "list":
-		var since int64 = 0
-		createdHoursAgoStr := req.ArgVal("created-hours-ago")
-		if createdHoursAgoStr != "" {
-			hoursAgo, err := strconv.Atoi(createdHoursAgoStr)
+		var createdSince, modifiedSince int64 = 0, 0
+		createdStr := req.ArgVal("created")
+		if createdStr != "" {
+			hoursAgo, err := strconv.Atoi(createdStr)
 			if err != nil {
 				return err
 			}
-			since = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
+			createdSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
+		}
+		modifiedStr := req.ArgVal("modified")
+		if modifiedStr != "" {
+			hoursAgo, err := strconv.Atoi(modifiedStr)
+			if err != nil {
+				return err
+			}
+			modifiedSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
 		}
 		properties := req.ArgValues("property")
-		return List(ids, since, pt, mt, properties...)
+		return List(ids, createdSince, modifiedSince, pt, mt, properties...)
 	case "search":
 		// TODO: move to properties
 		supportedProperties := []string{
@@ -87,10 +100,11 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Sync(mt, noData, images, screenshots, verbose)
 	case "extract":
 		properties := req.ArgValues("properties")
-		return Extract(mt, properties)
+		force := req.Flag("force")
+		return Extract(mt, properties, force)
 	case "wishlist":
-		addProductIds := req.ArgValues("add_product_ids")
-		removeProductIds := req.ArgValues("remove_product_ids")
+		addProductIds := req.ArgValues("add")
+		removeProductIds := req.ArgValues("remove")
 		return Wishlist(mt, addProductIds, removeProductIds)
 	default:
 		return clo.Route(req, defs)

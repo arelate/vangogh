@@ -22,8 +22,9 @@ func GetData(
 	denyIds []string,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
-	timestamp int64,
+	since int64,
 	missing bool,
+	updated bool,
 	verbose bool) error {
 
 	if !vangogh_products.Valid(pt) {
@@ -72,25 +73,25 @@ func GetData(
 		if err := vangogh_pages.GetAllPages(httpClient, pt, mt); err != nil {
 			return err
 		}
-		//if err := fetchPages(pt, mt, srcUrl, dstUrl, verbose); err != nil {
-		//	return err
-		//}
-		return split(pt, mt, timestamp)
+		return split(pt, mt, since)
 	} else {
-		if missing {
-			for _, mpt := range vangogh_products.MainTypes(pt) {
-				mainDstUrl, err := vangogh_urls.LocalProductsDir(mpt, mt)
-				if err != nil {
-					return err
-				}
-				if err = fetchMissing(pt, mpt, mt, denyIds, srcUrl, mainDstUrl, dstUrl, verbose); err != nil {
+		for _, mpt := range vangogh_products.MainTypes(pt) {
+			if missing {
+				if err = fetchMissing(pt, mpt, mt, denyIds, srcUrl, dstUrl, verbose); err != nil {
 					return err
 				}
 			}
-			return nil
-		} else {
+			if updated {
+				if err = fetchUpdated(since, pt, mpt, mt, srcUrl, dstUrl, verbose); err != nil {
+					return err
+				}
+			}
+		}
+
+		if !missing && !updated {
 			return fetchItems(ids, pt, mt, srcUrl, dstUrl, verbose)
 		}
+		return nil
 	}
 }
 
@@ -170,14 +171,56 @@ func fetchPages(
 	return nil
 }
 
+func fetchUpdated(
+	since int64,
+	detailPt, mainPt vangogh_products.ProductType,
+	mt gog_media.Media,
+	sourceUrl vangogh_urls.ProductTypeUrl,
+	detailDestUrl string,
+	verbose bool) error {
+	log.Printf("get updated %s (%s) for %s", detailPt, mt, mainPt)
+
+	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
+	if err != nil {
+		return err
+	}
+
+	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
+	if err != nil {
+		return err
+	}
+
+	updatedIds := kvMain.ModifiedAfter(since)
+
+	if len(updatedIds) > 0 {
+		if verbose {
+			log.Printf("updated %s ids: %v", detailPt, updatedIds)
+		}
+		if err := fetchItems(updatedIds, detailPt, mt, sourceUrl, detailDestUrl, verbose); err != nil {
+			log.Println(err)
+		}
+	} else {
+		if verbose {
+			log.Printf("no updated %s data for %s (%s)\n", detailPt, mainPt, mt)
+		}
+	}
+
+	return nil
+}
+
 func fetchMissing(
 	detailPt, mainPt vangogh_products.ProductType,
 	mt gog_media.Media,
 	denyIds []string,
 	sourceUrl vangogh_urls.ProductTypeUrl,
-	mainDestUrl, detailDestUrl string,
+	detailDestUrl string,
 	verbose bool) error {
 	log.Printf("get missing %s (%s) for %s", detailPt, mt, mainPt)
+
+	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
+	if err != nil {
+		return err
+	}
 
 	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
 	if err != nil {

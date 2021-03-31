@@ -1,5 +1,5 @@
 wishlist management command:
-	- should we also perform local operations to avoid roundtrips and make list more precise?
+	- should we also perform local operations to avoid roundtrips and make local data (e.g. list command) more precise?
 
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
@@ -18,14 +18,6 @@ Download files:
 		- youtube-dl?
 	- product files by OS, language:
 		- create helper for Details that returns collection of strucutred data per language 
-
-concurrency improvements:
-	- rewrite get-data pipeline to be concurrent:
-		- getItems
-		- getPages
-		- split
-		- extract
-		- search
 	
 dolo improvements:
 	- rewrite dolo to support concurrent ranges downloads
@@ -42,6 +34,7 @@ get-images improvements:
 	- show titles, not ids when downloading
 	- consider adding backup format (png -> jpg and vice a versa)
 	- checking existing files is way too verbose - consider checking if there are missing files for product - show only then
+	- don't consider .download as existing image
 
 history.txt:
 	- add a file that collects results of sync operations over time
@@ -62,9 +55,20 @@ Standartize directories:
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
 Fix bugs:
-	- get-images need to be updated to support screenshots as []string
+	- get-images need to be updated to support screenshots as []string @done(2021-03-30)
 	- "list wishlist-prod" doesn't work as expected
 	- data issue: investigate why so many entries have "TEST DEVELOPER"/"TEST PUBLISHER" (search test)
+	- "Disco Elysium" issue - title has not changed even if changed on the remote side. This is due to couple factors:
+		- extract is optimized to skip existing values, can be added to scrub
+		- detail data (details, api-products-v1/v2) are never redownloaded unless missing - this can be addressed with updates system
+	
+concurrency improvements:
+	- rewrite get-data pipeline to be concurrent:
+		- getItems
+		- getPages
+		- split
+		- extract
+		- search
 	
 Work on gaugin can start:
 	- Publish vangogh on GitHub
