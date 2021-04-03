@@ -76,20 +76,17 @@ func List(
 		ids = vr.All()
 	}
 
-	//only attempt to print supported properties by that product type
-	supportedProperties := make([]string, 0, len(properties))
-	for _, prop := range properties {
-		if vangogh_properties.SupportsProperty(pt, prop) {
-			supportedProperties = append(supportedProperties, prop)
-		}
-	}
-
 	//load properties extract that'll be used for printing
 	propExtracts, err := vangogh_properties.PropExtracts(properties)
 
 	//use common printInfo func to display product information by ID
 	for _, id := range ids {
-		printInfo(id, "", supportedProperties, propExtracts, nil)
+		printInfo(
+			id,
+			"",
+			vangogh_properties.Supported(pt, properties),
+			propExtracts,
+			nil)
 	}
 
 	return nil

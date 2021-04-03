@@ -9,7 +9,6 @@ import (
 	"github.com/boggydigital/froth"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
-	"strings"
 )
 
 func GetImages(
@@ -26,7 +25,7 @@ func GetImages(
 		vangogh_urls.ExtractsDir(),
 		vangogh_properties.TitleProperty)
 
-	propExtracts, err := froth.NewStash(
+	imageTypeExtracts, err := froth.NewStash(
 		vangogh_urls.ExtractsDir(),
 		vangogh_properties.FromImageType(it))
 	if err != nil {
@@ -37,7 +36,7 @@ func GetImages(
 		if len(ids) > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
-		ids, err = findIdsMissingImages(it, propExtracts, localImageIds)
+		ids, err = findIdsMissingImages(imageTypeExtracts, localImageIds)
 		if err != nil {
 			return err
 		}
@@ -76,13 +75,17 @@ func GetImages(
 		}
 		log.Printf("get %s for %s (%s)", it, title, id)
 
-		prop, ok := propExtracts.Get(id)
-		if !ok || prop == "" {
+		images, ok := imageTypeExtracts.GetAll(id)
+		if !ok || len(images) == 0 {
 			log.Printf("missing %s for %s (%s)", it, title, id)
 			continue
 		}
 
-		srcUrls, err := vangogh_urls.PropImageUrls(prop, it)
+		//if len(images) > 1 {
+		//	fmt.Println(id, images)
+		//}
+
+		srcUrls, err := vangogh_urls.PropImageUrls(images, it)
 		if err != nil {
 			return err
 		}
@@ -99,14 +102,12 @@ func GetImages(
 			if err != nil {
 				return err
 			}
-
-			//fmt.Println(srcUrl, dstDir)
 		}
 	}
 	return nil
 }
 
-func findIdsMissingImages(it vangogh_images.ImageType, propExtracts *froth.Stash, localImageIds map[string]bool) (ids []string, err error) {
+func findIdsMissingImages(imageTypeExtracts *froth.Stash, localImageIds map[string]bool) (ids []string, err error) {
 
 	ids = make([]string, 0)
 
@@ -118,25 +119,23 @@ func findIdsMissingImages(it vangogh_images.ImageType, propExtracts *froth.Stash
 		}
 	}
 
-	for _, id := range propExtracts.All() {
-		prop, ok := propExtracts.Get(id)
-		if prop == "" || !ok {
+	for _, id := range imageTypeExtracts.All() {
+		imageIds, ok := imageTypeExtracts.GetAll(id)
+		if len(imageIds) == 0 || !ok {
 			continue
 		}
-		if localImageIds[prop] {
-			continue
-		}
-		if it == vangogh_images.Screenshots {
-			haveAllScr := true
-			for _, scr := range strings.Split(prop, ",") {
-				if !localImageIds[scr] {
-					haveAllScr = false
-					break
-				}
-			}
-			if haveAllScr {
+		//if len(imageIds) > 1 {
+		//	fmt.Println(id, imageIds)
+		//}
+		haveImages := true
+		for _, imageId := range imageIds {
+			if localImageIds[imageId] {
 				continue
 			}
+			haveImages = false
+		}
+		if haveImages {
+			continue
 		}
 		ids = append(ids, id)
 	}

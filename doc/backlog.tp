@@ -1,3 +1,9 @@
+extracts scrub learnings:
+	- GOG.com has several variants of the same image/background - need to add and download all
+	- ^ this might require moving prop extracts from string to []string
+	- need to figure out what is source of truth for other data (publisher, etc.)
+	- backgrounds can be downloaded as jpg like screenshots
+
 wishlist management command:
 	- should we also perform local operations to avoid roundtrips and make local data (e.g. list command) more precise?
 

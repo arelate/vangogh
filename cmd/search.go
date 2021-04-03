@@ -6,21 +6,13 @@ import (
 	"strings"
 )
 
-// TODO: move to properties
-var queryProperties = map[string][]string{
-	vangogh_properties.AllTextProperties:    vangogh_properties.AllText(),
-	vangogh_properties.AllImageIdProperties: vangogh_properties.AllImageId(),
-	vangogh_properties.TitleProperty:        {vangogh_properties.TitleProperty},
-	vangogh_properties.DeveloperProperty:    {vangogh_properties.DeveloperProperty},
-	vangogh_properties.PublisherProperty:    {vangogh_properties.PublisherProperty},
-	vangogh_properties.RatingProperty:       {vangogh_properties.RatingProperty},
-}
-
 func Search(query map[string]string) error {
+
+	queryProps := vangogh_properties.AllQuery()
 
 	properties := []string{vangogh_properties.TitleProperty}
 	for prop, _ := range query {
-		properties = mergeProperties(properties, queryProperties[prop])
+		properties = mergeProperties(properties, queryProps[prop])
 	}
 
 	propExtracts, err := vangogh_properties.PropExtracts(properties)
@@ -33,7 +25,7 @@ func Search(query map[string]string) error {
 	for prop, term := range query {
 		mergeMatchingIdsProps(
 			matchingIdsProps,
-			matchingIds(term, queryProperties[prop], propExtracts))
+			matchingIds(term, queryProps[prop], propExtracts))
 	}
 
 	for id, props := range matchingIdsProps {
@@ -80,13 +72,15 @@ func matchingIds(term string, properties []string, propExtracts map[string]*frot
 			}
 
 			for _, id := range extracts.All() {
-				val, ok := extracts.Get(id)
-				if !ok || val == "" {
+				values, ok := extracts.GetAll(id)
+				if !ok || len(values) == 0 {
 					continue
 				}
 
-				if strings.Contains(strings.ToLower(val), term) {
-					ids[id] = append(ids[id], prop)
+				for _, val := range values {
+					if strings.Contains(strings.ToLower(val), term) {
+						ids[id] = append(ids[id], prop)
+					}
 				}
 
 			}

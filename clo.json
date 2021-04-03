@@ -16,8 +16,7 @@
     ],
     "extract": [
       "media=game_,movie",
-      "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots",
-      "force"
+      "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots"
     ],
     "get-images": [
       "image-type_!=image,box-art,logo,icon,background,galaxy-background,screenshots",

@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/vangogh/cmd"
 	"log"
 	"os"
+	"time"
 )
 
 //go:embed "clo.json"
@@ -18,6 +19,20 @@ var cloBytes []byte
 
 func main() {
 
+	//imagesStash, err := froth.NewStash(vangogh_urls.ExtractsDir(), vangogh_properties.ImageProperty)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, id := range imagesStash.All() {
+	//	val, _ := imagesStash.GetAll(id)
+	//	if len(val) < 2 {
+	//		continue
+	//	}
+	//	fmt.Println(id, val)
+	//}
+
+	start := time.Now()
 	//fmt.Println(len(imageIds))
 
 	//vr, err := vangogh_values.NewReader(
@@ -53,4 +68,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Printf("elapsed time: %dms\n", time.Since(start).Milliseconds())
 }

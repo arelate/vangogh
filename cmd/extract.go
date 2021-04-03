@@ -5,11 +5,10 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
-	"github.com/boggydigital/froth"
 	"log"
 )
 
-func Extract(mt gog_media.Media, properties []string, force bool) error {
+func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
 
 	if len(properties) == 0 {
 		properties = vangogh_properties.AllExtracted()
@@ -29,20 +28,18 @@ func Extract(mt gog_media.Media, properties []string, force bool) error {
 			return err
 		}
 
-		missingPropExtracts := make(map[string]map[string]string, 0)
+		missingProps := vangogh_properties.Supported(pt, properties)
 
-		for _, id := range vr.All() {
+		missingPropExtracts := make(map[string]map[string][]string, 0)
 
-			missingProps := make([]string, 0, len(properties))
-			if force {
-				for _, prop := range properties {
-					if vangogh_properties.SupportsProperty(pt, prop) {
-						missingProps = append(missingProps, prop)
-					}
-				}
-			} else {
-				missingProps = missingProperties(pt, propExtracts, id)
-			}
+		var modifiedIds []string
+		if modifiedAfter > 0 {
+			modifiedIds = vr.ModifiedAfter(modifiedAfter)
+		} else {
+			modifiedIds = vr.All()
+		}
+
+		for _, id := range modifiedIds {
 
 			if len(missingProps) == 0 {
 				continue
@@ -53,33 +50,20 @@ func Extract(mt gog_media.Media, properties []string, force bool) error {
 				return err
 			}
 
-			for prop, value := range propValues {
+			for prop, values := range propValues {
 				if _, ok := missingPropExtracts[prop]; !ok {
-					missingPropExtracts[prop] = make(map[string]string, 0)
+					missingPropExtracts[prop] = make(map[string][]string, 0)
 				}
-				missingPropExtracts[prop][id] = value
+				missingPropExtracts[prop][id] = values
 			}
 		}
 
 		for prop, extracts := range missingPropExtracts {
-			if err := propExtracts[prop].SetMany(extracts); err != nil {
+			if err := propExtracts[prop].AddMany(extracts); err != nil {
 				return err
 			}
 		}
 	}
 
 	return nil
-}
-
-func missingProperties(
-	pt vangogh_products.ProductType,
-	propStashes map[string]*froth.Stash,
-	id string) []string {
-	missingProps := make([]string, 0)
-	for prop, stash := range propStashes {
-		if !stash.Contains(id) && vangogh_properties.SupportsProperty(pt, prop) {
-			missingProps = append(missingProps, prop)
-		}
-	}
-	return missingProps
 }

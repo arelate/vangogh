@@ -71,8 +71,6 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			vangogh_properties.AllImageIdProperties}
 		supportedProperties = append(supportedProperties,
 			vangogh_properties.AllText()...)
-		supportedProperties = append(supportedProperties,
-			vangogh_properties.RatingProperty)
 		query := make(map[string]string)
 		for _, prop := range supportedProperties {
 			if values, ok := req.Arguments[prop]; ok && len(values) > 0 {
@@ -100,8 +98,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Sync(mt, noData, images, screenshots, verbose)
 	case "extract":
 		properties := req.ArgValues("properties")
-		force := req.Flag("force")
-		return Extract(mt, properties, force)
+		return Extract(0, mt, properties)
 	case "wishlist":
 		addProductIds := req.ArgValues("add")
 		removeProductIds := req.ArgValues("remove")

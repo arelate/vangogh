@@ -1,14 +1,10 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
-	"github.com/boggydigital/froth"
-	"sort"
-	"strings"
 )
 
 func Info(ids []string, mt gog_media.Media, images bool) error {
@@ -35,53 +31,4 @@ func Info(ids []string, mt gog_media.Media, images bool) error {
 		printInfo(id, "", properties, propExtracts, productTypeReaders)
 	}
 	return nil
-}
-
-func printInfo(
-	id string,
-	value string,
-	properties []string,
-	propExtracts map[string]*froth.Stash,
-	productTypeReaders map[vangogh_products.ProductType]*vangogh_values.ValueReader) {
-
-	titleExtracts := propExtracts[vangogh_properties.TitleProperty]
-	title, ok := titleExtracts.Get(id)
-	if ok {
-		fmt.Printf("%s %s\n", id, title)
-	} else {
-		fmt.Printf("no information for id %s\n", id)
-	}
-
-	if productTypeReaders != nil {
-		ptStrings := make([]string, 0)
-		for pt := range productTypeReaders {
-			if productTypeReaders[pt].Contains(id) {
-				ptStrings = append(ptStrings, pt.String())
-			}
-		}
-		sort.Strings(ptStrings)
-		if len(ptStrings) > 0 {
-			fmt.Printf(" types:%s\n", strings.Join(ptStrings, ","))
-		}
-	}
-
-	for _, prop := range properties {
-		if prop == vangogh_properties.TitleProperty {
-			continue
-		}
-		val, ok := propExtracts[prop].Get(id)
-		if !ok || val == "" {
-			continue
-		}
-		if prop == vangogh_properties.ScreenshotsProperty {
-			for _, scr := range strings.Split(val, ",") {
-				if value != "" && !strings.Contains(scr, value) {
-					continue
-				}
-				fmt.Printf(" %s:%s\n", prop, scr)
-			}
-		} else {
-			fmt.Printf(" %s:%v\n", prop, val)
-		}
-	}
 }
