@@ -3,12 +3,12 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/kvas"
-	"log"
 	"strconv"
 )
 
@@ -20,7 +20,7 @@ func split(pagedPt vangogh_products.ProductType, mt gog_media.Media, timestamp i
 
 	modifiedPageIds := vrPaged.ModifiedAfter(timestamp)
 	if len(modifiedPageIds) == 0 {
-		log.Printf("skip split for not modified %s (%s) pages", pagedPt, mt)
+		fmt.Printf("skip split for not modified %s (%s) pages\n", pagedPt, mt)
 		return nil
 	}
 
@@ -28,7 +28,7 @@ func split(pagedPt vangogh_products.ProductType, mt gog_media.Media, timestamp i
 
 		splitPt := vangogh_products.SplitType(pagedPt)
 
-		log.Printf("split %s (%s) %s into %s\n", pagedPt, mt, page, splitPt)
+		fmt.Printf("split %s (%s) %s into %s\n", pagedPt, mt, page, splitPt)
 
 		productsGetter, err := vrPaged.ProductGetter(page)
 

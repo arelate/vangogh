@@ -28,12 +28,30 @@ func Search(query map[string]string) error {
 			matchingIds(term, queryProps[prop], propExtracts))
 	}
 
-	for id, props := range matchingIdsProps {
-		// passing term of the -image-id query to allow filtering screenshots values
-		printInfo(id, query[vangogh_properties.AllImageIdProperties], props, propExtracts, nil)
+	for id, matchingProps := range matchingIdsProps {
+		printInfo(
+			id,
+			highlights(query, matchingProps),
+			matchingProps,
+			propExtracts,
+			nil)
 	}
 
 	return nil
+}
+
+func highlights(query map[string]string, matchingProps []string) map[string]string {
+	highlights := make(map[string]string, 0)
+	for _, prop := range matchingProps {
+		val := query[prop]
+		if val == "" {
+			val = query[vangogh_properties.Shorthand(prop)]
+		}
+		if val != "" {
+			highlights[prop] = val
+		}
+	}
+	return highlights
 }
 
 func mergeProperties(properties []string, newProperties []string) []string {
@@ -82,7 +100,6 @@ func matchingIds(term string, properties []string, propExtracts map[string]*frot
 						ids[id] = append(ids[id], prop)
 					}
 				}
-
 			}
 		}
 	}

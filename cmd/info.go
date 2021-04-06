@@ -28,7 +28,7 @@ func Info(ids []string, mt gog_media.Media, images bool) error {
 	}
 
 	for _, id := range ids {
-		printInfo(id, "", properties, propExtracts, productTypeReaders)
+		printInfo(id, nil, properties, propExtracts, productTypeReaders)
 	}
 	return nil
 }

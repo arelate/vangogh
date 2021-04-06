@@ -16,7 +16,7 @@
     ],
     "extract": [
       "media=game_,movie",
-      "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots"
+      "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,includes-games"
     ],
     "get-images": [
       "image-type_!=image,box-art,logo,icon,background,galaxy-background,screenshots",
@@ -36,8 +36,7 @@
     "list": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
-      "property...=developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating",
-      "created",
+      "property...=developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating,includes-games",
       "modified"
     ],
     "search": [

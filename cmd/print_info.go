@@ -12,7 +12,7 @@ import (
 
 func printInfo(
 	id string,
-	highlightValue string,
+	highlightValues map[string]string,
 	properties []string,
 	propExtracts map[string]*froth.Stash,
 	productTypeReaders map[vangogh_products.ProductType]*vangogh_values.ValueReader) {
@@ -48,7 +48,7 @@ func printInfo(
 			continue
 		}
 		for _, val := range values {
-			if highlightValue != "" && !strings.Contains(val, highlightValue) {
+			if highlightValues[prop] != "" && !strings.Contains(val, highlightValues[prop]) {
 				continue
 			}
 			fmt.Printf(" %s:%v\n", prop, val)

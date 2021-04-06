@@ -45,15 +45,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		images := req.Flag("images")
 		return Info(ids, mt, images)
 	case "list":
-		var createdSince, modifiedSince int64 = 0, 0
-		createdStr := req.ArgVal("created")
-		if createdStr != "" {
-			hoursAgo, err := strconv.Atoi(createdStr)
-			if err != nil {
-				return err
-			}
-			createdSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
-		}
+		var modifiedSince int64 = 0
 		modifiedStr := req.ArgVal("modified")
 		if modifiedStr != "" {
 			hoursAgo, err := strconv.Atoi(modifiedStr)
@@ -63,7 +55,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			modifiedSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
 		}
 		properties := req.ArgValues("property")
-		return List(ids, createdSince, modifiedSince, pt, mt, properties...)
+		return List(ids, modifiedSince, pt, mt, properties...)
 	case "search":
 		// TODO: move to properties
 		supportedProperties := []string{

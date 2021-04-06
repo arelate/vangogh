@@ -11,7 +11,6 @@ import (
 	"github.com/boggydigital/vangogh/cmd"
 	"log"
 	"os"
-	"time"
 )
 
 //go:embed "clo.json"
@@ -19,20 +18,41 @@ var cloBytes []byte
 
 func main() {
 
-	//imagesStash, err := froth.NewStash(vangogh_urls.ExtractsDir(), vangogh_properties.ImageProperty)
+	//apReader, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//for _, id := range imagesStash.All() {
-	//	val, _ := imagesStash.GetAll(id)
-	//	if len(val) < 2 {
+	//for _, id := range apReader.All() {
+	//	apv2, err := apReader.ApiProductV2(id)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	if !strings.Contains(apv2.Embedded.Product.Title, "Pajama") {
 	//		continue
 	//	}
-	//	fmt.Println(id, val)
+	//
+	//	fmt.Println(id, apv2.Embedded.Product.Title, apv2.GetIncludedGames())
 	//}
 
-	start := time.Now()
+	//for _, property := range vangogh_properties.AllExtracted() {
+	//	stash, err := froth.NewStash(vangogh_urls.ExtractsDir(), property)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	for _, id := range stash.All() {
+	//		values, _ := stash.GetAll(id)
+	//		for _, val := range values {
+	//			if val == "" {
+	//				fmt.Println(id, property)
+	//			}
+	//		}
+	//	}
+	//}
+
+	//start := time.Now()
 	//fmt.Println(len(imageIds))
 
 	//vr, err := vangogh_values.NewReader(
@@ -69,5 +89,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Printf("elapsed time: %dms\n", time.Since(start).Milliseconds())
+	//log.Printf("elapsed time: %dms\n", time.Since(start).Milliseconds())
 }

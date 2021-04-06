@@ -45,7 +45,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 
 		if len(splitIds) > 0 {
 			fmt.Printf("%s not present in %s:\n", splitPt, pagedPt)
-			if err := List(splitIds, 0, 0, splitPt, mt); err != nil {
+			if err := List(splitIds, 0, splitPt, mt); err != nil {
 				return err
 			}
 

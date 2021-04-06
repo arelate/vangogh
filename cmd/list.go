@@ -6,7 +6,6 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
-	"log"
 	"time"
 )
 
@@ -15,7 +14,7 @@ import (
 //Provided properties will be printed for each product (if supported) in addition to default ID, Title.
 func List(
 	ids []string,
-	createdSince, modifiedSince int64,
+	modifiedSince int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	properties ...string) error {
@@ -56,22 +55,14 @@ func List(
 		return err
 	}
 
-	if createdSince > 0 {
-		ids = append(ids, vr.CreatedAfter(createdSince)...)
-		if len(ids) == 0 {
-			log.Printf("no %s (%s) created since %v", pt, mt, time.Unix(createdSince, 0))
-		}
-	}
-
 	if modifiedSince > 0 {
 		ids = append(ids, vr.ModifiedAfter(modifiedSince)...)
 		if len(ids) == 0 {
-			log.Printf("no %s (%s) modified since %v", pt, mt, time.Unix(modifiedSince, 0))
+			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedSince, 0).Format(time.Kitchen))
 		}
 	}
 
 	if len(ids) == 0 &&
-		createdSince == 0 &&
 		modifiedSince == 0 {
 		ids = vr.All()
 	}
@@ -83,7 +74,7 @@ func List(
 	for _, id := range ids {
 		printInfo(
 			id,
-			"",
+			nil,
 			vangogh_properties.Supported(pt, properties),
 			propExtracts,
 			nil)

@@ -1,9 +1,3 @@
-extracts scrub learnings:
-	- GOG.com has several variants of the same image/background - need to add and download all
-	- ^ this might require moving prop extracts from string to []string
-	- need to figure out what is source of truth for other data (publisher, etc.)
-	- backgrounds can be downloaded as jpg like screenshots
-
 wishlist management command:
 	- should we also perform local operations to avoid roundtrips and make local data (e.g. list command) more precise?
 
@@ -14,9 +8,18 @@ tags management command:
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
 	- List: ?
+	
+list series command:
+	- needs to be implemented
+	- info?
+	- products for series
+	
+api-products-v2 tags -> genre:
+	- extract
+	- search as text
 
 rationalize working with times:
-	- common method to product timestamps based on minutes, hours, days
+	- common method to produce timestamps based on minutes, hours, days
 	- common output for times
 
 Download files:
@@ -35,12 +38,9 @@ verbosity improvements:
 	- add flags to functions to be optionally verbose
 	- when verbose - use log.Print
 	- when not - continue using fmt.Print
-	
-get-images improvements:
-	- show titles, not ids when downloading
-	- consider adding backup format (png -> jpg and vice a versa)
-	- checking existing files is way too verbose - consider checking if there are missing files for product - show only then
-	- don't consider .download as existing image
+
+figure out where 1435735429 gets box-art image in Galaxy:
+	- proxy requests and find the source
 
 history.txt:
 	- add a file that collects results of sync operations over time
@@ -61,7 +61,6 @@ Standartize directories:
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
 Fix bugs:
-	- get-images need to be updated to support screenshots as []string @done(2021-03-30)
 	- "list wishlist-prod" doesn't work as expected
 	- data issue: investigate why so many entries have "TEST DEVELOPER"/"TEST PUBLISHER" (search test)
 	- "Disco Elysium" issue - title has not changed even if changed on the remote side. This is due to couple factors:
@@ -106,6 +105,23 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	get-data improvements: @done(2021-04-05)
+		- rewrite pipeline to itemize ids based on signals @done(2021-04-05)
+		- get items for itemized ids @done(2021-04-05)
+		- finalize itemization for api-product-v2 type == "PACK", includesGames
+	extracts scrub learnings: @done(2021-04-04)
+		- add all distinct values for things like publisher/developer @done(2021-04-03)
+		- make Developer getter return []string @done(2021-04-03)
+		- filter out "" values, so that they're not saved @done(2021-04-04)
+	- GOG.com has several variants of the same image/background - need to add and download all @done(2021-04-02) @project(extracts scrub learnings)
+	- ^ this might require moving prop extracts from string to []string @done(2021-04-02) @project(extracts scrub learnings)
+	- backgrounds can be downloaded as jpg like screenshots @done(2021-04-02) @project(extracts scrub learnings)
+	get-images improvements: @done(2021-04-02)
+		- show titles, not ids when downloading @done(2021-04-02)
+		- consider adding backup format (png -> jpg and vice a versa) @done(2021-04-02)
+		- checking existing files is way too verbose - consider checking if there are missing files for product - show only then @done(2021-04-02)
+		- don't consider .download as existing image @done(2021-04-02)
+	- get-images need to be updated to support screenshots as []string @done(2021-03-30) @project(Fix bugs)
 	- Add: GET /user/wishlist/add/{product_id} @done(2021-03-29) @project(wishlist management command)
 	- Remove: GET /user/wishlist/remove/{product_id} @done(2021-03-29) @project(wishlist management command)
 	- List: reuse list command @done(2021-03-29) @project(wishlist management command)

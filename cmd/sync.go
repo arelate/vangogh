@@ -8,7 +8,6 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/vangogh/internal"
-	"log"
 	"time"
 )
 
@@ -55,22 +54,19 @@ func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 
 	// TODO: get files
 
-	// print created, modified
+	// print new or updated
 	return reportCreatedModifiedAfter(syncStart, mt)
 
 }
 
 func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
+	fmt.Println("sync summary:")
 	for _, pt := range vangogh_products.AllLocal() {
-		fmt.Printf("%s (%s) created this sync:\n", pt, mt)
-		if err := List(nil, timestamp, 0, pt, mt); err != nil {
-			return err
-		}
-		fmt.Printf("%s (%s) modified this sync:\n", pt, mt)
-		if err := List(nil, 0, timestamp, pt, mt); err != nil {
+		fmt.Printf("new or updated %s (%s) during this sync:\n", pt, mt)
+		if err := List(nil, timestamp, pt, mt); err != nil {
 			return err
 		}
 	}
-	log.Println("sync took:", time.Since(time.Unix(timestamp, 0)).String())
+	fmt.Println("sync duration:", time.Since(time.Unix(timestamp, 0)).String())
 	return nil
 }

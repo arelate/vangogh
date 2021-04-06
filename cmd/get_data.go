@@ -2,21 +2,20 @@ package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/arelate/gog_auth"
 	"github.com/arelate/gog_media"
-	"github.com/arelate/gog_types"
 	"github.com/arelate/vangogh_pages"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
+	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/vangogh/internal"
 	"io"
 	"log"
-	"strconv"
 )
 
+//GetData fetches remote metadata from GOG.com and stores locally.
 func GetData(
 	ids []string,
 	denyIds []string,
@@ -59,43 +58,188 @@ func GetData(
 		}
 	}
 
-	srcUrl, err := vangogh_urls.RemoteProductsUrl(pt)
-	if err != nil {
-		return err
-	}
-
-	dstUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
-	if err != nil {
-		return err
-	}
-
 	if vangogh_products.Paginated(pt) {
 		if err := vangogh_pages.GetAllPages(httpClient, pt, mt); err != nil {
 			return err
 		}
 		return split(pt, mt, since)
-	} else {
-		for _, mpt := range vangogh_products.MainTypes(pt) {
-			if missing {
-				if err = fetchMissing(pt, mpt, mt, denyIds, srcUrl, dstUrl, verbose); err != nil {
-					return err
-				}
-			}
-			if updated {
-				if err = fetchUpdated(since, pt, mpt, mt, srcUrl, dstUrl, verbose); err != nil {
-					return err
-				}
-			}
-		}
-
-		if !missing && !updated {
-			return fetchItems(ids, pt, mt, srcUrl, dstUrl, verbose)
-		}
-		return nil
 	}
+
+	ids, err = itemizeAll(ids, missing, updated, since, pt, mt)
+	if err != nil {
+		return err
+	}
+
+	approvedIds := make([]string, 0, len(ids))
+	for _, id := range ids {
+		if !stringsContain(denyIds, id) {
+			approvedIds = append(approvedIds, id)
+		}
+	}
+
+	return getItems(approvedIds, pt, mt, verbose)
 }
 
-func fetchItem(
+func itemizeAll(
+	ids []string,
+	missing, updated bool,
+	modifiedAfter int64,
+	pt vangogh_products.ProductType,
+	mt gog_media.Media) ([]string, error) {
+
+	for _, mainPt := range vangogh_products.MainTypes(pt) {
+		if missing {
+			missingIds, err := itemizeMissing(pt, mainPt, mt, modifiedAfter)
+			if err != nil {
+				return ids, err
+			}
+			if len(missingIds) == 0 {
+				fmt.Printf("no missing %s data for %s (%s)\n", pt, mainPt, mt)
+			}
+			ids = append(ids, missingIds...)
+		}
+		if updated {
+			updatedIds, err := itemizeUpdated(modifiedAfter, mainPt, mt)
+			if err != nil {
+				return ids, err
+			}
+			if len(updatedIds) == 0 {
+				fmt.Printf("no updated %s data for %s (%s)\n", pt, mainPt, mt)
+			}
+			ids = append(ids, updatedIds...)
+		}
+	}
+
+	return ids, nil
+}
+
+func itemizeMissing(
+	detailPt, mainPt vangogh_products.ProductType,
+	mt gog_media.Media,
+	modifiedAfter int64) ([]string, error) {
+
+	if mainPt == vangogh_products.ApiProductsV2 &&
+		detailPt == vangogh_products.ApiProductsV2 {
+		return itemizeMissingIncludesGames(modifiedAfter)
+	}
+
+	missingIds := make([]string, 0)
+
+	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
+	if err != nil {
+		return missingIds, err
+	}
+
+	detailDestUrl, err := vangogh_urls.LocalProductsDir(detailPt, mt)
+	if err != nil {
+		return missingIds, err
+	}
+
+	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
+	if err != nil {
+		return missingIds, err
+	}
+
+	kvDetail, err := kvas.NewJsonLocal(detailDestUrl)
+	if err != nil {
+		return missingIds, err
+	}
+	for _, id := range kvMain.All() {
+		if !kvDetail.Contains(id) {
+			missingIds = append(missingIds, id)
+		}
+	}
+
+	return missingIds, nil
+}
+
+func itemizeUpdated(
+	since int64,
+	pt vangogh_products.ProductType,
+	mt gog_media.Media) ([]string, error) {
+
+	updatedIds := make([]string, 0)
+
+	mainDestUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
+	if err != nil {
+		return updatedIds, err
+	}
+
+	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
+	if err != nil {
+		return updatedIds, err
+	}
+
+	updatedIds = kvMain.ModifiedAfter(since)
+
+	return updatedIds, nil
+}
+
+func itemizeMissingIncludesGames(modifiedAfter int64) ([]string, error) {
+
+	missingIncludesGames := make([]string, 0)
+
+	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
+
+	if err != nil {
+		return missingIncludesGames, err
+	}
+
+	for _, id := range vrApv2.ModifiedAfter(modifiedAfter) {
+
+		// have to use product reader and not extracts here, since extracts wouldn't be ready
+		// while we're still getting data. Attempting to minimize the impact by only querying
+		// new or updated api-product-v2 items since start to the sync
+		apv2, err := vrApv2.ApiProductV2(id)
+
+		if err != nil {
+			return missingIncludesGames, err
+		}
+
+		for _, igId := range apv2.GetIncludesGames() {
+			if !vrApv2.Contains(igId) {
+				missingIncludesGames = append(missingIncludesGames, igId)
+			}
+		}
+	}
+
+	return missingIncludesGames, nil
+}
+
+func getItems(
+	ids []string,
+	pt vangogh_products.ProductType,
+	mt gog_media.Media,
+	verbose bool) error {
+
+	if !vangogh_products.SupportsFetch(pt) {
+		return fmt.Errorf("getting %s data is not supported", pt)
+	}
+
+	if verbose {
+		log.Printf("get data for ids: %v", ids)
+	}
+
+	destUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
+	if err != nil {
+		return err
+	}
+
+	sourceUrl, err := vangogh_urls.RemoteProductsUrl(pt)
+	if err != nil {
+		return err
+	}
+
+	for _, id := range ids {
+		_, err := getItem(id, pt, mt, sourceUrl, destUrl, verbose)
+		if err != nil {
+			log.Printf("couldn't get data for %s (%s) %s: %v", pt, mt, id, err)
+		}
+	}
+	return nil
+}
+
+func getItem(
 	id string,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
@@ -103,7 +247,7 @@ func fetchItem(
 	destUrl string,
 	verbose bool) (io.Reader, error) {
 
-	log.Printf("get %s (%s) data %s", pt, mt, id)
+	fmt.Printf("get %s (%s) data %s\n", pt, mt, id)
 
 	httpClient, err := internal.HttpClient()
 	if err != nil {
@@ -144,138 +288,4 @@ func fetchItem(
 	}
 
 	return &b, nil
-}
-
-func fetchPages(
-	pt vangogh_products.ProductType,
-	mt gog_media.Media,
-	sourceUrl vangogh_urls.ProductTypeUrl,
-	destUrl string,
-	verbose bool) error {
-	totalPages := 1
-	for pp := 1; pp <= totalPages; pp++ {
-
-		rdr, err := fetchItem(strconv.Itoa(pp), pt, mt, sourceUrl, destUrl, verbose)
-		if err != nil {
-			return err
-		}
-
-		var page gog_types.Page
-		if err = json.NewDecoder(rdr).Decode(&page); err != nil {
-			return err
-		}
-
-		totalPages = page.TotalPages
-	}
-
-	return nil
-}
-
-func fetchUpdated(
-	since int64,
-	detailPt, mainPt vangogh_products.ProductType,
-	mt gog_media.Media,
-	sourceUrl vangogh_urls.ProductTypeUrl,
-	detailDestUrl string,
-	verbose bool) error {
-	log.Printf("get updated %s (%s) for %s", detailPt, mt, mainPt)
-
-	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
-	if err != nil {
-		return err
-	}
-
-	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
-	if err != nil {
-		return err
-	}
-
-	updatedIds := kvMain.ModifiedAfter(since)
-
-	if len(updatedIds) > 0 {
-		if verbose {
-			log.Printf("updated %s ids: %v", detailPt, updatedIds)
-		}
-		if err := fetchItems(updatedIds, detailPt, mt, sourceUrl, detailDestUrl, verbose); err != nil {
-			log.Println(err)
-		}
-	} else {
-		if verbose {
-			log.Printf("no updated %s data for %s (%s)\n", detailPt, mainPt, mt)
-		}
-	}
-
-	return nil
-}
-
-func fetchMissing(
-	detailPt, mainPt vangogh_products.ProductType,
-	mt gog_media.Media,
-	denyIds []string,
-	sourceUrl vangogh_urls.ProductTypeUrl,
-	detailDestUrl string,
-	verbose bool) error {
-	log.Printf("get missing %s (%s) for %s", detailPt, mt, mainPt)
-
-	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
-	if err != nil {
-		return err
-	}
-
-	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
-	if err != nil {
-		return err
-	}
-
-	kvDetail, err := kvas.NewJsonLocal(detailDestUrl)
-	if err != nil {
-		return err
-	}
-	missingIds := make([]string, 0)
-	for _, id := range kvMain.All() {
-		if !kvDetail.Contains(id) &&
-			!internal.StringsContain(denyIds, id) {
-			missingIds = append(missingIds, id)
-		}
-	}
-
-	if len(missingIds) > 0 {
-		if verbose {
-			log.Printf("missing %s ids: %v", detailPt, missingIds)
-		}
-		if err := fetchItems(missingIds, detailPt, mt, sourceUrl, detailDestUrl, verbose); err != nil {
-			log.Println(err)
-		}
-	} else {
-		if verbose {
-			log.Printf("no missing %s data for %s (%s)\n", detailPt, mainPt, mt)
-		}
-	}
-
-	return nil
-}
-
-func fetchItems(
-	ids []string,
-	pt vangogh_products.ProductType,
-	mt gog_media.Media,
-	sourceUrl vangogh_urls.ProductTypeUrl,
-	destUrl string,
-	verbose bool) error {
-
-	if !vangogh_products.SupportsFetch(pt) {
-		return fmt.Errorf("getting %s data is not supported", pt)
-	}
-
-	if verbose {
-		log.Printf("get data for ids: %v", ids)
-	}
-
-	for _, id := range ids {
-		_, err := fetchItem(id, pt, mt, sourceUrl, destUrl, verbose)
-		if err != nil {
-			log.Printf("couldn't get data for %s (%s) %s: %v", pt, mt, id, err)
-		}
-	}
-	return nil
 }

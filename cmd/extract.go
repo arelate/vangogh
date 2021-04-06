@@ -1,11 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
-	"log"
 )
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
@@ -20,8 +20,6 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 	}
 
 	for _, pt := range vangogh_products.AllLocal() {
-
-		log.Printf("extract %s", pt)
 
 		vr, err := vangogh_values.NewReader(pt, mt)
 		if err != nil {
@@ -38,6 +36,12 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		} else {
 			modifiedIds = vr.All()
 		}
+
+		if len(modifiedIds) == 0 {
+			continue
+		}
+
+		fmt.Printf("extract %s\n", pt)
 
 		for _, id := range modifiedIds {
 
