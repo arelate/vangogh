@@ -40,7 +40,8 @@ func printInfo(
 	}
 
 	for _, prop := range properties {
-		if prop == vangogh_properties.TitleProperty {
+		if prop == vangogh_properties.IdProperty ||
+			prop == vangogh_properties.TitleProperty {
 			continue
 		}
 		values, ok := propExtracts[prop].GetAll(id)
@@ -48,7 +49,8 @@ func printInfo(
 			continue
 		}
 		for _, val := range values {
-			if highlightValues[prop] != "" && !strings.Contains(val, highlightValues[prop]) {
+			highlight := highlightValues[prop]
+			if highlight != "" && !strings.Contains(strings.ToLower(val), highlight) {
 				continue
 			}
 			fmt.Printf(" %s:%v\n", prop, val)

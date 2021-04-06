@@ -48,7 +48,7 @@ func highlights(query map[string]string, matchingProps []string) map[string]stri
 			val = query[vangogh_properties.Shorthand(prop)]
 		}
 		if val != "" {
-			highlights[prop] = val
+			highlights[prop] = strings.ToLower(val)
 		}
 	}
 	return highlights
@@ -83,22 +83,21 @@ func mergeMatchingIdsProps(matchingIdsProps map[string][]string, newIdsProps map
 func matchingIds(term string, properties []string, propExtracts map[string]*froth.Stash) map[string][]string {
 	ids := make(map[string][]string, 0)
 	term = strings.ToLower(term)
-	for prop, extracts := range propExtracts {
-		for _, property := range properties {
-			if prop != property {
+	for _, property := range properties {
+
+		extracts, ok := propExtracts[property]
+		if !ok {
+			continue
+		}
+		for _, id := range extracts.All() {
+			values, ok := extracts.GetAll(id)
+			if !ok || len(values) == 0 {
 				continue
 			}
 
-			for _, id := range extracts.All() {
-				values, ok := extracts.GetAll(id)
-				if !ok || len(values) == 0 {
-					continue
-				}
-
-				for _, val := range values {
-					if strings.Contains(strings.ToLower(val), term) {
-						ids[id] = append(ids[id], prop)
-					}
+			for _, val := range values {
+				if strings.Contains(strings.ToLower(val), term) {
+					ids[id] = append(ids[id], property)
 				}
 			}
 		}
