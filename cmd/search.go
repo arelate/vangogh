@@ -22,6 +22,19 @@ func Search(query map[string]string) error {
 
 	matchingIdsProps := make(map[string][]string, 0)
 
+	// attempt to check if "text" property matches a valid id. Id is not extracted, and
+	// is present in every extract as a key. We'll use title extracts to confirm valid ID, given
+	// we've explicitly added them above.
+	titleExtracts, ok := propExtracts[vangogh_properties.TitleProperty]
+	if ok {
+		id := query[vangogh_properties.AllTextProperties]
+		if id != "" && titleExtracts.Contains(id) {
+			mergeMatchingIdsProps(
+				matchingIdsProps,
+				map[string][]string{id: {vangogh_properties.IdProperty}})
+		}
+	}
+
 	for prop, term := range query {
 		mergeMatchingIdsProps(
 			matchingIdsProps,
