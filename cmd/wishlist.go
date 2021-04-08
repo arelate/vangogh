@@ -33,25 +33,11 @@ func Wishlist(mt gog_media.Media, addProductIds, removeProductIds []string) erro
 		return err
 	}
 
-	if err := wishlistCommand(
-		addProductIds,
-		gog_urls.AddToWishlist,
-		addError,
-		addProgress,
-		httpClient,
-		vrStoreProducts,
-		titleExtracts); err != nil {
+	if err := wishlistAdd(addProductIds, httpClient, vrStoreProducts, mt, titleExtracts); err != nil {
 		return err
 	}
 
-	if err := wishlistCommand(
-		removeProductIds,
-		gog_urls.RemoveFromWishlist,
-		removeError,
-		removeProgress,
-		httpClient,
-		vrStoreProducts,
-		titleExtracts); err != nil {
+	if err := wishlistRemove(removeProductIds, httpClient, vrStoreProducts, mt, titleExtracts); err != nil {
 		return err
 	}
 
@@ -74,16 +60,60 @@ func removeProgress(title, id string) string {
 	return fmt.Sprintf("remove %s (%s) from the wishlist", title, id)
 }
 
-func wishlistCommand(
+func wishlistAdd(
+	ids []string,
+	httpClient *http.Client,
+	vrStoreProducts *vangogh_values.ValueReader,
+	mt gog_media.Media,
+	titleExtracts *froth.Stash) error {
+
+	for _, id := range ids {
+		if err := vrStoreProducts.CopyToType(id, vangogh_products.WishlistProducts, mt); err != nil {
+			return err
+		}
+	}
+
+	return remoteWishlistCommand(
+		ids,
+		gog_urls.AddToWishlist,
+		addError,
+		addProgress,
+		httpClient,
+		vrStoreProducts,
+		titleExtracts)
+}
+
+func wishlistRemove(
+	ids []string,
+	httpClient *http.Client,
+	vrStoreProducts *vangogh_values.ValueReader,
+	mt gog_media.Media,
+	titleExtracts *froth.Stash) error {
+
+	if err := removeData(ids, vangogh_products.WishlistProducts, mt); err != nil {
+		return err
+	}
+
+	return remoteWishlistCommand(
+		ids,
+		gog_urls.RemoveFromWishlist,
+		removeError,
+		removeProgress,
+		httpClient,
+		vrStoreProducts,
+		titleExtracts)
+}
+
+func remoteWishlistCommand(
 	ids []string,
 	wishlistUrl func(string) *url.URL,
 	fmtError func(string) string,
 	fmtProgress func(string, string) string,
 	httpClient *http.Client,
-	vr *vangogh_values.ValueReader,
+	vrStoreProducts *vangogh_values.ValueReader,
 	titleExtracts *froth.Stash) error {
 	for _, id := range ids {
-		if !vr.Contains(id) {
+		if !vrStoreProducts.Contains(id) {
 			log.Printf("vangogh: %s", fmtError(id))
 			continue
 		}
@@ -92,8 +122,8 @@ func wishlistCommand(
 			title = id
 		}
 		fmt.Println(fmtProgress(title, id))
-		addUrl := wishlistUrl(id)
-		resp, err := httpClient.Get(addUrl.String())
+		wUrl := wishlistUrl(id)
+		resp, err := httpClient.Get(wUrl.String())
 		if err != nil {
 			return err
 		}

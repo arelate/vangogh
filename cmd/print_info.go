@@ -20,7 +20,7 @@ func printInfo(
 	titleExtracts := propExtracts[vangogh_properties.TitleProperty]
 	title, ok := titleExtracts.Get(id)
 	if !ok {
-		fmt.Printf("no title for id %s\n", id)
+		fmt.Printf("product %s not found\n", id)
 		return
 	}
 
