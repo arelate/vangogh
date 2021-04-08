@@ -27,11 +27,11 @@ func Search(query map[string]string) error {
 	// we've explicitly added them above.
 	titleExtracts, ok := propExtracts[vangogh_properties.TitleProperty]
 	if ok {
-		id := query[vangogh_properties.AllTextProperties]
-		if id != "" && titleExtracts.Contains(id) {
+		potentialId := query[vangogh_properties.AllTextProperties]
+		if potentialId != "" && titleExtracts.Contains(potentialId) {
 			mergeMatchingIdsProps(
 				matchingIdsProps,
-				map[string][]string{id: {vangogh_properties.IdProperty}})
+				map[string][]string{potentialId: {vangogh_properties.IdProperty}})
 		}
 	}
 
