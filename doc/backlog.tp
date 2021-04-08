@@ -1,6 +1,3 @@
-wishlist management command:
-	- should we also perform local operations to avoid roundtrips and make local data (e.g. list command) more precise?
-
 series command:
 	- needs to be implemented
 	- list?
@@ -98,6 +95,8 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	wishlist management command: @done(2021-04-07)
+		- should we also perform local operations to avoid roundtrips and make local data (e.g. list command) more precise? @done(2021-04-07)
 	info improvements: @done(2021-04-07)
 		- when id doesn't exits - show this clearly @done(2021-04-07)
 	details: @done(2021-04-07)
