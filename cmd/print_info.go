@@ -48,12 +48,16 @@ func printInfo(
 		if !ok || len(values) == 0 {
 			continue
 		}
+		if len(values) > 1 && vangogh_properties.JoinPreferred(prop) {
+			fmt.Printf(" %s:%s\n", prop, strings.Join(values, ","))
+			continue
+		}
 		for _, val := range values {
 			highlight := highlightValues[prop]
 			if highlight != "" && !strings.Contains(strings.ToLower(val), highlight) {
 				continue
 			}
-			fmt.Printf(" %s:%v\n", prop, val)
+			fmt.Printf(" %s:%s\n", prop, val)
 		}
 	}
 }

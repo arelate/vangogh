@@ -9,10 +9,6 @@ list series command:
 	- info?
 	- products for series
 
-api-products-v2 tags -> genre:
-	- extract
-	- search as text
-	
 details:
 	- features
 
@@ -107,6 +103,10 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	api-products-v2 tags -> genre: @done(2021-04-07)
+		- extract @done(2021-04-07)
+		- search as text @done(2021-04-07)
+		
 	search improvements: @done(2021-04-06)
 		- add ability to search by id @done(2021-04-06)
 	rationalize working with times: @done(2021-04-05)

@@ -46,6 +46,7 @@
       "developer",
       "publisher",
       "genres",
+      "features",
       "image-id"
     ],
     "scrub-data": [
