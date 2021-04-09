@@ -1,16 +1,16 @@
-series command:
-	- needs to be implemented
-	- list?
-	- info?
-		- products for series
-
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
 	- Edit: POST /account/tags/update?tags={tags_json}
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
-	- List: ?
+	
+new command enumerate:
+	- add support for properties:
+		- series
+		- features
+		- genres
+		- tag
 
 Download files:
 	- videos
@@ -51,11 +51,7 @@ Standartize directories:
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
 Fix bugs:
-	- "list wishlist-prod" doesn't work as expected
-	- data issue: investigate why so many entries have "TEST DEVELOPER"/"TEST PUBLISHER" (search test)
-	- "Disco Elysium" issue - title has not changed even if changed on the remote side. This is due to couple factors:
-		- extract is optimized to skip existing values, can be added to scrub
-		- detail data (details, api-products-v1/v2) are never redownloaded unless missing - this can be addressed with updates system
+	No known at the moment
 	
 concurrency improvements:
 	- rewrite get-data pipeline to be concurrent:
@@ -95,6 +91,19 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	search improvements: @done(2021-04-08)
+		- conditions should be combined with "AND", not "OR" @done(2021-04-08)
+	- go run main.go search paj -pub paj results in double publisher output @done(2021-04-08) @project(Fix bugs)
+	series command: @done(2021-04-08)
+		- needs to be implemented @done(2021-04-08)
+		- list? @done(2021-04-08)
+		- info? @done(2021-04-08)
+			- products for series @done(2021-04-08)
+	- "Disco Elysium" issue - title has not changed even if changed on the remote side. This is due to couple factors: @done(2021-04-08) @project(Fix bugs)
+	- extract is optimized to skip existing values, can be added to scrub @done(2021-04-08) @project(Fix bugs)
+	- detail data (details, api-products-v1/v2) are never redownloaded unless missing - this can be addressed with updates system @done(2021-04-08) @project(Fix bugs)
+	- "list wishlist-prod" doesn't work as expected @done(2021-04-08) @project(Fix bugs)
+	- data issue: investigate why so many entries have "TEST DEVELOPER"/"TEST PUBLISHER" (search test) @done(2021-04-08) @project(Fix bugs)
 	wishlist management command: @done(2021-04-07)
 		- should we also perform local operations to avoid roundtrips and make local data (e.g. list command) more precise? @done(2021-04-07)
 	info improvements: @done(2021-04-07)

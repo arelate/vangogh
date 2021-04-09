@@ -35,11 +35,21 @@ func Search(query map[string]string) error {
 		}
 	}
 
+	scopeIds := titleExtracts.All()
+
 	for prop, term := range query {
+		matchedId := matchingIds(scopeIds, term, queryProps[prop], propExtracts)
+		scopeIds = make([]string, 0, len(matchedId))
+		for id, _ := range matchedId {
+			scopeIds = append(scopeIds, id)
+		}
 		mergeMatchingIdsProps(
 			matchingIdsProps,
-			matchingIds(term, queryProps[prop], propExtracts))
+			matchedId)
 	}
+
+	//fmt.Println(scopeIds)
+	matchingIdsProps = scopeMatchingIdsProps(matchingIdsProps, scopeIds)
 
 	for id, matchingProps := range matchingIdsProps {
 		printInfo(
@@ -88,21 +98,43 @@ func mergeMatchingIdsProps(matchingIdsProps map[string][]string, newIdsProps map
 		if _, ok := matchingIdsProps[id]; !ok {
 			matchingIdsProps[id] = props
 		} else {
-			matchingIdsProps[id] = append(matchingIdsProps[id], props...)
+			for _, prop := range props {
+				if !stringsContain(matchingIdsProps[id], prop) {
+					matchingIdsProps[id] = append(matchingIdsProps[id], prop)
+				}
+			}
 		}
 	}
 }
 
-func matchingIds(term string, properties []string, propExtracts map[string]*froth.Stash) map[string][]string {
+func scopeMatchingIdsProps(matchingIdsProps map[string][]string, scopeIds []string) map[string][]string {
+	scopedMatchingIdsProps := make(map[string][]string, 0)
+	for id, props := range matchingIdsProps {
+		if stringsContain(scopeIds, id) {
+			scopedMatchingIdsProps[id] = props
+		}
+	}
+	return scopedMatchingIdsProps
+}
+
+func matchingIds(
+	scopeIds []string,
+	term string,
+	properties []string,
+	propExtracts map[string]*froth.Stash) map[string][]string {
+
 	ids := make(map[string][]string, 0)
+
 	term = strings.ToLower(term)
+
 	for _, property := range properties {
 
 		extracts, ok := propExtracts[property]
 		if !ok {
 			continue
 		}
-		for _, id := range extracts.All() {
+		for _, id := range scopeIds {
+
 			values, ok := extracts.GetAll(id)
 			if !ok || len(values) == 0 {
 				continue

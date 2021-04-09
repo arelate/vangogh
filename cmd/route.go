@@ -31,6 +31,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		username := req.ArgVal("username")
 		password := req.ArgVal("password")
 		return Authenticate(username, password)
+	case "enumerate":
+		property := req.ArgVal("property")
+		return Enumerate(property)
 	case "get-data":
 		missing := req.Flag("missing")
 		updated := req.Flag("updated")
