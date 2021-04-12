@@ -7,7 +7,7 @@ import (
 	"github.com/arelate/vangogh_values"
 )
 
-func Info(ids []string, mt gog_media.Media, images bool) error {
+func Info(ids []string, mt gog_media.Media, images, videoId bool) error {
 	var err error
 	productTypeReaders := make(map[vangogh_products.ProductType]*vangogh_values.ValueReader)
 	for _, pt := range vangogh_products.AllLocal() {
@@ -20,6 +20,9 @@ func Info(ids []string, mt gog_media.Media, images bool) error {
 	properties := vangogh_properties.AllText()
 	if images {
 		properties = append(properties, vangogh_properties.AllImageId()...)
+	}
+	if videoId {
+		properties = append(properties, vangogh_properties.VideoIdProperty)
 	}
 
 	propExtracts, err := vangogh_properties.PropExtracts(properties)

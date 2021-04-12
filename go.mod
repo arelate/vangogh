@@ -6,7 +6,7 @@ require (
 	github.com/arelate/gog_auth v0.1.3-alpha
 	github.com/arelate/gog_media v0.1.3-alpha
 	github.com/arelate/gog_types v0.1.8-alpha
-	github.com/arelate/gog_urls v0.1.8-alpha
+	github.com/arelate/gog_urls v0.1.9-alpha
 	github.com/arelate/vangogh_images v0.1.1-alpha
 	github.com/arelate/vangogh_pages v0.1.0-alpha
 	github.com/arelate/vangogh_products v0.1.3-alpha

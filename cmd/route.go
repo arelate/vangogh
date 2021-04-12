@@ -44,9 +44,18 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		denyIdsFile := req.ArgVal("deny-ids-file")
 		denyIds := internal.ReadLines(denyIdsFile)
 		return GetData(ids, denyIds, pt, mt, since, missing, updated, verbose)
+	case "get-images":
+		imageType := req.ArgVal("image-type")
+		it := vangogh_images.Parse(imageType)
+		all := req.Flag("all")
+		return GetImages(ids, it, nil, all)
+	case "get-videos":
+		all := req.Flag("all")
+		return GetVideos(ids, all)
 	case "info":
 		images := req.Flag("images")
-		return Info(ids, mt, images)
+		videoId := req.Flag("video-id")
+		return Info(ids, mt, images, videoId)
 	case "list":
 		var modifiedSince int64 = 0
 		modifiedStr := req.ArgVal("modified")
@@ -67,11 +76,6 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			}
 		}
 		return Search(query)
-	case "get-images":
-		imageType := req.ArgVal("image-type")
-		it := vangogh_images.Parse(imageType)
-		all := req.Flag("all")
-		return GetImages(ids, it, nil, all)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)

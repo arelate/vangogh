@@ -18,59 +18,34 @@ var cloBytes []byte
 
 func main() {
 
-	//apReader, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
+	//reader, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//for _, id := range apReader.All() {
-	//	apv2, err := apReader.ApiProductV2(id)
+	//for _, id := range reader.All() {
+	//	prod, err := reader.ApiProductV2(id)
 	//	if err != nil {
 	//		log.Fatal(err)
 	//	}
 	//
-	//	if !strings.Contains(apv2.Embedded.Product.Title, "Pajama") {
-	//		continue
-	//	}
-	//
-	//	fmt.Println(id, apv2.Embedded.Product.Title, apv2.GetIncludedGames())
+	//	fmt.Println(id, prod.GetVideoIds())
 	//}
 
-	//for _, property := range vangogh_properties.AllExtracted() {
-	//	stash, err := froth.NewStash(vangogh_urls.ExtractsDir(), property)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
+	//videoIdsExtracts, err := froth.NewStash(vangogh_urls.ExtractsDir(), vangogh_properties.VideoIdProperty)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 	//
-	//	for _, id := range stash.All() {
-	//		values, _ := stash.GetAll(id)
-	//		for _, val := range values {
-	//			if val == "" {
-	//				fmt.Println(id, property)
-	//			}
-	//		}
+	//for _, id := range videoIdsExtracts.All() {
+	//	values, ok := videoIdsExtracts.GetAll(id)
+	//	if !ok || len(values) < 2 {
+	//		continue
 	//	}
+	//	fmt.Println(id, values)
 	//}
 
 	//start := time.Now()
-	//fmt.Println(len(imageIds))
-
-	//vr, err := vangogh_values.NewReader(
-	//	vangogh_products.StoreProducts,
-	//	gog_media.Game)
-	//
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//for _, id := range vr.All() {
-	//	sp, err := vr.StoreProduct(id)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//
-	//	fmt.Println(sp.Title, sp.Rating)
-	//}
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 

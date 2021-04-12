@@ -5,16 +5,23 @@ tags management command:
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
 	
+add operating system:
+	- plumb the property
+	
 new command enumerate:
 	- add support for properties:
-		- series
-		- features
-		- genres
-		- tag
+		- series @done(2021-04-08)
+		- features @done(2021-04-08)
+		- genres @done(2021-04-08)
+		- tags
 
 Download files:
 	- videos
-		- youtube-dl?
+		- extract property
+		- youtube-dl using exec.LookPath to confirm it's available
+		- download with 'youtube-dl {id} --id'
+		- try single letter partition, assuming omst products have one or two videos (confirm with data)
+		- use approach similar to images - itemize all local files to avoid reownloading same files
 	- product files by OS, language:
 		- create helper for Details that returns collection of strucutred data per language 
 	
