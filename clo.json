@@ -16,7 +16,7 @@
     ],
     "extract": [
       "media=game_,movie",
-      "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,includes-games,genres,features,series,video-id"
+      "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,includes-games,genres,features,series,video-id,os"
     ],
     "get-images": [
       "image-type_!=image,box-art,logo,icon,background,galaxy-background,screenshots",
@@ -41,7 +41,7 @@
     "list": [
       "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
-      "property...=developers,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating,includes-games,genres,features,series,video-id",
+      "property...=developers,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating,includes-games,genres,features,series,video-id,os",
       "modified"
     ],
     "enumerate": [
@@ -57,7 +57,8 @@
       "features",
       "series",
       "image-id",
-      "video-id"
+      "video-id",
+      "os"
     ],
     "scrub-data": [
       "media=game_,movie",

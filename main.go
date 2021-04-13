@@ -18,20 +18,8 @@ var cloBytes []byte
 
 func main() {
 
-	//reader, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	//videoIds := make(map[string][]string, 0)
 	//
-	//for _, id := range reader.All() {
-	//	prod, err := reader.ApiProductV2(id)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//
-	//	fmt.Println(id, prod.GetVideoIds())
-	//}
-
 	//videoIdsExtracts, err := froth.NewStash(vangogh_urls.ExtractsDir(), vangogh_properties.VideoIdProperty)
 	//if err != nil {
 	//	log.Fatal(err)
@@ -42,7 +30,18 @@ func main() {
 	//	if !ok || len(values) < 2 {
 	//		continue
 	//	}
-	//	fmt.Println(id, values)
+	//	for _, val := range values {
+	//		key := strings.ToLower(val[0:1])
+	//		if videoIds[key] == nil {
+	//			videoIds[key] = make([]string, 0)
+	//		}
+	//		videoIds[key] = append(videoIds[key], val)
+	//	}
+	//}
+	//
+	//fmt.Println(len(videoIds))
+	//for key, vals := range videoIds {
+	//	fmt.Println(key, len(vals))
 	//}
 
 	//start := time.Now()

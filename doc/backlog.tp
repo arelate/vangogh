@@ -5,8 +5,9 @@ tags management command:
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
 	
-add operating system:
-	- plumb the property
+add more properties:
+	- operating system
+	- language
 	
 new command enumerate:
 	- add support for properties:
