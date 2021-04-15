@@ -6,7 +6,7 @@
       "password"
     ],
     "get-data": [
-      "product-type_!=store-page,account-page,wishlist-page,details,api-products-v1,api-products-v2",
+      "product-type!_=store-page,account-page,wishlist-page,details,api-products-v1,api-products-v2",
       "media=game_,movie",
       "id...",
       "missing",
@@ -19,7 +19,7 @@
       "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,includes-games,genres,features,series,video-id,os"
     ],
     "get-images": [
-      "image-type_!=image,box-art,logo,icon,background,galaxy-background,screenshots",
+      "image-type!_=image,box-art,logo,icon,background,galaxy-background,screenshots",
       "media=game_,movie",
       "id...",
       "all"
@@ -39,7 +39,7 @@
       "video-id"
     ],
     "list": [
-      "product-type_!=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
+      "product-type!_=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
       "media=game_,movie",
       "property...=developers,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating,includes-games,genres,features,series,video-id,os",
       "modified"

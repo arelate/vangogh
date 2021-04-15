@@ -1,3 +1,11 @@
+clo improvements:
+	- DRY clo.json
+		- add preprocess step to replace placeholders with app provided values
+		- pass a map[string]func()[]string to plug callbacks to get values
+		- {join:} to concatenate values as csv
+		- {list:} to use as individual values
+		- add ability to specify first value as a default and transform callback as needed, perhaps like {join_1:media}, {list_1:search_properties}
+
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
@@ -6,8 +14,9 @@ tags management command:
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
 	
 add more properties:
-	- operating system
+	- operating system @done(2021-04-12)
 	- language
+		- this might need refinement happening for tags @blocked
 	
 new command enumerate:
 	- add support for properties:
@@ -18,7 +27,7 @@ new command enumerate:
 
 Download files:
 	- videos
-		- extract property
+		- extract property @done(2021-04-12)
 		- youtube-dl using exec.LookPath to confirm it's available
 		- download with 'youtube-dl {id} --id'
 		- try single letter partition, assuming omst products have one or two videos (confirm with data)

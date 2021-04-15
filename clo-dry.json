@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "cmd": {
+    "auth": [
+      "username",
+      "password"
+    ],
+    "get-data": [
+      "product-type!_={join:remote-types}",
+      "media={join_1:media}",
+      "id...",
+      "missing",
+      "updated",
+      "deny-ids-file",
+      "verbose"
+    ],
+    "extract": [
+      "media={join_1:media}",
+      "property...={join:extracted-properties}"
+    ],
+    "get-images": [
+      "image-type!_={join:image-types}",
+      "media={join_1:media}",
+      "id...",
+      "all"
+    ],
+    "get-videos": [
+      "id...",
+      "all"
+    ],
+    "get-files": [
+      "os=current_,windows,macos,linux",
+      "lang=en_,ru"
+    ],
+    "info": [
+      "media={join_1:media}",
+      "id!_...",
+      "images",
+      "video-id"
+    ],
+    "list": [
+      "product-type_!={join:local-types}",
+      "media={join_1:media}",
+      "property...={join:all-properties-no-title}",
+      "modified"
+    ],
+    "enumerate": [
+      "property_={join:enumerate-properties}"
+    ],
+    "search": [
+      "media={join_1:media}",
+      "{list_1:search-properties}"
+    ],
+    "scrub-data": [
+      "media={join_1:media}",
+      "fix"
+    ],
+    "sync": [
+      "media={join_1:media}",
+      "no-data",
+      "images",
+      "screenshots",
+      "all"
+    ],
+    "wishlist": [
+      "media={join_1:media}",
+      "add...",
+      "remove..."
+    ]
+  },
+  "help": {}
+}
