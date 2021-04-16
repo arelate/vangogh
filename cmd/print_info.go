@@ -25,11 +25,11 @@ func printInfo(
 		return
 	}
 
-	newSticker := ""
 	if isNew {
-		newSticker = "[NEW]"
+		title = "[NEW] " + title
 	}
-	fmt.Println(id, newSticker, title)
+
+	fmt.Println(id, title)
 
 	if productTypeReaders != nil {
 		ptStrings := make([]string, 0)

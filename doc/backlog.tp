@@ -1,3 +1,6 @@
+printInfo improvements:
+	- highlight items that were created, not just changed for a sync session
+
 clo improvements:
 	- DRY clo.json
 		- add preprocess step to replace placeholders with app provided values
