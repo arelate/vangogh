@@ -12,6 +12,7 @@ import (
 
 func printInfo(
 	id string,
+	isNew bool,
 	highlightValues map[string]string,
 	properties []string,
 	propExtracts map[string]*froth.Stash,
@@ -24,7 +25,11 @@ func printInfo(
 		return
 	}
 
-	fmt.Println(id, title)
+	newSticker := ""
+	if isNew {
+		newSticker = "[NEW]"
+	}
+	fmt.Println(id, newSticker, title)
 
 	if productTypeReaders != nil {
 		ptStrings := make([]string, 0)

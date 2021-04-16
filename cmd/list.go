@@ -14,7 +14,7 @@ import (
 //Provided properties will be printed for each product (if supported) in addition to default ID, Title.
 func List(
 	ids []string,
-	modifiedSince int64,
+	modifiedAfter int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	properties ...string) error {
@@ -41,9 +41,9 @@ func List(
 
 	//rules for collecting IDs to print:
 	//1. start with user provided IDs
-	//2. if createdSince has been provided - add products created since that time
-	//3. if modifiedSince has been provided - add products modified (not by creation!) since that time
-	//4. if no IDs have been collected and the request have not provided createdSince or modifiedSince:
+	//2. if createdAfter has been provided - add products created since that time
+	//3. if modifiedAfter has been provided - add products modified (not by creation!) since that time
+	//4. if no IDs have been collected and the request have not provided createdAfter or modifiedAfter:
 	// add all product IDs
 
 	if ids == nil {
@@ -55,15 +55,18 @@ func List(
 		return err
 	}
 
-	if modifiedSince > 0 {
-		ids = append(ids, vr.ModifiedAfter(modifiedSince)...)
+	var createdAfter []string
+
+	if modifiedAfter > 0 {
+		createdAfter = vr.CreatedAfter(modifiedAfter)
+		ids = append(ids, vr.ModifiedAfter(modifiedAfter)...)
 		if len(ids) == 0 {
-			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedSince, 0).Format(time.Kitchen))
+			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedAfter, 0).Format(time.Kitchen))
 		}
 	}
 
 	if len(ids) == 0 &&
-		modifiedSince == 0 {
+		modifiedAfter == 0 {
 		ids = vr.All()
 	}
 
@@ -72,8 +75,10 @@ func List(
 
 	//use common printInfo func to display product information by ID
 	for _, id := range ids {
+		isNew := stringsContain(createdAfter, id)
 		printInfo(
 			id,
+			isNew,
 			nil,
 			vangogh_properties.Supported(pt, properties),
 			propExtracts,

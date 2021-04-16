@@ -54,6 +54,7 @@ func Search(query map[string]string) error {
 	for id, matchingProps := range matchingIdsProps {
 		printInfo(
 			id,
+			false,
 			highlights(query, matchingProps),
 			matchingProps,
 			propExtracts,
