@@ -31,9 +31,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		username := req.ArgVal("username")
 		password := req.ArgVal("password")
 		return Authenticate(username, password)
-	case "enumerate":
+	case "digest":
 		property := req.ArgVal("property")
-		return Enumerate(property)
+		return Digest(property)
 	case "get-data":
 		missing := req.Flag("missing")
 		updated := req.Flag("updated")
@@ -70,7 +70,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return List(ids, modifiedSince, pt, mt, properties...)
 	case "search":
 		query := make(map[string]string)
-		for _, prop := range vangogh_properties.AllSearchable() {
+		for _, prop := range vangogh_properties.Searchable() {
 			if values, ok := req.Arguments[prop]; ok && len(values) > 0 {
 				query[prop] = values[0]
 			}

@@ -8,7 +8,7 @@ import (
 
 func Search(query map[string]string) error {
 
-	queryProps := vangogh_properties.AllQuery()
+	queryProps := vangogh_properties.Query()
 
 	properties := []string{vangogh_properties.TitleProperty}
 	for prop, _ := range query {
@@ -27,7 +27,7 @@ func Search(query map[string]string) error {
 	// we've explicitly added them above.
 	titleExtracts, ok := propExtracts[vangogh_properties.TitleProperty]
 	if ok {
-		potentialId := query[vangogh_properties.AllTextProperties]
+		potentialId := query[vangogh_properties.TextProperties]
 		if potentialId != "" && titleExtracts.Contains(potentialId) {
 			mergeMatchingIdsProps(
 				matchingIdsProps,

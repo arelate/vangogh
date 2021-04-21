@@ -7,7 +7,7 @@ import (
 	"sort"
 )
 
-func Enumerate(property string) error {
+func Digest(property string) error {
 
 	extracts, err := froth.NewStash(vangogh_urls.ExtractsDir(), property)
 	if err != nil {

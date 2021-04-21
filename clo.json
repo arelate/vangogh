@@ -6,8 +6,8 @@
       "password"
     ],
     "get-data": [
-      "product-type!_=store-page,account-page,wishlist-page,details,api-products-v1,api-products-v2",
-      "media=game_,movie",
+      "product-type!_={remote-product-types}",
+      "media={_media}",
       "id...",
       "missing",
       "updated",
@@ -15,12 +15,12 @@
       "verbose"
     ],
     "extract": [
-      "media=game_,movie",
-      "property...=title,developer,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,includes-games,genres,features,series,video-id,os"
+      "media={_media}",
+      "property...={extracted-properties}"
     ],
     "get-images": [
-      "image-type!_=image,box-art,logo,icon,background,galaxy-background,screenshots",
-      "media=game_,movie",
+      "image-type!_={image-types}",
+      "media={_media}",
       "id...",
       "all"
     ],
@@ -33,46 +33,37 @@
       "lang=en_,ru"
     ],
     "info": [
-      "media=game_,movie",
+      "media={_media}",
       "id!_...",
       "images",
       "video-id"
     ],
     "list": [
-      "product-type!_=store-products,account-products,wishlist-products,details,api-products-v1,api-products-v2",
-      "media=game_,movie",
-      "property...=developers,publisher,image,box-art,logo,icon,background,galaxy-background,screenshots,rating,includes-games,genres,features,series,video-id,os",
+      "product-type_!={local-product-types}",
+      "media={_media}",
+      "property...={all-properties}",
       "modified"
     ],
-    "enumerate": [
-      "property_=developers,publisher,genres,features,series"
+    "digest": [
+      "property_={one-to-many-properties}"
     ],
     "search": [
-      "media=game_,movie",
-      "text_",
-      "title",
-      "developers",
-      "publisher",
-      "genres",
-      "features",
-      "series",
-      "image-id",
-      "video-id",
-      "os"
+      "media={_media}",
+      "{_searchable-properties}"
     ],
     "scrub-data": [
-      "media=game_,movie",
+      "media={_media}",
       "fix"
     ],
     "sync": [
-      "media=game_,movie",
+      "media={_media}",
       "no-data",
       "images",
       "screenshots",
       "all"
     ],
     "wishlist": [
-      "media=game_,movie",
+      "media={_media}",
       "add...",
       "remove..."
     ]

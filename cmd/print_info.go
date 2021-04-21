@@ -26,7 +26,7 @@ func printInfo(
 	}
 
 	if isNew {
-		title = "[NEW] " + title
+		title = fmt.Sprintf("[NEW] %s", title)
 	}
 
 	fmt.Println(id, title)

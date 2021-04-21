@@ -1,5 +1,5 @@
-printInfo improvements:
-	- highlight items that were created, not just changed for a sync session
+diff data changes:
+	- when some piece of data changes, consider creating and storing a diff for reference
 
 clo improvements:
 	- DRY clo.json
@@ -17,20 +17,15 @@ tags management command:
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
 	
 add more properties:
-	- operating system @done(2021-04-12)
 	- language
 		- this might need refinement happening for tags @blocked
 	
 new command enumerate:
 	- add support for properties:
-		- series @done(2021-04-08)
-		- features @done(2021-04-08)
-		- genres @done(2021-04-08)
 		- tags
 
 Download files:
 	- videos
-		- extract property @done(2021-04-12)
 		- youtube-dl using exec.LookPath to confirm it's available
 		- download with 'youtube-dl {id} --id'
 		- try single letter partition, assuming omst products have one or two videos (confirm with data)
@@ -111,6 +106,13 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	printInfo improvements: @done(2021-04-16)
+		- highlight items that were created, not just changed for a sync session @done(2021-04-16)
+	- operating system @done(2021-04-12) @project(add more properties)
+	- series @done(2021-04-08) @project(new command enumerate)
+	- features @done(2021-04-08) @project(new command enumerate)
+	- genres @done(2021-04-08) @project(new command enumerate)
+	- extract property @done(2021-04-12) @project(Download files)
 	search improvements: @done(2021-04-08)
 		- conditions should be combined with "AND", not "OR" @done(2021-04-08)
 	- go run main.go search paj -pub paj results in double publisher output @done(2021-04-08) @project(Fix bugs)

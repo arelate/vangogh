@@ -11,7 +11,7 @@ import (
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
 
 	if len(properties) == 0 {
-		properties = vangogh_properties.AllExtracted()
+		properties = vangogh_properties.Extracted()
 	}
 
 	propExtracts, err := vangogh_properties.PropExtracts(properties)
@@ -19,7 +19,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		return err
 	}
 
-	for _, pt := range vangogh_products.AllLocal() {
+	for _, pt := range vangogh_products.Local() {
 
 		vr, err := vangogh_values.NewReader(pt, mt)
 		if err != nil {

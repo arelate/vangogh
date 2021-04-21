@@ -10,16 +10,16 @@ import (
 func Info(ids []string, mt gog_media.Media, images, videoId bool) error {
 	var err error
 	productTypeReaders := make(map[vangogh_products.ProductType]*vangogh_values.ValueReader)
-	for _, pt := range vangogh_products.AllLocal() {
+	for _, pt := range vangogh_products.Local() {
 		productTypeReaders[pt], err = vangogh_values.NewReader(pt, mt)
 		if err != nil {
 			return err
 		}
 	}
 
-	properties := vangogh_properties.AllText()
+	properties := vangogh_properties.Text()
 	if images {
-		properties = append(properties, vangogh_properties.AllImageId()...)
+		properties = append(properties, vangogh_properties.ImageId()...)
 	}
 	if videoId {
 		properties = append(properties, vangogh_properties.VideoIdProperty)

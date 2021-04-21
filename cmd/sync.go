@@ -17,14 +17,14 @@ func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 
 	if !noData {
 		// get paginated data
-		for _, pt := range vangogh_products.AllPaged() {
+		for _, pt := range vangogh_products.Paged() {
 			if err := GetData(nil, nil, pt, mt, syncStart, false, false, verbose); err != nil {
 				return err
 			}
 		}
 
 		// get main - detail data
-		for _, pt := range vangogh_products.AllDetail() {
+		for _, pt := range vangogh_products.Detail() {
 			denyIds := internal.ReadLines(vangogh_urls.Denylist(pt))
 			if err := GetData(nil, denyIds, pt, mt, syncStart, true, true, verbose); err != nil {
 				return err
@@ -32,7 +32,7 @@ func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 		}
 
 		// extract data
-		if err := Extract(syncStart, mt, vangogh_properties.AllExtracted()); err != nil {
+		if err := Extract(syncStart, mt, vangogh_properties.Extracted()); err != nil {
 			return err
 		}
 	}
@@ -61,7 +61,7 @@ func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 
 func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
 	fmt.Println("sync summary:")
-	for _, pt := range vangogh_products.AllLocal() {
+	for _, pt := range vangogh_products.Local() {
 		fmt.Printf("new or updated %s (%s) during this sync:\n", pt, mt)
 		if err := List(nil, timestamp, pt, mt); err != nil {
 			return err

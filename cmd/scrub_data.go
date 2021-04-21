@@ -11,7 +11,7 @@ import (
 func ScrubData(mt gog_media.Media, fix bool) error {
 
 	fmt.Println("split products missing from the paged data:")
-	for _, pagedPt := range vangogh_products.AllPaged() {
+	for _, pagedPt := range vangogh_products.Paged() {
 
 		pagedIds := make([]string, 0)
 		vrPaged, err := vangogh_values.NewReader(pagedPt, mt)
