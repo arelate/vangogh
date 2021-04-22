@@ -2,12 +2,18 @@ diff data changes:
 	- when some piece of data changes, consider creating and storing a diff for reference
 
 clo improvements:
-	- DRY clo.json
-		- add preprocess step to replace placeholders with app provided values
-		- pass a map[string]func()[]string to plug callbacks to get values
-		- {join:} to concatenate values as csv
-		- {list:} to use as individual values
-		- add ability to specify first value as a default and transform callback as needed, perhaps like {join_1:media}, {list_1:search_properties}
+	- DRY clo.json @done(2021-04-20)
+		- add preprocess step to replace placeholders with app provided values @done(2021-04-20)
+		- pass a map[string]func()[]string to plug callbacks to get values @done(2021-04-20)
+		- {join:} to concatenate values as csv @done(2021-04-20)
+		- {list:} to use as individual values @done(2021-04-20)
+		- add ability to specify first value as a default and transform callback as needed, perhaps like {join_1:media}, {list_1:search_properties} @done(2021-04-20)
+		- add tests
+		
+add owned command:
+	- check the product in account-products
+	- if not found - check includes-games and ownership of those
+	- consider this to be the property that's extracted in a special way (see above)
 
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}

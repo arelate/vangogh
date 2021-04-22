@@ -7,7 +7,7 @@
     ],
     "get-data": [
       "product-type!_={remote-product-types}",
-      "media={_media}",
+      "media={media_}",
       "id...",
       "missing",
       "updated",
@@ -15,12 +15,12 @@
       "verbose"
     ],
     "extract": [
-      "media={_media}",
+      "media={media_}",
       "property...={extracted-properties}"
     ],
     "get-images": [
       "image-type!_={image-types}",
-      "media={_media}",
+      "media={media_}",
       "id...",
       "all"
     ],
@@ -33,14 +33,14 @@
       "lang=en_,ru"
     ],
     "info": [
-      "media={_media}",
+      "media={media_}",
       "id!_...",
       "images",
       "video-id"
     ],
     "list": [
       "product-type_!={local-product-types}",
-      "media={_media}",
+      "media={media_}",
       "property...={all-properties}",
       "modified"
     ],
@@ -48,22 +48,22 @@
       "property_={one-to-many-properties}"
     ],
     "search": [
-      "media={_media}",
-      "{_searchable-properties}"
+      "media={media_}",
+      "{searchable-properties_}"
     ],
     "scrub-data": [
-      "media={_media}",
+      "media={media_}",
       "fix"
     ],
     "sync": [
-      "media={_media}",
+      "media={media_}",
       "no-data",
       "images",
       "screenshots",
       "all"
     ],
     "wishlist": [
-      "media={_media}",
+      "media={media_}",
       "add...",
       "remove..."
     ]
