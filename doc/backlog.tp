@@ -1,34 +1,45 @@
-diff data changes:
-	- when some piece of data changes, consider creating and storing a diff for reference
+resolve DLC questions:
+	- is there an existing update that happens to account-product when DLC is purchased?
+	- if not - investigate owned.json and whether it contains owned DLCs
+	- if not - try to figure out how store pages get "in library for DLCs"
+	- in general - understand and document the relation between store-product DLCs and account-product/details/api-product-vx
 
-clo improvements:
-	- DRY clo.json @done(2021-04-20)
-		- add preprocess step to replace placeholders with app provided values @done(2021-04-20)
-		- pass a map[string]func()[]string to plug callbacks to get values @done(2021-04-20)
-		- {join:} to concatenate values as csv @done(2021-04-20)
-		- {list:} to use as individual values @done(2021-04-20)
-		- add ability to specify first value as a default and transform callback as needed, perhaps like {join_1:media}, {list_1:search_properties} @done(2021-04-20)
-		- add tests
-		
 add owned command:
 	- check the product in account-products
 	- if not found - check includes-games and ownership of those
 	- consider this to be the property that's extracted in a special way (see above)
 
+add a summary command:
+	- print what has changed since provided timestamp
+	- group changes per product and highlight what changed for a product-type (e.g. new: wishlist-products, updated: store-product)
+	- if there are diffs available - add flag to show those
+	- automatically run summary after sync
+
+rename digest to distinct command:
+	- add support for properties:
+		- tags
+
+documentation investment:
+	- add clo.json help for stable commands
+	- generate MD/HTML for help using clo to use in README
+
 tags management command:
+	- need to implement related extracts for tag_id (tag_name)
+	- implement a replaced properties whenever we display tag_id - actually use tag_name
+		- and vice a versa for input
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
 	- Edit: POST /account/tags/update?tags={tags_json}
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
+
+diff data changes:
+	- when some piece of data changes, consider storing a previous (timestamped) version
+	- allow creating a diff between versions
 	
 add more properties:
 	- language
-		- this might need refinement happening for tags @blocked
-	
-new command enumerate:
-	- add support for properties:
-		- tags
+		- this would need refinement happening for tags @blocked
 
 Download files:
 	- videos
@@ -39,6 +50,10 @@ Download files:
 	- product files by OS, language:
 		- create helper for Details that returns collection of strucutred data per language 
 	
+kvas improvements:
+	- rewrite to support concurrent operations
+	- provide a REST API
+
 dolo improvements:
 	- rewrite dolo to support concurrent ranges downloads
 	- return report that contains:
@@ -112,6 +127,14 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	clo improvements: @done(2021-04-21)
+	- DRY clo.json @done(2021-04-20)
+		- add preprocess step to replace placeholders with app provided values @done(2021-04-20)
+		- pass a map[string]func()[]string to plug callbacks to get values @done(2021-04-20)
+		- {join:} to concatenate values as csv @done(2021-04-20)
+		- {list:} to use as individual values @done(2021-04-20)
+		- add ability to specify first value as a default and transform callback as needed, perhaps like {join_1:media}, {list_1:search_properties} @done(2021-04-20)
+		- add tests @done(2021-04-21)
 	printInfo improvements: @done(2021-04-16)
 		- highlight items that were created, not just changed for a sync session @done(2021-04-16)
 	- operating system @done(2021-04-12) @project(add more properties)
@@ -141,7 +164,6 @@ Archive:
 	api-products-v2 tags -> genre: @done(2021-04-07)
 		- extract @done(2021-04-07)
 		- search as text @done(2021-04-07)
-		
 	search improvements: @done(2021-04-06)
 		- add ability to search by id @done(2021-04-06)
 	rationalize working with times: @done(2021-04-05)
