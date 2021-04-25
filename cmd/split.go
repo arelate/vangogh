@@ -12,25 +12,25 @@ import (
 	"strconv"
 )
 
-func split(pagedPt vangogh_products.ProductType, mt gog_media.Media, timestamp int64) error {
-	vrPaged, err := vangogh_values.NewReader(pagedPt, mt)
+func split(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp int64) error {
+	vrPaged, err := vangogh_values.NewReader(sourcePt, mt)
 	if err != nil {
 		return err
 	}
 
-	modifiedPageIds := vrPaged.ModifiedAfter(timestamp)
-	if len(modifiedPageIds) == 0 {
-		fmt.Printf("skip split for not modified %s (%s) pages\n", pagedPt, mt)
+	modifiedIds := vrPaged.ModifiedAfter(timestamp)
+	if len(modifiedIds) == 0 {
+		fmt.Printf("skip split for not modified %s (%s)\n", sourcePt, mt)
 		return nil
 	}
 
-	for _, page := range modifiedPageIds {
+	for _, id := range modifiedIds {
 
-		splitPt := vangogh_products.SplitType(pagedPt)
+		splitPt := vangogh_products.SplitType(sourcePt)
 
-		fmt.Printf("split %s (%s) %s into %s\n", pagedPt, mt, page, splitPt)
+		fmt.Printf("split %s (%s) %s into %s\n", sourcePt, mt, id, splitPt)
 
-		productsGetter, err := vrPaged.ProductGetter(page)
+		productsGetter, err := vrPaged.ProductsGetter(id)
 
 		if err != nil {
 			return err

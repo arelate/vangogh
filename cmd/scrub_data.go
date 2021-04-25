@@ -19,7 +19,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			return err
 		}
 		for _, id := range vrPaged.All() {
-			productGetter, err := vrPaged.ProductGetter(id)
+			productGetter, err := vrPaged.ProductsGetter(id)
 			if err != nil {
 				return err
 			}

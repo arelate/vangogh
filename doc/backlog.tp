@@ -1,8 +1,12 @@
 resolve DLC questions:
-	- is there an existing update that happens to account-product when DLC is purchased?
+	- is there an existing update that happens to account-product when DLC is purchased? @done(2021-04-24)
 	- if not - investigate owned.json and whether it contains owned DLCs
-	- if not - try to figure out how store pages get "in library for DLCs"
-	- in general - understand and document the relation between store-product DLCs and account-product/details/api-product-vx
+		- https://menu.gog.com/v1/account/licences
+		- create a new remote-product-type
+		- split into individual licence products for created-date purposes
+		- make this main type to detail types account-products, details - if not present, query includes-games/requires-games
+	- if not - try to figure out how store pages get "in library for DLCs" @done(2021-04-24)
+	- in general - understand and document the relation between store-product DLCs and account-product/details/api-product-vx @done(2021-04-24)
 
 add owned command:
 	- check the product in account-products
@@ -15,7 +19,7 @@ add a summary command:
 	- if there are diffs available - add flag to show those
 	- automatically run summary after sync
 
-rename digest to distinct command:
+improvements to the digest command:
 	- add support for properties:
 		- tags
 
@@ -87,7 +91,7 @@ Standartize directories:
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
 Fix bugs:
-	No known at the moment
+	- search by id doesn't work
 	
 concurrency improvements:
 	- rewrite get-data pipeline to be concurrent:

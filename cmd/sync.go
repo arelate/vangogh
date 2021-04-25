@@ -16,14 +16,16 @@ func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 	syncStart := time.Now().Unix()
 
 	if !noData {
-		// get paginated data
-		for _, pt := range vangogh_products.Paged() {
+		//get array and paged data
+		paData := vangogh_products.Array()
+		paData = append(paData, vangogh_products.Paged()...)
+		for _, pt := range paData {
 			if err := GetData(nil, nil, pt, mt, syncStart, false, false, verbose); err != nil {
 				return err
 			}
 		}
 
-		// get main - detail data
+		//get main - detail data
 		for _, pt := range vangogh_products.Detail() {
 			denyIds := internal.ReadLines(vangogh_urls.Denylist(pt))
 			if err := GetData(nil, denyIds, pt, mt, syncStart, true, true, verbose); err != nil {
@@ -31,7 +33,7 @@ func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
 			}
 		}
 
-		// extract data
+		//extract data
 		if err := Extract(syncStart, mt, vangogh_properties.Extracted()); err != nil {
 			return err
 		}

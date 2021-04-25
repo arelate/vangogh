@@ -15,7 +15,7 @@ import (
 	"log"
 )
 
-//GetData fetches remote metadata from GOG.com and stores locally.
+//GetData gets remote data from GOG.com and stores as local products (splitting as paged data if needed)
 func GetData(
 	ids []string,
 	denyIds []string,
@@ -58,8 +58,15 @@ func GetData(
 		}
 	}
 
-	if vangogh_products.Paginated(pt) {
+	if vangogh_products.IsPaged(pt) {
 		if err := vangogh_pages.GetAllPages(httpClient, pt, mt); err != nil {
+			return err
+		}
+		return split(pt, mt, since)
+	}
+
+	if vangogh_products.IsArray(pt) {
+		if err := getItems([]string{vangogh_products.Licences.String()}, pt, mt, verbose); err != nil {
 			return err
 		}
 		return split(pt, mt, since)
@@ -212,7 +219,7 @@ func getItems(
 	mt gog_media.Media,
 	verbose bool) error {
 
-	if !vangogh_products.SupportsFetch(pt) {
+	if !vangogh_products.SupportsGetItems(pt) {
 		return fmt.Errorf("getting %s data is not supported", pt)
 	}
 
