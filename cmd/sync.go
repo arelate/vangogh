@@ -11,9 +11,14 @@ import (
 	"time"
 )
 
-func Sync(mt gog_media.Media, noData, images, screenshots, verbose bool) error {
+func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, verbose bool) error {
 
-	syncStart := time.Now().Unix()
+	var syncStart int64
+	if sinceHoursAgo > 0 {
+		syncStart = time.Now().Unix() - int64(sinceHoursAgo*60*60)
+	} else {
+		syncStart = time.Now().Unix()
+	}
 
 	if !noData {
 		//get array and paged data

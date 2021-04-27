@@ -1,18 +1,3 @@
-resolve DLC questions:
-	- is there an existing update that happens to account-product when DLC is purchased? @done(2021-04-24)
-	- if not - investigate owned.json and whether it contains owned DLCs
-		- https://menu.gog.com/v1/account/licences
-		- create a new remote-product-type
-		- split into individual licence products for created-date purposes
-		- make this main type to detail types account-products, details - if not present, query includes-games/requires-games
-	- if not - try to figure out how store pages get "in library for DLCs" @done(2021-04-24)
-	- in general - understand and document the relation between store-product DLCs and account-product/details/api-product-vx @done(2021-04-24)
-
-add owned command:
-	- check the product in account-products
-	- if not found - check includes-games and ownership of those
-	- consider this to be the property that's extracted in a special way (see above)
-
 add a summary command:
 	- print what has changed since provided timestamp
 	- group changes per product and highlight what changed for a product-type (e.g. new: wishlist-products, updated: store-product)
@@ -46,6 +31,7 @@ add more properties:
 		- this would need refinement happening for tags @blocked
 
 Download files:
+	- video thumbnails
 	- videos
 		- youtube-dl using exec.LookPath to confirm it's available
 		- download with 'youtube-dl {id} --id'
@@ -131,6 +117,25 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	add owned command: @done(2021-04-26)
+		- check the product in account-products / licence-products @done(2021-04-26)
+		- if not found - check includes-games and ownership of those @done(2021-04-26)
+		- consider this to be the property that's extracted in a special way (see above) @done(2021-04-26)
+	sync improvements: @done(2021-04-26)
+		- add "since" flag to handle interrupted sync attempts and allow to get updated/missing products @done(2021-04-26)
+	improve DLC handling: @done(2021-04-26)
+		- is there an existing update that happens to account-product when DLC is purchased? @done(2021-04-24)
+		- if not - investigate owned.json and whether it contains owned DLCs @done(2021-04-25)
+			- https://menu.gog.com/v1/account/licences @done(2021-04-24)
+			- create a new remote-product-type @done(2021-04-24)
+			- split into individual licence products for created-date purposes @done(2021-04-24)
+			- make this main type to detail types account-products, details - if not present, query is-requires-games (copy logic from api-products-v2 includes-games) @done(2021-04-26)
+				- create DLCs property for ApiProductV1/V2 @done(2021-04-24)
+				- extract DLCs property @done(2021-04-24)
+				- define logic for updating main details when DLC got created/updated
+		- if not - try to figure out how store pages get "in library for DLCs" @done(2021-04-24)
+		- in general - understand and document the relation between store-product DLCs and account-product/details/api-product-vx @done(2021-04-24)
+		- currently we download details for all licences, including DLC (that are empty) - consider only using licences for DLC - base product updates for details @done(2021-04-26)
 	clo improvements: @done(2021-04-21)
 	- DRY clo.json @done(2021-04-20)
 		- add preprocess step to replace placeholders with app provided values @done(2021-04-20)

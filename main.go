@@ -18,7 +18,6 @@ import (
 var cloBytes []byte
 
 func main() {
-
 	//start := time.Now()
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)

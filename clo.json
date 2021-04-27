@@ -60,7 +60,8 @@
       "no-data",
       "images",
       "screenshots",
-      "all"
+      "all",
+      "since-hours-ago"
     ],
     "wishlist": [
       "media={media_}",

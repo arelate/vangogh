@@ -125,9 +125,17 @@ func itemizeMissing(
 	mt gog_media.Media,
 	modifiedAfter int64) ([]string, error) {
 
+	//api-products-v2 provides includes-games for "PACK"
 	if mainPt == vangogh_products.ApiProductsV2 &&
 		detailPt == vangogh_products.ApiProductsV2 {
 		return itemizeMissingIncludesGames(modifiedAfter)
+	}
+
+	//licences give a signal when DLC has been purchased, this would add
+	//required (base) game details to the updates
+	if mainPt == vangogh_products.LicenceProducts &&
+		detailPt == vangogh_products.Details {
+		return itemizeRequiredGames(modifiedAfter, mt)
 	}
 
 	missingIds := make([]string, 0)
@@ -186,6 +194,8 @@ func itemizeMissingIncludesGames(modifiedAfter int64) ([]string, error) {
 
 	missingIncludesGames := make([]string, 0)
 
+	//currently api-products-v2 support only gog_media.Game, and since this method is exclusively
+	//using api-products-v2 we're fine specifying media directly
 	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 
 	if err != nil {
@@ -211,6 +221,37 @@ func itemizeMissingIncludesGames(modifiedAfter int64) ([]string, error) {
 	}
 
 	return missingIncludesGames, nil
+}
+
+//itemizeRequiredGames enumerates all base products for a newly acquired DLCs
+func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, error) {
+	requiredGamesForNewLicences := make([]string, 0)
+
+	vrLicences, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, mt)
+	if err != nil {
+		return requiredGamesForNewLicences, err
+	}
+
+	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
+	if err != nil {
+		return requiredGamesForNewLicences, err
+	}
+
+	for _, id := range vrLicences.CreatedAfter(createdAfter) {
+		//like in itemizeMissingIncludesGames, we can't use extracts here,
+		//because we're in process of getting data and would rather query api-products-v2 directly.
+		//the performance impact is expected to be minimal since we're only loading newly acquired licences
+		apv2, err := vrApv2.ApiProductV2(id)
+		if err != nil {
+			return requiredGamesForNewLicences, err
+		}
+
+		for _, rg := range apv2.GetRequiredGames() {
+			requiredGamesForNewLicences = append(requiredGamesForNewLicences, rg)
+		}
+	}
+
+	return requiredGamesForNewLicences, nil
 }
 
 func getItems(

@@ -88,7 +88,16 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			images = true
 			screenshots = true
 		}
-		return Sync(mt, noData, images, screenshots, verbose)
+		sinceHoursAgoStr := req.ArgVal("since-hours-ago")
+		var sinceHoursAgo int
+		var err error
+		if sinceHoursAgoStr != "" {
+			sinceHoursAgo, err = strconv.Atoi(sinceHoursAgoStr)
+			if err != nil {
+				return err
+			}
+		}
+		return Sync(mt, sinceHoursAgo, noData, images, screenshots, verbose)
 	case "extract":
 		properties := req.ArgValues("properties")
 		return Extract(0, mt, properties)
