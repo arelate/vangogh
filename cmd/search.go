@@ -57,8 +57,7 @@ func Search(query map[string]string) error {
 			false,
 			highlights(query, matchingProps),
 			matchingProps,
-			propExtracts,
-			nil)
+			propExtracts)
 	}
 
 	return nil

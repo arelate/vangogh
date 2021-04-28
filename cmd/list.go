@@ -70,7 +70,7 @@ func List(
 		ids = vr.All()
 	}
 
-	//load properties extract that'll be used for printing
+	//load properties extract that will be used for printing
 	propExtracts, err := vangogh_properties.PropExtracts(properties)
 
 	//use common printInfo func to display product information by ID
@@ -81,8 +81,7 @@ func List(
 			isNew,
 			nil,
 			vangogh_properties.Supported(pt, properties),
-			propExtracts,
-			nil)
+			propExtracts)
 	}
 
 	return nil

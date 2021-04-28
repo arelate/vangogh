@@ -5,7 +5,9 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
+	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/froth"
 )
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
@@ -14,10 +16,17 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		properties = vangogh_properties.Extracted()
 	}
 
+	typeExtracts, err := froth.NewStash(vangogh_urls.ExtractsDir(), vangogh_properties.TypesProperty)
+	if err != nil {
+		return err
+	}
+
 	propExtracts, err := vangogh_properties.PropExtracts(properties)
 	if err != nil {
 		return err
 	}
+
+	idsTypes := make(map[string][]string)
 
 	for _, pt := range vangogh_products.Local() {
 
@@ -45,6 +54,12 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 
 		for _, id := range modifiedIds {
 
+			if idsTypes[id] == nil {
+				idsTypes[id] = make([]string, 0)
+			}
+
+			idsTypes[id] = append(idsTypes[id], pt.String())
+
 			if len(missingProps) == 0 {
 				continue
 			}
@@ -69,5 +84,5 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		}
 	}
 
-	return nil
+	return typeExtracts.AddMany(idsTypes)
 }

@@ -2,11 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/froth"
-	"sort"
 	"strings"
 )
 
@@ -15,8 +12,7 @@ func printInfo(
 	isNew bool,
 	highlightValues map[string]string,
 	properties []string,
-	propExtracts map[string]*froth.Stash,
-	productTypeReaders map[vangogh_products.ProductType]*vangogh_values.ValueReader) {
+	propExtracts map[string]*froth.Stash) {
 
 	titleExtracts := propExtracts[vangogh_properties.TitleProperty]
 	title, ok := titleExtracts.Get(id)
@@ -30,19 +26,6 @@ func printInfo(
 	}
 
 	fmt.Println(id, title)
-
-	if productTypeReaders != nil {
-		ptStrings := make([]string, 0)
-		for pt := range productTypeReaders {
-			if productTypeReaders[pt].Contains(id) {
-				ptStrings = append(ptStrings, pt.String())
-			}
-		}
-		sort.Strings(ptStrings)
-		if len(ptStrings) > 0 {
-			fmt.Printf(" types:%s\n", strings.Join(ptStrings, ","))
-		}
-	}
 
 	for _, prop := range properties {
 		if prop == vangogh_properties.IdProperty ||

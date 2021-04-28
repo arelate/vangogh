@@ -17,7 +17,8 @@ func Info(ids []string, mt gog_media.Media, images, videoId bool) error {
 		}
 	}
 
-	properties := vangogh_properties.Text()
+	properties := []string{vangogh_properties.TypesProperty}
+	properties = append(properties, vangogh_properties.Text()...)
 	if images {
 		properties = append(properties, vangogh_properties.ImageId()...)
 	}
@@ -31,7 +32,7 @@ func Info(ids []string, mt gog_media.Media, images, videoId bool) error {
 	}
 
 	for _, id := range ids {
-		printInfo(id, false, nil, properties, propExtracts, productTypeReaders)
+		printInfo(id, false, nil, properties, propExtracts)
 	}
 
 	return nil

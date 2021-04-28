@@ -1,3 +1,8 @@
+test DLC improvements:
+	- remove some DLC from licences
+	- perform sync
+	- note whether base product details were queued for update
+
 add a summary command:
 	- print what has changed since provided timestamp
 	- group changes per product and highlight what changed for a product-type (e.g. new: wishlist-products, updated: store-product)
