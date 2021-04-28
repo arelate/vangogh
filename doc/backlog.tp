@@ -1,7 +1,10 @@
-test DLC improvements:
-	- remove some DLC from licences
-	- perform sync
-	- note whether base product details were queued for update
+refactor extracts:
+	- top level helper that abstracts working with extracts
+	- instead of passing maps around there is a convinient interface to request value(s) from an extract by asset
+	- provide foundation to add (transparent) on-demand property modification
+		- centralize looking for keys by value
+		- centralize getting value by key
+	
 
 add a summary command:
 	- print what has changed since provided timestamp
@@ -122,6 +125,10 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	test DLC improvements: @done(2021-04-27)
+		- remove some DLC from licences @done(2021-04-27)
+		- perform sync @done(2021-04-27)
+		- note whether base product details were queued for update @done(2021-04-27)
 	add owned command: @done(2021-04-26)
 		- check the product in account-products / licence-products @done(2021-04-26)
 		- if not found - check includes-games and ownership of those @done(2021-04-26)

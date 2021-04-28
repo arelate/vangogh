@@ -55,7 +55,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "info":
 		images := req.Flag("images")
 		videoId := req.Flag("video-id")
-		return Info(ids, mt, images, videoId)
+		return Info(ids, images, videoId)
 	case "list":
 		var modifiedSince int64 = 0
 		modifiedStr := req.ArgVal("modified")

@@ -97,6 +97,12 @@ func itemizeUpdated(
 
 	updatedIds := make([]string, 0)
 
+	//licence products can only update through creation and we've already handled
+	//newly created in itemizeMissing func
+	if pt == vangogh_products.LicenceProducts {
+		return updatedIds, nil
+	}
+
 	mainDestUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
 	if err != nil {
 		return updatedIds, err
@@ -169,7 +175,9 @@ func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, err
 		}
 
 		for _, rg := range apv2.GetRequiredGames() {
-			requiredGamesForNewLicences = append(requiredGamesForNewLicences, rg)
+			if !stringsContain(requiredGamesForNewLicences, rg) {
+				requiredGamesForNewLicences = append(requiredGamesForNewLicences, rg)
+			}
 		}
 	}
 

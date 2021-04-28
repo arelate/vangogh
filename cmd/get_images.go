@@ -28,6 +28,7 @@ func GetImages(
 	imageTypeExtracts, err := froth.NewStash(
 		vangogh_urls.ExtractsDir(),
 		vangogh_properties.FromImageType(it))
+
 	if err != nil {
 		return err
 	}
@@ -80,10 +81,6 @@ func GetImages(
 			fmt.Printf("missing %s for %s (%s)\n", it, title, id)
 			continue
 		}
-
-		//if len(images) > 1 {
-		//	fmt.Println(id, images)
-		//}
 
 		srcUrls, err := vangogh_urls.PropImageUrls(images, it)
 		if err != nil {
