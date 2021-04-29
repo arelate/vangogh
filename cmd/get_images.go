@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/froth"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 )
@@ -21,13 +21,10 @@ func GetImages(
 		return fmt.Errorf("invalid image type %s", it)
 	}
 
-	titleExtracts, err := froth.NewStash(
-		vangogh_urls.ExtractsDir(),
-		vangogh_properties.TitleProperty)
+	titleExtracts, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
 
-	imageTypeExtracts, err := froth.NewStash(
-		vangogh_urls.ExtractsDir(),
-		vangogh_properties.FromImageType(it))
+	imageTypeProp := vangogh_properties.FromImageType(it)
+	imageTypeExtracts, err := vangogh_extracts.NewList(imageTypeProp)
 
 	if err != nil {
 		return err
@@ -37,7 +34,7 @@ func GetImages(
 		if len(ids) > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
-		ids, err = findIdsMissingImages(imageTypeExtracts, localImageIds)
+		ids, err = findIdsMissingImages(imageTypeExtracts, imageTypeProp, localImageIds)
 		if err != nil {
 			return err
 		}
@@ -70,13 +67,13 @@ func GetImages(
 	//fmt.Println(dlClient)
 
 	for _, id := range ids {
-		title, ok := titleExtracts.Get(id)
+		title, ok := titleExtracts.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
 		}
 		fmt.Printf("get %s for %s (%s)\n", it, title, id)
 
-		images, ok := imageTypeExtracts.GetAll(id)
+		images, ok := imageTypeExtracts.GetAll(imageTypeProp, id)
 		if !ok || len(images) == 0 {
 			fmt.Printf("missing %s for %s (%s)\n", it, title, id)
 			continue
@@ -104,7 +101,10 @@ func GetImages(
 	return nil
 }
 
-func findIdsMissingImages(imageTypeExtracts *froth.Stash, localImageIds map[string]bool) (ids []string, err error) {
+func findIdsMissingImages(
+	imageTypeExtracts *vangogh_extracts.ExtractsList,
+	imageTypeProp string,
+	localImageIds map[string]bool) (ids []string, err error) {
 
 	ids = make([]string, 0)
 
@@ -116,14 +116,12 @@ func findIdsMissingImages(imageTypeExtracts *froth.Stash, localImageIds map[stri
 		}
 	}
 
-	for _, id := range imageTypeExtracts.All() {
-		imageIds, ok := imageTypeExtracts.GetAll(id)
+	for _, id := range imageTypeExtracts.All(imageTypeProp) {
+		imageIds, ok := imageTypeExtracts.GetAll(imageTypeProp, id)
 		if len(imageIds) == 0 || !ok {
 			continue
 		}
-		//if len(imageIds) > 1 {
-		//	fmt.Println(id, imageIds)
-		//}
+
 		haveImages := true
 		for _, imageId := range imageIds {
 			if localImageIds[imageId] {

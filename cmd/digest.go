@@ -2,22 +2,21 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_urls"
-	"github.com/boggydigital/froth"
+	"github.com/arelate/vangogh_extracts"
 	"sort"
 )
 
 func Digest(property string) error {
 
-	extracts, err := froth.NewStash(vangogh_urls.ExtractsDir(), property)
+	exl, err := vangogh_extracts.NewList(property)
 	if err != nil {
 		return err
 	}
 
 	distinctValues := make([]string, 0)
 
-	for _, id := range extracts.All() {
-		values, ok := extracts.GetAll(id)
+	for _, id := range exl.All(property) {
+		values, ok := exl.GetAll(property, id)
 		if !ok || len(values) == 0 {
 			continue
 		}

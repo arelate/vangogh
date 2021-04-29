@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/gog_urls"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
-	"github.com/boggydigital/froth"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 	"net/http"
@@ -26,9 +25,7 @@ func Wishlist(mt gog_media.Media, addProductIds, removeProductIds []string) erro
 		return err
 	}
 
-	titleExtracts, err := froth.NewStash(
-		vangogh_urls.ExtractsDir(),
-		vangogh_properties.TitleProperty)
+	titleExtracts, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
 	if err != nil {
 		return err
 	}
@@ -65,7 +62,7 @@ func wishlistAdd(
 	httpClient *http.Client,
 	vrStoreProducts *vangogh_values.ValueReader,
 	mt gog_media.Media,
-	titleExtracts *froth.Stash) error {
+	titleExtracts *vangogh_extracts.ExtractsList) error {
 
 	for _, id := range ids {
 		if err := vrStoreProducts.CopyToType(id, vangogh_products.WishlistProducts, mt); err != nil {
@@ -88,7 +85,7 @@ func wishlistRemove(
 	httpClient *http.Client,
 	vrStoreProducts *vangogh_values.ValueReader,
 	mt gog_media.Media,
-	titleExtracts *froth.Stash) error {
+	titleExtracts *vangogh_extracts.ExtractsList) error {
 
 	if err := removeData(ids, vangogh_products.WishlistProducts, mt); err != nil {
 		return err
@@ -111,13 +108,13 @@ func remoteWishlistCommand(
 	fmtProgress func(string, string) string,
 	httpClient *http.Client,
 	vrStoreProducts *vangogh_values.ValueReader,
-	titleExtracts *froth.Stash) error {
+	titleExtracts *vangogh_extracts.ExtractsList) error {
 	for _, id := range ids {
 		if !vrStoreProducts.Contains(id) {
 			log.Printf("vangogh: %s", fmtError(id))
 			continue
 		}
-		title, ok := titleExtracts.Get(id)
+		title, ok := titleExtracts.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
 		}
