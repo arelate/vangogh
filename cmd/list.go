@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
@@ -71,7 +72,7 @@ func List(
 	}
 
 	//load properties extract that will be used for printing
-	propExtracts, err := vangogh_properties.PropExtracts(properties)
+	exl, err := vangogh_extracts.NewList(properties...)
 
 	//use common printInfo func to display product information by ID
 	for _, id := range ids {
@@ -81,7 +82,7 @@ func List(
 			isNew,
 			nil,
 			vangogh_properties.Supported(pt, properties),
-			propExtracts)
+			exl)
 	}
 
 	return nil

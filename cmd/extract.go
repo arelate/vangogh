@@ -3,11 +3,10 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
-	"github.com/boggydigital/froth"
 )
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
@@ -16,12 +15,12 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		properties = vangogh_properties.Extracted()
 	}
 
-	typeExtracts, err := froth.NewStash(vangogh_urls.ExtractsDir(), vangogh_properties.TypesProperty)
+	typeExtracts, err := vangogh_extracts.NewList(vangogh_properties.TypesProperty)
 	if err != nil {
 		return err
 	}
 
-	propExtracts, err := vangogh_properties.PropExtracts(properties)
+	exl, err := vangogh_extracts.NewList(properties...)
 	if err != nil {
 		return err
 	}
@@ -78,11 +77,11 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		}
 
 		for prop, extracts := range missingPropExtracts {
-			if err := propExtracts[prop].AddMany(extracts); err != nil {
+			if err := exl.AddMany(prop, extracts); err != nil {
 				return err
 			}
 		}
 	}
 
-	return typeExtracts.AddMany(idsTypes)
+	return typeExtracts.AddMany(vangogh_properties.TypesProperty, idsTypes)
 }

@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
-	"github.com/boggydigital/froth"
 	"strings"
 )
 
@@ -12,10 +12,9 @@ func printInfo(
 	isNew bool,
 	highlightValues map[string]string,
 	properties []string,
-	propExtracts map[string]*froth.Stash) {
+	exl *vangogh_extracts.ExtractsList) {
 
-	titleExtracts := propExtracts[vangogh_properties.TitleProperty]
-	title, ok := titleExtracts.Get(id)
+	title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 	if !ok {
 		fmt.Printf("product %s not found\n", id)
 		return
@@ -32,7 +31,7 @@ func printInfo(
 			prop == vangogh_properties.TitleProperty {
 			continue
 		}
-		values, ok := propExtracts[prop].GetAll(id)
+		values, ok := exl.GetAll(prop, id)
 		if !ok || len(values) == 0 {
 			continue
 		}

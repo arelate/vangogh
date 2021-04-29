@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
-	"github.com/boggydigital/froth"
 	"strings"
 )
 
@@ -15,7 +15,7 @@ func Search(query map[string]string) error {
 		properties = mergeProperties(properties, queryProps[prop])
 	}
 
-	propExtracts, err := vangogh_properties.PropExtracts(properties)
+	exl, err := vangogh_extracts.NewList(properties...)
 	if err != nil {
 		return err
 	}
@@ -25,20 +25,17 @@ func Search(query map[string]string) error {
 	// attempt to check if "text" property matches a valid id. Id is not extracted, and
 	// is present in every extract as a key. We'll use title extracts to confirm valid ID, given
 	// we've explicitly added them above.
-	titleExtracts, ok := propExtracts[vangogh_properties.TitleProperty]
-	if ok {
-		potentialId := query[vangogh_properties.TextProperties]
-		if potentialId != "" && titleExtracts.Contains(potentialId) {
-			mergeMatchingIdsProps(
-				matchingIdsProps,
-				map[string][]string{potentialId: {vangogh_properties.IdProperty}})
-		}
+	potentialId := query[vangogh_properties.TextProperties]
+	if potentialId != "" && exl.Contains(vangogh_properties.TextProperties, potentialId) {
+		mergeMatchingIdsProps(
+			matchingIdsProps,
+			map[string][]string{potentialId: {vangogh_properties.IdProperty}})
 	}
 
-	scopeIds := titleExtracts.All()
+	scopeIds := exl.All(vangogh_properties.TitleProperty)
 
 	for prop, term := range query {
-		matchedId := matchingIds(scopeIds, term, queryProps[prop], propExtracts)
+		matchedId := matchingIds(scopeIds, term, queryProps[prop], exl)
 		scopeIds = make([]string, 0, len(matchedId))
 		for id, _ := range matchedId {
 			scopeIds = append(scopeIds, id)
@@ -48,7 +45,6 @@ func Search(query map[string]string) error {
 			matchedId)
 	}
 
-	//fmt.Println(scopeIds)
 	matchingIdsProps = scopeMatchingIdsProps(matchingIdsProps, scopeIds)
 
 	for id, matchingProps := range matchingIdsProps {
@@ -57,7 +53,7 @@ func Search(query map[string]string) error {
 			false,
 			highlights(query, matchingProps),
 			matchingProps,
-			propExtracts)
+			exl)
 	}
 
 	return nil
@@ -121,7 +117,7 @@ func matchingIds(
 	scopeIds []string,
 	term string,
 	properties []string,
-	propExtracts map[string]*froth.Stash) map[string][]string {
+	exl *vangogh_extracts.ExtractsList) map[string][]string {
 
 	ids := make(map[string][]string, 0)
 
@@ -129,13 +125,9 @@ func matchingIds(
 
 	for _, property := range properties {
 
-		extracts, ok := propExtracts[property]
-		if !ok {
-			continue
-		}
 		for _, id := range scopeIds {
 
-			values, ok := extracts.GetAll(id)
+			values, ok := exl.GetAll(property, id)
 			if !ok || len(values) == 0 {
 				continue
 			}

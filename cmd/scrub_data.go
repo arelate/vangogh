@@ -61,42 +61,6 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 	}
 
 	// fmt.Println("products with values different from extracts:")
-	//propExtracts, err := vangogh_properties.PropExtracts(vangogh_properties.AllExtracted())
-	//if err != nil {
-	//	return err
-	//}
-
-	//for _, pt := range vangogh_products.AllLocal() {
-	//
-	//	supProps := vangogh_properties.Supported(pt, vangogh_properties.AllExtracted())
-	//
-	//	vr, err := vangogh_values.NewReader(pt, mt)
-	//	if err != nil {
-	//		return err
-	//	}
-
-	//for _, id := range vr.All() {
-	//propValues, err := vangogh_properties.GetProperties(id, vr, supProps)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//for _, prop := range supProps {
-	//
-	//	if prop == vangogh_properties.ScreenshotsProperty {
-	//		continue
-	//	}
-
-	//extract, _ := propExtracts[prop].Get(id)
-	//if propValues[prop] != "" && propValues[prop] != extract {
-	//	fmt.Println(pt, mt, id, prop, "extract:", extract, "propValue:", propValues[prop])
-	//}
-	//}
-
-	//}
-
-	//}
-
 	// fmt.Println("images that are not linked to a product:")
 
 	return nil
