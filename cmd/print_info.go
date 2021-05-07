@@ -10,7 +10,7 @@ import (
 func printInfo(
 	id string,
 	isNew bool,
-	highlightValues map[string]string,
+	filterValues map[string]string,
 	properties []string,
 	exl *vangogh_extracts.ExtractsList) {
 
@@ -39,8 +39,9 @@ func printInfo(
 			fmt.Printf(" %s:%s\n", prop, strings.Join(values, ","))
 			continue
 		}
+		//TODO: redo this to filter all properties based on the filter
 		for _, val := range values {
-			highlight := highlightValues[prop]
+			highlight := filterValues[prop]
 			if highlight != "" && !strings.Contains(strings.ToLower(val), highlight) {
 				continue
 			}

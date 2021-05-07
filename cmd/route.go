@@ -75,7 +75,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 				query[prop] = values[0]
 			}
 		}
-		return Search(query)
+		return SearchNew(query)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)

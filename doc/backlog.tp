@@ -1,10 +1,9 @@
 refactor extracts:
-	- top level helper that abstracts working with extracts
-	- instead of passing maps around there is a convinient interface to request value(s) from an extract by asset
+	- top level helper that abstracts working with extracts @done(2021-04-28)
+	- instead of passing maps around there is a convinient interface to request value(s) from an extract by asset @done(2021-04-28)
 	- provide foundation to add (transparent) on-demand property modification
 		- centralize looking for keys by value
 		- centralize getting value by key
-	
 
 add a summary command:
 	- print what has changed since provided timestamp
