@@ -1,9 +1,6 @@
-refactor extracts:
-	- top level helper that abstracts working with extracts @done(2021-04-28)
-	- instead of passing maps around there is a convinient interface to request value(s) from an extract by asset @done(2021-04-28)
-	- provide foundation to add (transparent) on-demand property modification
-		- centralize looking for keys by value
-		- centralize getting value by key
+complete tags data support:
+	- extract tag-name property
+	- make tag replaced property
 
 add a summary command:
 	- print what has changed since provided timestamp
@@ -124,6 +121,12 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	refactor extracts: @done(2021-05-07)
+		- top level helper that abstracts working with extracts @done(2021-04-28)
+		- instead of passing maps around there is a convinient interface to request value(s) from an extract by asset @done(2021-04-28)
+		- provide foundation to add (transparent) property replacement @done(2021-05-07)
+			- centralize looking for keys by value @done(2021-05-07)
+			- centralize getting value by key @done(2021-05-07)
 	test DLC improvements: @done(2021-04-27)
 		- remove some DLC from licences @done(2021-04-27)
 		- perform sync @done(2021-04-27)

@@ -19,6 +19,19 @@ var cloBytes []byte
 
 func main() {
 
+	//exl, err := vangogh_extracts.NewList(vangogh_properties.IncludesGamesProperty)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, id := range exl.All(vangogh_properties.IncludesGamesProperty) {
+	//	values, ok := exl.GetAll(vangogh_properties.IncludesGamesProperty, id)
+	//	if !ok {
+	//		continue
+	//	}
+	//	fmt.Println(id, values)
+	//}
+
 	//start := time.Now()
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)

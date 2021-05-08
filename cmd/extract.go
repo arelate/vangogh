@@ -7,7 +7,16 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"strings"
 )
+
+func stringsTrimSpace(stringsWithSpace []string) []string {
+	trimmedStrings := make([]string, 0, len(stringsWithSpace))
+	for _, str := range stringsWithSpace {
+		trimmedStrings = append(trimmedStrings, strings.TrimSpace(str))
+	}
+	return trimmedStrings
+}
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
 
@@ -72,7 +81,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 				if _, ok := missingPropExtracts[prop]; !ok {
 					missingPropExtracts[prop] = make(map[string][]string, 0)
 				}
-				missingPropExtracts[prop][id] = values
+				missingPropExtracts[prop][id] = stringsTrimSpace(values)
 			}
 		}
 
