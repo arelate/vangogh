@@ -18,14 +18,14 @@ import (
 var cloBytes []byte
 
 func main() {
-	query := make(map[string][]string, 0)
-	query["title"] = []string{"doom", "quake"}
+	//query := make(map[string][]string, 0)
+	//query["title"] = []string{"doom", "quake"}
 
-	if err := cmd.Search(query); err != nil {
-		log.Fatal(err)
-	}
+	//if err := cmd.Search(query); err != nil {
+	//	log.Fatal(err)
+	//}
 
-	return
+	//return
 
 	//vrAPV2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	//if err != nil {
