@@ -1,5 +1,12 @@
 search improvements:
 	- add support for replaced properties
+	- add support for searching property with multiple values (doom OR quake)
+	- for any replaced properties reverse find original values - search by those
+	- add ability to create multiple values lists for clo runtime properties
+
+diff data changes:
+	- when some piece of data changes, consider storing a previous (timestamped) version
+	- allow creating a diff between versions
 
 add a summary command:
 	- print what has changed since provided timestamp
@@ -7,24 +14,16 @@ add a summary command:
 	- if there are diffs available - add flag to show those
 	- automatically run summary after sync
 
-documentation investment:
-	- add clo.json help for stable commands
-	- generate MD/HTML for help using clo to use in README
-
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
 	- Edit: POST /account/tags/update?tags={tags_json}
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
-
-diff data changes:
-	- when some piece of data changes, consider storing a previous (timestamped) version
-	- allow creating a diff between versions
 	
 add more properties:
 	- language
-		- this would need refinement happening for tags @blocked
+		- this would need refinement happening for tags
 
 Download files:
 	- video thumbnails
@@ -33,8 +32,13 @@ Download files:
 		- download with 'youtube-dl {id} --id'
 		- try single letter partition, assuming omst products have one or two videos (confirm with data)
 		- use approach similar to images - itemize all local files to avoid reownloading same files
+		- or create a very simple youtube downloader, since we don't need to handle any special cases - just download publicly available videos
 	- product files by OS, language:
 		- create helper for Details that returns collection of strucutred data per language 
+	
+documentation investment:
+	- add clo.json help for stable commands
+	- generate MD/HTML for help using clo to use in README
 	
 kvas improvements:
 	- rewrite to support concurrent operations
@@ -72,12 +76,6 @@ Standartize directories:
 	- opt/vangogh, etc/vangogh, etc.
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
-Fix bugs:
-	- product not found: 1207660843 @done(2021-05-09)
-		- should is-required-by-games, requires-games should be added to api-products-v2 missing? @done(2021-05-09)
-	- consider making api-products-v2 source for missing api-products-v1 @done(2021-05-09)
-	- license-products as a source for apv1, apv2
-	
 concurrency improvements:
 	- rewrite get-data pipeline to be concurrent:
 		- getItems
@@ -116,6 +114,12 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	Fix bugs: @done(2021-05-09)
+		- product not found: 1207660843 @done(2021-05-09)
+			- should is-required-by-games, requires-games should be added to api-products-v2 missing? @done(2021-05-09)
+		- consider making api-products-v2 source for missing api-products-v1 @done(2021-05-09)
+		- license-products as a source for apv1, apv2 // decided against that, since license contains a lot of ids that result in 404s (??) @done(2021-05-09)
+		
 	skiplists improvements: @done(2021-05-09)
 		- rename denylist -> skiplist @done(2021-05-09)
 		- api-products should be a single denylist since both lists produce same errors for same items. // decided against that since the code uses product type name as a filename @done(2021-05-09)

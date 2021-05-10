@@ -18,11 +18,43 @@ import (
 var cloBytes []byte
 
 func main() {
+	query := make(map[string][]string, 0)
+	query["title"] = []string{"doom", "quake"}
+
+	if err := cmd.Search(query); err != nil {
+		log.Fatal(err)
+	}
+
+	return
 
 	//vrAPV2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
+	//
+	//vrDet, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty, vangogh_properties.BoxArtProperty)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, id := range vrAPV2.All() {
+	//	if exl.Contains(vangogh_properties.BoxArtProperty, id) {
+	//		continue
+	//	}
+	//
+	//	if !vrDet.Contains(id) {
+	//		continue
+	//	}
+	//
+	//	title, _ := exl.Get(vangogh_properties.TitleProperty, id)
+	//	fmt.Println(id, title)
+	//}
+
 	//
 	//vrAPV1, err := vangogh_values.NewReader(vangogh_products.ApiProductsV1, gog_media.Game)
 	//if err != nil {

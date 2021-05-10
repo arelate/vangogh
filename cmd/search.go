@@ -1,11 +1,12 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 )
 
-func Search(query map[string]string) error {
+func Search(query map[string][]string) error {
 
 	//prepare a list of all properties to load extracts for and
 	//always start with a `title` property since it is printed for all matched item
@@ -25,14 +26,22 @@ func Search(query map[string]string) error {
 	//expand query properties for use in printInfo filter
 	//since it's not aware of collapsed/expanded properties concept
 	propertyFilter := make(map[string]string, 0)
-	for prop, term := range query {
-		if vangogh_properties.IsCollapsed(prop) {
-			for _, ep := range vangogh_properties.Expand(prop) {
-				propertyFilter[ep] = term
-			}
-		} else {
-			propertyFilter[prop] = term
-		}
+
+	// TODO: fix this
+	//for prop, term := range query {
+	//	if vangogh_properties.IsCollapsed(prop) {
+	//		for _, ep := range vangogh_properties.Expand(prop) {
+	//			propertyFilter[ep] = term
+	//		}
+	//	} else {
+	//		propertyFilter[prop] = term
+	//	}
+	//}
+
+	if len(results) > 0 {
+		fmt.Printf("found %d products:\n", len(results))
+	} else {
+		fmt.Println("zero products found")
 	}
 
 	for _, id := range results {
