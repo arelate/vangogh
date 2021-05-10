@@ -19,17 +19,28 @@ var cloBytes []byte
 
 func main() {
 
-	//exl, err := vangogh_extracts.NewList(vangogh_properties.IncludesGamesProperty)
+	//vrAPV2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//for _, id := range exl.All(vangogh_properties.IncludesGamesProperty) {
-	//	values, ok := exl.GetAll(vangogh_properties.IncludesGamesProperty, id)
-	//	if !ok {
+	//vrAPV1, err := vangogh_values.NewReader(vangogh_products.ApiProductsV1, gog_media.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//vrLic, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, gog_media.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//
+	//for _, id := range vrLic.All() {
+	//	if vrAPV1.Contains(id) && vrAPV2.Contains(id) {
 	//		continue
 	//	}
-	//	fmt.Println(id, values)
+	//
+	//	fmt.Println(id)
 	//}
 
 	//start := time.Now()

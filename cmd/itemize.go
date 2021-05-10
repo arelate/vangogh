@@ -47,10 +47,12 @@ func itemizeMissing(
 	mt gog_media.Media,
 	modifiedAfter int64) ([]string, error) {
 
-	//api-products-v2 provides includes-games for "PACK"
+	//api-products-v2 provides
+	//includes-games, is-included-by-games,
+	//requires-games, is-required-by-games
 	if mainPt == vangogh_products.ApiProductsV2 &&
 		detailPt == vangogh_products.ApiProductsV2 {
-		return itemizeMissingIncludesGames(modifiedAfter)
+		return itemizeAPV2LinkedGames(modifiedAfter)
 	}
 
 	//licences give a signal when DLC has been purchased, this would add
@@ -118,16 +120,16 @@ func itemizeUpdated(
 	return updatedIds, nil
 }
 
-func itemizeMissingIncludesGames(modifiedAfter int64) ([]string, error) {
+func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 
-	missingIncludesGames := make([]string, 0)
+	missing := make(map[string]bool, 0)
 
 	//currently api-products-v2 support only gog_media.Game, and since this method is exclusively
-	//using api-products-v2 we're fine specifying media directly
+	//using api-products-v2 we're fine specifying media directly and not taking as a parameter
 	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 
 	if err != nil {
-		return missingIncludesGames, err
+		return []string{}, err
 	}
 
 	for _, id := range vrApv2.ModifiedAfter(modifiedAfter) {
@@ -138,17 +140,27 @@ func itemizeMissingIncludesGames(modifiedAfter int64) ([]string, error) {
 		apv2, err := vrApv2.ApiProductV2(id)
 
 		if err != nil {
-			return missingIncludesGames, err
+			return []string{}, err
 		}
 
-		for _, igId := range apv2.GetIncludesGames() {
-			if !vrApv2.Contains(igId) {
-				missingIncludesGames = append(missingIncludesGames, igId)
+		linkedGames := apv2.GetIncludesGames()
+		linkedGames = append(linkedGames, apv2.GetIsIncludedInGames()...)
+		linkedGames = append(linkedGames, apv2.GetRequiresGames()...)
+		linkedGames = append(linkedGames, apv2.GetIsRequiredByGames()...)
+
+		for _, lid := range linkedGames {
+			if !vrApv2.Contains(lid) {
+				missing[lid] = true
 			}
 		}
 	}
 
-	return missingIncludesGames, nil
+	missingIds := make([]string, 0, len(missing))
+	for id, _ := range missing {
+		missingIds = append(missingIds, id)
+	}
+
+	return missingIds, nil
 }
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
@@ -174,7 +186,7 @@ func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, err
 			return requiredGamesForNewLicences, err
 		}
 
-		for _, rg := range apv2.GetRequiredGames() {
+		for _, rg := range apv2.GetRequiresGames() {
 			if !stringsContain(requiredGamesForNewLicences, rg) {
 				requiredGamesForNewLicences = append(requiredGamesForNewLicences, rg)
 			}

@@ -18,6 +18,37 @@ func stringsTrimSpace(stringsWithSpace []string) []string {
 	return trimmedStrings
 }
 
+func extractTagNames(mt gog_media.Media) error {
+	fmt.Println("extract tag names")
+	vrAccountPage, err := vangogh_values.NewReader(vangogh_products.AccountPage, mt)
+	if err != nil {
+		return err
+	}
+
+	const fpId = "1"
+	if !vrAccountPage.Contains(fpId) {
+		return fmt.Errorf("vangogh: %s doesn't contain page %s", vangogh_products.AccountPage, fpId)
+	}
+
+	firstPage, err := vrAccountPage.AccountPage(fpId)
+	if err != nil {
+		return err
+	}
+
+	exl, err := vangogh_extracts.NewList(vangogh_properties.TagNameProperty)
+	if err != nil {
+		return err
+	}
+
+	tagIdNames := make(map[string][]string, 0)
+
+	for _, tag := range firstPage.Tags {
+		tagIdNames[tag.Id] = []string{tag.Name}
+	}
+
+	return exl.AddMany(vangogh_properties.TagNameProperty, tagIdNames)
+}
+
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
 
 	if len(properties) == 0 {
@@ -90,6 +121,12 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 				return err
 			}
 		}
+	}
+
+	//tag-names are extracted separately from other types,
+	//given it's most convenient to extract from account-pages
+	if err := extractTagNames(mt); err != nil {
+		return err
 	}
 
 	return typeExtracts.AddMany(vangogh_properties.TypesProperty, idsTypes)

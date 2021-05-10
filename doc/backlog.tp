@@ -1,6 +1,5 @@
-complete tags data support:
-	- extract tag-name property
-	- make tag replaced property
+search improvements:
+	- add support for replaced properties
 
 add a summary command:
 	- print what has changed since provided timestamp
@@ -8,18 +7,11 @@ add a summary command:
 	- if there are diffs available - add flag to show those
 	- automatically run summary after sync
 
-improvements to the digest command:
-	- add support for properties:
-		- tags
-
 documentation investment:
 	- add clo.json help for stable commands
 	- generate MD/HTML for help using clo to use in README
 
 tags management command:
-	- need to implement related extracts for tag_id (tag_name)
-	- implement a replaced properties whenever we display tag_id - actually use tag_name
-		- and vice a versa for input
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
 	- Edit: POST /account/tags/update?tags={tags_json}
@@ -81,7 +73,10 @@ Standartize directories:
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
 Fix bugs:
-	- search by id doesn't work
+	- product not found: 1207660843 @done(2021-05-09)
+		- should is-required-by-games, requires-games should be added to api-products-v2 missing? @done(2021-05-09)
+	- consider making api-products-v2 source for missing api-products-v1 @done(2021-05-09)
+	- license-products as a source for apv1, apv2
 	
 concurrency improvements:
 	- rewrite get-data pipeline to be concurrent:
@@ -121,6 +116,17 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	skiplists improvements: @done(2021-05-09)
+		- rename denylist -> skiplist @done(2021-05-09)
+		- api-products should be a single denylist since both lists produce same errors for same items. // decided against that since the code uses product type name as a filename @done(2021-05-09)
+	- need to implement related extracts for tag_id (tag_name) @done(2021-05-07) @project(tags management command)
+	- implement a replaced properties whenever we display tag_id - actually use tag_name @done(2021-05-07) @project(tags management command)
+	improvements to the digest command: @done(2021-05-07)
+		- add support for properties: @done(2021-05-07)
+			- tags @done(2021-05-07)
+	complete tags data support: @done(2021-05-07)
+		- extract tag-name property @done(2021-05-07)
+		- make tag replaced property @done(2021-05-07)
 	refactor extracts: @done(2021-05-07)
 		- top level helper that abstracts working with extracts @done(2021-04-28)
 		- instead of passing maps around there is a convinient interface to request value(s) from an extract by asset @done(2021-04-28)
