@@ -25,18 +25,17 @@ func Search(query map[string][]string) error {
 
 	//expand query properties for use in printInfo filter
 	//since it's not aware of collapsed/expanded properties concept
-	propertyFilter := make(map[string]string, 0)
+	propertyFilter := make(map[string][]string, 0)
 
-	// TODO: fix this
-	//for prop, term := range query {
-	//	if vangogh_properties.IsCollapsed(prop) {
-	//		for _, ep := range vangogh_properties.Expand(prop) {
-	//			propertyFilter[ep] = term
-	//		}
-	//	} else {
-	//		propertyFilter[prop] = term
-	//	}
-	//}
+	for prop, terms := range query {
+		if vangogh_properties.IsCollapsed(prop) {
+			for _, ep := range vangogh_properties.Expand(prop) {
+				propertyFilter[ep] = terms
+			}
+		} else {
+			propertyFilter[prop] = terms
+		}
+	}
 
 	if len(results) > 0 {
 		fmt.Printf("found %d products:\n", len(results))

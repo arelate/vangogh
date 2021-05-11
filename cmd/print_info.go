@@ -7,10 +7,21 @@ import (
 	"strings"
 )
 
+func shouldSkip(value string, filterValues []string) bool {
+	value = strings.ToLower(value)
+	for _, fv := range filterValues {
+		if strings.Contains(value, fv) {
+			return false
+		}
+	}
+	// this makes sure we don't filter values if there is no filter
+	return len(filterValues) > 0
+}
+
 func printInfo(
 	id string,
 	isNew bool,
-	propertyFilter map[string]string,
+	propertyFilter map[string][]string,
 	properties []string,
 	exl *vangogh_extracts.ExtractsList) {
 
@@ -35,11 +46,11 @@ func printInfo(
 		if !ok || len(values) == 0 {
 			continue
 		}
-		filter := propertyFilter[prop]
+		filterValues := propertyFilter[prop]
 
 		if len(values) > 1 && vangogh_properties.JoinPreferred(prop) {
 			joinedValue := strings.Join(values, ",")
-			if filter != "" && !strings.Contains(strings.ToLower(joinedValue), filter) {
+			if shouldSkip(joinedValue, filterValues) {
 				continue
 			}
 			fmt.Printf(" %s:%s\n", prop, joinedValue)
@@ -47,7 +58,7 @@ func printInfo(
 		}
 
 		for _, val := range values {
-			if filter != "" && !strings.Contains(strings.ToLower(val), filter) {
+			if shouldSkip(val, filterValues) {
 				continue
 			}
 			fmt.Printf(" %s:%s\n", prop, val)

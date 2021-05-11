@@ -49,7 +49,7 @@
     ],
     "search": [
       "media={media_}",
-      "{searchable-properties_}"
+      "{searchable-properties_...}"
     ],
     "scrub-data": [
       "media={media_}",
