@@ -79,6 +79,18 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)
+	case "summary":
+		sinceHoursAgoStr := req.ArgVal("since-hours-ago")
+		var sinceHoursAgo int
+		var err error
+		if sinceHoursAgoStr != "" {
+			sinceHoursAgo, err = strconv.Atoi(sinceHoursAgoStr)
+			if err != nil {
+				return err
+			}
+		}
+		since := time.Now().Unix() - int64(sinceHoursAgo*60*60)
+		return Summary(since, mt)
 	case "sync":
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")

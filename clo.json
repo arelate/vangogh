@@ -63,6 +63,10 @@
       "all",
       "since-hours-ago"
     ],
+    "summary": [
+      "media={media_}",
+      "since-hours-ago"
+    ],
     "wishlist": [
       "media={media_}",
       "add...",

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_products"
@@ -62,18 +61,5 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, ve
 	// TODO: get files
 
 	// print new or updated
-	return reportCreatedModifiedAfter(syncStart, mt)
-
-}
-
-func reportCreatedModifiedAfter(timestamp int64, mt gog_media.Media) error {
-	fmt.Println("sync summary:")
-	for _, pt := range vangogh_products.Local() {
-		fmt.Printf("new or updated %s (%s) during this sync:\n", pt, mt)
-		if err := List(nil, timestamp, pt, mt); err != nil {
-			return err
-		}
-	}
-	fmt.Println("sync duration:", time.Since(time.Unix(timestamp, 0)).String())
-	return nil
+	return Summary(syncStart, mt)
 }

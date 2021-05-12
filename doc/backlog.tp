@@ -1,12 +1,6 @@
-search improvements:
-	- add support for replaced properties
-	- add support for searching property with multiple values (doom OR quake)
-	- for any replaced properties reverse find original values - search by those
-	- add ability to create multiple values lists for clo runtime properties
-
 diff data changes:
 	- when some piece of data changes, consider storing a previous (timestamped) version
-	- allow creating a diff between versions
+	- create a diff between versions
 
 add a summary command:
 	- print what has changed since provided timestamp
@@ -114,6 +108,11 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	search improvements: @done(2021-05-10)
+		- add support for replaced properties @done(2021-05-10)
+		- add support for searching property with multiple values (doom OR quake) @done(2021-05-10)
+		- for any replaced properties reverse find original values - search by those @done(2021-05-10)
+		- add ability to create multiple values lists for clo runtime properties @done(2021-05-10)
 	Fix bugs: @done(2021-05-09)
 		- product not found: 1207660843 @done(2021-05-09)
 			- should is-required-by-games, requires-games should be added to api-products-v2 missing? @done(2021-05-09)

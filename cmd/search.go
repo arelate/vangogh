@@ -37,12 +37,6 @@ func Search(query map[string][]string) error {
 		}
 	}
 
-	if len(results) > 0 {
-		fmt.Printf("found %d products:\n", len(results))
-	} else {
-		fmt.Println("zero products found")
-	}
-
 	for _, id := range results {
 		printInfo(
 			id,
@@ -51,6 +45,10 @@ func Search(query map[string][]string) error {
 			//similarly for propertyFilter (see comment above) - expand all properties to display
 			vangogh_properties.ExpandAll(properties),
 			exl)
+	}
+
+	if len(results) == 0 {
+		fmt.Println("no products found")
 	}
 
 	return nil

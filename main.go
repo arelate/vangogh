@@ -17,7 +17,36 @@ import (
 //go:embed "clo.json"
 var cloBytes []byte
 
+//func Compare(prefix string, some, another interface{}) error {
+//
+//	someType, anotherType := reflect.TypeOf(some), reflect.TypeOf(another)
+//	someValue, anotherValue := reflect.ValueOf(some), reflect.ValueOf(another)
+//
+//	if someType != anotherType  {
+//		return fmt.Errorf("dif: cannot compare different types: %s and %s", someType, anotherType)
+//	}
+//
+//	for i:=0; i<someType.NumField(); i++ {
+//		field := someType.Field(i)
+//		if field.Type.Kind() == reflect.Struct {
+//			if err := Compare(field.Name, someValue.Field(i).Interface(), anotherValue.Field(i).Interface()); err != nil {
+//				return err
+//			}
+//			continue
+//		}
+//		if someValue.Field(i).Interface() != anotherValue.Field(i).Interface() {
+//			if prefix != "" {
+//				fmt.Printf("%s.", prefix)
+//			}
+//			fmt.Printf("%s: %v -> %v\n", field.Name, someValue.Field(i), anotherValue.Field(i))
+//		}
+//	}
+//
+//	return nil
+//}
+
 func main() {
+
 	//query := make(map[string][]string, 0)
 	//query["title"] = []string{"doom", "quake"}
 
