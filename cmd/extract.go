@@ -80,7 +80,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 
 		var modifiedIds []string
 		if modifiedAfter > 0 {
-			modifiedIds = vr.ModifiedAfter(modifiedAfter)
+			modifiedIds = vr.ModifiedAfter(modifiedAfter, false)
 		} else {
 			modifiedIds = vr.All()
 		}

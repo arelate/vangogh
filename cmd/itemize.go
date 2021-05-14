@@ -115,7 +115,7 @@ func itemizeUpdated(
 		return updatedIds, err
 	}
 
-	updatedIds = kvMain.ModifiedAfter(since)
+	updatedIds = kvMain.ModifiedAfter(since, false)
 
 	return updatedIds, nil
 }
@@ -132,7 +132,7 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 		return []string{}, err
 	}
 
-	for _, id := range vrApv2.ModifiedAfter(modifiedAfter) {
+	for _, id := range vrApv2.ModifiedAfter(modifiedAfter, false) {
 
 		// have to use product reader and not extracts here, since extracts wouldn't be ready
 		// while we're still getting data. Attempting to minimize the impact by only querying

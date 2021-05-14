@@ -18,7 +18,7 @@ func split(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 		return err
 	}
 
-	modifiedIds := vrPaged.ModifiedAfter(timestamp)
+	modifiedIds := vrPaged.ModifiedAfter(timestamp, false)
 	if len(modifiedIds) == 0 {
 		fmt.Printf("skip split for not modified %s (%s)\n", sourcePt, mt)
 		return nil

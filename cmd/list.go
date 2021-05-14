@@ -60,7 +60,7 @@ func List(
 
 	if modifiedAfter > 0 {
 		createdAfter = vr.CreatedAfter(modifiedAfter)
-		ids = append(ids, vr.ModifiedAfter(modifiedAfter)...)
+		ids = append(ids, vr.ModifiedAfter(modifiedAfter, false)...)
 		if len(ids) == 0 {
 			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedAfter, 0).Format(time.Kitchen))
 		}

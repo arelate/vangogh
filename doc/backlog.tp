@@ -1,18 +1,3 @@
-add support for orders:
-	- URL: https://www.gog.com/account/settings/orders/data?canceled=1&completed=1&in_progress=1&not_redeemed=1&page=1&pending=1&redeemed=1
-	- add required interfaces (GetIds)
-	- split
-
-diff data changes:
-	- when some piece of data changes, consider storing a previous (timestamped) version
-	- create a diff between versions
-
-add a summary command:
-	- print what has changed since provided timestamp
-	- group changes per product and highlight what changed for a product-type (e.g. new: wishlist-products, updated: store-product)
-	- if there are diffs available - add flag to show those
-	- automatically run summary after sync
-
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
@@ -86,6 +71,10 @@ concurrency improvements:
 Work on gaugin can start:
 	- Publish vangogh on GitHub
 
+diff data changes:
+	- when some piece of data changes, consider storing a previous (timestamped) version
+	- create a diff between versions
+
 Operations log:
 	- add operations log or last success timestamp
 	- track updated account products (new, modified, updated)
@@ -113,6 +102,15 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	add a summary command: @done(2021-05-13)
+		- print what has changed since provided timestamp @done(2021-05-13)
+		- group changes per product and highlight what changed for a product-type (e.g. new: wishlist-products, updated: store-product) @done(2021-05-13)
+		- if there are diffs available - add flag to show those @done(2021-05-13)
+		- automatically run summary after sync @done(2021-05-13)
+	add support for orders: @done(2021-05-13)
+		- URL: https://www.gog.com/account/settings/orders/data?canceled=1&completed=1&in_progress=1&not_redeemed=1&page=1&pending=1&redeemed=1 @done(2021-05-13)
+		- add required interfaces (GetIds) @done(2021-05-13)
+		- split @done(2021-05-13)
 	search improvements: @done(2021-05-10)
 		- add support for replaced properties @done(2021-05-10)
 		- add support for searching property with multiple values (doom OR quake) @done(2021-05-10)

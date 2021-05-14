@@ -47,6 +47,40 @@ var cloBytes []byte
 
 func main() {
 
+	//vrOrder, err := vangogh_values.NewReader(vangogh_products.Order, gog_media.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	////statuses := make(map[string]bool, 0)
+	//paid := make(map[string]float64, 0)
+	//orders := 0
+	//earliest := time.Now().Unix()
+	//
+	//for _, id := range vrOrder.All() {
+	//
+	//	orders++
+	//
+	//	ord, err := vrOrder.Order(id)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	if int64(ord.Date) < earliest {
+	//		earliest = int64(ord.Date)
+	//	}
+	//
+	//	amt, err := strconv.ParseFloat(ord.Total.Amount, 64)
+	//	paid[ord.Total.Symbol] += amt
+	//
+	//}
+	//
+	//fmt.Println(time.Unix(earliest, 0).String())
+	//fmt.Println(orders)
+	//fmt.Println(paid)
+	//
+	//return
+
 	//query := make(map[string][]string, 0)
 	//query["title"] = []string{"doom", "quake"}
 
