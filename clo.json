@@ -44,6 +44,9 @@
       "property...={all-properties}",
       "modified"
     ],
+    "owned": [
+      "id!_..."
+    ],
     "digest": [
       "property_={digestible-properties}"
     ],

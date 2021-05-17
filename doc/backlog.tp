@@ -1,13 +1,22 @@
+clo improvements:
+	- sort commands when printing help
+	- standartize on a single space offset like vangogh
+	
+command-line piping:
+	- allow using results of another command as input (e.g. owned <- search) for ids
+	- skip lines that start with space
+	- parse other line using first word before the space as potential id
+
+add more properties:
+	- language
+		- this would need refinement happening for tags
+
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
 	- Edit: POST /account/tags/update?tags={tags_json}
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
-	
-add more properties:
-	- language
-		- this would need refinement happening for tags
 
 Download files:
 	- video thumbnails
@@ -102,6 +111,10 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	owned command: @done(2021-05-16)
+		- add command @done(2021-05-16)
+		- check if we own a PACK if we own all games in the pack @done(2021-05-16)
+		- test case: https://www.gog.com/game/rain_games_steampunk_bundle @done(2021-05-16)
 	add a summary command: @done(2021-05-13)
 		- print what has changed since provided timestamp @done(2021-05-13)
 		- group changes per product and highlight what changed for a product-type (e.g. new: wishlist-products, updated: store-product) @done(2021-05-13)

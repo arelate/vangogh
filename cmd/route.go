@@ -68,6 +68,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 		properties := req.ArgValues("property")
 		return List(ids, modifiedSince, pt, mt, properties...)
+	case "owned":
+		return Owned(ids...)
 	case "search":
 		query := make(map[string][]string)
 		for _, prop := range vangogh_properties.Searchable() {
