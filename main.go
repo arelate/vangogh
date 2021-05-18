@@ -140,6 +140,22 @@ func main() {
 
 	//start := time.Now()
 
+	//vrAPV1, err := vangogh_values.NewReader(vangogh_products.ApiProductsV1, gog_media.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, id := range vrAPV1.All() {
+	//	apv1, err := vrAPV1.ApiProductV1(id)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	fmt.Println(apv1.Languages)
+	//}
+	//
+	//return
+
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
 	defs, err := clo.Load(bytesBuffer, internal.CloValuesDelegates)

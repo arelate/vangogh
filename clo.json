@@ -9,6 +9,7 @@
       "product-type!_={remote-product-types}",
       "media={media_}",
       "id...",
+      "read-ids",
       "missing",
       "updated",
       "deny-ids-file",
@@ -22,10 +23,12 @@
       "image-type!_={image-types}",
       "media={media_}",
       "id...",
+      "read-ids",
       "all"
     ],
     "get-videos": [
       "id...",
+      "read-ids",
       "all"
     ],
     "get-files": [
@@ -45,7 +48,8 @@
       "modified"
     ],
     "owned": [
-      "id!_..."
+      "id_...",
+      "read-ids"
     ],
     "digest": [
       "property_={digestible-properties}"

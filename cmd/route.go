@@ -25,6 +25,13 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	mt := gog_media.Parse(media)
 
 	ids := req.ArgValues("id")
+	if req.Flag("read-ids") {
+		var err error
+		ids, err = internal.ReadStdinIds()
+		if err != nil {
+			return err
+		}
+	}
 
 	switch req.Command {
 	case "auth":

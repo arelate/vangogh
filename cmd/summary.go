@@ -11,8 +11,12 @@ import (
 	"time"
 )
 
-var filterProductTypeChanges = map[vangogh_products.ProductType]bool{
-	vangogh_products.Order:            true,
+var filterNewProductTypes = map[vangogh_products.ProductType]bool{
+	vangogh_products.Order: true,
+	//vangogh_products.LicenceProducts: true,
+}
+
+var filterUpdatedProductTypes = map[vangogh_products.ProductType]bool{
 	vangogh_products.StoreProducts:    true,
 	vangogh_products.WishlistProducts: true,
 	vangogh_products.ApiProductsV1:    true,
@@ -32,6 +36,10 @@ func Summary(since int64, mt gog_media.Media) error {
 
 	for _, pt := range vangogh_products.Local() {
 
+		if filterNewProductTypes[pt] {
+			continue
+		}
+
 		vr, err := vangogh_values.NewReader(pt, mt)
 		if err != nil {
 			return err
@@ -42,7 +50,7 @@ func Summary(since int64, mt gog_media.Media) error {
 			updated[id] = true
 		}
 
-		if filterProductTypeChanges[pt] {
+		if filterUpdatedProductTypes[pt] {
 			continue
 		}
 

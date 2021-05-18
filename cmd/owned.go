@@ -52,13 +52,13 @@ func Owned(ids ...string) error {
 	}
 
 	for _, id := range ids {
-
-		printInfo(id, false, nil, []string{vangogh_properties.TitleProperty}, exl)
 		if owned[id] {
-			fmt.Println(" OWNED")
+			fmt.Print("OWN:")
 		} else {
-			fmt.Println(" NOT OWNED")
+			fmt.Print("GOG:")
 		}
+		printInfo(id, false, nil, []string{vangogh_properties.TitleProperty}, exl)
+
 	}
 
 	return nil
