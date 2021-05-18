@@ -49,6 +49,25 @@ func extractTagNames(mt gog_media.Media) error {
 	return exl.AddMany(vangogh_properties.TagNameProperty, tagIdNames)
 }
 
+func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
+
+	codes := make(map[string]bool, 0)
+
+	for _, id := range exl.All(vangogh_properties.LanguageCodesProperty) {
+		idCodes, ok := exl.GetAll(vangogh_properties.LanguageCodesProperty, id)
+		if !ok {
+			continue
+		}
+		for _, code := range idCodes {
+			codes[code] = true
+		}
+	}
+
+	//fmt.Println(codes)
+
+	return nil
+}
+
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
 
 	if len(properties) == 0 {
@@ -121,6 +140,13 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 				return err
 			}
 		}
+	}
+
+	//language-names are extracted separately from general pipeline,
+	//given we'll be filling the blanks from api-products-v2 using
+	//a property that returns map[string]string
+	if err := extractLanguageNames(exl); err != nil {
+		return err
 	}
 
 	//tag-names are extracted separately from other types,

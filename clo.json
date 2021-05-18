@@ -37,7 +37,8 @@
     ],
     "info": [
       "media={media_}",
-      "id!_...",
+      "id_...",
+      "read-ids",
       "images",
       "video-id"
     ],

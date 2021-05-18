@@ -1,3 +1,7 @@
+text improvements:
+	- define default text properties and use only those for search, printInfo
+	- add flag to use all text properties
+
 add more properties:
 	- language
 		- this would need refinement happening for tags
@@ -109,7 +113,6 @@ Archive:
 	clo improvements: @done(2021-05-16)
 		- sort commands when printing help @done(2021-05-16)
 		- standartize on a single space offset like vangogh @done(2021-05-16)
-		
 	owned command: @done(2021-05-16)
 		- add command @done(2021-05-16)
 		- check if we own a PACK if we own all games in the pack @done(2021-05-16)
@@ -133,7 +136,6 @@ Archive:
 			- should is-required-by-games, requires-games should be added to api-products-v2 missing? @done(2021-05-09)
 		- consider making api-products-v2 source for missing api-products-v1 @done(2021-05-09)
 		- license-products as a source for apv1, apv2 // decided against that, since license contains a lot of ids that result in 404s (??) @done(2021-05-09)
-		
 	skiplists improvements: @done(2021-05-09)
 		- rename denylist -> skiplist @done(2021-05-09)
 		- api-products should be a single denylist since both lists produce same errors for same items. // decided against that since the code uses product type name as a filename @done(2021-05-09)
