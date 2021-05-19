@@ -35,7 +35,7 @@ func extractTagNames(mt gog_media.Media) error {
 		return err
 	}
 
-	exl, err := vangogh_extracts.NewList(vangogh_properties.TagNameProperty)
+	exl, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TagNameProperty: true})
 	if err != nil {
 		return err
 	}
@@ -68,18 +68,24 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 	return nil
 }
 
-func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
+func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool) error {
 
-	if len(properties) == 0 {
-		properties = vangogh_properties.Extracted()
+	if properties == nil {
+		properties = make(map[string]bool, 0)
 	}
 
-	typeExtracts, err := vangogh_extracts.NewList(vangogh_properties.TypesProperty)
+	if len(properties) == 0 {
+		for _, ep := range vangogh_properties.Extracted() {
+			properties[ep] = true
+		}
+	}
+
+	typeExtracts, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TypesProperty: true})
 	if err != nil {
 		return err
 	}
 
-	exl, err := vangogh_extracts.NewList(properties...)
+	exl, err := vangogh_extracts.NewList(properties)
 	if err != nil {
 		return err
 	}

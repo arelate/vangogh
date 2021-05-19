@@ -21,10 +21,10 @@ func GetImages(
 		return fmt.Errorf("invalid image type %s", it)
 	}
 
-	titleExtracts, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	titleExtracts, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TitleProperty: true})
 
 	imageTypeProp := vangogh_properties.FromImageType(it)
-	imageTypeExtracts, err := vangogh_extracts.NewList(imageTypeProp)
+	imageTypeExtracts, err := vangogh_extracts.NewList(map[string]bool{imageTypeProp: true})
 
 	if err != nil {
 		return err

@@ -73,8 +73,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			}
 			modifiedSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
 		}
-		properties := req.ArgValues("property")
-		return List(ids, modifiedSince, pt, mt, properties...)
+		properties := req.ArgValuesMap("property")
+		return List(ids, modifiedSince, pt, mt, properties)
 	case "owned":
 		return Owned(ids...)
 	case "search":
@@ -120,7 +120,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 		return Sync(mt, sinceHoursAgo, noData, images, screenshots, verbose)
 	case "extract":
-		properties := req.ArgValues("properties")
+		properties := req.ArgValuesMap("properties")
 		return Extract(0, mt, properties)
 	case "wishlist":
 		addProductIds := req.ArgValues("add")

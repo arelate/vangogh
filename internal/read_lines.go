@@ -8,8 +8,8 @@ import (
 
 const commentPrefix = "//"
 
-func ReadLines(filepath string) []string {
-	lines := make([]string, 0)
+func ReadLines(filepath string) map[string]bool {
+	lines := make(map[string]bool, 0)
 	if filepath == "" {
 		return lines
 	}
@@ -26,7 +26,7 @@ func ReadLines(filepath string) []string {
 		if strings.HasPrefix(line, commentPrefix) {
 			continue
 		}
-		lines = append(lines, scanner.Text())
+		lines[scanner.Text()] = true
 	}
 
 	return lines

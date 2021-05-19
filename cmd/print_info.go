@@ -20,9 +20,8 @@ func shouldSkip(value string, filterValues []string) bool {
 
 func printInfo(
 	id string,
-	isNew bool,
 	propertyFilter map[string][]string,
-	properties []string,
+	properties map[string]bool,
 	exl *vangogh_extracts.ExtractsList) {
 
 	title, ok := exl.Get(vangogh_properties.TitleProperty, id)
@@ -31,13 +30,12 @@ func printInfo(
 		return
 	}
 
-	if isNew {
-		title = fmt.Sprintf("[NEW] %s", title)
-	}
-
 	fmt.Println(id, title)
 
-	for _, prop := range properties {
+	for prop, ok := range properties {
+		if !ok {
+			continue
+		}
 		if prop == vangogh_properties.IdProperty ||
 			prop == vangogh_properties.TitleProperty {
 			continue

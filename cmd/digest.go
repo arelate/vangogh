@@ -8,12 +8,12 @@ import (
 
 func Digest(property string) error {
 
-	exl, err := vangogh_extracts.NewList(property)
+	exl, err := vangogh_extracts.NewList(map[string]bool{property: true})
 	if err != nil {
 		return err
 	}
 
-	distinctValues := make([]string, 0)
+	distValues := make(map[string]bool, 0)
 
 	for _, id := range exl.All(property) {
 		values, ok := exl.GetAll(property, id)
@@ -25,16 +25,19 @@ func Digest(property string) error {
 			if val == "" {
 				continue
 			}
-			if !stringsContain(distinctValues, val) {
-				distinctValues = append(distinctValues, val)
-			}
+			distValues[val] = true
 		}
 	}
 
-	sort.Strings(distinctValues)
+	keys := make([]string, 0, len(distValues))
+	for key, _ := range distValues {
+		keys = append(keys, key)
+	}
 
-	for _, distinctValue := range distinctValues {
-		fmt.Println(distinctValue)
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		fmt.Println(key)
 	}
 
 	return nil

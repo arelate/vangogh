@@ -11,12 +11,12 @@ func Search(query map[string][]string) error {
 	//prepare a list of all properties to load extracts for and
 	//always start with a `title` property since it is printed for all matched item
 	//(even if the match is for another property)
-	properties := []string{vangogh_properties.TitleProperty}
-	for prop, _ := range query {
-		properties = append(properties, prop)
+	properties := map[string]bool{vangogh_properties.TitleProperty: true}
+	for qp, _ := range query {
+		properties[qp] = true
 	}
 
-	exl, err := vangogh_extracts.NewList(properties...)
+	exl, err := vangogh_extracts.NewList(properties)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,6 @@ func Search(query map[string][]string) error {
 	for _, id := range results {
 		printInfo(
 			id,
-			false,
 			propertyFilter,
 			//similarly for propertyFilter (see comment above) - expand all properties to display
 			vangogh_properties.ExpandAll(properties),

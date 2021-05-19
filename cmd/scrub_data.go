@@ -13,7 +13,8 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 	fmt.Println("split products missing from the paged data:")
 	for _, pagedPt := range vangogh_products.Paged() {
 
-		pagedIds := make([]string, 0)
+		pagedIds := make(map[string]bool, 0)
+
 		vrPaged, err := vangogh_values.NewReader(pagedPt, mt)
 		if err != nil {
 			return err
@@ -24,7 +25,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 				return err
 			}
 			for _, idGetter := range productGetter.GetProducts() {
-				pagedIds = append(pagedIds, strconv.Itoa(idGetter.GetId()))
+				pagedIds[strconv.Itoa(idGetter.GetId())] = true
 			}
 		}
 
@@ -37,7 +38,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 		}
 
 		for _, id := range vrSplit.All() {
-			if stringsContain(pagedIds, id) {
+			if pagedIds[id] {
 				continue
 			}
 			splitIds = append(splitIds, id)
@@ -45,7 +46,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 
 		if len(splitIds) > 0 {
 			fmt.Printf("%s not present in %s:\n", splitPt, pagedPt)
-			if err := List(splitIds, 0, splitPt, mt); err != nil {
+			if err := List(splitIds, 0, splitPt, mt, nil); err != nil {
 				return err
 			}
 
@@ -66,11 +67,12 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 	return nil
 }
 
-func stringsContain(all []string, s string) bool {
-	for _, sa := range all {
-		if sa == s {
-			return true
-		}
-	}
-	return false
-}
+//func stringsContain(all []string, s string) bool {
+//	//TODO: audit and convert all usages of this func to map[string]bool
+//	for _, sa := range all {
+//		if sa == s {
+//			return true
+//		}
+//	}
+//	return false
+//}

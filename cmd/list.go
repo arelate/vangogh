@@ -18,7 +18,7 @@ func List(
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
-	properties ...string) error {
+	properties map[string]bool) error {
 
 	if !vangogh_products.Valid(pt) {
 		return fmt.Errorf("can't list invalid product type %s", pt)
@@ -27,17 +27,20 @@ func List(
 		return fmt.Errorf("can't list invalid media %s", mt)
 	}
 
+	if properties == nil {
+		properties = make(map[string]bool, 0)
+	}
+
 	//if no properties have been provided - print ID, Title
 	if len(properties) == 0 {
-		properties = []string{
-			vangogh_properties.IdProperty,
-			vangogh_properties.TitleProperty}
+		properties[vangogh_properties.IdProperty] = true
+		properties[vangogh_properties.TitleProperty] = true
 	}
 
 	//if Title property has not been provided - add it first.
 	//we'll always print the title
-	if !stringsContain(properties, vangogh_properties.TitleProperty) {
-		properties = append([]string{vangogh_properties.TitleProperty}, properties...)
+	if !properties[vangogh_properties.TitleProperty] {
+		properties[vangogh_properties.TitleProperty] = true
 	}
 
 	//rules for collecting IDs to print:
@@ -56,10 +59,7 @@ func List(
 		return err
 	}
 
-	var createdAfter []string
-
 	if modifiedAfter > 0 {
-		createdAfter = vr.CreatedAfter(modifiedAfter)
 		ids = append(ids, vr.ModifiedAfter(modifiedAfter, false)...)
 		if len(ids) == 0 {
 			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedAfter, 0).Format(time.Kitchen))
@@ -72,14 +72,12 @@ func List(
 	}
 
 	//load properties extract that will be used for printing
-	exl, err := vangogh_extracts.NewList(properties...)
+	exl, err := vangogh_extracts.NewList(properties)
 
 	//use common printInfo func to display product information by ID
 	for _, id := range ids {
-		isNew := stringsContain(createdAfter, id)
 		printInfo(
 			id,
-			isNew,
 			nil,
 			vangogh_properties.Supported(pt, properties),
 			exl)

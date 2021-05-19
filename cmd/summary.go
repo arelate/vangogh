@@ -23,15 +23,26 @@ var filterUpdatedProductTypes = map[vangogh_products.ProductType]bool{
 	vangogh_products.ApiProductsV2:    true,
 }
 
+func keys(someMap map[vangogh_products.ProductType]bool) []string {
+	keys := make([]string, 0, len(someMap))
+	for key, ok := range someMap {
+		if !ok {
+			continue
+		}
+		keys = append(keys, key.String())
+	}
+	return keys
+}
+
 func Summary(since int64, mt gog_media.Media) error {
 
-	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	exl, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TitleProperty: true})
 	if err != nil {
 		return err
 	}
 
-	created := make(map[string][]string, 0)
-	modified := make(map[string][]string, 0)
+	created := make(map[string]map[vangogh_products.ProductType]bool, 0)
+	modified := make(map[string]map[vangogh_products.ProductType]bool, 0)
 	updated := make(map[string]bool, 0)
 
 	for _, pt := range vangogh_products.Local() {
@@ -46,7 +57,10 @@ func Summary(since int64, mt gog_media.Media) error {
 		}
 
 		for _, id := range vr.CreatedAfter(since) {
-			created[id] = append(created[id], pt.String())
+			if created[id] == nil {
+				created[id] = make(map[vangogh_products.ProductType]bool, 0)
+			}
+			created[id][pt] = true
 			updated[id] = true
 		}
 
@@ -55,11 +69,14 @@ func Summary(since int64, mt gog_media.Media) error {
 		}
 
 		for _, id := range vr.ModifiedAfter(since, true) {
-			if stringsContain(created[id], pt.String()) {
+			if created[id][pt] {
 				continue
 			}
+			if modified[id] == nil {
+				modified[id] = make(map[vangogh_products.ProductType]bool, 0)
+			}
 			updated[id] = true
-			modified[id] = append(modified[id], pt.String())
+			modified[id][pt] = true
 		}
 	}
 
@@ -76,10 +93,10 @@ func Summary(since int64, mt gog_media.Media) error {
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 		fmt.Println(id, title)
 		if len(created[id]) > 0 {
-			fmt.Println(" NEW:", strings.Join(created[id], ","))
+			fmt.Println(" NEW:", strings.Join(keys(created[id]), ","))
 		}
 		if len(modified[id]) > 0 {
-			fmt.Println(" UPD:", strings.Join(modified[id], ","))
+			fmt.Println(" UPD:", strings.Join(keys(modified[id]), ","))
 		}
 	}
 

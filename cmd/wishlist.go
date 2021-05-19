@@ -25,7 +25,7 @@ func Wishlist(mt gog_media.Media, addProductIds, removeProductIds []string) erro
 		return err
 	}
 
-	titleExtracts, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	titleExtracts, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TitleProperty: true})
 	if err != nil {
 		return err
 	}

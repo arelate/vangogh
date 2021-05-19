@@ -13,9 +13,12 @@ func Owned(ids ...string) error {
 
 	owned := make(map[string]bool, 0)
 
-	exl, err := vangogh_extracts.NewList(
-		vangogh_properties.TitleProperty,
-		vangogh_properties.IncludesGamesProperty)
+	properties := map[string]bool{
+		vangogh_properties.TitleProperty:         true,
+		vangogh_properties.IncludesGamesProperty: true,
+	}
+
+	exl, err := vangogh_extracts.NewList(properties)
 
 	if err != nil {
 		return err
@@ -55,9 +58,13 @@ func Owned(ids ...string) error {
 		if owned[id] {
 			fmt.Print("OWN:")
 		} else {
-			fmt.Print("GOG:")
+			fmt.Print("NOT:")
 		}
-		printInfo(id, false, nil, []string{vangogh_properties.TitleProperty}, exl)
+		printInfo(
+			id,
+			nil,
+			map[string]bool{vangogh_properties.TitleProperty: true},
+			exl)
 
 	}
 

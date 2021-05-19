@@ -38,7 +38,11 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, ve
 		}
 
 		//extract data
-		if err := Extract(syncStart, mt, vangogh_properties.Extracted()); err != nil {
+		extProps := make(map[string]bool, 0)
+		for _, ep := range vangogh_properties.Extracted() {
+			extProps[ep] = true
+		}
+		if err := Extract(syncStart, mt, extProps); err != nil {
 			return err
 		}
 	}

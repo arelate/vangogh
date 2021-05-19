@@ -62,6 +62,7 @@ func itemizeMissing(
 		return itemizeRequiredGames(modifiedAfter, mt)
 	}
 
+	//TODO: convert this into map[string]bool to avoid duplicates
 	missingIds := make([]string, 0)
 
 	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
@@ -89,7 +90,21 @@ func itemizeMissing(
 		}
 	}
 
+	if mainPt == vangogh_products.AccountProducts &&
+		detailPt == vangogh_products.Details {
+		updatedAccountProducts, err := itemizeAccountProductsUpdates()
+		if err != nil {
+			return missingIds, err
+		}
+
+		missingIds = append(missingIds, updatedAccountProducts...)
+	}
+
 	return missingIds, nil
+}
+
+func itemizeAccountProductsUpdates() ([]string, error) {
+	return nil, nil
 }
 
 func itemizeUpdated(
@@ -165,16 +180,16 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
 func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, error) {
-	requiredGamesForNewLicences := make([]string, 0)
+	reqGamesForNewLicences := make(map[string]bool, 0)
 
 	vrLicences, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, mt)
 	if err != nil {
-		return requiredGamesForNewLicences, err
+		return nil, err
 	}
 
 	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	if err != nil {
-		return requiredGamesForNewLicences, err
+		return nil, err
 	}
 
 	for _, id := range vrLicences.CreatedAfter(createdAfter) {
@@ -183,15 +198,18 @@ func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, err
 		//the performance impact is expected to be minimal since we're only loading newly acquired licences
 		apv2, err := vrApv2.ApiProductV2(id)
 		if err != nil {
-			return requiredGamesForNewLicences, err
+			return nil, err
 		}
 
 		for _, rg := range apv2.GetRequiresGames() {
-			if !stringsContain(requiredGamesForNewLicences, rg) {
-				requiredGamesForNewLicences = append(requiredGamesForNewLicences, rg)
-			}
+			reqGamesForNewLicences[rg] = true
 		}
 	}
 
-	return requiredGamesForNewLicences, nil
+	keys := make([]string, 0, len(reqGamesForNewLicences))
+	for id, _ := range reqGamesForNewLicences {
+		keys = append(keys, id)
+	}
+
+	return keys, nil
 }

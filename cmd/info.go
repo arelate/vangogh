@@ -7,22 +7,30 @@ import (
 
 func Info(ids []string, images, videoId bool) error {
 
-	properties := []string{vangogh_properties.TypesProperty}
-	properties = append(properties, vangogh_properties.Text()...)
+	properties := map[string]bool{
+		vangogh_properties.TypesProperty: true,
+	}
+	for _, tp := range vangogh_properties.Text() {
+		properties[tp] = true
+	}
 	if images {
-		properties = append(properties, vangogh_properties.ImageId()...)
+		for _, ip := range vangogh_properties.ImageId() {
+			properties[ip] = true
+		}
 	}
 	if videoId {
-		properties = append(properties, vangogh_properties.VideoIdProperty)
+		for _, vp := range vangogh_properties.VideoId() {
+			properties[vp] = true
+		}
 	}
 
-	exl, err := vangogh_extracts.NewList(properties...)
+	exl, err := vangogh_extracts.NewList(properties)
 	if err != nil {
 		return err
 	}
 
 	for _, id := range ids {
-		printInfo(id, false, nil, properties, exl)
+		printInfo(id, nil, properties, exl)
 	}
 
 	return nil

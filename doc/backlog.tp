@@ -1,3 +1,9 @@
+get-items improvements:
+	- process account-products with Updates to queue details updates
+	
+stringsContain improvements:
+	- audit all usages and deprecate helper func
+
 text improvements:
 	- define default text properties and use only those for search, printInfo
 	- add flag to use all text properties
