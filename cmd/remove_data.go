@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-func removeData(ids []string, pt vangogh_products.ProductType, mt gog_media.Media) error {
+func removeData(ids map[string]bool, pt vangogh_products.ProductType, mt gog_media.Media) error {
 	ptDir, err := vangogh_urls.LocalProductsDir(pt, mt)
 	if err != nil {
 		return err
@@ -18,7 +18,10 @@ func removeData(ids []string, pt vangogh_products.ProductType, mt gog_media.Medi
 		return err
 	}
 
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		log.Printf("remove %s (%s) id %s", pt, mt, id)
 		if err := kvPt.Remove(id); err != nil {
 			return err

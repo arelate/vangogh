@@ -29,7 +29,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			}
 		}
 
-		splitIds := make([]string, 0)
+		splitIds := make(map[string]bool, 0)
 
 		splitPt := vangogh_products.SplitType(pagedPt)
 		vrSplit, err := vangogh_values.NewReader(splitPt, mt)
@@ -41,7 +41,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			if pagedIds[id] {
 				continue
 			}
-			splitIds = append(splitIds, id)
+			splitIds[id] = true
 		}
 
 		if len(splitIds) > 0 {

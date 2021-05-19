@@ -10,11 +10,15 @@ import (
 )
 
 func itemizeAll(
-	ids []string,
+	ids map[string]bool,
 	missing, updated bool,
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
-	mt gog_media.Media) ([]string, error) {
+	mt gog_media.Media) (map[string]bool, error) {
+
+	if ids == nil {
+		ids = make(map[string]bool, 0)
+	}
 
 	for _, mainPt := range vangogh_products.MainTypes(pt) {
 		if missing {
@@ -25,7 +29,9 @@ func itemizeAll(
 			if len(missingIds) == 0 {
 				fmt.Printf("no missing %s data for %s (%s)\n", pt, mainPt, mt)
 			}
-			ids = append(ids, missingIds...)
+			for missId := range missingIds {
+				ids[missId] = true
+			}
 		}
 		if updated {
 			updatedIds, err := itemizeUpdated(modifiedAfter, mainPt, mt)
@@ -35,7 +41,9 @@ func itemizeAll(
 			if len(updatedIds) == 0 {
 				fmt.Printf("no updated %s data for %s (%s)\n", pt, mainPt, mt)
 			}
-			ids = append(ids, updatedIds...)
+			for updId := range updatedIds {
+				ids[updId] = true
+			}
 		}
 	}
 
@@ -45,7 +53,7 @@ func itemizeAll(
 func itemizeMissing(
 	detailPt, mainPt vangogh_products.ProductType,
 	mt gog_media.Media,
-	modifiedAfter int64) ([]string, error) {
+	modifiedAfter int64) (map[string]bool, error) {
 
 	//api-products-v2 provides
 	//includes-games, is-included-by-games,
@@ -63,7 +71,7 @@ func itemizeMissing(
 	}
 
 	//TODO: convert this into map[string]bool to avoid duplicates
-	missingIds := make([]string, 0)
+	missingIds := make(map[string]bool, 0)
 
 	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
 	if err != nil {
@@ -86,7 +94,7 @@ func itemizeMissing(
 	}
 	for _, id := range kvMain.All() {
 		if !kvDetail.Contains(id) {
-			missingIds = append(missingIds, id)
+			missingIds[id] = true
 		}
 	}
 
@@ -96,8 +104,9 @@ func itemizeMissing(
 		if err != nil {
 			return missingIds, err
 		}
-
-		missingIds = append(missingIds, updatedAccountProducts...)
+		for _, uapId := range updatedAccountProducts {
+			missingIds[uapId] = true
+		}
 	}
 
 	return missingIds, nil
@@ -110,9 +119,9 @@ func itemizeAccountProductsUpdates() ([]string, error) {
 func itemizeUpdated(
 	since int64,
 	pt vangogh_products.ProductType,
-	mt gog_media.Media) ([]string, error) {
+	mt gog_media.Media) (map[string]bool, error) {
 
-	updatedIds := make([]string, 0)
+	updatedIds := make(map[string]bool, 0)
 
 	//licence products can only update through creation and we've already handled
 	//newly created in itemizeMissing func
@@ -130,12 +139,14 @@ func itemizeUpdated(
 		return updatedIds, err
 	}
 
-	updatedIds = kvMain.ModifiedAfter(since, false)
+	for _, id := range kvMain.ModifiedAfter(since, false) {
+		updatedIds[id] = true
+	}
 
 	return updatedIds, nil
 }
 
-func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
+func itemizeAPV2LinkedGames(modifiedAfter int64) (map[string]bool, error) {
 
 	missing := make(map[string]bool, 0)
 
@@ -144,7 +155,7 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 
 	if err != nil {
-		return []string{}, err
+		return missing, err
 	}
 
 	for _, id := range vrApv2.ModifiedAfter(modifiedAfter, false) {
@@ -155,7 +166,7 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 		apv2, err := vrApv2.ApiProductV2(id)
 
 		if err != nil {
-			return []string{}, err
+			return missing, err
 		}
 
 		linkedGames := apv2.GetIncludesGames()
@@ -170,16 +181,11 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 		}
 	}
 
-	missingIds := make([]string, 0, len(missing))
-	for id, _ := range missing {
-		missingIds = append(missingIds, id)
-	}
-
-	return missingIds, nil
+	return missing, nil
 }
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
-func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, error) {
+func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) (map[string]bool, error) {
 	reqGamesForNewLicences := make(map[string]bool, 0)
 
 	vrLicences, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, mt)
@@ -193,6 +199,10 @@ func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, err
 	}
 
 	for _, id := range vrLicences.CreatedAfter(createdAfter) {
+		// it's not guaranteed that a license would have an existing api-products-v2
+		if !vrApv2.Contains(id) {
+			continue
+		}
 		//like in itemizeMissingIncludesGames, we can't use extracts here,
 		//because we're in process of getting data and would rather query api-products-v2 directly.
 		//the performance impact is expected to be minimal since we're only loading newly acquired licences
@@ -206,10 +216,5 @@ func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, err
 		}
 	}
 
-	keys := make([]string, 0, len(reqGamesForNewLicences))
-	for id, _ := range reqGamesForNewLicences {
-		keys = append(keys, id)
-	}
-
-	return keys, nil
+	return reqGamesForNewLicences, nil
 }

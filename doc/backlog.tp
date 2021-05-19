@@ -1,8 +1,5 @@
 get-items improvements:
 	- process account-products with Updates to queue details updates
-	
-stringsContain improvements:
-	- audit all usages and deprecate helper func
 
 text improvements:
 	- define default text properties and use only those for search, printInfo
@@ -112,6 +109,8 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	stringsContain improvements: @done(2021-05-18)
+		- audit all usages and deprecate helper func @done(2021-05-18)
 	command-line piping: @done(2021-05-17)
 		- allow using results of another command as input (e.g. owned <- search) for ids @done(2021-05-17)
 		- skip lines that start with space @done(2021-05-17)

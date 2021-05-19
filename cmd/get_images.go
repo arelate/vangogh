@@ -12,7 +12,7 @@ import (
 )
 
 func GetImages(
-	ids []string,
+	ids map[string]bool,
 	it vangogh_images.ImageType,
 	localImageIds map[string]bool,
 	all bool) error {
@@ -66,7 +66,10 @@ func GetImages(
 
 	//fmt.Println(dlClient)
 
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		title, ok := titleExtracts.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
@@ -104,9 +107,9 @@ func GetImages(
 func findIdsMissingImages(
 	imageTypeExtracts *vangogh_extracts.ExtractsList,
 	imageTypeProp string,
-	localImageIds map[string]bool) (ids []string, err error) {
+	localImageIds map[string]bool) (ids map[string]bool, err error) {
 
-	ids = make([]string, 0)
+	ids = make(map[string]bool, 0)
 
 	// filter ids to only the ones that miss that particular image type
 	if localImageIds == nil {
@@ -132,7 +135,7 @@ func findIdsMissingImages(
 		if haveImages {
 			continue
 		}
-		ids = append(ids, id)
+		ids[id] = true
 	}
 
 	return ids, err

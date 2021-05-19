@@ -11,7 +11,7 @@ import (
 
 //GetData gets remote data from GOG.com and stores as local products (splitting as paged data if needed)
 func GetData(
-	ids []string,
+	ids map[string]bool,
 	denyIds map[string]bool,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
@@ -72,7 +72,10 @@ func GetData(
 	}
 
 	approvedIds := make([]string, 0, len(ids))
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		if !denyIds[id] {
 			approvedIds = append(approvedIds, id)
 		}

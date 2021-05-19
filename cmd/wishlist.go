@@ -14,7 +14,7 @@ import (
 	"net/url"
 )
 
-func Wishlist(mt gog_media.Media, addProductIds, removeProductIds []string) error {
+func Wishlist(mt gog_media.Media, addProductIds, removeProductIds map[string]bool) error {
 	httpClient, err := internal.HttpClient()
 	if err != nil {
 		return err
@@ -58,13 +58,16 @@ func removeProgress(title, id string) string {
 }
 
 func wishlistAdd(
-	ids []string,
+	ids map[string]bool,
 	httpClient *http.Client,
 	vrStoreProducts *vangogh_values.ValueReader,
 	mt gog_media.Media,
 	titleExtracts *vangogh_extracts.ExtractsList) error {
 
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		if err := vrStoreProducts.CopyToType(id, vangogh_products.WishlistProducts, mt); err != nil {
 			return err
 		}
@@ -81,7 +84,7 @@ func wishlistAdd(
 }
 
 func wishlistRemove(
-	ids []string,
+	ids map[string]bool,
 	httpClient *http.Client,
 	vrStoreProducts *vangogh_values.ValueReader,
 	mt gog_media.Media,
@@ -102,14 +105,17 @@ func wishlistRemove(
 }
 
 func remoteWishlistCommand(
-	ids []string,
+	ids map[string]bool,
 	wishlistUrl func(string) *url.URL,
 	fmtError func(string) string,
 	fmtProgress func(string, string) string,
 	httpClient *http.Client,
 	vrStoreProducts *vangogh_values.ValueReader,
 	titleExtracts *vangogh_extracts.ExtractsList) error {
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		if !vrStoreProducts.Contains(id) {
 			log.Printf("vangogh: %s", fmtError(id))
 			continue

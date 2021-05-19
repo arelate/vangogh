@@ -14,7 +14,7 @@ import (
 //Can be filtered to products that were created or modified since a certain time.
 //Provided properties will be printed for each product (if supported) in addition to default ID, Title.
 func List(
-	ids []string,
+	ids map[string]bool,
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
@@ -51,7 +51,7 @@ func List(
 	// add all product IDs
 
 	if ids == nil {
-		ids = make([]string, 0)
+		ids = make(map[string]bool, 0)
 	}
 
 	vr, err := vangogh_values.NewReader(pt, mt)
@@ -60,7 +60,9 @@ func List(
 	}
 
 	if modifiedAfter > 0 {
-		ids = append(ids, vr.ModifiedAfter(modifiedAfter, false)...)
+		for _, mId := range vr.ModifiedAfter(modifiedAfter, false) {
+			ids[mId] = true
+		}
 		if len(ids) == 0 {
 			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedAfter, 0).Format(time.Kitchen))
 		}
@@ -68,14 +70,19 @@ func List(
 
 	if len(ids) == 0 &&
 		modifiedAfter == 0 {
-		ids = vr.All()
+		for _, id := range vr.All() {
+			ids[id] = true
+		}
 	}
 
 	//load properties extract that will be used for printing
 	exl, err := vangogh_extracts.NewList(properties)
 
 	//use common printInfo func to display product information by ID
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		printInfo(
 			id,
 			nil,

@@ -9,7 +9,7 @@ import (
 	"github.com/arelate/vangogh_values"
 )
 
-func Owned(ids ...string) error {
+func Owned(ids map[string]bool) error {
 
 	owned := make(map[string]bool, 0)
 
@@ -30,7 +30,10 @@ func Owned(ids ...string) error {
 		return err
 	}
 
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		if vrLicenceProducts.Contains(id) {
 			owned[id] = true
 			continue
@@ -54,7 +57,10 @@ func Owned(ids ...string) error {
 		}
 	}
 
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		if owned[id] {
 			fmt.Print("OWN:")
 		} else {

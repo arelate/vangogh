@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func ReadStdinIds() ([]string, error) {
-	ids := make([]string, 0)
+func ReadStdinIds() (map[string]bool, error) {
+	ids := make(map[string]bool, 0)
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -18,7 +18,7 @@ func ReadStdinIds() ([]string, error) {
 		if len(tokens) < 1 {
 			continue
 		}
-		ids = append(ids, tokens[0])
+		ids[tokens[0]] = true
 	}
 	if err := scanner.Err(); err != nil {
 		return ids, err

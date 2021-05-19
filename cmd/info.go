@@ -5,7 +5,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 )
 
-func Info(ids []string, images, videoId bool) error {
+func Info(ids map[string]bool, images, videoId bool) error {
 
 	properties := map[string]bool{
 		vangogh_properties.TypesProperty: true,
@@ -29,7 +29,10 @@ func Info(ids []string, images, videoId bool) error {
 		return err
 	}
 
-	for _, id := range ids {
+	for id, ok := range ids {
+		if !ok {
+			continue
+		}
 		printInfo(id, nil, properties, exl)
 	}
 

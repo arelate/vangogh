@@ -24,7 +24,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	pt := vangogh_products.Parse(productType)
 	mt := gog_media.Parse(media)
 
-	ids := req.ArgValues("id")
+	ids := req.ArgValuesMap("id")
 	if req.Flag("read-ids") {
 		var err error
 		ids, err = internal.ReadStdinIds()
@@ -76,7 +76,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValuesMap("property")
 		return List(ids, modifiedSince, pt, mt, properties)
 	case "owned":
-		return Owned(ids...)
+		return Owned(ids)
 	case "search":
 		query := make(map[string][]string)
 		for _, prop := range vangogh_properties.Searchable() {
@@ -123,8 +123,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValuesMap("properties")
 		return Extract(0, mt, properties)
 	case "wishlist":
-		addProductIds := req.ArgValues("add")
-		removeProductIds := req.ArgValues("remove")
+		addProductIds := req.ArgValuesMap("add")
+		removeProductIds := req.ArgValuesMap("remove")
 		return Wishlist(mt, addProductIds, removeProductIds)
 	default:
 		return clo.Route(req, defs)
