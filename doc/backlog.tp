@@ -1,3 +1,6 @@
+vangogh_properties improvements:
+	- check type assertions before invoking
+
 get-items improvements:
 	- process account-products with Updates to queue details updates
 
