@@ -49,12 +49,31 @@ func extractTagNames(mt gog_media.Media) error {
 	return exl.AddMany(vangogh_properties.TagNameProperty, tagIdNames)
 }
 
+func noMissingNames(codes map[string]bool) bool {
+	nmn := true
+	for _, ok := range codes {
+		nmn = nmn && ok
+	}
+	return nmn
+}
+
 func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 
-	codes := make(map[string]bool, 0)
+	fmt.Println("extract language names")
 
+	tagNameExtracts, err := vangogh_extracts.NewList(map[string]bool{
+		vangogh_properties.LanguageNameProperty: true,
+	})
+	if err != nil {
+		return err
+	}
+
+	codes := make(map[string]bool, 0)
+	names := make(map[string][]string, 0)
+
+	//digest distinct languages codes
 	for _, id := range exl.All(vangogh_properties.LanguageCodesProperty) {
-		idCodes, ok := exl.GetAll(vangogh_properties.LanguageCodesProperty, id)
+		idCodes, ok := exl.GetAllRaw(vangogh_properties.LanguageCodesProperty, id)
 		if !ok {
 			continue
 		}
@@ -63,9 +82,44 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 		}
 	}
 
-	//fmt.Println(codes)
+	//map all language codes to names
+	for lc, _ := range codes {
+		_, ok := tagNameExtracts.Get(vangogh_properties.LanguageNameProperty, lc)
+		if !ok {
+			codes[lc] = false
+		}
+	}
 
-	return nil
+	if noMissingNames(codes) {
+		return nil
+	}
+
+	//iterate through api-products-v2 until we fill all names
+	vrApiProductsV2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
+	if err != nil {
+		return err
+	}
+
+	for _, id := range vrApiProductsV2.All() {
+		apv2, err := vrApiProductsV2.ApiProductV2(id)
+		if err != nil {
+			return err
+		}
+
+		languages := apv2.GetLanguages()
+		for lc, name := range languages {
+			if !codes[lc] {
+				names[lc] = []string{name}
+				codes[lc] = true
+			}
+		}
+
+		if noMissingNames(codes) {
+			break
+		}
+	}
+
+	return tagNameExtracts.AddMany(vangogh_properties.LanguageNameProperty, names)
 }
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool) error {
@@ -150,7 +204,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 
 	//language-names are extracted separately from general pipeline,
 	//given we'll be filling the blanks from api-products-v2 using
-	//a property that returns map[string]string
+	//GetLanguages property that returns map[string]string
 	if err := extractLanguageNames(exl); err != nil {
 		return err
 	}
