@@ -60,9 +60,10 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		all := req.Flag("all")
 		return GetVideos(ids, all)
 	case "info":
+		allText := req.Flag("all-text")
 		images := req.Flag("images")
 		videoId := req.Flag("video-id")
-		return Info(ids, images, videoId)
+		return Info(ids, allText, images, videoId)
 	case "list":
 		var modifiedSince int64 = 0
 		modifiedStr := req.ArgVal("modified")

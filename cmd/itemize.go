@@ -60,6 +60,7 @@ func itemizeMissing(
 	//requires-games, is-required-by-games
 	if mainPt == vangogh_products.ApiProductsV2 &&
 		detailPt == vangogh_products.ApiProductsV2 {
+		fmt.Printf("checking missing linked %s\n", mainPt)
 		return itemizeAPV2LinkedGames(modifiedAfter)
 	}
 
@@ -67,6 +68,7 @@ func itemizeMissing(
 	//required (base) game details to the updates
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
+		fmt.Printf("checking missing required %s for modified %s\n", detailPt, mainPt)
 		return itemizeRequiredGames(modifiedAfter, mt)
 	}
 
@@ -100,11 +102,15 @@ func itemizeMissing(
 
 	if mainPt == vangogh_products.AccountProducts &&
 		detailPt == vangogh_products.Details {
-		updatedAccountProducts, err := itemizeAccountProductsUpdates()
+		fmt.Printf("checking %s updates to update %s\n", mainPt, detailPt)
+		updatedAccountProducts, err := itemizeAccountProductsUpdates(mt)
 		if err != nil {
 			return missingIds, err
 		}
-		for _, uapId := range updatedAccountProducts {
+		for uapId, ok := range updatedAccountProducts {
+			if !ok {
+				continue
+			}
 			missingIds[uapId] = true
 		}
 	}
@@ -112,8 +118,24 @@ func itemizeMissing(
 	return missingIds, nil
 }
 
-func itemizeAccountProductsUpdates() ([]string, error) {
-	return nil, nil
+func itemizeAccountProductsUpdates(mt gog_media.Media) (map[string]bool, error) {
+	updates := make(map[string]bool, 0)
+	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
+	if err != nil {
+		return updates, err
+	}
+
+	for _, id := range vrAccountProducts.All() {
+		ap, err := vrAccountProducts.AccountProduct(id)
+		if err != nil {
+			return updates, err
+		}
+		if ap.Updates > 0 {
+			updates[id] = true
+		}
+	}
+
+	return updates, nil
 }
 
 func itemizeUpdated(

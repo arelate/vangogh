@@ -1,16 +1,6 @@
-vangogh_properties improvements:
-	- check type assertions before invoking
-
-get-items improvements:
-	- process account-products with Updates to queue details updates
-
-text improvements:
-	- define default text properties and use only those for search, printInfo
-	- add flag to use all text properties
-
 add more properties:
 	- language
-		- this would need refinement happening for tags
+		- extract languages names
 
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
@@ -112,6 +102,15 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	printInfo improvements: @done(2021-05-19)
+		- provide sort order of the properties for display @done(2021-05-19)
+	text improvements: @done(2021-05-19)
+		- define default text properties and use only those for search, printInfo @done(2021-05-19)
+		- add flag to use all text properties @done(2021-05-19)
+	get-items improvements: @done(2021-05-19)
+		- process account-products with Updates to queue details updates @done(2021-05-19)
+	vangogh_properties improvements: @done(2021-05-19)
+		- check type assertions before invoking @done(2021-05-19)
 	stringsContain improvements: @done(2021-05-18)
 		- audit all usages and deprecate helper func @done(2021-05-18)
 	command-line piping: @done(2021-05-17)

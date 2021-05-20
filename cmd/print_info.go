@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
+	"sort"
 	"strings"
 )
 
@@ -32,10 +33,16 @@ func printInfo(
 
 	fmt.Println(id, title)
 
+	sortedProperties := make([]string, 0, len(properties))
 	for prop, ok := range properties {
 		if !ok {
 			continue
 		}
+		sortedProperties = append(sortedProperties, prop)
+	}
+	sort.Strings(sortedProperties)
+
+	for _, prop := range sortedProperties {
 		if prop == vangogh_properties.IdProperty ||
 			prop == vangogh_properties.TitleProperty {
 			continue

@@ -39,6 +39,7 @@
       "media={media_}",
       "id_...",
       "read-ids",
+      "all-text",
       "images",
       "video-id"
     ],
