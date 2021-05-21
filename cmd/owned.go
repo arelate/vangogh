@@ -18,7 +18,7 @@ func Owned(ids map[string]bool) error {
 		vangogh_properties.IncludesGamesProperty: true,
 	}
 
-	exl, err := vangogh_extracts.NewList(properties)
+	exl, err := vangogh_extracts.NewListFromMap(properties)
 
 	if err != nil {
 		return err

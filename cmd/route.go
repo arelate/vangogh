@@ -41,6 +41,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "digest":
 		property := req.ArgVal("property")
 		return Digest(property)
+	case "extract":
+		properties := req.ArgValuesMap("properties")
+		return Extract(0, mt, properties)
 	case "get-data":
 		missing := req.Flag("missing")
 		updated := req.Flag("updated")
@@ -120,9 +123,11 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			}
 		}
 		return Sync(mt, sinceHoursAgo, noData, images, screenshots, verbose)
-	case "extract":
-		properties := req.ArgValuesMap("properties")
-		return Extract(0, mt, properties)
+	case "tag":
+		operation := req.ArgVal("operation")
+		tagName := req.ArgVal("tag-name")
+		id := req.ArgVal("id")
+		return Tag(operation, tagName, id)
 	case "wishlist":
 		addProductIds := req.ArgValuesMap("add")
 		removeProductIds := req.ArgValuesMap("remove")

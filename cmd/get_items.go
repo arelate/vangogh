@@ -71,7 +71,7 @@ func getItem(
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		return nil, fmt.Errorf("unexpected status: %s", resp.Status)
+		return nil, fmt.Errorf("vangogh: unexpected status: %s", resp.Status)
 	}
 
 	vs, err := kvas.NewJsonLocal(destUrl)

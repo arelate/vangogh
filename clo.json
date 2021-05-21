@@ -76,6 +76,11 @@
       "media={media_}",
       "since-hours-ago"
     ],
+    "tag": [
+      "operation_=create,delete,edit,add,remove",
+      "tag-name",
+      "id"
+    ],
     "wishlist": [
       "media={media_}",
       "add...",

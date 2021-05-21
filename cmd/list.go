@@ -76,7 +76,7 @@ func List(
 	}
 
 	//load properties extract that will be used for printing
-	exl, err := vangogh_extracts.NewList(properties)
+	exl, err := vangogh_extracts.NewListFromMap(properties)
 
 	//use common printInfo func to display product information by ID
 	for id, ok := range ids {

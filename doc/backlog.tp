@@ -1,13 +1,11 @@
-add more properties:
-	- language
-		- extract languages names
-
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
 	- Edit: POST /account/tags/update?tags={tags_json}
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
+	- Support offline operations?
+		- extracts?
 
 Download files:
 	- video thumbnails
@@ -102,6 +100,9 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	add more properties: @done(2021-05-19)
+		- language @done(2021-05-19)
+			- extract languages names @done(2021-05-19)
 	printInfo improvements: @done(2021-05-19)
 		- provide sort order of the properties for display @done(2021-05-19)
 	text improvements: @done(2021-05-19)

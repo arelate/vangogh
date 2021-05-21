@@ -16,7 +16,7 @@ func Search(query map[string][]string) error {
 		properties[qp] = true
 	}
 
-	exl, err := vangogh_extracts.NewList(properties)
+	exl, err := vangogh_extracts.NewListFromMap(properties)
 	if err != nil {
 		return err
 	}

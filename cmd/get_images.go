@@ -21,10 +21,10 @@ func GetImages(
 		return fmt.Errorf("invalid image type %s", it)
 	}
 
-	titleExtracts, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TitleProperty: true})
+	titleEx, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
 
 	imageTypeProp := vangogh_properties.FromImageType(it)
-	imageTypeExtracts, err := vangogh_extracts.NewList(map[string]bool{imageTypeProp: true})
+	imageTypeEx, err := vangogh_extracts.NewList(imageTypeProp)
 
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func GetImages(
 		if len(ids) > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
-		ids, err = findIdsMissingImages(imageTypeExtracts, imageTypeProp, localImageIds)
+		ids, err = findIdsMissingImages(imageTypeEx, imageTypeProp, localImageIds)
 		if err != nil {
 			return err
 		}
@@ -70,13 +70,13 @@ func GetImages(
 		if !ok {
 			continue
 		}
-		title, ok := titleExtracts.Get(vangogh_properties.TitleProperty, id)
+		title, ok := titleEx.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
 		}
 		fmt.Printf("get %s for %s (%s)\n", it, title, id)
 
-		images, ok := imageTypeExtracts.GetAll(imageTypeProp, id)
+		images, ok := imageTypeEx.GetAll(imageTypeProp, id)
 		if !ok || len(images) == 0 {
 			fmt.Printf("missing %s for %s (%s)\n", it, title, id)
 			continue

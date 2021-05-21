@@ -38,7 +38,7 @@ func keys(someMap map[vangogh_products.ProductType]bool) []string {
 
 func Summary(since int64, mt gog_media.Media) error {
 
-	exl, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TitleProperty: true})
+	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
 	if err != nil {
 		return err
 	}

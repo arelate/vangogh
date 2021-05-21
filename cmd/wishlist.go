@@ -25,16 +25,16 @@ func Wishlist(mt gog_media.Media, addProductIds, removeProductIds map[string]boo
 		return err
 	}
 
-	titleExtracts, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TitleProperty: true})
+	titleEx, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
 	if err != nil {
 		return err
 	}
 
-	if err := wishlistAdd(addProductIds, httpClient, vrStoreProducts, mt, titleExtracts); err != nil {
+	if err := wishlistAdd(addProductIds, httpClient, vrStoreProducts, mt, titleEx); err != nil {
 		return err
 	}
 
-	if err := wishlistRemove(removeProductIds, httpClient, vrStoreProducts, mt, titleExtracts); err != nil {
+	if err := wishlistRemove(removeProductIds, httpClient, vrStoreProducts, mt, titleEx); err != nil {
 		return err
 	}
 

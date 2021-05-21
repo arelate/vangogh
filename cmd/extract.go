@@ -35,7 +35,7 @@ func extractTagNames(mt gog_media.Media) error {
 		return err
 	}
 
-	exl, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TagNameProperty: true})
+	tagNameEx, err := vangogh_extracts.NewList(vangogh_properties.TagNameProperty)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func extractTagNames(mt gog_media.Media) error {
 		tagIdNames[tag.Id] = []string{tag.Name}
 	}
 
-	return exl.AddMany(vangogh_properties.TagNameProperty, tagIdNames)
+	return tagNameEx.AddMany(vangogh_properties.TagNameProperty, tagIdNames)
 }
 
 func noMissingNames(codes map[string]bool) bool {
@@ -61,9 +61,7 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 
 	fmt.Println("extract language names")
 
-	tagNameExtracts, err := vangogh_extracts.NewList(map[string]bool{
-		vangogh_properties.LanguageNameProperty: true,
-	})
+	langNameEx, err := vangogh_extracts.NewList(vangogh_properties.LanguageNameProperty)
 	if err != nil {
 		return err
 	}
@@ -84,7 +82,7 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 
 	//map all language codes to names
 	for lc, _ := range codes {
-		_, ok := tagNameExtracts.Get(vangogh_properties.LanguageNameProperty, lc)
+		_, ok := langNameEx.Get(vangogh_properties.LanguageNameProperty, lc)
 		if !ok {
 			codes[lc] = false
 		}
@@ -119,7 +117,7 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 		}
 	}
 
-	return tagNameExtracts.AddMany(vangogh_properties.LanguageNameProperty, names)
+	return langNameEx.AddMany(vangogh_properties.LanguageNameProperty, names)
 }
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool) error {
@@ -134,12 +132,12 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 		}
 	}
 
-	typeExtracts, err := vangogh_extracts.NewList(map[string]bool{vangogh_properties.TypesProperty: true})
+	typesEx, err := vangogh_extracts.NewList(vangogh_properties.TypesProperty)
 	if err != nil {
 		return err
 	}
 
-	exl, err := vangogh_extracts.NewList(properties)
+	exl, err := vangogh_extracts.NewListFromMap(properties)
 	if err != nil {
 		return err
 	}
@@ -215,5 +213,5 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 		return err
 	}
 
-	return typeExtracts.AddMany(vangogh_properties.TypesProperty, idsTypes)
+	return typesEx.AddMany(vangogh_properties.TypesProperty, idsTypes)
 }

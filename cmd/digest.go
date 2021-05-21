@@ -8,7 +8,7 @@ import (
 
 func Digest(property string) error {
 
-	exl, err := vangogh_extracts.NewList(map[string]bool{property: true})
+	exl, err := vangogh_extracts.NewList(property)
 	if err != nil {
 		return err
 	}

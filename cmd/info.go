@@ -29,7 +29,7 @@ func Info(ids map[string]bool, allText, images, videoId bool) error {
 		}
 	}
 
-	exl, err := vangogh_extracts.NewList(properties)
+	exl, err := vangogh_extracts.NewListFromMap(properties)
 	if err != nil {
 		return err
 	}
