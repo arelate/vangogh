@@ -1,9 +1,12 @@
 tags management command:
 	- Create: POST /account/tags/add?name={tag_name}
+		- handle response
 	- Delete: POST /account/tags/delete?tag_id={tag_id}
-	- Edit: POST /account/tags/update?tags={tags_json}
+		- handle response
 	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
+		- handle response
 	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
+		- handle response
 	- Support offline operations?
 		- extracts?
 
@@ -100,6 +103,8 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- confirm that both adding and removing works for extracts @done(2021-05-22) @project(tags management command)
+	- Edit: POST /account/tags/update?tags={tags_json} @done @project(tags management command)
 	add more properties: @done(2021-05-19)
 		- language @done(2021-05-19)
 			- extract languages names @done(2021-05-19)

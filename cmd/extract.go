@@ -46,7 +46,7 @@ func extractTagNames(mt gog_media.Media) error {
 		tagIdNames[tag.Id] = []string{tag.Name}
 	}
 
-	return tagNameEx.AddMany(vangogh_properties.TagNameProperty, tagIdNames)
+	return tagNameEx.SetMany(vangogh_properties.TagNameProperty, tagIdNames)
 }
 
 func noMissingNames(codes map[string]bool) bool {
@@ -117,7 +117,7 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 		}
 	}
 
-	return langNameEx.AddMany(vangogh_properties.LanguageNameProperty, names)
+	return langNameEx.SetMany(vangogh_properties.LanguageNameProperty, names)
 }
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool) error {
@@ -194,7 +194,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 		}
 
 		for prop, extracts := range missingPropExtracts {
-			if err := exl.AddMany(prop, extracts); err != nil {
+			if err := exl.SetMany(prop, extracts); err != nil {
 				return err
 			}
 		}
@@ -213,5 +213,5 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 		return err
 	}
 
-	return typesEx.AddMany(vangogh_properties.TypesProperty, idsTypes)
+	return typesEx.SetMany(vangogh_properties.TypesProperty, idsTypes)
 }
