@@ -12,7 +12,7 @@ import (
 )
 
 var filterNewProductTypes = map[vangogh_products.ProductType]bool{
-	vangogh_products.Order: true,
+	vangogh_products.Orders: true,
 	//not all licence-products have associated api-products-v1/api-products-v2,
 	//so in some cases we won't get a meaningful information like a title
 	vangogh_products.LicenceProducts: true,

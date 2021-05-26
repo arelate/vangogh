@@ -1,14 +1,5 @@
-tags management command:
-	- Create: POST /account/tags/add?name={tag_name}
-		- handle response
-	- Delete: POST /account/tags/delete?tag_id={tag_id}
-		- handle response
-	- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id}
-		- handle response
-	- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id}
-		- handle response
-	- Support offline operations?
-		- extracts?
+Known issues:
+No known at the moment
 
 Download files:
 	- video thumbnails
@@ -103,6 +94,25 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- SetMany doesn't work great for types @done(2021-05-26) @project(Known issues)
+	digest improvements: @done(2021-05-26)
+		- add a count of products that have that value @done(2021-05-26)
+	- "search -lang jp" some games show duplicate languages @done(2021-05-24) @project(Known issues)
+		- hypothesis: api-products-v2 locations scopes are contributing to this @done(2021-05-24)
+	- last-sync.txt has products with no titles @done(2021-05-24) @project(Known issues)
+		- seems like SetMany is overwriting existing extracts with only updated data @done(2021-05-24)
+	- extract slug from store-products, account-proidcuts, api-products-v1 @done(2021-05-23) @project(Download files)
+	tags management command: @done(2021-05-22)
+		- Create: POST /account/tags/add?name={tag_name} @done(2021-05-22)
+			- handle response @done(2021-05-22)
+		- Delete: POST /account/tags/delete?tag_id={tag_id} @done(2021-05-22)
+			- handle response @done(2021-05-22)
+		- Add: POST /account/tags/attach?product_id={product_id}&tag_id={tag_id} @done(2021-05-22)
+			- handle response @done(2021-05-22)
+		- Remove: POST /account/tags/detach?product_id={product_id}&tag_id={tag_id} @done(2021-05-22)
+			- handle response @done(2021-05-22)
+		- Support offline operations? @done(2021-05-22)
+			- extracts? @done(2021-05-22)
 	- confirm that both adding and removing works for extracts @done(2021-05-22) @project(tags management command)
 	- Edit: POST /account/tags/update?tags={tags_json} @done @project(tags management command)
 	add more properties: @done(2021-05-19)

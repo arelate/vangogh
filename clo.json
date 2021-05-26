@@ -54,7 +54,9 @@
       "read-ids"
     ],
     "digest": [
-      "property_={digestible-properties}"
+      "property_={digestible-properties}",
+      "descending",
+      "sort-by-key"
     ],
     "search": [
       "media={media_}",

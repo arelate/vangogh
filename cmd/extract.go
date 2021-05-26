@@ -70,8 +70,8 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 	names := make(map[string][]string, 0)
 
 	//digest distinct languages codes
-	for _, id := range exl.All(vangogh_properties.LanguageCodesProperty) {
-		idCodes, ok := exl.GetAllRaw(vangogh_properties.LanguageCodesProperty, id)
+	for _, id := range exl.All(vangogh_properties.LanguageCodeProperty) {
+		idCodes, ok := exl.GetAllRaw(vangogh_properties.LanguageCodeProperty, id)
 		if !ok {
 			continue
 		}
@@ -120,6 +120,37 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 	return langNameEx.SetMany(vangogh_properties.LanguageNameProperty, names)
 }
 
+func extractTypes(mt gog_media.Media) error {
+
+	fmt.Println("extract types")
+
+	idsTypes := make(map[string][]string)
+
+	for _, pt := range vangogh_products.Local() {
+
+		vr, err := vangogh_values.NewReader(pt, mt)
+		if err != nil {
+			return err
+		}
+
+		for _, id := range vr.All() {
+
+			if idsTypes[id] == nil {
+				idsTypes[id] = make([]string, 0)
+			}
+
+			idsTypes[id] = append(idsTypes[id], pt.String())
+		}
+	}
+
+	typesEx, err := vangogh_extracts.NewList(vangogh_properties.TypesProperty)
+	if err != nil {
+		return err
+	}
+
+	return typesEx.SetMany(vangogh_properties.TypesProperty, idsTypes)
+}
+
 func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool) error {
 
 	if properties == nil {
@@ -132,17 +163,10 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 		}
 	}
 
-	typesEx, err := vangogh_extracts.NewList(vangogh_properties.TypesProperty)
-	if err != nil {
-		return err
-	}
-
 	exl, err := vangogh_extracts.NewListFromMap(properties)
 	if err != nil {
 		return err
 	}
-
-	idsTypes := make(map[string][]string)
 
 	for _, pt := range vangogh_products.Local() {
 
@@ -169,12 +193,6 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 		fmt.Printf("extract %s\n", pt)
 
 		for _, id := range modifiedIds {
-
-			if idsTypes[id] == nil {
-				idsTypes[id] = make([]string, 0)
-			}
-
-			idsTypes[id] = append(idsTypes[id], pt.String())
 
 			if len(missingProps) == 0 {
 				continue
@@ -213,5 +231,5 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool
 		return err
 	}
 
-	return typesEx.SetMany(vangogh_properties.TypesProperty, idsTypes)
+	return extractTypes(mt)
 }
