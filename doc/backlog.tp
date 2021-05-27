@@ -1,14 +1,18 @@
 Known issues:
 No known at the moment
 
+Use slug where ids are used:
+	- review and add slug as an option to specify ids
+
+Download videos:
+	- youtube-dl using exec.LookPath to confirm it's available @cut @done(2021-05-27)
+	- download with 'youtube-dl {id} --id' @cut @done(2021-05-27)
+	- implement minimalistic youtube video link extract module @done(2021-05-27)
+	- try single letter partition, assuming omst products have one or two videos (confirm with data)
+	- use approach similar to images - itemize all local files to avoid reownloading same files
+	- or create a very simple youtube downloader, since we don't need to handle any special cases - just download publicly available videos
+
 Download files:
-	- video thumbnails
-	- videos
-		- youtube-dl using exec.LookPath to confirm it's available
-		- download with 'youtube-dl {id} --id'
-		- try single letter partition, assuming omst products have one or two videos (confirm with data)
-		- use approach similar to images - itemize all local files to avoid reownloading same files
-		- or create a very simple youtube downloader, since we don't need to handle any special cases - just download publicly available videos
 	- product files by OS, language:
 		- create helper for Details that returns collection of strucutred data per language 
 	

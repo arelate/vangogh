@@ -5,10 +5,11 @@ import (
 	"github.com/arelate/vangogh_properties"
 )
 
-func Info(ids map[string]bool, allText, images, videoId bool) error {
+func Info(slug string, ids map[string]bool, allText, images, videoId bool) error {
 
 	properties := map[string]bool{
 		vangogh_properties.TypesProperty: true,
+		vangogh_properties.SlugProperty:  slug != "",
 	}
 	for _, tp := range vangogh_properties.Text() {
 		properties[tp] = true
@@ -32,6 +33,13 @@ func Info(ids map[string]bool, allText, images, videoId bool) error {
 	exl, err := vangogh_extracts.NewListFromMap(properties)
 	if err != nil {
 		return err
+	}
+
+	if slug != "" {
+		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
+		for _, id := range slugIds {
+			ids[id] = true
+		}
 	}
 
 	for id, ok := range ids {

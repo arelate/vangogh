@@ -33,6 +33,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 	}
 
+	slug := req.ArgVal("slug")
+
 	switch req.Command {
 	case "auth":
 		username := req.ArgVal("username")
@@ -68,7 +70,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		allText := req.Flag("all-text")
 		images := req.Flag("images")
 		videoId := req.Flag("video-id")
-		return Info(ids, allText, images, videoId)
+		return Info(slug, ids, allText, images, videoId)
 	case "list":
 		var modifiedSince int64 = 0
 		modifiedStr := req.ArgVal("modified")
