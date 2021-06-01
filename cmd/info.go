@@ -46,7 +46,9 @@ func Info(slug string, ids map[string]bool, allText, images, videoId bool) error
 		if !ok {
 			continue
 		}
-		printInfo(id, nil, properties, exl)
+		if err := printInfo(id, nil, properties, exl); err != nil {
+			return err
+		}
 	}
 
 	return nil

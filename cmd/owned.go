@@ -66,11 +66,13 @@ func Owned(ids map[string]bool) error {
 		} else {
 			fmt.Print("NOT:")
 		}
-		printInfo(
+		if err := printInfo(
 			id,
 			nil,
 			map[string]bool{vangogh_properties.TitleProperty: true},
-			exl)
+			exl); err != nil {
+			return err
+		}
 
 	}
 

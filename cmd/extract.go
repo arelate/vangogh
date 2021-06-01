@@ -59,6 +59,10 @@ func noMissingNames(codes map[string]bool) bool {
 
 func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 
+	if err := exl.AssertSupport(vangogh_properties.LanguageCodeProperty); err != nil {
+		return err
+	}
+
 	fmt.Println("extract language names")
 
 	langNameEx, err := vangogh_extracts.NewList(vangogh_properties.LanguageNameProperty)

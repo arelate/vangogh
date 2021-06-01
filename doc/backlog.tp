@@ -1,5 +1,5 @@
 Known issues:
-No known at the moment
+	- Dying Light: White Death Bundle (1539474600) best quality video is not downloading, consider adding all streaming formats to try next best
 
 vangogh_extracts improvement:
 	- add a func to verify that a list has required property for a graceful fail

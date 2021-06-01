@@ -39,6 +39,10 @@ func postResp(url *url.URL, respVal interface{}) error {
 }
 
 func tagIdByName(tagName string, exl *vangogh_extracts.ExtractsList) (string, error) {
+	if err := exl.AssertSupport(vangogh_properties.TagNameProperty); err != nil {
+		return "", err
+	}
+
 	tagIds := exl.Search(map[string][]string{vangogh_properties.TagNameProperty: {tagName}}, true)
 	if len(tagIds) == 0 {
 		return "", fmt.Errorf("vangogh: unknown tag-name %s", tagName)
@@ -52,6 +56,9 @@ func tagIdByName(tagName string, exl *vangogh_extracts.ExtractsList) (string, er
 }
 
 func createTag(tagName string, exl *vangogh_extracts.ExtractsList) error {
+	if err := exl.AssertSupport(vangogh_properties.TagNameProperty); err != nil {
+		return err
+	}
 
 	createTagUrl := gog_urls.CreateTag(tagName)
 	var ctResp gog_types.CreateTagResp
@@ -71,6 +78,10 @@ func createTag(tagName string, exl *vangogh_extracts.ExtractsList) error {
 }
 
 func deleteTag(tagName, tagId string, exl *vangogh_extracts.ExtractsList) error {
+	if err := exl.AssertSupport(vangogh_properties.TagNameProperty); err != nil {
+		return err
+	}
+
 	deleteTagUrl := gog_urls.DeleteTag(tagId)
 	var dtResp gog_types.DeleteTagResp
 	if err := postResp(deleteTagUrl, &dtResp); err != nil {
@@ -89,6 +100,10 @@ func deleteTag(tagName, tagId string, exl *vangogh_extracts.ExtractsList) error 
 }
 
 func addTag(tagName, tagId, productId string, exl *vangogh_extracts.ExtractsList) error {
+	if err := exl.AssertSupport(vangogh_properties.TagNameProperty, vangogh_properties.TitleProperty); err != nil {
+		return err
+	}
+
 	addTagUrl := gog_urls.AddTag(productId, tagId)
 	var artResp gog_types.AddRemoveTagResp
 	if err := postResp(addTagUrl, &artResp); err != nil {
@@ -108,6 +123,10 @@ func addTag(tagName, tagId, productId string, exl *vangogh_extracts.ExtractsList
 }
 
 func removeTag(tagName, tagId, productId string, exl *vangogh_extracts.ExtractsList) error {
+	if err := exl.AssertSupport(vangogh_properties.TagNameProperty, vangogh_properties.TitleProperty); err != nil {
+		return err
+	}
+
 	removeTagUrl := gog_urls.RemoveTag(productId, tagId)
 	var artResp gog_types.AddRemoveTagResp
 	if err := postResp(removeTagUrl, &artResp); err != nil {

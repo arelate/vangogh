@@ -83,11 +83,13 @@ func List(
 		if !ok {
 			continue
 		}
-		printInfo(
+		if err := printInfo(
 			id,
 			nil,
 			vangogh_properties.Supported(pt, properties),
-			exl)
+			exl); err != nil {
+			return err
+		}
 	}
 
 	return nil

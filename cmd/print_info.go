@@ -23,12 +23,21 @@ func printInfo(
 	id string,
 	propertyFilter map[string][]string,
 	properties map[string]bool,
-	exl *vangogh_extracts.ExtractsList) {
+	exl *vangogh_extracts.ExtractsList) error {
+
+	props := make([]string, 0, len(properties))
+	for prop, _ := range properties {
+		props = append(props, prop)
+	}
+
+	if err := exl.AssertSupport(props...); err != nil {
+		return err
+	}
 
 	title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 	if !ok {
 		fmt.Printf("product %s not found\n", id)
-		return
+		return nil
 	}
 
 	fmt.Println(id, title)
@@ -69,4 +78,6 @@ func printInfo(
 			fmt.Printf(" %s:%s\n", prop, val)
 		}
 	}
+
+	return nil
 }

@@ -53,7 +53,7 @@ func GetVideos(ids map[string]bool, all bool) error {
 
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 
-		fmt.Println(id, title)
+		fmt.Printf("get videos for %s (%s)\n", title, id)
 
 		for _, videoId := range videoIds {
 
@@ -89,6 +89,10 @@ func allMissingLocalVideoIds(
 	exl *vangogh_extracts.ExtractsList) (ids map[string]bool, err error) {
 
 	ids = make(map[string]bool, 0)
+
+	if err := exl.AssertSupport(vangogh_properties.VideoIdProperty, vangogh_properties.MissingVideoUrlProperty); err != nil {
+		return ids, err
+	}
 
 	localVideoIds, err := vangogh_urls.LocalVideoIds()
 	if err != nil {
