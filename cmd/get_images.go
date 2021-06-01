@@ -53,17 +53,9 @@ func GetImages(
 		return err
 	}
 
-	dlClient := dolo.NewClient(httpClient, nil,
-		&dolo.ClientOptions{
-			Attempts:        3,
-			DelayAttempts:   5,
-			ResumeDownloads: true,
-			MinSizeComplete: 512,
-			//CheckContentLength: true,
-			//Verbose: true,
-		})
+	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
-	//fmt.Println(dlClient)
+	//fmt.Println(dl)
 
 	for id, ok := range ids {
 		if !ok {
@@ -94,7 +86,7 @@ func GetImages(
 				fmt.Printf("get %s for %s (%s) file %d/%d\n", it, title, id, i+1, len(srcUrls))
 			}
 
-			_, err = dlClient.Download(srcUrl, dstDir, "")
+			_, err = dl.Download(srcUrl, dstDir, "")
 			if err != nil {
 				return err
 			}

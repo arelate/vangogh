@@ -35,15 +35,7 @@ func GetVideos(ids map[string]bool, all bool) error {
 		return err
 	}
 
-	dl := dolo.NewClient(httpClient, nil,
-		&dolo.ClientOptions{
-			Attempts:        3,
-			DelayAttempts:   5,
-			ResumeDownloads: true,
-			MinSizeComplete: 512,
-			//CheckContentLength: true,
-			//Verbose: true,
-		})
+	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
 	for id, _ := range ids {
 		videoIds, ok := exl.GetAll(vangogh_properties.VideoIdProperty, id)

@@ -25,7 +25,6 @@ kvas improvements:
 	- provide a REST API
 
 dolo improvements:
-	- add default options method
 	- rewrite dolo to support concurrent ranges downloads
 	- return report that contains:
 		- files that were successfully downloaded with sizes
@@ -99,6 +98,7 @@ Report:
 		- all publishers, developers and number of games they have
 
 Archive:
+	- add default options method @done(2021-05-31) @project(dolo improvements)
 	Download videos: @done(2021-05-31)
 		- use approach similar to images - itemize all local files to avoid reownloading same files @done(2021-05-31)
 		- or create a very simple youtube downloader, since we don't need to handle any special cases - just download publicly available videos: @done(2021-05-31)
