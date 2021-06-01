@@ -2,6 +2,8 @@ github.com/arelate/gog_auth_urls v0.1.2-alpha h1:BCbaclpWzELEbmRpKFqlkYJLvATEd81
 github.com/arelate/gog_auth_urls v0.1.2-alpha/go.mod h1:a3x2OtBMTwzRkhjQoADLfvSrNZzdRNF/1irRY2lFgEM=
 github.com/boggydigital/match_node v0.1.1 h1:ko5T4J19k9XxnBXavAPs8k3zQTm5dwT0MrBGv/rXqVo=
 github.com/boggydigital/match_node v0.1.1/go.mod h1:mXcbPjp9i6MI9wuxjfy0prMNL80DzTSwKfTOkTxDLf8=
+github.com/boggydigital/yt_urls v0.1.1 h1:0PIr+SzzdXCnKr4Lph/euqkgYgW47nzN4oiXJNW106A=
+github.com/boggydigital/yt_urls v0.1.1/go.mod h1:yJGYP95LQ2bmcINgrkRE52l/2hmmKs8F3OeOOmdfn1k=
 golang.org/x/net v0.0.0-20210119194325-5f4716e94777 h1:003p0dJM77cxMSyCPFphvZf/Y5/NXf5fzg6ufd1/Oew=
 golang.org/x/net v0.0.0-20210119194325-5f4716e94777/go.mod h1:m0MpNAwzfU5UDzcl9v0D8zg8gWTRqZa9RBIspLL5mdg=
 golang.org/x/net v0.0.0-20210525063256-abc453219eb5 h1:wjuX4b5yYQnEQHzd+CBcrcC6OVR2J1CN6mUy0oSxIPo=

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, verbose bool) error {
+func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, videos, verbose bool) error {
 
 	var syncStart int64
 	if sinceHoursAgo > 0 {
@@ -58,6 +58,13 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, ve
 			continue
 		}
 		if err := GetImages(nil, it, localImageIds, true); err != nil {
+			return err
+		}
+	}
+
+	// get videos
+	if videos {
+		if err := GetVideos(nil, true); err != nil {
 			return err
 		}
 	}

@@ -21,11 +21,10 @@ func GetImages(
 		return fmt.Errorf("invalid image type %s", it)
 	}
 
-	titleEx, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
-
 	imageTypeProp := vangogh_properties.FromImageType(it)
-	imageTypeEx, err := vangogh_extracts.NewList(imageTypeProp)
-
+	exl, err := vangogh_extracts.NewList(
+		vangogh_properties.TitleProperty,
+		imageTypeProp)
 	if err != nil {
 		return err
 	}
@@ -34,7 +33,7 @@ func GetImages(
 		if len(ids) > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
-		ids, err = findIdsMissingImages(imageTypeEx, imageTypeProp, localImageIds)
+		ids, err = allMissingLocalImageIds(exl, imageTypeProp, localImageIds)
 		if err != nil {
 			return err
 		}
@@ -70,13 +69,13 @@ func GetImages(
 		if !ok {
 			continue
 		}
-		title, ok := titleEx.Get(vangogh_properties.TitleProperty, id)
+		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
 		}
 		fmt.Printf("get %s for %s (%s)\n", it, title, id)
 
-		images, ok := imageTypeEx.GetAll(imageTypeProp, id)
+		images, ok := exl.GetAll(imageTypeProp, id)
 		if !ok || len(images) == 0 {
 			fmt.Printf("missing %s for %s (%s)\n", it, title, id)
 			continue
@@ -95,7 +94,7 @@ func GetImages(
 				fmt.Printf("get %s for %s (%s) file %d/%d\n", it, title, id, i+1, len(srcUrls))
 			}
 
-			_, err = dlClient.Download(srcUrl, dstDir)
+			_, err = dlClient.Download(srcUrl, dstDir, "")
 			if err != nil {
 				return err
 			}
@@ -104,7 +103,7 @@ func GetImages(
 	return nil
 }
 
-func findIdsMissingImages(
+func allMissingLocalImageIds(
 	imageTypeExtracts *vangogh_extracts.ExtractsList,
 	imageTypeProp string,
 	localImageIds map[string]bool) (ids map[string]bool, err error) {
@@ -132,6 +131,7 @@ func findIdsMissingImages(
 			}
 			haveImages = false
 		}
+
 		if haveImages {
 			continue
 		}

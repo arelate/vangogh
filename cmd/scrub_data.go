@@ -66,13 +66,3 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 
 	return nil
 }
-
-//func stringsContain(all []string, s string) bool {
-//	//TODO: audit and convert all usages of this func to map[string]bool
-//	for _, sa := range all {
-//		if sa == s {
-//			return true
-//		}
-//	}
-//	return false
-//}

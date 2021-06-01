@@ -10,6 +10,7 @@ import (
 	"github.com/boggydigital/vangogh/internal"
 	"io"
 	"log"
+	"net/http"
 )
 
 func getItems(
@@ -36,8 +37,18 @@ func getItems(
 		return err
 	}
 
+	httpClient, err := internal.HttpClient()
+	if err != nil {
+		return err
+	}
+
+	vs, err := kvas.NewJsonLocal(destUrl)
+	if err != nil {
+		return err
+	}
+
 	for _, id := range ids {
-		_, err := getItem(id, pt, mt, sourceUrl, destUrl, verbose)
+		_, err := getItem(id, pt, mt, httpClient, vs, sourceUrl, destUrl, verbose)
 		if err != nil {
 			log.Printf("couldn't get data for %s (%s) %s: %v", pt, mt, id, err)
 		}
@@ -49,16 +60,13 @@ func getItem(
 	id string,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
+	httpClient *http.Client,
+	vs *kvas.ValueSet,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
 	verbose bool) (io.Reader, error) {
 
 	fmt.Printf("get %s (%s) data %s\n", pt, mt, id)
-
-	httpClient, err := internal.HttpClient()
-	if err != nil {
-		return nil, err
-	}
 
 	u := sourceUrl(id, mt)
 	if verbose {
@@ -72,11 +80,6 @@ func getItem(
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return nil, fmt.Errorf("vangogh: unexpected status: %s", resp.Status)
-	}
-
-	vs, err := kvas.NewJsonLocal(destUrl)
-	if err != nil {
-		return resp.Body, err
 	}
 
 	var b bytes.Buffer

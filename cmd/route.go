@@ -109,13 +109,16 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		since := time.Now().Unix() - int64(sinceHoursAgo*60*60)
 		return Summary(since, mt)
 	case "sync":
+		noData := req.Flag("no-data")
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")
-		noData := req.Flag("no-data")
+		videos := req.Flag("videos")
 		all := req.Flag("all")
 		if all {
+			noData = false
 			images = true
 			screenshots = true
+			videos = true
 		}
 		sinceHoursAgoStr := req.ArgVal("since-hours-ago")
 		var sinceHoursAgo int
@@ -126,7 +129,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 				return err
 			}
 		}
-		return Sync(mt, sinceHoursAgo, noData, images, screenshots, verbose)
+		return Sync(mt, sinceHoursAgo, noData, images, screenshots, videos, verbose)
 	case "tag":
 		operation := req.ArgVal("operation")
 		tagName := req.ArgVal("tag-name")

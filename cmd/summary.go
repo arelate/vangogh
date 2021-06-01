@@ -21,6 +21,7 @@ var filterNewProductTypes = map[vangogh_products.ProductType]bool{
 var filterUpdatedProductTypes = map[vangogh_products.ProductType]bool{
 	vangogh_products.StoreProducts:    true,
 	vangogh_products.WishlistProducts: true,
+	vangogh_products.AccountProducts:  true,
 	vangogh_products.ApiProductsV1:    true,
 	vangogh_products.ApiProductsV2:    true,
 }
