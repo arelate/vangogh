@@ -26,7 +26,10 @@ func printInfo(
 	exl *vangogh_extracts.ExtractsList) error {
 
 	props := make([]string, 0, len(properties))
-	for prop, _ := range properties {
+	for prop, val := range properties {
+		if !val {
+			continue
+		}
 		props = append(props, prop)
 	}
 

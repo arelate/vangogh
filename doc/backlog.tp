@@ -6,11 +6,8 @@ use slug where ids are used:
 
 Download files:
 	- product files by OS, language:
-		- create helper for Details that returns collection of strucutred data per language 
-	
-yt-urls improvements:
-	- support cipher urls
-	- return more than one urls and provide helpers to select url to fix known issue with 1539474600
+		- create helper for Details that returns collection of strucutred data
+		- suspect this needs to go through the []interface{}, extract "language", then encode/decode download data
 	
 configuration:
 	- create a configuration file at a certain default location
@@ -19,6 +16,10 @@ configuration:
 documentation investment:
 	- add clo.json help for stable commands
 	- generate MD/HTML for help using clo to use in README
+	
+yt-urls improvements:
+	- support cipher urls
+	- return more than one urls and provide helpers to select url to fix known issue with 1539474600
 	
 kvas improvements:
 	- rewrite to support concurrent operations
@@ -38,13 +39,6 @@ verbosity improvements:
 figure out where 1435735429 gets box-art image in Galaxy:
 	- proxy requests and find the source
 
-history.txt:
-	- add a file that collects results of sync operations over time
-	- consider adding information on the downloaded files:
-		- products that contributed to downloaded files
-		- files with sizes
-		- overall amount of data downloaded that session
-
 List improvements:
 	- add sort options (using memories)
 		- title (default)
@@ -59,21 +53,12 @@ Standartize directories:
 concurrency improvements:
 	- rewrite get-data pipeline to be concurrent:
 		- getItems
-		- getPages
 		- split
 		- extract
 		- search
 	
 Work on gaugin can start:
 	- Publish vangogh on GitHub
-
-diff data changes:
-	- when some piece of data changes, consider storing a previous (timestamped) version
-	- create a diff between versions
-
-Operations log:
-	- add operations log or last success timestamp
-	- track updated account products (new, modified, updated)
 
 Improve verbosity:
 	- add module that produced log.Print to the log output
@@ -92,12 +77,25 @@ Tests:
 		- dolo
 	- Make sure every closer is closed - validate errors, etc.
 
-Report:
-	- add various reports:
-		- total product per type and media
-		- all publishers, developers and number of games they have
-
 Archive:
+	- galaxy-background for Darksiders III: Soundtrack (1788625497) is empty @done(2021-06-01) @project(Known issues)
+	history.txt: @done(2021-05-31)
+		- add a file that collects results of sync operations over time @done(2021-05-31)
+		- consider adding information on the downloaded files: @done(2021-05-31)
+			- products that contributed to downloaded files @done(2021-05-31)
+			- files with sizes @done(2021-05-31)
+			- overall amount of data downloaded that session @done(2021-05-31)
+	- getPages @done(2021-05-31) @project(concurrency improvements)
+	Report: @done(2021-05-31)
+		- add various reports: @done(2021-05-31)
+			- total product per type and media @done(2021-05-31)
+			- all publishers, developers and number of games they have @done(2021-05-31)
+	diff data changes: @done(2021-05-31)
+		- when some piece of data changes, consider storing a previous (timestamped) version @done(2021-05-31)
+		- create a diff between versions @done(2021-05-31)
+	Operations log: @done(2021-05-31)
+		- add operations log or last success timestamp @done(2021-05-31)
+		- track updated account products (new, modified, updated) @done(2021-05-31)
 	- add default options method @done(2021-05-31) @project(dolo improvements)
 	Download videos: @done(2021-05-31)
 		- use approach similar to images - itemize all local files to avoid reownloading same files @done(2021-05-31)

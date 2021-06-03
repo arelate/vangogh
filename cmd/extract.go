@@ -13,7 +13,11 @@ import (
 func stringsTrimSpace(stringsWithSpace []string) []string {
 	trimmedStrings := make([]string, 0, len(stringsWithSpace))
 	for _, str := range stringsWithSpace {
-		trimmedStrings = append(trimmedStrings, strings.TrimSpace(str))
+		tStr := strings.TrimSpace(str)
+		if tStr == "" {
+			continue
+		}
+		trimmedStrings = append(trimmedStrings, tStr)
 	}
 	return trimmedStrings
 }

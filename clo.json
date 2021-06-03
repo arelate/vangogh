@@ -31,9 +31,12 @@
       "read-ids",
       "all"
     ],
-    "get-files": [
+    "get-downloads": [
+      "id_...",
       "os=current_,windows,macos,linux",
-      "lang=en_,ru"
+      "lang=en_,ru",
+      "read-ids",
+      "all"
     ],
     "info": [
       "media={media_}",

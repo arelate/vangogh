@@ -19,6 +19,40 @@ var cloBytes []byte
 
 func main() {
 
+	//vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//det, err := vrDetails.Details("1207661143")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//langOsDownloads, err := det.GetDownloads()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, lod := range langOsDownloads {
+	//	fmt.Println(lod.Language)
+	//	fmt.Println("Windows:", lod.Windows)
+	//	fmt.Println("Mac:", lod.Mac)
+	//}
+	//
+	//fmt.Println("Extras:")
+	//for _, ex := range det.Extras {
+	//	fmt.Println(ex)
+	//}
+	//
+	//fmt.Println("DLCs:")
+	//for _, dlc := range det.DLCs {
+	//	fmt.Println(dlc.GetDownloads())
+	//	fmt.Println(dlc.Extras)
+	//}
+	//
+	//return
+
 	//start := time.Now()
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
