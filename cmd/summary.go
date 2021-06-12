@@ -8,7 +8,6 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"sort"
-	"strings"
 	"time"
 )
 
@@ -53,6 +52,15 @@ func humanReadable(productTypes map[vangogh_products.ProductType]bool) []string 
 	return keys
 }
 
+func categorize(ids []string, cat string, updates map[string][]string) {
+	for _, id := range ids {
+		if updates[cat] == nil {
+			updates[cat] = make([]string, 0)
+		}
+		updates[cat] = append(updates[cat], id)
+	}
+}
+
 func Summary(since int64, mt gog_media.Media) error {
 
 	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
@@ -60,9 +68,7 @@ func Summary(since int64, mt gog_media.Media) error {
 		return err
 	}
 
-	created := make(map[string]map[vangogh_products.ProductType]bool, 0)
-	modified := make(map[string]map[vangogh_products.ProductType]bool, 0)
-	updated := make(map[string]bool, 0)
+	updates := make(map[string][]string, 0)
 
 	for _, pt := range vangogh_products.Local() {
 
@@ -75,47 +81,39 @@ func Summary(since int64, mt gog_media.Media) error {
 			return err
 		}
 
-		for _, id := range vr.CreatedAfter(since) {
-			if created[id] == nil {
-				created[id] = make(map[vangogh_products.ProductType]bool, 0)
-			}
-			created[id][pt] = true
-			updated[id] = true
-		}
+		categorize(vr.CreatedAfter(since),
+			fmt.Sprintf("new in %s:", pt.HumanReadableString()),
+			updates)
 
 		if filterUpdatedProductTypes[pt] {
 			continue
 		}
 
-		for _, id := range vr.ModifiedAfter(since, true) {
-			if created[id][pt] {
-				continue
-			}
-			if modified[id] == nil {
-				modified[id] = make(map[vangogh_products.ProductType]bool, 0)
-			}
-			updated[id] = true
-			modified[id][pt] = true
-		}
+		categorize(vr.ModifiedAfter(since, true),
+			fmt.Sprintf("updated in %s:", pt.HumanReadableString()),
+			updates)
 	}
 
-	var msg string
-	if len(updated) == 0 {
-		msg = fmt.Sprintf("no new or updated products since %s.", time.Unix(since, 0).Format(time.Kitchen))
-	} else {
-		msg = fmt.Sprintf("key changes since %s:", time.Unix(since, 0).Format(time.Kitchen))
+	if len(updates) == 0 {
+		fmt.Printf("no new or updated products since %s.\n", time.Unix(since, 0).Format(time.Kitchen))
+		return nil
 	}
 
-	fmt.Println(msg)
+	fmt.Printf("key changes since %s:\n", time.Unix(since, 0).Format(time.Kitchen))
 
-	for id, _ := range updated {
-		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
-		fmt.Println(id, title)
-		if len(created[id]) > 0 {
-			fmt.Println(" new in", strings.Join(humanReadable(created[id]), ","))
-		}
-		if len(modified[id]) > 0 {
-			fmt.Println(" updated in", strings.Join(humanReadable(modified[id]), ","))
+	cats := make([]string, 0, len(updates))
+	for cat, _ := range updates {
+		cats = append(cats, cat)
+	}
+
+	sort.Strings(cats)
+
+	for _, cat := range cats {
+		ids := updates[cat]
+		fmt.Printf(" %s\n", cat)
+		for _, id := range ids {
+			title, _ := exl.Get(vangogh_properties.TitleProperty, id)
+			fmt.Println(id, title)
 		}
 	}
 
