@@ -30,6 +30,15 @@ func GetVideos(ids map[string]bool, all bool) error {
 		}
 	}
 
+	if len(ids) == 0 {
+		if all {
+			fmt.Println("all videos are available locally")
+		} else {
+			fmt.Println("missing ids to get videos")
+		}
+		return nil
+	}
+
 	httpClient, err := internal.HttpClient()
 	if err != nil {
 		return err
@@ -49,27 +58,32 @@ func GetVideos(ids map[string]bool, all bool) error {
 
 		for _, videoId := range videoIds {
 
-			vidUrl, err := yt_urls.BestStreamingUrl(videoId)
+			vidUrls, err := yt_urls.BitrateSortedStreamingUrls(videoId)
 			if err != nil {
 				return err
 			}
 
-			if vidUrl == nil || len(vidUrl.String()) == 0 {
-				if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, ""); err != nil {
+			for _, vidUrl := range vidUrls {
+
+				if vidUrl == nil || len(vidUrl.String()) == 0 {
+					if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, ""); err != nil {
+						return err
+					}
+
+					continue
+				}
+
+				dir, err := vangogh_urls.VideoDir(videoId)
+				if err != nil {
 					return err
 				}
 
-				continue
-			}
+				_, err = dl.Download(vidUrl, dir, videoId+videoExt)
+				if err == nil {
+					break
+				}
 
-			dir, err := vangogh_urls.VideoDir(videoId)
-			if err != nil {
-				return err
-			}
-
-			_, err = dl.Download(vidUrl, dir, videoId+videoExt)
-			if err != nil {
-				return err
+				// log actual error before attempting another file
 			}
 		}
 	}
