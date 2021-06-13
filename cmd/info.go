@@ -3,34 +3,29 @@ package cmd
 import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
+	"github.com/boggydigital/gost"
 )
 
-func Info(slug string, ids map[string]bool, allText, images, videoId bool) error {
+func Info(slug string, ids []string, allText, images, videoId bool) error {
 
-	properties := map[string]bool{
-		vangogh_properties.TypesProperty: true,
-		vangogh_properties.SlugProperty:  slug != "",
+	idSet := gost.StrSetWith(ids...)
+
+	propSet := gost.StrSetWith(vangogh_properties.TypesProperty)
+	if slug != "" {
+		propSet.Add(vangogh_properties.SlugProperty)
 	}
-	for _, tp := range vangogh_properties.Text() {
-		properties[tp] = true
-	}
+	propSet.Add(vangogh_properties.Text()...)
 	if allText {
-		for _, atp := range vangogh_properties.AllText() {
-			properties[atp] = true
-		}
+		propSet.Add(vangogh_properties.AllText()...)
 	}
 	if images {
-		for _, ip := range vangogh_properties.ImageId() {
-			properties[ip] = true
-		}
+		propSet.Add(vangogh_properties.ImageId()...)
 	}
 	if videoId {
-		for _, vp := range vangogh_properties.VideoId() {
-			properties[vp] = true
-		}
+		propSet.Add(vangogh_properties.VideoId()...)
 	}
 
-	exl, err := vangogh_extracts.NewListFromMap(properties)
+	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
 		return err
 	}
@@ -38,15 +33,12 @@ func Info(slug string, ids map[string]bool, allText, images, videoId bool) error
 	if slug != "" {
 		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
 		for _, id := range slugIds {
-			ids[id] = true
+			idSet.Add(id)
 		}
 	}
 
-	for id, ok := range ids {
-		if !ok {
-			continue
-		}
-		if err := printInfo(id, nil, properties, exl); err != nil {
+	for _, id := range idSet.All() {
+		if err := printInfo(id, nil, propSet.All(), exl); err != nil {
 			return err
 		}
 	}

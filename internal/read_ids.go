@@ -2,12 +2,13 @@ package internal
 
 import (
 	"bufio"
+	"github.com/boggydigital/gost"
 	"os"
 	"strings"
 )
 
-func ReadStdinIds() (map[string]bool, error) {
-	ids := make(map[string]bool, 0)
+func ReadStdinIds() ([]string, error) {
+	idSet := gost.NewStrSet()
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -18,10 +19,10 @@ func ReadStdinIds() (map[string]bool, error) {
 		if len(tokens) < 1 {
 			continue
 		}
-		ids[tokens[0]] = true
+		idSet.Add(tokens[0])
 	}
 	if err := scanner.Err(); err != nil {
-		return ids, err
+		return idSet.All(), err
 	}
-	return ids, nil
+	return idSet.All(), nil
 }

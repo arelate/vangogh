@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
+	"github.com/boggydigital/gost"
 )
 
 func Search(query map[string][]string) error {
@@ -11,12 +12,12 @@ func Search(query map[string][]string) error {
 	//prepare a list of all properties to load extracts for and
 	//always start with a `title` property since it is printed for all matched item
 	//(even if the match is for another property)
-	properties := map[string]bool{vangogh_properties.TitleProperty: true}
+	propSet := gost.StrSetWith(vangogh_properties.TitleProperty)
 	for qp, _ := range query {
-		properties[qp] = true
+		propSet.Add(qp)
 	}
 
-	exl, err := vangogh_extracts.NewListFromMap(properties)
+	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
 		return err
 	}
@@ -42,7 +43,7 @@ func Search(query map[string][]string) error {
 			id,
 			propertyFilter,
 			//similarly for propertyFilter (see comment above) - expand all properties to display
-			vangogh_properties.ExpandAll(properties),
+			vangogh_properties.ExpandAll(propSet.All()),
 			exl); err != nil {
 			return err
 		}

@@ -5,14 +5,15 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_pages"
 	"github.com/arelate/vangogh_products"
+	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 )
 
 //GetData gets remote data from GOG.com and stores as local products (splitting as paged data if needed)
 func GetData(
-	ids map[string]bool,
-	denyIds map[string]bool,
+	ids []string,
+	denyIds []string,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	since int64,
@@ -71,12 +72,11 @@ func GetData(
 		return err
 	}
 
+	denyIdSet := gost.StrSetWith(denyIds...)
+
 	approvedIds := make([]string, 0, len(ids))
-	for id, ok := range ids {
-		if !ok {
-			continue
-		}
-		if !denyIds[id] {
+	for _, id := range ids {
+		if !denyIdSet.Has(id) {
 			approvedIds = append(approvedIds, id)
 		}
 	}

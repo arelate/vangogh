@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/gost"
 	"strings"
 )
 
@@ -159,19 +160,17 @@ func extractTypes(mt gog_media.Media) error {
 	return typesEx.SetMany(vangogh_properties.TypesProperty, idsTypes)
 }
 
-func Extract(modifiedAfter int64, mt gog_media.Media, properties map[string]bool) error {
+func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
 
-	if properties == nil {
-		properties = make(map[string]bool, 0)
-	}
+	propSet := gost.StrSetWith(properties...)
 
 	if len(properties) == 0 {
 		for _, ep := range vangogh_properties.Extracted() {
-			properties[ep] = true
+			propSet.Add(ep)
 		}
 	}
 
-	exl, err := vangogh_extracts.NewListFromMap(properties)
+	exl, err := vangogh_extracts.NewList(properties...)
 	if err != nil {
 		return err
 	}

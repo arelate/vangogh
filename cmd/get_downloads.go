@@ -9,7 +9,7 @@ import (
 	"github.com/arelate/vangogh_values"
 )
 
-func GetDownloads(ids map[string]bool, os []string, lang []string, all bool) error {
+func GetDownloads(ids []string, os []string, lang []string, all bool) error {
 	fmt.Printf("get %s, %s downloads for %v\n", os, lang, ids)
 
 	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
@@ -26,10 +26,7 @@ func GetDownloads(ids map[string]bool, os []string, lang []string, all bool) err
 	langCodes := exl.Search(map[string][]string{vangogh_properties.LanguageNameProperty: lang}, true)
 	fmt.Println(langCodes)
 
-	for id, ok := range ids {
-		if !ok {
-			continue
-		}
+	for _, id := range ids {
 
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 		fmt.Println(id, title)

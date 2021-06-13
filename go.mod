@@ -17,6 +17,7 @@ require (
 	github.com/boggydigital/clo v0.2.2-alpha
 	github.com/boggydigital/dolo v0.1.4-alpha
 	github.com/boggydigital/froth v0.1.0-alpha
+	github.com/boggydigital/gost v0.1.0
 	github.com/boggydigital/kvas v0.1.9-alphago
 	github.com/boggydigital/yt_urls v0.1.1
 )
@@ -36,6 +37,7 @@ replace (
 	github.com/boggydigital/clo => ../clo
 	github.com/boggydigital/dolo => ../dolo
 	github.com/boggydigital/froth => ../froth
+	github.com/boggydigital/gost => ../gost
 	github.com/boggydigital/kvas => ../kvas
 	github.com/boggydigital/yt_urls => ../yt_urls
 )

@@ -22,18 +22,10 @@ func shouldSkip(value string, filterValues []string) bool {
 func printInfo(
 	id string,
 	propertyFilter map[string][]string,
-	properties map[string]bool,
+	properties []string,
 	exl *vangogh_extracts.ExtractsList) error {
 
-	props := make([]string, 0, len(properties))
-	for prop, val := range properties {
-		if !val {
-			continue
-		}
-		props = append(props, prop)
-	}
-
-	if err := exl.AssertSupport(props...); err != nil {
+	if err := exl.AssertSupport(properties...); err != nil {
 		return err
 	}
 
@@ -45,16 +37,9 @@ func printInfo(
 
 	fmt.Println(id, title)
 
-	sortedProperties := make([]string, 0, len(properties))
-	for prop, ok := range properties {
-		if !ok {
-			continue
-		}
-		sortedProperties = append(sortedProperties, prop)
-	}
-	sort.Strings(sortedProperties)
+	sort.Strings(properties)
 
-	for _, prop := range sortedProperties {
+	for _, prop := range properties {
 		if prop == vangogh_properties.IdProperty ||
 			prop == vangogh_properties.TitleProperty {
 			continue

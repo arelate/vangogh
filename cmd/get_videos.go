@@ -6,13 +6,14 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/internal"
 	"github.com/boggydigital/yt_urls"
 )
 
 const videoExt = ".mp4"
 
-func GetVideos(ids map[string]bool, all bool) error {
+func GetVideos(ids []string, all bool) error {
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.TitleProperty,
@@ -46,7 +47,7 @@ func GetVideos(ids map[string]bool, all bool) error {
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
-	for id, _ := range ids {
+	for _, id := range ids {
 		videoIds, ok := exl.GetAll(vangogh_properties.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
 			continue
@@ -92,17 +93,18 @@ func GetVideos(ids map[string]bool, all bool) error {
 }
 
 func allMissingLocalVideoIds(
-	exl *vangogh_extracts.ExtractsList) (ids map[string]bool, err error) {
+	exl *vangogh_extracts.ExtractsList) ([]string, error) {
 
-	ids = make(map[string]bool, 0)
+	idSet := gost.NewStrSet()
+	var err error
 
 	if err := exl.AssertSupport(vangogh_properties.VideoIdProperty, vangogh_properties.MissingVideoUrlProperty); err != nil {
-		return ids, err
+		return nil, err
 	}
 
 	localVideoIds, err := vangogh_urls.LocalVideoIds()
 	if err != nil {
-		return ids, err
+		return nil, err
 	}
 
 	for _, id := range exl.All(vangogh_properties.VideoIdProperty) {
@@ -127,8 +129,8 @@ func allMissingLocalVideoIds(
 			continue
 		}
 
-		ids[id] = true
+		idSet.Add(id)
 	}
 
-	return ids, nil
+	return idSet.All(), nil
 }

@@ -3,11 +3,13 @@ vangogh_api:
 
 Misc improvements:
 	- wrap map[string]bool as an IdSet type and add convenience methods
+		- likely add general set with project agnostic methods
+		- add vangogh specific set with sorting, etc
 	- investigate text/tabwriter for output
 	- replace printInfo with a method that takes IdSet and nicely prints out everything, perhaps with actual sorting
 
 Known issues:
-	- Dying Light: White Death Bundle (1539474600) best quality video is not downloading, consider adding all streaming formats to try next best
+	no known at the moment
 	
 search improvements:
 	- need a new API or a flag for exact match search (not contains) - to be used in reverse lookups for things like language code (this should solve "en" -> ["English", "French"])
@@ -31,7 +33,6 @@ documentation investment:
 	
 yt-urls improvements:
 	- support cipher urls
-	- return more than one urls and provide helpers to select url to fix known issue with 1539474600
 	
 kvas improvements:
 	- rewrite to support concurrent operations
@@ -90,6 +91,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- Dying Light: White Death Bundle (1539474600) best quality video is not downloading, consider adding all streaming formats to try next best @done(2021-06-11) @project(Known issues)
+	- return more than one urls and provide helpers to select url to fix known issue with 1539474600 @done(2021-06-11) @project(yt-urls improvements)
 	- galaxy-background for Darksiders III: Soundtrack (1788625497) is empty @done(2021-06-01) @project(Known issues)
 	history.txt: @done(2021-05-31)
 		- add a file that collects results of sync operations over time @done(2021-05-31)

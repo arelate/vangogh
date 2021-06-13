@@ -24,7 +24,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	pt := vangogh_products.Parse(productType)
 	mt := gog_media.Parse(media)
 
-	ids := req.ArgValuesMap("id")
+	ids := req.ArgValues("id")
 	if req.Flag("read-ids") {
 		var err error
 		ids, err = internal.ReadStdinIds()
@@ -47,7 +47,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		property := req.ArgVal("property")
 		return Digest(property, desc, sortByKey)
 	case "extract":
-		properties := req.ArgValuesMap("properties")
+		properties := req.ArgValues("properties")
 		return Extract(0, mt, properties)
 	case "get-data":
 		missing := req.Flag("missing")
@@ -84,7 +84,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			}
 			modifiedSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
 		}
-		properties := req.ArgValuesMap("property")
+		properties := req.ArgValues("property")
 		return List(ids, modifiedSince, pt, mt, properties)
 	case "owned":
 		return Owned(ids)
@@ -138,8 +138,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		id := req.ArgVal("id")
 		return Tag(operation, tagName, id)
 	case "wishlist":
-		addProductIds := req.ArgValuesMap("add")
-		removeProductIds := req.ArgValuesMap("remove")
+		addProductIds := req.ArgValues("add")
+		removeProductIds := req.ArgValues("remove")
 		return Wishlist(mt, addProductIds, removeProductIds)
 	default:
 		return clo.Route(req, defs)

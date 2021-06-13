@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/gost"
 	"time"
 )
 
@@ -14,11 +15,11 @@ import (
 //Can be filtered to products that were created or modified since a certain time.
 //Provided properties will be printed for each product (if supported) in addition to default ID, Title.
 func List(
-	ids map[string]bool,
+	ids []string,
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
-	properties map[string]bool) error {
+	properties []string) error {
 
 	if !vangogh_products.Valid(pt) {
 		return fmt.Errorf("can't list invalid product type %s", pt)
@@ -27,20 +28,19 @@ func List(
 		return fmt.Errorf("can't list invalid media %s", mt)
 	}
 
-	if properties == nil {
-		properties = make(map[string]bool, 0)
-	}
+	propSet := gost.StrSetWith(properties...)
 
 	//if no properties have been provided - print ID, Title
-	if len(properties) == 0 {
-		properties[vangogh_properties.IdProperty] = true
-		properties[vangogh_properties.TitleProperty] = true
+	if propSet.Len() == 0 {
+		propSet.Add(
+			vangogh_properties.IdProperty,
+			vangogh_properties.TitleProperty)
 	}
 
 	//if Title property has not been provided - add it first.
 	//we'll always print the title
-	if !properties[vangogh_properties.TitleProperty] {
-		properties[vangogh_properties.TitleProperty] = true
+	if !propSet.Has(vangogh_properties.TitleProperty) {
+		propSet.Add(vangogh_properties.TitleProperty)
 	}
 
 	//rules for collecting IDs to print:
@@ -50,9 +50,7 @@ func List(
 	//4. if no IDs have been collected and the request have not provided createdAfter or modifiedAfter:
 	// add all product IDs
 
-	if ids == nil {
-		ids = make(map[string]bool, 0)
-	}
+	idSet := gost.StrSetWith(ids...)
 
 	vr, err := vangogh_values.NewReader(pt, mt)
 	if err != nil {
@@ -61,9 +59,9 @@ func List(
 
 	if modifiedAfter > 0 {
 		for _, mId := range vr.ModifiedAfter(modifiedAfter, false) {
-			ids[mId] = true
+			idSet.Add(mId)
 		}
-		if len(ids) == 0 {
+		if idSet.Len() == 0 {
 			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedAfter, 0).Format(time.Kitchen))
 		}
 	}
@@ -71,18 +69,15 @@ func List(
 	if len(ids) == 0 &&
 		modifiedAfter == 0 {
 		for _, id := range vr.All() {
-			ids[id] = true
+			idSet.Add(id)
 		}
 	}
 
 	//load properties extract that will be used for printing
-	exl, err := vangogh_extracts.NewListFromMap(properties)
+	exl, err := vangogh_extracts.NewList(propSet.All()...)
 
 	//use common printInfo func to display product information by ID
-	for id, ok := range ids {
-		if !ok {
-			continue
-		}
+	for _, id := range idSet.All() {
 		if err := printInfo(
 			id,
 			nil,

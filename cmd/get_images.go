@@ -7,12 +7,13 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 )
 
 func GetImages(
-	ids map[string]bool,
+	ids []string,
 	it vangogh_images.ImageType,
 	localImageIds map[string]bool,
 	all bool) error {
@@ -57,10 +58,7 @@ func GetImages(
 
 	//fmt.Println(dl)
 
-	for id, ok := range ids {
-		if !ok {
-			continue
-		}
+	for _, id := range ids {
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
@@ -98,15 +96,16 @@ func GetImages(
 func allMissingLocalImageIds(
 	imageTypeExtracts *vangogh_extracts.ExtractsList,
 	imageTypeProp string,
-	localImageIds map[string]bool) (ids map[string]bool, err error) {
+	localImageIds map[string]bool) ([]string, error) {
 
-	ids = make(map[string]bool, 0)
+	idSet := gost.NewStrSet()
+	var err error
 
 	// filter ids to only the ones that miss that particular image type
 	if localImageIds == nil {
 		localImageIds, err = vangogh_urls.LocalImageIds()
 		if err != nil {
-			return ids, err
+			return nil, err
 		}
 	}
 
@@ -127,8 +126,9 @@ func allMissingLocalImageIds(
 		if haveImages {
 			continue
 		}
-		ids[id] = true
+
+		idSet.Add(id)
 	}
 
-	return ids, err
+	return idSet.All(), err
 }

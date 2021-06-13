@@ -7,18 +7,20 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/gost"
 )
 
-func Owned(ids map[string]bool) error {
+func Owned(ids []string) error {
 
-	owned := make(map[string]bool, 0)
+	ownedSet := gost.NewStrSet()
 
-	properties := map[string]bool{
-		vangogh_properties.TitleProperty:         true,
-		vangogh_properties.IncludesGamesProperty: true,
-	}
+	idSet := gost.StrSetWith(ids...)
 
-	exl, err := vangogh_extracts.NewListFromMap(properties)
+	propSet := gost.StrSetWith(
+		vangogh_properties.TitleProperty,
+		vangogh_properties.IncludesGamesProperty)
+
+	exl, err := vangogh_extracts.NewList(propSet.All()...)
 
 	if err != nil {
 		return err
@@ -30,12 +32,10 @@ func Owned(ids map[string]bool) error {
 		return err
 	}
 
-	for id, ok := range ids {
-		if !ok {
-			continue
-		}
+	for _, id := range idSet.All() {
+
 		if vrLicenceProducts.Contains(id) {
-			owned[id] = true
+			ownedSet.Add(id)
 			continue
 		}
 
@@ -53,15 +53,12 @@ func Owned(ids map[string]bool) error {
 		}
 
 		if ownAllIncludedGames {
-			owned[id] = true
+			ownedSet.Add(id)
 		}
 	}
 
-	for id, ok := range ids {
-		if !ok {
-			continue
-		}
-		if owned[id] {
+	for _, id := range idSet.All() {
+		if ownedSet.Has(id) {
 			fmt.Print("OWN:")
 		} else {
 			fmt.Print("NOT:")
@@ -69,7 +66,7 @@ func Owned(ids map[string]bool) error {
 		if err := printInfo(
 			id,
 			nil,
-			map[string]bool{vangogh_properties.TitleProperty: true},
+			[]string{vangogh_properties.TitleProperty},
 			exl); err != nil {
 			return err
 		}

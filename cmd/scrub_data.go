@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/gost"
 	"strconv"
 )
 
@@ -29,7 +30,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			}
 		}
 
-		splitIds := make(map[string]bool, 0)
+		splitIdSet := gost.NewStrSet()
 
 		splitPt := vangogh_products.SplitType(pagedPt)
 		vrSplit, err := vangogh_values.NewReader(splitPt, mt)
@@ -41,18 +42,18 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			if pagedIds[id] {
 				continue
 			}
-			splitIds[id] = true
+			splitIdSet.Add(id)
 		}
 
-		if len(splitIds) > 0 {
+		if splitIdSet.Len() > 0 {
 			fmt.Printf("%s not present in %s:\n", splitPt, pagedPt)
-			if err := List(splitIds, 0, splitPt, mt, nil); err != nil {
+			if err := List(splitIdSet.All(), 0, splitPt, mt, nil); err != nil {
 				return err
 			}
 
 			if fix {
 				fmt.Printf("fix %s (%s):\n", splitPt, mt)
-				if err := removeData(splitIds, splitPt, mt); err != nil {
+				if err := removeData(splitIdSet.All(), splitPt, mt); err != nil {
 					return err
 				}
 			}
