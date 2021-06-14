@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
+	"github.com/arelate/vangogh_sets"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"time"
@@ -50,7 +51,7 @@ func List(
 	//4. if no IDs have been collected and the request have not provided createdAfter or modifiedAfter:
 	// add all product IDs
 
-	idSet := gost.StrSetWith(ids...)
+	idSet := vangogh_sets.IdSetWith(ids...)
 
 	vr, err := vangogh_values.NewReader(pt, mt)
 	if err != nil {
@@ -76,12 +77,14 @@ func List(
 	//load properties extract that will be used for printing
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
 
+	sorted := idSet.Sort(exl, vangogh_properties.TitleProperty, false)
+
 	//use common printInfo func to display product information by ID
-	for _, id := range idSet.All() {
+	for _, id := range sorted {
 		if err := printInfo(
 			id,
 			nil,
-			vangogh_properties.Supported(pt, properties),
+			vangogh_properties.IsSupported(pt, properties),
 			exl); err != nil {
 			return err
 		}

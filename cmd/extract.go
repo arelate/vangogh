@@ -182,7 +182,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 			return err
 		}
 
-		missingProps := vangogh_properties.Supported(pt, properties)
+		missingProps := vangogh_properties.IsSupported(pt, properties)
 
 		missingPropExtracts := make(map[string]map[string][]string, 0)
 

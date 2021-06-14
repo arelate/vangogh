@@ -43,9 +43,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Authenticate(username, password)
 	case "digest":
 		desc := req.Flag("descending")
-		sortByKey := req.Flag("sort-by-key")
 		property := req.ArgVal("property")
-		return Digest(property, desc, sortByKey)
+		sortByKey := req.Flag("sort-by-key")
+		return Digest(property, sortByKey, desc)
 	case "extract":
 		properties := req.ArgValues("properties")
 		return Extract(0, mt, properties)

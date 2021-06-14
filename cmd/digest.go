@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/vangogh_extracts"
-	"github.com/boggydigital/vangogh/internal"
+	"github.com/boggydigital/gost"
 	"sort"
 )
 
-func Digest(property string, desc, sortByKey bool) error {
+func Digest(property string, sortByKey, desc bool) error {
 
 	exl, err := vangogh_extracts.NewList(property)
 	if err != nil {
@@ -30,32 +30,26 @@ func Digest(property string, desc, sortByKey bool) error {
 		}
 	}
 
+	keys := make([]string, 0, len(distValues))
+	for key, _ := range distValues {
+		keys = append(keys, key)
+	}
+
+	var sorted []string
+
 	if sortByKey {
-
-		keys := make([]string, 0, len(distValues))
-		for key, _ := range distValues {
-			keys = append(keys, key)
+		var sortInterface sort.Interface = sort.StringSlice(keys)
+		if desc {
+			sortInterface = sort.Reverse(sortInterface)
 		}
-
-		sort.Strings(keys)
-
-		for i := 0; i < len(keys); i++ {
-			key := keys[i]
-			if desc {
-				key = keys[len(keys)-1-i]
-			}
-
-			fmt.Printf("%s: %d items\n", key, distValues[key])
-		}
-
+		sort.Sort(sortInterface)
+		sorted = keys
 	} else {
+		_, sorted = gost.NewIntSortedStrSetWith(distValues, desc)
+	}
 
-		siList := internal.NewSortList(distValues, desc)
-		siList.Sort()
-
-		for _, kv := range siList.KeyValues() {
-			fmt.Printf("%s: %d items\n", kv.Key, kv.Val)
-		}
+	for _, key := range sorted {
+		fmt.Printf("%s: %d items\n", key, distValues[key])
 	}
 
 	return nil
