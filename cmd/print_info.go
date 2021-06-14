@@ -8,15 +8,12 @@ import (
 	"strings"
 )
 
-func shouldSkip(value string, filterValues []string) bool {
-	value = strings.ToLower(value)
-	for _, fv := range filterValues {
-		if strings.Contains(value, fv) {
-			return false
-		}
-	}
-	// this makes sure we don't filter values if there is no filter
-	return len(filterValues) > 0
+func Print(
+	ids []string,
+	propertyFilter map[string][]string,
+	properties []string,
+	exl *vangogh_extracts.ExtractsList) error {
+	return nil
 }
 
 func printInfo(
@@ -68,4 +65,15 @@ func printInfo(
 	}
 
 	return nil
+}
+
+func shouldSkip(value string, filterValues []string) bool {
+	value = strings.ToLower(value)
+	for _, fv := range filterValues {
+		if strings.Contains(value, fv) {
+			return false
+		}
+	}
+	// this makes sure we don't filter values if there is no filter
+	return len(filterValues) > 0
 }

@@ -2,9 +2,9 @@ vangogh_api:
 	- create new module that provides all core commands functionality, leaving input output to vangogh
 
 Misc improvements:
-	- wrap map[string]bool as an IdSet type and add convenience methods
+	- wrap map[string]bool as an IdSet type and add convenience methods @done(2021-06-14)
 		- likely add general set with project agnostic methods @done(2021-06-12)
-		- add vangogh specific set with sorting, etc
+		- add vangogh specific set with sorting, etc @done(2021-06-14)
 	- investigate text/tabwriter for output
 	- replace printInfo with a method that takes IdSet and nicely prints out everything, perhaps with actual sorting
 
@@ -13,6 +13,7 @@ Known issues:
 	
 search improvements:
 	- need a new API or a flag for exact match search (not contains) - to be used in reverse lookups for things like language code (this should solve "en" -> ["English", "French"])
+	- provide properties helper that specifies properties that should use precise match (slug, lang)
 
 use slug where ids are used:
 	- review and add slug as an option to specify ids

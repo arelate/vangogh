@@ -28,9 +28,7 @@ func itemizeAll(
 			if len(missingIds) == 0 {
 				fmt.Printf("no missing %s data for %s (%s)\n", pt, mainPt, mt)
 			}
-			for _, missId := range missingIds {
-				idSet.Add(missId)
-			}
+			idSet.Add(missingIds...)
 		}
 		if updated {
 			updatedIds, err := itemizeUpdated(modifiedAfter, mainPt, mt)
@@ -40,9 +38,7 @@ func itemizeAll(
 			if len(updatedIds) == 0 {
 				fmt.Printf("no updated %s data for %s (%s)\n", pt, mainPt, mt)
 			}
-			for _, updId := range updatedIds {
-				idSet.Add(updId)
-			}
+			idSet.Add(updatedIds...)
 		}
 	}
 

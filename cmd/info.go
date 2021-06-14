@@ -32,9 +32,7 @@ func Info(slug string, ids []string, allText, images, videoId bool) error {
 
 	if slug != "" {
 		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
-		for _, id := range slugIds {
-			idSet.Add(id)
-		}
+		idSet.Add(slugIds...)
 	}
 
 	for _, id := range idSet.All() {

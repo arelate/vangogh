@@ -59,9 +59,7 @@ func List(
 	}
 
 	if modifiedAfter > 0 {
-		for _, mId := range vr.ModifiedAfter(modifiedAfter, false) {
-			idSet.Add(mId)
-		}
+		idSet.Add(vr.ModifiedAfter(modifiedAfter, false)...)
 		if idSet.Len() == 0 {
 			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedAfter, 0).Format(time.Kitchen))
 		}
@@ -69,9 +67,7 @@ func List(
 
 	if len(ids) == 0 &&
 		modifiedAfter == 0 {
-		for _, id := range vr.All() {
-			idSet.Add(id)
-		}
+		idSet.Add(vr.All()...)
 	}
 
 	//load properties extract that will be used for printing
