@@ -19,6 +19,21 @@ var cloBytes []byte
 
 func main() {
 
+	//idSet := vangogh_sets.NewIdSet()
+	//idSet.Add("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	//
+	//exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//for _, id := range idSet.Sort(exl, vangogh_properties.TitleProperty, false) {
+	//	title, _ := exl.Get(vangogh_properties.TitleProperty, id)
+	//	fmt.Println(id, title)
+	//}
+	//
+	//return
+
 	//vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
 	//if err != nil {
 	//	log.Fatal(err)

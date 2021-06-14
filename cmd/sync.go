@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_products"
@@ -66,6 +67,9 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, vi
 	}
 
 	// TODO: get files
+
+	// print an empty line before the sync summary
+	fmt.Println()
 
 	// print new or updated
 	return Summary(syncStart, mt)

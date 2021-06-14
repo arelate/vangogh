@@ -3,7 +3,7 @@ vangogh_api:
 
 Misc improvements:
 	- wrap map[string]bool as an IdSet type and add convenience methods
-		- likely add general set with project agnostic methods
+		- likely add general set with project agnostic methods @done(2021-06-12)
 		- add vangogh specific set with sorting, etc
 	- investigate text/tabwriter for output
 	- replace printInfo with a method that takes IdSet and nicely prints out everything, perhaps with actual sorting

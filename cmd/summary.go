@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
+	"github.com/arelate/vangogh_sets"
 	"github.com/arelate/vangogh_values"
 	"sort"
 	"time"
@@ -109,9 +110,12 @@ func Summary(since int64, mt gog_media.Media) error {
 	sort.Strings(cats)
 
 	for _, cat := range cats {
-		ids := updates[cat]
+		sorted := vangogh_sets.
+			IdSetWith(updates[cat]...).
+			Sort(exl, vangogh_properties.TitleProperty, false)
+
 		fmt.Printf(" %s\n", cat)
-		for _, id := range ids {
+		for _, id := range sorted {
 			title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 			fmt.Println(id, title)
 		}
