@@ -51,20 +51,26 @@
       "product-type_!={local-product-types}",
       "media={media_}",
       "property...={all-properties}",
-      "modified"
+      "modified",
+      "sort-by={sortable-properties_}",
+      "descending"
     ],
     "owned": [
       "id_...",
-      "read-ids"
+      "read-ids",
+      "sort-by={sortable-properties_}",
+      "descending"
     ],
     "digest": [
       "property_={digestible-properties}",
-      "descending",
-      "sort-by-key"
+      "sort-by-key",
+      "descending"
     ],
     "search": [
       "media={media_}",
-      "{searchable-properties_...}"
+      "sort-by={sortable-properties_}",
+      "{searchable-properties_...}",
+      "descending"
     ],
     "scrub-data": [
       "media={media_}",
@@ -81,7 +87,9 @@
     ],
     "summary": [
       "media={media_}",
-      "since-hours-ago"
+      "since-hours-ago",
+      "sort-by={sortable-properties_}",
+      "descending"
     ],
     "tag": [
       "operation_=create,delete,edit,add,remove",

@@ -5,13 +5,17 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_sets"
+	"github.com/boggydigital/gost"
 	"sort"
 	"strings"
 )
 
-//TODO: add sort property
 func PrintGroups(
-	groupIds map[string][]string) error {
+	groupIds map[string][]string,
+	sortBy string,
+	desc bool) error {
+
+	propSet := gost.StrSetWith(vangogh_properties.TitleProperty)
 
 	groups := make([]string, 0, len(groupIds))
 	for grp, _ := range groupIds {
@@ -20,7 +24,11 @@ func PrintGroups(
 
 	sort.Strings(groups)
 
-	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	if vangogh_properties.IsValid(sortBy) {
+		propSet.Add(sortBy)
+	}
+
+	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
 		return err
 	}
@@ -29,34 +37,40 @@ func PrintGroups(
 		if len(groupIds[grp]) == 0 {
 			continue
 		}
-		sorted := vangogh_sets.
-			IdSetWith(groupIds[grp]...).
-			Sort(exl, vangogh_properties.TitleProperty, false)
 
 		fmt.Printf(" %s:\n", grp)
 
-		Print(sorted, nil, []string{vangogh_properties.TitleProperty}, exl)
+		if err := Print(groupIds[grp], nil, propSet.All(), sortBy, desc, exl); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-// TODO: add sortBy property
 func Print(
 	ids []string,
 	propertyFilter map[string][]string,
 	properties []string,
+	sortBy string,
+	desc bool,
 	exl *vangogh_extracts.ExtractsList) error {
+
+	propSet := gost.StrSetWith(properties...)
+	propSet.Add(sortBy, vangogh_properties.TitleProperty)
+
 	if exl == nil {
 		var err error
-		exl, err = vangogh_extracts.NewList(properties...)
+		exl, err = vangogh_extracts.NewList(propSet.All()...)
 		if err != nil {
 			return err
 		}
 	}
 
-	for _, id := range ids {
-		if err := printInfo(id, propertyFilter, properties, exl); err != nil {
+	idSet := vangogh_sets.IdSetWith(ids...)
+
+	for _, id := range idSet.Sort(exl, sortBy, desc) {
+		if err := printInfo(id, propertyFilter, propSet.All(), exl); err != nil {
 			return err
 		}
 	}

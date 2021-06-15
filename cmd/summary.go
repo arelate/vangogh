@@ -59,7 +59,7 @@ func categorize(ids []string, cat string, updates map[string][]string) {
 	}
 }
 
-func Summary(since int64, mt gog_media.Media) error {
+func Summary(since int64, mt gog_media.Media, sortBy string, desc bool) error {
 
 	updates := make(map[string][]string, 0)
 
@@ -94,5 +94,5 @@ func Summary(since int64, mt gog_media.Media) error {
 
 	fmt.Printf("key changes since %s:\n", time.Unix(since, 0).Format(time.Kitchen))
 
-	return PrintGroups(updates)
+	return PrintGroups(updates, sortBy, desc)
 }

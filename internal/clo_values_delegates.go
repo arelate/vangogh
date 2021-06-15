@@ -16,6 +16,7 @@ var CloValuesDelegates = map[string]func() []string{
 	"all-properties":        vangogh_properties.All,
 	"searchable-properties": vangogh_properties.Searchable,
 	"digestible-properties": vangogh_properties.Digestible,
+	"sortable-properties":   vangogh_properties.Sortable,
 }
 
 func productTypeStr(productTypes []vangogh_products.ProductType) []string {

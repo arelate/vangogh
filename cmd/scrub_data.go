@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
+	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"strconv"
@@ -47,7 +48,14 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 
 		if splitIdSet.Len() > 0 {
 			fmt.Printf("%s not present in %s:\n", splitPt, pagedPt)
-			if err := List(splitIdSet.All(), 0, splitPt, mt, nil); err != nil {
+			if err := List(
+				splitIdSet.All(),
+				0,
+				splitPt,
+				mt,
+				nil,
+				vangogh_properties.DefaultSort(),
+				false); err != nil {
 				return err
 			}
 

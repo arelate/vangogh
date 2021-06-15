@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
-	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_sets"
@@ -20,7 +19,9 @@ func List(
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
-	properties []string) error {
+	properties []string,
+	sortBy string,
+	desc bool) error {
 
 	if !vangogh_products.Valid(pt) {
 		return fmt.Errorf("can't list invalid product type %s", pt)
@@ -38,11 +39,10 @@ func List(
 			vangogh_properties.TitleProperty)
 	}
 
-	//if Title property has not been provided - add it first.
-	//we'll always print the title
-	if !propSet.Has(vangogh_properties.TitleProperty) {
-		propSet.Add(vangogh_properties.TitleProperty)
-	}
+	//if Title property has not been provided - add it.
+	//we'll always print the title.
+	//same goes for sort-by property
+	propSet.Add(sortBy, vangogh_properties.TitleProperty)
 
 	//rules for collecting IDs to print:
 	//1. start with user provided IDs
@@ -70,14 +70,11 @@ func List(
 		idSet.Add(vr.All()...)
 	}
 
-	//load properties extract that will be used for printing
-	exl, err := vangogh_extracts.NewList(propSet.All()...)
-
-	sorted := idSet.Sort(exl, vangogh_properties.TitleProperty, false)
-
 	return Print(
-		sorted,
+		idSet.All(),
 		nil,
 		vangogh_properties.Supported(pt, properties),
-		exl)
+		sortBy,
+		desc,
+		nil)
 }

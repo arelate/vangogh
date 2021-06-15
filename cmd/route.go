@@ -36,13 +36,15 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	slug := req.ArgVal("slug")
 	all := req.Flag("all")
 
+	sortBy := req.ArgVal("sort-by")
+	desc := req.Flag("descending")
+
 	switch req.Command {
 	case "auth":
 		username := req.ArgVal("username")
 		password := req.ArgVal("password")
 		return Authenticate(username, password)
 	case "digest":
-		desc := req.Flag("descending")
 		property := req.ArgVal("property")
 		sortByKey := req.Flag("sort-by-key")
 		return Digest(property, sortByKey, desc)
@@ -73,7 +75,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		allText := req.Flag("all-text")
 		images := req.Flag("images")
 		videoId := req.Flag("video-id")
-		return Info(slug, ids, allText, images, videoId)
+		return Info(slug, ids, allText, images, videoId, sortBy, desc)
 	case "list":
 		var modifiedSince int64 = 0
 		modifiedStr := req.ArgVal("modified")
@@ -85,9 +87,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			modifiedSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
 		}
 		properties := req.ArgValues("property")
-		return List(ids, modifiedSince, pt, mt, properties)
+		return List(ids, modifiedSince, pt, mt, properties, sortBy, desc)
 	case "owned":
-		return Owned(ids)
+		return Owned(ids, sortBy, desc)
 	case "search":
 		query := make(map[string][]string)
 		for _, prop := range vangogh_properties.Searchable() {
@@ -95,7 +97,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 				query[prop] = values
 			}
 		}
-		return Search(query)
+		return Search(query, sortBy, desc)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)
@@ -110,7 +112,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			}
 		}
 		since := time.Now().Unix() - int64(sinceHoursAgo*60*60)
-		return Summary(since, mt)
+		return Summary(since, mt, sortBy, desc)
 	case "sync":
 		noData := req.Flag("no-data")
 		images := req.Flag("images")
