@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
@@ -12,10 +11,8 @@ import (
 
 func Owned(ids []string) error {
 
-	ownedSet := gost.NewStrSet()
-
 	idSet := gost.StrSetWith(ids...)
-
+	ownedSet := gost.NewStrSet()
 	propSet := gost.StrSetWith(
 		vangogh_properties.TitleProperty,
 		vangogh_properties.IncludesGamesProperty)
@@ -27,7 +24,6 @@ func Owned(ids []string) error {
 	}
 
 	vrLicenceProducts, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, gog_media.Game)
-
 	if err != nil {
 		return err
 	}
@@ -40,7 +36,7 @@ func Owned(ids []string) error {
 		}
 
 		includesGames, ok := exl.GetAllRaw(vangogh_properties.IncludesGamesProperty, id)
-		if !ok {
+		if !ok || len(includesGames) == 0 {
 			continue
 		}
 
@@ -57,21 +53,8 @@ func Owned(ids []string) error {
 		}
 	}
 
-	for _, id := range idSet.All() {
-		if ownedSet.Has(id) {
-			fmt.Print("OWN:")
-		} else {
-			fmt.Print("NOT:")
-		}
-		if err := printInfo(
-			id,
-			nil,
-			[]string{vangogh_properties.TitleProperty},
-			exl); err != nil {
-			return err
-		}
-
-	}
-
-	return nil
+	return PrintGroups(map[string][]string{
+		"owned":     ownedSet.All(),
+		"not owned": idSet.Except(ownedSet),
+	})
 }

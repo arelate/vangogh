@@ -3,10 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
-	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
-	"github.com/arelate/vangogh_properties"
-	"github.com/arelate/vangogh_sets"
 	"github.com/arelate/vangogh_values"
 	"sort"
 	"time"
@@ -64,11 +61,6 @@ func categorize(ids []string, cat string, updates map[string][]string) {
 
 func Summary(since int64, mt gog_media.Media) error {
 
-	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
-	if err != nil {
-		return err
-	}
-
 	updates := make(map[string][]string, 0)
 
 	for _, pt := range vangogh_products.Local() {
@@ -83,7 +75,7 @@ func Summary(since int64, mt gog_media.Media) error {
 		}
 
 		categorize(vr.CreatedAfter(since),
-			fmt.Sprintf("new in %s:", pt.HumanReadableString()),
+			fmt.Sprintf("new in %s", pt.HumanReadableString()),
 			updates)
 
 		if filterUpdatedProductTypes[pt] {
@@ -91,7 +83,7 @@ func Summary(since int64, mt gog_media.Media) error {
 		}
 
 		categorize(vr.ModifiedAfter(since, true),
-			fmt.Sprintf("updated in %s:", pt.HumanReadableString()),
+			fmt.Sprintf("updated in %s", pt.HumanReadableString()),
 			updates)
 	}
 
@@ -102,24 +94,5 @@ func Summary(since int64, mt gog_media.Media) error {
 
 	fmt.Printf("key changes since %s:\n", time.Unix(since, 0).Format(time.Kitchen))
 
-	cats := make([]string, 0, len(updates))
-	for cat, _ := range updates {
-		cats = append(cats, cat)
-	}
-
-	sort.Strings(cats)
-
-	for _, cat := range cats {
-		sorted := vangogh_sets.
-			IdSetWith(updates[cat]...).
-			Sort(exl, vangogh_properties.TitleProperty, false)
-
-		fmt.Printf(" %s\n", cat)
-		for _, id := range sorted {
-			title, _ := exl.Get(vangogh_properties.TitleProperty, id)
-			fmt.Println(id, title)
-		}
-	}
-
-	return nil
+	return PrintGroups(updates)
 }

@@ -4,15 +4,63 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
+	"github.com/arelate/vangogh_sets"
 	"sort"
 	"strings"
 )
 
+//TODO: add sort property
+func PrintGroups(
+	groupIds map[string][]string) error {
+
+	groups := make([]string, 0, len(groupIds))
+	for grp, _ := range groupIds {
+		groups = append(groups, grp)
+	}
+
+	sort.Strings(groups)
+
+	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	if err != nil {
+		return err
+	}
+
+	for _, grp := range groups {
+		if len(groupIds[grp]) == 0 {
+			continue
+		}
+		sorted := vangogh_sets.
+			IdSetWith(groupIds[grp]...).
+			Sort(exl, vangogh_properties.TitleProperty, false)
+
+		fmt.Printf(" %s:\n", grp)
+
+		Print(sorted, nil, []string{vangogh_properties.TitleProperty}, exl)
+	}
+
+	return nil
+}
+
+// TODO: add sortBy property
 func Print(
 	ids []string,
 	propertyFilter map[string][]string,
 	properties []string,
 	exl *vangogh_extracts.ExtractsList) error {
+	if exl == nil {
+		var err error
+		exl, err = vangogh_extracts.NewList(properties...)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, id := range ids {
+		if err := printInfo(id, propertyFilter, properties, exl); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

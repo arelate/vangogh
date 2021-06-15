@@ -38,20 +38,15 @@ func Search(query map[string][]string) error {
 		}
 	}
 
-	for _, id := range results {
-		if err := printInfo(
-			id,
-			propertyFilter,
-			//similarly for propertyFilter (see comment above) - expand all properties to display
-			vangogh_properties.ExpandAll(propSet.All()),
-			exl); err != nil {
-			return err
-		}
-	}
-
 	if len(results) == 0 {
 		fmt.Println("no products found")
+		return nil
 	}
 
-	return nil
+	return Print(
+		results,
+		propertyFilter,
+		//similarly for propertyFilter (see comment above) - expand all properties to display
+		vangogh_properties.ExpandAll(propSet.All()),
+		exl)
 }

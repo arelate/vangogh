@@ -75,16 +75,9 @@ func List(
 
 	sorted := idSet.Sort(exl, vangogh_properties.TitleProperty, false)
 
-	//use common printInfo func to display product information by ID
-	for _, id := range sorted {
-		if err := printInfo(
-			id,
-			nil,
-			vangogh_properties.IsSupported(pt, properties),
-			exl); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return Print(
+		sorted,
+		nil,
+		vangogh_properties.Supported(pt, properties),
+		exl)
 }

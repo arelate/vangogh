@@ -35,11 +35,5 @@ func Info(slug string, ids []string, allText, images, videoId bool) error {
 		idSet.Add(slugIds...)
 	}
 
-	for _, id := range idSet.All() {
-		if err := printInfo(id, nil, propSet.All(), exl); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return Print(idSet.All(), nil, propSet.All(), exl)
 }

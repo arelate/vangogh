@@ -165,12 +165,10 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 	propSet := gost.StrSetWith(properties...)
 
 	if len(properties) == 0 {
-		for _, ep := range vangogh_properties.Extracted() {
-			propSet.Add(ep)
-		}
+		propSet.Add(vangogh_properties.Extracted()...)
 	}
 
-	exl, err := vangogh_extracts.NewList(properties...)
+	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
 		return err
 	}
@@ -182,7 +180,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 			return err
 		}
 
-		missingProps := vangogh_properties.IsSupported(pt, properties)
+		missingProps := vangogh_properties.Supported(pt, propSet.All())
 
 		missingPropExtracts := make(map[string]map[string][]string, 0)
 
@@ -214,7 +212,9 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 				if _, ok := missingPropExtracts[prop]; !ok {
 					missingPropExtracts[prop] = make(map[string][]string, 0)
 				}
-				missingPropExtracts[prop][id] = stringsTrimSpace(values)
+				if trValues := stringsTrimSpace(values); len(trValues) > 0 {
+					missingPropExtracts[prop][id] = trValues
+				}
 			}
 		}
 
