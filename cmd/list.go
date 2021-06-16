@@ -19,9 +19,7 @@ func List(
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
-	properties []string,
-	sortBy string,
-	desc bool) error {
+	properties []string) error {
 
 	if !vangogh_products.Valid(pt) {
 		return fmt.Errorf("can't list invalid product type %s", pt)
@@ -42,7 +40,7 @@ func List(
 	//if Title property has not been provided - add it.
 	//we'll always print the title.
 	//same goes for sort-by property
-	propSet.Add(sortBy, vangogh_properties.TitleProperty)
+	propSet.Add(vangogh_properties.TitleProperty)
 
 	//rules for collecting IDs to print:
 	//1. start with user provided IDs
@@ -74,7 +72,5 @@ func List(
 		idSet.All(),
 		nil,
 		vangogh_properties.Supported(pt, properties),
-		sortBy,
-		desc,
 		nil)
 }

@@ -6,11 +6,11 @@ import (
 	"github.com/boggydigital/gost"
 )
 
-func Info(slug string, ids []string, allText, images, videoId bool, sortBy string, desc bool) error {
+func Info(slug string, ids []string, allText, images, videoId bool) error {
 
 	idSet := gost.StrSetWith(ids...)
 
-	propSet := gost.StrSetWith(vangogh_properties.TypesProperty, sortBy)
+	propSet := gost.StrSetWith(vangogh_properties.TypesProperty)
 	if slug != "" {
 		propSet.Add(vangogh_properties.SlugProperty)
 	}
@@ -39,7 +39,5 @@ func Info(slug string, ids []string, allText, images, videoId bool, sortBy strin
 		idSet.All(),
 		nil,
 		propSet.All(),
-		sortBy,
-		desc,
 		exl)
 }

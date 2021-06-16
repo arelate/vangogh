@@ -9,7 +9,7 @@ import (
 	"github.com/boggydigital/gost"
 )
 
-func Owned(ids []string, sortBy string, desc bool) error {
+func Owned(ids []string) error {
 
 	idSet := gost.StrSetWith(ids...)
 	ownedSet := gost.NewStrSet()
@@ -57,7 +57,5 @@ func Owned(ids []string, sortBy string, desc bool) error {
 		map[string][]string{
 			"owned":     ownedSet.All(),
 			"not owned": idSet.Except(ownedSet),
-		},
-		sortBy,
-		desc)
+		})
 }

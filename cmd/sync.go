@@ -72,5 +72,5 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, vi
 	fmt.Println()
 
 	// print new or updated
-	return Summary(syncStart, mt, vangogh_properties.DefaultSort(), false)
+	return Summary(syncStart, mt)
 }

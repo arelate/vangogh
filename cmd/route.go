@@ -36,9 +36,6 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	slug := req.ArgVal("slug")
 	all := req.Flag("all")
 
-	sortBy := req.ArgVal("sort-by")
-	desc := req.Flag("descending")
-
 	switch req.Command {
 	case "auth":
 		username := req.ArgVal("username")
@@ -46,8 +43,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		return Authenticate(username, password)
 	case "digest":
 		property := req.ArgVal("property")
-		sortByKey := req.Flag("sort-by-key")
-		return Digest(property, sortByKey, desc)
+		return Digest(property)
 	case "extract":
 		properties := req.ArgValues("properties")
 		return Extract(0, mt, properties)
@@ -75,7 +71,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		allText := req.Flag("all-text")
 		images := req.Flag("images")
 		videoId := req.Flag("video-id")
-		return Info(slug, ids, allText, images, videoId, sortBy, desc)
+		return Info(slug, ids, allText, images, videoId)
 	case "list":
 		var modifiedSince int64 = 0
 		modifiedStr := req.ArgVal("modified")
@@ -87,9 +83,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			modifiedSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
 		}
 		properties := req.ArgValues("property")
-		return List(ids, modifiedSince, pt, mt, properties, sortBy, desc)
+		return List(ids, modifiedSince, pt, mt, properties)
 	case "owned":
-		return Owned(ids, sortBy, desc)
+		return Owned(ids)
 	case "search":
 		query := make(map[string][]string)
 		for _, prop := range vangogh_properties.Searchable() {
@@ -97,7 +93,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 				query[prop] = values
 			}
 		}
-		return Search(query, sortBy, desc)
+		return Search(query)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)
@@ -112,7 +108,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			}
 		}
 		since := time.Now().Unix() - int64(sinceHoursAgo*60*60)
-		return Summary(since, mt, sortBy, desc)
+		return Summary(since, mt)
 	case "sync":
 		noData := req.Flag("no-data")
 		images := req.Flag("images")

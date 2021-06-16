@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/boggydigital/gost"
-	"sort"
 )
 
-func Digest(property string, sortByKey, desc bool) error {
+func Digest(property string) error {
 
 	exl, err := vangogh_extracts.NewList(property)
 	if err != nil {
@@ -37,16 +36,7 @@ func Digest(property string, sortByKey, desc bool) error {
 
 	var sorted []string
 
-	if sortByKey {
-		var sortInterface sort.Interface = sort.StringSlice(keys)
-		if desc {
-			sortInterface = sort.Reverse(sortInterface)
-		}
-		sort.Sort(sortInterface)
-		sorted = keys
-	} else {
-		_, sorted = gost.NewIntSortedStrSetWith(distValues, desc)
-	}
+	_, sorted = gost.NewIntSortedStrSetWith(distValues, defaultDesc)
 
 	for _, key := range sorted {
 		fmt.Printf("%s: %d items\n", key, distValues[key])

@@ -10,10 +10,13 @@ import (
 	"strings"
 )
 
+const (
+	defaultSort = vangogh_properties.TitleProperty
+	defaultDesc = false
+)
+
 func PrintGroups(
-	groupIds map[string][]string,
-	sortBy string,
-	desc bool) error {
+	groupIds map[string][]string) error {
 
 	propSet := gost.StrSetWith(vangogh_properties.TitleProperty)
 
@@ -23,10 +26,6 @@ func PrintGroups(
 	}
 
 	sort.Strings(groups)
-
-	if vangogh_properties.IsValid(sortBy) {
-		propSet.Add(sortBy)
-	}
 
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
@@ -40,7 +39,7 @@ func PrintGroups(
 
 		fmt.Printf(" %s:\n", grp)
 
-		if err := Print(groupIds[grp], nil, propSet.All(), sortBy, desc, exl); err != nil {
+		if err := Print(groupIds[grp], nil, propSet.All(), exl); err != nil {
 			return err
 		}
 	}
@@ -52,12 +51,10 @@ func Print(
 	ids []string,
 	propertyFilter map[string][]string,
 	properties []string,
-	sortBy string,
-	desc bool,
 	exl *vangogh_extracts.ExtractsList) error {
 
 	propSet := gost.StrSetWith(properties...)
-	propSet.Add(sortBy, vangogh_properties.TitleProperty)
+	propSet.Add(vangogh_properties.TitleProperty)
 
 	if exl == nil {
 		var err error
@@ -69,7 +66,7 @@ func Print(
 
 	idSet := vangogh_sets.IdSetWith(ids...)
 
-	for _, id := range idSet.Sort(exl, sortBy, desc) {
+	for _, id := range idSet.Sort(exl, defaultSort, defaultDesc) {
 		if err := printInfo(id, propertyFilter, propSet.All(), exl); err != nil {
 			return err
 		}

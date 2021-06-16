@@ -11,7 +11,10 @@ import (
 	"github.com/boggydigital/yt_urls"
 )
 
-const videoExt = ".mp4"
+const (
+	videoExt   = ".mp4"
+	missingStr = "missing"
+)
 
 func GetVideos(ids []string, all bool) error {
 
@@ -59,18 +62,26 @@ func GetVideos(ids []string, all bool) error {
 
 		for _, videoId := range videoIds {
 
-			vidUrls, err := yt_urls.BitrateSortedStreamingUrls(videoId)
+			vidUrls, err := yt_urls.StreamingUrls(videoId)
 			if err != nil {
-				return err
+				fmt.Println(err)
+				if addErr := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
+					return addErr
+				}
+			}
+
+			if len(vidUrls) == 0 {
+				if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
+					return err
+				}
 			}
 
 			for _, vidUrl := range vidUrls {
 
 				if vidUrl == nil || len(vidUrl.String()) == 0 {
-					if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, ""); err != nil {
+					if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
 						return err
 					}
-
 					continue
 				}
 

@@ -7,7 +7,7 @@ import (
 	"github.com/boggydigital/gost"
 )
 
-func Search(query map[string][]string, sortBy string, desc bool) error {
+func Search(query map[string][]string) error {
 
 	//prepare a list of all properties to load extracts for and
 	//always start with a `title` property since it is printed for all matched item
@@ -16,7 +16,6 @@ func Search(query map[string][]string, sortBy string, desc bool) error {
 	for qp, _ := range query {
 		propSet.Add(qp)
 	}
-	propSet.Add(sortBy)
 
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
@@ -49,7 +48,5 @@ func Search(query map[string][]string, sortBy string, desc bool) error {
 		propertyFilter,
 		//similarly for propertyFilter (see comment above) - expand all properties to display
 		vangogh_properties.ExpandAll(propSet.All()),
-		sortBy,
-		desc,
 		exl)
 }
