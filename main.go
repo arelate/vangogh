@@ -19,54 +19,49 @@ var cloBytes []byte
 
 func main() {
 
-	//idSet := vangogh_sets.NewIdSet()
-	//idSet.Add("1", "2", "3", "4", "5", "6", "7", "8", "9")
-	//
-	//exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	//exl, err := vangogh_extracts.NewList(vangogh_properties.LanguageCodeProperty)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//for _, id := range idSet.Sort(exl, vangogh_properties.TitleProperty, false) {
-	//	title, _ := exl.Get(vangogh_properties.TitleProperty, id)
-	//	fmt.Println(id, title)
+	//if err := cmd.ExtractLanguageNames(exl); err != nil {
+	//	log.Fatal(err)
 	//}
 	//
 	//return
 
-	//vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
+	//vrApiProductsV1, err := vangogh_values.NewReader(vangogh_products.ApiProductsV1, gog_media.Game)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//det, err := vrDetails.Details("1207661143")
+	//langs := map[string]string{}
+	//
+	//for _, id := range vrApiProductsV1.All() {
+	//	apv1, err := vrApiProductsV1.ApiProductV1(id)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//	for code, name := range apv1.GetNativeLanguages() {
+	//		if langs[code] != "" && langs[code] != name {
+	//			fmt.Println(code, langs[code], name)
+	//			continue
+	//		}
+	//		langs[code] = name
+	//	}
+	//}
+	//
+	//fmt.Println(langs)
+
+	//exl, err := vangogh_extracts.NewList(vangogh_properties.LanguageNameProperty)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//langOsDownloads, err := det.GetDownloads()
-	//if err != nil {
-	//	log.Fatal(err)
+	//for _, id := range exl.All(vangogh_properties.LanguageNameProperty) {
+	//	val, _ := exl.Get(vangogh_properties.LanguageNameProperty, id)
+	//	fmt.Println(id, val)
 	//}
-	//
-	//for _, lod := range langOsDownloads {
-	//	fmt.Println(lod.Language)
-	//	fmt.Println("Windows:", lod.Windows)
-	//	fmt.Println("Mac:", lod.Mac)
-	//}
-	//
-	//fmt.Println("Extras:")
-	//for _, ex := range det.Extras {
-	//	fmt.Println(ex)
-	//}
-	//
-	//fmt.Println("DLCs:")
-	//for _, dlc := range det.DLCs {
-	//	fmt.Println(dlc.GetDownloads())
-	//	fmt.Println(dlc.Extras)
-	//}
-	//
-	//return
 
 	//start := time.Now()
 

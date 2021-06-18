@@ -70,13 +70,7 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 
 	fmt.Println("extract language names")
 
-	langNameEx, err := vangogh_extracts.NewList(vangogh_properties.LanguageNameProperty)
-	if err != nil {
-		return err
-	}
-
-	codes := make(map[string]bool, 0)
-	names := make(map[string][]string, 0)
+	langCodeSet := gost.NewStrSet()
 
 	//digest distinct languages codes
 	for _, id := range exl.All(vangogh_properties.LanguageCodeProperty) {
@@ -85,23 +79,35 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 			continue
 		}
 		for _, code := range idCodes {
-			codes[code] = true
+			langCodeSet.Add(code)
 		}
 	}
 
-	//map all language codes to names
-	for lc, _ := range codes {
-		_, ok := langNameEx.Get(vangogh_properties.LanguageNameProperty, lc)
-		if !ok {
-			codes[lc] = false
+	langNamesEx, err := vangogh_extracts.NewList(
+		vangogh_properties.LanguageNameProperty,
+		vangogh_properties.NativeLanguageNameProperty)
+	if err != nil {
+		return err
+	}
+
+	names := make(map[string][]string, 0)
+
+	// TODO: write a comment explaining all or nothing approach
+	//map all language codes to names and hide existing
+	missingLangs := gost.StrSetWith(langCodeSet.All()...)
+	for _, lc := range missingLangs.All() {
+		if _, ok := langNamesEx.Get(vangogh_properties.LanguageNameProperty, lc); ok {
+			missingLangs.Hide(lc)
 		}
 	}
 
-	if noMissingNames(codes) {
+	if missingLangs.Len() == 0 {
 		return nil
 	}
 
-	//iterate through api-products-v2 until we fill all names
+	missingLangs = gost.StrSetWith(langCodeSet.All()...)
+
+	//iterate through api-products-v1 until we fill all native names
 	vrApiProductsV2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	if err != nil {
 		return err
@@ -115,18 +121,89 @@ func extractLanguageNames(exl *vangogh_extracts.ExtractsList) error {
 
 		languages := apv2.GetLanguages()
 		for lc, name := range languages {
-			if !codes[lc] {
+			if missingLangs.Has(lc) {
 				names[lc] = []string{name}
-				codes[lc] = true
+				missingLangs.Hide(lc)
 			}
 		}
 
-		if noMissingNames(codes) {
+		if missingLangs.Len() == 0 {
 			break
 		}
 	}
 
-	return langNameEx.SetMany(vangogh_properties.LanguageNameProperty, names)
+	return langNamesEx.SetMany(vangogh_properties.LanguageNameProperty, names)
+}
+
+//TODO: DRY this based on extractLanguageNames
+func extractNativeLanguageNames(exl *vangogh_extracts.ExtractsList) error {
+
+	if err := exl.AssertSupport(vangogh_properties.LanguageCodeProperty); err != nil {
+		return err
+	}
+
+	fmt.Println("extract native language names")
+
+	langCodeSet := gost.NewStrSet()
+
+	//digest distinct languages codes
+	for _, id := range exl.All(vangogh_properties.LanguageCodeProperty) {
+		idCodes, ok := exl.GetAllRaw(vangogh_properties.LanguageCodeProperty, id)
+		if !ok {
+			continue
+		}
+		for _, code := range idCodes {
+			langCodeSet.Add(code)
+		}
+	}
+
+	langNamesEx, err := vangogh_extracts.NewList(vangogh_properties.NativeLanguageNameProperty)
+	if err != nil {
+		return err
+	}
+
+	nativeNames := make(map[string][]string, 0)
+
+	// TODO: write a comment explaining all or nothing approach
+	//map all language codes to names and hide existing
+	missingNativeLangs := gost.StrSetWith(langCodeSet.All()...)
+	for _, lc := range langCodeSet.All() {
+		if _, ok := langNamesEx.Get(vangogh_properties.NativeLanguageNameProperty, lc); ok {
+			missingNativeLangs.Hide(lc)
+		}
+	}
+
+	if missingNativeLangs.Len() == 0 {
+		return nil
+	}
+
+	vrApiProductsV1, err := vangogh_values.NewReader(vangogh_products.ApiProductsV1, gog_media.Game)
+	if err != nil {
+		return err
+	}
+
+	missingNativeLangs = gost.StrSetWith(langCodeSet.All()...)
+
+	for _, id := range vrApiProductsV1.All() {
+		apv1, err := vrApiProductsV1.ApiProductV1(id)
+		if err != nil {
+			return err
+		}
+
+		nativeLanguages := apv1.GetNativeLanguages()
+		for lc, name := range nativeLanguages {
+			if missingNativeLangs.Has(lc) {
+				nativeNames[lc] = []string{name}
+				missingNativeLangs.Hide(lc)
+			}
+		}
+
+		if missingNativeLangs.Len() == 0 {
+			break
+		}
+	}
+
+	return langNamesEx.SetMany(vangogh_properties.NativeLanguageNameProperty, nativeNames)
 }
 
 func extractTypes(mt gog_media.Media) error {
@@ -229,6 +306,10 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 	//given we'll be filling the blanks from api-products-v2 using
 	//GetLanguages property that returns map[string]string
 	if err := extractLanguageNames(exl); err != nil {
+		return err
+	}
+
+	if err := extractNativeLanguageNames(exl); err != nil {
 		return err
 	}
 

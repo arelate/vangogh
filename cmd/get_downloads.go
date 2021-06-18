@@ -7,10 +7,17 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/gost"
 )
 
-func GetDownloads(ids []string, os []string, lang []string, all bool) error {
-	fmt.Printf("get %s, %s downloads for %v\n", os, lang, ids)
+const (
+	windows = "windows"
+	macos   = "macos"
+	linux   = "linux"
+)
+
+func GetDownloads(ids []string, os []string, langCodes []string, all bool) error {
+	fmt.Printf("get %s, %s downloads for %v\n", os, langCodes, ids)
 
 	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
 	if err != nil {
@@ -18,13 +25,21 @@ func GetDownloads(ids []string, os []string, lang []string, all bool) error {
 	}
 
 	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty,
-		vangogh_properties.LanguageNameProperty)
+		vangogh_properties.NativeLanguageNameProperty)
 	if err != nil {
 		return err
 	}
 
-	langCodes := exl.Search(map[string][]string{vangogh_properties.LanguageNameProperty: lang}, true)
-	fmt.Println(langCodes)
+	langNames := gost.NewStrSet()
+	for _, lc := range langCodes {
+		langName, ok := exl.Get(vangogh_properties.NativeLanguageNameProperty, lc)
+		if !ok || langName == "" {
+			continue
+		}
+		langNames.Add(langName)
+	}
+
+	osSet := gost.StrSetWith(os...)
 
 	for _, id := range ids {
 
@@ -42,14 +57,17 @@ func GetDownloads(ids []string, os []string, lang []string, all bool) error {
 		}
 
 		for _, dl := range downloads {
+			if !langNames.Has(dl.Language) {
+				continue
+			}
 			fmt.Println(dl.Language)
-			if len(dl.Windows) > 0 {
+			if osSet.Has(windows) && len(dl.Windows) > 0 {
 				fmt.Println(" Windows:", dl.Windows)
 			}
-			if len(dl.Mac) > 0 {
+			if osSet.Has(macos) && len(dl.Mac) > 0 {
 				fmt.Println(" Mac:", dl.Mac)
 			}
-			if len(dl.Linux) > 0 {
+			if osSet.Has(linux) && len(dl.Linux) > 0 {
 				fmt.Println(" Linux:", dl.Linux)
 			}
 		}
