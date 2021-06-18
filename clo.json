@@ -33,9 +33,11 @@
     ],
     "get-downloads": [
       "id_...",
+      "slug",
       "os...=windows,macos,linux",
       "lang...=en_,ru",
       "read-ids",
+      "extras",
       "all"
     ],
     "info": [
