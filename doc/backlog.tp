@@ -1,12 +1,9 @@
 Known issues:
 	No known at the moment
 
-Improve verbosity:
-	- print the current update category for get-items
-	- use new line separators for groups
-
 extract release date, added to GOG date and add as all-text properties:
 	- create a formatter for the value that converts from epoch to human date / time
+	- separate GOG release from product release (global release as called in GOG data)
 
 use slug where ids are used:
 	- review and add slug as an option to specify ids
@@ -94,6 +91,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Improve verbosity: @done(2021-06-24)
+		- print the current update category for get-items @done(2021-06-24)
+		- use new line separators for groups @done(2021-06-24)
 	- slug should use precise match @done(2021-06-23) @project(use slug where ids are used)
 	language names improvements: @done(2021-06-20)
 		- in order to match details languages we need to match code to language name in it's own language (e.g. ru = "русский", not "Russian") - perhaps as a new property native-language-name @done(2021-06-20)

@@ -25,24 +25,31 @@ func split(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 		return nil
 	}
 
-	// split operates on pages and ids are expected to be numerical
+	// split operates on pages and ids are expected to be numerical...
 	intIds := make([]int, 0, len(modifiedIds))
 	for _, id := range modifiedIds {
 		inv, err := strconv.Atoi(id)
-		if err != nil {
-			return err
+		if err == nil {
+			intIds = append(intIds, inv)
 		}
-		intIds = append(intIds, inv)
 	}
-	sort.Ints(intIds)
 
-	for _, id := range intIds {
+	// ...however if some were not - just use the original modifiedIds set
+	if len(intIds) == len(modifiedIds) {
+		sort.Ints(intIds)
+		modifiedIds = make([]string, 0, len(intIds))
+		for _, id := range intIds {
+			modifiedIds = append(modifiedIds, strconv.Itoa(id))
+		}
+	}
+
+	for _, id := range modifiedIds {
 
 		splitPt := vangogh_products.SplitType(sourcePt)
 
-		fmt.Printf("\rsplitting %s (%s) %d into %s...", sourcePt, mt, id, splitPt)
+		fmt.Printf("\rsplitting %s (%s) %s into %s...", sourcePt, mt, id, splitPt)
 
-		productsGetter, err := vrPaged.ProductsGetter(strconv.Itoa(id))
+		productsGetter, err := vrPaged.ProductsGetter(id)
 
 		if err != nil {
 			return err

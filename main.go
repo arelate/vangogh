@@ -19,48 +19,20 @@ var cloBytes []byte
 
 func main() {
 
-	//exl, err := vangogh_extracts.NewList(vangogh_properties.LanguageCodeProperty)
+	//vrStoreProducts, err := vangogh_values.NewReader(vangogh_products.StoreProducts, gog_media.Game)
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 	//
-	//if err := cmd.ExtractLanguageNames(exl); err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//return
-
-	//vrApiProductsV1, err := vangogh_values.NewReader(vangogh_products.ApiProductsV1, gog_media.Game)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//langs := map[string]string{}
-	//
-	//for _, id := range vrApiProductsV1.All() {
-	//	apv1, err := vrApiProductsV1.ApiProductV1(id)
+	//for _, id := range vrStoreProducts.All() {
+	//	sp, err := vrStoreProducts.StoreProduct(id)
 	//	if err != nil {
 	//		log.Fatal(err)
 	//	}
-	//	for code, name := range apv1.GetNativeLanguages() {
-	//		if langs[code] != "" && langs[code] != name {
-	//			fmt.Println(code, langs[code], name)
-	//			continue
-	//		}
-	//		langs[code] = name
+	//
+	//	if sp.GlobalReleaseDate != sp.ReleaseDate {
+	//		fmt.Println(id, sp.Title, sp.GlobalReleaseDate, sp.ReleaseDate)
 	//	}
-	//}
-	//
-	//fmt.Println(langs)
-
-	//exl, err := vangogh_extracts.NewList(vangogh_properties.LanguageNameProperty)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//for _, id := range exl.All(vangogh_properties.LanguageNameProperty) {
-	//	val, _ := exl.Get(vangogh_properties.LanguageNameProperty, id)
-	//	fmt.Println(id, val)
 	//}
 
 	//start := time.Now()
