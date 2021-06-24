@@ -10,7 +10,7 @@ import (
 )
 
 func extractTagNames(mt gog_media.Media) error {
-	fmt.Println("extract tag names")
+	fmt.Println("extracting tag names")
 	vrAccountPage, err := vangogh_values.NewReader(vangogh_products.AccountPage, mt)
 	if err != nil {
 		return err

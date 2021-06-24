@@ -26,7 +26,7 @@ func itemizeAll(
 				return idSet.All(), err
 			}
 			if len(missingIds) == 0 {
-				fmt.Printf("no missing %s data for %s (%s)\n", pt, mainPt, mt)
+				fmt.Printf(" no missing %s for %s (%s)\n", pt, mainPt, mt)
 			}
 			idSet.Add(missingIds...)
 		}
@@ -36,7 +36,7 @@ func itemizeAll(
 				return ids, err
 			}
 			if len(updatedIds) == 0 {
-				fmt.Printf("no updated %s data for %s (%s)\n", pt, mainPt, mt)
+				fmt.Printf(" no updated %s for %s (%s)\n", pt, mainPt, mt)
 			}
 			idSet.Add(updatedIds...)
 		}
@@ -63,9 +63,11 @@ func itemizeMissing(
 	//required (base) game details to the updates
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
-		fmt.Printf("checking missing required %s for modified %s\n", detailPt, mainPt)
+		fmt.Printf("checking missing required base %s for %s\n", detailPt, mainPt)
 		return itemizeRequiredGames(modifiedAfter, mt)
 	}
+
+	fmt.Printf("checking missing %s for %s\n", detailPt, mainPt)
 
 	missingIdSet := gost.NewStrSet()
 

@@ -9,6 +9,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/kvas"
+	"sort"
 	"strconv"
 )
 
@@ -20,17 +21,28 @@ func split(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 
 	modifiedIds := vrPaged.ModifiedAfter(timestamp, false)
 	if len(modifiedIds) == 0 {
-		fmt.Printf("skip split for not modified %s (%s)\n", sourcePt, mt)
+		fmt.Printf("no need to split unchanged %s (%s)\n", sourcePt, mt)
 		return nil
 	}
 
+	// split operates on pages and ids are expected to be numerical
+	intIds := make([]int, 0, len(modifiedIds))
 	for _, id := range modifiedIds {
+		inv, err := strconv.Atoi(id)
+		if err != nil {
+			return err
+		}
+		intIds = append(intIds, inv)
+	}
+	sort.Ints(intIds)
+
+	for _, id := range intIds {
 
 		splitPt := vangogh_products.SplitType(sourcePt)
 
-		fmt.Printf("split %s (%s) %s into %s\n", sourcePt, mt, id, splitPt)
+		fmt.Printf("\rsplitting %s (%s) %d into %s...", sourcePt, mt, id, splitPt)
 
-		productsGetter, err := vrPaged.ProductsGetter(id)
+		productsGetter, err := vrPaged.ProductsGetter(strconv.Itoa(id))
 
 		if err != nil {
 			return err
@@ -56,6 +68,8 @@ func split(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 			}
 		}
 	}
+
+	fmt.Println("done")
 
 	return nil
 }

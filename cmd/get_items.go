@@ -20,11 +20,11 @@ func getItems(
 	verbose bool) error {
 
 	if !vangogh_products.SupportsGetItems(pt) {
-		return fmt.Errorf("getting %s data is not supported", pt)
+		return fmt.Errorf("getting %s is not supported", pt)
 	}
 
 	if verbose {
-		log.Printf("get data for ids: %v", ids)
+		log.Printf("getting data for ids: %v", ids)
 	}
 
 	destUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
@@ -50,7 +50,7 @@ func getItems(
 	for _, id := range ids {
 		_, err := getItem(id, pt, mt, httpClient, vs, sourceUrl, destUrl, verbose)
 		if err != nil {
-			log.Printf("couldn't get data for %s (%s) %s: %v", pt, mt, id, err)
+			log.Printf("error getting %s (%s) %s: %v", pt, mt, id, err)
 		}
 	}
 	return nil
@@ -66,7 +66,7 @@ func getItem(
 	destUrl string,
 	verbose bool) (io.Reader, error) {
 
-	fmt.Printf("get %s (%s) data %s\n", pt, mt, id)
+	fmt.Printf("getting %s (%s) %s\n", pt, mt, id)
 
 	u := sourceUrl(id, mt)
 	if verbose {

@@ -58,7 +58,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 			continue
 		}
 
-		fmt.Printf("extract %s\n", pt)
+		fmt.Printf("extracting %s\n", pt)
 
 		for _, id := range modifiedIds {
 

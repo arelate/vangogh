@@ -11,7 +11,7 @@ import (
 
 func extractTypes(mt gog_media.Media) error {
 
-	fmt.Println("extract types")
+	fmt.Println("extracting types")
 
 	idsTypes := make(map[string][]string)
 

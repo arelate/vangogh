@@ -44,7 +44,7 @@ func GetImages(
 		if all {
 			fmt.Printf("all %s images are available locally\n", it)
 		} else {
-			fmt.Printf("missing ids to get images for %s\n", it)
+			fmt.Printf("no ids to get images for %s\n", it)
 		}
 		return nil
 	}
@@ -63,7 +63,7 @@ func GetImages(
 		if !ok {
 			title = id
 		}
-		fmt.Printf("get %s for %s (%s)\n", it, title, id)
+		fmt.Printf("getting %s for %s (%s)\n", it, title, id)
 
 		images, ok := exl.GetAll(imageTypeProp, id)
 		if !ok || len(images) == 0 {
@@ -81,7 +81,7 @@ func GetImages(
 			dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
 
 			if len(srcUrls) > 1 {
-				fmt.Printf("get %s for %s (%s) file %d/%d\n", it, title, id, i+1, len(srcUrls))
+				fmt.Printf("getting %s for %s (%s) file %d/%d\n", it, title, id, i+1, len(srcUrls))
 			}
 
 			_, err = dl.Download(srcUrl, dstDir, "")

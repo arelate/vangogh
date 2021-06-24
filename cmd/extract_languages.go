@@ -59,7 +59,7 @@ func updateLanguageNames(languages map[string]string, missingNames gost.StrSet, 
 
 func extractLanguageNames(langCodeSet gost.StrSet) error {
 
-	fmt.Println("extract language names")
+	fmt.Println("extracting language names")
 
 	property := vangogh_properties.LanguageNameProperty
 
@@ -104,7 +104,7 @@ func extractLanguageNames(langCodeSet gost.StrSet) error {
 
 func extractNativeLanguageNames(langCodeSet gost.StrSet) error {
 
-	fmt.Println("extract native language names")
+	fmt.Println("extracting native language names")
 
 	property := vangogh_properties.NativeLanguageNameProperty
 
