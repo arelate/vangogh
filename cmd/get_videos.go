@@ -16,10 +16,11 @@ const (
 	missingStr = "missing"
 )
 
-func GetVideos(ids []string, all bool) error {
+func GetVideos(ids []string, slug string, all bool) error {
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.TitleProperty,
+		vangogh_properties.SlugProperty,
 		vangogh_properties.VideoIdProperty,
 		vangogh_properties.MissingVideoUrlProperty)
 
@@ -32,6 +33,11 @@ func GetVideos(ids []string, all bool) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	if slug != "" {
+		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
+		ids = append(ids, slugIds...)
 	}
 
 	if len(ids) == 0 {

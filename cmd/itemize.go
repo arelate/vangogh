@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
+	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
@@ -12,12 +14,22 @@ import (
 
 func itemizeAll(
 	ids []string,
+	slug string,
 	missing, updated bool,
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media) ([]string, error) {
 
 	idSet := gost.StrSetWith(ids...)
+
+	if slug != "" {
+		exl, err := vangogh_extracts.NewList(vangogh_properties.SlugProperty)
+		if err != nil {
+			return nil, err
+		}
+		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
+		idSet.Add(slugIds...)
+	}
 
 	for _, mainPt := range vangogh_products.MainTypes(pt) {
 		if missing {

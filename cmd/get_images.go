@@ -14,6 +14,7 @@ import (
 
 func GetImages(
 	ids []string,
+	slug string,
 	it vangogh_images.ImageType,
 	localImageIds map[string]bool,
 	all bool) error {
@@ -25,6 +26,7 @@ func GetImages(
 	imageTypeProp := vangogh_properties.FromImageType(it)
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.TitleProperty,
+		vangogh_properties.SlugProperty,
 		imageTypeProp)
 	if err != nil {
 		return err
@@ -38,6 +40,11 @@ func GetImages(
 		if err != nil {
 			return err
 		}
+	}
+
+	if slug != "" {
+		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
+		ids = append(ids, slugIds...)
 	}
 
 	if len(ids) == 0 {
@@ -55,8 +62,6 @@ func GetImages(
 	}
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
-
-	//fmt.Println(dl)
 
 	for _, id := range ids {
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)

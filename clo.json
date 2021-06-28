@@ -9,6 +9,7 @@
       "product-type!_={remote-product-types}",
       "media={media_}",
       "id...",
+      "slug",
       "read-ids",
       "missing",
       "updated",
@@ -23,11 +24,13 @@
       "image-type!_={image-types}",
       "media={media_}",
       "id...",
+      "slug",
       "read-ids",
       "all"
     ],
     "get-videos": [
       "id...",
+      "slug",
       "read-ids",
       "all"
     ],
@@ -57,6 +60,7 @@
     ],
     "owned": [
       "id_...",
+      "slug",
       "read-ids"
     ],
     "digest": [

@@ -1,8 +1,6 @@
 Issues:
 	No known at the moment
 
-extract gog-order-date from orders
-
 use slug where ids are used:
 	- review and add slug as an option to specify ids
 
@@ -74,7 +72,7 @@ Work on gaugin can start:
 Improve verbosity:
 	- add module that produced log.Print to the log output
 	- add a "verbose" flag to every module
-	-  use log.Print for errors and info, fmt.Print for progress
+	- use log.Print for errors and info, fmt.Print for progress
 
 Documentation:
 	- update modules documentation:
@@ -89,6 +87,7 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	extract gog-order-date from orders @done(2021-06-27)
 	extract release date, added to GOG date and add as all-text properties: @done(2021-06-27)
 		- create a formatter for the value that converts from epoch to human date / time @done(2021-06-27)
 		- separate GOG release from product release (global release as called in GOG data) @done(2021-06-27)

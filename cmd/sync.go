@@ -25,7 +25,7 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, vi
 		paData := vangogh_products.Array()
 		paData = append(paData, vangogh_products.Paged()...)
 		for _, pt := range paData {
-			if err := GetData(nil, nil, pt, mt, syncStart, false, false, verbose); err != nil {
+			if err := GetData(nil, "", nil, pt, mt, syncStart, false, false, verbose); err != nil {
 				return err
 			}
 			fmt.Println()
@@ -34,7 +34,7 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, vi
 		//get main - detail data
 		for _, pt := range vangogh_products.Detail() {
 			denyIds := internal.ReadLines(vangogh_urls.Denylist(pt))
-			if err := GetData(nil, denyIds, pt, mt, syncStart, true, true, verbose); err != nil {
+			if err := GetData(nil, "", denyIds, pt, mt, syncStart, true, true, verbose); err != nil {
 				return err
 			}
 			fmt.Println()
@@ -57,7 +57,7 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, vi
 			if !screenshots && it == vangogh_images.Screenshots {
 				continue
 			}
-			if err := GetImages(nil, it, localImageIds, true); err != nil {
+			if err := GetImages(nil, "", it, localImageIds, true); err != nil {
 				return err
 			}
 		}
@@ -66,7 +66,7 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, vi
 
 	// get videos
 	if videos {
-		if err := GetVideos(nil, true); err != nil {
+		if err := GetVideos(nil, "", true); err != nil {
 			return err
 		}
 		fmt.Println()

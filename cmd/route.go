@@ -56,7 +56,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 		denyIdsFile := req.ArgVal("deny-ids-file")
 		denyIds := internal.ReadLines(denyIdsFile)
-		return GetData(ids, denyIds, pt, mt, since, missing, updated, verbose)
+		return GetData(ids, slug, denyIds, pt, mt, since, missing, updated, verbose)
 	case "get-downloads":
 		os := req.ArgValues("os")
 		lang := req.ArgValues("lang")
@@ -65,9 +65,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "get-images":
 		imageType := req.ArgVal("image-type")
 		it := vangogh_images.Parse(imageType)
-		return GetImages(ids, it, nil, all)
+		return GetImages(ids, slug, it, nil, all)
 	case "get-videos":
-		return GetVideos(ids, all)
+		return GetVideos(ids, slug, all)
 	case "info":
 		allText := req.Flag("all-text")
 		images := req.Flag("images")
@@ -86,7 +86,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValues("property")
 		return List(ids, modifiedSince, pt, mt, properties)
 	case "owned":
-		return Owned(ids)
+		return Owned(ids, slug)
 	case "search":
 		query := make(map[string][]string)
 		for _, prop := range vangogh_properties.Searchable() {

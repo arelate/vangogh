@@ -13,6 +13,7 @@ import (
 //GetData gets remote data from GOG.com and stores as local products (splitting as paged data if needed)
 func GetData(
 	ids []string,
+	slug string,
 	denyIds []string,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
@@ -67,19 +68,13 @@ func GetData(
 		return split(pt, mt, since)
 	}
 
-	ids, err = itemizeAll(ids, missing, updated, since, pt, mt)
+	ids, err = itemizeAll(ids, slug, missing, updated, since, pt, mt)
 	if err != nil {
 		return err
 	}
 
-	denyIdSet := gost.StrSetWith(denyIds...)
-
-	approvedIds := make([]string, 0, len(ids))
-	for _, id := range ids {
-		if !denyIdSet.Has(id) {
-			approvedIds = append(approvedIds, id)
-		}
-	}
+	approvedIds := gost.StrSetWith(ids...).
+		Except(gost.StrSetWith(denyIds...))
 
 	return getItems(approvedIds, pt, mt, verbose)
 }
