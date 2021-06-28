@@ -18,23 +18,6 @@ import (
 var cloBytes []byte
 
 func main() {
-
-	//vrStoreProducts, err := vangogh_values.NewReader(vangogh_products.StoreProducts, gog_media.Game)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//for _, id := range vrStoreProducts.All() {
-	//	sp, err := vrStoreProducts.StoreProduct(id)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//
-	//	if sp.GlobalReleaseDate != sp.ReleaseDate {
-	//		fmt.Println(id, sp.Title, sp.GlobalReleaseDate, sp.ReleaseDate)
-	//	}
-	//}
-
 	//start := time.Now()
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)

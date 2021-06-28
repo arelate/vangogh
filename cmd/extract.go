@@ -109,5 +109,10 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		return err
 	}
 
+	//orders are extracted separately from other types
+	if err := ExtractOrders(modifiedAfter); err != nil {
+		return err
+	}
+
 	return extractTypes(mt)
 }

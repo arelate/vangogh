@@ -1,9 +1,7 @@
-Known issues:
+Issues:
 	No known at the moment
 
-extract release date, added to GOG date and add as all-text properties:
-	- create a formatter for the value that converts from epoch to human date / time
-	- separate GOG release from product release (global release as called in GOG data)
+extract gog-order-date from orders
 
 use slug where ids are used:
 	- review and add slug as an option to specify ids
@@ -91,6 +89,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	extract release date, added to GOG date and add as all-text properties: @done(2021-06-27)
+		- create a formatter for the value that converts from epoch to human date / time @done(2021-06-27)
+		- separate GOG release from product release (global release as called in GOG data) @done(2021-06-27)
 	Improve verbosity: @done(2021-06-24)
 		- print the current update category for get-items @done(2021-06-24)
 		- use new line separators for groups @done(2021-06-24)

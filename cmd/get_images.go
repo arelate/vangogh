@@ -63,7 +63,7 @@ func GetImages(
 		if !ok {
 			title = id
 		}
-		fmt.Printf("getting %s for %s (%s)\n", it, title, id)
+		fmt.Printf("getting %s for %s (%s)...", it, title, id)
 
 		images, ok := exl.GetAll(imageTypeProp, id)
 		if !ok || len(images) == 0 {
@@ -81,7 +81,7 @@ func GetImages(
 			dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
 
 			if len(srcUrls) > 1 {
-				fmt.Printf("getting %s for %s (%s) file %d/%d\n", it, title, id, i+1, len(srcUrls))
+				fmt.Printf("\rgetting %s for %s (%s) file %d/%d...", it, title, id, i+1, len(srcUrls))
 			}
 
 			_, err = dl.Download(srcUrl, dstDir, "")
@@ -89,6 +89,8 @@ func GetImages(
 				return err
 			}
 		}
+
+		fmt.Println("done")
 	}
 	return nil
 }

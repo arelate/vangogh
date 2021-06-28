@@ -58,7 +58,7 @@ func GetVideos(ids []string, all bool) error {
 
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 
-		fmt.Printf("getting videos for %s (%s)\n", title, id)
+		fmt.Printf("getting videos for %s (%s)...", title, id)
 
 		for _, videoId := range videoIds {
 
@@ -98,6 +98,8 @@ func GetVideos(ids []string, all bool) error {
 				// log actual error before attempting another file
 			}
 		}
+
+		fmt.Println("done")
 	}
 
 	return nil
