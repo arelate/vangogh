@@ -37,18 +37,12 @@ func itemizeAll(
 			if err != nil {
 				return idSet.All(), err
 			}
-			if len(missingIds) == 0 {
-				fmt.Printf(" no missing %s for %s (%s)\n", pt, mainPt, mt)
-			}
 			idSet.Add(missingIds...)
 		}
 		if updated {
 			updatedIds, err := itemizeUpdated(modifiedAfter, mainPt, mt)
 			if err != nil {
 				return ids, err
-			}
-			if len(updatedIds) == 0 {
-				fmt.Printf(" no updated %s for %s (%s)\n", pt, mainPt, mt)
 			}
 			idSet.Add(updatedIds...)
 		}
@@ -67,7 +61,6 @@ func itemizeMissing(
 	//requires-games, is-required-by-games
 	if mainPt == vangogh_products.ApiProductsV2 &&
 		detailPt == vangogh_products.ApiProductsV2 {
-		fmt.Printf("checking missing linked %s\n", mainPt)
 		return itemizeAPV2LinkedGames(modifiedAfter)
 	}
 
@@ -75,11 +68,10 @@ func itemizeMissing(
 	//required (base) game details to the updates
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
-		fmt.Printf("checking missing required base %s for %s\n", detailPt, mainPt)
 		return itemizeRequiredGames(modifiedAfter, mt)
 	}
 
-	fmt.Printf("checking missing %s for %s\n", detailPt, mainPt)
+	fmt.Printf("itemizing missing %s for %s...", detailPt, mainPt)
 
 	missingIdSet := gost.NewStrSet()
 
@@ -102,15 +94,17 @@ func itemizeMissing(
 	if err != nil {
 		return missingIdSet.All(), err
 	}
+
 	for _, id := range kvMain.All() {
 		if !kvDetail.Contains(id) {
 			missingIdSet.Add(id)
 		}
 	}
 
+	printFoundAndAll(missingIdSet)
+
 	if mainPt == vangogh_products.AccountProducts &&
 		detailPt == vangogh_products.Details {
-		fmt.Printf("checking %s updates to update %s\n", mainPt, detailPt)
 		updatedAccountProducts, err := itemizeAccountProductsUpdates(mt)
 		if err != nil {
 			return missingIdSet.All(), err
@@ -124,6 +118,7 @@ func itemizeMissing(
 }
 
 func itemizeAccountProductsUpdates(mt gog_media.Media) ([]string, error) {
+	fmt.Printf("itemizing %s updates...", vangogh_products.AccountProducts)
 	updatesSet := gost.NewStrSet()
 	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
 	if err != nil {
@@ -140,7 +135,7 @@ func itemizeAccountProductsUpdates(mt gog_media.Media) ([]string, error) {
 		}
 	}
 
-	return updatesSet.All(), nil
+	return printFoundAndAll(updatesSet), nil
 }
 
 func itemizeUpdated(
@@ -148,32 +143,32 @@ func itemizeUpdated(
 	pt vangogh_products.ProductType,
 	mt gog_media.Media) ([]string, error) {
 
-	updatedIdSet := gost.NewStrSet()
+	fmt.Printf("itemizing updated %s...", pt)
 
 	//licence products can only update through creation and we've already handled
 	//newly created in itemizeMissing func
 	if pt == vangogh_products.LicenceProducts {
-		return updatedIdSet.All(), nil
+		return printFoundAndAll(gost.NewStrSet()), nil
 	}
 
-	mainDestUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
+	destUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
 	if err != nil {
-		return updatedIdSet.All(), err
+		return []string{}, err
 	}
 
-	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
+	kv, err := kvas.NewJsonLocal(destUrl)
 	if err != nil {
-		return updatedIdSet.All(), err
+		return []string{}, err
 	}
 
-	for _, id := range kvMain.ModifiedAfter(since, false) {
-		updatedIdSet.Add(id)
-	}
+	modSet := gost.StrSetWith(kv.ModifiedAfter(since, false)...)
 
-	return updatedIdSet.All(), nil
+	return printFoundAndAll(modSet), nil
 }
 
 func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
+
+	fmt.Printf("itemizing missing linked %s...", vangogh_products.ApiProductsV2)
 
 	missingSet := gost.NewStrSet()
 
@@ -208,11 +203,13 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 		}
 	}
 
-	return missingSet.All(), nil
+	return printFoundAndAll(missingSet), nil
 }
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
 func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, error) {
+	fmt.Printf("itemizing DLCs missing required base product...")
+
 	rgForNewLicSet := gost.NewStrSet()
 
 	vrLicences, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, mt)
@@ -232,7 +229,8 @@ func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, err
 		}
 		//like in itemizeMissingIncludesGames, we can't use extracts here,
 		//because we're in process of getting data and would rather query api-products-v2 directly.
-		//the performance impact is expected to be minimal since we're only loading newly acquired licences
+		//the performance impact is expected to be minimal since we're only loading api-products-v2
+		//for newly acquired licences.
 		apv2, err := vrApv2.ApiProductV2(id)
 		if err != nil {
 			return nil, err
@@ -243,5 +241,15 @@ func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, err
 		}
 	}
 
-	return rgForNewLicSet.All(), nil
+	return printFoundAndAll(rgForNewLicSet), nil
+}
+
+func printFoundAndAll(idSet gost.StrSet) []string {
+	items := idSet.All()
+	msg := "nothing found"
+	if len(items) > 0 {
+		msg = fmt.Sprintf("found %d", len(items))
+	}
+	fmt.Println(msg)
+	return items
 }

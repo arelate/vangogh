@@ -47,26 +47,29 @@ func getItems(
 		return err
 	}
 
-	for _, id := range ids {
-		_, err := getItem(id, pt, mt, httpClient, vs, sourceUrl, destUrl, verbose)
+	for i, id := range ids {
+		fmt.Printf("\rgetting %s (%s) %d/%d...", pt, mt, i+1, len(ids))
+		_, err := getItem(id, mt, httpClient, vs, sourceUrl, destUrl, verbose)
 		if err != nil {
 			log.Printf("error getting %s (%s) %s: %v", pt, mt, id, err)
 		}
 	}
+
+	if len(ids) > 0 {
+		fmt.Println("done")
+	}
+
 	return nil
 }
 
 func getItem(
 	id string,
-	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	httpClient *http.Client,
 	vs *kvas.ValueSet,
 	sourceUrl vangogh_urls.ProductTypeUrl,
 	destUrl string,
 	verbose bool) (io.Reader, error) {
-
-	fmt.Printf("getting %s (%s) %s\n", pt, mt, id)
 
 	u := sourceUrl(id, mt)
 	if verbose {

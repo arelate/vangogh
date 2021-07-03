@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/arelate/gog_auth"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_pages"
@@ -32,6 +33,12 @@ func GetData(
 			log.Printf("%s doesn't support %s media", pt, mt)
 		}
 		return nil
+	}
+
+	//only print "header" for details types, since they go really well with
+	//itemization detailed information
+	if vangogh_products.IsDetail(pt) {
+		fmt.Printf("getting %s (%s)\n", pt, mt)
 	}
 
 	httpClient, err := internal.HttpClient()
