@@ -65,7 +65,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "get-images":
 		imageType := req.ArgVal("image-type")
 		it := vangogh_images.Parse(imageType)
-		return GetImages(ids, slug, it, nil, all)
+		missing := req.Flag("missing")
+		return GetImages(ids, slug, it, nil, missing)
 	case "get-videos":
 		return GetVideos(ids, slug, all)
 	case "info":

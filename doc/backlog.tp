@@ -1,8 +1,9 @@
 Issues:
 	No known at the moment
-
-use slug where ids are used:
-	- review and add slug as an option to specify ids
+	
+get-items improvements:
+	- clearly print every step of the journey - how many are expected to be downloaded and why
+	- print updates like other items - on the same line as progressive update
 
 Download files:
 	- extract links for OS, language
@@ -87,6 +88,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	use slug where ids are used: @done(2021-06-27)
+		- review and add slug as an option to specify ids @done(2021-06-27)
 	extract gog-order-date from orders @done(2021-06-27)
 	extract release date, added to GOG date and add as all-text properties: @done(2021-06-27)
 		- create a formatter for the value that converts from epoch to human date / time @done(2021-06-27)

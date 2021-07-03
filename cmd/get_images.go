@@ -17,7 +17,7 @@ func GetImages(
 	slug string,
 	it vangogh_images.ImageType,
 	localImageIds map[string]bool,
-	all bool) error {
+	missing bool) error {
 
 	if !vangogh_images.Valid(it) {
 		return fmt.Errorf("invalid image type %s", it)
@@ -32,7 +32,7 @@ func GetImages(
 		return err
 	}
 
-	if all {
+	if missing {
 		if len(ids) > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
@@ -48,7 +48,7 @@ func GetImages(
 	}
 
 	if len(ids) == 0 {
-		if all {
+		if missing {
 			fmt.Printf("all %s images are available locally\n", it)
 		} else {
 			fmt.Printf("no ids to get images for %s\n", it)
