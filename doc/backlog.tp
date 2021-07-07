@@ -1,15 +1,17 @@
 Issues:
 	No known at the moment
-	
-get-items improvements:
-	- clearly print every step of the journey - how many are expected to be downloaded and why
-	- print updates like other items - on the same line as progressive update
 
 Download files:
+	- create new helper vangogh_downloads that encapsulates working with download links
+	- create new type:
+		- OperatingSystem
+		- DownloadUrlMetadata
 	- extract links for OS, language
 	- resolve URLs to exact links
 	- get validation files
-	- consider driving download from the validation file
+	
+Validate files:
+	- use validation files
 	
 vangogh_api:
 	- create new module that provides all core commands functionality, leaving input output to vangogh
@@ -88,6 +90,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	get-items improvements: @done(2021-07-02)
+		- clearly print every step of the journey - how many are expected to be downloaded and why @done(2021-07-02)
+		- print updates like other items - on the same line as progressive update @done(2021-07-02)
 	use slug where ids are used: @done(2021-06-27)
 		- review and add slug as an option to specify ids @done(2021-06-27)
 	extract gog-order-date from orders @done(2021-06-27)

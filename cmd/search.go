@@ -12,7 +12,7 @@ func Search(query map[string][]string) error {
 	//prepare a list of all properties to load extracts for and
 	//always start with a `title` property since it is printed for all matched item
 	//(even if the match is for another property)
-	propSet := gost.StrSetWith(vangogh_properties.TitleProperty)
+	propSet := gost.NewStrSetWith(vangogh_properties.TitleProperty)
 	for qp, _ := range query {
 		propSet.Add(qp)
 	}

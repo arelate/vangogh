@@ -18,6 +18,45 @@ import (
 var cloBytes []byte
 
 func main() {
+	//vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//exl, err := vangogh_extracts.NewList(vangogh_properties.NativeLanguageNameProperty)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//downloads := make(vangogh_downloads.DownloadsList, 0)
+	//
+	//for _, id := range vrDetails.All() {
+	//	det, err := vrDetails.Details(id)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	dlList, err := vangogh_downloads.FromDetails(det, exl)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//	dlList = dlList.Only(
+	//		[]vangogh_downloads.OperatingSystem{vangogh_downloads.Windows, vangogh_downloads.MacOS},
+	//		[]string{"en", "ru"},
+	//		[]vangogh_downloads.DownloadType{vangogh_downloads.AnyDownloadType})
+	//
+	//	downloads = append(downloads, dlList...)
+	//}
+	//
+	//russianMacOSExtras := downloads.Only(
+	//	[]vangogh_downloads.OperatingSystem{vangogh_downloads.Windows, vangogh_downloads.MacOS},
+	//	[]string{"en", "ru"},
+	//	[]vangogh_downloads.DownloadType{vangogh_downloads.Extra})
+	//
+	//fmt.Println(russianMacOSExtras.TotalBytesEstimate()/(1024*1024*1024), "GB")
+	//
+	//return
+
 	//start := time.Now()
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)

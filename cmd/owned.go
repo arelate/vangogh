@@ -11,9 +11,9 @@ import (
 
 func Owned(ids []string, slug string) error {
 
-	idSet := gost.StrSetWith(ids...)
+	idSet := gost.NewStrSetWith(ids...)
 	ownedSet := gost.NewStrSet()
-	propSet := gost.StrSetWith(
+	propSet := gost.NewStrSetWith(
 		vangogh_properties.TitleProperty,
 		vangogh_properties.SlugProperty,
 		vangogh_properties.IncludesGamesProperty)

@@ -8,9 +8,9 @@ import (
 
 func Info(slug string, ids []string, allText, images, videoId bool) error {
 
-	idSet := gost.StrSetWith(ids...)
+	idSet := gost.NewStrSetWith(ids...)
 
-	propSet := gost.StrSetWith(vangogh_properties.TypesProperty)
+	propSet := gost.NewStrSetWith(vangogh_properties.TypesProperty)
 	if slug != "" {
 		propSet.Add(vangogh_properties.SlugProperty)
 	}

@@ -20,7 +20,7 @@ func itemizeAll(
 	pt vangogh_products.ProductType,
 	mt gog_media.Media) ([]string, error) {
 
-	idSet := gost.StrSetWith(ids...)
+	idSet := gost.NewStrSetWith(ids...)
 
 	if slug != "" {
 		exl, err := vangogh_extracts.NewList(vangogh_properties.SlugProperty)
@@ -161,7 +161,7 @@ func itemizeUpdated(
 		return []string{}, err
 	}
 
-	modSet := gost.StrSetWith(kv.ModifiedAfter(since, false)...)
+	modSet := gost.NewStrSetWith(kv.ModifiedAfter(since, false)...)
 
 	return printFoundAndAll(modSet), nil
 }

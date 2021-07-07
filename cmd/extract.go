@@ -25,7 +25,7 @@ func stringsTrimSpace(stringsWithSpace []string) []string {
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
 
-	propSet := gost.StrSetWith(properties...)
+	propSet := gost.NewStrSetWith(properties...)
 
 	if len(properties) == 0 {
 		propSet.Add(vangogh_properties.Extracted()...)

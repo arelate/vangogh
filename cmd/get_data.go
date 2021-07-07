@@ -80,8 +80,8 @@ func GetData(
 		return err
 	}
 
-	approvedIds := gost.StrSetWith(ids...).
-		Except(gost.StrSetWith(denyIds...))
+	approvedIds := gost.NewStrSetWith(ids...).
+		Except(gost.NewStrSetWith(denyIds...))
 
 	return getItems(approvedIds, pt, mt, verbose)
 }

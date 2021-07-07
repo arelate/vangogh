@@ -35,7 +35,7 @@ func getMissingLanguageNames(
 	langCodeSet gost.StrSet,
 	exl *vangogh_extracts.ExtractsList,
 	property string) (gost.StrSet, error) {
-	missingLangs := gost.StrSetWith(langCodeSet.All()...)
+	missingLangs := gost.NewStrSetWith(langCodeSet.All()...)
 
 	// TODO: write a comment explaining all or nothing approach
 	//map all language codes to names and hide existing
@@ -77,7 +77,7 @@ func extractLanguageNames(langCodeSet gost.StrSet) error {
 		return nil
 	}
 
-	missingLangs = gost.StrSetWith(langCodeSet.All()...)
+	missingLangs = gost.NewStrSetWith(langCodeSet.All()...)
 	names := make(map[string][]string, 0)
 
 	//iterate through api-products-v1 until we fill all native names
@@ -127,7 +127,7 @@ func extractNativeLanguageNames(langCodeSet gost.StrSet) error {
 		return err
 	}
 
-	missingNativeLangs = gost.StrSetWith(langCodeSet.All()...)
+	missingNativeLangs = gost.NewStrSetWith(langCodeSet.All()...)
 	nativeNames := make(map[string][]string, 0)
 
 	for _, id := range vrApiProductsV1.All() {

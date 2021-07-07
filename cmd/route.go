@@ -34,7 +34,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	}
 
 	slug := req.ArgVal("slug")
-	all := req.Flag("all")
+	missing := req.Flag("missing")
 
 	switch req.Command {
 	case "auth":
@@ -58,17 +58,17 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		denyIds := internal.ReadLines(denyIdsFile)
 		return GetData(ids, slug, denyIds, pt, mt, since, missing, updated, verbose)
 	case "get-downloads":
-		os := req.ArgValues("os")
-		lang := req.ArgValues("lang")
-		extras := req.Flag("extras")
-		return GetDownloads(ids, slug, os, lang, extras, all)
+		osStrings := req.ArgValues("operating-system")
+		langCodes := req.ArgValues("language-code")
+		dtStrings := req.ArgValues("download-type")
+		return GetDownloads(ids, slug, osStrings, langCodes, dtStrings, missing)
 	case "get-images":
 		imageType := req.ArgVal("image-type")
 		it := vangogh_images.Parse(imageType)
 		missing := req.Flag("missing")
 		return GetImages(ids, slug, it, nil, missing)
 	case "get-videos":
-		return GetVideos(ids, slug, all)
+		return GetVideos(ids, slug, missing)
 	case "info":
 		allText := req.Flag("all-text")
 		images := req.Flag("images")
@@ -116,7 +116,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")
 		videos := req.Flag("videos")
-		if all {
+		if req.Flag("all") {
 			noData = false
 			images = true
 			screenshots = true

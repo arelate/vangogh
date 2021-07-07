@@ -16,7 +16,7 @@ const (
 	missingStr = "missing"
 )
 
-func GetVideos(ids []string, slug string, all bool) error {
+func GetVideos(ids []string, slug string, missing bool) error {
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.TitleProperty,
@@ -28,7 +28,7 @@ func GetVideos(ids []string, slug string, all bool) error {
 		return err
 	}
 
-	if all {
+	if missing {
 		ids, err = allMissingLocalVideoIds(exl)
 		if err != nil {
 			return err
@@ -41,10 +41,10 @@ func GetVideos(ids []string, slug string, all bool) error {
 	}
 
 	if len(ids) == 0 {
-		if all {
+		if missing {
 			fmt.Println("all videos are available locally")
 		} else {
-			fmt.Println("missing ids to get videos")
+			fmt.Println("no ids to get videos for")
 		}
 		return nil
 	}

@@ -28,7 +28,7 @@ func List(
 		return fmt.Errorf("can't list invalid media %s", mt)
 	}
 
-	propSet := gost.StrSetWith(properties...)
+	propSet := gost.NewStrSetWith(properties...)
 
 	//if no properties have been provided - print ID, Title
 	if propSet.Len() == 0 {

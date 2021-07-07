@@ -18,7 +18,7 @@ const (
 func PrintGroups(
 	groupIds map[string][]string) error {
 
-	propSet := gost.StrSetWith(vangogh_properties.TitleProperty)
+	propSet := gost.NewStrSetWith(vangogh_properties.TitleProperty)
 
 	groups := make([]string, 0, len(groupIds))
 	for grp, _ := range groupIds {
@@ -53,7 +53,7 @@ func Print(
 	properties []string,
 	exl *vangogh_extracts.ExtractsList) error {
 
-	propSet := gost.StrSetWith(properties...)
+	propSet := gost.NewStrSetWith(properties...)
 	propSet.Add(vangogh_properties.TitleProperty)
 
 	if exl == nil {
