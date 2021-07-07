@@ -6,9 +6,9 @@
       "password"
     ],
     "get-data": [
-      "product-type!_={remote-product-types}",
-      "media={media_}",
-      "id...",
+      "product-type*^={remote-product-types}",
+      "media={media^}",
+      "id&",
       "slug",
       "read-ids",
       "missing",
@@ -17,35 +17,35 @@
       "verbose"
     ],
     "extract": [
-      "media={media_}",
-      "property...={extracted-properties}"
+      "media={media^}",
+      "property&={extracted-properties}"
     ],
     "get-images": [
-      "image-type!_={image-types}",
-      "media={media_}",
-      "id...",
+      "image-type*^={image-types}",
+      "media={media^}",
+      "id&",
       "slug",
       "read-ids",
       "missing"
     ],
     "get-videos": [
-      "id...",
+      "id&",
       "slug",
       "read-ids",
       "all"
     ],
     "get-downloads": [
-      "id_...",
+      "id^&",
       "slug",
-      "os...=windows,macos,linux",
-      "lang...=en_,ru",
+      "os&=windows,macos,linux",
+      "lang&=en^,ru",
       "read-ids",
       "extras",
       "all"
     ],
     "info": [
-      "media={media_}",
-      "id_...",
+      "media={media^}",
+      "id^&",
       "read-ids",
       "slug",
       "all-text",
@@ -53,29 +53,29 @@
       "video-id"
     ],
     "list": [
-      "product-type_!={local-product-types}",
-      "media={media_}",
-      "property...={all-properties}",
+      "product-type^*={local-product-types}",
+      "media={media^}",
+      "property&={all-properties}",
       "modified"
     ],
     "owned": [
-      "id_...",
+      "id^&",
       "slug",
       "read-ids"
     ],
     "digest": [
-      "property_={digestible-properties}"
+      "property^={digestible-properties}"
     ],
     "search": [
-      "media={media_}",
-      "{searchable-properties_...}"
+      "media={media^}",
+      "{searchable-properties^&}"
     ],
     "scrub-data": [
-      "media={media_}",
+      "media={media^}",
       "fix"
     ],
     "sync": [
-      "media={media_}",
+      "media={media^}",
       "no-data",
       "images",
       "screenshots",
@@ -84,18 +84,18 @@
       "since-hours-ago"
     ],
     "summary": [
-      "media={media_}",
+      "media={media^}",
       "since-hours-ago"
     ],
     "tag": [
-      "operation_=create,delete,edit,add,remove",
+      "operation^=create,delete,edit,add,remove",
       "tag-name",
       "id"
     ],
     "wishlist": [
-      "media={media_}",
-      "add...",
-      "remove..."
+      "media={media^}",
+      "add&",
+      "remove&"
     ]
   },
   "help": {}
