@@ -68,7 +68,7 @@ func itemizeMissing(
 	//required (base) game details to the updates
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
-		return itemizeRequiredGames(modifiedAfter, mt)
+		return itemizeRequiredGames(modifiedAfter)
 	}
 
 	fmt.Printf("itemizing missing %s for %s...", detailPt, mainPt)
@@ -207,12 +207,12 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 }
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
-func itemizeRequiredGames(createdAfter int64, mt gog_media.Media) ([]string, error) {
+func itemizeRequiredGames(createdAfter int64) ([]string, error) {
 	fmt.Printf("itemizing DLCs missing required base product...")
 
 	rgForNewLicSet := gost.NewStrSet()
 
-	vrLicences, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, mt)
+	vrLicences, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, gog_media.Game)
 	if err != nil {
 		return nil, err
 	}

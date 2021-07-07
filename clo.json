@@ -37,8 +37,10 @@
     "get-downloads": [
       "id^&",
       "slug",
-      "os&=windows,macos,linux",
-      "lang&=en^,ru",
+      "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
       "read-ids",
       "extras",
       "all"

@@ -14,6 +14,7 @@ import (
 func GetDownloads(
 	ids []string,
 	slug string,
+	mt gog_media.Media,
 	osStrings []string,
 	langCodes []string,
 	dtStrings []string,
@@ -55,7 +56,7 @@ func GetDownloads(
 			return err
 		}
 
-		downloads, err := vangogh_downloads.FromDetails(det, exl)
+		downloads, err := vangogh_downloads.FromDetails(det, mt, exl)
 		if err != nil {
 			return err
 		}
