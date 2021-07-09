@@ -2,7 +2,7 @@ Issues:
 	No known at the moment
 
 sync improvements:
-	- reimplement sync flags to add 
+	- reimplement sync flags to add invidual items as well as remove individual from all
 
 Download files:
 	- create new helper vangogh_downloads that encapsulates working with download links

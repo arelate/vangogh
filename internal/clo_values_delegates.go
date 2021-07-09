@@ -21,6 +21,7 @@ var CloValuesDelegates = map[string]func() []string{
 	"operating-systems":     operatingSystems,
 	"download-types":        downloadTypes,
 	"language-codes":        languageCodes,
+	"sync-items":            syncItems,
 }
 
 func productTypeStr(productTypes []vangogh_products.ProductType) []string {
@@ -89,4 +90,22 @@ func languageCodes() []string {
 		langCodes = append(langCodes, lc)
 	}
 	return langCodes
+}
+
+func syncItems() []string {
+	items := []string{
+		"data",
+		"images",
+		"screenshots",
+		"videos",
+		"downloads",
+	}
+
+	excludeItems := make([]string, len(items))
+	for i, item := range items {
+		excludeItems[i] = "no-" + item
+	}
+
+	items = append(items, "all")
+	return append(items, excludeItems...)
 }

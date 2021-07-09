@@ -48,7 +48,6 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		properties := req.ArgValues("properties")
 		return Extract(0, mt, properties)
 	case "get-data":
-		missing := req.Flag("missing")
 		updated := req.Flag("updated")
 		since := time.Now().Unix()
 		if updated {
@@ -65,7 +64,6 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	case "get-images":
 		imageType := req.ArgVal("image-type")
 		it := vangogh_images.Parse(imageType)
-		missing := req.Flag("missing")
 		return GetImages(ids, slug, it, nil, missing)
 	case "get-videos":
 		return GetVideos(ids, slug, missing)
@@ -75,15 +73,11 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		videoId := req.Flag("video-id")
 		return Info(slug, ids, allText, images, videoId)
 	case "list":
-		var modifiedSince int64 = 0
-		modifiedStr := req.ArgVal("modified")
-		if modifiedStr != "" {
-			hoursAgo, err := strconv.Atoi(modifiedStr)
-			if err != nil {
-				return err
-			}
-			modifiedSince = time.Now().Add(-time.Hour * time.Duration(hoursAgo)).Unix()
+		mha, err := hoursAtoi(req.ArgVal("modified-hours-ago"))
+		if err != nil {
+			return err
 		}
+		modifiedSince := time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
 		properties := req.ArgValues("property")
 		return List(ids, modifiedSince, pt, mt, properties)
 	case "owned":
@@ -100,38 +94,29 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)
 	case "summary":
-		sinceHoursAgoStr := req.ArgVal("since-hours-ago")
-		var sinceHoursAgo int
-		var err error
-		if sinceHoursAgoStr != "" {
-			sinceHoursAgo, err = strconv.Atoi(sinceHoursAgoStr)
-			if err != nil {
-				return err
-			}
+		sha, err := hoursAtoi(req.ArgVal("since-hours-ago"))
+		if err != nil {
+			return err
 		}
-		since := time.Now().Unix() - int64(sinceHoursAgo*60*60)
+		since := time.Now().Unix() - int64(sha*60*60)
 		return Summary(since, mt)
 	case "sync":
-		noData := req.Flag("no-data")
+		data := req.Flag("data")
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")
 		videos := req.Flag("videos")
 		if req.Flag("all") {
-			noData = false
-			images = true
-			screenshots = true
-			videos = true
+			data, images, screenshots, videos = true, true, true, true
 		}
-		sinceHoursAgoStr := req.ArgVal("since-hours-ago")
-		var sinceHoursAgo int
-		var err error
-		if sinceHoursAgoStr != "" {
-			sinceHoursAgo, err = strconv.Atoi(sinceHoursAgoStr)
-			if err != nil {
-				return err
-			}
+		data = data && !req.Flag("no-data")
+		images = images && !req.Flag("no-images")
+		screenshots = screenshots && !req.Flag("no-screenshots")
+		videos = videos && req.Flag("no-videos")
+		sha, err := hoursAtoi(req.ArgVal("since-hours-ago"))
+		if err != nil {
+			return err
 		}
-		return Sync(mt, sinceHoursAgo, noData, images, screenshots, videos, verbose)
+		return Sync(mt, sha, data, images, screenshots, videos, verbose)
 	case "tag":
 		operation := req.ArgVal("operation")
 		tagName := req.ArgVal("tag-name")
@@ -144,4 +129,16 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	default:
 		return clo.Route(req, defs)
 	}
+}
+
+func hoursAtoi(str string) (int, error) {
+	var sha int
+	var err error
+	if str != "" {
+		sha, err = strconv.Atoi(str)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return sha, nil
 }

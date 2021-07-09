@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, videos, verbose bool) error {
+func Sync(mt gog_media.Media, sinceHoursAgo int, data, images, screenshots, videos, verbose bool) error {
 
 	var syncStart int64
 	if sinceHoursAgo > 0 {
@@ -20,7 +20,7 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, noData, images, screenshots, vi
 		syncStart = time.Now().Unix()
 	}
 
-	if !noData {
+	if data {
 		//get array and paged data
 		paData := vangogh_products.Array()
 		paData = append(paData, vangogh_products.Paged()...)

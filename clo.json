@@ -58,7 +58,7 @@
       "product-type^*={local-product-types}",
       "media={media^}",
       "property&={all-properties}",
-      "modified"
+      "modified-hours-ago"
     ],
     "owned": [
       "id^&",
@@ -78,12 +78,8 @@
     ],
     "sync": [
       "media={media^}",
-      "no-data",
-      "images",
-      "screenshots",
-      "videos",
-      "all",
-      "since-hours-ago"
+      "since-hours-ago",
+      "{sync-items^&}"
     ],
     "summary": [
       "media={media^}",
