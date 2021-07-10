@@ -1,8 +1,8 @@
 Issues:
 	No known at the moment
 
-sync improvements:
-	- reimplement sync flags to add invidual items as well as remove individual from all
+clo improvement:
+	- "SAME-AS" command to copy arguments from another command
 
 Download files:
 	- create new helper vangogh_downloads that encapsulates working with download links
@@ -93,6 +93,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	sync improvements: @done(2021-07-08)
+		- reimplement sync flags to add invidual items as well as remove individual from all @done(2021-07-08)
 	get-items improvements: @done(2021-07-02)
 		- clearly print every step of the journey - how many are expected to be downloaded and why @done(2021-07-02)
 		- print updates like other items - on the same line as progressive update @done(2021-07-02)

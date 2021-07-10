@@ -90,6 +90,11 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			}
 		}
 		return Search(query)
+	case "size":
+		osStrings := req.ArgValues("operating-system")
+		langCodes := req.ArgValues("language-code")
+		dtStrings := req.ArgValues("download-type")
+		return Size(ids, slug, mt, osStrings, langCodes, dtStrings, missing)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)

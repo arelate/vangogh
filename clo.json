@@ -5,51 +5,53 @@
       "username",
       "password"
     ],
-    "get-data": [
-      "product-type*^={remote-product-types}",
-      "media={media^}",
-      "id&",
-      "slug",
-      "read-ids",
-      "missing",
-      "updated",
-      "deny-ids-file",
-      "verbose"
+    "digest": [
+      "property^={digestible-properties}"
     ],
     "extract": [
       "media={media^}",
       "property&={extracted-properties}"
     ],
-    "get-images": [
-      "image-type*^={image-types}",
-      "media={media^}",
+    "get-data": [
       "id&",
       "slug",
       "read-ids",
+      "product-type*^={remote-product-types}",
+      "media={media^}",
+      "missing",
+      "updated",
+      "deny-ids-file",
+      "verbose"
+    ],
+    "get-downloads": [
+      "id^&",
+      "slug",
+      "read-ids",
+      "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
       "missing"
+    ],
+    "get-images": [
+      "id&",
+      "slug",
+      "read-ids",
+      "missing",
+      "image-type*^={image-types}",
+      "media={media^}"
     ],
     "get-videos": [
       "id&",
       "slug",
       "read-ids",
-      "all"
-    ],
-    "get-downloads": [
-      "id^&",
-      "slug",
-      "media={media^}",
-      "operating-system&={operating-systems^}",
-      "download-type&={download-types^}",
-      "language-code&={language-codes^}",
-      "read-ids",
-      "extras",
-      "all"
+      "missing"
     ],
     "info": [
-      "media={media^}",
       "id^&",
-      "read-ids",
       "slug",
+      "read-ids",
+      "media={media^}",
       "all-text",
       "images",
       "video-id"
@@ -65,30 +67,37 @@
       "slug",
       "read-ids"
     ],
-    "digest": [
-      "property^={digestible-properties}"
-    ],
     "search": [
       "media={media^}",
       "{searchable-properties^&}"
     ],
+    "size": [
+      "id^&",
+      "slug",
+      "read-ids",
+      "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
+      "missing"
+    ],
     "scrub-data": [
       "media={media^}",
       "fix"
+    ],
+    "summary": [
+      "media={media^}",
+      "since-hours-ago"
     ],
     "sync": [
       "media={media^}",
       "since-hours-ago",
       "{sync-items^&}"
     ],
-    "summary": [
-      "media={media^}",
-      "since-hours-ago"
-    ],
     "tag": [
+      "id",
       "operation^=create,delete,edit,add,remove",
-      "tag-name",
-      "id"
+      "tag-name"
     ],
     "wishlist": [
       "media={media^}",

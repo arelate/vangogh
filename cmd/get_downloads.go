@@ -20,6 +20,48 @@ func GetDownloads(
 	dtStrings []string,
 	missing bool) error {
 
+	if err := getDownloadsList(
+		ids,
+		slug,
+		mt,
+		osStrings,
+		langCodes,
+		dtStrings,
+		missing,
+		func(list vangogh_downloads.DownloadsList) {
+			for _, dl := range list {
+				fmt.Println(dl)
+			}
+
+		}); err != nil {
+		return nil
+	}
+
+	////TODO: Write detailed plan for downloading files
+	//
+	return nil
+
+}
+
+func getDownloadsList(
+	ids []string,
+	slug string,
+	mt gog_media.Media,
+	osStrings []string,
+	langCodes []string,
+	dtStrings []string,
+	missing bool,
+	delegate func(list vangogh_downloads.DownloadsList)) error {
+
+	operatingSystems := vangogh_downloads.ParseManyOperatingSystems(osStrings)
+	downloadTypes := vangogh_downloads.ParseManyDownloadTypes(dtStrings)
+
+	fmt.Printf("getting downloads for ids: %v operatingSystems: %v langCodes: %v downloadTypes: %v\n",
+		ids,
+		operatingSystems,
+		langCodes,
+		downloadTypes)
+
 	idSet := gost.NewStrSetWith(ids...)
 
 	exl, err := vangogh_extracts.NewList(
@@ -30,9 +72,6 @@ func GetDownloads(
 		return err
 	}
 
-	operatingSystems := vangogh_downloads.ParseManyOperatingSystems(osStrings)
-	downloadTypes := vangogh_downloads.ParseManyDownloadTypes(dtStrings)
-
 	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, gog_media.Game)
 	if err != nil {
 		return err
@@ -42,12 +81,6 @@ func GetDownloads(
 		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
 		idSet.Add(slugIds...)
 	}
-
-	fmt.Printf("getting downloads for ids: %v operatingSystems: %v langCodes: %v downloadTypes: %v\n",
-		ids,
-		operatingSystems,
-		langCodes,
-		downloadTypes)
 
 	for _, id := range idSet.All() {
 
@@ -61,21 +94,8 @@ func GetDownloads(
 			return err
 		}
 
-		downloads = downloads.Only(operatingSystems, langCodes, downloadTypes)
-
-		fmt.Println("total estimated size:", downloads.TotalBytesEstimate())
-		for _, dl := range downloads {
-			fmt.Println(dl)
-		}
+		delegate(downloads.Only(operatingSystems, langCodes, downloadTypes))
 	}
 
-	//httpClient, err := internal.HttpClient()
-	//if err != nil {
-	//	return err
-	//}
-
-	//TODO: Write detailed plan for downloading files
-
 	return nil
-
 }
