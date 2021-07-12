@@ -91,7 +91,8 @@ func GetImages(
 
 			_, err = dl.Download(srcUrl, dstDir, "")
 			if err != nil {
-				return err
+				fmt.Println(err)
+				continue
 			}
 		}
 

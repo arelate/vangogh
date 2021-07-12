@@ -97,11 +97,10 @@ func GetVideos(ids []string, slug string, missing bool) error {
 				}
 
 				_, err = dl.Download(vidUrl, dir, videoId+videoExt)
-				if err == nil {
-					break
+				if err != nil {
+					fmt.Println(err)
+					continue
 				}
-
-				// log actual error before attempting another file
 			}
 		}
 

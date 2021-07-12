@@ -99,6 +99,16 @@
       "operation^=create,delete,edit,add,remove",
       "tag-name"
     ],
+    "validate": [
+      "id^&",
+      "slug",
+      "read-ids",
+      "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
+      "all"
+    ],
     "wishlist": [
       "media={media^}",
       "add&",

@@ -77,7 +77,10 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		if err != nil {
 			return err
 		}
-		modifiedSince := time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
+		var modifiedSince int64 = 0
+		if mha > 0 {
+			modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
+		}
 		properties := req.ArgValues("property")
 		return List(ids, modifiedSince, pt, mt, properties)
 	case "owned":
@@ -94,7 +97,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		osStrings := req.ArgValues("operating-system")
 		langCodes := req.ArgValues("language-code")
 		dtStrings := req.ArgValues("download-type")
-		return Size(ids, slug, mt, osStrings, langCodes, dtStrings, missing)
+		return Size(ids, slug, mt, osStrings, langCodes, dtStrings)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)
@@ -127,6 +130,12 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		tagName := req.ArgVal("tag-name")
 		id := req.ArgVal("id")
 		return Tag(operation, tagName, id)
+	case "validate":
+		osStrings := req.ArgValues("operating-system")
+		langCodes := req.ArgValues("language-code")
+		dtStrings := req.ArgValues("download-type")
+		all := req.Flag("all")
+		return Validate(ids, slug, mt, osStrings, langCodes, dtStrings, all)
 	case "wishlist":
 		addProductIds := req.ArgValues("add")
 		removeProductIds := req.ArgValues("remove")

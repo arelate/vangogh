@@ -1,17 +1,17 @@
 Issues:
 	No known at the moment
 
-clo improvement:
-	- "SAME-AS" command to copy arguments from another command
-
 Download files:
-	- create new helper vangogh_downloads that encapsulates working with download links
-	- create new type:
-		- OperatingSystem
-		- DownloadUrlMetadata
-	- extract links for OS, language
-	- resolve URLs to exact links
-	- get validation files
+	- create new helper vangogh_downloads that encapsulates working with download links @done(2021-07-11)
+	- create new type: @done(2021-07-11)
+		- OperatingSystem @done(2021-07-11)
+		- DownloadUrlMetadata @done(2021-07-11)
+	- extract links for OS, language @done(2021-07-11)
+	- resolve URLs to exact links @done(2021-07-11)
+	- get validation files @done(2021-07-11)
+	- save association manualUrl -> local file @done(2021-07-11)
+	- download manualUrl files @done(2021-07-11)
+	- 
 	
 Validate files:
 	- use validation files
@@ -35,6 +35,9 @@ yt-urls improvements:
 		
 Misc improvements:
 	- investigate text/tabwriter for output
+		
+clo improvement:
+	- "SAME-AS" command to copy arguments from another command
 		
 kvas improvements:
 	- rewrite to support concurrent operations
