@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
@@ -24,17 +25,22 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	pt := vangogh_products.Parse(productType)
 	mt := gog_media.Parse(media)
 
-	ids := req.ArgValues("id")
-	if req.Flag("read-ids") {
-		var err error
-		ids, err = internal.ReadStdinIds()
-		if err != nil {
-			return err
-		}
+	missing := req.Flag("missing")
+
+	idSet, err := SetFromSelectors(idSelectors{
+		ids:       req.ArgValues("id"),
+		slugs:     req.ArgValues("slug"),
+		fromStdin: req.Flag("read-ids"),
+	})
+	if err != nil {
+		return err
 	}
 
-	slug := req.ArgVal("slug")
-	missing := req.Flag("missing")
+	osStrings := req.ArgValues("operating-system")
+	langCodes := req.ArgValues("language-code")
+	dtStrings := req.ArgValues("download-type")
+	operatingSystems := vangogh_downloads.ParseManyOperatingSystems(osStrings)
+	downloadTypes := vangogh_downloads.ParseManyDownloadTypes(dtStrings)
 
 	switch req.Command {
 	case "auth":
@@ -55,23 +61,37 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 		denyIdsFile := req.ArgVal("deny-ids-file")
 		denyIds := internal.ReadLines(denyIdsFile)
-		return GetData(ids, slug, denyIds, pt, mt, since, missing, updated, verbose)
+		return GetData(idSet, denyIds, pt, mt, since, missing, updated, verbose)
 	case "get-downloads":
-		osStrings := req.ArgValues("operating-system")
-		langCodes := req.ArgValues("language-code")
-		dtStrings := req.ArgValues("download-type")
-		return GetDownloads(ids, slug, mt, osStrings, langCodes, dtStrings, missing)
+		mha, err := hoursAtoi(req.ArgVal("modified-hours-ago"))
+		if err != nil {
+			return err
+		}
+		var modifiedSince int64 = 0
+		if mha > 0 {
+			modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
+		}
+		forceRemoteUpdate := req.Flag("force-remote-update")
+		return GetDownloads(
+			idSet,
+			mt,
+			operatingSystems,
+			langCodes,
+			downloadTypes,
+			missing,
+			modifiedSince,
+			forceRemoteUpdate)
 	case "get-images":
 		imageType := req.ArgVal("image-type")
 		it := vangogh_images.Parse(imageType)
-		return GetImages(ids, slug, it, nil, missing)
+		return GetImages(idSet, it, nil, missing)
 	case "get-videos":
-		return GetVideos(ids, slug, missing)
+		return GetVideos(idSet, missing)
 	case "info":
 		allText := req.Flag("all-text")
 		images := req.Flag("images")
 		videoId := req.Flag("video-id")
-		return Info(slug, ids, allText, images, videoId)
+		return Info(idSet, allText, images, videoId)
 	case "list":
 		mha, err := hoursAtoi(req.ArgVal("modified-hours-ago"))
 		if err != nil {
@@ -82,9 +102,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
 		}
 		properties := req.ArgValues("property")
-		return List(ids, modifiedSince, pt, mt, properties)
+		return List(idSet, modifiedSince, pt, mt, properties)
 	case "owned":
-		return Owned(ids, slug)
+		return Owned(idSet)
 	case "search":
 		query := make(map[string][]string)
 		for _, prop := range vangogh_properties.Searchable() {
@@ -94,10 +114,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 		return Search(query)
 	case "size":
-		osStrings := req.ArgValues("operating-system")
-		langCodes := req.ArgValues("language-code")
-		dtStrings := req.ArgValues("download-type")
-		return Size(ids, slug, mt, osStrings, langCodes, dtStrings)
+		return Size(idSet, mt, operatingSystems, langCodes, downloadTypes)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)
@@ -131,11 +148,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		id := req.ArgVal("id")
 		return Tag(operation, tagName, id)
 	case "validate":
-		osStrings := req.ArgValues("operating-system")
-		langCodes := req.ArgValues("language-code")
-		dtStrings := req.ArgValues("download-type")
 		all := req.Flag("all")
-		return Validate(ids, slug, mt, osStrings, langCodes, dtStrings, all)
+		return Validate(idSet, mt, operatingSystems, langCodes, downloadTypes, all)
 	case "wishlist":
 		addProductIds := req.ArgValues("add")
 		removeProductIds := req.ArgValues("remove")

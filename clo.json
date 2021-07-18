@@ -14,7 +14,7 @@
     ],
     "get-data": [
       "id&",
-      "slug",
+      "slug&",
       "read-ids",
       "product-type*^={remote-product-types}",
       "media={media^}",
@@ -25,17 +25,19 @@
     ],
     "get-downloads": [
       "id^&",
-      "slug",
+      "slug&",
       "read-ids",
       "media={media^}",
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
-      "missing"
+      "missing",
+      "modified-hours-ago",
+      "force-remote-update"
     ],
     "get-images": [
       "id&",
-      "slug",
+      "slug&",
       "read-ids",
       "missing",
       "image-type*^={image-types}",
@@ -43,13 +45,13 @@
     ],
     "get-videos": [
       "id&",
-      "slug",
+      "slug&",
       "read-ids",
       "missing"
     ],
     "info": [
       "id^&",
-      "slug",
+      "slug&",
       "read-ids",
       "media={media^}",
       "all-text",
@@ -64,7 +66,7 @@
     ],
     "owned": [
       "id^&",
-      "slug",
+      "slug&",
       "read-ids"
     ],
     "search": [
@@ -73,7 +75,7 @@
     ],
     "size": [
       "id^&",
-      "slug",
+      "slug&",
       "read-ids",
       "media={media^}",
       "operating-system&={operating-systems^}",
@@ -101,7 +103,7 @@
     ],
     "validate": [
       "id^&",
-      "slug",
+      "slug&",
       "read-ids",
       "media={media^}",
       "operating-system&={operating-systems^}",

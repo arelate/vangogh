@@ -1,20 +1,21 @@
 Issues:
 	No known at the moment
 
+standartize idSet generation:
+	- DRY
+
 Download files:
-	- create new helper vangogh_downloads that encapsulates working with download links @done(2021-07-11)
-	- create new type: @done(2021-07-11)
-		- OperatingSystem @done(2021-07-11)
-		- DownloadUrlMetadata @done(2021-07-11)
-	- extract links for OS, language @done(2021-07-11)
-	- resolve URLs to exact links @done(2021-07-11)
-	- get validation files @done(2021-07-11)
-	- save association manualUrl -> local file @done(2021-07-11)
-	- download manualUrl files @done(2021-07-11)
-	- 
+	- add support for missing option
+	- force refresh if details got updated recently (since the last update?)
+	- new cleanup command to remove files no longer required for current version (based on local-manual-url)
+	- add get-downloads and clean-up to sync 
 	
 Validate files:
 	- use validation files
+	- implement progress counter
+	
+Cleanup cmd:
+	- use getDownload
 	
 vangogh_api:
 	- create new module that provides all core commands functionality, leaving input output to vangogh
@@ -96,6 +97,16 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- create new helper vangogh_downloads that encapsulates working with download links @done(2021-07-11) @project(Download files)
+	- create new type: @done(2021-07-11) @project(Download files)
+		- OperatingSystem @done(2021-07-11)
+		- DownloadUrlMetadata @done(2021-07-11)
+	- extract links for OS, language @done(2021-07-11) @project(Download files)
+	- resolve URLs to exact links @done(2021-07-11) @project(Download files)
+	- get validation files @done(2021-07-11) @project(Download files)
+	- save association manualUrl -> local file @done(2021-07-11) @project(Download files)
+	- download manualUrl files @done(2021-07-11) @project(Download files)
+	- don't load account products just to get slug, use title extract instead @done(2021-07-15) @project(Download files)
 	sync improvements: @done(2021-07-08)
 		- reimplement sync flags to add invidual items as well as remove individual from all @done(2021-07-08)
 	get-items improvements: @done(2021-07-02)

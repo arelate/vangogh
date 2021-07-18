@@ -13,8 +13,7 @@ import (
 )
 
 func GetImages(
-	ids []string,
-	slug string,
+	idSet gost.StrSet,
 	it vangogh_images.ImageType,
 	localImageIds map[string]bool,
 	missing bool) error {
@@ -33,21 +32,17 @@ func GetImages(
 	}
 
 	if missing {
-		if len(ids) > 0 {
+		if idSet.Len() > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
-		ids, err = allMissingLocalImageIds(exl, imageTypeProp, localImageIds)
+		missingImageIds, err := allMissingLocalImageIds(exl, imageTypeProp, localImageIds)
 		if err != nil {
 			return err
 		}
+		idSet.Add(missingImageIds...)
 	}
 
-	if slug != "" {
-		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
-		ids = append(ids, slugIds...)
-	}
-
-	if len(ids) == 0 {
+	if idSet.Len() == 0 {
 		if missing {
 			fmt.Printf("all %s images are available locally\n", it)
 		} else {
@@ -63,7 +58,7 @@ func GetImages(
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
-	for _, id := range ids {
+	for _, id := range idSet.All() {
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
@@ -109,7 +104,6 @@ func allMissingLocalImageIds(
 	idSet := gost.NewStrSet()
 	var err error
 
-	// filter ids to only the ones that miss that particular image type
 	if localImageIds == nil {
 		localImageIds, err = vangogh_urls.LocalImageIds()
 		if err != nil {

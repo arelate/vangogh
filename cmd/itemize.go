@@ -3,9 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
-	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
-	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
@@ -13,42 +11,30 @@ import (
 )
 
 func itemizeAll(
-	ids []string,
-	slug string,
+	idSet gost.StrSet,
 	missing, updated bool,
 	modifiedAfter int64,
 	pt vangogh_products.ProductType,
-	mt gog_media.Media) ([]string, error) {
-
-	idSet := gost.NewStrSetWith(ids...)
-
-	if slug != "" {
-		exl, err := vangogh_extracts.NewList(vangogh_properties.SlugProperty)
-		if err != nil {
-			return nil, err
-		}
-		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
-		idSet.Add(slugIds...)
-	}
+	mt gog_media.Media) (gost.StrSet, error) {
 
 	for _, mainPt := range vangogh_products.MainTypes(pt) {
 		if missing {
 			missingIds, err := itemizeMissing(pt, mainPt, mt, modifiedAfter)
 			if err != nil {
-				return idSet.All(), err
+				return idSet, err
 			}
 			idSet.Add(missingIds...)
 		}
 		if updated {
 			updatedIds, err := itemizeUpdated(modifiedAfter, mainPt, mt)
 			if err != nil {
-				return ids, err
+				return idSet, err
 			}
 			idSet.Add(updatedIds...)
 		}
 	}
 
-	return idSet.All(), nil
+	return idSet, nil
 }
 
 func itemizeMissing(

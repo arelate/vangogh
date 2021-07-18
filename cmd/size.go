@@ -6,14 +6,15 @@ import (
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
+	"github.com/boggydigital/gost"
 )
 
-func Size(ids []string,
-	slug string,
+func Size(
+	idSet gost.StrSet,
 	mt gog_media.Media,
-	osStrings []string,
+	operatingSystems []vangogh_downloads.OperatingSystem,
 	langCodes []string,
-	dtStrings []string) error {
+	downloadTypes []vangogh_downloads.DownloadType) error {
 
 	dlList := vangogh_downloads.DownloadsList{}
 
@@ -25,20 +26,22 @@ func Size(ids []string,
 	}
 
 	if err := getDownloadsList(
-		ids,
-		slug,
+		idSet,
 		mt,
 		exl,
-		osStrings,
+		operatingSystems,
 		langCodes,
-		dtStrings,
+		downloadTypes,
 		func(
 			_ string,
 			list vangogh_downloads.DownloadsList,
-			_ *vangogh_extracts.ExtractsList) error {
+			_ *vangogh_extracts.ExtractsList,
+			_ bool) error {
 			dlList = append(dlList, list...)
 			return nil
-		}); err != nil {
+		},
+		0,
+		false); err != nil {
 		return err
 	}
 

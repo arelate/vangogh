@@ -11,6 +11,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/gost"
 	"io"
 	"os"
 	"path"
@@ -37,12 +38,11 @@ type ValidationChunk struct {
 }
 
 func Validate(
-	ids []string,
-	slug string,
+	idSet gost.StrSet,
 	mt gog_media.Media,
-	osStrings []string,
+	operatingSystems []vangogh_downloads.OperatingSystem,
 	langCodes []string,
-	dtStrings []string,
+	downloadTypes []vangogh_downloads.DownloadType,
 	all bool) error {
 
 	exl, err := vangogh_extracts.NewList(
@@ -58,10 +58,19 @@ func Validate(
 		if err != nil {
 			return err
 		}
-		ids = vrDetails.All()
+		idSet.Add(vrDetails.All()...)
 	}
 
-	if err := getDownloadsList(ids, slug, mt, exl, osStrings, langCodes, dtStrings, validateDownloadList); err != nil {
+	if err := getDownloadsList(
+		idSet,
+		mt,
+		exl,
+		operatingSystems,
+		langCodes,
+		downloadTypes,
+		validateDownloadList,
+		0,
+		false); err != nil {
 		return err
 	}
 
@@ -71,7 +80,8 @@ func Validate(
 func validateDownloadList(
 	slug string,
 	list vangogh_downloads.DownloadsList,
-	exl *vangogh_extracts.ExtractsList) error {
+	exl *vangogh_extracts.ExtractsList,
+	_ bool) error {
 	fmt.Println("validating", slug)
 
 	for _, dl := range list {

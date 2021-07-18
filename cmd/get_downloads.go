@@ -17,30 +17,26 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 )
 
 type downloadListDelegate func(
-	string,
-	vangogh_downloads.DownloadsList,
-	*vangogh_extracts.ExtractsList) error
+	id string,
+	dlList vangogh_downloads.DownloadsList,
+	exl *vangogh_extracts.ExtractsList,
+	forceRemoteUpdate bool) error
 
 func GetDownloads(
-	ids []string,
-	slug string,
+	idSet gost.StrSet,
 	mt gog_media.Media,
-	osStrings []string,
+	operatingSystems []vangogh_downloads.OperatingSystem,
 	langCodes []string,
-	dtStrings []string,
-	missing bool) error {
-
-	//fmt.Printf("getting downloads for ids: %v operatingSystems: %v langCodes: %v downloadTypes: %v\n",
-	//	ids,
-	//	osStrings,
-	//	langCodes,
-	//	dtStrings)
+	downloadTypes []vangogh_downloads.DownloadType,
+	missing bool,
+	modifiedSince int64,
+	forceRemoteUpdate bool) error {
 
 	exl, err := vangogh_extracts.NewList(
-		vangogh_properties.TitleProperty,
 		vangogh_properties.NativeLanguageNameProperty,
 		vangogh_properties.SlugProperty,
 		vangogh_properties.LocalManualUrl)
@@ -49,14 +45,15 @@ func GetDownloads(
 	}
 
 	if err := getDownloadsList(
-		ids,
-		slug,
+		idSet,
 		mt,
 		exl,
-		osStrings,
+		operatingSystems,
 		langCodes,
-		dtStrings,
-		downloadList); err != nil {
+		downloadTypes,
+		downloadList,
+		modifiedSince,
+		forceRemoteUpdate); err != nil {
 		return nil
 	}
 
@@ -68,7 +65,8 @@ func downloadManualUrl(
 	dl *vangogh_downloads.Download,
 	exl *vangogh_extracts.ExtractsList,
 	httpClient *http.Client,
-	dlClient *dolo.Client) error {
+	dlClient *dolo.Client,
+	forceRemoteUpdate bool) error {
 	//downloading a manual URL is the following set of steps:
 	//1 - check if local file exists (based on manualUrl -> relative localFile association) before attempting to resolve manualUrl
 	//2 - resolve the source URL to an actual session URL
@@ -83,11 +81,13 @@ func downloadManualUrl(
 	fmt.Printf("downloading %s...", dl.String())
 
 	//1
-	localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
-	if ok {
-		if _, err := os.Stat(path.Join(vangogh_urls.DownloadsDir(), localFilename)); !os.IsNotExist(err) {
-			fmt.Println("already exists")
-			return nil
+	if !forceRemoteUpdate {
+		localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
+		if ok {
+			if _, err := os.Stat(path.Join(vangogh_urls.DownloadsDir(), localFilename)); !os.IsNotExist(err) {
+				fmt.Println("already exists")
+				return nil
+			}
 		}
 	}
 
@@ -158,7 +158,8 @@ func printCompletion(current, total uint64) {
 func downloadList(
 	slug string,
 	list vangogh_downloads.DownloadsList,
-	exl *vangogh_extracts.ExtractsList) error {
+	exl *vangogh_extracts.ExtractsList,
+	forceRemoteUpdate bool) error {
 	fmt.Println("downloading", slug)
 
 	httpClient, err := internal.HttpClient()
@@ -168,10 +169,12 @@ func downloadList(
 
 	//there is no need to use internal httpClient with cookie support for downloading
 	//manual downloads, so we're going to rely on default http.Client
-	dlClient := dolo.NewClient(http.DefaultClient, printCompletion, dolo.Defaults())
+	defaultClient := http.DefaultClient
+	defaultClient.Timeout = time.Minute * 60
+	dlClient := dolo.NewClient(defaultClient, printCompletion, dolo.Defaults())
 
 	for _, dl := range list {
-		if err := downloadManualUrl(slug, &dl, exl, httpClient, dlClient); err != nil {
+		if err := downloadManualUrl(slug, &dl, exl, httpClient, dlClient, forceRemoteUpdate); err != nil {
 			fmt.Println(err)
 		}
 	}
@@ -179,14 +182,15 @@ func downloadList(
 }
 
 func getDownloadsList(
-	ids []string,
-	slug string,
+	idSet gost.StrSet,
 	mt gog_media.Media,
 	exl *vangogh_extracts.ExtractsList,
-	osStrings []string,
+	operatingSystems []vangogh_downloads.OperatingSystem,
 	langCodes []string,
-	dtStrings []string,
-	delegate downloadListDelegate) error {
+	downloadTypes []vangogh_downloads.DownloadType,
+	delegate downloadListDelegate,
+	modifiedSince int64,
+	forceRemoteUpdate bool) error {
 
 	if delegate == nil {
 		return fmt.Errorf("vangogh: get downloads list delegate is nil")
@@ -197,31 +201,16 @@ func getDownloadsList(
 		return err
 	}
 
-	operatingSystems := vangogh_downloads.ParseManyOperatingSystems(osStrings)
-	downloadTypes := vangogh_downloads.ParseManyDownloadTypes(dtStrings)
-
-	idSet := gost.NewStrSetWith(ids...)
-
 	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
 	if err != nil {
 		return err
 	}
 
-	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
-	if err != nil {
-		return err
-	}
-
-	if slug != "" {
-		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
-		idSet.Add(slugIds...)
-	}
-
 	for _, id := range idSet.All() {
 
-		if !vrDetails.Contains(id) ||
-			!vrAccountProducts.Contains(id) {
-			// log missing details id
+		detSlug, ok := exl.Get(vangogh_properties.SlugProperty, id)
+
+		if !vrDetails.Contains(id) || !ok {
 			continue
 		}
 
@@ -235,16 +224,17 @@ func getDownloadsList(
 			return err
 		}
 
-		ap, err := vrAccountProducts.AccountProduct(id)
-		if err != nil {
-			return err
+		if !forceRemoteUpdate {
+			forceRemoteUpdate = modifiedSince > 0 &&
+				vrDetails.WasModifiedAfter(id, modifiedSince)
 		}
 
 		// already checked for nil earlier in the function
 		if err := delegate(
-			ap.Slug,
+			detSlug,
 			downloads.Only(operatingSystems, langCodes, downloadTypes),
-			exl); err != nil {
+			exl,
+			forceRemoteUpdate); err != nil {
 			return err
 		}
 	}

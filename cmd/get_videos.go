@@ -16,7 +16,7 @@ const (
 	missingStr = "missing"
 )
 
-func GetVideos(ids []string, slug string, missing bool) error {
+func GetVideos(idSet gost.StrSet, missing bool) error {
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.TitleProperty,
@@ -29,18 +29,14 @@ func GetVideos(ids []string, slug string, missing bool) error {
 	}
 
 	if missing {
-		ids, err = allMissingLocalVideoIds(exl)
+		missingIds, err := allMissingLocalVideoIds(exl)
 		if err != nil {
 			return err
 		}
+		idSet.Add(missingIds...)
 	}
 
-	if slug != "" {
-		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
-		ids = append(ids, slugIds...)
-	}
-
-	if len(ids) == 0 {
+	if idSet.Len() == 0 {
 		if missing {
 			fmt.Println("all videos are available locally")
 		} else {
@@ -56,7 +52,7 @@ func GetVideos(ids []string, slug string, missing bool) error {
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
-	for _, id := range ids {
+	for _, id := range idSet.All() {
 		videoIds, ok := exl.GetAll(vangogh_properties.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
 			continue

@@ -9,9 +9,8 @@ import (
 	"github.com/boggydigital/gost"
 )
 
-func Owned(ids []string, slug string) error {
+func Owned(idSet gost.StrSet) error {
 
-	idSet := gost.NewStrSetWith(ids...)
 	ownedSet := gost.NewStrSet()
 	propSet := gost.NewStrSetWith(
 		vangogh_properties.TitleProperty,
@@ -21,11 +20,6 @@ func Owned(ids []string, slug string) error {
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
 		return err
-	}
-
-	if slug != "" {
-		slugIds := exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)
-		idSet.Add(slugIds...)
 	}
 
 	vrLicenceProducts, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, gog_media.Game)
