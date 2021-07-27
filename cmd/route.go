@@ -26,6 +26,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	mt := gog_media.Parse(media)
 
 	missing := req.Flag("missing")
+	all := req.Flag("all")
 
 	idSet, err := SetFromSelectors(idSelectors{
 		ids:       req.ArgValues("id"),
@@ -47,6 +48,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		username := req.ArgVal("username")
 		password := req.ArgVal("password")
 		return Authenticate(username, password)
+	case "cleanup":
+		return Cleanup(idSet, mt, operatingSystems, langCodes, downloadTypes, all)
 	case "digest":
 		property := req.ArgVal("property")
 		return Digest(property)
@@ -82,9 +85,12 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			modifiedSince,
 			forceRemoteUpdate)
 	case "get-images":
-		imageType := req.ArgVal("image-type")
-		it := vangogh_images.Parse(imageType)
-		return GetImages(idSet, it, nil, missing)
+		imageTypes := req.ArgValues("image-type")
+		its := make([]vangogh_images.ImageType, 0, len(imageTypes))
+		for _, imageType := range imageTypes {
+			its = append(its, vangogh_images.Parse(imageType))
+		}
+		return GetImages(idSet, its, nil, missing)
 	case "get-videos":
 		return GetVideos(idSet, missing)
 	case "info":
@@ -130,7 +136,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")
 		videos := req.Flag("videos")
-		if req.Flag("all") {
+		if all {
 			data, images, screenshots, videos = true, true, true, true
 		}
 		data = data && !req.Flag("no-data")
@@ -148,7 +154,6 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		id := req.ArgVal("id")
 		return Tag(operation, tagName, id)
 	case "validate":
-		all := req.Flag("all")
 		return Validate(idSet, mt, operatingSystems, langCodes, downloadTypes, all)
 	case "wishlist":
 		addProductIds := req.ArgValues("add")

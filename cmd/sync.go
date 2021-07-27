@@ -54,13 +54,15 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, data, images, screenshots, vide
 	}
 	// get images
 	if images {
+		imageTypes := make([]vangogh_images.ImageType, 0, len(vangogh_images.All()))
 		for _, it := range vangogh_images.All() {
 			if !screenshots && it == vangogh_images.Screenshots {
 				continue
 			}
-			if err := GetImages(gost.NewStrSet(), it, localImageIds, true); err != nil {
-				return err
-			}
+			imageTypes = append(imageTypes, it)
+		}
+		if err := GetImages(gost.NewStrSet(), imageTypes, localImageIds, true); err != nil {
+			return err
 		}
 		fmt.Println()
 	}

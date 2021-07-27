@@ -2,27 +2,31 @@ Issues:
 	No known at the moment
 
 standartize idSet generation:
-	- DRY
+	- DRY from other cmds and encapsulate itemization of ids for a given set of args
+
+Cleanup cmd:
+	- new cleanup command to remove files no longer required for current version (based on local-manual-url)
+	- rename getDownloadsList to mapDownloadList and move to a separate file
+	- when clearing out files, also cleanup xml files
 
 Download files:
+	- store xml files outside files directory for cleaner enumeration
 	- add support for missing option
-	- force refresh if details got updated recently (since the last update?)
-	- new cleanup command to remove files no longer required for current version (based on local-manual-url)
-	- add get-downloads and clean-up to sync 
+	- add get-downloads and clean-up to sync:
+		- rename "all" to "all-except-downloads"
+		- add files flag that is excluded by default (true "all" = "all-except-downloads" + "downloads")
 	
 Validate files:
 	- use validation files
 	- implement progress counter
 	
-Cleanup cmd:
-	- use getDownload
-	
-vangogh_api:
-	- create new module that provides all core commands functionality, leaving input output to vangogh
-	
 configuration:
 	- create a configuration file at a certain default location
 	- use it to specify directories/kvas connection strings
+	- use it to specify default scopes (e.g. sync, download, etc.)
+	
+vangogh_api:
+	- create new module that provides all core commands functionality, leaving input output to vangogh
 	
 documentation investment:
 	- add clo.json help for stable commands
@@ -97,6 +101,11 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Download images: @done(2021-07-26)
+		- group by product and update similarly to other products (e.g. getting Undertale icon... logo... image... done) @done(2021-07-26)
+	info improvements: @done(2021-07-25)
+		- when video is specified - show if it's known missing @done(2021-07-25)
+	- force refresh if details got updated recently (since the last update?) @done(2021-07-18) @project(Download files)
 	- create new helper vangogh_downloads that encapsulates working with download links @done(2021-07-11) @project(Download files)
 	- create new type: @done(2021-07-11) @project(Download files)
 		- OperatingSystem @done(2021-07-11)

@@ -5,6 +5,16 @@
       "username",
       "password"
     ],
+    "cleanup": [
+      "id^&",
+      "slug&",
+      "read-ids",
+      "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
+      "all"
+    ],
     "digest": [
       "property^={digestible-properties}"
     ],
@@ -40,7 +50,7 @@
       "slug&",
       "read-ids",
       "missing",
-      "image-type*^={image-types}",
+      "image-type&*^={image-types}",
       "media={media^}"
     ],
     "get-videos": [

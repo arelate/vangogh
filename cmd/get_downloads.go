@@ -82,8 +82,7 @@ func downloadManualUrl(
 
 	//1
 	if !forceRemoteUpdate {
-		localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
-		if ok {
+		if localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			if _, err := os.Stat(path.Join(vangogh_urls.DownloadsDir(), localFilename)); !os.IsNotExist(err) {
 				fmt.Println("already exists")
 				return nil

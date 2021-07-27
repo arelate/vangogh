@@ -14,39 +14,66 @@ import (
 
 func GetImages(
 	idSet gost.StrSet,
-	it vangogh_images.ImageType,
+	its []vangogh_images.ImageType,
 	localImageIds map[string]bool,
 	missing bool) error {
 
-	if !vangogh_images.Valid(it) {
-		return fmt.Errorf("invalid image type %s", it)
+	for _, it := range its {
+		if !vangogh_images.Valid(it) {
+			return fmt.Errorf("invalid image type %s", it)
+		}
 	}
 
-	imageTypeProp := vangogh_properties.FromImageType(it)
-	exl, err := vangogh_extracts.NewList(
-		vangogh_properties.TitleProperty,
-		vangogh_properties.SlugProperty,
-		imageTypeProp)
+	propSet := gost.NewStrSetWith(vangogh_properties.TitleProperty, vangogh_properties.SlugProperty)
+
+	for _, it := range its {
+		propSet.Add(vangogh_properties.FromImageType(it))
+	}
+
+	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
 		return err
 	}
+
+	//for every product we'll collect image types it's missing and download only those
+	idMissingTypes := map[string][]vangogh_images.ImageType{}
 
 	if missing {
 		if idSet.Len() > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
-		missingImageIds, err := allMissingLocalImageIds(exl, imageTypeProp, localImageIds)
-		if err != nil {
-			return err
+		//to track image types missing for each product we do the following:
+		//1. for every image type requested to be downloaded - get product ids that don't have this image type locally
+		//2. for every product id we get this way - add this image type to idMissingTypes[id]
+		for _, it := range its {
+			//1
+			missingImageIds, err := allMissingLocalImageIds(
+				exl,
+				vangogh_properties.FromImageType(it),
+				localImageIds)
+			if err != nil {
+				return err
+			}
+
+			//2
+			for _, id := range missingImageIds {
+				if idMissingTypes[id] == nil {
+					idMissingTypes[id] = make([]vangogh_images.ImageType, 0)
+				}
+				idMissingTypes[id] = append(idMissingTypes[id], it)
+			}
 		}
-		idSet.Add(missingImageIds...)
+	} else {
+		for _, id := range idSet.All() {
+			idMissingTypes[id] = its
+		}
 	}
 
-	if idSet.Len() == 0 {
+	if len(idMissingTypes) == 0 {
 		if missing {
-			fmt.Printf("all %s images are available locally\n", it)
+			fmt.Printf("all images are available locally\n")
 		} else {
-			fmt.Printf("no ids to get images for %s\n", it)
+			fmt.Printf("need at least one product id to get images\n")
 		}
 		return nil
 	}
@@ -58,36 +85,41 @@ func GetImages(
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
-	for _, id := range idSet.All() {
+	for id, missingIts := range idMissingTypes {
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
 		}
-		fmt.Printf("getting %s for %s (%s)...", it, title, id)
 
-		images, ok := exl.GetAll(imageTypeProp, id)
-		if !ok || len(images) == 0 {
-			fmt.Printf("missing %s for %s (%s)\n", it, title, id)
-			continue
-		}
+		fmt.Printf("getting images for %s (%s) - ", title, id)
 
-		srcUrls, err := vangogh_urls.PropImageUrls(images, it)
-		if err != nil {
-			return err
-		}
+		for _, it := range missingIts {
 
-		for i, srcUrl := range srcUrls {
+			fmt.Printf("%s.", it)
 
-			dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
-
-			if len(srcUrls) > 1 {
-				fmt.Printf("\rgetting %s for %s (%s) file %d/%d...", it, title, id, i+1, len(srcUrls))
+			images, ok := exl.GetAll(vangogh_properties.FromImageType(it), id)
+			if !ok || len(images) == 0 {
+				fmt.Printf("(missing).")
+				continue
 			}
 
-			_, err = dl.Download(srcUrl, dstDir, "")
+			srcUrls, err := vangogh_urls.PropImageUrls(images, it)
 			if err != nil {
-				fmt.Println(err)
-				continue
+				return err
+			}
+
+			for i, srcUrl := range srcUrls {
+
+				if len(srcUrls) > 0 && i > 0 {
+					fmt.Print(".")
+				}
+				dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
+
+				_, err = dl.Download(srcUrl, dstDir, "")
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
 			}
 		}
 
