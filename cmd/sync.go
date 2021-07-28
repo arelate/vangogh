@@ -49,6 +49,7 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, data, images, screenshots, vide
 	}
 
 	localImageIds, err := vangogh_urls.LocalImageIds()
+	localImageSet := gost.NewStrSetWith(localImageIds...)
 	if err != nil {
 		return err
 	}
@@ -61,7 +62,7 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, data, images, screenshots, vide
 			}
 			imageTypes = append(imageTypes, it)
 		}
-		if err := GetImages(gost.NewStrSet(), imageTypes, localImageIds, true); err != nil {
+		if err := GetImages(gost.NewStrSet(), imageTypes, localImageSet, true); err != nil {
 			return err
 		}
 		fmt.Println()

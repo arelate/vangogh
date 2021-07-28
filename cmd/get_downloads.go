@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-type downloadListDelegate func(
+type mapDownloadListDelegate func(
 	id string,
 	dlList vangogh_downloads.DownloadsList,
 	exl *vangogh_extracts.ExtractsList,
@@ -34,7 +34,9 @@ func GetDownloads(
 	downloadTypes []vangogh_downloads.DownloadType,
 	missing bool,
 	modifiedSince int64,
-	forceRemoteUpdate bool) error {
+	forceRemoteUpdate,
+	validate,
+	noCleanup bool) error {
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.NativeLanguageNameProperty,
@@ -44,7 +46,7 @@ func GetDownloads(
 		return err
 	}
 
-	if err := getDownloadsList(
+	if err := mapDownloadsList(
 		idSet,
 		mt,
 		exl,
@@ -55,6 +57,20 @@ func GetDownloads(
 		modifiedSince,
 		forceRemoteUpdate); err != nil {
 		return nil
+	}
+
+	if validate {
+		fmt.Println()
+		if err := Validate(idSet, mt, operatingSystems, langCodes, downloadTypes, false); err != nil {
+			return err
+		}
+	}
+
+	if !noCleanup {
+		fmt.Println()
+		if err := Cleanup(idSet, mt, operatingSystems, langCodes, downloadTypes, false); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -180,19 +196,19 @@ func downloadList(
 	return nil
 }
 
-func getDownloadsList(
+func mapDownloadsList(
 	idSet gost.StrSet,
 	mt gog_media.Media,
 	exl *vangogh_extracts.ExtractsList,
 	operatingSystems []vangogh_downloads.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_downloads.DownloadType,
-	delegate downloadListDelegate,
+	mapDlDelegate mapDownloadListDelegate,
 	modifiedSince int64,
 	forceRemoteUpdate bool) error {
 
-	if delegate == nil {
-		return fmt.Errorf("vangogh: get downloads list delegate is nil")
+	if mapDlDelegate == nil {
+		return fmt.Errorf("vangogh: get downloads list mapDlDelegate is nil")
 	}
 	if err := exl.AssertSupport(
 		vangogh_properties.SlugProperty,
@@ -229,7 +245,7 @@ func getDownloadsList(
 		}
 
 		// already checked for nil earlier in the function
-		if err := delegate(
+		if err := mapDlDelegate(
 			detSlug,
 			downloads.Only(operatingSystems, langCodes, downloadTypes),
 			exl,

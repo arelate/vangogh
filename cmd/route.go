@@ -75,6 +75,8 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
 		}
 		forceRemoteUpdate := req.Flag("force-remote-update")
+		validate := req.Flag("validate")
+		noCleanup := req.Flag("no-cleanup")
 		return GetDownloads(
 			idSet,
 			mt,
@@ -83,7 +85,9 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			downloadTypes,
 			missing,
 			modifiedSince,
-			forceRemoteUpdate)
+			forceRemoteUpdate,
+			validate,
+			noCleanup)
 	case "get-images":
 		imageTypes := req.ArgValues("image-type")
 		its := make([]vangogh_images.ImageType, 0, len(imageTypes))
@@ -142,7 +146,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		data = data && !req.Flag("no-data")
 		images = images && !req.Flag("no-images")
 		screenshots = screenshots && !req.Flag("no-screenshots")
-		videos = videos && req.Flag("no-videos")
+		videos = videos && !req.Flag("no-videos")
 		sha, err := hoursAtoi(req.ArgVal("since-hours-ago"))
 		if err != nil {
 			return err

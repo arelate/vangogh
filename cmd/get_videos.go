@@ -53,20 +53,20 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
 	for _, id := range idSet.All() {
-		videoIds, ok := exl.GetAll(vangogh_properties.VideoIdProperty, id)
+		videoIds, ok := exl.GetAllRaw(vangogh_properties.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
 			continue
 		}
 
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 
-		fmt.Printf("getting videos for %s (%s)...", title, id)
+		fmt.Printf("getting videos for %s (%s).", title, id)
 
 		for _, videoId := range videoIds {
 
 			vidUrls, err := yt_urls.StreamingUrls(videoId)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Printf("(%s).", err)
 				if addErr := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
 					return addErr
 				}
@@ -78,13 +78,17 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 				}
 			}
 
-			for _, vidUrl := range vidUrls {
+			for i, vidUrl := range vidUrls {
 
 				if vidUrl == nil || len(vidUrl.String()) == 0 {
 					if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
 						return err
 					}
 					continue
+				}
+
+				if len(vidUrls) > 0 && i > 0 {
+					fmt.Print(".")
 				}
 
 				dir, err := vangogh_urls.VideoDir(videoId)
@@ -94,7 +98,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 				_, err = dl.Download(vidUrl, dir, videoId+videoExt)
 				if err != nil {
-					fmt.Println(err)
+					fmt.Printf("(%s).", err)
 					continue
 				}
 			}
@@ -121,16 +125,18 @@ func allMissingLocalVideoIds(
 		return nil, err
 	}
 
+	localVideoSet := gost.NewStrSetWith(localVideoIds...)
+
 	for _, id := range exl.All(vangogh_properties.VideoIdProperty) {
 
-		videoIds, ok := exl.GetAll(vangogh_properties.VideoIdProperty, id)
+		videoIds, ok := exl.GetAllRaw(vangogh_properties.VideoIdProperty, id)
 		if len(videoIds) == 0 || !ok {
 			continue
 		}
 
 		haveVideos := true
 		for _, videoId := range videoIds {
-			if localVideoIds[videoId] {
+			if localVideoSet.Has(videoId) {
 				continue
 			}
 			if exl.Contains(vangogh_properties.MissingVideoUrlProperty, videoId) {

@@ -15,7 +15,7 @@ import (
 func GetImages(
 	idSet gost.StrSet,
 	its []vangogh_images.ImageType,
-	localImageIds map[string]bool,
+	localImageSet gost.StrSet,
 	missing bool) error {
 
 	for _, it := range its {
@@ -50,7 +50,7 @@ func GetImages(
 			missingImageIds, err := allMissingLocalImageIds(
 				exl,
 				vangogh_properties.FromImageType(it),
-				localImageIds)
+				localImageSet)
 			if err != nil {
 				return err
 			}
@@ -131,16 +131,17 @@ func GetImages(
 func allMissingLocalImageIds(
 	imageTypeExtracts *vangogh_extracts.ExtractsList,
 	imageTypeProp string,
-	localImageIds map[string]bool) ([]string, error) {
+	localImageSet gost.StrSet) ([]string, error) {
 
 	idSet := gost.NewStrSet()
 	var err error
 
-	if localImageIds == nil {
-		localImageIds, err = vangogh_urls.LocalImageIds()
+	if localImageSet == nil {
+		localImageIds, err := vangogh_urls.LocalImageIds()
 		if err != nil {
 			return nil, err
 		}
+		localImageSet = gost.NewStrSetWith(localImageIds...)
 	}
 
 	for _, id := range imageTypeExtracts.All(imageTypeProp) {
@@ -151,7 +152,7 @@ func allMissingLocalImageIds(
 
 		haveImages := true
 		for _, imageId := range imageIds {
-			if localImageIds[imageId] {
+			if localImageSet.Has(imageId) {
 				continue
 			}
 			haveImages = false

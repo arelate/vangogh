@@ -25,7 +25,7 @@ func Size(
 		return err
 	}
 
-	if err := getDownloadsList(
+	if err := mapDownloadsList(
 		idSet,
 		mt,
 		exl,

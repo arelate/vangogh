@@ -1,24 +1,14 @@
 Issues:
 	No known at the moment
 
-standartize idSet generation:
-	- DRY from other cmds and encapsulate itemization of ids for a given set of args
-
-Cleanup cmd:
-	- new cleanup command to remove files no longer required for current version (based on local-manual-url)
-	- rename getDownloadsList to mapDownloadList and move to a separate file
-	- when clearing out files, also cleanup xml files
-
 Download files:
-	- store xml files outside files directory for cleaner enumeration
 	- add support for missing option
 	- add get-downloads and clean-up to sync:
 		- rename "all" to "all-except-downloads"
-		- add files flag that is excluded by default (true "all" = "all-except-downloads" + "downloads")
+		- add downloads flag that is excluded by default (true "all" = "all-except-downloads" + "downloads")
 	
-Validate files:
-	- use validation files
-	- implement progress counter
+standartize idSet generation:
+	- DRY from other cmds and encapsulate itemization of ids for a given set of args
 	
 configuration:
 	- create a configuration file at a certain default location
@@ -101,6 +91,15 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Validate files: @done(2021-07-26)
+		- use validation files @done(2021-07-26)
+		- implement progress counter @done(2021-07-26)
+		
+	Cleanup cmd: @done(2021-07-26)
+		- new cleanup command to remove files no longer required for current version (based on local-manual-url) @done(2021-07-26)
+		- rename getDownloadsList to mapDownloadList and move to a separate file @done(2021-07-26)
+		- when clearing out files, also cleanup xml files @done(2021-07-26)
+	- store xml files outside files directory for cleaner enumeration @done(2021-07-26) @project(Download files)
 	Download images: @done(2021-07-26)
 		- group by product and update similarly to other products (e.g. getting Undertale icon... logo... image... done) @done(2021-07-26)
 	info improvements: @done(2021-07-25)

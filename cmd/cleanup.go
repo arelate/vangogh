@@ -10,6 +10,8 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"os"
+	"path/filepath"
 )
 
 func Cleanup(
@@ -36,7 +38,7 @@ func Cleanup(
 		idSet.Add(vrDetails.All()...)
 	}
 
-	if err := getDownloadsList(
+	if err := mapDownloadsList(
 		idSet,
 		mt,
 		exl,
@@ -63,10 +65,10 @@ func cleanupDownloadList(
 		return err
 	}
 
-	//cleanup procedure:
-	//1. setup all expected files for a downloadList
-	//2. setup all actual files for a slug (files present in a folder)
-	//3. delete (actual files).Except(expected)
+	//cleanup process:
+	//1. enumerate all expected files for a downloadList
+	//2. enumerate all files present for a slug (files present in a `downloads/slug` folder)
+	//3. delete (present files).Except(expected files) and corresponding xml files
 
 	expectedSet := gost.NewStrSet()
 
@@ -76,13 +78,37 @@ func cleanupDownloadList(
 		}
 	}
 
-	presentSet, err := vangogh_urls.LocalSlugDownloads(slug)
+	localFiles, err := vangogh_urls.LocalSlugDownloads(slug)
 	if err != nil {
 		return err
 	}
+	presentSet := gost.NewStrSetWith(localFiles...)
 
-	fmt.Println(expectedSet)
-	fmt.Println(presentSet)
+	unexpectedFiles := presentSet.Except(expectedSet)
+	if len(unexpectedFiles) == 0 {
+		fmt.Printf("%s is already clean\n", slug)
+		return nil
+	}
+
+	removeFiles := make([]string, 0, len(unexpectedFiles))
+
+	for _, unexpectedFile := range unexpectedFiles {
+		downloadFilename := filepath.Join(vangogh_urls.DownloadsDir(), unexpectedFile)
+		removeFiles = append(removeFiles, downloadFilename)
+		checksumFile := vangogh_urls.LocalValidationPath(unexpectedFile)
+		removeFiles = append(removeFiles, checksumFile)
+	}
+
+	for _, file := range removeFiles {
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			continue
+		}
+		fmt.Printf("removing %s...", file)
+		if err := os.Remove(file); err != nil {
+			return err
+		}
+		fmt.Println("done")
+	}
 
 	return nil
 }

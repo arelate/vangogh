@@ -43,7 +43,9 @@
       "language-code&={language-codes^}",
       "missing",
       "modified-hours-ago",
-      "force-remote-update"
+      "force-remote-update",
+      "validate",
+      "no-cleanup"
     ],
     "get-images": [
       "id&",
