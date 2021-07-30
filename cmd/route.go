@@ -94,7 +94,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		for _, imageType := range imageTypes {
 			its = append(its, vangogh_images.Parse(imageType))
 		}
-		return GetImages(idSet, its, nil, missing)
+		return GetImages(idSet, its, missing)
 	case "get-videos":
 		return GetVideos(idSet, missing)
 	case "info":

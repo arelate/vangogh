@@ -32,7 +32,7 @@ Misc improvements:
 	- investigate text/tabwriter for output
 		
 clo improvement:
-	- "SAME-AS" command to copy arguments from another command
+	- "SAME-AS" command to copy arguments from another command or predefined sets
 		
 kvas improvements:
 	- rewrite to support concurrent operations

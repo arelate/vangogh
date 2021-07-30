@@ -78,11 +78,10 @@ func cleanupDownloadList(
 		}
 	}
 
-	localFiles, err := vangogh_urls.LocalSlugDownloads(slug)
+	presentSet, err := vangogh_urls.LocalSlugDownloads(slug)
 	if err != nil {
 		return err
 	}
-	presentSet := gost.NewStrSetWith(localFiles...)
 
 	unexpectedFiles := presentSet.Except(expectedSet)
 	if len(unexpectedFiles) == 0 {

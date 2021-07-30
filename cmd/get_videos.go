@@ -29,11 +29,11 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 	}
 
 	if missing {
-		missingIds, err := allMissingLocalVideoIds(exl)
+		missingIds, err := idsMissingLocalVideos(exl)
 		if err != nil {
 			return err
 		}
-		idSet.Add(missingIds...)
+		idSet.Add(missingIds.All()...)
 	}
 
 	if idSet.Len() == 0 {
@@ -110,47 +110,34 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 	return nil
 }
 
-func allMissingLocalVideoIds(
-	exl *vangogh_extracts.ExtractsList) ([]string, error) {
+type videoPropertiesGetter struct {
+	extractsList *vangogh_extracts.ExtractsList
+}
 
-	idSet := gost.NewStrSet()
-	var err error
-
-	if err := exl.AssertSupport(vangogh_properties.VideoIdProperty, vangogh_properties.MissingVideoUrlProperty); err != nil {
-		return nil, err
+func NewVideoPropertiesGetter(exl *vangogh_extracts.ExtractsList) *videoPropertiesGetter {
+	return &videoPropertiesGetter{
+		extractsList: exl,
 	}
+}
 
-	localVideoIds, err := vangogh_urls.LocalVideoIds()
+func (vpg *videoPropertiesGetter) GetVideoIds(id string) ([]string, bool) {
+	return vpg.extractsList.GetAllRaw(vangogh_properties.VideoIdProperty, id)
+}
+
+func (vpg *videoPropertiesGetter) IsMissingVideo(videoId string) bool {
+	return vpg.extractsList.Contains(vangogh_properties.MissingVideoUrlProperty, videoId)
+}
+
+func idsMissingLocalVideos(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
+
+	all := exl.All(vangogh_properties.VideoIdProperty)
+
+	localVideoSet, err := vangogh_urls.LocalVideoIds()
 	if err != nil {
 		return nil, err
 	}
 
-	localVideoSet := gost.NewStrSetWith(localVideoIds...)
+	vpg := NewVideoPropertiesGetter(exl)
 
-	for _, id := range exl.All(vangogh_properties.VideoIdProperty) {
-
-		videoIds, ok := exl.GetAllRaw(vangogh_properties.VideoIdProperty, id)
-		if len(videoIds) == 0 || !ok {
-			continue
-		}
-
-		haveVideos := true
-		for _, videoId := range videoIds {
-			if localVideoSet.Has(videoId) {
-				continue
-			}
-			if exl.Contains(vangogh_properties.MissingVideoUrlProperty, videoId) {
-				continue
-			}
-			haveVideos = false
-		}
-
-		if haveVideos {
-			continue
-		}
-
-		idSet.Add(id)
-	}
-
-	return idSet.All(), nil
+	return idsMissingLocalFiles(all, localVideoSet, vpg.GetVideoIds, vpg.IsMissingVideo)
 }

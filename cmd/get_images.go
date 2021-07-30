@@ -15,7 +15,6 @@ import (
 func GetImages(
 	idSet gost.StrSet,
 	its []vangogh_images.ImageType,
-	localImageSet gost.StrSet,
 	missing bool) error {
 
 	for _, it := range its {
@@ -42,21 +41,23 @@ func GetImages(
 		if idSet.Len() > 0 {
 			log.Printf("provided ids would be overwritten by the 'all' flag")
 		}
+
+		localImageSet, err := vangogh_urls.LocalImageIds()
+		if err != nil {
+			return err
+		}
 		//to track image types missing for each product we do the following:
 		//1. for every image type requested to be downloaded - get product ids that don't have this image type locally
 		//2. for every product id we get this way - add this image type to idMissingTypes[id]
 		for _, it := range its {
 			//1
-			missingImageIds, err := allMissingLocalImageIds(
-				exl,
-				vangogh_properties.FromImageType(it),
-				localImageSet)
+			missingImageIds, err := idsMissingLocalImages(it, exl, localImageSet)
 			if err != nil {
 				return err
 			}
 
 			//2
-			for _, id := range missingImageIds {
+			for id := range missingImageIds {
 				if idMissingTypes[id] == nil {
 					idMissingTypes[id] = make([]vangogh_images.ImageType, 0)
 				}
@@ -64,7 +65,7 @@ func GetImages(
 			}
 		}
 	} else {
-		for _, id := range idSet.All() {
+		for id := range idSet {
 			idMissingTypes[id] = its
 		}
 	}
@@ -128,42 +129,39 @@ func GetImages(
 	return nil
 }
 
-func allMissingLocalImageIds(
-	imageTypeExtracts *vangogh_extracts.ExtractsList,
-	imageTypeProp string,
-	localImageSet gost.StrSet) ([]string, error) {
+type imageExtractsGetter struct {
+	imageType    vangogh_images.ImageType
+	extractsList *vangogh_extracts.ExtractsList
+}
 
-	idSet := gost.NewStrSet()
-	var err error
+func NewImageExtractsGetter(
+	it vangogh_images.ImageType,
+	exl *vangogh_extracts.ExtractsList) *imageExtractsGetter {
+	return &imageExtractsGetter{
+		imageType:    it,
+		extractsList: exl,
+	}
+}
 
-	if localImageSet == nil {
-		localImageIds, err := vangogh_urls.LocalImageIds()
-		if err != nil {
+func (ieg *imageExtractsGetter) GetImageIds(id string) ([]string, bool) {
+	return ieg.extractsList.GetAll(vangogh_properties.FromImageType(ieg.imageType), id)
+}
+
+func idsMissingLocalImages(
+	it vangogh_images.ImageType,
+	exl *vangogh_extracts.ExtractsList,
+	localImageIds gost.StrSet) (gost.StrSet, error) {
+
+	all := exl.All(vangogh_properties.FromImageType(it))
+
+	if localImageIds == nil {
+		var err error
+		if localImageIds, err = vangogh_urls.LocalImageIds(); err != nil {
 			return nil, err
 		}
-		localImageSet = gost.NewStrSetWith(localImageIds...)
 	}
 
-	for _, id := range imageTypeExtracts.All(imageTypeProp) {
-		imageIds, ok := imageTypeExtracts.GetAll(imageTypeProp, id)
-		if len(imageIds) == 0 || !ok {
-			continue
-		}
+	ieg := NewImageExtractsGetter(it, exl)
 
-		haveImages := true
-		for _, imageId := range imageIds {
-			if localImageSet.Has(imageId) {
-				continue
-			}
-			haveImages = false
-		}
-
-		if haveImages {
-			continue
-		}
-
-		idSet.Add(id)
-	}
-
-	return idSet.All(), err
+	return idsMissingLocalFiles(all, localImageIds, ieg.GetImageIds, nil)
 }

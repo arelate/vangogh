@@ -18,6 +18,7 @@ import (
 var cloBytes []byte
 
 func main() {
+
 	//mt := gog_media.Game
 	//vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
 	//if err != nil {
