@@ -125,7 +125,7 @@ func validateManualUrl(
 		return nil
 	}
 
-	fmt.Printf("validing %s...", dl)
+	fmt.Printf("validing %s.", dl)
 
 	valFile, err := os.Open(absValidationFile)
 	if err != nil {

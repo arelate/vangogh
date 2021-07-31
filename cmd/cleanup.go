@@ -89,21 +89,22 @@ func cleanupDownloadList(
 		return nil
 	}
 
-	removeFiles := make([]string, 0, len(unexpectedFiles))
-
 	for _, unexpectedFile := range unexpectedFiles {
 		downloadFilename := filepath.Join(vangogh_urls.DownloadsDir(), unexpectedFile)
-		removeFiles = append(removeFiles, downloadFilename)
-		checksumFile := vangogh_urls.LocalValidationPath(unexpectedFile)
-		removeFiles = append(removeFiles, checksumFile)
-	}
-
-	for _, file := range removeFiles {
-		if _, err := os.Stat(file); os.IsNotExist(err) {
+		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		fmt.Printf("removing %s...", file)
-		if err := os.Remove(file); err != nil {
+		fmt.Printf("removing %s.", downloadFilename)
+		if err := os.Remove(downloadFilename); err != nil {
+			return err
+		}
+
+		checksumFile := vangogh_urls.LocalValidationPath(unexpectedFile)
+		if _, err := os.Stat(checksumFile); os.IsNotExist(err) {
+			continue
+		}
+		fmt.Print("xml.")
+		if err := os.Remove(checksumFile); err != nil {
 			return err
 		}
 		fmt.Println("done")

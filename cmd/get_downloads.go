@@ -94,7 +94,7 @@ func downloadManualUrl(
 		return err
 	}
 
-	fmt.Printf("downloading %s...", dl.String())
+	fmt.Printf("downloading %s.", dl.String())
 
 	//1
 	if !forceRemoteUpdate {
@@ -135,7 +135,7 @@ func downloadManualUrl(
 				return err
 			}
 			resolvedUrl.Path = originalPath
-			fmt.Print("...")
+			fmt.Print(".")
 		}
 	}
 
@@ -145,7 +145,7 @@ func downloadManualUrl(
 	}
 
 	//6
-	if err := exl.Add(vangogh_properties.LocalManualUrl, dl.ManualUrl, path.Join(relDir, filename)); err != nil {
+	if err := exl.Set(vangogh_properties.LocalManualUrl, dl.ManualUrl, path.Join(relDir, filename)); err != nil {
 		return err
 	}
 

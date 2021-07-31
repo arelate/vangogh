@@ -47,7 +47,7 @@ func GetData(
 
 	if vangogh_products.RequiresAuth(pt) {
 		if verbose {
-			log.Printf("%s requires authenticated session, checking if user is logged in...", pt)
+			log.Printf("%s requires authenticated session, checking if user is logged in.", pt)
 		}
 
 		li, err := gog_auth.LoggedIn(httpClient)
