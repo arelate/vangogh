@@ -42,6 +42,7 @@
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
       "missing",
+      "update",
       "modified-hours-ago",
       "force-remote-update",
       "validate",
@@ -106,10 +107,15 @@
     "sync": [
       "media={media^}",
       "since-hours-ago",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
+      "missing-downloads",
       "{sync-items^&}"
     ],
     "tag": [
-      "id",
+      "id^",
+      "slug",
       "operation^=create,delete,edit,add,remove",
       "tag-name"
     ],

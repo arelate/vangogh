@@ -13,6 +13,7 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/internal"
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -30,9 +31,10 @@ func GetDownloads(
 	idSet gost.StrSet,
 	mt gog_media.Media,
 	operatingSystems []vangogh_downloads.OperatingSystem,
-	langCodes []string,
 	downloadTypes []vangogh_downloads.DownloadType,
-	missing bool,
+	langCodes []string,
+	missing,
+	update bool,
 	modifiedSince int64,
 	forceRemoteUpdate,
 	validate,
@@ -44,6 +46,30 @@ func GetDownloads(
 		vangogh_properties.LocalManualUrl)
 	if err != nil {
 		return err
+	}
+
+	if update {
+		localSlugs, err := vangogh_urls.LocalSlugs()
+		if err != nil {
+			return err
+		}
+		localIds, err := SetFromSelectors(idSelectors{
+			ids:       nil,
+			slugs:     localSlugs,
+			fromStdin: false,
+		})
+		idSet.AddSet(localIds)
+	}
+
+	if missing {
+		if idSet.Len() > 0 {
+			log.Printf("provided ids would be overwritten by 'missing' flag")
+		}
+		missingIds, err := idMissingLocalDownloads(mt, exl)
+		if err != nil {
+			return err
+		}
+		idSet.AddSet(missingIds)
 	}
 
 	if err := mapDownloadsList(
@@ -94,7 +120,7 @@ func downloadManualUrl(
 		return err
 	}
 
-	fmt.Printf("downloading %s.", dl.String())
+	fmt.Printf("downloading %s...", dl.String())
 
 	//1
 	if !forceRemoteUpdate {
@@ -135,7 +161,7 @@ func downloadManualUrl(
 				return err
 			}
 			resolvedUrl.Path = originalPath
-			fmt.Print(".")
+			fmt.Print("...")
 		}
 	}
 
@@ -255,4 +281,20 @@ func mapDownloadsList(
 	}
 
 	return nil
+}
+
+func idMissingLocalDownloads(mt gog_media.Media, exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
+	//if err := exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
+	//	return nil, err
+	//}
+	//
+	//vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//for _, id := range vrDetails.All() {
+	//
+	//}
+	return nil, nil
 }

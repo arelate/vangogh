@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
@@ -12,7 +13,14 @@ import (
 	"time"
 )
 
-func Sync(mt gog_media.Media, sinceHoursAgo int, data, images, screenshots, videos, verbose bool) error {
+func Sync(
+	mt gog_media.Media,
+	sinceHoursAgo int,
+	data, images, screenshots, videos, downloadsUpdates, missingDownloads bool,
+	operatingSystems []vangogh_downloads.OperatingSystem,
+	downloadTypes []vangogh_downloads.DownloadType,
+	langCodes []string,
+	verbose bool) error {
 
 	var syncStart int64
 	if sinceHoursAgo > 0 {
@@ -71,7 +79,22 @@ func Sync(mt gog_media.Media, sinceHoursAgo int, data, images, screenshots, vide
 		fmt.Println()
 	}
 
-	// TODO: get files
+	if downloadsUpdates {
+		if err := GetDownloads(
+			gost.NewStrSet(),
+			mt,
+			operatingSystems,
+			downloadTypes,
+			langCodes,
+			missingDownloads,
+			true,
+			syncStart,
+			false,
+			true,
+			false); err != nil {
+			return err
+		}
+	}
 
 	// print new or updated
 	return Summary(syncStart, mt)

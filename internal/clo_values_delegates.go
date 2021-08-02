@@ -98,7 +98,7 @@ func syncItems() []string {
 		"images",
 		"screenshots",
 		"videos",
-		"downloads",
+		"downloads-updates",
 	}
 
 	excludeItems := make([]string, len(items))

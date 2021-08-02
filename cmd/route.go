@@ -66,6 +66,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		denyIds := internal.ReadLines(denyIdsFile)
 		return GetData(idSet, denyIds, pt, mt, since, missing, updated, verbose)
 	case "get-downloads":
+		update := req.Flag("update")
 		mha, err := hoursAtoi(req.ArgVal("modified-hours-ago"))
 		if err != nil {
 			return err
@@ -81,9 +82,10 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			idSet,
 			mt,
 			operatingSystems,
-			langCodes,
 			downloadTypes,
+			langCodes,
 			missing,
+			update,
 			modifiedSince,
 			forceRemoteUpdate,
 			validate,
@@ -140,23 +142,32 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		images := req.Flag("images")
 		screenshots := req.Flag("screenshots")
 		videos := req.Flag("videos")
+		downloadsUpdates := req.Flag("downloads-updates")
+		missingDownloads := req.Flag("missing-downloads")
 		if all {
-			data, images, screenshots, videos = true, true, true, true
+			data, images, screenshots, videos, downloadsUpdates = true, true, true, true, true
 		}
 		data = data && !req.Flag("no-data")
 		images = images && !req.Flag("no-images")
 		screenshots = screenshots && !req.Flag("no-screenshots")
 		videos = videos && !req.Flag("no-videos")
+		downloadsUpdates = downloadsUpdates && !req.Flag("no-downloads-updates")
 		sha, err := hoursAtoi(req.ArgVal("since-hours-ago"))
 		if err != nil {
 			return err
 		}
-		return Sync(mt, sha, data, images, screenshots, videos, verbose)
+		return Sync(
+			mt,
+			sha,
+			data, images, screenshots, videos, downloadsUpdates, missingDownloads,
+			operatingSystems,
+			downloadTypes,
+			langCodes,
+			verbose)
 	case "tag":
 		operation := req.ArgVal("operation")
 		tagName := req.ArgVal("tag-name")
-		id := req.ArgVal("id")
-		return Tag(operation, tagName, id)
+		return Tag(idSet, operation, tagName)
 	case "validate":
 		return Validate(idSet, mt, operatingSystems, langCodes, downloadTypes, all)
 	case "wishlist":

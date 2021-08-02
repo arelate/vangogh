@@ -39,7 +39,7 @@ func GetImages(
 
 	if missing {
 		if idSet.Len() > 0 {
-			log.Printf("provided ids would be overwritten by the 'all' flag")
+			log.Printf("provided ids would be overwritten by 'missing' flag")
 		}
 
 		localImageSet, err := vangogh_urls.LocalImageIds()
@@ -96,11 +96,11 @@ func GetImages(
 
 		for _, it := range missingIts {
 
-			fmt.Printf("%s.", it)
+			fmt.Printf("%s...", it)
 
 			images, ok := exl.GetAll(vangogh_properties.FromImageType(it), id)
 			if !ok || len(images) == 0 {
-				fmt.Printf("(missing).")
+				fmt.Printf("(missing)...")
 				continue
 			}
 

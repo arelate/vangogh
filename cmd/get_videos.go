@@ -33,7 +33,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 		if err != nil {
 			return err
 		}
-		idSet.Add(missingIds.All()...)
+		idSet.AddSet(missingIds)
 	}
 
 	if idSet.Len() == 0 {
@@ -60,13 +60,13 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 
-		fmt.Printf("getting videos for %s (%s).", title, id)
+		fmt.Printf("getting videos for %s (%s)...", title, id)
 
 		for _, videoId := range videoIds {
 
 			vidUrls, err := yt_urls.StreamingUrls(videoId)
 			if err != nil {
-				fmt.Printf("(%s).", err)
+				fmt.Printf("(%s)...", err)
 				if addErr := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
 					return addErr
 				}
@@ -98,7 +98,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 				_, err = dl.Download(vidUrl, dir, videoId+videoExt)
 				if err != nil {
-					fmt.Printf("(%s).", err)
+					fmt.Printf("(%s)...", err)
 					continue
 				}
 			}
@@ -129,7 +129,6 @@ func (vpg *videoPropertiesGetter) IsMissingVideo(videoId string) bool {
 }
 
 func idsMissingLocalVideos(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
-
 	all := exl.All(vangogh_properties.VideoIdProperty)
 
 	localVideoSet, err := vangogh_urls.LocalVideoIds()

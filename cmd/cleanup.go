@@ -94,16 +94,17 @@ func cleanupDownloadList(
 		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		fmt.Printf("removing %s.", downloadFilename)
+		fmt.Printf("removing %s...", downloadFilename)
 		if err := os.Remove(downloadFilename); err != nil {
 			return err
 		}
 
 		checksumFile := vangogh_urls.LocalValidationPath(unexpectedFile)
 		if _, err := os.Stat(checksumFile); os.IsNotExist(err) {
+			fmt.Println("done")
 			continue
 		}
-		fmt.Print("xml.")
+		fmt.Print("xml...")
 		if err := os.Remove(checksumFile); err != nil {
 			return err
 		}

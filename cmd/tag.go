@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/gog_urls"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
+	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/internal"
 	"net/url"
 	"strings"
@@ -18,6 +19,42 @@ const (
 	addOp    = "add"
 	removeOp = "remove"
 )
+
+func Tag(idSet gost.StrSet, operation, tagName string) error {
+
+	//matching default GOG.com capitalization for tags
+	tagName = strings.ToUpper(tagName)
+
+	exl, err := vangogh_extracts.NewList(
+		vangogh_properties.TagNameProperty,
+		vangogh_properties.TagIdProperty,
+		vangogh_properties.TitleProperty,
+	)
+	if err != nil {
+		return err
+	}
+
+	tagId := ""
+	if operation != createOp {
+		tagId, err = tagIdByName(tagName, exl)
+		if err != nil {
+			return err
+		}
+	}
+
+	switch operation {
+	case createOp:
+		return createTag(tagName, exl)
+	case deleteOp:
+		return deleteTag(tagName, tagId, exl)
+	case addOp:
+		return addTag(idSet, tagName, tagId, exl)
+	case removeOp:
+		return removeTag(idSet, tagName, tagId, exl)
+	default:
+		return fmt.Errorf("vangogh: unknown tag operation %s", operation)
+	}
+}
 
 func postResp(url *url.URL, respVal interface{}) error {
 	httpClient, err := internal.HttpClient()
@@ -99,84 +136,52 @@ func deleteTag(tagName, tagId string, exl *vangogh_extracts.ExtractsList) error 
 	return nil
 }
 
-func addTag(tagName, tagId, productId string, exl *vangogh_extracts.ExtractsList) error {
+func addTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.ExtractsList) error {
 	if err := exl.AssertSupport(vangogh_properties.TagNameProperty, vangogh_properties.TitleProperty); err != nil {
 		return err
 	}
 
-	addTagUrl := gog_urls.AddTag(productId, tagId)
-	var artResp gog_types.AddRemoveTagResp
-	if err := postResp(addTagUrl, &artResp); err != nil {
-		return err
-	}
-	if !artResp.Success {
-		return fmt.Errorf("vangogh: failed to add tag %s", tagName)
-	}
-
-	if err := exl.Add(vangogh_properties.TagIdProperty, productId, tagId); err != nil {
-		return err
-	}
-	title, _ := exl.Get(vangogh_properties.TitleProperty, productId)
-	fmt.Printf("added tag %s to %s (%s)\n", tagName, title, productId)
-
-	return nil
-}
-
-func removeTag(tagName, tagId, productId string, exl *vangogh_extracts.ExtractsList) error {
-	if err := exl.AssertSupport(vangogh_properties.TagNameProperty, vangogh_properties.TitleProperty); err != nil {
-		return err
-	}
-
-	removeTagUrl := gog_urls.RemoveTag(productId, tagId)
-	var artResp gog_types.AddRemoveTagResp
-	if err := postResp(removeTagUrl, &artResp); err != nil {
-		return err
-	}
-	if !artResp.Success {
-		return fmt.Errorf("vangogh: failed to remove tag %s", tagName)
-	}
-
-	if err := exl.Remove(vangogh_properties.TagIdProperty, productId, tagId); err != nil {
-		return err
-	}
-	title, _ := exl.Get(vangogh_properties.TitleProperty, productId)
-	fmt.Printf("removed tag %s from %s (%s)\n", tagName, title, productId)
-
-	return nil
-}
-
-func Tag(operation, tagName, id string) error {
-
-	//matching default GOG.com capitalization for tags
-	tagName = strings.ToUpper(tagName)
-
-	exl, err := vangogh_extracts.NewList(
-		vangogh_properties.TagNameProperty,
-		vangogh_properties.TagIdProperty,
-		vangogh_properties.TitleProperty,
-	)
-	if err != nil {
-		return err
-	}
-
-	tagId := ""
-	if operation != createOp {
-		tagId, err = tagIdByName(tagName, exl)
-		if err != nil {
+	for id := range idSet {
+		addTagUrl := gog_urls.AddTag(id, tagId)
+		var artResp gog_types.AddRemoveTagResp
+		if err := postResp(addTagUrl, &artResp); err != nil {
 			return err
 		}
+		if !artResp.Success {
+			return fmt.Errorf("vangogh: failed to add tag %s", tagName)
+		}
+
+		if err := exl.Add(vangogh_properties.TagIdProperty, id, tagId); err != nil {
+			return err
+		}
+		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
+		fmt.Printf("added tag %s to %s (%s)\n", tagName, title, id)
 	}
 
-	switch operation {
-	case createOp:
-		return createTag(tagName, exl)
-	case deleteOp:
-		return deleteTag(tagName, tagId, exl)
-	case addOp:
-		return addTag(tagName, tagId, id, exl)
-	case removeOp:
-		return removeTag(tagName, tagId, id, exl)
-	default:
-		return fmt.Errorf("vangogh: unknown tag operation %s", operation)
+	return nil
+}
+
+func removeTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.ExtractsList) error {
+	if err := exl.AssertSupport(vangogh_properties.TagNameProperty, vangogh_properties.TitleProperty); err != nil {
+		return err
 	}
+
+	for id := range idSet {
+		removeTagUrl := gog_urls.RemoveTag(id, tagId)
+		var artResp gog_types.AddRemoveTagResp
+		if err := postResp(removeTagUrl, &artResp); err != nil {
+			return err
+		}
+		if !artResp.Success {
+			return fmt.Errorf("vangogh: failed to remove tag %s", tagName)
+		}
+
+		if err := exl.Remove(vangogh_properties.TagIdProperty, id, tagId); err != nil {
+			return err
+		}
+		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
+		fmt.Printf("removed tag %s from %s (%s)\n", tagName, title, id)
+	}
+
+	return nil
 }
