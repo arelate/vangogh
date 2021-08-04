@@ -13,8 +13,9 @@ func Size(
 	idSet gost.StrSet,
 	mt gog_media.Media,
 	operatingSystems []vangogh_downloads.OperatingSystem,
+	downloadTypes []vangogh_downloads.DownloadType,
 	langCodes []string,
-	downloadTypes []vangogh_downloads.DownloadType) error {
+	missing bool) error {
 
 	dlList := vangogh_downloads.DownloadsList{}
 
@@ -25,13 +26,26 @@ func Size(
 		return err
 	}
 
+	if missing {
+		missingIds, err := idMissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
+		if err != nil {
+			return err
+		}
+		idSet.AddSet(missingIds)
+	}
+
+	if idSet.Len() == 0 {
+		fmt.Println("no ids to estimate size")
+		return nil
+	}
+
 	if err := mapDownloadsList(
 		idSet,
 		mt,
 		exl,
 		operatingSystems,
-		langCodes,
 		downloadTypes,
+		langCodes,
 		func(
 			_ string,
 			list vangogh_downloads.DownloadsList,

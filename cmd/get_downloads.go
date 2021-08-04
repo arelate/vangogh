@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/arelate/gog_auth"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/gog_urls"
 	"github.com/arelate/vangogh_downloads"
@@ -17,8 +18,8 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
-	"time"
 )
 
 type mapDownloadListDelegate func(
@@ -39,6 +40,20 @@ func GetDownloads(
 	forceRemoteUpdate,
 	validate,
 	noCleanup bool) error {
+
+	httpClient, err := internal.HttpClient()
+	if err != nil {
+		return err
+	}
+
+	li, err := gog_auth.LoggedIn(httpClient)
+	if err != nil {
+		return err
+	}
+
+	if !li {
+		log.Fatalf("user is not logged in")
+	}
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.NativeLanguageNameProperty,
@@ -65,7 +80,7 @@ func GetDownloads(
 		if idSet.Len() > 0 {
 			log.Printf("provided ids would be overwritten by 'missing' flag")
 		}
-		missingIds, err := idMissingLocalDownloads(mt, exl)
+		missingIds, err := idMissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
 		if err != nil {
 			return err
 		}
@@ -77,8 +92,8 @@ func GetDownloads(
 		mt,
 		exl,
 		operatingSystems,
-		langCodes,
 		downloadTypes,
+		langCodes,
 		downloadList,
 		modifiedSince,
 		forceRemoteUpdate); err != nil {
@@ -120,25 +135,26 @@ func downloadManualUrl(
 		return err
 	}
 
-	fmt.Printf("downloading %s...", dl.String())
-
 	//1
 	if !forceRemoteUpdate {
 		if localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			if _, err := os.Stat(path.Join(vangogh_urls.DownloadsDir(), localFilename)); !os.IsNotExist(err) {
-				fmt.Println("already exists")
 				return nil
 			}
 		}
 	}
 
+	fmt.Printf("downloading %s...", dl.String())
+
 	//2
 	resp, err := httpClient.Head(gog_urls.ManualDownloadUrl(dl.ManualUrl).String())
 	if err != nil {
+		fmt.Println()
 		return err
 	}
 	resolvedUrl := resp.Request.URL
 	if err := resp.Body.Close(); err != nil {
+		fmt.Println()
 		return err
 	}
 
@@ -211,7 +227,6 @@ func downloadList(
 	//there is no need to use internal httpClient with cookie support for downloading
 	//manual downloads, so we're going to rely on default http.Client
 	defaultClient := http.DefaultClient
-	defaultClient.Timeout = time.Minute * 60
 	dlClient := dolo.NewClient(defaultClient, printCompletion, dolo.Defaults())
 
 	for _, dl := range list {
@@ -227,8 +242,8 @@ func mapDownloadsList(
 	mt gog_media.Media,
 	exl *vangogh_extracts.ExtractsList,
 	operatingSystems []vangogh_downloads.OperatingSystem,
-	langCodes []string,
 	downloadTypes []vangogh_downloads.DownloadType,
+	langCodes []string,
 	mapDlDelegate mapDownloadListDelegate,
 	modifiedSince int64,
 	forceRemoteUpdate bool) error {
@@ -246,6 +261,8 @@ func mapDownloadsList(
 	if err != nil {
 		return err
 	}
+
+	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
 
 	for _, id := range idSet.All() {
 
@@ -267,13 +284,14 @@ func mapDownloadsList(
 
 		if !forceRemoteUpdate {
 			forceRemoteUpdate = modifiedSince > 0 &&
-				vrDetails.WasModifiedAfter(id, modifiedSince)
+				(vrDetails.WasModifiedAfter(id, modifiedSince) ||
+					vrAccountProducts.WasModifiedAfter(id, modifiedSince))
 		}
 
 		// already checked for nil earlier in the function
 		if err := mapDlDelegate(
 			detSlug,
-			downloads.Only(operatingSystems, langCodes, downloadTypes),
+			downloads.Only(operatingSystems, downloadTypes, langCodes),
 			exl,
 			forceRemoteUpdate); err != nil {
 			return err
@@ -283,18 +301,80 @@ func mapDownloadsList(
 	return nil
 }
 
-func idMissingLocalDownloads(mt gog_media.Media, exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
-	//if err := exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
-	//	return nil, err
-	//}
-	//
-	//vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//for _, id := range vrDetails.All() {
-	//
-	//}
-	return nil, nil
+func idMissingLocalDownloads(
+	mt gog_media.Media,
+	exl *vangogh_extracts.ExtractsList,
+	operatingSystems []vangogh_downloads.OperatingSystem,
+	downloadTypes []vangogh_downloads.DownloadType,
+	langCodes []string) (gost.StrSet, error) {
+	//enumerating missing local downloads is a bit more complicated than images and videos
+	//due to the fact that actual filenames are resolved when downloads are processed, so we can't compare
+	//manualUrls and available files, we need to resolve manualUrls to actual local filenames first.
+	//with this in mind we'll use different approach:
+	//1. for all vangogh_products.Details ids:
+	//2. check if there are unresolved manualUrls -> add to missingIds
+	//3. check if slug dir is not present in downloads -> add to missingIds
+	//4. check if any expected (resolved manualUrls) files are not present -> add to missingIds
+
+	missingIds := gost.NewStrSet()
+
+	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
+	if err != nil {
+		return nil, err
+	}
+
+	// 1
+	for _, id := range vrDetails.All() {
+
+		det, err := vrDetails.Details(id)
+		if err != nil {
+			return missingIds, err
+		}
+
+		downloads, err := vangogh_downloads.FromDetails(det, mt, exl)
+		if err != nil {
+			return missingIds, err
+		}
+
+		downloads = downloads.Only(operatingSystems, downloadTypes, langCodes)
+
+		expectedFiles := gost.NewStrSet()
+		for _, dl := range downloads {
+			file, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
+			// 2
+			if !ok || file == "" {
+				missingIds.Add(id)
+				break
+			}
+			expectedFiles.Add(file)
+		}
+
+		if expectedFiles.Len() == 0 {
+			continue
+		}
+
+		slug, ok := exl.Get(vangogh_properties.SlugProperty, id)
+		if !ok {
+			continue
+		}
+
+		// 3
+		if _, err := os.Stat(filepath.Join(vangogh_urls.DownloadsDir(), slug)); os.IsNotExist(err) {
+			missingIds.Add(id)
+			continue
+		}
+
+		presentFiles, err := vangogh_urls.LocalSlugDownloads(slug)
+		if err != nil {
+			return missingIds, nil
+		}
+
+		// 4
+		missingFiles := expectedFiles.Except(presentFiles)
+		if len(missingFiles) > 0 {
+			missingIds.Add(id)
+		}
+	}
+
+	return missingIds, nil
 }

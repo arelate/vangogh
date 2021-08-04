@@ -126,7 +126,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 		return Search(query)
 	case "size":
-		return Size(idSet, mt, operatingSystems, langCodes, downloadTypes)
+		return Size(idSet, mt, operatingSystems, downloadTypes, langCodes, missing)
 	case "scrub-data":
 		fix := req.Flag("fix")
 		return ScrubData(mt, fix)

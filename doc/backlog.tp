@@ -1,15 +1,6 @@
 Issues:
 	No known at the moment
 
-Download files:
-	- add support for missing option
-	- add get-downloads and clean-up to sync:
-		- rename "all" to "all-except-downloads"
-		- add downloads flag that is excluded by default (true "all" = "all-except-downloads" + "downloads")
-	
-standartize idSet generation:
-	- DRY from other cmds and encapsulate itemization of ids for a given set of args
-	
 configuration:
 	- create a configuration file at a certain default location
 	- use it to specify directories/kvas connection strings
@@ -52,13 +43,6 @@ verbosity improvements:
 figure out where 1435735429 gets box-art image in Galaxy:
 	- proxy requests and find the source
 
-List improvements:
-	- add sort options (using memories)
-		- title (default)
-		- release date
-		- added date
-		- rating
-
 Standartize directories:
 	- opt/vangogh, etc/vangogh, etc.
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
@@ -91,6 +75,15 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Download files: @done(2021-08-02)
+		- add support for missing option @done(2021-08-02)
+		- add get-downloads and clean-up to sync:
+			- rename "all" to "all-except-downloads" @done(2021-08-02)
+			- add downloads flag that is excluded by default (true "all" = "all-except-downloads" + "downloads") @done(2021-08-02)
+		
+	standartize idSet generation: @done(2021-08-02)
+		- DRY from other cmds and encapsulate itemization of ids for a given set of args @done(2021-08-02)
+		
 	Validate files: @done(2021-07-26)
 		- use validation files @done(2021-07-26)
 		- implement progress counter @done(2021-07-26)

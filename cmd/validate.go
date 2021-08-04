@@ -66,8 +66,8 @@ func Validate(
 		mt,
 		exl,
 		operatingSystems,
-		langCodes,
 		downloadTypes,
+		langCodes,
 		validateDownloadList,
 		0,
 		false); err != nil {

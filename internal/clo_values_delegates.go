@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
+	"strings"
 )
 
 var CloValuesDelegates = map[string]func() []string{
@@ -62,7 +63,7 @@ func operatingSystems() []string {
 	oss := vangogh_downloads.AllOperatingSystems()
 	ossStr := make([]string, 0, len(oss))
 	for _, os := range oss {
-		ossStr = append(ossStr, os.String())
+		ossStr = append(ossStr, strings.ToLower(os.String()))
 	}
 	return ossStr
 }
@@ -87,7 +88,7 @@ func languageCodes() []string {
 		if lc == defaultLangCode {
 			continue
 		}
-		langCodes = append(langCodes, lc)
+		langCodes = append(langCodes, strings.ToLower(lc))
 	}
 	return langCodes
 }

@@ -43,8 +43,8 @@ func Cleanup(
 		mt,
 		exl,
 		operatingSystems,
-		langCodes,
 		downloadTypes,
+		langCodes,
 		cleanupDownloadList,
 		0,
 		false); err != nil {
@@ -59,7 +59,7 @@ func cleanupDownloadList(
 	list vangogh_downloads.DownloadsList,
 	exl *vangogh_extracts.ExtractsList,
 	_ bool) error {
-	fmt.Println("cleaning up", slug)
+	fmt.Printf("cleaning up %s...", slug)
 
 	if err := exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
 		return err
@@ -85,7 +85,7 @@ func cleanupDownloadList(
 
 	unexpectedFiles := presentSet.Except(expectedSet)
 	if len(unexpectedFiles) == 0 {
-		fmt.Printf("%s is already clean\n", slug)
+		fmt.Println("already clean")
 		return nil
 	}
 
@@ -94,7 +94,7 @@ func cleanupDownloadList(
 		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		fmt.Printf("removing %s...", downloadFilename)
+		fmt.Print(".")
 		if err := os.Remove(downloadFilename); err != nil {
 			return err
 		}
@@ -104,7 +104,7 @@ func cleanupDownloadList(
 			fmt.Println("done")
 			continue
 		}
-		fmt.Print("xml...")
+		fmt.Print("xml.")
 		if err := os.Remove(checksumFile); err != nil {
 			return err
 		}

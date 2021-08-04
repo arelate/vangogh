@@ -79,6 +79,7 @@ func Sync(
 		fmt.Println()
 	}
 
+	// get downloads
 	if downloadsUpdates {
 		if err := GetDownloads(
 			gost.NewStrSet(),
@@ -90,10 +91,11 @@ func Sync(
 			true,
 			syncStart,
 			false,
-			true,
+			false,
 			false); err != nil {
 			return err
 		}
+		fmt.Println()
 	}
 
 	// print new or updated
