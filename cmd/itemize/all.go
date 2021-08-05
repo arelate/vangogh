@@ -1,4 +1,4 @@
-package cmd
+package itemize
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/kvas"
 )
 
-func itemizeAll(
+func All(
 	idSet gost.StrSet,
 	missing, updated bool,
 	modifiedAfter int64,
@@ -19,25 +19,25 @@ func itemizeAll(
 
 	for _, mainPt := range vangogh_products.MainTypes(pt) {
 		if missing {
-			missingIds, err := itemizeMissing(pt, mainPt, mt, modifiedAfter)
+			missingIds, err := missingDetail(pt, mainPt, mt, modifiedAfter)
 			if err != nil {
 				return idSet, err
 			}
 			idSet.Add(missingIds...)
 		}
 		if updated {
-			updatedIds, err := itemizeUpdated(modifiedAfter, mainPt, mt)
+			modifiedIds, err := modified(modifiedAfter, mainPt, mt)
 			if err != nil {
 				return idSet, err
 			}
-			idSet.Add(updatedIds...)
+			idSet.Add(modifiedIds...)
 		}
 	}
 
 	return idSet, nil
 }
 
-func itemizeMissing(
+func missingDetail(
 	detailPt, mainPt vangogh_products.ProductType,
 	mt gog_media.Media,
 	modifiedAfter int64) ([]string, error) {
@@ -47,14 +47,14 @@ func itemizeMissing(
 	//requires-games, is-required-by-games
 	if mainPt == vangogh_products.ApiProductsV2 &&
 		detailPt == vangogh_products.ApiProductsV2 {
-		return itemizeAPV2LinkedGames(modifiedAfter)
+		return linkedGames(modifiedAfter)
 	}
 
 	//licences give a signal when DLC has been purchased, this would add
 	//required (base) game details to the updates
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
-		return itemizeRequiredGames(modifiedAfter)
+		return requiredGames(modifiedAfter)
 	}
 
 	fmt.Printf("itemizing missing %s for %s...", detailPt, mainPt)
@@ -91,7 +91,7 @@ func itemizeMissing(
 
 	if mainPt == vangogh_products.AccountProducts &&
 		detailPt == vangogh_products.Details {
-		updatedAccountProducts, err := itemizeAccountProductsUpdates(mt)
+		updatedAccountProducts, err := accountProductsUpdates(mt)
 		if err != nil {
 			return missingIdSet.All(), err
 		}
@@ -103,7 +103,7 @@ func itemizeMissing(
 	return missingIdSet.All(), nil
 }
 
-func itemizeAccountProductsUpdates(mt gog_media.Media) ([]string, error) {
+func accountProductsUpdates(mt gog_media.Media) ([]string, error) {
 	fmt.Printf("itemizing %s updates...", vangogh_products.AccountProducts)
 	updatesSet := gost.NewStrSet()
 	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
@@ -124,7 +124,7 @@ func itemizeAccountProductsUpdates(mt gog_media.Media) ([]string, error) {
 	return printFoundAndAll(updatesSet), nil
 }
 
-func itemizeUpdated(
+func modified(
 	since int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media) ([]string, error) {
@@ -152,7 +152,7 @@ func itemizeUpdated(
 	return printFoundAndAll(modSet), nil
 }
 
-func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
+func linkedGames(modifiedAfter int64) ([]string, error) {
 
 	fmt.Printf("itemizing missing linked %s...", vangogh_products.ApiProductsV2)
 
@@ -193,7 +193,7 @@ func itemizeAPV2LinkedGames(modifiedAfter int64) ([]string, error) {
 }
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
-func itemizeRequiredGames(createdAfter int64) ([]string, error) {
+func requiredGames(createdAfter int64) ([]string, error) {
 	fmt.Printf("itemizing DLCs missing required base product...")
 
 	rgForNewLicSet := gost.NewStrSet()

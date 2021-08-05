@@ -1,4 +1,4 @@
-package cmd
+package extract
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/arelate/vangogh_values"
 )
 
-func extractTagNames(mt gog_media.Media) error {
+func TagNames(mt gog_media.Media) error {
 	fmt.Println("extracting tag names")
 	vrAccountPage, err := vangogh_values.NewReader(vangogh_products.AccountPage, mt)
 	if err != nil {

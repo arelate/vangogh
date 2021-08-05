@@ -12,30 +12,12 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/iterate"
+	"github.com/boggydigital/vangogh/cmd/validation"
 	"io"
 	"os"
 	"path"
 )
-
-type ValidationFile struct {
-	XMLName             xml.Name          `xml:"file"`
-	Name                string            `xml:"name,attr"`
-	Available           int               `xml:"available,attr"`
-	NotAvailableMessage string            `xml:"notavailablemsg,attr"`
-	MD5                 string            `xml:"md5,attr"`
-	Chunks              int               `xml:"chunks,attr"`
-	Timestamp           string            `xml:"timestamp,attr"`
-	TotalSize           int               `xml:"total_size,attr"`
-	ValidationChunks    []ValidationChunk `xml:"chunk"`
-}
-type ValidationChunk struct {
-	XMLName xml.Name `xml:"chunk"`
-	ID      int      `xml:"id,attr"`
-	From    int      `xml:"from,attr"`
-	To      int      `xml:"to,attr"`
-	Method  string   `xml:"method,attr"`
-	Value   string   `xml:",innerxml"`
-}
 
 func Validate(
 	idSet gost.StrSet,
@@ -61,7 +43,7 @@ func Validate(
 		idSet.Add(vrDetails.All()...)
 	}
 
-	if err := mapDownloadsList(
+	if err := iterate.DownloadsList(
 		idSet,
 		mt,
 		exl,
@@ -133,7 +115,7 @@ func validateManualUrl(
 	}
 	defer valFile.Close()
 
-	var valData ValidationFile
+	var valData validation.File
 	if err := xml.NewDecoder(valFile).Decode(&valData); err != nil {
 		return err
 	}

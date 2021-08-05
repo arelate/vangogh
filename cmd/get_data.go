@@ -7,6 +7,9 @@ import (
 	"github.com/arelate/vangogh_pages"
 	"github.com/arelate/vangogh_products"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/fetch"
+	"github.com/boggydigital/vangogh/cmd/itemize"
+	"github.com/boggydigital/vangogh/cmd/split"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 )
@@ -64,22 +67,23 @@ func GetData(
 		if err := vangogh_pages.GetAllPages(httpClient, pt, mt); err != nil {
 			return err
 		}
-		return split(pt, mt, since)
+		return split.Pages(pt, mt, since)
 	}
 
 	if vangogh_products.IsArray(pt) {
-		if err := getItems([]string{vangogh_products.Licences.String()}, pt, mt, verbose); err != nil {
+		// using "licences" as id, since that's how we store that data in kvas
+		if err := fetch.Items([]string{vangogh_products.Licences.String()}, pt, mt, verbose); err != nil {
 			return err
 		}
-		return split(pt, mt, since)
+		return split.Pages(pt, mt, since)
 	}
 
-	idSet, err = itemizeAll(idSet, missing, updated, since, pt, mt)
+	idSet, err = itemize.All(idSet, missing, updated, since, pt, mt)
 	if err != nil {
 		return err
 	}
 
 	approvedIds := idSet.Except(gost.NewStrSetWith(denyIds...))
 
-	return getItems(approvedIds, pt, mt, verbose)
+	return fetch.Items(approvedIds, pt, mt, verbose)
 }

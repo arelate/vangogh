@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 )
@@ -34,7 +35,7 @@ func GetImages(
 		return err
 	}
 
-	//for every product we'll collect image types it's missing and download only those
+	//for every product we'll collect image types missing for id and download only those
 	idMissingTypes := map[string][]vangogh_images.ImageType{}
 
 	if missing {
@@ -51,7 +52,7 @@ func GetImages(
 		//2. for every product id we get this way - add this image type to idMissingTypes[id]
 		for _, it := range its {
 			//1
-			missingImageIds, err := idsMissingLocalImages(it, exl, localImageSet)
+			missingImageIds, err := itemize.MissingLocalImages(it, exl, localImageSet)
 			if err != nil {
 				return err
 			}
@@ -127,41 +128,4 @@ func GetImages(
 		fmt.Println("done")
 	}
 	return nil
-}
-
-type imageExtractsGetter struct {
-	imageType    vangogh_images.ImageType
-	extractsList *vangogh_extracts.ExtractsList
-}
-
-func NewImageExtractsGetter(
-	it vangogh_images.ImageType,
-	exl *vangogh_extracts.ExtractsList) *imageExtractsGetter {
-	return &imageExtractsGetter{
-		imageType:    it,
-		extractsList: exl,
-	}
-}
-
-func (ieg *imageExtractsGetter) GetImageIds(id string) ([]string, bool) {
-	return ieg.extractsList.GetAll(vangogh_properties.FromImageType(ieg.imageType), id)
-}
-
-func idsMissingLocalImages(
-	it vangogh_images.ImageType,
-	exl *vangogh_extracts.ExtractsList,
-	localImageIds gost.StrSet) (gost.StrSet, error) {
-
-	all := exl.All(vangogh_properties.FromImageType(it))
-
-	if localImageIds == nil {
-		var err error
-		if localImageIds, err = vangogh_urls.LocalImageIds(); err != nil {
-			return nil, err
-		}
-	}
-
-	ieg := NewImageExtractsGetter(it, exl)
-
-	return idsMissingLocalFiles(all, localImageIds, ieg.GetImageIds, nil)
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/internal"
 	"github.com/boggydigital/yt_urls"
 )
@@ -29,7 +30,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 	}
 
 	if missing {
-		missingIds, err := idsMissingLocalVideos(exl)
+		missingIds, err := itemize.MissingLocalVideos(exl)
 		if err != nil {
 			return err
 		}
@@ -108,35 +109,4 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 	}
 
 	return nil
-}
-
-type videoPropertiesGetter struct {
-	extractsList *vangogh_extracts.ExtractsList
-}
-
-func NewVideoPropertiesGetter(exl *vangogh_extracts.ExtractsList) *videoPropertiesGetter {
-	return &videoPropertiesGetter{
-		extractsList: exl,
-	}
-}
-
-func (vpg *videoPropertiesGetter) GetVideoIds(id string) ([]string, bool) {
-	return vpg.extractsList.GetAllRaw(vangogh_properties.VideoIdProperty, id)
-}
-
-func (vpg *videoPropertiesGetter) IsMissingVideo(videoId string) bool {
-	return vpg.extractsList.Contains(vangogh_properties.MissingVideoUrlProperty, videoId)
-}
-
-func idsMissingLocalVideos(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
-	all := exl.All(vangogh_properties.VideoIdProperty)
-
-	localVideoSet, err := vangogh_urls.LocalVideoIds()
-	if err != nil {
-		return nil, err
-	}
-
-	vpg := NewVideoPropertiesGetter(exl)
-
-	return idsMissingLocalFiles(all, localVideoSet, vpg.GetVideoIds, vpg.IsMissingVideo)
 }

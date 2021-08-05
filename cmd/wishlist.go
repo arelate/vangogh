@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/vangogh/cmd/remove"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 	"net/http"
@@ -87,7 +88,7 @@ func wishlistRemove(
 	mt gog_media.Media,
 	titleExtracts *vangogh_extracts.ExtractsList) error {
 
-	if err := removeData(ids, vangogh_products.WishlistProducts, mt); err != nil {
+	if err := remove.Data(ids, vangogh_products.WishlistProducts, mt); err != nil {
 		return err
 	}
 

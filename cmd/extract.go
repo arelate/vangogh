@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/extract"
 	"strings"
 )
 
@@ -91,28 +92,28 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 	//language-names are extracted separately from general pipeline,
 	//given we'll be filling the blanks from api-products-v2 using
 	//GetLanguages property that returns map[string]string
-	langCodeSet, err := getLanguageCodes(exl)
+	langCodeSet, err := extract.GetLanguageCodes(exl)
 	if err != nil {
 		return err
 	}
 
-	if err := extractLanguageNames(langCodeSet); err != nil {
+	if err := extract.LanguageNames(langCodeSet); err != nil {
 		return err
 	}
-	if err := extractNativeLanguageNames(langCodeSet); err != nil {
+	if err := extract.NativeLanguageNames(langCodeSet); err != nil {
 		return err
 	}
 
 	//tag-names are extracted separately from other types,
 	//given it's most convenient to extract from account-pages
-	if err := extractTagNames(mt); err != nil {
+	if err := extract.TagNames(mt); err != nil {
 		return err
 	}
 
 	//orders are extracted separately from other types
-	if err := ExtractOrders(modifiedAfter); err != nil {
+	if err := extract.Orders(modifiedAfter); err != nil {
 		return err
 	}
 
-	return extractTypes(mt)
+	return extract.Types(mt)
 }

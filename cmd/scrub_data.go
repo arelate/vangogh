@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/remove"
 	"strconv"
 )
 
@@ -58,7 +59,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 
 			if fix {
 				fmt.Printf("fix %s (%s):\n", splitPt, mt)
-				if err := removeData(splitIdSet.All(), splitPt, mt); err != nil {
+				if err := remove.Data(splitIdSet.All(), splitPt, mt); err != nil {
 					return err
 				}
 			}

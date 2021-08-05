@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/iterate"
 )
 
 func Size(
@@ -39,7 +40,7 @@ func Size(
 		return nil
 	}
 
-	if err := mapDownloadsList(
+	if err := iterate.DownloadsList(
 		idSet,
 		mt,
 		exl,

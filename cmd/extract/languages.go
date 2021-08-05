@@ -1,4 +1,4 @@
-package cmd
+package extract
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/gost"
 )
 
-func getLanguageCodes(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
+func GetLanguageCodes(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
 	langCodeSet := gost.NewStrSet()
 
 	if err := exl.AssertSupport(vangogh_properties.LanguageCodeProperty); err != nil {
@@ -57,7 +57,7 @@ func updateLanguageNames(languages map[string]string, missingNames gost.StrSet, 
 	}
 }
 
-func extractLanguageNames(langCodeSet gost.StrSet) error {
+func LanguageNames(langCodeSet gost.StrSet) error {
 
 	fmt.Println("extracting language names")
 
@@ -102,7 +102,7 @@ func extractLanguageNames(langCodeSet gost.StrSet) error {
 	return langNamesEx.SetMany(property, names)
 }
 
-func extractNativeLanguageNames(langCodeSet gost.StrSet) error {
+func NativeLanguageNames(langCodeSet gost.StrSet) error {
 
 	fmt.Println("extracting native language names")
 

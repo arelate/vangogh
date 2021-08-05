@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/clo"
+	"github.com/boggydigital/vangogh/cmd/selectors"
 	"github.com/boggydigital/vangogh/internal"
 	"strconv"
 	"time"
@@ -28,10 +29,10 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 	missing := req.Flag("missing")
 	all := req.Flag("all")
 
-	idSet, err := SetFromSelectors(idSelectors{
-		ids:       req.ArgValues("id"),
-		slugs:     req.ArgValues("slug"),
-		fromStdin: req.Flag("read-ids"),
+	idSet, err := selectors.StrSetFrom(selectors.Id{
+		Ids:       req.ArgValues("id"),
+		Slugs:     req.ArgValues("slug"),
+		FromStdin: req.Flag("read-ids"),
 	})
 	if err != nil {
 		return err

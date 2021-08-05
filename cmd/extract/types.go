@@ -1,4 +1,4 @@
-package cmd
+package extract
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/arelate/vangogh_values"
 )
 
-func extractTypes(mt gog_media.Media) error {
+func Types(mt gog_media.Media) error {
 
 	fmt.Println("extracting types")
 

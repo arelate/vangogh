@@ -31,34 +31,6 @@ var filterUpdatedProductTypes = map[vangogh_products.ProductType]bool{
 	vangogh_products.ApiProductsV2: true,
 }
 
-func humanReadable(productTypes map[vangogh_products.ProductType]bool) []string {
-	hrStrings := make(map[string]bool, 0)
-	for key, ok := range productTypes {
-		if !ok {
-			continue
-		}
-		hrStrings[key.HumanReadableString()] = true
-	}
-
-	keys := make([]string, 0, len(hrStrings))
-	for key, _ := range hrStrings {
-		keys = append(keys, key)
-	}
-
-	sort.Strings(keys)
-
-	return keys
-}
-
-func categorize(ids []string, cat string, updates map[string][]string) {
-	for _, id := range ids {
-		if updates[cat] == nil {
-			updates[cat] = make([]string, 0)
-		}
-		updates[cat] = append(updates[cat], id)
-	}
-}
-
 func Summary(since int64, mt gog_media.Media) error {
 
 	updates := make(map[string][]string, 0)
@@ -95,4 +67,32 @@ func Summary(since int64, mt gog_media.Media) error {
 	fmt.Printf("key changes since %s:\n", time.Unix(since, 0).Format(time.Kitchen))
 
 	return PrintGroups(updates)
+}
+
+func humanReadable(productTypes map[vangogh_products.ProductType]bool) []string {
+	hrStrings := make(map[string]bool, 0)
+	for key, ok := range productTypes {
+		if !ok {
+			continue
+		}
+		hrStrings[key.HumanReadableString()] = true
+	}
+
+	keys := make([]string, 0, len(hrStrings))
+	for key, _ := range hrStrings {
+		keys = append(keys, key)
+	}
+
+	sort.Strings(keys)
+
+	return keys
+}
+
+func categorize(ids []string, cat string, updates map[string][]string) {
+	for _, id := range ids {
+		if updates[cat] == nil {
+			updates[cat] = make([]string, 0)
+		}
+		updates[cat] = append(updates[cat], id)
+	}
 }

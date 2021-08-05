@@ -13,6 +13,8 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/iterate"
+	"github.com/boggydigital/vangogh/cmd/selectors"
 	"github.com/boggydigital/vangogh/internal"
 	"log"
 	"net/http"
@@ -21,12 +23,6 @@ import (
 	"path/filepath"
 	"strings"
 )
-
-type mapDownloadListDelegate func(
-	id string,
-	dlList vangogh_downloads.DownloadsList,
-	exl *vangogh_extracts.ExtractsList,
-	forceRemoteUpdate bool) error
 
 func GetDownloads(
 	idSet gost.StrSet,
@@ -68,10 +64,10 @@ func GetDownloads(
 		if err != nil {
 			return err
 		}
-		localIds, err := SetFromSelectors(idSelectors{
-			ids:       nil,
-			slugs:     localSlugs,
-			fromStdin: false,
+		localIds, err := selectors.StrSetFrom(selectors.Id{
+			Ids:       nil,
+			Slugs:     localSlugs,
+			FromStdin: false,
 		})
 		idSet.AddSet(localIds)
 	}
@@ -87,7 +83,7 @@ func GetDownloads(
 		idSet.AddSet(missingIds)
 	}
 
-	if err := mapDownloadsList(
+	if err := iterate.DownloadsList(
 		idSet,
 		mt,
 		exl,
@@ -234,70 +230,6 @@ func downloadList(
 			fmt.Println(err)
 		}
 	}
-	return nil
-}
-
-func mapDownloadsList(
-	idSet gost.StrSet,
-	mt gog_media.Media,
-	exl *vangogh_extracts.ExtractsList,
-	operatingSystems []vangogh_downloads.OperatingSystem,
-	downloadTypes []vangogh_downloads.DownloadType,
-	langCodes []string,
-	mapDlDelegate mapDownloadListDelegate,
-	modifiedSince int64,
-	forceRemoteUpdate bool) error {
-
-	if mapDlDelegate == nil {
-		return fmt.Errorf("vangogh: get downloads list mapDlDelegate is nil")
-	}
-	if err := exl.AssertSupport(
-		vangogh_properties.SlugProperty,
-		vangogh_properties.NativeLanguageNameProperty); err != nil {
-		return err
-	}
-
-	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
-	if err != nil {
-		return err
-	}
-
-	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
-
-	for _, id := range idSet.All() {
-
-		detSlug, ok := exl.Get(vangogh_properties.SlugProperty, id)
-
-		if !vrDetails.Contains(id) || !ok {
-			continue
-		}
-
-		det, err := vrDetails.Details(id)
-		if err != nil {
-			return err
-		}
-
-		downloads, err := vangogh_downloads.FromDetails(det, mt, exl)
-		if err != nil {
-			return err
-		}
-
-		if !forceRemoteUpdate {
-			forceRemoteUpdate = modifiedSince > 0 &&
-				(vrDetails.WasModifiedAfter(id, modifiedSince) ||
-					vrAccountProducts.WasModifiedAfter(id, modifiedSince))
-		}
-
-		// already checked for nil earlier in the function
-		if err := mapDlDelegate(
-			detSlug,
-			downloads.Only(operatingSystems, downloadTypes, langCodes),
-			exl,
-			forceRemoteUpdate); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 

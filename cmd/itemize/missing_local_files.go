@@ -1,8 +1,8 @@
-package cmd
+package itemize
 
 import "github.com/boggydigital/gost"
 
-func idsMissingLocalFiles(
+func missingLocalFiles(
 	all []string,
 	localSet gost.StrSet,
 	getById func(id string) ([]string, bool),

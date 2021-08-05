@@ -1,4 +1,4 @@
-package cmd
+package split
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"strconv"
 )
 
-func split(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp int64) error {
+func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp int64) error {
 	vrPaged, err := vangogh_values.NewReader(sourcePt, mt)
 	if err != nil {
 		return err

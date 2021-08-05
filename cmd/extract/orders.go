@@ -1,4 +1,4 @@
-package cmd
+package extract
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func ExtractOrders(modifiedAfter int64) error {
+func Orders(modifiedAfter int64) error {
 	fmt.Println("extracting order dates")
 	exl, err := vangogh_extracts.NewList(vangogh_properties.GOGOrderDate)
 	if err != nil {

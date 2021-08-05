@@ -1,4 +1,4 @@
-package cmd
+package fetch
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"net/http"
 )
 
-func getItems(
+func Items(
 	ids []string,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,

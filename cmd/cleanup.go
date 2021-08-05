@@ -10,6 +10,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/iterate"
 	"os"
 	"path/filepath"
 )
@@ -38,7 +39,7 @@ func Cleanup(
 		idSet.Add(vrDetails.All()...)
 	}
 
-	if err := mapDownloadsList(
+	if err := iterate.DownloadsList(
 		idSet,
 		mt,
 		exl,

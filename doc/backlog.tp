@@ -1,6 +1,12 @@
 Issues:
 	No known at the moment
 
+download/cleanup/validation improments:
+	- print what is being processed before doing the work
+
+validation improvements:
+	- provide validation summary
+
 configuration:
 	- create a configuration file at a certain default location
 	- use it to specify directories/kvas connection strings
