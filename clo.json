@@ -82,6 +82,10 @@
       "slug&",
       "read-ids"
     ],
+    "scrub-data": [
+      "media={media^}",
+      "fix"
+    ],
     "search": [
       "media={media^}",
       "{searchable-properties^&}"
@@ -95,10 +99,6 @@
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
       "missing"
-    ],
-    "scrub-data": [
-      "media={media^}",
-      "fix"
     ],
     "summary": [
       "media={media^}",

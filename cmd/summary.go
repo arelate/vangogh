@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/vangogh/cmd/output"
 	"sort"
 	"time"
 )
@@ -66,7 +67,7 @@ func Summary(since int64, mt gog_media.Media) error {
 
 	fmt.Printf("key changes since %s:\n", time.Unix(since, 0).Format(time.Kitchen))
 
-	return PrintGroups(updates)
+	return output.Groups(updates)
 }
 
 func humanReadable(productTypes map[vangogh_products.ProductType]bool) []string {

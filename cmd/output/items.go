@@ -1,4 +1,4 @@
-package cmd
+package output
 
 import (
 	"fmt"
@@ -10,44 +10,7 @@ import (
 	"strings"
 )
 
-const (
-	defaultSort = vangogh_properties.TitleProperty
-	defaultDesc = false
-)
-
-func PrintGroups(
-	groupIds map[string][]string) error {
-
-	propSet := gost.NewStrSetWith(vangogh_properties.TitleProperty)
-
-	groups := make([]string, 0, len(groupIds))
-	for grp, _ := range groupIds {
-		groups = append(groups, grp)
-	}
-
-	sort.Strings(groups)
-
-	exl, err := vangogh_extracts.NewList(propSet.All()...)
-	if err != nil {
-		return err
-	}
-
-	for _, grp := range groups {
-		if len(groupIds[grp]) == 0 {
-			continue
-		}
-
-		fmt.Printf(" %s:\n", grp)
-
-		if err := Print(groupIds[grp], nil, propSet.All(), exl); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func Print(
+func Items(
 	ids []string,
 	propertyFilter map[string][]string,
 	properties []string,
@@ -66,8 +29,8 @@ func Print(
 
 	idSet := vangogh_sets.IdSetWith(ids...)
 
-	for _, id := range idSet.Sort(exl, defaultSort, defaultDesc) {
-		if err := printInfo(id, propertyFilter, propSet.All(), exl); err != nil {
+	for _, id := range idSet.Sort(exl, DefaultSort, DefaultDesc) {
+		if err := item(id, propertyFilter, propSet.All(), exl); err != nil {
 			return err
 		}
 	}
@@ -75,7 +38,7 @@ func Print(
 	return nil
 }
 
-func printInfo(
+func item(
 	id string,
 	propertyFilter map[string][]string,
 	properties []string,

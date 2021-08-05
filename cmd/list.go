@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/output"
 	"time"
 )
 
@@ -65,7 +66,7 @@ func List(
 		idSet.Add(vr.All()...)
 	}
 
-	return Print(
+	return output.Items(
 		idSet.All(),
 		nil,
 		vangogh_properties.Supported(pt, properties),

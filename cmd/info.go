@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/output"
 )
 
 func Info(idSet gost.StrSet, allText, images, videoId bool) error {
@@ -26,7 +27,7 @@ func Info(idSet gost.StrSet, allText, images, videoId bool) error {
 		return err
 	}
 
-	return Print(
+	return output.Items(
 		idSet.All(),
 		nil,
 		propSet.All(),

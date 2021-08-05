@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/output"
 )
 
 func Search(query map[string][]string) error {
@@ -43,7 +44,7 @@ func Search(query map[string][]string) error {
 		return nil
 	}
 
-	return Print(
+	return output.Items(
 		results,
 		propertyFilter,
 		//similarly for propertyFilter (see comment above) - expand all properties to display

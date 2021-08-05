@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/output"
 )
 
 func Owned(idSet gost.StrSet) error {
@@ -52,7 +53,7 @@ func Owned(idSet gost.StrSet) error {
 		}
 	}
 
-	return PrintGroups(
+	return output.Groups(
 		map[string][]string{
 			"owned":     ownedSet.All(),
 			"not owned": idSet.Except(ownedSet),

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/output"
 )
 
 func Digest(property string) error {
@@ -36,7 +37,7 @@ func Digest(property string) error {
 
 	var sorted []string
 
-	_, sorted = gost.NewIntSortedStrSetWith(distValues, defaultDesc)
+	_, sorted = gost.NewIntSortedStrSetWith(distValues, output.DefaultDesc)
 
 	for _, key := range sorted {
 		fmt.Printf("%s: %d items\n", key, distValues[key])
