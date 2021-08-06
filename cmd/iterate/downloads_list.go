@@ -12,7 +12,7 @@ import (
 )
 
 type iterateDownloadListDelegate func(
-	id string,
+	slug string,
 	dlList vangogh_downloads.DownloadsList,
 	exl *vangogh_extracts.ExtractsList,
 	forceRemoteUpdate bool) error

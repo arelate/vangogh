@@ -1,11 +1,9 @@
 Issues:
 	No known at the moment
 
-download/cleanup/validation improments:
-	- print what is being processed before doing the work
-
 validation improvements:
-	- provide validation summary
+	- provide validation summary @done(2021-08-05)
+	- don't stop on errors, report them like everything else @done(2021-08-05)
 
 configuration:
 	- create a configuration file at a certain default location
@@ -81,6 +79,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	download/cleanup/validation improments: @done(2021-08-05)
+		- print what is being processed before doing the work @done(2021-08-05)
 	Download files: @done(2021-08-02)
 		- add support for missing option @done(2021-08-02)
 		- add get-downloads and clean-up to sync:

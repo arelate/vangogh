@@ -3,6 +3,7 @@ package cmd
 import (
 	"crypto/md5"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
@@ -17,6 +18,13 @@ import (
 	"io"
 	"os"
 	"path"
+)
+
+var (
+	ErrMissingDownload        = errors.New("download file missing")
+	ErrMissingValidationFile  = errors.New("validation file missing")
+	ErrValidationNotSupported = errors.New("validation not supported")
+	ErrValidationFailed       = errors.New("validation failed")
 )
 
 func Validate(
@@ -43,6 +51,12 @@ func Validate(
 		idSet.Add(vrDetails.All()...)
 	}
 
+	validated := make(map[string]bool)
+	missingDownload := make(map[string]bool)
+	missingChecksum := make(map[string]bool)
+	failed := make(map[string]bool)
+	slugLastError := make(map[string]string)
+
 	if err := iterate.DownloadsList(
 		idSet,
 		mt,
@@ -50,29 +64,81 @@ func Validate(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		validateDownloadList,
+		func(slug string,
+			list vangogh_downloads.DownloadsList,
+			exl *vangogh_extracts.ExtractsList,
+			_ bool) error {
+
+			hasValidationTargets := false
+
+			for _, dl := range list {
+				if err := validateManualUrl(slug, &dl, exl); errors.Is(err, ErrValidationNotSupported) {
+					continue
+				} else if errors.Is(err, ErrMissingValidationFile) {
+					missingChecksum[slug] = true
+				} else if errors.Is(err, ErrMissingDownload) {
+					missingDownload[slug] = true
+				} else if errors.Is(err, ErrValidationFailed) {
+					failed[slug] = true
+				} else if err != nil {
+					fmt.Println(err)
+					slugLastError[slug] = err.Error()
+					continue
+				}
+				hasValidationTargets = true
+			}
+
+			if hasValidationTargets &&
+				!missingDownload[slug] &&
+				!missingChecksum[slug] &&
+				!failed[slug] &&
+				slugLastError[slug] == "" {
+				validated[slug] = true
+			}
+
+			return nil
+		},
 		0,
 		false); err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func validateDownloadList(
-	slug string,
-	list vangogh_downloads.DownloadsList,
-	exl *vangogh_extracts.ExtractsList,
-	_ bool) error {
-	fmt.Println("validating", slug)
-
-	for _, dl := range list {
-		if err := validateManualUrl(slug, &dl, exl); err != nil {
-			return err
+	fmt.Println()
+	fmt.Println("validation summary:")
+	fmt.Printf("%d product(s) successfully validated\n", len(validated))
+	if len(missingDownload) > 0 {
+		fmt.Printf("%d product(s) not downloaded\n", len(missingDownload))
+		for slug := range missingDownload {
+			fmt.Println("", slug)
+		}
+	}
+	if len(missingChecksum) > 0 {
+		fmt.Printf("%d product(s) without checksum:\n", len(missingChecksum))
+		for slug := range missingChecksum {
+			fmt.Println("", slug)
+		}
+	}
+	if len(failed) > 0 {
+		fmt.Printf("%d product(s) failed validation:\n", len(failed))
+		for slug := range failed {
+			fmt.Println("", slug)
+		}
+	}
+	if len(slugLastError) > 0 {
+		fmt.Printf("%d product(s) validation caused an error:\n", len(slugLastError))
+		for slug, err := range slugLastError {
+			fmt.Printf(" %s: %s\n", slug, err)
 		}
 	}
 
 	return nil
+}
+
+type validationError struct {
+}
+
+func (ve validationError) Error() string {
+	return "validation failed"
 }
 
 func validateManualUrl(
@@ -86,25 +152,22 @@ func validateManualUrl(
 
 	relLocalFile, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
 	if !ok {
-		fmt.Printf("vangogh: %s file for %s have not been successfully downloaded yet\n", slug, dl.ManualUrl)
-		return nil
+		return ErrMissingDownload
 	}
 
 	absLocalFile := path.Join(vangogh_urls.DownloadsDir(), relLocalFile)
 	if !vangogh_urls.CanValidate(absLocalFile) {
-		return nil
+		return ErrValidationNotSupported
 	}
 
 	if _, err := os.Stat(absLocalFile); os.IsNotExist(err) {
-		fmt.Printf("vangogh: %s local file %s does not exist\n", slug, absLocalFile)
-		return nil
+		return ErrMissingDownload
 	}
 
 	absValidationFile := vangogh_urls.LocalValidationPath(absLocalFile)
 
 	if _, err := os.Stat(absValidationFile); os.IsNotExist(err) {
-		fmt.Printf("vangogh: %s validation file %s does not exist\n", slug, absValidationFile)
-		return nil
+		return ErrMissingValidationFile
 	}
 
 	fmt.Printf("validing %s...", dl)
@@ -136,6 +199,7 @@ func validateManualUrl(
 		fmt.Println("ok")
 	} else {
 		fmt.Println("FAIL")
+		return ErrValidationFailed
 	}
 
 	return nil
