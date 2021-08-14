@@ -85,6 +85,7 @@ func Validate(
 					slugLastError[slug] = err.Error()
 					continue
 				}
+				// don't attempt to assess success for files that don't support validation
 				hasValidationTargets = true
 			}
 

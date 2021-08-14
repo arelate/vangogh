@@ -40,7 +40,7 @@ func GetData(
 	//only print "header" for details types, since they go really well with
 	//itemization detailed information
 	if vangogh_products.IsDetail(pt) {
-		fmt.Printf("getting %s (%s)\n", pt, mt)
+		fmt.Printf("get %s (%s):\n", pt, mt)
 	}
 
 	httpClient, err := internal.HttpClient()

@@ -1,17 +1,34 @@
 Issues:
 	No known at the moment
 
-validation improvements:
-	- provide validation summary @done(2021-08-05)
-	- don't stop on errors, report them like everything else @done(2021-08-05)
+verbosity improvments: @done(2021-08-14)
+	- get *-page (media) n/N... @done(2021-08-14)
+	- split licences (game) -> licence-products N... @done(2021-08-14)
+	- get details (game): @done(2021-08-14)
+	- (space) finding .... @done(2021-08-14)
+	- fetch details (game) n/N... @done(2021-08-14)
+	- extract data... (type)... done @done(2021-08-14)
+	- get images: @done(2021-08-14)
+	- id Title... (type)... done @done(2021-08-14)
+	
+vangogh_pages improvements:
+	- move code to dolo to download a set of Urls
+	- refactor all uses to that ^
+
+clo improvements:
+	- make clo web server ready
+	- parse as Url clo://app/cmd?arg=values
+	- register handlers (CLI and HTTP) for cmds and perform internal routing - perhaps as a map[string]func ?
+		- Perform checks if all cmds are handled and return errors if not
+	- transition from app routing to clo routing and make route func private, perhaps expose Handle func that takes Url as input
+	- add another built-in cmd to start web server (with optional parameters like port)
 
 configuration:
 	- create a configuration file at a certain default location
 	- use it to specify directories/kvas connection strings
-	- use it to specify default scopes (e.g. sync, download, etc.)
 	
 vangogh_api:
-	- create new module that provides all core commands functionality, leaving input output to vangogh
+	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh
 	
 documentation investment:
 	- add clo.json help for stable commands
@@ -79,6 +96,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- use it to specify default scopes (e.g. sync, download, etc.) @done(2021-08-07) @project(configuration)
+	validation improvements: @done(2021-08-07)
+		- provide validation summary @done(2021-08-05)
+		- don't stop on errors, report them like everything else @done(2021-08-05)
 	download/cleanup/validation improments: @done(2021-08-05)
 		- print what is being processed before doing the work @done(2021-08-05)
 	Download files: @done(2021-08-02)

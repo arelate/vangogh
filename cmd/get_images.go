@@ -87,17 +87,17 @@ func GetImages(
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
+	fmt.Println("get images:")
+
 	for id, missingIts := range idMissingTypes {
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
 		}
 
-		fmt.Printf("getting images for %s (%s) - ", title, id)
+		fmt.Printf("%s %s - ", id, title)
 
 		for _, it := range missingIts {
-
-			fmt.Printf("%s...", it)
 
 			images, ok := exl.GetAll(vangogh_properties.FromImageType(it), id)
 			if !ok || len(images) == 0 {
@@ -110,11 +110,11 @@ func GetImages(
 				return err
 			}
 
-			for i, srcUrl := range srcUrls {
+			fmt.Printf("%s", it)
 
-				if len(srcUrls) > 0 && i > 0 {
-					fmt.Print(".")
-				}
+			for _, srcUrl := range srcUrls {
+
+				fmt.Print(".")
 				dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
 
 				_, err = dl.Download(srcUrl, dstDir, "")
@@ -123,6 +123,8 @@ func GetImages(
 					continue
 				}
 			}
+
+			fmt.Print(" ")
 		}
 
 		fmt.Println("done")

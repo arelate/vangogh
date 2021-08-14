@@ -27,7 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	req, err := defs.Parse(os.Args[1:])
+	req, err := defs.ParseRequest(os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}

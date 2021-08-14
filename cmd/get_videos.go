@@ -53,6 +53,8 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
+	fmt.Println("get videos:")
+
 	for _, id := range idSet.All() {
 		videoIds, ok := exl.GetAllRaw(vangogh_properties.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
@@ -61,7 +63,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 
-		fmt.Printf("getting videos for %s (%s)...", title, id)
+		fmt.Printf("%s %s", id, title)
 
 		for _, videoId := range videoIds {
 
@@ -79,7 +81,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 				}
 			}
 
-			for i, vidUrl := range vidUrls {
+			for _, vidUrl := range vidUrls {
 
 				if vidUrl == nil || len(vidUrl.String()) == 0 {
 					if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
@@ -88,9 +90,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 					continue
 				}
 
-				if len(vidUrls) > 0 && i > 0 {
-					fmt.Print(".")
-				}
+				fmt.Print(".")
 
 				dir, err := vangogh_urls.VideoDir(videoId)
 				if err != nil {
@@ -102,9 +102,13 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 					fmt.Printf("(%s)...", err)
 					continue
 				}
+
+				//yt_urls.StreamingUrls returns bitrate sorted video urls,
+				//so we can stop, if we've successfully got the best available one
+				break
 			}
 		}
-
+		fmt.Print(" ")
 		fmt.Println("done")
 	}
 

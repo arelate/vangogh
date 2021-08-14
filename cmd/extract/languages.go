@@ -1,7 +1,6 @@
 package extract
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
@@ -58,9 +57,6 @@ func updateLanguageNames(languages map[string]string, missingNames gost.StrSet, 
 }
 
 func LanguageNames(langCodeSet gost.StrSet) error {
-
-	fmt.Println("extracting language names")
-
 	property := vangogh_properties.LanguageNameProperty
 
 	langNamesEx, err := vangogh_extracts.NewList(property)
@@ -103,9 +99,6 @@ func LanguageNames(langCodeSet gost.StrSet) error {
 }
 
 func NativeLanguageNames(langCodeSet gost.StrSet) error {
-
-	fmt.Println("extracting native language names")
-
 	property := vangogh_properties.NativeLanguageNameProperty
 
 	langNamesEx, err := vangogh_extracts.NewList(property)

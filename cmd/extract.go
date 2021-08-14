@@ -37,6 +37,9 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		return err
 	}
 
+	fmt.Printf("extract ")
+	defer fmt.Println()
+
 	for _, pt := range vangogh_products.Local() {
 
 		vr, err := vangogh_values.NewReader(pt, mt)
@@ -59,7 +62,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 			continue
 		}
 
-		fmt.Printf("extracting %s\n", pt)
+		fmt.Printf("%s... ", pt)
 
 		for _, id := range modifiedIds {
 
@@ -97,23 +100,33 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		return err
 	}
 
+	fmt.Print("language names... ")
 	if err := extract.LanguageNames(langCodeSet); err != nil {
 		return err
 	}
+
+	fmt.Print("native language names... ")
 	if err := extract.NativeLanguageNames(langCodeSet); err != nil {
 		return err
 	}
 
 	//tag-names are extracted separately from other types,
-	//given it's most convenient to extract from account-pages
+	//given it is most convenient to extract from account-pages
+	fmt.Print("tag names... ")
 	if err := extract.TagNames(mt); err != nil {
 		return err
 	}
 
 	//orders are extracted separately from other types
+	fmt.Print("order dates... ")
 	if err := extract.Orders(modifiedAfter); err != nil {
 		return err
 	}
 
-	return extract.Types(mt)
+	fmt.Print("types... ")
+	if err := extract.Types(mt); err != nil {
+		return err
+	}
+
+	return nil
 }

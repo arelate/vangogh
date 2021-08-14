@@ -1,7 +1,6 @@
 package extract
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
@@ -12,7 +11,6 @@ import (
 )
 
 func Orders(modifiedAfter int64) error {
-	fmt.Println("extracting order dates")
 	exl, err := vangogh_extracts.NewList(vangogh_properties.GOGOrderDate)
 	if err != nil {
 		return err

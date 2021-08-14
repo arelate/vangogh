@@ -1,7 +1,6 @@
 package extract
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
@@ -10,9 +9,6 @@ import (
 )
 
 func Types(mt gog_media.Media) error {
-
-	fmt.Println("extracting types")
-
 	idsTypes := make(map[string][]string)
 
 	for _, pt := range vangogh_products.Local() {
