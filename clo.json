@@ -98,7 +98,8 @@
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
-      "missing"
+      "missing",
+      "all"
     ],
     "summary": [
       "media={media^}",

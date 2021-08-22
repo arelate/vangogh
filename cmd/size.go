@@ -5,8 +5,11 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
+	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
+	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/iterate"
 )
 
@@ -16,11 +19,13 @@ func Size(
 	operatingSystems []vangogh_downloads.OperatingSystem,
 	downloadTypes []vangogh_downloads.DownloadType,
 	langCodes []string,
-	missing bool) error {
+	missing bool,
+	all bool) error {
 
 	dlList := vangogh_downloads.DownloadsList{}
 
 	exl, err := vangogh_extracts.NewList(
+		vangogh_properties.LocalManualUrl,
 		vangogh_properties.NativeLanguageNameProperty,
 		vangogh_properties.SlugProperty)
 	if err != nil {
@@ -28,11 +33,20 @@ func Size(
 	}
 
 	if missing {
-		missingIds, err := idMissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
+		missingIds, err := itemize.MissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
 		if err != nil {
 			return err
 		}
 		idSet.AddSet(missingIds)
+	}
+
+	if all {
+		vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
+		if err != nil {
+			return err
+		}
+
+		idSet.Add(vrDetails.All()...)
 	}
 
 	if idSet.Len() == 0 {

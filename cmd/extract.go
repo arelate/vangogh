@@ -128,5 +128,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		return err
 	}
 
+	fmt.Print("done")
+
 	return nil
 }

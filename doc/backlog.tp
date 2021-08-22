@@ -1,19 +1,18 @@
 Issues:
 	No known at the moment
 
-verbosity improvments: @done(2021-08-14)
-	- get *-page (media) n/N... @done(2021-08-14)
-	- split licences (game) -> licence-products N... @done(2021-08-14)
-	- get details (game): @done(2021-08-14)
-	- (space) finding .... @done(2021-08-14)
-	- fetch details (game) n/N... @done(2021-08-14)
-	- extract data... (type)... done @done(2021-08-14)
-	- get images: @done(2021-08-14)
-	- id Title... (type)... done @done(2021-08-14)
-	
+get-videos improvements:
+	- video download timeouts take too much time
+
 vangogh_pages improvements:
 	- move code to dolo to download a set of Urls
-	- refactor all uses to that ^
+	- refactor all vangogh_pages usage to that ^
+	- refactor all multifile download (images, videos) to that
+	- deprecate vangogh_pages
+	- create new dolo method to download files as concurrent chunks
+	
+read-ids improvements:
+	- silently ignore potential ids that are not keys (sum -s 1 | info -r)
 
 clo improvements:
 	- make clo web server ready
@@ -28,7 +27,7 @@ configuration:
 	- use it to specify directories/kvas connection strings
 	
 vangogh_api:
-	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh
+	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
 	
 documentation investment:
 	- add clo.json help for stable commands
@@ -96,6 +95,19 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- size -missing and -all produced the same results @done(2021-08-22) @project(Issues)
+	id itemization improvements: @done(2021-08-22)
+		- continue to DRY code and make more efficient itemizations @done(2021-08-22)
+	verbosity improvments: @done(2021-08-14)
+		- get *-page (media) n/N... @done(2021-08-14)
+		- split licences (game) -> licence-products N... @done(2021-08-14)
+		- get details (game): @done(2021-08-14)
+		- (space) finding .... @done(2021-08-14)
+		- fetch details (game) n/N... @done(2021-08-14)
+		- extract data... (type)... done @done(2021-08-14)
+		- get images: @done(2021-08-14)
+		- id Title... (type)... done @done(2021-08-14)
+		
 	- use it to specify default scopes (e.g. sync, download, etc.) @done(2021-08-07) @project(configuration)
 	validation improvements: @done(2021-08-07)
 		- provide validation summary @done(2021-08-05)

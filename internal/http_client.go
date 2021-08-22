@@ -21,6 +21,7 @@ func HttpClient() (*http.Client, error) {
 			TLSHandshakeTimeout:   10 * time.Second,
 			ExpectContinueTimeout: 10 * time.Second,
 			ResponseHeaderTimeout: 10 * time.Second,
+			IdleConnTimeout:       10 * time.Second,
 		},
 		Jar: jar,
 	}, nil
