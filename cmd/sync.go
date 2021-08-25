@@ -9,7 +9,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/internal"
+	"github.com/boggydigital/vangogh/cmd/lines"
 	"time"
 )
 
@@ -42,7 +42,7 @@ func Sync(
 
 		//get main - detail data
 		for _, pt := range vangogh_products.Detail() {
-			denyIds := internal.ReadLines(vangogh_urls.Denylist(pt))
+			denyIds := lines.Read(vangogh_urls.Denylist(pt))
 			if err := GetData(gost.NewStrSet(), denyIds, pt, mt, syncStart, true, true, verbose); err != nil {
 				return err
 			}
@@ -90,7 +90,6 @@ func Sync(
 			missingDownloads,
 			true,
 			syncStart,
-			false,
 			false,
 			false); err != nil {
 			return err

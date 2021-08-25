@@ -7,8 +7,8 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/clo"
+	"github.com/boggydigital/vangogh/cmd/lines"
 	"github.com/boggydigital/vangogh/cmd/selectors"
-	"github.com/boggydigital/vangogh/internal"
 	"strconv"
 	"time"
 )
@@ -64,7 +64,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			since = time.Now().Add(-time.Hour * 24).Unix()
 		}
 		denyIdsFile := req.ArgVal("deny-ids-file")
-		denyIds := internal.ReadLines(denyIdsFile)
+		denyIds := lines.Read(denyIdsFile)
 		return GetData(idSet, denyIds, pt, mt, since, missing, updated, verbose)
 	case "get-downloads":
 		update := req.Flag("update")
@@ -78,7 +78,6 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 		}
 		forceRemoteUpdate := req.Flag("force-remote-update")
 		validate := req.Flag("validate")
-		noCleanup := req.Flag("no-cleanup")
 		return GetDownloads(
 			idSet,
 			mt,
@@ -89,8 +88,7 @@ func Route(req *clo.Request, defs *clo.Definitions) error {
 			update,
 			modifiedSince,
 			forceRemoteUpdate,
-			validate,
-			noCleanup)
+			validate)
 	case "get-images":
 		imageTypes := req.ArgValues("image-type")
 		its := make([]vangogh_images.ImageType, 0, len(imageTypes))

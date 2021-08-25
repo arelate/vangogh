@@ -8,15 +8,15 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/remove"
-	"github.com/boggydigital/vangogh/internal"
 	"log"
 	"net/http"
 	"net/url"
 )
 
 func Wishlist(mt gog_media.Media, addProductIds, removeProductIds []string) error {
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}

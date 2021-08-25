@@ -8,8 +8,8 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
-	"github.com/boggydigital/vangogh/internal"
 	"log"
 )
 
@@ -80,7 +80,7 @@ func GetImages(
 		return nil
 	}
 
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}

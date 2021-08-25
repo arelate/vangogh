@@ -64,7 +64,8 @@ func Validate(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		func(slug string,
+		func(id string,
+			slug string,
 			list vangogh_downloads.DownloadsList,
 			exl *vangogh_extracts.ExtractsList,
 			_ bool) error {

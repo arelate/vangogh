@@ -1,13 +1,14 @@
-package internal
+package http_client
 
 import (
+	"github.com/boggydigital/vangogh/cmd/cookies"
 	"net"
 	"net/http"
 	"time"
 )
 
-func HttpClient() (*http.Client, error) {
-	jar, err := LoadCookieJar()
+func Default() (*http.Client, error) {
+	jar, err := cookies.LoadJar()
 	if err != nil {
 		return nil, err
 	}

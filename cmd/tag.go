@@ -8,7 +8,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/internal"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"net/url"
 	"strings"
 )
@@ -57,7 +57,7 @@ func Tag(idSet gost.StrSet, operation, tagName string) error {
 }
 
 func postResp(url *url.URL, respVal interface{}) error {
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,4 @@
-package internal
+package lines
 
 import (
 	"bufio"
@@ -8,7 +8,7 @@ import (
 
 const commentPrefix = "//"
 
-func ReadLines(filepath string) []string {
+func Read(filepath string) []string {
 	lines := make([]string, 0)
 	if filepath == "" {
 		return lines

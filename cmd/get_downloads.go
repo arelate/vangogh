@@ -11,14 +11,15 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/iterate"
 	"github.com/boggydigital/vangogh/cmd/selectors"
-	"github.com/boggydigital/vangogh/internal"
 	"log"
 	"net/http"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 )
 
@@ -32,10 +33,9 @@ func GetDownloads(
 	update bool,
 	modifiedSince int64,
 	forceRemoteUpdate,
-	validate,
-	noCleanup bool) error {
+	validate bool) error {
 
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,8 @@ func GetDownloads(
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.NativeLanguageNameProperty,
 		vangogh_properties.SlugProperty,
-		vangogh_properties.LocalManualUrl)
+		vangogh_properties.LocalManualUrl,
+		vangogh_properties.DownloadStatusError)
 	if err != nil {
 		return err
 	}
@@ -78,6 +79,12 @@ func GetDownloads(
 		if err != nil {
 			return err
 		}
+
+		if missingIds.Len() == 0 {
+			fmt.Println("all downloads are available locally")
+			return nil
+		}
+
 		idSet.AddSet(missingIds)
 	}
 
@@ -101,13 +108,6 @@ func GetDownloads(
 		}
 	}
 
-	if !noCleanup {
-		fmt.Println()
-		if err := Cleanup(idSet, mt, operatingSystems, langCodes, downloadTypes, false); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
@@ -125,7 +125,9 @@ func downloadManualUrl(
 	//4 - for a given set of extensions - download validation file
 	//5 - download authorized session URL to a file
 	//6 - set association from manualUrl to a resolved filename
-	if err := exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
+	if err := exl.AssertSupport(
+		vangogh_properties.LocalManualUrl,
+		vangogh_properties.DownloadStatusError); err != nil {
 		return err
 	}
 
@@ -138,7 +140,7 @@ func downloadManualUrl(
 		}
 	}
 
-	fmt.Printf("downloading %s...", dl.String())
+	fmt.Printf(" %s...", dl.String())
 
 	//2
 	resp, err := httpClient.Head(gog_urls.ManualDownloadUrl(dl.ManualUrl).String())
@@ -146,7 +148,17 @@ func downloadManualUrl(
 		fmt.Println()
 		return err
 	}
+	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
+	//is not a problem that can be solved locally (it's a remote source error)
+	if resp.StatusCode > 299 {
+		if err := exl.Set(vangogh_properties.DownloadStatusError, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
+			return err
+		}
+		return fmt.Errorf(resp.Status)
+	}
+
 	resolvedUrl := resp.Request.URL
+
 	if err := resp.Body.Close(); err != nil {
 		fmt.Println()
 		return err
@@ -207,13 +219,14 @@ func printCompletion(current, total uint64) {
 }
 
 func downloadList(
+	id string,
 	slug string,
 	list vangogh_downloads.DownloadsList,
 	exl *vangogh_extracts.ExtractsList,
 	forceRemoteUpdate bool) error {
 	fmt.Println("downloading", slug)
 
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}

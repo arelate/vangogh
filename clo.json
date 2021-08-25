@@ -45,8 +45,7 @@
       "update",
       "modified-hours-ago",
       "force-remote-update",
-      "validate",
-      "no-cleanup"
+      "validate"
     ],
     "get-images": [
       "id&",

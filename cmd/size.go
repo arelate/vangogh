@@ -27,7 +27,8 @@ func Size(
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.LocalManualUrl,
 		vangogh_properties.NativeLanguageNameProperty,
-		vangogh_properties.SlugProperty)
+		vangogh_properties.SlugProperty,
+		vangogh_properties.DownloadStatusError)
 	if err != nil {
 		return err
 	}
@@ -37,6 +38,12 @@ func Size(
 		if err != nil {
 			return err
 		}
+
+		if missingIds.Len() == 0 {
+			fmt.Println("all downloads are available locally")
+			return nil
+		}
+
 		idSet.AddSet(missingIds)
 	}
 
@@ -45,7 +52,6 @@ func Size(
 		if err != nil {
 			return err
 		}
-
 		idSet.Add(vrDetails.All()...)
 	}
 
@@ -63,6 +69,7 @@ func Size(
 		langCodes,
 		func(
 			_ string,
+			_ string,
 			list vangogh_downloads.DownloadsList,
 			_ *vangogh_extracts.ExtractsList,
 			_ bool) error {
@@ -74,7 +81,7 @@ func Size(
 		return err
 	}
 
-	fmt.Printf("estimated total download size: %.2fGB\n", dlList.TotalGBsEstimate())
+	fmt.Printf("est. download size: %.2fGB\n", dlList.TotalGBsEstimate())
 
 	return nil
 }

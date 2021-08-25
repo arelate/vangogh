@@ -7,7 +7,7 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
-	"github.com/boggydigital/vangogh/internal"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"io"
 	"log"
 	"net/http"
@@ -37,7 +37,7 @@ func Items(
 		return err
 	}
 
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}

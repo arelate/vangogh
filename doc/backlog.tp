@@ -1,8 +1,13 @@
 Issues:
 	No known at the moment
 
-get-videos improvements:
-	- video download timeouts take too much time
+get-downloads improvements:
+	- some products have unresolvable manualUrls, we should store status codes for those and take into account for size, cleanup, validation purposes
+	- force-update should override this for downloads and allow trying again
+
+cleanup improvements:
+	- consider non-destructive option to move instead of delete with an option to delete
+	- add scrub action to cleanup moved files
 
 vangogh_pages improvements:
 	- move code to dolo to download a set of Urls
@@ -10,9 +15,6 @@ vangogh_pages improvements:
 	- refactor all multifile download (images, videos) to that
 	- deprecate vangogh_pages
 	- create new dolo method to download files as concurrent chunks
-	
-read-ids improvements:
-	- silently ignore potential ids that are not keys (sum -s 1 | info -r)
 
 clo improvements:
 	- make clo web server ready
@@ -95,6 +97,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	read-ids improvements: @done(2021-08-22)
+		- silently ignore potential ids that are not keys (sum -s 1 | info -r) @done(2021-08-22)
+	get-videos improvements: @done(2021-08-22)
+		- video download timeouts take too much time @done(2021-08-22)
 	- size -missing and -all produced the same results @done(2021-08-22) @project(Issues)
 	id itemization improvements: @done(2021-08-22)
 		- continue to DRY code and make more efficient itemizations @done(2021-08-22)

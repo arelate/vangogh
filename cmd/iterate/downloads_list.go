@@ -12,6 +12,7 @@ import (
 )
 
 type iterateDownloadListDelegate func(
+	id string,
 	slug string,
 	dlList vangogh_downloads.DownloadsList,
 	exl *vangogh_extracts.ExtractsList,
@@ -68,10 +69,24 @@ func DownloadsList(
 					vrAccountProducts.WasModifiedAfter(id, modifiedSince))
 		}
 
+		filteredDownloads := make([]vangogh_downloads.Download, 0)
+
+		for _, dl := range downloads.Only(operatingSystems, downloadTypes, langCodes) {
+			//some manualUrls have "0 MB" specified as size and don't seem to be used to create user clickable links.
+			//resolving such manualUrls leads to an empty filename
+			//given they don't contribute anything to download, size or validate commands - we're filtering them
+			if dl.EstimatedBytes == 0 {
+				continue
+			}
+			filteredDownloads = append(filteredDownloads, dl)
+
+		}
+
 		// already checked for nil earlier in the function
 		if err := delegate(
+			id,
 			detSlug,
-			downloads.Only(operatingSystems, downloadTypes, langCodes),
+			filteredDownloads,
 			exl,
 			forceRemoteUpdate); err != nil {
 			return err

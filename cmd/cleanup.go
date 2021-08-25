@@ -56,6 +56,7 @@ func Cleanup(
 }
 
 func cleanupDownloadList(
+	id string,
 	slug string,
 	list vangogh_downloads.DownloadsList,
 	exl *vangogh_extracts.ExtractsList,

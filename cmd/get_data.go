@@ -8,9 +8,9 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/fetch"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/split"
-	"github.com/boggydigital/vangogh/internal"
 	"log"
 )
 
@@ -43,7 +43,7 @@ func GetData(
 		fmt.Printf("get %s (%s):\n", pt, mt)
 	}
 
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}

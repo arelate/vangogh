@@ -9,6 +9,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/iterate"
 	"os"
 )
 
@@ -27,7 +28,9 @@ func MissingLocalDownloads(
 	//3. check if slug dir is not present in downloads -> add to missingIds
 	//4. check if any expected (resolved manualUrls) files are not present -> add to missingIds
 
-	if err := exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
+	if err := exl.AssertSupport(
+		vangogh_properties.LocalManualUrl,
+		vangogh_properties.DownloadStatusError); err != nil {
 		return nil, err
 	}
 
@@ -38,58 +41,68 @@ func MissingLocalDownloads(
 		return nil, err
 	}
 
-	// 1
-	for _, id := range vrDetails.All() {
+	//1
+	allIds := gost.NewStrSetWith(vrDetails.All()...)
 
-		det, err := vrDetails.Details(id)
-		if err != nil {
-			return missingIds, err
-		}
+	iterate.DownloadsList(
+		allIds,
+		mt,
+		exl,
+		operatingSystems,
+		downloadTypes,
+		langCodes,
+		func(id string,
+			slug string,
+			dlList vangogh_downloads.DownloadsList,
+			exl *vangogh_extracts.ExtractsList,
+			forceRemoteUpdate bool) error {
 
-		downloads, err := vangogh_downloads.FromDetails(det, mt, exl)
-		if err != nil {
-			return missingIds, err
-		}
+			expectedFiles := gost.NewStrSet()
 
-		downloads = downloads.Only(operatingSystems, downloadTypes, langCodes)
+			for _, dl := range dlList {
 
-		expectedFiles := gost.NewStrSet()
-		for _, dl := range downloads {
-			file, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
-			// 2
-			if !ok || file == "" {
-				missingIds.Add(id)
-				break
+				//skip manualUrls that have produced error status codes, while they're technically missing
+				//it's due to remote status for this URL, not a problem we can resolve locally
+				status, ok := exl.Get(vangogh_properties.DownloadStatusError, dl.ManualUrl)
+				if ok && status == "404" {
+					continue
+				}
+
+				file, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
+				// 2
+				if !ok || file == "" {
+					missingIds.Add(id)
+					break
+				}
+				expectedFiles.Add(file)
 			}
-			expectedFiles.Add(file)
-		}
 
-		if expectedFiles.Len() == 0 {
-			continue
-		}
+			if expectedFiles.Len() == 0 {
+				return nil
+			}
 
-		slug, ok := exl.Get(vangogh_properties.SlugProperty, id)
-		if !ok {
-			continue
-		}
+			// 3
+			if _, err := os.Stat(vangogh_urls.ProductDownloadsDir(slug)); os.IsNotExist(err) {
+				missingIds.Add(id)
+				return nil
+			}
 
-		// 3
-		if _, err := os.Stat(vangogh_urls.ProductDownloadsDir(slug)); os.IsNotExist(err) {
-			missingIds.Add(id)
-			continue
-		}
+			presentFiles, err := vangogh_urls.LocalSlugDownloads(slug)
+			if err != nil {
+				return nil
+			}
 
-		presentFiles, err := vangogh_urls.LocalSlugDownloads(slug)
-		if err != nil {
-			return missingIds, nil
-		}
+			// 4
+			missingFiles := expectedFiles.Except(presentFiles)
+			if len(missingFiles) > 0 {
+				missingIds.Add(id)
+			}
 
-		// 4
-		missingFiles := expectedFiles.Except(presentFiles)
-		if len(missingFiles) > 0 {
-			missingIds.Add(id)
-		}
-	}
+			return nil
+		},
+		0,
+		false,
+	)
 
 	return missingIds, nil
 }

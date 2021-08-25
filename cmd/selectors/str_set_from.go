@@ -4,7 +4,6 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/internal"
 )
 
 func StrSetFrom(idSel Id) (idSet gost.StrSet, err error) {
@@ -12,11 +11,11 @@ func StrSetFrom(idSel Id) (idSet gost.StrSet, err error) {
 	idSet = gost.NewStrSetWith(idSel.Ids...)
 
 	if idSel.FromStdin {
-		stdinIds, err := internal.ReadStdinIds()
+		stdinIds, err := readStdinIds()
 		if err != nil {
 			return idSet, err
 		}
-		idSet.Add(stdinIds...)
+		idSet.AddSet(stdinIds)
 	}
 
 	var exl *vangogh_extracts.ExtractsList

@@ -1,4 +1,4 @@
-package internal
+package selectors
 
 import (
 	"bufio"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func ReadStdinIds() ([]string, error) {
+func readStdinIds() (gost.StrSet, error) {
 	idSet := gost.NewStrSet()
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -19,10 +19,11 @@ func ReadStdinIds() ([]string, error) {
 		if len(tokens) < 1 {
 			continue
 		}
+
 		idSet.Add(tokens[0])
 	}
 	if err := scanner.Err(); err != nil {
-		return idSet.All(), err
+		return idSet, err
 	}
-	return idSet.All(), nil
+	return idSet, nil
 }

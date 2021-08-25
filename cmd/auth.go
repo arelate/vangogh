@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/arelate/gog_auth"
-	"github.com/boggydigital/vangogh/internal"
+	"github.com/boggydigital/vangogh/cmd/cookies"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"os"
 )
 
@@ -19,7 +20,7 @@ func requestText(prompt string) string {
 
 func Authenticate(username, password string) error {
 
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}
@@ -37,5 +38,5 @@ func Authenticate(username, password string) error {
 		return err
 	}
 
-	return internal.SaveCookieJar(httpClient.Jar)
+	return cookies.SaveJar(httpClient.Jar)
 }

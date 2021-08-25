@@ -7,8 +7,8 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
-	"github.com/boggydigital/vangogh/internal"
 	"github.com/boggydigital/yt_urls"
 )
 
@@ -46,12 +46,12 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 		return nil
 	}
 
-	httpClient, err := internal.HttpClient()
+	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
 	}
 
-	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
+	dl := dolo.NewClient(httpClient, printCompletion, dolo.Defaults())
 
 	fmt.Println("get videos:")
 
@@ -69,7 +69,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 			vidUrls, err := yt_urls.StreamingUrls(videoId)
 			if err != nil {
-				fmt.Printf("(%s)...", err)
+				fmt.Printf("(%s)", err)
 				if addErr := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
 					return addErr
 				}
@@ -99,7 +99,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 				_, err = dl.Download(vidUrl, dir, videoId+videoExt)
 				if err != nil {
-					fmt.Printf("(%s)...", err)
+					fmt.Printf("(%s)", err)
 					continue
 				}
 
