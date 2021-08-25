@@ -1,13 +1,6 @@
 Issues:
 	No known at the moment
 
-vangogh_pages improvements:
-	- move code to dolo to download a set of Urls
-	- refactor all vangogh_pages usage to that ^
-	- refactor all multifile download (images, videos) to that
-	- deprecate vangogh_pages
-	- create new dolo method to download files as concurrent chunks
-
 clo improvements:
 	- make clo web server ready
 	- parse as Url clo://app/cmd?arg=values
@@ -15,6 +8,13 @@ clo improvements:
 		- Perform checks if all cmds are handled and return errors if not
 	- transition from app routing to clo routing and make route func private, perhaps expose Handle func that takes Url as input
 	- add another built-in cmd to start web server (with optional parameters like port)
+
+vangogh_pages improvements:
+	- move code to dolo to download a set of Urls
+	- refactor all vangogh_pages usage to that ^
+	- refactor all multifile download (images, videos) to that
+	- deprecate vangogh_pages
+	- create new dolo method to download files as concurrent chunks
 
 configuration:
 	- create a configuration file at a certain default location

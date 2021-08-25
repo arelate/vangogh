@@ -27,6 +27,8 @@ var (
 	ErrValidationFailed       = errors.New("validation failed")
 )
 
+const blockSize = 32 * 1024
+
 func Validate(
 	idSet gost.StrSet,
 	mt gog_media.Media,
@@ -143,6 +145,21 @@ func (ve validationError) Error() string {
 	return "validation failed"
 }
 
+type progress struct {
+	total   uint64
+	current uint64
+	notify  func(uint64, uint64)
+}
+
+func (pr *progress) Write(p []byte) (int, error) {
+	n := len(p)
+	pr.current += uint64(n)
+	if pr.notify != nil {
+		pr.notify(pr.current, pr.total)
+	}
+	return n, nil
+}
+
 func validateManualUrl(
 	slug string,
 	dl *vangogh_downloads.Download,
@@ -192,15 +209,38 @@ func validateManualUrl(
 	defer sourceFile.Close()
 
 	h := md5.New()
-	if _, err := io.Copy(h, sourceFile); err != nil {
+
+	stat, err := sourceFile.Stat()
+	if err != nil {
 		return err
 	}
+
+	prg := &progress{
+		total: uint64(stat.Size())}
+
+	prg.notify = printCompletion
+	prg.notify(0, uint64(stat.Size()))
+
+	for {
+		_, err = io.CopyN(h, io.TeeReader(sourceFile, prg), blockSize)
+		if err == io.EOF {
+			// This is not an error in the common sense
+			// io.EOF tells us, that we did read the complete body
+			break
+		} else if err != nil {
+			//You should do error handling here
+			return err
+		}
+	}
+	prg.notify(uint64(stat.Size()), uint64(stat.Size()))
+
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
 
 	if valData.MD5 == sourceFileMD5 {
-		fmt.Println("ok")
+		//spacing is intentional here to overwrite 100% progress (so it has to be 4 characters)
+		fmt.Println(" ok ")
 	} else {
-		fmt.Println("FAIL")
+		fmt.Println(" FAIL")
 		return ErrValidationFailed
 	}
 

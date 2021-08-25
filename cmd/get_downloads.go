@@ -213,7 +213,7 @@ func printCompletion(current, total uint64) {
 		//move cursor 4 spaces back and print over current percent completion
 		fmt.Printf("\x1b[4D%3.0f%%", percent)
 	} else {
-		//final update moves the cursor back 4 spaces to overwrite on the following updateß
+		//final update moves the cursor back 4 spaces to overwrite on the following update
 		fmt.Printf("\x1b[4D")
 	}
 }
