@@ -1,10 +1,6 @@
 Issues:
 	No known at the moment
 
-cleanup improvements:
-	- consider non-destructive option to move instead of delete with an option to delete
-	- add scrub action to cleanup moved files
-
 vangogh_pages improvements:
 	- move code to dolo to download a set of Urls
 	- refactor all vangogh_pages usage to that ^
@@ -93,6 +89,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	cleanup improvements: @done(2021-08-24)
+		- consider non-destructive option to move instead of delete with an option to delete @done(2021-08-24)
+		- add scrub action to cleanup moved files @done(2021-08-24)
 	get-downloads improvements: @done(2021-08-24)
 		- some products have unresolvable manualUrls, we should store status codes for those and take into account for size, cleanup, validation purposes @done(2021-08-24)
 		- force-update should override this for downloads and allow trying again @done(2021-08-24)

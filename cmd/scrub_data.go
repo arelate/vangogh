@@ -18,23 +18,22 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 	fmt.Println("split products missing from the paged data:")
 	for _, pagedPt := range vangogh_products.Paged() {
 
-		pagedIds := make(map[string]bool, 0)
+		pagedIds := gost.NewStrSet()
 
 		vrPaged, err := vangogh_values.NewReader(pagedPt, mt)
 		if err != nil {
 			return err
 		}
+
 		for _, id := range vrPaged.All() {
 			productGetter, err := vrPaged.ProductsGetter(id)
 			if err != nil {
 				return err
 			}
 			for _, idGetter := range productGetter.GetProducts() {
-				pagedIds[strconv.Itoa(idGetter.GetId())] = true
+				pagedIds.Add(strconv.Itoa(idGetter.GetId()))
 			}
 		}
-
-		splitIdSet := gost.NewStrSet()
 
 		splitPt := vangogh_products.SplitType(pagedPt)
 		vrSplit, err := vangogh_values.NewReader(splitPt, mt)
@@ -42,17 +41,14 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			return err
 		}
 
-		for _, id := range vrSplit.All() {
-			if pagedIds[id] {
-				continue
-			}
-			splitIdSet.Add(id)
-		}
+		splitIdSet := gost.NewStrSetWith(vrSplit.All()...)
 
-		if splitIdSet.Len() > 0 {
+		unexpectedSplitIds := gost.NewStrSetWith(splitIdSet.Except(pagedIds)...)
+
+		if unexpectedSplitIds.Len() > 0 {
 			fmt.Printf("%s not present in %s:\n", splitPt, pagedPt)
 			if err := List(
-				splitIdSet,
+				unexpectedSplitIds,
 				0,
 				splitPt,
 				mt,
@@ -62,7 +58,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 
 			if fix {
 				fmt.Printf("fix %s (%s):\n", splitPt, mt)
-				if err := remove.Data(splitIdSet.All(), splitPt, mt); err != nil {
+				if err := remove.Data(unexpectedSplitIds.All(), splitPt, mt); err != nil {
 					return err
 				}
 			}
@@ -70,6 +66,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			fmt.Printf("%s and %s have all the same products\n", splitPt, pagedPt)
 		}
 	}
+	fmt.Println()
 
 	fmt.Println("files in recycle bin:")
 
@@ -109,6 +106,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 
 	// fmt.Println("products with values different from extracts:")
 	// fmt.Println("images that are not linked to a product:")
+	// fmt.Println("videos that are not linked to a product:")
 
 	return nil
 }
