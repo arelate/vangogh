@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
+	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/remove"
+	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -65,6 +68,42 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 			}
 		} else {
 			fmt.Printf("%s and %s have all the same products\n", splitPt, pagedPt)
+		}
+	}
+
+	fmt.Println("files in recycle bin:")
+
+	recycleBinFiles, err := vangogh_urls.RecycleBinFiles()
+	if err != nil {
+		return err
+	}
+	recycleBinDirs, err := vangogh_urls.RecycleBinDirs()
+	if err != nil {
+		return err
+	}
+
+	if recycleBinFiles.Len() == 0 && len(recycleBinDirs) == 0 {
+		fmt.Println("recycle bin is empty")
+	} else {
+		for file := range recycleBinFiles {
+			fmt.Print(file)
+			if fix {
+				if err := os.Remove(filepath.Join(vangogh_urls.RecycleBinDir(), file)); err != nil {
+					return err
+				}
+				fmt.Print(" removed")
+			}
+			fmt.Println()
+		}
+
+		//remove empty directories after fixing files
+		if fix {
+			for _, dir := range recycleBinDirs {
+				if err := os.Remove(filepath.Join(vangogh_urls.RecycleBinDir(), dir)); err != nil {
+					return err
+				}
+				fmt.Printf("empty dir %s removed\n", dir)
+			}
 		}
 	}
 

@@ -15,6 +15,10 @@ import (
 	"path/filepath"
 )
 
+const (
+	dirPerm os.FileMode = 0755
+)
+
 func Cleanup(
 	idSet gost.StrSet,
 	mt gog_media.Media,
@@ -53,6 +57,15 @@ func Cleanup(
 	}
 
 	return nil
+}
+
+func moveToRecycleBin(fp string) error {
+	rbFilepath := filepath.Join(vangogh_urls.RecycleBinDir(), fp)
+	rbDir, _ := filepath.Split(rbFilepath)
+	if _, err := os.Stat(rbDir); os.IsNotExist(err) {
+		os.MkdirAll(rbDir, dirPerm)
+	}
+	return os.Rename(fp, rbFilepath)
 }
 
 func cleanupDownloadList(
@@ -97,7 +110,7 @@ func cleanupDownloadList(
 			continue
 		}
 		fmt.Print(".")
-		if err := os.Remove(downloadFilename); err != nil {
+		if err := moveToRecycleBin(downloadFilename); err != nil {
 			return err
 		}
 
@@ -107,7 +120,7 @@ func cleanupDownloadList(
 			continue
 		}
 		fmt.Print("xml.")
-		if err := os.Remove(checksumFile); err != nil {
+		if err := moveToRecycleBin(checksumFile); err != nil {
 			return err
 		}
 		fmt.Println("done")
