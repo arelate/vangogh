@@ -27,13 +27,29 @@ func main() {
 		log.Fatal(err)
 	}
 
-	req, err := defs.ParseRequest(os.Args[1:])
-	if err != nil {
-		log.Fatal(err)
-	}
+	clo.HandleFuncs(map[string]clo.Handler{
+		"auth":          cmd.AuthHandler,
+		"cleanup":       cmd.CleanupHandler,
+		"digest":        cmd.DigestHandler,
+		"extract":       cmd.ExtractHandler,
+		"get-data":      cmd.GetDataHandler,
+		"get-downloads": cmd.GetDownloadsHandler,
+		"get-images":    cmd.GetImagesHandler,
+		"get-videos":    cmd.GetVideosHandler,
+		"info":          cmd.InfoHandler,
+		"list":          cmd.ListHandler,
+		"owned":         cmd.OwnedHandler,
+		"scrub-data":    cmd.ScrubDataHandler,
+		"search":        cmd.SearchHandler,
+		"size":          cmd.SizeHandler,
+		"summary":       cmd.SummaryHandler,
+		"sync":          cmd.SyncHandler,
+		"tag":           cmd.TagHandler,
+		"validate":      cmd.ValidateHandler,
+		"wishlist":      cmd.WishlistHandler,
+	})
 
-	err = cmd.Route(req, defs)
-	if err != nil {
+	if err := defs.Serve(os.Args[1:]); err != nil {
 		log.Fatal(err)
 	}
 

@@ -9,18 +9,58 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/hours"
 	"github.com/boggydigital/vangogh/cmd/lines"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 	"time"
 )
+
+func SyncHandler(u *url.URL) error {
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	data := url_helpers.Flag(u, "data")
+	images := url_helpers.Flag(u, "images")
+	screenshots := url_helpers.Flag(u, "screenshots")
+	videos := url_helpers.Flag(u, "videos")
+	downloadsUpdates := url_helpers.Flag(u, "downloads-updates")
+	missingDownloads := url_helpers.Flag(u, "missing-downloads")
+	all := url_helpers.Flag(u, "all")
+	if all {
+		data, images, screenshots, videos, downloadsUpdates = true, true, true, true, true
+	}
+
+	data = data && !url_helpers.Flag(u, "no-data")
+	images = images && !url_helpers.Flag(u, "no-images")
+	screenshots = screenshots && !url_helpers.Flag(u, "no-screenshots")
+	videos = videos && !url_helpers.Flag(u, "no-videos")
+	downloadsUpdates = downloadsUpdates && !url_helpers.Flag(u, "no-downloads-updates")
+
+	sha, err := hours.Atoi(url_helpers.Value(u, "since-hours-ago"))
+	if err != nil {
+		return err
+	}
+
+	operatingSystems := url_helpers.OperatingSystems(u)
+	langCodes := url_helpers.Values(u, "language-code")
+	downloadTypes := url_helpers.DownloadTypes(u)
+
+	return Sync(
+		mt,
+		sha,
+		data, images, screenshots, videos, downloadsUpdates, missingDownloads,
+		operatingSystems,
+		langCodes,
+		downloadTypes)
+}
 
 func Sync(
 	mt gog_media.Media,
 	sinceHoursAgo int,
 	data, images, screenshots, videos, downloadsUpdates, missingDownloads bool,
 	operatingSystems []vangogh_downloads.OperatingSystem,
-	downloadTypes []vangogh_downloads.DownloadType,
 	langCodes []string,
-	verbose bool) error {
+	downloadTypes []vangogh_downloads.DownloadType) error {
 
 	var syncStart int64
 	if sinceHoursAgo > 0 {
@@ -34,7 +74,7 @@ func Sync(
 		paData := vangogh_products.Array()
 		paData = append(paData, vangogh_products.Paged()...)
 		for _, pt := range paData {
-			if err := GetData(gost.NewStrSet(), nil, pt, mt, syncStart, false, false, verbose); err != nil {
+			if err := GetData(gost.NewStrSet(), nil, pt, mt, syncStart, false, false); err != nil {
 				return err
 			}
 			fmt.Println()
@@ -43,7 +83,7 @@ func Sync(
 		//get main - detail data
 		for _, pt := range vangogh_products.Detail() {
 			denyIds := lines.Read(vangogh_urls.Denylist(pt))
-			if err := GetData(gost.NewStrSet(), denyIds, pt, mt, syncStart, true, true, verbose); err != nil {
+			if err := GetData(gost.NewStrSet(), denyIds, pt, mt, syncStart, true, true); err != nil {
 				return err
 			}
 			fmt.Println()
@@ -98,5 +138,5 @@ func Sync(
 	}
 
 	// print new or updated
-	return Summary(syncStart, mt)
+	return Summary(mt, syncStart)
 }

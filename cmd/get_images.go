@@ -10,8 +10,26 @@ import (
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"log"
+	"net/url"
 )
+
+func GetImagesHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	imageTypes := url_helpers.Values(u, "image-type")
+	its := make([]vangogh_images.ImageType, 0, len(imageTypes))
+	for _, imageType := range imageTypes {
+		its = append(its, vangogh_images.Parse(imageType))
+	}
+	missing := url_helpers.Flag(u, "missing")
+
+	return GetImages(idSet, its, missing)
+}
 
 func GetImages(
 	idSet gost.StrSet,

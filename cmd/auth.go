@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/gog_auth"
 	"github.com/boggydigital/vangogh/cmd/cookies"
 	"github.com/boggydigital/vangogh/cmd/http_client"
+	"net/url"
 	"os"
 )
 
@@ -18,7 +19,15 @@ func requestText(prompt string) string {
 	return ""
 }
 
-func Authenticate(username, password string) error {
+func AuthHandler(u *url.URL) error {
+	q := u.Query()
+	username := q.Get("username")
+	password := q.Get("password")
+
+	return Auth(username, password)
+}
+
+func Auth(username, password string) error {
 
 	httpClient, err := http_client.Default()
 	if err != nil {

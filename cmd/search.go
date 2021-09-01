@@ -6,7 +6,19 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/output"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 )
+
+func SearchHandler(u *url.URL) error {
+	query := make(map[string][]string)
+	for _, prop := range vangogh_properties.Searchable() {
+		if values := url_helpers.Values(u, prop); len(values) > 0 {
+			query[prop] = values
+		}
+	}
+	return Search(query)
+}
 
 func Search(query map[string][]string) error {
 

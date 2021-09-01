@@ -16,15 +16,10 @@ import (
 func Items(
 	ids []string,
 	pt vangogh_products.ProductType,
-	mt gog_media.Media,
-	verbose bool) error {
+	mt gog_media.Media) error {
 
 	if !vangogh_products.SupportsGetItems(pt) {
 		return fmt.Errorf("getting %s is not supported", pt)
-	}
-
-	if verbose {
-		log.Printf("getting data for ids: %v", ids)
 	}
 
 	destUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
@@ -49,7 +44,7 @@ func Items(
 
 	for i, id := range ids {
 		fmt.Printf("\rfetch %s (%s) %d/%d... ", pt, mt, i+1, len(ids))
-		_, err := getItem(id, mt, httpClient, vs, sourceUrl, destUrl, verbose)
+		_, err := getItem(id, mt, httpClient, vs, sourceUrl, destUrl)
 		if err != nil {
 			log.Printf("error getting %s (%s) %s: %v", pt, mt, id, err)
 		}
@@ -68,13 +63,9 @@ func getItem(
 	httpClient *http.Client,
 	vs *kvas.ValueSet,
 	sourceUrl vangogh_urls.ProductTypeUrl,
-	destUrl string,
-	verbose bool) (io.Reader, error) {
+	destUrl string) (io.Reader, error) {
 
 	u := sourceUrl(id, mt)
-	if verbose {
-		log.Printf("source url %s", u)
-	}
 
 	resp, err := httpClient.Get(u.String())
 	if err != nil {
@@ -88,9 +79,6 @@ func getItem(
 	var b bytes.Buffer
 	tr := io.TeeReader(resp.Body, &b)
 
-	if verbose {
-		log.Printf("set value for item %s at destination %s", id, destUrl)
-	}
 	if err = vs.Set(id, tr); err != nil {
 		return &b, err
 	}

@@ -8,7 +8,18 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/output"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 )
+
+func OwnedHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	return Owned(idSet)
+}
 
 func Owned(idSet gost.StrSet) error {
 

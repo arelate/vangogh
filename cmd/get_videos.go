@@ -9,13 +9,26 @@ import (
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"github.com/boggydigital/yt_urls"
+	"net/url"
 )
 
 const (
 	videoExt   = ".mp4"
 	missingStr = "missing"
 )
+
+func GetVideosHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	missing := url_helpers.Flag(u, "missing")
+
+	return GetVideos(idSet, missing)
+}
 
 func GetVideos(idSet gost.StrSet, missing bool) error {
 

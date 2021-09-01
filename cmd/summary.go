@@ -5,7 +5,10 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/vangogh/cmd/hours"
 	"github.com/boggydigital/vangogh/cmd/output"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 	"sort"
 	"time"
 )
@@ -32,7 +35,19 @@ var filterUpdatedProductTypes = map[vangogh_products.ProductType]bool{
 	vangogh_products.ApiProductsV2: true,
 }
 
-func Summary(since int64, mt gog_media.Media) error {
+func SummaryHandler(u *url.URL) error {
+	sha, err := hours.Atoi(url_helpers.Value(u, "since-hours-ago"))
+	if err != nil {
+		return err
+	}
+	since := time.Now().Unix() - int64(sha*60*60)
+
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	return Summary(mt, since)
+}
+
+func Summary(mt gog_media.Media, since int64) error {
 
 	updates := make(map[string][]string, 0)
 

@@ -2,12 +2,14 @@ Issues:
 	No known at the moment
 
 clo improvements:
-	- make clo web server ready
 	- parse as Url clo://app/cmd?arg=values
 	- register handlers (CLI and HTTP) for cmds and perform internal routing - perhaps as a map[string]func ?
 		- Perform checks if all cmds are handled and return errors if not
 	- transition from app routing to clo routing and make route func private, perhaps expose Handle func that takes Url as input
 	- add another built-in cmd to start web server (with optional parameters like port)
+	
+DRY progress display:
+	- it's copied in dolo, vangogh validation
 
 vangogh_pages improvements:
 	- move code to dolo to download a set of Urls
@@ -15,13 +17,22 @@ vangogh_pages improvements:
 	- refactor all multifile download (images, videos) to that
 	- deprecate vangogh_pages
 	- create new dolo method to download files as concurrent chunks
-
+	
 configuration:
 	- create a configuration file at a certain default location
 	- use it to specify directories/kvas connection strings
-	
+
 vangogh_api:
 	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
+
+Work on gaugin can start:
+	- Publish vangogh on GitHub
+	- REST API:
+		- Data (GET only):
+			- /product-type/media/titles?sort,limit,start
+			- /product-type/media/{id}
+			- /images/{image-id}
+			- /videos/{video-id}
 	
 documentation investment:
 	- add clo.json help for stable commands
@@ -67,9 +78,6 @@ concurrency improvements:
 		- split
 		- extract
 		- search
-	
-Work on gaugin can start:
-	- Publish vangogh on GitHub
 
 Improve verbosity:
 	- add module that produced log.Print to the log output

@@ -1,4 +1,4 @@
-package selectors
+package lines
 
 import (
 	"bufio"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func readStdinIds() (gost.StrSet, error) {
+func ReadPipedIds() (gost.StrSet, error) {
 	idSet := gost.NewStrSet()
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

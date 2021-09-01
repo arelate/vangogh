@@ -5,7 +5,13 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/output"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 )
+
+func DigestHandler(u *url.URL) error {
+	return Digest(url_helpers.Value(u, "property"))
+}
 
 func Digest(property string) error {
 

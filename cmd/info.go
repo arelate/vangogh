@@ -5,7 +5,22 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/output"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 )
+
+func InfoHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	allText := url_helpers.Flag(u, "all-text")
+	images := url_helpers.Flag(u, "images")
+	videoId := url_helpers.Flag(u, "video-id")
+
+	return Info(idSet, allText, images, videoId)
+}
 
 func Info(idSet gost.StrSet, allText, images, videoId bool) error {
 

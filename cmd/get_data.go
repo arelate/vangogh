@@ -10,9 +10,35 @@ import (
 	"github.com/boggydigital/vangogh/cmd/fetch"
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
+	"github.com/boggydigital/vangogh/cmd/lines"
 	"github.com/boggydigital/vangogh/cmd/split"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"log"
+	"net/url"
+	"time"
 )
+
+func GetDataHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	pt := vangogh_products.Parse(url_helpers.Value(u, "product-type"))
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	denyIdsFile := url_helpers.Value(u, "deny-ids-file")
+	denyIds := lines.Read(denyIdsFile)
+
+	updated := url_helpers.Flag(u, "updated")
+	since := time.Now().Unix()
+	if updated {
+		since = time.Now().Add(-time.Hour * 24).Unix()
+	}
+	missing := url_helpers.Flag(u, "missing")
+
+	return GetData(idSet, denyIds, pt, mt, since, missing, updated)
+}
 
 //GetData gets remote data from GOG.com and stores as local products (splitting as paged data if needed)
 func GetData(
@@ -22,8 +48,7 @@ func GetData(
 	mt gog_media.Media,
 	since int64,
 	missing bool,
-	updated bool,
-	verbose bool) error {
+	updated bool) error {
 
 	if !vangogh_products.Valid(pt) {
 		log.Printf("%s is not a valid product type", pt)
@@ -31,9 +56,6 @@ func GetData(
 	}
 
 	if !vangogh_products.SupportsMedia(pt, mt) {
-		if verbose {
-			log.Printf("%s doesn't support %s media", pt, mt)
-		}
 		return nil
 	}
 
@@ -49,10 +71,6 @@ func GetData(
 	}
 
 	if vangogh_products.RequiresAuth(pt) {
-		if verbose {
-			log.Printf("%s requires authenticated session, checking if user is logged in.", pt)
-		}
-
 		li, err := gog_auth.LoggedIn(httpClient)
 		if err != nil {
 			return err
@@ -72,7 +90,7 @@ func GetData(
 
 	if vangogh_products.IsArray(pt) {
 		// using "licences" as id, since that's how we store that data in kvas
-		if err := fetch.Items([]string{vangogh_products.Licences.String()}, pt, mt, verbose); err != nil {
+		if err := fetch.Items([]string{vangogh_products.Licences.String()}, pt, mt); err != nil {
 			return err
 		}
 		return split.Pages(pt, mt, since)
@@ -85,5 +103,5 @@ func GetData(
 
 	approvedIds := idSet.Except(gost.NewStrSetWith(denyIds...))
 
-	return fetch.Items(approvedIds, pt, mt, verbose)
+	return fetch.Items(approvedIds, pt, mt)
 }

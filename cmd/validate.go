@@ -14,8 +14,10 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/iterate"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"github.com/boggydigital/vangogh/cmd/validation"
 	"io"
+	"net/url"
 	"os"
 	"path"
 )
@@ -28,6 +30,23 @@ var (
 )
 
 const blockSize = 32 * 1024
+
+func ValidateHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	operatingSystems := url_helpers.OperatingSystems(u)
+	langCodes := url_helpers.Values(u, "language-code")
+	downloadTypes := url_helpers.DownloadTypes(u)
+
+	all := url_helpers.Flag(u, "all")
+
+	return Validate(idSet, mt, operatingSystems, langCodes, downloadTypes, all)
+}
 
 func Validate(
 	idSet gost.StrSet,

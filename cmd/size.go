@@ -11,7 +11,27 @@ import (
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/iterate"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 )
+
+func SizeHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	operatingSystems := url_helpers.OperatingSystems(u)
+	langCodes := url_helpers.Values(u, "language-code")
+	downloadTypes := url_helpers.DownloadTypes(u)
+
+	missing := url_helpers.Flag(u, "missing")
+	all := url_helpers.Flag(u, "all")
+
+	return Size(idSet, mt, operatingSystems, downloadTypes, langCodes, missing, all)
+}
 
 func Size(
 	idSet gost.StrSet,

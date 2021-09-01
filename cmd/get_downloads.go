@@ -11,17 +11,61 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/hours"
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/iterate"
-	"github.com/boggydigital/vangogh/cmd/selectors"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
 	"strings"
+	"time"
 )
+
+func GetDownloadsHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	operatingSystems := url_helpers.OperatingSystems(u)
+	langCodes := url_helpers.Values(u, "language-code")
+	downloadTypes := url_helpers.DownloadTypes(u)
+
+	missing := url_helpers.Flag(u, "missing")
+
+	update := url_helpers.Flag(u, "update")
+	mha, err := hours.Atoi(url_helpers.Value(u, "modified-hours-ago"))
+	if err != nil {
+		return err
+	}
+
+	var modifiedSince int64 = 0
+	if mha > 0 {
+		modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
+	}
+
+	forceRemoteUpdate := url_helpers.Flag(u, "force-remote-update")
+	validate := url_helpers.Flag(u, "validate")
+
+	return GetDownloads(
+		idSet,
+		mt,
+		operatingSystems,
+		downloadTypes,
+		langCodes,
+		missing,
+		update,
+		modifiedSince,
+		forceRemoteUpdate,
+		validate)
+}
 
 func GetDownloads(
 	idSet gost.StrSet,
@@ -63,12 +107,8 @@ func GetDownloads(
 		if err != nil {
 			return err
 		}
-		localIds, err := selectors.StrSetFrom(selectors.Id{
-			Ids:       nil,
-			Slugs:     localSlugs,
-			FromStdin: false,
-		})
-		idSet.AddSet(localIds)
+		localIds, err := url_helpers.SlugIds(exl, localSlugs)
+		idSet.Add(localIds...)
 	}
 
 	if missing {

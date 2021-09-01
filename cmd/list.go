@@ -7,9 +7,36 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/vangogh/cmd/hours"
 	"github.com/boggydigital/vangogh/cmd/output"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 	"time"
 )
+
+func ListHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	mha, err := hours.Atoi(url_helpers.Value(u, "modified-hours-ago"))
+	if err != nil {
+		return err
+	}
+
+	var modifiedSince int64 = 0
+	if mha > 0 {
+		modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
+	}
+
+	pt := vangogh_products.Parse(url_helpers.Value(u, "product-type"))
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	properties := url_helpers.Values(u, "property")
+
+	return List(idSet, modifiedSince, pt, mt, properties)
+}
 
 //List prints products of a certain type and media.
 //Can be filtered to products that were created or modified since a certain time.

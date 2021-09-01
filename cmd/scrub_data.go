@@ -8,10 +8,19 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/remove"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
 )
+
+func ScrubDataHandler(u *url.URL) error {
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	fix := url_helpers.Flag(u, "fix")
+	return ScrubData(mt, fix)
+}
 
 func ScrubData(mt gog_media.Media, fix bool) error {
 

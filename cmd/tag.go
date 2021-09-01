@@ -9,6 +9,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/http_client"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"net/url"
 	"strings"
 )
@@ -19,6 +20,18 @@ const (
 	addOp    = "add"
 	removeOp = "remove"
 )
+
+func TagHandler(u *url.URL) error {
+	idSet, err := url_helpers.IdSet(u)
+	if err != nil {
+		return err
+	}
+
+	operation := url_helpers.Value(u, "operation")
+	tagName := url_helpers.Value(u, "tag-name")
+
+	return Tag(idSet, operation, tagName)
+}
 
 func Tag(idSet gost.StrSet, operation, tagName string) error {
 

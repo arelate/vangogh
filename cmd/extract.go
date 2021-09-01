@@ -9,19 +9,14 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/extract"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"net/url"
 	"strings"
 )
 
-func stringsTrimSpace(stringsWithSpace []string) []string {
-	trimmedStrings := make([]string, 0, len(stringsWithSpace))
-	for _, str := range stringsWithSpace {
-		tStr := strings.TrimSpace(str)
-		if tStr == "" {
-			continue
-		}
-		trimmedStrings = append(trimmedStrings, tStr)
-	}
-	return trimmedStrings
+func ExtractHandler(u *url.URL) error {
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+	return Extract(0, mt, url_helpers.Values(u, "property"))
 }
 
 func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error {
@@ -131,4 +126,16 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 	fmt.Print("done")
 
 	return nil
+}
+
+func stringsTrimSpace(stringsWithSpace []string) []string {
+	trimmedStrings := make([]string, 0, len(stringsWithSpace))
+	for _, str := range stringsWithSpace {
+		tStr := strings.TrimSpace(str)
+		if tStr == "" {
+			continue
+		}
+		trimmedStrings = append(trimmedStrings, tStr)
+	}
+	return trimmedStrings
 }

@@ -10,10 +10,20 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/remove"
+	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"log"
 	"net/http"
 	"net/url"
 )
+
+func WishlistHandler(u *url.URL) error {
+	mt := gog_media.Parse(url_helpers.Value(u, "media"))
+
+	addProductIds := url_helpers.Values(u, "add")
+	removeProductIds := url_helpers.Values(u, "remove")
+
+	return Wishlist(mt, addProductIds, removeProductIds)
+}
 
 func Wishlist(mt gog_media.Media, addProductIds, removeProductIds []string) error {
 	httpClient, err := http_client.Default()
