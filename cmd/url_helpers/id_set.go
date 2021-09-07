@@ -17,8 +17,10 @@ func SlugIds(exl *vangogh_extracts.ExtractsList, slugs []string) (slugId []strin
 		}
 	}
 
-	if err := exl.AssertSupport(vangogh_properties.SlugProperty); err != nil {
-		return nil, err
+	if exl != nil {
+		if err := exl.AssertSupport(vangogh_properties.SlugProperty); err != nil {
+			return nil, err
+		}
 	}
 
 	for _, slug := range slugs {

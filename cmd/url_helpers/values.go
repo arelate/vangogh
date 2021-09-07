@@ -15,8 +15,11 @@ func Value(u *url.URL, arg string) string {
 }
 
 func Values(u *url.URL, arg string) []string {
-	val := Value(u, arg)
-	return strings.Split(val, ",")
+	if Flag(u, arg) {
+		val := Value(u, arg)
+		return strings.Split(val, ",")
+	}
+	return nil
 }
 
 func Flag(u *url.URL, arg string) bool {

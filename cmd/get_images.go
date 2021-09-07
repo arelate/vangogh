@@ -11,7 +11,6 @@ import (
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
-	"log"
 	"net/url"
 )
 
@@ -57,10 +56,6 @@ func GetImages(
 	idMissingTypes := map[string][]vangogh_images.ImageType{}
 
 	if missing {
-		if idSet.Len() > 0 {
-			log.Printf("provided ids would be overwritten by 'missing' flag")
-		}
-
 		localImageSet, err := vangogh_urls.LocalImageIds()
 		if err != nil {
 			return err

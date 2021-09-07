@@ -7,6 +7,8 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"fmt"
+	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/cmd"
 	"github.com/boggydigital/vangogh/internal"
@@ -19,6 +21,15 @@ var cloBytes []byte
 
 func main() {
 	//start := time.Now()
+
+	localSlugs, err := vangogh_urls.LocalSlugs()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(len(localSlugs))
+
+	return
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
@@ -41,6 +52,7 @@ func main() {
 		"owned":         cmd.OwnedHandler,
 		"scrub-data":    cmd.ScrubDataHandler,
 		"search":        cmd.SearchHandler,
+		"serve":         cmd.ServeHandler,
 		"size":          cmd.SizeHandler,
 		"summary":       cmd.SummaryHandler,
 		"sync":          cmd.SyncHandler,

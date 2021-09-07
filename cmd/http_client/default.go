@@ -16,13 +16,13 @@ func Default() (*http.Client, error) {
 	return &http.Client{
 		Transport: &http.Transport{
 			DialContext: (&net.Dialer{
-				Timeout:   10 * time.Second,
-				KeepAlive: 10 * time.Second,
+				Timeout:   20 * time.Second,
+				KeepAlive: 20 * time.Second,
 			}).DialContext,
-			TLSHandshakeTimeout:   10 * time.Second,
-			ExpectContinueTimeout: 10 * time.Second,
-			ResponseHeaderTimeout: 10 * time.Second,
-			IdleConnTimeout:       10 * time.Second,
+			TLSHandshakeTimeout:   20 * time.Second,
+			ExpectContinueTimeout: 20 * time.Second,
+			ResponseHeaderTimeout: 20 * time.Second,
+			IdleConnTimeout:       20 * time.Second,
 		},
 		Jar: jar,
 	}, nil

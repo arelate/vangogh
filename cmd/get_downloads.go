@@ -112,9 +112,6 @@ func GetDownloads(
 	}
 
 	if missing {
-		if idSet.Len() > 0 {
-			log.Printf("provided ids would be overwritten by 'missing' flag")
-		}
 		missingIds, err := itemize.MissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
 		if err != nil {
 			return err

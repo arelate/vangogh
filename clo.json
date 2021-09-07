@@ -89,6 +89,9 @@
       "media={media^}",
       "{searchable-properties^&}"
     ],
+    "serve": [
+      "port"
+    ],
     "size": [
       "id^&",
       "slug&",

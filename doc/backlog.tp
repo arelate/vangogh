@@ -1,13 +1,23 @@
 Issues:
 	No known at the moment
+	- downloads not updated on sync
 
-clo improvements:
-	- parse as Url clo://app/cmd?arg=values
-	- register handlers (CLI and HTTP) for cmds and perform internal routing - perhaps as a map[string]func ?
-		- Perform checks if all cmds are handled and return errors if not
-	- transition from app routing to clo routing and make route func private, perhaps expose Handle func that takes Url as input
-	- add another built-in cmd to start web server (with optional parameters like port)
+improve extracts:
+	- extracts are rewritten with in-memory data, consider reading from disk (+locking) and adding changes - to allow parallel execution
 	
+improve validation:
+	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
+	
+improve size:
+	- consider providing more precise estimates
+	
+improve cleanup:
+	- cleanup output is too light
+
+get-down improvements:
+	- use the same dir naming scheme as in images/videos and assign first letter
+	- modify local slugs to take this into account
+
 DRY progress display:
 	- it's copied in dolo, vangogh validation
 
@@ -97,6 +107,23 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- ./vangogh info -s spiritfarer @done(2021-09-03) @project(Issues)
+	- ./vangogh get-down -s heretic_kingdoms_the_inquisition -o win @done(2021-09-03) @project(Issues)
+	- Duplicate names: @done(2021-09-04) @project(Issues)
+		- batman_arkham_origins @done(2021-09-04)
+		- the_witcher_3_wild_hunt_game @done(2021-09-04)
+		- batman_a_telltale_game_series @done(2021-09-04)
+		- baldurs_gate_enhanced_edition @done(2021-09-04)
+		- outlast @done(2021-09-04)
+		- wolfenstein_ii_the_new_colossus_rotw @done(2021-09-04)
+		- titan_quest_anniversary_edition @done(2021-09-04)
+	clo improvements: @done(2021-08-31)
+		- parse as Url clo://app/cmd?arg=values @done(2021-08-31)
+		- register handlers (CLI and HTTP) for cmds and perform internal routing - perhaps as a map[string]func ? @done(2021-08-31)
+			- Perform checks if all cmds are handled and return errors if not @done(2021-08-31)
+		- transition from app routing to clo routing and make route func private, perhaps expose Handle func that takes Url as input @done(2021-08-31)
+		- add another built-in cmd to start web server (with optional parameters like port) @done(2021-08-31)
+		
 	cleanup improvements: @done(2021-08-24)
 		- consider non-destructive option to move instead of delete with an option to delete @done(2021-08-24)
 		- add scrub action to cleanup moved files @done(2021-08-24)
