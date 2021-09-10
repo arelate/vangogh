@@ -1,16 +1,6 @@
 Issues:
 	No known at the moment
 	- downloads not updated on sync
-	- fix local-manual-url for:
-		- 1538068873 objects_in_space @done(2021-09-09)
-		- 1289701346 truberbrook @done(2021-09-09)
-		- indivisible
-
-get-down improvements:
-	- use the same dir naming scheme as in images/videos and assign first letter @done(2021-09-09)
-	- modify local slugs to take this into account @done(2021-09-09)
-	- fix local-manual-urls to add this letter @done(2021-09-09)
-	- test validate and cleanup cmds @done(2021-09-09)
 
 add update-downloads command and use it instead of get-downloads in sync
 
@@ -115,6 +105,15 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	get-down improvements: @done(2021-09-09)
+	- fix local-manual-url for: @done(2021-09-09) @project(Issues)
+		- 1538068873 objects_in_space @done(2021-09-09)
+		- 1289701346 truberbrook @done(2021-09-09)
+		- indivisible
+	- use the same dir naming scheme as in images/videos and assign first letter @done(2021-09-09) @project(get-down improvements)
+	- modify local slugs to take this into account @done(2021-09-09) @project(get-down improvements)
+	- fix local-manual-urls to add this letter @done(2021-09-09) @project(get-down improvements)
+	- test validate and cleanup cmds @done(2021-09-09) @project(get-down improvements)
 	add changelog cmd: @done(2021-09-06)
 		- print details changelog @done(2021-09-06)
 	improve cleanup: @done(2021-09-06)

@@ -8,7 +8,7 @@ import (
 	"net/url"
 )
 
-func SlugIds(exl *vangogh_extracts.ExtractsList, slugs []string) (slugId []string, err error) {
+func SlugIds(exl *vangogh_extracts.ExtractsList, slugs []string) (slugId gost.StrSet, err error) {
 
 	if exl == nil && len(slugs) > 0 {
 		exl, err = vangogh_extracts.NewList(vangogh_properties.SlugProperty)
@@ -23,13 +23,14 @@ func SlugIds(exl *vangogh_extracts.ExtractsList, slugs []string) (slugId []strin
 		}
 	}
 
+	idSet := gost.NewStrSet()
 	for _, slug := range slugs {
 		if slug != "" && exl != nil {
-			return exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true), nil
+			idSet.Add(exl.Search(map[string][]string{vangogh_properties.SlugProperty: {slug}}, true)...)
 		}
 	}
 
-	return []string{}, nil
+	return idSet, nil
 }
 
 func IdSet(u *url.URL) (idSet gost.StrSet, err error) {
@@ -50,7 +51,7 @@ func IdSet(u *url.URL) (idSet gost.StrSet, err error) {
 	if err != nil {
 		return idSet, err
 	}
-	idSet.Add(slugIds...)
+	idSet.AddSet(slugIds)
 
 	return idSet, err
 }

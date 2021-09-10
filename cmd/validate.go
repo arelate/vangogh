@@ -92,6 +92,8 @@ func Validate(
 			exl *vangogh_extracts.ExtractsList,
 			_ bool) error {
 
+			fmt.Printf("validate %s:\n", slug)
+
 			hasValidationTargets := false
 
 			for _, dl := range list {
@@ -166,13 +168,6 @@ func Validate(
 	return nil
 }
 
-type validationError struct {
-}
-
-func (ve validationError) Error() string {
-	return "validation failed"
-}
-
 type progress struct {
 	total   uint64
 	current uint64
@@ -220,7 +215,7 @@ func validateManualUrl(
 		return ErrMissingValidationFile
 	}
 
-	fmt.Printf("validing %s...", dl)
+	fmt.Printf(" %s", dl)
 
 	chkFile, err := os.Open(absChecksumFile)
 	if err != nil {
