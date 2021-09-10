@@ -21,6 +21,9 @@ const (
 	dirPerm os.FileMode = 0755
 )
 
+// TODO: implement this in a cleaner way
+var testMode bool
+
 func CleanupHandler(u *url.URL) error {
 	idSet, err := url_helpers.IdSet(u)
 	if err != nil {
@@ -34,6 +37,8 @@ func CleanupHandler(u *url.URL) error {
 	downloadTypes := url_helpers.DownloadTypes(u)
 
 	all := url_helpers.Flag(u, "all")
+
+	testMode = url_helpers.Flag(u, "test")
 
 	return Cleanup(idSet, mt, operatingSystems, langCodes, downloadTypes, all)
 }
@@ -79,10 +84,15 @@ func Cleanup(
 }
 
 func moveToRecycleBin(fp string) error {
+	if testMode {
+		return nil
+	}
 	rbFilepath := filepath.Join(vangogh_urls.RecycleBinDir(), fp)
 	rbDir, _ := filepath.Split(rbFilepath)
 	if _, err := os.Stat(rbDir); os.IsNotExist(err) {
-		os.MkdirAll(rbDir, dirPerm)
+		if err := os.MkdirAll(rbDir, dirPerm); err != nil {
+			return err
+		}
 	}
 	return os.Rename(fp, rbFilepath)
 }
@@ -93,11 +103,12 @@ func cleanupDownloadList(
 	list vangogh_downloads.DownloadsList,
 	exl *vangogh_extracts.ExtractsList,
 	_ bool) error {
-	fmt.Printf("cleaning up %s...", slug)
 
 	if err := exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
 		return err
 	}
+
+	fmt.Printf("cleaning up %s\n", slug)
 
 	//cleanup process:
 	//1. enumerate all expected files for a downloadList
@@ -106,12 +117,25 @@ func cleanupDownloadList(
 
 	expectedSet := gost.NewStrSet()
 
+	//pDir = s/slug
+	pDir, err := vangogh_urls.ProductDownloadsRelDir(slug)
+	if err != nil {
+		return err
+	}
+
 	for _, dl := range list {
 		if localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
-			expectedSet.Add(localFilename)
+			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
+			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
+			relFilename, err := filepath.Rel(pDir, localFilename)
+			if err != nil {
+				return err
+			}
+			expectedSet.Add(relFilename)
 		}
 	}
 
+	//LocalSlugDownloads returns list of files relative to s/slug product directory
 	presentSet, err := vangogh_urls.LocalSlugDownloads(slug)
 	if err != nil {
 		return err
@@ -119,30 +143,33 @@ func cleanupDownloadList(
 
 	unexpectedFiles := presentSet.Except(expectedSet)
 	if len(unexpectedFiles) == 0 {
-		fmt.Println("already clean")
+		fmt.Println(" already clean")
 		return nil
 	}
 
 	for _, unexpectedFile := range unexpectedFiles {
-		downloadFilename := filepath.Join(vangogh_urls.DownloadsDir(), unexpectedFile)
+		//restore absolute from local_filename to s/slug/local_filename
+		downloadFilename := vangogh_urls.DownloadRelToAbs(filepath.Join(pDir, unexpectedFile))
 		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		fmt.Print(".")
+		prefix := ""
+		if testMode {
+			prefix = " TEST"
+		}
+		fmt.Println(prefix, downloadFilename)
 		if err := moveToRecycleBin(downloadFilename); err != nil {
 			return err
 		}
 
-		checksumFile := vangogh_urls.LocalValidationPath(unexpectedFile)
+		checksumFile := vangogh_urls.LocalChecksumPath(unexpectedFile)
 		if _, err := os.Stat(checksumFile); os.IsNotExist(err) {
-			fmt.Println("done")
 			continue
 		}
-		fmt.Print("xml.")
+		fmt.Println(prefix, checksumFile)
 		if err := moveToRecycleBin(checksumFile); err != nil {
 			return err
 		}
-		fmt.Println("done")
 	}
 
 	return nil

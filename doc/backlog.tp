@@ -1,22 +1,30 @@
 Issues:
 	No known at the moment
 	- downloads not updated on sync
+	- fix local-manual-url for:
+		- 1538068873 objects_in_space @done(2021-09-09)
+		- 1289701346 truberbrook @done(2021-09-09)
+		- indivisible
+
+get-down improvements:
+	- use the same dir naming scheme as in images/videos and assign first letter @done(2021-09-09)
+	- modify local slugs to take this into account @done(2021-09-09)
+	- fix local-manual-urls to add this letter @done(2021-09-09)
+	- test validate and cleanup cmds @done(2021-09-09)
+
+add update-downloads command and use it instead of get-downloads in sync
 
 improve extracts:
 	- extracts are rewritten with in-memory data, consider reading from disk (+locking) and adding changes - to allow parallel execution
+	
+improve cleanup:
+	- implement simulate flag to avoid actual OS moves, just print what will be moved
 	
 improve validation:
 	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
 	
 improve size:
 	- consider providing more precise estimates
-	
-improve cleanup:
-	- cleanup output is too light
-
-get-down improvements:
-	- use the same dir naming scheme as in images/videos and assign first letter
-	- modify local slugs to take this into account
 
 DRY progress display:
 	- it's copied in dolo, vangogh validation
@@ -107,6 +115,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	add changelog cmd: @done(2021-09-06)
+		- print details changelog @done(2021-09-06)
+	improve cleanup: @done(2021-09-06)
+		- cleanup output is too light @done(2021-09-06)
 	- ./vangogh info -s spiritfarer @done(2021-09-03) @project(Issues)
 	- ./vangogh get-down -s heretic_kingdoms_the_inquisition -o win @done(2021-09-03) @project(Issues)
 	- Duplicate names: @done(2021-09-04) @project(Issues)

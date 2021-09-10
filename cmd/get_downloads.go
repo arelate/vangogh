@@ -21,6 +21,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -102,14 +103,14 @@ func GetDownloads(
 		return err
 	}
 
-	if update {
-		localSlugs, err := vangogh_urls.LocalSlugs()
-		if err != nil {
-			return err
-		}
-		localIds, err := url_helpers.SlugIds(exl, localSlugs)
-		idSet.Add(localIds...)
-	}
+	//if update {
+	//	localSlugs, err := vangogh_urls.LocalSlugs()
+	//	if err != nil {
+	//		return err
+	//	}
+	//	localIds, err := url_helpers.SlugIds(exl, localSlugs)
+	//	idSet.Add(localIds...)
+	//}
 
 	if missing {
 		missingIds, err := itemize.MissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
@@ -171,7 +172,11 @@ func downloadManualUrl(
 	//1
 	if !forceRemoteUpdate {
 		if localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
-			if _, err := os.Stat(path.Join(vangogh_urls.DownloadsDir(), localFilename)); !os.IsNotExist(err) {
+			pDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
+			if err != nil {
+				return err
+			}
+			if _, err := os.Stat(path.Join(pDir, localFilename)); !os.IsNotExist(err) {
 				return nil
 			}
 		}
@@ -203,18 +208,23 @@ func downloadManualUrl(
 
 	//3
 	_, filename := path.Split(resolvedUrl.Path)
-	relDir := dl.Dir(slug)
-	absDir := path.Join(vangogh_urls.DownloadsDir(), relDir)
+	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
+	pAbsDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
+	if err != nil {
+		return err
+	}
+	//we need to add suffix to a dir path, e.g. dlc, extras
+	absDir := filepath.Join(pAbsDir, dl.DirSuffix())
 
 	//4
-	remoteValidationPath := vangogh_urls.RemoteValidationPath(resolvedUrl.Path)
-	if remoteValidationPath != "" {
-		localValidationPath := vangogh_urls.LocalValidationPath(path.Join(absDir, filename))
-		if _, err := os.Stat(localValidationPath); os.IsNotExist(err) {
+	remoteChecksumPath := vangogh_urls.RemoteChecksumPath(resolvedUrl.Path)
+	if remoteChecksumPath != "" {
+		localChecksumPath := vangogh_urls.LocalChecksumPath(path.Join(absDir, filename))
+		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) {
 			fmt.Print("xml")
 			originalPath := resolvedUrl.Path
-			resolvedUrl.Path = remoteValidationPath
-			valDir, valFilename := path.Split(localValidationPath)
+			resolvedUrl.Path = remoteChecksumPath
+			valDir, valFilename := path.Split(localChecksumPath)
 			if _, err := dlClient.Download(
 				resolvedUrl, valDir, valFilename); err != nil {
 				return err
@@ -230,6 +240,14 @@ func downloadManualUrl(
 	}
 
 	//6
+	//ProductDownloadsRelDir would return relative (to downloads/ root) dir path, e.g. s/slug
+	pRelDir, err := vangogh_urls.ProductDownloadsRelDir(slug)
+	//we need to add suffix to a dir path, e.g. dlc, extras
+	relDir := filepath.Join(pRelDir, dl.DirSuffix())
+	if err != nil {
+		return err
+	}
+	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
 	if err := exl.Set(vangogh_properties.LocalManualUrl, dl.ManualUrl, path.Join(relDir, filename)); err != nil {
 		return err
 	}

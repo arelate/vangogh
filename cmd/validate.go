@@ -19,10 +19,10 @@ import (
 	"io"
 	"net/url"
 	"os"
-	"path"
 )
 
 var (
+	ErrUnresolvedManualUrl    = errors.New("not resolved manual-url")
 	ErrMissingDownload        = errors.New("download file missing")
 	ErrMissingValidationFile  = errors.New("validation file missing")
 	ErrValidationNotSupported = errors.New("validation not supported")
@@ -73,7 +73,8 @@ func Validate(
 	}
 
 	validated := make(map[string]bool)
-	missingDownload := make(map[string]bool)
+	unresolvedManualUrl := make(map[string]bool)
+	missingDownloads := make(map[string]bool)
 	missingChecksum := make(map[string]bool)
 	failed := make(map[string]bool)
 	slugLastError := make(map[string]string)
@@ -98,8 +99,10 @@ func Validate(
 					continue
 				} else if errors.Is(err, ErrMissingValidationFile) {
 					missingChecksum[slug] = true
+				} else if errors.Is(err, ErrUnresolvedManualUrl) {
+					unresolvedManualUrl[slug] = true
 				} else if errors.Is(err, ErrMissingDownload) {
-					missingDownload[slug] = true
+					missingDownloads[slug] = true
 				} else if errors.Is(err, ErrValidationFailed) {
 					failed[slug] = true
 				} else if err != nil {
@@ -112,7 +115,7 @@ func Validate(
 			}
 
 			if hasValidationTargets &&
-				!missingDownload[slug] &&
+				!unresolvedManualUrl[slug] &&
 				!missingChecksum[slug] &&
 				!failed[slug] &&
 				slugLastError[slug] == "" {
@@ -129,9 +132,15 @@ func Validate(
 	fmt.Println()
 	fmt.Println("validation summary:")
 	fmt.Printf("%d product(s) successfully validated\n", len(validated))
-	if len(missingDownload) > 0 {
-		fmt.Printf("%d product(s) not downloaded\n", len(missingDownload))
-		for slug := range missingDownload {
+	if len(unresolvedManualUrl) > 0 {
+		fmt.Printf("%d product(s) have unresolved manual-url (not downloaded)\n", len(unresolvedManualUrl))
+		for slug := range unresolvedManualUrl {
+			fmt.Println("", slug)
+		}
+	}
+	if len(missingDownloads) > 0 {
+		fmt.Printf("%d product(s) missing downloads\n", len(missingDownloads))
+		for slug := range missingDownloads {
 			fmt.Println("", slug)
 		}
 	}
@@ -188,12 +197,15 @@ func validateManualUrl(
 		return err
 	}
 
-	relLocalFile, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
+	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
+	localFile, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
 	if !ok {
-		return ErrMissingDownload
+		return ErrUnresolvedManualUrl
 	}
 
-	absLocalFile := path.Join(vangogh_urls.DownloadsDir(), relLocalFile)
+	//absolute path (given a downloads/ root) for a s/slug/local_filename,
+	//e.g. downloads/s/slug/local_filename
+	absLocalFile := vangogh_urls.DownloadRelToAbs(localFile)
 	if !vangogh_urls.CanValidate(absLocalFile) {
 		return ErrValidationNotSupported
 	}
@@ -202,22 +214,22 @@ func validateManualUrl(
 		return ErrMissingDownload
 	}
 
-	absValidationFile := vangogh_urls.LocalValidationPath(absLocalFile)
+	absChecksumFile := vangogh_urls.LocalChecksumPath(absLocalFile)
 
-	if _, err := os.Stat(absValidationFile); os.IsNotExist(err) {
+	if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
 		return ErrMissingValidationFile
 	}
 
 	fmt.Printf("validing %s...", dl)
 
-	valFile, err := os.Open(absValidationFile)
+	chkFile, err := os.Open(absChecksumFile)
 	if err != nil {
 		return err
 	}
-	defer valFile.Close()
+	defer chkFile.Close()
 
-	var valData validation.File
-	if err := xml.NewDecoder(valFile).Decode(&valData); err != nil {
+	var chkData validation.File
+	if err := xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
 		return err
 	}
 
@@ -255,7 +267,7 @@ func validateManualUrl(
 
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
 
-	if valData.MD5 == sourceFileMD5 {
+	if chkData.MD5 == sourceFileMD5 {
 		//spacing is intentional here to overwrite 100% progress (so it has to be 4 characters)
 		fmt.Println(" ok ")
 	} else {

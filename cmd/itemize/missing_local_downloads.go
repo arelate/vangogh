@@ -82,7 +82,11 @@ func MissingLocalDownloads(
 			}
 
 			// 3
-			if _, err := os.Stat(vangogh_urls.ProductDownloadsDir(slug)); os.IsNotExist(err) {
+			pDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
+			if err != nil {
+				return err
+			}
+			if _, err := os.Stat(pDir); os.IsNotExist(err) {
 				missingIds.Add(id)
 				return nil
 			}

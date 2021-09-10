@@ -13,7 +13,8 @@
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
-      "all"
+      "all",
+      "test"
     ],
     "digest": [
       "property^={digestible-properties}"

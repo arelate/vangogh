@@ -37,6 +37,7 @@ func Serve(port int) error {
 	}
 
 	for _, property := range vangogh_properties.Extracted() {
+		fmt.Println(property)
 		path := fmt.Sprintf("/properties/%s", property)
 		http.HandleFunc(path, http_api.GetProperty)
 	}
