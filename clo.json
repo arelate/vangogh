@@ -111,7 +111,6 @@
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
-      "missing-downloads",
       "{sync-items^&}"
     ],
     "tag": [
@@ -119,6 +118,13 @@
       "slug",
       "operation^=create,delete,edit,add,remove",
       "tag-name"
+    ],
+    "update-downloads": [
+      "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
+      "since-hours-ago"
     ],
     "validate": [
       "id^&",

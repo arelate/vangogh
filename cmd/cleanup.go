@@ -32,22 +32,22 @@ func CleanupHandler(u *url.URL) error {
 	mt := gog_media.Parse(url_helpers.Value(u, "media"))
 
 	operatingSystems := url_helpers.OperatingSystems(u)
-	langCodes := url_helpers.Values(u, "language-code")
 	downloadTypes := url_helpers.DownloadTypes(u)
+	langCodes := url_helpers.Values(u, "language-code")
 
 	all := url_helpers.Flag(u, "all")
 
 	testMode = url_helpers.Flag(u, "test")
 
-	return Cleanup(idSet, mt, operatingSystems, langCodes, downloadTypes, all)
+	return Cleanup(idSet, mt, operatingSystems, downloadTypes, langCodes, all)
 }
 
 func Cleanup(
 	idSet gost.StrSet,
 	mt gog_media.Media,
 	operatingSystems []vangogh_downloads.OperatingSystem,
-	langCodes []string,
 	downloadTypes []vangogh_downloads.DownloadType,
+	langCodes []string,
 	all bool) error {
 
 	exl, err := vangogh_extracts.NewList(

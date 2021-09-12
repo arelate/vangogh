@@ -33,8 +33,8 @@ func GetDownloadsHandler(u *url.URL) error {
 	mt := gog_media.Parse(url_helpers.Value(u, "media"))
 
 	operatingSystems := url_helpers.OperatingSystems(u)
-	langCodes := url_helpers.Values(u, "language-code")
 	downloadTypes := url_helpers.DownloadTypes(u)
+	langCodes := url_helpers.Values(u, "language-code")
 
 	missing := url_helpers.Flag(u, "missing")
 

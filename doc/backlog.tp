@@ -2,12 +2,6 @@ Issues:
 	No known at the moment
 	- downloads not updated on sync
 
-add update-downloads command:
-	- use it instead of get-downloads in sync
-
-improve extracts:
-	- extracts are rewritten with in-memory data, consider reading from disk (+locking) and adding changes - to allow parallel execution
-	
 improve validation:
 	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
 	
@@ -103,6 +97,13 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	improve extracts: @done(2021-09-11)
+		- extracts are rewritten with in-memory data, consider reading from disk (+locking) and adding changes - to allow parallel execution @done(2021-09-11)
+		
+	add update-downloads command: @done(2021-09-11)
+		- use it instead of get-downloads in sync @done(2021-09-11)
+		- enumerate new and updated details, account-products @done(2021-09-11)
+		- get-downloads for those forcing updates @done(2021-09-11)
 	DRY iterate.DownloadsList and specific functions used to drive that: @done(2021-09-11)
 		- get downloads @done(2021-09-11)
 		- validate @done(2021-09-11)

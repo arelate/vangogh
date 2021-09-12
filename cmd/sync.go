@@ -24,7 +24,6 @@ func SyncHandler(u *url.URL) error {
 	screenshots := url_helpers.Flag(u, "screenshots")
 	videos := url_helpers.Flag(u, "videos")
 	downloadsUpdates := url_helpers.Flag(u, "downloads-updates")
-	missingDownloads := url_helpers.Flag(u, "missing-downloads")
 	all := url_helpers.Flag(u, "all")
 	if all {
 		data, images, screenshots, videos, downloadsUpdates = true, true, true, true, true
@@ -42,25 +41,25 @@ func SyncHandler(u *url.URL) error {
 	}
 
 	operatingSystems := url_helpers.OperatingSystems(u)
-	langCodes := url_helpers.Values(u, "language-code")
 	downloadTypes := url_helpers.DownloadTypes(u)
+	langCodes := url_helpers.Values(u, "language-code")
 
 	return Sync(
 		mt,
 		sha,
-		data, images, screenshots, videos, downloadsUpdates, missingDownloads,
+		data, images, screenshots, videos, downloadsUpdates,
 		operatingSystems,
-		langCodes,
-		downloadTypes)
+		downloadTypes,
+		langCodes)
 }
 
 func Sync(
 	mt gog_media.Media,
 	sinceHoursAgo int,
-	data, images, screenshots, videos, downloadsUpdates, missingDownloads bool,
+	data, images, screenshots, videos, downloadsUpdates bool,
 	operatingSystems []vangogh_downloads.OperatingSystem,
-	langCodes []string,
-	downloadTypes []vangogh_downloads.DownloadType) error {
+	downloadTypes []vangogh_downloads.DownloadType,
+	langCodes []string) error {
 
 	var syncStart int64
 	if sinceHoursAgo > 0 {
@@ -119,23 +118,12 @@ func Sync(
 		fmt.Println()
 	}
 
-	// get downloads
+	// get downloads updates
 	if downloadsUpdates {
-		//TODO: implement update-downloads cmd and use it here
-		//if err := GetDownloads(
-		//	gost.NewStrSet(),
-		//	mt,
-		//	operatingSystems,
-		//	downloadTypes,
-		//	langCodes,
-		//	missingDownloads,
-		//	true,
-		//	syncStart,
-		//	false,
-		//	false); err != nil {
-		//	return err
-		//}
-		//fmt.Println()
+		if err := UpdateDownloads(mt, operatingSystems, downloadTypes, langCodes, syncStart); err != nil {
+			return err
+		}
+		fmt.Println()
 	}
 
 	// print new or updated
