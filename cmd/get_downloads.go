@@ -14,7 +14,6 @@ import (
 	"github.com/boggydigital/vangogh/cmd/hours"
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
-	"github.com/boggydigital/vangogh/cmd/iterate"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"log"
 	"net/http"
@@ -126,14 +125,19 @@ func GetDownloads(
 		idSet.AddSet(missingIds)
 	}
 
-	if err := iterate.DownloadsList(
+	gdd := &getDownloadsDelegate{
+		exl:               exl,
+		forceRemoteUpdate: forceRemoteUpdate,
+	}
+
+	if err := vangogh_downloads.Map(
 		idSet,
 		mt,
 		exl,
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		downloadList,
+		gdd.DownloadList,
 		modifiedSince,
 		forceRemoteUpdate); err != nil {
 		return nil
@@ -149,13 +153,54 @@ func GetDownloads(
 	return nil
 }
 
-func downloadManualUrl(
+func printCompletion(current, total uint64) {
+	percent := (float32(current) / float32(total)) * 100
+	if current == 0 {
+		//we'll get the first notification before download starts and will output 4 spaces (XXX%)
+		//that'll be deleted on updates
+		fmt.Printf(strings.Repeat(" ", 4))
+	}
+	if current < total {
+		//every update except the first (pre-download) and last (completion) are the same
+		//move cursor 4 spaces back and print over current percent completion
+		fmt.Printf("\x1b[4D%3.0f%%", percent)
+	} else {
+		//final update moves the cursor back 4 spaces to overwrite on the following update
+		fmt.Printf("\x1b[4D")
+	}
+}
+
+type getDownloadsDelegate struct {
+	exl               *vangogh_extracts.ExtractsList
+	forceRemoteUpdate bool
+}
+
+func (gdd *getDownloadsDelegate) DownloadList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
+	fmt.Println("downloading", slug)
+
+	httpClient, err := http_client.Default()
+	if err != nil {
+		return err
+	}
+
+	//there is no need to use internal httpClient with cookie support for downloading
+	//manual downloads, so we're going to rely on default http.Client
+	defaultClient := http.DefaultClient
+	dlClient := dolo.NewClient(defaultClient, printCompletion, dolo.Defaults())
+
+	for _, dl := range list {
+		if err := gdd.downloadManualUrl(slug, &dl, httpClient, dlClient); err != nil {
+			fmt.Println(err)
+		}
+	}
+	return nil
+}
+
+func (gdd *getDownloadsDelegate) downloadManualUrl(
 	slug string,
 	dl *vangogh_downloads.Download,
-	exl *vangogh_extracts.ExtractsList,
 	httpClient *http.Client,
-	dlClient *dolo.Client,
-	forceRemoteUpdate bool) error {
+	dlClient *dolo.Client) error {
 	//downloading a manual URL is the following set of steps:
 	//1 - check if local file exists (based on manualUrl -> relative localFile association) before attempting to resolve manualUrl
 	//2 - resolve the source URL to an actual session URL
@@ -163,15 +208,15 @@ func downloadManualUrl(
 	//4 - for a given set of extensions - download validation file
 	//5 - download authorized session URL to a file
 	//6 - set association from manualUrl to a resolved filename
-	if err := exl.AssertSupport(
+	if err := gdd.exl.AssertSupport(
 		vangogh_properties.LocalManualUrl,
 		vangogh_properties.DownloadStatusError); err != nil {
 		return err
 	}
 
 	//1
-	if !forceRemoteUpdate {
-		if localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
+	if !gdd.forceRemoteUpdate {
+		if localFilename, ok := gdd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			pDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
 			if err != nil {
 				return err
@@ -193,7 +238,7 @@ func downloadManualUrl(
 	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
 	//is not a problem that can be solved locally (it's a remote source error)
 	if resp.StatusCode > 299 {
-		if err := exl.Set(vangogh_properties.DownloadStatusError, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
+		if err := gdd.exl.Set(vangogh_properties.DownloadStatusError, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
 			return err
 		}
 		return fmt.Errorf(resp.Status)
@@ -248,53 +293,10 @@ func downloadManualUrl(
 		return err
 	}
 	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
-	if err := exl.Set(vangogh_properties.LocalManualUrl, dl.ManualUrl, path.Join(relDir, filename)); err != nil {
+	if err := gdd.exl.Set(vangogh_properties.LocalManualUrl, dl.ManualUrl, path.Join(relDir, filename)); err != nil {
 		return err
 	}
 
 	fmt.Println("done")
-	return nil
-}
-
-func printCompletion(current, total uint64) {
-	percent := (float32(current) / float32(total)) * 100
-	if current == 0 {
-		//we'll get the first notification before download starts and will output 4 spaces (XXX%)
-		//that'll be deleted on updates
-		fmt.Printf(strings.Repeat(" ", 4))
-	}
-	if current < total {
-		//every update except the first (pre-download) and last (completion) are the same
-		//move cursor 4 spaces back and print over current percent completion
-		fmt.Printf("\x1b[4D%3.0f%%", percent)
-	} else {
-		//final update moves the cursor back 4 spaces to overwrite on the following update
-		fmt.Printf("\x1b[4D")
-	}
-}
-
-func downloadList(
-	id string,
-	slug string,
-	list vangogh_downloads.DownloadsList,
-	exl *vangogh_extracts.ExtractsList,
-	forceRemoteUpdate bool) error {
-	fmt.Println("downloading", slug)
-
-	httpClient, err := http_client.Default()
-	if err != nil {
-		return err
-	}
-
-	//there is no need to use internal httpClient with cookie support for downloading
-	//manual downloads, so we're going to rely on default http.Client
-	defaultClient := http.DefaultClient
-	dlClient := dolo.NewClient(defaultClient, printCompletion, dolo.Defaults())
-
-	for _, dl := range list {
-		if err := downloadManualUrl(slug, &dl, exl, httpClient, dlClient, forceRemoteUpdate); err != nil {
-			fmt.Println(err)
-		}
-	}
 	return nil
 }

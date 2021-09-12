@@ -13,7 +13,6 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/iterate"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"github.com/boggydigital/vangogh/cmd/validation"
 	"io"
@@ -72,60 +71,16 @@ func Validate(
 		idSet.Add(vrDetails.All()...)
 	}
 
-	validated := make(map[string]bool)
-	unresolvedManualUrl := make(map[string]bool)
-	missingDownloads := make(map[string]bool)
-	missingChecksum := make(map[string]bool)
-	failed := make(map[string]bool)
-	slugLastError := make(map[string]string)
+	vd := &validateDelegate{exl: exl}
 
-	if err := iterate.DownloadsList(
+	if err := vangogh_downloads.Map(
 		idSet,
 		mt,
 		exl,
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		func(id string,
-			slug string,
-			list vangogh_downloads.DownloadsList,
-			exl *vangogh_extracts.ExtractsList,
-			_ bool) error {
-
-			fmt.Printf("validate %s:\n", slug)
-
-			hasValidationTargets := false
-
-			for _, dl := range list {
-				if err := validateManualUrl(slug, &dl, exl); errors.Is(err, ErrValidationNotSupported) {
-					continue
-				} else if errors.Is(err, ErrMissingValidationFile) {
-					missingChecksum[slug] = true
-				} else if errors.Is(err, ErrUnresolvedManualUrl) {
-					unresolvedManualUrl[slug] = true
-				} else if errors.Is(err, ErrMissingDownload) {
-					missingDownloads[slug] = true
-				} else if errors.Is(err, ErrValidationFailed) {
-					failed[slug] = true
-				} else if err != nil {
-					fmt.Println(err)
-					slugLastError[slug] = err.Error()
-					continue
-				}
-				// don't attempt to assess success for files that don't support validation
-				hasValidationTargets = true
-			}
-
-			if hasValidationTargets &&
-				!unresolvedManualUrl[slug] &&
-				!missingChecksum[slug] &&
-				!failed[slug] &&
-				slugLastError[slug] == "" {
-				validated[slug] = true
-			}
-
-			return nil
-		},
+		vd.ValidateList,
 		0,
 		false); err != nil {
 		return err
@@ -133,34 +88,34 @@ func Validate(
 
 	fmt.Println()
 	fmt.Println("validation summary:")
-	fmt.Printf("%d product(s) successfully validated\n", len(validated))
-	if len(unresolvedManualUrl) > 0 {
-		fmt.Printf("%d product(s) have unresolved manual-url (not downloaded)\n", len(unresolvedManualUrl))
-		for slug := range unresolvedManualUrl {
+	fmt.Printf("%d product(s) successfully validated\n", len(vd.validated))
+	if len(vd.unresolvedManualUrl) > 0 {
+		fmt.Printf("%d product(s) have unresolved manual-url (not downloaded)\n", len(vd.unresolvedManualUrl))
+		for slug := range vd.unresolvedManualUrl {
 			fmt.Println("", slug)
 		}
 	}
-	if len(missingDownloads) > 0 {
-		fmt.Printf("%d product(s) missing downloads\n", len(missingDownloads))
-		for slug := range missingDownloads {
+	if len(vd.missingDownloads) > 0 {
+		fmt.Printf("%d product(s) missing downloads\n", len(vd.missingDownloads))
+		for slug := range vd.missingDownloads {
 			fmt.Println("", slug)
 		}
 	}
-	if len(missingChecksum) > 0 {
-		fmt.Printf("%d product(s) without checksum:\n", len(missingChecksum))
-		for slug := range missingChecksum {
+	if len(vd.missingChecksum) > 0 {
+		fmt.Printf("%d product(s) without checksum:\n", len(vd.missingChecksum))
+		for slug := range vd.missingChecksum {
 			fmt.Println("", slug)
 		}
 	}
-	if len(failed) > 0 {
-		fmt.Printf("%d product(s) failed validation:\n", len(failed))
-		for slug := range failed {
+	if len(vd.failed) > 0 {
+		fmt.Printf("%d product(s) failed validation:\n", len(vd.failed))
+		for slug := range vd.failed {
 			fmt.Println("", slug)
 		}
 	}
-	if len(slugLastError) > 0 {
-		fmt.Printf("%d product(s) validation caused an error:\n", len(slugLastError))
-		for slug, err := range slugLastError {
+	if len(vd.slugLastError) > 0 {
+		fmt.Printf("%d product(s) validation caused an error:\n", len(vd.slugLastError))
+		for slug, err := range vd.slugLastError {
 			fmt.Printf(" %s: %s\n", slug, err)
 		}
 	}
@@ -268,6 +223,72 @@ func validateManualUrl(
 	} else {
 		fmt.Println(" FAIL")
 		return ErrValidationFailed
+	}
+
+	return nil
+}
+
+type validateDelegate struct {
+	exl                 *vangogh_extracts.ExtractsList
+	validated           map[string]bool
+	unresolvedManualUrl map[string]bool
+	missingDownloads    map[string]bool
+	missingChecksum     map[string]bool
+	failed              map[string]bool
+	slugLastError       map[string]string
+}
+
+func (vd *validateDelegate) ValidateList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
+
+	fmt.Printf("validate %s:\n", slug)
+
+	if vd.validated == nil {
+		vd.validated = make(map[string]bool)
+	}
+	if vd.unresolvedManualUrl == nil {
+		vd.unresolvedManualUrl = make(map[string]bool)
+	}
+	if vd.missingDownloads == nil {
+		vd.missingDownloads = make(map[string]bool)
+	}
+	if vd.missingChecksum == nil {
+		vd.missingChecksum = make(map[string]bool)
+	}
+	if vd.failed == nil {
+		vd.failed = make(map[string]bool)
+	}
+	if vd.slugLastError == nil {
+		vd.slugLastError = make(map[string]string)
+	}
+
+	hasValidationTargets := false
+
+	for _, dl := range list {
+		if err := validateManualUrl(slug, &dl, vd.exl); errors.Is(err, ErrValidationNotSupported) {
+			continue
+		} else if errors.Is(err, ErrMissingValidationFile) {
+			vd.missingChecksum[slug] = true
+		} else if errors.Is(err, ErrUnresolvedManualUrl) {
+			vd.unresolvedManualUrl[slug] = true
+		} else if errors.Is(err, ErrMissingDownload) {
+			vd.missingDownloads[slug] = true
+		} else if errors.Is(err, ErrValidationFailed) {
+			vd.failed[slug] = true
+		} else if err != nil {
+			fmt.Println(err)
+			vd.slugLastError[slug] = err.Error()
+			continue
+		}
+		// don't attempt to assess success for files that don't support validation
+		hasValidationTargets = true
+	}
+
+	if hasValidationTargets &&
+		!vd.unresolvedManualUrl[slug] &&
+		!vd.missingChecksum[slug] &&
+		!vd.failed[slug] &&
+		vd.slugLastError[slug] == "" {
+		vd.validated[slug] = true
 	}
 
 	return nil

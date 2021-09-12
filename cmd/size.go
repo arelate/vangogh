@@ -10,7 +10,6 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/itemize"
-	"github.com/boggydigital/vangogh/cmd/iterate"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"net/url"
 )
@@ -41,8 +40,6 @@ func Size(
 	langCodes []string,
 	missing bool,
 	all bool) error {
-
-	dlList := vangogh_downloads.DownloadsList{}
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.LocalManualUrl,
@@ -80,28 +77,41 @@ func Size(
 		return nil
 	}
 
-	if err := iterate.DownloadsList(
+	sd := &sizeDelegate{}
+
+	if err := vangogh_downloads.Map(
 		idSet,
 		mt,
 		exl,
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		func(
-			_ string,
-			_ string,
-			list vangogh_downloads.DownloadsList,
-			_ *vangogh_extracts.ExtractsList,
-			_ bool) error {
-			dlList = append(dlList, list...)
-			return nil
-		},
+		sd.Add,
 		0,
 		false); err != nil {
 		return err
 	}
 
-	fmt.Printf("est. download size: %.2fGB\n", dlList.TotalGBsEstimate())
+	fmt.Printf("est. download size: %.2fGB\n", sd.TotalGBsEstimate())
 
 	return nil
+}
+
+type sizeDelegate struct {
+	dlList vangogh_downloads.DownloadsList
+}
+
+func (sd *sizeDelegate) Add(_ string, _ string, list vangogh_downloads.DownloadsList) error {
+	if sd.dlList == nil {
+		sd.dlList = make(vangogh_downloads.DownloadsList, 0)
+	}
+	sd.dlList = append(sd.dlList, list...)
+	return nil
+}
+
+func (sd *sizeDelegate) TotalGBsEstimate() float64 {
+	if sd.dlList != nil {
+		return sd.dlList.TotalGBsEstimate()
+	}
+	return 0
 }

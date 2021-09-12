@@ -10,7 +10,6 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/iterate"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"net/url"
 	"os"
@@ -67,14 +66,16 @@ func Cleanup(
 		idSet.Add(vrDetails.All()...)
 	}
 
-	if err := iterate.DownloadsList(
+	cd := &cleanupDelegate{exl: exl}
+
+	if err := vangogh_downloads.Map(
 		idSet,
 		mt,
 		exl,
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		cleanupDownloadList,
+		cd.CleanupList,
 		0,
 		false); err != nil {
 		return err
@@ -97,14 +98,13 @@ func moveToRecycleBin(fp string) error {
 	return os.Rename(fp, rbFilepath)
 }
 
-func cleanupDownloadList(
-	id string,
-	slug string,
-	list vangogh_downloads.DownloadsList,
-	exl *vangogh_extracts.ExtractsList,
-	_ bool) error {
+type cleanupDelegate struct {
+	exl *vangogh_extracts.ExtractsList
+}
 
-	if err := exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
+func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
+
+	if err := cd.exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
 		return err
 	}
 
@@ -124,7 +124,7 @@ func cleanupDownloadList(
 	}
 
 	for _, dl := range list {
-		if localFilename, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
+		if localFilename, ok := cd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
 			relFilename, err := filepath.Rel(pDir, localFilename)

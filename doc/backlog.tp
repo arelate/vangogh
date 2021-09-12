@@ -2,13 +2,11 @@ Issues:
 	No known at the moment
 	- downloads not updated on sync
 
-add update-downloads command and use it instead of get-downloads in sync
+add update-downloads command:
+	- use it instead of get-downloads in sync
 
 improve extracts:
 	- extracts are rewritten with in-memory data, consider reading from disk (+locking) and adding changes - to allow parallel execution
-	
-improve cleanup:
-	- implement simulate flag to avoid actual OS moves, just print what will be moved
 	
 improve validation:
 	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
@@ -105,6 +103,14 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	DRY iterate.DownloadsList and specific functions used to drive that: @done(2021-09-11)
+		- get downloads @done(2021-09-11)
+		- validate @done(2021-09-11)
+		- clean up @done(2021-09-11)
+		- missing downloads @done(2021-09-11)
+	improve cleanup: @done(2021-09-09)
+		- implement simulate flag to avoid actual OS moves, just print what will be moved @done(2021-09-09)
+		
 	get-down improvements: @done(2021-09-09)
 	- fix local-manual-url for: @done(2021-09-09) @project(Issues)
 		- 1538068873 objects_in_space @done(2021-09-09)
