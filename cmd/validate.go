@@ -80,9 +80,7 @@ func Validate(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		vd.ValidateList,
-		0,
-		false); err != nil {
+		vd.ValidateList); err != nil {
 		return err
 	}
 

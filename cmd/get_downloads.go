@@ -11,7 +11,6 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/hours"
 	"github.com/boggydigital/vangogh/cmd/http_client"
 	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
@@ -23,7 +22,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func GetDownloadsHandler(u *url.URL) error {
@@ -40,19 +38,7 @@ func GetDownloadsHandler(u *url.URL) error {
 
 	missing := url_helpers.Flag(u, "missing")
 
-	update := url_helpers.Flag(u, "update")
-	mha, err := hours.Atoi(url_helpers.Value(u, "modified-hours-ago"))
-	if err != nil {
-		return err
-	}
-
-	var modifiedSince int64 = 0
-	if mha > 0 {
-		modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
-	}
-
-	forceRemoteUpdate := url_helpers.Flag(u, "force-remote-update")
-	validate := url_helpers.Flag(u, "validate")
+	forceUpdate := url_helpers.Flag(u, "force-update")
 
 	return GetDownloads(
 		idSet,
@@ -61,10 +47,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		downloadTypes,
 		langCodes,
 		missing,
-		update,
-		modifiedSince,
-		forceRemoteUpdate,
-		validate)
+		forceUpdate)
 }
 
 func GetDownloads(
@@ -74,10 +57,7 @@ func GetDownloads(
 	downloadTypes []vangogh_downloads.DownloadType,
 	langCodes []string,
 	missing,
-	update bool,
-	modifiedSince int64,
-	forceRemoteUpdate,
-	validate bool) error {
+	forceUpdate bool) error {
 
 	httpClient, err := http_client.Default()
 	if err != nil {
@@ -102,15 +82,6 @@ func GetDownloads(
 		return err
 	}
 
-	//if update {
-	//	localSlugs, err := vangogh_urls.LocalSlugs()
-	//	if err != nil {
-	//		return err
-	//	}
-	//	localIds, err := url_helpers.SlugIds(exl, localSlugs)
-	//	idSet.Add(localIds...)
-	//}
-
 	if missing {
 		missingIds, err := itemize.MissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
 		if err != nil {
@@ -126,8 +97,8 @@ func GetDownloads(
 	}
 
 	gdd := &getDownloadsDelegate{
-		exl:               exl,
-		forceRemoteUpdate: forceRemoteUpdate,
+		exl:         exl,
+		forceUpdate: forceUpdate,
 	}
 
 	if err := vangogh_downloads.Map(
@@ -137,17 +108,8 @@ func GetDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		gdd.DownloadList,
-		modifiedSince,
-		forceRemoteUpdate); err != nil {
+		gdd.DownloadList); err != nil {
 		return nil
-	}
-
-	if validate {
-		fmt.Println()
-		if err := Validate(idSet, mt, operatingSystems, langCodes, downloadTypes, false); err != nil {
-			return err
-		}
 	}
 
 	return nil
@@ -171,8 +133,8 @@ func printCompletion(current, total uint64) {
 }
 
 type getDownloadsDelegate struct {
-	exl               *vangogh_extracts.ExtractsList
-	forceRemoteUpdate bool
+	exl         *vangogh_extracts.ExtractsList
+	forceUpdate bool
 }
 
 func (gdd *getDownloadsDelegate) DownloadList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
@@ -215,7 +177,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//1
-	if !gdd.forceRemoteUpdate {
+	if !gdd.forceUpdate {
 		if localFilename, ok := gdd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			pDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
 			if err != nil {

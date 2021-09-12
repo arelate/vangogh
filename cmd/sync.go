@@ -121,20 +121,21 @@ func Sync(
 
 	// get downloads
 	if downloadsUpdates {
-		if err := GetDownloads(
-			gost.NewStrSet(),
-			mt,
-			operatingSystems,
-			downloadTypes,
-			langCodes,
-			missingDownloads,
-			true,
-			syncStart,
-			false,
-			false); err != nil {
-			return err
-		}
-		fmt.Println()
+		//TODO: implement update-downloads cmd and use it here
+		//if err := GetDownloads(
+		//	gost.NewStrSet(),
+		//	mt,
+		//	operatingSystems,
+		//	downloadTypes,
+		//	langCodes,
+		//	missingDownloads,
+		//	true,
+		//	syncStart,
+		//	false,
+		//	false); err != nil {
+		//	return err
+		//}
+		//fmt.Println()
 	}
 
 	// print new or updated

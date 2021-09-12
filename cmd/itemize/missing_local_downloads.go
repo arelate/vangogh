@@ -51,10 +51,7 @@ func MissingLocalDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		mdd.AddMissing,
-		0,
-		false,
-	); err != nil {
+		mdd.AddMissing); err != nil {
 		return mdd.missingIds, err
 	}
 

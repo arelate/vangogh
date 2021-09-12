@@ -86,9 +86,7 @@ func Size(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		sd.Add,
-		0,
-		false); err != nil {
+		sd.Add); err != nil {
 		return err
 	}
 

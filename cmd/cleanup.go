@@ -75,9 +75,7 @@ func Cleanup(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		cd.CleanupList,
-		0,
-		false); err != nil {
+		cd.CleanupList); err != nil {
 		return err
 	}
 
