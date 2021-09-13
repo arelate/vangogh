@@ -106,7 +106,7 @@ func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downl
 		return err
 	}
 
-	fmt.Printf("cleaning up %s\n", slug)
+	fmt.Println("cleaning up", slug)
 
 	//cleanup process:
 	//1. enumerate all expected files for a downloadList

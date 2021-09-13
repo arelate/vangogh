@@ -72,7 +72,7 @@
       "product-type^*={local-product-types}",
       "media={media^}",
       "property&={all-properties}",
-      "modified-hours-ago"
+      "since-hours-ago"
     ],
     "owned": [
       "id^&",

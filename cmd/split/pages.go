@@ -47,7 +47,7 @@ func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 
 		splitPt := vangogh_products.SplitType(sourcePt)
 
-		fmt.Printf("\rsplit %s (%s) %s... ", sourcePt, mt, id)
+		fmt.Printf("\rsplitting %s (%s) %s... ", sourcePt, mt, id)
 
 		productsGetter, err := vrPaged.ProductsGetter(id)
 

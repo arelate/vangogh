@@ -32,7 +32,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		return err
 	}
 
-	fmt.Printf("extract ")
+	fmt.Printf("extracting ")
 	defer fmt.Println()
 
 	for _, pt := range vangogh_products.Local() {

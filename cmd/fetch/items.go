@@ -43,7 +43,7 @@ func Items(
 	}
 
 	for i, id := range ids {
-		fmt.Printf("\rfetch %s (%s) %d/%d... ", pt, mt, i+1, len(ids))
+		fmt.Printf("\rfetching %s (%s) %d/%d... ", pt, mt, i+1, len(ids))
 		_, err := getItem(id, mt, httpClient, vs, sourceUrl, destUrl)
 		if err != nil {
 			log.Printf("error getting %s (%s) %s: %v", pt, mt, id, err)

@@ -100,7 +100,7 @@ func GetImages(
 
 	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
 
-	fmt.Println("get images:")
+	fmt.Println("getting images:")
 
 	for id, missingIts := range idMissingTypes {
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)

@@ -20,14 +20,14 @@ func ListHandler(u *url.URL) error {
 		return err
 	}
 
-	mha, err := hours.Atoi(url_helpers.Value(u, "modified-hours-ago"))
+	sha, err := hours.Atoi(url_helpers.Value(u, "since-hours-ago"))
 	if err != nil {
 		return err
 	}
 
-	var modifiedSince int64 = 0
-	if mha > 0 {
-		modifiedSince = time.Now().Add(-time.Hour * time.Duration(mha)).Unix()
+	var since int64 = 0
+	if sha > 0 {
+		since = time.Now().Add(-time.Hour * time.Duration(sha)).Unix()
 	}
 
 	pt := vangogh_products.Parse(url_helpers.Value(u, "product-type"))
@@ -35,7 +35,7 @@ func ListHandler(u *url.URL) error {
 
 	properties := url_helpers.Values(u, "property")
 
-	return List(idSet, modifiedSince, pt, mt, properties)
+	return List(idSet, since, pt, mt, properties)
 }
 
 //List prints products of a certain type and media.
@@ -43,7 +43,7 @@ func ListHandler(u *url.URL) error {
 //Provided properties will be printed for each product (if supported) in addition to default ID, Title.
 func List(
 	idSet gost.StrSet,
-	modifiedAfter int64,
+	modifiedSince int64,
 	pt vangogh_products.ProductType,
 	mt gog_media.Media,
 	properties []string) error {
@@ -81,15 +81,15 @@ func List(
 		return err
 	}
 
-	if modifiedAfter > 0 {
-		idSet.Add(vr.ModifiedAfter(modifiedAfter, false)...)
+	if modifiedSince > 0 {
+		idSet.Add(vr.ModifiedAfter(modifiedSince, false)...)
 		if idSet.Len() == 0 {
-			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedAfter, 0).Format(time.Kitchen))
+			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedSince, 0).Format(time.Kitchen))
 		}
 	}
 
 	if idSet.Len() == 0 &&
-		modifiedAfter == 0 {
+		modifiedSince == 0 {
 		idSet.Add(vr.All()...)
 	}
 

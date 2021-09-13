@@ -1,12 +1,13 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_products"
-	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/hours"
+	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
 	"net/url"
 	"time"
@@ -35,20 +36,14 @@ func UpdateDownloads(
 	langCodes []string,
 	since int64) error {
 
+	fmt.Println("finding updated details and account-products")
+
 	idSet := gost.NewStrSet()
 
-	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
+	idSet, err := itemize.All(idSet, true, true, since, vangogh_products.Details, mt)
 	if err != nil {
 		return err
 	}
-
-	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
-	if err != nil {
-		return err
-	}
-
-	idSet.Add(vrDetails.ModifiedAfter(since, false)...)
-	idSet.Add(vrAccountProducts.ModifiedAfter(since, false)...)
 
 	return GetDownloads(idSet, mt, operatingSystems, downloadTypes, langCodes, false, true)
 }

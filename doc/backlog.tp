@@ -1,15 +1,15 @@
 Issues:
 	No known at the moment
-	- downloads not updated on sync
+	- ./vangogh clean -s divinity_original_sin_2 -t - no xml files
 
 improve validation:
 	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
 	
-improve size:
-	- consider providing more precise estimates
-
 DRY progress display:
 	- it's copied in dolo, vangogh validation
+	
+improve size:
+	- consider providing more precise estimates
 
 vangogh_pages improvements:
 	- move code to dolo to download a set of Urls
@@ -97,6 +97,7 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- downloads not updated on sync @done(2021-09-11) @project(Issues)
 	improve extracts: @done(2021-09-11)
 		- extracts are rewritten with in-memory data, consider reading from disk (+locking) and adding changes - to allow parallel execution @done(2021-09-11)
 		

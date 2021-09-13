@@ -66,7 +66,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 	dl := dolo.NewClient(httpClient, printCompletion, dolo.Defaults())
 
-	fmt.Println("get videos:")
+	fmt.Println("getting videos:")
 
 	for _, id := range idSet.All() {
 		videoIds, ok := exl.GetAllRaw(vangogh_properties.VideoIdProperty, id)

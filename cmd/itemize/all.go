@@ -26,6 +26,7 @@ func All(
 			idSet.Add(missingIds...)
 		}
 		if updated {
+			// modified main product type items
 			modifiedIds, err := modified(modifiedAfter, mainPt, mt)
 			if err != nil {
 				return idSet, err
@@ -131,7 +132,7 @@ func modified(
 
 	fmt.Printf(" find modified %s... ", pt)
 
-	//licence products can only update through creation and we've already handled
+	//licence products can only update through creation, and we've already handled
 	//newly created in itemizeMissing func
 	if pt == vangogh_products.LicenceProducts {
 		return printFoundAndAll(gost.NewStrSet()), nil
