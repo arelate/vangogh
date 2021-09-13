@@ -36,7 +36,7 @@ func UpdateDownloads(
 	langCodes []string,
 	since int64) error {
 
-	fmt.Println("finding updated details and account-products")
+	fmt.Println("updating downloads:")
 
 	idSet := gost.NewStrSet()
 

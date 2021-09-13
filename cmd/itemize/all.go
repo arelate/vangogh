@@ -58,7 +58,7 @@ func missingDetail(
 		return requiredGames(modifiedAfter)
 	}
 
-	fmt.Printf(" find missing %s for %s... ", detailPt, mainPt)
+	fmt.Printf(" finding missing %s for %s... ", detailPt, mainPt)
 
 	missingIdSet := gost.NewStrSet()
 
@@ -105,7 +105,7 @@ func missingDetail(
 }
 
 func accountProductsUpdates(mt gog_media.Media) ([]string, error) {
-	fmt.Printf(" find %s updates... ", vangogh_products.AccountProducts)
+	fmt.Printf(" finding %s updates... ", vangogh_products.AccountProducts)
 	updatesSet := gost.NewStrSet()
 	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
 	if err != nil {
@@ -130,7 +130,7 @@ func modified(
 	pt vangogh_products.ProductType,
 	mt gog_media.Media) ([]string, error) {
 
-	fmt.Printf(" find modified %s... ", pt)
+	fmt.Printf(" finding modified %s... ", pt)
 
 	//licence products can only update through creation, and we've already handled
 	//newly created in itemizeMissing func
@@ -155,7 +155,7 @@ func modified(
 
 func linkedGames(modifiedAfter int64) ([]string, error) {
 
-	fmt.Printf(" find missing linked %s... ", vangogh_products.ApiProductsV2)
+	fmt.Printf(" finding missing linked %s... ", vangogh_products.ApiProductsV2)
 
 	missingSet := gost.NewStrSet()
 
@@ -195,7 +195,7 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
 func requiredGames(createdAfter int64) ([]string, error) {
-	fmt.Printf(" find DLCs missing required base product... ")
+	fmt.Printf(" finding DLCs missing required base product... ")
 
 	rgForNewLicSet := gost.NewStrSet()
 
