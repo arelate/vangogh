@@ -16,13 +16,6 @@ import (
 	"path/filepath"
 )
 
-const (
-	dirPerm os.FileMode = 0755
-)
-
-// TODO: implement this in a cleaner way
-var testMode bool
-
 func CleanupHandler(u *url.URL) error {
 	idSet, err := url_helpers.IdSet(u)
 	if err != nil {
@@ -36,10 +29,9 @@ func CleanupHandler(u *url.URL) error {
 	langCodes := url_helpers.Values(u, "language-code")
 
 	all := url_helpers.Flag(u, "all")
+	test := url_helpers.Flag(u, "test")
 
-	testMode = url_helpers.Flag(u, "test")
-
-	return Cleanup(idSet, mt, operatingSystems, downloadTypes, langCodes, all)
+	return Cleanup(idSet, mt, operatingSystems, downloadTypes, langCodes, all, test)
 }
 
 func Cleanup(
@@ -48,7 +40,7 @@ func Cleanup(
 	operatingSystems []vangogh_downloads.OperatingSystem,
 	downloadTypes []vangogh_downloads.DownloadType,
 	langCodes []string,
-	all bool) error {
+	all, test bool) error {
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.SlugProperty,
@@ -66,7 +58,10 @@ func Cleanup(
 		idSet.Add(vrDetails.All()...)
 	}
 
-	cd := &cleanupDelegate{exl: exl}
+	cd := &cleanupDelegate{
+		exl:  exl,
+		all:  all,
+		test: test}
 
 	if err := vangogh_downloads.Map(
 		idSet,
@@ -83,13 +78,10 @@ func Cleanup(
 }
 
 func moveToRecycleBin(fp string) error {
-	if testMode {
-		return nil
-	}
 	rbFilepath := filepath.Join(vangogh_urls.RecycleBinDir(), fp)
 	rbDir, _ := filepath.Split(rbFilepath)
 	if _, err := os.Stat(rbDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(rbDir, dirPerm); err != nil {
+		if err := os.MkdirAll(rbDir, 0755); err != nil {
 			return err
 		}
 	}
@@ -97,7 +89,9 @@ func moveToRecycleBin(fp string) error {
 }
 
 type cleanupDelegate struct {
-	exl *vangogh_extracts.ExtractsList
+	exl  *vangogh_extracts.ExtractsList
+	all  bool
+	test bool
 }
 
 func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
@@ -106,7 +100,9 @@ func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downl
 		return err
 	}
 
-	fmt.Println("cleaning up", slug)
+	if !cd.all {
+		fmt.Println("cleaning up", slug)
+	}
 
 	//cleanup process:
 	//1. enumerate all expected files for a downloadList
@@ -141,8 +137,14 @@ func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downl
 
 	unexpectedFiles := presentSet.Except(expectedSet)
 	if len(unexpectedFiles) == 0 {
-		fmt.Println(" already clean")
+		if !cd.all {
+			fmt.Println(" already clean")
+		}
 		return nil
+	}
+
+	if cd.all {
+		fmt.Println("cleaning up", slug)
 	}
 
 	for _, unexpectedFile := range unexpectedFiles {
@@ -151,22 +153,26 @@ func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downl
 		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		prefix := ""
-		if testMode {
+		prefix := " RM"
+		if cd.test {
 			prefix = " TEST"
 		}
 		fmt.Println(prefix, downloadFilename)
-		if err := moveToRecycleBin(downloadFilename); err != nil {
-			return err
+		if !cd.test {
+			if err := moveToRecycleBin(downloadFilename); err != nil {
+				return err
+			}
 		}
 
-		checksumFile := vangogh_urls.LocalChecksumPath(unexpectedFile)
+		checksumFile := vangogh_urls.LocalChecksumPath(downloadFilename)
 		if _, err := os.Stat(checksumFile); os.IsNotExist(err) {
 			continue
 		}
 		fmt.Println(prefix, checksumFile)
-		if err := moveToRecycleBin(checksumFile); err != nil {
-			return err
+		if !cd.test {
+			if err := moveToRecycleBin(checksumFile); err != nil {
+				return err
+			}
 		}
 	}
 

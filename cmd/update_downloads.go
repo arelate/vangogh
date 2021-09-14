@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
-	"github.com/arelate/vangogh_products"
-	"github.com/boggydigital/gost"
 	"github.com/boggydigital/vangogh/cmd/hours"
 	"github.com/boggydigital/vangogh/cmd/itemize"
 	"github.com/boggydigital/vangogh/cmd/url_helpers"
@@ -38,12 +36,10 @@ func UpdateDownloads(
 
 	fmt.Println("updating downloads:")
 
-	idSet := gost.NewStrSet()
-
-	idSet, err := itemize.All(idSet, true, true, since, vangogh_products.Details, mt)
+	updAccountProductIds, err := itemize.AccountProductsUpdates(mt, since)
 	if err != nil {
 		return err
 	}
 
-	return GetDownloads(idSet, mt, operatingSystems, downloadTypes, langCodes, false, true)
+	return GetDownloads(updAccountProductIds, mt, operatingSystems, downloadTypes, langCodes, false, true)
 }

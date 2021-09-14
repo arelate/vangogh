@@ -23,15 +23,17 @@ func All(
 			if err != nil {
 				return idSet, err
 			}
-			idSet.Add(missingIds...)
+			idSet.AddSet(missingIds)
 		}
 		if updated {
+			fmt.Printf(" finding modified %s... ", pt)
 			// modified main product type items
 			modifiedIds, err := modified(modifiedAfter, mainPt, mt)
 			if err != nil {
 				return idSet, err
 			}
-			idSet.Add(modifiedIds...)
+			printFoundAndAll(modifiedIds)
+			idSet.AddSet(modifiedIds)
 		}
 	}
 
@@ -41,21 +43,33 @@ func All(
 func missingDetail(
 	detailPt, mainPt vangogh_products.ProductType,
 	mt gog_media.Media,
-	modifiedAfter int64) ([]string, error) {
+	since int64) (gost.StrSet, error) {
 
 	//api-products-v2 provides
 	//includes-games, is-included-by-games,
 	//requires-games, is-required-by-games
 	if mainPt == vangogh_products.ApiProductsV2 &&
 		detailPt == vangogh_products.ApiProductsV2 {
-		return linkedGames(modifiedAfter)
+		fmt.Printf(" finding missing linked %s... ", vangogh_products.ApiProductsV2)
+		lg, err := linkedGames(since)
+		if err != nil {
+			return lg, err
+		}
+		printFoundAndAll(lg)
+		return lg, nil
 	}
 
 	//licences give a signal when DLC has been purchased, this would add
 	//required (base) game details to the updates
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
-		return requiredGames(modifiedAfter)
+		fmt.Printf(" finding DLCs missing required base product... ")
+		rg, err := requiredGames(since)
+		if err != nil {
+			return rg, err
+		}
+		printFoundAndAll(rg)
+		return rg, nil
 	}
 
 	fmt.Printf(" finding missing %s for %s... ", detailPt, mainPt)
@@ -64,22 +78,22 @@ func missingDetail(
 
 	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
 	if err != nil {
-		return missingIdSet.All(), err
+		return missingIdSet, err
 	}
 
 	detailDestUrl, err := vangogh_urls.LocalProductsDir(detailPt, mt)
 	if err != nil {
-		return missingIdSet.All(), err
+		return missingIdSet, err
 	}
 
 	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
 	if err != nil {
-		return missingIdSet.All(), err
+		return missingIdSet, err
 	}
 
 	kvDetail, err := kvas.NewJsonLocal(detailDestUrl)
 	if err != nil {
-		return missingIdSet.All(), err
+		return missingIdSet, err
 	}
 
 	for _, id := range kvMain.All() {
@@ -92,79 +106,83 @@ func missingDetail(
 
 	if mainPt == vangogh_products.AccountProducts &&
 		detailPt == vangogh_products.Details {
-		updatedAccountProducts, err := accountProductsUpdates(mt)
+		fmt.Printf(" finding %s updates... ", vangogh_products.AccountProducts)
+		updatedAccountProducts, err := AccountProductsUpdates(mt, since)
 		if err != nil {
-			return missingIdSet.All(), err
+			return missingIdSet, err
 		}
-		for _, uapId := range updatedAccountProducts {
+		printFoundAndAll(updatedAccountProducts)
+		for uapId := range updatedAccountProducts {
 			missingIdSet.Add(uapId)
 		}
 	}
 
-	return missingIdSet.All(), nil
+	return missingIdSet, nil
 }
 
-func accountProductsUpdates(mt gog_media.Media) ([]string, error) {
-	fmt.Printf(" finding %s updates... ", vangogh_products.AccountProducts)
+func AccountProductsUpdates(mt gog_media.Media, since int64) (gost.StrSet, error) {
 	updatesSet := gost.NewStrSet()
 	vrAccountProducts, err := vangogh_values.NewReader(vangogh_products.AccountProducts, mt)
 	if err != nil {
-		return updatesSet.All(), err
+		return updatesSet, err
 	}
 
-	for _, id := range vrAccountProducts.All() {
+	var accountProducts []string
+	if since > 0 {
+		accountProducts = vrAccountProducts.ModifiedAfter(since, false)
+	} else {
+		accountProducts = vrAccountProducts.All()
+	}
+
+	for _, id := range accountProducts {
 		ap, err := vrAccountProducts.AccountProduct(id)
 		if err != nil {
-			return updatesSet.All(), err
+			return updatesSet, err
 		}
 		if ap.Updates > 0 {
 			updatesSet.Add(id)
 		}
 	}
 
-	return printFoundAndAll(updatesSet), nil
+	return updatesSet, nil
 }
 
 func modified(
 	since int64,
 	pt vangogh_products.ProductType,
-	mt gog_media.Media) ([]string, error) {
-
-	fmt.Printf(" finding modified %s... ", pt)
+	mt gog_media.Media) (gost.StrSet, error) {
 
 	//licence products can only update through creation, and we've already handled
 	//newly created in itemizeMissing func
 	if pt == vangogh_products.LicenceProducts {
-		return printFoundAndAll(gost.NewStrSet()), nil
+		return nil, nil
 	}
 
 	destUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
 	if err != nil {
-		return []string{}, err
+		return nil, err
 	}
 
 	kv, err := kvas.NewJsonLocal(destUrl)
 	if err != nil {
-		return []string{}, err
+		return nil, err
 	}
 
 	modSet := gost.NewStrSetWith(kv.ModifiedAfter(since, false)...)
 
-	return printFoundAndAll(modSet), nil
+	return modSet, nil
 }
 
-func linkedGames(modifiedAfter int64) ([]string, error) {
-
-	fmt.Printf(" finding missing linked %s... ", vangogh_products.ApiProductsV2)
+func linkedGames(modifiedAfter int64) (gost.StrSet, error) {
 
 	missingSet := gost.NewStrSet()
 
-	//currently api-products-v2 support only gog_media.Game, and since this method is exclusively
+	//currently, api-products-v2 support only gog_media.Game, and since this method is exclusively
 	//using api-products-v2 we're fine specifying media directly and not taking as a parameter
 	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 
 	if err != nil {
-		return missingSet.All(), err
+		return missingSet, err
 	}
 
 	for _, id := range vrApv2.ModifiedAfter(modifiedAfter, false) {
@@ -175,27 +193,26 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 		apv2, err := vrApv2.ApiProductV2(id)
 
 		if err != nil {
-			return missingSet.All(), err
+			return missingSet, err
 		}
 
-		linkedGames := apv2.GetIncludesGames()
-		linkedGames = append(linkedGames, apv2.GetIsIncludedInGames()...)
-		linkedGames = append(linkedGames, apv2.GetRequiresGames()...)
-		linkedGames = append(linkedGames, apv2.GetIsRequiredByGames()...)
+		lgs := apv2.GetIncludesGames()
+		lgs = append(lgs, apv2.GetIsIncludedInGames()...)
+		lgs = append(lgs, apv2.GetRequiresGames()...)
+		lgs = append(lgs, apv2.GetIsRequiredByGames()...)
 
-		for _, lid := range linkedGames {
+		for _, lid := range lgs {
 			if !vrApv2.Contains(lid) {
 				missingSet.Add(lid)
 			}
 		}
 	}
 
-	return printFoundAndAll(missingSet), nil
+	return missingSet, nil
 }
 
 //itemizeRequiredGames enumerates all base products for a newly acquired DLCs
-func requiredGames(createdAfter int64) ([]string, error) {
-	fmt.Printf(" finding DLCs missing required base product... ")
+func requiredGames(createdAfter int64) (gost.StrSet, error) {
 
 	rgForNewLicSet := gost.NewStrSet()
 
@@ -228,7 +245,7 @@ func requiredGames(createdAfter int64) ([]string, error) {
 		}
 	}
 
-	return printFoundAndAll(rgForNewLicSet), nil
+	return rgForNewLicSet, nil
 }
 
 func printFoundAndAll(idSet gost.StrSet) []string {

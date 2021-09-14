@@ -1,12 +1,17 @@
 Issues:
 	No known at the moment
-	- ./vangogh clean -s divinity_original_sin_2 -t - no xml files
 
 improve validation:
 	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
 	
 DRY progress display:
 	- it's copied in dolo, vangogh validation
+	- DRY copy code with progress callback (to be used in dolo, validation, more?)
+	
+implement new status tracking system:
+	- report current action and progress in output agnostic way
+	- status itself creates output
+	- status is also capable of creating data suitable for endpoint, not just console
 	
 improve size:
 	- consider providing more precise estimates
@@ -97,6 +102,7 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- ./vangogh clean -s divinity_original_sin_2 -t - no xml files @done(2021-09-12) @project(Issues)
 	- downloads not updated on sync @done(2021-09-11) @project(Issues)
 	improve extracts: @done(2021-09-11)
 		- extracts are rewritten with in-memory data, consider reading from disk (+locking) and adding changes - to allow parallel execution @done(2021-09-11)
