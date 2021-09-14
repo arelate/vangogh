@@ -140,6 +140,11 @@ type getDownloadsDelegate struct {
 func (gdd *getDownloadsDelegate) DownloadList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
 	fmt.Println("downloading", slug)
 
+	if len(list) == 0 {
+		fmt.Println(" (no downloads for requested operating systems + download types + languages)")
+		return nil
+	}
+
 	httpClient, err := http_client.Default()
 	if err != nil {
 		return err
