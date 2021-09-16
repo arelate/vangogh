@@ -1,11 +1,11 @@
-package cmd
+package cli_api
 
 import (
 	"bufio"
 	"fmt"
 	"github.com/arelate/gog_auth"
-	"github.com/boggydigital/vangogh/cmd/cookies"
-	"github.com/boggydigital/vangogh/cmd/http_client"
+	"github.com/boggydigital/vangogh/cli_api/cookies"
+	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"net/url"
 	"os"
 )

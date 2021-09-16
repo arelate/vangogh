@@ -4,7 +4,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/lines"
+	"github.com/boggydigital/vangogh/cli_api/lines"
 	"net/url"
 )
 

@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"encoding/json"
@@ -8,8 +8,8 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/http_client"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/http_client"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 	"strings"
 )
@@ -154,7 +154,7 @@ func addTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.Extr
 		return err
 	}
 
-	for id := range idSet {
+	for _, id := range idSet.All() {
 		addTagUrl := gog_urls.AddTag(id, tagId)
 		var artResp gog_types.AddRemoveTagResp
 		if err := postResp(addTagUrl, &artResp); err != nil {
@@ -179,7 +179,7 @@ func removeTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.E
 		return err
 	}
 
-	for id := range idSet {
+	for _, id := range idSet.All() {
 		removeTagUrl := gog_urls.RemoveTag(id, tagId)
 		var artResp gog_types.AddRemoveTagResp
 		if err := postResp(removeTagUrl, &artResp); err != nil {

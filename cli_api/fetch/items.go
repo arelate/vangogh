@@ -7,7 +7,7 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
-	"github.com/boggydigital/vangogh/cmd/http_client"
+	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"io"
 	"log"
 	"net/http"

@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"fmt"
@@ -9,9 +9,9 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/hours"
-	"github.com/boggydigital/vangogh/cmd/lines"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/hours"
+	"github.com/boggydigital/vangogh/cli_api/lines"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 	"time"
 )
@@ -34,6 +34,7 @@ func SyncHandler(u *url.URL) error {
 	screenshots = screenshots && !url_helpers.Flag(u, "no-screenshots")
 	videos = videos && !url_helpers.Flag(u, "no-videos")
 	downloadsUpdates = downloadsUpdates && !url_helpers.Flag(u, "no-downloads-updates")
+	updatesOnly := url_helpers.Flag(u, "updates-only")
 
 	sha, err := hours.Atoi(url_helpers.Value(u, "since-hours-ago"))
 	if err != nil {
@@ -47,7 +48,7 @@ func SyncHandler(u *url.URL) error {
 	return Sync(
 		mt,
 		sha,
-		data, images, screenshots, videos, downloadsUpdates,
+		data, images, screenshots, videos, downloadsUpdates, updatesOnly,
 		operatingSystems,
 		downloadTypes,
 		langCodes)
@@ -56,7 +57,7 @@ func SyncHandler(u *url.URL) error {
 func Sync(
 	mt gog_media.Media,
 	sinceHoursAgo int,
-	data, images, screenshots, videos, downloadsUpdates bool,
+	data, images, screenshots, videos, downloadsUpdates, updatesOnly bool,
 	operatingSystems []vangogh_downloads.OperatingSystem,
 	downloadTypes []vangogh_downloads.DownloadType,
 	langCodes []string) error {
@@ -120,7 +121,13 @@ func Sync(
 
 	// get downloads updates
 	if downloadsUpdates {
-		if err := UpdateDownloads(mt, operatingSystems, downloadTypes, langCodes, syncStart); err != nil {
+		if err := UpdateDownloads(
+			mt,
+			operatingSystems,
+			downloadTypes,
+			langCodes,
+			syncStart,
+			updatesOnly); err != nil {
 			return err
 		}
 		fmt.Println()

@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -153,7 +153,7 @@ func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downl
 		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		prefix := " RM"
+		prefix := " DELETE"
 		if cd.test {
 			prefix = " TEST"
 		}

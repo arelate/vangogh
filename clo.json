@@ -111,6 +111,7 @@
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
+      "updates-only",
       "{sync-items^&}"
     ],
     "tag": [
@@ -124,7 +125,8 @@
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
-      "since-hours-ago"
+      "since-hours-ago",
+      "updates-only"
     ],
     "validate": [
       "id^&",

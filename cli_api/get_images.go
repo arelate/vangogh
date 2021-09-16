@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"fmt"
@@ -8,9 +8,9 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/http_client"
-	"github.com/boggydigital/vangogh/cmd/itemize"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/http_client"
+	"github.com/boggydigital/vangogh/cli_api/itemize"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 )
 
@@ -71,7 +71,7 @@ func GetImages(
 			}
 
 			//2
-			for id := range missingImageIds {
+			for _, id := range missingImageIds.All() {
 				if idMissingTypes[id] == nil {
 					idMissingTypes[id] = make([]vangogh_images.ImageType, 0)
 				}
@@ -79,7 +79,7 @@ func GetImages(
 			}
 		}
 	} else {
-		for id := range idSet {
+		for _, id := range idSet.All() {
 			idMissingTypes[id] = its
 		}
 	}

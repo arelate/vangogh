@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"crypto/md5"
@@ -13,8 +13,8 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
-	"github.com/boggydigital/vangogh/cmd/validation"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/validation"
 	"io"
 	"net/url"
 	"os"

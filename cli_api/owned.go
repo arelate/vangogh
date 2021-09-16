@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"github.com/arelate/gog_media"
@@ -7,8 +7,8 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/output"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/output"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 )
 

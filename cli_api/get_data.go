@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"fmt"
@@ -7,12 +7,12 @@ import (
 	"github.com/arelate/vangogh_pages"
 	"github.com/arelate/vangogh_products"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/fetch"
-	"github.com/boggydigital/vangogh/cmd/http_client"
-	"github.com/boggydigital/vangogh/cmd/itemize"
-	"github.com/boggydigital/vangogh/cmd/lines"
-	"github.com/boggydigital/vangogh/cmd/split"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/fetch"
+	"github.com/boggydigital/vangogh/cli_api/http_client"
+	"github.com/boggydigital/vangogh/cli_api/itemize"
+	"github.com/boggydigital/vangogh/cli_api/lines"
+	"github.com/boggydigital/vangogh/cli_api/split"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"log"
 	"net/url"
 	"time"

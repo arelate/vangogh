@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
-	"github.com/boggydigital/vangogh/cmd/itemize"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/itemize"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 )
 

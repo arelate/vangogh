@@ -1,11 +1,11 @@
-package cmd
+package cli_api
 
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"github.com/boggydigital/vangogh/http_api"
 	"net/http"
 	"net/url"

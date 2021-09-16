@@ -1,7 +1,7 @@
 package http_client
 
 import (
-	"github.com/boggydigital/vangogh/cmd/cookies"
+	"github.com/boggydigital/vangogh/cli_api/cookies"
 	"net"
 	"net/http"
 	"time"

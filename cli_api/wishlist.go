@@ -1,4 +1,4 @@
-package cmd
+package cli_api
 
 import (
 	"fmt"
@@ -8,9 +8,9 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
-	"github.com/boggydigital/vangogh/cmd/http_client"
-	"github.com/boggydigital/vangogh/cmd/remove"
-	"github.com/boggydigital/vangogh/cmd/url_helpers"
+	"github.com/boggydigital/vangogh/cli_api/http_client"
+	"github.com/boggydigital/vangogh/cli_api/remove"
+	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"log"
 	"net/http"
 	"net/url"
