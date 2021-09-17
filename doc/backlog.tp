@@ -1,6 +1,14 @@
 Issues:
 	No known at the moment
 
+clo improvements:
+	- add support for local default overrides
+	- create new my_defaults.json file support
+	- this file contents are a map of "cmd:argument" or "argument" to ["value1","value2"] pairs that provide local default overrides over default clo.json values (that are embedded and not editable anyway)
+	- add "operating-systems": ["Windows", "macOS"]
+	- add "language-codes": ["en", "ru"]
+	- make sure that get-downloads, update-downloads, sync all work as expected with new values
+
 improve validation:
 	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
 	
