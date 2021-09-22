@@ -70,7 +70,7 @@ func Cleanup(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		cd.CleanupList); err != nil {
+		cd); err != nil {
 		return err
 	}
 
@@ -94,7 +94,7 @@ type cleanupDelegate struct {
 	test bool
 }
 
-func (cd *cleanupDelegate) CleanupList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
+func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads.DownloadsList) error {
 
 	if err := cd.exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
 		return err

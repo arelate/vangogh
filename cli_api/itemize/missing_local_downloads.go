@@ -51,7 +51,7 @@ func MissingLocalDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		mdd.AddMissing); err != nil {
+		mdd); err != nil {
 		return mdd.missingIds, err
 	}
 
@@ -63,7 +63,7 @@ type missingDownloadsDelegate struct {
 	missingIds gost.StrSet
 }
 
-func (mdd *missingDownloadsDelegate) AddMissing(id string, slug string, list vangogh_downloads.DownloadsList) error {
+func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_downloads.DownloadsList) error {
 
 	if mdd.missingIds == nil {
 		mdd.missingIds = gost.NewStrSet()

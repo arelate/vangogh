@@ -80,7 +80,7 @@ func Validate(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		vd.ValidateList); err != nil {
+		vd); err != nil {
 		return err
 	}
 
@@ -236,7 +236,7 @@ type validateDelegate struct {
 	slugLastError       map[string]string
 }
 
-func (vd *validateDelegate) ValidateList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
+func (vd *validateDelegate) Process(_, slug string, list vangogh_downloads.DownloadsList) error {
 
 	fmt.Printf("validate %s:\n", slug)
 

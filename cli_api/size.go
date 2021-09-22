@@ -86,7 +86,7 @@ func Size(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		sd.Add); err != nil {
+		sd); err != nil {
 		return err
 	}
 
@@ -99,7 +99,7 @@ type sizeDelegate struct {
 	dlList vangogh_downloads.DownloadsList
 }
 
-func (sd *sizeDelegate) Add(_ string, _ string, list vangogh_downloads.DownloadsList) error {
+func (sd *sizeDelegate) Process(_, _ string, list vangogh_downloads.DownloadsList) error {
 	if sd.dlList == nil {
 		sd.dlList = make(vangogh_downloads.DownloadsList, 0)
 	}

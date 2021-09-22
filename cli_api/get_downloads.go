@@ -108,7 +108,7 @@ func GetDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		gdd.DownloadList); err != nil {
+		gdd); err != nil {
 		return nil
 	}
 
@@ -137,7 +137,7 @@ type getDownloadsDelegate struct {
 	forceUpdate bool
 }
 
-func (gdd *getDownloadsDelegate) DownloadList(_ string, slug string, list vangogh_downloads.DownloadsList) error {
+func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_downloads.DownloadsList) error {
 	fmt.Println("downloading", slug)
 
 	if len(list) == 0 {
@@ -184,6 +184,8 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//1
 	if !gdd.forceUpdate {
 		if localFilename, ok := gdd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
+			//localFilename would be a relative path for a download - s/slug,
+			//and RelToAbs would convert this to downloads/s/slug
 			if _, err := os.Stat(vangogh_urls.DownloadRelToAbs(localFilename)); err == nil {
 				fmt.Printf(" %s already exists\n", dl.String())
 				return nil
