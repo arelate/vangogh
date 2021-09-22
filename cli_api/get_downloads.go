@@ -184,11 +184,8 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//1
 	if !gdd.forceUpdate {
 		if localFilename, ok := gdd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
-			pDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
-			if err != nil {
-				return err
-			}
-			if _, err := os.Stat(path.Join(pDir, localFilename)); !os.IsNotExist(err) {
+			if _, err := os.Stat(vangogh_urls.DownloadRelToAbs(localFilename)); err == nil {
+				fmt.Printf(" %s already exists\n", dl.String())
 				return nil
 			}
 		}

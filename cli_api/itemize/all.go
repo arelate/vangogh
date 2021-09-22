@@ -139,7 +139,8 @@ func AccountProductsUpdates(mt gog_media.Media, since int64) (gost.StrSet, error
 		if err != nil {
 			return updatesSet, err
 		}
-		if ap.Updates > 0 {
+		if ap.Updates > 0 ||
+			ap.IsNew {
 			updatesSet.Add(id)
 		}
 	}

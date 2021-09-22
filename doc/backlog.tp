@@ -1,13 +1,6 @@
 Issues:
 	No known at the moment
-
-clo improvements:
-	- add support for local default overrides
-	- create new my_defaults.json file support
-	- this file contents are a map of "cmd:argument" or "argument" to ["value1","value2"] pairs that provide local default overrides over default clo.json values (that are embedded and not editable anyway)
-	- add "operating-systems": ["Windows", "macOS"]
-	- add "language-codes": ["en", "ru"]
-	- make sure that get-downloads, update-downloads, sync all work as expected with new values
+	- get-down -s huntdown is slow @done(2021-09-21)
 
 improve validation:
 	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
@@ -110,6 +103,13 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	clo improvements: @done(2021-09-16)
+		- add support for local default overrides @done(2021-09-16)
+		- create new my_defaults.json file support @done(2021-09-16)
+		- this file contents are a map of "cmd:argument" or "argument" to ["value1","value2"] pairs that provide local default overrides over default clo.json values (that are embedded and not editable anyway) @done(2021-09-16)
+		- add "operating-systems": ["Windows", "macOS"] @done(2021-09-16)
+		- add "language-codes": ["en", "ru"] @done(2021-09-16)
+		- make sure that get-downloads, update-downloads, sync all work as expected with new values @done(2021-09-16)
 	- ./vangogh clean -s divinity_original_sin_2 -t - no xml files @done(2021-09-12) @project(Issues)
 	- downloads not updated on sync @done(2021-09-11) @project(Issues)
 	improve extracts: @done(2021-09-11)
