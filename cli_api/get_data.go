@@ -77,7 +77,7 @@ func GetData(
 		}
 
 		if !li {
-			log.Fatalf("user is not logged in")
+			return fmt.Errorf("user is not logged in")
 		}
 	}
 

@@ -56,6 +56,14 @@ func UpdateDownloads(
 		return err
 	}
 
+	//Additionally itemize required games for newly acquired DLCs
+	requiredGamesForNewDLCs, err := itemize.RequiredAndIncluded(since)
+	if err != nil {
+		return err
+	}
+
+	updAccountProductIds.AddSet(requiredGamesForNewDLCs)
+
 	if len(updAccountProductIds) == 0 {
 		fmt.Printf("all downloads are up to date\n")
 		return nil
@@ -74,7 +82,7 @@ func UpdateDownloads(
 			if err != nil {
 				return err
 			}
-			if ok {
+			if !ok {
 				updAccountProductIds.Hide(id)
 			}
 		}

@@ -7,10 +7,10 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"fmt"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/vangogh/cli_api"
 	"github.com/boggydigital/vangogh/internal"
-	"log"
 	"os"
 )
 
@@ -24,7 +24,8 @@ func main() {
 
 	defs, err := clo.Load(bytesBuffer, internal.CloValuesDelegates)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	clo.HandleFuncs(map[string]clo.Handler{
@@ -52,7 +53,8 @@ func main() {
 	})
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	//log.Printf("elapsed time: %dms\n", time.Since(start).Milliseconds())

@@ -64,7 +64,7 @@ func missingDetail(
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
 		fmt.Printf(" finding DLCs missing required base product... ")
-		rg, err := requiredGames(since)
+		rg, err := RequiredAndIncluded(since)
 		if err != nil {
 			return rg, err
 		}
@@ -212,10 +212,10 @@ func linkedGames(modifiedAfter int64) (gost.StrSet, error) {
 	return missingSet, nil
 }
 
-//itemizeRequiredGames enumerates all base products for a newly acquired DLCs
-func requiredGames(createdAfter int64) (gost.StrSet, error) {
+//RequiredAndIncluded enumerates all base products for a newly acquired DLCs
+func RequiredAndIncluded(createdAfter int64) (gost.StrSet, error) {
 
-	rgForNewLicSet := gost.NewStrSet()
+	newLicSet := gost.NewStrSet()
 
 	vrLicences, err := vangogh_values.NewReader(vangogh_products.LicenceProducts, gog_media.Game)
 	if err != nil {
@@ -242,11 +242,15 @@ func requiredGames(createdAfter int64) (gost.StrSet, error) {
 		}
 
 		for _, reqGame := range apv2.GetRequiresGames() {
-			rgForNewLicSet.Add(reqGame)
+			newLicSet.Add(reqGame)
+		}
+
+		for _, inclGame := range apv2.GetIncludesGames() {
+			newLicSet.Add(inclGame)
 		}
 	}
 
-	return rgForNewLicSet, nil
+	return newLicSet, nil
 }
 
 func printFoundAndAll(idSet gost.StrSet) []string {

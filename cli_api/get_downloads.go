@@ -14,7 +14,6 @@ import (
 	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -70,7 +69,7 @@ func GetDownloads(
 	}
 
 	if !li {
-		log.Fatalf("user is not logged in")
+		return fmt.Errorf("user is not logged in")
 	}
 
 	exl, err := vangogh_extracts.NewList(
