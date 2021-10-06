@@ -1,4 +1,4 @@
-package internal
+package clo_delegates
 
 import (
 	"github.com/arelate/gog_media"
@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var CloValuesDelegates = map[string]func() []string{
+var Values = map[string]func() []string{
 	"media":                 media,
 	"remote-product-types":  remoteProductTypes,
 	"local-product-types":   localProductTypes,

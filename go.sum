@@ -4,6 +4,8 @@ github.com/boggydigital/gost v0.1.0 h1:2RTyMgziKeBPxui7g77qk3t/4d/vijxVBka2WqwGX
 github.com/boggydigital/gost v0.1.0/go.mod h1:A/i4djAJV0niwrQm1D6DKB1yWYftdYphgmHf9r7iOz8=
 github.com/boggydigital/match_node v0.1.1 h1:ko5T4J19k9XxnBXavAPs8k3zQTm5dwT0MrBGv/rXqVo=
 github.com/boggydigital/match_node v0.1.1/go.mod h1:mXcbPjp9i6MI9wuxjfy0prMNL80DzTSwKfTOkTxDLf8=
+github.com/boggydigital/utter v0.0.0-20211002051143-29ed525642d7 h1:qUC7i5MD+6frIjVHja05qN8LpMIY2ODdzS6fi6GfvdQ=
+github.com/boggydigital/utter v0.0.0-20211002051143-29ed525642d7/go.mod h1:4B2pHxzL/gF+04/XAFFtmFmDBsutNQQBoIsh+O5k/0k=
 golang.org/x/net v0.0.0-20210525063256-abc453219eb5 h1:wjuX4b5yYQnEQHzd+CBcrcC6OVR2J1CN6mUy0oSxIPo=
 golang.org/x/net v0.0.0-20210525063256-abc453219eb5/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

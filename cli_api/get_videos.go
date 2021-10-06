@@ -80,7 +80,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 		for _, videoId := range videoIds {
 
-			vidUrls, err := yt_urls.StreamingUrls(videoId)
+			_, vidUrls, err := yt_urls.TitleStreamingUrls(videoId)
 			if err != nil {
 				fmt.Printf("(%s)", err)
 				if addErr := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {

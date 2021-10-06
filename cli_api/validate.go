@@ -13,6 +13,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"github.com/boggydigital/vangogh/cli_api/validation"
 	"io"
@@ -20,10 +21,12 @@ import (
 	"os"
 )
 
+const validationTopic = "validating:"
+
 var (
 	ErrUnresolvedManualUrl    = errors.New("not resolved manual-url")
 	ErrMissingDownload        = errors.New("download file missing")
-	ErrMissingValidationFile  = errors.New("validation file missing")
+	ErrMissingChecksum        = errors.New("checksum missing")
 	ErrValidationNotSupported = errors.New("validation not supported")
 	ErrValidationFailed       = errors.New("validation failed")
 )
@@ -55,6 +58,8 @@ func Validate(
 	langCodes []string,
 	all bool) error {
 
+	nod.Begin(validationTopic)
+
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.SlugProperty,
 		vangogh_properties.NativeLanguageNameProperty,
@@ -84,56 +89,35 @@ func Validate(
 		return err
 	}
 
-	fmt.Println()
-	fmt.Println("validation summary:")
-	fmt.Printf("%d product(s) successfully validated\n", len(vd.validated))
-	if len(vd.unresolvedManualUrl) > 0 {
-		fmt.Printf("%d product(s) have unresolved manual-url (not downloaded)\n", len(vd.unresolvedManualUrl))
-		for slug := range vd.unresolvedManualUrl {
-			fmt.Println("", slug)
-		}
-	}
-	if len(vd.missingDownloads) > 0 {
-		fmt.Printf("%d product(s) missing downloads\n", len(vd.missingDownloads))
-		for slug := range vd.missingDownloads {
-			fmt.Println("", slug)
-		}
-	}
-	if len(vd.missingChecksum) > 0 {
-		fmt.Printf("%d product(s) without checksum:\n", len(vd.missingChecksum))
-		for slug := range vd.missingChecksum {
-			fmt.Println("", slug)
-		}
-	}
-	if len(vd.failed) > 0 {
-		fmt.Printf("%d product(s) failed validation:\n", len(vd.failed))
-		for slug := range vd.failed {
-			fmt.Println("", slug)
-		}
-	}
+	summary := map[string][]string{}
+	tp := fmt.Sprintf("%d product(s) successfully validated", len(vd.validated))
+	summary[tp] = []string{}
+	maybeAddTopic(summary, "%d product(s) have unresolved manual-url (not downloaded)", vd.unresolvedManualUrl)
+	maybeAddTopic(summary, "%d product(s) missing downloads", vd.missingDownloads)
+	maybeAddTopic(summary, "%d product(s) without checksum", vd.missingChecksum)
+	maybeAddTopic(summary, "%d product(s) failed validation", vd.failed)
 	if len(vd.slugLastError) > 0 {
-		fmt.Printf("%d product(s) validation caused an error:\n", len(vd.slugLastError))
+		tp = fmt.Sprintf("%d product(s) validation caused an error", len(vd.slugLastError))
+		summary[tp] = make([]string, 0, len(vd.slugLastError))
 		for slug, err := range vd.slugLastError {
-			fmt.Printf(" %s: %s\n", slug, err)
+			summary[tp] = append(summary[tp], fmt.Sprintf(" %s: %s", slug, err))
 		}
 	}
+
+	nod.End(validationTopic)
+	nod.Summary(summary, validationTopic)
 
 	return nil
 }
 
-type progress struct {
-	total   uint64
-	current uint64
-	notify  func(uint64, uint64)
-}
-
-func (pr *progress) Write(p []byte) (int, error) {
-	n := len(p)
-	pr.current += uint64(n)
-	if pr.notify != nil {
-		pr.notify(pr.current, pr.total)
+func maybeAddTopic(summary map[string][]string, tmpl string, col map[string]bool) {
+	if len(col) > 0 {
+		tp := fmt.Sprintf(tmpl, len(col))
+		summary[tp] = make([]string, 0, len(col))
+		for it := range col {
+			summary[tp] = append(summary[tp], it)
+		}
 	}
-	return n, nil
 }
 
 func validateManualUrl(
@@ -145,6 +129,10 @@ func validateManualUrl(
 		return err
 	}
 
+	topics := []string{validationTopic, slug, dl.String()}
+
+	nod.Begin(topics...)
+
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 	localFile, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
 	if !ok {
@@ -155,6 +143,7 @@ func validateManualUrl(
 	//e.g. downloads/s/slug/local_filename
 	absLocalFile := vangogh_urls.DownloadRelToAbs(localFile)
 	if !vangogh_urls.CanValidate(absLocalFile) {
+		nod.End(topics...)
 		return ErrValidationNotSupported
 	}
 
@@ -165,10 +154,8 @@ func validateManualUrl(
 	absChecksumFile := vangogh_urls.LocalChecksumPath(absLocalFile)
 
 	if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
-		return ErrMissingValidationFile
+		return ErrMissingChecksum
 	}
-
-	fmt.Printf(" %s", dl)
 
 	chkFile, err := os.Open(absChecksumFile)
 	if err != nil {
@@ -194,14 +181,15 @@ func validateManualUrl(
 		return err
 	}
 
-	prg := &progress{
-		total: uint64(stat.Size())}
+	nod.Total(uint64(stat.Size()), topics...)
+	if err != nil {
+		return err
+	}
 
-	prg.notify = printCompletion
-	prg.notify(0, uint64(stat.Size()))
+	pw := nod.ProgressWriter(topics...)
 
 	for {
-		_, err = io.CopyN(h, io.TeeReader(sourceFile, prg), blockSize)
+		_, err = io.CopyN(h, io.TeeReader(sourceFile, pw), blockSize)
 		if err == io.EOF {
 			// This is not an error in the common sense
 			// io.EOF tells us, that we did read the complete body
@@ -211,17 +199,17 @@ func validateManualUrl(
 			return err
 		}
 	}
-	prg.notify(uint64(stat.Size()), uint64(stat.Size()))
 
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
 
-	if chkData.MD5 == sourceFileMD5 {
-		//spacing is intentional here to overwrite 100% progress (so it has to be 4 characters)
-		fmt.Println(" ok ")
-	} else {
-		fmt.Println(" FAIL")
+	if chkData.MD5 != sourceFileMD5 {
+		nod.Success(false, topics...)
 		return ErrValidationFailed
+	} else {
+		nod.Success(true, topics...)
 	}
+
+	nod.End(topics...)
 
 	return nil
 }
@@ -238,7 +226,9 @@ type validateDelegate struct {
 
 func (vd *validateDelegate) Process(_, slug string, list vangogh_downloads.DownloadsList) error {
 
-	fmt.Printf("validate %s:\n", slug)
+	topics := []string{validationTopic, slug}
+
+	nod.Begin(topics...)
 
 	if vd.validated == nil {
 		vd.validated = make(map[string]bool)
@@ -264,7 +254,7 @@ func (vd *validateDelegate) Process(_, slug string, list vangogh_downloads.Downl
 	for _, dl := range list {
 		if err := validateManualUrl(slug, &dl, vd.exl); errors.Is(err, ErrValidationNotSupported) {
 			continue
-		} else if errors.Is(err, ErrMissingValidationFile) {
+		} else if errors.Is(err, ErrMissingChecksum) {
 			vd.missingChecksum[slug] = true
 		} else if errors.Is(err, ErrUnresolvedManualUrl) {
 			vd.unresolvedManualUrl[slug] = true
@@ -273,7 +263,6 @@ func (vd *validateDelegate) Process(_, slug string, list vangogh_downloads.Downl
 		} else if errors.Is(err, ErrValidationFailed) {
 			vd.failed[slug] = true
 		} else if err != nil {
-			fmt.Println(err)
 			vd.slugLastError[slug] = err.Error()
 			continue
 		}
@@ -282,12 +271,15 @@ func (vd *validateDelegate) Process(_, slug string, list vangogh_downloads.Downl
 	}
 
 	if hasValidationTargets &&
-		!vd.unresolvedManualUrl[slug] &&
 		!vd.missingChecksum[slug] &&
+		!vd.unresolvedManualUrl[slug] &&
+		!vd.missingDownloads[slug] &&
 		!vd.failed[slug] &&
 		vd.slugLastError[slug] == "" {
 		vd.validated[slug] = true
 	}
+
+	nod.End(topics...)
 
 	return nil
 }

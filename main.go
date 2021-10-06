@@ -9,8 +9,9 @@ import (
 	_ "embed"
 	"fmt"
 	"github.com/boggydigital/clo"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api"
-	"github.com/boggydigital/vangogh/internal"
+	"github.com/boggydigital/vangogh/clo_delegates"
 	"os"
 )
 
@@ -20,9 +21,36 @@ var cloBytes []byte
 func main() {
 	//start := time.Now()
 
+	//t := time.Now().Unix()
+	//
+	//dd := simplex.DefaultDispatch
+	//if err := dd.Start("vangogh"); err != nil {
+	//	log.Fatal(err)
+	//}
+	//for _, i := range []int {1,2,3,4,5,6,7,8,9,10} {
+	//	fmt.Println(dd.Updates(t))
+	//	t = time.Now().Unix()
+	//	time.Sleep(time.Millisecond * 100)
+	//	if err := dd.Progress(uint64(i), 10, "vangogh"); err != nil {
+	//		log.Fatal(err)
+	//	}
+	//}
+	//
+	//fmt.Println(dd.Updates(t))
+	//
+	//if err := dd.End("vangogh"); err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//fmt.Println(dd.Updates(t))
+	//
+	//return
+
+	nod.EnableStdOut()
+
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
-	defs, err := clo.Load(bytesBuffer, internal.CloValuesDelegates)
+	defs, err := clo.Load(bytesBuffer, clo_delegates.Values)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
