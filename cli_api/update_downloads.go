@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
+	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/vangogh/cli_api/hours"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
@@ -41,17 +42,17 @@ func UpdateDownloads(
 
 	fmt.Println("updating downloads:")
 
-	//There are few alternatives to itemize products for downloads update:
-	//1) all account-products, details - that would be too much activity for
-	// very few updates (typically)
-	//2) modified account-products, details - this would capture all changes,
-	// including unrelated to actual product updates
-	//3) modified account-products with .Updates > 0 - this should be minimal
-	// required set of account-product updates that set themselves as "updated"
-	// or "new" (as visible on the GOG.com account page)
-	//Comparing those alternatives across runs, #3 seems pretty efficient and
-	//doesn't lead to attempts to update unchanged products.
-	updAccountProductIds, err := itemize.AccountProductsUpdates(mt, since)
+	//Here is a set of items we'll consider as updated for updating downloads:
+	//1) account-products updates, all products that have .IsNew or .Updates > 0 -
+	// basically items that GOG.com marked as new/updated
+	//2) required games for newly acquired license-products -
+	// making sure we update downloads for base product, when purchasing a DLC separately
+	//3) modified details (since certain time) -
+	// this accounts for interrupted sync, when we already processed account-products
+	// updates (so .IsNew or .Updates > 0 won't be true anymore) and have updated
+	// details as a result. This is somewhat excessive for general case, however would
+	// allow us to capture all updated account-products at a price of some extra checks
+	updAccountProductIds, err := itemize.AccountProductsUpdates(mt)
 	if err != nil {
 		return err
 	}
@@ -63,6 +64,15 @@ func UpdateDownloads(
 	}
 
 	updAccountProductIds.AddSet(requiredGamesForNewDLCs)
+
+	//Additionally add modified details in case the sync was interrupted and
+	//account-products doesn't have .IsNew or .Updates > 0 items
+	modifiedDetails, err := itemize.Modified(since, vangogh_products.Details, mt)
+	if err != nil {
+		return err
+	}
+
+	updAccountProductIds.AddSet(modifiedDetails)
 
 	if len(updAccountProductIds) == 0 {
 		fmt.Printf("all downloads are up to date\n")
