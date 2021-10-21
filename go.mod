@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/arelate/gog_auth v0.1.3-alpha
 	github.com/arelate/gog_media v0.1.3-alpha
-	github.com/arelate/gog_types v0.1.8-alpha // indirect
+	github.com/arelate/gog_types v0.1.8-alpha
 	github.com/arelate/gog_urls v0.1.9-alpha
 	github.com/arelate/vangogh_downloads v0.1.0
 	github.com/arelate/vangogh_extracts v0.1.0-alpha
@@ -20,7 +20,7 @@ require (
 	github.com/boggydigital/dolo v0.1.4-alpha
 	github.com/boggydigital/gost v0.1.0
 	github.com/boggydigital/kvas v0.1.9-alphago
-	github.com/boggydigital/nod v0.1.2
+	github.com/boggydigital/nod v0.1.4
 	github.com/boggydigital/yt_urls v0.1.1
 )
 
@@ -43,6 +43,6 @@ replace (
 	github.com/boggydigital/froth => ../froth
 	github.com/boggydigital/gost => ../gost
 	github.com/boggydigital/kvas => ../kvas
-	github.com/boggydigital/yt_urls => ../yt_urls
 	github.com/boggydigital/nod => ../nod
+	github.com/boggydigital/yt_urls => ../yt_urls
 )

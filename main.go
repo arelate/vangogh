@@ -7,7 +7,6 @@ package main
 import (
 	"bytes"
 	_ "embed"
-	"fmt"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api"
@@ -21,38 +20,16 @@ var cloBytes []byte
 func main() {
 	//start := time.Now()
 
-	//t := time.Now().Unix()
-	//
-	//dd := simplex.DefaultDispatch
-	//if err := dd.Start("vangogh"); err != nil {
-	//	log.Fatal(err)
-	//}
-	//for _, i := range []int {1,2,3,4,5,6,7,8,9,10} {
-	//	fmt.Println(dd.Updates(t))
-	//	t = time.Now().Unix()
-	//	time.Sleep(time.Millisecond * 100)
-	//	if err := dd.Progress(uint64(i), 10, "vangogh"); err != nil {
-	//		log.Fatal(err)
-	//	}
-	//}
-	//
-	//fmt.Println(dd.Updates(t))
-	//
-	//if err := dd.End("vangogh"); err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//fmt.Println(dd.Updates(t))
-	//
-	//return
+	nod.EnableStdOutPresenter()
 
-	nod.EnableStdOut()
+	ns := nod.SessionBegin()
+	defer ns.End()
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
 	defs, err := clo.Load(bytesBuffer, clo_delegates.Values)
 	if err != nil {
-		fmt.Println(err)
+		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
 
@@ -81,7 +58,7 @@ func main() {
 	})
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
-		fmt.Println(err)
+		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
 

@@ -64,8 +64,6 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 		return err
 	}
 
-	dl := dolo.NewClient(httpClient, printCompletion, dolo.Defaults())
-
 	fmt.Println("getting videos:")
 
 	for _, id := range idSet.All() {
@@ -78,15 +76,19 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 		fmt.Printf("%s %s", id, title)
 
+		dl := dolo.NewClient(httpClient, dolo.Defaults())
+
 		for _, videoId := range videoIds {
 
-			_, vidUrls, err := yt_urls.TitleStreamingUrls(videoId)
+			vp, err := yt_urls.GetVideoPage(videoId)
 			if err != nil {
 				fmt.Printf("(%s)", err)
 				if addErr := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
 					return addErr
 				}
 			}
+
+			vidUrls := vp.StreamingFormats()
 
 			if len(vidUrls) == 0 {
 				if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
@@ -96,7 +98,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 			for _, vidUrl := range vidUrls {
 
-				if vidUrl == nil || len(vidUrl.String()) == 0 {
+				if vidUrl.Url == "" {
 					if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
 						return err
 					}
@@ -110,7 +112,12 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 					return err
 				}
 
-				_, err = dl.Download(vidUrl, dir, videoId+videoExt)
+				u, err := url.Parse(vidUrl.Url)
+				if err != nil {
+					return err
+				}
+
+				_, err = dl.Download(u, dir, videoId+videoExt, nil)
 				if err != nil {
 					fmt.Printf("(%s)", err)
 					continue

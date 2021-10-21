@@ -1,7 +1,6 @@
 package cli_api
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
@@ -10,6 +9,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 	"os"
@@ -49,6 +49,9 @@ func Cleanup(
 	if err != nil {
 		return err
 	}
+
+	ca := nod.Begin("cleaning up:")
+	defer ca.End()
 
 	if all {
 		vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
@@ -96,12 +99,11 @@ type cleanupDelegate struct {
 
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads.DownloadsList) error {
 
+	csa := nod.Begin(slug)
+	defer csa.End()
+
 	if err := cd.exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
 		return err
-	}
-
-	if !cd.all {
-		fmt.Println("cleaning up", slug)
 	}
 
 	//cleanup process:
@@ -117,6 +119,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 		return err
 	}
 
+	ceft := nod.Begin("checking expected files")
 	for _, dl := range list {
 		if localFilename, ok := cd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
@@ -128,24 +131,27 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 			expectedSet.Add(relFilename)
 		}
 	}
+	ceft.End()
 
+	cpft := nod.Begin("checking present files")
 	//LocalSlugDownloads returns list of files relative to s/slug product directory
 	presentSet, err := vangogh_urls.LocalSlugDownloads(slug)
 	if err != nil {
 		return err
 	}
+	cpft.End()
 
 	unexpectedFiles := presentSet.Except(expectedSet)
 	if len(unexpectedFiles) == 0 {
 		if !cd.all {
-			fmt.Println(" already clean")
+			csa.EndWithResult("already clean")
 		}
 		return nil
 	}
 
-	if cd.all {
-		fmt.Println("cleaning up", slug)
-	}
+	//if cd.all {
+	//	fmt.Println("cleaning up", slug)
+	//}
 
 	for _, unexpectedFile := range unexpectedFiles {
 		//restore absolute from local_filename to s/slug/local_filename
@@ -153,27 +159,33 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		prefix := " DELETE"
-		if cd.test {
-			prefix = " TEST"
-		}
-		fmt.Println(prefix, downloadFilename)
+		//prefix := " DELETE"
+		//if cd.test {
+		//	prefix = " TEST"
+		//}
+		//fmt.Println(prefix, downloadFilename)
+
+		dft := nod.Begin(downloadFilename)
 		if !cd.test {
 			if err := moveToRecycleBin(downloadFilename); err != nil {
-				return err
+				return dft.EndWithError(err)
 			}
 		}
+		dft.End()
 
 		checksumFile := vangogh_urls.LocalChecksumPath(downloadFilename)
 		if _, err := os.Stat(checksumFile); os.IsNotExist(err) {
 			continue
 		}
-		fmt.Println(prefix, checksumFile)
+
+		//fmt.Println(prefix, checksumFile)
+		cft := nod.Begin(checksumFile)
 		if !cd.test {
 			if err := moveToRecycleBin(checksumFile); err != nil {
-				return err
+				return cft.EndWithError(err)
 			}
 		}
+		cft.End()
 	}
 
 	return nil

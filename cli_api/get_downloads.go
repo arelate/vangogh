@@ -152,7 +152,7 @@ func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_downloads.
 	//there is no need to use internal httpClient with cookie support for downloading
 	//manual downloads, so we're going to rely on default http.Client
 	defaultClient := http.DefaultClient
-	dlClient := dolo.NewClient(defaultClient, printCompletion, dolo.Defaults())
+	dlClient := dolo.NewClient(defaultClient, dolo.Defaults())
 
 	for _, dl := range list {
 		if err := gdd.downloadManualUrl(slug, &dl, httpClient, dlClient); err != nil {
@@ -236,7 +236,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			resolvedUrl.Path = remoteChecksumPath
 			valDir, valFilename := path.Split(localChecksumPath)
 			if _, err := dlClient.Download(
-				resolvedUrl, valDir, valFilename); err != nil {
+				resolvedUrl, valDir, valFilename, nil); err != nil {
 				return err
 			}
 			resolvedUrl.Path = originalPath
@@ -245,7 +245,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//5
-	if _, err := dlClient.Download(resolvedUrl, absDir, filename); err != nil {
+	if _, err := dlClient.Download(resolvedUrl, absDir, filename, nil); err != nil {
 		return err
 	}
 

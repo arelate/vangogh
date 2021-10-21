@@ -21,8 +21,6 @@ import (
 	"os"
 )
 
-const validationTopic = "validating:"
-
 var (
 	ErrUnresolvedManualUrl    = errors.New("not resolved manual-url")
 	ErrMissingDownload        = errors.New("download file missing")
@@ -58,7 +56,8 @@ func Validate(
 	langCodes []string,
 	all bool) error {
 
-	nod.Begin(validationTopic)
+	va := nod.Begin("validating:")
+	defer va.End()
 
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.SlugProperty,
@@ -104,8 +103,7 @@ func Validate(
 		}
 	}
 
-	nod.End(validationTopic)
-	nod.Summary(summary, validationTopic)
+	va.EndWithSummary(summary)
 
 	return nil
 }
@@ -129,48 +127,46 @@ func validateManualUrl(
 		return err
 	}
 
-	topics := []string{validationTopic, slug, dl.String()}
-
-	nod.Begin(topics...)
+	mua := nod.TotalProgress(dl.String())
+	defer mua.End()
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 	localFile, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
 	if !ok {
-		return ErrUnresolvedManualUrl
+		return mua.EndWithError(ErrUnresolvedManualUrl)
 	}
 
 	//absolute path (given a downloads/ root) for a s/slug/local_filename,
 	//e.g. downloads/s/slug/local_filename
 	absLocalFile := vangogh_urls.DownloadRelToAbs(localFile)
 	if !vangogh_urls.CanValidate(absLocalFile) {
-		nod.End(topics...)
-		return ErrValidationNotSupported
+		return mua.EndWithError(ErrValidationNotSupported)
 	}
 
 	if _, err := os.Stat(absLocalFile); os.IsNotExist(err) {
-		return ErrMissingDownload
+		return mua.EndWithError(ErrMissingDownload)
 	}
 
 	absChecksumFile := vangogh_urls.LocalChecksumPath(absLocalFile)
 
 	if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
-		return ErrMissingChecksum
+		return mua.EndWithError(ErrMissingChecksum)
 	}
 
 	chkFile, err := os.Open(absChecksumFile)
 	if err != nil {
-		return err
+		return mua.EndWithError(err)
 	}
 	defer chkFile.Close()
 
 	var chkData validation.File
 	if err := xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
-		return err
+		return mua.EndWithError(err)
 	}
 
 	sourceFile, err := os.Open(absLocalFile)
 	if err != nil {
-		return err
+		return mua.EndWithError(err)
 	}
 	defer sourceFile.Close()
 
@@ -178,38 +174,34 @@ func validateManualUrl(
 
 	stat, err := sourceFile.Stat()
 	if err != nil {
-		return err
+		return mua.EndWithError(err)
 	}
 
-	nod.Total(uint64(stat.Size()), topics...)
+	mua.Total(uint64(stat.Size()))
 	if err != nil {
-		return err
+		return mua.EndWithError(err)
 	}
-
-	pw := nod.ProgressWriter(topics...)
 
 	for {
-		_, err = io.CopyN(h, io.TeeReader(sourceFile, pw), blockSize)
+		_, err = io.CopyN(h, io.TeeReader(sourceFile, mua), blockSize)
 		if err == io.EOF {
 			// This is not an error in the common sense
 			// io.EOF tells us, that we did read the complete body
 			break
 		} else if err != nil {
 			//You should do error handling here
-			return err
+			return mua.EndWithError(err)
 		}
 	}
 
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
 
 	if chkData.MD5 != sourceFileMD5 {
-		nod.Success(false, topics...)
+		mua.EndWithResult("error")
 		return ErrValidationFailed
 	} else {
-		nod.Success(true, topics...)
+		mua.EndWithResult("valid")
 	}
-
-	nod.End(topics...)
 
 	return nil
 }
@@ -226,9 +218,8 @@ type validateDelegate struct {
 
 func (vd *validateDelegate) Process(_, slug string, list vangogh_downloads.DownloadsList) error {
 
-	topics := []string{validationTopic, slug}
-
-	nod.Begin(topics...)
+	sva := nod.Begin(slug)
+	defer sva.End()
 
 	if vd.validated == nil {
 		vd.validated = make(map[string]bool)
@@ -278,8 +269,6 @@ func (vd *validateDelegate) Process(_, slug string, list vangogh_downloads.Downl
 		vd.slugLastError[slug] == "" {
 		vd.validated[slug] = true
 	}
-
-	nod.End(topics...)
 
 	return nil
 }

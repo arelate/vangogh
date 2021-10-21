@@ -98,7 +98,7 @@ func GetImages(
 		return err
 	}
 
-	dl := dolo.NewClient(httpClient, nil, dolo.Defaults())
+	dl := dolo.NewClient(httpClient, dolo.Defaults())
 
 	fmt.Println("getting images:")
 
@@ -130,7 +130,7 @@ func GetImages(
 				fmt.Print(".")
 				dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
 
-				_, err = dl.Download(srcUrl, dstDir, "")
+				_, err = dl.Download(srcUrl, dstDir, "", nil)
 				if err != nil {
 					fmt.Println(err)
 					continue

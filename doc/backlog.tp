@@ -1,20 +1,38 @@
 Issues:
 	No known at the moment
 
-improve update-downloads:
-	- add newly aquired DLCs to itemized product ids
+implement nod support:
+	- add log/debug presenter
+	- add current status output
+	- update individual cmds:
+		- auth
+		- cleanup @done(2021-10-09)
+		- digest
+		- extract
+		- get-data
+		- get-downloads
+		- get-images
+		- get-videos
+		- info
+		- list
+		- owned
+		- scrub-data
+		- search
+		- serve
+		- size
+		- summary
+		- sync
+		- tag
+		- update-downloads
+		- validate
+		- wishlist
 
-improve validation:
-	- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement
-	
+dolo improvements:
+	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
+
 DRY progress display:
 	- it's copied in dolo, vangogh validation
 	- DRY copy code with progress callback (to be used in dolo, validation, more?)
-	
-implement new status tracking system:
-	- report current action and progress in output agnostic way
-	- status itself creates output
-	- status is also capable of creating data suitable for endpoint, not just console
 	
 improve size:
 	- consider providing more precise estimates
@@ -105,6 +123,16 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	implement new status tracking system: @done(2021-10-09)
+		- report current action and progress in output agnostic way @done(2021-10-09)
+		- status itself creates output @done(2021-10-09)
+		- status is also capable of creating data suitable for endpoint, not just console @done(2021-10-09)
+		
+	improve update-downloads: @done(2021-10-09)
+		- add newly aquired DLCs to itemized product ids @done(2021-10-09)
+	improve validation: @done(2021-10-09)
+		- ./vangogh val -s heretic_kingdoms_the_inquisition -o win - wrong ok placement @done(2021-10-09)
+		
 	- get-down -s huntdown is slow @done(2021-09-21) @project(Issues)
 	clo improvements: @done(2021-09-16)
 		- add support for local default overrides @done(2021-09-16)
