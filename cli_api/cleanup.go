@@ -99,7 +99,7 @@ type cleanupDelegate struct {
 
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads.DownloadsList) error {
 
-	csa := nod.Begin(slug)
+	csa := nod.QueueBegin(slug)
 	defer csa.End()
 
 	if err := cd.exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
@@ -119,7 +119,6 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 		return err
 	}
 
-	ceft := nod.Begin("checking expected files")
 	for _, dl := range list {
 		if localFilename, ok := cd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
@@ -131,27 +130,26 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 			expectedSet.Add(relFilename)
 		}
 	}
-	ceft.End()
 
-	cpft := nod.Begin("checking present files")
 	//LocalSlugDownloads returns list of files relative to s/slug product directory
 	presentSet, err := vangogh_urls.LocalSlugDownloads(slug)
 	if err != nil {
 		return err
 	}
-	cpft.End()
 
 	unexpectedFiles := presentSet.Except(expectedSet)
+
 	if len(unexpectedFiles) == 0 {
 		if !cd.all {
-			csa.EndWithResult("already clean")
+			csa.EndWithResult("- already clean")
+			csa.Flush()
 		}
 		return nil
 	}
 
-	//if cd.all {
-	//	fmt.Println("cleaning up", slug)
-	//}
+	//given some unexpected files - flush message queue to output slug and put the files
+	//output next in context of a slug we've queued earlier
+	csa.Flush()
 
 	for _, unexpectedFile := range unexpectedFiles {
 		//restore absolute from local_filename to s/slug/local_filename
@@ -159,13 +157,12 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
 			continue
 		}
-		//prefix := " DELETE"
-		//if cd.test {
-		//	prefix = " TEST"
-		//}
-		//fmt.Println(prefix, downloadFilename)
+		prefix := "DELETE"
+		if cd.test {
+			prefix = "TEST"
+		}
 
-		dft := nod.Begin(downloadFilename)
+		dft := nod.Begin(" %s %s", prefix, downloadFilename)
 		if !cd.test {
 			if err := moveToRecycleBin(downloadFilename); err != nil {
 				return dft.EndWithError(err)
@@ -178,8 +175,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 			continue
 		}
 
-		//fmt.Println(prefix, checksumFile)
-		cft := nod.Begin(checksumFile)
+		cft := nod.Begin(" %s %s", prefix, checksumFile)
 		if !cd.test {
 			if err := moveToRecycleBin(checksumFile); err != nil {
 				return cft.EndWithError(err)

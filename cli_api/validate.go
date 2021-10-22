@@ -127,7 +127,7 @@ func validateManualUrl(
 		return err
 	}
 
-	mua := nod.TotalProgress(dl.String())
+	mua := nod.NewProgress(" " + dl.String())
 	defer mua.End()
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)

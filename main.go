@@ -22,7 +22,7 @@ func main() {
 
 	nod.EnableStdOutPresenter()
 
-	ns := nod.SessionBegin()
+	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
