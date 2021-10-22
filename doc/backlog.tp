@@ -1,26 +1,18 @@
 Issues:
 	No known at the moment
 
-nod improvements based on application:
-	- rework LF before/after to:
-		- store before (as it is right now) and only execute on output
-		- perform after right away and flag it happened, don't do any more LFs until next output (reset the flag in that case)
-	- need some sort of conditional output
-		- accumulate messages and allow client to Flush conditionally or Discard the buffer
-
 implement nod support:
 	- add log/debug presenter
 	- add current status output
 	- update individual cmds:
 		- auth
-		- cleanup @done(2021-10-09)
-		- digest
+		- digest @done(2021-10-22)
 		- extract
 		- get-data
 		- get-downloads
 		- get-images
 		- get-videos
-		- info
+		- info @done(2021-10-22)
 		- list
 		- owned
 		- scrub-data
@@ -130,6 +122,13 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	nod improvements based on application: @done(2021-10-22)
+		- rework LF before/after to: @done(2021-10-22)
+			- store before (as it is right now) and only execute on output @done(2021-10-22)
+			- perform after right away and flag it happened, don't do any more LFs until next output (reset the flag in that case) @done(2021-10-22)
+		- need some sort of conditional output @done(2021-10-22)
+			- accumulate messages and allow client to Flush conditionally or Discard the buffer @done(2021-10-22)
+	- cleanup @done(2021-10-09) @project(implement nod support)
 	implement new status tracking system: @done(2021-10-09)
 		- report current action and progress in output agnostic way @done(2021-10-09)
 		- status itself creates output @done(2021-10-09)

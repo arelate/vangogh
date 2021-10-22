@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
@@ -14,6 +15,9 @@ func DigestHandler(u *url.URL) error {
 }
 
 func Digest(property string) error {
+
+	da := nod.Begin("digesting:")
+	defer da.End()
 
 	exl, err := vangogh_extracts.NewList(property)
 	if err != nil {
@@ -41,13 +45,15 @@ func Digest(property string) error {
 		keys = append(keys, key)
 	}
 
-	var sorted []string
+	_, sorted := gost.NewIntSortedStrSetWith(distValues, output.DefaultDesc)
 
-	_, sorted = gost.NewIntSortedStrSetWith(distValues, output.DefaultDesc)
-
+	summary := make(map[string][]string)
+	summary[""] = make([]string, 0, len(sorted))
 	for _, key := range sorted {
-		fmt.Printf("%s: %d items\n", key, distValues[key])
+		summary[""] = append(summary[""], fmt.Sprintf("%s: %d items", key, distValues[key]))
 	}
+
+	da.EndWithSummary(summary)
 
 	return nil
 }
