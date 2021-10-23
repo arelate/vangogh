@@ -7,13 +7,18 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 )
 
 func GetLanguageCodes(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error) {
+
+	lca := nod.Begin(" %s...", vangogh_properties.LanguageCodeProperty)
+	defer lca.EndWithResult("done")
+
 	langCodeSet := gost.NewStrSet()
 
 	if err := exl.AssertSupport(vangogh_properties.LanguageCodeProperty); err != nil {
-		return langCodeSet, err
+		return langCodeSet, lca.EndWithError(err)
 	}
 
 	//digest distinct languages codes
@@ -59,14 +64,17 @@ func updateLanguageNames(languages map[string]string, missingNames gost.StrSet, 
 func LanguageNames(langCodeSet gost.StrSet) error {
 	property := vangogh_properties.LanguageNameProperty
 
+	lna := nod.Begin(" %s...", property)
+	defer lna.EndWithResult("done")
+
 	langNamesEx, err := vangogh_extracts.NewList(property)
 	if err != nil {
-		return err
+		return lna.EndWithError(err)
 	}
 
 	missingLangs, err := getMissingLanguageNames(langCodeSet, langNamesEx, property)
 	if err != nil {
-		return err
+		return lna.EndWithError(err)
 	}
 
 	if missingLangs.Len() == 0 {
@@ -79,13 +87,13 @@ func LanguageNames(langCodeSet gost.StrSet) error {
 	//iterate through api-products-v1 until we fill all native names
 	vrApiProductsV2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
 	if err != nil {
-		return err
+		return lna.EndWithError(err)
 	}
 
 	for _, id := range vrApiProductsV2.All() {
 		apv2, err := vrApiProductsV2.ApiProductV2(id)
 		if err != nil {
-			return err
+			return lna.EndWithError(err)
 		}
 
 		updateLanguageNames(apv2.GetLanguages(), missingLangs, names)
@@ -95,29 +103,37 @@ func LanguageNames(langCodeSet gost.StrSet) error {
 		}
 	}
 
-	return langNamesEx.SetMany(property, names)
+	if err := langNamesEx.SetMany(property, names); err != nil {
+		return lna.EndWithError(err)
+	}
+
+	return nil
 }
 
 func NativeLanguageNames(langCodeSet gost.StrSet) error {
 	property := vangogh_properties.NativeLanguageNameProperty
 
+	nlna := nod.Begin(" %s...", property)
+	defer nlna.End()
+
 	langNamesEx, err := vangogh_extracts.NewList(property)
 	if err != nil {
-		return err
+		return nlna.EndWithError(err)
 	}
 
 	missingNativeLangs, err := getMissingLanguageNames(langCodeSet, langNamesEx, property)
 	if err != nil {
-		return err
+		return nlna.EndWithError(err)
 	}
 
 	if missingNativeLangs.Len() == 0 {
+		nlna.EndWithResult("done")
 		return nil
 	}
 
 	vrApiProductsV1, err := vangogh_values.NewReader(vangogh_products.ApiProductsV1, gog_media.Game)
 	if err != nil {
-		return err
+		return nlna.EndWithError(err)
 	}
 
 	missingNativeLangs = gost.NewStrSetWith(langCodeSet.All()...)
@@ -126,7 +142,7 @@ func NativeLanguageNames(langCodeSet gost.StrSet) error {
 	for _, id := range vrApiProductsV1.All() {
 		apv1, err := vrApiProductsV1.ApiProductV1(id)
 		if err != nil {
-			return err
+			return nlna.EndWithError(err)
 		}
 
 		updateLanguageNames(apv1.GetNativeLanguages(), missingNativeLangs, nativeNames)
@@ -136,5 +152,11 @@ func NativeLanguageNames(langCodeSet gost.StrSet) error {
 		}
 	}
 
-	return langNamesEx.SetMany(property, nativeNames)
+	if err := langNamesEx.SetMany(property, nativeNames); err != nil {
+		return nlna.EndWithError(err)
+	}
+
+	nlna.EndWithResult("done")
+
+	return nil
 }
