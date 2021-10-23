@@ -1,7 +1,6 @@
 package cli_api
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
@@ -9,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
@@ -41,23 +41,26 @@ func Size(
 	missing bool,
 	all bool) error {
 
+	sa := nod.NewProgress("estimating downloads size:")
+	defer sa.End()
+
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.LocalManualUrl,
 		vangogh_properties.NativeLanguageNameProperty,
 		vangogh_properties.SlugProperty,
 		vangogh_properties.DownloadStatusError)
 	if err != nil {
-		return err
+		return sa.EndWithError(err)
 	}
 
 	if missing {
 		missingIds, err := itemize.MissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
 		if err != nil {
-			return err
+			return sa.EndWithError(err)
 		}
 
 		if missingIds.Len() == 0 {
-			fmt.Println("all downloads are available locally")
+			sa.EndWithResult("no missing downloads")
 			return nil
 		}
 
@@ -67,13 +70,13 @@ func Size(
 	if all {
 		vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
 		if err != nil {
-			return err
+			return sa.EndWithError(err)
 		}
 		idSet.Add(vrDetails.All()...)
 	}
 
 	if idSet.Len() == 0 {
-		fmt.Println("no ids to estimate size")
+		sa.EndWithResult("no ids to estimate size")
 		return nil
 	}
 
@@ -90,7 +93,7 @@ func Size(
 		return err
 	}
 
-	fmt.Printf("est. download size: %.2fGB\n", sd.TotalGBsEstimate())
+	sa.EndWithResult("%.2fGB", sd.TotalGBsEstimate())
 
 	return nil
 }

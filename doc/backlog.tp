@@ -6,13 +6,10 @@ implement nod support:
 	- add current status output
 	- update individual cmds:
 		- auth
-		- digest @done(2021-10-22)
-		- extract
 		- get-data
 		- get-downloads
 		- get-images
 		- get-videos
-		- info @done(2021-10-22)
 		- list
 		- owned
 		- scrub-data
@@ -122,6 +119,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- digest @done(2021-10-22) @project(implement nod support)
+	- extract @done(2021-10-22) @project(implement nod support)
+	- info @done(2021-10-22) @project(implement nod support)
 	nod improvements based on application: @done(2021-10-22)
 		- rework LF before/after to: @done(2021-10-22)
 			- store before (as it is right now) and only execute on output @done(2021-10-22)

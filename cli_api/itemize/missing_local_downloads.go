@@ -9,6 +9,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"os"
 	"path/filepath"
 )
@@ -28,21 +29,28 @@ func MissingLocalDownloads(
 	//3. check if slug dir is not present in downloads -> add to missingIds
 	//4. check if any expected (resolved manualUrls) files are not present -> add to missingIds
 
+	mlda := nod.NewProgress(" itemizing missing local downloads")
+	defer mlda.End()
+
 	if err := exl.AssertSupport(
 		vangogh_properties.LocalManualUrl,
 		vangogh_properties.DownloadStatusError); err != nil {
-		return nil, err
+		return nil, mlda.EndWithError(err)
 	}
 
 	vrDetails, err := vangogh_values.NewReader(vangogh_products.Details, mt)
 	if err != nil {
-		return nil, err
+		return nil, mlda.EndWithError(err)
 	}
 
 	//1
 	allIds := gost.NewStrSetWith(vrDetails.All()...)
 
-	mdd := &missingDownloadsDelegate{exl: exl}
+	mlda.Total(uint64(allIds.Len()))
+
+	mdd := &missingDownloadsDelegate{
+		exl: exl,
+		tpw: mlda}
 
 	if err := vangogh_downloads.Map(
 		allIds,
@@ -52,13 +60,14 @@ func MissingLocalDownloads(
 		downloadTypes,
 		langCodes,
 		mdd); err != nil {
-		return mdd.missingIds, err
+		return mdd.missingIds, mlda.EndWithError(err)
 	}
 
 	return mdd.missingIds, nil
 }
 
 type missingDownloadsDelegate struct {
+	tpw        nod.TotalProgressWriter
 	exl        *vangogh_extracts.ExtractsList
 	missingIds gost.StrSet
 }
@@ -126,6 +135,8 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_downl
 	if len(missingFiles) > 0 {
 		mdd.missingIds.Add(id)
 	}
+
+	mdd.tpw.Increment()
 
 	return nil
 }
