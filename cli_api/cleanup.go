@@ -50,7 +50,7 @@ func Cleanup(
 		return err
 	}
 
-	ca := nod.Begin("cleaning up:")
+	ca := nod.NewProgress("cleaning up:")
 	defer ca.End()
 
 	if all {
@@ -64,7 +64,11 @@ func Cleanup(
 	cd := &cleanupDelegate{
 		exl:  exl,
 		all:  all,
-		test: test}
+		test: test,
+		tpw:  ca,
+	}
+
+	ca.Total(uint64(idSet.Len()))
 
 	if err := vangogh_downloads.Map(
 		idSet,
@@ -95,12 +99,14 @@ type cleanupDelegate struct {
 	exl  *vangogh_extracts.ExtractsList
 	all  bool
 	test bool
+	tpw  nod.TotalProgressWriter
 }
 
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads.DownloadsList) error {
 
 	csa := nod.QueueBegin(slug)
 	defer csa.End()
+	defer cd.tpw.Increment()
 
 	if err := cd.exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
 		return err
