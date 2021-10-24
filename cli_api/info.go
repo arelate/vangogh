@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
@@ -24,6 +25,9 @@ func InfoHandler(u *url.URL) error {
 
 func Info(idSet gost.StrSet, allText, images, videoId bool) error {
 
+	ia := nod.Begin("information about %d item(s)...", idSet.Len())
+	defer ia.End()
+
 	propSet := gost.NewStrSetWith(vangogh_properties.TypesProperty)
 
 	propSet.Add(vangogh_properties.Text()...)
@@ -39,12 +43,20 @@ func Info(idSet gost.StrSet, allText, images, videoId bool) error {
 
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
-		return err
+		return ia.EndWithError(err)
 	}
 
-	return output.Items(
+	itp, err := output.Items(
 		idSet.All(),
 		nil,
 		propSet.All(),
 		exl)
+
+	if err != nil {
+		return ia.EndWithError(err)
+	}
+
+	ia.EndWithSummary(itp)
+
+	return nil
 }

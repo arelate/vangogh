@@ -10,10 +10,8 @@ implement nod support:
 		- get-downloads
 		- get-images
 		- get-videos
-		- list
 		- owned
 		- scrub-data
-		- search
 		- serve
 		- summary
 		- sync
@@ -118,6 +116,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- info @done(2021-10-23) @project(implement nod support)
+	- list @done(2021-10-23) @project(implement nod support)
+	- search @done(2021-10-23) @project(implement nod support)
 	- size @done(2021-10-22) @project(implement nod support)
 	- digest @done(2021-10-22) @project(implement nod support)
 	- extract @done(2021-10-22) @project(implement nod support)

@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/hours"
 	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
@@ -48,11 +49,14 @@ func List(
 	mt gog_media.Media,
 	properties []string) error {
 
+	la := nod.Begin("listing %s...", pt)
+	defer la.End()
+
 	if !vangogh_products.Valid(pt) {
-		return fmt.Errorf("can't list invalid product type %s", pt)
+		return la.EndWithError(fmt.Errorf("can't list invalid product type %s", pt))
 	}
 	if !gog_media.Valid(mt) {
-		return fmt.Errorf("can't list invalid media %s", mt)
+		return la.EndWithError(fmt.Errorf("can't list invalid media %s", mt))
 	}
 
 	propSet := gost.NewStrSetWith(properties...)
@@ -78,13 +82,13 @@ func List(
 
 	vr, err := vangogh_values.NewReader(pt, mt)
 	if err != nil {
-		return err
+		return la.EndWithError(err)
 	}
 
 	if modifiedSince > 0 {
 		idSet.Add(vr.ModifiedAfter(modifiedSince, false)...)
 		if idSet.Len() == 0 {
-			fmt.Printf("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedSince, 0).Format(time.Kitchen))
+			la.EndWithResult("no new or updated %s (%s) since %v\n", pt, mt, time.Unix(modifiedSince, 0).Format(time.Kitchen))
 		}
 	}
 
@@ -93,9 +97,17 @@ func List(
 		idSet.Add(vr.All()...)
 	}
 
-	return output.Items(
+	itp, err := output.Items(
 		idSet.All(),
 		nil,
 		vangogh_properties.Supported(pt, properties),
 		nil)
+
+	if err != nil {
+		return la.EndWithError(err)
+	}
+
+	la.EndWithSummary(itp)
+
+	return nil
 }

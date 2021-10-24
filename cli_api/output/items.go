@@ -14,7 +14,7 @@ func Items(
 	ids []string,
 	propertyFilter map[string][]string,
 	properties []string,
-	exl *vangogh_extracts.ExtractsList) error {
+	exl *vangogh_extracts.ExtractsList) (map[string][]string, error) {
 
 	propSet := gost.NewStrSetWith(properties...)
 	propSet.Add(vangogh_properties.TitleProperty)
@@ -23,38 +23,48 @@ func Items(
 		var err error
 		exl, err = vangogh_extracts.NewList(propSet.All()...)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 
 	idSet := vangogh_sets.IdSetWith(ids...)
 
+	itps := make(map[string][]string)
+
 	for _, id := range idSet.Sort(exl, DefaultSort, DefaultDesc) {
-		if err := item(id, propertyFilter, propSet.All(), exl); err != nil {
-			return err
+		itp, err := item(id, propertyFilter, propSet.All(), exl)
+		if err != nil {
+			return itps, err
+		}
+		for idTitle, props := range itp {
+			itps[idTitle] = props
 		}
 	}
 
-	return nil
+	return itps, nil
 }
 
 func item(
 	id string,
 	propertyFilter map[string][]string,
 	properties []string,
-	exl *vangogh_extracts.ExtractsList) error {
+	exl *vangogh_extracts.ExtractsList) (map[string][]string, error) {
 
 	if err := exl.AssertSupport(properties...); err != nil {
-		return err
+		return nil, err
 	}
 
 	title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 	if !ok {
-		fmt.Printf("product %s not found\n", id)
-		return nil
+		//fmt.Printf("product %s not found\n", id)
+		return nil, nil
 	}
 
-	fmt.Println(id, title)
+	itp := make(map[string][]string)
+	idTitle := fmt.Sprintf("%s %s", id, title)
+	itp[idTitle] = make([]string, 0)
+
+	//fmt.Println(id, title)
 
 	sort.Strings(properties)
 
@@ -74,7 +84,7 @@ func item(
 			if shouldSkip(joinedValue, filterValues) {
 				continue
 			}
-			fmt.Printf(" %s:%s\n", prop, joinedValue)
+			itp[idTitle] = append(itp[idTitle], fmt.Sprintf("%s:%s", prop, joinedValue))
 			continue
 		}
 
@@ -82,11 +92,11 @@ func item(
 			if shouldSkip(val, filterValues) {
 				continue
 			}
-			fmt.Printf(" %s:%s\n", prop, val)
+			itp[idTitle] = append(itp[idTitle], fmt.Sprintf("%s:%s", prop, val))
 		}
 	}
 
-	return nil
+	return itp, nil
 }
 
 func shouldSkip(value string, filterValues []string) bool {

@@ -1,10 +1,10 @@
 package cli_api
 
 import (
-	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
@@ -22,6 +22,9 @@ func SearchHandler(u *url.URL) error {
 
 func Search(query map[string][]string) error {
 
+	sa := nod.Begin("search results...")
+	defer sa.End()
+
 	//prepare a list of all properties to load extracts for and
 	//always start with a `title` property since it is printed for all matched item
 	//(even if the match is for another property)
@@ -32,7 +35,7 @@ func Search(query map[string][]string) error {
 
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
-		return err
+		return sa.EndWithError(err)
 	}
 
 	results := exl.Search(query, true)
@@ -52,14 +55,22 @@ func Search(query map[string][]string) error {
 	}
 
 	if len(results) == 0 {
-		fmt.Println("no products found")
+		sa.EndWithResult("no products found")
 		return nil
 	}
 
-	return output.Items(
+	itp, err := output.Items(
 		results,
 		propertyFilter,
 		//similarly for propertyFilter (see comment above) - expand all properties to display
 		vangogh_properties.ExpandAll(propSet.All()),
 		exl)
+
+	if err != nil {
+		return sa.EndWithError(err)
+	}
+
+	sa.EndWithSummary(itp)
+
+	return nil
 }
