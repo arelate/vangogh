@@ -3,8 +3,11 @@ package cli_api
 import (
 	"fmt"
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
+	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/hours"
 	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
@@ -49,6 +52,9 @@ func SummaryHandler(u *url.URL) error {
 
 func Summary(mt gog_media.Media, since int64) error {
 
+	sa := nod.Begin("key changes since %s:", time.Unix(since, 0).Format("01/02 03:04PM"))
+	defer sa.End()
+
 	updates := make(map[string][]string, 0)
 
 	for _, pt := range vangogh_products.Local() {
@@ -59,7 +65,7 @@ func Summary(mt gog_media.Media, since int64) error {
 
 		vr, err := vangogh_values.NewReader(pt, mt)
 		if err != nil {
-			return err
+			return sa.EndWithError(err)
 		}
 
 		categorize(vr.CreatedAfter(since),
@@ -76,13 +82,26 @@ func Summary(mt gog_media.Media, since int64) error {
 	}
 
 	if len(updates) == 0 {
-		fmt.Printf("no new or updated products since %s.\n", time.Unix(since, 0).Format(time.Kitchen))
+		sa.EndWithResult("no new or updated products")
 		return nil
 	}
 
-	fmt.Printf("key changes since %s:\n", time.Unix(since, 0).Format(time.Kitchen))
+	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	if err != nil {
+		return sa.EndWithError(err)
+	}
 
-	return output.Groups(updates)
+	for grp, ids := range updates {
+		ga := nod.Begin(" %s:", grp)
+		itp, err := output.Items(ids, nil, []string{vangogh_properties.TitleProperty}, exl)
+		if err != nil {
+			return ga.EndWithError(err)
+		}
+		ga.EndWithSummary(itp)
+	}
+
+	//return output.Groups(updates)
+	return nil
 }
 
 func humanReadable(productTypes map[vangogh_products.ProductType]bool) []string {

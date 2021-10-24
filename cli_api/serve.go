@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"github.com/boggydigital/vangogh/http_api"
 	"net/http"
@@ -23,7 +24,8 @@ func ServeHandler(u *url.URL) error {
 }
 
 func Serve(port int) error {
-	fmt.Printf("serving at port %d...\n", port)
+	sa := nod.Begin("serving at port %d...", port)
+	defer sa.End()
 
 	if err := http_api.Init(); err != nil {
 		return err

@@ -10,14 +10,10 @@ implement nod support:
 		- get-downloads
 		- get-images
 		- get-videos
-		- owned
 		- scrub-data
-		- serve
-		- summary
 		- sync
 		- tag
 		- update-downloads
-		- validate
 		- wishlist
 
 dolo improvements:
@@ -116,6 +112,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- owned @done(2021-10-23) @project(implement nod support)
+	- summary @done(2021-10-23) @project(implement nod support)
+	- validate @done(2021-10-23) @project(implement nod support)
+	- serve @done(2021-10-23) @project(implement nod support)
 	- info @done(2021-10-23) @project(implement nod support)
 	- list @done(2021-10-23) @project(implement nod support)
 	- search @done(2021-10-23) @project(implement nod support)

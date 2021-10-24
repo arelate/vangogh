@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+const (
+	DefaultSort = vangogh_properties.TitleProperty
+	DefaultDesc = false
+)
+
 func Items(
 	ids []string,
 	propertyFilter map[string][]string,

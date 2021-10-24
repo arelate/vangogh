@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
@@ -64,9 +65,19 @@ func Owned(idSet gost.StrSet) error {
 		}
 	}
 
-	return output.Groups(
-		map[string][]string{
-			"owned":     ownedSet.All(),
-			"not owned": idSet.Except(ownedSet),
-		})
+	noa := nod.Begin(" not owned:")
+	itp, err := output.Items(idSet.Except(ownedSet), nil, []string{vangogh_properties.TitleProperty}, exl)
+	if err != nil {
+		return noa.EndWithError(err)
+	}
+	noa.EndWithSummary(itp)
+
+	oa := nod.Begin(" owned:")
+	itp, err = output.Items(ownedSet.All(), nil, []string{vangogh_properties.TitleProperty}, exl)
+	if err != nil {
+		return oa.EndWithError(err)
+	}
+	oa.EndWithSummary(itp)
+
+	return nil
 }
