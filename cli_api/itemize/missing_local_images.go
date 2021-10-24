@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 )
 
 type imageExtractsGetter struct {
@@ -42,5 +43,8 @@ func MissingLocalImages(
 
 	ieg := NewImageExtractsGetter(it, exl)
 
-	return missingLocalFiles(all, localImageIds, ieg.GetImageIds, nil, nil)
+	mlia := nod.NewProgress(" itemizing local images (%s)...", it)
+	defer mlia.EndWithResult("done")
+
+	return missingLocalFiles(all, localImageIds, ieg.GetImageIds, nil, mlia)
 }

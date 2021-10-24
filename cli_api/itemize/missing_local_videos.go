@@ -36,7 +36,7 @@ func MissingLocalVideos(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error)
 
 	vpg := NewVideoPropertiesGetter(exl)
 
-	mlva := nod.NewProgress("itemizing local videos...")
+	mlva := nod.NewProgress(" itemizing local videos...")
 	defer mlva.EndWithResult("done")
 
 	return missingLocalFiles(all, localVideoSet, vpg.GetVideoIds, vpg.IsMissingVideo, mlva)

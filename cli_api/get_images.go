@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
@@ -35,9 +36,12 @@ func GetImages(
 	its []vangogh_images.ImageType,
 	missing bool) error {
 
+	gia := nod.NewProgress("getting images...")
+	defer gia.End()
+
 	for _, it := range its {
 		if !vangogh_images.Valid(it) {
-			return fmt.Errorf("invalid image type %s", it)
+			return gia.EndWithError(fmt.Errorf("invalid image type %s", it))
 		}
 	}
 
@@ -49,7 +53,7 @@ func GetImages(
 
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
 	if err != nil {
-		return err
+		return gia.EndWithError(err)
 	}
 
 	//for every product we'll collect image types missing for id and download only those
@@ -58,7 +62,7 @@ func GetImages(
 	if missing {
 		localImageSet, err := vangogh_urls.LocalImageIds()
 		if err != nil {
-			return err
+			return gia.EndWithError(err)
 		}
 		//to track image types missing for each product we do the following:
 		//1. for every image type requested to be downloaded - get product ids that don't have this image type locally
@@ -67,7 +71,7 @@ func GetImages(
 			//1
 			missingImageIds, err := itemize.MissingLocalImages(it, exl, localImageSet)
 			if err != nil {
-				return err
+				return gia.EndWithError(err)
 			}
 
 			//2
@@ -86,21 +90,21 @@ func GetImages(
 
 	if len(idMissingTypes) == 0 {
 		if missing {
-			fmt.Printf("all images are available locally\n")
+			gia.EndWithResult("all images are available locally")
 		} else {
-			fmt.Printf("need at least one product id to get images\n")
+			gia.EndWithResult("need at least one product id to get images")
 		}
 		return nil
 	}
 
 	httpClient, err := http_client.Default()
 	if err != nil {
-		return err
+		return gia.EndWithError(err)
 	}
 
 	dl := dolo.NewClient(httpClient, dolo.Defaults())
 
-	fmt.Println("getting images...")
+	gia.TotalInt(len(idMissingTypes))
 
 	for id, missingIts := range idMissingTypes {
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
@@ -108,39 +112,44 @@ func GetImages(
 			title = id
 		}
 
-		fmt.Printf("%s %s - ", id, title)
+		mita := nod.Begin("%s %s", id, title)
 
 		for _, it := range missingIts {
 
+			mia := nod.NewProgress(" %s...", it)
+
 			images, ok := exl.GetAll(vangogh_properties.FromImageType(it), id)
 			if !ok || len(images) == 0 {
-				fmt.Printf("(missing)...")
 				continue
 			}
 
 			srcUrls, err := vangogh_urls.PropImageUrls(images, it)
 			if err != nil {
-				return err
+				return mia.EndWithError(err)
 			}
 
-			fmt.Printf("%s", it)
+			mia.TotalInt(len(srcUrls))
 
 			for _, srcUrl := range srcUrls {
 
-				fmt.Print(".")
 				dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
 
 				_, err = dl.Download(srcUrl, dstDir, "", nil)
 				if err != nil {
-					fmt.Println(err)
+					mia.Error(err)
 					continue
 				}
+				mia.Increment()
 			}
 
-			fmt.Print(" ")
+			mia.EndWithResult("done")
 		}
 
-		fmt.Println("done")
+		mita.End()
+		gia.Increment()
 	}
+
+	gia.EndWithResult("done")
+
 	return nil
 }
