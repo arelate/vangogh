@@ -16,7 +16,7 @@ func DigestHandler(u *url.URL) error {
 
 func Digest(property string) error {
 
-	da := nod.Begin("digesting:")
+	da := nod.Begin("digesting...")
 	defer da.End()
 
 	exl, err := vangogh_extracts.NewList(property)

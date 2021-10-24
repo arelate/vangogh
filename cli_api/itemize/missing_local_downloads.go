@@ -46,7 +46,7 @@ func MissingLocalDownloads(
 	//1
 	allIds := gost.NewStrSetWith(vrDetails.All()...)
 
-	mlda.Total(uint64(allIds.Len()))
+	mlda.TotalInt(allIds.Len())
 
 	mdd := &missingDownloadsDelegate{
 		exl: exl,

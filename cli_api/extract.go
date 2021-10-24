@@ -32,7 +32,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		propSet.Add(vangogh_properties.LanguageCodeProperty)
 	}
 
-	ea := nod.Begin("extracting:")
+	ea := nod.Begin("extracting...")
 	defer ea.End()
 
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
@@ -63,7 +63,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		}
 
 		pta := nod.NewProgress(" %s...", pt)
-		pta.Total(uint64(len(modifiedIds)))
+		pta.TotalInt(len(modifiedIds))
 
 		for _, id := range modifiedIds {
 

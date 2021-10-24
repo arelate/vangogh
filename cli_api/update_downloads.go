@@ -40,7 +40,7 @@ func UpdateDownloads(
 	since int64,
 	updatesOnly bool) error {
 
-	fmt.Println("updating downloads:")
+	fmt.Println("updating downloads...")
 
 	//Here is a set of items we'll consider as updated for updating downloads:
 	//1) account-products updates, all products that have .IsNew or .Updates > 0 -

@@ -23,7 +23,7 @@ func ServeHandler(u *url.URL) error {
 }
 
 func Serve(port int) error {
-	fmt.Println("serve, port:", port)
+	fmt.Printf("serving at port %d...\n", port)
 
 	if err := http_api.Init(); err != nil {
 		return err

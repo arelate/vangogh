@@ -22,11 +22,11 @@ import (
 )
 
 var (
-	ErrUnresolvedManualUrl    = errors.New("not resolved manual-url")
-	ErrMissingDownload        = errors.New("download file missing")
-	ErrMissingChecksum        = errors.New("checksum missing")
+	ErrUnresolvedManualUrl    = errors.New("unresolved manual-url")
+	ErrMissingDownload        = errors.New("not downloaded")
+	ErrMissingChecksum        = errors.New("missing checksum")
 	ErrValidationNotSupported = errors.New("validation not supported")
-	ErrValidationFailed       = errors.New("validation failed")
+	ErrValidationFailed       = errors.New("failed validation")
 )
 
 const blockSize = 32 * 1024
@@ -56,7 +56,7 @@ func Validate(
 	langCodes []string,
 	all bool) error {
 
-	va := nod.Begin("validating:")
+	va := nod.Begin("validating...")
 	defer va.End()
 
 	exl, err := vangogh_extracts.NewList(
@@ -127,30 +127,34 @@ func validateManualUrl(
 		return err
 	}
 
-	mua := nod.NewProgress(" " + dl.String())
+	mua := nod.NewProgress(" %s...", dl.String())
 	defer mua.End()
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 	localFile, ok := exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl)
 	if !ok {
-		return mua.EndWithError(ErrUnresolvedManualUrl)
+		mua.EndWithResult(ErrUnresolvedManualUrl.Error())
+		return ErrUnresolvedManualUrl
 	}
 
 	//absolute path (given a downloads/ root) for a s/slug/local_filename,
 	//e.g. downloads/s/slug/local_filename
 	absLocalFile := vangogh_urls.DownloadRelToAbs(localFile)
 	if !vangogh_urls.CanValidate(absLocalFile) {
-		return mua.EndWithError(ErrValidationNotSupported)
+		mua.EndWithResult(ErrValidationNotSupported.Error())
+		return ErrValidationNotSupported
 	}
 
 	if _, err := os.Stat(absLocalFile); os.IsNotExist(err) {
-		return mua.EndWithError(ErrMissingDownload)
+		mua.EndWithResult(ErrMissingDownload.Error())
+		return ErrMissingDownload
 	}
 
 	absChecksumFile := vangogh_urls.LocalChecksumPath(absLocalFile)
 
 	if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
-		return mua.EndWithError(ErrMissingChecksum)
+		mua.EndWithResult(ErrMissingChecksum.Error())
+		return ErrMissingChecksum
 	}
 
 	chkFile, err := os.Open(absChecksumFile)

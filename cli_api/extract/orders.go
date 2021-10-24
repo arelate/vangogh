@@ -35,7 +35,7 @@ func Orders(modifiedAfter int64) error {
 		modifiedOrders = vrOrders.All()
 	}
 
-	oa.Total(uint64(len(modifiedOrders)))
+	oa.TotalInt(len(modifiedOrders))
 
 	for _, orderId := range modifiedOrders {
 		order, err := vrOrders.Order(orderId)

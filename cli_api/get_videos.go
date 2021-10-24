@@ -64,7 +64,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 		return err
 	}
 
-	fmt.Println("getting videos:")
+	fmt.Println("getting videos...")
 
 	for _, id := range idSet.All() {
 		videoIds, ok := exl.GetAllRaw(vangogh_properties.VideoIdProperty, id)

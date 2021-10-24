@@ -15,7 +15,6 @@ implement nod support:
 		- scrub-data
 		- search
 		- serve
-		- size
 		- summary
 		- sync
 		- tag
@@ -119,6 +118,7 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- size @done(2021-10-22) @project(implement nod support)
 	- digest @done(2021-10-22) @project(implement nod support)
 	- extract @done(2021-10-22) @project(implement nod support)
 	- info @done(2021-10-22) @project(implement nod support)

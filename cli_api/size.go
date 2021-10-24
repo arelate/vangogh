@@ -41,7 +41,7 @@ func Size(
 	missing bool,
 	all bool) error {
 
-	sa := nod.NewProgress("estimating downloads size:")
+	sa := nod.NewProgress("estimating downloads size...")
 	defer sa.End()
 
 	exl, err := vangogh_extracts.NewList(
@@ -84,7 +84,7 @@ func Size(
 		tpw: sa,
 	}
 
-	sa.Total(uint64(idSet.Len()))
+	sa.TotalInt(idSet.Len())
 
 	if err := vangogh_downloads.Map(
 		idSet,

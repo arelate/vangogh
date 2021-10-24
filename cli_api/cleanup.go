@@ -50,7 +50,7 @@ func Cleanup(
 		return err
 	}
 
-	ca := nod.NewProgress("cleaning up:")
+	ca := nod.NewProgress("cleaning up...")
 	defer ca.End()
 
 	if all {
@@ -68,7 +68,7 @@ func Cleanup(
 		tpw:  ca,
 	}
 
-	ca.Total(uint64(idSet.Len()))
+	ca.TotalInt(idSet.Len())
 
 	if err := vangogh_downloads.Map(
 		idSet,
@@ -80,6 +80,8 @@ func Cleanup(
 		cd); err != nil {
 		return err
 	}
+
+	ca.EndWithResult("done")
 
 	return nil
 }
