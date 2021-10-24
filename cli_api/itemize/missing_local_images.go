@@ -42,5 +42,5 @@ func MissingLocalImages(
 
 	ieg := NewImageExtractsGetter(it, exl)
 
-	return missingLocalFiles(all, localImageIds, ieg.GetImageIds, nil)
+	return missingLocalFiles(all, localImageIds, ieg.GetImageIds, nil, nil)
 }

@@ -1,12 +1,12 @@
 package cli_api
 
 import (
-	"fmt"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
@@ -32,6 +32,9 @@ func GetVideosHandler(u *url.URL) error {
 
 func GetVideos(idSet gost.StrSet, missing bool) error {
 
+	gva := nod.NewProgress("getting videos...")
+	defer gva.End()
+
 	exl, err := vangogh_extracts.NewList(
 		vangogh_properties.TitleProperty,
 		vangogh_properties.SlugProperty,
@@ -39,42 +42,44 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 		vangogh_properties.MissingVideoUrlProperty)
 
 	if err != nil {
-		return err
+		return gva.EndWithError(err)
 	}
 
 	if missing {
 		missingIds, err := itemize.MissingLocalVideos(exl)
 		if err != nil {
-			return err
+			return gva.EndWithError(err)
 		}
 		idSet.AddSet(missingIds)
 	}
 
 	if idSet.Len() == 0 {
 		if missing {
-			fmt.Println("all videos are available locally")
+			gva.EndWithResult("all videos are available locally")
 		} else {
-			fmt.Println("no ids to get videos for")
+			gva.EndWithResult("no ids to get videos for")
 		}
 		return nil
 	}
 
 	httpClient, err := http_client.Default()
 	if err != nil {
-		return err
+		return gva.EndWithError(err)
 	}
 
-	fmt.Println("getting videos...")
+	gva.TotalInt(idSet.Len())
 
 	for _, id := range idSet.All() {
 		videoIds, ok := exl.GetAllRaw(vangogh_properties.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
+			gva.Increment()
 			continue
 		}
 
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 
-		fmt.Printf("%s %s", id, title)
+		va := nod.Begin("%s %s", id, title)
+		//fmt.Printf("%s %s", id, title)
 
 		dl := dolo.NewClient(httpClient, dolo.Defaults())
 
@@ -82,17 +87,20 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 			vp, err := yt_urls.GetVideoPage(videoId)
 			if err != nil {
-				fmt.Printf("(%s)", err)
+				va.Error(err)
 				if addErr := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
 					return addErr
 				}
+				continue
 			}
+
+			vfa := nod.NewProgress(" %s", vp.Title())
 
 			vidUrls := vp.StreamingFormats()
 
 			if len(vidUrls) == 0 {
 				if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
-					return err
+					return vfa.EndWithError(err)
 				}
 			}
 
@@ -100,26 +108,27 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 				if vidUrl.Url == "" {
 					if err := exl.Add(vangogh_properties.MissingVideoUrlProperty, videoId, missingStr); err != nil {
-						return err
+						return vfa.EndWithError(err)
 					}
 					continue
 				}
 
-				fmt.Print(".")
+				//fmt.Print(".")
 
 				dir, err := vangogh_urls.VideoDir(videoId)
 				if err != nil {
-					return err
+					return vfa.EndWithError(err)
 				}
 
 				u, err := url.Parse(vidUrl.Url)
 				if err != nil {
-					return err
+					return vfa.EndWithError(err)
 				}
 
-				_, err = dl.Download(u, dir, videoId+videoExt, nil)
+				_, err = dl.Download(u, dir, videoId+videoExt, vfa)
 				if err != nil {
-					fmt.Printf("(%s)", err)
+					//fmt.Printf("(%s)", err)
+					vfa.Error(err)
 					continue
 				}
 
@@ -128,9 +137,12 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 				break
 			}
 		}
-		fmt.Print(" ")
-		fmt.Println("done")
+
+		va.End()
+		gva.Increment()
 	}
+
+	gva.EndWithResult("done")
 
 	return nil
 }

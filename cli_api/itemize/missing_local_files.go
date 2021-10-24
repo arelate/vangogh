@@ -1,19 +1,30 @@
 package itemize
 
-import "github.com/boggydigital/gost"
+import (
+	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
+)
 
 func missingLocalFiles(
 	all []string,
 	localSet gost.StrSet,
 	getById func(id string) ([]string, bool),
-	exclude func(id string) bool) (gost.StrSet, error) {
+	exclude func(id string) bool,
+	tpw nod.TotalProgressWriter) (gost.StrSet, error) {
 
 	idSet := gost.NewStrSet()
 	var err error
 
+	if tpw != nil {
+		tpw.TotalInt(len(all))
+	}
+
 	for _, id := range all {
 		items, ok := getById(id)
 		if !ok || len(items) == 0 {
+			if tpw != nil {
+				tpw.Increment()
+			}
 			continue
 		}
 
@@ -25,6 +36,10 @@ func missingLocalFiles(
 				idSet.Add(id)
 				break
 			}
+		}
+
+		if tpw != nil {
+			tpw.Increment()
 		}
 	}
 

@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 )
 
 type videoPropertiesGetter struct {
@@ -35,5 +36,8 @@ func MissingLocalVideos(exl *vangogh_extracts.ExtractsList) (gost.StrSet, error)
 
 	vpg := NewVideoPropertiesGetter(exl)
 
-	return missingLocalFiles(all, localVideoSet, vpg.GetVideoIds, vpg.IsMissingVideo)
+	mlva := nod.NewProgress("itemizing local videos...")
+	defer mlva.EndWithResult("done")
+
+	return missingLocalFiles(all, localVideoSet, vpg.GetVideoIds, vpg.IsMissingVideo, mlva)
 }
