@@ -11,6 +11,7 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
@@ -20,7 +21,6 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
-	"strings"
 )
 
 func GetDownloadsHandler(u *url.URL) error {
@@ -58,18 +58,21 @@ func GetDownloads(
 	missing,
 	forceUpdate bool) error {
 
+	gda := nod.NewProgress("downloading product files...")
+	defer gda.End()
+
 	httpClient, err := http_client.Default()
 	if err != nil {
-		return err
+		return gda.EndWithError(err)
 	}
 
 	li, err := gog_auth.LoggedIn(httpClient)
 	if err != nil {
-		return err
+		return gda.EndWithError(err)
 	}
 
 	if !li {
-		return fmt.Errorf("user is not logged in")
+		return gda.EndWithError(fmt.Errorf("user is not logged in"))
 	}
 
 	exl, err := vangogh_extracts.NewList(
@@ -78,17 +81,17 @@ func GetDownloads(
 		vangogh_properties.LocalManualUrl,
 		vangogh_properties.DownloadStatusError)
 	if err != nil {
-		return err
+		return gda.EndWithError(err)
 	}
 
 	if missing {
 		missingIds, err := itemize.MissingLocalDownloads(mt, exl, operatingSystems, downloadTypes, langCodes)
 		if err != nil {
-			return err
+			return gda.EndWithError(err)
 		}
 
 		if missingIds.Len() == 0 {
-			fmt.Println("all downloads are available locally")
+			gda.EndWithResult("all downloads are available locally")
 			return nil
 		}
 
@@ -96,9 +99,12 @@ func GetDownloads(
 	}
 
 	gdd := &getDownloadsDelegate{
+		tpw:         gda,
 		exl:         exl,
 		forceUpdate: forceUpdate,
 	}
+
+	gda.TotalInt(idSet.Len())
 
 	if err := vangogh_downloads.Map(
 		idSet,
@@ -108,45 +114,32 @@ func GetDownloads(
 		downloadTypes,
 		langCodes,
 		gdd); err != nil {
-		return nil
+		return gda.EndWithError(err)
 	}
+
+	gda.EndWithResult("done")
 
 	return nil
 }
 
-func printCompletion(current, total uint64) {
-	percent := (float32(current) / float32(total)) * 100
-	if current == 0 {
-		//we'll get the first notification before download starts and will output 4 spaces (XXX%)
-		//that'll be deleted on updates
-		fmt.Printf(strings.Repeat(" ", 4))
-	}
-	if current < total {
-		//every update except the first (pre-download) and last (completion) are the same
-		//move cursor 4 spaces back and print over current percent completion
-		fmt.Printf("\x1b[4D%3.0f%%", percent)
-	} else {
-		//final update moves the cursor back 4 spaces to overwrite on the following update
-		fmt.Printf("\x1b[4D")
-	}
-}
-
 type getDownloadsDelegate struct {
+	tpw         nod.TotalProgressWriter
 	exl         *vangogh_extracts.ExtractsList
 	forceUpdate bool
 }
 
 func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_downloads.DownloadsList) error {
-	fmt.Println("downloading", slug)
+	sda := nod.Begin(slug)
+	defer sda.End()
 
 	if len(list) == 0 {
-		fmt.Println(" (no downloads for requested operating systems + download types + languages)")
+		sda.EndWithResult("no downloads for requested operating systems, download types, languages")
 		return nil
 	}
 
 	httpClient, err := http_client.Default()
 	if err != nil {
-		return err
+		return sda.EndWithError(err)
 	}
 
 	//there is no need to use internal httpClient with cookie support for downloading
@@ -156,9 +149,12 @@ func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_downloads.
 
 	for _, dl := range list {
 		if err := gdd.downloadManualUrl(slug, &dl, httpClient, dlClient); err != nil {
-			fmt.Println(err)
+			sda.Error(err)
 		}
 	}
+
+	gdd.tpw.Increment()
+
 	return nil
 }
 
@@ -167,6 +163,10 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	dl *vangogh_downloads.Download,
 	httpClient *http.Client,
 	dlClient *dolo.Client) error {
+
+	dmua := nod.NewProgress(" %s...", dl.String())
+	defer dmua.End()
+
 	//downloading a manual URL is the following set of steps:
 	//1 - check if local file exists (based on manualUrl -> relative localFile association) before attempting to resolve manualUrl
 	//2 - resolve the source URL to an actual session URL
@@ -177,7 +177,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	if err := gdd.exl.AssertSupport(
 		vangogh_properties.LocalManualUrl,
 		vangogh_properties.DownloadStatusError); err != nil {
-		return err
+		return dmua.EndWithError(err)
 	}
 
 	//1
@@ -186,34 +186,30 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			//localFilename would be a relative path for a download - s/slug,
 			//and RelToAbs would convert this to downloads/s/slug
 			if _, err := os.Stat(vangogh_urls.DownloadRelToAbs(localFilename)); err == nil {
-				fmt.Printf(" %s already exists\n", dl.String())
+				dmua.EndWithResult("already exists")
 				return nil
 			}
 		}
 	}
 
-	fmt.Printf(" %s...", dl.String())
-
 	//2
 	resp, err := httpClient.Head(gog_urls.ManualDownloadUrl(dl.ManualUrl).String())
 	if err != nil {
-		fmt.Println()
-		return err
+		return dmua.EndWithError(err)
 	}
 	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
 	//is not a problem that can be solved locally (it's a remote source error)
 	if resp.StatusCode > 299 {
 		if err := gdd.exl.Set(vangogh_properties.DownloadStatusError, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
-			return err
+			return dmua.EndWithError(err)
 		}
-		return fmt.Errorf(resp.Status)
+		return dmua.EndWithError(fmt.Errorf(resp.Status))
 	}
 
 	resolvedUrl := resp.Request.URL
 
 	if err := resp.Body.Close(); err != nil {
-		fmt.Println()
-		return err
+		return dmua.EndWithError(err)
 	}
 
 	//3
@@ -221,7 +217,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
 	pAbsDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
 	if err != nil {
-		return err
+		return dmua.EndWithError(err)
 	}
 	//we need to add suffix to a dir path, e.g. dlc, extras
 	absDir := filepath.Join(pAbsDir, dl.DirSuffix())
@@ -231,22 +227,22 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	if remoteChecksumPath != "" {
 		localChecksumPath := vangogh_urls.LocalChecksumPath(path.Join(absDir, filename))
 		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) {
-			fmt.Print("xml")
+			dca := nod.NewProgress(" downloading checksum...")
 			originalPath := resolvedUrl.Path
 			resolvedUrl.Path = remoteChecksumPath
 			valDir, valFilename := path.Split(localChecksumPath)
 			if _, err := dlClient.Download(
-				resolvedUrl, valDir, valFilename, nil); err != nil {
-				return err
+				resolvedUrl, valDir, valFilename, dca); err != nil {
+				return dca.EndWithError(err)
 			}
 			resolvedUrl.Path = originalPath
-			fmt.Print("...")
+			dca.EndWithResult("done")
 		}
 	}
 
 	//5
-	if _, err := dlClient.Download(resolvedUrl, absDir, filename, nil); err != nil {
-		return err
+	if _, err := dlClient.Download(resolvedUrl, absDir, filename, dmua); err != nil {
+		return dmua.EndWithError(err)
 	}
 
 	//6
@@ -255,13 +251,14 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//we need to add suffix to a dir path, e.g. dlc, extras
 	relDir := filepath.Join(pRelDir, dl.DirSuffix())
 	if err != nil {
-		return err
+		return dmua.EndWithError(err)
 	}
 	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
 	if err := gdd.exl.Set(vangogh_properties.LocalManualUrl, dl.ManualUrl, path.Join(relDir, filename)); err != nil {
-		return err
+		return dmua.EndWithError(err)
 	}
 
-	fmt.Println("done")
+	dmua.EndWithResult("done")
+
 	return nil
 }

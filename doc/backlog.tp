@@ -7,12 +7,9 @@ implement nod support:
 	- update individual cmds:
 		- auth
 		- get-data
-		- get-downloads
-		- get-images
+		- get-downloads @done(2021-10-24)
 		- scrub-data
-		- sync
 		- tag
-		- update-downloads
 		- wishlist
 
 dolo improvements:
@@ -111,6 +108,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- sync @done(2021-10-23) @project(implement nod support)
+	- update-downloads @done(2021-10-23) @project(implement nod support)
+	- get-images @done(2021-10-23) @project(implement nod support)
 	- get-videos @done(2021-10-23) @project(implement nod support)
 	- owned @done(2021-10-23) @project(implement nod support)
 	- summary @done(2021-10-23) @project(implement nod support)

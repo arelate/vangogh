@@ -1,12 +1,12 @@
 package cli_api
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/hours"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
@@ -40,7 +40,8 @@ func UpdateDownloads(
 	since int64,
 	updatesOnly bool) error {
 
-	fmt.Println("updating downloads...")
+	uda := nod.Begin("itemizing updated downloads...")
+	defer uda.End()
 
 	//Here is a set of items we'll consider as updated for updating downloads:
 	//1) account-products updates, all products that have .IsNew or .Updates > 0 -
@@ -54,13 +55,13 @@ func UpdateDownloads(
 	// allow us to capture all updated account-products at a price of some extra checks
 	updAccountProductIds, err := itemize.AccountProductsUpdates(mt)
 	if err != nil {
-		return err
+		return uda.EndWithError(err)
 	}
 
 	//Additionally itemize required games for newly acquired DLCs
 	requiredGamesForNewDLCs, err := itemize.RequiredAndIncluded(since)
 	if err != nil {
-		return err
+		return uda.EndWithError(err)
 	}
 
 	updAccountProductIds.AddSet(requiredGamesForNewDLCs)
@@ -69,13 +70,13 @@ func UpdateDownloads(
 	//account-products doesn't have .IsNew or .Updates > 0 items
 	modifiedDetails, err := itemize.Modified(since, vangogh_products.Details, mt)
 	if err != nil {
-		return err
+		return uda.EndWithError(err)
 	}
 
 	updAccountProductIds.AddSet(modifiedDetails)
 
 	if len(updAccountProductIds) == 0 {
-		fmt.Printf("all downloads are up to date\n")
+		uda.EndWithResult("all downloads are up to date")
 		return nil
 	}
 
@@ -84,19 +85,21 @@ func UpdateDownloads(
 	if updatesOnly {
 		exl, err := vangogh_extracts.NewList(vangogh_properties.SlugProperty)
 		if err != nil {
-			return err
+			return uda.EndWithError(err)
 		}
 
 		for _, id := range updAccountProductIds.All() {
 			ok, err := vangogh_downloads.ProductDownloaded(id, exl)
 			if err != nil {
-				return err
+				return uda.EndWithError(err)
 			}
 			if !ok {
 				updAccountProductIds.Hide(id)
 			}
 		}
 	}
+
+	uda.EndWithResult("done")
 
 	return GetDownloads(
 		updAccountProductIds,

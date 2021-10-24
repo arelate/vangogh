@@ -1,7 +1,6 @@
 package cli_api
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_images"
@@ -9,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/hours"
 	"github.com/boggydigital/vangogh/cli_api/lines"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
@@ -69,31 +69,31 @@ func Sync(
 		syncStart = time.Now().Unix()
 	}
 
+	sa := nod.Begin("syncing source data...")
+	defer sa.End()
+
 	if data {
 		//get array and paged data
 		paData := vangogh_products.Array()
 		paData = append(paData, vangogh_products.Paged()...)
 		for _, pt := range paData {
 			if err := GetData(gost.NewStrSet(), nil, pt, mt, syncStart, false, false); err != nil {
-				return err
+				return sa.EndWithError(err)
 			}
-			fmt.Println()
 		}
 
 		//get main - detail data
 		for _, pt := range vangogh_products.Detail() {
 			denyIds := lines.Read(vangogh_urls.Denylist(pt))
 			if err := GetData(gost.NewStrSet(), denyIds, pt, mt, syncStart, true, true); err != nil {
-				return err
+				return sa.EndWithError(err)
 			}
-			fmt.Println()
 		}
 
 		//extract data
 		if err := Extract(syncStart, mt, vangogh_properties.Extracted()); err != nil {
-			return err
+			return sa.EndWithError(err)
 		}
-		fmt.Println()
 	}
 
 	// get images
@@ -106,17 +106,15 @@ func Sync(
 			imageTypes = append(imageTypes, it)
 		}
 		if err := GetImages(gost.NewStrSet(), imageTypes, true); err != nil {
-			return err
+			return sa.EndWithError(err)
 		}
-		fmt.Println()
 	}
 
 	// get videos
 	if videos {
 		if err := GetVideos(gost.NewStrSet(), true); err != nil {
-			return err
+			return sa.EndWithError(err)
 		}
-		fmt.Println()
 	}
 
 	// get downloads updates
@@ -128,9 +126,8 @@ func Sync(
 			langCodes,
 			syncStart,
 			updatesOnly); err != nil {
-			return err
+			return sa.EndWithError(err)
 		}
-		fmt.Println()
 	}
 
 	// print new or updated
