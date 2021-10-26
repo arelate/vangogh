@@ -5,7 +5,6 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/kvas"
-	"log"
 )
 
 func Data(ids []string, pt vangogh_products.ProductType, mt gog_media.Media) error {
@@ -19,7 +18,7 @@ func Data(ids []string, pt vangogh_products.ProductType, mt gog_media.Media) err
 	}
 
 	for _, id := range ids {
-		log.Printf("remove %s (%s) id %s", pt, mt, id)
+		//log.Printf("remove %s (%s) id %s", pt, mt, id)
 		if err := kvPt.Remove(id); err != nil {
 			return err
 		}

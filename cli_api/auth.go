@@ -1,23 +1,12 @@
 package cli_api
 
 import (
-	"bufio"
-	"fmt"
 	"github.com/arelate/gog_auth"
 	"github.com/boggydigital/vangogh/cli_api/cookies"
 	"github.com/boggydigital/vangogh/cli_api/http_client"
+	"github.com/boggydigital/vangogh/cli_api/input"
 	"net/url"
-	"os"
 )
-
-func requestText(prompt string) string {
-	fmt.Print(prompt)
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		return scanner.Text()
-	}
-	return ""
-}
 
 func AuthHandler(u *url.URL) error {
 	q := u.Query()
@@ -43,7 +32,7 @@ func Auth(username, password string) error {
 		return nil
 	}
 
-	if err := gog_auth.Login(httpClient, username, password, requestText); err != nil {
+	if err := gog_auth.Login(httpClient, username, password, input.RequestText); err != nil {
 		return err
 	}
 

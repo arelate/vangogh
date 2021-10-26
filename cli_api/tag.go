@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
@@ -34,6 +35,9 @@ func TagHandler(u *url.URL) error {
 }
 
 func Tag(idSet gost.StrSet, operation, tagName string) error {
+
+	ta := nod.Begin("performing requested tag operation...")
+	defer ta.End()
 
 	//matching default GOG.com capitalization for tags
 	tagName = strings.ToUpper(tagName)
@@ -65,7 +69,7 @@ func Tag(idSet gost.StrSet, operation, tagName string) error {
 	case removeOp:
 		return removeTag(idSet, tagName, tagId, exl)
 	default:
-		return fmt.Errorf("vangogh: unknown tag operation %s", operation)
+		return ta.EndWithError(fmt.Errorf("vangogh: unknown tag operation %s", operation))
 	}
 }
 
@@ -106,95 +110,121 @@ func tagIdByName(tagName string, exl *vangogh_extracts.ExtractsList) (string, er
 }
 
 func createTag(tagName string, exl *vangogh_extracts.ExtractsList) error {
+
+	cta := nod.Begin(" creating tag %s...", tagName)
+	defer cta.End()
+
 	if err := exl.AssertSupport(vangogh_properties.TagNameProperty); err != nil {
-		return err
+		return cta.EndWithError(err)
 	}
 
 	createTagUrl := gog_urls.CreateTag(tagName)
 	var ctResp gog_types.CreateTagResp
 	if err := postResp(createTagUrl, &ctResp); err != nil {
-		return err
+		return cta.EndWithError(err)
 	}
 	if ctResp.Id == "" {
-		return fmt.Errorf("vangogh: invalid create tag response")
+		return cta.EndWithError(fmt.Errorf("invalid create tag response"))
 	}
 
 	if err := exl.Add(vangogh_properties.TagNameProperty, ctResp.Id, tagName); err != nil {
-		return err
+		return cta.EndWithError(err)
 	}
-	fmt.Printf("created tag %s\n", tagName)
+
+	cta.EndWithResult("done")
 
 	return nil
 }
 
 func deleteTag(tagName, tagId string, exl *vangogh_extracts.ExtractsList) error {
+
+	dta := nod.Begin(" deleting tag %s...", tagName)
+	defer dta.End()
+
 	if err := exl.AssertSupport(vangogh_properties.TagNameProperty); err != nil {
-		return err
+		return dta.EndWithError(err)
 	}
 
 	deleteTagUrl := gog_urls.DeleteTag(tagId)
 	var dtResp gog_types.DeleteTagResp
 	if err := postResp(deleteTagUrl, &dtResp); err != nil {
-		return err
+		return dta.EndWithError(err)
 	}
 	if dtResp.Status != "deleted" {
-		return fmt.Errorf("vangogh: invalid delete tag response")
+		return dta.EndWithError(fmt.Errorf("invalid delete tag response"))
 	}
 
 	if err := exl.Remove(vangogh_properties.TagNameProperty, tagId, tagName); err != nil {
-		return err
+		return dta.EndWithError(err)
 	}
-	fmt.Printf("deleted tag %s\n", tagName)
+
+	dta.EndWithResult("done")
 
 	return nil
 }
 
 func addTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.ExtractsList) error {
+
+	ata := nod.NewProgress(" adding tag %s to item(s)...", tagName)
+	defer ata.End()
+
 	if err := exl.AssertSupport(vangogh_properties.TagNameProperty, vangogh_properties.TitleProperty); err != nil {
-		return err
+		return ata.EndWithError(err)
 	}
+
+	ata.TotalInt(idSet.Len())
 
 	for _, id := range idSet.All() {
 		addTagUrl := gog_urls.AddTag(id, tagId)
 		var artResp gog_types.AddRemoveTagResp
 		if err := postResp(addTagUrl, &artResp); err != nil {
-			return err
+			return ata.EndWithError(err)
 		}
 		if !artResp.Success {
-			return fmt.Errorf("vangogh: failed to add tag %s", tagName)
+			return ata.EndWithError(fmt.Errorf("vangogh: failed to add tag %s", tagName))
 		}
 
 		if err := exl.Add(vangogh_properties.TagIdProperty, id, tagId); err != nil {
-			return err
+			return ata.EndWithError(err)
 		}
-		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
-		fmt.Printf("added tag %s to %s (%s)\n", tagName, title, id)
+
+		ata.Increment()
 	}
+
+	ata.EndWithResult("done")
 
 	return nil
 }
 
 func removeTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.ExtractsList) error {
+
+	rta := nod.NewProgress(" removing tag %s from item(s)...", tagName)
+	defer rta.End()
+
 	if err := exl.AssertSupport(vangogh_properties.TagNameProperty, vangogh_properties.TitleProperty); err != nil {
-		return err
+		return rta.EndWithError(err)
 	}
+
+	rta.TotalInt(idSet.Len())
 
 	for _, id := range idSet.All() {
 		removeTagUrl := gog_urls.RemoveTag(id, tagId)
 		var artResp gog_types.AddRemoveTagResp
 		if err := postResp(removeTagUrl, &artResp); err != nil {
-			return err
+			return rta.EndWithError(err)
 		}
 		if !artResp.Success {
-			return fmt.Errorf("vangogh: failed to remove tag %s", tagName)
+			return rta.EndWithError(fmt.Errorf("vangogh: failed to remove tag %s", tagName))
 		}
 
 		if err := exl.Remove(vangogh_properties.TagIdProperty, id, tagId); err != nil {
-			return err
+			return rta.EndWithError(err)
 		}
-		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
-		fmt.Printf("removed tag %s from %s (%s)\n", tagName, title, id)
+
+		rta.Increment()
 	}
+
+	rta.EndWithResult("done")
 
 	return nil
 }
