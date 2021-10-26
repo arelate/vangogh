@@ -17,7 +17,7 @@ func Items(
 	pt vangogh_products.ProductType,
 	mt gog_media.Media) error {
 
-	ia := nod.NewProgress(" fetching %s (%s)... ", pt, mt)
+	ia := nod.NewProgress(" fetching %s (%s)...", pt, mt)
 	defer ia.End()
 
 	ia.TotalInt(len(ids))

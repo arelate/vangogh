@@ -11,7 +11,7 @@ import (
 //RequiredAndIncluded enumerates all base products for a newly acquired DLCs
 func RequiredAndIncluded(createdAfter int64) (gost.StrSet, error) {
 
-	raia := nod.Begin(" finding DLCs missing required base product... ")
+	raia := nod.Begin(" finding DLCs missing required base product...")
 	defer raia.End()
 
 	newLicSet := gost.NewStrSet()

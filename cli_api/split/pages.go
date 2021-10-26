@@ -15,7 +15,7 @@ import (
 
 func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp int64) error {
 
-	spa := nod.NewProgress(" splitting %s (%s)... ", sourcePt, mt)
+	spa := nod.NewProgress(" splitting %s (%s)...", sourcePt, mt)
 	defer spa.End()
 
 	vrPaged, err := vangogh_values.NewReader(sourcePt, mt)

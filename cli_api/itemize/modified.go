@@ -14,7 +14,7 @@ func Modified(
 	pt vangogh_products.ProductType,
 	mt gog_media.Media) (gost.StrSet, error) {
 
-	ma := nod.Begin(" finding modified %s... ", pt)
+	ma := nod.Begin(" finding modified %s...", pt)
 	defer ma.End()
 
 	//licence products can only update through creation, and we've already handled

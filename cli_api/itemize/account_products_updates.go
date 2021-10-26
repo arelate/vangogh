@@ -11,7 +11,7 @@ import (
 
 func AccountProductsUpdates(mt gog_media.Media) (gost.StrSet, error) {
 
-	apua := nod.Begin(" finding %s updates... ", vangogh_products.AccountProducts)
+	apua := nod.Begin(" finding %s updates...", vangogh_products.AccountProducts)
 	defer apua.End()
 
 	updatesSet := gost.NewStrSet()

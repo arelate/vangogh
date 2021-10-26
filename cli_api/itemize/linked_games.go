@@ -10,7 +10,7 @@ import (
 
 func linkedGames(modifiedAfter int64) (gost.StrSet, error) {
 
-	lga := nod.Begin(" finding missing linked %s... ", vangogh_products.ApiProductsV2)
+	lga := nod.Begin(" finding missing linked %s...", vangogh_products.ApiProductsV2)
 	defer lga.End()
 
 	missingSet := gost.NewStrSet()

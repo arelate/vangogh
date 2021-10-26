@@ -46,7 +46,7 @@ func missingDetail(
 		return rg, nil
 	}
 
-	mda := nod.Begin(" finding missing %s for %s... ", detailPt, mainPt)
+	mda := nod.Begin(" finding missing %s for %s...", detailPt, mainPt)
 	defer mda.End()
 
 	missingIdSet := gost.NewStrSet()
