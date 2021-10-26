@@ -1,18 +1,16 @@
 package cli_api
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
-	"github.com/arelate/vangogh_values"
-	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/remove"
+	"github.com/boggydigital/vangogh/cli_api/scrubs"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 	"os"
 	"path/filepath"
-	"strconv"
 )
 
 func ScrubDataHandler(u *url.URL) error {
@@ -24,98 +22,110 @@ func ScrubDataHandler(u *url.URL) error {
 
 func ScrubData(mt gog_media.Media, fix bool) error {
 
-	fmt.Println("split products missing from the paged data:")
+	sda := nod.Begin("scrubbing local data for potential issues...")
+	defer sda.End()
+
+	if err := scrubLocalOnlySplitProducts(mt, fix); err != nil {
+		return sda.EndWithError(err)
+	}
+
+	if err := scrubFilesInRecycleBin(fix); err != nil {
+		return sda.EndWithError(err)
+	}
+
+	//products with values different from extracts
+	//images that are not linked to a product
+	//videos that are not linked to a product
+
+	return nil
+}
+
+func scrubLocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
+	sloa := nod.Begin("checking for local only split products...")
+	defer sloa.End()
+
 	for _, pagedPt := range vangogh_products.Paged() {
 
-		pagedIds := gost.NewStrSet()
-
-		vrPaged, err := vangogh_values.NewReader(pagedPt, mt)
-		if err != nil {
-			return err
-		}
-
-		for _, id := range vrPaged.All() {
-			productGetter, err := vrPaged.ProductsGetter(id)
-			if err != nil {
-				return err
-			}
-			for _, idGetter := range productGetter.GetProducts() {
-				pagedIds.Add(strconv.Itoa(idGetter.GetId()))
-			}
-		}
-
 		splitPt := vangogh_products.SplitType(pagedPt)
-		vrSplit, err := vangogh_values.NewReader(splitPt, mt)
+
+		pa := nod.Begin(" checking %s not present in %s...", splitPt, pagedPt)
+
+		localOnlyProducts, err := scrubs.LocalOnlySplitProducts(pagedPt, mt)
 		if err != nil {
-			return err
+			return pa.EndWithError(err)
 		}
 
-		splitIdSet := gost.NewStrSetWith(vrSplit.All()...)
-
-		unexpectedSplitIds := gost.NewStrSetWith(splitIdSet.Except(pagedIds)...)
-
-		if unexpectedSplitIds.Len() > 0 {
-			fmt.Printf("%s not present in %s:\n", splitPt, pagedPt)
+		if localOnlyProducts.Len() > 0 {
+			pa.EndWithResult("found %d", localOnlyProducts.Len())
 			if err := List(
-				unexpectedSplitIds,
+				localOnlyProducts,
 				0,
 				splitPt,
 				mt,
 				nil); err != nil {
-				return err
+				return pa.EndWithError(err)
 			}
 
 			if fix {
-				fmt.Printf("fix %s (%s):\n", splitPt, mt)
-				if err := remove.Data(unexpectedSplitIds.All(), splitPt, mt); err != nil {
-					return err
+				fa := nod.Begin(" removing local only %s...", splitPt)
+				if err := remove.Data(localOnlyProducts.All(), splitPt, mt); err != nil {
+					return fa.EndWithError(err)
 				}
+				fa.EndWithResult("done")
 			}
 		} else {
-			fmt.Printf("%s and %s have all the same products\n", splitPt, pagedPt)
+			pa.EndWithResult("%s and %s have all the same products", splitPt, pagedPt)
 		}
 	}
-	fmt.Println()
 
-	fmt.Println("files in recycle bin:")
+	sloa.EndWithResult("done")
+
+	return nil
+}
+
+func scrubFilesInRecycleBin(fix bool) error {
+
+	srba := nod.Begin(" checking files in recycle bin...")
+	defer srba.End()
 
 	recycleBinFiles, err := vangogh_urls.RecycleBinFiles()
 	if err != nil {
-		return err
+		return srba.EndWithError(err)
 	}
 	recycleBinDirs, err := vangogh_urls.RecycleBinDirs()
 	if err != nil {
-		return err
+		return srba.EndWithError(err)
 	}
 
 	if recycleBinFiles.Len() == 0 && len(recycleBinDirs) == 0 {
-		fmt.Println("recycle bin is empty")
+		srba.EndWithResult("recycle bin is empty")
 	} else {
-		for file := range recycleBinFiles {
-			fmt.Print(file)
-			if fix {
-				if err := os.Remove(filepath.Join(vangogh_urls.RecycleBinDir(), file)); err != nil {
-					return err
-				}
-				fmt.Print(" removed")
-			}
-			fmt.Println()
-		}
 
-		//remove empty directories after fixing files
+		srba.EndWithResult("recycle bin contains %d file(s)", recycleBinFiles.Len())
+
 		if fix {
+			rfa := nod.NewProgress(" removing files in recycle bin...")
+			rfa.TotalInt(recycleBinFiles.Len())
+			for file := range recycleBinFiles {
+				if err := os.Remove(filepath.Join(vangogh_urls.RecycleBinDir(), file)); err != nil {
+					return rfa.EndWithError(err)
+				}
+				rfa.Increment()
+			}
+			rfa.EndWithResult("done")
+
+			//remove empty directories after fixing files
+			rda := nod.NewProgress(" removing directories in recycle bin...")
+			rda.TotalInt(len(recycleBinDirs))
 			for _, dir := range recycleBinDirs {
 				if err := os.Remove(filepath.Join(vangogh_urls.RecycleBinDir(), dir)); err != nil {
-					return err
+					return rda.EndWithError(err)
 				}
-				fmt.Printf("empty dir %s removed\n", dir)
+				rda.Increment()
 			}
+			rda.EndWithResult("done")
 		}
 	}
-
-	// fmt.Println("products with values different from extracts:")
-	// fmt.Println("images that are not linked to a product:")
-	// fmt.Println("videos that are not linked to a product:")
 
 	return nil
 }
