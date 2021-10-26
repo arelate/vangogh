@@ -32,7 +32,7 @@ func Extract(modifiedAfter int64, mt gog_media.Media, properties []string) error
 		propSet.Add(vangogh_properties.LanguageCodeProperty)
 	}
 
-	ea := nod.Begin("extracting...")
+	ea := nod.Begin("extracting properties...")
 	defer ea.End()
 
 	exl, err := vangogh_extracts.NewList(propSet.All()...)
