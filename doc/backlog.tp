@@ -3,12 +3,13 @@ Issues:
 
 implement nod support:
 	- add log/debug presenter
-	- add current status output
-	- update individual cmds:
-		- auth @done(2021-10-25)
-		- scrub-data
-		- tag
-		- wishlist
+
+vangogh_pages improvements:
+	- move code to dolo to download a set of Urls
+	- refactor all vangogh_pages usage to that ^
+	- refactor all multifile download (images, videos) to that
+	- deprecate vangogh_pages
+	- create new dolo method to download files as concurrent chunks
 
 dolo improvements:
 	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
@@ -19,13 +20,6 @@ DRY progress display:
 	
 improve size:
 	- consider providing more precise estimates
-
-vangogh_pages improvements:
-	- move code to dolo to download a set of Urls
-	- refactor all vangogh_pages usage to that ^
-	- refactor all multifile download (images, videos) to that
-	- deprecate vangogh_pages
-	- create new dolo method to download files as concurrent chunks
 	
 configuration:
 	- create a configuration file at a certain default location
@@ -106,6 +100,12 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- add current status output @done(2021-10-25) @project(implement nod support)
+	- update individual cmds: @done(2021-10-25) @project(implement nod support)
+		- auth @done(2021-10-25)
+		- scrub-data @done(2021-10-25)
+		- tag @done(2021-10-25)
+		- wishlist @done(2021-10-25)
 	- get-data @done(2021-10-24) @project(implement nod support)
 	- get-downloads @done(2021-10-24) @project(implement nod support)
 	- sync @done(2021-10-23) @project(implement nod support)

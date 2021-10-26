@@ -74,7 +74,7 @@ func scrubLocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
 				fa.EndWithResult("done")
 			}
 		} else {
-			pa.EndWithResult("%s and %s have all the same products", splitPt, pagedPt)
+			pa.EndWithResult("none found")
 		}
 	}
 

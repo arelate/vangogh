@@ -69,7 +69,7 @@ func Tag(idSet gost.StrSet, operation, tagName string) error {
 	case removeOp:
 		return removeTag(idSet, tagName, tagId, exl)
 	default:
-		return ta.EndWithError(fmt.Errorf("vangogh: unknown tag operation %s", operation))
+		return ta.EndWithError(fmt.Errorf("unknown tag operation %s", operation))
 	}
 }
 
@@ -86,7 +86,7 @@ func postResp(url *url.URL, respVal interface{}) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		return fmt.Errorf("vangogh: unexpected status: %s", resp.Status)
+		return fmt.Errorf("unexpected status: %s", resp.Status)
 	}
 
 	return json.NewDecoder(resp.Body).Decode(&respVal)
@@ -99,10 +99,10 @@ func tagIdByName(tagName string, exl *vangogh_extracts.ExtractsList) (string, er
 
 	tagIds := exl.Search(map[string][]string{vangogh_properties.TagNameProperty: {tagName}}, true)
 	if len(tagIds) == 0 {
-		return "", fmt.Errorf("vangogh: unknown tag-name %s", tagName)
+		return "", fmt.Errorf("unknown tag-name %s", tagName)
 	}
 	if len(tagIds) > 1 {
-		return "", fmt.Errorf("vangogh: ambiguous tag-name %s, matching tag-ids: %s",
+		return "", fmt.Errorf("ambiguous tag-name %s, matching tag-ids: %s",
 			tagName,
 			strings.Join(tagIds, ","))
 	}
@@ -181,7 +181,7 @@ func addTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.Extr
 			return ata.EndWithError(err)
 		}
 		if !artResp.Success {
-			return ata.EndWithError(fmt.Errorf("vangogh: failed to add tag %s", tagName))
+			return ata.EndWithError(fmt.Errorf("failed to add tag %s", tagName))
 		}
 
 		if err := exl.Add(vangogh_properties.TagIdProperty, id, tagId); err != nil {
@@ -214,7 +214,7 @@ func removeTag(idSet gost.StrSet, tagName, tagId string, exl *vangogh_extracts.E
 			return rta.EndWithError(err)
 		}
 		if !artResp.Success {
-			return rta.EndWithError(fmt.Errorf("vangogh: failed to remove tag %s", tagName))
+			return rta.EndWithError(fmt.Errorf("failed to remove tag %s", tagName))
 		}
 
 		if err := exl.Remove(vangogh_properties.TagIdProperty, id, tagId); err != nil {

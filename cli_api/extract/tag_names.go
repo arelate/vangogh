@@ -22,7 +22,7 @@ func TagNames(mt gog_media.Media) error {
 
 	const fpId = "1"
 	if !vrAccountPage.Contains(fpId) {
-		err := fmt.Errorf("vangogh: %s doesn't contain page %s", vangogh_products.AccountPage, fpId)
+		err := fmt.Errorf("%s doesn't contain page %s", vangogh_products.AccountPage, fpId)
 		return tna.EndWithError(err)
 	}
 
