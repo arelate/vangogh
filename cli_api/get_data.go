@@ -7,13 +7,13 @@ import (
 	"github.com/arelate/vangogh_pages"
 	"github.com/arelate/vangogh_products"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/fetch"
 	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/lines"
 	"github.com/boggydigital/vangogh/cli_api/split"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
-	"log"
 	"net/url"
 	"time"
 )
@@ -50,55 +50,54 @@ func GetData(
 	missing bool,
 	updated bool) error {
 
+	gda := nod.NewProgress("getting %s (%s) data...", pt, mt)
+	defer gda.End()
+
 	if !vangogh_products.Valid(pt) {
-		log.Printf("%s is not a valid product type", pt)
+		gda.EndWithResult("%s is not a valid product type", pt)
 		return nil
 	}
 
 	if !vangogh_products.SupportsMedia(pt, mt) {
+		gda.EndWithResult("%s is not a supported media for %s", mt, pt)
 		return nil
-	}
-
-	//only print "header" for details types, since they go really well with
-	//itemization detailed information
-	if vangogh_products.IsDetail(pt) {
-		fmt.Printf("fetching %s (%s):\n", pt, mt)
 	}
 
 	httpClient, err := http_client.Default()
 	if err != nil {
-		return err
+		return gda.EndWithError(err)
 	}
 
 	if vangogh_products.RequiresAuth(pt) {
 		li, err := gog_auth.LoggedIn(httpClient)
 		if err != nil {
-			return err
+			return gda.EndWithError(err)
 		}
 
 		if !li {
-			return fmt.Errorf("user is not logged in")
+			return gda.EndWithError(fmt.Errorf("user is not logged in"))
 		}
 	}
 
 	if vangogh_products.IsPaged(pt) {
-		if err := vangogh_pages.GetAllPages(httpClient, pt, mt); err != nil {
-			return err
+		if err := vangogh_pages.GetAllPages(httpClient, pt, mt, gda); err != nil {
+			return gda.EndWithError(err)
 		}
 		return split.Pages(pt, mt, since)
 	}
 
 	if vangogh_products.IsArray(pt) {
 		// using "licences" as id, since that's how we store that data in kvas
-		if err := fetch.Items([]string{vangogh_products.Licences.String()}, pt, mt); err != nil {
-			return err
+		ids := []string{vangogh_products.Licences.String()}
+		if err := fetch.Items(ids, pt, mt); err != nil {
+			return gda.EndWithError(err)
 		}
 		return split.Pages(pt, mt, since)
 	}
 
 	idSet, err = itemize.All(idSet, missing, updated, since, pt, mt)
 	if err != nil {
-		return err
+		return gda.EndWithError(err)
 	}
 
 	approvedIds := idSet.Except(gost.NewStrSetWith(denyIds...))

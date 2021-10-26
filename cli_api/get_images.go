@@ -149,7 +149,7 @@ func GetImages(
 		gia.Increment()
 	}
 
-	gia.EndWithResult("done")
+	//gia.EndWithResult("done")
 
 	return nil
 }

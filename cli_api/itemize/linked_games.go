@@ -5,18 +5,21 @@ import (
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
+	"github.com/boggydigital/nod"
 )
 
 func linkedGames(modifiedAfter int64) (gost.StrSet, error) {
+
+	lga := nod.Begin(" finding missing linked %s... ", vangogh_products.ApiProductsV2)
+	defer lga.End()
 
 	missingSet := gost.NewStrSet()
 
 	//currently, api-products-v2 support only gog_media.Game, and since this method is exclusively
 	//using api-products-v2 we're fine specifying media directly and not taking as a parameter
 	vrApv2, err := vangogh_values.NewReader(vangogh_products.ApiProductsV2, gog_media.Game)
-
 	if err != nil {
-		return missingSet, err
+		return missingSet, lga.EndWithError(err)
 	}
 
 	for _, id := range vrApv2.ModifiedAfter(modifiedAfter, false) {
@@ -27,7 +30,7 @@ func linkedGames(modifiedAfter int64) (gost.StrSet, error) {
 		apv2, err := vrApv2.ApiProductV2(id)
 
 		if err != nil {
-			return missingSet, err
+			return missingSet, lga.EndWithError(err)
 		}
 
 		lgs := apv2.GetIncludesGames()
@@ -41,6 +44,8 @@ func linkedGames(modifiedAfter int64) (gost.StrSet, error) {
 			}
 		}
 	}
+
+	lga.EndWithResult(itemizationResult(missingSet))
 
 	return missingSet, nil
 }

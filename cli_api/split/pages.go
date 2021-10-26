@@ -3,17 +3,21 @@ package split
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/nod"
 	"sort"
 	"strconv"
 )
 
 func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp int64) error {
+
+	spa := nod.NewProgress(" splitting %s (%s)... ", sourcePt, mt)
+	defer spa.End()
+
 	vrPaged, err := vangogh_values.NewReader(sourcePt, mt)
 	if err != nil {
 		return err
@@ -21,7 +25,7 @@ func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 
 	modifiedIds := vrPaged.ModifiedAfter(timestamp, false)
 	if len(modifiedIds) == 0 {
-		fmt.Printf("no need to split unchanged %s (%s)\n", sourcePt, mt)
+		spa.EndWithResult("no need to split unchanged %s (%s)", sourcePt, mt)
 		return nil
 	}
 
@@ -43,40 +47,42 @@ func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 		}
 	}
 
+	spa.TotalInt(len(modifiedIds))
+
 	for _, id := range modifiedIds {
 
 		splitPt := vangogh_products.SplitType(sourcePt)
 
-		fmt.Printf("\rsplitting %s (%s) %s... ", sourcePt, mt, id)
-
 		productsGetter, err := vrPaged.ProductsGetter(id)
 
 		if err != nil {
-			return err
+			return spa.EndWithError(err)
 		}
 
 		detailDstUrl, err := vangogh_urls.LocalProductsDir(splitPt, mt)
 		if err != nil {
-			return nil
+			return spa.EndWithError(err)
 		}
 
 		kvDetail, err := kvas.NewJsonLocal(detailDstUrl)
 		if err != nil {
-			return err
+			return spa.EndWithError(err)
 		}
 
 		for _, product := range productsGetter.GetProducts() {
 			buf := new(bytes.Buffer)
 			if err := json.NewEncoder(buf).Encode(product); err != nil {
-				return err
+				return spa.EndWithError(err)
 			}
 			if err := kvDetail.Set(strconv.Itoa(product.GetId()), buf); err != nil {
-				return err
+				return spa.EndWithError(err)
 			}
 		}
+
+		spa.Increment()
 	}
 
-	fmt.Println("done")
+	spa.EndWithResult("done")
 
 	return nil
 }

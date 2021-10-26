@@ -79,7 +79,6 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 		title, _ := exl.Get(vangogh_properties.TitleProperty, id)
 
 		va := nod.Begin("%s %s", id, title)
-		//fmt.Printf("%s %s", id, title)
 
 		dl := dolo.NewClient(httpClient, dolo.Defaults())
 
@@ -113,8 +112,6 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 					continue
 				}
 
-				//fmt.Print(".")
-
 				dir, err := vangogh_urls.VideoDir(videoId)
 				if err != nil {
 					return vfa.EndWithError(err)
@@ -127,7 +124,6 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 
 				_, err = dl.Download(u, dir, videoId+videoExt, vfa)
 				if err != nil {
-					//fmt.Printf("(%s)", err)
 					vfa.Error(err)
 					continue
 				}
@@ -142,7 +138,7 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 		gva.Increment()
 	}
 
-	gva.EndWithResult("done")
+	//gva.EndWithResult("done")
 
 	return nil
 }

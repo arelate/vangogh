@@ -5,9 +5,7 @@ implement nod support:
 	- add log/debug presenter
 	- add current status output
 	- update individual cmds:
-		- auth
-		- get-data
-		- get-downloads @done(2021-10-24)
+		- auth @done(2021-10-25)
 		- scrub-data
 		- tag
 		- wishlist
@@ -108,6 +106,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- get-data @done(2021-10-24) @project(implement nod support)
+	- get-downloads @done(2021-10-24) @project(implement nod support)
 	- sync @done(2021-10-23) @project(implement nod support)
 	- update-downloads @done(2021-10-23) @project(implement nod support)
 	- get-images @done(2021-10-23) @project(implement nod support)

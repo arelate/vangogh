@@ -1,7 +1,6 @@
 package itemize
 
 import (
-	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/boggydigital/gost"
@@ -23,13 +22,10 @@ func All(
 			idSet.AddSet(missingIds)
 		}
 		if updated {
-			fmt.Printf(" finding Modified %s... ", pt)
-			// Modified main product type items
 			modifiedIds, err := Modified(modifiedAfter, mainPt, mt)
 			if err != nil {
 				return idSet, err
 			}
-			printFoundAndAll(modifiedIds)
 			idSet.AddSet(modifiedIds)
 		}
 	}

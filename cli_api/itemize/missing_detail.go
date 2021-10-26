@@ -7,7 +7,16 @@ import (
 	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/nod"
 )
+
+func itemizationResult(set gost.StrSet) string {
+	if set.Len() == 0 {
+		return "found nothing"
+	} else {
+		return fmt.Sprintf("found %d", set.Len())
+	}
+}
 
 func missingDetail(
 	detailPt, mainPt vangogh_products.ProductType,
@@ -19,12 +28,10 @@ func missingDetail(
 	//requires-games, is-required-by-games
 	if mainPt == vangogh_products.ApiProductsV2 &&
 		detailPt == vangogh_products.ApiProductsV2 {
-		fmt.Printf(" finding missing linked %s... ", vangogh_products.ApiProductsV2)
 		lg, err := linkedGames(since)
 		if err != nil {
 			return lg, err
 		}
-		printFoundAndAll(lg)
 		return lg, nil
 	}
 
@@ -32,37 +39,36 @@ func missingDetail(
 	//required (base) game details to the updates
 	if mainPt == vangogh_products.LicenceProducts &&
 		detailPt == vangogh_products.Details {
-		fmt.Printf(" finding DLCs missing required base product... ")
 		rg, err := RequiredAndIncluded(since)
 		if err != nil {
 			return rg, err
 		}
-		printFoundAndAll(rg)
 		return rg, nil
 	}
 
-	fmt.Printf(" finding missing %s for %s... ", detailPt, mainPt)
+	mda := nod.Begin(" finding missing %s for %s... ", detailPt, mainPt)
+	defer mda.End()
 
 	missingIdSet := gost.NewStrSet()
 
 	mainDestUrl, err := vangogh_urls.LocalProductsDir(mainPt, mt)
 	if err != nil {
-		return missingIdSet, err
+		return missingIdSet, mda.EndWithError(err)
 	}
 
 	detailDestUrl, err := vangogh_urls.LocalProductsDir(detailPt, mt)
 	if err != nil {
-		return missingIdSet, err
+		return missingIdSet, mda.EndWithError(err)
 	}
 
 	kvMain, err := kvas.NewJsonLocal(mainDestUrl)
 	if err != nil {
-		return missingIdSet, err
+		return missingIdSet, mda.EndWithError(err)
 	}
 
 	kvDetail, err := kvas.NewJsonLocal(detailDestUrl)
 	if err != nil {
-		return missingIdSet, err
+		return missingIdSet, mda.EndWithError(err)
 	}
 
 	for _, id := range kvMain.All() {
@@ -71,16 +77,14 @@ func missingDetail(
 		}
 	}
 
-	printFoundAndAll(missingIdSet)
+	mda.EndWithResult(itemizationResult(missingIdSet))
 
 	if mainPt == vangogh_products.AccountProducts &&
 		detailPt == vangogh_products.Details {
-		fmt.Printf(" finding %s updates... ", vangogh_products.AccountProducts)
 		updatedAccountProducts, err := AccountProductsUpdates(mt)
 		if err != nil {
 			return missingIdSet, err
 		}
-		printFoundAndAll(updatedAccountProducts)
 		for uapId := range updatedAccountProducts {
 			missingIdSet.Add(uapId)
 		}

@@ -61,15 +61,12 @@ func item(
 
 	title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 	if !ok {
-		//fmt.Printf("product %s not found\n", id)
 		return nil, nil
 	}
 
 	itp := make(map[string][]string)
 	idTitle := fmt.Sprintf("%s %s", id, title)
 	itp[idTitle] = make([]string, 0)
-
-	//fmt.Println(id, title)
 
 	sort.Strings(properties)
 
