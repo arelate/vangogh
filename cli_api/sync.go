@@ -130,6 +130,8 @@ func Sync(
 		}
 	}
 
+	sa.EndWithResult("done")
+
 	// print new or updated
 	return Summary(mt, syncStart)
 }

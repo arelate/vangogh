@@ -3,6 +3,10 @@ Issues:
 
 implement nod support:
 	- add log/debug presenter
+	- add clo.json global flags (e.g. log / debug)
+
+DRY progress display:
+	- DRY copy code with progress callback (to be used in dolo, validation, more?)
 
 vangogh_pages improvements:
 	- move code to dolo to download a set of Urls
@@ -11,22 +15,14 @@ vangogh_pages improvements:
 	- deprecate vangogh_pages
 	- create new dolo method to download files as concurrent chunks
 
-dolo improvements:
-	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
-
-DRY progress display:
-	- it's copied in dolo, vangogh validation
-	- DRY copy code with progress callback (to be used in dolo, validation, more?)
-	
-improve size:
-	- consider providing more precise estimates
-	
-configuration:
-	- create a configuration file at a certain default location
-	- use it to specify directories/kvas connection strings
-
 vangogh_api:
 	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
+
+dolo improvements:
+	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
+	
+improve size:
+	- consider providing more precise estimates (not whole product, but actual items)
 
 Work on gaugin can start:
 	- Publish vangogh on GitHub
@@ -37,18 +33,11 @@ Work on gaugin can start:
 			- /images/{image-id}
 			- /videos/{video-id}
 	
-documentation investment:
-	- add clo.json help for stable commands
-	- generate MD/HTML for help using clo to use in README
-	
 yt-urls improvements:
 	- support cipher urls
 		- 276 videos at this moment
 	- support login required videos
 		- 14 videos at this moment
-		
-Misc improvements:
-	- investigate text/tabwriter for output
 		
 clo improvement:
 	- "SAME-AS" command to copy arguments from another command or predefined sets
@@ -63,11 +52,6 @@ dolo improvements:
 		- files that were successfully downloaded with sizes
 		- files that were not attempted to be downloaded
 
-verbosity improvements:
-	- add flags to functions to be optionally verbose
-	- when verbose - use log.Print
-	- when not - continue using fmt.Print
-
 figure out where 1435735429 gets box-art image in Galaxy:
 	- proxy requests and find the source
 
@@ -75,23 +59,13 @@ Standartize directories:
 	- opt/vangogh, etc/vangogh, etc.
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
 
-concurrency improvements:
-	- rewrite get-data pipeline to be concurrent:
-		- getItems
-		- split
-		- extract
-		- search
-
-Improve verbosity:
-	- add module that produced log.Print to the log output
-	- add a "verbose" flag to every module
-	- use log.Print for errors and info, fmt.Print for progress
-
 Documentation:
 	- update modules documentation:
 		- clo
 		- kvas
 		- dolo
+	- add clo.json help for stable commands
+	- generate MD/HTML for help using clo to use in README
 
 Tests:
 	- add test coverage for modules:
@@ -100,6 +74,27 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	configuration: @done(2021-10-25)
+		- create a configuration file at a certain default location @done(2021-10-25)
+		- use it to specify directories/kvas connection strings @done(2021-10-25)
+	concurrency improvements: @done(2021-10-25)
+		- rewrite get-data pipeline to be concurrent: @done(2021-10-25)
+			- getItems @done(2021-10-25)
+			- split @done(2021-10-25)
+			- extract @done(2021-10-25)
+			- search @done(2021-10-25)
+	Improve verbosity: @done(2021-10-25)
+		- add module that produced log.Print to the log output @done(2021-10-25)
+		- add a "verbose" flag to every module @done(2021-10-25)
+		- use log.Print for errors and info, fmt.Print for progress @done(2021-10-25)
+	verbosity improvements: @done(2021-10-25)
+		- add flags to functions to be optionally verbose @done(2021-10-25)
+		- when verbose - use log.Print @done(2021-10-25)
+		- when not - continue using fmt.Print @done(2021-10-25)
+	- it's copied in dolo, vangogh validation @done(2021-10-25) @project(DRY progress display)
+	Misc improvements: @done(2021-10-25)
+		- investigate text/tabwriter for output @done(2021-10-25)
+			
 	- add current status output @done(2021-10-25) @project(implement nod support)
 	- update individual cmds: @done(2021-10-25) @project(implement nod support)
 		- auth @done(2021-10-25)

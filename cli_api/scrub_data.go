@@ -36,6 +36,7 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 	//products with values different from extracts
 	//images that are not linked to a product
 	//videos that are not linked to a product
+	//logs older than 30 days
 
 	return nil
 }

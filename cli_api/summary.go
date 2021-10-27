@@ -9,7 +9,6 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/hours"
-	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 	"sort"
@@ -91,16 +90,16 @@ func Summary(mt gog_media.Media, since int64) error {
 		return sa.EndWithError(err)
 	}
 
-	for grp, ids := range updates {
-		ga := nod.Begin(" %s:", grp)
-		itp, err := output.Items(ids, nil, []string{vangogh_properties.TitleProperty}, exl)
-		if err != nil {
-			return ga.EndWithError(err)
+	for _, items := range updates {
+		for i := 0; i < len(items); i++ {
+			if title, ok := exl.Get(vangogh_properties.TitleProperty, items[i]); ok {
+				items[i] = fmt.Sprintf("%s %s", items[i], title)
+			}
 		}
-		ga.EndWithSummary(itp)
 	}
 
-	//return output.Groups(updates)
+	sa.EndWithSummary(updates)
+
 	return nil
 }
 
