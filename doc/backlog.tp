@@ -1,12 +1,6 @@
 Issues:
 	No known at the moment
 
-implement nod support:
-	- add clo.json global flags (e.g. log / debug)
-
-DRY progress display:
-	- DRY copy code with progress callback (to be used in dolo, validation, more?)
-
 vangogh_pages improvements:
 	- move code to dolo to download a set of Urls
 	- refactor all vangogh_pages usage to that ^
@@ -73,6 +67,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	DRY progress display: @done(2021-10-27)
+		- DRY copy code with progress callback (to be used in dolo, validation, more?) @done(2021-10-27)
+	implement nod support: @done(2021-10-27)
+		- add clo.json global flags (e.g. log / debug) @done(2021-10-27)
 	- add log/debug presenter @done(2021-10-26) @project(implement nod support)
 	configuration: @done(2021-10-25)
 		- create a configuration file at a certain default location @done(2021-10-25)

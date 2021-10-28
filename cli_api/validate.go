@@ -12,11 +12,11 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/arelate/vangogh_urls"
 	"github.com/arelate/vangogh_values"
+	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"github.com/boggydigital/vangogh/cli_api/validation"
-	"io"
 	"net/url"
 	"os"
 )
@@ -28,8 +28,6 @@ var (
 	ErrValidationNotSupported = errors.New("validation not supported")
 	ErrValidationFailed       = errors.New("failed validation")
 )
-
-const blockSize = 32 * 1024
 
 func ValidateHandler(u *url.URL) error {
 	idSet, err := url_helpers.IdSet(u)
@@ -186,16 +184,8 @@ func validateManualUrl(
 		return mua.EndWithError(err)
 	}
 
-	for {
-		_, err = io.CopyN(h, io.TeeReader(sourceFile, mua), blockSize)
-		if err == io.EOF {
-			// This is not an error in the common sense
-			// io.EOF tells us, that we did read the complete body
-			break
-		} else if err != nil {
-			//You should do error handling here
-			return mua.EndWithError(err)
-		}
+	if err := dolo.Copy(h, sourceFile, mua); err != nil {
+		return mua.EndWithError(err)
 	}
 
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
