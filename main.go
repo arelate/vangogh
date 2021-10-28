@@ -25,18 +25,20 @@ func main() {
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
 
-	logger, err := nod.EnableFileLogger("logs")
-	if err != nil {
-		_ = ns.EndWithError(err)
-	}
-	defer logger.Close()
-
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
 	defs, err := clo.Load(bytesBuffer, clo_delegates.Values)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
+	}
+
+	if defs.HasDefaultsFlag("debug") {
+		logger, err := nod.EnableFileLogger("logs")
+		if err != nil {
+			_ = ns.EndWithError(err)
+		}
+		defer logger.Close()
 	}
 
 	clo.HandleFuncs(map[string]clo.Handler{

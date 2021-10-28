@@ -73,6 +73,7 @@ func missingDetail(
 
 	for _, id := range kvMain.All() {
 		if !kvDetail.Contains(id) {
+			nod.Log("adding missing %s: #%s", detailPt, id)
 			missingIdSet.Add(id)
 		}
 	}

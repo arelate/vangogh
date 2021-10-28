@@ -26,7 +26,12 @@ func RequiredAndIncluded(createdAfter int64) (gost.StrSet, error) {
 		return nil, raia.EndWithError(err)
 	}
 
-	for _, id := range vrLicences.CreatedAfter(createdAfter) {
+	newLicences := vrLicences.CreatedAfter(createdAfter)
+	if len(newLicences) > 0 {
+		nod.Log("new %s: %v", vangogh_products.LicenceProducts, newLicences)
+	}
+
+	for _, id := range newLicences {
 		// it's not guaranteed that a license would have an existing api-products-v2
 		if !vrApv2.Contains(id) {
 			continue
@@ -40,11 +45,20 @@ func RequiredAndIncluded(createdAfter int64) (gost.StrSet, error) {
 			return nil, raia.EndWithError(err)
 		}
 
-		for _, reqGame := range apv2.GetRequiresGames() {
+		grg := apv2.GetRequiresGames()
+		if len(grg) > 0 {
+			nod.Log("%s #%s requires-games: %v", vangogh_products.ApiProductsV2, id, grg)
+		}
+		for _, reqGame := range grg {
 			newLicSet.Add(reqGame)
 		}
 
-		for _, inclGame := range apv2.GetIncludesGames() {
+		gig := apv2.GetIncludesGames()
+		if len(gig) > 0 {
+			nod.Log("%s #%s includes-games: %v", vangogh_products.ApiProductsV2, id, gig)
+		}
+
+		for _, inclGame := range gig {
 			newLicSet.Add(inclGame)
 		}
 	}

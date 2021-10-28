@@ -28,6 +28,7 @@ func AccountProductsUpdates(mt gog_media.Media) (gost.StrSet, error) {
 		for _, ap := range accountPage.Products {
 			if ap.Updates > 0 ||
 				ap.IsNew {
+				nod.Log("%s #%d Updates, isNew: %d, %v", vangogh_products.AccountProducts, ap.Id, ap.Updates, ap.IsNew)
 				updatesSet.Add(strconv.Itoa(ap.Id))
 			}
 		}

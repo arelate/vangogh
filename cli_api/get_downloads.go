@@ -227,7 +227,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	if remoteChecksumPath != "" {
 		localChecksumPath := vangogh_urls.LocalChecksumPath(path.Join(absDir, filename))
 		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) {
-			dca := nod.NewProgress(" downloading checksum...")
+			dca := nod.NewProgress(" checksum for %s...", filename)
 			originalPath := resolvedUrl.Path
 			resolvedUrl.Path = remoteChecksumPath
 			valDir, valFilename := path.Split(localChecksumPath)
