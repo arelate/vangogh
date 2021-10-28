@@ -2,7 +2,6 @@ Issues:
 	No known at the moment
 
 implement nod support:
-	- add log/debug presenter
 	- add clo.json global flags (e.g. log / debug)
 
 DRY progress display:
@@ -74,6 +73,7 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- add log/debug presenter @done(2021-10-26) @project(implement nod support)
 	configuration: @done(2021-10-25)
 		- create a configuration file at a certain default location @done(2021-10-25)
 		- use it to specify directories/kvas connection strings @done(2021-10-25)

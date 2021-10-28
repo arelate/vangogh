@@ -1,6 +1,7 @@
 package cli_api
 
 import (
+	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
@@ -8,9 +9,13 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
+)
+
+const (
+	ownedSection    = "owned"
+	notOwnedSection = "not owned"
 )
 
 func OwnedHandler(u *url.URL) error {
@@ -23,6 +28,9 @@ func OwnedHandler(u *url.URL) error {
 }
 
 func Owned(idSet gost.StrSet) error {
+
+	oa := nod.Begin("checking ownership...")
+	defer oa.End()
 
 	ownedSet := gost.NewStrSet()
 	propSet := gost.NewStrSetWith(
@@ -65,19 +73,24 @@ func Owned(idSet gost.StrSet) error {
 		}
 	}
 
-	noa := nod.Begin(" not owned:")
-	itp, err := output.Items(idSet.Except(ownedSet), nil, []string{vangogh_properties.TitleProperty}, exl)
-	if err != nil {
-		return noa.EndWithError(err)
+	ownSummary := make(map[string][]string)
+	ownSummary[ownedSection] = make([]string, 0, ownedSet.Len())
+	for id, _ := range ownedSet {
+		if title, ok := exl.Get(vangogh_properties.TitleProperty, id); ok {
+			ownSummary[ownedSection] = append(ownSummary[ownedSection], fmt.Sprintf("%s %s", id, title))
+		}
 	}
-	noa.EndWithSummary(itp)
 
-	oa := nod.Begin(" owned:")
-	itp, err = output.Items(ownedSet.All(), nil, []string{vangogh_properties.TitleProperty}, exl)
-	if err != nil {
-		return oa.EndWithError(err)
+	notOwned := idSet.Except(ownedSet)
+
+	ownSummary[notOwnedSection] = make([]string, 0, len(notOwned))
+	for _, id := range notOwned {
+		if title, ok := exl.Get(vangogh_properties.TitleProperty, id); ok {
+			ownSummary[notOwnedSection] = append(ownSummary[notOwnedSection], fmt.Sprintf("%s %s", id, title))
+		}
 	}
-	oa.EndWithSummary(itp)
+
+	oa.EndWithSummary(ownSummary)
 
 	return nil
 }

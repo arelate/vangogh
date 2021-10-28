@@ -111,7 +111,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 	defer cd.tpw.Increment()
 
 	if err := cd.exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
-		return err
+		return csa.EndWithError(err)
 	}
 
 	//cleanup process:
@@ -124,7 +124,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 	//pDir = s/slug
 	pDir, err := vangogh_urls.ProductDownloadsRelDir(slug)
 	if err != nil {
-		return err
+		return csa.EndWithError(err)
 	}
 
 	for _, dl := range list {
@@ -133,7 +133,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
 			relFilename, err := filepath.Rel(pDir, localFilename)
 			if err != nil {
-				return err
+				return csa.EndWithError(err)
 			}
 			expectedSet.Add(relFilename)
 		}
@@ -142,14 +142,14 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 	//LocalSlugDownloads returns list of files relative to s/slug product directory
 	presentSet, err := vangogh_urls.LocalSlugDownloads(slug)
 	if err != nil {
-		return err
+		return csa.EndWithError(err)
 	}
 
 	unexpectedFiles := presentSet.Except(expectedSet)
 
 	if len(unexpectedFiles) == 0 {
 		if !cd.all {
-			csa.EndWithResult("- already clean")
+			csa.EndWithResult("already clean")
 			csa.Flush()
 		}
 		return nil
