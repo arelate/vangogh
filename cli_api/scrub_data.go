@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
+	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/remove"
 	"github.com/boggydigital/vangogh/cli_api/scrubs"
@@ -117,10 +118,21 @@ func scrubFilesInRecycleBin(fix bool) error {
 			rfa.EndWithResult("done")
 
 			//remove empty directories after fixing files
+			sortDirs := gost.NewSortStrSet()
+			dirLens := make(map[string]int)
+
+			for _, dir := range recycleBinDirs.All() {
+				sortDirs.Add(dir)
+				dirLens[dir] = len(dir)
+			}
+
+			sortedDirs := sortDirs.SortByIntVal(dirLens, true)
+
 			rda := nod.NewProgress(" removing directories in recycle bin...")
-			rda.TotalInt(len(recycleBinDirs))
-			for _, dir := range recycleBinDirs {
-				if err := os.Remove(filepath.Join(vangogh_urls.RecycleBinDir(), dir)); err != nil {
+			rda.TotalInt(len(sortedDirs))
+
+			for _, dir := range sortedDirs {
+				if err := os.Remove(dir); err != nil {
 					return rda.EndWithError(err)
 				}
 				rda.Increment()

@@ -1,12 +1,20 @@
 Issues:
 	No known at the moment
+	- cleanup doesn't properly remove directories
 
 vangogh_pages improvements:
-	- move code to dolo to download a set of Urls
-	- refactor all vangogh_pages usage to that ^
-	- refactor all multifile download (images, videos) to that
+	- move code to dolo to download a set of Urls @done(2021-10-28)
+	- refactor all vangogh_pages usage to that:
+		- get-data
+		- fetch.Items
+	- refactor all multifile download (images, videos) to that:
+		- get-images
+		- get-videos
 	- deprecate vangogh_pages
-	- create new dolo method to download files as concurrent chunks
+	- create new dolo method to download files as concurrent chunks @done(2021-10-28)
+
+cleanup improvement:
+	- add summary detailing size of the extra files
 
 vangogh_api:
 	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
