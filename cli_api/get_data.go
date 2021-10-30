@@ -80,6 +80,13 @@ func GetData(
 	}
 
 	if vangogh_products.IsPaged(pt) {
+
+		// create indexSetter using kvas and dst(pt,mt)
+		// dolo.GetSetOne first page
+		// load and read TotalPages for that pt
+		// create a list of src URLs starting with page 2 (if available)
+		// dolo.GetSetMany all pages
+
 		if err := vangogh_pages.GetAllPages(httpClient, pt, mt, gda); err != nil {
 			return gda.EndWithError(err)
 		}

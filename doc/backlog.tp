@@ -1,9 +1,7 @@
 Issues:
 	No known at the moment
-	- cleanup doesn't properly remove directories
 
 vangogh_pages improvements:
-	- move code to dolo to download a set of Urls @done(2021-10-28)
 	- refactor all vangogh_pages usage to that:
 		- get-data
 		- fetch.Items
@@ -11,7 +9,6 @@ vangogh_pages improvements:
 		- get-images
 		- get-videos
 	- deprecate vangogh_pages
-	- create new dolo method to download files as concurrent chunks @done(2021-10-28)
 
 cleanup improvement:
 	- add summary detailing size of the extra files
@@ -75,6 +72,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- cleanup doesn't properly remove directories @done(2021-10-28) @project(Issues)
+	- move code to dolo to download a set of Urls @done(2021-10-28) @project(vangogh_pages improvements)
+	- create new dolo method to download files as concurrent chunks @done(2021-10-28) @project(vangogh_pages improvements)
 	DRY progress display: @done(2021-10-27)
 		- DRY copy code with progress callback (to be used in dolo, validation, more?) @done(2021-10-27)
 	implement nod support: @done(2021-10-27)
