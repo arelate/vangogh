@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/arelate/gog_auth"
 	"github.com/arelate/gog_media"
-	"github.com/arelate/vangogh_pages"
 	"github.com/arelate/vangogh_products"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
@@ -80,14 +79,7 @@ func GetData(
 	}
 
 	if vangogh_products.IsPaged(pt) {
-
-		// create indexSetter using kvas and dst(pt,mt)
-		// dolo.GetSetOne first page
-		// load and read TotalPages for that pt
-		// create a list of src URLs starting with page 2 (if available)
-		// dolo.GetSetMany all pages
-
-		if err := vangogh_pages.GetAllPages(httpClient, pt, mt, gda); err != nil {
+		if err := fetch.Pages(pt, mt, httpClient, gda); err != nil {
 			return gda.EndWithError(err)
 		}
 		return split.Pages(pt, mt, since)

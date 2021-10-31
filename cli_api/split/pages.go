@@ -25,7 +25,7 @@ func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 
 	modifiedIds := vrPaged.ModifiedAfter(timestamp, false)
 	if len(modifiedIds) == 0 {
-		spa.EndWithResult("no changes to split")
+		spa.EndWithResult("unchanged")
 		return nil
 	}
 

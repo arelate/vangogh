@@ -139,7 +139,7 @@ func GetImages(
 
 		imagesIndexSetter := dolo.NewFileIndexSetter(filenames)
 
-		if err := dolo.GetSetMany(urls, imagesIndexSetter, http.DefaultClient, mita); err != nil {
+		if err := dolo.GetSet(urls, imagesIndexSetter, http.DefaultClient, mita); err != nil {
 			return mita.EndWithError(err)
 		}
 

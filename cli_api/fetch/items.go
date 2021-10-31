@@ -1,15 +1,14 @@
 package fetch
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_urls"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/http_client"
-	"io"
+	"net/url"
 )
 
 func Items(
@@ -26,11 +25,6 @@ func Items(
 		return ia.EndWithError(fmt.Errorf("getting %s is not supported", pt))
 	}
 
-	destUrl, err := vangogh_urls.LocalProductsDir(pt, mt)
-	if err != nil {
-		return ia.EndWithError(err)
-	}
-
 	sourceUrl, err := vangogh_urls.RemoteProductsUrl(pt)
 	if err != nil {
 		return ia.EndWithError(err)
@@ -41,45 +35,23 @@ func Items(
 		return ia.EndWithError(err)
 	}
 
-	vs, err := kvas.NewJsonLocal(destUrl)
+	urls := make([]*url.URL, len(ids))
+	idStr := make([]string, len(ids))
+
+	for i := 0; i < len(ids); i++ {
+		urls[i], idStr[i] = sourceUrl(ids[i], mt), ids[i]
+	}
+
+	kis, err := NewKvasIndexSetter(pt, mt, idStr)
 	if err != nil {
 		return ia.EndWithError(err)
 	}
 
-	for _, id := range ids {
-
-		u := sourceUrl(id, mt)
-
-		resp, err := httpClient.Get(u.String())
-		if err != nil {
-			return ia.EndWithError(err)
-		}
-
-		if resp.StatusCode < 200 || resp.StatusCode > 299 {
-			return ia.EndWithError(fmt.Errorf("unexpected status: %s", resp.Status))
-		}
-
-		var b bytes.Buffer
-		tr := io.TeeReader(resp.Body, &b)
-
-		if err = vs.Set(id, tr); err != nil {
-			return ia.EndWithError(err)
-		}
-
-		if err := resp.Body.Close(); err != nil {
-			return ia.EndWithError(err)
-		}
-
-		if err != nil {
-			ia.Error(fmt.Errorf("error getting %s (%s) %s: %v", pt, mt, id, err))
-		}
-
-		ia.Increment()
+	if err := dolo.GetSet(urls, kis, httpClient, ia); err != nil {
+		return ia.EndWithError(err)
 	}
 
-	//if len(ids) > 0 {
 	ia.EndWithResult("done")
-	//}
 
 	return nil
 }

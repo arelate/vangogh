@@ -3,9 +3,9 @@ Issues:
 
 vangogh_pages improvements:
 	- refactor all vangogh_pages usage to that:
-		- get-data
+		- get-data IsPaged @done(2021-10-30)
 		- fetch.Items
-	- deprecate vangogh_pages
+	- deprecate vangogh_pages @done(2021-10-30)
 
 cleanup improvement:
 	- add summary detailing size of the extra files

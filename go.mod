@@ -1,6 +1,6 @@
 module github.com/boggydigital/vangogh
 
-go 1.16
+go 1.17
 
 require (
 	github.com/arelate/gog_auth v0.1.3-alpha
@@ -10,7 +10,6 @@ require (
 	github.com/arelate/vangogh_downloads v0.1.0
 	github.com/arelate/vangogh_extracts v0.1.0-alpha
 	github.com/arelate/vangogh_images v0.1.1-alpha
-	github.com/arelate/vangogh_pages v0.1.0-alpha
 	github.com/arelate/vangogh_products v0.1.3-alpha
 	github.com/arelate/vangogh_properties v0.1.0-alpha
 	github.com/arelate/vangogh_sets v0.1.0
@@ -24,6 +23,13 @@ require (
 	github.com/boggydigital/yt_urls v0.1.1
 )
 
+require (
+	github.com/arelate/gog_auth_urls v0.1.2-alpha // indirect
+	github.com/boggydigital/froth v0.1.0-alpha // indirect
+	github.com/boggydigital/match_node v0.1.3 // indirect
+	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
+)
+
 replace (
 	github.com/arelate/gog_auth => ../gog_auth
 	github.com/arelate/gog_media => ../gog_media
@@ -32,7 +38,6 @@ replace (
 	github.com/arelate/vangogh_downloads => ../vangogh_downloads
 	github.com/arelate/vangogh_extracts => ../vangogh_extracts
 	github.com/arelate/vangogh_images => ../vangogh_images
-	github.com/arelate/vangogh_pages => ../vangogh_pages
 	github.com/arelate/vangogh_products => ../vangogh_products
 	github.com/arelate/vangogh_properties => ../vangogh_properties
 	github.com/arelate/vangogh_sets => ../vangogh_sets
