@@ -9,10 +9,11 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/vangogh/cli_api/http_client"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
+	"net/http"
 	"net/url"
+	"path/filepath"
 )
 
 func GetImagesHandler(u *url.URL) error {
@@ -97,26 +98,21 @@ func GetImages(
 		return nil
 	}
 
-	httpClient, err := http_client.Default()
-	if err != nil {
-		return gia.EndWithError(err)
-	}
-
-	dl := dolo.NewClient(httpClient, dolo.Defaults())
-
 	gia.TotalInt(len(idMissingTypes))
 
 	for id, missingIts := range idMissingTypes {
+
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
 		}
 
-		mita := nod.Begin("%s %s", id, title)
+		mita := nod.NewProgress("%s %s", id, title)
+
+		urls := make([]*url.URL, 0, len(missingIts))
+		filenames := make([]string, 0, len(missingIts))
 
 		for _, it := range missingIts {
-
-			mia := nod.NewProgress(" %s...", it)
 
 			images, ok := exl.GetAll(vangogh_properties.FromImageType(it), id)
 			if !ok || len(images) == 0 {
@@ -125,31 +121,33 @@ func GetImages(
 
 			srcUrls, err := vangogh_urls.PropImageUrls(images, it)
 			if err != nil {
-				return mia.EndWithError(err)
+				return mita.EndWithError(err)
 			}
 
-			mia.TotalInt(len(srcUrls))
+			urls = append(urls, srcUrls...)
 
 			for _, srcUrl := range srcUrls {
 
 				dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
-
-				_, err = dl.Download(srcUrl, dstDir, "", nil)
 				if err != nil {
-					mia.Error(err)
-					continue
+					return mita.EndWithError(err)
 				}
-				mia.Increment()
-			}
 
-			mia.EndWithResult("done")
+				filenames = append(filenames, filepath.Join(dstDir, srcUrl.Path))
+			}
 		}
 
-		mita.End()
+		imagesIndexSetter := dolo.NewFileIndexSetter(filenames)
+
+		if err := dolo.GetSetMany(urls, imagesIndexSetter, http.DefaultClient, mita); err != nil {
+			return mita.EndWithError(err)
+		}
+
+		mita.EndWithResult("done")
 		gia.Increment()
 	}
 
-	//gia.EndWithResult("done")
+	gia.EndWithResult("done")
 
 	return nil
 }

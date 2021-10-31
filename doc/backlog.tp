@@ -5,9 +5,6 @@ vangogh_pages improvements:
 	- refactor all vangogh_pages usage to that:
 		- get-data
 		- fetch.Items
-	- refactor all multifile download (images, videos) to that:
-		- get-images
-		- get-videos
 	- deprecate vangogh_pages
 
 cleanup improvement:
@@ -72,6 +69,9 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- refactor all multifile download (images, videos) to that: @done(2021-10-30) @project(vangogh_pages improvements)
+		- get-images @done(2021-10-30)
+		- get-videos @done(2021-10-30)
 	- cleanup doesn't properly remove directories @done(2021-10-28) @project(Issues)
 	- move code to dolo to download a set of Urls @done(2021-10-28) @project(vangogh_pages improvements)
 	- create new dolo method to download files as concurrent chunks @done(2021-10-28) @project(vangogh_pages improvements)

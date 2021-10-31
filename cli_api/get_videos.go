@@ -122,13 +122,20 @@ func GetVideos(idSet gost.StrSet, missing bool) error {
 					return vfa.EndWithError(err)
 				}
 
+				//get-videos is not using dolo.GetSetMany unlike get-images, and is downloading
+				//videos sequentially for two main reasons:
+				//1) each video has a list of bitrate-sorted URLs, and we're attempting to download "the best" quality
+				//moving to the next available on failure
+				//2) currently dolo.GetSetMany doesn't support nod progress reporting on each individual concurrent
+				//download (ok, well, StdOutPresenter doesn't, nod likely does) and for video files this would mean
+				//long pauses as we download individual files
 				_, err = dl.Download(u, dir, videoId+videoExt, vfa)
 				if err != nil {
 					vfa.Error(err)
 					continue
 				}
 
-				//yt_urls.StreamingUrls returns bitrate sorted video urls,
+				//yt_urls.StreamingUrls returns bitrate-sorted video urls,
 				//so we can stop, if we've successfully got the best available one
 				break
 			}
