@@ -5,7 +5,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/vangogh/cli_api/output"
+	"github.com/boggydigital/vangogh/cli_api/expand"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 )
@@ -46,7 +46,7 @@ func Info(idSet gost.StrSet, allText, images, videoId bool) error {
 		return ia.EndWithError(err)
 	}
 
-	itp, err := output.Items(
+	itp, err := expand.IdsToPropertyLists(
 		idSet.All(),
 		nil,
 		propSet.All(),

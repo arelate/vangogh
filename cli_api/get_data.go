@@ -88,7 +88,7 @@ func GetData(
 	if vangogh_products.IsArray(pt) {
 		// using "licences" as id, since that's how we store that data in kvas
 		ids := []string{vangogh_products.Licences.String()}
-		if err := fetch.Items(ids, pt, mt); err != nil {
+		if err := fetch.Items(ids, pt, mt, httpClient); err != nil {
 			return gda.EndWithError(err)
 		}
 		return split.Pages(pt, mt, since)
@@ -101,5 +101,5 @@ func GetData(
 
 	approvedIds := idSet.Except(gost.NewStrSetWith(denyIds...))
 
-	return fetch.Items(approvedIds, pt, mt)
+	return fetch.Items(approvedIds, pt, mt, httpClient)
 }

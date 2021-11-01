@@ -3,21 +3,19 @@ Issues:
 
 vangogh_pages improvements:
 	- refactor all vangogh_pages usage to that:
-		- get-data IsPaged @done(2021-10-30)
-		- fetch.Items
-	- deprecate vangogh_pages @done(2021-10-30)
+		- document new usage
 
 cleanup improvement:
 	- add summary detailing size of the extra files
+
+improve size:
+	- consider providing more precise estimates (not whole product, but actual items)
 
 vangogh_api:
 	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
 
 dolo improvements:
 	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
-	
-improve size:
-	- consider providing more precise estimates (not whole product, but actual items)
 
 Work on gaugin can start:
 	- Publish vangogh on GitHub
@@ -69,6 +67,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- search doesn't find by title (search dusk) @done(2021-10-31) @project(Issues)
+	- get-data IsPaged @done(2021-10-30) @project(vangogh_pages improvements)
+	- fetch.Items @done(2021-10-30) @project(vangogh_pages improvements)
+	- deprecate vangogh_pages @done(2021-10-30) @project(vangogh_pages improvements)
 	- refactor all multifile download (images, videos) to that: @done(2021-10-30) @project(vangogh_pages improvements)
 		- get-images @done(2021-10-30)
 		- get-videos @done(2021-10-30)

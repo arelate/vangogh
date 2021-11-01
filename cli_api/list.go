@@ -8,8 +8,8 @@ import (
 	"github.com/arelate/vangogh_values"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/vangogh/cli_api/expand"
 	"github.com/boggydigital/vangogh/cli_api/hours"
-	"github.com/boggydigital/vangogh/cli_api/output"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 	"time"
@@ -97,7 +97,7 @@ func List(
 		idSet.Add(vr.All()...)
 	}
 
-	itp, err := output.Items(
+	itp, err := expand.IdsToPropertyLists(
 		idSet.All(),
 		nil,
 		vangogh_properties.Supported(pt, properties),

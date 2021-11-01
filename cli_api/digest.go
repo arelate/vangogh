@@ -5,7 +5,7 @@ import (
 	"github.com/arelate/vangogh_extracts"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/vangogh/cli_api/output"
+	"github.com/boggydigital/vangogh/cli_api/expand"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 )
@@ -45,7 +45,7 @@ func Digest(property string) error {
 		keys = append(keys, key)
 	}
 
-	_, sorted := gost.NewIntSortedStrSetWith(distValues, output.DefaultDesc)
+	_, sorted := gost.NewIntSortedStrSetWith(distValues, expand.DefaultDesc)
 
 	summary := make(map[string][]string)
 	summary[""] = make([]string, 0, len(sorted))

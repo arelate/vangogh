@@ -5,7 +5,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/vangogh/cli_api/output"
+	"github.com/boggydigital/vangogh/cli_api/expand"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
 	"net/url"
 )
@@ -59,7 +59,7 @@ func Search(query map[string][]string) error {
 		return nil
 	}
 
-	itp, err := output.Items(
+	itp, err := expand.IdsToPropertyLists(
 		results,
 		propertyFilter,
 		//similarly for propertyFilter (see comment above) - expand all properties to display

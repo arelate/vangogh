@@ -32,6 +32,9 @@ func GetImagesHandler(u *url.URL) error {
 	return GetImages(idSet, its, missing)
 }
 
+//GetImages fetches remote images for a given type (box-art, screenshots, background, etc.).
+//If requested it can check locally present files and download all missing (used in data files,
+//but not present locally) images for a given type.
 func GetImages(
 	idSet gost.StrSet,
 	its []vangogh_images.ImageType,
@@ -46,7 +49,8 @@ func GetImages(
 		}
 	}
 
-	propSet := gost.NewStrSetWith(vangogh_properties.TitleProperty, vangogh_properties.SlugProperty)
+	propSet := gost.NewStrSetWith(
+		vangogh_properties.TitleProperty)
 
 	for _, it := range its {
 		propSet.Add(vangogh_properties.FromImageType(it))
@@ -102,6 +106,9 @@ func GetImages(
 
 	for id, missingIts := range idMissingTypes {
 
+		//for every product collect all image URLs and all corresponding local filenames
+		//to pass to dolo.GetSet, that'll concurrently download all required product images
+
 		title, ok := exl.Get(vangogh_properties.TitleProperty, id)
 		if !ok {
 			title = id
@@ -109,6 +116,8 @@ func GetImages(
 
 		mita := nod.NewProgress("%s %s", id, title)
 
+		//sensible assumption - we'll have at least as many URLs and filenames
+		//as types of images we're missing
 		urls := make([]*url.URL, 0, len(missingIts))
 		filenames := make([]string, 0, len(missingIts))
 
@@ -139,6 +148,8 @@ func GetImages(
 
 		imagesIndexSetter := dolo.NewFileIndexSetter(filenames)
 
+		//using http.DefaultClient as no image types require authentication
+		//(this might change in the future)
 		if err := dolo.GetSet(urls, imagesIndexSetter, http.DefaultClient, mita); err != nil {
 			return mita.EndWithError(err)
 		}

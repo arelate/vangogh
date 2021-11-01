@@ -1,4 +1,4 @@
-package output
+package expand
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ const (
 	DefaultDesc = false
 )
 
-func Items(
+func IdsToPropertyLists(
 	ids []string,
 	propertyFilter map[string][]string,
 	properties []string,
