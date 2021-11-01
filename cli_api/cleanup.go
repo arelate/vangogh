@@ -1,6 +1,7 @@
 package cli_api
 
 import (
+	"fmt"
 	"github.com/arelate/gog_media"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
@@ -11,10 +12,13 @@ import (
 	"github.com/boggydigital/gost"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
+	"math"
 	"net/url"
 	"os"
 	"path/filepath"
 )
+
+const spaceSavingsSummary = "est. disk space savings:"
 
 func CleanupHandler(u *url.URL) error {
 	idSet, err := url_helpers.IdSet(u)
@@ -81,7 +85,15 @@ func Cleanup(
 		return err
 	}
 
-	ca.EndWithResult("done")
+	if cd.totalBytes > 0 {
+		summary := make(map[string][]string)
+		summary[spaceSavingsSummary] = []string{
+			fmt.Sprintf("%.2fGB", float64(cd.totalBytes)/math.Pow(1000, 3)),
+		}
+		ca.EndWithSummary(summary)
+	} else {
+		ca.EndWithResult("done")
+	}
 
 	return nil
 }
@@ -98,10 +110,11 @@ func moveToRecycleBin(fp string) error {
 }
 
 type cleanupDelegate struct {
-	exl  *vangogh_extracts.ExtractsList
-	all  bool
-	test bool
-	tpw  nod.TotalProgressWriter
+	exl        *vangogh_extracts.ExtractsList
+	all        bool
+	test       bool
+	tpw        nod.TotalProgressWriter
+	totalBytes int64
 }
 
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads.DownloadsList) error {
@@ -162,9 +175,14 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 	for _, unexpectedFile := range unexpectedFiles {
 		//restore absolute from local_filename to s/slug/local_filename
 		downloadFilename := vangogh_urls.DownloadRelToAbs(filepath.Join(pDir, unexpectedFile))
-		if _, err := os.Stat(downloadFilename); os.IsNotExist(err) {
+		if stat, err := os.Stat(downloadFilename); err == nil {
+			cd.totalBytes += stat.Size()
+		} else if os.IsNotExist(err) {
 			continue
+		} else {
+			return csa.EndWithError(err)
 		}
+
 		prefix := "DELETE"
 		if cd.test {
 			prefix = "TEST"
@@ -179,8 +197,12 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 		dft.End()
 
 		checksumFile := vangogh_urls.LocalChecksumPath(downloadFilename)
-		if _, err := os.Stat(checksumFile); os.IsNotExist(err) {
+		if stat, err := os.Stat(checksumFile); err == nil {
+			cd.totalBytes += stat.Size()
+		} else if os.IsNotExist(err) {
 			continue
+		} else {
+			return csa.EndWithError(err)
 		}
 
 		cft := nod.Begin(" %s %s", prefix, checksumFile)

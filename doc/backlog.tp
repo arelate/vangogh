@@ -1,13 +1,6 @@
 Issues:
 	No known at the moment
 
-vangogh_pages improvements:
-	- refactor all vangogh_pages usage to that:
-		- document new usage
-
-cleanup improvement:
-	- add summary detailing size of the extra files
-
 improve size:
 	- consider providing more precise estimates (not whole product, but actual items)
 
@@ -34,16 +27,6 @@ yt-urls improvements:
 		
 clo improvement:
 	- "SAME-AS" command to copy arguments from another command or predefined sets
-		
-kvas improvements:
-	- rewrite to support concurrent operations
-	- provide a REST API
-
-dolo improvements:
-	- rewrite dolo to support concurrent ranges downloads
-	- return report that contains:
-		- files that were successfully downloaded with sizes
-		- files that were not attempted to be downloaded
 
 figure out where 1435735429 gets box-art image in Galaxy:
 	- proxy requests and find the source
@@ -67,6 +50,19 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	dolo improvements: @done(2021-10-31)
+		- rewrite dolo to support concurrent ranges downloads @done(2021-10-31)
+		- return report that contains: @done(2021-10-31)
+			- files that were successfully downloaded with sizes @done(2021-10-31)
+			- files that were not attempted to be downloaded @done(2021-10-31)
+	kvas improvements: @done(2021-10-31)
+		- rewrite to support concurrent operations @done(2021-10-31)
+		- provide a REST API @done(2021-10-31)
+	cleanup improvement: @done(2021-10-31)
+		- add summary detailing size of the extra files @done(2021-10-31)
+	vangogh_pages improvements: @done(2021-10-31)
+		- refactor all vangogh_pages usage to that: @done(2021-10-31)
+			- document new usage @done(2021-10-31)
 	- search doesn't find by title (search dusk) @done(2021-10-31) @project(Issues)
 	- get-data IsPaged @done(2021-10-30) @project(vangogh_pages improvements)
 	- fetch.Items @done(2021-10-30) @project(vangogh_pages improvements)
