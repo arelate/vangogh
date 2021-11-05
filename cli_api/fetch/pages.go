@@ -76,7 +76,7 @@ func NewKvasIndexSetter(pt vangogh_products.ProductType, mt gog_media.Media, ids
 //pages from 2nd to TotalPages using kvas index setter.
 func Pages(pt vangogh_products.ProductType, mt gog_media.Media, httpClient *http.Client, tpw nod.TotalProgressWriter) error {
 
-	gfp := nod.Begin(" getting the first %s (%s) page...", pt, mt)
+	gfp := nod.Begin(" getting the first %s (%s)...", pt, mt)
 	defer gfp.End()
 
 	remoteUrl, err := vangogh_urls.RemoteProductsUrl(pt)

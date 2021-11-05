@@ -69,7 +69,13 @@ func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 			return spa.EndWithError(err)
 		}
 
-		for _, product := range productsGetter.GetProducts() {
+		products := productsGetter.GetProducts()
+
+		if sourcePt == vangogh_products.Licences {
+			spa.TotalInt(len(products))
+		}
+
+		for _, product := range products {
 			buf := new(bytes.Buffer)
 			if err := json.NewEncoder(buf).Encode(product); err != nil {
 				return spa.EndWithError(err)
@@ -77,9 +83,14 @@ func Pages(sourcePt vangogh_products.ProductType, mt gog_media.Media, timestamp 
 			if err := kvDetail.Set(strconv.Itoa(product.GetId()), buf); err != nil {
 				return spa.EndWithError(err)
 			}
+			if sourcePt == vangogh_products.Licences {
+				spa.Increment()
+			}
 		}
 
-		spa.Increment()
+		if sourcePt != vangogh_products.Licences {
+			spa.Increment()
+		}
 	}
 
 	spa.EndWithResult("done")
