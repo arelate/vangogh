@@ -95,7 +95,7 @@ func scrubLocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
 
 func scrubFilesInRecycleBin(fix bool) error {
 
-	srba := nod.Begin(" checking files in recycle bin...")
+	srba := nod.Begin("checking files in recycle bin...")
 	defer srba.End()
 
 	recycleBinFiles, err := vangogh_urls.RecycleBinFiles()
@@ -152,7 +152,7 @@ func scrubFilesInRecycleBin(fix bool) error {
 }
 
 func scrubInvalidLocalProductData(mt gog_media.Media, fix bool) error {
-	ilpa := nod.NewProgress(" checking data for invalid products...")
+	ilpa := nod.NewProgress("checking data for invalid products...")
 	defer ilpa.End()
 
 	invalidProducts := make(map[vangogh_products.ProductType][]string)

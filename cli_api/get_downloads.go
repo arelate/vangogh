@@ -164,7 +164,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	httpClient *http.Client,
 	dlClient *dolo.Client) error {
 
-	dmua := nod.NewProgress(" %s...", dl.String())
+	dmua := nod.NewProgress(" %s:", dl.String())
 	defer dmua.End()
 
 	//downloading a manual URL is the following set of steps:
@@ -182,11 +182,13 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//1
 	if !gdd.forceUpdate {
-		if localFilename, ok := gdd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
+		if localPath, ok := gdd.exl.Get(vangogh_properties.LocalManualUrl, dl.ManualUrl); ok {
 			//localFilename would be a relative path for a download - s/slug,
 			//and RelToAbs would convert this to downloads/s/slug
-			if _, err := os.Stat(vangogh_urls.DownloadRelToAbs(localFilename)); err == nil {
-				dmua.EndWithResult("already exists")
+			if _, err := os.Stat(vangogh_urls.DownloadRelToAbs(localPath)); err == nil {
+				_, localFilename := filepath.Split(localPath)
+				lfa := nod.Begin(" %s", localFilename)
+				lfa.EndWithResult("already exists")
 				return nil
 			}
 		}
@@ -199,7 +201,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
 	//is not a problem that can be solved locally (it's a remote source error)
-	if resp.StatusCode > 299 {
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		if err := gdd.exl.Set(vangogh_properties.DownloadStatusError, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
 			return dmua.EndWithError(err)
 		}
@@ -214,6 +216,8 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//3
 	_, filename := path.Split(resolvedUrl.Path)
+	lfa := nod.NewProgress(" %s", filename)
+	defer lfa.End()
 	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
 	pAbsDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
 	if err != nil {
@@ -227,12 +231,11 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	if remoteChecksumPath != "" {
 		localChecksumPath := vangogh_urls.LocalChecksumPath(path.Join(absDir, filename))
 		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) {
-			dca := nod.NewProgress(" checksum for %s...", filename)
+			checksumDir, checksumFilename := filepath.Split(localChecksumPath)
+			dca := nod.NewProgress(" %s", checksumFilename)
 			originalPath := resolvedUrl.Path
 			resolvedUrl.Path = remoteChecksumPath
-			valDir, valFilename := path.Split(localChecksumPath)
-			if _, err := dlClient.Download(
-				resolvedUrl, valDir, valFilename, dca); err != nil {
+			if _, err := dlClient.Download(resolvedUrl, checksumDir, checksumFilename, dca); err != nil {
 				return dca.EndWithError(err)
 			}
 			resolvedUrl.Path = originalPath
@@ -241,9 +244,11 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//5
-	if _, err := dlClient.Download(resolvedUrl, absDir, filename, dmua); err != nil {
+	if _, err := dlClient.Download(resolvedUrl, absDir, filename, lfa); err != nil {
 		return dmua.EndWithError(err)
 	}
+
+	lfa.EndWithResult("downloaded")
 
 	//6
 	//ProductDownloadsRelDir would return relative (to downloads/ root) dir path, e.g. s/slug

@@ -1,6 +1,9 @@
 Issues:
 	No known at the moment
 
+get-downloads improvements:
+	- output filenames under title
+
 dolo improvements:
 	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
 
@@ -623,7 +626,7 @@ Archive:
 	- Store-products are stored in "products" @done
 	- "sync" objective that does all remote data fetching in one command @done
 	- figure out throttling situation for downloading many details at once (do they send headers we can check? figure out other heuristics) @done
-	^ Seems like there is no throttling anymore - I was able to download all details without encountering any throttling
+	^ Seems like there is no throttling anymore - I was able to download all details without encountering any throttling @done(2021-11-05)
 	- default !overwrite check should be "fast" - only check if the file exists @done
 	- move all dolo options to constructor, Download should take two parameters - source, destination @done
 	- add api-products: https://api.gog.com/v2/games/{id} @done
