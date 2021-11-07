@@ -1,4 +1,4 @@
-package http_api
+package v1
 
 import (
 	"encoding/json"
@@ -13,15 +13,16 @@ import (
 
 func GetProductData(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 4 {
+	if len(parts) < 5 {
 		w.WriteHeader(404)
 		_, _ = io.WriteString(w, "URL need to contain product-type, media and id(s)")
 		return
 	}
 
-	pt := vangogh_products.Parse(parts[1])
-	mt := gog_media.Parse(parts[2])
-	idsStr := parts[3]
+	//parts[1] == "v1"
+	pt := vangogh_products.Parse(parts[2])
+	mt := gog_media.Parse(parts[3])
+	idsStr := parts[4]
 
 	var valueReader *vangogh_values.ValueReader
 	if mt == gog_media.Game {

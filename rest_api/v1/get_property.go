@@ -1,4 +1,4 @@
-package http_api
+package v1
 
 import (
 	"encoding/json"
@@ -11,15 +11,16 @@ import (
 func GetProperty(w http.ResponseWriter, r *http.Request) {
 
 	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 4 {
+	if len(parts) < 5 {
 		w.WriteHeader(404)
 		_, _ = io.WriteString(w, "URL need to contain property, id(s)")
 		return
 	}
 
-	// parts[1] == "property"
-	prop := parts[2]
-	idsStr := parts[3]
+	//parts[1] == "v1"
+	//parts[2] == "property"
+	prop := parts[3]
+	idsStr := parts[4]
 
 	if err := exl.AssertSupport(prop); err != nil {
 		w.WriteHeader(404)

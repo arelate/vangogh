@@ -7,7 +7,7 @@ import (
 	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
-	"github.com/boggydigital/vangogh/http_api"
+	"github.com/boggydigital/vangogh/rest_api/v1"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -27,7 +27,9 @@ func Serve(port int) error {
 	sa := nod.Begin("serving at port %d...", port)
 	defer sa.End()
 
-	if err := http_api.Init(); err != nil {
+	// version 1
+
+	if err := v1.Init(); err != nil {
 		return err
 	}
 
@@ -35,27 +37,27 @@ func Serve(port int) error {
 	for _, pt := range vangogh_products.Local() {
 		for _, mt := range gog_media.All() {
 			http.HandleFunc(
-				fmt.Sprintf("/%s/%s/", pt, mt),
-				http_api.GetProductData)
+				fmt.Sprintf("/v1/%s/%s/", pt, mt),
+				v1.GetProductData)
 		}
 	}
 
 	// GET /property/{property}/{id}[,{id}...]
 	for _, property := range vangogh_properties.Extracted() {
 		http.HandleFunc(
-			fmt.Sprintf("/property/%s/", property),
-			http_api.GetProperty)
+			fmt.Sprintf("/v1/property/%s/", property),
+			v1.GetProperty)
 	}
 
 	// GET /image/{image-id}
 	http.HandleFunc(
-		"/image/",
-		http_api.GetImage)
+		"/v1/image/",
+		v1.GetImage)
 
 	// GET /video/{video-id}
 	http.HandleFunc(
-		"/video/",
-		http_api.GetVideo)
+		"/v1/video/",
+		v1.GetVideo)
 
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }

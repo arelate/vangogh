@@ -1,4 +1,4 @@
-package http_api
+package v1
 
 import (
 	"github.com/arelate/vangogh_urls"

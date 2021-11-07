@@ -8,13 +8,13 @@ Work on gaugin can start:
 	- Publish vangogh on GitHub
 	- Backend REST API:
 		- Product data (GET only): @done(2021-11-06)
-			- /{product-type}/{media}/all - list of ids @done(2021-11-06)
-			- /{product-type}/{media}/{id}[,{id}...] - map of id: product data @done(2021-11-06)
+			- /v1/{product-type}/{media}/all - list of ids @done(2021-11-06)
+			- /v1/{product-type}/{media}/{id}[,{id}...] - map of id: product data @done(2021-11-06)
 		- Properties (GET only): @done(2021-11-06)
-			- /property/{property/[{id},...] - map of id: property value @done(2021-11-06)
+			- /v1/property/{property/[{id},...] - map of id: property value @done(2021-11-06)
 		- Images, Videos (GET only): @done(2021-11-06)
-			- /images/{image-id} - binary payload of that image (need to set correct MIME type) @done(2021-11-06)
-			- /videos/{video-id} - binary payload of that video (need to set correct MIME type) @done(2021-11-06)
+			- /v1/images/{image-id} - binary payload of that image (need to set correct MIME type) @done(2021-11-06)
+			- /v1/videos/{video-id} - binary payload of that video (need to set correct MIME type) @done(2021-11-06)
 		- Downloads, Checksums (GET only):
 			- TBD
 	
