@@ -184,7 +184,7 @@ func validateManualUrl(
 		return mua.EndWithError(err)
 	}
 
-	if err := dolo.Copy(h, sourceFile, mua); err != nil {
+	if err := dolo.CopyWithProgress(h, sourceFile, mua); err != nil {
 		return mua.EndWithError(err)
 	}
 

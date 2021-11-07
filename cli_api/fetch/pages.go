@@ -104,8 +104,10 @@ func Pages(pt vangogh_products.ProductType, mt gog_media.Media, httpClient *http
 		return err
 	}
 
+	dc := dolo.NewClient(httpClient, dolo.Defaults())
+
 	//get the first page payload and set it in kvas
-	if err := dolo.GetSet(urls, kis, httpClient, tpw); err != nil {
+	if err := dc.GetSet(urls, kis, tpw); err != nil {
 		return err
 	}
 
@@ -140,7 +142,7 @@ func Pages(pt vangogh_products.ProductType, mt gog_media.Media, httpClient *http
 		return err
 	}
 
-	if err := dolo.GetSet(urls, kis, httpClient, tpw); err != nil {
+	if err := dc.GetSet(urls, kis, tpw); err != nil {
 		return err
 	}
 

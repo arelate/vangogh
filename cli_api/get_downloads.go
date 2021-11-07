@@ -216,7 +216,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//3
 	_, filename := path.Split(resolvedUrl.Path)
-	lfa := nod.NewProgress(" %s", filename)
+	lfa := nod.NewProgress(" - %s", filename)
 	defer lfa.End()
 	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
 	pAbsDir, err := vangogh_urls.ProductDownloadsAbsDir(slug)
@@ -232,10 +232,10 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		localChecksumPath := vangogh_urls.LocalChecksumPath(path.Join(absDir, filename))
 		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) {
 			checksumDir, checksumFilename := filepath.Split(localChecksumPath)
-			dca := nod.NewProgress(" %s", checksumFilename)
+			dca := nod.NewProgress(" - %s", checksumFilename)
 			originalPath := resolvedUrl.Path
 			resolvedUrl.Path = remoteChecksumPath
-			if _, err := dlClient.Download(resolvedUrl, checksumDir, checksumFilename, dca); err != nil {
+			if err := dlClient.Download(resolvedUrl, dca, checksumDir, checksumFilename); err != nil {
 				return dca.EndWithError(err)
 			}
 			resolvedUrl.Path = originalPath
@@ -244,7 +244,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//5
-	if _, err := dlClient.Download(resolvedUrl, absDir, filename, lfa); err != nil {
+	if err := dlClient.Download(resolvedUrl, lfa, absDir, filename); err != nil {
 		return dmua.EndWithError(err)
 	}
 
@@ -263,7 +263,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		return dmua.EndWithError(err)
 	}
 
-	dmua.EndWithResult("done")
+	//dmua.EndWithResult("done")
 
 	return nil
 }

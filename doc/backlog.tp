@@ -1,9 +1,6 @@
 Issues:
 	No known at the moment
 
-get-downloads improvements:
-	- output filenames under title
-
 dolo improvements:
 	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
 
@@ -50,6 +47,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	get-downloads improvements: @done(2021-11-05)
+		- output filenames under title @done(2021-11-05)
 	improve size: @done(2021-10-31)
 		- consider providing more precise estimates (not whole product, but actual items) @done(2021-10-31)
 	dolo improvements: @done(2021-10-31)

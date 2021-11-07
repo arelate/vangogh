@@ -11,7 +11,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/cli_api/itemize"
 	"github.com/boggydigital/vangogh/cli_api/url_helpers"
-	"net/http"
 	"net/url"
 	"path/filepath"
 )
@@ -150,7 +149,7 @@ func GetImages(
 
 		//using http.DefaultClient as no image types require authentication
 		//(this might change in the future)
-		if err := dolo.GetSet(urls, imagesIndexSetter, http.DefaultClient, mita); err != nil {
+		if err := dolo.DefaultClient.GetSet(urls, imagesIndexSetter, mita); err != nil {
 			return mita.EndWithError(err)
 		}
 

@@ -44,7 +44,9 @@ func Items(
 		return ia.EndWithError(err)
 	}
 
-	if err := dolo.GetSet(urls, kis, httpClient, ia); err != nil {
+	dc := dolo.NewClient(httpClient, dolo.Defaults())
+
+	if err := dc.GetSet(urls, kis, ia); err != nil {
 		return ia.EndWithError(err)
 	}
 
