@@ -16,7 +16,7 @@ require (
 	github.com/arelate/vangogh_urls v0.1.0-alpha
 	github.com/arelate/vangogh_values v0.1.2-alpha
 	github.com/boggydigital/clo v0.2.2-alpha
-	github.com/boggydigital/dolo v0.1.4-alpha
+	github.com/boggydigital/dolo v0.2.0
 	github.com/boggydigital/gost v0.1.0
 	github.com/boggydigital/kvas v0.1.9-alphago
 	github.com/boggydigital/nod v0.1.4

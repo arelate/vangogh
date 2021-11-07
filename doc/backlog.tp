@@ -1,20 +1,25 @@
 Issues:
 	No known at the moment
 
-dolo improvements:
-	- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%)
+vangogh_api:
+	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
 
 Work on gaugin can start:
 	- Publish vangogh on GitHub
-	- REST API:
-		- Data (GET only):
-			- /product-type/media/titles?sort,limit,start
-			- /product-type/media/{id}
-			- /images/{image-id}
-			- /videos/{video-id}
+	- Backend REST API:
+		- Product data (GET only): @done(2021-11-06)
+			- /{product-type}/{media}/all - list of ids @done(2021-11-06)
+			- /{product-type}/{media}/{id}[,{id}...] - map of id: product data @done(2021-11-06)
+		- Properties (GET only): @done(2021-11-06)
+			- /property/{property/[{id},...] - map of id: property value @done(2021-11-06)
+		- Images, Videos (GET only):
+			- /images/{image-id} - binary payload of that image (need to set correct MIME type)
+			- /videos/{video-id} - binary payload of that video (need to set correct MIME type)
+		- Downloads, Checksums (GET only):
+			- TBD
 	
-vangogh_api:
-	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
+validation improvements:
+	- store last validation date and result for querying (as properties?)
 	
 yt-urls improvements:
 	- support cipher urls
@@ -47,6 +52,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	dolo improvements: @done(2021-11-06)
+		- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%) @done(2021-11-06)
 	get-downloads improvements: @done(2021-11-05)
 		- output filenames under title @done(2021-11-05)
 	improve size: @done(2021-10-31)

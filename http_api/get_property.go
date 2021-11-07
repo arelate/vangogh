@@ -1,23 +1,47 @@
 package http_api
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"path/filepath"
+	"strings"
 )
 
 func GetProperty(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
-	_, prop := filepath.Split(path)
+
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) < 4 {
+		w.WriteHeader(404)
+		_, _ = io.WriteString(w, "URL need to contain property, id(s)")
+		return
+	}
+
+	// parts[1] == "property"
+	prop := parts[2]
+	idsStr := parts[3]
 
 	if err := exl.AssertSupport(prop); err != nil {
 		w.WriteHeader(404)
-		io.WriteString(w, fmt.Sprintf("unsupported property %s", prop))
+		_, _ = io.WriteString(w, fmt.Sprintf("unsupported property %s", prop))
 	}
 
-	if err := exl.Encode(prop, w); err != nil {
+	var ids []string
+
+	if strings.Contains(idsStr, ",") {
+		ids = strings.Split(idsStr, ",")
+	} else {
+		ids = []string{idsStr}
+	}
+
+	values := make(map[string][]string, len(ids))
+
+	for _, id := range ids {
+		values[id], _ = exl.GetAll(prop, id)
+	}
+
+	if err := json.NewEncoder(w).Encode(values); err != nil {
 		w.WriteHeader(500)
-		io.WriteString(w, err.Error())
+		_, _ = io.WriteString(w, err.Error())
 	}
 }

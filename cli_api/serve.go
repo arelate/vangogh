@@ -33,14 +33,16 @@ func Serve(port int) error {
 
 	for _, pt := range vangogh_products.Local() {
 		for _, mt := range gog_media.All() {
-			path := fmt.Sprintf("/%s/%s/", pt, mt)
-			http.HandleFunc(path, http_api.GetProductType)
+			http.HandleFunc(
+				fmt.Sprintf("/%s/%s/", pt, mt),
+				http_api.GetProductData)
 		}
 	}
 
 	for _, property := range vangogh_properties.Extracted() {
-		path := fmt.Sprintf("/properties/%s", property)
-		http.HandleFunc(path, http_api.GetProperty)
+		http.HandleFunc(
+			fmt.Sprintf("/property/%s/", property),
+			http_api.GetProperty)
 	}
 
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
