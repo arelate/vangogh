@@ -12,9 +12,9 @@ Work on gaugin can start:
 			- /{product-type}/{media}/{id}[,{id}...] - map of id: product data @done(2021-11-06)
 		- Properties (GET only): @done(2021-11-06)
 			- /property/{property/[{id},...] - map of id: property value @done(2021-11-06)
-		- Images, Videos (GET only):
-			- /images/{image-id} - binary payload of that image (need to set correct MIME type)
-			- /videos/{video-id} - binary payload of that video (need to set correct MIME type)
+		- Images, Videos (GET only): @done(2021-11-06)
+			- /images/{image-id} - binary payload of that image (need to set correct MIME type) @done(2021-11-06)
+			- /videos/{video-id} - binary payload of that video (need to set correct MIME type) @done(2021-11-06)
 		- Downloads, Checksums (GET only):
 			- TBD
 	

@@ -27,7 +27,14 @@ func GetProductData(w http.ResponseWriter, r *http.Request) {
 	if mt == gog_media.Game {
 		var ok bool
 		if valueReader, ok = gameValueReaders[pt]; !ok {
+			w.WriteHeader(500)
 			_, _ = io.WriteString(w, fmt.Sprintf("unsupported product type %s", pt))
+		}
+	} else {
+		var err error
+		if valueReader, err = vangogh_values.NewReader(pt, mt); err != nil {
+			w.WriteHeader(500)
+			_, _ = io.WriteString(w, err.Error())
 		}
 	}
 
@@ -36,6 +43,7 @@ func GetProductData(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(500)
 			_, _ = io.WriteString(w, err.Error())
 		}
+		return
 	}
 
 	var ids []string

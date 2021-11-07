@@ -31,6 +31,7 @@ func Serve(port int) error {
 		return err
 	}
 
+	// GET /{product-type}/{media}/{id}[,{id}...]
 	for _, pt := range vangogh_products.Local() {
 		for _, mt := range gog_media.All() {
 			http.HandleFunc(
@@ -39,11 +40,22 @@ func Serve(port int) error {
 		}
 	}
 
+	// GET /property/{property}/{id}[,{id}...]
 	for _, property := range vangogh_properties.Extracted() {
 		http.HandleFunc(
 			fmt.Sprintf("/property/%s/", property),
 			http_api.GetProperty)
 	}
+
+	// GET /image/{image-id}
+	http.HandleFunc(
+		"/image/",
+		http_api.GetImage)
+
+	// GET /video/{video-id}
+	http.HandleFunc(
+		"/video/",
+		http_api.GetVideo)
 
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }

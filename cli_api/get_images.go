@@ -135,12 +135,7 @@ func GetImages(
 			urls = append(urls, srcUrls...)
 
 			for _, srcUrl := range srcUrls {
-
-				dstDir, err := vangogh_urls.ImageDir(srcUrl.Path)
-				if err != nil {
-					return mita.EndWithError(err)
-				}
-
+				dstDir := vangogh_urls.ImageDir(srcUrl.Path)
 				filenames = append(filenames, filepath.Join(dstDir, srcUrl.Path))
 			}
 		}
