@@ -7,16 +7,23 @@ vangogh_api:
 Work on gaugin can start:
 	- Publish vangogh on GitHub
 	- Backend REST API:
-		- Product data (GET only): @done(2021-11-06)
-			- /v1/{product-type}/{media}/all - list of ids @done(2021-11-06)
-			- /v1/{product-type}/{media}/{id}[,{id}...] - map of id: product data @done(2021-11-06)
-		- Properties (GET only): @done(2021-11-06)
-			- /v1/property/{property/[{id},...] - map of id: property value @done(2021-11-06)
-		- Images, Videos (GET only): @done(2021-11-06)
-			- /v1/images/{image-id} - binary payload of that image (need to set correct MIME type) @done(2021-11-06)
-			- /v1/videos/{video-id} - binary payload of that video (need to set correct MIME type) @done(2021-11-06)
 		- Downloads, Checksums (GET only):
 			- TBD
+	- Frontend:
+		- virtual scroller component:
+			- bind to a product-type/media
+			- get all ids
+			- for a visible area - draw certain number of items that are in view:
+				- request titles for visible items
+				- create a box with a title and queue box-art download
+				- replace box with a text with a box-art when available
+			- on scroll - add/remove areas in/out of the view
+		- product details component:
+			- transition from scroller list to detail keeping some anchor in place (and back)
+		- product type switcher
+		- commands area (sync, scrub, clean-up)?
+		- search component with rich preview
+		- settings?
 	
 validation improvements:
 	- store last validation date and result for querying (as properties?)
@@ -52,6 +59,14 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- Product data (GET only): @done(2021-11-06) @project(Work on gaugin can start)
+		- /v1/{product-type}/{media}/all - list of ids @done(2021-11-06)
+		- /v1/{product-type}/{media}/{id}[,{id}...] - map of id: product data @done(2021-11-06)
+	- Properties (GET only): @done(2021-11-06) @project(Work on gaugin can start)
+		- /v1/property/{property/[{id},...] - map of id: property value @done(2021-11-06)
+	- Images, Videos (GET only): @done(2021-11-06) @project(Work on gaugin can start)
+		- /v1/images/{image-id} - binary payload of that image (need to set correct MIME type) @done(2021-11-06)
+		- /v1/videos/{video-id} - binary payload of that video (need to set correct MIME type) @done(2021-11-06)
 	dolo improvements: @done(2021-11-06)
 		- investigate total/progress reports for resumed downloads (restarted at lower value and got to 101%) @done(2021-11-06)
 	get-downloads improvements: @done(2021-11-05)

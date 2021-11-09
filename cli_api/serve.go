@@ -27,7 +27,7 @@ func Serve(port int) error {
 	sa := nod.Begin("serving at port %d...", port)
 	defer sa.End()
 
-	// version 1
+	// REST API Version 1
 
 	if err := v1.Init(); err != nil {
 		return err

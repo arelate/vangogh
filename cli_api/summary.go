@@ -54,7 +54,7 @@ func Summary(mt gog_media.Media, since int64) error {
 	sa := nod.Begin("key changes since %s:", time.Unix(since, 0).Format("01/02 03:04PM"))
 	defer sa.End()
 
-	updates := make(map[string][]string, 0)
+	updates := make(map[string]map[string]bool, 0)
 
 	for _, pt := range vangogh_products.Local() {
 
@@ -90,15 +90,18 @@ func Summary(mt gog_media.Media, since int64) error {
 		return sa.EndWithError(err)
 	}
 
-	for _, items := range updates {
-		for i := 0; i < len(items); i++ {
-			if title, ok := exl.Get(vangogh_properties.TitleProperty, items[i]); ok {
-				items[i] = fmt.Sprintf("%s %s", items[i], title)
+	summary := make(map[string][]string)
+
+	for cat, items := range updates {
+		summary[cat] = make([]string, 0, len(items))
+		for id := range items {
+			if title, ok := exl.Get(vangogh_properties.TitleProperty, id); ok {
+				summary[cat] = append(summary[cat], fmt.Sprintf("%s %s", id, title))
 			}
 		}
 	}
 
-	sa.EndWithSummary(updates)
+	sa.EndWithSummary(summary)
 
 	return nil
 }
@@ -122,11 +125,11 @@ func humanReadable(productTypes map[vangogh_products.ProductType]bool) []string 
 	return keys
 }
 
-func categorize(ids []string, cat string, updates map[string][]string) {
+func categorize(ids []string, cat string, updates map[string]map[string]bool) {
 	for _, id := range ids {
 		if updates[cat] == nil {
-			updates[cat] = make([]string, 0)
+			updates[cat] = make(map[string]bool, 0)
 		}
-		updates[cat] = append(updates[cat], id)
+		updates[cat][id] = true
 	}
 }
