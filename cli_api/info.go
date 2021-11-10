@@ -25,7 +25,7 @@ func InfoHandler(u *url.URL) error {
 
 func Info(idSet gost.StrSet, allText, images, videoId bool) error {
 
-	ia := nod.Begin("information about %d item(s)...", idSet.Len())
+	ia := nod.Begin("information:")
 	defer ia.End()
 
 	propSet := gost.NewStrSetWith(vangogh_properties.TypesProperty)

@@ -8,8 +8,21 @@ import (
 	"github.com/arelate/vangogh_values"
 )
 
+type productTypeMedia struct {
+	productType vangogh_products.ProductType
+	media       gog_media.Media
+}
+
+type productTypeMediaSort struct {
+	productTypeMedia
+	sort string
+	desc bool
+}
+
 var exl *vangogh_extracts.ExtractsList
-var gameValueReaders map[vangogh_products.ProductType]*vangogh_values.ValueReader
+var valueReaders map[productTypeMedia]*vangogh_values.ValueReader
+var sortedIds map[productTypeMediaSort][]string
+var defaultSort = vangogh_properties.TitleProperty
 
 func Init() error {
 	var err error
@@ -19,13 +32,18 @@ func Init() error {
 		return err
 	}
 
-	gameValueReaders = make(map[vangogh_products.ProductType]*vangogh_values.ValueReader)
+	valueReaders = make(map[productTypeMedia]*vangogh_values.ValueReader)
+	mt := gog_media.Game
 	for _, pt := range vangogh_products.Local() {
-		gameValueReaders[pt], err = vangogh_values.NewReader(pt, gog_media.Game)
+		ptm := productTypeMedia{productType: pt, media: mt}
+		valueReaders[ptm], err = vangogh_values.NewReader(pt, mt)
 		if err != nil {
 			return err
 		}
 	}
+
+	//TODO: consider priming that with default sort for a type
+	sortedIds = make(map[productTypeMediaSort][]string)
 
 	return nil
 }

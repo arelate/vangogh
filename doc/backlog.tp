@@ -9,6 +9,10 @@ Work on gaugin can start:
 	- Backend REST API:
 		- Downloads, Checksums (GET only):
 			- TBD
+		- Refactor the API to allow persistent order and ranges:
+			- /v1/{product-type}/{media}/all?sort=S
+			- /v1/{property1}[,{property2}]/ids
+			- /v1/{property1}[,{property2}]/range?sort=S
 	- Frontend:
 		- virtual scroller component:
 			- bind to a product-type/media
