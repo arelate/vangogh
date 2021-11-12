@@ -2,25 +2,27 @@ package v1
 
 import (
 	"encoding/json"
-	"github.com/arelate/gog_media"
-	"github.com/arelate/vangogh_products"
 	"io"
 	"net/http"
 	"strings"
 )
 
-func GetProductsById(w http.ResponseWriter, r *http.Request) {
-	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 5 {
-		w.WriteHeader(404)
-		_, _ = io.WriteString(w, "URL need to contain product-type, media and id(s)")
+func GetData(w http.ResponseWriter, r *http.Request) {
+
+	// GET /v1/data?product-type&media&id
+
+	if r.Method != http.MethodGet {
+		w.WriteHeader(405)
 		return
 	}
 
-	//parts[1] == "v1"
-	pt := vangogh_products.Parse(parts[2])
-	mt := gog_media.Parse(parts[3])
-	ids := strings.Split(parts[4], ",")
+	pt, mt, err := getProductTypeMedia(r.URL)
+	if err != nil {
+		w.WriteHeader(400)
+		_, _ = io.WriteString(w, err.Error())
+	}
+
+	ids := strings.Split(r.URL.Query().Get("id"), ",")
 
 	values := make(map[string]interface{}, len(ids))
 
