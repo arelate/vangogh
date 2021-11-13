@@ -22,7 +22,7 @@ func SearchHandler(u *url.URL) error {
 
 func Search(query map[string][]string) error {
 
-	sa := nod.Begin("search results...")
+	sa := nod.Begin("searching...")
 	defer sa.End()
 
 	//prepare a list of all properties to load extracts for and
@@ -60,6 +60,7 @@ func Search(query map[string][]string) error {
 	}
 
 	itp, err := expand.IdsToPropertyLists(
+		"found products:",
 		results,
 		propertyFilter,
 		//similarly for propertyFilter (see comment above) - expand all properties to display

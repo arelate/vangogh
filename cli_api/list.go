@@ -98,6 +98,7 @@ func List(
 	}
 
 	itp, err := expand.IdsToPropertyLists(
+		"",
 		idSet.All(),
 		nil,
 		vangogh_properties.Supported(pt, properties),

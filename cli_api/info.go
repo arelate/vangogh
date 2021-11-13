@@ -47,6 +47,7 @@ func Info(idSet gost.StrSet, allText, images, videoId bool) error {
 	}
 
 	itp, err := expand.IdsToPropertyLists(
+		"",
 		idSet.All(),
 		nil,
 		propSet.All(),

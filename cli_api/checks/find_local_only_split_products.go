@@ -1,4 +1,4 @@
-package scrubs
+package checks
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func LocalOnlySplitProducts(pagedPt vangogh_products.ProductType, mt gog_media.Media) (gost.StrSet, error) {
+func findLocalOnlySplitProducts(pagedPt vangogh_products.ProductType, mt gog_media.Media) (gost.StrSet, error) {
 	if !vangogh_products.IsPaged(pagedPt) {
 		return nil, fmt.Errorf("%s is not a paged type", pagedPt)
 	}
