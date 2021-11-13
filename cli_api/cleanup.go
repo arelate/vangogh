@@ -69,10 +69,7 @@ func Cleanup(
 		exl:  exl,
 		all:  all,
 		test: test,
-		tpw:  ca,
 	}
-
-	ca.TotalInt(idSet.Len())
 
 	if err := vangogh_downloads.Map(
 		idSet,
@@ -81,7 +78,8 @@ func Cleanup(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		cd); err != nil {
+		cd,
+		ca); err != nil {
 		return err
 	}
 
@@ -113,7 +111,6 @@ type cleanupDelegate struct {
 	exl        *vangogh_extracts.ExtractsList
 	all        bool
 	test       bool
-	tpw        nod.TotalProgressWriter
 	totalBytes int64
 }
 
@@ -121,7 +118,6 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_downloads
 
 	csa := nod.QueueBegin(slug)
 	defer csa.End()
-	defer cd.tpw.Increment()
 
 	if err := cd.exl.AssertSupport(vangogh_properties.LocalManualUrl); err != nil {
 		return csa.EndWithError(err)

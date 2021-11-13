@@ -49,8 +49,7 @@ func MissingLocalDownloads(
 	mlda.TotalInt(allIds.Len())
 
 	mdd := &missingDownloadsDelegate{
-		exl: exl,
-		tpw: mlda}
+		exl: exl}
 
 	if err := vangogh_downloads.Map(
 		allIds,
@@ -59,7 +58,8 @@ func MissingLocalDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		mdd); err != nil {
+		mdd,
+		mlda); err != nil {
 		return mdd.missingIds, mlda.EndWithError(err)
 	}
 
@@ -67,7 +67,6 @@ func MissingLocalDownloads(
 }
 
 type missingDownloadsDelegate struct {
-	tpw        nod.TotalProgressWriter
 	exl        *vangogh_extracts.ExtractsList
 	missingIds gost.StrSet
 }
@@ -135,8 +134,6 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_downl
 	if len(missingFiles) > 0 {
 		mdd.missingIds.Add(id)
 	}
-
-	mdd.tpw.Increment()
 
 	return nil
 }

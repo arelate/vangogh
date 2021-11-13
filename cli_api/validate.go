@@ -54,7 +54,7 @@ func Validate(
 	langCodes []string,
 	all bool) error {
 
-	va := nod.Begin("validating...")
+	va := nod.NewProgress("validating...")
 	defer va.End()
 
 	exl, err := vangogh_extracts.NewList(
@@ -82,7 +82,8 @@ func Validate(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		vd); err != nil {
+		vd,
+		va); err != nil {
 		return err
 	}
 

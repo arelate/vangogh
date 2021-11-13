@@ -99,12 +99,9 @@ func GetDownloads(
 	}
 
 	gdd := &getDownloadsDelegate{
-		tpw:         gda,
 		exl:         exl,
 		forceUpdate: forceUpdate,
 	}
-
-	gda.TotalInt(idSet.Len())
 
 	if err := vangogh_downloads.Map(
 		idSet,
@@ -113,7 +110,8 @@ func GetDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		gdd); err != nil {
+		gdd,
+		gda); err != nil {
 		return gda.EndWithError(err)
 	}
 
@@ -123,7 +121,6 @@ func GetDownloads(
 }
 
 type getDownloadsDelegate struct {
-	tpw         nod.TotalProgressWriter
 	exl         *vangogh_extracts.ExtractsList
 	forceUpdate bool
 }
@@ -152,8 +149,6 @@ func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_downloads.
 			sda.Error(err)
 		}
 	}
-
-	gdd.tpw.Increment()
 
 	return nil
 }

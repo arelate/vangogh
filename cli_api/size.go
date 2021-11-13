@@ -80,9 +80,7 @@ func Size(
 		return nil
 	}
 
-	sd := &sizeDelegate{
-		tpw: sa,
-	}
+	sd := &sizeDelegate{}
 
 	sa.TotalInt(idSet.Len())
 
@@ -93,7 +91,8 @@ func Size(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
-		sd); err != nil {
+		sd,
+		sa); err != nil {
 		return err
 	}
 
@@ -103,7 +102,6 @@ func Size(
 }
 
 type sizeDelegate struct {
-	tpw    nod.TotalProgressWriter
 	dlList vangogh_downloads.DownloadsList
 }
 
@@ -112,7 +110,6 @@ func (sd *sizeDelegate) Process(_, _ string, list vangogh_downloads.DownloadsLis
 		sd.dlList = make(vangogh_downloads.DownloadsList, 0)
 	}
 	sd.dlList = append(sd.dlList, list...)
-	sd.tpw.Increment()
 	return nil
 }
 
