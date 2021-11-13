@@ -1,10 +1,13 @@
 package checks
 
 import (
+	"fmt"
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_products"
+	"github.com/arelate/vangogh_properties"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/vangogh/cli_api"
+	"github.com/boggydigital/vangogh/cli_api/expand"
 	"github.com/boggydigital/vangogh/cli_api/remove"
 )
 
@@ -12,6 +15,11 @@ func LocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
 
 	sloa := nod.Begin("checking for local only split products...")
 	defer sloa.End()
+
+	exl, err := vangogh_extracts.NewList(vangogh_properties.TitleProperty)
+	if err != nil {
+		return sloa.EndWithError(err)
+	}
 
 	for _, pagedPt := range vangogh_products.Paged() {
 
@@ -25,15 +33,20 @@ func LocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
 		}
 
 		if localOnlyProducts.Len() > 0 {
-			pa.EndWithResult("found %d", localOnlyProducts.Len())
-			if err := cli_api.List(
-				localOnlyProducts,
-				0,
-				splitPt,
-				mt,
-				nil); err != nil {
-				return pa.EndWithError(err)
+
+			summary, err := expand.IdsToPropertyLists(
+				fmt.Sprintf("found %d:", localOnlyProducts.Len()),
+				localOnlyProducts.All(),
+				nil,
+				[]string{vangogh_properties.TitleProperty},
+				exl)
+
+			if err != nil {
+				_ = pa.EndWithError(err)
+				continue
 			}
+
+			pa.EndWithSummary(summary)
 
 			if fix {
 				fa := nod.Begin(" removing local only %s...", splitPt)

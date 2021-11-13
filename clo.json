@@ -81,6 +81,9 @@
     ],
     "vet": [
       "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
       "fix"
     ],
     "search": [
