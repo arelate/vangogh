@@ -52,7 +52,7 @@ func main() {
 		"info":             cli_api.InfoHandler,
 		"list":             cli_api.ListHandler,
 		"owned":            cli_api.OwnedHandler,
-		"scrub-data":       cli_api.ScrubDataHandler,
+		"vet":              cli_api.VetHandler,
 		"search":           cli_api.SearchHandler,
 		"serve":            cli_api.ServeHandler,
 		"size":             cli_api.SizeHandler,

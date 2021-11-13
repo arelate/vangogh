@@ -79,7 +79,7 @@
       "slug&",
       "read-ids"
     ],
-    "scrub-data": [
+    "vet": [
       "media={media^}",
       "fix"
     ],

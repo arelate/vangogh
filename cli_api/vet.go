@@ -18,27 +18,27 @@ import (
 	"path/filepath"
 )
 
-func ScrubDataHandler(u *url.URL) error {
+func VetHandler(u *url.URL) error {
 	mt := gog_media.Parse(url_helpers.Value(u, "media"))
 
 	fix := url_helpers.Flag(u, "fix")
-	return ScrubData(mt, fix)
+	return Vet(mt, fix)
 }
 
-func ScrubData(mt gog_media.Media, fix bool) error {
+func Vet(mt gog_media.Media, fix bool) error {
 
-	sda := nod.Begin("scrubbing local data for potential issues...")
+	sda := nod.Begin("vetting local data...")
 	defer sda.End()
 
-	if err := scrubLocalOnlySplitProducts(mt, fix); err != nil {
+	if err := checkLocalOnlySplitProducts(mt, fix); err != nil {
 		return sda.EndWithError(err)
 	}
 
-	if err := scrubFilesInRecycleBin(fix); err != nil {
+	if err := checkFilesInRecycleBin(fix); err != nil {
 		return sda.EndWithError(err)
 	}
 
-	if err := scrubInvalidLocalProductData(mt, fix); err != nil {
+	if err := checkInvalidLocalProductData(mt, fix); err != nil {
 		return sda.EndWithError(err)
 	}
 
@@ -51,7 +51,8 @@ func ScrubData(mt gog_media.Media, fix bool) error {
 	return nil
 }
 
-func scrubLocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
+func checkLocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
+
 	sloa := nod.Begin("checking for local only split products...")
 	defer sloa.End()
 
@@ -94,7 +95,7 @@ func scrubLocalOnlySplitProducts(mt gog_media.Media, fix bool) error {
 	return nil
 }
 
-func scrubFilesInRecycleBin(fix bool) error {
+func checkFilesInRecycleBin(fix bool) error {
 
 	srba := nod.Begin("checking files in recycle bin...")
 	defer srba.End()
@@ -109,13 +110,13 @@ func scrubFilesInRecycleBin(fix bool) error {
 	}
 
 	if recycleBinFiles.Len() == 0 && len(recycleBinDirs) == 0 {
-		srba.EndWithResult("recycle bin is empty")
+		srba.EndWithResult("none found")
 	} else {
 
-		srba.EndWithResult("recycle bin contains %d file(s)", recycleBinFiles.Len())
+		srba.EndWithResult("%d file(s) found", recycleBinFiles.Len())
 
 		if fix {
-			rfa := nod.NewProgress(" removing files in recycle bin...")
+			rfa := nod.NewProgress(" emptying recycle bin...")
 			rfa.TotalInt(recycleBinFiles.Len())
 			for file := range recycleBinFiles {
 				if err := os.Remove(filepath.Join(vangogh_urls.RecycleBinDir(), file)); err != nil {
@@ -136,7 +137,7 @@ func scrubFilesInRecycleBin(fix bool) error {
 
 			sortedDirs := sortDirs.SortByIntVal(dirLens, true)
 
-			rda := nod.NewProgress(" removing directories in recycle bin...")
+			rda := nod.NewProgress(" removing leftover directories...")
 			rda.TotalInt(len(sortedDirs))
 
 			for _, dir := range sortedDirs {
@@ -152,7 +153,7 @@ func scrubFilesInRecycleBin(fix bool) error {
 	return nil
 }
 
-func scrubInvalidLocalProductData(mt gog_media.Media, fix bool) error {
+func checkInvalidLocalProductData(mt gog_media.Media, fix bool) error {
 	ilpa := nod.NewProgress("checking data for invalid products...")
 	defer ilpa.End()
 
