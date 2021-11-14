@@ -9,14 +9,6 @@ Work on gaugin can start:
 	- Backend REST API:
 		- Downloads, Checksums (GET only):
 			- TBD
-		- Refactor the API even more:
-			- /indexes
-			- /data
-			- /extracts
-		- Refactor the API to allow persistent order and ranges: @done(2021-11-10)
-			- /v1/{product-type}/{media}/all?sort=S @done(2021-11-10)
-			- /v1/{property1}[,{property2}]/ids @done(2021-11-10)
-			- /v1/{property1}[,{property2}]/range?sort=S @done(2021-11-10)
 	- Frontend:
 		- virtual scroller component:
 			- bind to a product-type/media
@@ -67,6 +59,14 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- Refactor the API even more: @done(2021-11-11) @project(Work on gaugin can start)
+		- /indexes @done(2021-11-11)
+		- /data @done(2021-11-11)
+		- /extracts @done(2021-11-11)
+	- Refactor the API to allow persistent order and ranges: @done(2021-11-10) @project(Work on gaugin can start)
+		- /v1/{product-type}/{media}/all?sort=S @done(2021-11-10)
+		- /v1/{property1}[,{property2}]/ids @done(2021-11-10)
+		- /v1/{property1}[,{property2}]/range?sort=S @done(2021-11-10)
 	- Product data (GET only): @done(2021-11-06) @project(Work on gaugin can start)
 		- /v1/{product-type}/{media}/all - list of ids @done(2021-11-06)
 		- /v1/{product-type}/{media}/{id}[,{id}...] - map of id: product data @done(2021-11-06)

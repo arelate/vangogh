@@ -7,9 +7,9 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"github.com/arelate/vangogh_api/cli"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/vangogh/cli_api"
 	"github.com/boggydigital/vangogh/clo_delegates"
 	"os"
 )
@@ -41,27 +41,27 @@ func main() {
 	}
 
 	clo.HandleFuncs(map[string]clo.Handler{
-		"auth":             cli_api.AuthHandler,
-		"cleanup":          cli_api.CleanupHandler,
-		"digest":           cli_api.DigestHandler,
-		"extract":          cli_api.ExtractHandler,
-		"get-data":         cli_api.GetDataHandler,
-		"get-downloads":    cli_api.GetDownloadsHandler,
-		"get-images":       cli_api.GetImagesHandler,
-		"get-videos":       cli_api.GetVideosHandler,
-		"info":             cli_api.InfoHandler,
-		"list":             cli_api.ListHandler,
-		"owned":            cli_api.OwnedHandler,
-		"vet":              cli_api.VetHandler,
-		"search":           cli_api.SearchHandler,
-		"serve":            cli_api.ServeHandler,
-		"size":             cli_api.SizeHandler,
-		"summary":          cli_api.SummaryHandler,
-		"sync":             cli_api.SyncHandler,
-		"tag":              cli_api.TagHandler,
-		"update-downloads": cli_api.UpdateDownloadsHandler,
-		"validate":         cli_api.ValidateHandler,
-		"wishlist":         cli_api.WishlistHandler,
+		"auth":             cli.AuthHandler,
+		"cleanup":          cli.CleanupHandler,
+		"digest":           cli.DigestHandler,
+		"extract":          cli.ExtractHandler,
+		"get-data":         cli.GetDataHandler,
+		"get-downloads":    cli.GetDownloadsHandler,
+		"get-images":       cli.GetImagesHandler,
+		"get-videos":       cli.GetVideosHandler,
+		"info":             cli.InfoHandler,
+		"list":             cli.ListHandler,
+		"owned":            cli.OwnedHandler,
+		"vet":              cli.VetHandler,
+		"search":           cli.SearchHandler,
+		"serve":            cli.ServeHandler,
+		"size":             cli.SizeHandler,
+		"summary":          cli.SummaryHandler,
+		"sync":             cli.SyncHandler,
+		"tag":              cli.TagHandler,
+		"update-downloads": cli.UpdateDownloadsHandler,
+		"validate":         cli.ValidateHandler,
+		"wishlist":         cli.WishlistHandler,
 	})
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
