@@ -1,8 +1,6 @@
 Issues:
 	No known at the moment
-
-vangogh_api:
-	- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP
+	- dolo.GetSet panics
 
 Work on gaugin can start:
 	- Publish vangogh on GitHub
@@ -26,7 +24,7 @@ Work on gaugin can start:
 		- settings?
 	
 validation improvements:
-	- store last validation date and result for querying (as properties?)
+	- store last successful validation date and result for querying (as properties?)
 	
 yt-urls improvements:
 	- support cipher urls
@@ -59,6 +57,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	vangogh_api: @done(2021-11-13)
+		- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP @done(2021-11-13)
 	- Refactor the API even more: @done(2021-11-11) @project(Work on gaugin can start)
 		- /indexes @done(2021-11-11)
 		- /data @done(2021-11-11)
