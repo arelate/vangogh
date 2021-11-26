@@ -1,10 +1,16 @@
 Issues:
 	No known at the moment
-	- dolo.GetSet panics
+	- dolo.GetSet panics @done(2021-11-22)
+	- search "-title opus" has found products in the middle of results" - good target for heading application?
+
+Add export command to package metadata:
+	- generate metadata-YYYY-MM-DD-HH-MM-SS.tar.gz archives
+	- add data vet to clear old exports
 
 Work on gaugin can start:
 	- Publish vangogh on GitHub
 	- Backend REST API:
+		- /export/metadata
 		- Downloads, Checksums (GET only):
 			- TBD
 	- Frontend:

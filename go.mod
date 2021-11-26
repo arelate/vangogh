@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/arelate/gog_media v0.1.4
-	github.com/arelate/vangogh_api v0.1.3
+	github.com/arelate/vangogh_api v0.1.5
 	github.com/arelate/vangogh_downloads v0.1.1
 	github.com/arelate/vangogh_extracts v0.1.1
 	github.com/arelate/vangogh_images v0.1.3
