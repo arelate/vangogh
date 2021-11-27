@@ -79,13 +79,6 @@
       "slug&",
       "read-ids"
     ],
-    "vet": [
-      "media={media^}",
-      "operating-system&={operating-systems^}",
-      "download-type&={download-types^}",
-      "language-code&={language-codes^}",
-      "fix"
-    ],
     "search": [
       "media={media^}",
       "{searchable-properties^&}"
@@ -115,7 +108,7 @@
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
       "updates-only",
-      "{sync-items^&}"
+      "{sync-options^&}"
     ],
     "tag": [
       "id^",
@@ -140,6 +133,14 @@
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
       "all"
+    ],
+    "vet": [
+      "media={media^}",
+      "operating-system&={operating-systems^}",
+      "download-type&={download-types^}",
+      "language-code&={language-codes^}",
+      "fix",
+      "{vet-options^&}"
     ],
     "wishlist": [
       "media={media^}",

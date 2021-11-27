@@ -2,6 +2,7 @@ package clo_delegates
 
 import (
 	"github.com/arelate/gog_media"
+	"github.com/arelate/vangogh_api/cli"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_images"
@@ -22,7 +23,8 @@ var Values = map[string]func() []string{
 	"operating-systems":     operatingSystems,
 	"download-types":        downloadTypes,
 	"language-codes":        languageCodes,
-	"sync-items":            syncItems,
+	"sync-options":          syncOptions,
+	"vet-options":           vetOptions,
 }
 
 func productTypeStr(productTypes []vangogh_products.ProductType) []string {
@@ -93,20 +95,31 @@ func languageCodes() []string {
 	return langCodes
 }
 
-func syncItems() []string {
-	items := []string{
-		"data",
-		"images",
-		"screenshots",
-		"videos",
-		"downloads-updates",
+func options(opts []string) []string {
+	excludeOptions := make([]string, len(opts))
+	for i, opt := range opts {
+		excludeOptions[i] = cli.NegOpt(opt)
 	}
 
-	excludeItems := make([]string, len(items))
-	for i, item := range items {
-		excludeItems[i] = "no-" + item
-	}
+	opts = append([]string{"all"}, opts...)
+	return append(opts, excludeOptions...)
+}
 
-	items = append(items, "all")
-	return append(items, excludeItems...)
+func syncOptions() []string {
+	return options([]string{
+		cli.SyncOptionData,
+		cli.SyncOptionImages,
+		cli.SyncOptionScreenshots,
+		cli.SyncOptionVideos,
+		cli.SyncOptionDownloadsUpdates,
+	})
+}
+
+func vetOptions() []string {
+	return options([]string{
+		cli.VetOptionLocalOnlyData,
+		cli.VetOptionRecycleBin,
+		cli.VetOptionInvalidData,
+		cli.VetOptionUnresolvedManualUrls,
+	})
 }

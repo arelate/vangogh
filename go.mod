@@ -4,14 +4,14 @@ go 1.17
 
 require (
 	github.com/arelate/gog_media v0.1.4
-	github.com/arelate/vangogh_api v0.1.5
+	github.com/arelate/vangogh_api v0.1.11
 	github.com/arelate/vangogh_downloads v0.1.1
 	github.com/arelate/vangogh_extracts v0.1.1
 	github.com/arelate/vangogh_images v0.1.3
 	github.com/arelate/vangogh_products v0.1.4
 	github.com/arelate/vangogh_properties v0.1.1
 	github.com/boggydigital/clo v0.2.5
-	github.com/boggydigital/nod v0.1.5
+	github.com/boggydigital/nod v0.1.6
 )
 
 require (
