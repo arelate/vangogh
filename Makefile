@@ -1,8 +1,32 @@
 APP          := vangogh
+DOCKER_IMAGE := arelate/vangogh
 VERSION      := $(shell git describe --tags --abbrev=0)
 COMMIT       := $(shell git rev-parse --short HEAD)
 BUILD_DATE   := `date +%FT%T%z`
 LD_FLAGS     := "-s -w -X 'vangogh/version.Version=$(VERSION)' -X 'vangogh/version.Commit=$(COMMIT)' -X 'vangogh/version.BuildDate=$(BUILD_DATE)'"
+
+.PHONY: \
+	miniflux \
+	linux-amd64 \
+	linux-arm64 \
+	linux-armv7 \
+	linux-armv6 \
+	linux-armv5 \
+	linux-x86 \
+	darwin-amd64 \
+	darwin-arm64 \
+	freebsd-amd64 \
+	freebsd-x86 \
+	openbsd-amd64 \
+	openbsd-x86 \
+	netbsd-x86 \
+	netbsd-amd64 \
+	windows-amd64 \
+	windows-x86 \
+	build \
+	run \
+	clean \
+	docker-image
 
 vangogh:
 	@ go build -ldflags=$(LD_FLAGS) -o $(APP) main.go
@@ -44,3 +68,6 @@ run:
 
 clean:
 	@ rm -f $(APP)-* $(APP)
+
+docker-image:
+	docker build -t $(DOCKER_IMAGE):$(VERSION) -f Dockerfile .

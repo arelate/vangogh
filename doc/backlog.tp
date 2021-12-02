@@ -8,7 +8,7 @@ Issues:
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 
 Add export command to package metadata:
-	- generate metadata-YYYY-MM-DD-HH-MM-SS.tar.gz archives
+	- generate metadata-YYYY-MM-DD-HH-MM-SS.tar.gz archives @done(2021-12-01)
 	- add data vet to clear old exports
 
 Prepare vangogh release:
