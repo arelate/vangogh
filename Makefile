@@ -2,7 +2,7 @@ APP          := vangogh
 VERSION      := $(shell git describe --tags --abbrev=0)
 COMMIT       := $(shell git rev-parse --short HEAD)
 BUILD_DATE   := `date +%FT%T%z`
-LD_FLAGS     := "-s -w -X 'vangogh/version.Version=$(VERSION)' -X 'vangogh/version.Commit=$(COMMIT)' -X 'vangoghÏ/version.BuildDate=$(BUILD_DATE)'"
+LD_FLAGS     := "-s -w -X 'vangogh/version.Version=$(VERSION)' -X 'vangogh/version.Commit=$(COMMIT)' -X 'vangogh/version.BuildDate=$(BUILD_DATE)'"
 
 vangogh:
 	@ go build -ldflags=$(LD_FLAGS) -o $(APP) main.go
