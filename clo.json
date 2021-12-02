@@ -19,6 +19,7 @@
     "digest": [
       "property^={digestible-properties}"
     ],
+    "export": [],
     "extract": [
       "media={media^}",
       "property&={extracted-properties}"

@@ -1,33 +1,41 @@
 Issues:
 	No known at the moment
 	- dolo.GetSet panics @done(2021-11-22)
-	- search "-title opus" has found products in the middle of results" - good target for heading application?
+	- search "-title opus" has found products in the middle of results" - good target for heading application? @done(2021-12-01)
+	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
+		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
+		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
+		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 
 Add export command to package metadata:
 	- generate metadata-YYYY-MM-DD-HH-MM-SS.tar.gz archives
 	- add data vet to clear old exports
 
-Work on gaugin can start:
+Prepare vangogh release:
 	- Publish vangogh on GitHub
-	- Backend REST API:
-		- /export/metadata
-		- Downloads, Checksums (GET only):
-			- TBD
-	- Frontend:
-		- virtual scroller component:
-			- bind to a product-type/media
-			- get all ids
-			- for a visible area - draw certain number of items that are in view:
-				- request titles for visible items
-				- create a box with a title and queue box-art download
-				- replace box with a text with a box-art when available
-			- on scroll - add/remove areas in/out of the view
-		- product details component:
-			- transition from scroller list to detail keeping some anchor in place (and back)
-		- product type switcher
-		- commands area (sync, scrub, clean-up)?
-		- search component with rich preview
-		- settings?
+		- Create Makefile
+		- Create Dockerfile
+		
+Improvements to vangogh backend:
+	- /export/metadata
+	- Downloads, Checksums (GET only):
+		- TBD
+	
+Gaugin:
+	- virtual scroller component:
+		- bind to a product-type/media
+		- get all ids
+		- for a visible area - draw certain number of items that are in view:
+			- request titles for visible items
+			- create a box with a title and queue box-art download
+			- replace box with a text with a box-art when available
+		- on scroll - add/remove areas in/out of the view
+	- product details component:
+		- transition from scroller list to detail keeping some anchor in place (and back)
+	- product type switcher
+	- commands area (sync, scrub, clean-up)?
+	- search component with rich preview
+	- settings?
 	
 validation improvements:
 	- store last successful validation date and result for querying (as properties?)

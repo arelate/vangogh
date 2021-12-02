@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/arelate/gog_media v0.1.4
-	github.com/arelate/vangogh_api v0.1.11
+	github.com/arelate/vangogh_api v0.2.1
 	github.com/arelate/vangogh_downloads v0.1.1
 	github.com/arelate/vangogh_extracts v0.1.1
 	github.com/arelate/vangogh_images v0.1.3
@@ -20,7 +20,7 @@ require (
 	github.com/arelate/gog_types v0.1.9 // indirect
 	github.com/arelate/gog_urls v0.2.0 // indirect
 	github.com/arelate/vangogh_sets v0.1.1 // indirect
-	github.com/arelate/vangogh_urls v0.1.1 // indirect
+	github.com/arelate/vangogh_urls v0.1.2 // indirect
 	github.com/arelate/vangogh_values v0.1.3 // indirect
 	github.com/boggydigital/dolo v0.2.2 // indirect
 	github.com/boggydigital/froth v0.1.1 // indirect

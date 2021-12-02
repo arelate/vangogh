@@ -44,6 +44,7 @@ func main() {
 		"auth":             cli.AuthHandler,
 		"cleanup":          cli.CleanupHandler,
 		"digest":           cli.DigestHandler,
+		"export":           cli.ExportHandler,
 		"extract":          cli.ExtractHandler,
 		"get-data":         cli.GetDataHandler,
 		"get-downloads":    cli.GetDownloadsHandler,
