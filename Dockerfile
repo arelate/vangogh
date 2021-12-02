@@ -2,8 +2,7 @@ FROM golang:alpine
 RUN mkdir /app
 ADD . /app/
 WORKDIR /app
-RUN go mod download
-RUN go build -o vangogh .
+RUN go mod download && go build -o vangogh .
 
 EXPOSE 5000
 VOLUME checksums
