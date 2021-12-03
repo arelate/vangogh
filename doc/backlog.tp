@@ -6,12 +6,12 @@ Issues:
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 
 Standartize directories:
-	#app configuration: my-defaults.json
-	- /etc/vangogh
+	#app configuration: my-defaults.json @done(2021-12-02)
+	- /etc/vangogh @done(2021-12-02)
 	#temporary data: cookies.json
 	- VOLUME /var/tmp
-	#logs
-	- VOLUME /var/log/vangogh
+	#logs @done(2021-12-02)
+	- VOLUME /var/log/vangogh @done(2021-12-02)
 	#app artifacts: checksums, images, metadata, recycle_bin, videos
 	- VOLUME /var/lib/vangogh
 

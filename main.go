@@ -17,7 +17,10 @@ import (
 //go:embed "clo.json"
 var cloBytes []byte
 
-const overridesDirectory = "/etc/vangogh"
+const (
+	overridesDirectory = "/etc/vangogh"
+	logsDirectory = "/var/log/vangogh"
+)
 
 func main() {
 
@@ -35,7 +38,7 @@ func main() {
 	}
 
 	if defs.HasDefaultsFlag("debug") {
-		logger, err := nod.EnableFileLogger("logs")
+		logger, err := nod.EnableFileLogger(logsDirectory)
 		if err != nil {
 			_ = ns.EndWithError(err)
 		}
