@@ -5,20 +5,24 @@ WORKDIR /go/src/app
 RUN go get ./...
 RUN go build \
     -o vangogh \
-    -ldflags="-s -w -X 'vangogh/version.Version=`git describe --tags --abbrev=0`' -X 'vangogh/version.Commit=`git rev-parse --short HEAD`' -X 'vangogh/version.BuildDate=`date +%FT%T%z`'" \
+    -ldflags="-s -w \
+    -X 'vangogh/version.Version=`git describe --tags --abbrev=0`' \
+    -X 'vangogh/version.Commit=`git rev-parse --short HEAD`' \
+    -X 'vangogh/version.BuildDate=`date +%FT%T%z`'" \
     main.go
 
 FROM alpine
 COPY --from=build /go/src/app/vangogh /usr/bin/vangogh
 
-EXPOSE 5000
-VOLUME checksums
-VOLUME downloads
-VOLUME images
-VOLUME logs
-VOLUME metadata
-VOLUME recycle_bin
-VOLUME videos
+EXPOSE 1853
+#app configuration: my-defaults.json
+VOLUME /etc/vangogh
+#temporary data: cookies.json
+VOLUME /var/tmp
+#logs
+VOLUME /var/log/vangogh
+#app artifacts: checksums, images, metadata, recycle_bin, videos
+VOLUME /var/lib/vangogh
 
 ENTRYPOINT ["/usr/bin/vangogh"]
-CMD ["serve","-p", "5000"]
+CMD ["serve","-p", "1853"]

@@ -17,6 +17,8 @@ import (
 //go:embed "clo.json"
 var cloBytes []byte
 
+const overridesDirectory = "/etc/vangogh"
+
 func main() {
 
 	nod.EnableStdOutPresenter()
@@ -26,7 +28,7 @@ func main() {
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
-	defs, err := clo.Load(bytesBuffer, clo_delegates.Values)
+	defs, err := clo.Load(bytesBuffer, clo_delegates.Values, overridesDirectory)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)

@@ -1,14 +1,21 @@
 Issues:
 	No known at the moment
-	- dolo.GetSet panics @done(2021-11-22)
-	- search "-title opus" has found products in the middle of results" - good target for heading application? @done(2021-12-01)
 	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
 		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
 		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 
+Standartize directories:
+	#app configuration: my-defaults.json
+	- /etc/vangogh
+	#temporary data: cookies.json
+	- VOLUME /var/tmp
+	#logs
+	- VOLUME /var/log/vangogh
+	#app artifacts: checksums, images, metadata, recycle_bin, videos
+	- VOLUME /var/lib/vangogh
+
 Add export command to package metadata:
-	- generate metadata-YYYY-MM-DD-HH-MM-SS.tar.gz archives @done(2021-12-01)
 	- add data vet to clear old exports
 
 Prepare vangogh release:
@@ -52,10 +59,6 @@ clo improvement:
 figure out where 1435735429 gets box-art image in Galaxy:
 	- proxy requests and find the source
 
-Standartize directories:
-	- opt/vangogh, etc/vangogh, etc.
-	- provide flags for operations to specify non-default directories as well as allow reading from env. variables
-
 Documentation:
 	- update modules documentation:
 		- clo
@@ -71,6 +74,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- dolo.GetSet panics @done(2021-11-22) @project(Issues)
+	- search "-title opus" has found products in the middle of results" - good target for heading application? @done(2021-12-01) @project(Issues)
+	- provide flags for operations to specify non-default directories as well as allow reading from env. variables @done(2021-12-02) @project(Standartize directories)
+	- generate metadata-YYYY-MM-DD-HH-MM-SS.tar.gz archives @done(2021-12-01) @project(Add export command to package metadata)
 	vangogh_api: @done(2021-11-13)
 		- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP @done(2021-11-13)
 	- Refactor the API even more: @done(2021-11-11) @project(Work on gaugin can start)

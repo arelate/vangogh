@@ -10,7 +10,7 @@ require (
 	github.com/arelate/vangogh_images v0.1.3
 	github.com/arelate/vangogh_products v0.1.4
 	github.com/arelate/vangogh_properties v0.1.1
-	github.com/boggydigital/clo v0.2.5
+	github.com/boggydigital/clo v0.2.6
 	github.com/boggydigital/nod v0.1.6
 )
 
