@@ -19,9 +19,10 @@ import (
 var cloBytes []byte
 
 const (
-	configurationDir = "/etc/vangogh"
-	logsDir          = "/var/log/vangogh"
-	stateRootDir     = "/var/lib/vangogh"
+	cfgDir   = "/etc/vangogh"
+	logsDir  = "/var/log/vangogh"
+	stateDir = "/var/lib/vangogh"
+	tempDir  = "/var/tmp"
 )
 
 func main() {
@@ -31,9 +32,14 @@ func main() {
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
 
+	//set default temp dir
+	clo_delegates.SetTempDir(tempDir)
+	//change state root so that all vangogh_urls functions work in under that root
+	vangogh_urls.ChRoot(stateDir)
+
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
-	defs, err := clo.Load(bytesBuffer, clo_delegates.Values, configurationDir)
+	defs, err := clo.Load(bytesBuffer, clo_delegates.Values, cfgDir)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
@@ -46,9 +52,6 @@ func main() {
 		}
 		defer logger.Close()
 	}
-
-	//change state root so that all vangogh_urls functions work in under that root
-	vangogh_urls.ChRoot(stateRootDir)
 
 	clo.HandleFuncs(map[string]clo.Handler{
 		"auth":             cli.AuthHandler,

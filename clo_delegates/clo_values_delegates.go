@@ -25,7 +25,10 @@ var Values = map[string]func() []string{
 	"language-codes":        languageCodes,
 	"sync-options":          syncOptions,
 	"vet-options":           vetOptions,
+	"temp-directory":        getTempDir,
 }
+
+var tempDir = ""
 
 func productTypeStr(productTypes []vangogh_products.ProductType) []string {
 	ptsStr := make([]string, 0, len(productTypes))
@@ -122,4 +125,14 @@ func vetOptions() []string {
 		cli.VetOptionInvalidData,
 		cli.VetOptionUnresolvedManualUrls,
 	})
+}
+
+func SetTempDir(td string) {
+	tempDir = td
+}
+
+func getTempDir() []string {
+	return []string{
+		tempDir,
+	}
 }

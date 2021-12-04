@@ -3,7 +3,8 @@
   "cmd": {
     "auth": [
       "username",
-      "password"
+      "password",
+      "temp-directory={temp-directory^}"
     ],
     "cleanup": [
       "id^&",
@@ -33,7 +34,7 @@
       "missing",
       "updated",
       "deny-ids-file",
-      "verbose"
+      "temp-directory={temp-directory^}"
     ],
     "get-downloads": [
       "id^&",
@@ -44,7 +45,8 @@
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
       "missing",
-      "force-update"
+      "force-update",
+      "temp-directory={temp-directory^}"
     ],
     "get-images": [
       "id&",
@@ -108,6 +110,7 @@
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
+      "temp-directory={temp-directory^}",
       "updates-only",
       "{sync-options^&}"
     ],
@@ -115,7 +118,8 @@
       "id^",
       "slug",
       "operation^=create,delete,edit,add,remove",
-      "tag-name"
+      "tag-name",
+      "temp-directory={temp-directory^}"
     ],
     "update-downloads": [
       "media={media^}",
@@ -123,6 +127,7 @@
       "download-type&={download-types^}",
       "language-code&={language-codes^}",
       "since-hours-ago",
+      "temp-directory={temp-directory^}",
       "updates-only"
     ],
     "validate": [
@@ -146,7 +151,8 @@
     "wishlist": [
       "media={media^}",
       "add&",
-      "remove&"
+      "remove&",
+      "temp-directory={temp-directory^}"
     ]
   },
   "help": {}

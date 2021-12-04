@@ -14,20 +14,7 @@ vangogh_api Refactors:
 	- remove into vangogh_products?
 	- split into vangogh_products?
 	- extract into vangogh_extracts?
-	- http_client into cooja? @done(2021-12-03)
 	- Move gogHosts to gog_urls
-
-Standartize directories:
-	#app configuration: my-defaults.json @done(2021-12-02)
-	- /etc/vangogh @done(2021-12-02)
-	#temporary data: cookies.json @done(2021-12-03)
-	- VOLUME /var/tmp @done(2021-12-03)
-	- Need to refactor cookie code into a module @done(2021-12-03)
-	#logs @done(2021-12-02)
-	- VOLUME /var/log/vangogh @done(2021-12-02)
-	#app artifacts: checksums, images, metadata, recycle_bin, videos
-	- VOLUME /var/lib/vangogh
-	- Need to refactor vangogh_urls into a module
 
 Add export command to package metadata:
 	- add data vet to clear old exports
@@ -88,6 +75,18 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- http_client into cooja? @done(2021-12-03) @project(vangogh_api Refactors)
+	Standartize directories: @done(2021-12-03)
+		#app configuration: my-defaults.json @done(2021-12-02)
+		- /etc/vangogh @done(2021-12-02)
+		#temporary data: cookies.json @done(2021-12-03)
+		- VOLUME /var/tmp @done(2021-12-03)
+		- Need to refactor cookie code into a module @done(2021-12-03)
+		#logs @done(2021-12-02)
+		- VOLUME /var/log/vangogh @done(2021-12-02)
+		#app artifacts: checksums, images, metadata, recycle_bin, videos @done(2021-12-03)
+		- VOLUME /var/lib/vangogh @done(2021-12-03)
+		- Need to refactor vangogh_urls into a module @done(2021-12-03)
 	- dolo.GetSet panics @done(2021-11-22) @project(Issues)
 	- search "-title opus" has found products in the middle of results" - good target for heading application? @done(2021-12-01) @project(Issues)
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables @done(2021-12-02) @project(Standartize directories)
