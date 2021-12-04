@@ -18,8 +18,9 @@ import (
 var cloBytes []byte
 
 const (
-	overridesDirectory = "/etc/vangogh"
-	logsDirectory = "/var/log/vangogh"
+	configurationDir = "/etc/vangogh"
+	logsDir = "/var/log/vangogh"
+	stateRootDir = "/var/lib/vangogh"
 )
 
 func main() {
@@ -31,14 +32,14 @@ func main() {
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
 
-	defs, err := clo.Load(bytesBuffer, clo_delegates.Values, overridesDirectory)
+	defs, err := clo.Load(bytesBuffer, clo_delegates.Values, configurationDir)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
 
 	if defs.HasDefaultsFlag("debug") {
-		logger, err := nod.EnableFileLogger(logsDirectory)
+		logger, err := nod.EnableFileLogger(logsDir)
 		if err != nil {
 			_ = ns.EndWithError(err)
 		}

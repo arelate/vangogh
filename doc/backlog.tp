@@ -5,15 +5,29 @@ Issues:
 		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 
+Cleanup module names:
+	- Replace "_" with "-" and consider if there are other name changes required
+	
+vangogh_api Refactors:
+	- url_helpers into vangogh_urls
+	- expand hours into a minimal human readable variants
+	- remove into vangogh_products?
+	- split into vangogh_products?
+	- extract into vangogh_extracts?
+	- http_client into cooja? @done(2021-12-03)
+	- Move gogHosts to gog_urls
+
 Standartize directories:
 	#app configuration: my-defaults.json @done(2021-12-02)
 	- /etc/vangogh @done(2021-12-02)
-	#temporary data: cookies.json
-	- VOLUME /var/tmp
+	#temporary data: cookies.json @done(2021-12-03)
+	- VOLUME /var/tmp @done(2021-12-03)
+	- Need to refactor cookie code into a module @done(2021-12-03)
 	#logs @done(2021-12-02)
 	- VOLUME /var/log/vangogh @done(2021-12-02)
 	#app artifacts: checksums, images, metadata, recycle_bin, videos
 	- VOLUME /var/lib/vangogh
+	- Need to refactor vangogh_urls into a module
 
 Add export command to package metadata:
 	- add data vet to clear old exports
