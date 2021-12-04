@@ -8,6 +8,7 @@ import (
 	"bytes"
 	_ "embed"
 	"github.com/arelate/vangogh_api/cli"
+	"github.com/arelate/vangogh_urls"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/clo_delegates"
@@ -19,8 +20,8 @@ var cloBytes []byte
 
 const (
 	configurationDir = "/etc/vangogh"
-	logsDir = "/var/log/vangogh"
-	stateRootDir = "/var/lib/vangogh"
+	logsDir          = "/var/log/vangogh"
+	stateRootDir     = "/var/lib/vangogh"
 )
 
 func main() {
@@ -45,6 +46,9 @@ func main() {
 		}
 		defer logger.Close()
 	}
+
+	//change state root so that all vangogh_urls functions work in under that root
+	vangogh_urls.ChRoot(stateRootDir)
 
 	clo.HandleFuncs(map[string]clo.Handler{
 		"auth":             cli.AuthHandler,
