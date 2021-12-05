@@ -19,10 +19,10 @@ EXPOSE 1853
 VOLUME /etc/vangogh
 #temporary data: cookies.json
 VOLUME /var/tmp
-#logs
+#app logs
 VOLUME /var/log/vangogh
 #app artifacts: checksums, images, metadata, recycle_bin, videos
 VOLUME /var/lib/vangogh
 
 ENTRYPOINT ["/usr/bin/vangogh"]
-CMD ["serve","-p", "1853"]
+CMD ["serve","-p", "1853", "-stderr"]

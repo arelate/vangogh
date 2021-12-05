@@ -4,6 +4,16 @@ Issues:
 		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
 		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
+	- web server serves stale data (currently by design since we load and store indexes into memory)
+
+Improve web server:
+	- Address stale data by checking if index was modified since starting the server
+	- start logging automatically (and disable stdout) @done(2021-12-04)
+	- improve extacts API:
+		- currently it expects to/from parameters since it was designed for scroller
+		- need to refactor it to two endpoints: extracts-list and extracts:
+			- the former is a rename of current API
+			- the latter is a new API that takes ids
 
 Cleanup module names:
 	- Replace "_" with "-" and consider if there are other name changes required
@@ -17,13 +27,8 @@ vangogh_api Refactors:
 	- Move gogHosts to gog_urls
 
 Add export command to package metadata:
-	- add data vet to clear old exports
+	- add data vet to clear all byt the most recent export
 
-Prepare vangogh release:
-	- Publish vangogh on GitHub
-		- Create Makefile
-		- Create Dockerfile
-		
 Improvements to vangogh backend:
 	- /export/metadata
 	- Downloads, Checksums (GET only):
@@ -75,6 +80,11 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Prepare vangogh release: @done(2021-12-04)
+		- Publish vangogh on GitHub @done(2021-12-04)
+			- Create Makefile @done(2021-12-04)
+			- Create Dockerfile @done(2021-12-04)
+			
 	- http_client into cooja? @done(2021-12-03) @project(vangogh_api Refactors)
 	Standartize directories: @done(2021-12-03)
 		#app configuration: my-defaults.json @done(2021-12-02)

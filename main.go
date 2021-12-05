@@ -38,17 +38,17 @@ func main() {
 	vangogh_urls.ChRoot(stateDir)
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
-
 	defs, err := clo.Load(bytesBuffer, clo_delegates.Values, cfgDir)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
 
-	if defs.HasDefaultsFlag("debug") {
+	if defs.HasDefaultsFlag("log") {
 		logger, err := nod.EnableFileLogger(logsDir)
 		if err != nil {
 			_ = ns.EndWithError(err)
+			os.Exit(1)
 		}
 		defer logger.Close()
 	}

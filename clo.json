@@ -20,7 +20,9 @@
     "digest": [
       "property^={digestible-properties}"
     ],
-    "export": [],
+    "export": [
+      "temp-directory={temp-directory^}"
+    ],
     "extract": [
       "media={media^}",
       "property&={extracted-properties}"
@@ -87,7 +89,8 @@
       "{searchable-properties^&}"
     ],
     "serve": [
-      "port"
+      "port",
+      "stderr"
     ],
     "size": [
       "id^&",
