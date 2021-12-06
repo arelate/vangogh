@@ -9,18 +9,17 @@ Issues:
 Improve web server:
 	- Address stale data by checking if index was modified since starting the server
 	- start logging automatically (and disable stdout) @done(2021-12-04)
-	- improve extacts API:
-		- currently it expects to/from parameters since it was designed for scroller
-		- need to refactor it to two endpoints: extracts-list and extracts:
-			- the former is a rename of current API
-			- the latter is a new API that takes ids
+	- improve extacts API: @done(2021-12-04)
+		- currently it expects to/from parameters since it was designed for scroller @done(2021-12-04)
+		- need to refactor it to two endpoints: extracts-list and extracts: @done(2021-12-04)
+			- the former is a rename of current API @done(2021-12-04)
+			- the latter is a new API that takes ids @done(2021-12-04)
 
 Cleanup module names:
 	- Replace "_" with "-" and consider if there are other name changes required
 	
 vangogh_api Refactors:
 	- url_helpers into vangogh_urls
-	- expand hours into a minimal human readable variants
 	- remove into vangogh_products?
 	- split into vangogh_products?
 	- extract into vangogh_extracts?
@@ -28,6 +27,10 @@ vangogh_api Refactors:
 
 Add export command to package metadata:
 	- add data vet to clear all byt the most recent export
+
+Improve time based parameters:
+	- expand hours into a minimal human readable variants
+	- review all of the parameters and find opportunity for url helpers
 
 Improvements to vangogh backend:
 	- /export/metadata

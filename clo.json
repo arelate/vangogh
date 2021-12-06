@@ -35,7 +35,7 @@
       "media={media^}",
       "missing",
       "updated",
-      "deny-ids-file",
+      "skip-ids-file",
       "temp-directory={temp-directory^}"
     ],
     "get-downloads": [
