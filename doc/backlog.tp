@@ -4,16 +4,24 @@ Issues:
 		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
 		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
-	- web server serves stale data (currently by design since we load and store indexes into memory)
+		- Investigate if there are other properties like that - that would benefit from such cascade
+	
+Export improvements:
+	- export archives absolute path. Should be only metadata
+	
+Search improvements:
+	- split search into "find" command and "search" api that returns found entries
+	- search -dev "Sysiac" doesn't highlight developer, vangogh search -dev "sysiac" does
+
+Images improvements:
+	- for the lists change from box-art to images that gog uses in account / store (also capture the dimensions)
+	- consider changing from images?id to images?id&image-type to avoid trying various extensions
+
+Get-data improvements:
+	- refactor into data providers that download required data (perhaps using shared classes)
 
 Improve web server:
 	- Address stale data by checking if index was modified since starting the server
-	- start logging automatically (and disable stdout) @done(2021-12-04)
-	- improve extacts API: @done(2021-12-04)
-		- currently it expects to/from parameters since it was designed for scroller @done(2021-12-04)
-		- need to refactor it to two endpoints: extracts-list and extracts: @done(2021-12-04)
-			- the former is a rename of current API @done(2021-12-04)
-			- the latter is a new API that takes ids @done(2021-12-04)
 
 Cleanup module names:
 	- Replace "_" with "-" and consider if there are other name changes required
@@ -24,6 +32,7 @@ vangogh_api Refactors:
 	- split into vangogh_products?
 	- extract into vangogh_extracts?
 	- Move gogHosts to gog_urls
+	- Split into cli and http
 
 Add export command to package metadata:
 	- add data vet to clear all byt the most recent export
@@ -48,9 +57,10 @@ Gaugin:
 		- on scroll - add/remove areas in/out of the view
 	- product details component:
 		- transition from scroller list to detail keeping some anchor in place (and back)
+		- segue controller
 	- product type switcher
-	- commands area (sync, scrub, clean-up)?
-	- search component with rich preview
+	- commands area (sync, vet, cleanup)?
+	- search component with rich previews
 	- settings?
 	
 validation improvements:
@@ -83,6 +93,12 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- start logging automatically (and disable stdout) @done(2021-12-04) @project(Improve web server)
+	- improve extacts API: @done(2021-12-04) @project(Improve web server)
+		- currently it expects to/from parameters since it was designed for scroller @done(2021-12-04)
+		- need to refactor it to two endpoints: extracts-list and extracts: @done(2021-12-04)
+			- the former is a rename of current API @done(2021-12-04)
+			- the latter is a new API that takes ids @done(2021-12-04)
 	Prepare vangogh release: @done(2021-12-04)
 		- Publish vangogh on GitHub @done(2021-12-04)
 			- Create Makefile @done(2021-12-04)
