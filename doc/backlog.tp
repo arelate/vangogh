@@ -1,16 +1,23 @@
 Issues:
 	No known at the moment
+
+Extract improvements:
 	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
 		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
 		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 		- Investigate if there are other properties like that - that would benefit from such cascade
-	
-Export improvements:
-	- export archives absolute path. Should be only metadata
+	- consider extracting typeahead data for search predictions (only consider this when building search)
+
+Cleanup improvments:
+	- need to trim paths relative to RootDir()
+
+Add version command:
+	- check other examples and print out the tagged version
 	
 Search improvements:
 	- split search into "find" command and "search" api that returns found entries
+	- create search API POST endpoint
 	- search -dev "Sysiac" doesn't highlight developer, vangogh search -dev "sysiac" does
 
 Images improvements:
@@ -18,7 +25,7 @@ Images improvements:
 	- consider changing from images?id to images?id&image-type to avoid trying various extensions
 
 Get-data improvements:
-	- refactor into data providers that download required data (perhaps using shared classes)
+	- refactor into data providers that download required data (perhaps using shared classes) and allow multiple product-types
 
 Improve web server:
 	- Address stale data by checking if index was modified since starting the server
@@ -93,6 +100,8 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	Export improvements: @done(2021-12-11)
+		- export archives absolute path. Should be only metadata @done(2021-12-11)
 	- start logging automatically (and disable stdout) @done(2021-12-04) @project(Improve web server)
 	- improve extacts API: @done(2021-12-04) @project(Improve web server)
 		- currently it expects to/from parameters since it was designed for scroller @done(2021-12-04)
