@@ -9,6 +9,9 @@ Extract improvements:
 		- Investigate if there are other properties like that - that would benefit from such cascade
 	- consider extracting typeahead data for search predictions (only consider this when building search)
 
+Defaults improvements:
+	- transition to wits
+
 Cleanup improvments:
 	- need to trim paths relative to RootDir()
 
@@ -40,6 +43,8 @@ vangogh_api Refactors:
 	- extract into vangogh_extracts?
 	- Move gogHosts to gog_urls
 	- Split into cli and http
+	- deprecate read-ids (we don't need that for backend)
+	- move skiplists to wits
 
 Add export command to package metadata:
 	- add data vet to clear all byt the most recent export

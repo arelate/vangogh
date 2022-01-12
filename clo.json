@@ -9,7 +9,6 @@
     "cleanup": [
       "id^&",
       "slug&",
-      "read-ids",
       "media={media^}",
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
@@ -30,18 +29,16 @@
     "get-data": [
       "id&",
       "slug&",
-      "read-ids",
       "product-type*^={remote-product-types}",
       "media={media^}",
       "missing",
       "updated",
-      "skip-ids-file",
+      "skip-id&",
       "temp-directory={temp-directory^}"
     ],
     "get-downloads": [
       "id^&",
       "slug&",
-      "read-ids",
       "media={media^}",
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
@@ -53,7 +50,6 @@
     "get-images": [
       "id&",
       "slug&",
-      "read-ids",
       "missing",
       "image-type&*^={image-types}",
       "media={media^}"
@@ -61,13 +57,11 @@
     "get-videos": [
       "id&",
       "slug&",
-      "read-ids",
       "missing"
     ],
     "info": [
       "id^&",
       "slug&",
-      "read-ids",
       "media={media^}",
       "all-text",
       "images",
@@ -81,8 +75,7 @@
     ],
     "owned": [
       "id^&",
-      "slug&",
-      "read-ids"
+      "slug&"
     ],
     "search": [
       "media={media^}",
@@ -95,7 +88,6 @@
     "size": [
       "id^&",
       "slug&",
-      "read-ids",
       "media={media^}",
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
@@ -136,7 +128,6 @@
     "validate": [
       "id^&",
       "slug&",
-      "read-ids",
       "media={media^}",
       "operating-system&={operating-systems^}",
       "download-type&={download-types^}",
