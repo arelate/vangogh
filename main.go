@@ -12,7 +12,9 @@ import (
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/clo_delegates"
+	"github.com/boggydigital/wits"
 	"os"
+	"path/filepath"
 )
 
 //go:embed "clo.json"
@@ -23,6 +25,8 @@ const (
 	logsDir  = "/var/log/vangogh"
 	stateDir = "/var/lib/vangogh"
 	tempDir  = "/var/tmp"
+
+	userDefaultsFilename = "vangogh-settings.txt"
 )
 
 func main() {
@@ -38,13 +42,26 @@ func main() {
 	vangogh_urls.ChRoot(stateDir)
 
 	bytesBuffer := bytes.NewBuffer(cloBytes)
-	defs, err := clo.Load(bytesBuffer, clo_delegates.Values, cfgDir)
+	defs, err := clo.Load(bytesBuffer, clo_delegates.Values)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
 
-	if defs.HasDefaultsFlag("log") {
+	userDefaultsOverrides, err := wits.ReadSectLines(
+		filepath.Join(cfgDir, userDefaultsFilename))
+
+	if err != nil {
+		_ = ns.EndWithError(err)
+		os.Exit(1)
+	}
+
+	if err := defs.SetUserDefaults(userDefaultsOverrides); err != nil {
+		_ = ns.EndWithError(err)
+		os.Exit(1)
+	}
+
+	if defs.HasUserDefaultsFlag("log") {
 		logger, err := nod.EnableFileLogger(logsDir)
 		if err != nil {
 			_ = ns.EndWithError(err)

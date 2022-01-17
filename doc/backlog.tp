@@ -1,6 +1,10 @@
 Issues:
 	No known at the moment
 
+General improvements:
+	- allow injecting settings overrides (aka my-defaults.txt) in a way that doesn't require files in magical locations
+	- allow setting operation "context" - working directory and such
+
 Extract improvements:
 	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
 		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
