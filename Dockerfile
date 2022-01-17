@@ -6,18 +6,18 @@ RUN go get ./...
 RUN go build \
     -o vangogh \
     -ldflags="-s -w \
-    -X 'vangogh/version.Version=`git describe --tags --abbrev=0`' \
-    -X 'vangogh/version.Commit=`git rev-parse --short HEAD`' \
-    -X 'vangogh/version.BuildDate=`date +%FT%T%z`'" \
+    -X 'github.com/boggydigital/vangogh/version.Version=`git describe --tags --abbrev=0`' \
+    -X 'github.com/boggydigital/vangogh/version.Commit=`git rev-parse --short HEAD`' \
+    -X 'github.com/boggydigital/vangogh/version.BuildDate=`date +%FT%T%z`'" \
     main.go
 
 FROM alpine
 COPY --from=build /go/src/app/vangogh /usr/bin/vangogh
 
 EXPOSE 1853
-#app configuration: my-defaults.json
+#app configuration: vangogh-settings.txt
 VOLUME /etc/vangogh
-#temporary data: cookies.json
+#temporary data: cookies.txt
 VOLUME /var/tmp
 #app logs
 VOLUME /var/log/vangogh

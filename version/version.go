@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	Version   string
-	Commit    string
-	BuildDate string
+	Version   string = "undefined"
+	Commit    string = "undefined"
+	BuildDate string = "undefined"
 )
 
 func VersionHander(u *url.URL) error {
