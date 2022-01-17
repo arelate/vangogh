@@ -49,9 +49,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	userDefaultsOverrides, err := wits.ReadSectLines(
-		filepath.Join(cfgDir, userDefaultsFilename))
-
+	userDefaultsPath := filepath.Join(cfgDir, userDefaultsFilename)
+	userDefaultsOverrides, err := wits.ReadSectLines(userDefaultsPath)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
@@ -96,6 +95,11 @@ func main() {
 		"validate":         cli.ValidateHandler,
 		"wishlist":         cli.WishlistHandler,
 	})
+
+	if err := defs.AssertCommandsHaveHandlers(); err != nil {
+		_ = ns.EndWithError(err)
+		os.Exit(1)
+	}
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)

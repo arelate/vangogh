@@ -11,8 +11,9 @@ require (
 	github.com/arelate/vangogh_products v0.1.4
 	github.com/arelate/vangogh_properties v0.1.2
 	github.com/arelate/vangogh_urls v0.1.13
-	github.com/boggydigital/clo v0.2.8
+	github.com/boggydigital/clo v0.2.11
 	github.com/boggydigital/nod v0.1.9
+	github.com/boggydigital/wits v0.1.2
 )
 
 require (
@@ -28,7 +29,6 @@ require (
 	github.com/boggydigital/gost v0.1.1 // indirect
 	github.com/boggydigital/kvas v0.2.1 // indirect
 	github.com/boggydigital/match_node v0.1.4 // indirect
-	github.com/boggydigital/wits v0.1.2 // indirect
 	github.com/boggydigital/yt_urls v0.1.5 // indirect
 	golang.org/x/net v0.0.0-20220111093109-d55c255bac03 // indirect
 )

@@ -6,12 +6,15 @@ import (
 )
 
 var (
+	//TODO: Explore replacing with runtime/debug.ReadBuildInfo when 1.18 releases
+	//and simplify make and docker build scripts
 	Version   string = "undefined"
 	Commit    string = "undefined"
 	BuildDate string = "undefined"
 )
 
 func VersionHander(u *url.URL) error {
+
 	va := nod.Begin("")
 
 	va.EndWithSummary("app information:", map[string][]string{
