@@ -3,7 +3,7 @@ DOCKER_IMAGE := arelate/vangogh
 VERSION      := $(shell git describe --tags --abbrev=0)
 COMMIT       := $(shell git rev-parse --short HEAD)
 BUILD_DATE   := `date +%FT%T%z`
-LD_FLAGS     := "-s -w -X 'vangogh/version.Version=$(VERSION)' -X 'vangogh/version.Commit=$(COMMIT)' -X 'vangogh/version.BuildDate=$(BUILD_DATE)'"
+LD_FLAGS     := "-s -w -X 'github.com/boggydigital/vangogh/version.Version=$(VERSION)' -X 'github.com/boggydigital/vangogh/version.Commit=$(COMMIT)' -X 'github.com/boggydigital/vangogh/version.BuildDate=$(BUILD_DATE)'"
 
 .PHONY: \
 	miniflux \

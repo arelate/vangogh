@@ -134,6 +134,7 @@
       "language-code&={language-codes^}",
       "all"
     ],
+    "version": [],
     "vet": [
       "media={media^}",
       "operating-system&={operating-systems^}",

@@ -12,6 +12,7 @@ import (
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/clo_delegates"
+	"github.com/boggydigital/vangogh/version"
 	"github.com/boggydigital/wits"
 	"os"
 	"path/filepath"
@@ -83,6 +84,7 @@ func main() {
 		"info":             cli.InfoHandler,
 		"list":             cli.ListHandler,
 		"owned":            cli.OwnedHandler,
+		"version":          version.VersionHander,
 		"vet":              cli.VetHandler,
 		"search":           cli.SearchHandler,
 		"serve":            cli.ServeHandler,
