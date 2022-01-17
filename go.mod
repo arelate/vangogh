@@ -11,8 +11,8 @@ require (
 	github.com/arelate/vangogh_products v0.1.4
 	github.com/arelate/vangogh_properties v0.1.2
 	github.com/arelate/vangogh_urls v0.1.13
-	github.com/boggydigital/clo v0.2.11
-	github.com/boggydigital/nod v0.1.9
+	github.com/boggydigital/clo v0.2.12
+	github.com/boggydigital/nod v0.1.10
 	github.com/boggydigital/wits v0.1.2
 )
 
