@@ -26,7 +26,8 @@ var (
 )
 
 const (
-	userDefaultsFilename = "settings.txt"
+	settingsFilename    = "settings.txt"
+	directoriesFilename = "directories.txt"
 )
 
 var (
@@ -62,7 +63,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	userDefaultsPath := filepath.Join(configDir, userDefaultsFilename)
+	userDefaultsPath := filepath.Join(configDir, settingsFilename)
 	if _, err := os.Stat(userDefaultsPath); err == nil {
 		udoFile, err := os.Open(userDefaultsPath)
 		if err != nil {
@@ -124,4 +125,35 @@ func main() {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
+}
+
+func readUserDirectories() error {
+	if _, err := os.Stat(directoriesFilename); os.IsNotExist(err) {
+		return nil
+	}
+
+	udFile, err := os.Open(directoriesFilename)
+	if err != nil {
+		return err
+	}
+
+	dirs, err := wits.ReadKeyValue(udFile)
+	if err != nil {
+		return err
+	}
+
+	if cd, ok := dirs["config"]; ok {
+		configDir = cd
+	}
+	if ld, ok := dirs["logs"]; ok {
+		logsDir = ld
+	}
+	if sd, ok := dirs["state"]; ok {
+		stateDir = sd
+	}
+	if td, ok := dirs["temp"]; ok {
+		tempDir = td
+	}
+
+	return nil
 }

@@ -1,4 +1,4 @@
-APP          := vangogh
+APP          := vg
 DOCKER_IMAGE := arelate/vangogh
 VERSION      := $(shell git describe --tags --abbrev=0)
 COMMIT       := $(shell git rev-parse --short HEAD)
