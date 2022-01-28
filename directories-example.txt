@@ -1,0 +1,13 @@
+config
+ # configuration: settings.txt
+ /etc/vangogh
+logs
+ # logs
+ /var/log/vangogh
+state
+ # directories: checksums, downloads, images, metadata, recycle_bin, videos
+ # files: skiplist.txt
+ /var/lib/vangogh
+temp
+ # temporary data: cookies.txt
+ /var/tmp

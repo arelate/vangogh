@@ -1,0 +1,148 @@
+auth
+    username
+    password
+    temp-directory={temp-directory^}
+
+cleanup
+    id^&
+    slug&
+    media={media^}
+    operating-system&={operating-systems^}
+    download-type&={download-types^}
+    language-code&={language-codes^}
+    all
+    test
+
+digest
+    property^={digestible-properties}
+
+export
+    temp-directory={temp-directory^}
+
+extract
+    media={media^}
+    property&={extracted-properties}
+
+get-data
+    id&
+    slug&
+    product-type*^={remote-product-types}
+    media={media^}
+    missing
+    updated
+    skip-id&
+    temp-directory={temp-directory^}
+
+get-downloads
+    id^&
+    slug&
+    media={media^}
+    operating-system&={operating-systems^}
+    download-type&={download-types^}
+    language-code&={language-codes^}
+    missing
+    force-update
+    temp-directory={temp-directory^}
+
+get-images
+    id&
+    slug&
+    missing
+    image-type&*^={image-types}
+    media={media^}
+
+get-videos
+    id&
+    slug&
+    missing
+
+info
+    id^&
+    slug&
+    media={media^}
+    all-text
+    images
+    video-id
+
+list
+    product-type^*={local-product-types}
+    media={media^}
+    property&={all-properties}
+    since-hours-ago
+
+owned
+    id^&
+    slug&
+
+search
+    media={media^}
+    {searchable-properties^&}
+
+serve
+    port
+    stderr
+
+size
+    id^&
+    slug&
+    media={media^}
+    operating-system&={operating-systems^}
+    download-type&={download-types^}
+    language-code&={language-codes^}
+    missing
+    all
+
+summary
+    media={media^}
+    since-hours-ago
+
+sync
+    media={media^}
+    since-hours-ago
+    operating-system&={operating-systems^}
+    download-type&={download-types^}
+    language-code&={language-codes^}
+    temp-directory={temp-directory^}
+    updates-only
+    {sync-options^&}
+
+tag
+    id^
+    slug
+    operation^=create,delete,edit,add,remove
+    tag-name
+    temp-directory={temp-directory^}
+
+update-downloads
+    media={media^}
+    operating-system&={operating-systems^}
+    download-type&={download-types^}
+    language-code&={language-codes^}
+    since-hours-ago
+    temp-directory={temp-directory^}
+    updates-only
+
+validate
+    id^&
+    slug&
+    media={media^}
+    operating-system&={operating-systems^}
+    download-type&={download-types^}
+    language-code&={language-codes^}
+    all
+
+version
+
+vet
+    media={media^}
+    operating-system&={operating-systems^}
+    download-type&={download-types^}
+    language-code&={language-codes^}
+    fix
+    {vet-options^&}
+
+wishlist
+    media={media^}
+    add&
+    remove&
+    temp-directory={temp-directory^}

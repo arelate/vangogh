@@ -1,9 +1,16 @@
 Issues:
 	No known at the moment
+	- investigate weird api-product-v1 URLs
+		- probably it's not a problem, just formatting attempting to add %something values (URL encoded query string)
+		- need to adjust nod to fix that
 
 General improvements:
-	- allow injecting settings overrides (aka my-defaults.txt) in a way that doesn't require files in magical locations
+	- rename binary "vangogh" -> "vg" to disambiguate with container name
 	- allow setting operation "context" - working directory and such
+
+Finish directories refactor:
+	- read vangogh_directories.txt from current process for a non-Docker binary, use it to set all directories
+	- consider consolidating setting directories in vangogh_api where they are used
 
 Extract improvements:
 	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
@@ -13,15 +20,9 @@ Extract improvements:
 		- Investigate if there are other properties like that - that would benefit from such cascade
 	- consider extracting typeahead data for search predictions (only consider this when building search)
 
-Defaults improvements:
-	- transition to wits
-
 Cleanup improvments:
 	- need to trim paths relative to RootDir()
 
-Add version command:
-	- check other examples and print out the tagged version
-	
 Search improvements:
 	- split search into "find" command and "search" api that returns found entries
 	- create search API POST endpoint
@@ -109,6 +110,12 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- allow injecting settings overrides (aka my-defaults.txt) in a way that doesn't require files in magical locations @done(2022-01-16) @project(General improvements)
+	Defaults improvements: @done(2022-01-16)
+		- transition to wits @done(2022-01-16)
+	Add version command: @done(2022-01-16)
+		- check other examples and print out the tagged version @done(2022-01-16)
+		
 	Export improvements: @done(2021-12-11)
 		- export archives absolute path. Should be only metadata @done(2021-12-11)
 	- start logging automatically (and disable stdout) @done(2021-12-04) @project(Improve web server)

@@ -18,16 +18,22 @@ import (
 	"path/filepath"
 )
 
-//go:embed "clo.json"
-var cloBytes []byte
+var (
+	//go:embed "cli-commands.txt"
+	cliCommands []byte
+	//go:embed "cli-help.txt"
+	cliHelp []byte
+)
 
 const (
-	cfgDir   = "/etc/vangogh"
-	logsDir  = "/var/log/vangogh"
-	stateDir = "/var/lib/vangogh"
-	tempDir  = "/var/tmp"
+	userDefaultsFilename = "settings.txt"
+)
 
-	userDefaultsFilename = "vangogh-settings.txt"
+var (
+	configDir = "/etc/vangogh"
+	logsDir   = "/var/log/vangogh"
+	stateDir  = "/var/lib/vangogh"
+	tempDir   = "/var/tmp"
 )
 
 func main() {
@@ -37,31 +43,44 @@ func main() {
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
 
-	//set default temp dir
+	if err := readUserDirectories(); err != nil {
+		_ = ns.EndWithError(err)
+		os.Exit(1)
+	}
+
+	//TODO: Move this to vangogh_api as SetTempDir
 	clo_delegates.SetTempDir(tempDir)
-	//change state root so that all vangogh_urls functions work in under that root
+	//TODO: Rename this to SetStateDir
 	vangogh_urls.ChRoot(stateDir)
 
-	bytesBuffer := bytes.NewBuffer(cloBytes)
-	defs, err := clo.Load(bytesBuffer, clo_delegates.Values)
+	defs, err := clo.Load(
+		bytes.NewBuffer(cliCommands),
+		bytes.NewBuffer(cliHelp),
+		clo_delegates.Values)
 	if err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
 
-	userDefaultsPath := filepath.Join(cfgDir, userDefaultsFilename)
-	userDefaultsOverrides, err := wits.ReadSectLines(userDefaultsPath)
-	if err != nil {
-		_ = ns.EndWithError(err)
-		os.Exit(1)
+	userDefaultsPath := filepath.Join(configDir, userDefaultsFilename)
+	if _, err := os.Stat(userDefaultsPath); err == nil {
+		udoFile, err := os.Open(userDefaultsPath)
+		if err != nil {
+			_ = ns.EndWithError(err)
+			os.Exit(1)
+		}
+		userDefaultsOverrides, err := wits.ReadKeyValues(udoFile)
+		if err != nil {
+			_ = ns.EndWithError(err)
+			os.Exit(1)
+		}
+		if err := defs.SetUserDefaults(userDefaultsOverrides); err != nil {
+			_ = ns.EndWithError(err)
+			os.Exit(1)
+		}
 	}
 
-	if err := defs.SetUserDefaults(userDefaultsOverrides); err != nil {
-		_ = ns.EndWithError(err)
-		os.Exit(1)
-	}
-
-	if defs.HasUserDefaultsFlag("log") {
+	if defs.HasUserDefaultsFlag("debug") {
 		logger, err := nod.EnableFileLogger(logsDir)
 		if err != nil {
 			_ = ns.EndWithError(err)
