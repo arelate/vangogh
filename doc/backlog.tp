@@ -20,6 +20,10 @@ Extract improvements:
 		- Investigate if there are other properties like that - that would benefit from such cascade
 	- consider extracting typeahead data for search predictions (only consider this when building search)
 
+Modules improvements:
+	- review and consolidate gog_* and vangogh_* modules to fewer items (gut feeling: about 50% can be removed)
+	- move bulk of logic from _extracts to _froth
+
 Cleanup improvments:
 	- need to trim paths relative to RootDir()
 

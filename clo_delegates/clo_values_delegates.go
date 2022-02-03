@@ -1,7 +1,7 @@
 package clo_delegates
 
 import (
-	"github.com/arelate/gog_media"
+	"github.com/arelate/gog_atu"
 	"github.com/arelate/vangogh_api/cli"
 	"github.com/arelate/vangogh_downloads"
 	"github.com/arelate/vangogh_extracts"
@@ -47,7 +47,7 @@ func localProductTypes() []string {
 }
 
 func media() []string {
-	media := gog_media.All()
+	media := gog_atu.AllMedia()
 	mediaStr := make([]string, 0, len(media))
 	for _, md := range media {
 		mediaStr = append(mediaStr, md.String())
