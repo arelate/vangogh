@@ -5,7 +5,7 @@ Issues:
 		- need to adjust nod to fix that
 
 General improvements:
-	- rename binary "vangogh" -> "vg" to disambiguate with container name
+	- rename binary "vangogh" -> "vg" to disambiguate with container name @done(2022-02-09)
 	- allow setting operation "context" - working directory and such
 
 Finish directories refactor:
@@ -22,7 +22,9 @@ Extract improvements:
 
 Modules improvements:
 	- review and consolidate gog_* and vangogh_* modules to fewer items (gut feeling: about 50% can be removed)
-	- move bulk of logic from _extracts to _froth
+		- gog_auth, gog_auth_url, gog_types, gog_urls, gog_media -> gog_uta @done(2022-02-03)
+	- move bulk of logic from _extracts to _froth, consider consolidating froth into kvas @done(2022-02-09)
+	- deprecate froth and _extracts
 
 Cleanup improvments:
 	- need to trim paths relative to RootDir()

@@ -4,7 +4,6 @@ import (
 	"github.com/arelate/gog_atu"
 	"github.com/arelate/vangogh_api/cli"
 	"github.com/arelate/vangogh_downloads"
-	"github.com/arelate/vangogh_extracts"
 	"github.com/arelate/vangogh_images"
 	"github.com/arelate/vangogh_products"
 	"github.com/arelate/vangogh_properties"
@@ -85,11 +84,11 @@ func downloadTypes() []string {
 func languageCodes() []string {
 	defaultLangCode := "en"
 	langCodes := []string{defaultLangCode}
-	exl, err := vangogh_extracts.NewList(vangogh_properties.LanguageNameProperty)
+	rxa, err := vangogh_properties.ConnectReduxAssets(vangogh_properties.LanguageNameProperty)
 	if err != nil {
 		return langCodes
 	}
-	for _, lc := range exl.All(vangogh_properties.LanguageNameProperty) {
+	for _, lc := range rxa.Keys(vangogh_properties.LanguageNameProperty) {
 		if lc == defaultLangCode {
 			continue
 		}
