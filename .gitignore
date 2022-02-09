@@ -1,5 +1,7 @@
 .idea
-cookies.json
+cookies.txt
+directories.txt
+settings.txt
 metadata/*
 images/*
 videos/*

@@ -5,8 +5,8 @@ Issues:
 		- need to adjust nod to fix that
 
 General improvements:
-	- rename binary "vangogh" -> "vg" to disambiguate with container name @done(2022-02-09)
 	- allow setting operation "context" - working directory and such
+	- rename extract -> reduce
 
 Finish directories refactor:
 	- read vangogh_directories.txt from current process for a non-Docker binary, use it to set all directories
@@ -22,9 +22,6 @@ Extract improvements:
 
 Modules improvements:
 	- review and consolidate gog_* and vangogh_* modules to fewer items (gut feeling: about 50% can be removed)
-		- gog_auth, gog_auth_url, gog_types, gog_urls, gog_media -> gog_uta @done(2022-02-03)
-	- move bulk of logic from _extracts to _froth, consider consolidating froth into kvas @done(2022-02-09)
-	- deprecate froth and _extracts
 
 Cleanup improvments:
 	- need to trim paths relative to RootDir()
@@ -116,6 +113,10 @@ Tests:
 	- Make sure every closer is closed - validate errors, etc.
 
 Archive:
+	- rename binary "vangogh" -> "vg" to disambiguate with container name @done(2022-02-09) @project(General improvements)
+	- gog_auth, gog_auth_url, gog_types, gog_urls, gog_media -> gog_uta @done(2022-02-03) @project(Modules improvements)
+	- move bulk of logic from _extracts to _froth, consider consolidating froth into kvas @done(2022-02-09) @project(Modules improvements)
+	- deprecate froth and _extracts @done(2022-02-09) @project(Modules improvements)
 	- allow injecting settings overrides (aka my-defaults.txt) in a way that doesn't require files in magical locations @done(2022-01-16) @project(General improvements)
 	Defaults improvements: @done(2022-01-16)
 		- transition to wits @done(2022-01-16)
