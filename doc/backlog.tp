@@ -7,6 +7,8 @@ Issues:
 General improvements:
 	- allow setting operation "context" - working directory and such
 	- rename extract -> reduce
+	- gog_atu.ValidMedia -> IsValidMedia
+	- Extracted, Searchable, Digestible -> *Properties
 
 Finish directories refactor:
 	- read vangogh_directories.txt from current process for a non-Docker binary, use it to set all directories

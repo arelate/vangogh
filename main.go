@@ -8,7 +8,7 @@ import (
 	"bytes"
 	_ "embed"
 	"github.com/arelate/vangogh_api/cli"
-	"github.com/arelate/vangogh_urls"
+	"github.com/arelate/vangogh_data"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/clo_delegates"
@@ -52,7 +52,7 @@ func main() {
 	//TODO: Move this to vangogh_api as SetTempDir
 	clo_delegates.SetTempDir(tempDir)
 	//TODO: Rename this to SetStateDir
-	vangogh_urls.ChRoot(stateDir)
+	vangogh_data.ChRoot(stateDir)
 
 	defs, err := clo.Load(
 		bytes.NewBuffer(cliCommands),
