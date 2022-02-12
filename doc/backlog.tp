@@ -8,10 +8,14 @@ General improvements:
 	- allow setting operation "context" - working directory and such
 	- rename extract -> reduce
 	- gog_atu.ValidMedia -> IsValidMedia
-	- Extracted, Searchable, Digestible -> *Properties
+	- Resolve new TODOs in vangogh_api
+	- Cleanup module names:
+		- Replace "_" with "-" and consider if there are other name changes required
+		- gog_atu -> gog-integration
+		- vangogh_data -> vangogh-local-data
+	- Deprecate gost from _api, move useful code to _data
 
 Finish directories refactor:
-	- read vangogh_directories.txt from current process for a non-Docker binary, use it to set all directories
 	- consider consolidating setting directories in vangogh_api where they are used
 
 Extract improvements:
@@ -20,101 +24,93 @@ Extract improvements:
 		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
 		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 		- Investigate if there are other properties like that - that would benefit from such cascade
-	- consider extracting typeahead data for search predictions (only consider this when building search)
-
-Modules improvements:
-	- review and consolidate gog_* and vangogh_* modules to fewer items (gut feeling: about 50% can be removed)
 
 Cleanup improvments:
 	- need to trim paths relative to RootDir()
 
 Search improvements:
-	- split search into "find" command and "search" api that returns found entries
-	- create search API POST endpoint
 	- search -dev "Sysiac" doesn't highlight developer, vangogh search -dev "sysiac" does
-
-Images improvements:
-	- for the lists change from box-art to images that gog uses in account / store (also capture the dimensions)
-	- consider changing from images?id to images?id&image-type to avoid trying various extensions
-
-Get-data improvements:
-	- refactor into data providers that download required data (perhaps using shared classes) and allow multiple product-types
-
-Improve web server:
-	- Address stale data by checking if index was modified since starting the server
-
-Cleanup module names:
-	- Replace "_" with "-" and consider if there are other name changes required
-	
-vangogh_api Refactors:
-	- url_helpers into vangogh_urls
-	- remove into vangogh_products?
-	- split into vangogh_products?
-	- extract into vangogh_extracts?
-	- Move gogHosts to gog_urls
-	- Split into cli and http
-	- deprecate read-ids (we don't need that for backend)
-	- move skiplists to wits
-
-Add export command to package metadata:
-	- add data vet to clear all byt the most recent export
 
 Improve time based parameters:
 	- expand hours into a minimal human readable variants
 	- review all of the parameters and find opportunity for url helpers
 
 Improvements to vangogh backend:
-	- /export/metadata
-	- Downloads, Checksums (GET only):
-		- TBD
-	
-Gaugin:
-	- virtual scroller component:
-		- bind to a product-type/media
-		- get all ids
-		- for a visible area - draw certain number of items that are in view:
-			- request titles for visible items
-			- create a box with a title and queue box-art download
-			- replace box with a text with a box-art when available
-		- on scroll - add/remove areas in/out of the view
-	- product details component:
-		- transition from scroller list to detail keeping some anchor in place (and back)
-		- segue controller
-	- product type switcher
-	- commands area (sync, vet, cleanup)?
-	- search component with rich previews
-	- settings?
-	
-validation improvements:
-	- store last successful validation date and result for querying (as properties?)
 	
 yt-urls improvements:
-	- support cipher urls
-		- 276 videos at this moment
 	- support login required videos
 		- 14 videos at this moment
-		
-clo improvement:
-	- "SAME-AS" command to copy arguments from another command or predefined sets
-
-figure out where 1435735429 gets box-art image in Galaxy:
-	- proxy requests and find the source
+		- redownload missing videos for that reason
 
 Documentation:
 	- update modules documentation:
 		- clo
-		- kvas
-		- dolo
-	- add clo.json help for stable commands
-	- generate MD/HTML for help using clo to use in README
-
-Tests:
-	- add test coverage for modules:
-		- kvas
-		- dolo
-	- Make sure every closer is closed - validate errors, etc.
+	- add clo-help.txt
+	- document vangogh_data
 
 Archive:
+	- Extracted, Searchable, Digestible -> *Properties @done(2022-02-11) @project(General improvements)
+	vangogh_api Refactors: @done(2022-02-11)
+		- url_helpers into vangogh_urls @done(2022-02-11)
+		- remove into vangogh_products? @done(2022-02-11)
+		- split into vangogh_products? @done(2022-02-11) @cut
+		- extract into vangogh_extracts? @cut @done(2022-02-11)
+		- Move gogHosts to gog_urls @done(2022-02-11)
+		- Split into cli and http @done(2022-02-11) @cut
+		- deprecate read-ids (we don't need that for backend) @done(2022-02-11)
+		- move skiplists to wits @done(2022-02-11)
+	- read vangogh_directories.txt from current process for a non-Docker binary, use it to set all directories @done(2022-02-11) @project(Finish directories refactor)
+	- consider extracting typeahead data for search predictions (only consider this when building search) @done(2022-02-11) @project(Extract improvements)
+	- support cipher urls @done(2022-02-11) @project(yt-urls improvements)
+		- 276 videos at this moment @done(2022-02-11)
+	Tests: @done(2022-02-10)
+		- add test coverage for modules: @done(2022-02-10)
+			- kvas @done(2022-02-10)
+			- dolo @done(2022-02-10)
+		- Make sure every closer is closed - validate errors, etc. @done(2022-02-10)
+	- generate MD/HTML for help using clo to use in README @done(2022-02-10) @project(Documentation)
+	- kvas @done(2022-02-10) @project(Documentation)
+	- dolo @done(2022-02-10) @project(Documentation)
+	figure out where 1435735429 gets box-art image in Galaxy: @done(2022-02-10)
+		- proxy requests and find the source @cut @done(2022-02-10)
+	clo improvement: @done(2022-02-10)
+		- "SAME-AS" command to copy arguments from another command or predefined sets @cut @done(2022-02-10)
+	validation improvements: @done(2022-02-10)
+		- store last successful validation date and result for querying (as properties?) @cut @done(2022-02-10)
+		
+	Gaugin: @done(2022-02-10)
+		- virtual scroller component: @done(2022-02-10)
+			- bind to a product-type/media @done(2022-02-10)
+			- get all ids @done(2022-02-10)
+			- for a visible area - draw certain number of items that are in view: @done(2022-02-10)
+				- request titles for visible items @done(2022-02-10)
+				- create a box with a title and queue box-art download @done(2022-02-10)
+				- replace box with a text with a box-art when available @done(2022-02-10)
+			- on scroll - add/remove areas in/out of the view @done(2022-02-10)
+		- product details component: @done(2022-02-10)
+			- transition from scroller list to detail keeping some anchor in place (and back) @done(2022-02-10)
+			- segue controller @done(2022-02-10)
+		- product type switcher @done(2022-02-10)
+		- commands area (sync, vet, cleanup)? @done(2022-02-10)
+		- search component with rich previews @done(2022-02-10)
+		- settings? @done(2022-02-10)
+		
+	- /export/metadata @done(2022-02-10) @project(Improvements to vangogh backend)
+	- Downloads, Checksums (GET only): @done(2022-02-10) @project(Improvements to vangogh backend)
+		- TBD @done(2022-02-10)
+	Add export command to package metadata: @done(2022-02-10)
+		- add data vet to clear all by the most recent export @cut @done(2022-02-10)
+	Improve web server: @done(2022-02-10)
+		- Address stale data by checking if index was modified since starting the server @cut @done(2022-02-10)
+	Get-data improvements: @done(2022-02-10)
+		- refactor into data providers that download required data (perhaps using shared classes) and allow multiple product-types @cut @done(2022-02-10)
+	Images improvements: @done(2022-02-10)
+		- for the lists change from box-art to images that gog uses in account / store (also capture the dimensions) @done(2022-02-10) @cut
+		- consider changing from images?id to images?id&image-type to avoid trying various extensions @cut @done(2022-02-10)
+	- split search into "find" command and "search" api that returns found entries @done(2022-02-10) @project(Search improvements)
+	- create search API POST endpoint @done(2022-02-10) @project(Search improvements)
+	Modules improvements: @done(2022-02-10)
+		- review and consolidate gog_* and vangogh_* modules to fewer items (gut feeling: about 50% can be removed) @done(2022-02-10)
 	- rename binary "vangogh" -> "vg" to disambiguate with container name @done(2022-02-09) @project(General improvements)
 	- gog_auth, gog_auth_url, gog_types, gog_urls, gog_media -> gog_uta @done(2022-02-03) @project(Modules improvements)
 	- move bulk of logic from _extracts to _froth, consider consolidating froth into kvas @done(2022-02-09) @project(Modules improvements)
