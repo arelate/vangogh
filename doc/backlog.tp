@@ -7,16 +7,12 @@ Issues:
 General improvements:
 	- allow setting operation "context" - working directory and such
 	- rename extract -> reduce
-	- gog_atu.ValidMedia -> IsValidMedia
-	- Resolve new TODOs in vangogh_api
-	- Cleanup module names:
-		- Replace "_" with "-" and consider if there are other name changes required
-		- gog_atu -> gog-integration
-		- vangogh_data -> vangogh-local-data
+	- gog_integration.ValidMedia -> IsValidMedia
+	- Resolve new TODOs in vangogh_cli_api
 	- Deprecate gost from _api, move useful code to _data
 
 Finish directories refactor:
-	- consider consolidating setting directories in vangogh_api where they are used
+	- consider consolidating setting directories in vangogh_cli_api where they are used
 
 Extract improvements:
 	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
@@ -46,11 +42,15 @@ Documentation:
 	- update modules documentation:
 		- clo
 	- add clo-help.txt
-	- document vangogh_data
+	- document vangogh_local_data
 
 Archive:
+	- Cleanup module names: @done(2022-02-12) @project(General improvements)
+		- Replace "_" with "-" and consider if there are other name changes required @done(2022-02-12)
+		- gog_integration -> gog-integration @done(2022-02-12)
+		- vangogh_local_data -> vangogh-local-data @done(2022-02-12)
 	- Extracted, Searchable, Digestible -> *Properties @done(2022-02-11) @project(General improvements)
-	vangogh_api Refactors: @done(2022-02-11)
+	vangogh_cli_api Refactors: @done(2022-02-11)
 		- url_helpers into vangogh_urls @done(2022-02-11)
 		- remove into vangogh_products? @done(2022-02-11)
 		- split into vangogh_products? @done(2022-02-11) @cut
@@ -134,7 +134,7 @@ Archive:
 			- Create Makefile @done(2021-12-04)
 			- Create Dockerfile @done(2021-12-04)
 			
-	- http_client into cooja? @done(2021-12-03) @project(vangogh_api Refactors)
+	- http_client into cooja? @done(2021-12-03) @project(vangogh_cli_api Refactors)
 	Standartize directories: @done(2021-12-03)
 		#app configuration: my-defaults.json @done(2021-12-02)
 		- /etc/vangogh @done(2021-12-02)
@@ -150,7 +150,7 @@ Archive:
 	- search "-title opus" has found products in the middle of results" - good target for heading application? @done(2021-12-01) @project(Issues)
 	- provide flags for operations to specify non-default directories as well as allow reading from env. variables @done(2021-12-02) @project(Standartize directories)
 	- generate metadata-YYYY-MM-DD-HH-MM-SS.tar.gz archives @done(2021-12-01) @project(Add export command to package metadata)
-	vangogh_api: @done(2021-11-13)
+	vangogh_cli_api: @done(2021-11-13)
 		- create new module that provides all core commands functionality, leaving input output and clo handlers to vangogh to allow serving both CLI and HTTP @done(2021-11-13)
 	- Refactor the API even more: @done(2021-11-11) @project(Work on gaugin can start)
 		- /indexes @done(2021-11-11)

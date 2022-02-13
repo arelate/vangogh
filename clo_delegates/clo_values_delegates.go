@@ -1,9 +1,9 @@
 package clo_delegates
 
 import (
-	"github.com/arelate/gog_atu"
-	"github.com/arelate/vangogh_api/cli"
-	"github.com/arelate/vangogh_data"
+	"github.com/arelate/gog_integration"
+	"github.com/arelate/vangogh_cli_api/cli"
+	"github.com/arelate/vangogh_local_data"
 	"strings"
 )
 
@@ -12,10 +12,10 @@ var Values = map[string]func() []string{
 	"remote-product-types":  remoteProductTypes,
 	"local-product-types":   localProductTypes,
 	"image-types":           imageTypes,
-	"extracted-properties":  vangogh_data.ExtractedProperties,
-	"all-properties":        vangogh_data.AllProperties,
-	"searchable-properties": vangogh_data.SearchableProperties,
-	"digestible-properties": vangogh_data.DigestibleProperties,
+	"extracted-properties":  vangogh_local_data.ExtractedProperties,
+	"all-properties":        vangogh_local_data.AllProperties,
+	"searchable-properties": vangogh_local_data.SearchableProperties,
+	"digestible-properties": vangogh_local_data.DigestibleProperties,
 	"operating-systems":     operatingSystems,
 	"download-types":        downloadTypes,
 	"language-codes":        languageCodes,
@@ -26,7 +26,7 @@ var Values = map[string]func() []string{
 
 var tempDir = ""
 
-func productTypeStr(productTypes []vangogh_data.ProductType) []string {
+func productTypeStr(productTypes []vangogh_local_data.ProductType) []string {
 	ptsStr := make([]string, 0, len(productTypes))
 	for _, pt := range productTypes {
 		ptsStr = append(ptsStr, pt.String())
@@ -35,15 +35,15 @@ func productTypeStr(productTypes []vangogh_data.ProductType) []string {
 }
 
 func remoteProductTypes() []string {
-	return productTypeStr(vangogh_data.RemoteProducts())
+	return productTypeStr(vangogh_local_data.RemoteProducts())
 }
 
 func localProductTypes() []string {
-	return productTypeStr(vangogh_data.LocalProducts())
+	return productTypeStr(vangogh_local_data.LocalProducts())
 }
 
 func media() []string {
-	media := gog_atu.AllMedia()
+	media := gog_integration.AllMedia()
 	mediaStr := make([]string, 0, len(media))
 	for _, md := range media {
 		mediaStr = append(mediaStr, md.String())
@@ -52,7 +52,7 @@ func media() []string {
 }
 
 func imageTypes() []string {
-	its := vangogh_data.AllImageTypes()
+	its := vangogh_local_data.AllImageTypes()
 	itsStr := make([]string, 0, len(its))
 	for _, it := range its {
 		itsStr = append(itsStr, it.String())
@@ -61,7 +61,7 @@ func imageTypes() []string {
 }
 
 func operatingSystems() []string {
-	oss := vangogh_data.AllOperatingSystems()
+	oss := vangogh_local_data.AllOperatingSystems()
 	ossStr := make([]string, 0, len(oss))
 	for _, os := range oss {
 		ossStr = append(ossStr, strings.ToLower(os.String()))
@@ -70,7 +70,7 @@ func operatingSystems() []string {
 }
 
 func downloadTypes() []string {
-	dts := vangogh_data.AllDownloadTypes()
+	dts := vangogh_local_data.AllDownloadTypes()
 	dtsStr := make([]string, 0, len(dts))
 	for _, dt := range dts {
 		dtsStr = append(dtsStr, dt.String())
@@ -81,11 +81,11 @@ func downloadTypes() []string {
 func languageCodes() []string {
 	defaultLangCode := "en"
 	langCodes := []string{defaultLangCode}
-	rxa, err := vangogh_data.ConnectReduxAssets(vangogh_data.LanguageNameProperty)
+	rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.LanguageNameProperty)
 	if err != nil {
 		return langCodes
 	}
-	for _, lc := range rxa.Keys(vangogh_data.LanguageNameProperty) {
+	for _, lc := range rxa.Keys(vangogh_local_data.LanguageNameProperty) {
 		if lc == defaultLangCode {
 			continue
 		}
