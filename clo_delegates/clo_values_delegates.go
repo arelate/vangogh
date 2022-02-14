@@ -12,7 +12,7 @@ var Values = map[string]func() []string{
 	"remote-product-types":  remoteProductTypes,
 	"local-product-types":   localProductTypes,
 	"image-types":           imageTypes,
-	"extracted-properties":  vangogh_local_data.ExtractedProperties,
+	"redux-properties":      vangogh_local_data.ReduxProperties,
 	"all-properties":        vangogh_local_data.AllProperties,
 	"searchable-properties": vangogh_local_data.SearchableProperties,
 	"digestible-properties": vangogh_local_data.DigestibleProperties,
@@ -21,10 +21,7 @@ var Values = map[string]func() []string{
 	"language-codes":        languageCodes,
 	"sync-options":          syncOptions,
 	"vet-options":           vetOptions,
-	"temp-directory":        getTempDir,
 }
-
-var tempDir = ""
 
 func productTypeStr(productTypes []vangogh_local_data.ProductType) []string {
 	ptsStr := make([]string, 0, len(productTypes))
@@ -121,14 +118,4 @@ func vetOptions() []string {
 		cli.VetOptionInvalidData,
 		cli.VetOptionUnresolvedManualUrls,
 	})
-}
-
-func SetTempDir(td string) {
-	tempDir = td
-}
-
-func getTempDir() []string {
-	return []string{
-		tempDir,
-	}
 }

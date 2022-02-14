@@ -8,7 +8,7 @@ import (
 	"bytes"
 	_ "embed"
 	"github.com/arelate/vangogh_cli_api/cli"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/vangogh_cli_api/cli/dirs"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/clo_delegates"
@@ -49,10 +49,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	//TODO: Move this to vangogh_cli_api as SetTempDir
-	clo_delegates.SetTempDir(tempDir)
-	//TODO: Rename this to SetStateDir
-	vangogh_local_data.ChRoot(stateDir)
+	//set directories context in vangogh_cli_api
+	dirs.SetTempDir(tempDir)
+	dirs.SetStateDir(stateDir)
 
 	defs, err := clo.Load(
 		bytes.NewBuffer(cliCommands),
@@ -95,7 +94,6 @@ func main() {
 		"cleanup":          cli.CleanupHandler,
 		"digest":           cli.DigestHandler,
 		"export":           cli.ExportHandler,
-		"extract":          cli.ExtractHandler,
 		"get-data":         cli.GetDataHandler,
 		"get-downloads":    cli.GetDownloadsHandler,
 		"get-images":       cli.GetImagesHandler,
@@ -103,8 +101,7 @@ func main() {
 		"info":             cli.InfoHandler,
 		"list":             cli.ListHandler,
 		"owned":            cli.OwnedHandler,
-		"version":          version.VersionHander,
-		"vet":              cli.VetHandler,
+		"reduce":           cli.ReduceHandler,
 		"search":           cli.SearchHandler,
 		"serve":            cli.ServeHandler,
 		"size":             cli.SizeHandler,
@@ -113,6 +110,8 @@ func main() {
 		"tag":              cli.TagHandler,
 		"update-downloads": cli.UpdateDownloadsHandler,
 		"validate":         cli.ValidateHandler,
+		"version":          version.VersionHander,
+		"vet":              cli.VetHandler,
 		"wishlist":         cli.WishlistHandler,
 	})
 
@@ -153,6 +152,23 @@ func readUserDirectories() error {
 	}
 	if td, ok := dirs["temp"]; ok {
 		tempDir = td
+	}
+
+	//validate that directories actually exist
+	if _, err := os.Stat(configDir); err != nil {
+		return err
+	}
+
+	if _, err := os.Stat(logsDir); err != nil {
+		return err
+	}
+
+	if _, err := os.Stat(stateDir); err != nil {
+		return err
+	}
+
+	if _, err := os.Stat(tempDir); err != nil {
+		return err
 	}
 
 	return nil

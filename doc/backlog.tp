@@ -1,42 +1,12 @@
 Issues:
 	No known at the moment
-	- investigate weird api-product-v1 URLs
-		- probably it's not a problem, just formatting attempting to add %something values (URL encoded query string)
-		- need to adjust nod to fix that
 
-General improvements:
-	- allow setting operation "context" - working directory and such
-	- rename extract -> reduce
-	- gog_integration.ValidMedia -> IsValidMedia
-	- Resolve new TODOs in vangogh_cli_api
-	- Deprecate gost from _api, move useful code to _data
-
-Finish directories refactor:
-	- consider consolidating setting directories in vangogh_cli_api where they are used
-
-Extract improvements:
+Redux improvements:
 	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
 		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
 		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
-		- I think during gog-order-date extraction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
+		- I think during gog-order-date reduction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
 		- Investigate if there are other properties like that - that would benefit from such cascade
-
-Cleanup improvments:
-	- need to trim paths relative to RootDir()
-
-Search improvements:
-	- search -dev "Sysiac" doesn't highlight developer, vangogh search -dev "sysiac" does
-
-Improve time based parameters:
-	- expand hours into a minimal human readable variants
-	- review all of the parameters and find opportunity for url helpers
-
-Improvements to vangogh backend:
-	
-yt-urls improvements:
-	- support login required videos
-		- 14 videos at this moment
-		- redownload missing videos for that reason
 
 Documentation:
 	- update modules documentation:
@@ -45,6 +15,30 @@ Documentation:
 	- document vangogh_local_data
 
 Archive:
+	yt-urls improvements: @done(2022-02-13)
+		- support login required videos @done(2022-02-13)
+			- 14 videos at this moment @done(2022-02-13)
+			- redownload missing videos for that reason @done(2022-02-13)
+	Search improvements: @done(2022-02-13)
+		- search -dev "Sysiac" doesn't highlight developer, vangogh search -dev "sysiac" does @done(2022-02-13)
+	- investigate weird api-product-v1 URLs @done(2022-02-13) @project(Issues)
+		- probably it's not a problem, just formatting attempting to add %something values (URL encoded query string) @done(2022-02-13)
+		- need to adjust nod to fix that @done(2022-02-13)
+	General improvements: @done(2022-02-13)
+		- Deprecate gost from _api, move useful code to _data @done(2022-02-13)
+	Cleanup improvments: @done(2022-02-13)
+		- need to trim paths relative to RootDir() @done(2022-02-13)
+	Improve time based parameters: @done(2022-02-13)
+		- expand hours into a minimal human readable variants @done(2022-02-13)
+		- review all of the parameters and find opportunity for url helpers @done(2022-02-13)
+	- allow setting operation "context" - working directory and such @done(2022-02-13) @project(General improvements)
+	- rename extract -> reduce @done(2022-02-13) @project(General improvements)
+	Finish directories refactor: @done(2022-02-13)
+		- consider consolidating setting directories in vangogh_cli_api where they are used @done(2022-02-13)
+	Improvements to vangogh backend: @done(2022-02-12)
+		
+	- gog_integration.ValidMedia -> IsValidMedia @done(2022-02-12) @project(General improvements)
+	- Resolve new TODOs in vangogh_cli_api @done(2022-02-12) @project(General improvements)
 	- Cleanup module names: @done(2022-02-12) @project(General improvements)
 		- Replace "_" with "-" and consider if there are other name changes required @done(2022-02-12)
 		- gog_integration -> gog-integration @done(2022-02-12)

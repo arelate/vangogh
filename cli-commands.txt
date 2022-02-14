@@ -1,7 +1,14 @@
+# Decorators legend:
+# $ - supports environmental variable value
+# ^ - default property, value
+# & - supports multiple values
+# * - required value
+# {} - placeholder values
+# {^} - placeholder values, first value is default
+
 auth
     username
     password
-    temp-directory={temp-directory^}
 
 cleanup
     id^&
@@ -17,11 +24,6 @@ digest
     property^={digestible-properties}
 
 export
-    temp-directory={temp-directory^}
-
-extract
-    media={media^}
-    property&={extracted-properties}
 
 get-data
     id&
@@ -30,8 +32,8 @@ get-data
     media={media^}
     missing
     updated
+    since-hours-ago
     skip-id&
-    temp-directory={temp-directory^}
 
 get-downloads
     id^&
@@ -42,7 +44,6 @@ get-downloads
     language-code&={language-codes^}
     missing
     force-update
-    temp-directory={temp-directory^}
 
 get-images
     id&
@@ -74,6 +75,10 @@ owned
     id^&
     slug&
 
+reduce
+    media={media^}
+    property&={redux-properties}
+
 search
     media={media^}
     {searchable-properties^&}
@@ -102,7 +107,6 @@ sync
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
-    temp-directory={temp-directory^}
     updates-only
     {sync-options^&}
 
@@ -111,7 +115,6 @@ tag
     slug
     operation^=create,delete,edit,add,remove
     tag-name
-    temp-directory={temp-directory^}
 
 update-downloads
     media={media^}
@@ -119,7 +122,6 @@ update-downloads
     download-type&={download-types^}
     language-code&={language-codes^}
     since-hours-ago
-    temp-directory={temp-directory^}
     updates-only
 
 validate
@@ -145,4 +147,3 @@ wishlist
     media={media^}
     add&
     remove&
-    temp-directory={temp-directory^}

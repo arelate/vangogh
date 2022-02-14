@@ -7,7 +7,7 @@ require (
 	github.com/arelate/vangogh_cli_api v0.2.21
 	github.com/arelate/vangogh_local_data v0.1.5
 	github.com/boggydigital/clo v0.3.1
-	github.com/boggydigital/nod v0.1.10
+	github.com/boggydigital/nod v0.1.11
 	github.com/boggydigital/wits v0.2.3
 )
 
@@ -19,4 +19,9 @@ require (
 	github.com/boggydigital/match_node v0.1.5 // indirect
 	github.com/boggydigital/yt_urls v0.1.7 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+)
+
+replace (
+	github.com/arelate/vangogh_cli_api => ../vangogh_cli_api
+	github.com/arelate/vangogh_local_data => ../vangogh_local_data
 )
