@@ -1,20 +1,18 @@
 Issues:
 	No known at the moment
 
-Redux improvements:
-	- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet)
-		- Looking at the data: Psychonauts 2 is details is 1731504234 that doesn't have gog-order-date
-		- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234)
-		- I think during gog-order-date reduction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug)
-		- Investigate if there are other properties like that - that would benefit from such cascade
-
-Documentation:
-	- update modules documentation:
-		- clo
-	- add clo-help.txt
-	- document vangogh_local_data
-
 Archive:
+	Documentation: @done(2022-02-13)
+		- update modules documentation: @done(2022-02-13)
+			- clo @done(2022-02-13)
+		- add clo-help.txt @done(2022-02-13)
+		- document vangogh_local_data @done(2022-02-13)
+	Redux improvements: @done(2022-02-13)
+		- details gog-order-date sorting doesn't show some recent games (Psychonauts 2, Journey to the Savage Planet) @done(2022-02-13)
+			- Looking at the data: Psychonauts 2 details is 1731504234 that doesn't have gog-order-date @done(2022-02-13)
+			- Store-product Psychonauts 2 is 1508046796 that has that, as well as includes-games:Psychonauts 2 (1731504234) @done(2022-02-13)
+			- I think during gog-order-date reduction we need to cascade properties to includes-games (we'll start with gog-order-date to fix this bug) @done(2022-02-13)
+			- Investigate if there are other properties like that - that would benefit from such cascade @done(2022-02-13)
 	yt-urls improvements: @done(2022-02-13)
 		- support login required videos @done(2022-02-13)
 			- 14 videos at this moment @done(2022-02-13)
