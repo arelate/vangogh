@@ -85,7 +85,7 @@ search
     {searchable-properties^&}
 
 serve
-    port
+    port*
     stderr
 
 size
