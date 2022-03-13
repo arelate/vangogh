@@ -85,8 +85,8 @@ search
     {searchable-properties^&}
 
 serve
-    port*
-    stderr
+    port$*
+    stderr$
 
 size
     id^&
