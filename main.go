@@ -120,6 +120,26 @@ func main() {
 		os.Exit(1)
 	}
 
+	//rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.ReduxProperties()...)
+	//if err != nil {
+	//	log.Fatalln(err)
+	//}
+	//
+	//sortProperty := vangogh_local_data.GOGOrderDateProperty
+	//
+	//idSet := vangogh_local_data.IdSetFromSlice("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
+	//sorted := idSet.Sort(rxa, sortProperty, true)
+	//
+	//fmt.Println()
+	//for _, id := range sorted {
+	//	title, _ := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id)
+	//	sp, _ := rxa.GetFirstVal(sortProperty, id)
+	//
+	//	fmt.Println(id, title, sp)
+	//}
+	//
+	//return
+
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
