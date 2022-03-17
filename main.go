@@ -9,13 +9,11 @@ import (
 	_ "embed"
 	"github.com/arelate/vangogh_cli_api/cli"
 	"github.com/arelate/vangogh_cli_api/cli/dirs"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/vangogh/clo_delegates"
 	"github.com/boggydigital/vangogh/version"
 	"github.com/boggydigital/wits"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -121,12 +119,6 @@ func main() {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
-
-	if err := cli.GetImages(nil, []vangogh_local_data.ImageType{vangogh_local_data.Screenshots}, true); err != nil {
-		log.Fatalln(err)
-	}
-
-	return
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
