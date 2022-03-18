@@ -114,6 +114,7 @@ func syncOptions() []string {
 func vetOptions() []string {
 	return options([]string{
 		cli.VetOptionLocalOnlyData,
+		cli.VetOptionLocalOnlyImages,
 		cli.VetOptionRecycleBin,
 		cli.VetOptionInvalidData,
 		cli.VetOptionUnresolvedManualUrls,
