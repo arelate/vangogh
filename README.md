@@ -36,7 +36,7 @@ services:
 The recommended way to enjoy the data sync'd by `vangogh` is [arelate/gaugin](github.com/arelate/gaugin). `gaugin` is a read-only view and doesn't change the data. To update your data you can use `vangogh` with a CLI interface to get and maintain all the publicly available GOG.com data, including your account data (game installers):
 
 - in the same folder with `docker-compose.yaml` config use `docker-compose exec vangogh vg <command> <options>`
-- most commonly you would run sync `docker-compose exec vangogh vg sync -all` that gets all available data from GOG.com
+- most commonly you would run sync `docker-compose exec vangogh vg sync -all` that gets all available data from GOG.com. Sync is optimized to get as little data as possible on each run - only the newly added images, videos and updated installers. There is no great way to determine if metadata was updated remotely, so all of it is fetched on each sync - however upon doing that `vangogh` would know exactly what changed and use this information to optimize decisions.
 
 ### Disk space requirements
 
