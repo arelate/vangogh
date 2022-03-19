@@ -38,7 +38,7 @@ The recommended way to enjoy the data sync'd by `vangogh` is [arelate/gaugin](gi
 - in the same folder with `docker-compose.yaml` config use `docker-compose exec vangogh vg <command> <options>`
 - most commonly you would run sync `docker-compose exec vangogh vg sync -all` that gets all available data from GOG.com
 
-### Make sure you have available disk space
+### Disk space requirements
 
 Please note that all data === a lot of data, so make sure you have space available or use specific options to get what you need (any combination of `-data -images -screenshots -videos -downloads`)
 
