@@ -3,13 +3,7 @@ RUN apk add --no-cache --update git
 ADD . /go/src/app
 WORKDIR /go/src/app
 RUN go get ./...
-RUN go build \
-    -o vg \
-    -ldflags="-s -w \
-    -X 'github.com/boggydigital/vangogh/version.Version=`git describe --tags --abbrev=0`' \
-    -X 'github.com/boggydigital/vangogh/version.Commit=`git rev-parse --short HEAD`' \
-    -X 'github.com/boggydigital/vangogh/version.BuildDate=`date +%FT%T%z`'" \
-    main.go
+RUN CGO_ENABLED=0 go build -o vg main.go
 
 FROM alpine
 COPY --from=build /go/src/app/vg /usr/bin/vg

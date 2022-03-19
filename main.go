@@ -11,8 +11,8 @@ import (
 	"github.com/arelate/vangogh_cli_api/cli/dirs"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/vangogh/app"
 	"github.com/boggydigital/vangogh/clo_delegates"
-	"github.com/boggydigital/vangogh/version"
 	"github.com/boggydigital/wits"
 	"os"
 	"path/filepath"
@@ -110,7 +110,7 @@ func main() {
 		"tag":              cli.TagHandler,
 		"update-downloads": cli.UpdateDownloadsHandler,
 		"validate":         cli.ValidateHandler,
-		"version":          version.VersionHander,
+		"version":          app.VersionHandler,
 		"vet":              cli.VetHandler,
 		"wishlist":         cli.WishlistHandler,
 	})
