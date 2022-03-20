@@ -3,7 +3,7 @@ RUN apk add --no-cache --update git
 ADD . /go/src/app
 WORKDIR /go/src/app
 RUN go get ./...
-RUN CGO_ENABLED=0 go build -o vg main.go
+RUN go build -o vg main.go
 
 FROM alpine
 COPY --from=build /go/src/app/vg /usr/bin/vg
