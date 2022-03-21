@@ -63,7 +63,7 @@ Here are available endpoints and parameters:
 - /v1/redux?property&id
 - /v1/search?text&(searchable properties)
 
-All endpoints support only GET requests and return JSON. No endpoint provides access to digital artifacts (images, videos, installers), since it's not effective to do that for `vangogh`. Given those files would need to be served by the front-end, you'd need access to the complete file payload in order to serve is efficiently (e.g. HTTP range requests). With this in mind, `vangogh` is focused on the metadata only and doesn't require authentication for any endpoint.
+All endpoints support only GET requests and return [gob data](https://go.dev/blog/gob) (format parameter can be used to request JSON). No endpoint provides access to digital artifacts (images, videos, installers), since it's not effective to do that for `vangogh`. Given those files would need to be served by the front-end, you'd need access to the complete file payload in order to serve is efficiently (e.g. HTTP range requests). Instead, `vangogh` is focused on the metadata only and doesn't require authentication for any endpoint.
 
 ## Taking care of your data
 
