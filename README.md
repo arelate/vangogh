@@ -72,6 +72,7 @@ Syncing data keeps it in sync with GOG.com. As part of this process some data is
 - `cleanup` will take care of older downloads versions. `cleanup -all -test` will enumerate all installers that are not linked to most current data. `cleanup -all` (without `-test`) will move that stale data to `recycle_bin` under your state directory
 - `vet` will take care of various data problems, such as metadata that was downloaded earlier, and is not longer available at GOG.com. `vet -all` will run series of tests of data and print out recommendations. `vet -all -fix` will also attempt to repair the data.
 - `validate` will test installers you've downloaded using validation files provided by GOG.com. `validate -all` will do that for all installers (a very long process if you have a lot of them!). Please note that GOG.com is missing validation files for some installers and this will not be considered a critical error. 
+- you might notice that some recently purchased products still show "wishlisted" in `gaugin`. This is because `gaugin` uses types reduction to determine whether a product is in `wishlist-products`. To clear that up you need to run `vet -local-only-data -fix` to remove it from `wishlist-products`, then `reduce` to capture that fact in types reductions. In the future we'll find a better way to display wishlisted status that won't require this workaround.
 
 ## Sharing games
 
