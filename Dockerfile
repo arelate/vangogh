@@ -17,6 +17,8 @@ VOLUME /var/tmp
 VOLUME /var/log/vangogh
 #app artifacts: checksums, images, metadata, recycle_bin, videos
 VOLUME /var/lib/vangogh
+#ffmpeg (and dependencies) location
+VOLUME /usr/local/sbin
 
 ENTRYPOINT ["/usr/bin/vg"]
 CMD ["serve","-p", "1853", "-stderr"]
