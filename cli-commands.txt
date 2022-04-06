@@ -110,8 +110,9 @@ sync
     download-type&={download-types^}
     language-code&={language-codes^}
     updates-only
+    ffmpeg-cmd
     {sync-options^&}
-    fast
+
 
 tag
     id^
