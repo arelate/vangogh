@@ -55,7 +55,6 @@ get-images
 get-videos
     id&
     slug&
-    ffmpeg-cmd
     missing
 
 info
@@ -110,7 +109,6 @@ sync
     download-type&={download-types^}
     language-code&={language-codes^}
     updates-only
-    ffmpeg-cmd
     {sync-options^&}
 
 
