@@ -55,6 +55,7 @@ get-images
 get-videos
     id&
     slug&
+    ffmpeg-cmd
     missing
 
 info
@@ -110,6 +111,7 @@ sync
     language-code&={language-codes^}
     updates-only
     {sync-options^&}
+    fast
 
 tag
     id^
