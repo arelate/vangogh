@@ -52,6 +52,10 @@ get-images
     image-type&*^={image-types}
     media={media^}
 
+get-items
+    media={media^}
+    since-hours-ago
+
 get-videos
     id&
     slug&
@@ -108,7 +112,7 @@ sync
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
-    updates-only
+    fast
     {sync-options^&}
 
 

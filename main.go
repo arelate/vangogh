@@ -97,6 +97,7 @@ func main() {
 		"get-data":         cli.GetDataHandler,
 		"get-downloads":    cli.GetDownloadsHandler,
 		"get-images":       cli.GetImagesHandler,
+		"get-items":        cli.GetItemsHandler,
 		"get-videos":       cli.GetVideosHandler,
 		"info":             cli.InfoHandler,
 		"list":             cli.ListHandler,

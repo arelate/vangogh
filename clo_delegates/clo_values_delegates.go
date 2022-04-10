@@ -104,6 +104,7 @@ func options(opts []string) []string {
 func syncOptions() []string {
 	return options([]string{
 		cli.SyncOptionData,
+		cli.SyncOptionItems,
 		cli.SyncOptionImages,
 		cli.SyncOptionScreenshots,
 		cli.SyncOptionVideos,
