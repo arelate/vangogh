@@ -53,6 +53,7 @@ get-images
     media={media^}
 
 get-items
+    id&
     media={media^}
     since-hours-ago
 
@@ -114,7 +115,6 @@ sync
     language-code&={language-codes^}
     fast
     {sync-options^&}
-
 
 tag
     id^
