@@ -20,5 +20,3 @@ require (
 	golang.org/x/exp v0.0.0-20220328175248-053ad81199eb // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 )
-
-replace github.com/arelate/vangogh_local_data => ../vangogh_local_data
