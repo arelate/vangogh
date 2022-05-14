@@ -119,5 +119,6 @@ func vetOptions() []string {
 		cli.VetOptionRecycleBin,
 		cli.VetOptionInvalidData,
 		cli.VetOptionUnresolvedManualUrls,
+		cli.VetOptionInvalidResolvedManualUrls,
 	})
 }
