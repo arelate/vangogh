@@ -113,7 +113,6 @@ sync
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
-    fast
     {sync-options^&}
 
 tag
