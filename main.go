@@ -101,6 +101,7 @@ func main() {
 		"get-videos":       cli.GetVideosHandler,
 		"info":             cli.InfoHandler,
 		"list":             cli.ListHandler,
+		"local-tag":        cli.LocalTagHandler,
 		"owned":            cli.OwnedHandler,
 		"reduce":           cli.ReduceHandler,
 		"search":           cli.SearchHandler,

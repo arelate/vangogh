@@ -76,6 +76,12 @@ list
     property&={all-properties}
     since-hours-ago
 
+local-tag
+    id^
+    slug
+    operation^=add,remove
+    tag-name
+
 owned
     id^&
     slug&
