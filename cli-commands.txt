@@ -77,7 +77,7 @@ list
     since-hours-ago
 
 local-tag
-    id^
+    id^&
     slug
     operation^=add,remove
     tag-name
