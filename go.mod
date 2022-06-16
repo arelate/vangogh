@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/arelate/gog_integration v0.1.19
-	github.com/arelate/vangogh_cli_api v0.3.52
+	github.com/arelate/vangogh_cli_api v0.3.53
 	github.com/arelate/vangogh_local_data v0.1.72
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/nod v0.1.19
@@ -19,6 +19,6 @@ require (
 	github.com/boggydigital/match_node v0.1.5 // indirect
 	github.com/boggydigital/middleware v0.1.0 // indirect
 	github.com/boggydigital/yt_urls v0.1.13 // indirect
-	golang.org/x/exp v0.0.0-20220428152302-39d4317da171 // indirect
-	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
+	golang.org/x/exp v0.0.0-20220613132600-b0d781184e0d // indirect
+	golang.org/x/net v0.0.0-20220615171555-694bf12d69de // indirect
 )
