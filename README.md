@@ -74,11 +74,11 @@ The recommended way to enjoy the data sync'd by `vangogh` is [arelate/gaugin](ht
 
 ### Disk space requirements
 
-Please note that all data === a lot of data, so make sure you have space available or use specific options to get what you need (any combination of `-data -images -screenshots -videos -downloads`)
+Please note that all data === a lot of data, so make sure you have space available or use specific options to get what you need (any combination of `-data -images -screenshots -videos -thumbnails -downloads`)
 
-Here are some current estimates of how much space you'll need for each type of data:
+Here are few estimates of how much space you'll need for each type of data:
 
-- core metadata (Store, Account, Wishlist products and associated detailed data): 1.3Gb
+- core metadata (Store, Account, Wishlist products and associated detailed data; Steam reviews, product pages, app list): 1.3Gb
 - images, including screenshots: 30Gb
 - description items: 6.5Gb
 - videos: 76Gb
@@ -88,7 +88,7 @@ Here are some current estimates of how much space you'll need for each type of d
 
 ## REST API
 
-The default installation method provided above would start a web service that can serve available data over HTTP REST API. 
+The default installation method provided above would start a web service that serves available data over HTTP REST API. 
 
 Here are available endpoints and parameters:
 
@@ -99,7 +99,7 @@ Here are available endpoints and parameters:
 - /v1/redux?property&id
 - /v1/search?text&(searchable properties)
 
-All endpoints support only GET requests and return [gob data](https://go.dev/blog/gob) (format parameter can be used to request JSON). No endpoint provides access to digital artifacts (images, videos, installers), since it's not effective to do that for `vangogh`. Given those files would need to be served by the front-end, you'd need access to the complete file payload in order to serve is efficiently (e.g. HTTP range requests). Instead, `vangogh` is focused on the metadata only and doesn't require authentication for any endpoint.
+All endpoints support only GET requests and return [gob data](https://go.dev/blog/gob) (`format` parameter can be used to request JSON). No endpoint provides access to digital artifacts (images, videos, installers), since it's not effective to do that for `vangogh`. Given those files would need to be served by the front-end, you'd need access to the complete file payload in order to serve is efficiently (e.g. HTTP range requests). Instead, `vangogh` is focused on the metadata only and doesn't require authentication for any endpoint. You likely don't want it exposed to the public internet.
 
 ## Taking care of your data
 
