@@ -78,10 +78,11 @@ Please note that all data === a lot of data, so make sure you have space availab
 
 Here are some current estimates of how much space you'll need for each type of data:
 
-- core metadata (Store, Account, Wishlist products and associated detailed data): 400Mb
+- core metadata (Store, Account, Wishlist products and associated detailed data): 1.3Gb
 - images, including screenshots: 30Gb
-- description items: 6Gb
-- videos: 73Gb
+- description items: 6.5Gb
+- videos: 76Gb
+- thumbnails: 400 Mb
 - checksums (automatically downloaded with installers for validation): 120Mb
 - product installers: estimate is about 6.5Tb for 1000 products for installers for the 10 most common languages for all operating systems (just Windows and English is about half of that)
 
