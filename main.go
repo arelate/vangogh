@@ -98,6 +98,7 @@ func main() {
 		"get-downloads":    cli.GetDownloadsHandler,
 		"get-images":       cli.GetImagesHandler,
 		"get-items":        cli.GetItemsHandler,
+		"get-thumbnails":   cli.GetThumbnailsHandler,
 		"get-videos":       cli.GetVideosHandler,
 		"info":             cli.InfoHandler,
 		"list":             cli.ListHandler,

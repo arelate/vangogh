@@ -57,6 +57,11 @@ get-items
     media={media^}
     since-hours-ago
 
+get-thumbnails
+    id&
+    slug&
+    missing
+
 get-videos
     id&
     slug&

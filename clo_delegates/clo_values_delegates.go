@@ -108,6 +108,7 @@ func syncOptions() []string {
 		cli.SyncOptionImages,
 		cli.SyncOptionScreenshots,
 		cli.SyncOptionVideos,
+		cli.SyncOptionThumbnails,
 		cli.SyncOptionDownloadsUpdates,
 	})
 }
