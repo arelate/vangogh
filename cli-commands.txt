@@ -20,6 +20,9 @@ cleanup
     all
     test
 
+dehydrate-images
+    media={media^}
+
 digest
     property^={digestible-properties}
 
