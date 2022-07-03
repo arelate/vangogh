@@ -92,7 +92,6 @@ func main() {
 	clo.HandleFuncs(map[string]clo.Handler{
 		"auth":             cli.AuthHandler,
 		"cleanup":          cli.CleanupHandler,
-		"dehydrate-images": cli.DehydrateImagesHandler,
 		"digest":           cli.DigestHandler,
 		"export":           cli.ExportHandler,
 		"get-data":         cli.GetDataHandler,
