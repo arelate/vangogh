@@ -95,6 +95,7 @@ reduce
     media={media^}
     property&={redux-properties}
     since-hours-ago
+    dehydrate-images
 
 search
     media={media^}
