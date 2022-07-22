@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/arelate/gog_integration v0.1.20
-	github.com/arelate/vangogh_cli_api v0.3.88
-	github.com/arelate/vangogh_local_data v0.2.1
+	github.com/arelate/vangogh_cli_api v0.3.89
+	github.com/arelate/vangogh_local_data v0.2.3
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/nod v0.1.20
 	github.com/boggydigital/wits v0.2.3
