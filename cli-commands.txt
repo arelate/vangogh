@@ -20,6 +20,8 @@ cleanup
     all
     test
 
+dehydrate-images
+
 digest
     property^={digestible-properties}
 
@@ -95,7 +97,7 @@ reduce
     media={media^}
     property&={redux-properties}
     since-hours-ago
-    dehydrate-images
+    properties-only
 
 search
     media={media^}
