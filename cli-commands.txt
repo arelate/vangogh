@@ -21,6 +21,8 @@ cleanup
     test
 
 dehydrate-images
+    id^&
+    force
 
 digest
     property^={digestible-properties}
@@ -45,7 +47,7 @@ get-downloads
     download-type&={download-types^}
     language-code&={language-codes^}
     missing
-    force-update
+    force
 
 get-images
     id&
@@ -63,11 +65,13 @@ get-thumbnails
     id&
     slug&
     missing
+    force
 
 get-videos
     id&
     slug&
     missing
+    force
 
 info
     id^&
