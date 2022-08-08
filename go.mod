@@ -3,9 +3,9 @@ module github.com/boggydigital/vangogh
 go 1.18
 
 require (
-	github.com/arelate/gog_integration v0.1.24
-	github.com/arelate/vangogh_cli_api v0.4.2
-	github.com/arelate/vangogh_local_data v0.2.12
+	github.com/arelate/gog_integration v0.1.25
+	github.com/arelate/vangogh_cli_api v0.4.3
+	github.com/arelate/vangogh_local_data v0.2.13
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/nod v0.1.20
 	github.com/boggydigital/wits v0.2.3
