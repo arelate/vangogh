@@ -123,5 +123,6 @@ func vetOptions() []string {
 		cli.VetOptionInvalidData,
 		cli.VetOptionUnresolvedManualUrls,
 		cli.VetOptionInvalidResolvedManualUrls,
+		cli.VetOptionStaleDehydratedImages,
 	})
 }
