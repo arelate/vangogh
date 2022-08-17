@@ -1,4 +1,4 @@
-module github.com/boggydigital/vangogh
+module github.com/arelate/vangogh
 
 go 1.19
 
