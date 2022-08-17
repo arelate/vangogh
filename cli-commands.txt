@@ -61,6 +61,9 @@ get-items
     media={media^}
     since-hours-ago
 
+get-summary
+    media={media^}
+
 get-thumbnails
     id&
     slug&
@@ -121,8 +124,9 @@ size
     missing
     all
 
-summary
+summarize
     media={media^}
+    since-hours-ago
 
 sync
     media={media^}

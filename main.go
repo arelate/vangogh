@@ -7,6 +7,9 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"os"
+	"path/filepath"
+
 	"github.com/arelate/vangogh_cli_api/cli"
 	"github.com/arelate/vangogh_cli_api/cli/dirs"
 	"github.com/boggydigital/clo"
@@ -14,8 +17,6 @@ import (
 	"github.com/boggydigital/vangogh/app"
 	"github.com/boggydigital/vangogh/clo_delegates"
 	"github.com/boggydigital/wits"
-	"os"
-	"path/filepath"
 )
 
 var (
@@ -99,6 +100,7 @@ func main() {
 		"get-downloads":    cli.GetDownloadsHandler,
 		"get-images":       cli.GetImagesHandler,
 		"get-items":        cli.GetItemsHandler,
+		"get-summary":      cli.GetSummaryHandler,
 		"get-thumbnails":   cli.GetThumbnailsHandler,
 		"get-videos":       cli.GetVideosHandler,
 		"info":             cli.InfoHandler,
@@ -109,7 +111,7 @@ func main() {
 		"search":           cli.SearchHandler,
 		"serve":            cli.ServeHandler,
 		"size":             cli.SizeHandler,
-		"summary":          cli.SummaryHandler,
+		"summarize":        cli.SummarizeHandler,
 		"sync":             cli.SyncHandler,
 		"tag":              cli.TagHandler,
 		"update-downloads": cli.UpdateDownloadsHandler,
