@@ -90,14 +90,7 @@ Here are few estimates of how much space you'll need for each type of data:
 
 The default installation method provided above would start a web service that serves available data over HTTP REST API. 
 
-Here are available endpoints and parameters:
-
-- /v1/all_redux?property&product-type&media
-- /v1/data?product-type&media&id
-- /v1/downloads?id&operating-system&language-code
-- /v1/keys?product-type&media&sort&desc
-- /v1/redux?property&id
-- /v1/search?text&(searchable properties)
+Here is a list of [all endpoints that vangogh supports](https://github.com/arelate/vangogh_cli_api/blob/main/rest/routing.go).
 
 All endpoints support only GET requests and return [gob data](https://go.dev/blog/gob) (`format` parameter can be used to request JSON). No endpoint provides access to digital artifacts (images, videos, installers), since it's not effective to do that for `vangogh`. Given those files would need to be served by the front-end, you'd need access to the complete file payload in order to serve is efficiently (e.g. HTTP range requests). Instead, `vangogh` is focused on the metadata only and doesn't require authentication for any endpoint. You likely don't want it exposed to the public internet.
 

@@ -13,7 +13,6 @@ auth
 cleanup
     id^&
     slug&
-    media={media^}
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
@@ -33,7 +32,6 @@ get-data
     id&
     slug&
     product-type*^={remote-product-types}
-    media={media^}
     missing
     updated
     since-hours-ago
@@ -42,7 +40,6 @@ get-data
 get-downloads
     id^&
     slug&
-    media={media^}
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
@@ -54,15 +51,12 @@ get-images
     slug&
     missing
     image-type&*^={image-types}
-    media={media^}
 
 get-items
     id&
-    media={media^}
     since-hours-ago
 
 get-summary
-    media={media^}
 
 get-thumbnails
     id&
@@ -79,14 +73,12 @@ get-videos
 info
     id^&
     slug&
-    media={media^}
     all-text
     images
     video-id
 
 list
     product-type^*={local-product-types}
-    media={media^}
     property&={all-properties}
     since-hours-ago
 
@@ -101,13 +93,11 @@ owned
     slug&
 
 reduce
-    media={media^}
     property&={redux-properties}
     since-hours-ago
     properties-only
 
 search
-    media={media^}
     {searchable-properties^&}
 
 serve
@@ -117,7 +107,6 @@ serve
 size
     id^&
     slug&
-    media={media^}
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
@@ -125,11 +114,9 @@ size
     all
 
 summarize
-    media={media^}
     since-hours-ago
 
 sync
-    media={media^}
     since-hours-ago
     operating-system&={operating-systems^}
     download-type&={download-types^}
@@ -143,7 +130,6 @@ tag
     tag-name
 
 update-downloads
-    media={media^}
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
@@ -153,7 +139,6 @@ update-downloads
 validate
     id^&
     slug&
-    media={media^}
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
@@ -162,7 +147,6 @@ validate
 version
 
 vet
-    media={media^}
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
@@ -170,6 +154,5 @@ vet
     {vet-options^&}
 
 wishlist
-    media={media^}
     add&
     remove&

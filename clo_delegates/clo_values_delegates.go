@@ -1,14 +1,12 @@
 package clo_delegates
 
 import (
-	"github.com/arelate/gog_integration"
 	"github.com/arelate/vangogh_cli_api/cli"
 	"github.com/arelate/vangogh_local_data"
 	"strings"
 )
 
 var Values = map[string]func() []string{
-	"media":                 media,
 	"remote-product-types":  remoteProductTypes,
 	"local-product-types":   localProductTypes,
 	"image-types":           imageTypes,
@@ -39,15 +37,6 @@ func remoteProductTypes() []string {
 
 func localProductTypes() []string {
 	return productTypeStr(vangogh_local_data.LocalProducts())
-}
-
-func media() []string {
-	media := gog_integration.AllMedia()
-	mediaStr := make([]string, 0, len(media))
-	for _, md := range media {
-		mediaStr = append(mediaStr, md.String())
-	}
-	return mediaStr
 }
 
 func imageTypes() []string {
