@@ -7,9 +7,6 @@ package main
 import (
 	"bytes"
 	_ "embed"
-	"os"
-	"path/filepath"
-
 	"github.com/arelate/vangogh/app"
 	"github.com/arelate/vangogh/clo_delegates"
 	"github.com/arelate/vangogh_cli_api/cli"
@@ -17,6 +14,8 @@ import (
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/wits"
+	"os"
+	"path/filepath"
 )
 
 var (
