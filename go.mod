@@ -3,15 +3,15 @@ module github.com/arelate/vangogh
 go 1.19
 
 require (
-	github.com/arelate/vangogh_cli_api v0.4.22
-	github.com/arelate/vangogh_local_data v0.2.29
+	github.com/arelate/vangogh_cli_api v0.4.23
+	github.com/arelate/vangogh_local_data v0.2.30
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/nod v0.1.20
 	github.com/boggydigital/wits v0.2.3
 )
 
 require (
-	github.com/arelate/gog_integration v0.2.0 // indirect
+	github.com/arelate/gog_integration v0.2.1 // indirect
 	github.com/arelate/steam_integration v0.1.16 // indirect
 	github.com/boggydigital/coost v0.3.8 // indirect
 	github.com/boggydigital/dolo v0.2.4 // indirect
