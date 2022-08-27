@@ -7,10 +7,12 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"fmt"
 	"github.com/arelate/vangogh/app"
 	"github.com/arelate/vangogh/clo_delegates"
 	"github.com/arelate/vangogh_cli_api/cli"
 	"github.com/arelate/vangogh_cli_api/cli/dirs"
+	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/wits"
@@ -124,6 +126,26 @@ func main() {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
+
+	vrOrders, err := vangogh_local_data.NewReader(vangogh_local_data.Orders)
+	if err != nil {
+		panic(err)
+	}
+
+	statuses := make(map[string]interface{})
+
+	for _, id := range vrOrders.Keys() {
+		order, err := vrOrders.Order(id)
+		if err != nil {
+			panic(err)
+		}
+
+		statuses[order.Status] = nil
+	}
+
+	fmt.Println(statuses)
+
+	return
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
