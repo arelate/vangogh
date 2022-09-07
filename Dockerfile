@@ -21,4 +21,4 @@ VOLUME /var/lib/vangogh
 VOLUME /usr/local/sbin
 
 ENTRYPOINT ["/usr/bin/vg"]
-CMD ["serve","-p", "1853", "-stderr"]
+CMD ["serve","-port", "1853", "-stderr"]
