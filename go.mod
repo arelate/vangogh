@@ -3,8 +3,8 @@ module github.com/arelate/vangogh
 go 1.19
 
 require (
-	github.com/arelate/vangogh_cli_api v0.4.36
-	github.com/arelate/vangogh_local_data v0.2.39
+	github.com/arelate/vangogh_cli_api v0.4.37
+	github.com/arelate/vangogh_local_data v0.2.40
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/nod v0.1.20
 	github.com/boggydigital/wits v0.2.3
