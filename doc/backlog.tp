@@ -1,5 +1,7 @@
-Issues:
-	No known at the moment
+Backup feature:
+	- add backup command that exports data and moves to backup folder
+	- backup before (after?) every sync
+	- add vet to delete backups older than 30 days
 
 Archive:
 	Documentation: @done(2022-02-13)

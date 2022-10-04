@@ -10,6 +10,8 @@ auth
     username
     password
 
+backup
+
 cleanup
     id^&
     slug&
