@@ -1,6 +1,6 @@
 Backup feature:
-	- add backup command that exports data and moves to backup folder
-	- backup before (after?) every sync
+	- add backup command that exports data and moves to backup folder @done(2022-10-08)
+	- backup before (after?) every sync @done(2022-10-08)
 	- add vet to delete backups older than 30 days
 
 Archive:
