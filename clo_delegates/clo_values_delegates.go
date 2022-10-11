@@ -1,7 +1,7 @@
 package clo_delegates
 
 import (
-	"github.com/arelate/vangogh_cli_api/cli"
+	"github.com/arelate/vangogh/cli"
 	"github.com/arelate/vangogh_local_data"
 	"strings"
 )
@@ -113,7 +113,6 @@ func vetOptions() []string {
 		cli.VetOptionInvalidData,
 		cli.VetOptionUnresolvedManualUrls,
 		cli.VetOptionInvalidResolvedManualUrls,
-		cli.VetOptionStaleDehydratedImages,
 		cli.VetOptionMissingChecksums,
 	})
 }

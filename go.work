@@ -1,0 +1,10 @@
+go 1.18
+
+use .
+
+replace (
+	github.com/arelate/gog_integration => ../gog_integration
+	github.com/arelate/vangogh_local_data => ../vangogh_local_data
+	github.com/arelate/steam_integration => ../steam_integration
+	github.com/arelate/steam_integration => ../steam_integration
+)

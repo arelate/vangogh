@@ -21,10 +21,6 @@ cleanup
     all
     test
 
-dehydrate-images
-    id^&
-    force
-
 digest
     property^={digestible-properties}
 

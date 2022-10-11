@@ -8,9 +8,9 @@ import (
 	"bytes"
 	_ "embed"
 	"github.com/arelate/vangogh/app"
+	"github.com/arelate/vangogh/cli"
+	"github.com/arelate/vangogh/cli/dirs"
 	"github.com/arelate/vangogh/clo_delegates"
-	"github.com/arelate/vangogh_cli_api/cli"
-	"github.com/arelate/vangogh_cli_api/cli/dirs"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/wits"
@@ -93,7 +93,6 @@ func main() {
 		"auth":             cli.AuthHandler,
 		"backup":           cli.BackupHandler,
 		"cleanup":          cli.CleanupHandler,
-		"dehydrate-images": cli.DehydrateImagesHandler,
 		"digest":           cli.DigestHandler,
 		"export":           cli.ExportHandler,
 		"get-data":         cli.GetDataHandler,
