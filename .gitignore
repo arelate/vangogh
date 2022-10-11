@@ -7,3 +7,5 @@ images/*
 videos/*
 checksums/*
 downloads/*
+
+go.work
