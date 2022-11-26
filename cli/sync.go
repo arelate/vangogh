@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/arelate/vangogh/cli/reductions"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/wits"
@@ -160,11 +159,6 @@ func Sync(
 			imageTypes = append(imageTypes, it)
 		}
 		if err := GetImages(map[string]bool{}, imageTypes, true); err != nil {
-			return sa.EndWithError(err)
-		}
-
-		// dehydrating images after downloading
-		if err := reductions.DehydrateImages(nil, false); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
