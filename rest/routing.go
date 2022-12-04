@@ -14,6 +14,7 @@ var (
 
 func HandleFuncs() {
 	patternHandlers := map[string]http.Handler{
+		"/atom":      GetOnly(Log(http.HandlerFunc(GetAtom))),
 		"/data":      IfDataModifiedSince(GetOnly(Log(http.HandlerFunc(GetData)))),
 		"/digest":    IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetDigest)))),
 		"/downloads": IfDataModifiedSince(GetOnly(Log(http.HandlerFunc(GetDownloads)))),

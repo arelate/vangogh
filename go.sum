@@ -4,6 +4,8 @@ github.com/arelate/steam_integration v0.1.17 h1:XUT2Ac+ZLzs/vqdZIb9hMHue3yDMtKD4
 github.com/arelate/steam_integration v0.1.17/go.mod h1:rJZspnKCjmslFCiZMGHW8qdNJKludRxy+E3TTqM8mV0=
 github.com/arelate/vangogh_local_data v0.2.48 h1:2bB/63zPiBFY4kZKiJkmJfO18OSzi0+FHQJ/tEJisGo=
 github.com/arelate/vangogh_local_data v0.2.48/go.mod h1:LO/YhUJj8rACsxCuB8y/jgfND/uY9yn+y3+gBRXesu4=
+github.com/arelate/vangogh_local_data v0.2.49 h1:YQqdUPIgPuz1y+AXxocsmtINrU7iP5BMpkPzxLHbTnk=
+github.com/arelate/vangogh_local_data v0.2.49/go.mod h1:LO/YhUJj8rACsxCuB8y/jgfND/uY9yn+y3+gBRXesu4=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
