@@ -11,7 +11,7 @@ import (
 
 const (
 	atomXMLNS     = "http://www.w3.org/2005/Atom"
-	atomFeedTitle = "vangogh Atom feed"
+	atomFeedTitle = "vangogh sync updates"
 )
 
 type AtomFeed struct { // <feed xmlns="http://www.w3.org/2005/Atom">
@@ -62,7 +62,7 @@ func NewAtomFeed(rxa kvas.ReduxAssets, since int64, summary map[string][]string)
 			Published: updated.Format(time.RFC3339),
 			Author: &AtomEntryAuthor{
 				Name:  "Vincent van Gogh",
-				Email: "vincent@arelate",
+				Email: "vg@arelate",
 			},
 			Content: &AtomEntryContent{
 				Type:    "xhtml",
