@@ -51,8 +51,8 @@ type AtomEntryAuthor struct {
 	Email   string   `xml:"email"` // <email>johndoe@example.com</email>
 }
 
-func NewAtomFeed(rxa kvas.ReduxAssets, since int64, summary map[string][]string) *AtomFeed {
-	updated := time.Unix(since, 0)
+func NewAtomFeed(rxa kvas.ReduxAssets, summary map[string][]string) *AtomFeed {
+	updated := time.Now()
 	return &AtomFeed{
 		XMLNS:   atomXMLNS,
 		Title:   atomFeedTitle,

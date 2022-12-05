@@ -76,10 +76,10 @@ func Summarize(since int64) error {
 		sa.EndWithError(err)
 	}
 
-	was := nod.Begin("writing atom...")
+	was := nod.Begin("publishing atom...")
 	defer was.End()
 
-	if err := writeAtom(rxa, since, summary); err != nil {
+	if err := publishAtom(rxa, summary); err != nil {
 		return was.EndWithError(err)
 	}
 
@@ -109,14 +109,14 @@ func releasedToday(rxa kvas.ReduxAssets) ([]string, error) {
 	return rxa.Sort(ids, vangogh_local_data.DefaultDesc, vangogh_local_data.DefaultSort)
 }
 
-func writeAtom(rxa kvas.ReduxAssets, since int64, summary map[string][]string) error {
+func publishAtom(rxa kvas.ReduxAssets, summary map[string][]string) error {
 
 	atomFile, err := os.Create(vangogh_local_data.AbsAtomFeedPath())
 	if err != nil {
 		return err
 	}
 
-	atomFeed := NewAtomFeed(rxa, since, summary)
+	atomFeed := NewAtomFeed(rxa, summary)
 
 	if err := xml.NewEncoder(atomFile).Encode(atomFeed); err != nil {
 		return err
