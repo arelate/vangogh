@@ -5,38 +5,43 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kvas"
+	"golang.org/x/exp/maps"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
 
 const (
-	atomXMLNS     = "http://www.w3.org/2005/Atom"
-	atomFeedTitle = "vangogh sync updates"
+	atomXMLNS       = "http://www.w3.org/2005/Atom"
+	atomFeedTitle   = "vangogh sync updates"
+	atomEntryName   = "Vincent van Gogh"
+	atomContentType = "xhtml"
+	atomEntryTitle  = "Sync results "
 )
 
-type AtomFeed struct { // <feed xmlns="http://www.w3.org/2005/Atom">
-	XMLName xml.Name `xml:"feed"`
+type AtomFeed struct {
+	XMLName xml.Name `xml:"feed"` // <feed xmlns="http://www.w3.org/2005/Atom">
 	XMLNS   string   `xml:"xmlns,attr"`
 	Title   string   `xml:"title"` // <title>Example Feed</title>
 	//<subtitle>A subtitle.</subtitle>
 	//<link href="http://example.org/feed/" rel="self" />
 	//<link href="http://example.org/" />
-	//<id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>
 	Updated string     `xml:"updated"` // <updated>2003-12-13T18:30:02Z</updated>
 	Entry   *AtomEntry `xml:"entry"`
-} //</feed>
+}
 
 type AtomEntry struct {
 	Title string `xml:"title"` // <title>Atom-Powered Robots Run Amok</title>
 	// <link href="http://example.org/2003/12/13/atom03" />
 	// <link rel="alternate" type="text/html" href="http://example.org/2003/12/13/atom03.html"/>
 	// <link rel="edit" href="http://example.org/2003/12/13/atom03/edit"/>
-	// <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
-	Published string `xml:"published"` // <published>2003-11-09T17:23:02Z</published>
-	// <updated>2003-12-13T18:30:02Z</updated>
-	// <summary>Some text.</summary>
-	Author  *AtomEntryAuthor  `xml:"author"`
-	Content *AtomEntryContent `xml:"content"`
+	Id        string            `xml:"id"`                // <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+	Published string            `xml:"published"`         // <published>2003-11-09T17:23:02Z</published>
+	Updated   string            `xml:"updated"`           // <updated>2003-12-13T18:30:02Z</updated>
+	Summary   string            `xml:"summary,omitempty"` // <summary>Some text.</summary>
+	Author    *AtomEntryAuthor  `xml:"author"`
+	Content   *AtomEntryContent `xml:"content"`
 }
 
 type AtomEntryContent struct {
@@ -47,8 +52,8 @@ type AtomEntryContent struct {
 
 type AtomEntryAuthor struct {
 	XMLName xml.Name `xml:"author"`
-	Name    string   `xml:"name"`  // <name>John Doe</name>
-	Email   string   `xml:"email"` // <email>johndoe@example.com</email>
+	Name    string   `xml:"name"`            // <name>John Doe</name>
+	Email   string   `xml:"email,omitempty"` // <email>johndoe@example.com</email>
 }
 
 func NewAtomFeed(rxa kvas.ReduxAssets, summary map[string][]string) *AtomFeed {
@@ -58,14 +63,15 @@ func NewAtomFeed(rxa kvas.ReduxAssets, summary map[string][]string) *AtomFeed {
 		Title:   atomFeedTitle,
 		Updated: updated.Format(time.RFC3339),
 		Entry: &AtomEntry{
-			Title:     fmt.Sprintf("Sync results %s", updated.Format(time.RFC1123)),
+			Id:        strconv.FormatInt(updated.Unix(), 10),
+			Title:     atomEntryTitle + updated.Format(time.RFC1123),
 			Published: updated.Format(time.RFC3339),
+			Updated:   updated.Format(time.RFC3339),
 			Author: &AtomEntryAuthor{
-				Name:  "Vincent van Gogh",
-				Email: "vg@arelate",
+				Name: atomEntryName,
 			},
 			Content: &AtomEntryContent{
-				Type:    "xhtml",
+				Type:    atomContentType,
 				Content: NewAtomFeedContent(rxa, summary),
 			},
 		},
@@ -74,7 +80,11 @@ func NewAtomFeed(rxa kvas.ReduxAssets, summary map[string][]string) *AtomFeed {
 
 func NewAtomFeedContent(rxa kvas.ReduxAssets, summary map[string][]string) string {
 	sb := strings.Builder{}
-	for section := range summary {
+
+	sections := maps.Keys(summary)
+	sort.Strings(sections)
+
+	for _, section := range sections {
 		if len(summary[section]) == 0 {
 			continue
 		}
