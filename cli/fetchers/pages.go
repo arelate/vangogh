@@ -80,7 +80,10 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	gfp := nod.Begin(" getting the first %s...", pt)
 	defer gfp.End()
 
-	up := vangogh_local_data.NewUrlProvider(pt, nil)
+	up, err := vangogh_local_data.NewUrlProvider(pt, nil)
+	if err != nil {
+		return gfp.EndWithError(err)
+	}
 
 	//we need to handle the first page of the paged product type get-data request
 	//separately from the rest, because:

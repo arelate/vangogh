@@ -32,7 +32,10 @@ func Items(
 	//since we know how many ids need to be fetched, allocate URLs and idStrs to that number
 	urls, idStr := make([]*url.URL, len(ids)), make([]string, len(ids))
 
-	up := vangogh_local_data.NewUrlProvider(pt, rxa)
+	up, err := vangogh_local_data.NewUrlProvider(pt, rxa)
+	if err != nil {
+		return ia.EndWithError(err)
+	}
 
 	for i := 0; i < len(ids); i++ {
 		urls[i], idStr[i] = up.Url(ids[i]), ids[i]
