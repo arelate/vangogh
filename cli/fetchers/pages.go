@@ -80,10 +80,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	gfp := nod.Begin(" getting the first %s...", pt)
 	defer gfp.End()
 
-	remoteUrl, err := vangogh_local_data.RemoteProductsUrl(pt)
-	if err != nil {
-		return err
-	}
+	up := vangogh_local_data.NewUrlProvider(pt, nil)
 
 	//we need to handle the first page of the paged product type get-data request
 	//separately from the rest, because:
@@ -97,7 +94,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 
 	//construct a list of a single first page URL and page id "1"
 	urls, ids := make([]*url.URL, 1), make([]string, 1)
-	urls[0], ids[0] = remoteUrl(firstPage), firstPage
+	urls[0], ids[0] = up.Url(firstPage), firstPage
 
 	//initiate kvasIndexSetter using single page id "1"
 	kis, err := NewKvasIndexSetter(pt, ids)
@@ -141,7 +138,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	for i := 2; i <= tpp.GetTotalPages(); i++ {
 		page := strconv.Itoa(i)
 		//i-2 = first page (index: 0) will be 2
-		urls[i-2] = remoteUrl(page)
+		urls[i-2] = up.Url(page)
 		ids[i-2] = page
 	}
 

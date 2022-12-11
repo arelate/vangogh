@@ -2,10 +2,14 @@ github.com/arelate/gog_integration v0.2.8 h1:rOU8u+SBtiSy9X+U1gesstEQeqs24ghFiMJ
 github.com/arelate/gog_integration v0.2.8/go.mod h1:7DMkmzTgkG3zC1EFGwmo9MvBUFKNKZBY5oeXHlz9ROo=
 github.com/arelate/steam_integration v0.1.17 h1:XUT2Ac+ZLzs/vqdZIb9hMHue3yDMtKD4bhFoYIShSi8=
 github.com/arelate/steam_integration v0.1.17/go.mod h1:rJZspnKCjmslFCiZMGHW8qdNJKludRxy+E3TTqM8mV0=
+github.com/arelate/steam_integration v0.1.18 h1:O/yl4UFyAWIyq0PeFMuvm6KiN7cZFMl8sabk8F4Gdm4=
+github.com/arelate/steam_integration v0.1.18/go.mod h1:rJZspnKCjmslFCiZMGHW8qdNJKludRxy+E3TTqM8mV0=
 github.com/arelate/vangogh_local_data v0.2.48 h1:2bB/63zPiBFY4kZKiJkmJfO18OSzi0+FHQJ/tEJisGo=
 github.com/arelate/vangogh_local_data v0.2.48/go.mod h1:LO/YhUJj8rACsxCuB8y/jgfND/uY9yn+y3+gBRXesu4=
 github.com/arelate/vangogh_local_data v0.2.49 h1:YQqdUPIgPuz1y+AXxocsmtINrU7iP5BMpkPzxLHbTnk=
 github.com/arelate/vangogh_local_data v0.2.49/go.mod h1:LO/YhUJj8rACsxCuB8y/jgfND/uY9yn+y3+gBRXesu4=
+github.com/arelate/vangogh_local_data v0.2.51 h1:9oprJGuafADJJxluyjWdepxCSANd5rFtE1zTADLkUuM=
+github.com/arelate/vangogh_local_data v0.2.51/go.mod h1:FaE+Vrr7sau8srWyrGJj4nemKVIlfjsdlLYUz9oVTxw=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
@@ -14,6 +18,8 @@ github.com/boggydigital/dolo v0.2.5 h1:Ux0JNW4U1L2QLII013ajhnbPC96NGNV/wo2ka9F30
 github.com/boggydigital/dolo v0.2.5/go.mod h1:KyIaQOp2cV85hC6lTMRwHtzofzjxXr+msOgcs89t078=
 github.com/boggydigital/kvas v0.3.24 h1:ENL36JGNOvGSf206ShYnoC/lb+WsZ/poIjinus9JT8E=
 github.com/boggydigital/kvas v0.3.24/go.mod h1:4lV1ZL4ceDrW87WlDLGdxW1FFV3UKwN9wPqkzQYnSW0=
+github.com/boggydigital/kvas v0.3.26 h1:ftl7RXNuaW+CMFfy2d4XHX7JJUWgnbqrl89HQ2kutIg=
+github.com/boggydigital/kvas v0.3.26/go.mod h1:I+wVKLxOqWhzw0X8nez/ec/GVXcQY5GUksFJBx+G7Yc=
 github.com/boggydigital/match_node v0.1.9 h1:6kw2QvnvEjcVL4dDKa1mVqnNOq/jk9lGzkCWKpsE2jg=
 github.com/boggydigital/match_node v0.1.9/go.mod h1:LmKtZy8YgBYC14BStAS4g17MglrLqqUF6dehrBX7Zwc=
 github.com/boggydigital/middleware v0.1.3 h1:U8HtBXOroPQ60v9H9AkniL1NwEPBCI+yNFaX5WPevys=
@@ -27,5 +33,9 @@ github.com/boggydigital/yt_urls v0.1.19 h1:O7jmvoXkJrRoH+YJcnNEh+eUJBeUYRHX+W0Nf
 github.com/boggydigital/yt_urls v0.1.19/go.mod h1:hIfQyToulrS54t3GAuOkF9age66NKh0gswVvVQndHcs=
 golang.org/x/exp v0.0.0-20220929160808-de9c53c655b9 h1:lNtcVz/3bOstm7Vebox+5m3nLh/BYWnhmc3AhXOW6oI=
 golang.org/x/exp v0.0.0-20220929160808-de9c53c655b9/go.mod h1:cyybsKvd6eL0RnXn6p/Grxp8F5bW7iYuBgsNCOHpMYE=
+golang.org/x/exp v0.0.0-20221208152030-732eee02a75a h1:4iLhBPcpqFmylhnkbY3W0ONLUYYkDAW9xMFLfxgsvCw=
+golang.org/x/exp v0.0.0-20221208152030-732eee02a75a/go.mod h1:CxIveKay+FTh1D0yPZemJVgC/95VzuuOLq5Qi4xnoYc=
 golang.org/x/net v0.0.0-20221004154528-8021a29435af h1:wv66FM3rLZGPdxpYL+ApnDe2HzHcTFta3z5nsc13wI4=
 golang.org/x/net v0.0.0-20221004154528-8021a29435af/go.mod h1:YDH+HFinaLZZlnHAfSS6ZXJJ9M9t4Dl22yv3iI2vPwk=
+golang.org/x/net v0.4.0 h1:Q5QPcMlvfxFTAPV0+07Xz/MpK9NTXu2VDUuy0FeMfaU=
+golang.org/x/net v0.4.0/go.mod h1:MBQ8lrhLObU/6UmLb4fmbmk5OcyYmqtbGd/9yIeKjEE=
