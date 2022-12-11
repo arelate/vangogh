@@ -10,7 +10,7 @@ func findLocalOnlySplitProducts(pagedPt vangogh_local_data.ProductType) (map[str
 
 	idSet := make(map[string]bool)
 
-	if !vangogh_local_data.IsPagedProduct(pagedPt) {
+	if !vangogh_local_data.IsGOGPagedProduct(pagedPt) {
 		return idSet, fmt.Errorf("%s is not a paged type", pagedPt)
 	}
 

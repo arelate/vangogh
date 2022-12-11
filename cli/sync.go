@@ -101,8 +101,8 @@ func Sync(
 
 	if syncOpts.data {
 		//get array and paged data
-		paData := append(vangogh_local_data.ArrayProducts(),
-			vangogh_local_data.PagedProducts()...)
+		paData := append(vangogh_local_data.GOGArrayProducts(),
+			vangogh_local_data.GOGPagedProducts()...)
 
 		for _, pt := range paData {
 			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {

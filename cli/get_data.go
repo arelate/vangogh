@@ -69,14 +69,14 @@ func GetData(
 		}
 	}
 
-	if vangogh_local_data.IsPagedProduct(pt) {
+	if vangogh_local_data.IsGOGPagedProduct(pt) {
 		if err := fetchers.Pages(pt, since, hc, gda); err != nil {
 			return gda.EndWithError(err)
 		}
 		return split(pt, since)
 	}
 
-	if vangogh_local_data.IsArrayProduct(pt) {
+	if vangogh_local_data.IsGOGArrayProduct(pt) {
 		ids := []string{pt.String()}
 		if err := fetchers.Items(ids, pt, hc); err != nil {
 			return gda.EndWithError(err)

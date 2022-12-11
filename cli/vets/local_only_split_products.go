@@ -17,7 +17,7 @@ func LocalOnlySplitProducts(fix bool) error {
 		return sloa.EndWithError(err)
 	}
 
-	for _, pagedPt := range vangogh_local_data.PagedProducts() {
+	for _, pagedPt := range vangogh_local_data.GOGPagedProducts() {
 
 		splitPt := vangogh_local_data.SplitProductType(pagedPt)
 
