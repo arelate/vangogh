@@ -115,9 +115,15 @@ func Sync(
 			return sa.EndWithError(err)
 		}
 
+		//get PCGamingWiki cargo data
+		if err := getDetailData([]vangogh_local_data.ProductType{vangogh_local_data.PCGWCargo}, since); err != nil {
+			return sa.EndWithError(err)
+		}
+
 		//reduce Title and Steam AppId
 		if err := Reduce(since, []string{
 			vangogh_local_data.TitleProperty,
+			vangogh_local_data.PCGWPageId,
 			vangogh_local_data.SteamAppIdProperty}, true); err != nil {
 			return sa.EndWithError(err)
 		}
@@ -127,6 +133,13 @@ func Sync(
 		//connection is established at reduce. And the earlier data set cannot be retrieved post reduce,
 		//since SteamAppList is fetched with initial data
 		if err := getDetailData(vangogh_local_data.SteamDetailProducts(), since); err != nil {
+			return sa.EndWithError(err)
+		}
+
+		//get PCGamingWiki cargo data
+		//this needs to happen after reduce, since PCGW PageId - GOG.com ProductId
+		//connection is established at reduce from cargo data.
+		if err := getDetailData([]vangogh_local_data.ProductType{vangogh_local_data.PCGWWikiText}, since); err != nil {
 			return sa.EndWithError(err)
 		}
 

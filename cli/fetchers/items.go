@@ -24,7 +24,9 @@ func Items(
 
 	ia.TotalInt(len(ids))
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.SteamAppIdProperty)
+	rxa, err := vangogh_local_data.ConnectReduxAssets(
+		vangogh_local_data.SteamAppIdProperty,
+		vangogh_local_data.PCGWPageId)
 	if err != nil {
 		return err
 	}

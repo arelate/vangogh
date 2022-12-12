@@ -30,9 +30,7 @@ func productTypeStr(productTypes []vangogh_local_data.ProductType) []string {
 }
 
 func remoteProductTypes() []string {
-	pts := vangogh_local_data.GOGRemoteProducts()
-	pts = append(pts, vangogh_local_data.SteamRemoteProducts()...)
-	return productTypeStr(pts)
+	return productTypeStr(vangogh_local_data.RemoteProducts())
 }
 
 func localProductTypes() []string {
