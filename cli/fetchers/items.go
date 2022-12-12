@@ -26,7 +26,7 @@ func Items(
 
 	rxa, err := vangogh_local_data.ConnectReduxAssets(
 		vangogh_local_data.SteamAppIdProperty,
-		vangogh_local_data.PCGWPageId)
+		vangogh_local_data.PCGWPageIdProperty)
 	if err != nil {
 		return err
 	}

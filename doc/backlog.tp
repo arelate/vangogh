@@ -11,10 +11,11 @@ Add more data sources:
 		- https://www.pcgamingwiki.com/w/api.php?action=cargoquery&tables=Infobox_game&fields=_pageID=PageID,Steam_AppID&where=Infobox_game.GOGcom_ID%20HOLDS%20%222067731250%22&format=json
 			- reduce steam-app-id
 			- reduce pcgw-page-id
-		- https://www.pcgamingwiki.com/w/api.php?action=parse&format=json&pageid=162911&prop=wikitext
+		- https://www.pcgamingwiki.com/w/api.php?action=parse&format=json&pageid=162911&prop=externallinks
 			- reduce hltb-id
 			- reduce igdb-id
 	- HowLongToBeat
+		- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601
 	- IGDB
 	
 vangogh_local_data simplify tracking property support by data types:

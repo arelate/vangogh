@@ -103,65 +103,64 @@ func Sync(
 	//all supported data types in one sync session (assuming the connection data
 	//is available and the data itself if available, of course)
 	//below is a current sequence:
-	//- Fetch GOG.com array and paged data
-	//- Fetch Steam array data (required for SteamAppId reduction)
-	//- Fetch PCGamingWiki Cargo data (required for SteamAppId and PCGWPageId reduction)
-	//- Reduce Title, SteamAppId and PCGWPageId data
-	//- Fetch Steam detail data (using SteamAppId data)
-	//- Fetch PCGamingWiki Wikitext data (required for all other data id reductions)
-	//- ... (will be used to reduce other data ids)
-	//- ... (will be used to fetch other data types using data ids)
-	//- Reduce all properties from the data
+	//
+	//- get GOG.com, Steam array and paged data
+	//- get GOG.com detail data, PCGamingWiki cargo
+	//- reduce PCGamingWiki pageId
+	//- get PCGamingWiki externallinks
+	//- reduce Steam AppId, HowLongToBeat Id, IGDB Id
+	//- get Steam detail data
+	//- finally, reduce all properties
 
 	if syncOpts.data {
 
-		//get GOG.com array and paged data
-		paData := append(vangogh_local_data.GOGArrayProducts(),
+		//get GOG.com, Steam array and paged data
+		gogSteamPagedArrayData := append(
+			vangogh_local_data.GOGArrayProducts(),
 			vangogh_local_data.GOGPagedProducts()...)
+		gogSteamPagedArrayData = append(gogSteamPagedArrayData,
+			vangogh_local_data.SteamArrayProducts()...)
 
-		for _, pt := range paData {
+		for _, pt := range gogSteamPagedArrayData {
 			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {
 				return sa.EndWithError(err)
 			}
 		}
 
-		//get Steam array data
-		for _, pt := range vangogh_local_data.SteamArrayProducts() {
-			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {
-				return sa.EndWithError(err)
-			}
-		}
+		gogPCGWDetailData := append(
+			vangogh_local_data.GOGDetailProducts(),
+			vangogh_local_data.PCGWCargo)
 
-		//get GOG.com main - detail data
-		if err := getDetailData(vangogh_local_data.GOGDetailProducts(), since); err != nil {
+		//get GOG.com detail data, PCGamingWiki cargo
+		if err := getDetailData(gogPCGWDetailData, since); err != nil {
 			return sa.EndWithError(err)
 		}
 
-		//get PCGamingWiki cargo data
-		if err := getDetailData([]vangogh_local_data.ProductType{vangogh_local_data.PCGWCargo}, since); err != nil {
+		//reduce PCGamingWiki pageId
+		if err := Reduce(since, []string{vangogh_local_data.PCGWPageIdProperty}, true); err != nil {
 			return sa.EndWithError(err)
 		}
 
-		//reduce Title and Steam AppId
+		//get PCGamingWiki externallinks
+		//this needs to happen after reduce, since PCGW PageId - GOG.com ProductId
+		//connection is established at reduce from cargo data.
+		if err := getDetailData([]vangogh_local_data.ProductType{vangogh_local_data.PCGWExternalLinks}, since); err != nil {
+			return sa.EndWithError(err)
+		}
+
+		//reduce Steam AppId, HowLongToBeat Id, IGDB Id
 		if err := Reduce(since, []string{
-			vangogh_local_data.TitleProperty,
-			vangogh_local_data.PCGWPageId,
-			vangogh_local_data.SteamAppIdProperty}, true); err != nil {
+			vangogh_local_data.SteamAppIdProperty,
+			vangogh_local_data.HowLongToBeatIdProperty,
+			vangogh_local_data.IGDBIdProperty}, true); err != nil {
 			return sa.EndWithError(err)
 		}
 
-		//get Steam main - detail data
+		//get Steam detail data
 		//this needs to happen after reduce, since Steam AppId - GOG.com ProductId
 		//connection is established at reduce. And the earlier data set cannot be retrieved post reduce,
 		//since SteamAppList is fetched with initial data
 		if err := getDetailData(vangogh_local_data.SteamDetailProducts(), since); err != nil {
-			return sa.EndWithError(err)
-		}
-
-		//get PCGamingWiki cargo data
-		//this needs to happen after reduce, since PCGW PageId - GOG.com ProductId
-		//connection is established at reduce from cargo data.
-		if err := getDetailData([]vangogh_local_data.ProductType{vangogh_local_data.PCGWWikiText}, since); err != nil {
 			return sa.EndWithError(err)
 		}
 
