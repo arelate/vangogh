@@ -99,12 +99,34 @@ func Sync(
 	syncEvents := make(map[string][]string, 2)
 	syncEvents[vangogh_local_data.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
 
+	//data sync is a sequence of specific data types that is required to get
+	//all supported data types in one sync session (assuming the connection data
+	//is available and the data itself if available, of course)
+	//below is a current sequence:
+	//- Fetch GOG.com array and paged data
+	//- Fetch Steam array data (required for SteamAppId reduction)
+	//- Fetch PCGamingWiki Cargo data (required for SteamAppId and PCGWPageId reduction)
+	//- Reduce Title, SteamAppId and PCGWPageId data
+	//- Fetch Steam detail data (using SteamAppId data)
+	//- Fetch PCGamingWiki Wikitext data (required for all other data id reductions)
+	//- ... (will be used to reduce other data ids)
+	//- ... (will be used to fetch other data types using data ids)
+	//- Reduce all properties from the data
+
 	if syncOpts.data {
-		//get array and paged data
+
+		//get GOG.com array and paged data
 		paData := append(vangogh_local_data.GOGArrayProducts(),
 			vangogh_local_data.GOGPagedProducts()...)
 
 		for _, pt := range paData {
+			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {
+				return sa.EndWithError(err)
+			}
+		}
+
+		//get Steam array data
+		for _, pt := range vangogh_local_data.SteamArrayProducts() {
 			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {
 				return sa.EndWithError(err)
 			}
