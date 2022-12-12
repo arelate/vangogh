@@ -37,9 +37,13 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 		}
 	}
 
-	//TODO: only add if those properties were specified above
-	//required for language-* properties reduction below
-	propSet[vangogh_local_data.LanguageCodeProperty] = true
+	if !propertiesOnly {
+		if propSet[vangogh_local_data.LanguageNameProperty] ||
+			propSet[vangogh_local_data.NativeLanguageNameProperty] {
+			//required for language-* properties reduction below
+			propSet[vangogh_local_data.LanguageCodeProperty] = true
+		}
+	}
 
 	ra := nod.Begin("reducing properties...")
 	defer ra.End()

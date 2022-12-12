@@ -10,6 +10,8 @@ github.com/arelate/vangogh_local_data v0.2.58 h1:vyqmLVRNS9NjKVrqOZgXwvVcSayEZGN
 github.com/arelate/vangogh_local_data v0.2.58/go.mod h1:B3iSPILbEdUmSl27qdPkcs3rlaSdU1MrTLLXrVjbBss=
 github.com/arelate/vangogh_local_data v0.2.59 h1:T8fPvOnIufZbWKXs0HP8shdXjf6pn/iREuO1u/+K8as=
 github.com/arelate/vangogh_local_data v0.2.59/go.mod h1:B3iSPILbEdUmSl27qdPkcs3rlaSdU1MrTLLXrVjbBss=
+github.com/arelate/vangogh_local_data v0.2.60 h1:+kY3E0VVXL3x0VdUnoz/3NAn5qHXoTfdgeOWv1D96Rw=
+github.com/arelate/vangogh_local_data v0.2.60/go.mod h1:B3iSPILbEdUmSl27qdPkcs3rlaSdU1MrTLLXrVjbBss=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
