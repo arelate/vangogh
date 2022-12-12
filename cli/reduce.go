@@ -37,6 +37,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 		}
 	}
 
+	//TODO: only add if those properties were specified above
 	//required for language-* properties reduction below
 	propSet[vangogh_local_data.LanguageCodeProperty] = true
 
