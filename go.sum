@@ -1,5 +1,9 @@
 github.com/arelate/gog_integration v0.2.8 h1:rOU8u+SBtiSy9X+U1gesstEQeqs24ghFiMJORm6EEiQ=
 github.com/arelate/gog_integration v0.2.8/go.mod h1:7DMkmzTgkG3zC1EFGwmo9MvBUFKNKZBY5oeXHlz9ROo=
+github.com/arelate/gog_integration v0.2.10 h1:yemwDBgS85fQNwVtM49DUFEOQ87C0ZSXJSwzlJehRTY=
+github.com/arelate/gog_integration v0.2.10/go.mod h1:7DMkmzTgkG3zC1EFGwmo9MvBUFKNKZBY5oeXHlz9ROo=
+github.com/arelate/gogdb_integration v0.1.0 h1:Se7bOMJu7obmln1IVhcJhfviZk4ZpGnAJbu3wAvC/Vg=
+github.com/arelate/gogdb_integration v0.1.0/go.mod h1:9q4U4EooiLN33r2y0gZrjzo56eqcjfRQY1InPxB8cfo=
 github.com/arelate/pcgw_integration v0.1.3 h1:J082uLTPwwVyFKpaC4m2N9TclgIouwLugCxi+MLdGck=
 github.com/arelate/pcgw_integration v0.1.3/go.mod h1:+VcbHJyqC1BYaW3e9kIUTfCi5NWQlqMKr8VPkNospOo=
 github.com/arelate/pcgw_integration v0.1.4 h1:4uKXBTwDvxjXopHmT9JHEFt6BNjbeavx53rq+Pq2VTE=

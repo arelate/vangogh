@@ -3,7 +3,7 @@ module github.com/arelate/vangogh
 go 1.19
 
 require (
-	github.com/arelate/gog_integration v0.2.8
+	github.com/arelate/gog_integration v0.2.10
 	github.com/arelate/steam_integration v0.1.18
 	github.com/arelate/vangogh_local_data v0.2.63
 	github.com/boggydigital/clo v0.3.1
@@ -19,4 +19,6 @@ require (
 	golang.org/x/net v0.4.0
 )
 
-require github.com/arelate/pcgw_integration v0.1.4 // indirect
+require (
+	github.com/arelate/pcgw_integration v0.1.4 // indirect
+)
