@@ -17,6 +17,13 @@ Add more data sources:
 	- HowLongToBeat
 		- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601
 	- IGDB
+	- VNDB Tags:
+		- https://api.vndb.org/kana#post-vn
+		- curl https://api.vndb.org/kana/vn --header 'Content-Type: application/json' --data '{
+			"filters": ["id", "=", "v14018"],
+			"fields": "tags.name,tags.rating,tags.spoiler,rating"
+		}'
+		- this would require dolo.GetSet pipeline refactor to allow POST requests
 	
 vangogh_local_data simplify tracking property support by data types:
 	- use runtime interface testing instead of maps
