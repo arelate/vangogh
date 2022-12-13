@@ -1,7 +1,11 @@
 github.com/arelate/southern_light v0.1.0 h1:FsJGAOerLu1qxfR9pOwkdj8I5WNhNzo16hV+GVZaPDc=
 github.com/arelate/southern_light v0.1.0/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
+github.com/arelate/southern_light v0.1.3 h1:guzWl/y9IvGAARG2XokROR335qSaPa50pn4kYPOdIco=
+github.com/arelate/southern_light v0.1.3/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
 github.com/arelate/vangogh_local_data v0.2.64 h1:A9Xokz2ugTYa/uCbSF9/TfW1iIYlWgekDL9lh8+F/LY=
 github.com/arelate/vangogh_local_data v0.2.64/go.mod h1:RHdAwxoJZqWajL1pcEV6uOcjAUZwSK/idjk4v8i8E3E=
+github.com/arelate/vangogh_local_data v0.2.65 h1:I1z/S2eGNKTJYYqakOAuoVVHlVhuSUxh5xgxPnGOJSI=
+github.com/arelate/vangogh_local_data v0.2.65/go.mod h1:PsEwgP5LdSisvEEBQu+UyPVtRcOu9z/oEbxWYXvsxwM=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
