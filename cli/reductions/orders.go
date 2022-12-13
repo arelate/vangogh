@@ -1,7 +1,7 @@
 package reductions
 
 import (
-	"github.com/arelate/gog_integration"
+	"github.com/arelate/southern_light/gog_integration"
 	"strconv"
 	"time"
 

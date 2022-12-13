@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"github.com/arelate/gog_integration"
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"

@@ -2,8 +2,8 @@ package rest
 
 import (
 	"encoding/gob"
-	"github.com/arelate/gog_integration"
-	"github.com/arelate/steam_integration"
+	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kvas"
 )

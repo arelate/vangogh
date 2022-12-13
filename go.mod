@@ -3,9 +3,8 @@ module github.com/arelate/vangogh
 go 1.19
 
 require (
-	github.com/arelate/gog_integration v0.2.10
-	github.com/arelate/steam_integration v0.1.18
-	github.com/arelate/vangogh_local_data v0.2.63
+	github.com/arelate/southern_light v0.1.0
+	github.com/arelate/vangogh_local_data v0.2.64
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/coost v0.3.8
 	github.com/boggydigital/dolo v0.2.5
@@ -17,8 +16,4 @@ require (
 	github.com/boggydigital/yt_urls v0.1.19
 	golang.org/x/exp v0.0.0-20221208152030-732eee02a75a
 	golang.org/x/net v0.4.0
-)
-
-require (
-	github.com/arelate/pcgw_integration v0.1.4 // indirect
 )

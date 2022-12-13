@@ -3,7 +3,7 @@ package cli
 import (
 	"bufio"
 	"fmt"
-	"github.com/arelate/gog_integration"
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"net/url"

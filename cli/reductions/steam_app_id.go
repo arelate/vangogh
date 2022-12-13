@@ -1,7 +1,7 @@
 package reductions
 
 import (
-	"github.com/arelate/steam_integration"
+	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"strconv"
