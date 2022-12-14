@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// TODO: Convert into a property on a struct under steam_integration
 func SteamTags(since int64) error {
 	sta := nod.NewProgress(" %s...", vangogh_local_data.SteamTagsProperty)
 	defer sta.End()

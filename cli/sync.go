@@ -115,24 +115,26 @@ func Sync(
 	if syncOpts.data {
 
 		//get GOG.com, Steam array and paged data
-		gogSteamPagedArrayData := append(
+		pagedArrayData := append(
 			vangogh_local_data.GOGArrayProducts(),
 			vangogh_local_data.GOGPagedProducts()...)
-		gogSteamPagedArrayData = append(gogSteamPagedArrayData,
+		pagedArrayData = append(pagedArrayData,
 			vangogh_local_data.SteamArrayProducts()...)
+		//pagedArrayData = append(pagedArrayData,
+		//	vangogh_local_data.)
 
-		for _, pt := range gogSteamPagedArrayData {
+		for _, pt := range pagedArrayData {
 			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {
 				return sa.EndWithError(err)
 			}
 		}
 
-		gogPCGWDetailData := append(
+		detailData := append(
 			vangogh_local_data.GOGDetailProducts(),
 			vangogh_local_data.PCGWCargo)
 
 		//get GOG.com detail data, PCGamingWiki cargo
-		if err := getDetailData(gogPCGWDetailData, since); err != nil {
+		if err := getDetailData(detailData, since); err != nil {
 			return sa.EndWithError(err)
 		}
 

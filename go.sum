@@ -6,6 +6,10 @@ github.com/arelate/southern_light v0.1.5 h1:N8TPE3tYzc9VlCg6NpuIodj1g4c/8oHkHFiV
 github.com/arelate/southern_light v0.1.5/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
 github.com/arelate/southern_light v0.1.7 h1:bFYC6txZKbiRjsqnawpYrx7A55tiEA0Z7Pz7m544WqM=
 github.com/arelate/southern_light v0.1.7/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
+github.com/arelate/southern_light v0.1.10 h1:H+edzxEgjq5/zru2Kkt4uilWvgJjFNlWolTZFY4ugic=
+github.com/arelate/southern_light v0.1.10/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
+github.com/arelate/southern_light v0.1.11 h1:XYgOuRPFh5kE7PQ+tz+fLHDz216fE021KnRlf1Qck30=
+github.com/arelate/southern_light v0.1.11/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
 github.com/arelate/vangogh_local_data v0.2.64 h1:A9Xokz2ugTYa/uCbSF9/TfW1iIYlWgekDL9lh8+F/LY=
 github.com/arelate/vangogh_local_data v0.2.64/go.mod h1:RHdAwxoJZqWajL1pcEV6uOcjAUZwSK/idjk4v8i8E3E=
 github.com/arelate/vangogh_local_data v0.2.65 h1:I1z/S2eGNKTJYYqakOAuoVVHlVhuSUxh5xgxPnGOJSI=
@@ -14,6 +18,10 @@ github.com/arelate/vangogh_local_data v0.2.66 h1:QvrYufMnlHpfVXE2xSxXklPdPllmDgM
 github.com/arelate/vangogh_local_data v0.2.66/go.mod h1:y3u/LeryeJYz6tKadFrFt6JxRHL0xtd7L/CsqQ4/Pqg=
 github.com/arelate/vangogh_local_data v0.2.67 h1:L/kYl/cRAtoNsKhmfCxy5BsKLlMUQEaTHzODWlO7Vr0=
 github.com/arelate/vangogh_local_data v0.2.67/go.mod h1:ypFFQWNrzcle7V/30FbbPLxYOWn7lBjtwCAo7AZgIDs=
+github.com/arelate/vangogh_local_data v0.2.68 h1:g/7cYlazuFeKo/zs/xLPSxgPIoxQLp9+poezpYWFmcA=
+github.com/arelate/vangogh_local_data v0.2.68/go.mod h1:5p6JzWatjbN6qswm4+GhBWsmd5KiUM9TvZa/XFhokKk=
+github.com/arelate/vangogh_local_data v0.2.69 h1:tgOtcsX/4vXgrnf8jEUKFXgE6HSsCuttv9uwgdt16c4=
+github.com/arelate/vangogh_local_data v0.2.69/go.mod h1:w24pXVIWesUU7JBYX9gg68+rPzqhyfXz8yBYOrbPrfo=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=

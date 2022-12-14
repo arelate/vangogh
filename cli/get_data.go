@@ -76,7 +76,7 @@ func GetData(
 		return split(pt, since)
 	}
 
-	if vangogh_local_data.IsGOGArrayProduct(pt) {
+	if vangogh_local_data.IsArrayProduct(pt) {
 		ids := []string{pt.String()}
 		if err := fetchers.Items(ids, pt, hc); err != nil {
 			return gda.EndWithError(err)
