@@ -15,6 +15,8 @@ Add more data sources:
 			- reduce hltb-id @done(2022-12-12)
 			- reduce igdb-id @done(2022-12-12)
 	- HowLongToBeat
+		- need to fetch root page and reduce next.js build
+		- then download details with (need to happen after pcgw_external_links have been downloaded and ids reduced):
 		- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601
 	- IGDB
 	- VNDB Tags:

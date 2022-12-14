@@ -109,7 +109,7 @@ func Sync(
 	//- reduce PCGamingWiki pageId
 	//- get PCGamingWiki externallinks
 	//- reduce Steam AppId, HowLongToBeat Id, IGDB Id
-	//- get Steam detail data
+	//- get other detail products (Steam data, HLTB data)
 	//- finally, reduce all properties
 
 	if syncOpts.data {
@@ -153,16 +153,20 @@ func Sync(
 		//reduce Steam AppId, HowLongToBeat Id, IGDB Id
 		if err := Reduce(since, []string{
 			vangogh_local_data.SteamAppIdProperty,
+			vangogh_local_data.HowLongToBeatNextBuildProperty,
 			vangogh_local_data.HowLongToBeatIdProperty,
 			vangogh_local_data.IGDBIdProperty}, true); err != nil {
 			return sa.EndWithError(err)
 		}
 
-		//get Steam detail data
+		otherDetailProducts := vangogh_local_data.SteamDetailProducts()
+		otherDetailProducts = append(otherDetailProducts, vangogh_local_data.HLTBDetailProducts()...)
+
+		//get other detail products (Steam data, HLTB data)
 		//this needs to happen after reduce, since Steam AppId - GOG.com ProductId
 		//connection is established at reduce. And the earlier data set cannot be retrieved post reduce,
 		//since SteamAppList is fetched with initial data
-		if err := getDetailData(vangogh_local_data.SteamDetailProducts(), since); err != nil {
+		if err := getDetailData(otherDetailProducts, since); err != nil {
 			return sa.EndWithError(err)
 		}
 

@@ -27,6 +27,7 @@ func Items(
 	rxa, err := vangogh_local_data.ConnectReduxAssets(
 		vangogh_local_data.SteamAppIdProperty,
 		vangogh_local_data.PCGWPageIdProperty,
+		vangogh_local_data.HowLongToBeatNextBuildProperty,
 		vangogh_local_data.HowLongToBeatIdProperty)
 	if err != nil {
 		return err
