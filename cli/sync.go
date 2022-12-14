@@ -120,8 +120,8 @@ func Sync(
 			vangogh_local_data.GOGPagedProducts()...)
 		pagedArrayData = append(pagedArrayData,
 			vangogh_local_data.SteamArrayProducts()...)
-		//pagedArrayData = append(pagedArrayData,
-		//	vangogh_local_data.)
+		pagedArrayData = append(pagedArrayData,
+			vangogh_local_data.HLTBArrayProducts()...)
 
 		for _, pt := range pagedArrayData {
 			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {

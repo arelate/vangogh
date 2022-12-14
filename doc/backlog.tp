@@ -18,6 +18,8 @@ Add more data sources:
 		- need to fetch root page and reduce next.js build
 		- then download details with (need to happen after pcgw_external_links have been downloaded and ids reduced):
 		- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601
+		- need to make user-agent a get-data param
+		- add user-agents defaults.txt to allow updating it outside code
 	- IGDB
 	- VNDB Tags:
 		- https://api.vndb.org/kana#post-vn
