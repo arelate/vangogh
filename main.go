@@ -125,33 +125,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	//rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.HowLongToBeatNextBuildProperty)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//for _, id := range rxa.Keys(vangogh_local_data.HowLongToBeatNextBuildProperty) {
-	//	val, ok := rxa.GetAllUnchangedValues(vangogh_local_data.HowLongToBeatNextBuildProperty, id)
-	//	fmt.Println(val, ok)
-	//}
-	//
-	//return
-
-	//vr, err := vangogh_local_data.NewReader(vangogh_local_data.HLTBRootPage)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//rp, err := vr.HLTBRootPage()
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//fmt.Println()
-	//fmt.Println(rp.GetNextBuild())
-	//
-	//return
-
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)

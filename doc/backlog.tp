@@ -4,6 +4,9 @@ Documentation investment:
 	- directories.txt
 	- defaults.txt
 	
+Pay off technical debt:
+	- Cleanup all TODOs/FIXMEs
+	
 Add more data sources:
 	- refactor get-data cmd to only download GOG.com data @done(2022-12-11)
 	- add get-additional-data to get other data sources @done(2022-12-11)
@@ -15,12 +18,13 @@ Add more data sources:
 			- reduce hltb-id @done(2022-12-12)
 			- reduce igdb-id @done(2022-12-12)
 	- HowLongToBeat
-		- need to fetch root page and reduce next.js build
-		- then download details with (need to happen after pcgw_external_links have been downloaded and ids reduced):
-		- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601
+		- need to fetch root page and reduce next.js build @done(2022-12-13)
+		- then download details with (need to happen after pcgw_external_links have been downloaded and ids reduced): @done(2022-12-13)
+		- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601 @done(2022-12-13)
 		- need to make user-agent a get-data param
 		- add user-agents defaults.txt to allow updating it outside code
 	- IGDB
+		- needs API key concept (another param / defaults.txt candidate)
 	- VNDB Tags:
 		- https://api.vndb.org/kana#post-vn
 		- curl https://api.vndb.org/kana/vn --header 'Content-Type: application/json' --data '{
@@ -28,6 +32,9 @@ Add more data sources:
 			"fields": "tags.name,tags.rating,tags.spoiler,rating"
 		}'
 		- this would require dolo.GetSet pipeline refactor to allow POST requests
+	- OpenCritic/MetaCritic links
+	- aggregate all external links and find last remaining candidates
+	- aggregate all iwlinks and find last remaining candidates
 	
 vangogh_local_data simplify tracking property support by data types:
 	- use runtime interface testing instead of maps
