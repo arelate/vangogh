@@ -153,8 +153,8 @@ func Sync(
 		//reduce Steam AppId, HowLongToBeat Id, IGDB Id
 		if err := Reduce(since, []string{
 			vangogh_local_data.SteamAppIdProperty,
-			vangogh_local_data.HowLongToBeatNextBuildProperty,
-			vangogh_local_data.HowLongToBeatIdProperty,
+			vangogh_local_data.HLTBBuildIdProperty,
+			vangogh_local_data.HLTBIdProperty,
 			vangogh_local_data.IGDBIdProperty}, true); err != nil {
 			return sa.EndWithError(err)
 		}
