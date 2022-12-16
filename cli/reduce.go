@@ -168,10 +168,6 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 		if err := reductions.Owned(); err != nil {
 			return ra.EndWithError(err)
 		}
-
-		if err := reductions.SteamTags(since); err != nil {
-			return ra.EndWithError(err)
-		}
 	}
 
 	return reductions.Cascade()
