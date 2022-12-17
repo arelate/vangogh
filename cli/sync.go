@@ -131,7 +131,7 @@ func Sync(
 
 		detailData := append(
 			vangogh_local_data.GOGDetailProducts(),
-			vangogh_local_data.PCGWPageIdSteamAppId)
+			vangogh_local_data.PCGWPageId)
 
 		//get GOG.com detail data, PCGamingWiki pageId, steamAppId
 		if err := getDetailData(detailData, since); err != nil {
