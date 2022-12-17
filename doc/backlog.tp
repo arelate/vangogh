@@ -33,6 +33,7 @@ Add more data sources:
 		}'
 		- this would require dolo.GetSet pipeline refactor to allow POST requests
 	- OpenCritic/MetaCritic links
+	- Add IsThereAnyDeal (steam-app-id)
 	- aggregate all external links and find last remaining candidates
 	- aggregate all iwlinks and find last remaining candidates
 	

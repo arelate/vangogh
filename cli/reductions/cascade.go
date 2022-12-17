@@ -10,6 +10,7 @@ var cascadingProperties = []string{
 	vangogh_local_data.GOGReleaseDateProperty,
 	vangogh_local_data.SteamAppIdProperty,
 	vangogh_local_data.VerticalImageProperty,
+	vangogh_local_data.RatingProperty,
 }
 
 // Cascade is a method to assign reductions to products that don't have them,

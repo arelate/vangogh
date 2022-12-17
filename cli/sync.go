@@ -105,10 +105,10 @@ func Sync(
 	//below is a current sequence:
 	//
 	//- get GOG.com, Steam array and paged data
-	//- get GOG.com detail data, PCGamingWiki cargo
+	//- get GOG.com detail data, PCGamingWiki pageId, steamAppId
 	//- reduce PCGamingWiki pageId
-	//- get PCGamingWiki externallinks
-	//- reduce Steam AppId, HowLongToBeat Id, IGDB Id
+	//- get PCGamingWiki externallinks, engine
+	//- reduce SteamAppId, HowLongToBeatId, IGDBId
 	//- get other detail products (Steam data, HLTB data)
 	//- finally, reduce all properties
 
@@ -131,9 +131,9 @@ func Sync(
 
 		detailData := append(
 			vangogh_local_data.GOGDetailProducts(),
-			vangogh_local_data.PCGWCargo)
+			vangogh_local_data.PCGWPageIdSteamAppId)
 
-		//get GOG.com detail data, PCGamingWiki cargo
+		//get GOG.com detail data, PCGamingWiki pageId, steamAppId
 		if err := getDetailData(detailData, since); err != nil {
 			return sa.EndWithError(err)
 		}
@@ -143,14 +143,19 @@ func Sync(
 			return sa.EndWithError(err)
 		}
 
-		//get PCGamingWiki externallinks
+		//get PCGamingWiki externallinks, engine
 		//this needs to happen after reduce, since PCGW PageId - GOG.com ProductId
 		//connection is established at reduce from cargo data.
-		if err := getDetailData([]vangogh_local_data.ProductType{vangogh_local_data.PCGWExternalLinks}, since); err != nil {
+		pcgwDetailProducts := []vangogh_local_data.ProductType{
+			vangogh_local_data.PCGWEngine,
+			vangogh_local_data.PCGWExternalLinks,
+		}
+
+		if err := getDetailData(pcgwDetailProducts, since); err != nil {
 			return sa.EndWithError(err)
 		}
 
-		//reduce Steam AppId, HowLongToBeat Id, IGDB Id
+		//reduce SteamAppId, HowLongToBeatId, IGDBId
 		if err := Reduce(since, []string{
 			vangogh_local_data.SteamAppIdProperty,
 			vangogh_local_data.HLTBBuildIdProperty,
