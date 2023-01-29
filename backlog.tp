@@ -6,21 +6,11 @@ Documentation investment:
 	
 Pay off technical debt:
 	- Cleanup all TODOs/FIXMEs
+	- Don't log empty URLs
+	- Investigate lagging Steam data updates
 	
 Add more data sources:
-	- refactor get-data cmd to only download GOG.com data @done(2022-12-11)
-	- add get-additional-data to get other data sources @done(2022-12-11)
-	- investigate and consider other sources from PCGamingWiki: @done(2022-12-12)
-		- https://www.pcgamingwiki.com/w/api.php?action=cargoquery&tables=Infobox_game&fields=_pageID=PageID,Steam_AppID&where=Infobox_game.GOGcom_ID%20HOLDS%20%222067731250%22&format=json @done(2022-12-12)
-			- reduce steam-app-id @done(2022-12-12)
-			- reduce pcgw-page-id @done(2022-12-12)
-		- https://www.pcgamingwiki.com/w/api.php?action=parse&format=json&pageid=162911&prop=externallinks @done(2022-12-12)
-			- reduce hltb-id @done(2022-12-12)
-			- reduce igdb-id @done(2022-12-12)
 	- HowLongToBeat
-		- need to fetch root page and reduce next.js build @done(2022-12-13)
-		- then download details with (need to happen after pcgw_external_links have been downloaded and ids reduced): @done(2022-12-13)
-		- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601 @done(2022-12-13)
 		- need to make user-agent a get-data param
 		- add user-agents defaults.txt to allow updating it outside code
 	- IGDB
@@ -37,10 +27,6 @@ Add more data sources:
 	- aggregate all external links and find last remaining candidates
 	- aggregate all iwlinks and find last remaining candidates
 	
-vangogh_local_data simplify tracking property support by data types:
-	- use runtime interface testing instead of maps
-	- ideally only need to add implementation once in gog_integration and nothing else
-	
 Add sourceports support:
 	- use import pipeline
 	- support GitHub releases for auto-updates
@@ -53,6 +39,22 @@ Precise and space efficient downloads:
 	- when available, use allow and deny wits files to specify list of products to download
 
 Archive:
+	vangogh_local_data simplify tracking property support by data types: @done(2023-01-05)
+		- use runtime interface testing instead of maps @done(2023-01-05)
+		- ideally only need to add implementation once in gog_integration and nothing else @done(2023-01-05)
+		
+	- refactor get-data cmd to only download GOG.com data @done(2022-12-11) @project(Add more data sources)
+	- add get-additional-data to get other data sources @done(2022-12-11) @project(Add more data sources)
+	- investigate and consider other sources from PCGamingWiki: @done(2022-12-12) @project(Add more data sources)
+		- https://www.pcgamingwiki.com/w/api.php?action=cargoquery&tables=Infobox_game&fields=_pageID=PageID,Steam_AppID&where=Infobox_game.GOGcom_ID%20HOLDS%20%222067731250%22&format=json @done(2022-12-12)
+			- reduce steam-app-id @done(2022-12-12)
+			- reduce pcgw-page-id @done(2022-12-12)
+		- https://www.pcgamingwiki.com/w/api.php?action=parse&format=json&pageid=162911&prop=externallinks @done(2022-12-12)
+			- reduce hltb-id @done(2022-12-12)
+			- reduce igdb-id @done(2022-12-12)
+	- need to fetch root page and reduce next.js build @done(2022-12-13) @project(Add more data sources)
+	- then download details with (need to happen after pcgw_external_links have been downloaded and ids reduced): @done(2022-12-13) @project(Add more data sources)
+	- https://howlongtobeat.com/_next/data/UPerfxWQ-QHzGTpefAKl7/game/82601.json?gameId=82601 @done(2022-12-13) @project(Add more data sources)
 	Atom feed: @done(2022-12-04)
 		- https://en.wikipedia.org/wiki/Atom_(web_standard) @done(2022-12-04)
 		- https://www.rfc-editor.org/rfc/rfc5023 @done(2022-12-04)

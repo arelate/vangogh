@@ -125,24 +125,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	//vr, err := vangogh_local_data.NewReader(vangogh_local_data.PCGWExternalLinks)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//for _, id := range vr.Keys() {
-	//	pel, err := vr.PCGWExternalLinks(id)
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//
-	//	fmt.Println(pel.Parse.ExternalLinks)
-	//	fmt.Println(pel.Parse.IWLinks)
-	//
-	//}
-	//
-	//return
-
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
