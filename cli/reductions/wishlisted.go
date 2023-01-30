@@ -35,6 +35,9 @@ func Wishlisted() error {
 		id := strconv.Itoa(idGetter.GetId())
 		wishlisted[id] = []string{"true"}
 	}
+	if err != nil {
+		return wa.EndWithError(err)
+	}
 
 	wishlistedRdx, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.WishlistedProperty)
 	if err != nil {

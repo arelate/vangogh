@@ -125,6 +125,45 @@ func main() {
 		os.Exit(1)
 	}
 
+	//debug code to print out all Unity games that provide Linux releases, and no macOS releases
+	//
+	//fmt.Print()
+	//
+	//rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.ReduxProperties()...)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//for _, id := range rxa.Keys(vangogh_local_data.TitleProperty) {
+	//
+	//	isUnity := false
+	//	engines, _ := rxa.GetAllUnchangedValues(vangogh_local_data.EnginesProperty, id)
+	//	for _, engine := range engines {
+	//		isUnity = isUnity || strings.Contains(engine, "Unity")
+	//	}
+	//
+	//	if !isUnity {
+	//		continue
+	//	}
+	//
+	//	oss, _ := rxa.GetAllUnchangedValues(vangogh_local_data.OperatingSystemsProperty, id)
+	//	linuxStr, macOSStr := strings.ToLower(vangogh_local_data.Linux.String()), strings.ToLower(vangogh_local_data.MacOS.String())
+	//	if !slices.Contains(oss, linuxStr) || slices.Contains(oss, macOSStr) {
+	//		continue
+	//	}
+	//
+	//	productType, _ := rxa.GetFirstVal(vangogh_local_data.ProductTypeProperty, id)
+	//	if productType != "GAME" {
+	//		continue
+	//	}
+	//
+	//	title, _ := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id)
+	//
+	//	fmt.Println(id, title)
+	//}
+	//
+	//return
+
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
