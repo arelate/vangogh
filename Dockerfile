@@ -3,10 +3,11 @@ RUN apk add --no-cache --update git
 ADD . /go/src/app
 WORKDIR /go/src/app
 RUN go get ./...
-RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o vg main.go
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -tags timetzdata -o vg main.go
 
 FROM scratch
 COPY --from=build /go/src/app/vg /usr/bin/vg
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
 #app configuration: settings.txt
