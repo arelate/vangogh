@@ -20,6 +20,7 @@ func HandleFuncs() {
 		"/downloads": IfDataModifiedSince(GetOnly(Log(http.HandlerFunc(GetDownloads)))),
 		"/has_data":  IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetHasData)))),
 		"/has_redux": IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetHasRedux)))),
+		"/health":    GetOnly(Log(http.HandlerFunc(GetHealth))),
 		"/local_tag": PatchOnly(Log(http.HandlerFunc(PatchLocalTag))),
 		"/redux":     IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetRedux)))),
 		"/search":    IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(Search)))),
