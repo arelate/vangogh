@@ -68,6 +68,9 @@ get-videos
     missing
     force
 
+health
+    url
+
 info
     id^&
     slug&
