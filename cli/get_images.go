@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
 	"net/url"
 	"path/filepath"
@@ -33,25 +34,7 @@ func GetImages(
 	gia := nod.NewProgress("getting images...")
 	defer gia.End()
 
-	for _, it := range its {
-		if !vangogh_local_data.IsValidImageType(it) {
-			return gia.EndWithError(fmt.Errorf("invalid image type %s", it))
-		}
-	}
-
-	propSet := make(map[string]bool)
-	propSet[vangogh_local_data.TitleProperty] = true
-
-	for _, it := range its {
-		propSet[vangogh_local_data.PropertyFromImageType(it)] = true
-	}
-
-	properties := make([]string, len(propSet))
-	for p := range propSet {
-		properties = append(properties, p)
-	}
-
-	rxa, err := vangogh_local_data.ConnectReduxAssets(properties...)
+	rxa, err := imageTypesReduxAssets(nil, its)
 	if err != nil {
 		return gia.EndWithError(err)
 	}
@@ -151,4 +134,30 @@ func GetImages(
 	gia.EndWithResult("done")
 
 	return nil
+}
+
+func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.ImageType) (kvas.ReduxAssets, error) {
+	for _, it := range its {
+		if !vangogh_local_data.IsValidImageType(it) {
+			return nil, fmt.Errorf("invalid image type %s", it)
+		}
+	}
+
+	propSet := make(map[string]bool)
+	propSet[vangogh_local_data.TitleProperty] = true
+
+	for _, it := range its {
+		propSet[vangogh_local_data.PropertyFromImageType(it)] = true
+	}
+
+	for _, p := range otherProperties {
+		propSet[p] = true
+	}
+
+	properties := make([]string, len(propSet))
+	for p := range propSet {
+		properties = append(properties, p)
+	}
+
+	return vangogh_local_data.ConnectReduxAssets(properties...)
 }

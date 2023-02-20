@@ -93,6 +93,7 @@ func main() {
 		"auth":             cli.AuthHandler,
 		"backup":           cli.BackupHandler,
 		"cleanup":          cli.CleanupHandler,
+		"dehydrate":        cli.DehydrateHandler,
 		"digest":           cli.DigestHandler,
 		"export":           cli.ExportHandler,
 		"get-data":         cli.GetDataHandler,

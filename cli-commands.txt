@@ -21,6 +21,12 @@ cleanup
     all
     test
 
+dehydrate
+    id&
+    slug&
+    missing
+    image-type&*^={image-types}
+
 digest
     property^={digestible-properties}
 
@@ -69,7 +75,7 @@ get-videos
     force
 
 health
-    url
+    url^*
 
 info
     id^&
