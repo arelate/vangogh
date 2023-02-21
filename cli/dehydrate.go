@@ -5,6 +5,7 @@ import (
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
 	"image"
+	"image/color"
 	_ "image/jpeg"
 	"net/url"
 	"os"
@@ -88,25 +89,12 @@ func Dehydrate(
 				continue
 			}
 
-			fi, err := os.Open(vangogh_local_data.AbsLocalImagePath(imageId))
-			if err != nil {
-				return di.EndWithError(err)
+			if dhi, err := dehydrateImage(vangogh_local_data.AbsLocalImagePath(imageId), plt, samples); err == nil {
+				dehydratedImages[id] = []string{dhi}
+				dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
+			} else {
+				nod.Log(err.Error())
 			}
-
-			img, _, err := image.Decode(fi)
-			if err != nil {
-				return di.EndWithError(err)
-			}
-
-			gif := issa.GIFImage(img, plt, samples)
-
-			dhi, err := issa.Dehydrate(gif)
-			if err != nil {
-				return di.EndWithError(err)
-			}
-
-			dehydratedImages[id] = []string{dhi}
-			dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
 
 			di.Increment()
 		}
@@ -125,4 +113,22 @@ func Dehydrate(
 	di.EndWithResult("done")
 
 	return nil
+}
+
+func dehydrateImage(absImagePath string, plt color.Palette, samples int) (string, error) {
+	dhi := ""
+
+	fi, err := os.Open(absImagePath)
+	if err != nil {
+		return dhi, err
+	}
+
+	img, _, err := image.Decode(fi)
+	if err != nil {
+		return dhi, err
+	}
+
+	gif := issa.GIFImage(img, plt, samples)
+
+	return issa.Dehydrate(gif)
 }
