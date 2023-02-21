@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/arelate/southern_light v0.1.28
-	github.com/arelate/vangogh_local_data v0.2.87
+	github.com/arelate/vangogh_local_data v0.2.91
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/coost v0.3.8
 	github.com/boggydigital/dolo v0.2.6

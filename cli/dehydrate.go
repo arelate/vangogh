@@ -32,9 +32,14 @@ func Dehydrate(
 	di := nod.NewProgress("dehydrating images...")
 	defer di.End()
 
-	rxa, err := imageTypesReduxAssets(
-		[]string{vangogh_local_data.DehydratedImageProperty, vangogh_local_data.DehydratedImageModifiedProperty},
-		its)
+	properties := make([]string, 0, len(its)*2)
+	for _, it := range its {
+		properties = append(properties,
+			vangogh_local_data.ImageTypeDehydratedProperty(it),
+			vangogh_local_data.ImageTypeDehydratedModifiedProperty(it))
+	}
+
+	rxa, err := imageTypesReduxAssets(properties, its)
 	if err != nil {
 		return di.EndWithError(err)
 	}
@@ -46,35 +51,38 @@ func Dehydrate(
 			}
 
 			asset := vangogh_local_data.PropertyFromImageType(it)
+			dehydratedProperty := vangogh_local_data.ImageTypeDehydratedProperty(it)
 
 			for _, id := range rxa.Keys(asset) {
-				if !rxa.HasKey(vangogh_local_data.DehydratedImageProperty, id) {
+				if !rxa.HasKey(dehydratedProperty, id) {
 					idSet[id] = true
 				}
 			}
 		}
 	}
 
-	di.TotalInt(len(idSet))
-
-	dehydratedImages := make(map[string][]string)
-	dehydratedImageModified := make(map[string][]string)
+	di.TotalInt(len(idSet) * len(its))
 
 	plt := issa.StdPalette()
 
-	for id := range idSet {
+	for _, it := range its {
 
-		for _, it := range its {
-			if !vangogh_local_data.IsImageTypeDehydrationSupported(it) {
-				continue
-			}
+		if !vangogh_local_data.IsImageTypeDehydrationSupported(it) {
+			continue
+		}
 
-			samples := vangogh_local_data.ImageTypeDehydrationSamples(it)
-			if samples < 0 {
-				continue
-			}
+		samples := vangogh_local_data.ImageTypeDehydrationSamples(it)
+		if samples < 0 {
+			continue
+		}
 
-			asset := vangogh_local_data.PropertyFromImageType(it)
+		asset := vangogh_local_data.PropertyFromImageType(it)
+
+		dehydratedImages := make(map[string][]string)
+		dehydratedImageModified := make(map[string][]string)
+
+		for id := range idSet {
+
 			imageId, ok := rxa.GetFirstVal(asset, id)
 			if !ok {
 				continue
@@ -99,17 +107,19 @@ func Dehydrate(
 
 			dehydratedImages[id] = []string{dhi}
 			dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
+
+			di.Increment()
 		}
 
-		di.Increment()
-	}
+		dehydratedProperty := vangogh_local_data.ImageTypeDehydratedProperty(it)
+		if err := rxa.BatchReplaceValues(dehydratedProperty, dehydratedImages); err != nil {
+			return di.EndWithError(err)
+		}
 
-	if err := rxa.BatchReplaceValues(vangogh_local_data.DehydratedImageProperty, dehydratedImages); err != nil {
-		return di.EndWithError(err)
-	}
-
-	if err := rxa.BatchReplaceValues(vangogh_local_data.DehydratedImageModifiedProperty, dehydratedImageModified); err != nil {
-		return di.EndWithError(err)
+		dehydratedModifiedProperty := vangogh_local_data.ImageTypeDehydratedModifiedProperty(it)
+		if err := rxa.BatchReplaceValues(dehydratedModifiedProperty, dehydratedImageModified); err != nil {
+			return di.EndWithError(err)
+		}
 	}
 
 	di.EndWithResult("done")

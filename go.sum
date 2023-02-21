@@ -6,6 +6,14 @@ github.com/arelate/vangogh_local_data v0.2.86 h1:KU425BrnFs0skjUpt3u49ISiRRtFFUv
 github.com/arelate/vangogh_local_data v0.2.86/go.mod h1:Kqq0ovd+Kx22em0PUn9t5z5aLKVC0NzfjQ4TU/LKdZc=
 github.com/arelate/vangogh_local_data v0.2.87 h1:xXqmp+MhcEnP1XbFSFpp6d+Nc6l1jZZXcDiSD2S7x7k=
 github.com/arelate/vangogh_local_data v0.2.87/go.mod h1:Kqq0ovd+Kx22em0PUn9t5z5aLKVC0NzfjQ4TU/LKdZc=
+github.com/arelate/vangogh_local_data v0.2.88 h1:qTy5ktt22pfW/PgkRtVM8gsc/UjpvDJlbRss+hr4/nY=
+github.com/arelate/vangogh_local_data v0.2.88/go.mod h1:Kqq0ovd+Kx22em0PUn9t5z5aLKVC0NzfjQ4TU/LKdZc=
+github.com/arelate/vangogh_local_data v0.2.89 h1:aVTmSa5TfinatBbhEuvv1MDvpFGyDiupOXYcQ0B5kH4=
+github.com/arelate/vangogh_local_data v0.2.89/go.mod h1:Kqq0ovd+Kx22em0PUn9t5z5aLKVC0NzfjQ4TU/LKdZc=
+github.com/arelate/vangogh_local_data v0.2.90 h1:T/ACkiE1/KrhrOitfpOFeO4oWjjbLP195qKjNArAZXs=
+github.com/arelate/vangogh_local_data v0.2.90/go.mod h1:Kqq0ovd+Kx22em0PUn9t5z5aLKVC0NzfjQ4TU/LKdZc=
+github.com/arelate/vangogh_local_data v0.2.91 h1:8g5RyuxdORH4Zblylaf1n8GbsXk8YykABsxogvRAT3w=
+github.com/arelate/vangogh_local_data v0.2.91/go.mod h1:Kqq0ovd+Kx22em0PUn9t5z5aLKVC0NzfjQ4TU/LKdZc=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=

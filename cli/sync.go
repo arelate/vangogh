@@ -206,6 +206,10 @@ func Sync(
 		if err := GetImages(map[string]bool{}, imageTypes, true); err != nil {
 			return sa.EndWithError(err)
 		}
+
+		if err := Dehydrate(map[string]bool{}, vangogh_local_data.ImageTypesDehydration(), true); err != nil {
+			return sa.EndWithError(err)
+		}
 	}
 
 	// get downloads updates
