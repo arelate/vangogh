@@ -122,6 +122,7 @@ func dehydrateImage(absImagePath string, plt color.Palette, samples int) (string
 	if err != nil {
 		return dhi, err
 	}
+	defer fi.Close()
 
 	img, _, err := image.Decode(fi)
 	if err != nil {

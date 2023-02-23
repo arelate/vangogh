@@ -14,6 +14,7 @@ import (
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/wits"
+	_ "image/jpeg"
 	"os"
 	"path/filepath"
 )
