@@ -99,6 +99,9 @@ owned
     id^&
     slug&
 
+post-completion
+    completion-webhook-url
+
 reduce
     property&={redux-properties}
     since-hours-ago
@@ -128,6 +131,7 @@ sync
     operating-system&={operating-systems^}
     download-type&={download-types^}
     language-code&={language-codes^}
+    completion-webhook-url
     {sync-options^&}
 
 tag

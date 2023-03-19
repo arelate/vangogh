@@ -109,6 +109,7 @@ func main() {
 		"list":             cli.ListHandler,
 		"local-tag":        cli.LocalTagHandler,
 		"owned":            cli.OwnedHandler,
+		"post-completion":  cli.PostCompletionHandler,
 		"reduce":           cli.ReduceHandler,
 		"search":           cli.SearchHandler,
 		"serve":            cli.ServeHandler,

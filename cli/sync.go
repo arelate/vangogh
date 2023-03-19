@@ -73,12 +73,15 @@ func SyncHandler(u *url.URL) error {
 		return err
 	}
 
+	cwu := vangogh_local_data.ValueFromUrl(u, "completion-webhook-url")
+
 	return Sync(
 		since,
 		syncOpts,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, "language-code"))
+		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		cwu)
 }
 
 func Sync(
@@ -86,7 +89,8 @@ func Sync(
 	syncOpts *syncOptions,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
-	langCodes []string) error {
+	langCodes []string,
+	completionWebhookUrl string) error {
 
 	sa := nod.Begin("syncing source data...")
 	defer sa.End()
@@ -259,7 +263,13 @@ func Sync(
 		return sa.EndWithError(err)
 	}
 
+	// backing up data
 	if err := Backup(); err != nil {
+		return sa.EndWithError(err)
+	}
+
+	// posting sync completion
+	if err := PostCompletion(completionWebhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 
