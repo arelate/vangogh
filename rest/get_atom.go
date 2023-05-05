@@ -3,6 +3,7 @@ package rest
 import (
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
+	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
 	"net/http"
 	"os"
@@ -16,9 +17,9 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 	absAtomFeedPath := vangogh_local_data.AbsAtomFeedPath()
 	if stat, err := os.Stat(absAtomFeedPath); err == nil {
 
-		w.Header().Set(lastModifiedHeader, stat.ModTime().Format(time.RFC1123))
-		ims := r.Header.Get(ifModifiedSinceHeader)
-		if isNotModified(ims, stat.ModTime().Unix()) {
+		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().Format(time.RFC1123))
+		ims := r.Header.Get(middleware.IfModifiedSinceHeader)
+		if middleware.IsNotModified(ims, stat.ModTime().Unix()) {
 			w.WriteHeader(http.StatusNotModified)
 			return
 		}

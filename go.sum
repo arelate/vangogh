@@ -8,6 +8,8 @@ github.com/boggydigital/atomus v0.1.1 h1:gO+dKNE6doMWSnKB+obGCIYdVyFdYUQm1Z0Qa7C
 github.com/boggydigital/atomus v0.1.1/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/atomus v0.1.2 h1:sYcJTZIFSIZqeXBAQhfPypHdRL292jOIBgA+K7e7kqQ=
 github.com/boggydigital/atomus v0.1.2/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
+github.com/boggydigital/atomus v0.1.3 h1:DXQ1QY/43gN/S1liZIk9n0u76gI8olUuXESTWEP1t9M=
+github.com/boggydigital/atomus v0.1.3/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
@@ -22,6 +24,8 @@ github.com/boggydigital/match_node v0.1.11 h1:Uxm5tlrDAXGeHDf8EMVpyazZ5UHzRS0DUk
 github.com/boggydigital/match_node v0.1.11/go.mod h1:LmKtZy8YgBYC14BStAS4g17MglrLqqUF6dehrBX7Zwc=
 github.com/boggydigital/middleware v0.1.3 h1:U8HtBXOroPQ60v9H9AkniL1NwEPBCI+yNFaX5WPevys=
 github.com/boggydigital/middleware v0.1.3/go.mod h1:6BpLsFRsR/barySl9mu5eit5o9PG4SuSplaGe3YpvXs=
+github.com/boggydigital/middleware v0.1.8 h1:2k7BEEynjp/hXZ2MO5CsAQyEpDl1LaoLS1MEopljuAg=
+github.com/boggydigital/middleware v0.1.8/go.mod h1:pU6ig6HG7HpwZtUatAy0Hp/H7bfllI5cZhZQOy2NIME=
 github.com/boggydigital/nod v0.1.20 h1:6cyK3fDxAUcDC9s+2JLNNHJKuCCObQbabpmJfpXCSfA=
 github.com/boggydigital/nod v0.1.20/go.mod h1:rghsJhj0wC5UL7qT8W3vSUc1MlE5IyheYjfAKIZ9kLQ=
 github.com/boggydigital/testo v0.1.7 h1:Sa5GIAwCyQNeGGXi8XgVpIpLQqWVeqBKQRcv0gkL098=
