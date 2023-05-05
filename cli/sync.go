@@ -191,6 +191,11 @@ func Sync(
 		return sa.EndWithError(err)
 	}
 
+	// posting sync completion to update static content
+	if err := PostCompletion(completionWebhookUrl); err != nil {
+		return sa.EndWithError(err)
+	}
+
 	// get items (embedded into descriptions)
 	if syncOpts.items {
 		if err := GetItems(map[string]bool{}, since); err != nil {
@@ -265,11 +270,6 @@ func Sync(
 
 	// backing up data
 	if err := Backup(); err != nil {
-		return sa.EndWithError(err)
-	}
-
-	// posting sync completion
-	if err := PostCompletion(completionWebhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 
