@@ -1,15 +1,24 @@
 package cli
 
 import (
-	"encoding/xml"
+	"fmt"
+	"github.com/boggydigital/atomus"
 	"net/url"
 	"os"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
+)
+
+const (
+	atomFeedTitle  = "vangogh sync updates"
+	atomAuthorName = "Vincent van Gogh"
+	atomEntryTitle = "Sync results "
 )
 
 func SummarizeHandler(u *url.URL) error {
@@ -116,11 +125,32 @@ func publishAtom(rxa kvas.ReduxAssets, summary map[string][]string) error {
 		return err
 	}
 
-	atomFeed := NewAtomFeed(rxa, summary)
+	af := atomus.NewFeed(atomFeedTitle, "")
+	af.SetEntry(atomEntryTitle, atomAuthorName, NewAtomFeedContent(rxa, summary))
 
-	if err := xml.NewEncoder(atomFile).Encode(atomFeed); err != nil {
-		return err
+	return af.Encode(atomFile)
+}
+
+func NewAtomFeedContent(rxa kvas.ReduxAssets, summary map[string][]string) string {
+	sb := strings.Builder{}
+
+	sections := maps.Keys(summary)
+	sort.Strings(sections)
+
+	for _, section := range sections {
+		if len(summary[section]) == 0 {
+			continue
+		}
+		sb.WriteString("<h1>" + section + "</h1>")
+		sb.WriteString("<ul>")
+		for _, id := range summary[section] {
+			if title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+				sb.WriteString(fmt.Sprintf("<li>%s (%s)</li>", title, id))
+			} else {
+				sb.WriteString("<li>" + id + "</li>")
+			}
+		}
+		sb.WriteString("</ul>")
 	}
-
-	return nil
+	return sb.String()
 }

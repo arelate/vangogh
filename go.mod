@@ -18,6 +18,7 @@ require (
 )
 
 require (
+	github.com/boggydigital/atomus v0.1.2 // indirect
 	github.com/boggydigital/match_node v0.1.11 // indirect
 	golang.org/x/net v0.7.0 // indirect
 )
