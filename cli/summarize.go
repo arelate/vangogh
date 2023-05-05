@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	atomFeedTitle  = "vangogh sync updates"
-	atomAuthorName = "Vincent van Gogh"
-	atomEntryTitle = "Sync results "
+	atomFeedTitle   = "vangogh sync updates"
+	atomEntryAuthor = "Vincent van Gogh"
+	atomEntryTitle  = "Sync results"
 )
 
 func SummarizeHandler(u *url.URL) error {
@@ -126,7 +126,7 @@ func publishAtom(rxa kvas.ReduxAssets, summary map[string][]string) error {
 	}
 
 	af := atomus.NewFeed(atomFeedTitle, "")
-	af.SetEntry(atomEntryTitle, atomAuthorName, NewAtomFeedContent(rxa, summary))
+	af.SetEntry(atomEntryTitle, atomEntryAuthor, NewAtomFeedContent(rxa, summary))
 
 	return af.Encode(atomFile)
 }

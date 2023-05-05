@@ -10,6 +10,8 @@ github.com/boggydigital/atomus v0.1.2 h1:sYcJTZIFSIZqeXBAQhfPypHdRL292jOIBgA+K7e
 github.com/boggydigital/atomus v0.1.2/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/atomus v0.1.3 h1:DXQ1QY/43gN/S1liZIk9n0u76gI8olUuXESTWEP1t9M=
 github.com/boggydigital/atomus v0.1.3/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
+github.com/boggydigital/atomus v0.1.4 h1:91VcvkJbtURDyoPgjMNkpI8VICaVhsTfgFbUd86ZT6I=
+github.com/boggydigital/atomus v0.1.4/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
