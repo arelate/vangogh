@@ -2,54 +2,18 @@ package fetchers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kvas_dolo"
 	"github.com/boggydigital/nod"
-	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 )
 
-type kvasIndexSetter struct {
-	keyValues kvas.KeyValues
-	ids       []string
-}
-
-func (kis *kvasIndexSetter) Len() int {
-	return len(kis.ids)
-}
-
-func (kis *kvasIndexSetter) Exists(int) bool {
-	//kvas performs hash computation to track modified files,
-	//so we want all set attempts to go through (we need to
-	//read src to compute that hash)
-	return false
-}
-
-func (kis *kvasIndexSetter) Set(index int, src io.ReadCloser, results chan *dolo.IndexResult, errors chan *dolo.IndexError) {
-
-	defer src.Close()
-
-	if index < 0 || index >= len(kis.ids) {
-		errors <- dolo.NewIndexError(index, fmt.Errorf("id index out of bounds"))
-	}
-
-	if err := kis.keyValues.Set(kis.ids[index], src); err != nil {
-		errors <- dolo.NewIndexError(index, err)
-	}
-
-	results <- dolo.NewIndexResult(index, true)
-}
-
-func (kis *kvasIndexSetter) Get(key string) (io.ReadCloser, error) {
-	return kis.keyValues.Get(key)
-}
-
-func NewKvasIndexSetter(pt vangogh_local_data.ProductType, ids []string) (*kvasIndexSetter, error) {
+func NewIndexSetter(pt vangogh_local_data.ProductType, ids []string) (dolo.IndexSetter, error) {
 
 	localDir, err := vangogh_local_data.AbsLocalProductTypeDir(pt)
 	if err != nil {
@@ -61,15 +25,12 @@ func NewKvasIndexSetter(pt vangogh_local_data.ProductType, ids []string) (*kvasI
 		return nil, err
 	}
 
-	return &kvasIndexSetter{
-		keyValues: valueSet,
-		ids:       ids,
-	}, nil
+	return kvas_dolo.NewIndexSetter(valueSet, ids...), nil
 }
 
-func (kis *kvasIndexSetter) IsModifiedAfter(index string, since int64) bool {
-	return kis.keyValues.IsModifiedAfter(index, since)
-}
+//func (kis *kvasIndexSetter) IsModifiedAfter(index string, since int64) bool {
+//	return kis.keyValues.IsModifiedAfter(index, since)
+//}
 
 // Pages fetches all paged product type pages concurrently (using dolo.GetSet).
 // To do that it downloads the first page, decodes that to get TotalPages,
@@ -100,7 +61,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	urls[0], ids[0] = up.Url(firstPage), firstPage
 
 	//initiate kvasIndexSetter using single page id "1"
-	kis, err := NewKvasIndexSetter(pt, ids)
+	kis, err := NewIndexSetter(pt, ids)
 	if err != nil {
 		return err
 	}
@@ -114,13 +75,13 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 
 	// certain data types increase monotonically and don't need to be downloaded completely (e.g. orders, wishlist)
 	// if the first page has not been modified
-	if vangogh_local_data.IsFastPageFetchProduct(pt) && !kis.IsModifiedAfter(firstPage, since) {
+	if vangogh_local_data.IsFastPageFetchProduct(pt) && !kis.IsModifiedAfter(0, since) {
 		gfp.EndWithResult("first page unchanged, skipping the rest")
 		return nil
 	}
 
 	//get downloaded first page from kvas...
-	fpReadCloser, err := kis.Get(firstPage)
+	fpReadCloser, err := kis.Get(0)
 	defer fpReadCloser.Close()
 	if err != nil {
 		return err
@@ -145,7 +106,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 		ids[i-2] = page
 	}
 
-	kis, err = NewKvasIndexSetter(pt, ids)
+	kis, err = NewIndexSetter(pt, ids)
 	if err != nil {
 		return err
 	}

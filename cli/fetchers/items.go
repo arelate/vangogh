@@ -45,7 +45,7 @@ func Items(
 		urls[i], idStr[i] = up.Url(ids[i]), ids[i]
 	}
 
-	kis, err := NewKvasIndexSetter(pt, idStr)
+	kis, err := NewIndexSetter(pt, idStr)
 	if err != nil {
 		return ia.EndWithError(err)
 	}
