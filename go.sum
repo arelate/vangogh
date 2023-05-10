@@ -36,6 +36,8 @@ github.com/boggydigital/kvas_dolo v0.1.3 h1:+Fewa6EDZsH/eXypoZvpAmyHLGmtwNc4r2CP
 github.com/boggydigital/kvas_dolo v0.1.3/go.mod h1:yPX28Ckuzz3oXAflcCpR7uKUP2DU0uc4LKRdAnehqFg=
 github.com/boggydigital/kvas_dolo v0.1.4 h1:KB3ZdEKoIfU7or2Q0T8Jb9E8SD74wuGLLmOLZgpHZJE=
 github.com/boggydigital/kvas_dolo v0.1.4/go.mod h1:Lt8OI9jrbAQZc8+Q0UPBsgp/vXXkLmakk/FkuciFfak=
+github.com/boggydigital/kvas_dolo v0.1.5 h1:OeM3eWPGQfsx+qMr4rVtpfYhF67CK1wNzcYIzstx8NA=
+github.com/boggydigital/kvas_dolo v0.1.5/go.mod h1:uioLEPX4AtyJEa+c6eiCvmYH5Ib8pSuBWLHBPrhJsCo=
 github.com/boggydigital/match_node v0.1.11 h1:Uxm5tlrDAXGeHDf8EMVpyazZ5UHzRS0DUkN65HfsEDs=
 github.com/boggydigital/match_node v0.1.11/go.mod h1:LmKtZy8YgBYC14BStAS4g17MglrLqqUF6dehrBX7Zwc=
 github.com/boggydigital/middleware v0.1.3 h1:U8HtBXOroPQ60v9H9AkniL1NwEPBCI+yNFaX5WPevys=
