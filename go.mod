@@ -7,7 +7,7 @@ require (
 	github.com/arelate/vangogh_local_data v0.2.91
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/coost v0.3.8
-	github.com/boggydigital/dolo v0.2.8
+	github.com/boggydigital/dolo v0.2.10
 	github.com/boggydigital/issa v0.1.5
 	github.com/boggydigital/kvas v0.3.27
 	github.com/boggydigital/middleware v0.1.8
