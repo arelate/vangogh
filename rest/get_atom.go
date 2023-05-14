@@ -7,7 +7,6 @@ import (
 	"github.com/boggydigital/nod"
 	"net/http"
 	"os"
-	"time"
 )
 
 func GetAtom(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +16,7 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 	absAtomFeedPath := vangogh_local_data.AbsAtomFeedPath()
 	if stat, err := os.Stat(absAtomFeedPath); err == nil {
 
-		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().Format(time.RFC1123))
+		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().Format(http.TimeFormat))
 		ims := r.Header.Get(middleware.IfModifiedSinceHeader)
 		if middleware.IsNotModified(ims, stat.ModTime().Unix()) {
 			w.WriteHeader(http.StatusNotModified)
