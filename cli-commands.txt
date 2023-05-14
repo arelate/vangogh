@@ -6,10 +6,6 @@
 # {} - placeholder values
 # {^} - placeholder values, first value is default
 
-auth
-    username
-    password
-
 backup
 
 cleanup

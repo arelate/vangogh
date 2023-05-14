@@ -91,7 +91,6 @@ func main() {
 	}
 
 	clo.HandleFuncs(map[string]clo.Handler{
-		"auth":             cli.AuthHandler,
 		"backup":           cli.BackupHandler,
 		"cleanup":          cli.CleanupHandler,
 		"dehydrate":        cli.DehydrateHandler,
