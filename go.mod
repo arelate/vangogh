@@ -10,7 +10,7 @@ require (
 	github.com/boggydigital/dolo v0.2.10
 	github.com/boggydigital/issa v0.1.5
 	github.com/boggydigital/kvas v0.3.27
-	github.com/boggydigital/middleware v0.1.8
+	github.com/boggydigital/middleware v0.1.10
 	github.com/boggydigital/nod v0.1.20
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yt_urls v0.1.19

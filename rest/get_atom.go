@@ -18,7 +18,8 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().Format(http.TimeFormat))
 		ims := r.Header.Get(middleware.IfModifiedSinceHeader)
-		if middleware.IsNotModified(ims, stat.ModTime().Unix()) {
+		lm := stat.ModTime().Format(http.TimeFormat)
+		if middleware.IsNotModified(ims, lm) {
 			w.WriteHeader(http.StatusNotModified)
 			return
 		}
