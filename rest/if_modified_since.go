@@ -13,7 +13,7 @@ func IfReduxModifiedSince(next http.Handler) http.Handler {
 		// 1) set Last-Modified header
 		// 2) check if content was modified since client cache
 		if ramt, err := rxa.ReduxAssetsModTime(); err == nil {
-			lm := time.Unix(ramt, 0).Format(http.TimeFormat)
+			lm := time.Unix(ramt, 0).UTC().Format(http.TimeFormat)
 			w.Header().Set(middleware.LastModifiedHeader, lm)
 			ims := r.Header.Get(middleware.IfModifiedSinceHeader)
 			if middleware.IsNotModified(ims, lm) {
@@ -34,7 +34,7 @@ func IfDataModifiedSince(next http.Handler) http.Handler {
 		pt := vangogh_local_data.ParseProductType(vangogh_local_data.ValueFromUrl(r.URL, "product-type"))
 		if vr, err := vangogh_local_data.NewReader(pt); err == nil {
 			if icmt, err := vr.IndexCurrentModTime(); err == nil {
-				lm := time.Unix(icmt, 0).Format(http.TimeFormat)
+				lm := time.Unix(icmt, 0).UTC().Format(http.TimeFormat)
 				w.Header().Set(middleware.LastModifiedHeader, lm)
 				if middleware.IsNotModified(r.Header.Get(middleware.IfModifiedSinceHeader), lm) {
 					w.WriteHeader(http.StatusNotModified)

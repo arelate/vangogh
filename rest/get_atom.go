@@ -16,9 +16,9 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 	absAtomFeedPath := vangogh_local_data.AbsAtomFeedPath()
 	if stat, err := os.Stat(absAtomFeedPath); err == nil {
 
-		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().Format(http.TimeFormat))
+		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().UTC().Format(http.TimeFormat))
 		ims := r.Header.Get(middleware.IfModifiedSinceHeader)
-		lm := stat.ModTime().Format(http.TimeFormat)
+		lm := stat.ModTime().UTC().Format(http.TimeFormat)
 		if middleware.IsNotModified(ims, lm) {
 			w.WriteHeader(http.StatusNotModified)
 			return
