@@ -33,14 +33,11 @@ services:
 
 ## Getting started
 
-After you've installed `vangogh`, you probably want to authenticate your GOG.com username / password. 
+After you've installed `vangogh`, you need to authenticate your GOG.com username / password. 
 Please note - your credentials are not stored by `vangogh` and only used to get session cookies from GOG.com - 
 exactly the same way you would log in to a website.
 
-There are two ways to do that:
-
-1) Run `docker-compose exec vangogh vg auth` and follow the prompts
-2) Import your cookies from existing browser session. To do that you need to create `cookies.txt` in the `temporary data` folder (see [docker installation](#Installation)),
+To do that you'll need to import your cookies from existing browser session. To do that you need to create `cookies.txt` in the `temporary data` folder (see [docker installation](#Installation)),
    then follow [instructions here](https://github.com/boggydigital/coost#copying-session-cookies-from-an-existing-browser-session) to copy `gog.com` cookies into that file. When you run `vangogh` for the first time, it'll import the cookie header value and split individual parameters.
 
 Regardless of how you do it, the content of `cookies.txt` should look like this:
