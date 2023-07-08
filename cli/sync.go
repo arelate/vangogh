@@ -191,7 +191,8 @@ func Sync(
 		return sa.EndWithError(err)
 	}
 
-	// posting sync completion to update static content
+	// posting intermediate completion for the updated data
+	// while downloads, video downloads and validation are still processing
 	if err := PostCompletion(completionWebhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
@@ -270,6 +271,11 @@ func Sync(
 
 	// backing up data
 	if err := Backup(); err != nil {
+		return sa.EndWithError(err)
+	}
+
+	// post a final completion
+	if err := PostCompletion(completionWebhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 
