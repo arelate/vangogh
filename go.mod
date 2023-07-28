@@ -1,6 +1,6 @@
 module github.com/arelate/vangogh
 
-go 1.19
+go 1.20
 
 require (
 	github.com/arelate/southern_light v0.1.28
@@ -8,18 +8,18 @@ require (
 	github.com/boggydigital/atomus v0.1.8
 	github.com/boggydigital/clo v0.3.1
 	github.com/boggydigital/coost v0.3.8
-	github.com/boggydigital/dolo v0.2.10
+	github.com/boggydigital/dolo v0.2.11
 	github.com/boggydigital/issa v0.1.5
 	github.com/boggydigital/kvas v0.3.27
 	github.com/boggydigital/kvas_dolo v0.1.5
 	github.com/boggydigital/middleware v0.1.10
 	github.com/boggydigital/nod v0.1.20
 	github.com/boggydigital/wits v0.2.3
-	github.com/boggydigital/yt_urls v0.1.19
-	golang.org/x/exp v0.0.0-20230213192124-5e25df0256eb
+	github.com/boggydigital/yt_urls v0.1.21
+	golang.org/x/exp v0.0.0-20230725093048-515e97ebf090
 )
 
 require (
-	github.com/boggydigital/match_node v0.1.11 // indirect
-	golang.org/x/net v0.7.0 // indirect
+	github.com/boggydigital/match_node v0.1.14 // indirect
+	golang.org/x/net v0.12.0 // indirect
 )
