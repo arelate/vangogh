@@ -2,7 +2,7 @@ package dirs
 
 import "github.com/arelate/vangogh_local_data"
 
-var LogsDir = ""
+var AbsLogsDir = ""
 
 func SetStateDir(d string) {
 	vangogh_local_data.ChRoot(d)
@@ -13,5 +13,5 @@ func SetTempDir(d string) {
 }
 
 func SetLogsDir(d string) {
-	LogsDir = d
+	AbsLogsDir = d
 }

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/arelate/vangogh/cli/dirs"
 	"github.com/arelate/vangogh/cli/vets"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
@@ -148,14 +149,18 @@ func Vet(
 	}
 
 	if vetOpts.oldLogs {
-		if err := vets.OldLogs(fix); err != nil {
+		if err := vets.OldFiles(dirs.AbsLogsDir, "logs", fix); err != nil {
+			return sda.EndWithError(err)
+		}
+	}
+
+	if vetOpts.oldBackups {
+		if err := vets.OldFiles(vangogh_local_data.AbsBackupDir(), "backups", fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}
 
 	//products with values different from redux
-	//logs older than 30 days
-	//backups older than 30 days
 
 	return nil
 }
