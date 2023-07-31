@@ -113,5 +113,7 @@ func vetOptions() []string {
 		cli.VetOptionInvalidResolvedManualUrls,
 		cli.VetOptionMissingChecksums,
 		cli.VetStaleDehydrations,
+		cli.VetOldLogs,
+		cli.VetOldBackups,
 	})
 }

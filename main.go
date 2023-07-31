@@ -53,6 +53,7 @@ func main() {
 	//set directories context in vangogh_cli_api
 	dirs.SetTempDir(tempDir)
 	dirs.SetStateDir(stateDir)
+	dirs.SetLogsDir(logsDir)
 
 	defs, err := clo.Load(
 		bytes.NewBuffer(cliCommands),

@@ -20,6 +20,8 @@ const (
 	VetOptionInvalidResolvedManualUrls    = "invalid-resolved-manual-urls"
 	VetOptionMissingChecksums             = "missing-checksums"
 	VetStaleDehydrations                  = "stale-dehydrations"
+	VetOldLogs                            = "old-logs"
+	VetOldBackups                         = "old-backups"
 )
 
 type vetOptions struct {
@@ -32,6 +34,8 @@ type vetOptions struct {
 	invalidUnresolvedManualUrls bool
 	staleDehydrations           bool
 	missingChecksums            bool
+	oldLogs                     bool
+	oldBackups                  bool
 }
 
 func initVetOptions(u *url.URL) *vetOptions {
@@ -46,6 +50,8 @@ func initVetOptions(u *url.URL) *vetOptions {
 		invalidUnresolvedManualUrls: vangogh_local_data.FlagFromUrl(u, VetOptionInvalidResolvedManualUrls),
 		missingChecksums:            vangogh_local_data.FlagFromUrl(u, VetOptionMissingChecksums),
 		staleDehydrations:           vangogh_local_data.FlagFromUrl(u, VetStaleDehydrations),
+		oldLogs:                     vangogh_local_data.FlagFromUrl(u, VetOldLogs),
+		oldBackups:                  vangogh_local_data.FlagFromUrl(u, VetOldBackups),
 	}
 
 	if vangogh_local_data.FlagFromUrl(u, "all") {
@@ -58,6 +64,8 @@ func initVetOptions(u *url.URL) *vetOptions {
 		vo.invalidUnresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionInvalidResolvedManualUrls))
 		vo.missingChecksums = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionMissingChecksums))
 		vo.staleDehydrations = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
+		vo.oldLogs = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOldLogs))
+		vo.oldBackups = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOldBackups))
 	}
 
 	return vo
@@ -139,8 +147,13 @@ func Vet(
 		}
 	}
 
+	if vetOpts.oldLogs {
+		if err := vets.OldLogs(fix); err != nil {
+			return sda.EndWithError(err)
+		}
+	}
+
 	//products with values different from redux
-	//videos that are not linked to a product
 	//logs older than 30 days
 	//backups older than 30 days
 
