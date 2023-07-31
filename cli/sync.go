@@ -240,6 +240,10 @@ func Sync(
 			langCodes); err != nil {
 			return sa.EndWithError(err)
 		}
+
+		if err := CascadeValidation(); err != nil {
+			return sa.EndWithError(err)
+		}
 	}
 
 	// get videos
