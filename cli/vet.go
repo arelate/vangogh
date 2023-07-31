@@ -5,6 +5,9 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"net/url"
+	"os"
+	"strconv"
+	"time"
 )
 
 const (
@@ -16,6 +19,7 @@ const (
 	VetOptionUnresolvedManualUrls         = "unresolved-manual-urls"
 	VetOptionInvalidResolvedManualUrls    = "invalid-resolved-manual-urls"
 	VetOptionMissingChecksums             = "missing-checksums"
+	VetStaleDehydrations                  = "stale-dehydrations"
 )
 
 type vetOptions struct {
@@ -26,7 +30,7 @@ type vetOptions struct {
 	invalidData                 bool
 	unresolvedManualUrls        bool
 	invalidUnresolvedManualUrls bool
-	staleDehydratedImages       bool
+	staleDehydrations           bool
 	missingChecksums            bool
 }
 
@@ -41,6 +45,7 @@ func initVetOptions(u *url.URL) *vetOptions {
 		unresolvedManualUrls:        vangogh_local_data.FlagFromUrl(u, VetOptionUnresolvedManualUrls),
 		invalidUnresolvedManualUrls: vangogh_local_data.FlagFromUrl(u, VetOptionInvalidResolvedManualUrls),
 		missingChecksums:            vangogh_local_data.FlagFromUrl(u, VetOptionMissingChecksums),
+		staleDehydrations:           vangogh_local_data.FlagFromUrl(u, VetStaleDehydrations),
 	}
 
 	if vangogh_local_data.FlagFromUrl(u, "all") {
@@ -52,6 +57,7 @@ func initVetOptions(u *url.URL) *vetOptions {
 		vo.unresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionUnresolvedManualUrls))
 		vo.invalidUnresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionInvalidResolvedManualUrls))
 		vo.missingChecksums = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionMissingChecksums))
+		vo.staleDehydrations = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
 	}
 
 	return vo
@@ -127,10 +133,81 @@ func Vet(
 		}
 	}
 
+	if vetOpts.staleDehydrations {
+		if err := StaleDehydrations(fix); err != nil {
+			return sda.EndWithError(err)
+		}
+	}
+
 	//products with values different from redux
 	//videos that are not linked to a product
 	//logs older than 30 days
 	//backups older than 30 days
+
+	return nil
+}
+
+// StaleDehydrations needs to be in cli to avoid import cycle
+func StaleDehydrations(fix bool) error {
+
+	if err := staleDehydrationsImageType(
+		vangogh_local_data.ImageProperty,
+		vangogh_local_data.DehydratedImageModifiedProperty, fix); err != nil {
+		return err
+	}
+
+	if err := staleDehydrationsImageType(
+		vangogh_local_data.VerticalImageProperty,
+		vangogh_local_data.DehydratedVerticalImageModifiedProperty, fix); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) error {
+
+	sdia := nod.NewProgress("checking stale dehydrations for %s...", imageProperty)
+	defer sdia.End()
+
+	rxa, err := vangogh_local_data.ConnectReduxAssets(imageProperty, dimProperty)
+	if err != nil {
+		return err
+	}
+
+	staleIds := make(map[string]bool)
+
+	ids := rxa.Keys(imageProperty)
+	sdia.TotalInt(len(ids))
+
+	for _, id := range ids {
+		if imageId, ok := rxa.GetFirstVal(imageProperty, id); ok {
+			imagePath := vangogh_local_data.AbsLocalImagePath(imageId)
+			if stat, err := os.Stat(imagePath); err == nil {
+				if dimStr, ok := rxa.GetFirstVal(dimProperty, id); ok {
+					if dim, err := strconv.ParseInt(dimStr, 10, 64); err == nil {
+						dimTime := time.Unix(dim, 0)
+						imt := stat.ModTime()
+						if imt.After(dimTime) {
+							staleIds[id] = true
+						}
+					}
+				}
+			}
+		}
+		sdia.Increment()
+	}
+
+	if len(staleIds) == 0 {
+		sdia.EndWithResult("all good")
+	} else {
+		sdia.EndWithResult("found %d stale dehydrations", len(staleIds))
+		if fix {
+			imageType := vangogh_local_data.ImageTypeFromProperty(imageProperty)
+			return Dehydrate(staleIds, []vangogh_local_data.ImageType{imageType}, false)
+		}
+
+	}
 
 	return nil
 }
