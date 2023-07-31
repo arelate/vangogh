@@ -130,6 +130,7 @@ sync
     download-type&={download-types^}
     language-code&={language-codes^}
     completion-webhook-url
+    purchases-only
     {sync-options^&}
 
 tag

@@ -73,11 +73,13 @@ func SyncHandler(u *url.URL) error {
 		return err
 	}
 
+	purchasesOnly := vangogh_local_data.FlagFromUrl(u, "purchases-only")
 	cwu := vangogh_local_data.ValueFromUrl(u, "completion-webhook-url")
 
 	return Sync(
 		since,
 		syncOpts,
+		purchasesOnly,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
@@ -87,6 +89,7 @@ func SyncHandler(u *url.URL) error {
 func Sync(
 	since int64,
 	syncOpts *syncOptions,
+	purchasesOnly bool,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
@@ -122,10 +125,12 @@ func Sync(
 		pagedArrayData := append(
 			vangogh_local_data.GOGArrayProducts(),
 			vangogh_local_data.GOGPagedProducts()...)
-		pagedArrayData = append(pagedArrayData,
-			vangogh_local_data.SteamArrayProducts()...)
-		pagedArrayData = append(pagedArrayData,
-			vangogh_local_data.HLTBArrayProducts()...)
+		if !purchasesOnly {
+			pagedArrayData = append(pagedArrayData,
+				vangogh_local_data.SteamArrayProducts()...)
+			pagedArrayData = append(pagedArrayData,
+				vangogh_local_data.HLTBArrayProducts()...)
+		}
 
 		for _, pt := range pagedArrayData {
 			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {
@@ -133,55 +138,58 @@ func Sync(
 			}
 		}
 
-		detailData := append(
-			vangogh_local_data.GOGDetailProducts(),
-			vangogh_local_data.PCGWPageId)
+		detailData := vangogh_local_data.GOGDetailProducts()
+		if !purchasesOnly {
+			detailData = append(detailData, vangogh_local_data.PCGWPageId)
+		}
 
 		//get GOG.com detail data, PCGamingWiki pageId, steamAppId
 		if err := getDetailData(detailData, since); err != nil {
 			return sa.EndWithError(err)
 		}
 
-		//reduce PCGamingWiki pageId
-		if err := Reduce(since, []string{vangogh_local_data.PCGWPageIdProperty}, true); err != nil {
-			return sa.EndWithError(err)
-		}
+		if !purchasesOnly {
+			//reduce PCGamingWiki pageId
+			if err := Reduce(since, []string{vangogh_local_data.PCGWPageIdProperty}, true); err != nil {
+				return sa.EndWithError(err)
+			}
 
-		//get PCGamingWiki externallinks, engine
-		//this needs to happen after reduce, since PCGW PageId - GOG.com ProductId
-		//connection is established at reduce from cargo data.
-		pcgwDetailProducts := []vangogh_local_data.ProductType{
-			vangogh_local_data.PCGWEngine,
-			vangogh_local_data.PCGWExternalLinks,
-		}
+			//get PCGamingWiki externallinks, engine
+			//this needs to happen after reduce, since PCGW PageId - GOG.com ProductId
+			//connection is established at reduce from cargo data.
+			pcgwDetailProducts := []vangogh_local_data.ProductType{
+				vangogh_local_data.PCGWEngine,
+				vangogh_local_data.PCGWExternalLinks,
+			}
 
-		if err := getDetailData(pcgwDetailProducts, since); err != nil {
-			return sa.EndWithError(err)
-		}
+			if err := getDetailData(pcgwDetailProducts, since); err != nil {
+				return sa.EndWithError(err)
+			}
 
-		//reduce SteamAppId, HowLongToBeatId, IGDBId
-		if err := Reduce(since, []string{
-			vangogh_local_data.SteamAppIdProperty,
-			vangogh_local_data.HLTBBuildIdProperty,
-			vangogh_local_data.HLTBIdProperty,
-			vangogh_local_data.IGDBIdProperty}, true); err != nil {
-			return sa.EndWithError(err)
-		}
+			//reduce SteamAppId, HowLongToBeatId, IGDBId
+			if err := Reduce(since, []string{
+				vangogh_local_data.SteamAppIdProperty,
+				vangogh_local_data.HLTBBuildIdProperty,
+				vangogh_local_data.HLTBIdProperty,
+				vangogh_local_data.IGDBIdProperty}, true); err != nil {
+				return sa.EndWithError(err)
+			}
 
-		otherDetailProducts := vangogh_local_data.SteamDetailProducts()
-		otherDetailProducts = append(otherDetailProducts, vangogh_local_data.HLTBDetailProducts()...)
+			otherDetailProducts := vangogh_local_data.SteamDetailProducts()
+			otherDetailProducts = append(otherDetailProducts, vangogh_local_data.HLTBDetailProducts()...)
 
-		//get other detail products (Steam data, HLTB data)
-		//this needs to happen after reduce, since Steam AppId - GOG.com ProductId
-		//connection is established at reduce. And the earlier data set cannot be retrieved post reduce,
-		//since SteamAppList is fetched with initial data
-		if err := getDetailData(otherDetailProducts, since); err != nil {
-			return sa.EndWithError(err)
-		}
+			//get other detail products (Steam data, HLTB data)
+			//this needs to happen after reduce, since Steam AppId - GOG.com ProductId
+			//connection is established at reduce. And the earlier data set cannot be retrieved post reduce,
+			//since SteamAppList is fetched with initial data
+			if err := getDetailData(otherDetailProducts, since); err != nil {
+				return sa.EndWithError(err)
+			}
 
-		// finally, reduce all properties
-		if err := Reduce(since, vangogh_local_data.ReduxProperties(), false); err != nil {
-			return sa.EndWithError(err)
+			// finally, reduce all properties
+			if err := Reduce(since, vangogh_local_data.ReduxProperties(), false); err != nil {
+				return sa.EndWithError(err)
+			}
 		}
 	}
 
@@ -198,14 +206,14 @@ func Sync(
 	}
 
 	// get items (embedded into descriptions)
-	if syncOpts.items {
+	if syncOpts.items && !purchasesOnly {
 		if err := GetItems(map[string]bool{}, since); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
 
 	// get images
-	if syncOpts.images {
+	if syncOpts.images && !purchasesOnly {
 		imageTypes := make([]vangogh_local_data.ImageType, 0, len(vangogh_local_data.AllImageTypes()))
 		for _, it := range vangogh_local_data.AllImageTypes() {
 			if !syncOpts.screenshots && it == vangogh_local_data.Screenshots {
@@ -247,14 +255,14 @@ func Sync(
 	}
 
 	// get videos
-	if syncOpts.videos {
+	if syncOpts.videos && !purchasesOnly {
 		if err := GetVideos(map[string]bool{}, true, false); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
 
 	// get thumbnails
-	if syncOpts.thumbnails {
+	if syncOpts.thumbnails && !purchasesOnly {
 		if err := GetThumbnails(map[string]bool{}, true, false); err != nil {
 			return sa.EndWithError(err)
 		}
