@@ -37,7 +37,8 @@ func OldFiles(dir string, entities string, fix bool) error {
 		}
 		ft, err := time.Parse(nod.TimeFormat, fnse)
 		if err != nil {
-			return ofa.EndWithError(err)
+			nod.Log(err.Error())
+			continue
 		}
 
 		if ft.After(earliest) {
