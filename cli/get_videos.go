@@ -73,7 +73,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 
 		for _, videoId := range videoIds {
 
-			vp, err := yt_urls.GetVideoPage(http.DefaultClient, videoId)
+			vp, _, err := yt_urls.GetVideoPage(http.DefaultClient, videoId)
 			if err != nil {
 				va.Error(err)
 				if addErr := rxa.AddVal(vangogh_local_data.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {

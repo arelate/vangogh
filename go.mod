@@ -15,8 +15,8 @@ require (
 	github.com/boggydigital/middleware v0.1.10
 	github.com/boggydigital/nod v0.1.20
 	github.com/boggydigital/wits v0.2.3
-	github.com/boggydigital/yt_urls v0.1.21
-	golang.org/x/exp v0.0.0-20230725093048-515e97ebf090
+	github.com/boggydigital/yt_urls v0.1.24
+	golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691
 )
 
 require (

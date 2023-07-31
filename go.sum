@@ -6,6 +6,8 @@ github.com/boggydigital/atomus v0.1.8 h1:q6KTcQR+oBnWCnQV0UD9E7PO2k+kuriqWtAL3B4
 github.com/boggydigital/atomus v0.1.8/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v0.3.1 h1:hbODCWxflR7y4/O3+96uIuS/KNN5WXfItm5zoMpy36k=
 github.com/boggydigital/clo v0.3.1/go.mod h1:/3bLgOSu4HbChi6qbST8ZN6uDfKyrgVvVwEKNy/GxYw=
+github.com/boggydigital/clo v1.0.3 h1:Y9vmopsu/WLn+P37oRMzVUZvdBOPSTnI/OzvSFXLf1M=
+github.com/boggydigital/clo v1.0.3/go.mod h1:Vd6WItzFzxrzpV7PRwytJwRHi7FaPs4zzVoaDYaNB68=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
 github.com/boggydigital/coost v0.3.8/go.mod h1:f5wbDShRqPvjX7ZBtrevnCFjcOe/lGBh0zV3KXsO/LY=
 github.com/boggydigital/dolo v0.2.11 h1:L/VotXRJbuV7VN7H+eW4HQinYZHzUCeUOQ01++MFsPE=
@@ -27,7 +29,11 @@ github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/
 github.com/boggydigital/wits v0.2.3/go.mod h1:aR/z0vfMLtg0b4hcts0qiSTZcA51O8A2N3U9laqd2Lc=
 github.com/boggydigital/yt_urls v0.1.21 h1:XP/WmMOEuyZg06Kp62PgzX552oW+hhvUyTnEmlJQFts=
 github.com/boggydigital/yt_urls v0.1.21/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
+github.com/boggydigital/yt_urls v0.1.24 h1:aZSCOjHGc7jcLH/HaJSmps69Ce/VsYvWIJ9rXQ8mvdY=
+github.com/boggydigital/yt_urls v0.1.24/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
 golang.org/x/exp v0.0.0-20230725093048-515e97ebf090 h1:Di6/M8l0O2lCLc6VVRWhgCiApHV8MnQurBnFSHsQtNY=
 golang.org/x/exp v0.0.0-20230725093048-515e97ebf090/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
+golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691 h1:/yRP+0AN7mf5DkD3BAI6TOFnd51gEoDEb8o35jIFtgw=
+golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
 golang.org/x/net v0.12.0 h1:cfawfvKITfUsFCeJIHJrbSxpeu/E81khclypR0GVT50=
 golang.org/x/net v0.12.0/go.mod h1:zEVYFnQC7m/vmpQFELhcD1EWkZlX69l4oqgmer6hfKA=
