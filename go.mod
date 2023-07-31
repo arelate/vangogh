@@ -21,5 +21,6 @@ require (
 
 require (
 	github.com/boggydigital/match_node v0.1.14 // indirect
+	github.com/boggydigital/packer v0.1.0 // indirect
 	golang.org/x/net v0.12.0 // indirect
 )

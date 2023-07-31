@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func BackupHandler(u *url.URL) error {
+func BackupHandler(_ *url.URL) error {
 	return Backup()
 }
 
@@ -22,7 +22,5 @@ func Backup() error {
 		}
 	}
 
-	return Export(
-		vangogh_local_data.AbsReduxDir(),
-		vangogh_local_data.AbsBackupDir())
+	return Export(vangogh_local_data.AbsBackupDir())
 }
