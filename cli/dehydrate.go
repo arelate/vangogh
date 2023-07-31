@@ -72,11 +72,6 @@ func Dehydrate(
 			continue
 		}
 
-		samples := vangogh_local_data.ImageTypeDehydrationSamples(it)
-		if samples < 0 {
-			continue
-		}
-
 		asset := vangogh_local_data.PropertyFromImageType(it)
 
 		dehydratedImages := make(map[string][]string)
@@ -89,7 +84,7 @@ func Dehydrate(
 				continue
 			}
 
-			if dhi, err := dehydrateImage(vangogh_local_data.AbsLocalImagePath(imageId), plt, samples); err == nil {
+			if dhi, err := dehydrateImage(vangogh_local_data.AbsLocalImagePath(imageId), plt); err == nil {
 				dehydratedImages[id] = []string{dhi}
 				dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
 			} else {
@@ -115,7 +110,7 @@ func Dehydrate(
 	return nil
 }
 
-func dehydrateImage(absImagePath string, plt color.Palette, samples int) (string, error) {
+func dehydrateImage(absImagePath string, plt color.Palette) (string, error) {
 	dhi := ""
 
 	fi, err := os.Open(absImagePath)
@@ -129,7 +124,7 @@ func dehydrateImage(absImagePath string, plt color.Palette, samples int) (string
 		return dhi, err
 	}
 
-	gif := issa.GIFImage(img, plt, samples)
+	gif := issa.GIFImage(img, plt, issa.DefaultSampling)
 
 	return issa.Dehydrate(gif)
 }
