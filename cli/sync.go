@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/arelate/vangogh/cli/dirs"
 	"net/url"
 	"os"
 	"strconv"
@@ -74,7 +75,9 @@ func SyncHandler(u *url.URL) error {
 	}
 
 	purchasesOnly := vangogh_local_data.FlagFromUrl(u, "purchases-only")
+	gauginUrl := vangogh_local_data.ValueFromUrl(u, "gaugin-url")
 	cwu := vangogh_local_data.ValueFromUrl(u, "completion-webhook-url")
+	debug := vangogh_local_data.FlagFromUrl(u, "debug")
 
 	return Sync(
 		since,
@@ -83,7 +86,9 @@ func SyncHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
-		cwu)
+		gauginUrl,
+		cwu,
+		debug)
 }
 
 func Sync(
@@ -93,7 +98,17 @@ func Sync(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
-	completionWebhookUrl string) error {
+	gauginUrl string,
+	completionWebhookUrl string,
+	debug bool) error {
+
+	if debug {
+		logger, err := nod.EnableFileLogger(dirs.AbsLogsDir)
+		if err != nil {
+			return err
+		}
+		defer logger.Close()
+	}
 
 	sa := nod.Begin("syncing source data...")
 	defer sa.End()
@@ -195,7 +210,7 @@ func Sync(
 
 	// summarize sync updates now, since other updates are digital artifacts
 	// and won't affect the summaries
-	if err := Summarize(syncStart); err != nil {
+	if err := Summarize(syncStart, gauginUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 

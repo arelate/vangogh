@@ -28,11 +28,14 @@ func SummarizeHandler(u *url.URL) error {
 		return err
 	}
 
+	gauginUrl := vangogh_local_data.ValueFromUrl(u, "gaugin-url")
+
 	return Summarize(
-		since)
+		since,
+		gauginUrl)
 }
 
-func Summarize(since int64) error {
+func Summarize(since int64, gauginUrl string) error {
 
 	sa := nod.Begin("summarizing updates...")
 	defer sa.End()
@@ -88,7 +91,7 @@ func Summarize(since int64) error {
 	was := nod.Begin("publishing atom...")
 	defer was.End()
 
-	if err := publishAtom(rxa, summary); err != nil {
+	if err := publishAtom(gauginUrl, rxa, summary); err != nil {
 		return was.EndWithError(err)
 	}
 
@@ -118,15 +121,15 @@ func releasedToday(rxa kvas.ReduxAssets) ([]string, error) {
 	return rxa.Sort(ids, vangogh_local_data.DefaultDesc, vangogh_local_data.DefaultSort)
 }
 
-func publishAtom(rxa kvas.ReduxAssets, summary map[string][]string) error {
+func publishAtom(gauginUrl string, rxa kvas.ReduxAssets, summary map[string][]string) error {
 
 	atomFile, err := os.Create(vangogh_local_data.AbsAtomFeedPath())
 	if err != nil {
 		return err
 	}
 
-	af := atomus.NewFeed(atomFeedTitle, "")
-	af.SetEntry(atomEntryTitle, atomEntryAuthor, NewAtomFeedContent(rxa, summary))
+	af := atomus.NewFeed(atomFeedTitle, gauginUrl)
+	af.SetEntry(atomEntryTitle, atomEntryAuthor, gauginUrl, NewAtomFeedContent(rxa, summary))
 
 	return af.Encode(atomFile)
 }

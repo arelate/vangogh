@@ -82,14 +82,14 @@ func main() {
 		}
 	}
 
-	if defs.HasUserDefaultsFlag("debug") {
-		logger, err := nod.EnableFileLogger(logsDir)
-		if err != nil {
-			_ = ns.EndWithError(err)
-			os.Exit(1)
-		}
-		defer logger.Close()
-	}
+	//if defs.HasUserDefaultsFlag("debug") {
+	//	logger, err := nod.EnableFileLogger(logsDir)
+	//	if err != nil {
+	//		_ = ns.EndWithError(err)
+	//		os.Exit(1)
+	//	}
+	//	defer logger.Close()
+	//}
 
 	clo.HandleFuncs(map[string]clo.Handler{
 		"backup":             cli.BackupHandler,
