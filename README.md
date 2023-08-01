@@ -14,6 +14,29 @@ services:
   vangogh:
     container_name: vangogh
     image: ghcr.io/arelate/vangogh:latest
+    environment:
+       # Operating system and language code
+       # - VG_CLEANUP_OPERATING-SYSTEM=Windows,macOS
+       # - VG_CLEANUP_LANGUAGE-CODE=en,fr
+       # - VG_GET-DOWNLOADS_OPERATING-SYSTEM=Windows,macOS
+       # - VG_GET-DOWNLOADS_LANGUAGE-CODE=en,fr
+       # - VG_SIZE_OPERATING-SYSTEM=Windows,macOS
+       # - VG_SIZE_LANGUAGE-CODE=en,fr
+       # - VG_SYNC_OPERATING-SYSTEM=Windows,macOS
+       # - VG_SYNC_LANGUAGE-CODE=en,fr
+       # - VG_UPDATE-DOWNLOADS_OPERATING-SYSTEM=Windows,macOS
+       # - VG_UPDATE-DOWNLOADS_LANGUAGE-CODE=en,fr
+       # - VG_VALIDATE_OPERATING-SYSTEM=Windows,macOS
+       # - VG_VALIDATE_LANGUAGE-CODE=en,fr
+       # - VG_VET_OPERATING-SYSTEM=Windows,macOS
+       # - VG_VET_LANGUAGE-CODE=en,fr
+       # gaugin URL
+       # - VG_SYNC_GAUGIN-URL=https://GAUGIN-ADDRESS
+       # - VG_SUMMARIZE_GAUGIN-URL=https://GAUGIN-ADDRESS
+       # completion webhook URL
+       # - VG_POST-COMPLETION_COMPLETION-WEBHOOK-URL=http://VANGOGH-ADDRESS/prerender
+       # debug
+       # - VG_SYNC_DEBUG=true    
     volumes:
       # app configuration: settings.txt
       - /docker/vangogh:/etc/vangogh:ro

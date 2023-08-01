@@ -13,9 +13,9 @@ cascade-validation
 cleanup
     id^&
     slug&
-    operating-system&={operating-systems^}
-    download-type&={download-types^}
-    language-code&={language-codes^}
+    operating-system&$={operating-systems^}
+    download-type&$={download-types^}
+    language-code&$={language-codes^}
     all
     test
 
