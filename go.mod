@@ -9,7 +9,7 @@ require (
 	github.com/boggydigital/clo v0.3.4
 	github.com/boggydigital/coost v0.3.8
 	github.com/boggydigital/dolo v0.2.11
-	github.com/boggydigital/issa v0.1.6
+	github.com/boggydigital/issa v0.1.9
 	github.com/boggydigital/kvas v0.3.27
 	github.com/boggydigital/kvas_dolo v0.1.5
 	github.com/boggydigital/middleware v0.1.10
