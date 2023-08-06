@@ -200,11 +200,11 @@ func Sync(
 			if err := getDetailData(otherDetailProducts, since); err != nil {
 				return sa.EndWithError(err)
 			}
+		}
 
-			// finally, reduce all properties
-			if err := Reduce(since, vangogh_local_data.ReduxProperties(), false); err != nil {
-				return sa.EndWithError(err)
-			}
+		// finally, reduce all properties
+		if err := Reduce(since, vangogh_local_data.ReduxProperties(), false); err != nil {
+			return sa.EndWithError(err)
 		}
 	}
 
