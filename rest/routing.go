@@ -25,6 +25,7 @@ func HandleFuncs() {
 		"/redux":     IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetRedux)))),
 		"/search":    IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(Search)))),
 		"/tag":       PatchOnly(Log(http.HandlerFunc(PatchTag))),
+		"/titles":    IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetTitles)))),
 		"/wishlist":  Log(http.HandlerFunc(RouteWishlist)),
 	}
 
