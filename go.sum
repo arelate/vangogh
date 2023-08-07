@@ -14,6 +14,8 @@ github.com/boggydigital/clo v0.3.4 h1:fCL/lfOq5DkDrZyKCDzNBqDXoC0PLU6GmmSmxSocJ+
 github.com/boggydigital/clo v0.3.4/go.mod h1:7QbdMB008okXsdk41qJyJ6k/oJALIIXQ0GLYSxY9WFM=
 github.com/boggydigital/clo v0.3.5 h1:cnvzlp6ewoV2qj8gPcLPClLCi3JzxBPE+T5p04PDO4c=
 github.com/boggydigital/clo v0.3.5/go.mod h1:7QbdMB008okXsdk41qJyJ6k/oJALIIXQ0GLYSxY9WFM=
+github.com/boggydigital/clo v0.3.6 h1:syeucZIM2/9B3jsUZqDo3TOYqgvJ6C1ketRgSuDoUf4=
+github.com/boggydigital/clo v0.3.6/go.mod h1:7QbdMB008okXsdk41qJyJ6k/oJALIIXQ0GLYSxY9WFM=
 github.com/boggydigital/clo v1.0.3 h1:Y9vmopsu/WLn+P37oRMzVUZvdBOPSTnI/OzvSFXLf1M=
 github.com/boggydigital/clo v1.0.3/go.mod h1:Vd6WItzFzxrzpV7PRwytJwRHi7FaPs4zzVoaDYaNB68=
 github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
