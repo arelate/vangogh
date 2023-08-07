@@ -6,7 +6,7 @@ require (
 	github.com/arelate/southern_light v0.1.28
 	github.com/arelate/vangogh_local_data v0.2.91
 	github.com/boggydigital/atomus v0.1.9
-	github.com/boggydigital/clo v0.3.4
+	github.com/boggydigital/clo v0.3.5
 	github.com/boggydigital/coost v0.3.8
 	github.com/boggydigital/dolo v0.2.11
 	github.com/boggydigital/issa v0.1.9
