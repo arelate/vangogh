@@ -31,7 +31,7 @@ func LocalOnlyVideosAndThumbnails(fix bool) error {
 
 	expectedVideos := make(map[string]bool)
 	for _, id := range ids {
-		videoIds, ok := rxa.GetAllUnchangedValues(vangogh_local_data.VideoIdProperty, id)
+		videoIds, ok := rxa.GetAllValues(vangogh_local_data.VideoIdProperty, id)
 		if !ok {
 			ieva.Increment()
 			continue

@@ -41,7 +41,7 @@ func LocalOnlyImages(fix bool) error {
 	expectedImages := make(map[string]bool)
 	for p := range propSet {
 		for _, id := range rxa.Keys(p) {
-			imageIds, ok := rxa.GetAllUnchangedValues(p, id)
+			imageIds, ok := rxa.GetAllValues(p, id)
 			if !ok {
 				ieia.Increment()
 				continue

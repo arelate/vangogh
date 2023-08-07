@@ -27,7 +27,7 @@ func MissingChecksums(fix bool) error {
 	ids := make(map[string]interface{})
 
 	for _, id := range rxa.Keys(vangogh_local_data.ValidationResultProperty) {
-		results, ok := rxa.GetAllUnchangedValues(vangogh_local_data.ValidationResultProperty, id)
+		results, ok := rxa.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
 		if !ok {
 			continue
 		}

@@ -36,14 +36,14 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		properties = append(properties, p)
 	}
 
-	detailedProperties := vangogh_local_data.DetailAllAggregateProperties(properties...)
+	//detailedProperties := vangogh_local_data.DetailAllAggregateProperties(properties...)
 
-	if err := RefreshReduxAssets(maps.Keys(detailedProperties)...); err != nil {
+	if err := RefreshReduxAssets(properties...); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	found := rxa.Match(query, true)
+	found := rxa.Match(query, true, true)
 	keys, err := rxa.Sort(maps.Keys(found), desc, sort, vangogh_local_data.TitleProperty)
 
 	if err != nil {

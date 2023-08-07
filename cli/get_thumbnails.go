@@ -59,7 +59,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 	gta.TotalInt(len(idSet))
 
 	for id := range idSet {
-		videoIds, ok := rxa.GetAllUnchangedValues(vangogh_local_data.VideoIdProperty, id)
+		videoIds, ok := rxa.GetAllValues(vangogh_local_data.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
 			gta.Increment()
 			continue

@@ -20,7 +20,7 @@ func GetLanguageCodes(rxa kvas.ReduxAssets) (map[string]bool, error) {
 
 	//digest distinct languages codes
 	for _, id := range rxa.Keys(vangogh_local_data.LanguageCodeProperty) {
-		idCodes, ok := rxa.GetAllUnchangedValues(vangogh_local_data.LanguageCodeProperty, id)
+		idCodes, ok := rxa.GetAllValues(vangogh_local_data.LanguageCodeProperty, id)
 		if !ok {
 			continue
 		}

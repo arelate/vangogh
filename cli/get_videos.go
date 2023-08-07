@@ -59,7 +59,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 	gva.TotalInt(len(idSet))
 
 	for id := range idSet {
-		videoIds, ok := rxa.GetAllUnchangedValues(vangogh_local_data.VideoIdProperty, id)
+		videoIds, ok := rxa.GetAllValues(vangogh_local_data.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
 			gva.Increment()
 			continue

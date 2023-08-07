@@ -39,7 +39,7 @@ func Search(query map[string][]string) error {
 		return sa.EndWithError(err)
 	}
 
-	results := rxa.Match(query, true)
+	results := rxa.Match(query, true, true)
 
 	//expand query properties for use in printInfo filter
 	//since it's not aware of collapsed/expanded properties concept
@@ -50,13 +50,13 @@ func Search(query map[string][]string) error {
 		for _, t := range terms {
 			lowerCaseTerms = append(lowerCaseTerms, strings.ToLower(t))
 		}
-		if vangogh_local_data.IsPropertyAggregate(prop) {
-			for _, ep := range vangogh_local_data.DetailAggregateProperty(prop) {
-				propertyFilter[ep] = lowerCaseTerms
-			}
-		} else {
-			propertyFilter[prop] = lowerCaseTerms
-		}
+		//if vangogh_local_data.IsPropertyAggregate(prop) {
+		//	for _, ep := range vangogh_local_data.DetailAggregateProperty(prop) {
+		//		propertyFilter[ep] = lowerCaseTerms
+		//	}
+		//} else {
+		propertyFilter[prop] = lowerCaseTerms
+		//}
 	}
 
 	if len(results) == 0 {
@@ -65,16 +65,16 @@ func Search(query map[string][]string) error {
 	}
 
 	//similarly for propertyFilter (see comment above) - expand all properties to display
-	expandedPropsMap := vangogh_local_data.DetailAllAggregateProperties(maps.Keys(propSet)...)
-	expandedProps := make([]string, 0, len(expandedPropsMap))
-	for p := range expandedPropsMap {
-		expandedProps = append(expandedProps, p)
-	}
+	//expandedPropsMap := vangogh_local_data.DetailAllAggregateProperties(maps.Keys(propSet)...)
+	//expandedProps := make([]string, 0, len(expandedPropsMap))
+	//for p := range expandedPropsMap {
+	//	expandedProps = append(expandedProps, p)
+	//}
 
 	itp, err := vangogh_local_data.PropertyListsFromIdSet(
 		results,
 		propertyFilter,
-		expandedProps,
+		maps.Keys(propSet),
 		rxa)
 
 	if err != nil {

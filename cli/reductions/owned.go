@@ -35,7 +35,7 @@ func CheckOwnership(idSet map[string]bool, rxa kvas.ReduxAssets) (map[string]boo
 			continue
 		}
 
-		includesGames, _ := rxa.GetAllUnchangedValues(vangogh_local_data.IncludesGamesProperty, id)
+		includesGames, _ := rxa.GetAllValues(vangogh_local_data.IncludesGamesProperty, id)
 
 		// check if all included games are owned
 		ownAllIncludedGames := len(includesGames) > 0
@@ -64,7 +64,7 @@ func CheckOwnership(idSet map[string]bool, rxa kvas.ReduxAssets) (map[string]boo
 }
 
 func isIncludedByIsOwned(id string, rxa kvas.ReduxAssets, vrLicenceProducts *vangogh_local_data.ValueReader) bool {
-	if iibg, ok := rxa.GetAllUnchangedValues(vangogh_local_data.IsIncludedByGamesProperty, id); !ok {
+	if iibg, ok := rxa.GetAllValues(vangogh_local_data.IsIncludedByGamesProperty, id); !ok {
 		return false
 	} else {
 		for _, aid := range iibg {

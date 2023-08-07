@@ -34,7 +34,7 @@ func CascadeValidation() error {
 
 	for _, id := range ids {
 
-		vr, _ := rxa.GetAllUnchangedValues(vangogh_local_data.ValidationResultProperty, id)
+		vr, _ := rxa.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
 
 		for _, ri := range filterOwnedRelated(rxa, vangogh_local_data.IsRequiredByGamesProperty, id) {
 			cascadedResults[ri] = vr
@@ -56,7 +56,7 @@ func CascadeValidation() error {
 
 func filterOwnedRelated(rxa kvas.ReduxAssets, p, id string) []string {
 	ownedRelated := make([]string, 0)
-	if related, ok := rxa.GetAllUnchangedValues(p, id); ok {
+	if related, ok := rxa.GetAllValues(p, id); ok {
 		for _, rid := range related {
 			if own, ok := rxa.GetFirstVal(vangogh_local_data.OwnedProperty, rid); ok && own == "true" {
 				ownedRelated = append(ownedRelated, rid)

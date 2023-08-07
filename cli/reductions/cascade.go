@@ -37,18 +37,18 @@ func Cascade() error {
 	ca.TotalInt(len(ids))
 
 	for _, id := range ids {
-		includesIds, ok := rxa.GetAllUnchangedValues(vangogh_local_data.IncludesGamesProperty, id)
+		includesIds, ok := rxa.GetAllValues(vangogh_local_data.IncludesGamesProperty, id)
 		if !ok {
 			ca.Increment()
 			continue
 		}
 		for _, prop := range cascadingProperties {
-			mainValues, ok := rxa.GetAllUnchangedValues(prop, id)
+			mainValues, ok := rxa.GetAllValues(prop, id)
 			if !ok {
 				continue
 			}
 			for _, includesId := range includesIds {
-				if _, ok := rxa.GetAllUnchangedValues(prop, includesId); !ok {
+				if _, ok := rxa.GetAllValues(prop, includesId); !ok {
 					if err := rxa.ReplaceValues(prop, includesId, mainValues...); err != nil {
 						return ca.EndWithError(err)
 					}

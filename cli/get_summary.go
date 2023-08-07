@@ -28,7 +28,7 @@ func GetSummary() error {
 	summary := make(map[string][]string)
 
 	for _, section := range rxa.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
-		ids, _ := rxa.GetAllUnchangedValues(vangogh_local_data.LastSyncUpdatesProperty, section)
+		ids, _ := rxa.GetAllValues(vangogh_local_data.LastSyncUpdatesProperty, section)
 		for _, id := range ids {
 			if title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
 				summary[section] = append(summary[section], fmt.Sprintf("%s %s", id, title))

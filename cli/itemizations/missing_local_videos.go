@@ -17,7 +17,7 @@ func NewVideoPropertiesGetter(rxa kvas.ReduxAssets) *videoPropertiesGetter {
 }
 
 func (vpg *videoPropertiesGetter) GetVideoIds(id string) ([]string, bool) {
-	return vpg.reduxAssets.GetAllUnchangedValues(vangogh_local_data.VideoIdProperty, id)
+	return vpg.reduxAssets.GetAllValues(vangogh_local_data.VideoIdProperty, id)
 }
 
 func (vpg *videoPropertiesGetter) IsMissingVideo(videoId string) bool {

@@ -113,7 +113,7 @@ func main() {
 	//for _, id := range rxa.Keys(vangogh_local_data.TitleProperty) {
 	//
 	//	isUnity := false
-	//	engines, _ := rxa.GetAllUnchangedValues(vangogh_local_data.EnginesProperty, id)
+	//	engines, _ := rxa.GetAllValues(vangogh_local_data.EnginesProperty, id)
 	//	for _, engine := range engines {
 	//		isUnity = isUnity || strings.Contains(engine, "Unity")
 	//	}
@@ -122,7 +122,7 @@ func main() {
 	//		continue
 	//	}
 	//
-	//	oss, _ := rxa.GetAllUnchangedValues(vangogh_local_data.OperatingSystemsProperty, id)
+	//	oss, _ := rxa.GetAllValues(vangogh_local_data.OperatingSystemsProperty, id)
 	//	linuxStr, macOSStr := strings.ToLower(vangogh_local_data.Linux.String()), strings.ToLower(vangogh_local_data.MacOS.String())
 	//	if !slices.Contains(oss, linuxStr) || slices.Contains(oss, macOSStr) {
 	//		continue
