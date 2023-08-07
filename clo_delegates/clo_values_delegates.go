@@ -12,7 +12,7 @@ var Values = map[string]func() []string{
 	"image-types":           imageTypes,
 	"redux-properties":      vangogh_local_data.ReduxProperties,
 	"all-properties":        vangogh_local_data.AllProperties,
-	"searchable-properties": vangogh_local_data.SearchableProperties,
+	"searchable-properties": vangogh_local_data.ReduxProperties,
 	"digestible-properties": vangogh_local_data.DigestibleProperties,
 	"operating-systems":     operatingSystems,
 	"download-types":        downloadTypes,

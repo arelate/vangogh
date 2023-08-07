@@ -11,7 +11,7 @@ import (
 func SearchHandler(u *url.URL) error {
 	query := make(map[string][]string)
 
-	for _, prop := range vangogh_local_data.SearchableProperties() {
+	for _, prop := range vangogh_local_data.ReduxProperties() {
 		if values := vangogh_local_data.ValuesFromUrl(u, prop); len(values) > 0 {
 			query[prop] = values
 		}
