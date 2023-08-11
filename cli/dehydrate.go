@@ -124,7 +124,7 @@ func dehydrateImage(absImagePath string, plt color.Palette) (string, error) {
 		return dhi, err
 	}
 
-	gif := issa.GIFImage(img, plt, issa.DefaultSampling)
+	gif := issa.GIFImage(img, plt, issa.DefaultDownSampling)
 
 	return issa.Dehydrate(gif)
 }
