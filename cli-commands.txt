@@ -98,7 +98,7 @@ owned
     slug&
 
 post-completion
-    completion-webhook-url$
+    webhook-url*^$
 
 reduce
     property&={redux-properties}

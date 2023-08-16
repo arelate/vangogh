@@ -8,21 +8,22 @@ import (
 )
 
 func PostCompletionHandler(u *url.URL) error {
-	cwu := vangogh_local_data.ValueFromUrl(u, "completion-webhook-url")
+	cwu := vangogh_local_data.ValueFromUrl(u, "webhook-url")
 
 	return PostCompletion(cwu)
 }
 
-func PostCompletion(completionWebhookUrl string) error {
-
-	if completionWebhookUrl == "" {
-		return nil
-	}
+func PostCompletion(webhookUrl string) error {
 
 	pca := nod.Begin("posting completion...")
 	defer pca.End()
 
-	_, err := http.DefaultClient.Post(completionWebhookUrl, "", nil)
+	if webhookUrl == "" {
+		pca.EndWithResult("empty webhook url")
+		return nil
+	}
+
+	_, err := http.DefaultClient.Post(webhookUrl, "", nil)
 	if err != nil {
 		return pca.EndWithError(err)
 	}
