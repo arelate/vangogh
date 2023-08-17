@@ -1,13 +1,19 @@
 config
- # configuration: settings.txt
- /etc/vangogh
+    # configuration: settings.txt
+    /etc/vangogh
 logs
- # logs
- /var/log/vangogh
-state
- # directories: checksums, downloads, images, metadata, recycle_bin, videos
- # files: skiplist.txt
- /var/lib/vangogh
+    # logs
+    /var/log/vangogh
+root
+    # directories: checksums, downloads, recycle_bin, videos
+    # files: skiplist.txt
+    /var/lib/vangogh
+images
+    /var/lib/vangogh/images
+items
+    /var/lib/vangogh/items
+metadata
+    /var/lib/vangogh/metadata
 temp
- # temporary data: cookies.txt
- /var/tmp
+    # temporary data: cookies.txt
+    /var/tmp

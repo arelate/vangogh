@@ -16,10 +16,14 @@ VOLUME /etc/vangogh
 VOLUME /var/tmp
 #app logs
 VOLUME /var/log/vangogh
-#app artifacts: checksums, images, metadata, recycle_bin, videos
+#application data root (cold store): checksums, recycle_bin, videos
 VOLUME /var/lib/vangogh
-#ffmpeg (and dependencies) location
-VOLUME /usr/local/sbin
+#images (warm store)
+VOLUME /var/lib/vangogh/images
+#items (warm store)
+VOLUME /var/lib/vangogh/items
+#metadata (warm store)
+VOLUME /var/lib/vangogh/metadata
 
 ENTRYPOINT ["/usr/bin/vg"]
 CMD ["serve","-port", "1853", "-stderr"]
