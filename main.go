@@ -31,7 +31,6 @@ const (
 )
 
 var (
-	configDir   = "/etc/vangogh"
 	logsDir     = "/var/log/vangogh"
 	rootDir     = "/var/lib/vangogh"
 	imagesDir   = rootDir + "/images"
@@ -168,9 +167,6 @@ func readUserDirectories() error {
 		return err
 	}
 
-	if cd, ok := dirs["config"]; ok {
-		configDir = cd
-	}
 	if ld, ok := dirs["logs"]; ok {
 		logsDir = ld
 	}
@@ -191,9 +187,6 @@ func readUserDirectories() error {
 	}
 
 	//validate that directories actually exist
-	if _, err := os.Stat(configDir); err != nil {
-		return err
-	}
 	if _, err := os.Stat(logsDir); err != nil {
 		return err
 	}

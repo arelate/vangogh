@@ -1,6 +1,3 @@
-config
-    # configuration: settings.txt
-    /etc/vangogh
 logs
     # logs
     /var/log/vangogh

@@ -10,8 +10,6 @@ COPY --from=build /go/src/app/vg /usr/bin/vg
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
-#app configuration: settings.txt
-VOLUME /etc/vangogh
 #temporary data: cookies.txt
 VOLUME /var/tmp
 #app logs
