@@ -76,7 +76,7 @@ func SyncHandler(u *url.URL) error {
 
 	purchasesOnly := vangogh_local_data.FlagFromUrl(u, "purchases-only")
 	gauginUrl := vangogh_local_data.ValueFromUrl(u, "gaugin-url")
-	cwu := vangogh_local_data.ValueFromUrl(u, "completion-webhook-url")
+	wu := vangogh_local_data.ValueFromUrl(u, "webhook-url")
 	debug := vangogh_local_data.FlagFromUrl(u, "debug")
 
 	return Sync(
@@ -87,7 +87,7 @@ func SyncHandler(u *url.URL) error {
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
 		gauginUrl,
-		cwu,
+		wu,
 		debug)
 }
 
@@ -99,7 +99,7 @@ func Sync(
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
 	gauginUrl string,
-	completionWebhookUrl string,
+	webhookUrl string,
 	debug bool) error {
 
 	if debug {
@@ -216,7 +216,7 @@ func Sync(
 
 	// posting intermediate completion for the updated data
 	// while downloads, video downloads and validation are still processing
-	if err := PostCompletion(completionWebhookUrl); err != nil {
+	if err := PostCompletion(webhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 
@@ -302,7 +302,7 @@ func Sync(
 	}
 
 	// post a final completion
-	if err := PostCompletion(completionWebhookUrl); err != nil {
+	if err := PostCompletion(webhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 
