@@ -7,6 +7,8 @@ Backend microservice to sync and serve metadata, images, videos from GOG.com. Ca
 The recommended way to install `vangogh` is with docker-compose:
 
 - create a `docker-compose.yaml` file (this minimal example omits common settings like network, restart, etc):
+- NOTE: cold storage signifies resources used less frequently
+- NOTE: hot storage signifies resources used on most page loads
 
 ```yaml
 version: '3'
@@ -16,36 +18,31 @@ services:
     image: ghcr.io/arelate/vangogh:latest
     environment:
        # Operating system and language code
-       # - VG_CLEANUP_OPERATING-SYSTEM=Windows,macOS
-       # - VG_CLEANUP_LANGUAGE-CODE=en,fr
-       # - VG_GET-DOWNLOADS_OPERATING-SYSTEM=Windows,macOS
-       # - VG_GET-DOWNLOADS_LANGUAGE-CODE=en,fr
-       # - VG_SIZE_OPERATING-SYSTEM=Windows,macOS
-       # - VG_SIZE_LANGUAGE-CODE=en,fr
-       # - VG_SYNC_OPERATING-SYSTEM=Windows,macOS
-       # - VG_SYNC_LANGUAGE-CODE=en,fr
-       # - VG_UPDATE-DOWNLOADS_OPERATING-SYSTEM=Windows,macOS
-       # - VG_UPDATE-DOWNLOADS_LANGUAGE-CODE=en,fr
-       # - VG_VALIDATE_OPERATING-SYSTEM=Windows,macOS
-       # - VG_VALIDATE_LANGUAGE-CODE=en,fr
-       # - VG_VET_OPERATING-SYSTEM=Windows,macOS
-       # - VG_VET_LANGUAGE-CODE=en,fr
-       # gaugin URL
-       # - VG_SYNC_GAUGIN-URL=https://GAUGIN-ADDRESS
-       # - VG_SUMMARIZE_GAUGIN-URL=https://GAUGIN-ADDRESS
-       # completion webhook URL
-       # - VG_POST-COMPLETION_COMPLETION-WEBHOOK-URL=http://VANGOGH-ADDRESS/prerender
+       # - VG_OPERATING-SYSTEM=Windows,macOS
+       # - VG_LANGUAGE-CODE=en,fr
+       # gaugin URL for Atom feed
+       # - VG_GAUGIN-URL=https://GAUGIN-ADDRESS
+       # prerender webhook URL
+       # - VG_WEBHOOK-URL=http://GAUGIN-ADDRESS/prerender
        # debug
        # - VG_SYNC_DEBUG=true    
     volumes:
-      # app configuration: settings.txt
-      - /docker/vangogh:/etc/vangogh:ro
-      # temporary data: cookies.txt, exported metadata
+      # temporary data: cookies.txt, exported metadata (cold storage)
       - /docker/vangogh:/var/tmp
-      # app logs
+      # app logs (cold storage)
       - /docker/vangogh/logs:/var/log/vangogh
-      # app artifacts: checksums, images, metadata, recycle_bin, videos
+      # app root: checksums, recycle_bin, videos (cold storage)
       - /docker/vangogh:/var/lib/vangogh
+      # images (hot storage)
+      - /docker/vangogh/images:/var/lib/vangogh/images
+       # items (hot storage)
+      - /docker/vangogh/items:/var/lib/vangogh/items
+       # metadata (hot storage)
+      - /docker/vangogh/metadata:/var/lib/vangogh/metadata
+       # sharing timezone from the host
+      - /etc/localtime:/etc/localtime:ro
+       # certificates
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
     ports:
       # https://en.wikipedia.org/wiki/Vincent_van_Gogh
       - "1853:1853"
