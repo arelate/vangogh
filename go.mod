@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/arelate/southern_light v0.1.28
-	github.com/arelate/vangogh_local_data v0.2.98
+	github.com/arelate/vangogh_local_data v0.2.99
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/clo v0.3.6
 	github.com/boggydigital/coost v0.3.8
