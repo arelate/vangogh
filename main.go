@@ -28,21 +28,7 @@ var (
 
 const (
 	userDirsFilename = "directories.txt"
-	defaultRootDir   = "/var/lib/vangogh"
 )
-
-var defaultDirs = map[string]string{
-	"backups":      defaultRootDir + "/backups",
-	"downloads":    defaultRootDir + "/downloads",
-	"images":       defaultRootDir + "/images",
-	"input_files":  defaultRootDir,
-	"items":        defaultRootDir + "/items",
-	"logs":         "/var/log/vangogh",
-	"metadata":     defaultRootDir + "/metadata",
-	"output_files": defaultRootDir,
-	"recycle_bin":  defaultRootDir + "/recycle_bin",
-	"videos":       defaultRootDir + "/videos",
-}
 
 func main() {
 
@@ -51,7 +37,7 @@ func main() {
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
 
-	if err := chRoot(userDirsFilename, defaultDirs); err != nil {
+	if err := chRoot(userDirsFilename, vangogh_local_data.DefaultDirs); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
