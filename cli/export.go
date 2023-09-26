@@ -9,7 +9,7 @@ import (
 )
 
 func ExportHandler(_ *url.URL) error {
-	return Export(vangogh_local_data.AbsOutputDir())
+	return Export(vangogh_local_data.AbsOutputFilesDir())
 }
 
 func Export(to string) error {
