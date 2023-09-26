@@ -77,7 +77,7 @@ func LocalOnlyImages(fix bool) error {
 		for _, imageId := range unexpectedImages {
 			absLocalImagePath := vangogh_local_data.AbsLocalImagePath(imageId)
 			nod.Log("removing local only imageId=%s file=%s", imageId, absLocalImagePath)
-			if err := vangogh_local_data.MoveToRecycleBin(absLocalImagePath); err != nil && !os.IsNotExist(err) {
+			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsImagesDir(), absLocalImagePath); err != nil && !os.IsNotExist(err) {
 				return floia.EndWithError(err)
 			}
 			floia.Increment()

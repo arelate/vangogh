@@ -5,16 +5,17 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/packer"
 	"net/url"
+	"path/filepath"
 )
 
 func ExportHandler(_ *url.URL) error {
-	return Export(vangogh_local_data.AbsTempDir())
+	return Export(vangogh_local_data.AbsOutputDir())
 }
 
 func Export(to string) error {
 
-	root := vangogh_local_data.Pwd()
 	from := vangogh_local_data.AbsMetadataDir()
+	root, _ := filepath.Split(from)
 
 	ea := nod.NewProgress("exporting metadata...")
 	defer ea.End()

@@ -64,7 +64,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 
 				// move local file to the recycle bin
 				absLocalFilepath := vangogh_local_data.AbsDownloadDirFromRel(local)
-				if err := vangogh_local_data.MoveToRecycleBin(absLocalFilepath); err != nil {
+				if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsDownloadsDir(), absLocalFilepath); err != nil {
 					cirmu.Error(err)
 				}
 				if firmu != nil {

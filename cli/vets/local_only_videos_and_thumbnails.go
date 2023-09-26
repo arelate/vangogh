@@ -66,12 +66,12 @@ func LocalOnlyVideosAndThumbnails(fix bool) error {
 		for _, videoId := range unexpectedVideos {
 			absLocalVideoPath := vangogh_local_data.AbsLocalVideoPath(videoId)
 			nod.Log("removing local only videoId=%s file=%s", videoId, absLocalVideoPath)
-			if err := vangogh_local_data.MoveToRecycleBin(absLocalVideoPath); err != nil && !os.IsNotExist(err) {
+			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsVideosDir(), absLocalVideoPath); err != nil && !os.IsNotExist(err) {
 				return flova.EndWithError(err)
 			}
 			absLocalThumbnailPath := vangogh_local_data.AbsLocalVideoThumbnailPath(videoId)
 			nod.Log("removing local only thumbnail videoId=%s file=%s", videoId, absLocalThumbnailPath)
-			if err := vangogh_local_data.MoveToRecycleBin(absLocalThumbnailPath); err != nil && !os.IsNotExist(err) {
+			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsVideoThumbnailsDir(), absLocalThumbnailPath); err != nil && !os.IsNotExist(err) {
 				return flova.EndWithError(err)
 			}
 			flova.Increment()

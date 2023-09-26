@@ -176,7 +176,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 
 		dft := nod.Begin(" %s %s", prefix, relDownloadFilename)
 		if !cd.test {
-			if err := vangogh_local_data.MoveToRecycleBin(absDownloadFilename); err != nil {
+			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsDownloadsDir(), absDownloadFilename); err != nil {
 				return dft.EndWithError(err)
 			}
 		}
@@ -198,7 +198,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 
 		cft := nod.Begin(" %s %s", prefix, relChecksumFile)
 		if !cd.test {
-			if err := vangogh_local_data.MoveToRecycleBin(absChecksumFile); err != nil {
+			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsChecksumsDir(), absChecksumFile); err != nil {
 				return cft.EndWithError(err)
 			}
 		}

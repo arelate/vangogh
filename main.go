@@ -31,12 +31,18 @@ const (
 )
 
 var (
-	logsDir     = "/var/log/vangogh"
-	rootDir     = "/var/lib/vangogh"
-	imagesDir   = rootDir + "/images"
-	itemsDir    = rootDir + "/items"
-	metadataDir = rootDir + "/metadata"
-	tempDir     = "/var/tmp"
+	rootDir = "/var/lib/vangogh"
+
+	backupsDir     = rootDir + "/backups"
+	downloadsDir   = rootDir + "/downloads"
+	imagesDir      = rootDir + "/images"
+	inputFilesDir  = rootDir
+	outputFilesDir = rootDir
+	itemsDir       = rootDir + "/items"
+	logsDir        = "/var/log/vangogh"
+	metadataDir    = rootDir + "/metadata"
+	recycleBinDir  = "/var/tmp"
+	videosDir      = rootDir + "/videos"
 )
 
 func main() {
@@ -52,11 +58,16 @@ func main() {
 	}
 
 	//set directories context in vangogh_cli_api
-	vangogh_local_data.SetTempDir(tempDir)
-	vangogh_local_data.ChRoot(rootDir)
+	//vangogh_local_data.SetTempDir(tempDir)
+	//vangogh_local_data.ChRoot(rootDir)
+	vangogh_local_data.SetBackupsDir(backupsDir)
+	vangogh_local_data.SetDownloadsDir(downloadsDir)
 	vangogh_local_data.SetImagesDir(imagesDir)
+	vangogh_local_data.SetInputFilesDir(inputFilesDir)
 	vangogh_local_data.SetItemsDir(itemsDir)
 	vangogh_local_data.SetMetadataDir(metadataDir)
+	vangogh_local_data.SetRecycleBinDir(recycleBinDir)
+	vangogh_local_data.SetVideosDir(videosDir)
 	dirs.SetLogsDir(logsDir)
 
 	defs, err := clo.Load(
@@ -167,42 +178,66 @@ func readUserDirectories() error {
 		return err
 	}
 
-	if ld, ok := dirs["logs"]; ok {
-		logsDir = ld
+	if bd, ok := dirs["backups"]; ok {
+		backupsDir = bd
 	}
-	if rd, ok := dirs["root"]; ok {
-		rootDir = rd
+	if dd, ok := dirs["downloads"]; ok {
+		downloadsDir = dd
 	}
 	if imd, ok := dirs["images"]; ok {
 		imagesDir = imd
 	}
+	if ifd, ok := dirs["input_files"]; ok {
+		inputFilesDir = ifd
+	}
 	if itd, ok := dirs["items"]; ok {
 		itemsDir = itd
+	}
+	if ld, ok := dirs["logs"]; ok {
+		logsDir = ld
 	}
 	if md, ok := dirs["metadata"]; ok {
 		metadataDir = md
 	}
-	if td, ok := dirs["temp"]; ok {
-		tempDir = td
+	if ofd, ok := dirs["output_files"]; ok {
+		outputFilesDir = ofd
+	}
+	if rbd, ok := dirs["recycle_bin"]; ok {
+		recycleBinDir = rbd
+	}
+	if vd, ok := dirs["videos"]; ok {
+		videosDir = vd
 	}
 
 	//validate that directories actually exist
-	if _, err := os.Stat(logsDir); err != nil {
+	if _, err := os.Stat(backupsDir); err != nil {
 		return err
 	}
-	if _, err := os.Stat(rootDir); err != nil {
+	if _, err := os.Stat(downloadsDir); err != nil {
 		return err
 	}
 	if _, err := os.Stat(imagesDir); err != nil {
 		return err
 	}
+	if _, err := os.Stat(inputFilesDir); err != nil {
+		return err
+	}
 	if _, err := os.Stat(itemsDir); err != nil {
+		return err
+	}
+	if _, err := os.Stat(logsDir); err != nil {
 		return err
 	}
 	if _, err := os.Stat(metadataDir); err != nil {
 		return err
 	}
-	if _, err := os.Stat(tempDir); err != nil {
+	if _, err := os.Stat(outputFilesDir); err != nil {
+		return err
+	}
+	if _, err := os.Stat(recycleBinDir); err != nil {
+		return err
+	}
+	if _, err := os.Stat(videosDir); err != nil {
 		return err
 	}
 

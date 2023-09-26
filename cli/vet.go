@@ -155,7 +155,7 @@ func Vet(
 	}
 
 	if vetOpts.oldBackups {
-		if err := vets.OldFiles(vangogh_local_data.AbsBackupDir(), "backups", fix); err != nil {
+		if err := vets.OldFiles(vangogh_local_data.AbsBackupsDir(), "backups", fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}
