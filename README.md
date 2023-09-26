@@ -27,18 +27,27 @@ services:
        # debug
        # - VG_SYNC_DEBUG=true    
     volumes:
-      # temporary data: cookies.txt, exported metadata (cold storage)
-      - /docker/vangogh:/var/tmp
-      # app logs (cold storage)
-      - /docker/vangogh/logs:/var/log/vangogh
-      # app root: checksums, recycle_bin, videos (cold storage)
-      - /docker/vangogh:/var/lib/vangogh
+      # backups (cold storage)
+      - /docker/vangogh/backups:/var/lib/vangogh/backups
+      # downloads (cold storage)
+      - /docker/vangogh/downloads:/var/lib/vangogh/downloads
       # images (hot storage)
       - /docker/vangogh/images:/var/lib/vangogh/images
-       # items (hot storage)
+      # input_files (hot storage)
+      - /docker/vangogh:/var/lib/vangogh
+      # items (hot storage)
       - /docker/vangogh/items:/var/lib/vangogh/items
-       # metadata (hot storage)
+      # logs (cold storage)
+      - /docker/vangogh/logs:/var/log/vangogh
+      # metadata (hot storage)
       - /docker/vangogh/metadata:/var/lib/vangogh/metadata
+      # output_files (hot storage)
+      # typically the same as input_files, uncomment if different
+      # - /docker/vangogh:/var/lib/vangogh
+      # recycle_bin (cold storage)
+      - /docker/vangogh/recycle_bin:/var/lib/vangogh/recycle_bin
+      # videos (cold storage)
+      - /docker/vangogh/videos:/var/lib/vangogh/videos
        # sharing timezone from the host
       - /etc/localtime:/etc/localtime:ro
        # certificates
