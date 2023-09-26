@@ -53,6 +53,11 @@ func InvalidResolvedManualUrls(fix bool) error {
 			firmu.TotalInt(len(invalidResolvedUrls))
 		}
 
+		adp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Downloads)
+		if err != nil {
+			return cirmu.EndWithError(err)
+		}
+
 		for url := range invalidResolvedUrls {
 			local, _ := rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, url)
 			summary[url] = []string{local}
@@ -63,8 +68,11 @@ func InvalidResolvedManualUrls(fix bool) error {
 				}
 
 				// move local file to the recycle bin
-				absLocalFilepath := vangogh_local_data.AbsDownloadDirFromRel(local)
-				if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsDownloadsDir(), absLocalFilepath); err != nil {
+				absLocalFilepath, err := vangogh_local_data.AbsDownloadDirFromRel(local)
+				if err != nil {
+					cirmu.Error(err)
+				}
+				if err := vangogh_local_data.MoveToRecycleBin(adp, absLocalFilepath); err != nil {
 					cirmu.Error(err)
 				}
 				if firmu != nil {

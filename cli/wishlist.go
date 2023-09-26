@@ -19,7 +19,12 @@ func Wishlist(addProductIds, removeProductIds []string) error {
 	wa := nod.Begin("performing requested wishlist operations...")
 	defer wa.End()
 
-	hc, err := coost.NewHttpClientFromFile(vangogh_local_data.AbsCookiePath(), gog_integration.GogHost)
+	acp, err := vangogh_local_data.AbsCookiePath()
+	if err != nil {
+		return wa.EndWithError(err)
+	}
+
+	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
 	if err != nil {
 		return wa.EndWithError(err)
 	}

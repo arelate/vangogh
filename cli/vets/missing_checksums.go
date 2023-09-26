@@ -68,7 +68,10 @@ func MissingChecksums(fix bool) error {
 				continue
 			}
 
-			absChecksumFile := vangogh_local_data.AbsLocalChecksumPath(relFile)
+			absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
+			if err != nil {
+				return mca.EndWithError(err)
+			}
 			if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
 				filesMissingChecksums[relFile] = nil
 			}
@@ -87,7 +90,10 @@ func MissingChecksums(fix bool) error {
 				gca.Error(err)
 			}
 
-			absChecksum := vangogh_local_data.AbsLocalChecksumPath(relFile)
+			absChecksum, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
+			if err != nil {
+				return gca.EndWithError(err)
+			}
 
 			checksumFile, err := os.Create(absChecksum)
 			if err != nil {
@@ -114,7 +120,10 @@ func generateChecksumData(relFile string) (*vangogh_local_data.ValidationFile, e
 	fa := nod.NewProgress(" %s", fname)
 	defer fa.End()
 
-	absFile := vangogh_local_data.AbsDownloadDirFromRel(relFile)
+	absFile, err := vangogh_local_data.AbsDownloadDirFromRel(relFile)
+	if err != nil {
+		return nil, fa.EndWithError(err)
+	}
 
 	inputFile, err := os.Open(absFile)
 	if err != nil {

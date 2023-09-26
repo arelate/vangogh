@@ -16,7 +16,13 @@ func RouteWishlist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hc, err := coost.NewHttpClientFromFile(vangogh_local_data.AbsCookiePath(), gog_integration.GogHost)
+	acp, err := vangogh_local_data.AbsCookiePath()
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

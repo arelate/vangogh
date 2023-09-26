@@ -16,13 +16,16 @@ func Backup() error {
 	ba := nod.Begin("backing up local data...")
 	defer ba.End()
 
-	abd := vangogh_local_data.AbsBackupsDir()
+	abp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Backups)
+	if err != nil {
+		return err
+	}
 
-	if _, err := os.Stat(abd); os.IsNotExist(err) {
-		if err := os.MkdirAll(abd, 0755); err != nil {
+	if _, err := os.Stat(abp); os.IsNotExist(err) {
+		if err := os.MkdirAll(abp, 0755); err != nil {
 			return ba.EndWithError(err)
 		}
 	}
 
-	return Export(abd)
+	return Export(abp)
 }

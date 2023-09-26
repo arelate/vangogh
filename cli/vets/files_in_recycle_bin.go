@@ -29,9 +29,13 @@ func FilesInRecycleBin(fix bool) error {
 
 		if fix {
 			rfa := nod.NewProgress(" emptying recycle bin...")
+			rbdp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.RecycleBin)
+			if err != nil {
+				return rfa.EndWithError(err)
+			}
 			rfa.TotalInt(len(recycleBinFiles))
 			for file := range recycleBinFiles {
-				if err := os.Remove(filepath.Join(vangogh_local_data.AbsRecycleBinDir(), file)); err != nil {
+				if err := os.Remove(filepath.Join(rbdp, file)); err != nil {
 					return rfa.EndWithError(err)
 				}
 				rfa.Increment()

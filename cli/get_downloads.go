@@ -43,7 +43,12 @@ func GetDownloads(
 	gda := nod.NewProgress("downloading product files...")
 	defer gda.End()
 
-	hc, err := coost.NewHttpClientFromFile(vangogh_local_data.AbsCookiePath(), gog_integration.GogHost)
+	acp, err := vangogh_local_data.AbsCookiePath()
+	if err != nil {
+		return gda.EndWithError(err)
+	}
+
+	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
 	if err != nil {
 		return gda.EndWithError(err)
 	}
@@ -117,7 +122,12 @@ func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_local_data
 		return nil
 	}
 
-	hc, err := coost.NewHttpClientFromFile(vangogh_local_data.AbsCookiePath(), gog_integration.GogHost)
+	acp, err := vangogh_local_data.AbsCookiePath()
+	if err != nil {
+		return sda.EndWithError(err)
+	}
+
+	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
 	if err != nil {
 		return sda.EndWithError(err)
 	}
@@ -163,11 +173,17 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		if localPath, ok := gdd.rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
 			//localFilename would be a relative path for a download - s/slug,
 			//and RelToAbs would convert this to downloads/s/slug
-			if _, err := os.Stat(vangogh_local_data.AbsDownloadDirFromRel(localPath)); err == nil {
+			addp, err := vangogh_local_data.AbsDownloadDirFromRel(localPath)
+			if err != nil {
+				return dmua.EndWithError(err)
+			}
+			if _, err := os.Stat(addp); err == nil {
 				_, localFilename := filepath.Split(localPath)
 				lfa := nod.Begin(" - %s", localFilename)
 				lfa.EndWithResult("already exists")
 				return nil
+			} else {
+				return dmua.EndWithError(err)
 			}
 		}
 	}
@@ -200,12 +216,26 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		return dmua.EndWithError(err)
 	}
 	//we need to add suffix to a dir path, e.g. dlc, extras
-	absDir := filepath.Join(pAbsDir, dl.DirSuffix())
+	dtRelDir := ""
+	switch dl.Type {
+	case vangogh_local_data.DLC:
+		dtRelDir, err = vangogh_local_data.GetRelDir(vangogh_local_data.DLCs)
+	case vangogh_local_data.Extra:
+		dtRelDir, err = vangogh_local_data.GetRelDir(vangogh_local_data.Extras)
+	}
+	if err != nil {
+		return dmua.EndWithError(err)
+	}
+	absDir := filepath.Join(pAbsDir, dtRelDir)
 
 	//4
 	remoteChecksumPath := vangogh_local_data.RemoteChecksumPath(resolvedUrl.Path)
 	if remoteChecksumPath != "" {
-		localChecksumPath := vangogh_local_data.AbsLocalChecksumPath(path.Join(absDir, filename))
+		localChecksumPath, err := vangogh_local_data.AbsLocalChecksumPath(path.Join(absDir, filename))
+		if err != nil {
+			return dmua.EndWithError(err)
+		}
+
 		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) {
 			checksumDir, checksumFilename := filepath.Split(localChecksumPath)
 			dca := nod.NewProgress(" - %s", checksumFilename)
@@ -234,8 +264,8 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//6
 	//ProductDownloadsRelDir would return relative (to downloads/ root) dir path, e.g. s/slug
 	pRelDir, err := vangogh_local_data.RelProductDownloadsDir(slug)
-	//we need to add suffix to a dir path, e.g. dlc, extras
-	relDir := filepath.Join(pRelDir, dl.DirSuffix())
+	//we need to add suffix to a dir path, e.g. dlc, extras - using already resolved download type relative dir
+	relDir := filepath.Join(pRelDir, dtRelDir)
 	if err != nil {
 		return dmua.EndWithError(err)
 	}

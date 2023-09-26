@@ -155,7 +155,12 @@ func Vet(
 	}
 
 	if vetOpts.oldBackups {
-		if err := vets.OldFiles(vangogh_local_data.AbsBackupsDir(), "backups", fix); err != nil {
+		abp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Backups)
+		if err != nil {
+			return sda.EndWithError(err)
+		}
+
+		if err := vets.OldFiles(abp, "backups", fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}
@@ -200,7 +205,10 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 
 	for _, id := range ids {
 		if imageId, ok := rxa.GetFirstVal(imageProperty, id); ok {
-			imagePath := vangogh_local_data.AbsLocalImagePath(imageId)
+			imagePath, err := vangogh_local_data.AbsLocalImagePath(imageId)
+			if err != nil {
+				return sdia.EndWithError(err)
+			}
 			if stat, err := os.Stat(imagePath); err == nil {
 				if dimStr, ok := rxa.GetFirstVal(dimProperty, id); ok {
 					if dim, err := strconv.ParseInt(dimStr, 10, 64); err == nil {

@@ -139,7 +139,10 @@ func validateManualUrl(
 
 	//absolute path (given a downloads/ root) for a s/slug/local_filename,
 	//e.g. downloads/s/slug/local_filename
-	absLocalFile := vangogh_local_data.AbsDownloadDirFromRel(localFile)
+	absLocalFile, err := vangogh_local_data.AbsDownloadDirFromRel(localFile)
+	if err != nil {
+		return mua.EndWithError(err)
+	}
 	if !vangogh_local_data.IsPathSupportingValidation(absLocalFile) {
 		mua.EndWithResult(ErrValidationNotSupported.Error())
 		return ErrValidationNotSupported
@@ -150,7 +153,10 @@ func validateManualUrl(
 		return ErrMissingDownload
 	}
 
-	absChecksumFile := vangogh_local_data.AbsLocalChecksumPath(absLocalFile)
+	absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(absLocalFile)
+	if err != nil {
+		return mua.EndWithError(err)
+	}
 
 	if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
 		mua.EndWithResult(ErrMissingChecksum.Error())

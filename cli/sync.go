@@ -317,8 +317,13 @@ func getDetailData(pts []vangogh_local_data.ProductType, since int64) error {
 
 		var skipList wits.KeyValues
 
-		if _, err := os.Stat(vangogh_local_data.AbsSkipListPath()); err == nil {
-			slFile, err := os.Open(vangogh_local_data.AbsSkipListPath())
+		aslp, err := vangogh_local_data.AbsSkipListPath()
+		if err != nil {
+			return err
+		}
+
+		if _, err := os.Stat(aslp); err == nil {
+			slFile, err := os.Open(aslp)
 			if err != nil {
 				slFile.Close()
 				return err

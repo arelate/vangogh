@@ -9,18 +9,25 @@ import (
 )
 
 func ExportHandler(_ *url.URL) error {
-	return Export(vangogh_local_data.AbsOutputFilesDir())
+	aofp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.OutputFiles)
+	if err != nil {
+		return err
+	}
+	return Export(aofp)
 }
 
 func Export(to string) error {
 
-	from := vangogh_local_data.AbsMetadataDir()
-	root, _ := filepath.Split(from)
-
 	ea := nod.NewProgress("exporting metadata...")
 	defer ea.End()
 
-	if err := packer.Pack(root, from, to, ea); err != nil {
+	amp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Metadata)
+	if err != nil {
+		return ea.EndWithError(err)
+	}
+	root, _ := filepath.Split(amp)
+
+	if err := packer.Pack(root, amp, to, ea); err != nil {
 		return ea.EndWithError(err)
 	}
 

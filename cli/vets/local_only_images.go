@@ -70,14 +70,22 @@ func LocalOnlyImages(fix bool) error {
 
 	loia.EndWithResult("found %d unexpected images", len(unexpectedImages))
 
+	aip, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Images)
+	if err != nil {
+		return loia.EndWithError(err)
+	}
+
 	if fix && len(unexpectedImages) > 0 {
 		floia := nod.NewProgress(" removing %d local only image(s)...", len(unexpectedImages))
 		floia.TotalInt(len(unexpectedImages))
 
 		for _, imageId := range unexpectedImages {
-			absLocalImagePath := vangogh_local_data.AbsLocalImagePath(imageId)
+			absLocalImagePath, err := vangogh_local_data.AbsLocalImagePath(imageId)
+			if err != nil {
+				return floia.EndWithError(err)
+			}
 			nod.Log("removing local only imageId=%s file=%s", imageId, absLocalImagePath)
-			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsImagesDir(), absLocalImagePath); err != nil && !os.IsNotExist(err) {
+			if err := vangogh_local_data.MoveToRecycleBin(aip, absLocalImagePath); err != nil && !os.IsNotExist(err) {
 				return floia.EndWithError(err)
 			}
 			floia.Increment()

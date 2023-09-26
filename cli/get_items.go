@@ -80,7 +80,11 @@ func GetItems(
 		for _, itemUrl := range items {
 			if u, err := url.Parse(itemUrl); err == nil {
 				urls = append(urls, u)
-				filenames = append(filenames, vangogh_local_data.AbsItemPath(u.Path))
+				aip, err := vangogh_local_data.AbsItemPath(u.Path)
+				if err != nil {
+					return gia.EndWithError(err)
+				}
+				filenames = append(filenames, aip)
 			}
 		}
 

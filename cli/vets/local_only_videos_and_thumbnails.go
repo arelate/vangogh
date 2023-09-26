@@ -63,15 +63,31 @@ func LocalOnlyVideosAndThumbnails(fix bool) error {
 		flova := nod.NewProgress(" removing %d local only video(s)...", len(unexpectedVideos))
 		flova.TotalInt(len(unexpectedVideos))
 
+		avp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Videos)
+		if err != nil {
+			return flova.EndWithError(err)
+		}
+
+		avtp, err := vangogh_local_data.GetAbsRelDir(vangogh_local_data.VideoThumbnails)
+		if err != nil {
+			return flova.EndWithError(err)
+		}
+
 		for _, videoId := range unexpectedVideos {
-			absLocalVideoPath := vangogh_local_data.AbsLocalVideoPath(videoId)
-			nod.Log("removing local only videoId=%s file=%s", videoId, absLocalVideoPath)
-			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsVideosDir(), absLocalVideoPath); err != nil && !os.IsNotExist(err) {
+			absLocalVideoPath, err := vangogh_local_data.AbsLocalVideoPath(videoId)
+			if err != nil {
 				return flova.EndWithError(err)
 			}
-			absLocalThumbnailPath := vangogh_local_data.AbsLocalVideoThumbnailPath(videoId)
+			nod.Log("removing local only videoId=%s file=%s", videoId, absLocalVideoPath)
+			if err := vangogh_local_data.MoveToRecycleBin(avp, absLocalVideoPath); err != nil && !os.IsNotExist(err) {
+				return flova.EndWithError(err)
+			}
+			absLocalThumbnailPath, err := vangogh_local_data.AbsLocalVideoThumbnailPath(videoId)
+			if err != nil {
+				return flova.EndWithError(err)
+			}
 			nod.Log("removing local only thumbnail videoId=%s file=%s", videoId, absLocalThumbnailPath)
-			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsVideoThumbnailsDir(), absLocalThumbnailPath); err != nil && !os.IsNotExist(err) {
+			if err := vangogh_local_data.MoveToRecycleBin(avtp, absLocalThumbnailPath); err != nil && !os.IsNotExist(err) {
 				return flova.EndWithError(err)
 			}
 			flova.Increment()

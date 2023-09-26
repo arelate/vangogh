@@ -155,7 +155,10 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 
 	for _, unexpectedFile := range unexpectedFiles {
 		//restore absolute from local_filename to s/slug/local_filename
-		absDownloadFilename := vangogh_local_data.AbsDownloadDirFromRel(filepath.Join(pDir, unexpectedFile))
+		absDownloadFilename, err := vangogh_local_data.AbsDownloadDirFromRel(filepath.Join(pDir, unexpectedFile))
+		if err != nil {
+			return csa.EndWithError(err)
+		}
 		if stat, err := os.Stat(absDownloadFilename); err == nil {
 			cd.totalBytes += stat.Size()
 		} else if os.IsNotExist(err) {
@@ -169,20 +172,28 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			prefix = "TEST"
 		}
 
-		relDownloadFilename, err := filepath.Rel(vangogh_local_data.AbsDownloadsDir(), absDownloadFilename)
+		adp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Downloads)
+		if err != nil {
+			return csa.EndWithError(err)
+		}
+
+		relDownloadFilename, err := filepath.Rel(adp, absDownloadFilename)
 		if err != nil {
 			return csa.EndWithError(err)
 		}
 
 		dft := nod.Begin(" %s %s", prefix, relDownloadFilename)
 		if !cd.test {
-			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsDownloadsDir(), absDownloadFilename); err != nil {
+			if err := vangogh_local_data.MoveToRecycleBin(adp, absDownloadFilename); err != nil {
 				return dft.EndWithError(err)
 			}
 		}
 		dft.End()
 
-		absChecksumFile := vangogh_local_data.AbsLocalChecksumPath(absDownloadFilename)
+		absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(absDownloadFilename)
+		if err != nil {
+			return csa.EndWithError(err)
+		}
 		if stat, err := os.Stat(absChecksumFile); err == nil {
 			cd.totalBytes += stat.Size()
 		} else if os.IsNotExist(err) {
@@ -191,14 +202,19 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			return csa.EndWithError(err)
 		}
 
-		relChecksumFile, err := filepath.Rel(vangogh_local_data.AbsChecksumsDir(), absChecksumFile)
+		acp, err := vangogh_local_data.GetAbsRelDir(vangogh_local_data.Checksums)
+		if err != nil {
+			return csa.EndWithError(err)
+		}
+
+		relChecksumFile, err := filepath.Rel(acp, absChecksumFile)
 		if err != nil {
 			return csa.EndWithError(err)
 		}
 
 		cft := nod.Begin(" %s %s", prefix, relChecksumFile)
 		if !cd.test {
-			if err := vangogh_local_data.MoveToRecycleBin(vangogh_local_data.AbsChecksumsDir(), absChecksumFile); err != nil {
+			if err := vangogh_local_data.MoveToRecycleBin(acp, absChecksumFile); err != nil {
 				return cft.EndWithError(err)
 			}
 		}

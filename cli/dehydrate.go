@@ -84,7 +84,12 @@ func Dehydrate(
 				continue
 			}
 
-			if dhi, err := dehydrateImage(vangogh_local_data.AbsLocalImagePath(imageId), plt); err == nil {
+			alip, err := vangogh_local_data.AbsLocalImagePath(imageId)
+			if err != nil {
+				return di.EndWithError(err)
+			}
+
+			if dhi, err := dehydrateImage(alip, plt); err == nil {
 				dehydratedImages[id] = []string{dhi}
 				dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
 			} else {

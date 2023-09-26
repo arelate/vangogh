@@ -114,7 +114,10 @@ func GetImages(
 			urls = append(urls, srcUrls...)
 
 			for _, srcUrl := range srcUrls {
-				dstDir := vangogh_local_data.AbsImagesDirByImageId(srcUrl.Path)
+				dstDir, err := vangogh_local_data.AbsImagesDirByImageId(srcUrl.Path)
+				if err != nil {
+					return mita.EndWithError(err)
+				}
 				filenames = append(filenames, filepath.Join(dstDir, srcUrl.Path))
 			}
 		}

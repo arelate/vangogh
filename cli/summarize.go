@@ -123,7 +123,12 @@ func releasedToday(rxa kvas.ReduxAssets) ([]string, error) {
 
 func publishAtom(gauginUrl string, rxa kvas.ReduxAssets, summary map[string][]string) error {
 
-	atomFile, err := os.Create(vangogh_local_data.AbsAtomFeedPath())
+	afp, err := vangogh_local_data.AbsAtomFeedPath()
+	if err != nil {
+		return err
+	}
+
+	atomFile, err := os.Create(afp)
 	if err != nil {
 		return err
 	}

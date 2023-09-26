@@ -48,7 +48,12 @@ func Tag(idSet map[string]bool, operation, tagName string) error {
 		}
 	}
 
-	hc, err := coost.NewHttpClientFromFile(vangogh_local_data.AbsCookiePath(), gog_integration.GogHost)
+	acp, err := vangogh_local_data.AbsCookiePath()
+	if err != nil {
+		return ta.EndWithError(err)
+	}
+
+	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
 	if err != nil {
 		return ta.EndWithError(err)
 	}

@@ -101,7 +101,10 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 					continue
 				}
 
-				dir := vangogh_local_data.AbsVideoDirByVideoId(videoId)
+				dir, err := vangogh_local_data.AbsVideoDirByVideoId(videoId)
+				if err != nil {
+					return vfa.EndWithError(err)
+				}
 
 				u, err := url.Parse(vidUrl.Url)
 				if err != nil {
