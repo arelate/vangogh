@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/arelate/vangogh/cli/reductions"
 	"github.com/arelate/vangogh_local_data"
+	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -62,7 +63,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 
 		missingProps := vangogh_local_data.SupportedPropertiesOnly(pt, maps.Keys(propSet))
 
-		missingPropRedux := make(vangogh_local_data.IdReduxAssets, 0)
+		missingPropRedux := make(kvas.IdReduxAssets, 0)
 
 		var modifiedIds []string
 		if since > 0 {

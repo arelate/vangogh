@@ -3,6 +3,7 @@ package rest
 import (
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
+	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
 	"net/http"
 )
@@ -47,7 +48,7 @@ func GetRedux(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	values := make(vangogh_local_data.IdReduxAssets, len(ids))
+	values := make(kvas.IdReduxAssets, len(ids))
 	for id := range ids {
 		propValues := make(map[string][]string)
 		for _, prop := range properties {
