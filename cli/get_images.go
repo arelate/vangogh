@@ -9,6 +9,7 @@ import (
 	"github.com/boggydigital/nod"
 	"net/url"
 	"path/filepath"
+	"strings"
 )
 
 func GetImagesHandler(u *url.URL) error {
@@ -93,6 +94,7 @@ func GetImages(
 		}
 
 		mita := nod.NewProgress("%s %s", id, title)
+		missingImageTypes := map[vangogh_local_data.ImageType]bool{}
 
 		//sensible assumption - we'll have at least as many URLs and filenames
 		//as types of images we're missing
@@ -103,6 +105,8 @@ func GetImages(
 
 			images, ok := rxa.GetAllValues(vangogh_local_data.PropertyFromImageType(it), id)
 			if !ok || len(images) == 0 {
+				nod.Log("%s missing %s", id, it)
+				missingImageTypes[it] = true
 				continue
 			}
 
@@ -130,7 +134,16 @@ func GetImages(
 			return mita.EndWithError(err)
 		}
 
-		mita.EndWithResult("done")
+		completionStatus := "done"
+		if len(missingImageTypes) > 0 {
+			itss := make([]string, 0, len(missingImageTypes))
+			for it := range missingImageTypes {
+				itss = append(itss, it.String())
+			}
+			completionStatus = fmt.Sprintf("no %s", strings.Join(itss, ", "))
+		}
+
+		mita.EndWithResult(completionStatus)
 		gia.Increment()
 	}
 
