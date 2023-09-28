@@ -10,7 +10,7 @@ require (
 	github.com/boggydigital/coost v0.3.8
 	github.com/boggydigital/dolo v0.2.12
 	github.com/boggydigital/issa v0.1.10
-	github.com/boggydigital/kvas v0.3.29
+	github.com/boggydigital/kvas v0.3.30
 	github.com/boggydigital/kvas_dolo v0.1.6
 	github.com/boggydigital/middleware v0.1.10
 	github.com/boggydigital/nod v0.1.21
