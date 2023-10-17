@@ -1,3 +1,5 @@
+github.com/andybalholm/brotli v1.0.6 h1:Yf9fFpf49Zrxb9NlQaluyE92/+X7UVHlhMNJN2sxfOI=
+github.com/andybalholm/brotli v1.0.6/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/arelate/southern_light v0.1.28 h1:aq56O1ixk3bfBY2kUlZ7PaEEPQrdm2fG78TmknuK7eQ=
 github.com/arelate/southern_light v0.1.28/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
 github.com/arelate/vangogh_local_data v0.3.5 h1:uUvXdNrzlDRucKOLygcU/ZSOZpSLy5aNLXJkeyBNx9g=
@@ -18,8 +20,8 @@ github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drY
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.14 h1:2CrpdCQeb8EX+E0wNadsbcLOSw/WvuHLgUZh35D9a58=
 github.com/boggydigital/match_node v0.1.14/go.mod h1:LmKtZy8YgBYC14BStAS4g17MglrLqqUF6dehrBX7Zwc=
-github.com/boggydigital/middleware v0.1.10 h1:69KEbo1sKZykR5wnh6Ai7yyzErVqKOci1Bo6K0hEkHM=
-github.com/boggydigital/middleware v0.1.10/go.mod h1:pU6ig6HG7HpwZtUatAy0Hp/H7bfllI5cZhZQOy2NIME=
+github.com/boggydigital/middleware v0.1.11 h1:jmUbgB1EPUoM9vP8BllgZMwbx2Gar17uNPqtsWHXSDE=
+github.com/boggydigital/middleware v0.1.11/go.mod h1:RCbCF5f5evepYZyVcZpqzMwiF+xSY62xi9CKEeQJJCg=
 github.com/boggydigital/nod v0.1.21 h1:pQbrgswCuU5dr3IWS1Z902PJAm5BebSLG+Q3aG7KJ+4=
 github.com/boggydigital/nod v0.1.21/go.mod h1:bYucIZ3rLHBZKf/3+T+eTSxuijuja7Y6OgU2P6o2/vo=
 github.com/boggydigital/packer v0.1.0 h1:u727MJMwwElKDkyhcNjkhJwChdbeUl0sWh7R0SmkWNc=
@@ -33,8 +35,8 @@ github.com/boggydigital/yt_urls v0.1.25/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
-golang.org/x/exp v0.0.0-20230905200255-921286631fa9 h1:GoHiUyI/Tp2nVkLI2mCxVkOjsbSXD66ic0XW0js0R9g=
-golang.org/x/exp v0.0.0-20230905200255-921286631fa9/go.mod h1:S2oDrQGGwySpoQPVqRShND87VCbxmc6bL1Yd2oYrm6k=
+golang.org/x/exp v0.0.0-20231006140011-7918f672742d h1:jtJma62tbqLibJ5sFQz8bKtEM8rJBtfilJ2qTU199MI=
+golang.org/x/exp v0.0.0-20231006140011-7918f672742d/go.mod h1:ldy0pHrwJyGW56pPQzzkH36rKxoZW1tw7ZJpeKx+hdo=
 golang.org/x/image v0.11.0 h1:ds2RoQvBvYTiJkwpSFDwCcDFNX7DqjL2WsUgTNk0Ooo=
 golang.org/x/image v0.11.0/go.mod h1:bglhjqbqVuEb9e9+eNR45Jfu7D+T4Qan+NhQk8Ck2P8=
 golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4/go.mod h1:jJ57K6gSWd91VN4djpZkiMVwK6gcyfeH4XE8wZrZaV4=
