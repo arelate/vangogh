@@ -88,8 +88,10 @@ func GetItems(
 			}
 		}
 
-		if err := dl.GetSet(urls, dolo.NewFileIndexSetter(filenames), dia); err != nil {
-			gia.Error(err)
+		if errs := dl.GetSet(urls, dolo.NewFileIndexSetter(filenames), dia); len(errs) > 0 {
+			for ui, e := range errs {
+				nod.Log("GetSet %s error: %s", urls[ui], e.Error())
+			}
 			continue
 		}
 

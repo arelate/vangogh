@@ -1,10 +1,12 @@
 package fetchers
 
 import (
+	"errors"
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 	"net/http"
 	"net/url"
 )
@@ -52,8 +54,11 @@ func Items(
 
 	dc := dolo.NewClient(httpClient, dolo.Defaults())
 
-	if err := dc.GetSet(urls, kis, ia); err != nil {
-		return ia.EndWithError(err)
+	if errs := dc.GetSet(urls, kis, ia); len(errs) > 0 {
+		for ui, e := range errs {
+			nod.Log("GetSet %s error: %s", urls[ui], e.Error())
+		}
+		return ia.EndWithError(errors.Join(maps.Values(errs)...))
 	}
 
 	ia.EndWithResult("done")

@@ -1,12 +1,14 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 	"net/url"
 	"path/filepath"
 	"strings"
@@ -130,8 +132,11 @@ func GetImages(
 
 		//using http.DefaultClient as no image types require authentication
 		//(this might change in the future)
-		if err := dolo.DefaultClient.GetSet(urls, imagesIndexSetter, mita); err != nil {
-			return mita.EndWithError(err)
+		if errs := dolo.DefaultClient.GetSet(urls, imagesIndexSetter, mita); len(errs) > 0 {
+			for ui, e := range errs {
+				nod.Log("GetSet %s error: %s", urls[ui], e.Error())
+			}
+			return mita.EndWithError(errors.Join(maps.Values(errs)...))
 		}
 
 		completionStatus := "done"
