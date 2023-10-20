@@ -2,14 +2,13 @@ package fetchers
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/kvas_dolo"
 	"github.com/boggydigital/nod"
-	"golang.org/x/exp/maps"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -73,9 +72,9 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	//get the first page payload and set it in kvas
 	if errs := dc.GetSet(urls, kis, tpw); len(errs) > 0 {
 		for ui, e := range errs {
-			nod.Log("GetSet %s error: %s", urls[ui], e.Error())
+			gfp.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 		}
-		return errors.Join(maps.Values(errs)...)
+		return fmt.Errorf("could not get the first page")
 	}
 
 	// certain data types increase monotonically and don't need to be downloaded completely (e.g. orders, wishlist)
@@ -118,9 +117,8 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 
 	if errs := dc.GetSet(urls, kis, tpw); len(errs) > 0 {
 		for ui, e := range errs {
-			nod.Log("GetSet %s error: %s", urls[ui], e.Error())
+			tpw.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 		}
-		return errors.Join(maps.Values(errs)...)
 	}
 
 	tpw.EndWithResult("done")

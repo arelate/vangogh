@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
@@ -90,7 +91,7 @@ func GetItems(
 
 		if errs := dl.GetSet(urls, dolo.NewFileIndexSetter(filenames), dia); len(errs) > 0 {
 			for ui, e := range errs {
-				nod.Log("GetSet %s error: %s", urls[ui], e.Error())
+				dia.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 			}
 			continue
 		}
