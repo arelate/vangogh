@@ -8,10 +8,8 @@ github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v0.3.6 h1:syeucZIM2/9B3jsUZqDo3TOYqgvJ6C1ketRgSuDoUf4=
 github.com/boggydigital/clo v0.3.6/go.mod h1:7QbdMB008okXsdk41qJyJ6k/oJALIIXQ0GLYSxY9WFM=
-github.com/boggydigital/coost v0.3.8 h1:LMHuC5ftC60uSA8/eMv2/qOj5F/tK86XcQ/3qzEI33Y=
-github.com/boggydigital/coost v0.3.8/go.mod h1:f5wbDShRqPvjX7ZBtrevnCFjcOe/lGBh0zV3KXsO/LY=
-github.com/boggydigital/dolo v0.2.12 h1:MrHk5IBqGrTMaaUfO6Ksnue9e5C7HpjqGlSKz1x6hF8=
-github.com/boggydigital/dolo v0.2.12/go.mod h1:xOzQ4WPcyETrETGpuHRQRtXTFu8kkdXKQCcddbhU/tQ=
+github.com/boggydigital/coost v0.3.9 h1:lMfR5PyexBDR4xDOQp0zWZWUk/Dqlrx7gw7i7XdsC4c=
+github.com/boggydigital/coost v0.3.9/go.mod h1:w7ChGaah1DKsBIXb9ANdILg2pe2Jp7JkNpnK2R6rBec=
 github.com/boggydigital/dolo v0.2.13 h1:hR45YlPPT59ilnWGqAnxkoiBslSMbvHxBUv6kvXutH4=
 github.com/boggydigital/dolo v0.2.13/go.mod h1:xOzQ4WPcyETrETGpuHRQRtXTFu8kkdXKQCcddbhU/tQ=
 github.com/boggydigital/issa v0.1.10 h1:zHSRJHkOz3DwVvp4/YL06qq/VHXexL7qrn4m48hRf/o=
@@ -22,8 +20,6 @@ github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drY
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.14 h1:2CrpdCQeb8EX+E0wNadsbcLOSw/WvuHLgUZh35D9a58=
 github.com/boggydigital/match_node v0.1.14/go.mod h1:LmKtZy8YgBYC14BStAS4g17MglrLqqUF6dehrBX7Zwc=
-github.com/boggydigital/middleware v0.1.10 h1:69KEbo1sKZykR5wnh6Ai7yyzErVqKOci1Bo6K0hEkHM=
-github.com/boggydigital/middleware v0.1.10/go.mod h1:pU6ig6HG7HpwZtUatAy0Hp/H7bfllI5cZhZQOy2NIME=
 github.com/boggydigital/middleware v0.1.11 h1:jmUbgB1EPUoM9vP8BllgZMwbx2Gar17uNPqtsWHXSDE=
 github.com/boggydigital/middleware v0.1.11/go.mod h1:RCbCF5f5evepYZyVcZpqzMwiF+xSY62xi9CKEeQJJCg=
 github.com/boggydigital/nod v0.1.21 h1:pQbrgswCuU5dr3IWS1Z902PJAm5BebSLG+Q3aG7KJ+4=
@@ -39,8 +35,6 @@ github.com/boggydigital/yt_urls v0.1.25/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
-golang.org/x/exp v0.0.0-20230905200255-921286631fa9 h1:GoHiUyI/Tp2nVkLI2mCxVkOjsbSXD66ic0XW0js0R9g=
-golang.org/x/exp v0.0.0-20230905200255-921286631fa9/go.mod h1:S2oDrQGGwySpoQPVqRShND87VCbxmc6bL1Yd2oYrm6k=
 golang.org/x/exp v0.0.0-20231006140011-7918f672742d h1:jtJma62tbqLibJ5sFQz8bKtEM8rJBtfilJ2qTU199MI=
 golang.org/x/exp v0.0.0-20231006140011-7918f672742d/go.mod h1:ldy0pHrwJyGW56pPQzzkH36rKxoZW1tw7ZJpeKx+hdo=
 golang.org/x/image v0.11.0 h1:ds2RoQvBvYTiJkwpSFDwCcDFNX7DqjL2WsUgTNk0Ooo=
