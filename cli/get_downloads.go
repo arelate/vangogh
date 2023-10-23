@@ -48,7 +48,7 @@ func GetDownloads(
 		return gda.EndWithError(err)
 	}
 
-	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
+	hc, err := coost.NewHttpClientFromFile(acp)
 	if err != nil {
 		return gda.EndWithError(err)
 	}
@@ -127,7 +127,7 @@ func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_local_data
 		return sda.EndWithError(err)
 	}
 
-	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
+	hc, err := coost.NewHttpClientFromFile(acp)
 	if err != nil {
 		return sda.EndWithError(err)
 	}

@@ -2,7 +2,6 @@ package cli
 
 import (
 	"fmt"
-	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
@@ -53,7 +52,7 @@ func Tag(idSet map[string]bool, operation, tagName string) error {
 		return ta.EndWithError(err)
 	}
 
-	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
+	hc, err := coost.NewHttpClientFromFile(acp)
 	if err != nil {
 		return ta.EndWithError(err)
 	}

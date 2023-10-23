@@ -56,7 +56,7 @@ func GetData(
 		return gda.EndWithError(err)
 	}
 
-	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
+	hc, err := coost.NewHttpClientFromFile(acp)
 	if err != nil {
 		return gda.EndWithError(err)
 	}

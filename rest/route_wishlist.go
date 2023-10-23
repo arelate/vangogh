@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
@@ -22,7 +21,7 @@ func RouteWishlist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hc, err := coost.NewHttpClientFromFile(acp, gog_integration.GogHost)
+	hc, err := coost.NewHttpClientFromFile(acp)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
