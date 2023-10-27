@@ -21,25 +21,25 @@ EXPOSE 1853
 # that can benefit from being stored on SSD.
 
 # backups (cold storage)
-/var/lib/vangogh/backups
+EXPOSE /var/lib/vangogh/backups
 # downloads (cold storage)
-/var/lib/vangogh/downloads
+EXPOSE /var/lib/vangogh/downloads
 # images (hot storage)
-/var/lib/vangogh/images
+EXPOSE /var/lib/vangogh/images
 # input (hot storage)
-/var/lib/vangogh/input
+EXPOSE /var/lib/vangogh/input
 # items (hot storage)
-/var/lib/vangogh/items
+EXPOSE /var/lib/vangogh/items
 # logs (cold storage)
-/var/log/vangogh
+EXPOSE /var/log/vangogh
 # metadata (hot storage)
-/var/lib/vangogh/metadata
+EXPOSE /var/lib/vangogh/metadata
 # output (hot storage)
-/var/lib/vangogh/output
+EXPOSE /var/lib/vangogh/output
 # recycle_bin (cold storage)
-/var/lib/vangogh/recycle_bin
+EXPOSE /var/lib/vangogh/recycle_bin
 # videos (cold storage)
-/var/lib/vangogh/videos
+EXPOSE /var/lib/vangogh/videos
 
 ENTRYPOINT ["/usr/bin/vg"]
 CMD ["serve","-port", "1853", "-stderr"]
