@@ -9,7 +9,7 @@ import (
 )
 
 func ExportHandler(_ *url.URL) error {
-	aofp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.OutputFiles)
+	aofp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Output)
 	if err != nil {
 		return err
 	}

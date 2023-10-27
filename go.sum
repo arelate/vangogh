@@ -8,6 +8,8 @@ github.com/arelate/vangogh_local_data v0.3.6 h1:b7OncF7PPo2+nw627Yzua0zLrYQApqyf
 github.com/arelate/vangogh_local_data v0.3.6/go.mod h1:GX4f81XgDnhDRdEjvQK6XbBGFqceBqhUTL8PFpvuC+M=
 github.com/arelate/vangogh_local_data v0.3.7 h1:ohFw4IMeU15/EirYz1Twe5fLhTRMiY4ij/h2m/EDWc8=
 github.com/arelate/vangogh_local_data v0.3.7/go.mod h1:GX4f81XgDnhDRdEjvQK6XbBGFqceBqhUTL8PFpvuC+M=
+github.com/arelate/vangogh_local_data v0.3.8 h1:irt3kAsrkUGTRRRqill1dALMP5N58oYJ26yuwYgiltk=
+github.com/arelate/vangogh_local_data v0.3.8/go.mod h1:GX4f81XgDnhDRdEjvQK6XbBGFqceBqhUTL8PFpvuC+M=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v0.3.6 h1:syeucZIM2/9B3jsUZqDo3TOYqgvJ6C1ketRgSuDoUf4=
