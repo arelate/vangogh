@@ -7,7 +7,6 @@ package main
 import (
 	"bytes"
 	_ "embed"
-	"github.com/arelate/vangogh/app"
 	"github.com/arelate/vangogh/cli"
 	"github.com/arelate/vangogh/cli/dirs"
 	"github.com/arelate/vangogh/clo_delegates"
@@ -80,7 +79,7 @@ func main() {
 		"tag":                cli.TagHandler,
 		"update-downloads":   cli.UpdateDownloadsHandler,
 		"validate":           cli.ValidateHandler,
-		"version":            app.VersionHandler,
+		"version":            cli.VersionHandler,
 		"vet":                cli.VetHandler,
 		"wishlist":           cli.WishlistHandler,
 	})
