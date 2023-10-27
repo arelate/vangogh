@@ -17,40 +17,43 @@ services:
     container_name: vangogh
     image: ghcr.io/arelate/vangogh:latest
     environment:
-       # Operating system and language code
-       # - VG_OPERATING-SYSTEM=Windows,macOS
-       # - VG_LANGUAGE-CODE=en,fr
-       # gaugin URL for Atom feed
-       # - VG_GAUGIN-URL=https://GAUGIN-ADDRESS
-       # prerender webhook URL
-       # - VG_WEBHOOK-URL=http://GAUGIN-ADDRESS/prerender
-       # debug
-       # - VG_SYNC_DEBUG=true    
+    # Operating system and language code
+    # - VG_OPERATING-SYSTEM=Windows,macOS
+    # - VG_LANGUAGE-CODE=en,fr
+    # gaugin URL for Atom feed
+    # - VG_GAUGIN-URL=https://GAUGIN-ADDRESS
+    # prerender webhook URL
+    # - VG_WEBHOOK-URL=http://GAUGIN-ADDRESS/prerender
+    # debug
+    # - VG_SYNC_DEBUG=true    
     volumes:
+      # cold storage is less frequently accessed data,
+      # that can be stored on hibernating HDD.
+      # hot storage is frequently accessed data,
+      # that can benefit from being stored on SSD.
       # backups (cold storage)
       - /docker/vangogh/backups:/var/lib/vangogh/backups
       # downloads (cold storage)
       - /docker/vangogh/downloads:/var/lib/vangogh/downloads
       # images (hot storage)
       - /docker/vangogh/images:/var/lib/vangogh/images
-      # input_files (hot storage)
-      - /docker/vangogh:/var/lib/vangogh
+      # input (hot storage)
+      - /docker/vangogh:/var/lib/vangogh/input
       # items (hot storage)
       - /docker/vangogh/items:/var/lib/vangogh/items
       # logs (cold storage)
       - /docker/vangogh/logs:/var/log/vangogh
       # metadata (hot storage)
       - /docker/vangogh/metadata:/var/lib/vangogh/metadata
-      # output_files (hot storage)
-      # typically the same as input_files, uncomment if different
-      # - /docker/vangogh:/var/lib/vangogh
+      # output (hot storage)
+      - /docker/vangogh:/var/lib/vangogh/output
       # recycle_bin (cold storage)
       - /docker/vangogh/recycle_bin:/var/lib/vangogh/recycle_bin
       # videos (cold storage)
       - /docker/vangogh/videos:/var/lib/vangogh/videos
-       # sharing timezone from the host
+      # sharing timezone from the host
       - /etc/localtime:/etc/localtime:ro
-       # certificates
+      # certificates
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
     ports:
       # https://en.wikipedia.org/wiki/Vincent_van_Gogh

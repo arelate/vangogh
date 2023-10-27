@@ -15,23 +15,27 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
 
+# cold storage is less frequently accessed data,
+# that can be stored on hibernating HDD.
+# hot storage is frequently accessed data,
+# that can benefit from being stored on SSD.
+
 # backups (cold storage)
 /var/lib/vangogh/backups
 # downloads (cold storage)
 /var/lib/vangogh/downloads
 # images (hot storage)
 /var/lib/vangogh/images
-# input_files (hot storage)
-/var/lib/vangogh
+# input (hot storage)
+/var/lib/vangogh/input
 # items (hot storage)
 /var/lib/vangogh/items
 # logs (cold storage)
 /var/log/vangogh
 # metadata (hot storage)
 /var/lib/vangogh/metadata
-# output_files (hot storage)
-# same as input_files
-#/var/lib/vangogh
+# output (hot storage)
+/var/lib/vangogh/output
 # recycle_bin (cold storage)
 /var/lib/vangogh/recycle_bin
 # videos (cold storage)
