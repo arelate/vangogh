@@ -82,7 +82,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 				continue
 			}
 
-			vfa := nod.NewProgress(" %s", vp.Title())
+			vfa := nod.NewProgress(" %s", vp.VideoDetails.Title)
 
 			vidUrls := vp.Formats()
 

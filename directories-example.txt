@@ -1,16 +1,22 @@
-logs
-    # logs
-    /var/log/vangogh
-root
-    # directories: checksums, downloads, recycle_bin, videos
-    # files: skiplist.txt
-    /var/lib/vangogh
+backups
+    /var/lib/vangogh/backups
+downloads
+    /var/lib/vangogh/downloads
 images
     /var/lib/vangogh/images
+input
+    # cookies.txt, skiplist.txt
+    /var/lib/vangogh
 items
     /var/lib/vangogh/items
+logs
+    # logs
+    /var/lib/vangogh/logs
 metadata
     /var/lib/vangogh/metadata
-temp
-    # temporary data: cookies.txt
-    /var/tmp
+output
+    /var/lib/vangogh
+recycle_bin
+    /var/lib/vangogh/recycle_bin
+videos
+    /var/lib/vangogh/videos

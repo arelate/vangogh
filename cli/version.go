@@ -9,7 +9,7 @@ var (
 	GitTag string
 )
 
-func VersionHandler(u *url.URL) error {
+func VersionHandler(_ *url.URL) error {
 	if GitTag == "" {
 		fmt.Println("unknown version")
 	} else {
