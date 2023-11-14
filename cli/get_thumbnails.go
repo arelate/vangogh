@@ -111,7 +111,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 			}
 
 			if !gotVideoIdThumbnail {
-				if err := rxa.AddVal(vangogh_local_data.MissingVideoThumbnailProperty, id, videoId); err != nil {
+				if err := rxa.AddValues(vangogh_local_data.MissingVideoThumbnailProperty, id, videoId); err != nil {
 					return ta.EndWithError(err)
 				}
 			}

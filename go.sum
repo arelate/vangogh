@@ -10,6 +10,8 @@ github.com/arelate/vangogh_local_data v0.3.7 h1:ohFw4IMeU15/EirYz1Twe5fLhTRMiY4i
 github.com/arelate/vangogh_local_data v0.3.7/go.mod h1:GX4f81XgDnhDRdEjvQK6XbBGFqceBqhUTL8PFpvuC+M=
 github.com/arelate/vangogh_local_data v0.3.8 h1:irt3kAsrkUGTRRRqill1dALMP5N58oYJ26yuwYgiltk=
 github.com/arelate/vangogh_local_data v0.3.8/go.mod h1:GX4f81XgDnhDRdEjvQK6XbBGFqceBqhUTL8PFpvuC+M=
+github.com/arelate/vangogh_local_data v0.3.9 h1:gGlyQle4QMphLjQ/ikNH7Web77v3TuanGXGH5DY0uRU=
+github.com/arelate/vangogh_local_data v0.3.9/go.mod h1:JFHA2+s8d/Nuq5gY9t6x2daLefQV5dsMkihr3MTANGc=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v0.3.6 h1:syeucZIM2/9B3jsUZqDo3TOYqgvJ6C1ketRgSuDoUf4=
@@ -28,6 +30,8 @@ github.com/boggydigital/issa v0.1.10 h1:zHSRJHkOz3DwVvp4/YL06qq/VHXexL7qrn4m48hR
 github.com/boggydigital/issa v0.1.10/go.mod h1:Rq+f8yeTlM/3ov4MCjmxWNL90n47h5CkwP6/628McKU=
 github.com/boggydigital/kvas v0.3.30 h1:i3em9pvtur4s9WgwF8a/DynUFmLjE7MAo+bjXm2sVY0=
 github.com/boggydigital/kvas v0.3.30/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
+github.com/boggydigital/kvas v0.3.31 h1:Ifgfyflbug1fz9YwPLnFcEdv6zZMukKQVOrnpp8ST9k=
+github.com/boggydigital/kvas v0.3.31/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
 github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drYKjcEOks=
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.14 h1:2CrpdCQeb8EX+E0wNadsbcLOSw/WvuHLgUZh35D9a58=

@@ -76,7 +76,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 			vp, _, err := yt_urls.GetVideoPage(http.DefaultClient, videoId)
 			if err != nil {
 				va.Error(err)
-				if addErr := rxa.AddVal(vangogh_local_data.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
+				if addErr := rxa.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
 					return addErr
 				}
 				continue
@@ -87,7 +87,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 			vidUrls := vp.Formats()
 
 			if len(vidUrls) == 0 {
-				if err := rxa.AddVal(vangogh_local_data.MissingVideoUrlProperty, videoId, "missing"); err != nil {
+				if err := rxa.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, "missing"); err != nil {
 					return vfa.EndWithError(err)
 				}
 			}
@@ -95,7 +95,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 			for _, vidUrl := range vidUrls {
 
 				if vidUrl.Url == "" {
-					if err := rxa.AddVal(vangogh_local_data.MissingVideoUrlProperty, videoId, "missing"); err != nil {
+					if err := rxa.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, "missing"); err != nil {
 						return vfa.EndWithError(err)
 					}
 					continue
