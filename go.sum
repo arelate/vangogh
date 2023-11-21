@@ -54,6 +54,8 @@ github.com/boggydigital/yt_urls v0.1.25 h1:rVfxPAuUss5w5Y3LBNi+VW2dOlf5co31xQnkI
 github.com/boggydigital/yt_urls v0.1.25/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
 github.com/boggydigital/yt_urls v0.1.29 h1:rpt6B4ZZ61zKD3Ka4ZuBNx/RTi93lXWKy+14HjyFlA4=
 github.com/boggydigital/yt_urls v0.1.29/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
+github.com/boggydigital/yt_urls v0.1.31 h1:nK/DgNEr+N6mrnYP7T1jpy+7jrD+bKcZl+zVyiRqo4c=
+github.com/boggydigital/yt_urls v0.1.31/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
