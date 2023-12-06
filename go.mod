@@ -10,14 +10,14 @@ require (
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.13
 	github.com/boggydigital/issa v0.1.10
-	github.com/boggydigital/kvas v0.3.31
+	github.com/boggydigital/kvas v0.3.34
 	github.com/boggydigital/kvas_dolo v0.1.6
 	github.com/boggydigital/middleware v0.1.11
 	github.com/boggydigital/nod v0.1.21
 	github.com/boggydigital/packer v0.1.0
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yt_urls v0.1.31
-	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
+	golang.org/x/exp v0.0.0-20231127185646-65229373498e
 )
 
 require (

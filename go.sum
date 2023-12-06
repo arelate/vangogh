@@ -32,6 +32,8 @@ github.com/boggydigital/kvas v0.3.30 h1:i3em9pvtur4s9WgwF8a/DynUFmLjE7MAo+bjXm2s
 github.com/boggydigital/kvas v0.3.30/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
 github.com/boggydigital/kvas v0.3.31 h1:Ifgfyflbug1fz9YwPLnFcEdv6zZMukKQVOrnpp8ST9k=
 github.com/boggydigital/kvas v0.3.31/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
+github.com/boggydigital/kvas v0.3.34 h1:BYaEvqY2feiGBNOCW6eVdjCpyVCKm9cJ39OGXKLWoKA=
+github.com/boggydigital/kvas v0.3.34/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
 github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drYKjcEOks=
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.14 h1:2CrpdCQeb8EX+E0wNadsbcLOSw/WvuHLgUZh35D9a58=
@@ -65,6 +67,8 @@ golang.org/x/exp v0.0.0-20231006140011-7918f672742d h1:jtJma62tbqLibJ5sFQz8bKtEM
 golang.org/x/exp v0.0.0-20231006140011-7918f672742d/go.mod h1:ldy0pHrwJyGW56pPQzzkH36rKxoZW1tw7ZJpeKx+hdo=
 golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa h1:FRnLl4eNAQl8hwxVVC17teOw8kdjVDVAiFMtgUdTSRQ=
 golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa/go.mod h1:zk2irFbV9DP96SEBUUAy67IdHUaZuSnrz1n472HUCLE=
+golang.org/x/exp v0.0.0-20231127185646-65229373498e h1:Gvh4YaCaXNs6dKTlfgismwWZKyjVZXwOPfIyUaqU3No=
+golang.org/x/exp v0.0.0-20231127185646-65229373498e/go.mod h1:iRJReGqOEeBhDZGkGbynYwcHlctCvnjTYIamk7uXpHI=
 golang.org/x/image v0.11.0 h1:ds2RoQvBvYTiJkwpSFDwCcDFNX7DqjL2WsUgTNk0Ooo=
 golang.org/x/image v0.11.0/go.mod h1:bglhjqbqVuEb9e9+eNR45Jfu7D+T4Qan+NhQk8Ck2P8=
 golang.org/x/image v0.14.0 h1:tNgSxAFe3jC4uYqvZdTr84SZoM1KfwdC9SKIFrLjFn4=
