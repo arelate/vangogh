@@ -16,7 +16,7 @@ require (
 	github.com/boggydigital/nod v0.1.21
 	github.com/boggydigital/packer v0.1.0
 	github.com/boggydigital/wits v0.2.3
-	github.com/boggydigital/yt_urls v0.1.31
+	github.com/boggydigital/yt_urls v0.1.32
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
 )
 
