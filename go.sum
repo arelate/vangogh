@@ -30,8 +30,8 @@ github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6j
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=
 github.com/boggydigital/wits v0.2.3/go.mod h1:aR/z0vfMLtg0b4hcts0qiSTZcA51O8A2N3U9laqd2Lc=
-github.com/boggydigital/yt_urls v0.1.31 h1:nK/DgNEr+N6mrnYP7T1jpy+7jrD+bKcZl+zVyiRqo4c=
-github.com/boggydigital/yt_urls v0.1.31/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
+github.com/boggydigital/yt_urls v0.1.32 h1:TmznNtXLwwnBoVl9wD5RWr5HZvo4LLREY6a3B0VJy4w=
+github.com/boggydigital/yt_urls v0.1.32/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
 golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb h1:c0vyKkb6yr3KR7jEfJaOSv4lG7xPkbN6r52aJz1d8a8=
 golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb/go.mod h1:iRJReGqOEeBhDZGkGbynYwcHlctCvnjTYIamk7uXpHI=
 golang.org/x/image v0.14.0 h1:tNgSxAFe3jC4uYqvZdTr84SZoM1KfwdC9SKIFrLjFn4=
