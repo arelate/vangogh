@@ -17,6 +17,8 @@ func GetDataHandler(u *url.URL) error {
 		return err
 	}
 
+	productType := vangogh_local_data.ProductTypeFromUrl(u)
+
 	skipIds := vangogh_local_data.ValuesFromUrl(u, "skip-id")
 
 	updated := vangogh_local_data.FlagFromUrl(u, "updated")
@@ -25,12 +27,14 @@ func GetDataHandler(u *url.URL) error {
 		return err
 	}
 
+	missing := vangogh_local_data.FlagFromUrl(u, "missing")
+
 	return GetData(
 		idSet,
 		skipIds,
-		vangogh_local_data.ProductTypeFromUrl(u),
+		productType,
 		since,
-		vangogh_local_data.FlagFromUrl(u, "missing"),
+		missing,
 		updated)
 }
 
