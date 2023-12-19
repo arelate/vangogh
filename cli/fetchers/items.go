@@ -24,7 +24,7 @@ func Items(
 
 	ia.TotalInt(len(ids))
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.SteamAppIdProperty,
 		vangogh_local_data.PCGWPageIdProperty,
 		vangogh_local_data.HLTBBuildIdProperty,
@@ -36,7 +36,7 @@ func Items(
 	//since we know how many ids need to be fetched, allocate URLs and idStrs to that number
 	urls, idStr := make([]*url.URL, len(ids)), make([]string, len(ids))
 
-	up, err := vangogh_local_data.NewUrlProvider(pt, rxa)
+	up, err := vangogh_local_data.NewUrlProvider(pt, rdx)
 	if err != nil {
 		return ia.EndWithError(err)
 	}

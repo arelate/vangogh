@@ -9,21 +9,25 @@ import (
 )
 
 const (
-	VetOptionLocalOnlyData                = "local-only-data"
-	VetOptionLocalOnlyImages              = "local-only-images"
-	VetOptionLocalOnlyVideosAndThumbnails = "local-only-videos-and-thumbnails"
-	VetOptionRecycleBin                   = "recycle-bin"
-	VetOptionInvalidData                  = "invalid-data"
-	VetOptionUnresolvedManualUrls         = "unresolved-manual-urls"
-	VetOptionInvalidResolvedManualUrls    = "invalid-resolved-manual-urls"
-	VetOptionMissingChecksums             = "missing-checksums"
-	VetStaleDehydrations                  = "stale-dehydrations"
-	VetOldLogs                            = "old-logs"
-	VetOldBackups                         = "old-backups"
-	VetWishlistedOwned                    = "wishlisted-owned"
+	VetIndexOnly                    = "index-only"
+	VetIndexMissing                 = "index-missing"
+	VetLocalOnlyData                = "local-only-data"
+	VetLocalOnlyImages              = "local-only-images"
+	VetLocalOnlyVideosAndThumbnails = "local-only-videos-and-thumbnails"
+	VetRecycleBin                   = "recycle-bin"
+	VetInvalidData                  = "invalid-data"
+	VetUnresolvedManualUrls         = "unresolved-manual-urls"
+	VetInvalidResolvedManualUrls    = "invalid-resolved-manual-urls"
+	VetMissingChecksums             = "missing-checksums"
+	VetStaleDehydrations            = "stale-dehydrations"
+	VetOldLogs                      = "old-logs"
+	VetOldBackups                   = "old-backups"
+	VetWishlistedOwned              = "wishlisted-owned"
 )
 
 type vetOptions struct {
+	indexOnly                   bool
+	indexMissing                bool
 	localOnlyData               bool
 	localOnlyImages             bool
 	localOnlyVideos             bool
@@ -41,14 +45,16 @@ type vetOptions struct {
 func initVetOptions(u *url.URL) *vetOptions {
 
 	vo := &vetOptions{
-		localOnlyData:               vangogh_local_data.FlagFromUrl(u, VetOptionLocalOnlyData),
-		localOnlyImages:             vangogh_local_data.FlagFromUrl(u, VetOptionLocalOnlyImages),
-		localOnlyVideos:             vangogh_local_data.FlagFromUrl(u, VetOptionLocalOnlyVideosAndThumbnails),
-		recycleBin:                  vangogh_local_data.FlagFromUrl(u, VetOptionRecycleBin),
-		invalidData:                 vangogh_local_data.FlagFromUrl(u, VetOptionInvalidData),
-		unresolvedManualUrls:        vangogh_local_data.FlagFromUrl(u, VetOptionUnresolvedManualUrls),
-		invalidUnresolvedManualUrls: vangogh_local_data.FlagFromUrl(u, VetOptionInvalidResolvedManualUrls),
-		missingChecksums:            vangogh_local_data.FlagFromUrl(u, VetOptionMissingChecksums),
+		indexOnly:                   vangogh_local_data.FlagFromUrl(u, VetIndexOnly),
+		indexMissing:                vangogh_local_data.FlagFromUrl(u, VetIndexMissing),
+		localOnlyData:               vangogh_local_data.FlagFromUrl(u, VetLocalOnlyData),
+		localOnlyImages:             vangogh_local_data.FlagFromUrl(u, VetLocalOnlyImages),
+		localOnlyVideos:             vangogh_local_data.FlagFromUrl(u, VetLocalOnlyVideosAndThumbnails),
+		recycleBin:                  vangogh_local_data.FlagFromUrl(u, VetRecycleBin),
+		invalidData:                 vangogh_local_data.FlagFromUrl(u, VetInvalidData),
+		unresolvedManualUrls:        vangogh_local_data.FlagFromUrl(u, VetUnresolvedManualUrls),
+		invalidUnresolvedManualUrls: vangogh_local_data.FlagFromUrl(u, VetInvalidResolvedManualUrls),
+		missingChecksums:            vangogh_local_data.FlagFromUrl(u, VetMissingChecksums),
 		staleDehydrations:           vangogh_local_data.FlagFromUrl(u, VetStaleDehydrations),
 		oldLogs:                     vangogh_local_data.FlagFromUrl(u, VetOldLogs),
 		oldBackups:                  vangogh_local_data.FlagFromUrl(u, VetOldBackups),
@@ -56,14 +62,16 @@ func initVetOptions(u *url.URL) *vetOptions {
 	}
 
 	if vangogh_local_data.FlagFromUrl(u, "all") {
-		vo.localOnlyData = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionLocalOnlyData))
-		vo.localOnlyImages = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionLocalOnlyImages))
-		vo.localOnlyVideos = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionLocalOnlyVideosAndThumbnails))
-		vo.recycleBin = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionRecycleBin))
-		vo.invalidData = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionInvalidData))
-		vo.unresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionUnresolvedManualUrls))
-		vo.invalidUnresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionInvalidResolvedManualUrls))
-		vo.missingChecksums = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOptionMissingChecksums))
+		vo.indexOnly = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetIndexOnly))
+		vo.indexMissing = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetIndexMissing))
+		vo.localOnlyData = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyData))
+		vo.localOnlyImages = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyImages))
+		vo.localOnlyVideos = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyVideosAndThumbnails))
+		vo.recycleBin = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetRecycleBin))
+		vo.invalidData = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetInvalidData))
+		vo.unresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetUnresolvedManualUrls))
+		vo.invalidUnresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetInvalidResolvedManualUrls))
+		vo.missingChecksums = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetMissingChecksums))
 		vo.staleDehydrations = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
 		vo.oldLogs = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOldLogs))
 		vo.oldBackups = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOldBackups))
@@ -94,6 +102,18 @@ func Vet(
 
 	sda := nod.Begin("vetting local data...")
 	defer sda.End()
+
+	if vetOpts.indexOnly {
+		if err := vets.IndexOnly(fix); err != nil {
+			return sda.EndWithError(err)
+		}
+	}
+
+	if vetOpts.indexMissing {
+		if err := vets.IndexMissing(fix); err != nil {
+			return sda.EndWithError(err)
+		}
+	}
 
 	if vetOpts.localOnlyData {
 		if err := vets.LocalOnlySplitProducts(fix); err != nil {

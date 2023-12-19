@@ -49,7 +49,7 @@ func Validate(
 	va := nod.NewProgress("validating...")
 	defer va.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxWriter(
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty,
@@ -66,7 +66,7 @@ func Validate(
 		}
 		for _, id := range vrDetails.Keys() {
 			if skipValid {
-				valid, ok := rxa.GetFirstVal(vangogh_local_data.ValidationResultProperty, id)
+				valid, ok := rdx.GetFirstVal(vangogh_local_data.ValidationResultProperty, id)
 				if ok && valid == vangogh_local_data.OKValue {
 					continue
 				}
@@ -75,11 +75,11 @@ func Validate(
 		}
 	}
 
-	vd := &validateDelegate{rxa: rxa}
+	vd := &validateDelegate{rdx: rdx}
 
 	if err := vangogh_local_data.MapDownloads(
 		idSet,
-		rxa,
+		rdx,
 		operatingSystems,
 		downloadTypes,
 		langCodes,
@@ -121,9 +121,9 @@ func maybeAddTopic(summary map[string][]string, tmpl string, col map[string]bool
 
 func validateManualUrl(
 	dl *vangogh_local_data.Download,
-	rxa kvas.ReduxAssets) error {
+	rdx kvas.ReadableRedux) error {
 
-	if err := rxa.IsSupported(vangogh_local_data.LocalManualUrlProperty); err != nil {
+	if err := rdx.MustHave(vangogh_local_data.LocalManualUrlProperty); err != nil {
 		return err
 	}
 
@@ -131,7 +131,7 @@ func validateManualUrl(
 	defer mua.End()
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
-	localFile, ok := rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
+	localFile, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
 	if !ok {
 		mua.EndWithResult(ErrUnresolvedManualUrl.Error())
 		return ErrUnresolvedManualUrl
@@ -209,7 +209,7 @@ func validateManualUrl(
 }
 
 type validateDelegate struct {
-	rxa                  kvas.ReduxAssets
+	rdx                  kvas.WriteableRedux
 	validated            map[string]bool
 	unresolvedManualUrl  map[string]bool
 	missingDownloads     map[string]bool
@@ -250,7 +250,7 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 	results := make([]string, 0, 1)
 
 	for _, dl := range list {
-		if err := validateManualUrl(&dl, vd.rxa); errors.Is(err, ErrValidationNotSupported) {
+		if err := validateManualUrl(&dl, vd.rdx); errors.Is(err, ErrValidationNotSupported) {
 			continue
 		} else if errors.Is(err, ErrMissingChecksum) {
 			if dl.Type == vangogh_local_data.Extra {
@@ -278,7 +278,7 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 	}
 
 	now := strconv.FormatInt(time.Now().UTC().Unix(), 10)
-	if err := vd.rxa.ReplaceValues(vangogh_local_data.ValidationCompletedProperty, id, now); err != nil {
+	if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationCompletedProperty, id, now); err != nil {
 		return err
 	}
 
@@ -292,7 +292,7 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 		results = append(results, vangogh_local_data.OKValue)
 	}
 
-	if err := vd.rxa.ReplaceValues(vangogh_local_data.ValidationResultProperty, id, results...); err != nil {
+	if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationResultProperty, id, results...); err != nil {
 		return err
 	}
 

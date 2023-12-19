@@ -9,11 +9,11 @@ import (
 	"sort"
 )
 
-func PropertyValuesCounts(rxa kvas.ReduxAssets, property string) map[string]int {
+func PropertyValuesCounts(rdx kvas.ReadableRedux, property string) map[string]int {
 	distValues := make(map[string]int)
 
-	for _, id := range rxa.Keys(property) {
-		values, ok := rxa.GetAllValues(property, id)
+	for _, id := range rdx.Keys(property) {
+		values, ok := rdx.GetAllValues(property, id)
 		if !ok || len(values) == 0 {
 			continue
 		}
@@ -43,7 +43,7 @@ func GetDigest(w http.ResponseWriter, r *http.Request) {
 	propertyValues := make(map[string][]string)
 
 	for _, p := range properties {
-		pvc := PropertyValuesCounts(rxa, p)
+		pvc := PropertyValuesCounts(rdx, p)
 		values := maps.Keys(pvc)
 		sort.Strings(values)
 		propertyValues[p] = values

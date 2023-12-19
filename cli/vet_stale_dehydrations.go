@@ -31,24 +31,24 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 	sdia := nod.NewProgress("checking stale dehydrations for %s...", imageProperty)
 	defer sdia.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(imageProperty, dimProperty)
+	rdx, err := vangogh_local_data.ReduxReader(imageProperty, dimProperty)
 	if err != nil {
 		return err
 	}
 
 	staleIds := make(map[string]bool)
 
-	ids := rxa.Keys(imageProperty)
+	ids := rdx.Keys(imageProperty)
 	sdia.TotalInt(len(ids))
 
 	for _, id := range ids {
-		if imageId, ok := rxa.GetFirstVal(imageProperty, id); ok {
+		if imageId, ok := rdx.GetFirstVal(imageProperty, id); ok {
 			imagePath, err := vangogh_local_data.AbsLocalImagePath(imageId)
 			if err != nil {
 				return sdia.EndWithError(err)
 			}
 			if stat, err := os.Stat(imagePath); err == nil {
-				if dimStr, ok := rxa.GetFirstVal(dimProperty, id); ok {
+				if dimStr, ok := rdx.GetFirstVal(dimProperty, id); ok {
 					if dim, err := strconv.ParseInt(dimStr, 10, 64); err == nil {
 						dimTime := time.Unix(dim, 0)
 						imt := stat.ModTime()

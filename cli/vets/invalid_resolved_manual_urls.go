@@ -12,7 +12,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 	cirmu := nod.NewProgress("checking invalid resolved manual-urls...")
 	defer cirmu.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxWriter(
 		vangogh_local_data.LocalManualUrlProperty)
 	if err != nil {
 		return cirmu.EndWithError(err)
@@ -20,11 +20,11 @@ func InvalidResolvedManualUrls(fix bool) error {
 
 	invalidResolvedUrls := make(map[string]bool)
 
-	keys := rxa.Keys(vangogh_local_data.LocalManualUrlProperty)
+	keys := rdx.Keys(vangogh_local_data.LocalManualUrlProperty)
 	cirmu.TotalInt(len(keys))
 	for _, url := range keys {
 
-		local, ok := rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, url)
+		local, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, url)
 		if !ok {
 			continue
 		}
@@ -59,11 +59,11 @@ func InvalidResolvedManualUrls(fix bool) error {
 		}
 
 		for url := range invalidResolvedUrls {
-			local, _ := rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, url)
+			local, _ := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, url)
 			summary[url] = []string{local}
 			if fix {
 				// remove the entry from the redux
-				if err := rxa.CutVal(vangogh_local_data.LocalManualUrlProperty, url, local); err != nil {
+				if err := rdx.CutValues(vangogh_local_data.LocalManualUrlProperty, url, local); err != nil {
 					cirmu.Error(err)
 				}
 

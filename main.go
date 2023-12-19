@@ -89,6 +89,45 @@ func main() {
 		os.Exit(1)
 	}
 
+	//pts := vangogh_local_data.LocalProducts()
+	//fmt.Println()
+	//
+	//for _, pt := range pts {
+	//
+	//	vr, err := vangogh_local_data.NewReader(pt)
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	tpw := nod.NewProgress("%s - index only", pt)
+	//
+	//	iop, err := vr.VetIndexOnly(false, tpw)
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	result := "done"
+	//	if len(iop) > 0 {
+	//		result = strings.Join(iop, ",")
+	//	}
+	//	tpw.EndWithResult(result)
+	//
+	//	tpw = nod.NewProgress("%s - index missing", pt)
+	//
+	//	imp, err := vr.VetIndexMissing(false, tpw)
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	result = "done"
+	//	if len(imp) > 0 {
+	//		result = strings.Join(imp, ",")
+	//	}
+	//	tpw.EndWithResult(result)
+	//}
+	//
+	//return
+
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)

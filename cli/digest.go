@@ -18,12 +18,12 @@ func Digest(property string) error {
 	da := nod.Begin("digesting...")
 	defer da.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(property)
+	rdx, err := vangogh_local_data.ReduxReader(property)
 	if err != nil {
 		return err
 	}
 
-	distValues := v1.PropertyValuesCounts(rxa, property)
+	distValues := v1.PropertyValuesCounts(rdx, property)
 
 	keys := make([]string, 0, len(distValues))
 	for key := range distValues {

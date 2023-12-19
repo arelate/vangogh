@@ -19,19 +19,19 @@ func LocalOnlyVideosAndThumbnails(fix bool) error {
 	}
 	ilva.EndWithResult("done")
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.VideoIdProperty)
+	rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.VideoIdProperty)
 	if err != nil {
 		return lova.EndWithError(err)
 	}
 
 	ieva := nod.NewProgress(" itemizing expected videos...")
-	ids := rxa.Keys(vangogh_local_data.VideoIdProperty)
+	ids := rdx.Keys(vangogh_local_data.VideoIdProperty)
 
 	ieva.TotalInt(len(ids))
 
 	expectedVideos := make(map[string]bool)
 	for _, id := range ids {
-		videoIds, ok := rxa.GetAllValues(vangogh_local_data.VideoIdProperty, id)
+		videoIds, ok := rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id)
 		if !ok {
 			ieva.Increment()
 			continue

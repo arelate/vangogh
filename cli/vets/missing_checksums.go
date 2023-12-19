@@ -16,7 +16,7 @@ func MissingChecksums(fix bool) error {
 	mca := nod.Begin("looking for missing checksums...")
 	defer mca.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.ValidationResultProperty,
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.NativeLanguageNameProperty)
@@ -26,8 +26,8 @@ func MissingChecksums(fix bool) error {
 
 	ids := make(map[string]interface{})
 
-	for _, id := range rxa.Keys(vangogh_local_data.ValidationResultProperty) {
-		results, ok := rxa.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
+	for _, id := range rdx.Keys(vangogh_local_data.ValidationResultProperty) {
+		results, ok := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
 		if !ok {
 			continue
 		}
@@ -53,13 +53,13 @@ func MissingChecksums(fix bool) error {
 			return mca.EndWithError(err)
 		}
 
-		dls, err := vangogh_local_data.FromDetails(det, rxa)
+		dls, err := vangogh_local_data.FromDetails(det, rdx)
 		if err != nil {
 			return mca.EndWithError(err)
 		}
 
 		for _, dl := range dls {
-			relFile, ok := rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
+			relFile, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
 			if !ok {
 				continue
 			}

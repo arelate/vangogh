@@ -76,13 +76,13 @@ func UpdateDownloads(
 	//filter updAccountProductIds to products that have already been downloaded
 	//note that this would exclude, for example, pre-order products automatic downloads
 	if updatesOnly {
-		rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.SlugProperty)
+		rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.SlugProperty)
 		if err != nil {
 			return uda.EndWithError(err)
 		}
 
 		for id := range updAccountProductIds {
-			ok, err := vangogh_local_data.IsProductDownloaded(id, rxa)
+			ok, err := vangogh_local_data.IsProductDownloaded(id, rdx)
 			if err != nil {
 				return uda.EndWithError(err)
 			}

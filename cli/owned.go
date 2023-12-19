@@ -36,12 +36,12 @@ func Owned(idSet map[string]bool) error {
 		vangogh_local_data.OwnedProperty:             true,
 	}
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
 
-	ownedSet, err := reductions.CheckOwnership(idSet, rxa)
+	ownedSet, err := reductions.CheckOwnership(idSet, rdx)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
@@ -49,7 +49,7 @@ func Owned(idSet map[string]bool) error {
 	ownSummary := make(map[string][]string)
 	ownSummary[ownedSection] = make([]string, 0, len(ownedSet))
 	for id := range ownedSet {
-		if title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+		if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
 			ownSummary[ownedSection] = append(ownSummary[ownedSection], fmt.Sprintf("%s %s", id, title))
 		}
 	}
@@ -63,7 +63,7 @@ func Owned(idSet map[string]bool) error {
 
 	ownSummary[notOwnedSection] = make([]string, 0, len(notOwned))
 	for id := range notOwned {
-		if title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+		if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
 			ownSummary[notOwnedSection] = append(ownSummary[notOwnedSection], fmt.Sprintf("%s %s", id, title))
 		}
 	}

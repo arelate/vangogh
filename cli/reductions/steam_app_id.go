@@ -13,7 +13,7 @@ func SteamAppId(since int64) error {
 	saia := nod.NewProgress(" %s...", vangogh_local_data.SteamAppIdProperty)
 	defer saia.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxWriter(
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.SteamAppIdProperty)
 	if err != nil {
@@ -43,7 +43,7 @@ func SteamAppId(since int64) error {
 	saia.TotalInt(len(modified))
 
 	for _, id := range modified {
-		title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id)
+		title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id)
 		if !ok {
 			saia.Increment()
 			continue
@@ -58,7 +58,7 @@ func SteamAppId(since int64) error {
 		saia.Increment()
 	}
 
-	if err := rxa.BatchReplaceValues(vangogh_local_data.SteamAppIdProperty, gogSteamAppId); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_local_data.SteamAppIdProperty, gogSteamAppId); err != nil {
 		return saia.EndWithError(err)
 	}
 

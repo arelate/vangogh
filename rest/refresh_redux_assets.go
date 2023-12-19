@@ -1,10 +1,10 @@
 package rest
 
 func RefreshReduxAssets(properties ...string) (err error) {
-	if rxa, err = rxa.RefreshReduxAssets(); err != nil {
+	if rdx, err = rdx.RefreshReader(); err != nil {
 		return err
 	}
-	if err := rxa.IsSupported(properties...); err != nil {
+	if err := rdx.MustHave(properties...); err != nil {
 		return err
 	}
 	return err

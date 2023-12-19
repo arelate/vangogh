@@ -16,7 +16,7 @@ func CascadeValidation() error {
 	cva := nod.NewProgress("cascading validation...")
 	defer cva.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxWriter(
 		vangogh_local_data.OwnedProperty,
 		vangogh_local_data.IsRequiredByGamesProperty,
 		vangogh_local_data.IsIncludedByGamesProperty,
@@ -28,37 +28,37 @@ func CascadeValidation() error {
 
 	cascadedResults := make(map[string][]string)
 
-	ids := rxa.Keys(vangogh_local_data.ValidationResultProperty)
+	ids := rdx.Keys(vangogh_local_data.ValidationResultProperty)
 
 	cva.TotalInt(len(ids))
 
 	for _, id := range ids {
 
-		vr, _ := rxa.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
+		vr, _ := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
 
-		for _, ri := range filterOwnedRelated(rxa, vangogh_local_data.IsRequiredByGamesProperty, id) {
+		for _, ri := range filterOwnedRelated(rdx, vangogh_local_data.IsRequiredByGamesProperty, id) {
 			cascadedResults[ri] = vr
 		}
 
-		for _, ii := range filterOwnedRelated(rxa, vangogh_local_data.IsIncludedByGamesProperty, id) {
+		for _, ii := range filterOwnedRelated(rdx, vangogh_local_data.IsIncludedByGamesProperty, id) {
 			cascadedResults[ii] = vr
 		}
 
 		cva.Increment()
 	}
 
-	if err := rxa.BatchReplaceValues(vangogh_local_data.ValidationResultProperty, cascadedResults); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_local_data.ValidationResultProperty, cascadedResults); err != nil {
 
 	}
 
 	return nil
 }
 
-func filterOwnedRelated(rxa kvas.ReduxAssets, p, id string) []string {
+func filterOwnedRelated(rdx kvas.ReadableRedux, p, id string) []string {
 	ownedRelated := make([]string, 0)
-	if related, ok := rxa.GetAllValues(p, id); ok {
+	if related, ok := rdx.GetAllValues(p, id); ok {
 		for _, rid := range related {
-			if own, ok := rxa.GetFirstVal(vangogh_local_data.OwnedProperty, rid); ok && own == "true" {
+			if own, ok := rdx.GetFirstVal(vangogh_local_data.OwnedProperty, rid); ok && own == "true" {
 				ownedRelated = append(ownedRelated, rid)
 			}
 		}

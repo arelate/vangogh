@@ -9,7 +9,7 @@ import (
 )
 
 func MissingLocalDownloads(
-	rxa kvas.ReduxAssets,
+	rdx kvas.ReadableRedux,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string) (map[string]bool, error) {
@@ -27,7 +27,7 @@ func MissingLocalDownloads(
 
 	emptySet := make(map[string]bool)
 
-	if err := rxa.IsSupported(
+	if err := rdx.MustHave(
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.DownloadStatusErrorProperty); err != nil {
 		return emptySet, mlda.EndWithError(err)
@@ -47,11 +47,11 @@ func MissingLocalDownloads(
 	mlda.TotalInt(len(allIds))
 
 	mdd := &missingDownloadsDelegate{
-		rxa: rxa}
+		rdx: rdx}
 
 	if err := vangogh_local_data.MapDownloads(
 		allIds,
-		rxa,
+		rdx,
 		operatingSystems,
 		downloadTypes,
 		langCodes,
@@ -64,7 +64,7 @@ func MissingLocalDownloads(
 }
 
 type missingDownloadsDelegate struct {
-	rxa        kvas.ReduxAssets
+	rdx        kvas.ReadableRedux
 	missingIds map[string]bool
 }
 
@@ -86,12 +86,12 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_local
 
 		//skip manualUrls that have produced error status codes, while they're technically missing
 		//it's due to remote status for this URL, not a problem we can resolve locally
-		status, ok := mdd.rxa.GetFirstVal(vangogh_local_data.DownloadStatusErrorProperty, dl.ManualUrl)
+		status, ok := mdd.rdx.GetFirstVal(vangogh_local_data.DownloadStatusErrorProperty, dl.ManualUrl)
 		if ok && status == "404" {
 			continue
 		}
 
-		localFilename, ok := mdd.rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
+		localFilename, ok := mdd.rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
 		// 2
 		if !ok || localFilename == "" {
 			mdd.missingIds[id] = true

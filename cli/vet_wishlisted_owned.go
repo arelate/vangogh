@@ -10,7 +10,7 @@ func WishlistedOwned(fix bool) error {
 	woa := nod.Begin("checking wishlisted owned products...")
 	defer woa.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.WishlistedProperty,
 		vangogh_local_data.OwnedProperty)
 
@@ -20,12 +20,12 @@ func WishlistedOwned(fix bool) error {
 
 	woid := make([]string, 0)
 
-	for _, id := range rxa.Keys(vangogh_local_data.WishlistedProperty) {
+	for _, id := range rdx.Keys(vangogh_local_data.WishlistedProperty) {
 		// only check actually wishlisted products, not just any wishlisted state
-		if rxa.HasVal(vangogh_local_data.WishlistedProperty, id, vangogh_local_data.FalseValue) {
+		if rdx.HasValue(vangogh_local_data.WishlistedProperty, id, vangogh_local_data.FalseValue) {
 			continue
 		}
-		if rxa.HasVal(vangogh_local_data.OwnedProperty, id, vangogh_local_data.TrueValue) {
+		if rdx.HasValue(vangogh_local_data.OwnedProperty, id, vangogh_local_data.TrueValue) {
 			woid = append(woid, id)
 		}
 	}

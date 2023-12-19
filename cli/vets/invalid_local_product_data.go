@@ -66,7 +66,7 @@ func InvalidLocalProductData(fix bool) error {
 	if !dataProblems {
 		ilpa.EndWithResult("data seems ok")
 	} else {
-		rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.TitleProperty)
+		rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.TitleProperty)
 		if err != nil {
 			return err
 		}
@@ -79,7 +79,7 @@ func InvalidLocalProductData(fix bool) error {
 			summary[ptStr] = make([]string, len(ids))
 			for i := 0; i < len(ids); i++ {
 				prodStr := ids[i]
-				if title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, ids[i]); ok {
+				if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, ids[i]); ok {
 					prodStr = fmt.Sprintf("%s %s", prodStr, title)
 				}
 				summary[ptStr][i] = prodStr

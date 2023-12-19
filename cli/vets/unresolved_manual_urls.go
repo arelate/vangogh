@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 )
 
 func UnresolvedManualUrls(
@@ -15,7 +16,7 @@ func UnresolvedManualUrls(
 	cumu := nod.NewProgress("checking unresolved manual-urls...")
 	defer cumu.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty)
@@ -41,7 +42,7 @@ func UnresolvedManualUrls(
 			continue
 		}
 
-		downloadsList, err := vangogh_local_data.FromDetails(det, rxa)
+		downloadsList, err := vangogh_local_data.FromDetails(det, rdx)
 		if err != nil {
 			cumu.Error(err)
 			cumu.Increment()
@@ -51,7 +52,7 @@ func UnresolvedManualUrls(
 		downloadsList = downloadsList.Only(operatingSystems, downloadTypes, langCodes)
 
 		for _, dl := range downloadsList {
-			if _, ok := rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); !ok {
+			if _, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); !ok {
 				unresolvedIds[id] = true
 			}
 		}
@@ -64,10 +65,10 @@ func UnresolvedManualUrls(
 	} else {
 
 		summary, err := vangogh_local_data.PropertyListsFromIdSet(
-			unresolvedIds,
+			maps.Keys(unresolvedIds),
 			nil,
 			[]string{vangogh_local_data.TitleProperty},
-			rxa)
+			rdx)
 
 		heading := fmt.Sprintf("found %d problems:", len(unresolvedIds))
 		if fix {

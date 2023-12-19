@@ -23,33 +23,33 @@ func Cascade() error {
 	ca := nod.NewProgress("cascading supported properties...")
 	defer ca.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.ReduxProperties()...)
+	rdx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.ReduxProperties()...)
 	if err != nil {
 		return ca.EndWithError(err)
 	}
 
-	if err := rxa.IsSupported(vangogh_local_data.IncludesGamesProperty); err != nil {
+	if err := rdx.MustHave(vangogh_local_data.IncludesGamesProperty); err != nil {
 		return ca.EndWithError(err)
 	}
 
-	ids := rxa.Keys(vangogh_local_data.IncludesGamesProperty)
+	ids := rdx.Keys(vangogh_local_data.IncludesGamesProperty)
 
 	ca.TotalInt(len(ids))
 
 	for _, id := range ids {
-		includesIds, ok := rxa.GetAllValues(vangogh_local_data.IncludesGamesProperty, id)
+		includesIds, ok := rdx.GetAllValues(vangogh_local_data.IncludesGamesProperty, id)
 		if !ok {
 			ca.Increment()
 			continue
 		}
 		for _, prop := range cascadingProperties {
-			mainValues, ok := rxa.GetAllValues(prop, id)
+			mainValues, ok := rdx.GetAllValues(prop, id)
 			if !ok {
 				continue
 			}
 			for _, includesId := range includesIds {
-				if _, ok := rxa.GetAllValues(prop, includesId); !ok {
-					if err := rxa.ReplaceValues(prop, includesId, mainValues...); err != nil {
+				if _, ok := rdx.GetAllValues(prop, includesId); !ok {
+					if err := rdx.ReplaceValues(prop, includesId, mainValues...); err != nil {
 						return ca.EndWithError(err)
 					}
 				}

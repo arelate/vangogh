@@ -46,16 +46,16 @@ func Info(idSet map[string]bool, allText, images, videoId bool) error {
 		}
 	}
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return ia.EndWithError(err)
 	}
 
 	itp, err := vangogh_local_data.PropertyListsFromIdSet(
-		idSet,
+		maps.Keys(idSet),
 		nil,
 		maps.Keys(propSet),
-		rxa)
+		rdx)
 
 	if err != nil {
 		return ia.EndWithError(err)

@@ -40,7 +40,7 @@ func Dehydrate(
 			vangogh_local_data.ImageTypeDehydratedModifiedProperty(it))
 	}
 
-	rxa, err := imageTypesReduxAssets(properties, its)
+	rdx, err := imageTypesReduxAssets(properties, its)
 	if err != nil {
 		return di.EndWithError(err)
 	}
@@ -54,8 +54,8 @@ func Dehydrate(
 			asset := vangogh_local_data.PropertyFromImageType(it)
 			dehydratedProperty := vangogh_local_data.ImageTypeDehydratedProperty(it)
 
-			for _, id := range rxa.Keys(asset) {
-				if !rxa.HasKey(dehydratedProperty, id) {
+			for _, id := range rdx.Keys(asset) {
+				if !rdx.HasKey(dehydratedProperty, id) {
 					idSet[id] = true
 				}
 			}
@@ -79,7 +79,7 @@ func Dehydrate(
 
 		for id := range idSet {
 
-			imageId, ok := rxa.GetFirstVal(asset, id)
+			imageId, ok := rdx.GetFirstVal(asset, id)
 			if !ok {
 				continue
 			}
@@ -100,12 +100,12 @@ func Dehydrate(
 		}
 
 		dehydratedProperty := vangogh_local_data.ImageTypeDehydratedProperty(it)
-		if err := rxa.BatchReplaceValues(dehydratedProperty, dehydratedImages); err != nil {
+		if err := rdx.BatchReplaceValues(dehydratedProperty, dehydratedImages); err != nil {
 			return di.EndWithError(err)
 		}
 
 		dehydratedModifiedProperty := vangogh_local_data.ImageTypeDehydratedModifiedProperty(it)
-		if err := rxa.BatchReplaceValues(dehydratedModifiedProperty, dehydratedImageModified); err != nil {
+		if err := rdx.BatchReplaceValues(dehydratedModifiedProperty, dehydratedImageModified); err != nil {
 			return di.EndWithError(err)
 		}
 	}

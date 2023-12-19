@@ -37,7 +37,7 @@ func GetRedux(w http.ResponseWriter, r *http.Request) {
 		ids = make(map[string]bool)
 
 		//the code above enforced a single property value for 'all' branch
-		for _, id := range rxa.Keys(properties[0]) {
+		for _, id := range rdx.Keys(properties[0]) {
 			ids[id] = true
 		}
 	} else {
@@ -52,7 +52,7 @@ func GetRedux(w http.ResponseWriter, r *http.Request) {
 	for id := range ids {
 		propValues := make(map[string][]string)
 		for _, prop := range properties {
-			propValues[prop], _ = rxa.GetAllValues(prop, id)
+			propValues[prop], _ = rdx.GetAllValues(prop, id)
 		}
 		values[id] = propValues
 	}

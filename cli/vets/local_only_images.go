@@ -25,7 +25,7 @@ func LocalOnlyImages(fix bool) error {
 		propSet[vangogh_local_data.PropertyFromImageType(it)] = true
 	}
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return loia.EndWithError(err)
 	}
@@ -33,15 +33,15 @@ func LocalOnlyImages(fix bool) error {
 	ieia := nod.NewProgress(" itemizing expected images...")
 	totalProducts := 0
 	for p := range propSet {
-		totalProducts += len(rxa.Keys(p))
+		totalProducts += len(rdx.Keys(p))
 	}
 
 	ieia.TotalInt(totalProducts)
 
 	expectedImages := make(map[string]bool)
 	for p := range propSet {
-		for _, id := range rxa.Keys(p) {
-			imageIds, ok := rxa.GetAllValues(p, id)
+		for _, id := range rdx.Keys(p) {
+			imageIds, ok := rdx.GetAllValues(p, id)
 			if !ok {
 				ieia.Increment()
 				continue

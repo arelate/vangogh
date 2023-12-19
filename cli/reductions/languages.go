@@ -7,20 +7,20 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-func GetLanguageCodes(rxa kvas.ReduxAssets) (map[string]bool, error) {
+func GetLanguageCodes(rdx kvas.ReadableRedux) (map[string]bool, error) {
 
 	lca := nod.Begin(" %s...", vangogh_local_data.LanguageCodeProperty)
 	defer lca.EndWithResult("done")
 
 	langCodeSet := make(map[string]bool)
 
-	if err := rxa.IsSupported(vangogh_local_data.LanguageCodeProperty); err != nil {
+	if err := rdx.MustHave(vangogh_local_data.LanguageCodeProperty); err != nil {
 		return langCodeSet, lca.EndWithError(err)
 	}
 
 	//digest distinct languages codes
-	for _, id := range rxa.Keys(vangogh_local_data.LanguageCodeProperty) {
-		idCodes, ok := rxa.GetAllValues(vangogh_local_data.LanguageCodeProperty, id)
+	for _, id := range rdx.Keys(vangogh_local_data.LanguageCodeProperty) {
+		idCodes, ok := rdx.GetAllValues(vangogh_local_data.LanguageCodeProperty, id)
 		if !ok {
 			continue
 		}
@@ -34,7 +34,7 @@ func GetLanguageCodes(rxa kvas.ReduxAssets) (map[string]bool, error) {
 
 func getMissingLanguageNames(
 	langCodeSet map[string]bool,
-	rxa kvas.ReduxAssets,
+	rdx kvas.ReadableRedux,
 	property string) (map[string]bool, error) {
 
 	missingLangs := maps.Clone(langCodeSet)
@@ -42,7 +42,7 @@ func getMissingLanguageNames(
 	// TODO: write a comment explaining all or nothing approach
 	//map all language codes to names and hide existing
 	for lc := range missingLangs {
-		if _, ok := rxa.GetFirstVal(property, lc); ok {
+		if _, ok := rdx.GetFirstVal(property, lc); ok {
 			delete(missingLangs, lc)
 		}
 	}
@@ -65,7 +65,7 @@ func LanguageNames(langCodeSet map[string]bool) error {
 	lna := nod.Begin(" %s...", property)
 	defer lna.EndWithResult("done")
 
-	langNamesEx, err := vangogh_local_data.ConnectReduxAssets(property)
+	langNamesEx, err := vangogh_local_data.ReduxWriter(property)
 	if err != nil {
 		return lna.EndWithError(err)
 	}
@@ -114,7 +114,7 @@ func NativeLanguageNames(langCodeSet map[string]bool) error {
 	nlna := nod.Begin(" %s...", property)
 	defer nlna.End()
 
-	langNamesEx, err := vangogh_local_data.ConnectReduxAssets(property)
+	langNamesEx, err := vangogh_local_data.ReduxWriter(property)
 	if err != nil {
 		return nlna.EndWithError(err)
 	}

@@ -49,7 +49,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 	ra := nod.Begin("reducing properties...")
 	defer ra.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.ReduxWriter(maps.Keys(propSet)...)
 	if err != nil {
 		return ra.EndWithError(err)
 	}
@@ -72,7 +72,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 			modifiedIds = vr.Keys()
 		}
 
-		if len(modifiedIds) == 0 {
+		if len(modifiedIds) == 0 || len(missingProps) == 0 {
 			continue
 		}
 
@@ -118,7 +118,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 			//	}
 			//}
 
-			if err := rxa.BatchReplaceValues(prop, redux); err != nil {
+			if err := rdx.BatchReplaceValues(prop, redux); err != nil {
 				return pta.EndWithError(err)
 			}
 		}
@@ -134,7 +134,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 		//language-names are reduced separately from general pipeline,
 		//given we'll be filling the blanks from api-products-v2 using
 		//GetLanguages property that returns map[string]string
-		langCodeSet, err := reductions.GetLanguageCodes(rxa)
+		langCodeSet, err := reductions.GetLanguageCodes(rdx)
 		if err != nil {
 			return ra.EndWithError(err)
 		}

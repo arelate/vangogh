@@ -25,7 +25,7 @@ func GetHasData(w http.ResponseWriter, r *http.Request) {
 		values[pt] = make(map[string]string, len(ids))
 
 		for id := range ids {
-			if ok := rxa.HasVal(vangogh_local_data.TypesProperty, id, pt); ok {
+			if ok := rdx.HasValue(vangogh_local_data.TypesProperty, id, pt); ok {
 				values[pt][id] = "true"
 			} else {
 				values[pt][id] = "false"

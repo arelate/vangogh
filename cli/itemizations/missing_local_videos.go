@@ -7,37 +7,37 @@ import (
 )
 
 type videoPropertiesGetter struct {
-	reduxAssets kvas.ReduxAssets
+	rdx kvas.ReadableRedux
 }
 
-func NewVideoPropertiesGetter(rxa kvas.ReduxAssets) *videoPropertiesGetter {
+func NewVideoPropertiesGetter(rdx kvas.ReadableRedux) *videoPropertiesGetter {
 	return &videoPropertiesGetter{
-		reduxAssets: rxa,
+		rdx: rdx,
 	}
 }
 
 func (vpg *videoPropertiesGetter) GetVideoIds(id string) ([]string, bool) {
-	return vpg.reduxAssets.GetAllValues(vangogh_local_data.VideoIdProperty, id)
+	return vpg.rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id)
 }
 
 func (vpg *videoPropertiesGetter) IsMissingVideo(videoId string) bool {
-	return vpg.reduxAssets.HasKey(vangogh_local_data.MissingVideoUrlProperty, videoId)
+	return vpg.rdx.HasKey(vangogh_local_data.MissingVideoUrlProperty, videoId)
 }
 
 func missingLocalVideoRelatedFiles(
-	rxa kvas.ReduxAssets,
+	rdx kvas.ReadableRedux,
 	localVideoIdsDelegate func() (map[string]bool, error),
 	excludeKnownMissingVideos bool,
 	videoFilesDesc string) (map[string]bool, error) {
 
-	all := rxa.Keys(vangogh_local_data.VideoIdProperty)
+	all := rdx.Keys(vangogh_local_data.VideoIdProperty)
 
 	localSet, err := localVideoIdsDelegate()
 	if err != nil {
 		return map[string]bool{}, err
 	}
 
-	vpg := NewVideoPropertiesGetter(rxa)
+	vpg := NewVideoPropertiesGetter(rdx)
 
 	mlma := nod.NewProgress(" itemizing local %s...", videoFilesDesc)
 	defer mlma.EndWithResult("done")
@@ -55,17 +55,17 @@ func missingLocalVideoRelatedFiles(
 	return missingLocalFiles(all, localSet, vpg.GetVideoIds, excludeDelegate, mlma)
 }
 
-func MissingLocalVideos(rxa kvas.ReduxAssets, force bool) (map[string]bool, error) {
+func MissingLocalVideos(rdx kvas.ReadableRedux, force bool) (map[string]bool, error) {
 	return missingLocalVideoRelatedFiles(
-		rxa,
+		rdx,
 		vangogh_local_data.LocalVideoIds,
 		!force,
 		"videos")
 }
 
-func MissingLocalThumbnails(rxa kvas.ReduxAssets) (map[string]bool, error) {
+func MissingLocalThumbnails(rdx kvas.ReadableRedux) (map[string]bool, error) {
 	return missingLocalVideoRelatedFiles(
-		rxa,
+		rdx,
 		vangogh_local_data.LocalVideoThumbnailIds,
 		false,
 		"thumbnails")

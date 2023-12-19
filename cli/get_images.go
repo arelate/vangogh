@@ -35,7 +35,7 @@ func GetImages(
 	gia := nod.NewProgress("getting images...")
 	defer gia.End()
 
-	rxa, err := imageTypesReduxAssets(nil, its)
+	rdx, err := imageTypesReduxAssets(nil, its)
 	if err != nil {
 		return gia.EndWithError(err)
 	}
@@ -53,7 +53,7 @@ func GetImages(
 		//2. for every product id we get this way - add this image type to idMissingTypes[id]
 		for _, it := range its {
 			//1
-			missingImageIds, err := itemizations.MissingLocalImages(it, rxa, localImageSet)
+			missingImageIds, err := itemizations.MissingLocalImages(it, rdx, localImageSet)
 			if err != nil {
 				return gia.EndWithError(err)
 			}
@@ -88,7 +88,7 @@ func GetImages(
 		//for every product collect all image URLs and all corresponding local filenames
 		//to pass to dolo.GetSet, that'll concurrently download all required product images
 
-		title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id)
+		title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id)
 		if !ok {
 			title = id
 		}
@@ -103,7 +103,7 @@ func GetImages(
 
 		for _, it := range missingIts {
 
-			images, ok := rxa.GetAllValues(vangogh_local_data.PropertyFromImageType(it), id)
+			images, ok := rdx.GetAllValues(vangogh_local_data.PropertyFromImageType(it), id)
 			if !ok || len(images) == 0 {
 				nod.Log("%s missing %s", id, it)
 				missingImageTypes[it] = true
@@ -154,7 +154,7 @@ func GetImages(
 	return nil
 }
 
-func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.ImageType) (kvas.ReduxAssets, error) {
+func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.ImageType) (kvas.WriteableRedux, error) {
 	for _, it := range its {
 		if !vangogh_local_data.IsValidImageType(it) {
 			return nil, fmt.Errorf("invalid image type %s", it)
@@ -177,5 +177,5 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.Im
 		properties = append(properties, p)
 	}
 
-	return vangogh_local_data.ConnectReduxAssets(properties...)
+	return vangogh_local_data.ReduxWriter(properties...)
 }

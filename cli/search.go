@@ -34,12 +34,12 @@ func Search(query map[string][]string) error {
 		propSet[qp] = true
 	}
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
 
-	results := rxa.Match(query, true, true)
+	results := rdx.Match(query)
 
 	//expand query properties for use in printInfo filter
 	//since it's not aware of collapsed/expanded properties concept
@@ -75,7 +75,7 @@ func Search(query map[string][]string) error {
 		results,
 		propertyFilter,
 		maps.Keys(propSet),
-		rxa)
+		rdx)
 
 	if err != nil {
 		return sa.EndWithError(err)

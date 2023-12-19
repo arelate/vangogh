@@ -35,7 +35,7 @@ func GetDownloads(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if det != nil {
-		dl, err = vangogh_local_data.FromDetails(det, rxa)
+		dl, err = vangogh_local_data.FromDetails(det, rdx)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

@@ -18,7 +18,7 @@ func GetSummary() error {
 	sa := nod.Begin("last sync summary:")
 	defer sa.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.LastSyncUpdatesProperty,
 		vangogh_local_data.TitleProperty)
 	if err != nil {
@@ -27,10 +27,10 @@ func GetSummary() error {
 
 	summary := make(map[string][]string)
 
-	for _, section := range rxa.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
-		ids, _ := rxa.GetAllValues(vangogh_local_data.LastSyncUpdatesProperty, section)
+	for _, section := range rdx.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
+		ids, _ := rdx.GetAllValues(vangogh_local_data.LastSyncUpdatesProperty, section)
 		for _, id := range ids {
-			if title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+			if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
 				summary[section] = append(summary[section], fmt.Sprintf("%s %s", id, title))
 			}
 		}

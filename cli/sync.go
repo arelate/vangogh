@@ -283,14 +283,14 @@ func Sync(
 		}
 	}
 
-	syncEventsRxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.SyncEventsProperty)
+	syncEventsrdx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.SyncEventsProperty)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
 
 	syncEvents[vangogh_local_data.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
 
-	if err := syncEventsRxa.BatchReplaceValues(
+	if err := syncEventsrdx.BatchReplaceValues(
 		vangogh_local_data.SyncEventsProperty,
 		syncEvents); err != nil {
 		return sa.EndWithError(err)

@@ -49,7 +49,7 @@ func Summarize(since int64, gauginUrl string) error {
 		return nil
 	}
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxWriter(
 		vangogh_local_data.LastSyncUpdatesProperty,
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.GOGReleaseDateProperty)
@@ -61,7 +61,7 @@ func Summarize(since int64, gauginUrl string) error {
 
 	//set new values for each section
 	for section, ids := range updates {
-		sortedIds, err := rxa.Sort(maps.Keys(ids),
+		sortedIds, err := rdx.Sort(maps.Keys(ids),
 			vangogh_local_data.DefaultDesc,
 			vangogh_local_data.DefaultSort)
 		if err != nil {
@@ -71,27 +71,27 @@ func Summarize(since int64, gauginUrl string) error {
 	}
 
 	//clean sections filled earlier that don't exist anymore
-	for _, section := range rxa.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
+	for _, section := range rdx.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
 		if _, ok := updates[section]; ok {
 			continue
 		}
 		summary[section] = nil
 	}
 
-	if rt, err := releasedToday(rxa); err == nil {
+	if rt, err := releasedToday(rdx); err == nil {
 		if len(rt) > 0 {
 			summary["released today"] = rt
 		}
 	}
 
-	if err := rxa.BatchReplaceValues(vangogh_local_data.LastSyncUpdatesProperty, summary); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_local_data.LastSyncUpdatesProperty, summary); err != nil {
 		sa.EndWithError(err)
 	}
 
 	was := nod.Begin("publishing atom...")
 	defer was.End()
 
-	if err := publishAtom(gauginUrl, rxa, summary); err != nil {
+	if err := publishAtom(gauginUrl, rdx, summary); err != nil {
 		return was.EndWithError(err)
 	}
 
@@ -101,27 +101,27 @@ func Summarize(since int64, gauginUrl string) error {
 	return nil
 }
 
-func releasedToday(rxa kvas.ReduxAssets) ([]string, error) {
+func releasedToday(rdx kvas.ReadableRedux) ([]string, error) {
 
-	if err := rxa.IsSupported(vangogh_local_data.GOGReleaseDateProperty); err != nil {
+	if err := rdx.MustHave(vangogh_local_data.GOGReleaseDateProperty); err != nil {
 		return nil, err
 	}
 
 	ids := make([]string, 0)
 	today := time.Now().Format("2006.01.02")
 
-	for _, id := range rxa.Keys(vangogh_local_data.GOGReleaseDateProperty) {
-		if rt, ok := rxa.GetFirstVal(vangogh_local_data.GOGReleaseDateProperty, id); ok {
+	for _, id := range rdx.Keys(vangogh_local_data.GOGReleaseDateProperty) {
+		if rt, ok := rdx.GetFirstVal(vangogh_local_data.GOGReleaseDateProperty, id); ok {
 			if rt == today {
 				ids = append(ids, id)
 			}
 		}
 	}
 
-	return rxa.Sort(ids, vangogh_local_data.DefaultDesc, vangogh_local_data.DefaultSort)
+	return rdx.Sort(ids, vangogh_local_data.DefaultDesc, vangogh_local_data.DefaultSort)
 }
 
-func publishAtom(gauginUrl string, rxa kvas.ReduxAssets, summary map[string][]string) error {
+func publishAtom(gauginUrl string, rdx kvas.ReadableRedux, summary map[string][]string) error {
 
 	afp, err := vangogh_local_data.AbsAtomFeedPath()
 	if err != nil {
@@ -134,12 +134,12 @@ func publishAtom(gauginUrl string, rxa kvas.ReduxAssets, summary map[string][]st
 	}
 
 	af := atomus.NewFeed(atomFeedTitle, gauginUrl)
-	af.SetEntry(atomEntryTitle, atomEntryAuthor, gauginUrl, NewAtomFeedContent(rxa, summary))
+	af.SetEntry(atomEntryTitle, atomEntryAuthor, gauginUrl, NewAtomFeedContent(rdx, summary))
 
 	return af.Encode(atomFile)
 }
 
-func NewAtomFeedContent(rxa kvas.ReduxAssets, summary map[string][]string) string {
+func NewAtomFeedContent(rdx kvas.ReadableRedux, summary map[string][]string) string {
 	sb := strings.Builder{}
 
 	sections := maps.Keys(summary)
@@ -152,7 +152,7 @@ func NewAtomFeedContent(rxa kvas.ReduxAssets, summary map[string][]string) strin
 		sb.WriteString("<h1>" + section + "</h1>")
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
-			if title, ok := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+			if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
 				sb.WriteString(fmt.Sprintf("<li>%s (%s)</li>", title, id))
 			} else {
 				sb.WriteString("<li>" + id + "</li>")

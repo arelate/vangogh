@@ -8,7 +8,7 @@ import (
 	"github.com/boggydigital/kvas"
 )
 
-var rxa kvas.ReduxAssets
+var rdx kvas.ReadableRedux
 
 func Init() error {
 
@@ -33,6 +33,6 @@ func Init() error {
 	properties := vangogh_local_data.ReduxProperties()
 	//used by get_downloads
 	properties = append(properties, vangogh_local_data.NativeLanguageNameProperty)
-	rxa, err = vangogh_local_data.ConnectReduxAssets(properties...)
+	rdx, err = vangogh_local_data.ReduxReader(properties...)
 	return err
 }

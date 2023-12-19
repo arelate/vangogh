@@ -88,7 +88,7 @@ func List(
 	}
 
 	itp, err := vangogh_local_data.PropertyListsFromIdSet(
-		idSet,
+		maps.Keys(idSet),
 		nil,
 		vangogh_local_data.SupportedPropertiesOnly(pt, maps.Keys(propSet)),
 		nil)

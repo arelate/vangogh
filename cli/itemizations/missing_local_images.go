@@ -7,29 +7,29 @@ import (
 )
 
 type imageReduxGetter struct {
-	imageType   vangogh_local_data.ImageType
-	reduxAssets kvas.ReduxAssets
+	imageType vangogh_local_data.ImageType
+	rdx       kvas.ReadableRedux
 }
 
 func NewImageReduxGetter(
 	it vangogh_local_data.ImageType,
-	rxa kvas.ReduxAssets) *imageReduxGetter {
+	rdx kvas.ReadableRedux) *imageReduxGetter {
 	return &imageReduxGetter{
-		imageType:   it,
-		reduxAssets: rxa,
+		imageType: it,
+		rdx:       rdx,
 	}
 }
 
 func (ieg *imageReduxGetter) GetImageIds(id string) ([]string, bool) {
-	return ieg.reduxAssets.GetAllValues(vangogh_local_data.PropertyFromImageType(ieg.imageType), id)
+	return ieg.rdx.GetAllValues(vangogh_local_data.PropertyFromImageType(ieg.imageType), id)
 }
 
 func MissingLocalImages(
 	it vangogh_local_data.ImageType,
-	rxa kvas.ReduxAssets,
+	rdx kvas.ReadableRedux,
 	localImageIds map[string]bool) (map[string]bool, error) {
 
-	all := rxa.Keys(vangogh_local_data.PropertyFromImageType(it))
+	all := rdx.Keys(vangogh_local_data.PropertyFromImageType(it))
 
 	if localImageIds == nil {
 		var err error
@@ -38,7 +38,7 @@ func MissingLocalImages(
 		}
 	}
 
-	ieg := NewImageReduxGetter(it, rxa)
+	ieg := NewImageReduxGetter(it, rdx)
 
 	mlia := nod.NewProgress(" itemizing local images (%s)...", it)
 	defer mlia.EndWithResult("done")

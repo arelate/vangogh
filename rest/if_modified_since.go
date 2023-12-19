@@ -12,7 +12,7 @@ func IfReduxModifiedSince(next http.Handler) http.Handler {
 		// redux assets mod time is used to:
 		// 1) set Last-Modified header
 		// 2) check if content was modified since client cache
-		if ramt, err := rxa.ReduxAssetsModTime(); err == nil {
+		if ramt, err := rdx.ModTime(); err == nil {
 			lm := time.Unix(ramt, 0).UTC().Format(http.TimeFormat)
 			w.Header().Set(middleware.LastModifiedHeader, lm)
 			ims := r.Header.Get(middleware.IfModifiedSinceHeader)

@@ -26,7 +26,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 	gta := nod.NewProgress("getting thumbnails...")
 	defer gta.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxWriter(
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.VideoIdProperty,
@@ -38,7 +38,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 	}
 
 	if missing {
-		missingIds, err := itemizations.MissingLocalThumbnails(rxa)
+		missingIds, err := itemizations.MissingLocalThumbnails(rdx)
 		if err != nil {
 			return gta.EndWithError(err)
 		}
@@ -59,13 +59,13 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 	gta.TotalInt(len(idSet))
 
 	for id := range idSet {
-		videoIds, ok := rxa.GetAllValues(vangogh_local_data.VideoIdProperty, id)
+		videoIds, ok := rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id)
 		if !ok || len(videoIds) == 0 {
 			gta.Increment()
 			continue
 		}
 
-		title, _ := rxa.GetFirstVal(vangogh_local_data.TitleProperty, id)
+		title, _ := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id)
 
 		ta := nod.Begin("%s %s", id, title)
 
@@ -74,7 +74,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 		for _, videoId := range videoIds {
 
 			// skipping known problematic videoIds, unless forcing download
-			if !force && rxa.HasVal(vangogh_local_data.MissingVideoThumbnailProperty, id, videoId) {
+			if !force && rdx.HasValue(vangogh_local_data.MissingVideoThumbnailProperty, id, videoId) {
 				continue
 			}
 
@@ -111,7 +111,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 			}
 
 			if !gotVideoIdThumbnail {
-				if err := rxa.AddValues(vangogh_local_data.MissingVideoThumbnailProperty, id, videoId); err != nil {
+				if err := rdx.AddValues(vangogh_local_data.MissingVideoThumbnailProperty, id, videoId); err != nil {
 					return ta.EndWithError(err)
 				}
 			}

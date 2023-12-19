@@ -25,7 +25,7 @@ func GetTitles(w http.ResponseWriter, r *http.Request) {
 
 	for id := range ids {
 		values[id] = make(map[string][]string)
-		values[id][vangogh_local_data.TitleProperty], _ = rxa.GetAllValues(vangogh_local_data.TitleProperty, id)
+		values[id][vangogh_local_data.TitleProperty], _ = rdx.GetAllValues(vangogh_local_data.TitleProperty, id)
 	}
 
 	if err := encode(values, w, r); err != nil {

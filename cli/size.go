@@ -33,7 +33,7 @@ func Size(
 	sa := nod.NewProgress("estimating downloads size...")
 	defer sa.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.SlugProperty,
@@ -43,7 +43,7 @@ func Size(
 	}
 
 	if missing {
-		missingIds, err := itemizations.MissingLocalDownloads(rxa, operatingSystems, downloadTypes, langCodes)
+		missingIds, err := itemizations.MissingLocalDownloads(rdx, operatingSystems, downloadTypes, langCodes)
 		if err != nil {
 			return sa.EndWithError(err)
 		}
@@ -79,7 +79,7 @@ func Size(
 
 	if err := vangogh_local_data.MapDownloads(
 		idSet,
-		rxa,
+		rdx,
 		operatingSystems,
 		downloadTypes,
 		langCodes,

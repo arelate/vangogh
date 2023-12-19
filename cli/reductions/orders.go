@@ -14,7 +14,7 @@ func Orders(modifiedAfter int64) error {
 	oa := nod.NewProgress(" %s...", vangogh_local_data.GOGOrderDateProperty)
 	defer oa.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.GOGOrderDateProperty)
+	rdx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.GOGOrderDateProperty)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
@@ -60,7 +60,7 @@ func Orders(modifiedAfter int64) error {
 		oa.Increment()
 	}
 
-	if err := rxa.BatchReplaceValues(vangogh_local_data.GOGOrderDateProperty, gogOrderDates); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_local_data.GOGOrderDateProperty, gogOrderDates); err != nil {
 		return oa.EndWithError(err)
 	}
 

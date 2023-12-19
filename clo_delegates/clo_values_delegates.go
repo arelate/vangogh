@@ -67,11 +67,11 @@ func downloadTypes() []string {
 func languageCodes() []string {
 	defaultLangCode := "en"
 	langCodes := []string{defaultLangCode}
-	rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.LanguageNameProperty)
+	rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.LanguageNameProperty)
 	if err != nil {
 		return langCodes
 	}
-	for _, lc := range rxa.Keys(vangogh_local_data.LanguageNameProperty) {
+	for _, lc := range rdx.Keys(vangogh_local_data.LanguageNameProperty) {
 		if lc == defaultLangCode {
 			continue
 		}
@@ -104,14 +104,16 @@ func syncOptions() []string {
 
 func vetOptions() []string {
 	return options([]string{
-		cli.VetOptionLocalOnlyData,
-		cli.VetOptionLocalOnlyImages,
-		cli.VetOptionLocalOnlyVideosAndThumbnails,
-		cli.VetOptionRecycleBin,
-		cli.VetOptionInvalidData,
-		cli.VetOptionUnresolvedManualUrls,
-		cli.VetOptionInvalidResolvedManualUrls,
-		cli.VetOptionMissingChecksums,
+		cli.VetIndexOnly,
+		cli.VetIndexMissing,
+		cli.VetLocalOnlyData,
+		cli.VetLocalOnlyImages,
+		cli.VetLocalOnlyVideosAndThumbnails,
+		cli.VetRecycleBin,
+		cli.VetInvalidData,
+		cli.VetUnresolvedManualUrls,
+		cli.VetInvalidResolvedManualUrls,
+		cli.VetMissingChecksums,
 		cli.VetStaleDehydrations,
 		cli.VetOldLogs,
 		cli.VetOldBackups,

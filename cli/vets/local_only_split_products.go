@@ -12,7 +12,7 @@ func LocalOnlySplitProducts(fix bool) error {
 	sloa := nod.Begin("checking for local only split products...")
 	defer sloa.End()
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.TitleProperty)
+	rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.TitleProperty)
 	if err != nil {
 		return sloa.EndWithError(err)
 	}
@@ -31,10 +31,10 @@ func LocalOnlySplitProducts(fix bool) error {
 		if len(localOnlyProducts) > 0 {
 
 			summary, err := vangogh_local_data.PropertyListsFromIdSet(
-				localOnlyProducts,
+				maps.Keys(localOnlyProducts),
 				nil,
 				[]string{vangogh_local_data.TitleProperty},
-				rxa)
+				rdx)
 
 			if err != nil {
 				_ = pa.EndWithError(err)

@@ -35,7 +35,7 @@ func Cleanup(
 	langCodes []string,
 	all, test bool) error {
 
-	rxa, err := vangogh_local_data.ConnectReduxAssets(
+	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty)
@@ -57,7 +57,7 @@ func Cleanup(
 	}
 
 	cd := &cleanupDelegate{
-		rxa:  rxa,
+		rdx:  rdx,
 		all:  all,
 		test: test,
 	}
@@ -65,7 +65,7 @@ func Cleanup(
 	// cleaning files in local download directory that no longer map to downloads
 	if err := vangogh_local_data.MapDownloads(
 		idSet,
-		rxa,
+		rdx,
 		operatingSystems,
 		downloadTypes,
 		langCodes,
@@ -88,7 +88,7 @@ func Cleanup(
 }
 
 type cleanupDelegate struct {
-	rxa        kvas.ReduxAssets
+	rdx        kvas.ReadableRedux
 	all        bool
 	test       bool
 	totalBytes int64
@@ -99,7 +99,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 	csa := nod.QueueBegin(slug)
 	defer csa.End()
 
-	if err := cd.rxa.IsSupported(vangogh_local_data.LocalManualUrlProperty); err != nil {
+	if err := cd.rdx.MustHave(vangogh_local_data.LocalManualUrlProperty); err != nil {
 		return csa.EndWithError(err)
 	}
 
@@ -117,7 +117,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 	}
 
 	for _, dl := range list {
-		if localFilename, ok := cd.rxa.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
+		if localFilename, ok := cd.rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
 			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
 			relFilename, err := filepath.Rel(pDir, localFilename)

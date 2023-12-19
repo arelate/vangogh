@@ -39,7 +39,7 @@ func Wishlisted() error {
 		return wa.EndWithError(err)
 	}
 
-	wishlistedRdx, err := vangogh_local_data.ConnectReduxAssets(vangogh_local_data.WishlistedProperty)
+	wishlistedRdx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.WishlistedProperty)
 	if err != nil {
 		return wa.EndWithError(err)
 	}
