@@ -2,6 +2,8 @@ github.com/andybalholm/brotli v1.0.6 h1:Yf9fFpf49Zrxb9NlQaluyE92/+X7UVHlhMNJN2sx
 github.com/andybalholm/brotli v1.0.6/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/arelate/southern_light v0.1.28 h1:aq56O1ixk3bfBY2kUlZ7PaEEPQrdm2fG78TmknuK7eQ=
 github.com/arelate/southern_light v0.1.28/go.mod h1:5P7A0MoqwBKSWhss/U26ny5qSwXkWJ83+PAWYQlvAXY=
+github.com/arelate/southern_light v0.1.31 h1:PzgSkNyX7WikVf+vf+Zw9jFmDqpUGqQN3gk90tDFUAA=
+github.com/arelate/southern_light v0.1.31/go.mod h1:IR7j2+TrHdoNfZrTNeXOvL3UYsotcNED3aOAEpm7VCY=
 github.com/arelate/vangogh_local_data v0.3.5 h1:uUvXdNrzlDRucKOLygcU/ZSOZpSLy5aNLXJkeyBNx9g=
 github.com/arelate/vangogh_local_data v0.3.5/go.mod h1:WM4gAvDeQ4dTL939KlaxzBIKPD07ILOtPz03co77J8o=
 github.com/arelate/vangogh_local_data v0.3.6 h1:b7OncF7PPo2+nw627Yzua0zLrYQApqyfqIw69FraO34=
@@ -14,6 +16,8 @@ github.com/arelate/vangogh_local_data v0.3.9 h1:gGlyQle4QMphLjQ/ikNH7Web77v3Tuan
 github.com/arelate/vangogh_local_data v0.3.9/go.mod h1:JFHA2+s8d/Nuq5gY9t6x2daLefQV5dsMkihr3MTANGc=
 github.com/arelate/vangogh_local_data v0.3.10 h1:7oO7cyI1mFtv959eZjiV2RQu/mwLKo+THScuhdFwIIA=
 github.com/arelate/vangogh_local_data v0.3.10/go.mod h1:zOTNt5jB1X05fv2HV/0qnFhuumBLPBNdbujhc9YbGyM=
+github.com/arelate/vangogh_local_data v0.3.12 h1:qDCdRr61Ps13SUh12fW2x5ortmSHpI5CnXGElfQgF6Q=
+github.com/arelate/vangogh_local_data v0.3.12/go.mod h1:6C4jAGqeIxrucw80lyAic6DbMXSUA9XSktzCoFKl6lY=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v0.3.6 h1:syeucZIM2/9B3jsUZqDo3TOYqgvJ6C1ketRgSuDoUf4=
@@ -38,6 +42,8 @@ github.com/boggydigital/kvas v0.3.34 h1:BYaEvqY2feiGBNOCW6eVdjCpyVCKm9cJ39OGXKLW
 github.com/boggydigital/kvas v0.3.34/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
 github.com/boggydigital/kvas v0.3.35 h1:ywPMXTPGgeJgx161OYbQVSOgnYVZH5/WSwqgECDkX24=
 github.com/boggydigital/kvas v0.3.35/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
+github.com/boggydigital/kvas v0.3.37 h1:d8pLkUuxyVJYmE2T3wO5ELYm08bDd2nPbCUo2wb/VkA=
+github.com/boggydigital/kvas v0.3.37/go.mod h1:ZKvlZY8ygEgdsH4LXpr3TL456O2HJ8Spr3KYCtQxzD0=
 github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drYKjcEOks=
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.14 h1:2CrpdCQeb8EX+E0wNadsbcLOSw/WvuHLgUZh35D9a58=
@@ -62,6 +68,8 @@ github.com/boggydigital/yt_urls v0.1.29 h1:rpt6B4ZZ61zKD3Ka4ZuBNx/RTi93lXWKy+14H
 github.com/boggydigital/yt_urls v0.1.29/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
 github.com/boggydigital/yt_urls v0.1.31 h1:nK/DgNEr+N6mrnYP7T1jpy+7jrD+bKcZl+zVyiRqo4c=
 github.com/boggydigital/yt_urls v0.1.31/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
+github.com/boggydigital/yt_urls v0.1.32 h1:TmznNtXLwwnBoVl9wD5RWr5HZvo4LLREY6a3B0VJy4w=
+github.com/boggydigital/yt_urls v0.1.32/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
