@@ -28,6 +28,7 @@ func Init() error {
 	gob.Register(steam_integration.AppList{})
 	gob.Register(steam_integration.GetNewsForAppResponse{})
 	gob.Register(steam_integration.AppReviews{})
+	gob.Register(steam_integration.DeckAppCompatibilityReport{})
 
 	var err error
 	properties := vangogh_local_data.ReduxProperties()
