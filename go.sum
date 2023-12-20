@@ -14,8 +14,8 @@ github.com/boggydigital/dolo v0.2.13 h1:hR45YlPPT59ilnWGqAnxkoiBslSMbvHxBUv6kvXu
 github.com/boggydigital/dolo v0.2.13/go.mod h1:xOzQ4WPcyETrETGpuHRQRtXTFu8kkdXKQCcddbhU/tQ=
 github.com/boggydigital/issa v0.1.10 h1:zHSRJHkOz3DwVvp4/YL06qq/VHXexL7qrn4m48hRf/o=
 github.com/boggydigital/issa v0.1.10/go.mod h1:Rq+f8yeTlM/3ov4MCjmxWNL90n47h5CkwP6/628McKU=
-github.com/boggydigital/kvas v0.4.0 h1:Qv6WrEVwrg/D3hEEpVYI5cDt8K4hAKIbxvdBAaRDCHg=
-github.com/boggydigital/kvas v0.4.0/go.mod h1:oP9td1uUuG0cgNGle/iz2dbdAllJcyLBGgp0GJ7nZCg=
+github.com/boggydigital/kvas v0.4.2 h1:3OG/pxBuzEaec4YJlHbppRFeAoqZnp9GOUuny3RkGD4=
+github.com/boggydigital/kvas v0.4.2/go.mod h1:oP9td1uUuG0cgNGle/iz2dbdAllJcyLBGgp0GJ7nZCg=
 github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drYKjcEOks=
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.16 h1:oE7Hlehb1xuFnB3k7kfZPjaOV3c+j0g/O76+XVoib3E=
