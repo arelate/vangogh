@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kvas"
@@ -25,7 +26,8 @@ func CleanupHandler(u *url.URL) error {
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
 		vangogh_local_data.FlagFromUrl(u, "all"),
-		vangogh_local_data.FlagFromUrl(u, "test"))
+		vangogh_local_data.FlagFromUrl(u, "test"),
+		vangogh_local_data.FlagFromUrl(u, "delete"))
 }
 
 func Cleanup(
@@ -33,7 +35,11 @@ func Cleanup(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
-	all, test bool) error {
+	all, test, delete bool) error {
+
+	if test && delete {
+		return errors.New("cleanup can be either test or delete, not both at the same time")
+	}
 
 	rdx, err := vangogh_local_data.ReduxReader(
 		vangogh_local_data.SlugProperty,
@@ -57,9 +63,10 @@ func Cleanup(
 	}
 
 	cd := &cleanupDelegate{
-		rdx:  rdx,
-		all:  all,
-		test: test,
+		rdx:    rdx,
+		all:    all,
+		test:   test,
+		delete: delete,
 	}
 
 	// cleaning files in local download directory that no longer map to downloads
@@ -91,6 +98,7 @@ type cleanupDelegate struct {
 	rdx        kvas.ReadableRedux
 	all        bool
 	test       bool
+	delete     bool
 	totalBytes int64
 }
 
@@ -167,9 +175,15 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			return csa.EndWithError(err)
 		}
 
-		prefix := "DELETE"
+		prefix := ""
 		if cd.test {
 			prefix = "TEST"
+		} else {
+			if cd.delete {
+				prefix = "DELETE"
+			} else {
+				prefix = "RECYCLE"
+			}
 		}
 
 		adp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Downloads)
@@ -184,8 +198,14 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 
 		dft := nod.Begin(" %s %s", prefix, relDownloadFilename)
 		if !cd.test {
-			if err := vangogh_local_data.MoveToRecycleBin(adp, absDownloadFilename); err != nil {
-				return dft.EndWithError(err)
+			if cd.delete {
+				if err := os.Remove(absDownloadFilename); err != nil {
+					return dft.EndWithError(err)
+				}
+			} else {
+				if err := vangogh_local_data.MoveToRecycleBin(adp, absDownloadFilename); err != nil {
+					return dft.EndWithError(err)
+				}
 			}
 		}
 		dft.End()

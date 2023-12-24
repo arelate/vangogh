@@ -18,6 +18,7 @@ cleanup
     language-code&$={language-codes^}
     all
     test
+    delete
 
 dehydrate
     id&
