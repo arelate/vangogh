@@ -44,6 +44,8 @@ github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/
 github.com/boggydigital/wits v0.2.3/go.mod h1:aR/z0vfMLtg0b4hcts0qiSTZcA51O8A2N3U9laqd2Lc=
 github.com/boggydigital/yt_urls v0.1.32 h1:TmznNtXLwwnBoVl9wD5RWr5HZvo4LLREY6a3B0VJy4w=
 github.com/boggydigital/yt_urls v0.1.32/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
+github.com/boggydigital/yt_urls v0.1.35 h1:7qARszTV0LnzN/Izqne9spv+oZK2I8mgLMthWX4EljQ=
+github.com/boggydigital/yt_urls v0.1.35/go.mod h1:SmZeJzMogVwcY5VyL7o1w0Xkf4adR2L0N1ywtFmoRcA=
 golang.org/x/exp v0.0.0-20231219180239-dc181d75b848 h1:+iq7lrkxmFNBM7xx+Rae2W6uyPfhPeDWD+n+JgppptE=
 golang.org/x/exp v0.0.0-20231219180239-dc181d75b848/go.mod h1:iRJReGqOEeBhDZGkGbynYwcHlctCvnjTYIamk7uXpHI=
 golang.org/x/image v0.14.0 h1:tNgSxAFe3jC4uYqvZdTr84SZoM1KfwdC9SKIFrLjFn4=
