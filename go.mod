@@ -3,8 +3,8 @@ module github.com/arelate/vangogh
 go 1.21
 
 require (
-	github.com/arelate/southern_light v0.1.35
-	github.com/arelate/vangogh_local_data v0.4.3
+	github.com/arelate/southern_light v0.1.36
+	github.com/arelate/vangogh_local_data v0.4.4
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/clo v1.0.4
 	github.com/boggydigital/coost v0.3.9
@@ -17,7 +17,7 @@ require (
 	github.com/boggydigital/packer v0.1.0
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yt_urls v0.1.35
-	golang.org/x/exp v0.0.0-20231219180239-dc181d75b848
+	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b
 )
 
 require (
