@@ -2,11 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"net/url"
-	"sort"
-
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"net/url"
 )
 
 func GetSummaryHandler(u *url.URL) error {
@@ -39,23 +37,4 @@ func GetSummary() error {
 	sa.EndWithSummary("", summary)
 
 	return nil
-}
-
-func humanReadable(productTypes map[vangogh_local_data.ProductType]bool) []string {
-	hrStrings := make(map[string]bool, 0)
-	for key, ok := range productTypes {
-		if !ok {
-			continue
-		}
-		hrStrings[key.HumanReadableString()] = true
-	}
-
-	keys := make([]string, 0, len(hrStrings))
-	for key := range hrStrings {
-		keys = append(keys, key)
-	}
-
-	sort.Strings(keys)
-
-	return keys
 }
