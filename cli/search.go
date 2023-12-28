@@ -34,7 +34,7 @@ func Search(query map[string][]string) error {
 		propSet[qp] = true
 	}
 
-	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return sa.EndWithError(err)
 	}

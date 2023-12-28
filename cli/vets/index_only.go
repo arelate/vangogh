@@ -36,7 +36,7 @@ func IndexOnly(fix bool) error {
 	rioa := nod.NewProgress("checking index only redux properties...")
 	defer rioa.End()
 
-	rdx, err := vangogh_local_data.ReduxVetter(vangogh_local_data.ReduxProperties()...)
+	rdx, err := vangogh_local_data.NewReduxVetter(vangogh_local_data.ReduxProperties()...)
 	if err != nil {
 		return rioa.EndWithError(err)
 	}

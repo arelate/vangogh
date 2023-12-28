@@ -36,7 +36,7 @@ func Owned(idSet map[string]bool) error {
 		vangogh_local_data.OwnedProperty:             true,
 	}
 
-	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return oa.EndWithError(err)
 	}

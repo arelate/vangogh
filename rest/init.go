@@ -34,6 +34,6 @@ func Init() error {
 	properties := vangogh_local_data.ReduxProperties()
 	//used by get_downloads
 	properties = append(properties, vangogh_local_data.NativeLanguageNameProperty)
-	rdx, err = vangogh_local_data.ReduxReader(properties...)
+	rdx, err = vangogh_local_data.NewReduxReader(properties...)
 	return err
 }

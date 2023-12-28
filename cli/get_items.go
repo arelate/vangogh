@@ -30,7 +30,7 @@ func GetItems(
 	gia := nod.NewProgress("getting description items...")
 	defer gia.End()
 
-	rdx, err := vangogh_local_data.ReduxReader(
+	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.DescriptionOverviewProperty,
 		vangogh_local_data.DescriptionFeaturesProperty)

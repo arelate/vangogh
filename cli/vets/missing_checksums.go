@@ -16,7 +16,7 @@ func MissingChecksums(fix bool) error {
 	mca := nod.Begin("looking for missing checksums...")
 	defer mca.End()
 
-	rdx, err := vangogh_local_data.ReduxReader(
+	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.ValidationResultProperty,
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.NativeLanguageNameProperty)

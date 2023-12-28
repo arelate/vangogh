@@ -35,7 +35,7 @@ func IndexMissing(fix bool) error {
 	rima := nod.NewProgress("checking index missing redux properties...")
 	defer rima.End()
 
-	rdx, err := vangogh_local_data.ReduxVetter(vangogh_local_data.ReduxProperties()...)
+	rdx, err := vangogh_local_data.NewReduxVetter(vangogh_local_data.ReduxProperties()...)
 	if err != nil {
 		return rima.EndWithError(err)
 	}

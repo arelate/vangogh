@@ -10,7 +10,7 @@ func WishlistedOwned(fix bool) error {
 	woa := nod.Begin("checking wishlisted owned products...")
 	defer woa.End()
 
-	rdx, err := vangogh_local_data.ReduxReader(
+	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.WishlistedProperty,
 		vangogh_local_data.OwnedProperty)
 

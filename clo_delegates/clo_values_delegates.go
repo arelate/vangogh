@@ -67,7 +67,7 @@ func downloadTypes() []string {
 func languageCodes() []string {
 	defaultLangCode := "en"
 	langCodes := []string{defaultLangCode}
-	rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.LanguageNameProperty)
+	rdx, err := vangogh_local_data.NewReduxReader(vangogh_local_data.LanguageNameProperty)
 	if err != nil {
 		return langCodes
 	}

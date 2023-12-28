@@ -16,7 +16,7 @@ func GetSummary() error {
 	sa := nod.Begin("last sync summary:")
 	defer sa.End()
 
-	rdx, err := vangogh_local_data.ReduxReader(
+	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.LastSyncUpdatesProperty,
 		vangogh_local_data.TitleProperty)
 	if err != nil {

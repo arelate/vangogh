@@ -49,7 +49,7 @@ func Summarize(since int64, gauginUrl string) error {
 		return nil
 	}
 
-	rdx, err := vangogh_local_data.ReduxWriter(
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.LastSyncUpdatesProperty,
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.GOGReleaseDateProperty)

@@ -24,7 +24,7 @@ func Items(
 
 	ia.TotalInt(len(ids))
 
-	rdx, err := vangogh_local_data.ReduxReader(
+	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.SteamAppIdProperty,
 		vangogh_local_data.PCGWPageIdProperty,
 		vangogh_local_data.HLTBBuildIdProperty,

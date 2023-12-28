@@ -48,7 +48,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 	ra := nod.Begin("reducing properties...")
 	defer ra.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.NewReduxWriter(maps.Keys(propSet)...)
 	if err != nil {
 		return ra.EndWithError(err)
 	}

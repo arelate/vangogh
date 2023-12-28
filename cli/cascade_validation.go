@@ -16,7 +16,7 @@ func CascadeValidation() error {
 	cva := nod.NewProgress("cascading validation...")
 	defer cva.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.OwnedProperty,
 		vangogh_local_data.IsRequiredByGamesProperty,
 		vangogh_local_data.IsIncludedByGamesProperty,

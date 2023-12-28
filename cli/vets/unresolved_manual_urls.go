@@ -16,7 +16,7 @@ func UnresolvedManualUrls(
 	cumu := nod.NewProgress("checking unresolved manual-urls...")
 	defer cumu.End()
 
-	rdx, err := vangogh_local_data.ReduxReader(
+	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty)

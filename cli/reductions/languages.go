@@ -65,7 +65,7 @@ func LanguageNames(langCodeSet map[string]bool) error {
 	lna := nod.Begin(" %s...", property)
 	defer lna.EndWithResult("done")
 
-	langNamesEx, err := vangogh_local_data.ReduxWriter(property)
+	langNamesEx, err := vangogh_local_data.NewReduxWriter(property)
 	if err != nil {
 		return lna.EndWithError(err)
 	}
@@ -114,7 +114,7 @@ func NativeLanguageNames(langCodeSet map[string]bool) error {
 	nlna := nod.Begin(" %s...", property)
 	defer nlna.End()
 
-	langNamesEx, err := vangogh_local_data.ReduxWriter(property)
+	langNamesEx, err := vangogh_local_data.NewReduxWriter(property)
 	if err != nil {
 		return nlna.EndWithError(err)
 	}

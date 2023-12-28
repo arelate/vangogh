@@ -49,7 +49,7 @@ func Validate(
 	va := nod.NewProgress("validating...")
 	defer va.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty,

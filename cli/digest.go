@@ -18,7 +18,7 @@ func Digest(property string) error {
 	da := nod.Begin("digesting...")
 	defer da.End()
 
-	rdx, err := vangogh_local_data.ReduxReader(property)
+	rdx, err := vangogh_local_data.NewReduxReader(property)
 	if err != nil {
 		return err
 	}

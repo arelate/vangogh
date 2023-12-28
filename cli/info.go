@@ -46,7 +46,7 @@ func Info(idSet map[string]bool, allText, images, videoId bool) error {
 		}
 	}
 
-	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return ia.EndWithError(err)
 	}

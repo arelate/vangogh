@@ -25,7 +25,7 @@ func LocalOnlyImages(fix bool) error {
 		propSet[vangogh_local_data.PropertyFromImageType(it)] = true
 	}
 
-	rdx, err := vangogh_local_data.ReduxReader(maps.Keys(propSet)...)
+	rdx, err := vangogh_local_data.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return loia.EndWithError(err)
 	}

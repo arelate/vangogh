@@ -27,7 +27,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 	gva := nod.NewProgress("getting videos...")
 	defer gva.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.VideoIdProperty,

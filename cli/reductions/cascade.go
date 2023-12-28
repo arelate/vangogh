@@ -23,7 +23,7 @@ func Cascade() error {
 	ca := nod.NewProgress("cascading supported properties...")
 	defer ca.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.ReduxProperties()...)
+	rdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.ReduxProperties()...)
 	if err != nil {
 		return ca.EndWithError(err)
 	}

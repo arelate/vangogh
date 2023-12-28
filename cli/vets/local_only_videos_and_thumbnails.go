@@ -19,7 +19,7 @@ func LocalOnlyVideosAndThumbnails(fix bool) error {
 	}
 	ilva.EndWithResult("done")
 
-	rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.VideoIdProperty)
+	rdx, err := vangogh_local_data.NewReduxReader(vangogh_local_data.VideoIdProperty)
 	if err != nil {
 		return lova.EndWithError(err)
 	}

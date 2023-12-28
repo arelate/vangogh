@@ -283,7 +283,7 @@ func Sync(
 		}
 	}
 
-	syncEventsrdx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.SyncEventsProperty)
+	syncEventsrdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.SyncEventsProperty)
 	if err != nil {
 		return sa.EndWithError(err)
 	}

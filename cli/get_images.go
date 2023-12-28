@@ -177,5 +177,5 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.Im
 		properties = append(properties, p)
 	}
 
-	return vangogh_local_data.ReduxWriter(properties...)
+	return vangogh_local_data.NewReduxWriter(properties...)
 }

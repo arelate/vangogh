@@ -26,7 +26,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 	gta := nod.NewProgress("getting thumbnails...")
 	defer gta.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.TitleProperty,
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.VideoIdProperty,

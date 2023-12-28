@@ -41,7 +41,7 @@ func Cleanup(
 		return errors.New("cleanup can be either test or delete, not both at the same time")
 	}
 
-	rdx, err := vangogh_local_data.ReduxReader(
+	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty)

@@ -31,7 +31,7 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 	sdia := nod.NewProgress("checking stale dehydrations for %s...", imageProperty)
 	defer sdia.End()
 
-	rdx, err := vangogh_local_data.ReduxReader(imageProperty, dimProperty)
+	rdx, err := vangogh_local_data.NewReduxReader(imageProperty, dimProperty)
 	if err != nil {
 		return err
 	}

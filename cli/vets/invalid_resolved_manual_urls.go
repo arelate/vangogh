@@ -12,7 +12,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 	cirmu := nod.NewProgress("checking invalid resolved manual-urls...")
 	defer cirmu.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.LocalManualUrlProperty)
 	if err != nil {
 		return cirmu.EndWithError(err)

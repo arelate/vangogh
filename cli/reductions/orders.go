@@ -14,7 +14,7 @@ func Orders(modifiedAfter int64) error {
 	oa := nod.NewProgress(" %s...", vangogh_local_data.GOGOrderDateProperty)
 	defer oa.End()
 
-	rdx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.GOGOrderDateProperty)
+	rdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.GOGOrderDateProperty)
 	if err != nil {
 		return oa.EndWithError(err)
 	}

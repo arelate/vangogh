@@ -27,7 +27,7 @@ func TagNames() error {
 		return tna.EndWithError(err)
 	}
 
-	tagNameEx, err := vangogh_local_data.ReduxWriter(vangogh_local_data.TagNameProperty)
+	tagNameEx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.TagNameProperty)
 	if err != nil {
 		return tna.EndWithError(err)
 	}

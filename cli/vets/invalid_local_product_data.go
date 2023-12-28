@@ -66,7 +66,7 @@ func InvalidLocalProductData(fix bool) error {
 	if !dataProblems {
 		ilpa.EndWithResult("data seems ok")
 	} else {
-		rdx, err := vangogh_local_data.ReduxReader(vangogh_local_data.TitleProperty)
+		rdx, err := vangogh_local_data.NewReduxReader(vangogh_local_data.TitleProperty)
 		if err != nil {
 			return err
 		}
