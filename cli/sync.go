@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh/cli/dirs"
+	"github.com/boggydigital/pathology"
 	"net/url"
 	"os"
 	"strconv"
@@ -103,7 +103,11 @@ func Sync(
 	debug bool) error {
 
 	if debug {
-		logger, err := nod.EnableFileLogger(dirs.AbsLogsDir)
+		absLogsDir, err := pathology.GetAbsDir(vangogh_local_data.Logs)
+		if err != nil {
+			return err
+		}
+		logger, err := nod.EnableFileLogger(absLogsDir)
 		if err != nil {
 			return err
 		}

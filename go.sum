@@ -20,6 +20,10 @@ github.com/arelate/vangogh_local_data v0.4.4 h1:2xG+TlonCkIlwNtvfrkGfbyd0CCXGYs/
 github.com/arelate/vangogh_local_data v0.4.4/go.mod h1:seCnqG06X3vh6x/0Lm80kerB/aNLcD5QPHNzX+bFsvA=
 github.com/arelate/vangogh_local_data v0.4.5 h1:tuxiSYxMGTmxRcIMZ2CTn+rZ2/nnAz7AYdGspQnT04Y=
 github.com/arelate/vangogh_local_data v0.4.5/go.mod h1:iXCHTV9iL+S8I/iSCtUN9fWGklTA/BxKioIvLL1rwp8=
+github.com/arelate/vangogh_local_data v0.4.6 h1:TkUmN3PiwwWdaYMCZdxY7X2CqLjCh3nB6G2I/5Z0ess=
+github.com/arelate/vangogh_local_data v0.4.6/go.mod h1:czQ0k8p8SkF0OGYuOi43PbA8JTayDt3POBnsYtqmkFY=
+github.com/arelate/vangogh_local_data v0.4.7 h1:LhHMAvPd6dhRrezJQoJ4AAyS1yTKjFKuL8wO4fcJsIs=
+github.com/arelate/vangogh_local_data v0.4.7/go.mod h1:YLtdiX5XlYxCf83LYcTn71OnU60vvu3WT17rvEVxge4=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v1.0.4 h1:LKvXktyG+EeemzjnSp0DYIAEbY2/rvFcuHtjjwJk280=
@@ -46,6 +50,12 @@ github.com/boggydigital/nod v0.1.21 h1:pQbrgswCuU5dr3IWS1Z902PJAm5BebSLG+Q3aG7KJ
 github.com/boggydigital/nod v0.1.21/go.mod h1:bYucIZ3rLHBZKf/3+T+eTSxuijuja7Y6OgU2P6o2/vo=
 github.com/boggydigital/packer v0.1.0 h1:u727MJMwwElKDkyhcNjkhJwChdbeUl0sWh7R0SmkWNc=
 github.com/boggydigital/packer v0.1.0/go.mod h1:cCRWxv7LDqsKuVoD6B6R2rSQedZbugrlnTyc39Lm59c=
+github.com/boggydigital/pathology v0.1.3 h1:ys+aNx63cVG8lDjTRXpRMhsADWeFRlKkl4HXewcD9dM=
+github.com/boggydigital/pathology v0.1.3/go.mod h1:nxEBKwUHHFbm8b1K4FICWnkE4xaYaC18mXd27zq//sE=
+github.com/boggydigital/pathology v0.1.4 h1:nE2YqKsPHiCRyN5B6qY3J2At3oqQ6IV6K67nsdLXKyY=
+github.com/boggydigital/pathology v0.1.4/go.mod h1:IqegmSGqlK1UR9+P6Mrua7+ZYdB8NC07sIs4Z+u2BMk=
+github.com/boggydigital/pathology v0.1.5 h1:8gPRXU+7Dp4ZJv0MXXRIAJfaaFqzUno3yVou7OVysW0=
+github.com/boggydigital/pathology v0.1.5/go.mod h1:IqegmSGqlK1UR9+P6Mrua7+ZYdB8NC07sIs4Z+u2BMk=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=

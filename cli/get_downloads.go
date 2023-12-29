@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
@@ -9,6 +10,7 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathology"
 	"net/http"
 	"net/url"
 	"os"
@@ -211,7 +213,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//3
 	_, filename := path.Split(resolvedUrl.Path)
 	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
-	pAbsDir, err := vangogh_local_data.AbsProductDownloadsDir(slug)
+	absDir, err := vangogh_local_data.AbsProductDownloadsDir(slug)
 	if err != nil {
 		return dmua.EndWithError(err)
 	}
@@ -219,14 +221,15 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	dtRelDir := ""
 	switch dl.Type {
 	case vangogh_local_data.DLC:
-		dtRelDir, err = vangogh_local_data.GetRelDir(vangogh_local_data.DLCs)
+		absDir, err = pathology.GetAbsRelDir(vangogh_local_data.DLCs)
 	case vangogh_local_data.Extra:
-		dtRelDir, err = vangogh_local_data.GetRelDir(vangogh_local_data.Extras)
+		absDir, err = pathology.GetAbsRelDir(vangogh_local_data.Extras)
+	default:
+		err = errors.New("unknown download type")
 	}
 	if err != nil {
 		return dmua.EndWithError(err)
 	}
-	absDir := filepath.Join(pAbsDir, dtRelDir)
 
 	//4
 	remoteChecksumPath := vangogh_local_data.RemoteChecksumPath(resolvedUrl.Path)

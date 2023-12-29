@@ -8,12 +8,11 @@ import (
 	"bytes"
 	_ "embed"
 	"github.com/arelate/vangogh/cli"
-	"github.com/arelate/vangogh/cli/dirs"
 	"github.com/arelate/vangogh/clo_delegates"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/wits"
+	"github.com/boggydigital/pathology"
 	_ "image/jpeg"
 	"os"
 )
@@ -31,15 +30,17 @@ const (
 
 func main() {
 
+	// setup directories
+	pathology.SetDefaultRootDir(vangogh_local_data.DefaultVangoghRootDir)
+	if err := pathology.SetAbsDirs(userDirsFilename, vangogh_local_data.AllAbsDirs...); err != nil {
+		panic(err)
+	}
+	pathology.SetRelToAbsDir(vangogh_local_data.RelToAbsDirs)
+
 	nod.EnableStdOutPresenter()
 
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
-
-	if err := chRoot(userDirsFilename, vangogh_local_data.DefaultDirs); err != nil {
-		_ = ns.EndWithError(err)
-		os.Exit(1)
-	}
 
 	defs, err := clo.Load(
 		bytes.NewBuffer(cliCommands),
@@ -93,29 +94,4 @@ func main() {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}
-}
-
-func chRoot(userDirsFilename string, defaultDirs map[string]string) error {
-
-	var userDirs map[string]string
-
-	if _, err := os.Stat(userDirsFilename); err == nil {
-		udFile, err := os.Open(userDirsFilename)
-		if err != nil {
-			return err
-		}
-
-		userDirs, err = wits.ReadKeyValue(udFile)
-		if err != nil {
-			return err
-		}
-	} else if os.IsNotExist(err) {
-		userDirs = defaultDirs
-	} else {
-		return err
-	}
-
-	dirs.SetLogsDir(userDirs["logs"])
-
-	return vangogh_local_data.SetAbsDirs(userDirs)
 }

@@ -4,12 +4,13 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/packer"
+	"github.com/boggydigital/pathology"
 	"net/url"
 	"path/filepath"
 )
 
 func ExportHandler(_ *url.URL) error {
-	aofp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Output)
+	aofp, err := pathology.GetAbsDir(vangogh_local_data.Output)
 	if err != nil {
 		return err
 	}
@@ -21,7 +22,7 @@ func Export(to string) error {
 	ea := nod.NewProgress("exporting metadata...")
 	defer ea.End()
 
-	amp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Metadata)
+	amp, err := pathology.GetAbsDir(vangogh_local_data.Metadata)
 	if err != nil {
 		return ea.EndWithError(err)
 	}

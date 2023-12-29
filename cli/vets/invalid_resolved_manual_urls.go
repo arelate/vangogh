@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathology"
 	"path"
 )
 
@@ -53,7 +54,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 			firmu.TotalInt(len(invalidResolvedUrls))
 		}
 
-		adp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Downloads)
+		adp, err := pathology.GetAbsDir(vangogh_local_data.Downloads)
 		if err != nil {
 			return cirmu.EndWithError(err)
 		}

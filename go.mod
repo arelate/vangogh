@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/arelate/southern_light v0.1.36
-	github.com/arelate/vangogh_local_data v0.4.5
+	github.com/arelate/vangogh_local_data v0.4.7
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/clo v1.0.4
 	github.com/boggydigital/coost v0.3.9
@@ -23,6 +23,7 @@ require (
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/boggydigital/match_node v0.1.16 // indirect
+	github.com/boggydigital/pathology v0.1.5 // indirect
 	golang.org/x/image v0.14.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 )

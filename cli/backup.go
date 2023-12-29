@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathology"
 	"net/url"
 	"os"
 )
@@ -16,7 +17,7 @@ func Backup() error {
 	ba := nod.Begin("backing up local data...")
 	defer ba.End()
 
-	abp, err := vangogh_local_data.GetAbsDir(vangogh_local_data.Backups)
+	abp, err := pathology.GetAbsDir(vangogh_local_data.Backups)
 	if err != nil {
 		return err
 	}
