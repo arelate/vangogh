@@ -13,6 +13,7 @@ import (
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathology"
+	"github.com/boggydigital/wits"
 	_ "image/jpeg"
 	"os"
 )
@@ -35,8 +36,16 @@ func main() {
 	if err := pathology.SetAbsDirs(vangogh_local_data.AllAbsDirs...); err != nil {
 		panic(err)
 	}
-	if err := pathology.SetUserDirsOverrides(userDirsFilename); err != nil {
-		panic(err)
+	if _, err := os.Stat(userDirsFilename); err == nil {
+		udFile, err := os.Open(userDirsFilename)
+		if err != nil {
+			panic(err)
+		}
+		userDirs, err := wits.ReadKeyValue(udFile)
+		if err != nil {
+			panic(err)
+		}
+		pathology.SetUserDirsOverrides(userDirs)
 	}
 	pathology.SetRelToAbsDir(vangogh_local_data.RelToAbsDirs)
 
