@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
@@ -225,7 +224,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	case vangogh_local_data.Extra:
 		absDir, err = pathology.GetAbsRelDir(vangogh_local_data.Extras)
 	default:
-		err = errors.New("unknown download type")
+		// do nothing - use base product downloads dir
 	}
 	if err != nil {
 		return dmua.EndWithError(err)
