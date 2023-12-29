@@ -32,7 +32,10 @@ func main() {
 
 	// setup directories
 	pathology.SetDefaultRootDir(vangogh_local_data.DefaultVangoghRootDir)
-	if err := pathology.SetAbsDirs(userDirsFilename, vangogh_local_data.AllAbsDirs...); err != nil {
+	if err := pathology.SetAbsDirs(vangogh_local_data.AllAbsDirs...); err != nil {
+		panic(err)
+	}
+	if err := pathology.SetUserDirsOverrides(userDirsFilename); err != nil {
 		panic(err)
 	}
 	pathology.SetRelToAbsDir(vangogh_local_data.RelToAbsDirs)

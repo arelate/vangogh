@@ -26,6 +26,8 @@ github.com/arelate/vangogh_local_data v0.4.7 h1:LhHMAvPd6dhRrezJQoJ4AAyS1yTKjFKu
 github.com/arelate/vangogh_local_data v0.4.7/go.mod h1:YLtdiX5XlYxCf83LYcTn71OnU60vvu3WT17rvEVxge4=
 github.com/arelate/vangogh_local_data v0.4.8 h1:UzMbHtx2p8Dv8SZGlWa6CJegLxdgedPRLtVK/7D1XOI=
 github.com/arelate/vangogh_local_data v0.4.8/go.mod h1:g9RrWvMkhZLcYK0c9o4QY0bfm9gXNb2RqEWfeI8lVx4=
+github.com/arelate/vangogh_local_data v0.4.9 h1:kucbkdnlV/SUBwmFZbzUpbxL5KokBxAWBCVQEbQfmNo=
+github.com/arelate/vangogh_local_data v0.4.9/go.mod h1:zbNKzfGYXHSaqoZdFYdSADbXhf9+KVGbZ+qhSTukfoQ=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v1.0.4 h1:LKvXktyG+EeemzjnSp0DYIAEbY2/rvFcuHtjjwJk280=
@@ -60,6 +62,8 @@ github.com/boggydigital/pathology v0.1.5 h1:8gPRXU+7Dp4ZJv0MXXRIAJfaaFqzUno3yVou
 github.com/boggydigital/pathology v0.1.5/go.mod h1:IqegmSGqlK1UR9+P6Mrua7+ZYdB8NC07sIs4Z+u2BMk=
 github.com/boggydigital/pathology v0.1.6 h1:ssWIR8Z78x/546IkXInnsGcUutA76R+cEK4Ee2C2VAc=
 github.com/boggydigital/pathology v0.1.6/go.mod h1:IqegmSGqlK1UR9+P6Mrua7+ZYdB8NC07sIs4Z+u2BMk=
+github.com/boggydigital/pathology v0.1.7 h1:mo6IQ3e4eLmP7xL437mIiZn1uqC0JdXIZm8OI9FPnX8=
+github.com/boggydigital/pathology v0.1.7/go.mod h1:IqegmSGqlK1UR9+P6Mrua7+ZYdB8NC07sIs4Z+u2BMk=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=
