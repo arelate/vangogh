@@ -14,7 +14,7 @@ require (
 	github.com/boggydigital/kvas_dolo v0.1.6
 	github.com/boggydigital/middleware v0.1.11
 	github.com/boggydigital/nod v0.1.21
-	github.com/boggydigital/packer v0.1.0
+	github.com/boggydigital/packer v0.1.1
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yt_urls v0.1.35
 	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b

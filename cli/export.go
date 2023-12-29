@@ -6,7 +6,6 @@ import (
 	"github.com/boggydigital/packer"
 	"github.com/boggydigital/pathology"
 	"net/url"
-	"path/filepath"
 )
 
 func ExportHandler(_ *url.URL) error {
@@ -26,9 +25,8 @@ func Export(to string) error {
 	if err != nil {
 		return ea.EndWithError(err)
 	}
-	root, _ := filepath.Split(amp)
 
-	if err := packer.Pack(root, amp, to, ea); err != nil {
+	if err := packer.Pack(amp, to, ea); err != nil {
 		return ea.EndWithError(err)
 	}
 

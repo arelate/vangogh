@@ -56,6 +56,8 @@ github.com/boggydigital/nod v0.1.21 h1:pQbrgswCuU5dr3IWS1Z902PJAm5BebSLG+Q3aG7KJ
 github.com/boggydigital/nod v0.1.21/go.mod h1:bYucIZ3rLHBZKf/3+T+eTSxuijuja7Y6OgU2P6o2/vo=
 github.com/boggydigital/packer v0.1.0 h1:u727MJMwwElKDkyhcNjkhJwChdbeUl0sWh7R0SmkWNc=
 github.com/boggydigital/packer v0.1.0/go.mod h1:cCRWxv7LDqsKuVoD6B6R2rSQedZbugrlnTyc39Lm59c=
+github.com/boggydigital/packer v0.1.1 h1:Ac/DnmJbEXRJmci3Pi+/C+7eV1MypWxOi91IE6/1bfE=
+github.com/boggydigital/packer v0.1.1/go.mod h1:cCRWxv7LDqsKuVoD6B6R2rSQedZbugrlnTyc39Lm59c=
 github.com/boggydigital/pathology v0.1.3 h1:ys+aNx63cVG8lDjTRXpRMhsADWeFRlKkl4HXewcD9dM=
 github.com/boggydigital/pathology v0.1.3/go.mod h1:nxEBKwUHHFbm8b1K4FICWnkE4xaYaC18mXd27zq//sE=
 github.com/boggydigital/pathology v0.1.4 h1:nE2YqKsPHiCRyN5B6qY3J2At3oqQ6IV6K67nsdLXKyY=
