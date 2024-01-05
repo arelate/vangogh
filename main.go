@@ -37,6 +37,7 @@ func main() {
 
 	if err := pathology.Setup(dirsOverrideFilename,
 		vangogh_local_data.DefaultVangoghRootDir,
+		vangogh_local_data.RelToAbsDirs,
 		vangogh_local_data.AllAbsDirs...); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)

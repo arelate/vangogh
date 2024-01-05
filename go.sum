@@ -74,6 +74,8 @@ github.com/boggydigital/pathology v0.1.8 h1:a5brNIQS//yednzdJsxtCExHVJLlu8hhi2pB
 github.com/boggydigital/pathology v0.1.8/go.mod h1:kv9hzFMn1Ud0Hxn2vITcZAS68YuB/XbaErXXcANcolU=
 github.com/boggydigital/pathology v0.1.9 h1:G8791r1/z4eUP+w3ysKHXc3kwLVOHIYycH9rtdstW3M=
 github.com/boggydigital/pathology v0.1.9/go.mod h1:Kded3dV1G1agmmw3OjGzT5UJW5GyBNIoJSd/GHXToAs=
+github.com/boggydigital/pathology v0.1.10 h1:sS+pDMjXEMZSAmDIBqmpusb3x0k30fxBCBF0RWMnQRA=
+github.com/boggydigital/pathology v0.1.10/go.mod h1:Kded3dV1G1agmmw3OjGzT5UJW5GyBNIoJSd/GHXToAs=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=
