@@ -29,8 +29,6 @@ dehydrate
 digest
     property^={digestible-properties}
 
-export
-
 get-data
     id&
     slug&

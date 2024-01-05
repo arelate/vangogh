@@ -3,9 +3,9 @@ package cli
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/packer"
 	"github.com/boggydigital/pathology"
 	"net/url"
-	"os"
 )
 
 func BackupHandler(_ *url.URL) error {
@@ -14,19 +14,24 @@ func BackupHandler(_ *url.URL) error {
 
 func Backup() error {
 
-	ba := nod.Begin("backing up local data...")
+	ba := nod.NewProgress("backing up local data...")
 	defer ba.End()
 
 	abp, err := pathology.GetAbsDir(vangogh_local_data.Backups)
 	if err != nil {
-		return err
+		return ba.EndWithError(err)
 	}
 
-	if _, err := os.Stat(abp); os.IsNotExist(err) {
-		if err := os.MkdirAll(abp, 0755); err != nil {
-			return ba.EndWithError(err)
-		}
+	amp, err := pathology.GetAbsDir(vangogh_local_data.Metadata)
+	if err != nil {
+		return ba.EndWithError(err)
 	}
 
-	return Export(abp)
+	if err := packer.Pack(amp, abp, ba); err != nil {
+		return ba.EndWithError(err)
+	}
+
+	ba.EndWithResult("done")
+
+	return nil
 }

@@ -10,12 +10,12 @@ require (
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.13
 	github.com/boggydigital/issa v0.1.10
-	github.com/boggydigital/kvas v0.4.3
+	github.com/boggydigital/kvas v0.4.4
 	github.com/boggydigital/kvas_dolo v0.1.6
 	github.com/boggydigital/middleware v0.1.11
 	github.com/boggydigital/nod v0.1.21
 	github.com/boggydigital/packer v0.1.1
-	github.com/boggydigital/pathology v0.1.8
+	github.com/boggydigital/pathology v0.1.9
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yt_urls v0.1.40
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc

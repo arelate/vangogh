@@ -13,7 +13,6 @@ import (
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathology"
-	"github.com/boggydigital/wits"
 	_ "image/jpeg"
 	"os"
 )
@@ -26,33 +25,22 @@ var (
 )
 
 const (
-	userDirsFilename = "directories.txt"
+	dirsOverrideFilename = "directories.txt"
 )
 
 func main() {
-
-	// setup directories
-	pathology.SetDefaultRootDir(vangogh_local_data.DefaultVangoghRootDir)
-	if err := pathology.SetAbsDirs(vangogh_local_data.AllAbsDirs...); err != nil {
-		panic(err)
-	}
-	if _, err := os.Stat(userDirsFilename); err == nil {
-		udFile, err := os.Open(userDirsFilename)
-		if err != nil {
-			panic(err)
-		}
-		userDirs, err := wits.ReadKeyValue(udFile)
-		if err != nil {
-			panic(err)
-		}
-		pathology.SetUserDirsOverrides(userDirs)
-	}
-	pathology.SetRelToAbsDir(vangogh_local_data.RelToAbsDirs)
 
 	nod.EnableStdOutPresenter()
 
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
+
+	if err := pathology.Setup(dirsOverrideFilename,
+		vangogh_local_data.DefaultVangoghRootDir,
+		vangogh_local_data.AllAbsDirs...); err != nil {
+		_ = ns.EndWithError(err)
+		os.Exit(1)
+	}
 
 	defs, err := clo.Load(
 		bytes.NewBuffer(cliCommands),
@@ -69,7 +57,6 @@ func main() {
 		"cleanup":            cli.CleanupHandler,
 		"dehydrate":          cli.DehydrateHandler,
 		"digest":             cli.DigestHandler,
-		"export":             cli.ExportHandler,
 		"get-data":           cli.GetDataHandler,
 		"get-downloads":      cli.GetDownloadsHandler,
 		"get-images":         cli.GetImagesHandler,

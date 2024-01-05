@@ -46,6 +46,8 @@ github.com/boggydigital/kvas v0.4.2 h1:3OG/pxBuzEaec4YJlHbppRFeAoqZnp9GOUuny3RkG
 github.com/boggydigital/kvas v0.4.2/go.mod h1:oP9td1uUuG0cgNGle/iz2dbdAllJcyLBGgp0GJ7nZCg=
 github.com/boggydigital/kvas v0.4.3 h1:T6hSzFz1ocPBzpn4rhbDf+mIU0P7xvFn7zVkQ+JV43w=
 github.com/boggydigital/kvas v0.4.3/go.mod h1:oP9td1uUuG0cgNGle/iz2dbdAllJcyLBGgp0GJ7nZCg=
+github.com/boggydigital/kvas v0.4.4 h1:74MRryE/zcjaZzIvADe1vGh/scv9pnxR8djf6E5m0qI=
+github.com/boggydigital/kvas v0.4.4/go.mod h1:oP9td1uUuG0cgNGle/iz2dbdAllJcyLBGgp0GJ7nZCg=
 github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drYKjcEOks=
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.16 h1:oE7Hlehb1xuFnB3k7kfZPjaOV3c+j0g/O76+XVoib3E=
@@ -70,6 +72,8 @@ github.com/boggydigital/pathology v0.1.7 h1:mo6IQ3e4eLmP7xL437mIiZn1uqC0JdXIZm8O
 github.com/boggydigital/pathology v0.1.7/go.mod h1:IqegmSGqlK1UR9+P6Mrua7+ZYdB8NC07sIs4Z+u2BMk=
 github.com/boggydigital/pathology v0.1.8 h1:a5brNIQS//yednzdJsxtCExHVJLlu8hhi2pB1D/us0U=
 github.com/boggydigital/pathology v0.1.8/go.mod h1:kv9hzFMn1Ud0Hxn2vITcZAS68YuB/XbaErXXcANcolU=
+github.com/boggydigital/pathology v0.1.9 h1:G8791r1/z4eUP+w3ysKHXc3kwLVOHIYycH9rtdstW3M=
+github.com/boggydigital/pathology v0.1.9/go.mod h1:Kded3dV1G1agmmw3OjGzT5UJW5GyBNIoJSd/GHXToAs=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=
