@@ -4,7 +4,7 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/packer"
-	"github.com/boggydigital/pathology"
+	"github.com/boggydigital/pasu"
 	"net/url"
 )
 
@@ -17,12 +17,12 @@ func Backup() error {
 	ba := nod.NewProgress("backing up local data...")
 	defer ba.End()
 
-	abp, err := pathology.GetAbsDir(vangogh_local_data.Backups)
+	abp, err := pasu.GetAbsDir(vangogh_local_data.Backups)
 	if err != nil {
 		return ba.EndWithError(err)
 	}
 
-	amp, err := pathology.GetAbsDir(vangogh_local_data.Metadata)
+	amp, err := pasu.GetAbsDir(vangogh_local_data.Metadata)
 	if err != nil {
 		return ba.EndWithError(err)
 	}

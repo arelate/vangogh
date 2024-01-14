@@ -9,7 +9,7 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathology"
+	"github.com/boggydigital/pasu"
 	"net/http"
 	"net/url"
 	"os"
@@ -220,9 +220,9 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	relDirSuffix := ""
 	switch dl.Type {
 	case vangogh_local_data.DLC:
-		relDirSuffix, err = pathology.GetRelDir(vangogh_local_data.DLCs)
+		relDirSuffix, err = pasu.GetRelDir(vangogh_local_data.DLCs)
 	case vangogh_local_data.Extra:
-		relDirSuffix, err = pathology.GetRelDir(vangogh_local_data.Extras)
+		relDirSuffix, err = pasu.GetRelDir(vangogh_local_data.Extras)
 	default:
 		// do nothing - use base product downloads dir
 	}

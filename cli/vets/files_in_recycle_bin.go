@@ -3,7 +3,7 @@ package vets
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathology"
+	"github.com/boggydigital/pasu"
 	"os"
 	"path/filepath"
 )
@@ -30,7 +30,7 @@ func FilesInRecycleBin(fix bool) error {
 
 		if fix {
 			rfa := nod.NewProgress(" emptying recycle bin...")
-			rbdp, err := pathology.GetAbsDir(vangogh_local_data.RecycleBin)
+			rbdp, err := pasu.GetAbsDir(vangogh_local_data.RecycleBin)
 			if err != nil {
 				return rfa.EndWithError(err)
 			}

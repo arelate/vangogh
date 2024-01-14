@@ -4,7 +4,7 @@ import (
 	"github.com/arelate/vangogh/cli/vets"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathology"
+	"github.com/boggydigital/pasu"
 	"net/url"
 )
 
@@ -170,7 +170,7 @@ func Vet(
 	}
 
 	if vetOpts.oldLogs {
-		absLogsDir, err := pathology.GetAbsDir(vangogh_local_data.Logs)
+		absLogsDir, err := pasu.GetAbsDir(vangogh_local_data.Logs)
 		if err != nil {
 			return err
 		}
@@ -180,7 +180,7 @@ func Vet(
 	}
 
 	if vetOpts.oldBackups {
-		abp, err := pathology.GetAbsDir(vangogh_local_data.Backups)
+		abp, err := pasu.GetAbsDir(vangogh_local_data.Backups)
 		if err != nil {
 			return sda.EndWithError(err)
 		}

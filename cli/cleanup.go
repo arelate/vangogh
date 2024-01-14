@@ -6,7 +6,7 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathology"
+	"github.com/boggydigital/pasu"
 	"math"
 	"net/url"
 	"os"
@@ -187,7 +187,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			}
 		}
 
-		adp, err := pathology.GetAbsDir(vangogh_local_data.Downloads)
+		adp, err := pasu.GetAbsDir(vangogh_local_data.Downloads)
 		if err != nil {
 			return csa.EndWithError(err)
 		}
@@ -223,7 +223,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			return csa.EndWithError(err)
 		}
 
-		acp, err := pathology.GetAbsRelDir(vangogh_local_data.Checksums)
+		acp, err := pasu.GetAbsRelDir(vangogh_local_data.Checksums)
 		if err != nil {
 			return csa.EndWithError(err)
 		}

@@ -12,7 +12,7 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathology"
+	"github.com/boggydigital/pasu"
 	_ "image/jpeg"
 	"os"
 )
@@ -35,7 +35,7 @@ func main() {
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
 	defer ns.End()
 
-	if err := pathology.Setup(dirsOverrideFilename,
+	if err := pasu.Setup(dirsOverrideFilename,
 		vangogh_local_data.DefaultVangoghRootDir,
 		vangogh_local_data.RelToAbsDirs,
 		vangogh_local_data.AllAbsDirs...); err != nil {

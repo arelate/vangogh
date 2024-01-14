@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/arelate/southern_light v0.1.36
-	github.com/arelate/vangogh_local_data v0.4.10
+	github.com/arelate/vangogh_local_data v0.4.11
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/clo v1.0.4
 	github.com/boggydigital/coost v0.3.9
@@ -15,7 +15,7 @@ require (
 	github.com/boggydigital/middleware v0.1.11
 	github.com/boggydigital/nod v0.1.21
 	github.com/boggydigital/packer v0.1.1
-	github.com/boggydigital/pathology v0.1.11
+	github.com/boggydigital/pasu v0.1.12
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yt_urls v0.1.40
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3
