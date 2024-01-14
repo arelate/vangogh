@@ -217,18 +217,21 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		return dmua.EndWithError(err)
 	}
 	//we need to add suffix to a dir path, e.g. dlc, extras
-	dtRelDir := ""
+	relDirSuffix := ""
 	switch dl.Type {
 	case vangogh_local_data.DLC:
-		absDir, err = pathology.GetAbsRelDir(vangogh_local_data.DLCs)
+		relDirSuffix, err = pathology.GetRelDir(vangogh_local_data.DLCs)
 	case vangogh_local_data.Extra:
-		absDir, err = pathology.GetAbsRelDir(vangogh_local_data.Extras)
+		relDirSuffix, err = pathology.GetRelDir(vangogh_local_data.Extras)
 	default:
 		// do nothing - use base product downloads dir
 	}
 	if err != nil {
 		return dmua.EndWithError(err)
 	}
+
+	//completing absDir with download type relative suffix (e.g. /g/game + dlc = /g/game/dlc)
+	absDir = filepath.Join(absDir, relDirSuffix)
 
 	//4
 	remoteChecksumPath := vangogh_local_data.RemoteChecksumPath(resolvedUrl.Path)
@@ -267,7 +270,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//ProductDownloadsRelDir would return relative (to downloads/ root) dir path, e.g. s/slug
 	pRelDir, err := vangogh_local_data.RelProductDownloadsDir(slug)
 	//we need to add suffix to a dir path, e.g. dlc, extras - using already resolved download type relative dir
-	relDir := filepath.Join(pRelDir, dtRelDir)
+	relDir := filepath.Join(pRelDir, relDirSuffix)
 	if err != nil {
 		return dmua.EndWithError(err)
 	}
