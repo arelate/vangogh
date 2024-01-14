@@ -42,7 +42,7 @@ services:
       # items (hot storage)
       - /docker/vangogh/items:/var/lib/vangogh/items
       # logs (cold storage)
-      - /docker/vangogh/logs:/var/log/vangogh
+      - /docker/vangogh/logs:/var/lib/vangogh/logs
       # metadata (hot storage)
       - /docker/vangogh/metadata:/var/lib/vangogh/metadata
       # output (hot storage)
