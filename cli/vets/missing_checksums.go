@@ -19,7 +19,8 @@ func MissingChecksums(fix bool) error {
 	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.ValidationResultProperty,
 		vangogh_local_data.LocalManualUrlProperty,
-		vangogh_local_data.NativeLanguageNameProperty)
+		vangogh_local_data.NativeLanguageNameProperty,
+		vangogh_local_data.ProductTypeProperty)
 	if err != nil {
 		return mca.EndWithError(err)
 	}
@@ -27,14 +28,20 @@ func MissingChecksums(fix bool) error {
 	ids := make(map[string]interface{})
 
 	for _, id := range rdx.Keys(vangogh_local_data.ValidationResultProperty) {
-		results, ok := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
-		if !ok {
+
+		// skip DLC and PACK product types as they don't have Details for their ids and would
+		// crash below attempting to read vrDetails for missing product. That's totally ok, since
+		// DLC and PACK product types get validation status from cascading, so as we fix GAME
+		// product types and perform cascade - we'll eventually get correct status for all cascaded types
+		if pt, ok := rdx.GetFirstVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
 			continue
 		}
 
-		for _, res := range results {
-			if res == "missing-checksum" {
-				ids[id] = nil
+		if results, ok := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); ok {
+			for _, res := range results {
+				if res == "missing-checksum" {
+					ids[id] = nil
+				}
 			}
 		}
 	}
