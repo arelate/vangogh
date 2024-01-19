@@ -218,12 +218,6 @@ func Sync(
 		return sa.EndWithError(err)
 	}
 
-	// posting intermediate completion for the updated data
-	// while downloads, video downloads and validation are still processing
-	if err := PostCompletion(webhookUrl); err != nil {
-		return sa.EndWithError(err)
-	}
-
 	// get items (embedded into descriptions)
 	if syncOpts.items && !purchasesOnly {
 		if err := GetItems(map[string]bool{}, since); err != nil {
@@ -247,6 +241,12 @@ func Sync(
 		if err := Dehydrate(map[string]bool{}, vangogh_local_data.ImageTypesDehydration(), true); err != nil {
 			return sa.EndWithError(err)
 		}
+	}
+
+	// posting intermediate completion for the updated data
+	// while downloads, video downloads and validation are still processing
+	if err := PostCompletion(webhookUrl); err != nil {
+		return sa.EndWithError(err)
 	}
 
 	// get downloads updates
@@ -287,26 +287,26 @@ func Sync(
 		}
 	}
 
-	syncEventsrdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.SyncEventsProperty)
+	syncEventsRdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.SyncEventsProperty)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
 
 	syncEvents[vangogh_local_data.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
 
-	if err := syncEventsrdx.BatchReplaceValues(
+	if err := syncEventsRdx.BatchReplaceValues(
 		vangogh_local_data.SyncEventsProperty,
 		syncEvents); err != nil {
 		return sa.EndWithError(err)
 	}
 
-	// backing up data
-	if err := Backup(); err != nil {
+	// post a final completion
+	if err := PostCompletion(webhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 
-	// post a final completion
-	if err := PostCompletion(webhookUrl); err != nil {
+	// backing up data
+	if err := Backup(); err != nil {
 		return sa.EndWithError(err)
 	}
 
