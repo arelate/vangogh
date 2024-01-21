@@ -15,7 +15,7 @@ func IndexMissing(fix bool) error {
 
 	for _, pt := range pts {
 
-		vr, err := vangogh_local_data.NewReader(pt)
+		vr, err := vangogh_local_data.NewProductReader(pt)
 		if err != nil {
 			return ima.EndWithError(err)
 		}

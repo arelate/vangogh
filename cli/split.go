@@ -20,7 +20,7 @@ func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
 	spa := nod.NewProgress(" splitting %s...", sourcePt)
 	defer spa.End()
 
-	vrPaged, err := vangogh_local_data.NewReader(sourcePt)
+	vrPaged, err := vangogh_local_data.NewProductReader(sourcePt)
 	if err != nil {
 		return err
 	}

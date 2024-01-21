@@ -60,7 +60,7 @@ func Validate(
 	}
 
 	if all {
-		vrDetails, err := vangogh_local_data.NewReader(vangogh_local_data.Details)
+		vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
 		if err != nil {
 			return err
 		}
@@ -304,7 +304,7 @@ func validateUpdated(since int64,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string) error {
 
-	vrAccountProducts, err := vangogh_local_data.NewReader(vangogh_local_data.AccountProducts)
+	vrAccountProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountProducts)
 	if err != nil {
 		return err
 	}

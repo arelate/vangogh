@@ -52,7 +52,7 @@ func Items(
 
 	dc := dolo.NewClient(httpClient, dolo.Defaults())
 
-	if errs := dc.GetSet(urls, kis, ia); len(errs) > 0 {
+	if errs := dc.GetSet(urls, kis, ia, false); len(errs) > 0 {
 		for ui, e := range errs {
 			ia.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 		}

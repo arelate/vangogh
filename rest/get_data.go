@@ -19,7 +19,7 @@ func GetData(w http.ResponseWriter, r *http.Request) {
 
 	values := make(map[string]interface{}, len(ids))
 
-	vr, err := vangogh_local_data.NewReader(pt)
+	vr, err := vangogh_local_data.NewProductReader(pt)
 
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

@@ -32,7 +32,7 @@ func IfDataModifiedSince(next http.Handler) http.Handler {
 		// 2) check if content was modified since client cache
 		//pt := vangogh_local_data.ProductTypeFromUrl(r.URL)
 		pt := vangogh_local_data.ParseProductType(vangogh_local_data.ValueFromUrl(r.URL, "product-type"))
-		if vr, err := vangogh_local_data.NewReader(pt); err == nil {
+		if vr, err := vangogh_local_data.NewProductReader(pt); err == nil {
 			if icmt, err := vr.IndexCurrentModTime(); err == nil {
 				lm := time.Unix(icmt, 0).UTC().Format(http.TimeFormat)
 				w.Header().Set(middleware.LastModifiedHeader, lm)

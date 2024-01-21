@@ -20,12 +20,12 @@ func SteamAppId(since int64) error {
 		return saia.EndWithError(err)
 	}
 
-	vrSteamAppList, err := vangogh_local_data.NewReader(vangogh_local_data.SteamAppList)
+	vrSteamAppList, err := vangogh_local_data.NewProductReader(vangogh_local_data.SteamAppList)
 	if err != nil {
 		return saia.EndWithError(err)
 	}
 
-	vrCatalogProducts, err := vangogh_local_data.NewReader(vangogh_local_data.CatalogProducts)
+	vrCatalogProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.CatalogProducts)
 	if err != nil {
 		return saia.EndWithError(err)
 	}

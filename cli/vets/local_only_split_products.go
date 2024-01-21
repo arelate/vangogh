@@ -46,7 +46,7 @@ func LocalOnlySplitProducts(fix bool) error {
 			if fix {
 				fa := nod.Begin(" removing local only %s...", splitPt)
 
-				kv, err := vangogh_local_data.NewReader(splitPt)
+				kv, err := vangogh_local_data.NewProductReader(splitPt)
 				if err != nil {
 					return fa.EndWithError(err)
 				}

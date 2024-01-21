@@ -12,7 +12,7 @@ func linkedGames(modifiedAfter int64) (map[string]bool, error) {
 
 	missingSet := make(map[string]bool)
 
-	vrApv2, err := vangogh_local_data.NewReader(vangogh_local_data.ApiProductsV2)
+	vrApv2, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV2)
 	if err != nil {
 		return missingSet, lga.EndWithError(err)
 	}

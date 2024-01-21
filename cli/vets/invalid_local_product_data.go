@@ -36,7 +36,7 @@ func InvalidLocalProductData(fix bool) error {
 
 		pta := nod.NewProgress(" checking %s...", pt)
 
-		vr, err := vangogh_local_data.NewReader(pt)
+		vr, err := vangogh_local_data.NewProductReader(pt)
 		if err != nil {
 			_ = pta.EndWithError(err)
 			continue

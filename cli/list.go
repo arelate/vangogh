@@ -66,7 +66,7 @@ func List(
 	//4. if no IDs have been collected and the request have not provided createdAfter or modifiedAfter:
 	// add all product IDs
 
-	vr, err := vangogh_local_data.NewReader(pt)
+	vr, err := vangogh_local_data.NewProductReader(pt)
 	if err != nil {
 		return la.EndWithError(err)
 	}

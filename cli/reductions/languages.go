@@ -83,7 +83,7 @@ func LanguageNames(langCodeSet map[string]bool) error {
 	names := make(map[string][]string, 0)
 
 	//iterate through api-products-v1 until we fill all native names
-	vrApiProductsV2, err := vangogh_local_data.NewReader(vangogh_local_data.ApiProductsV2)
+	vrApiProductsV2, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV2)
 	if err != nil {
 		return lna.EndWithError(err)
 	}
@@ -129,7 +129,7 @@ func NativeLanguageNames(langCodeSet map[string]bool) error {
 		return nil
 	}
 
-	vrApiProductsV1, err := vangogh_local_data.NewReader(vangogh_local_data.ApiProductsV1)
+	vrApiProductsV1, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV1)
 	if err != nil {
 		return nlna.EndWithError(err)
 	}

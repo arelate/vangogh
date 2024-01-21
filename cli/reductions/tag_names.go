@@ -11,7 +11,7 @@ func TagNames() error {
 	tna := nod.Begin(" %s...", vangogh_local_data.TagNameProperty)
 	defer tna.End()
 
-	vrAccountPage, err := vangogh_local_data.NewReader(vangogh_local_data.AccountPage)
+	vrAccountPage, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountPage)
 	if err != nil {
 		return tna.EndWithError(err)
 	}

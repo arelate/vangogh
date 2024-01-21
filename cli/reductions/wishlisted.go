@@ -11,13 +11,13 @@ func Wishlisted() error {
 	wa := nod.Begin(" %s...", vangogh_local_data.UserWishlist)
 	defer wa.End()
 
-	vrCatalogProducts, err := vangogh_local_data.NewReader(vangogh_local_data.CatalogProducts)
+	vrCatalogProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.CatalogProducts)
 	if err != nil {
 		return wa.EndWithError(err)
 	}
 
 	//using WishlistPage and not WishlistProduct for the remote source of truth
-	vrUserWishlist, err := vangogh_local_data.NewReader(vangogh_local_data.UserWishlist)
+	vrUserWishlist, err := vangogh_local_data.NewProductReader(vangogh_local_data.UserWishlist)
 	if err != nil {
 		return wa.EndWithError(err)
 	}

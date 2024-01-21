@@ -33,7 +33,7 @@ func MissingLocalDownloads(
 		return emptySet, mlda.EndWithError(err)
 	}
 
-	vrDetails, err := vangogh_local_data.NewReader(vangogh_local_data.Details)
+	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
 	if err != nil {
 		return emptySet, mlda.EndWithError(err)
 	}

@@ -55,7 +55,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 
 	for _, pt := range vangogh_local_data.LocalProducts() {
 
-		vr, err := vangogh_local_data.NewReader(pt)
+		vr, err := vangogh_local_data.NewProductReader(pt)
 		if err != nil {
 			return ra.EndWithError(err)
 		}

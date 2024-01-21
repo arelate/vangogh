@@ -13,12 +13,12 @@ func RequiredAndIncluded(createdAfter int64) (map[string]bool, error) {
 
 	newLicSet := make(map[string]bool)
 
-	vrLicences, err := vangogh_local_data.NewReader(vangogh_local_data.LicenceProducts)
+	vrLicences, err := vangogh_local_data.NewProductReader(vangogh_local_data.LicenceProducts)
 	if err != nil {
 		return newLicSet, raia.EndWithError(err)
 	}
 
-	vrApv2, err := vangogh_local_data.NewReader(vangogh_local_data.ApiProductsV2)
+	vrApv2, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV2)
 	if err != nil {
 		return newLicSet, raia.EndWithError(err)
 	}

@@ -59,7 +59,7 @@ func Size(
 	}
 
 	if all {
-		vrDetails, err := vangogh_local_data.NewReader(vangogh_local_data.Details)
+		vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
 		if err != nil {
 			return sa.EndWithError(err)
 		}

@@ -70,7 +70,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	dc := dolo.NewClient(httpClient, dolo.Defaults())
 
 	//get the first page payload and set it in kvas
-	if errs := dc.GetSet(urls, kis, tpw); len(errs) > 0 {
+	if errs := dc.GetSet(urls, kis, tpw, false); len(errs) > 0 {
 		for ui, e := range errs {
 			gfp.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 		}
@@ -115,7 +115,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 		return err
 	}
 
-	if errs := dc.GetSet(urls, kis, tpw); len(errs) > 0 {
+	if errs := dc.GetSet(urls, kis, tpw, false); len(errs) > 0 {
 		for ui, e := range errs {
 			tpw.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 		}

@@ -18,7 +18,7 @@ func CheckOwnership(idSet map[string]bool, rdx kvas.ReadableRedux) (map[string]b
 		return ownedSet, err
 	}
 
-	vrLicenceProducts, err := vangogh_local_data.NewReader(vangogh_local_data.LicenceProducts)
+	vrLicenceProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.LicenceProducts)
 	if err != nil {
 		return ownedSet, err
 	}
@@ -63,7 +63,7 @@ func CheckOwnership(idSet map[string]bool, rdx kvas.ReadableRedux) (map[string]b
 	return ownedSet, nil
 }
 
-func isIncludedByIsOwned(id string, rdx kvas.ReadableRedux, vrLicenceProducts *vangogh_local_data.ValueReader) bool {
+func isIncludedByIsOwned(id string, rdx kvas.ReadableRedux, vrLicenceProducts *vangogh_local_data.ProductReader) bool {
 	if iibg, ok := rdx.GetAllValues(vangogh_local_data.IsIncludedByGamesProperty, id); !ok {
 		return false
 	} else {

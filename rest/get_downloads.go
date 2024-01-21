@@ -15,7 +15,7 @@ func GetDownloads(w http.ResponseWriter, r *http.Request) {
 
 	id := vangogh_local_data.ValueFromUrl(r.URL, "id")
 
-	vrDetails, err := vangogh_local_data.NewReader(vangogh_local_data.Details)
+	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

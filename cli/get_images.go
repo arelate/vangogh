@@ -130,7 +130,7 @@ func GetImages(
 
 		//using http.DefaultClient as no image types require authentication
 		//(this might change in the future)
-		if errs := dolo.DefaultClient.GetSet(urls, imagesIndexSetter, mita); len(errs) > 0 {
+		if errs := dolo.DefaultClient.GetSet(urls, imagesIndexSetter, mita, false); len(errs) > 0 {
 			for ui, e := range errs {
 				mita.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 			}

@@ -19,7 +19,7 @@ func Orders(modifiedAfter int64) error {
 		return oa.EndWithError(err)
 	}
 
-	vrOrders, err := vangogh_local_data.NewReader(vangogh_local_data.Orders)
+	vrOrders, err := vangogh_local_data.NewProductReader(vangogh_local_data.Orders)
 	if err != nil {
 		return oa.EndWithError(err)
 	}

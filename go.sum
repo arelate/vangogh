@@ -4,6 +4,8 @@ github.com/arelate/southern_light v0.1.36 h1:LArePEjBIUeXFDfs0w4wO9i9KwM7zQg1Uzl
 github.com/arelate/southern_light v0.1.36/go.mod h1:IR7j2+TrHdoNfZrTNeXOvL3UYsotcNED3aOAEpm7VCY=
 github.com/arelate/vangogh_local_data v0.4.11 h1:btzJ7yTO+T/Rc4A+Q9nnPdaLeah/Cij2YDBQJVZa/4c=
 github.com/arelate/vangogh_local_data v0.4.11/go.mod h1:0RtAxMJId3AlZ28mTRjcBZS40c++kEcUq/gZuyGPz4c=
+github.com/arelate/vangogh_local_data v0.4.12 h1:PBl+pJxFcowWBCf8TKKU5Oe/gXf6dRi1SFjYA6kbiHg=
+github.com/arelate/vangogh_local_data v0.4.12/go.mod h1:0RtAxMJId3AlZ28mTRjcBZS40c++kEcUq/gZuyGPz4c=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/clo v1.0.4 h1:LKvXktyG+EeemzjnSp0DYIAEbY2/rvFcuHtjjwJk280=
@@ -12,6 +14,8 @@ github.com/boggydigital/coost v0.3.9 h1:lMfR5PyexBDR4xDOQp0zWZWUk/Dqlrx7gw7i7Xds
 github.com/boggydigital/coost v0.3.9/go.mod h1:w7ChGaah1DKsBIXb9ANdILg2pe2Jp7JkNpnK2R6rBec=
 github.com/boggydigital/dolo v0.2.13 h1:hR45YlPPT59ilnWGqAnxkoiBslSMbvHxBUv6kvXutH4=
 github.com/boggydigital/dolo v0.2.13/go.mod h1:xOzQ4WPcyETrETGpuHRQRtXTFu8kkdXKQCcddbhU/tQ=
+github.com/boggydigital/dolo v0.2.14 h1:ppfUnrzwvLjF0xoEl1q0Rfwk0X+9oNStBB7NeGV/Vuw=
+github.com/boggydigital/dolo v0.2.14/go.mod h1:xOzQ4WPcyETrETGpuHRQRtXTFu8kkdXKQCcddbhU/tQ=
 github.com/boggydigital/issa v0.1.10 h1:zHSRJHkOz3DwVvp4/YL06qq/VHXexL7qrn4m48hRf/o=
 github.com/boggydigital/issa v0.1.10/go.mod h1:Rq+f8yeTlM/3ov4MCjmxWNL90n47h5CkwP6/628McKU=
 github.com/boggydigital/kvas v0.4.6 h1:2KHMUX3iK7uZz6oOpekCaKBakx/8SYbCav/8l0oJ6bk=
@@ -36,6 +40,8 @@ github.com/boggydigital/yt_urls v0.1.40 h1:1bLmk8bdfE/W2VcljuHS1WRSrmQZbb+LKZptE
 github.com/boggydigital/yt_urls v0.1.40/go.mod h1:n6l37tlAOu/S1u3UDGGj0wpFLxq5PPtlAZQsrmpAcKM=
 golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 h1:hNQpMuAJe5CtcUqCXaWga3FHu+kQvCqcsoVaQgSV60o=
 golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=
+golang.org/x/exp v0.0.0-20240119083558-1b970713d09a h1:Q8/wZp0KX97QFTc2ywcOE0YRjZPVIx+MXInMzdvQqcA=
+golang.org/x/exp v0.0.0-20240119083558-1b970713d09a/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=
 golang.org/x/image v0.15.0 h1:kOELfmgrmJlw4Cdb7g/QGuB3CvDrXbqEIww/pNtNBm8=
 golang.org/x/image v0.15.0/go.mod h1:HUYqC05R2ZcZ3ejNQsIHQDQiwWM4JBqmm6MKANTp4LE=
 golang.org/x/net v0.20.0 h1:aCL9BSgETF1k+blQaYUBx9hJ9LOGP3gAVemcZlf1Kpo=
