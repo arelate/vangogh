@@ -145,8 +145,13 @@ func validateManualUrl(
 		return mua.EndWithError(err)
 	}
 	if !vangogh_local_data.IsPathSupportingValidation(absLocalFile) {
-		mua.EndWithResult(ErrValidationNotSupported.Error())
-		return ErrValidationNotSupported
+		if _, err := os.Stat(absLocalFile); err == nil {
+			mua.EndWithResult(ErrValidationNotSupported.Error())
+			return ErrValidationNotSupported
+		} else {
+			mua.EndWithResult(ErrMissingDownload.Error())
+			return ErrMissingDownload
+		}
 	}
 
 	if _, err := os.Stat(absLocalFile); os.IsNotExist(err) {
