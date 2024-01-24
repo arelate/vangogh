@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/nod"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 )
@@ -127,7 +128,7 @@ func validateManualUrl(
 		return err
 	}
 
-	mua := nod.NewProgress(" %s...", dl.String())
+	mua := nod.NewProgress(" %s:", dl.String())
 	defer mua.End()
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
@@ -187,22 +188,25 @@ func validateManualUrl(
 		return mua.EndWithError(err)
 	}
 
-	mua.Total(uint64(stat.Size()))
+	_, filename := filepath.Split(localFile)
+	vlfa := nod.NewProgress(" - %s", filename)
+
+	vlfa.Total(uint64(stat.Size()))
 	if err != nil {
-		return mua.EndWithError(err)
+		return vlfa.EndWithError(err)
 	}
 
-	if err := dolo.CopyWithProgress(h, sourceFile, mua); err != nil {
+	if err := dolo.CopyWithProgress(h, sourceFile, vlfa); err != nil {
 		return mua.EndWithError(err)
 	}
 
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
 
 	if chkData.MD5 != sourceFileMD5 {
-		mua.EndWithResult("error")
+		vlfa.EndWithResult("error")
 		return ErrValidationFailed
 	} else {
-		mua.EndWithResult("valid")
+		vlfa.EndWithResult("valid")
 	}
 
 	return nil
