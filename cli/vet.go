@@ -21,7 +21,6 @@ const (
 	VetMissingChecksums             = "missing-checksums"
 	VetStaleDehydrations            = "stale-dehydrations"
 	VetOldLogs                      = "old-logs"
-	VetOldBackups                   = "old-backups"
 	VetWishlistedOwned              = "wishlisted-owned"
 )
 
@@ -38,7 +37,6 @@ type vetOptions struct {
 	staleDehydrations           bool
 	missingChecksums            bool
 	oldLogs                     bool
-	oldBackups                  bool
 	wishlistedOwned             bool
 }
 
@@ -57,7 +55,6 @@ func initVetOptions(u *url.URL) *vetOptions {
 		missingChecksums:            vangogh_local_data.FlagFromUrl(u, VetMissingChecksums),
 		staleDehydrations:           vangogh_local_data.FlagFromUrl(u, VetStaleDehydrations),
 		oldLogs:                     vangogh_local_data.FlagFromUrl(u, VetOldLogs),
-		oldBackups:                  vangogh_local_data.FlagFromUrl(u, VetOldBackups),
 		wishlistedOwned:             vangogh_local_data.FlagFromUrl(u, VetWishlistedOwned),
 	}
 
@@ -74,7 +71,6 @@ func initVetOptions(u *url.URL) *vetOptions {
 		vo.missingChecksums = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetMissingChecksums))
 		vo.staleDehydrations = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
 		vo.oldLogs = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOldLogs))
-		vo.oldBackups = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOldBackups))
 		vo.wishlistedOwned = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetWishlistedOwned))
 	}
 
@@ -175,17 +171,6 @@ func Vet(
 			return err
 		}
 		if err := vets.OldFiles(absLogsDir, "logs", fix); err != nil {
-			return sda.EndWithError(err)
-		}
-	}
-
-	if vetOpts.oldBackups {
-		abp, err := pasu.GetAbsDir(vangogh_local_data.Backups)
-		if err != nil {
-			return sda.EndWithError(err)
-		}
-
-		if err := vets.OldFiles(abp, "backups", fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}

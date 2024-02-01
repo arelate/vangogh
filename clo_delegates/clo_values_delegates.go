@@ -116,7 +116,6 @@ func vetOptions() []string {
 		cli.VetMissingChecksums,
 		cli.VetStaleDehydrations,
 		cli.VetOldLogs,
-		cli.VetOldBackups,
 		cli.VetWishlistedOwned,
 	})
 }

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/arelate/vangogh/cli/vets"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/packer"
@@ -32,6 +33,10 @@ func Backup() error {
 	}
 
 	ba.EndWithResult("done")
+
+	if err := vets.OldFiles(abp, "backups", true); err != nil {
+		return ba.EndWithError(err)
+	}
 
 	return nil
 }
