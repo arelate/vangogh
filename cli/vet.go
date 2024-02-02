@@ -4,7 +4,6 @@ import (
 	"github.com/arelate/vangogh/cli/vets"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pasu"
 	"net/url"
 )
 
@@ -166,11 +165,7 @@ func Vet(
 	}
 
 	if vetOpts.oldLogs {
-		absLogsDir, err := pasu.GetAbsDir(vangogh_local_data.Logs)
-		if err != nil {
-			return err
-		}
-		if err := vets.OldFiles(absLogsDir, "logs", fix); err != nil {
+		if err := vets.CleanupOldLogs(fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}

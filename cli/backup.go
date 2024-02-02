@@ -1,10 +1,9 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh/cli/vets"
 	"github.com/arelate/vangogh_local_data"
+	"github.com/boggydigital/hogo"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/packer"
 	"github.com/boggydigital/pasu"
 	"net/url"
 )
@@ -28,15 +27,20 @@ func Backup() error {
 		return ba.EndWithError(err)
 	}
 
-	if err := packer.Pack(amp, abp, ba); err != nil {
+	if err := hogo.Compress(amp, abp, ba); err != nil {
 		return ba.EndWithError(err)
 	}
 
 	ba.EndWithResult("done")
 
-	if err := vets.OldFiles(abp, "backups", true); err != nil {
-		return ba.EndWithError(err)
+	ca := nod.NewProgress("cleaning up old backups...")
+	defer ca.End()
+
+	if err := hogo.Cleanup(abp, true, ca); err != nil {
+		return ca.EndWithError(err)
 	}
+
+	ca.EndWithResult("done")
 
 	return nil
 }
