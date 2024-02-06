@@ -11,7 +11,7 @@ require (
 	github.com/boggydigital/dolo v0.2.14
 	github.com/boggydigital/hogo v0.1.0
 	github.com/boggydigital/issa v0.1.10
-	github.com/boggydigital/kvas v0.4.6
+	github.com/boggydigital/kvas v0.4.7
 	github.com/boggydigital/kvas_dolo v0.1.6
 	github.com/boggydigital/middleware v0.1.11
 	github.com/boggydigital/nod v0.1.21
