@@ -1,32 +1,29 @@
 package rest
 
 import (
-	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
 	"net/http"
 )
 
 var (
-	GetOnly   = middleware.GetMethodOnly
-	PatchOnly = middleware.PatchMethodOnly
-	Log       = nod.RequestLog
+	Log = nod.RequestLog
 )
 
 func HandleFuncs() {
 	patternHandlers := map[string]http.Handler{
-		"/atom":      GetOnly(Log(http.HandlerFunc(GetAtom))),
-		"/data":      IfDataModifiedSince(GetOnly(Log(http.HandlerFunc(GetData)))),
-		"/digest":    IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetDigest)))),
-		"/downloads": IfDataModifiedSince(GetOnly(Log(http.HandlerFunc(GetDownloads)))),
-		"/has_data":  IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetHasData)))),
-		"/has_redux": IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetHasRedux)))),
-		"/health":    GetOnly(Log(http.HandlerFunc(GetHealth))),
-		"/local_tag": PatchOnly(Log(http.HandlerFunc(PatchLocalTag))),
-		"/redux":     IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetRedux)))),
-		"/search":    IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(Search)))),
-		"/tag":       PatchOnly(Log(http.HandlerFunc(PatchTag))),
-		"/titles":    IfReduxModifiedSince(GetOnly(Log(http.HandlerFunc(GetTitles)))),
-		"/wishlist":  Log(http.HandlerFunc(RouteWishlist)),
+		"GET /atom":        Log(http.HandlerFunc(GetAtom)),
+		"GET /data":        IfDataModifiedSince(Log(http.HandlerFunc(GetData))),
+		"GET /digest":      IfReduxModifiedSince(Log(http.HandlerFunc(GetDigest))),
+		"GET /downloads":   IfDataModifiedSince(Log(http.HandlerFunc(GetDownloads))),
+		"GET /has_data":    IfReduxModifiedSince(Log(http.HandlerFunc(GetHasData))),
+		"GET /has_redux":   IfReduxModifiedSince(Log(http.HandlerFunc(GetHasRedux))),
+		"GET /health":      Log(http.HandlerFunc(GetHealth)),
+		"PATCH /local_tag": Log(http.HandlerFunc(PatchLocalTag)),
+		"GET /redux":       IfReduxModifiedSince(Log(http.HandlerFunc(GetRedux))),
+		"GET /search":      IfReduxModifiedSince(Log(http.HandlerFunc(Search))),
+		"PATCH /tag":       Log(http.HandlerFunc(PatchTag)),
+		"GET /titles":      IfReduxModifiedSince(Log(http.HandlerFunc(GetTitles))),
+		"/wishlist":        Log(http.HandlerFunc(RouteWishlist)),
 	}
 
 	for p, h := range patternHandlers {
