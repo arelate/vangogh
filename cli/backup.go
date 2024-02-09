@@ -27,7 +27,7 @@ func Backup() error {
 		return ba.EndWithError(err)
 	}
 
-	if err := hogo.Compress(amp, abp, ba); err != nil {
+	if err := hogo.Compress(amp, abp); err != nil {
 		return ba.EndWithError(err)
 	}
 

@@ -12,6 +12,8 @@ github.com/boggydigital/dolo v0.2.14 h1:ppfUnrzwvLjF0xoEl1q0Rfwk0X+9oNStBB7NeGV/
 github.com/boggydigital/dolo v0.2.14/go.mod h1:xOzQ4WPcyETrETGpuHRQRtXTFu8kkdXKQCcddbhU/tQ=
 github.com/boggydigital/hogo v0.1.0 h1:YZEayOEog5Tb1v1zmwn+UgePIBbdBF0qeZ2KKwVxgz4=
 github.com/boggydigital/hogo v0.1.0/go.mod h1:JTwVH0Xzn+OSMOnzFW++dJGAf9W3bhkw6MuYrCD3tyg=
+github.com/boggydigital/hogo v0.1.1 h1:boNmlFueV2MJQBgyXqjsWkMiDpTGn/1kXvbxi7L6NU0=
+github.com/boggydigital/hogo v0.1.1/go.mod h1:2ZnDqvsMS2LxLDZnfbnq1m8/MS2Ig1rj4seUcnF3qz8=
 github.com/boggydigital/issa v0.1.10 h1:zHSRJHkOz3DwVvp4/YL06qq/VHXexL7qrn4m48hRf/o=
 github.com/boggydigital/issa v0.1.10/go.mod h1:Rq+f8yeTlM/3ov4MCjmxWNL90n47h5CkwP6/628McKU=
 github.com/boggydigital/kvas v0.4.7 h1:igiP0CqrPkAkL/lq80Oex2gvUtWd+OFibdgvPnazFIo=
@@ -22,6 +24,8 @@ github.com/boggydigital/match_node v0.1.16 h1:oE7Hlehb1xuFnB3k7kfZPjaOV3c+j0g/O7
 github.com/boggydigital/match_node v0.1.16/go.mod h1:dAlD1Ktt/eUSkGzvqoxDUDTmAKZO6V7aWH5toocaeU4=
 github.com/boggydigital/middleware v0.1.15 h1:cMxPMz8o5BVJ/kLm1jTUU0Fe4Cp8HmBR22bwZNIoWEY=
 github.com/boggydigital/middleware v0.1.15/go.mod h1:KUe0GXODjXyAcX7ow2o5lEz4+86dhG7ChTX5ekjqGro=
+github.com/boggydigital/middleware v0.1.16 h1:ajmnG2A2gCCkVAj85GrC7Pokp+KtB0rG9caOfxnGyUs=
+github.com/boggydigital/middleware v0.1.16/go.mod h1:KUe0GXODjXyAcX7ow2o5lEz4+86dhG7ChTX5ekjqGro=
 github.com/boggydigital/nod v0.1.21 h1:pQbrgswCuU5dr3IWS1Z902PJAm5BebSLG+Q3aG7KJ+4=
 github.com/boggydigital/nod v0.1.21/go.mod h1:bYucIZ3rLHBZKf/3+T+eTSxuijuja7Y6OgU2P6o2/vo=
 github.com/boggydigital/pasu v0.1.12 h1:RoPaV+1n2Rjw110yEHJe2wR0xYdRfJ4fJOGtBkPCLZc=
