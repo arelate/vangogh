@@ -84,49 +84,45 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 
 			vfa := nod.NewProgress(" %s", vp.VideoDetails.Title)
 
-			vidUrls := vp.Formats()
+			vidUrl := vp.BestFormat()
 
-			if len(vidUrls) == 0 {
+			if vidUrl == nil {
 				if err := rdx.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, "missing"); err != nil {
 					return vfa.EndWithError(err)
 				}
 			}
 
-			for _, vidUrl := range vidUrls {
-
-				if vidUrl.Url == "" {
-					if err := rdx.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, "missing"); err != nil {
-						return vfa.EndWithError(err)
-					}
-					continue
-				}
-
-				dir, err := vangogh_local_data.AbsVideoDirByVideoId(videoId)
-				if err != nil {
+			if vidUrl.Url == "" {
+				if err := rdx.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, "missing"); err != nil {
 					return vfa.EndWithError(err)
 				}
-
-				u, err := url.Parse(vidUrl.Url)
-				if err != nil {
-					return vfa.EndWithError(err)
-				}
-
-				//get-videos is not using dolo.GetSetMany unlike get-images, and is downloading
-				//videos sequentially for two main reasons:
-				//1) each video has a list of bitrate-sorted URLs, and we're attempting to download "the best" quality
-				//moving to the next available on failure
-				//2) currently dolo.GetSetMany doesn't support nod progress reporting on each individual concurrent
-				//download (ok, well, StdOutPresenter doesn't, nod likely does) and for video files this would mean
-				//long pauses as we download individual files
-				if err = dl.Download(u, vfa, dir, videoId+yt_urls.DefaultVideoExt); err != nil {
-					vfa.Error(err)
-					continue
-				}
-
-				//yt_urls.StreamingUrls returns bitrate-sorted video urls,
-				//so we can stop, if we've successfully got the best available one
-				break
+				continue
 			}
+
+			dir, err := vangogh_local_data.AbsVideoDirByVideoId(videoId)
+			if err != nil {
+				return vfa.EndWithError(err)
+			}
+
+			u, err := url.Parse(vidUrl.Url)
+			if err != nil {
+				return vfa.EndWithError(err)
+			}
+
+			//get-videos is not using dolo.GetSetMany unlike get-images, and is downloading
+			//videos sequentially for two main reasons:
+			//1) each video has a list of bitrate-sorted URLs, and we're attempting to download "the best" quality
+			//moving to the next available on failure
+			//2) currently dolo.GetSetMany doesn't support nod progress reporting on each individual concurrent
+			//download (ok, well, StdOutPresenter doesn't, nod likely does) and for video files this would mean
+			//long pauses as we download individual files
+			if err = dl.Download(u, vfa, dir, videoId+yt_urls.DefaultVideoExt); err != nil {
+				vfa.Error(err)
+				continue
+			}
+
+			//yt_urls.StreamingUrls returns bitrate-sorted video urls,
+			//so we can stop, if we've successfully got the best available one
 		}
 
 		va.End()
