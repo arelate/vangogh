@@ -96,9 +96,6 @@ owned
     id^&
     slug&
 
-post-completion
-    webhook-url*^$
-
 reduce
     property&={redux-properties}
     since-hours-ago
@@ -129,7 +126,6 @@ sync
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    webhook-url$
     purchases-only
     gaugin-url$
     debug$

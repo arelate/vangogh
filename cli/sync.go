@@ -243,12 +243,6 @@ func Sync(
 		}
 	}
 
-	// posting intermediate completion for the updated data
-	// while downloads, video downloads and validation are still processing
-	if err := PostCompletion(webhookUrl); err != nil {
-		return sa.EndWithError(err)
-	}
-
 	// get downloads updates
 	if syncOpts.downloadsUpdates {
 		if err := UpdateDownloads(
@@ -297,11 +291,6 @@ func Sync(
 	if err := syncEventsRdx.BatchReplaceValues(
 		vangogh_local_data.SyncEventsProperty,
 		syncEvents); err != nil {
-		return sa.EndWithError(err)
-	}
-
-	// post a final completion
-	if err := PostCompletion(webhookUrl); err != nil {
 		return sa.EndWithError(err)
 	}
 
