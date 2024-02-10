@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/hogo"
+	"github.com/boggydigital/konpo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pasu"
 	"net/url"
@@ -27,7 +27,7 @@ func Backup() error {
 		return ba.EndWithError(err)
 	}
 
-	if err := hogo.Compress(amp, abp); err != nil {
+	if err := konpo.Compress(amp, abp); err != nil {
 		return ba.EndWithError(err)
 	}
 
@@ -36,7 +36,7 @@ func Backup() error {
 	ca := nod.NewProgress("cleaning up old backups...")
 	defer ca.End()
 
-	if err := hogo.Cleanup(abp, true, ca); err != nil {
+	if err := konpo.Cleanup(abp, true, ca); err != nil {
 		return ca.EndWithError(err)
 	}
 

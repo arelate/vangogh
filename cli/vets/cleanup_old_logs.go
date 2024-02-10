@@ -2,7 +2,7 @@ package vets
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/hogo"
+	"github.com/boggydigital/konpo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pasu"
 )
@@ -16,7 +16,7 @@ func CleanupOldLogs(fix bool) error {
 		return err
 	}
 
-	if err := hogo.Cleanup(absLogsDir, fix, cla); err != nil {
+	if err := konpo.Cleanup(absLogsDir, fix, cla); err != nil {
 		return cla.EndWithError(err)
 	}
 
