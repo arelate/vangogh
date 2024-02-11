@@ -76,7 +76,6 @@ func SyncHandler(u *url.URL) error {
 
 	purchasesOnly := vangogh_local_data.FlagFromUrl(u, "purchases-only")
 	gauginUrl := vangogh_local_data.ValueFromUrl(u, "gaugin-url")
-	wu := vangogh_local_data.ValueFromUrl(u, "webhook-url")
 	debug := vangogh_local_data.FlagFromUrl(u, "debug")
 
 	return Sync(
@@ -87,7 +86,6 @@ func SyncHandler(u *url.URL) error {
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
 		gauginUrl,
-		wu,
 		debug)
 }
 
@@ -99,7 +97,6 @@ func Sync(
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
 	gauginUrl string,
-	webhookUrl string,
 	debug bool) error {
 
 	if debug {
