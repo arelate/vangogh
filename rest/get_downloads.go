@@ -44,8 +44,9 @@ func GetDownloads(w http.ResponseWriter, r *http.Request) {
 
 	os := vangogh_local_data.OperatingSystemsFromUrl(r.URL)
 	lang := vangogh_local_data.ValuesFromUrl(r.URL, "language-code")
+	excludePatches := vangogh_local_data.FlagFromUrl(r.URL, "exclude-patches")
 
-	dl = dl.Only(os, []vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType}, lang)
+	dl = dl.Only(os, []vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType}, lang, excludePatches)
 
 	if err := encode(dl, w, r); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

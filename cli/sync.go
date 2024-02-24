@@ -85,6 +85,7 @@ func SyncHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
 		gauginUrl,
 		debug)
 }
@@ -96,6 +97,7 @@ func Sync(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	gauginUrl string,
 	debug bool) error {
 
@@ -246,6 +248,7 @@ func Sync(
 			operatingSystems,
 			downloadTypes,
 			langCodes,
+			excludePatches,
 			since,
 			false); err != nil {
 			return sa.EndWithError(err)
@@ -255,7 +258,8 @@ func Sync(
 			since,
 			operatingSystems,
 			downloadTypes,
-			langCodes); err != nil {
+			langCodes,
+			excludePatches); err != nil {
 			return sa.EndWithError(err)
 		}
 

@@ -18,6 +18,7 @@ func SizeHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
 		vangogh_local_data.FlagFromUrl(u, "missing"),
 		vangogh_local_data.FlagFromUrl(u, "all"))
 }
@@ -27,6 +28,7 @@ func Size(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	missing bool,
 	all bool) error {
 
@@ -43,7 +45,12 @@ func Size(
 	}
 
 	if missing {
-		missingIds, err := itemizations.MissingLocalDownloads(rdx, operatingSystems, downloadTypes, langCodes)
+		missingIds, err := itemizations.MissingLocalDownloads(
+			rdx,
+			operatingSystems,
+			downloadTypes,
+			langCodes,
+			excludePatches)
 		if err != nil {
 			return sa.EndWithError(err)
 		}
@@ -83,6 +90,7 @@ func Size(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
+		excludePatches,
 		sd,
 		sa); err != nil {
 		return err

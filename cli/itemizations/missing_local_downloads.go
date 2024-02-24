@@ -12,7 +12,8 @@ func MissingLocalDownloads(
 	rdx kvas.ReadableRedux,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
-	langCodes []string) (map[string]bool, error) {
+	langCodes []string,
+	excludePatches bool) (map[string]bool, error) {
 	//enumerating missing local downloads is a bit more complicated than images and videos
 	//due to the fact that actual filenames are resolved when downloads are processed, so we can't compare
 	//manualUrls and available files, we need to resolve manualUrls to actual local filenames first.
@@ -55,6 +56,7 @@ func MissingLocalDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
+		excludePatches,
 		mdd,
 		mlda); err != nil {
 		return mdd.missingIds, mlda.EndWithError(err)

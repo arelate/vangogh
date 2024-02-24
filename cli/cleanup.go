@@ -26,6 +26,7 @@ func CleanupHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
 		vangogh_local_data.FlagFromUrl(u, "all"),
 		vangogh_local_data.FlagFromUrl(u, "test"),
 		vangogh_local_data.FlagFromUrl(u, "delete"))
@@ -36,6 +37,7 @@ func Cleanup(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	all, test, delete bool) error {
 
 	if test && delete {
@@ -77,6 +79,7 @@ func Cleanup(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
+		excludePatches,
 		cd,
 		ca); err != nil {
 		return err

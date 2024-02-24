@@ -35,6 +35,7 @@ func ValidateHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
 		vangogh_local_data.FlagFromUrl(u, "all"),
 		vangogh_local_data.FlagFromUrl(u, "skip-valid"))
 }
@@ -44,6 +45,7 @@ func Validate(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	all bool,
 	skipValid bool) error {
 
@@ -84,6 +86,7 @@ func Validate(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
+		excludePatches,
 		vd,
 		va); err != nil {
 		return err
@@ -311,7 +314,8 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 func validateUpdated(since int64,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
-	langCodes []string) error {
+	langCodes []string,
+	excludePatches bool) error {
 
 	vrAccountProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountProducts)
 	if err != nil {
@@ -323,5 +327,5 @@ func validateUpdated(since int64,
 		idSet[id] = true
 	}
 
-	return Validate(idSet, operatingSystems, downloadTypes, langCodes, false, false)
+	return Validate(idSet, operatingSystems, downloadTypes, langCodes, excludePatches, false, false)
 }

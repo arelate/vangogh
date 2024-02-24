@@ -18,6 +18,7 @@ func UpdateDownloadsHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
 		since,
 		vangogh_local_data.FlagFromUrl(u, "Updates-only"))
 }
@@ -26,6 +27,7 @@ func UpdateDownloads(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	since int64,
 	updatesOnly bool) error {
 
@@ -99,6 +101,7 @@ func UpdateDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
+		excludePatches,
 		false,
 		true)
 }

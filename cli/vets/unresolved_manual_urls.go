@@ -11,6 +11,7 @@ func UnresolvedManualUrls(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	fix bool) error {
 
 	cumu := nod.NewProgress("checking unresolved manual-urls...")
@@ -49,7 +50,7 @@ func UnresolvedManualUrls(
 			continue
 		}
 
-		downloadsList = downloadsList.Only(operatingSystems, downloadTypes, langCodes)
+		downloadsList = downloadsList.Only(operatingSystems, downloadTypes, langCodes, excludePatches)
 
 		for _, dl := range downloadsList {
 			if _, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); !ok {

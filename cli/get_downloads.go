@@ -29,6 +29,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
 		vangogh_local_data.FlagFromUrl(u, "missing"),
 		vangogh_local_data.FlagFromUrl(u, "force"))
 }
@@ -38,6 +39,7 @@ func GetDownloads(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	missing,
 	force bool) error {
 
@@ -73,7 +75,12 @@ func GetDownloads(
 	}
 
 	if missing {
-		missingIds, err := itemizations.MissingLocalDownloads(rdx, operatingSystems, downloadTypes, langCodes)
+		missingIds, err := itemizations.MissingLocalDownloads(
+			rdx,
+			operatingSystems,
+			downloadTypes,
+			langCodes,
+			excludePatches)
 		if err != nil {
 			return gda.EndWithError(err)
 		}
@@ -99,6 +106,7 @@ func GetDownloads(
 		operatingSystems,
 		downloadTypes,
 		langCodes,
+		excludePatches,
 		gdd,
 		gda); err != nil {
 		return gda.EndWithError(err)

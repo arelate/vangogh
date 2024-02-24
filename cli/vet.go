@@ -85,6 +85,7 @@ func VetHandler(u *url.URL) error {
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
+		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
 		vangogh_local_data.FlagFromUrl(u, "fix"))
 }
 
@@ -93,6 +94,7 @@ func Vet(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	excludePatches bool,
 	fix bool) error {
 
 	sda := nod.Begin("vetting local data...")
@@ -141,7 +143,7 @@ func Vet(
 	}
 
 	if vetOpts.unresolvedManualUrls {
-		if err := vets.UnresolvedManualUrls(operatingSystems, downloadTypes, langCodes, fix); err != nil {
+		if err := vets.UnresolvedManualUrls(operatingSystems, downloadTypes, langCodes, excludePatches, fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}
