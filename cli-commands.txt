@@ -16,7 +16,7 @@ cleanup
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    exclude-patches
+    exclude-patches$
     all
     test
     delete
@@ -45,7 +45,7 @@ get-downloads
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    exclude-patches
+    exclude-patches$
     missing
     force
 
@@ -116,7 +116,7 @@ size
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    exclude-patches
+    exclude-patches$
     missing
     all
 
@@ -129,7 +129,7 @@ sync
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    exclude-patches
+    exclude-patches$
     purchases-only
     gaugin-url$
     debug$
@@ -145,7 +145,7 @@ update-downloads
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    exclude-patches
+    exclude-patches$
     since-hours-ago
     updates-only
 
@@ -155,7 +155,7 @@ validate
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    exclude-patches
+    exclude-patches$
     all
     skip-valid
 
@@ -165,7 +165,7 @@ vet
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
-    exclude-patches
+    exclude-patches$
     fix
     {vet-options^&}
 
