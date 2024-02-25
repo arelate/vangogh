@@ -17,9 +17,10 @@ services:
     container_name: vangogh
     image: ghcr.io/arelate/vangogh:latest
     environment:
-    # Operating system and language code
+    # Download lists filters
     # - VG_OPERATING-SYSTEM=Windows,macOS
     # - VG_LANGUAGE-CODE=en,fr
+    # - VG_EXCLUDE-PATCHES=true
     # gaugin URL for Atom feed
     # - VG_GAUGIN-URL=https://GAUGIN-ADDRESS
     # prerender webhook URL
