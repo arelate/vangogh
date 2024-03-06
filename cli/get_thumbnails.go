@@ -98,7 +98,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 				//2) currently dolo.GetSetMany doesn't support nod progress reporting on each individual concurrent
 				//download (ok, well, StdOutPresenter doesn't, nod likely does) and for thumbnails this would mean
 				//long pauses as we download individual files
-				if err = dl.Download(thumbnailUrl, vta, dir, videoId+yt_urls.DefaultThumbnailExt); err != nil {
+				if err = dl.Download(thumbnailUrl, force, vta, dir, videoId+yt_urls.DefaultThumbnailExt); err != nil {
 					vta.Error(err)
 					continue
 				}

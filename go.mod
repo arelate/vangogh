@@ -8,7 +8,7 @@ require (
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/clo v1.0.4
 	github.com/boggydigital/coost v0.3.9
-	github.com/boggydigital/dolo v0.2.14
+	github.com/boggydigital/dolo v0.2.15
 	github.com/boggydigital/issa v0.1.10
 	github.com/boggydigital/konpo v0.1.2
 	github.com/boggydigital/kvas v0.4.8

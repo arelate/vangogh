@@ -116,7 +116,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 			//2) currently dolo.GetSetMany doesn't support nod progress reporting on each individual concurrent
 			//download (ok, well, StdOutPresenter doesn't, nod likely does) and for video files this would mean
 			//long pauses as we download individual files
-			if err = dl.Download(u, vfa, dir, videoId+yt_urls.DefaultVideoExt); err != nil {
+			if err = dl.Download(u, force, vfa, dir, videoId+yt_urls.DefaultVideoExt); err != nil {
 				vfa.Error(err)
 				continue
 			}

@@ -254,7 +254,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			dca := nod.NewProgress(" - %s", checksumFilename)
 			originalPath := resolvedUrl.Path
 			resolvedUrl.Path = remoteChecksumPath
-			if err := dlClient.Download(resolvedUrl, dca, checksumDir, checksumFilename); err != nil {
+			if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, checksumDir, checksumFilename); err != nil {
 				//don't interrupt normal download due to checksum download error,
 				//so don't return this error, just log it
 				dca.Error(err)
@@ -268,7 +268,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//5
 	lfa := nod.NewProgress(" - %s", filename)
 	defer lfa.End()
-	if err := dlClient.Download(resolvedUrl, lfa, absDir, filename); err != nil {
+	if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, filename); err != nil {
 		return dmua.EndWithError(err)
 	}
 

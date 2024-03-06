@@ -12,6 +12,8 @@ github.com/boggydigital/coost v0.3.9 h1:lMfR5PyexBDR4xDOQp0zWZWUk/Dqlrx7gw7i7Xds
 github.com/boggydigital/coost v0.3.9/go.mod h1:w7ChGaah1DKsBIXb9ANdILg2pe2Jp7JkNpnK2R6rBec=
 github.com/boggydigital/dolo v0.2.14 h1:ppfUnrzwvLjF0xoEl1q0Rfwk0X+9oNStBB7NeGV/Vuw=
 github.com/boggydigital/dolo v0.2.14/go.mod h1:xOzQ4WPcyETrETGpuHRQRtXTFu8kkdXKQCcddbhU/tQ=
+github.com/boggydigital/dolo v0.2.15 h1:7wMOgmRF7/jrYdZu+iruhz2m8a61WpZKM3UwXqL3bKQ=
+github.com/boggydigital/dolo v0.2.15/go.mod h1:FUhJVj468bLhQV45QxsHCWbMHuZvPUkg15SSOlbc0qk=
 github.com/boggydigital/issa v0.1.10 h1:zHSRJHkOz3DwVvp4/YL06qq/VHXexL7qrn4m48hRf/o=
 github.com/boggydigital/issa v0.1.10/go.mod h1:Rq+f8yeTlM/3ov4MCjmxWNL90n47h5CkwP6/628McKU=
 github.com/boggydigital/konpo v0.1.2 h1:tzt1GYSC8d3ciZ19Bj1OjAm73IH1w7I35DDgCmgAbH4=
