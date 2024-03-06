@@ -191,7 +191,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 				lfa := nod.Begin(" - %s", localFilename)
 				lfa.EndWithResult("already exists")
 				return nil
-			} else {
+			} else if !os.IsNotExist(err) {
 				return dmua.EndWithError(err)
 			}
 		}
