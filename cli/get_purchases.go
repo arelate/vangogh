@@ -36,7 +36,7 @@ func GetPurchases(
 		return err
 	}
 
-	if err := Reduce(0, []string{vangogh_local_data.OwnedProperty}, true); err != nil {
+	if err := Reduce(0, nil, false); err != nil {
 		return err
 	}
 
