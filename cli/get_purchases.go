@@ -28,11 +28,15 @@ func GetPurchases(
 	excludePatches bool,
 	force bool) error {
 
-	if err := GetData(nil, nil, vangogh_local_data.AccountPage, -1, false, false); err != nil {
+	if err := GetData(nil, nil, vangogh_local_data.AccountPage, 0, false, false); err != nil {
 		return err
 	}
 
-	if err := GetData(idSet, nil, vangogh_local_data.Details, -1, false, false); err != nil {
+	if err := GetData(idSet, nil, vangogh_local_data.Details, 0, false, false); err != nil {
+		return err
+	}
+
+	if err := Reduce(0, []string{vangogh_local_data.OwnedProperty}, true); err != nil {
 		return err
 	}
 
