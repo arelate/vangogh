@@ -59,8 +59,8 @@ get-items
     id&
     since-hours-ago
 
-get-purchase
-    id&
+get-purchases
+    id^&
     operating-system&$={operating-systems^}
     download-type&$={download-types^}
     language-code&$={language-codes^}
