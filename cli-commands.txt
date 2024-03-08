@@ -65,6 +65,7 @@ get-purchases
     download-type&$={download-types^}
     language-code&$={language-codes^}
     exclude-patches$
+    force
 
 get-summary
 
