@@ -30,7 +30,7 @@ func GetPurchases(
 	force bool) error {
 
 	// required for ownership check
-	if err := GetData(nil, nil, vangogh_local_data.LicenceProducts, 0, false, false); err != nil {
+	if err := GetData(nil, nil, vangogh_local_data.Licences, 0, false, false); err != nil {
 		return err
 	}
 
