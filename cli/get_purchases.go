@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/arelate/vangogh/cli/reductions"
 	"github.com/arelate/vangogh_local_data"
 	"net/url"
 )
@@ -28,6 +29,11 @@ func GetPurchases(
 	excludePatches bool,
 	force bool) error {
 
+	// required for ownership check
+	if err := GetData(nil, nil, vangogh_local_data.LicenceProducts, 0, false, false); err != nil {
+		return err
+	}
+
 	if err := GetData(nil, nil, vangogh_local_data.AccountPage, 0, false, false); err != nil {
 		return err
 	}
@@ -36,7 +42,7 @@ func GetPurchases(
 		return err
 	}
 
-	if err := Reduce(0, []string{vangogh_local_data.OwnedProperty}, false); err != nil {
+	if err := reductions.Owned(); err != nil {
 		return err
 	}
 
