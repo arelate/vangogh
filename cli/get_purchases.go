@@ -42,7 +42,7 @@ func GetPurchases(
 		}
 	}
 
-	if err := Reduce(0, []string{vangogh_local_data.GOGOrderDateProperty}, true); err != nil {
+	if err := reductions.Orders(0); err != nil {
 		return err
 	}
 
