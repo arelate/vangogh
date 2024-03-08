@@ -59,6 +59,13 @@ get-items
     id&
     since-hours-ago
 
+get-purchase
+    id&
+    operating-system&$={operating-systems^}
+    download-type&$={download-types^}
+    language-code&$={language-codes^}
+    exclude-patches$
+
 get-summary
 
 get-thumbnails
@@ -130,7 +137,6 @@ sync
     download-type&$={download-types^}
     language-code&$={language-codes^}
     exclude-patches$
-    purchases-only
     gaugin-url$
     debug$
     {sync-options^&}
