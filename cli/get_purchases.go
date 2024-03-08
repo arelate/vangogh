@@ -29,17 +29,17 @@ func GetPurchases(
 	excludePatches bool,
 	force bool) error {
 
-	// required for ownership check
-	if err := GetData(nil, nil, vangogh_local_data.Licences, 0, false, false); err != nil {
-		return err
+	productTypes := []vangogh_local_data.ProductType{
+		vangogh_local_data.OrderPage, // required for Search > Owned
+		vangogh_local_data.Licences,  // required for ownership check
+		vangogh_local_data.AccountPage,
+		vangogh_local_data.Details,
 	}
 
-	if err := GetData(nil, nil, vangogh_local_data.AccountPage, 0, false, false); err != nil {
-		return err
-	}
-
-	if err := GetData(idSet, nil, vangogh_local_data.Details, 0, false, false); err != nil {
-		return err
+	for _, pt := range productTypes {
+		if err := GetData(idSet, nil, pt, 0, false, false); err != nil {
+			return err
+		}
 	}
 
 	if err := reductions.Owned(); err != nil {
