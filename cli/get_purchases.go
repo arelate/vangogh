@@ -7,12 +7,18 @@ import (
 )
 
 func GetPurchasesHandler(u *url.URL) error {
+	since, err := vangogh_local_data.SinceFromUrl(u)
+	if err != nil {
+		return err
+	}
+
 	idSet, err := vangogh_local_data.IdSetFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return GetPurchases(
+		since,
 		idSet,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
@@ -22,6 +28,7 @@ func GetPurchasesHandler(u *url.URL) error {
 }
 
 func GetPurchases(
+	since int64,
 	idSet map[string]bool,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
@@ -37,12 +44,12 @@ func GetPurchases(
 	}
 
 	for _, pt := range productTypes {
-		if err := GetData(idSet, nil, pt, 0, false, false); err != nil {
+		if err := GetData(idSet, nil, pt, since, false, false); err != nil {
 			return err
 		}
 	}
 
-	if err := reductions.Orders(0); err != nil {
+	if err := reductions.Orders(since); err != nil {
 		return err
 	}
 
