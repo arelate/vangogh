@@ -17,12 +17,12 @@ require (
 	github.com/boggydigital/nod v0.1.21
 	github.com/boggydigital/pasu v0.1.12
 	github.com/boggydigital/wits v0.2.3
-	github.com/boggydigital/yt_urls v0.1.45
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
+	github.com/boggydigital/yt_urls v0.1.46
+	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842
 )
 
 require (
 	github.com/boggydigital/match_node v0.1.16 // indirect
-	golang.org/x/image v0.15.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/image v0.16.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
 )

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
@@ -74,9 +75,20 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 		for _, videoId := range videoIds {
 
 			vp, err := yt_urls.GetVideoPage(http.DefaultClient, videoId)
+
 			if err != nil {
 				va.Error(err)
 				if addErr := rdx.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, err.Error()); addErr != nil {
+					return addErr
+				}
+				continue
+			}
+
+			// handle signatureCipher separately from other errors
+			if vp.SignatureCipher() {
+				scErr := errors.New("signatureCipher")
+				va.Error(err)
+				if addErr := rdx.AddValues(vangogh_local_data.MissingVideoUrlProperty, videoId, scErr.Error()); addErr != nil {
 					return addErr
 				}
 				continue
