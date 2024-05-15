@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/boggydigital/pasu"
+	"github.com/boggydigital/pathways"
 	"net/url"
 	"os"
 	"strconv"
@@ -99,7 +99,7 @@ func Sync(
 	debug bool) error {
 
 	if debug {
-		absLogsDir, err := pasu.GetAbsDir(vangogh_local_data.Logs)
+		absLogsDir, err := pathways.GetAbsDir(vangogh_local_data.Logs)
 		if err != nil {
 			return err
 		}

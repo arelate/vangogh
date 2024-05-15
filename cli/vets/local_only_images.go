@@ -3,7 +3,7 @@ package vets
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pasu"
+	"github.com/boggydigital/pathways"
 	"golang.org/x/exp/maps"
 	"os"
 )
@@ -71,7 +71,7 @@ func LocalOnlyImages(fix bool) error {
 
 	loia.EndWithResult("found %d unexpected images", len(unexpectedImages))
 
-	aip, err := pasu.GetAbsDir(vangogh_local_data.Images)
+	aip, err := pathways.GetAbsDir(vangogh_local_data.Images)
 	if err != nil {
 		return loia.EndWithError(err)
 	}

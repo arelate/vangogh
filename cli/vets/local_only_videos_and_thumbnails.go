@@ -3,7 +3,7 @@ package vets
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pasu"
+	"github.com/boggydigital/pathways"
 	"os"
 )
 
@@ -64,12 +64,12 @@ func LocalOnlyVideosAndThumbnails(fix bool) error {
 		flova := nod.NewProgress(" removing %d local only video(s)...", len(unexpectedVideos))
 		flova.TotalInt(len(unexpectedVideos))
 
-		avp, err := pasu.GetAbsDir(vangogh_local_data.Videos)
+		avp, err := pathways.GetAbsDir(vangogh_local_data.Videos)
 		if err != nil {
 			return flova.EndWithError(err)
 		}
 
-		avtp, err := pasu.GetAbsRelDir(vangogh_local_data.VideoThumbnails)
+		avtp, err := pathways.GetAbsRelDir(vangogh_local_data.VideoThumbnails)
 		if err != nil {
 			return flova.EndWithError(err)
 		}
