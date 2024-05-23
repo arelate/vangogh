@@ -3,7 +3,7 @@ module github.com/arelate/vangogh
 go 1.22.0
 
 require (
-	github.com/arelate/southern_light v0.1.36
+	github.com/arelate/southern_light v0.1.41
 	github.com/arelate/vangogh_local_data v0.4.14
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/backups v0.1.3
@@ -11,7 +11,7 @@ require (
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.15
 	github.com/boggydigital/issa v0.1.10
-	github.com/boggydigital/kvas v0.4.8
+	github.com/boggydigital/kvas v0.4.9
 	github.com/boggydigital/kvas_dolo v0.1.6
 	github.com/boggydigital/middleware v0.1.16
 	github.com/boggydigital/nod v0.1.21

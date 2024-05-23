@@ -1,5 +1,7 @@
 github.com/arelate/southern_light v0.1.36 h1:LArePEjBIUeXFDfs0w4wO9i9KwM7zQg1UzlqeSK2QqA=
 github.com/arelate/southern_light v0.1.36/go.mod h1:IR7j2+TrHdoNfZrTNeXOvL3UYsotcNED3aOAEpm7VCY=
+github.com/arelate/southern_light v0.1.41 h1:ZJgqLGHVloQQN1kgaMO2Qx5VVy3TBQxqxoNxeAp1tOA=
+github.com/arelate/southern_light v0.1.41/go.mod h1:IR7j2+TrHdoNfZrTNeXOvL3UYsotcNED3aOAEpm7VCY=
 github.com/arelate/vangogh_local_data v0.4.14 h1:Xr5+fkvPTjTBcIikmohAW/oev8rmvIAAAcOljfTzF7k=
 github.com/arelate/vangogh_local_data v0.4.14/go.mod h1:3pKylRrfuVsvsn1vMnfm84gfXW89wd29dxQlPAD6ELs=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
@@ -16,6 +18,8 @@ github.com/boggydigital/issa v0.1.10 h1:zHSRJHkOz3DwVvp4/YL06qq/VHXexL7qrn4m48hR
 github.com/boggydigital/issa v0.1.10/go.mod h1:Rq+f8yeTlM/3ov4MCjmxWNL90n47h5CkwP6/628McKU=
 github.com/boggydigital/kvas v0.4.8 h1:I1yEQwpSnt5fgUoYFWzjEYQ+Ee8vIoBtLvo5q4sGLGE=
 github.com/boggydigital/kvas v0.4.8/go.mod h1:oP9td1uUuG0cgNGle/iz2dbdAllJcyLBGgp0GJ7nZCg=
+github.com/boggydigital/kvas v0.4.9 h1:L63tF2sDYACwdDri2J+MvQBMJMXNoWTpXM+GUDS79jg=
+github.com/boggydigital/kvas v0.4.9/go.mod h1:xExdP8dLO5Kh7BG2KV12Ove6UmGPuQUiy2AC4hu+kwA=
 github.com/boggydigital/kvas_dolo v0.1.6 h1:8FWZBzkcV06/eOFLZcEsCYdXHIatooCW7drYKjcEOks=
 github.com/boggydigital/kvas_dolo v0.1.6/go.mod h1:6rtg+zY/yNCE1U3palU/z2SNsHm0toCY67pqfS6US/0=
 github.com/boggydigital/match_node v0.1.16 h1:oE7Hlehb1xuFnB3k7kfZPjaOV3c+j0g/O76+XVoib3E=
