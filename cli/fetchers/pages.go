@@ -21,7 +21,7 @@ func NewIndexSetter(pt vangogh_local_data.ProductType, ids []string) (dolo.Index
 		return nil, err
 	}
 
-	valueSet, err := kvas.ConnectLocal(localDir, kvas.JsonExt)
+	valueSet, err := kvas.NewKeyValues(localDir, kvas.JsonExt)
 	if err != nil {
 		return nil, err
 	}

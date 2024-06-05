@@ -64,7 +64,7 @@ func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
 			return spa.EndWithError(err)
 		}
 
-		kvDetail, err := kvas.ConnectLocal(detailDstUrl, kvas.JsonExt)
+		kvDetail, err := kvas.NewKeyValues(detailDstUrl, kvas.JsonExt)
 		if err != nil {
 			return spa.EndWithError(err)
 		}

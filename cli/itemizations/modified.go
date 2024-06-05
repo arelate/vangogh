@@ -26,7 +26,7 @@ func Modified(
 		return modSet, ma.EndWithError(err)
 	}
 
-	kv, err := kvas.ConnectLocal(destUrl, kvas.JsonExt)
+	kv, err := kvas.NewKeyValues(destUrl, kvas.JsonExt)
 	if err != nil {
 		return modSet, ma.EndWithError(err)
 	}

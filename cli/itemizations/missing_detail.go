@@ -57,12 +57,12 @@ func missingDetail(
 		return missingIdSet, mda.EndWithError(err)
 	}
 
-	kvMain, err := kvas.ConnectLocal(mainDestUrl, kvas.JsonExt)
+	kvMain, err := kvas.NewKeyValues(mainDestUrl, kvas.JsonExt)
 	if err != nil {
 		return missingIdSet, mda.EndWithError(err)
 	}
 
-	kvDetail, err := kvas.ConnectLocal(detailDestUrl, kvas.JsonExt)
+	kvDetail, err := kvas.NewKeyValues(detailDestUrl, kvas.JsonExt)
 	if err != nil {
 		return missingIdSet, mda.EndWithError(err)
 	}
