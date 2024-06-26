@@ -23,6 +23,6 @@ require (
 
 require (
 	github.com/boggydigital/match_node v0.1.16 // indirect
-	golang.org/x/image v0.17.0 // indirect
+	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/net v0.26.0 // indirect
 )
