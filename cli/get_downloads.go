@@ -7,7 +7,7 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"net/http"
@@ -118,7 +118,7 @@ func GetDownloads(
 }
 
 type getDownloadsDelegate struct {
-	rdx         kvas.WriteableRedux
+	rdx         kevlar.WriteableRedux
 	forceUpdate bool
 }
 
@@ -179,7 +179,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//1
 	if !gdd.forceUpdate {
-		if localPath, ok := gdd.rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
+		if localPath, ok := gdd.rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
 			//localFilename would be a relative path for a download - s/slug,
 			//and RelToAbs would convert this to downloads/s/slug
 			addp, err := vangogh_local_data.AbsDownloadDirFromRel(localPath)

@@ -2,11 +2,11 @@ package reductions
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 )
 
-func CheckOwnership(idSet map[string]bool, rdx kvas.ReadableRedux) (map[string]bool, error) {
+func CheckOwnership(idSet map[string]bool, rdx kevlar.ReadableRedux) (map[string]bool, error) {
 
 	ownedSet := make(map[string]bool)
 
@@ -15,22 +15,27 @@ func CheckOwnership(idSet map[string]bool, rdx kvas.ReadableRedux) (map[string]b
 		vangogh_local_data.IncludesGamesProperty,
 		vangogh_local_data.IsIncludedByGamesProperty,
 		vangogh_local_data.OwnedProperty); err != nil {
-		return ownedSet, err
+		return nil, err
 	}
 
 	vrLicenceProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.LicenceProducts)
 	if err != nil {
-		return ownedSet, err
+		return nil, err
 	}
 
 	for id := range idSet {
 
-		if val, ok := rdx.GetFirstVal(vangogh_local_data.OwnedProperty, id); ok && val == "true" {
+		if val, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok && val == "true" {
 			ownedSet[id] = true
 			continue
 		}
 
-		if vrLicenceProducts.Has(id) {
+		has, err := vrLicenceProducts.Has(id)
+		if err != nil {
+			return nil, err
+		}
+
+		if has {
 			ownedSet[id] = true
 			continue
 		}
@@ -40,8 +45,13 @@ func CheckOwnership(idSet map[string]bool, rdx kvas.ReadableRedux) (map[string]b
 		// check if all included games are owned
 		ownAllIncludedGames := len(includesGames) > 0
 		for _, igId := range includesGames {
-			val, ok := rdx.GetFirstVal(vangogh_local_data.OwnedProperty, igId)
-			ownAllIncludedGames = ownAllIncludedGames && (vrLicenceProducts.Has(igId) || (ok && val == "true"))
+			val, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, igId)
+			has, err := vrLicenceProducts.Has(igId)
+			if err != nil {
+				return nil, err
+			}
+
+			ownAllIncludedGames = ownAllIncludedGames && (has || (ok && val == "true"))
 			if !ownAllIncludedGames {
 				break
 			}
@@ -63,12 +73,16 @@ func CheckOwnership(idSet map[string]bool, rdx kvas.ReadableRedux) (map[string]b
 	return ownedSet, nil
 }
 
-func isIncludedByIsOwned(id string, rdx kvas.ReadableRedux, vrLicenceProducts *vangogh_local_data.ProductReader) bool {
+func isIncludedByIsOwned(id string, rdx kevlar.ReadableRedux, vrLicenceProducts *vangogh_local_data.ProductReader) bool {
 	if iibg, ok := rdx.GetAllValues(vangogh_local_data.IsIncludedByGamesProperty, id); !ok {
 		return false
 	} else {
 		for _, aid := range iibg {
-			if vrLicenceProducts.Has(aid) {
+			has, err := vrLicenceProducts.Has(aid)
+			if err != nil {
+				return false
+			}
+			if has {
 				return true
 			}
 			if isIncludedByIsOwned(aid, rdx, vrLicenceProducts) {

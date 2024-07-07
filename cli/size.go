@@ -70,7 +70,11 @@ func Size(
 		if err != nil {
 			return sa.EndWithError(err)
 		}
-		for _, id := range vrDetails.Keys() {
+		keys, err := vrDetails.Keys()
+		if err != nil {
+			return sa.EndWithError(err)
+		}
+		for _, id := range keys {
 			idSet[id] = true
 		}
 	}

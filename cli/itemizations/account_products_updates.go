@@ -14,13 +14,18 @@ func AccountProductsUpdates() (map[string]bool, error) {
 	updatesSet := make(map[string]bool)
 	vrAccountPages, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountPage)
 	if err != nil {
-		return updatesSet, apua.EndWithError(err)
+		return nil, apua.EndWithError(err)
 	}
 
-	for _, page := range vrAccountPages.Keys() {
+	keys, err := vrAccountPages.Keys()
+	if err != nil {
+		return nil, apua.EndWithError(err)
+	}
+
+	for _, page := range keys {
 		accountPage, err := vrAccountPages.AccountPage(page)
 		if err != nil {
-			return updatesSet, apua.EndWithError(err)
+			return nil, apua.EndWithError(err)
 		}
 		for _, ap := range accountPage.Products {
 			if ap.Updates > 0 ||

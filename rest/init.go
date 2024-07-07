@@ -5,10 +5,10 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 )
 
-var rdx kvas.ReadableRedux
+var rdx kevlar.ReadableRedux
 
 func Init() error {
 

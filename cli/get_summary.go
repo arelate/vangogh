@@ -28,7 +28,7 @@ func GetSummary() error {
 	for _, section := range rdx.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
 		ids, _ := rdx.GetAllValues(vangogh_local_data.LastSyncUpdatesProperty, section)
 		for _, id := range ids {
-			if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+			if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
 				summary[section] = append(summary[section], fmt.Sprintf("%s %s", id, title))
 			}
 		}

@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"github.com/boggydigital/atomus"
+	"github.com/boggydigital/kevlar"
 	"net/url"
 	"os"
 	"sort"
@@ -10,7 +11,6 @@ import (
 	"time"
 
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
@@ -101,7 +101,7 @@ func Summarize(since int64, gauginUrl string) error {
 	return nil
 }
 
-func releasedToday(rdx kvas.ReadableRedux) ([]string, error) {
+func releasedToday(rdx kevlar.ReadableRedux) ([]string, error) {
 
 	if err := rdx.MustHave(vangogh_local_data.GOGReleaseDateProperty); err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func releasedToday(rdx kvas.ReadableRedux) ([]string, error) {
 	today := time.Now().Format("2006.01.02")
 
 	for _, id := range rdx.Keys(vangogh_local_data.GOGReleaseDateProperty) {
-		if rt, ok := rdx.GetFirstVal(vangogh_local_data.GOGReleaseDateProperty, id); ok {
+		if rt, ok := rdx.GetLastVal(vangogh_local_data.GOGReleaseDateProperty, id); ok {
 			if rt == today {
 				ids = append(ids, id)
 			}
@@ -121,7 +121,7 @@ func releasedToday(rdx kvas.ReadableRedux) ([]string, error) {
 	return rdx.Sort(ids, vangogh_local_data.DefaultDesc, vangogh_local_data.DefaultSort)
 }
 
-func publishAtom(gauginUrl string, rdx kvas.ReadableRedux, summary map[string][]string) error {
+func publishAtom(gauginUrl string, rdx kevlar.ReadableRedux, summary map[string][]string) error {
 
 	afp, err := vangogh_local_data.AbsAtomFeedPath()
 	if err != nil {
@@ -139,7 +139,7 @@ func publishAtom(gauginUrl string, rdx kvas.ReadableRedux, summary map[string][]
 	return af.Encode(atomFile)
 }
 
-func NewAtomFeedContent(rdx kvas.ReadableRedux, summary map[string][]string) string {
+func NewAtomFeedContent(rdx kevlar.ReadableRedux, summary map[string][]string) string {
 	sb := strings.Builder{}
 
 	sections := maps.Keys(summary)
@@ -152,7 +152,7 @@ func NewAtomFeedContent(rdx kvas.ReadableRedux, summary map[string][]string) str
 		sb.WriteString("<h1>" + section + "</h1>")
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
-			if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+			if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
 				sb.WriteString(fmt.Sprintf("<li>%s (%s)</li>", title, id))
 			} else {
 				sb.WriteString("<li>" + id + "</li>")

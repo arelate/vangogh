@@ -104,8 +104,6 @@ func syncOptions() []string {
 
 func vetOptions() []string {
 	return options([]string{
-		cli.VetIndexOnly,
-		cli.VetIndexMissing,
 		cli.VetLocalOnlyData,
 		cli.VetLocalOnlyImages,
 		cli.VetLocalOnlyVideosAndThumbnails,

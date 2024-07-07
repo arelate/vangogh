@@ -33,7 +33,7 @@ func MissingChecksums(fix bool) error {
 		// crash below attempting to read vrDetails for missing product. That's totally ok, since
 		// DLC and PACK product types get validation status from cascading, so as we fix GAME
 		// product types and perform cascade - we'll eventually get correct status for all cascaded types
-		if pt, ok := rdx.GetFirstVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
+		if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
 			continue
 		}
 
@@ -66,7 +66,7 @@ func MissingChecksums(fix bool) error {
 		}
 
 		for _, dl := range dls {
-			relFile, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
+			relFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
 			if !ok {
 				continue
 			}

@@ -2,7 +2,7 @@ package itemizations
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 )
 
@@ -18,20 +18,24 @@ func Modified(
 	//licence products can only update through creation, and we've already handled
 	//newly created in itemizeMissing func
 	if pt == vangogh_local_data.LicenceProducts {
-		return modSet, nil
+		return nil, nil
 	}
 
 	destUrl, err := vangogh_local_data.AbsLocalProductTypeDir(pt)
 	if err != nil {
-		return modSet, ma.EndWithError(err)
+		return nil, ma.EndWithError(err)
 	}
 
-	kv, err := kvas.NewKeyValues(destUrl, kvas.JsonExt)
+	kv, err := kevlar.NewKeyValues(destUrl, kevlar.JsonExt)
 	if err != nil {
-		return modSet, ma.EndWithError(err)
+		return nil, ma.EndWithError(err)
 	}
 
-	for _, mid := range kv.ModifiedAfter(since, false) {
+	updatedAfter, err := kv.CreatedOrUpdatedAfter(since)
+	if err != nil {
+		return nil, ma.EndWithError(err)
+	}
+	for _, mid := range updatedAfter {
 		modSet[mid] = true
 	}
 

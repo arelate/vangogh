@@ -2,15 +2,15 @@ package itemizations
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 )
 
 type videoPropertiesGetter struct {
-	rdx kvas.ReadableRedux
+	rdx kevlar.ReadableRedux
 }
 
-func NewVideoPropertiesGetter(rdx kvas.ReadableRedux) *videoPropertiesGetter {
+func NewVideoPropertiesGetter(rdx kevlar.ReadableRedux) *videoPropertiesGetter {
 	return &videoPropertiesGetter{
 		rdx: rdx,
 	}
@@ -25,7 +25,7 @@ func (vpg *videoPropertiesGetter) IsMissingVideo(videoId string) bool {
 }
 
 func missingLocalVideoRelatedFiles(
-	rdx kvas.ReadableRedux,
+	rdx kevlar.ReadableRedux,
 	localVideoIdsDelegate func() (map[string]bool, error),
 	excludeKnownMissingVideos bool,
 	videoFilesDesc string) (map[string]bool, error) {
@@ -55,7 +55,7 @@ func missingLocalVideoRelatedFiles(
 	return missingLocalFiles(all, localSet, vpg.GetVideoIds, excludeDelegate, mlma)
 }
 
-func MissingLocalVideos(rdx kvas.ReadableRedux, force bool) (map[string]bool, error) {
+func MissingLocalVideos(rdx kevlar.ReadableRedux, force bool) (map[string]bool, error) {
 	return missingLocalVideoRelatedFiles(
 		rdx,
 		vangogh_local_data.LocalVideoIds,
@@ -63,7 +63,7 @@ func MissingLocalVideos(rdx kvas.ReadableRedux, force bool) (map[string]bool, er
 		"videos")
 }
 
-func MissingLocalThumbnails(rdx kvas.ReadableRedux) (map[string]bool, error) {
+func MissingLocalThumbnails(rdx kevlar.ReadableRedux) (map[string]bool, error) {
 	return missingLocalVideoRelatedFiles(
 		rdx,
 		vangogh_local_data.LocalVideoThumbnailIds,

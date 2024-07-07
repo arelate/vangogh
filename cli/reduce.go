@@ -66,9 +66,15 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 
 		var modifiedIds []string
 		if since > 0 {
-			modifiedIds = vr.ModifiedAfter(since, false)
+			modifiedIds, err = vr.CreatedOrUpdatedAfter(since)
+			if err != nil {
+				return ra.EndWithError(err)
+			}
 		} else {
-			modifiedIds = vr.Keys()
+			modifiedIds, err = vr.Keys()
+			if err != nil {
+				return ra.EndWithError(err)
+			}
 		}
 
 		if len(modifiedIds) == 0 || len(missingProps) == 0 {

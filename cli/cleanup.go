@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"math"
@@ -60,7 +60,11 @@ func Cleanup(
 		if err != nil {
 			return err
 		}
-		for _, id := range vrDetails.Keys() {
+		keys, err := vrDetails.Keys()
+		if err != nil {
+			return ca.EndWithError(err)
+		}
+		for _, id := range keys {
 			idSet[id] = true
 		}
 	}
@@ -99,7 +103,7 @@ func Cleanup(
 }
 
 type cleanupDelegate struct {
-	rdx        kvas.ReadableRedux
+	rdx        kevlar.ReadableRedux
 	all        bool
 	test       bool
 	delete     bool
@@ -129,7 +133,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 	}
 
 	for _, dl := range list {
-		if localFilename, ok := cd.rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
+		if localFilename, ok := cd.rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
 			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
 			relFilename, err := filepath.Rel(pDir, localFilename)

@@ -49,7 +49,7 @@ func GetItems(
 
 	for id := range all {
 
-		title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id)
+		title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 		if !ok {
 			gia.Log("%s has no title", id)
 			continue
@@ -57,12 +57,12 @@ func GetItems(
 
 		var items []string
 
-		descOverview, ok := rdx.GetFirstVal(vangogh_local_data.DescriptionOverviewProperty, id)
+		descOverview, ok := rdx.GetLastVal(vangogh_local_data.DescriptionOverviewProperty, id)
 		if ok {
 			items = vangogh_local_data.ExtractDescItems(descOverview)
 		}
 
-		descFeatures, ok := rdx.GetFirstVal(vangogh_local_data.DescriptionFeaturesProperty, id)
+		descFeatures, ok := rdx.GetLastVal(vangogh_local_data.DescriptionFeaturesProperty, id)
 		if ok {
 			items = append(items, vangogh_local_data.ExtractDescItems(descFeatures)...)
 		}

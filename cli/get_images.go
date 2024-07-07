@@ -5,7 +5,7 @@ import (
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/url"
 	"path/filepath"
@@ -88,7 +88,7 @@ func GetImages(
 		//for every product collect all image URLs and all corresponding local filenames
 		//to pass to dolo.GetSet, that'll concurrently download all required product images
 
-		title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id)
+		title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 		if !ok {
 			title = id
 		}
@@ -154,7 +154,7 @@ func GetImages(
 	return nil
 }
 
-func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.ImageType) (kvas.WriteableRedux, error) {
+func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.ImageType) (kevlar.WriteableRedux, error) {
 	for _, it := range its {
 		if !vangogh_local_data.IsValidImageType(it) {
 			return nil, fmt.Errorf("invalid image type %s", it)

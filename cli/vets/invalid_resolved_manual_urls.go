@@ -25,7 +25,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 	cirmu.TotalInt(len(keys))
 	for _, url := range keys {
 
-		local, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, url)
+		local, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, url)
 		if !ok {
 			continue
 		}
@@ -60,7 +60,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 		}
 
 		for url := range invalidResolvedUrls {
-			local, _ := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, url)
+			local, _ := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, url)
 			summary[url] = []string{local}
 			if fix {
 				// remove the entry from the redux

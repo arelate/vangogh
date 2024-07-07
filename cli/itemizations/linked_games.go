@@ -14,10 +14,13 @@ func linkedGames(modifiedAfter int64) (map[string]bool, error) {
 
 	vrApv2, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV2)
 	if err != nil {
-		return missingSet, lga.EndWithError(err)
+		return nil, lga.EndWithError(err)
 	}
 
-	modifiedApv2 := vrApv2.ModifiedAfter(modifiedAfter, false)
+	modifiedApv2, err := vrApv2.CreatedOrUpdatedAfter(modifiedAfter)
+	if err != nil {
+		return nil, lga.EndWithError(err)
+	}
 	if len(modifiedApv2) > 0 {
 		nod.Log("modified %s: %v", vangogh_local_data.ApiProductsV2, modifiedApv2)
 	}
@@ -30,7 +33,7 @@ func linkedGames(modifiedAfter int64) (map[string]bool, error) {
 		apv2, err := vrApv2.ApiProductV2(id)
 
 		if err != nil {
-			return missingSet, lga.EndWithError(err)
+			return nil, lga.EndWithError(err)
 		}
 
 		gig := apv2.GetIncludesGames()
@@ -58,7 +61,11 @@ func linkedGames(modifiedAfter int64) (map[string]bool, error) {
 		lgs = append(lgs, girbg...)
 
 		for _, lid := range lgs {
-			if !vrApv2.Has(lid) {
+			has, err := vrApv2.Has(lid)
+			if err != nil {
+				return nil, lga.EndWithError(err)
+			}
+			if !has {
 				missingSet[lid] = true
 			}
 		}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"sort"
 	"strconv"
@@ -22,10 +22,14 @@ func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
 
 	vrPaged, err := vangogh_local_data.NewProductReader(sourcePt)
 	if err != nil {
-		return err
+		return spa.EndWithError(err)
 	}
 
-	modifiedIds := vrPaged.ModifiedAfter(timestamp, false)
+	modifiedIds, err := vrPaged.CreatedOrUpdatedAfter(timestamp)
+	if err != nil {
+		return spa.EndWithError(err)
+	}
+
 	if len(modifiedIds) == 0 {
 		spa.EndWithResult("unchanged")
 		return nil
@@ -64,7 +68,7 @@ func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
 			return spa.EndWithError(err)
 		}
 
-		kvDetail, err := kvas.NewKeyValues(detailDstUrl, kvas.JsonExt)
+		kvDetail, err := kevlar.NewKeyValues(detailDstUrl, kevlar.JsonExt)
 		if err != nil {
 			return spa.EndWithError(err)
 		}

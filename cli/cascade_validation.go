@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
@@ -54,11 +54,11 @@ func CascadeValidation() error {
 	return nil
 }
 
-func filterOwnedRelated(rdx kvas.ReadableRedux, p, id string) []string {
+func filterOwnedRelated(rdx kevlar.ReadableRedux, p, id string) []string {
 	ownedRelated := make([]string, 0)
 	if related, ok := rdx.GetAllValues(p, id); ok {
 		for _, rid := range related {
-			if own, ok := rdx.GetFirstVal(vangogh_local_data.OwnedProperty, rid); ok && own == "true" {
+			if own, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, rid); ok && own == "true" {
 				ownedRelated = append(ownedRelated, rid)
 			}
 		}

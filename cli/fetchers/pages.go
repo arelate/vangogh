@@ -6,8 +6,8 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kvas"
-	"github.com/boggydigital/kvas_dolo"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/kevlar_dolo"
 	"github.com/boggydigital/nod"
 	"net/http"
 	"net/url"
@@ -21,12 +21,12 @@ func NewIndexSetter(pt vangogh_local_data.ProductType, ids []string) (dolo.Index
 		return nil, err
 	}
 
-	valueSet, err := kvas.NewKeyValues(localDir, kvas.JsonExt)
+	valueSet, err := kevlar.NewKeyValues(localDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
-	return kvas_dolo.NewIndexSetter(valueSet, ids...), nil
+	return kevlar_dolo.NewIndexSetter(valueSet, ids...), nil
 }
 
 //func (kis *kvasIndexSetter) IsModifiedAfter(index string, since int64) bool {
@@ -79,12 +79,17 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 
 	// certain data types increase monotonically and don't need to be downloaded completely (e.g. orders, wishlist)
 	// if the first page has not been modified
-	if vangogh_local_data.IsFastPageFetchProduct(pt) && !kis.IsModifiedAfter(0, since) {
+	iua, err := kis.IsUpdatedAfter(0, since)
+	if err != nil {
+		return err
+	}
+
+	if vangogh_local_data.IsFastPageFetchProduct(pt) && !iua {
 		gfp.EndWithResult("first page unchanged, skipping the rest")
 		return nil
 	}
 
-	//get downloaded first page from kvas...
+	//get downloaded first page from kevlar...
 	fpReadCloser, err := kis.Get(0)
 	defer fpReadCloser.Close()
 	if err != nil {

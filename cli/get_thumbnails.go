@@ -65,7 +65,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 			continue
 		}
 
-		title, _ := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id)
+		title, _ := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 
 		ta := nod.Begin("%s %s", id, title)
 

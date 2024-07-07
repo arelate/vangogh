@@ -15,22 +15,29 @@ func RequiredAndIncluded(createdAfter int64) (map[string]bool, error) {
 
 	vrLicences, err := vangogh_local_data.NewProductReader(vangogh_local_data.LicenceProducts)
 	if err != nil {
-		return newLicSet, raia.EndWithError(err)
+		return nil, raia.EndWithError(err)
 	}
 
 	vrApv2, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV2)
 	if err != nil {
-		return newLicSet, raia.EndWithError(err)
+		return nil, raia.EndWithError(err)
 	}
 
-	newLicences := vrLicences.CreatedAfter(createdAfter)
+	newLicences, err := vrLicences.CreatedAfter(createdAfter)
+	if err != nil {
+		return nil, raia.EndWithError(err)
+	}
 	if len(newLicences) > 0 {
 		nod.Log("new %s: %v", vangogh_local_data.LicenceProducts, newLicences)
 	}
 
 	for _, id := range newLicences {
 		// it's not guaranteed that a license would have an existing api-products-v2
-		if !vrApv2.Has(id) {
+		has, err := vrApv2.Has(id)
+		if err != nil {
+			return nil, raia.EndWithError(err)
+		}
+		if !has {
 			continue
 		}
 		//like in itemizeMissingIncludesGames, we can't use redux here,
@@ -39,7 +46,7 @@ func RequiredAndIncluded(createdAfter int64) (map[string]bool, error) {
 		//for newly acquired licences.
 		apv2, err := vrApv2.ApiProductV2(id)
 		if err != nil {
-			return newLicSet, raia.EndWithError(err)
+			return nil, raia.EndWithError(err)
 		}
 
 		grg := apv2.GetRequiresGames()
@@ -63,7 +70,11 @@ func RequiredAndIncluded(createdAfter int64) (map[string]bool, error) {
 	//newLicSet contains all product types at the moment, we need to filter to GAME types only,
 	//since other types won't have account-products / details data available remotely
 	for id := range newLicSet {
-		if !vrApv2.Has(id) {
+		has, err := vrApv2.Has(id)
+		if err != nil {
+			return nil, raia.EndWithError(err)
+		}
+		if !has {
 			delete(newLicSet, id)
 			continue
 		}

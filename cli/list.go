@@ -72,7 +72,12 @@ func List(
 	}
 
 	if modifiedSince > 0 {
-		for _, mid := range vr.ModifiedAfter(modifiedSince, false) {
+		updatedAfter, err := vr.CreatedOrUpdatedAfter(modifiedSince)
+		if err != nil {
+			return la.EndWithError(err)
+		}
+
+		for _, mid := range updatedAfter {
 			idSet[mid] = true
 		}
 		if len(idSet) == 0 {
@@ -82,7 +87,11 @@ func List(
 
 	if len(idSet) == 0 &&
 		modifiedSince == 0 {
-		for _, id := range vr.Keys() {
+		keys, err := vr.Keys()
+		if err != nil {
+			return la.EndWithError(err)
+		}
+		for _, id := range keys {
 			idSet[id] = true
 		}
 	}

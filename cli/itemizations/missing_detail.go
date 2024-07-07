@@ -3,7 +3,7 @@ package itemizations
 import (
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 )
 
@@ -37,7 +37,7 @@ func missingDetail(
 		detailPt == vangogh_local_data.Details {
 		rg, err := RequiredAndIncluded(since)
 		if err != nil {
-			return rg, err
+			return nil, err
 		}
 		return rg, nil
 	}
@@ -49,26 +49,34 @@ func missingDetail(
 
 	mainDestUrl, err := vangogh_local_data.AbsLocalProductTypeDir(mainPt)
 	if err != nil {
-		return missingIdSet, mda.EndWithError(err)
+		return nil, mda.EndWithError(err)
 	}
 
 	detailDestUrl, err := vangogh_local_data.AbsLocalProductTypeDir(detailPt)
 	if err != nil {
-		return missingIdSet, mda.EndWithError(err)
+		return nil, mda.EndWithError(err)
 	}
 
-	kvMain, err := kvas.NewKeyValues(mainDestUrl, kvas.JsonExt)
+	kvMain, err := kevlar.NewKeyValues(mainDestUrl, kevlar.JsonExt)
 	if err != nil {
-		return missingIdSet, mda.EndWithError(err)
+		return nil, mda.EndWithError(err)
 	}
 
-	kvDetail, err := kvas.NewKeyValues(detailDestUrl, kvas.JsonExt)
+	kvDetail, err := kevlar.NewKeyValues(detailDestUrl, kevlar.JsonExt)
 	if err != nil {
-		return missingIdSet, mda.EndWithError(err)
+		return nil, mda.EndWithError(err)
 	}
 
-	for _, id := range kvMain.Keys() {
-		if !kvDetail.Has(id) {
+	keys, err := kvMain.Keys()
+	if err != nil {
+		return nil, mda.EndWithError(err)
+	}
+	for _, id := range keys {
+		has, err := kvDetail.Has(id)
+		if err != nil {
+			return nil, mda.EndWithError(err)
+		}
+		if !has {
 			nod.Log("adding missing %s: #%s", detailPt, id)
 			missingIdSet[id] = true
 		}

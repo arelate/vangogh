@@ -79,7 +79,7 @@ func Dehydrate(
 
 		for id := range idSet {
 
-			imageId, ok := rdx.GetFirstVal(asset, id)
+			imageId, ok := rdx.GetLastVal(asset, id)
 			if !ok {
 				continue
 			}

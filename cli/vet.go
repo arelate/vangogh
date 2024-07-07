@@ -8,8 +8,6 @@ import (
 )
 
 const (
-	VetIndexOnly                    = "index-only"
-	VetIndexMissing                 = "index-missing"
 	VetLocalOnlyData                = "local-only-data"
 	VetLocalOnlyImages              = "local-only-images"
 	VetLocalOnlyVideosAndThumbnails = "local-only-videos-and-thumbnails"
@@ -24,8 +22,6 @@ const (
 )
 
 type vetOptions struct {
-	indexOnly                   bool
-	indexMissing                bool
 	localOnlyData               bool
 	localOnlyImages             bool
 	localOnlyVideos             bool
@@ -42,8 +38,6 @@ type vetOptions struct {
 func initVetOptions(u *url.URL) *vetOptions {
 
 	vo := &vetOptions{
-		indexOnly:                   vangogh_local_data.FlagFromUrl(u, VetIndexOnly),
-		indexMissing:                vangogh_local_data.FlagFromUrl(u, VetIndexMissing),
 		localOnlyData:               vangogh_local_data.FlagFromUrl(u, VetLocalOnlyData),
 		localOnlyImages:             vangogh_local_data.FlagFromUrl(u, VetLocalOnlyImages),
 		localOnlyVideos:             vangogh_local_data.FlagFromUrl(u, VetLocalOnlyVideosAndThumbnails),
@@ -58,8 +52,6 @@ func initVetOptions(u *url.URL) *vetOptions {
 	}
 
 	if vangogh_local_data.FlagFromUrl(u, "all") {
-		vo.indexOnly = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetIndexOnly))
-		vo.indexMissing = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetIndexMissing))
 		vo.localOnlyData = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyData))
 		vo.localOnlyImages = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyImages))
 		vo.localOnlyVideos = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyVideosAndThumbnails))
@@ -99,18 +91,6 @@ func Vet(
 
 	sda := nod.Begin("vetting local data...")
 	defer sda.End()
-
-	if vetOpts.indexOnly {
-		if err := vets.IndexOnly(fix); err != nil {
-			return sda.EndWithError(err)
-		}
-	}
-
-	if vetOpts.indexMissing {
-		if err := vets.IndexMissing(fix); err != nil {
-			return sda.EndWithError(err)
-		}
-	}
 
 	if vetOpts.localOnlyData {
 		if err := vets.LocalOnlySplitProducts(fix); err != nil {

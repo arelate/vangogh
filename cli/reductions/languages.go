@@ -2,12 +2,12 @@ package reductions
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
 
-func GetLanguageCodes(rdx kvas.ReadableRedux) (map[string]bool, error) {
+func GetLanguageCodes(rdx kevlar.ReadableRedux) (map[string]bool, error) {
 
 	lca := nod.Begin(" %s...", vangogh_local_data.LanguageCodeProperty)
 	defer lca.EndWithResult("done")
@@ -34,7 +34,7 @@ func GetLanguageCodes(rdx kvas.ReadableRedux) (map[string]bool, error) {
 
 func getMissingLanguageNames(
 	langCodeSet map[string]bool,
-	rdx kvas.ReadableRedux,
+	rdx kevlar.ReadableRedux,
 	property string) (map[string]bool, error) {
 
 	missingLangs := maps.Clone(langCodeSet)
@@ -42,7 +42,7 @@ func getMissingLanguageNames(
 	// TODO: write a comment explaining all or nothing approach
 	//map all language codes to names and hide existing
 	for lc := range missingLangs {
-		if _, ok := rdx.GetFirstVal(property, lc); ok {
+		if _, ok := rdx.GetLastVal(property, lc); ok {
 			delete(missingLangs, lc)
 		}
 	}
@@ -88,7 +88,12 @@ func LanguageNames(langCodeSet map[string]bool) error {
 		return lna.EndWithError(err)
 	}
 
-	for _, id := range vrApiProductsV2.Keys() {
+	keys, err := vrApiProductsV2.Keys()
+	if err != nil {
+		return lna.EndWithError(err)
+	}
+
+	for _, id := range keys {
 		apv2, err := vrApiProductsV2.ApiProductV2(id)
 		if err != nil {
 			return lna.EndWithError(err)
@@ -137,7 +142,12 @@ func NativeLanguageNames(langCodeSet map[string]bool) error {
 	missingNativeLangs = maps.Clone(langCodeSet)
 	nativeNames := make(map[string][]string, 0)
 
-	for _, id := range vrApiProductsV1.Keys() {
+	keys, err := vrApiProductsV1.Keys()
+	if err != nil {
+		return nlna.EndWithError(err)
+	}
+
+	for _, id := range keys {
 		apv1, err := vrApiProductsV1.ApiProductV1(id)
 		if err != nil {
 			return nlna.EndWithError(err)

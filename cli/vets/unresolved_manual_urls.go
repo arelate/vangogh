@@ -30,7 +30,10 @@ func UnresolvedManualUrls(
 		return cumu.EndWithError(err)
 	}
 
-	allDetails := vrDetails.Keys()
+	allDetails, err := vrDetails.Keys()
+	if err != nil {
+		return cumu.EndWithError(err)
+	}
 	unresolvedIds := make(map[string]bool)
 
 	cumu.TotalInt(len(allDetails))
@@ -53,7 +56,7 @@ func UnresolvedManualUrls(
 		downloadsList = downloadsList.Only(operatingSystems, downloadTypes, langCodes, excludePatches)
 
 		for _, dl := range downloadsList {
-			if _, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); !ok {
+			if _, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); !ok {
 				unresolvedIds[id] = true
 			}
 		}

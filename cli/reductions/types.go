@@ -19,7 +19,12 @@ func Types() error {
 			return ta.EndWithError(err)
 		}
 
-		for _, id := range vr.Keys() {
+		keys, err := vr.Keys()
+		if err != nil {
+			return ta.EndWithError(err)
+		}
+
+		for _, id := range keys {
 
 			if idsTypes[id] == nil {
 				idsTypes[id] = make([]string, 0)

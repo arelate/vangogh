@@ -38,12 +38,15 @@ func SteamAppId(since int64) error {
 	appMap := GetAppListResponseToMap(sal)
 	gogSteamAppId := make(map[string][]string)
 
-	modified := vrCatalogProducts.ModifiedAfter(since, false)
+	updated, err := vrCatalogProducts.CreatedOrUpdatedAfter(since)
+	if err != nil {
+		return saia.EndWithError(err)
+	}
 
-	saia.TotalInt(len(modified))
+	saia.TotalInt(len(updated))
 
-	for _, id := range modified {
-		title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id)
+	for _, id := range updated {
+		title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 		if !ok {
 			saia.Increment()
 			continue

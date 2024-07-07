@@ -792,9 +792,9 @@ Archive:
 	- check downloaded data (details) to fill types TODOs @done
 	- add "id..." parameter to "list" to be used for status updates @done
 	- investigate "list wishlist" issues @done
-	- root caused to not closing files after a kvas.Get @done
+	- root caused to not closing files after a kevlar.Get @done
 	- convert all returned io.Reader to io.ReadCloser (should work with remote kvas as well) @done
-	- ue file.Create instead of OpenFile for kvas.Set @done
+	- ue file.Create instead of OpenFile for kevlar.Set @done
 	- kvas separate index extension from content extension (allow protobuf index, png files) @done
 	- don't use global httpClient in cmds @done
 	- create NewLocalJsonClient and NewLocalProtoClient that only take URL @done

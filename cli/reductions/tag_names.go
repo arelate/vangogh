@@ -17,7 +17,11 @@ func TagNames() error {
 	}
 
 	const fpId = "1"
-	if !vrAccountPage.Has(fpId) {
+	has, err := vrAccountPage.Has(fpId)
+	if err != nil {
+		return tna.EndWithError(err)
+	}
+	if !has {
 		err := fmt.Errorf("%s doesn't contain page %s", vangogh_local_data.AccountPage, fpId)
 		return tna.EndWithError(err)
 	}

@@ -28,9 +28,15 @@ func Orders(modifiedAfter int64) error {
 
 	var modifiedOrders []string
 	if modifiedAfter > 0 {
-		modifiedOrders = vrOrders.ModifiedAfter(modifiedAfter, false)
+		modifiedOrders, err = vrOrders.CreatedOrUpdatedAfter(modifiedAfter)
+		if err != nil {
+			return oa.EndWithError(err)
+		}
 	} else {
-		modifiedOrders = vrOrders.Keys()
+		modifiedOrders, err = vrOrders.Keys()
+		if err != nil {
+			return oa.EndWithError(err)
+		}
 	}
 
 	oa.TotalInt(len(modifiedOrders))

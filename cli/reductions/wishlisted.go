@@ -26,7 +26,12 @@ func Wishlisted() error {
 
 	//important to set all to false as a starting point to overwrite status
 	//for product no longer wishlisted at the remote source of truth
-	for _, id := range vrCatalogProducts.Keys() {
+	keys, err := vrCatalogProducts.Keys()
+	if err != nil {
+		return wa.EndWithError(err)
+	}
+
+	for _, id := range keys {
 		wishlisted[id] = []string{"false"}
 	}
 

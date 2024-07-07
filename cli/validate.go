@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/url"
 	"os"
@@ -67,9 +67,13 @@ func Validate(
 		if err != nil {
 			return err
 		}
-		for _, id := range vrDetails.Keys() {
+		keys, err := vrDetails.Keys()
+		if err != nil {
+			return err
+		}
+		for _, id := range keys {
 			if skipValid {
-				valid, ok := rdx.GetFirstVal(vangogh_local_data.ValidationResultProperty, id)
+				valid, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id)
 				if ok && valid == vangogh_local_data.OKValue {
 					continue
 				}
@@ -125,7 +129,7 @@ func maybeAddTopic(summary map[string][]string, tmpl string, col map[string]bool
 
 func validateManualUrl(
 	dl *vangogh_local_data.Download,
-	rdx kvas.ReadableRedux) error {
+	rdx kevlar.ReadableRedux) error {
 
 	if err := rdx.MustHave(vangogh_local_data.LocalManualUrlProperty); err != nil {
 		return err
@@ -135,7 +139,7 @@ func validateManualUrl(
 	defer mua.End()
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
-	localFile, ok := rdx.GetFirstVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
+	localFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
 	if !ok {
 		mua.EndWithResult(ErrUnresolvedManualUrl.Error())
 		return ErrUnresolvedManualUrl
@@ -221,7 +225,7 @@ func validateManualUrl(
 }
 
 type validateDelegate struct {
-	rdx                  kvas.WriteableRedux
+	rdx                  kevlar.WriteableRedux
 	validated            map[string]bool
 	unresolvedManualUrl  map[string]bool
 	missingDownloads     map[string]bool
@@ -323,7 +327,11 @@ func validateUpdated(since int64,
 	}
 
 	idSet := make(map[string]bool)
-	for _, id := range vrAccountProducts.ModifiedAfter(since, false) {
+	updatedAfter, err := vrAccountProducts.CreatedOrUpdatedAfter(since)
+	if err != nil {
+		return err
+	}
+	for _, id := range updatedAfter {
 		idSet[id] = true
 	}
 

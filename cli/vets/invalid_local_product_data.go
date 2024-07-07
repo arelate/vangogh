@@ -42,7 +42,11 @@ func InvalidLocalProductData(fix bool) error {
 			continue
 		}
 
-		allProducts := vr.Keys()
+		allProducts, err := vr.Keys()
+		if err != nil {
+			_ = pta.EndWithError(err)
+			continue
+		}
 
 		pta.TotalInt(len(allProducts))
 
@@ -79,7 +83,7 @@ func InvalidLocalProductData(fix bool) error {
 			summary[ptStr] = make([]string, len(ids))
 			for i := 0; i < len(ids); i++ {
 				prodStr := ids[i]
-				if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, ids[i]); ok {
+				if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, ids[i]); ok {
 					prodStr = fmt.Sprintf("%s %s", prodStr, title)
 				}
 				summary[ptStr][i] = prodStr

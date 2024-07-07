@@ -2,14 +2,14 @@ package rest
 
 import (
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/kvas"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/http"
 	"sort"
 )
 
-func PropertyValuesCounts(rdx kvas.ReadableRedux, property string) map[string]int {
+func PropertyValuesCounts(rdx kevlar.ReadableRedux, property string) map[string]int {
 	distValues := make(map[string]int)
 
 	for _, id := range rdx.Keys(property) {

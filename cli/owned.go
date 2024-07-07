@@ -49,7 +49,7 @@ func Owned(idSet map[string]bool) error {
 	ownSummary := make(map[string][]string)
 	ownSummary[ownedSection] = make([]string, 0, len(ownedSet))
 	for id := range ownedSet {
-		if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+		if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
 			ownSummary[ownedSection] = append(ownSummary[ownedSection], fmt.Sprintf("%s %s", id, title))
 		}
 	}
@@ -63,7 +63,7 @@ func Owned(idSet map[string]bool) error {
 
 	ownSummary[notOwnedSection] = make([]string, 0, len(notOwned))
 	for id := range notOwned {
-		if title, ok := rdx.GetFirstVal(vangogh_local_data.TitleProperty, id); ok {
+		if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
 			ownSummary[notOwnedSection] = append(ownSummary[notOwnedSection], fmt.Sprintf("%s %s", id, title))
 		}
 	}
