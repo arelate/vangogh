@@ -6,7 +6,7 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/yt_urls"
+	"github.com/boggydigital/yet_urls/youtube_urls"
 	"net/http"
 	"net/url"
 )
@@ -74,7 +74,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 
 		for _, videoId := range videoIds {
 
-			vp, err := yt_urls.GetVideoPage(http.DefaultClient, videoId)
+			vp, err := youtube_urls.GetVideoPage(http.DefaultClient, videoId)
 
 			if err != nil {
 				va.Error(err)
@@ -128,7 +128,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 			//2) currently dolo.GetSetMany doesn't support nod progress reporting on each individual concurrent
 			//download (ok, well, StdOutPresenter doesn't, nod likely does) and for video files this would mean
 			//long pauses as we download individual files
-			if err = dl.Download(u, force, vfa, dir, videoId+yt_urls.DefaultVideoExt); err != nil {
+			if err = dl.Download(u, force, vfa, dir, videoId+youtube_urls.DefaultVideoExt); err != nil {
 				vfa.Error(err)
 				continue
 			}

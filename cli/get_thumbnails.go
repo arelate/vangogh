@@ -5,7 +5,7 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/yt_urls"
+	"github.com/boggydigital/yet_urls/youtube_urls"
 	"net/url"
 	"path"
 )
@@ -80,7 +80,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 
 			gotVideoIdThumbnail := false
 
-			for _, thumbnailUrl := range yt_urls.ThumbnailUrls(videoId) {
+			for _, thumbnailUrl := range youtube_urls.ThumbnailUrls(videoId) {
 
 				_, file := path.Split(thumbnailUrl.Path)
 
@@ -98,7 +98,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 				//2) currently dolo.GetSetMany doesn't support nod progress reporting on each individual concurrent
 				//download (ok, well, StdOutPresenter doesn't, nod likely does) and for thumbnails this would mean
 				//long pauses as we download individual files
-				if err = dl.Download(thumbnailUrl, force, vta, dir, videoId+yt_urls.DefaultThumbnailExt); err != nil {
+				if err = dl.Download(thumbnailUrl, force, vta, dir, videoId+youtube_urls.DefaultThumbnailExt); err != nil {
 					vta.Error(err)
 					continue
 				}

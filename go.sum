@@ -1,7 +1,7 @@
 github.com/arelate/southern_light v0.1.45 h1:QhZ+ro67/wqoqX9JUkSACkS44p55bI3NdmjPBBOVEUs=
 github.com/arelate/southern_light v0.1.45/go.mod h1:IR7j2+TrHdoNfZrTNeXOvL3UYsotcNED3aOAEpm7VCY=
-github.com/arelate/vangogh_local_data v0.4.16 h1:GfdaOI4QwWowULmFM6O8x8BB8YEbEFQHUyiXdKpn+aY=
-github.com/arelate/vangogh_local_data v0.4.16/go.mod h1:Od88bz+FD4GaQ2O3YIBwGzn4TEQoyh/4EfDgAwcUMQk=
+github.com/arelate/vangogh_local_data v0.4.17 h1:3jUQ96/96NMcWHajmfHKYPb3vsEIxNvleSmWxl2njbU=
+github.com/arelate/vangogh_local_data v0.4.17/go.mod h1:unEZgU2PkfWDeHBuYBcJDnmlaRqxRFwmyfCI/3W24kQ=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
 github.com/boggydigital/backups v0.1.3 h1:Yq4/2kVxpexc0bAVA5tQPgdcKXPWsqihzgI759VPgVM=
@@ -32,8 +32,8 @@ github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6j
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=
 github.com/boggydigital/wits v0.2.3/go.mod h1:aR/z0vfMLtg0b4hcts0qiSTZcA51O8A2N3U9laqd2Lc=
-github.com/boggydigital/yt_urls v0.1.47 h1:LsW/F7lq87/k4YiMneZoEMBgdVg/gUXGODXFEUcJ7Q0=
-github.com/boggydigital/yt_urls v0.1.47/go.mod h1:n6l37tlAOu/S1u3UDGGj0wpFLxq5PPtlAZQsrmpAcKM=
+github.com/boggydigital/yet_urls v0.1.49 h1:4Oloy8OqTxDsqyEDoHFiFuZuNhFwxwYVj9U0DqLhDMU=
+github.com/boggydigital/yet_urls v0.1.49/go.mod h1:gwp6JmGZPfDTYn7DZJWk3cM2+8cBjatpCJmXR3AzIRo=
 golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 h1:yixxcjnhBmY0nkL253HFVIm0JsFHwrHdT3Yh6szTnfY=
 golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8/go.mod h1:jj3sYF3dwk5D+ghuXyeI3r5MFf+NT2An6/9dOA95KSI=
 golang.org/x/image v0.18.0 h1:jGzIakQa/ZXI1I0Fxvaa9W7yP25TqT6cHIHn+6CqvSQ=
