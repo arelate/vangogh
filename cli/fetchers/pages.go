@@ -29,14 +29,10 @@ func NewIndexSetter(pt vangogh_local_data.ProductType, ids []string) (dolo.Index
 	return kevlar_dolo.NewIndexSetter(valueSet, ids...), nil
 }
 
-//func (kis *kvasIndexSetter) IsModifiedAfter(index string, since int64) bool {
-//	return kis.keyValues.IsModifiedAfter(index, since)
-//}
-
 // Pages fetches all paged product type pages concurrently (using dolo.GetSet).
 // To do that it downloads the first page, decodes that to get TotalPages,
 // then constructs a slice of URLs and page ids to download all the remaining
-// pages from 2nd to TotalPages using kvas index setter.
+// pages from 2nd to TotalPages using index setter.
 func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Client, tpw nod.TotalProgressWriter) error {
 
 	gfp := nod.Begin(" getting the first %s...", pt)
@@ -52,7 +48,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	//1) initially we don't know how many pages paged data source would have (at least one is guaranteed)
 	//2) first page contains the amount of pages data source has, so upon saving that we'll read it back
 	//3) after figuring out how many pages data source has, we can construct URLs and page ids to get
-	//the remaining set using dolo.GetSet and kvasIndexSetter.
+	//the remaining set using dolo.GetSet and kevlar_dolo.IndexSetter.
 	//Here is how we put that plan in motion:
 
 	firstPage := "1"
@@ -61,7 +57,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 	urls, ids := make([]*url.URL, 1), make([]string, 1)
 	urls[0], ids[0] = up.Url(firstPage), firstPage
 
-	//initiate kvasIndexSetter using single page id "1"
+	//initiate IndexSetter using single page id "1"
 	kis, err := NewIndexSetter(pt, ids)
 	if err != nil {
 		return err
@@ -69,7 +65,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 
 	dc := dolo.NewClient(httpClient, dolo.Defaults())
 
-	//get the first page payload and set it in kvas
+	//get the first page payload and set it in kevlar
 	if errs := dc.GetSet(urls, kis, tpw, false); len(errs) > 0 {
 		for ui, e := range errs {
 			gfp.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
