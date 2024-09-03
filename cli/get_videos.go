@@ -133,7 +133,7 @@ func GetVideos(idSet map[string]bool, missing bool, force bool) error {
 				continue
 			}
 
-			//yt_urls.StreamingUrls returns bitrate-sorted video urls,
+			//yet_urls.StreamingUrls returns bitrate-sorted video urls,
 			//so we can stop, if we've successfully got the best available one
 		}
 

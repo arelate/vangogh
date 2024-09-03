@@ -105,7 +105,7 @@ func GetThumbnails(idSet map[string]bool, missing bool, force bool) error {
 
 				gotVideoIdThumbnail = true
 
-				//yt_urls.ThumbnailUrls returns quality-sorted thumbnail urls,
+				//yet_urls.ThumbnailUrls returns quality-sorted thumbnail urls,
 				//so we can stop, if we've successfully got the best available one
 				break
 			}
