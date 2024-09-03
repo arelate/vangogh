@@ -36,7 +36,9 @@ func Info(idSet map[string]bool, allText, images, videoId bool) error {
 		}
 	}
 	if images {
-		for _, p := range vangogh_local_data.ImageIdProperties() {
+		imageProperties := vangogh_local_data.ImageIdProperties()
+		imageProperties = append(imageProperties, vangogh_local_data.DehydratedImagesProperties()...)
+		for _, p := range imageProperties {
 			propSet[p] = true
 		}
 	}
