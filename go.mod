@@ -3,8 +3,8 @@ module github.com/arelate/vangogh
 go 1.23.0
 
 require (
-	github.com/arelate/southern_light v0.1.48
-	github.com/arelate/vangogh_local_data v0.4.19
+	github.com/arelate/southern_light v0.1.49
+	github.com/arelate/vangogh_local_data v0.4.20
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/backups v0.1.3
 	github.com/boggydigital/clo v1.0.4
