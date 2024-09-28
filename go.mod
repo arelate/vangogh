@@ -9,7 +9,7 @@ require (
 	github.com/boggydigital/backups v0.1.3
 	github.com/boggydigital/clo v1.0.4
 	github.com/boggydigital/coost v0.3.9
-	github.com/boggydigital/dolo v0.2.17
+	github.com/boggydigital/dolo v0.2.18
 	github.com/boggydigital/issa v0.1.12
 	github.com/boggydigital/kevlar v0.5.19
 	github.com/boggydigital/kevlar_dolo v0.1.7
