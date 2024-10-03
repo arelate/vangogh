@@ -259,20 +259,6 @@ func Sync(
 		}
 	}
 
-	// get videos
-	if syncOpts.videos {
-		if err := GetVideos(map[string]bool{}, true, false); err != nil {
-			return sa.EndWithError(err)
-		}
-	}
-
-	// get thumbnails
-	if syncOpts.thumbnails {
-		if err := GetThumbnails(map[string]bool{}, true, false); err != nil {
-			return sa.EndWithError(err)
-		}
-	}
-
 	syncEventsRdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.SyncEventsProperty)
 	if err != nil {
 		return sa.EndWithError(err)

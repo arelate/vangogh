@@ -71,18 +71,6 @@ get-purchases
 
 get-summary
 
-get-thumbnails
-    id&
-    slug&
-    missing
-    force
-
-get-videos
-    id&
-    slug&
-    missing
-    force
-
 health
     url^*
 

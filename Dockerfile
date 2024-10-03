@@ -38,8 +38,6 @@ VOLUME /var/lib/vangogh/metadata
 VOLUME /var/lib/vangogh/output
 # recycle_bin (cold storage)
 VOLUME /var/lib/vangogh/recycle_bin
-# videos (cold storage)
-VOLUME /var/lib/vangogh/videos
 
 ENTRYPOINT ["/usr/bin/vg"]
 CMD ["serve","-port", "1853", "-stderr"]

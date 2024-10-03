@@ -64,8 +64,6 @@ func main() {
 		"get-items":          cli.GetItemsHandler,
 		"get-purchases":      cli.GetPurchasesHandler,
 		"get-summary":        cli.GetSummaryHandler,
-		"get-thumbnails":     cli.GetThumbnailsHandler,
-		"get-videos":         cli.GetVideosHandler,
 		"health":             cli.HealthHandler,
 		"info":               cli.InfoHandler,
 		"list":               cli.ListHandler,
