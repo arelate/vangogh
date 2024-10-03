@@ -18,5 +18,3 @@ output
     /var/lib/vangogh
 recycle_bin
     /var/lib/vangogh/recycle_bin
-videos
-    /var/lib/vangogh/videos

@@ -18,7 +18,6 @@ const (
 	SyncOptionItems            = "items"
 	SyncOptionImages           = "images"
 	SyncOptionScreenshots      = "screenshots"
-	SyncOptionVideos           = "videos"
 	SyncOptionThumbnails       = "thumbnails"
 	SyncOptionDownloadsUpdates = "downloads-Updates"
 	negativePrefix             = "no-"
@@ -48,7 +47,6 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		items:            vangogh_local_data.FlagFromUrl(u, SyncOptionItems),
 		images:           vangogh_local_data.FlagFromUrl(u, SyncOptionImages),
 		screenshots:      vangogh_local_data.FlagFromUrl(u, SyncOptionScreenshots),
-		videos:           vangogh_local_data.FlagFromUrl(u, SyncOptionVideos),
 		thumbnails:       vangogh_local_data.FlagFromUrl(u, SyncOptionThumbnails),
 		downloadsUpdates: vangogh_local_data.FlagFromUrl(u, SyncOptionDownloadsUpdates),
 	}
@@ -58,7 +56,6 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		so.items = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionItems))
 		so.images = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionImages))
 		so.screenshots = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionScreenshots))
-		so.videos = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionVideos))
 		so.thumbnails = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionThumbnails))
 		so.downloadsUpdates = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionDownloadsUpdates))
 	}

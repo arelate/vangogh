@@ -14,7 +14,7 @@ func MissingLocalDownloads(
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
 	excludePatches bool) (map[string]bool, error) {
-	//enumerating missing local downloads is a bit more complicated than images and videos
+	//enumerating missing local downloads is a bit more complicated than images
 	//due to the fact that actual filenames are resolved when downloads are processed, so we can't compare
 	//manualUrls and available files, we need to resolve manualUrls to actual local filenames first.
 	//with this in mind we'll use different approach:
