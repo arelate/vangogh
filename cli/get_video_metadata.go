@@ -63,7 +63,9 @@ func GetVideoMetadata(idSet map[string]bool, missing, force bool) error {
 
 		ipr, err := youtube_urls.GetVideoPage(http.DefaultClient, videoId)
 		if err != nil {
-			return gvma.EndWithError(err)
+			gvma.Error(err)
+			gvma.Increment()
+			continue
 		}
 
 		videoTitles[videoId] = []string{ipr.VideoDetails.Title}

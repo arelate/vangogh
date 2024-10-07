@@ -18,7 +18,7 @@ const (
 	SyncOptionItems            = "items"
 	SyncOptionImages           = "images"
 	SyncOptionScreenshots      = "screenshots"
-	SyncOptionThumbnails       = "thumbnails"
+	SyncOptionVideosMetadata   = "videos-metadata"
 	SyncOptionDownloadsUpdates = "downloads-Updates"
 	negativePrefix             = "no-"
 )
@@ -28,8 +28,7 @@ type syncOptions struct {
 	items            bool
 	images           bool
 	screenshots      bool
-	videos           bool
-	thumbnails       bool
+	videosMetadata   bool
 	downloadsUpdates bool
 }
 
@@ -47,7 +46,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		items:            vangogh_local_data.FlagFromUrl(u, SyncOptionItems),
 		images:           vangogh_local_data.FlagFromUrl(u, SyncOptionImages),
 		screenshots:      vangogh_local_data.FlagFromUrl(u, SyncOptionScreenshots),
-		thumbnails:       vangogh_local_data.FlagFromUrl(u, SyncOptionThumbnails),
+		videosMetadata:   vangogh_local_data.FlagFromUrl(u, SyncOptionVideosMetadata),
 		downloadsUpdates: vangogh_local_data.FlagFromUrl(u, SyncOptionDownloadsUpdates),
 	}
 
@@ -56,7 +55,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		so.items = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionItems))
 		so.images = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionImages))
 		so.screenshots = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionScreenshots))
-		so.thumbnails = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionThumbnails))
+		so.videosMetadata = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionVideosMetadata))
 		so.downloadsUpdates = !vangogh_local_data.FlagFromUrl(u, NegOpt(SyncOptionDownloadsUpdates))
 	}
 
@@ -226,6 +225,12 @@ func Sync(
 		}
 
 		if err := Dehydrate(map[string]bool{}, vangogh_local_data.ImageTypesDehydration(), true); err != nil {
+			return sa.EndWithError(err)
+		}
+	}
+
+	if syncOpts.videosMetadata {
+		if err := GetVideoMetadata(map[string]bool{}, true, false); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
