@@ -71,6 +71,12 @@ get-purchases
 
 get-summary
 
+get-video-metadata
+    id^&
+    slug&
+    missing
+    force
+
 health
     url^*
 

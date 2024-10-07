@@ -43,7 +43,7 @@ func Info(idSet map[string]bool, allText, images, videoId bool) error {
 		}
 	}
 	if videoId {
-		for _, p := range vangogh_local_data.VideoIdProperties() {
+		for _, p := range vangogh_local_data.VideoProperties() {
 			propSet[p] = true
 		}
 	}
