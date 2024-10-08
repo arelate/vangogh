@@ -9,6 +9,8 @@ import (
 	"net/url"
 )
 
+const limitVideoRequests = 1000
+
 func GetVideoMetadataHandler(u *url.URL) error {
 	idSet, err := vangogh_local_data.IdSetFromUrl(u)
 	if err != nil {
@@ -38,6 +40,9 @@ func GetVideoMetadata(idSet map[string]bool, missing, force bool) error {
 				if rdx.HasKey(vangogh_local_data.VideoTitleProperty, vid) && !force {
 					continue
 				}
+				if rdx.HasKey(vangogh_local_data.VideoErrorProperty, vid) && !force {
+					continue
+				}
 				videoIds = append(videoIds, vid)
 			}
 		}
@@ -47,6 +52,9 @@ func GetVideoMetadata(idSet map[string]bool, missing, force bool) error {
 		for _, id := range rdx.Keys(vangogh_local_data.VideoIdProperty) {
 			if vip, ok := rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id); ok {
 				for _, vid := range vip {
+					if rdx.HasKey(vangogh_local_data.VideoErrorProperty, vid) && !force {
+						continue
+					}
 					if !rdx.HasKey(vangogh_local_data.VideoTitleProperty, vid) {
 						videoIds = append(videoIds, vid)
 					}
@@ -55,14 +63,22 @@ func GetVideoMetadata(idSet map[string]bool, missing, force bool) error {
 		}
 	}
 
+	if len(videoIds) > limitVideoRequests {
+		gvma.EndWithResult("limiting number of videos to avoid IP blacklisting")
+		gvma = nod.NewProgress("getting %d videos metadata...", limitVideoRequests)
+		videoIds = videoIds[:limitVideoRequests]
+	}
+
 	gvma.TotalInt(len(videoIds))
 	videoTitles := make(map[string][]string)
 	videoDurations := make(map[string][]string)
+	videoErrors := make(map[string][]string)
 
 	for _, videoId := range videoIds {
 
 		ipr, err := youtube_urls.GetVideoPage(http.DefaultClient, videoId)
 		if err != nil {
+			videoErrors[videoId] = append(videoErrors[videoId], err.Error())
 			gvma.Error(err)
 			gvma.Increment()
 			continue
@@ -79,6 +95,10 @@ func GetVideoMetadata(idSet map[string]bool, missing, force bool) error {
 	}
 
 	if err := rdx.BatchAddValues(vangogh_local_data.VideoDurationProperty, videoDurations); err != nil {
+		return gvma.EndWithError(err)
+	}
+
+	if err := rdx.BatchAddValues(vangogh_local_data.VideoErrorProperty, videoErrors); err != nil {
 		return gvma.EndWithError(err)
 	}
 
