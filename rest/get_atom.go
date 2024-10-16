@@ -1,4 +1,4 @@
-package rest_vg
+package rest
 
 import (
 	"fmt"
