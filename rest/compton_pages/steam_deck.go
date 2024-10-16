@@ -77,6 +77,9 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 			displayTypeIcon.AddClass("svg")
 			displayTypeIcon.Append(svg_use.SvgUse(s, svg_use.Circle))
 			decodedResult := steam_integration.DecodeLocToken(result)
+			if decodedResult == "" {
+				decodedResult = result
+			}
 			displayTypeMessage := fspan.Text(s, decodedResult)
 			if dt == "Unknown" {
 				displayTypeMessage.ForegroundColor(color.Gray)
