@@ -1,56 +1,92 @@
 package rest
 
 import (
+	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
-func Search(w http.ResponseWriter, r *http.Request) {
+func GetSearch(w http.ResponseWriter, r *http.Request) {
 
-	// GET /search?text&(searchable properties)&sort&desc&format
+	// GET /search?(search_params)&from
 
-	query := make(map[string][]string)
+	if err := RefreshRedux(); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
 	q := r.URL.Query()
 
-	for _, p := range vangogh_local_data.ReduxProperties() {
-		if q.Has(p) {
-			vals := q[p]
-			if len(vals) == 0 ||
-				(len(vals) == 1 && vals[0] == "") {
-				continue
+	from, to := 0, 0
+	if q.Has("from") {
+		from64, err := strconv.ParseInt(q.Get("from"), 10, 32)
+		if err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
+		}
+		from = int(from64)
+	}
+
+	query := make(map[string][]string)
+
+	shortQuery := false
+	queryProperties := compton_data.SearchProperties
+	for _, p := range queryProperties {
+		if v := q.Get(p); v != "" {
+			query[p] = strings.Split(v, ",")
+		} else {
+			if q.Has(p) {
+				q.Del(p)
+				shortQuery = true
 			}
-			query[p] = vals
 		}
 	}
 
-	sort := q.Get(vangogh_local_data.SortProperty)
-	if sort == "" {
-		sort = vangogh_local_data.TitleProperty
-	}
-	desc := q.Get(vangogh_local_data.DescendingProperty) == "true"
-
-	properties := []string{sort}
-	for p := range query {
-		properties = append(properties, p)
-	}
-
-	//detailedProperties := vangogh_local_data.DetailAllAggregateProperties(properties...)
-
-	if err := RefreshReduxAssets(properties...); err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+	//if we removed some properties with no values - redirect to the shortest URL
+	if shortQuery {
+		r.URL.RawQuery = q.Encode()
+		http.Redirect(w, r, r.URL.String(), http.StatusPermanentRedirect)
 		return
 	}
 
-	found := rdx.Match(query)
-	keys, err := rdx.Sort(found, desc, sort, vangogh_local_data.TitleProperty)
+	var ids, slice []string
 
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
+	if len(query) > 0 {
+
+		sort := q.Get(vangogh_local_data.SortProperty)
+		if sort == "" {
+			sort = vangogh_local_data.TitleProperty
+		}
+		desc := q.Get(vangogh_local_data.DescendingProperty) == "true"
+
+		var err error
+		found := rdx.Match(q)
+		ids, err = rdx.Sort(found, desc, sort, vangogh_local_data.TitleProperty)
+		if err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if from > len(ids)-1 {
+			from = 0
+		}
+
+		to = from + SearchResultsLimit
+		if to > len(ids) {
+			to = len(ids)
+		} else if to+SearchResultsLimit > len(ids) {
+			to = len(ids)
+		}
+
+		slice = ids[from:to]
 	}
 
-	if err := encode(keys, w, r); err != nil {
+	searchPage := compton_pages.Search(query, slice, from, to, rdx)
+	if err := searchPage.WriteContent(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }

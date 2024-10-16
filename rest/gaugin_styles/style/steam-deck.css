@@ -1,0 +1,50 @@
+h1 {
+    font-size: var(--fs-l);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--s-n);
+
+    & li {
+
+        & flex-items.nowrap {
+            flex-wrap: nowrap;
+        }
+
+        & fspan.svg {
+            line-height: 0;
+        }
+
+        & svg {
+            width: var(--s-n);
+            height: var(--s-n);
+        }
+    }
+}
+
+.message {
+
+    & .category, .title {
+        font-weight: bold;
+    }
+
+    & .verified {
+        color: var(--c-green)
+    }
+
+    & .playable {
+        color: var(--c-orange)
+    }
+
+    & .unsupported {
+        color: var(--c-red)
+    }
+
+    & .unknown {
+        color: var(--c-gray)
+    }
+}

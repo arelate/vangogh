@@ -1,0 +1,79 @@
+@scope (.label) {
+    :scope {
+        &.owned {
+            color: var(--c-highlight);
+            background-color: var(--c-gray);
+        }
+
+        &.owned.OK {
+            color: var(--c-highlight);
+            background-color: var(--c-green);
+        }
+
+        &.owned.missing-checksum {
+            color:var(--c-highlight);
+            background-color: var(--c-mint);
+        }
+
+        &.owned.unresolved-manual-url {
+            color:var(--c-highlight);
+            background-color: var(--c-teal);
+        }
+
+        &.owned.missing-download {
+            color: black;
+            background-color: var(--c-yellow);
+        }
+
+        &.owned.failed-validation {
+            color:var(--c-highlight);
+            background-color: var(--c-red);
+        }
+
+        /* GAME, DLC, PACK */
+
+        &.product-type {
+            color: var(--c-highlight);
+            background-color: var(--c-foreground);
+        }
+
+        /* Release timeline labels */
+
+        &.tba,
+        &.coming-soon,
+        &.pre-order,
+        &.in-development {
+            color: var(--c-highlight);
+            background-color: var(--c-teal);
+        }
+
+        /* Engine/Source-port labels */
+
+        &.is-using-dosbox,
+        &.is-using-scummvm {
+            color: var(--c-highlight);
+            background-color: var(--c-color);
+        }
+
+        /* User tags */
+
+        &.tag,
+        &.local-tags {
+            color: var(--c-highlight);
+            background-color: var(--c-indigo);
+        }
+
+        /* Sale/price lifecycle labels */
+
+        &.wishlisted {
+            color: var(--c-highlight);
+            background-color: var(--c-orange);
+        }
+
+        &.is-free,
+        &.discount-percentage {
+            color: var(--c-highlight);
+            background-color: var(--c-red);
+        }
+    }
+}

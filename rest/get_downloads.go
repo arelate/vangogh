@@ -1,54 +1,106 @@
 package rest
 
 import (
+	"github.com/arelate/vangogh/rest/compton_pages"
+	"github.com/boggydigital/kevlar"
+	"net/http"
+	"strings"
+
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetDownloads(w http.ResponseWriter, r *http.Request) {
 
-	// GET /downloads?id&operating-system&language-code&format&product-type
-	// NOTE: product-type is not used by the code below, but required for IfModifiedSince middleware
-	// so clients that expect to benefit from 304 Not Modified status are expected to request
-	// downloads with product-type
+	// GET /downloads?id
 
-	id := vangogh_local_data.ValueFromUrl(r.URL, "id")
+	if err := RefreshRedux(); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
 
-	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+	id := r.URL.Query().Get("id")
+
+	dls, err := getDownloads(id, operatingSystems, languageCodes, excludePatches, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
+	}
+
+	p := compton_pages.Downloads(id, dls, rdx)
+
+	if err := p.WriteContent(w); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+	}
+}
+
+func getDownloads(id string,
+	operatingSystems []vangogh_local_data.OperatingSystem,
+	languageCodes []string,
+	excludePatches bool,
+	rdx kevlar.ReadableRedux) (vangogh_local_data.DownloadsList, error) {
+
+	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+	if err != nil {
+		return nil, err
 	}
 
 	det, err := vrDetails.Details(id)
 	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	dl := make(vangogh_local_data.DownloadsList, 0)
 
-	if err := RefreshReduxAssets(vangogh_local_data.NativeLanguageNameProperty); err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
 	if det != nil {
 		dl, err = vangogh_local_data.FromDetails(det, rdx)
 		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
+			return nil, err
 		}
 	}
 
-	os := vangogh_local_data.OperatingSystemsFromUrl(r.URL)
-	lang := vangogh_local_data.ValuesFromUrl(r.URL, "language-code")
-	excludePatches := vangogh_local_data.FlagFromUrl(r.URL, "exclude-patches")
+	return dl.Only(operatingSystems,
+		[]vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType},
+		languageCodes,
+		excludePatches), nil
 
-	dl = dl.Only(os, []vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType}, lang, excludePatches)
+}
 
-	if err := encode(dl, w, r); err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+func getClientOperatingSystem(r *http.Request) vangogh_local_data.OperatingSystem {
+
+	var clientOS vangogh_local_data.OperatingSystem
+
+	//attempt to extract platform from user agent client hints first
+	secChUaPlatform := r.Header.Get("Sec-CH-UA-Platform")
+
+	switch secChUaPlatform {
+	case "Linux":
+		clientOS = vangogh_local_data.Linux
+	case "iOS":
+		fallthrough
+	case "macOS":
+		clientOS = vangogh_local_data.MacOS
+	case "Windows":
+		clientOS = vangogh_local_data.Windows
+	default:
+		// "Android", "Chrome OS", "Chromium OS" or "Unknown"
+		clientOS = vangogh_local_data.AnyOperatingSystem
 	}
+
+	if clientOS != vangogh_local_data.AnyOperatingSystem {
+		return clientOS
+	}
+
+	//use "User-Agent" header if we couldn't extract platform from user agent client hints
+	userAgent := r.UserAgent()
+
+	if strings.Contains(userAgent, "Windows") {
+		clientOS = vangogh_local_data.Windows
+	} else if strings.Contains(userAgent, "Mac OS X") {
+		clientOS = vangogh_local_data.MacOS
+	} else if strings.Contains(userAgent, "Linux") {
+		clientOS = vangogh_local_data.Linux
+	}
+
+	return clientOS
 }

@@ -1,0 +1,54 @@
+@scope (h1) {
+    :scope {
+        text-align: center;
+    }
+}
+
+@scope (.product-poster) {
+    :scope {
+        & img {
+            width: 800px;
+            height: 370px;
+        }
+    }
+
+    @media only screen and (max-width: 800px) {
+        :scope {
+            & img {
+                max-width: 100%;
+                height: unset;
+            }
+        }
+    }
+}
+
+@scope (title-values) {
+
+    &.positive .values {
+        --fg: var(--c-green);
+    }
+
+    &.negative .values {
+        --fg: var(--c-red);
+    }
+
+    &.neutral .values {
+        --fg: var(--c-gray);
+    }
+
+    &.Verified .values {
+        --fg: var(--c-green)
+    }
+
+    &.Playable .values {
+        --fg: var(--c-orange)
+    }
+
+    &.Unsupported .values {
+        --fg: var(--c-red)
+    }
+
+    &.Unknown .values {
+        --fg: var(--c-gray)
+    }
+}

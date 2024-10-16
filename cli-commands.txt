@@ -27,9 +27,6 @@ dehydrate
     missing
     image-type&*^={image-types}
 
-digest
-    property^={digestible-properties}
-
 get-data
     id&
     slug&
@@ -115,6 +112,13 @@ search
 serve
     port$*
     stderr$
+    operating-system$
+    language-code$
+    exclude-patches$
+    admin-username$
+    admin-password$
+    shared-username$
+    shared-password$
 
 size
     id^&

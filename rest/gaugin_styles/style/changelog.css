@@ -1,0 +1,8 @@
+body {
+    word-break: break-word;
+}
+
+a {
+    font-weight: var(--fw-b);
+    color: var(--c-cyan);
+}
