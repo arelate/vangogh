@@ -23,6 +23,7 @@ require (
 
 require (
 	github.com/boggydigital/busan v0.1.0 // indirect
+	github.com/boggydigital/compton v0.1.78 // indirect
 	github.com/boggydigital/match_node v0.1.16 // indirect
 	golang.org/x/image v0.21.0 // indirect
 	golang.org/x/net v0.30.0 // indirect

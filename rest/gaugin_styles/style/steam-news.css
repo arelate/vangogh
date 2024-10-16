@@ -1,0 +1,34 @@
+body {
+    word-break: break-word;
+}
+
+a {
+    color: var(--c-cyan);
+    font-weight: var(--fw-b);
+}
+
+ul, p {
+    margin: var(--s-n) 0;
+}
+
+ul > br {
+    display: none;
+}
+
+pre {
+    font-family: sans-serif;
+    white-space: break-spaces;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+mark.spoiler {
+    background: var(--color);
+    color: var(--color);
+    cursor: pointer;
+}
+
+mark.spoiler::selection,
+mark.spoiler:active {
+    color: var(--background-color);
+}

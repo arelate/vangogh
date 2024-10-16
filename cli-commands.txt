@@ -27,9 +27,6 @@ dehydrate
     missing
     image-type&*^={image-types}
 
-digest
-    property^={digestible-properties}
-
 get-data
     id&
     slug&
@@ -66,7 +63,7 @@ get-purchases
     download-type&$={download-types^}
     language-code&$={language-codes^}
     exclude-patches$
-    gaugin-url
+    external-url
     force
 
 get-summary
@@ -115,6 +112,13 @@ search
 serve
     port$*
     stderr$
+    operating-system$
+    language-code$
+    exclude-patches$
+    admin-username$
+    admin-password$
+    shared-username$
+    shared-password$
 
 size
     id^&
@@ -128,7 +132,7 @@ size
 
 summarize
     since-hours-ago
-    gaugin-url$
+    external-url$
 
 sync
     since-hours-ago
@@ -136,7 +140,7 @@ sync
     download-type&$={download-types^}
     language-code&$={language-codes^}
     exclude-patches$
-    gaugin-url$
+    external-url$
     debug$
     {sync-options^&}
 

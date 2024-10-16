@@ -57,7 +57,6 @@ func main() {
 		"cascade-validation": cli.CascadeValidationHandler,
 		"cleanup":            cli.CleanupHandler,
 		"dehydrate":          cli.DehydrateHandler,
-		"digest":             cli.DigestHandler,
 		"get-data":           cli.GetDataHandler,
 		"get-downloads":      cli.GetDownloadsHandler,
 		"get-images":         cli.GetImagesHandler,

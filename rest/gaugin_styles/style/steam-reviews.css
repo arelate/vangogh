@@ -1,0 +1,9 @@
+fspan.symbol {
+    height: var(--s-n);
+    line-height: var(--s-n);
+
+    & svg {
+        width: var(--s-n);
+        height: var(--s-n)
+    }
+}

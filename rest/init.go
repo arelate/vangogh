@@ -1,37 +1,48 @@
 package rest
 
 import (
-	"encoding/gob"
-	"github.com/arelate/southern_light/gog_integration"
-	"github.com/arelate/southern_light/steam_integration"
+	"crypto/sha256"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/middleware"
 )
 
-var rdx kevlar.ReadableRedux
+const (
+	AdminRole  = "admin"
+	SharedRole = "shared"
+
+	SearchResultsLimit = 60 // divisible by 2,3,4,5,6
+)
+
+var (
+	operatingSystems []vangogh_local_data.OperatingSystem
+	languageCodes    []string
+	excludePatches   bool
+
+	rdx kevlar.ReadableRedux
+)
+
+func SetDefaultDownloadsFilters(
+	os []vangogh_local_data.OperatingSystem,
+	lc []string,
+	ep bool) {
+	operatingSystems = os
+	languageCodes = lc
+	excludePatches = ep
+}
+
+func SetUsername(role, u string) {
+	middleware.SetUsername(role, sha256.Sum256([]byte(u)))
+}
+
+func SetPassword(role, p string) {
+	middleware.SetPassword(role, sha256.Sum256([]byte(p)))
+}
 
 func Init() error {
 
-	//GOG.com types
-	gob.Register(gog_integration.AccountPage{})
-	gob.Register(gog_integration.AccountProduct{})
-	gob.Register(gog_integration.ApiProductV1{})
-	gob.Register(gog_integration.ApiProductV2{})
-	gob.Register(gog_integration.Details{})
-	gob.Register(gog_integration.Licences{})
-	gob.Register(gog_integration.OrderPage{})
-	gob.Register(gog_integration.Order{})
-	gob.Register(gog_integration.CatalogPage{})
-	gob.Register(gog_integration.CatalogProduct{})
-	gob.Register(gog_integration.UserWishlist{})
-	//Steam types
-	gob.Register(steam_integration.AppList{})
-	gob.Register(steam_integration.GetNewsForAppResponse{})
-	gob.Register(steam_integration.AppReviews{})
-	gob.Register(steam_integration.DeckAppCompatibilityReport{})
-
 	var err error
-	properties := vangogh_local_data.ReduxProperties()
+	properties := vangogh_local_data.AllProperties()
 	//used by get_downloads
 	properties = append(properties, vangogh_local_data.NativeLanguageNameProperty)
 	rdx, err = vangogh_local_data.NewReduxReader(properties...)

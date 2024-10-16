@@ -1,6 +1,6 @@
 # vangogh
 
-Backend microservice to sync and serve metadata, images from GOG.com. Can be used as a CLI app.
+Backend microservice to sync and serve metadata, images from GOG.com. Can be used as a CLI app or a web service that provides a frontend to browse, search that data.
 
 ## Installation
 
@@ -21,10 +21,8 @@ services:
     # - VG_OPERATING-SYSTEM=Windows,macOS
     # - VG_LANGUAGE-CODE=en,fr
     # - VG_EXCLUDE-PATCHES=true
-    # gaugin URL for Atom feed
-    # - VG_GAUGIN-URL=https://GAUGIN-ADDRESS
-    # prerender webhook URL
-    # - VG_WEBHOOK-URL=http://GAUGIN-ADDRESS/prerender
+    # External URL for Atom feed
+    # - VG_EXTERNAL-URL=https://vangogh.arles
     # debug
     # - VG_SYNC_DEBUG=true    
     volumes:
@@ -93,9 +91,13 @@ getting licences (game) data...
 
 If you want to de-authorize `vangogh` from accessing your GOG.com data - delete the `cookies.txt` file. After that you'll still be able to download anything that does not require account authorization. All the account specific data you'll have accumulated until that point will be preserved. 
 
-## Usage
+## Serving data
 
-The recommended way to enjoy the data sync'd by `vangogh` is [arelate/gaugin](https://github.com/arelate/gaugin). `gaugin` is a read-only view and doesn't change the data. To update your data you can use `vangogh` with a CLI interface to get and maintain all the publicly available GOG.com data, including your account data (game installers):
+The recommended way to enjoy the data sync'd by `vangogh` is to serve it with a `serve` command.
+
+## Updating data
+
+To update your data you can use `vangogh` with a CLI interface to get and maintain all the publicly available GOG.com data, including your account data (game installers):
 
 - in the same folder with `docker-compose.yaml` config use `docker-compose exec vangogh vg <command> <options>`
 - most commonly you would run sync `docker-compose exec vangogh vg sync -all` that gets all available data from GOG.com. Sync is optimized to get as little data as possible on each run - only the newly added images and updated installers. There is no great way to determine if metadata was updated remotely, so all of it is fetched on each sync - however upon doing that `vangogh` would know exactly what changed and use this information to optimize decisions.
@@ -112,14 +114,6 @@ Here are few estimates of how much space you'll need for each type of data:
 - thumbnails: 400 Mb
 - checksums (automatically downloaded with installers for validation): 120Mb
 - product installers: estimate is about 6.5Tb for 1000 products for installers for the 10 most common languages for all operating systems (just Windows and English is about half of that)
-
-## REST API
-
-The default installation method provided above would start a web service that serves available data over HTTP REST API. 
-
-Here is a list of [all endpoints that vangogh supports](https://github.com/arelate/vangogh/blob/main/rest/routing.go).
-
-All endpoints support only GET requests and return [gob data](https://go.dev/blog/gob) (`format` parameter can be used to request JSON). No endpoint provides access to digital artifacts (images, installers), since it's not effective to do that for `vangogh`. Given those files would need to be served by the front-end, you'd need access to the complete file payload in order to serve is efficiently (e.g. HTTP range requests). Instead, `vangogh` is focused on the metadata only and doesn't require authentication for any endpoint. You likely don't want it exposed to the public internet.
 
 ## Taking care of your data
 

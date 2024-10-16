@@ -70,7 +70,7 @@ func SyncHandler(u *url.URL) error {
 		return err
 	}
 
-	gauginUrl := vangogh_local_data.ValueFromUrl(u, "gaugin-url")
+	externalUrl := vangogh_local_data.ValueFromUrl(u, "external-url")
 	debug := vangogh_local_data.FlagFromUrl(u, "debug")
 
 	return Sync(
@@ -80,7 +80,7 @@ func SyncHandler(u *url.URL) error {
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, "language-code"),
 		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
-		gauginUrl,
+		externalUrl,
 		debug)
 }
 

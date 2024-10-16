@@ -1,0 +1,11 @@
+{
+  "short_name": "Gaugin",
+  "name": "Gaugin",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon.png"
+    }
+  ]
+}
