@@ -90,6 +90,7 @@ var ProductHiddenProperties = []string{
 	vangogh_local_data.PreOrderProperty,
 	vangogh_local_data.InDevelopmentProperty,
 	vangogh_local_data.IsFreeProperty,
+	vangogh_local_data.IsDiscountedProperty,
 	vangogh_local_data.BasePriceProperty,
 	vangogh_local_data.DiscountPercentageProperty,
 	vangogh_local_data.ValidationResultProperty,
