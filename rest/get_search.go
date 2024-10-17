@@ -53,7 +53,7 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var ids, slice []string
+	var ids []string
 
 	if len(query) > 0 {
 
@@ -81,11 +81,9 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		} else if to+SearchResultsLimit > len(ids) {
 			to = len(ids)
 		}
-
-		slice = ids[from:to]
 	}
 
-	searchPage := compton_pages.Search(query, slice, from, to, rdx)
+	searchPage := compton_pages.Search(query, ids, from, to, rdx)
 	if err := searchPage.WriteContent(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
