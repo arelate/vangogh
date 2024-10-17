@@ -2,8 +2,8 @@ package compton_pages
 
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh/rest/gaugin_elements/product_labels"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"

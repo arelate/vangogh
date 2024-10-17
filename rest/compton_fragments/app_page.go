@@ -1,6 +1,7 @@
 package compton_fragments
 
 import (
+	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/page"

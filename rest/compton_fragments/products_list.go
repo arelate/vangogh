@@ -2,7 +2,7 @@ package compton_fragments
 
 import (
 	"github.com/arelate/vangogh/paths"
-	"github.com/arelate/vangogh/rest/gaugin_elements/product_card"
+	"github.com/arelate/vangogh/rest/compton_elements/product_card"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/elements/els"

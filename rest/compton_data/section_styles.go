@@ -1,5 +1,7 @@
 package compton_data
 
+import "github.com/arelate/vangogh/rest/compton_styles"
+
 var SectionStyles = map[string][]byte{
 	PropertiesSection:    nil,
 	ExternalLinksSection: nil,

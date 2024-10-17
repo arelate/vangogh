@@ -3,8 +3,9 @@ package product_card
 import (
 	"bytes"
 	_ "embed"
+	"github.com/arelate/vangogh/rest/compton_atoms"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh/rest/gaugin_elements/product_labels"
+	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/size"

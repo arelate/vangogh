@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
