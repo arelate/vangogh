@@ -8,8 +8,7 @@ import (
 )
 
 func AppPage(current string) (p *page.PageElement, stack *flex_items.FlexItemsElement) {
-	p = page.Page(
-		PageTitle(current)).
+	p = page.Page(current).
 		AppendStyle(gaugin_styles.AppStyle).
 		AppendManifest().
 		AppendFavIcon()
