@@ -89,6 +89,34 @@ func main() {
 		os.Exit(1)
 	}
 
+	//sdcrReader, err := vangogh_local_data.NewProductReader(vangogh_local_data.SteamDeckCompatibilityReport)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//keys, err := sdcrReader.Keys()
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//sdra := nod.NewProgress("Steam deck results...")
+	//sdra.TotalInt(len(keys))
+	//
+	//for _, id := range keys {
+	//	sdcr, err := sdcrReader.SteamDeckAppCompatibilityReport(id)
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	for _, result := range sdcr.GetResults() {
+	//		if dlt := steam_integration.DecodeLocToken(result); dlt == "" {
+	//			fmt.Println(id, result)
+	//		}
+	//	}
+	//
+	//	sdra.Increment()
+	//}
+
 	if err := defs.Serve(os.Args[1:]); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)

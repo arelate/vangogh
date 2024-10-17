@@ -133,7 +133,7 @@ func externalLinks(id string, rdx kevlar.ReadableRedux) map[string][]string {
 	}
 
 	if steamAppId, ok := rdx.GetLastVal(vangogh_local_data.SteamAppIdProperty, id); ok {
-		if appId, err := strconv.ParseUint(steamAppId, 10, 32); err == nil {
+		if appId, err := strconv.ParseUint(steamAppId, 10, 32); err == nil && appId > 0 {
 			uAppId := uint32(appId)
 			links[data.GauginSteamLinksProperty] =
 				append(links[data.GauginSteamLinksProperty],
