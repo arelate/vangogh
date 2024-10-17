@@ -1,16 +1,14 @@
 package compton_data
 
-import "github.com/arelate/vangogh/rest/gaugin_styles"
-
 var SectionStyles = map[string][]byte{
 	PropertiesSection:    nil,
 	ExternalLinksSection: nil,
-	DescriptionSection:   gaugin_styles.DescriptionStyle,
-	ScreenshotsSection:   gaugin_styles.ScreenshotsStyle,
-	VideosSection:        gaugin_styles.VideosStyle,
-	ChangelogSection:     gaugin_styles.ChangelogStyle,
-	SteamNewsSection:     gaugin_styles.SteamNewsStyle,
-	SteamReviewsSection:  gaugin_styles.SteamReviewsStyle,
-	SteamDeckSection:     gaugin_styles.SteamDeckStyle,
-	DownloadsSection:     gaugin_styles.DownloadsStyle,
+	DescriptionSection:   compton_styles.DescriptionStyle,
+	ScreenshotsSection:   compton_styles.ScreenshotsStyle,
+	VideosSection:        compton_styles.VideosStyle,
+	ChangelogSection:     compton_styles.ChangelogStyle,
+	SteamNewsSection:     compton_styles.SteamNewsStyle,
+	SteamReviewsSection:  compton_styles.SteamReviewsStyle,
+	SteamDeckSection:     compton_styles.SteamDeckStyle,
+	DownloadsSection:     compton_styles.DownloadsStyle,
 }

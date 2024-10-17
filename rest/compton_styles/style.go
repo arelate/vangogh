@@ -1,4 +1,4 @@
-package gaugin_styles
+package compton_styles
 
 import _ "embed"
 

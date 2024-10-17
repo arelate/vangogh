@@ -4,7 +4,6 @@ import (
 	"bytes"
 	_ "embed"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh/rest/gaugin_atoms"
 	"github.com/arelate/vangogh/rest/gaugin_elements/product_labels"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
@@ -148,7 +147,7 @@ func (pc *ProductCardElement) SetHydratedPoster(hydratedSrc, posterSrc string) *
 func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.ReadableRedux) *ProductCardElement {
 	pc := &ProductCardElement{
 		BaseElement: compton.BaseElement{
-			TagName: gaugin_atoms.ProductCard,
+			TagName: compton_atoms.ProductCard,
 			Markup:  markupProductCard,
 		},
 		r:   r,

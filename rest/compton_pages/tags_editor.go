@@ -3,7 +3,6 @@ package compton_pages
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh/rest/gaugin_styles"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
@@ -35,7 +34,7 @@ func TagsEditor(
 	tagsPropertyTitle := compton_data.PropertyTitles[tagsProperty]
 
 	p, pageStack := compton_fragments.AppPage("Edit " + tagsPropertyTitle)
-	p.AppendStyle(gaugin_styles.TagEditorsStyle)
+	p.AppendStyle(compton_styles.TagEditorsStyle)
 
 	/* App navigation */
 

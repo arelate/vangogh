@@ -35,7 +35,7 @@ func GetPurchases(
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
 	excludePatches bool,
-	gauginUrl string,
+	externalUrl string,
 	force bool) error {
 
 	productTypes := []vangogh_local_data.ProductType{
@@ -67,7 +67,7 @@ func GetPurchases(
 		return err
 	}
 
-	if err := Summarize(since, gauginUrl); err != nil {
+	if err := Summarize(since, externalUrl); err != nil {
 		return err
 	}
 

@@ -1,4 +1,4 @@
-package gaugin_atoms
+package compton_atoms
 
 import "golang.org/x/net/html/atom"
 
