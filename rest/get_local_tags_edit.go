@@ -11,6 +11,11 @@ func GetLocalTagsEdit(w http.ResponseWriter, r *http.Request) {
 
 	// GET /local-tags/edit?id
 
+	if err := RefreshRedux(); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
 	id := r.URL.Query().Get("id")
 
 	selectedValues := make(map[string]any)
@@ -20,13 +25,16 @@ func GetLocalTagsEdit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// TODO: Restore
-	//localTags := make(map[string]string)
-	//for _, v := range localTagsDigest[vangogh_local_data.LocalTagsProperty] {
-	//	localTags[v] = v
-	//}
+	localTags := make(map[string]string)
+	for _, ltId := range rdx.Keys(vangogh_local_data.LocalTagsProperty) {
+		if lts, ok := rdx.GetAllValues(vangogh_local_data.LocalTagsProperty, ltId); ok {
+			for _, lt := range lts {
+				localTags[lt] = lt
+			}
+		}
+	}
 
-	ltePage := compton_pages.TagsEditor(id, true, vangogh_local_data.LocalTagsProperty, nil, selectedValues, rdx)
+	ltePage := compton_pages.TagsEditor(id, true, vangogh_local_data.LocalTagsProperty, localTags, selectedValues, rdx)
 	if err := ltePage.WriteContent(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
