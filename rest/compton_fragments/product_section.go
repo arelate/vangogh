@@ -12,7 +12,7 @@ func ProductSection(section string) *page.PageElement {
 	ifc := iframe_expand.IframeExpandContent(section, title)
 
 	if style, ok := compton_data.SectionStyles[section]; ok && style != nil {
-		ifc.AppendStyle(style)
+		ifc.AppendStyle("style-section", style)
 	}
 
 	return ifc

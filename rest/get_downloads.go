@@ -29,7 +29,7 @@ func GetDownloads(w http.ResponseWriter, r *http.Request) {
 
 	p := compton_pages.Downloads(id, dls, rdx)
 
-	if err := p.WriteContent(w); err != nil {
+	if err := p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }

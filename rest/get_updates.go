@@ -79,7 +79,7 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 	sort.Strings(sections)
 
 	updatesPage := compton_pages.Updates(sections, updates, sectionTitles, updateTotals, updated, rdx)
-	if err := updatesPage.WriteContent(w); err != nil {
+	if err := updatesPage.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }

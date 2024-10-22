@@ -9,9 +9,9 @@ import (
 
 func AppPage(current string) (p *page.PageElement, stack *flex_items.FlexItemsElement) {
 	p = page.Page(current).
-		AppendStyle(compton_styles.AppStyle).
+		AppendStyle("style-app", compton_styles.AppStyle).
 		AppendManifest().
-		AppendFavIcon()
+		AppendIcon()
 
 	stack = flex_items.FlexItems(p, direction.Column)
 	p.Append(stack)

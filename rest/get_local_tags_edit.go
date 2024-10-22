@@ -35,7 +35,7 @@ func GetLocalTagsEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ltePage := compton_pages.TagsEditor(id, true, vangogh_local_data.LocalTagsProperty, localTags, selectedValues, rdx)
-	if err := ltePage.WriteContent(w); err != nil {
+	if err := ltePage.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}

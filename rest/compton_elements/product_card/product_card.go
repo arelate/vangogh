@@ -9,7 +9,6 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/els"
 	"github.com/boggydigital/compton/elements/issa_image"
 	"github.com/boggydigital/compton/elements/labels"
 	"github.com/boggydigital/compton/elements/svg_use"
@@ -42,47 +41,47 @@ type ProductCardElement struct {
 	id        string
 }
 
-func (pc *ProductCardElement) WriteStyles(w io.Writer) error {
-	if pc.r.RequiresRegistration(styleRegistrationName) {
-		if err := els.Style(styleProductCard, styleRegistrationName).WriteContent(w); err != nil {
-			return err
-		}
-	}
-	if pc.poster != nil {
-		if err := pc.poster.WriteStyles(w); err != nil {
-			return err
-		}
-	}
-	if pc.labels != nil {
-		if err := pc.labels.WriteStyles(w); err != nil {
-			return err
-		}
-	}
-	return nil
-}
+//func (pc *ProductCardElement) WriteStyles(w io.Writer) error {
+//	if pc.r.RequiresRegistration(styleRegistrationName) {
+//		if err := els.Style(styleProductCard, styleRegistrationName).WriteContent(w); err != nil {
+//			return err
+//		}
+//	}
+//	if pc.poster != nil {
+//		if err := pc.poster.WriteStyles(w); err != nil {
+//			return err
+//		}
+//	}
+//	if pc.labels != nil {
+//		if err := pc.labels.WriteStyles(w); err != nil {
+//			return err
+//		}
+//	}
+//	return nil
+//}
 
-func (pc *ProductCardElement) WriteRequirements(w io.Writer) error {
-	if pc.poster != nil {
-		if err := pc.poster.WriteRequirements(w); err != nil {
-			return err
-		}
-	}
-	for _, symbol := range pc.osSymbols {
-		if err := symbol.WriteRequirements(w); err != nil {
-			return err
-		}
-	}
-	return pc.BaseElement.WriteRequirements(w)
-}
+//func (pc *ProductCardElement) WriteRequirements(w io.Writer) error {
+//	if pc.poster != nil {
+//		if err := pc.poster.WriteRequirements(w); err != nil {
+//			return err
+//		}
+//	}
+//	for _, symbol := range pc.osSymbols {
+//		if err := symbol.WriteRequirements(w); err != nil {
+//			return err
+//		}
+//	}
+//	return pc.BaseElement.WriteRequirements(w)
+//}
 
-func (pc *ProductCardElement) WriteDeferrals(w io.Writer) error {
-	if pc.poster != nil {
-		return pc.poster.WriteDeferrals(w)
-	}
-	return nil
-}
+//func (pc *ProductCardElement) WriteDeferrals(w io.Writer) error {
+//	if pc.poster != nil {
+//		return pc.poster.WriteDeferrals(w)
+//	}
+//	return nil
+//}
 
-func (pc *ProductCardElement) WriteContent(w io.Writer) error {
+func (pc *ProductCardElement) Write(w io.Writer) error {
 	return compton.WriteContents(bytes.NewReader(markupProductCard), w, pc.elementFragmentWriter)
 }
 
@@ -94,7 +93,7 @@ func (pc *ProductCardElement) elementFragmentWriter(t string, w io.Writer) error
 		}
 	case ".Poster":
 		if pc.poster != nil {
-			if err := pc.poster.WriteContent(w); err != nil {
+			if err := pc.poster.Write(w); err != nil {
 				return err
 			}
 		}
@@ -105,12 +104,12 @@ func (pc *ProductCardElement) elementFragmentWriter(t string, w io.Writer) error
 			}
 		}
 	case ".Labels":
-		if err := pc.labels.WriteContent(w); err != nil {
+		if err := pc.labels.Write(w); err != nil {
 			return err
 		}
 	case ".OperatingSystems":
 		for _, symbol := range pc.osSymbols {
-			if err := symbol.WriteContent(w); err != nil {
+			if err := symbol.Write(w); err != nil {
 				return err
 			}
 		}
@@ -186,6 +185,8 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 		RowGap(size.XXSmall)
 
 	pc.SetAttribute("data-id", id)
+
+	r.RegisterStyle(styleRegistrationName, styleProductCard)
 
 	return pc
 }

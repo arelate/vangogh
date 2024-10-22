@@ -40,7 +40,7 @@ func GetVideos(w http.ResponseWriter, r *http.Request) {
 
 	p := compton_pages.Videos(videoIds, videoTitles, videoDurations)
 
-	if err := p.WriteContent(w); err != nil {
+	if err := p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }

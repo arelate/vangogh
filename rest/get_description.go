@@ -19,7 +19,7 @@ func GetDescription(w http.ResponseWriter, r *http.Request) {
 
 	p := compton_pages.Description(id, rdx)
 
-	if err := p.WriteContent(w); err != nil {
+	if err := p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }
