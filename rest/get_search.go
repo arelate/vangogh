@@ -84,7 +84,7 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	searchPage := compton_pages.Search(query, ids, from, to, rdx)
-	if err := searchPage.Write(w); err != nil {
+	if err := searchPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }

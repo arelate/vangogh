@@ -5,7 +5,6 @@ import (
 	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
@@ -16,10 +15,11 @@ import (
 	"github.com/boggydigital/compton/elements/inputs"
 	"github.com/boggydigital/compton/elements/labels"
 	"github.com/boggydigital/compton/elements/popup"
+	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 )
 
-func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks map[string][]string) compton.Element {
+func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks map[string][]string) *page.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 	if !ok {

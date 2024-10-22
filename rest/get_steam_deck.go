@@ -31,8 +31,7 @@ func GetSteamDeck(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := compton_pages.SteamDeck(id, dacr, rdx)
-
-	if err := p.Write(w); err != nil {
+	if err := p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }

@@ -10,12 +10,13 @@ import (
 	"github.com/boggydigital/compton/elements/els"
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/fspan"
+	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 )
 
 const eagerLoadingScreenshots = 3
 
-func Screenshots(id string, rdx kevlar.ReadableRedux) compton.Element {
+func Screenshots(id string, rdx kevlar.ReadableRedux) *page.PageElement {
 
 	screenshots, _ := rdx.GetAllValues(vangogh_local_data.ScreenshotsProperty, id)
 

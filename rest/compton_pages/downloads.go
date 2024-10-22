@@ -16,6 +16,7 @@ import (
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/fspan"
 	"github.com/boggydigital/compton/elements/svg_use"
+	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 	"strconv"
 )
@@ -43,7 +44,7 @@ var downloadTypesStrings = map[vangogh_local_data.DownloadType]string{
 // Downloads will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
-func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
+func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) *page.PageElement {
 	s := compton_fragments.ProductSection(compton_data.DownloadsSection)
 
 	pageStack := flex_items.FlexItems(s, direction.Column)

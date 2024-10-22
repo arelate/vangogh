@@ -4,15 +4,15 @@ import (
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/elements/els"
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/fspan"
+	"github.com/boggydigital/compton/page"
 )
 
-func SteamNews(id string, san *steam_integration.AppNews, all bool) compton.Element {
+func SteamNews(id string, san *steam_integration.AppNews, all bool) *page.PageElement {
 	s := compton_fragments.ProductSection(compton_data.SteamNewsSection)
 
 	pageStack := flex_items.FlexItems(s, direction.Column)

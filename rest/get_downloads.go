@@ -28,8 +28,7 @@ func GetDownloads(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := compton_pages.Downloads(id, dls, rdx)
-
-	if err := p.Write(w); err != nil {
+	if err := p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }
@@ -63,7 +62,6 @@ func getDownloads(id string,
 		[]vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType},
 		languageCodes,
 		excludePatches), nil
-
 }
 
 func getClientOperatingSystem(r *http.Request) vangogh_local_data.OperatingSystem {

@@ -17,6 +17,7 @@ import (
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/fspan"
 	"github.com/boggydigital/compton/elements/inputs"
+	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
 	"net/http"
@@ -30,7 +31,7 @@ func TagsEditor(
 	tagsProperty string,
 	allValues map[string]string,
 	selected map[string]any,
-	rdx kevlar.ReadableRedux) compton.Element {
+	rdx kevlar.ReadableRedux) *page.PageElement {
 
 	tagsPropertyTitle := compton_data.PropertyTitles[tagsProperty]
 

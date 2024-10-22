@@ -18,8 +18,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	p := compton_pages.Changelog(id, rdx)
-
-	if err := p.Write(w); err != nil {
+	if err := p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
