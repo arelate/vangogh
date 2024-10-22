@@ -4,12 +4,12 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/compton/elements/details_summary"
 	"github.com/boggydigital/compton/elements/els"
 	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 	"strconv"
 )
@@ -18,7 +18,7 @@ const (
 	filterSearchTitle = "Filter & search"
 )
 
-func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.ReadableRedux) *page.PageElement {
+func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	current := compton_data.AppNavSearch
 	p, pageStack := compton_fragments.AppPage(current)

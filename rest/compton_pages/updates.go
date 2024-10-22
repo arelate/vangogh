@@ -12,7 +12,6 @@ import (
 	"github.com/boggydigital/compton/elements/els"
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/nav_links"
-	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 )
 
@@ -21,7 +20,7 @@ func Updates(sections []string,
 	sectionTitles map[string]string,
 	updateTotals map[string]int,
 	updated string,
-	rdx kevlar.ReadableRedux) *page.PageElement {
+	rdx kevlar.ReadableRedux) compton.PageElement {
 
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)

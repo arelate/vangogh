@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh_local_data"
+	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
@@ -13,7 +14,6 @@ import (
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/fspan"
 	"github.com/boggydigital/compton/elements/svg_use"
-	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 )
 
@@ -38,7 +38,7 @@ var displayTypeColors = map[string]color.Color{
 	"Unknown":     color.Gray,
 }
 
-func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx kevlar.ReadableRedux) *page.PageElement {
+func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx kevlar.ReadableRedux) compton.PageElement {
 	title, _ := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 
 	s := compton_fragments.ProductSection(compton_data.SteamDeckSection)

@@ -4,16 +4,16 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh_local_data"
+	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/elements/els"
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/fspan"
-	"github.com/boggydigital/compton/page"
 	"github.com/boggydigital/kevlar"
 )
 
-func Changelog(id string, rdx kevlar.ReadableRedux) *page.PageElement {
+func Changelog(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	// empty changelog is handled below, no need to check for existence here
 	changelog, _ := rdx.GetAllValues(vangogh_local_data.ChangelogProperty, id)

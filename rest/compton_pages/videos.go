@@ -3,15 +3,15 @@ package compton_pages
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/elements/els"
 	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/compton/elements/fspan"
-	"github.com/boggydigital/compton/page"
 )
 
-func Videos(videoIds []string, videoTitles, videoDurations map[string]string) *page.PageElement {
+func Videos(videoIds []string, videoTitles, videoDurations map[string]string) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.VideosSection)
 

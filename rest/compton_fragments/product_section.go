@@ -2,11 +2,11 @@ package compton_fragments
 
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/elements/iframe_expand"
-	"github.com/boggydigital/compton/page"
 )
 
-func ProductSection(section string) *page.PageElement {
+func ProductSection(section string) compton.PageElement {
 
 	title := compton_data.SectionTitles[section]
 	ifc := iframe_expand.IframeExpandContent(section, title)
