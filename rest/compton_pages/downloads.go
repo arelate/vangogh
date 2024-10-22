@@ -11,11 +11,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
-	"github.com/boggydigital/compton/elements/svg_use"
 	"github.com/boggydigital/kevlar"
 	"strconv"
 )
@@ -46,7 +41,7 @@ var downloadTypesStrings = map[vangogh_local_data.DownloadType]string{
 func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.PageElement {
 	s := compton_fragments.ProductSection(compton_data.DownloadsSection)
 
-	pageStack := flex_items.FlexItems(s, direction.Column)
+	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
 	if valRes := validationResults(s, id, rdx); valRes != nil {
@@ -73,7 +68,7 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 		}
 
 		if ii != len(dlOs)-1 {
-			pageStack.Append(els.Hr())
+			pageStack.Append(compton.Hr())
 		}
 	}
 
@@ -85,7 +80,7 @@ func validationResults(r compton.Registrar, id string, rdx kevlar.ReadableRedux)
 		if valRes, sure := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); sure && len(valRes) > 0 {
 
 			lastResult := valRes[len(valRes)-1]
-			valSect := flex_items.FlexItems(r, direction.Row).
+			valSect := compton.FlexItems(r, direction.Row).
 				JustifyContent(align.Center).
 				ColumnGap(size.Small).
 				FontSize(size.Small)
@@ -94,7 +89,7 @@ func validationResults(r compton.Registrar, id string, rdx kevlar.ReadableRedux)
 			var valDateElement compton.Element
 
 			if vd, err := strconv.ParseInt(valDate, 10, 64); err == nil {
-				valDateElement = fspan.Text(r, compton_fragments.EpochDate(vd)).
+				valDateElement = compton.Fspan(r, compton_fragments.EpochDate(vd)).
 					ForegroundColor(color.Gray)
 			}
 
@@ -123,7 +118,7 @@ func validationResults(r compton.Registrar, id string, rdx kevlar.ReadableRedux)
 				valResColor = color.Gray
 			}
 
-			valResElement := fspan.Text(r, valResTitle).
+			valResElement := compton.Fspan(r, valResTitle).
 				FontWeight(font_weight.Bolder).
 				ForegroundColor(valResColor)
 
@@ -141,16 +136,16 @@ func validationResults(r compton.Registrar, id string, rdx kevlar.ReadableRedux)
 }
 
 func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.OperatingSystem) compton.Element {
-	osRow := flex_items.FlexItems(r, direction.Row).
+	osRow := compton.FlexItems(r, direction.Row).
 		AlignItems(align.Center).
 		ColumnGap(size.Small)
-	osSymbol := svg_use.Sparkle
+	osSymbol := compton.Sparkle
 	if smb, ok := compton_data.OperatingSystemSymbols[os]; ok {
 		osSymbol = smb
 	}
-	osIcon := svg_use.SvgUse(r, osSymbol)
+	osIcon := compton.SvgUse(r, osSymbol)
 	osIcon.AddClass("operating-system")
-	osTitle := els.H3()
+	osTitle := compton.H3()
 	osString := ""
 	switch os {
 	case vangogh_local_data.AnyOperatingSystem:
@@ -158,36 +153,36 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.Operating
 	default:
 		osString = os.String()
 	}
-	osTitle.Append(fspan.Text(r, osString))
+	osTitle.Append(compton.Fspan(r, osString))
 	osRow.Append(osIcon, osTitle)
 	return osRow
 }
 
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
-	row := flex_items.FlexItems(r, direction.Row).
+	row := compton.FlexItems(r, direction.Row).
 		ColumnGap(size.Small).
 		RowGap(size.Unset).
 		AlignItems(align.Center).FontSize(size.Small)
 
-	typeIcon := svg_use.SvgUse(r, svg_use.Circle)
+	typeIcon := compton.SvgUse(r, compton.Circle)
 	typeIcon.AddClass(dv.dlType.String())
-	typeSpan := fspan.Text(r, downloadTypesStrings[dv.dlType]).
+	typeSpan := compton.Fspan(r, downloadTypesStrings[dv.dlType]).
 		FontWeight(font_weight.Bolder)
 
 	row.Append(typeIcon, typeSpan)
 
 	if dv.langCode != "" {
-		lcTitle := fspan.Text(r, "Lang:").ForegroundColor(color.Gray)
-		lcSpan := fspan.Text(r, compton_data.LanguageFlags[dv.langCode])
+		lcTitle := compton.Fspan(r, "Lang:").ForegroundColor(color.Gray)
+		lcSpan := compton.Fspan(r, compton_data.LanguageFlags[dv.langCode])
 		row.Append(lcTitle, lcSpan)
 	}
 
 	//column.Append(row)
 
 	if dv.version != "" {
-		versionTitle := fspan.Text(r, "Version:").ForegroundColor(color.Gray)
-		versionSpan := fspan.Text(r, dv.version)
+		versionTitle := compton.Fspan(r, "Version:").ForegroundColor(color.Gray)
+		versionSpan := compton.Fspan(r, dv.version)
 		row.Append(versionTitle, versionSpan)
 	}
 
@@ -195,15 +190,15 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 }
 
 func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, dv *DownloadVariant, dls vangogh_local_data.DownloadsList) compton.Element {
-	downloadLinksTitle := fspan.Text(r, "Show download links").
+	downloadLinksTitle := compton.Fspan(r, "Show download links").
 		FontWeight(font_weight.Bolder).
 		ForegroundColor(color.Gray)
 
-	dsDownloadLinks := details_summary.Smaller(r, downloadLinksTitle, false)
+	dsDownloadLinks := compton.DSSmall(r, downloadLinksTitle, false)
 
 	downloads := filterDownloads(os, dls, dv)
 
-	downloadsColumn := flex_items.FlexItems(r, direction.Column).
+	downloadsColumn := compton.FlexItems(r, direction.Column).
 		RowGap(size.Small)
 	dsDownloadLinks.Append(downloadsColumn)
 
@@ -212,7 +207,7 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, d
 			downloadsColumn.Append(link)
 		}
 		if ii != len(downloads)-1 {
-			downloadsColumn.Append(els.Hr())
+			downloadsColumn.Append(compton.Hr())
 		}
 	}
 
@@ -221,25 +216,25 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, d
 
 func downloadLink(r compton.Registrar, dl vangogh_local_data.Download) compton.Element {
 
-	link := els.A("/files?manual-url=" + dl.ManualUrl)
+	link := compton.A("/files?manual-url=" + dl.ManualUrl)
 	link.AddClass("download")
 
-	linkColumn := flex_items.FlexItems(r, direction.Column).
+	linkColumn := compton.FlexItems(r, direction.Column).
 		RowGap(size.Unset)
 
 	name := dl.Name
 	if dl.Type == vangogh_local_data.DLC {
 		name = dl.ProductTitle
 	}
-	linkTitle := fspan.Text(r, name).
+	linkTitle := compton.Fspan(r, name).
 		FontWeight(font_weight.Bolder)
 	linkColumn.Append(linkTitle)
 
-	sizeRow := flex_items.FlexItems(r, direction.Row).
+	sizeRow := compton.FlexItems(r, direction.Row).
 		ColumnGap(size.XSmall).
 		FontSize(size.Small)
-	sizeTitle := fspan.Text(r, "Size:").ForegroundColor(color.Gray)
-	sizeSpan := fspan.Text(r, fmtBytes(dl.EstimatedBytes))
+	sizeTitle := compton.Fspan(r, "Size:").ForegroundColor(color.Gray)
+	sizeSpan := compton.Fspan(r, fmtBytes(dl.EstimatedBytes))
 	sizeRow.Append(sizeTitle, sizeSpan)
 	linkColumn.Append(sizeRow)
 

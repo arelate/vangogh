@@ -12,11 +12,6 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
-	"github.com/boggydigital/compton/elements/inputs"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
 	"net/http"
@@ -41,7 +36,7 @@ func TagsEditor(
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 
-	pageStack.Append(flex_items.Center(p, appNavLinks))
+	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	/* Product poster */
 
@@ -52,23 +47,23 @@ func TagsEditor(
 	/* Product title */
 
 	productTitle, _ := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
-	productHeading := els.HeadingText(productTitle, 1)
-	pageStack.Append(flex_items.Center(p, productHeading))
+	productHeading := compton.HeadingText(productTitle, 1)
+	pageStack.Append(compton.FICenter(p, productHeading))
 
 	/* Ownership notice */
 
 	if !owned {
-		ownershipNotice := fspan.Text(p, "Tags modifications require product ownership").
+		ownershipNotice := compton.Fspan(p, "Tags modifications require product ownership").
 			ForegroundColor(color.Yellow).FontWeight(font_weight.Bolder)
 
-		pageStack.Append(flex_items.Center(p, ownershipNotice))
+		pageStack.Append(compton.FICenter(p, ownershipNotice))
 	}
 
 	/* Tags Property Title */
 
 	tagsPropertyHeading := compton_fragments.DetailsSummaryTitle(p, tagsPropertyTitle)
 
-	dsTags := details_summary.Larger(p, tagsPropertyHeading, true).
+	dsTags := compton.DSLarge(p, tagsPropertyHeading, true).
 		BackgroundColor(color.Highlight).
 		ForegroundColor(color.Foreground).
 		SummaryMarginBlockEnd(size.Normal).
@@ -88,14 +83,14 @@ func TagsEditor(
 		panic("unknown tags property editor")
 	}
 
-	editTagsForm := els.Form(action, http.MethodGet)
-	swColumn := flex_items.FlexItems(p, direction.Column).AlignContent(align.Center)
+	editTagsForm := compton.Form(action, http.MethodGet)
+	swColumn := compton.FlexItems(p, direction.Column).AlignContent(align.Center)
 
-	idInput := inputs.InputValue(p, input_types.Hidden, id)
+	idInput := compton.InputValue(p, input_types.Hidden, id)
 	idInput.SetName(vangogh_local_data.IdProperty)
 	swColumn.Append(idInput)
 
-	conditionInput := inputs.InputValue(p, input_types.Hidden, strconv.FormatBool(owned))
+	conditionInput := compton.InputValue(p, input_types.Hidden, strconv.FormatBool(owned))
 	conditionInput.SetName("condition")
 	swColumn.Append(conditionInput)
 
@@ -108,12 +103,12 @@ func TagsEditor(
 		swColumn.Append(switchLabel(p, vid, label, has, !owned))
 	}
 
-	newValueInput := inputs.Input(p, input_types.Text)
+	newValueInput := compton.Input(p, input_types.Text)
 	newValueInput.SetName("new-property-value")
 	newValueInput.SetPlaceholder("Add new value")
 	swColumn.Append(newValueInput)
 
-	applyButton := inputs.InputValue(p, input_types.Submit, "Apply")
+	applyButton := compton.InputValue(p, input_types.Submit, "Apply")
 	swColumn.Append(applyButton)
 
 	editTagsForm.Append(swColumn)
@@ -121,23 +116,23 @@ func TagsEditor(
 
 	/* Footer */
 
-	pageStack.Append(els.Br(), compton_fragments.Footer(p))
+	pageStack.Append(compton.Br(), compton_fragments.Footer(p))
 
 	return p
 }
 
 func switchLabel(r compton.Registrar, id, label string, checked, disabled bool) compton.Element {
-	row := flex_items.FlexItems(r, direction.Row).AlignItems(align.Center)
+	row := compton.FlexItems(r, direction.Row).AlignItems(align.Center)
 
-	switchElement := inputs.Switch(r)
+	switchElement := compton.Switch(r)
 	switchElement.SetId(id)
 	switchElement.SetValue(id)
 	switchElement.SetChecked(checked)
 	switchElement.SetDisabled(disabled)
 	switchElement.SetName("value") //using the same name for all binary properties
 
-	labelElement := els.Label(id)
-	labelElement.Append(els.Text(label))
+	labelElement := compton.Label(id)
+	labelElement.Append(compton.Text(label))
 
 	row.Append(switchElement, labelElement)
 

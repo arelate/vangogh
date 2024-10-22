@@ -1,8 +1,6 @@
 package compton_data
 
-import (
-	"github.com/boggydigital/compton/elements/svg_use"
-)
+import "github.com/boggydigital/compton"
 
 const (
 	AppNavUpdates = "Updates"
@@ -11,9 +9,9 @@ const (
 
 var AppNavOrder = []string{AppNavUpdates, AppNavSearch}
 
-var AppNavIcons = map[string]svg_use.Symbol{
-	AppNavUpdates: svg_use.Sparkle,
-	AppNavSearch:  svg_use.Search,
+var AppNavIcons = map[string]compton.Symbol{
+	AppNavUpdates: compton.Sparkle,
+	AppNavSearch:  compton.Search,
 }
 
 var AppNavLinks = map[string]string{

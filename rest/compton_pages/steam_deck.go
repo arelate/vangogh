@@ -10,10 +10,6 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
-	"github.com/boggydigital/compton/elements/svg_use"
 	"github.com/boggydigital/kevlar"
 )
 
@@ -43,12 +39,12 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 
 	s := compton_fragments.ProductSection(compton_data.SteamDeckSection)
 
-	pageStack := flex_items.FlexItems(s, direction.Column)
+	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
 	if category, ok := rdx.GetLastVal(vangogh_local_data.SteamDeckAppCompatibilityCategoryProperty, id); ok {
 		message := fmt.Sprintf(messageByCategory[category], title)
-		divMessage := els.DivText(message)
+		divMessage := compton.DivText(message)
 		divMessage.AddClass("message")
 		pageStack.Append(divMessage)
 	}
@@ -56,43 +52,43 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 	results := dacr.GetResults()
 
 	if len(results) > 0 {
-		pageStack.Append(els.Hr())
+		pageStack.Append(compton.Hr())
 	}
 
 	if blogUrl := dacr.GetBlogUrl(); blogUrl != "" {
-		pageStack.Append(els.AText("Read more in the Steam blog", blogUrl))
+		pageStack.Append(compton.AText("Read more in the Steam blog", blogUrl))
 	}
 
 	displayTypes := dacr.GetDisplayTypes()
 
-	ul := els.Ul()
+	ul := compton.Ul()
 	if len(displayTypes) == len(results) {
 		for ii, result := range results {
 
 			dt := displayTypes[ii]
-			resultRow := flex_items.FlexItems(s, direction.Row).AlignItems(align.Center)
+			resultRow := compton.FlexItems(s, direction.Row).AlignItems(align.Center)
 			resultRow.AddClass("nowrap")
 
-			displayTypeIcon := fspan.Text(s, "").ForegroundColor(displayTypeColors[dt])
+			displayTypeIcon := compton.Fspan(s, "").ForegroundColor(displayTypeColors[dt])
 			displayTypeIcon.AddClass("svg")
-			displayTypeIcon.Append(svg_use.SvgUse(s, svg_use.Circle))
+			displayTypeIcon.Append(compton.SvgUse(s, compton.Circle))
 			decodedResult := steam_integration.DecodeLocToken(result)
 			if decodedResult == "" {
 				decodedResult = result
 			}
-			displayTypeMessage := fspan.Text(s, decodedResult)
+			displayTypeMessage := compton.Fspan(s, decodedResult)
 			if dt == "Unknown" {
 				displayTypeMessage.ForegroundColor(color.Gray)
 			}
 			resultRow.Append(displayTypeIcon, displayTypeMessage)
 
-			li := els.ListItem()
+			li := compton.ListItem()
 			li.Append(resultRow)
 
 			ul.Append(li)
 
 			if ii != len(results)-1 {
-				ul.Append(els.Hr())
+				ul.Append(compton.Hr())
 			}
 
 		}

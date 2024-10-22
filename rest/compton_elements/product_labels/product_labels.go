@@ -5,20 +5,20 @@ import (
 	"fmt"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh_local_data"
-	"github.com/boggydigital/compton/elements/labels"
+	"github.com/boggydigital/compton"
 	"github.com/boggydigital/kevlar"
 )
 
 //go:embed "style/product-labels.css"
 var StyleProductLabels []byte
 
-func FormatLabels(id string, rdx kevlar.ReadableRedux, properties ...string) []labels.FormattedLabel {
+func FormatLabels(id string, rdx kevlar.ReadableRedux, properties ...string) []compton.FormattedLabel {
 	owned := false
 	if op, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok {
 		owned = op == vangogh_local_data.TrueValue
 	}
 
-	fmtLabels := make([]labels.FormattedLabel, 0, len(properties))
+	fmtLabels := make([]compton.FormattedLabel, 0, len(properties))
 
 	for _, p := range properties {
 		fmtLabels = append(fmtLabels, formatLabel(id, p, owned, rdx))
@@ -27,9 +27,9 @@ func FormatLabels(id string, rdx kevlar.ReadableRedux, properties ...string) []l
 	return fmtLabels
 }
 
-func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) labels.FormattedLabel {
+func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) compton.FormattedLabel {
 
-	fmtLabel := labels.FormattedLabel{
+	fmtLabel := compton.FormattedLabel{
 		Property: property,
 	}
 

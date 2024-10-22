@@ -8,10 +8,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/nav_links"
 	"github.com/boggydigital/kevlar"
 )
 
@@ -40,10 +36,10 @@ func Updates(sections []string,
 		order = append(order, st)
 	}
 
-	sectionTargets := nav_links.TextLinks(sectionLinks, "", order...)
+	sectionTargets := compton.TextLinks(sectionLinks, "", order...)
 
-	sectionNav := nav_links.NavLinksTargets(p, sectionTargets...)
-	pageStack.Append(flex_items.Center(p, appNavLinks, sectionNav))
+	sectionNav := compton.NavLinksTargets(p, sectionTargets...)
+	pageStack.Append(compton.FICenter(p, appNavLinks, sectionNav))
 
 	/* Show All... button */
 
@@ -63,8 +59,7 @@ func Updates(sections []string,
 
 		sectionHeading := compton_fragments.DetailsSummaryTitle(p, sectionTitle)
 
-		sectionDetailsToggle := details_summary.
-			Larger(p, sectionHeading, true).
+		sectionDetailsToggle := compton.DSLarge(p, sectionHeading, true).
 			BackgroundColor(color.Highlight).
 			SummaryMarginBlockEnd(size.Normal).
 			DetailsMarginBlockEnd(size.Unset).
@@ -76,7 +71,7 @@ func Updates(sections []string,
 		sectionDetailsToggle.SetId(sectionTitle)
 		pageStack.Append(sectionDetailsToggle)
 
-		sectionStack := flex_items.FlexItems(p, direction.Column)
+		sectionStack := compton.FlexItems(p, direction.Column)
 		sectionDetailsToggle.Append(sectionStack)
 
 		//sectionStack.Append(itemsCount)
@@ -93,7 +88,7 @@ func Updates(sections []string,
 
 	/* Last Updated section */
 
-	pageStack.Append(els.Br(), compton_fragments.Updated(p, updated))
+	pageStack.Append(compton.Br(), compton_fragments.Updated(p, updated))
 
 	/* Standard app footer */
 

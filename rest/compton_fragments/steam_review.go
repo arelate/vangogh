@@ -9,11 +9,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
-	"github.com/boggydigital/compton/elements/svg_use"
 	"strconv"
 	"time"
 )
@@ -22,7 +17,7 @@ const longReviewThreshold = 750
 
 func SteamReview(r compton.Registrar, review steam_integration.Review) compton.Element {
 
-	container := flex_items.FlexItems(r, direction.Column).RowGap(size.Normal)
+	container := compton.FlexItems(r, direction.Column).RowGap(size.Normal)
 
 	votedTitle := "Not Recommended"
 	votedColor := color.Red
@@ -31,22 +26,22 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 		votedColor = color.Green
 	}
 
-	votedRow := flex_items.FlexItems(r, direction.Row).
+	votedRow := compton.FlexItems(r, direction.Row).
 		AlignItems(align.Center).
 		ColumnGap(size.Small)
 
-	fs := fspan.Text(r, "").ForegroundColor(votedColor)
+	fs := compton.Fspan(r, "").ForegroundColor(votedColor)
 	fs.AddClass("symbol")
-	fs.Append(svg_use.SvgUse(r, svg_use.Circle))
+	fs.Append(compton.SvgUse(r, compton.Circle))
 
-	votedHeading := els.H3Text(votedTitle)
-	//votedHeading.Append(fspan.Text(r, votedTitle))
+	votedHeading := compton.H3Text(votedTitle)
+	//votedHeading.Append(compton.Fspan(r, votedTitle))
 
 	votedRow.Append(fs, votedHeading)
 
 	container.Append(votedRow)
 
-	header := flex_items.FlexItems(r, direction.Row).ColumnGap(size.Small).RowGap(size.Unset).FontSize(size.Small)
+	header := compton.FlexItems(r, direction.Row).ColumnGap(size.Small).RowGap(size.Unset).FontSize(size.Small)
 
 	authorRow := SteamReviewHeadingRow(r, "Author")
 	if review.Author.NumGamesOwned > 0 {
@@ -101,16 +96,16 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 	var reviewContainer compton.Element
 	if len(review.Review) > longReviewThreshold {
 		dsTitleText := fmt.Sprintf("Show full review (%d chars)", len(review.Review))
-		dsTitle := fspan.Text(r, dsTitleText).
+		dsTitle := compton.Fspan(r, dsTitleText).
 			ForegroundColor(color.Gray).
 			FontWeight(font_weight.Bolder)
-		dsReview := details_summary.Smaller(r, dsTitle, false)
+		dsReview := compton.DSSmall(r, dsTitle, false)
 		container.Append(dsReview)
 		reviewContainer = dsReview
 	} else {
 		reviewContainer = container
 	}
-	reviewContainer.Append(fspan.Text(r, review.Review))
+	reviewContainer.Append(compton.Fspan(r, review.Review))
 
 	votesRow := SteamReviewHeadingRow(r, "Votes")
 	if review.VotesUp > 0 {
@@ -136,25 +131,25 @@ func EpochDate(e int64) string {
 }
 
 func AppendSteamReviewPropertyValue(r compton.Registrar, c compton.Element, p, v string) {
-	c.Append(fspan.Text(r, p).ForegroundColor(color.Gray))
-	c.Append(fspan.Text(r, v))
+	c.Append(compton.Fspan(r, p).ForegroundColor(color.Gray))
+	c.Append(compton.Fspan(r, v))
 }
 
 func AppendSteamReviewNotice(r compton.Registrar, c compton.Element, n string) {
-	notice := fspan.Text(r, n).
+	notice := compton.Fspan(r, n).
 		FontWeight(font_weight.Bolder).
 		ForegroundColor(color.Orange)
 	c.Append(notice)
 }
 
 func SteamReviewHeadingRow(r compton.Registrar, title string) compton.Element {
-	row := flex_items.FlexItems(r, direction.Row).
+	row := compton.FlexItems(r, direction.Row).
 		ColumnGap(size.XSmall).
 		RowGap(size.Unset).
 		AlignItems(align.Center).
 		FontSize(size.Small)
 	if title != "" {
-		row.Append(fspan.Text(r, title).FontWeight(font_weight.Bolder))
+		row.Append(compton.Fspan(r, title).FontWeight(font_weight.Bolder))
 	}
 	return row
 

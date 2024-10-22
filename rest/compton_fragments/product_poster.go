@@ -3,8 +3,6 @@ package compton_fragments
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/issa_image"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/kevlar"
 )
@@ -15,9 +13,9 @@ func ProductPoster(r compton.Registrar, id string, rdx kevlar.ReadableRedux) com
 		relImgSrc := "/image?id=" + imgSrc
 		if dehydSrc, sure := rdx.GetLastVal(vangogh_local_data.DehydratedImageProperty, id); sure {
 			hydSrc := issa.HydrateColor(dehydSrc)
-			poster = issa_image.IssaImageHydrated(r, hydSrc, relImgSrc)
+			poster = compton.IssaImageHydrated(r, hydSrc, relImgSrc)
 		} else {
-			poster = els.Img(relImgSrc)
+			poster = compton.Img(relImgSrc)
 		}
 		poster.AddClass("product-poster")
 		return poster

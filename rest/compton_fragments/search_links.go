@@ -3,7 +3,6 @@ package compton_fragments
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/compton/elements/nav_links"
 )
 
 func SearchLinks(r compton.Registrar, current string) compton.Element {
@@ -13,10 +12,10 @@ func SearchLinks(r compton.Registrar, current string) compton.Element {
 		searchLinks[dst] = compton_data.SearchPath + "?" + q
 	}
 
-	targets := nav_links.TextLinks(
+	targets := compton.TextLinks(
 		searchLinks,
 		current,
 		compton_data.SearchOrder...)
 
-	return nav_links.NavLinksTargets(r, targets...)
+	return compton.NavLinksTargets(r, targets...)
 }

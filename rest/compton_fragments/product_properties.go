@@ -11,13 +11,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
-	"github.com/boggydigital/compton/elements/grid_items"
-	"github.com/boggydigital/compton/elements/svg_use"
-	"github.com/boggydigital/compton/elements/title_values"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
 	"slices"
@@ -32,7 +25,7 @@ type formattedProperty struct {
 }
 
 func ProductProperties(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
-	grid := grid_items.GridItems(r).JustifyContent(align.Center)
+	grid := compton.GridItems(r).JustifyContent(align.Center)
 
 	for _, property := range compton_data.ProductProperties {
 		if slices.Contains(compton_data.ProductHiddenProperties, property) {
@@ -205,26 +198,26 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 func operatingSystemsTitleValues(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
 	property := vangogh_local_data.OperatingSystemsProperty
 	propertyTitle := compton_data.PropertyTitles[property]
-	tv := title_values.TitleValues(r, propertyTitle)
-	row := flex_items.FlexItems(r, direction.Row).JustifyContent(align.Start)
+	tv := compton.TitleValues(r, propertyTitle)
+	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start)
 	tv.Append(row)
 	if values, ok := rdx.GetAllValues(property, id); ok {
 		for _, os := range vangogh_local_data.ParseManyOperatingSystems(values) {
-			osLink := els.A(searchHref(property, os.String()))
-			osLink.Append(svg_use.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
+			osLink := compton.A(searchHref(property, os.String()))
+			osLink.Append(compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
 			row.Append(osLink)
 		}
 	}
 	return tv
 }
 
-func propertyTitleValues(r compton.Registrar, property string, fmtProperty formattedProperty) *title_values.TitleValuesElement {
+func propertyTitleValues(r compton.Registrar, property string, fmtProperty formattedProperty) *compton.TitleValuesElement {
 
 	if len(fmtProperty.values) == 0 && len(fmtProperty.actions) == 0 {
 		return nil
 	}
 
-	tv := title_values.TitleValues(r, compton_data.PropertyTitles[property]).
+	tv := compton.TitleValues(r, compton_data.PropertyTitles[property]).
 		ForegroundColor(color.Gray).TitleForegroundColor(color.Foreground)
 
 	if len(fmtProperty.values) > 0 {
@@ -233,17 +226,17 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 			tv.AppendLinkValues(fmtProperty.values)
 		} else {
 			summaryTitle := fmt.Sprintf("Show all %d", len(fmtProperty.values))
-			summaryElement := fspan.Text(r, summaryTitle).
+			summaryElement := compton.Fspan(r, summaryTitle).
 				FontWeight(font_weight.Bolder)
-			ds := details_summary.Smaller(r, summaryElement, false).
+			ds := compton.DSSmall(r, summaryElement, false).
 				SummaryMarginBlockEnd(size.Normal).
 				DetailsMarginBlockEnd(size.Small)
-			row := flex_items.FlexItems(r, direction.Row).JustifyContent(align.Start)
+			row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start)
 			keys := maps.Keys(fmtProperty.values)
 			slices.Sort(keys)
 			for _, link := range keys {
 				href := fmtProperty.values[link]
-				row.Append(els.AText(link, href))
+				row.Append(compton.AText(link, href))
 			}
 			ds.Append(row)
 			tv.AppendValues(ds)
@@ -256,8 +249,8 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 
 	if len(fmtProperty.actions) > 0 {
 		for ac, acHref := range fmtProperty.actions {
-			actionLink := els.A(acHref)
-			actionLink.Append(fspan.Text(r, ac).ForegroundColor(color.Blue))
+			actionLink := compton.A(acHref)
+			actionLink.Append(compton.Fspan(r, ac).ForegroundColor(color.Blue))
 			tv.AppendValues(actionLink)
 		}
 	}

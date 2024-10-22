@@ -7,15 +7,12 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
 )
 
 func SteamNews(id string, san *steam_integration.AppNews, all bool) compton.PageElement {
 	s := compton_fragments.ProductSection(compton_data.SteamNewsSection)
 
-	pageStack := flex_items.FlexItems(s, direction.Column)
+	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
 	communityAnnouncements := make([]steam_integration.NewsItem, 0, len(san.NewsItems))
@@ -47,8 +44,8 @@ func SteamNews(id string, san *steam_integration.AppNews, all bool) compton.Page
 		if all {
 			title = "Steam news are not available for this product"
 		}
-		fs := fspan.Text(s, title).ForegroundColor(color.Gray)
-		pageStack.Append(flex_items.Center(s, fs))
+		fs := compton.Fspan(s, title).ForegroundColor(color.Gray)
+		pageStack.Append(compton.FICenter(s, fs))
 	}
 
 	for ii, ni := range newsItems {
@@ -56,7 +53,7 @@ func SteamNews(id string, san *steam_integration.AppNews, all bool) compton.Page
 			pageStack.Append(srf)
 		}
 		if ii < len(newsItems)-1 {
-			pageStack.Append(els.Hr())
+			pageStack.Append(compton.Hr())
 		}
 	}
 

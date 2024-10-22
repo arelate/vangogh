@@ -7,9 +7,6 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
 	"github.com/boggydigital/kevlar"
 )
 
@@ -21,24 +18,24 @@ func Screenshots(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.ScreenshotsSection)
 
-	pageStack := flex_items.FlexItems(s, direction.Column)
+	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
 	if len(screenshots) == 0 {
-		fs := fspan.Text(s, "Screenshots are not available for this product").
+		fs := compton.Fspan(s, "Screenshots are not available for this product").
 			ForegroundColor(color.Gray)
-		pageStack.Append(flex_items.Center(s, fs))
+		pageStack.Append(compton.FICenter(s, fs))
 	}
 
 	for ii, src := range screenshots {
 		imageSrc := "/image?id=" + src
-		link := els.A(imageSrc)
+		link := compton.A(imageSrc)
 		link.SetAttribute("target", "_top")
 		var img compton.Element
 		if ii < eagerLoadingScreenshots {
-			img = els.ImgEager(imageSrc)
+			img = compton.ImgEager(imageSrc)
 		} else {
-			img = els.ImgLazy(imageSrc)
+			img = compton.ImgLazy(imageSrc)
 		}
 		link.Append(img)
 		pageStack.Append(link)

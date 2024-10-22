@@ -9,10 +9,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
 	"github.com/boggydigital/yet_urls/youtube_urls"
 	"regexp"
 	"strings"
@@ -20,9 +16,9 @@ import (
 
 func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bool) compton.Element {
 
-	container := flex_items.FlexItems(r, direction.Column).RowGap(size.Normal)
+	container := compton.FlexItems(r, direction.Column).RowGap(size.Normal)
 
-	newItemHeading := els.HeadingText(item.Title, 3)
+	newItemHeading := compton.HeadingText(item.Title, 3)
 
 	container.Append(newItemHeading)
 
@@ -52,13 +48,13 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 
 	container.Append(header)
 
-	dsTitle := fspan.Text(r, "Show news item").
+	dsTitle := compton.Fspan(r, "Show news item").
 		FontWeight(font_weight.Bolder).
 		ForegroundColor(color.Gray)
 
-	ds := details_summary.Smaller(r, dsTitle, open)
+	ds := compton.DSSmall(r, dsTitle, open)
 
-	itemContents := els.DivText(steamNewsToHTML(item.Contents))
+	itemContents := compton.DivText(steamNewsToHTML(item.Contents))
 	itemContents.AddClass("steam-news-item")
 
 	ds.Append(itemContents)
@@ -69,10 +65,10 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 }
 
 func SteamNewsLink(r compton.Registrar, title, href string) compton.Element {
-	linkDecoration := fspan.Text(r, "").
+	linkDecoration := compton.Fspan(r, "").
 		FontWeight(font_weight.Bolder).
 		ForegroundColor(color.Cyan)
-	link := els.AText(title, href)
+	link := compton.AText(title, href)
 	link.SetAttribute("target", "_top")
 	linkDecoration.Append(link)
 	return linkDecoration

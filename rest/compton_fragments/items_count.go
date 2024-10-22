@@ -5,7 +5,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/fspan"
 	"strconv"
 	"strings"
 )
@@ -29,7 +28,7 @@ func ItemsCount(r compton.Registrar, from, to, total int) compton.Element {
 		title = strings.Replace(title, "{total}", strconv.Itoa(total), 1)
 	}
 
-	itemsCount := fspan.Text(r, title).
+	itemsCount := compton.Fspan(r, title).
 		ForegroundColor(color.Gray).
 		FontSize(size.XSmall).
 		FontWeight(font_weight.Normal)

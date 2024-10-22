@@ -1,7 +1,7 @@
 package product_card
 
 import (
-	"bytes"
+	"embed"
 	_ "embed"
 	"github.com/arelate/vangogh/rest/compton_atoms"
 	"github.com/arelate/vangogh/rest/compton_data"
@@ -9,9 +9,6 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/issa_image"
-	"github.com/boggydigital/compton/elements/labels"
-	"github.com/boggydigital/compton/elements/svg_use"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/kevlar"
 	"io"
@@ -20,15 +17,14 @@ import (
 )
 
 const (
-	registrationName      = "product-card"
-	styleRegistrationName = "style-" + registrationName
+	registrationName = "product-card"
 )
 
 var (
 	//go:embed "markup/product-card.html"
-	markupProductCard []byte
+	markupProductCard embed.FS
 	//go:embed "style/product-card.css"
-	styleProductCard []byte
+	styleProductCard embed.FS
 )
 
 type ProductCardElement struct {
@@ -36,53 +32,17 @@ type ProductCardElement struct {
 	r         compton.Registrar
 	poster    compton.Element
 	osSymbols []compton.Element
-	labels    *labels.LabelsElement
+	labels    *compton.LabelsElement
 	rdx       kevlar.ReadableRedux
 	id        string
 }
 
-//func (pc *ProductCardElement) WriteStyles(w io.Writer) error {
-//	if pc.r.RequiresRegistration(styleRegistrationName) {
-//		if err := els.Style(styleProductCard, styleRegistrationName).WriteContent(w); err != nil {
-//			return err
-//		}
-//	}
-//	if pc.poster != nil {
-//		if err := pc.poster.WriteStyles(w); err != nil {
-//			return err
-//		}
-//	}
-//	if pc.labels != nil {
-//		if err := pc.labels.WriteStyles(w); err != nil {
-//			return err
-//		}
-//	}
-//	return nil
-//}
-
-//func (pc *ProductCardElement) WriteRequirements(w io.Writer) error {
-//	if pc.poster != nil {
-//		if err := pc.poster.WriteRequirements(w); err != nil {
-//			return err
-//		}
-//	}
-//	for _, symbol := range pc.osSymbols {
-//		if err := symbol.WriteRequirements(w); err != nil {
-//			return err
-//		}
-//	}
-//	return pc.BaseElement.WriteRequirements(w)
-//}
-
-//func (pc *ProductCardElement) WriteDeferrals(w io.Writer) error {
-//	if pc.poster != nil {
-//		return pc.poster.WriteDeferrals(w)
-//	}
-//	return nil
-//}
-
 func (pc *ProductCardElement) Write(w io.Writer) error {
-	return compton.WriteContents(bytes.NewReader(markupProductCard), w, pc.elementFragmentWriter)
+	file, err := pc.Markup.Open(pc.Filename)
+	if err != nil {
+		return err
+	}
+	return compton.WriteContents(file, w, pc.elementFragmentWriter)
 }
 
 func (pc *ProductCardElement) elementFragmentWriter(t string, w io.Writer) error {
@@ -135,20 +95,21 @@ func (pc *ProductCardElement) elementFragmentWriter(t string, w io.Writer) error
 }
 
 func (pc *ProductCardElement) SetDehydratedPoster(dehydratedSrc, posterSrc string) *ProductCardElement {
-	pc.poster = issa_image.IssaImageDehydrated(pc.r, dehydratedSrc, posterSrc)
+	pc.poster = compton.IssaImageDehydrated(pc.r, dehydratedSrc, posterSrc)
 	return pc
 }
 
 func (pc *ProductCardElement) SetHydratedPoster(hydratedSrc, posterSrc string) *ProductCardElement {
-	pc.poster = issa_image.IssaImageHydrated(pc.r, hydratedSrc, posterSrc)
+	pc.poster = compton.IssaImageHydrated(pc.r, hydratedSrc, posterSrc)
 	return pc
 }
 
 func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.ReadableRedux) *ProductCardElement {
 	pc := &ProductCardElement{
 		BaseElement: compton.BaseElement{
-			TagName: compton_atoms.ProductCard,
-			Markup:  markupProductCard,
+			TagName:  compton_atoms.ProductCard,
+			Markup:   markupProductCard,
+			Filename: "markup/product-card.html",
 		},
 		r:   r,
 		id:  id,
@@ -173,12 +134,12 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 		pOses := vangogh_local_data.ParseManyOperatingSystems(oses)
 		for _, os := range osOrder {
 			if slices.Contains(pOses, os) {
-				pc.osSymbols = append(pc.osSymbols, svg_use.SvgUse(pc.r, compton_data.OperatingSystemSymbols[os]))
+				pc.osSymbols = append(pc.osSymbols, compton.SvgUse(pc.r, compton_data.OperatingSystemSymbols[os]))
 			}
 		}
 	}
 
-	pc.labels = labels.Labels(r,
+	pc.labels = compton.Labels(r,
 		product_labels.FormatLabels(id, rdx, compton_data.LabelProperties...)...).
 		FontSize(size.XSmall).
 		ColumnGap(size.XXSmall).
@@ -186,7 +147,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 
 	pc.SetAttribute("data-id", id)
 
-	r.RegisterStyle(styleRegistrationName, styleProductCard)
+	r.RegisterStyle("style/product-card.css", styleProductCard)
 
 	return pc
 }

@@ -8,11 +8,6 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/input_types"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/grid_items"
-	"github.com/boggydigital/compton/elements/inputs"
-	"github.com/boggydigital/compton/elements/title_values"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
 	"slices"
@@ -21,20 +16,20 @@ import (
 
 func SearchForm(r compton.Registrar, query map[string][]string, searchQueryDisplay compton.Element, rdx kevlar.ReadableRedux) compton.Element {
 
-	form := els.Form("/search", "GET")
-	formStack := flex_items.FlexItems(r, direction.Column)
+	form := compton.Form("/search", "GET")
+	formStack := compton.FlexItems(r, direction.Column)
 	form.Append(formStack)
 
 	if searchQueryDisplay != nil {
 		formStack.Append(searchQueryDisplay)
 	}
 
-	submitRow := flex_items.FlexItems(r, direction.Row).JustifyContent(align.Center)
-	submit := inputs.InputValue(r, input_types.Submit, "Submit Query")
+	submitRow := compton.FlexItems(r, direction.Row).JustifyContent(align.Center)
+	submit := compton.InputValue(r, input_types.Submit, "Submit Query")
 	submitRow.Append(submit)
 	formStack.Append(submitRow)
 
-	inputsGrid := grid_items.GridItems(r).JustifyContent(align.Center)
+	inputsGrid := compton.GridItems(r).JustifyContent(align.Center)
 	formStack.Append(inputsGrid)
 
 	searchInputs(r, query, inputsGrid, rdx)
@@ -128,7 +123,7 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 	for _, property := range compton_data.SearchProperties {
 		title := compton_data.PropertyTitles[property]
 		value := strings.Join(query[property], ", ")
-		titleInput := title_values.SearchValue(r, title, property, value)
+		titleInput := compton.TISearchValue(r, title, property, value)
 
 		var datalist map[string]string
 		var listId string

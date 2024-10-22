@@ -9,13 +9,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/iframe_expand"
-	"github.com/boggydigital/compton/elements/inputs"
-	"github.com/boggydigital/compton/elements/labels"
-	"github.com/boggydigital/compton/elements/popup"
 	"github.com/boggydigital/kevlar"
 )
 
@@ -33,15 +26,15 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 
-	showToc := inputs.InputValue(p, input_types.Button, "Sections")
-	pageStack.Append(flex_items.Center(p, appNavLinks, showToc))
+	showToc := compton.InputValue(p, input_types.Button, "Sections")
+	pageStack.Append(compton.FICenter(p, appNavLinks, showToc))
 
 	/* Product details sections shortcuts */
 
 	productSectionsLinks := compton_fragments.ProductSectionsLinks(p, hasSections)
 	pageStack.Append(productSectionsLinks)
 
-	pageStack.Append(popup.Attach(p, showToc, productSectionsLinks))
+	pageStack.Append(compton.Attach(p, showToc, productSectionsLinks))
 
 	/* Product poster */
 
@@ -51,14 +44,14 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 	/* Product title */
 
-	productTitle := els.HeadingText(title, 1)
+	productTitle := compton.HeadingText(title, 1)
 	productTitle.AddClass("product-title")
 
 	/* Product labels */
 
 	fmtLabels := product_labels.FormatLabels(id, rdx, compton_data.LabelProperties...)
-	productLabels := labels.Labels(p, fmtLabels...).FontSize(size.Small).RowGap(size.XSmall).ColumnGap(size.XSmall)
-	pageStack.Append(flex_items.Center(p, productTitle, productLabels))
+	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.Small).RowGap(size.XSmall).ColumnGap(size.XSmall)
+	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
 
 	/* Product details sections */
 
@@ -66,8 +59,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 		sectionTitle := compton_data.SectionTitles[section]
 		summaryHeading := compton_fragments.DetailsSummaryTitle(p, sectionTitle)
-		detailsSummary := details_summary.
-			Larger(p, summaryHeading, section == compton_data.PropertiesSection).
+		detailsSummary := compton.DSLarge(p, summaryHeading, section == compton_data.PropertiesSection).
 			BackgroundColor(color.Highlight).
 			ForegroundColor(color.Foreground).
 			MarkerColor(color.Gray).
@@ -85,7 +77,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 				detailsSummary.Append(externalLinks)
 			}
 		default:
-			ifh := iframe_expand.IframeExpandHost(p, section, "/"+section+"?id="+id)
+			ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)
 			detailsSummary.Append(ifh)
 		}
 		pageStack.Append(detailsSummary)
@@ -93,7 +85,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 	/* Standard app footer */
 
-	pageStack.Append(els.Br(), compton_fragments.Footer(p))
+	pageStack.Append(compton.Br(), compton_fragments.Footer(p))
 
 	return p
 }

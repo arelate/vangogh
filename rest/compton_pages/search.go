@@ -7,9 +7,6 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/compton/elements/details_summary"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
 	"github.com/boggydigital/kevlar"
 	"strconv"
 )
@@ -31,14 +28,13 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 	searchScope := compton_data.SearchScopeFromQuery(query)
 	searchLinks := compton_fragments.SearchLinks(p, searchScope)
 
-	pageStack.Append(flex_items.Center(p, appNavLinks, searchLinks))
+	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks))
 
 	/* Filter & Search details */
 
 	filterSearchHeading := compton_fragments.DetailsSummaryTitle(p, filterSearchTitle)
 
-	filterSearchDetails := details_summary.
-		Larger(p, filterSearchHeading, len(query) == 0).
+	filterSearchDetails := compton.DSLarge(p, filterSearchHeading, len(query) == 0).
 		BackgroundColor(color.Highlight).
 		SummaryMarginBlockEnd(size.Normal).
 		DetailsMarginBlockEnd(size.Unset).
@@ -79,7 +75,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 	/* Standard app footer */
 
-	pageStack.Append(els.Br(), compton_fragments.Footer(p))
+	pageStack.Append(compton.Br(), compton_fragments.Footer(p))
 
 	return p
 }

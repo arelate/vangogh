@@ -7,22 +7,19 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
 )
 
 func SteamReviews(id string, sar *steam_integration.AppReviews) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.SteamReviewsSection)
 
-	pageStack := flex_items.FlexItems(s, direction.Column)
+	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
 	if len(sar.Reviews) == 0 {
-		fs := fspan.Text(s, "Steam reviews are not available for this product").
+		fs := compton.Fspan(s, "Steam reviews are not available for this product").
 			ForegroundColor(color.Gray)
-		pageStack.Append(flex_items.Center(s, fs))
+		pageStack.Append(compton.FICenter(s, fs))
 	}
 
 	for ii, review := range sar.Reviews {
@@ -30,7 +27,7 @@ func SteamReviews(id string, sar *steam_integration.AppReviews) compton.PageElem
 			pageStack.Append(srf)
 		}
 		if ii < len(sar.Reviews)-1 {
-			pageStack.Append(els.Hr())
+			pageStack.Append(compton.Hr())
 		}
 	}
 

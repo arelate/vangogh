@@ -7,9 +7,6 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
-	"github.com/boggydigital/compton/elements/els"
-	"github.com/boggydigital/compton/elements/flex_items"
-	"github.com/boggydigital/compton/elements/fspan"
 	"github.com/boggydigital/kevlar"
 	"net/url"
 	"path"
@@ -24,14 +21,14 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.DescriptionSection)
 
-	descriptionDiv := els.Div()
+	descriptionDiv := compton.Div()
 	descriptionDiv.AddClass("description")
 	s.Append(descriptionDiv)
 
 	if desc == "" {
-		fs := fspan.Text(s, "Description is not available for this product").
+		fs := compton.Fspan(s, "Description is not available for this product").
 			ForegroundColor(color.Gray)
-		descriptionDiv.Append(flex_items.Center(s, fs))
+		descriptionDiv.Append(compton.FICenter(s, fs))
 	} else {
 		desc = rewriteItemsLinks(desc)
 		desc = rewriteGameLinks(desc)
@@ -40,18 +37,18 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 		desc = replaceDataFallbackUrls(desc)
 		desc = rewriteVideoAsInline(desc)
 
-		descriptionDiv.Append(els.Text(desc))
+		descriptionDiv.Append(compton.Text(desc))
 	}
 
-	featuresDiv := els.Div()
+	featuresDiv := compton.Div()
 	featuresDiv.AddClass("description__features")
 	if dfp, ok := rdx.GetLastVal(vangogh_local_data.DescriptionFeaturesProperty, id); ok {
-		featuresDiv.Append(els.Text(implicitToExplicitList(dfp)))
+		featuresDiv.Append(compton.Text(implicitToExplicitList(dfp)))
 	}
 
 	descriptionDiv.Append(featuresDiv)
 
-	copyrightsDiv := els.Div()
+	copyrightsDiv := compton.Div()
 	copyrightsDiv.AddClass("description__copyrights")
 	descriptionDiv.Append(copyrightsDiv)
 
@@ -60,7 +57,7 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 		copyright = cp
 	}
 	if copyright != "" {
-		cd := els.DivText(copyright)
+		cd := compton.DivText(copyright)
 		copyrightsDiv.Append(cd)
 	}
 
@@ -69,7 +66,7 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 		addtReqs = arp
 	}
 	if addtReqs != "" {
-		ard := els.DivText(addtReqs)
+		ard := compton.DivText(addtReqs)
 		copyrightsDiv.Append(ard)
 	}
 
