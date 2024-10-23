@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
@@ -20,7 +21,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 	}
 
 	p, pageStack := compton_fragments.AppPage(title)
-	p.AppendStyle("style-product-labels", product_labels.StyleProductLabels)
+	p.RegisterStyles(compton_styles.VangoghStyles, "style/product-labels.css")
 
 	/* App navigation */
 

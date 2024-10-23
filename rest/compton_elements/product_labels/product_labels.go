@@ -1,16 +1,12 @@
 package product_labels
 
 import (
-	_ "embed"
 	"fmt"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/kevlar"
 )
-
-//go:embed "style/product-labels.css"
-var StyleProductLabels []byte
 
 func FormatLabels(id string, rdx kevlar.ReadableRedux, properties ...string) []compton.FormattedLabel {
 	owned := false

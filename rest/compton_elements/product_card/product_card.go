@@ -1,6 +1,7 @@
 package product_card
 
 import (
+	"bytes"
 	"embed"
 	_ "embed"
 	"github.com/arelate/vangogh/rest/compton_atoms"
@@ -17,18 +18,18 @@ import (
 )
 
 const (
-	registrationName = "product-card"
+	pcFilename = "style/product-card.css"
 )
 
 var (
 	//go:embed "markup/product-card.html"
-	markupProductCard embed.FS
+	markupProductCard []byte
 	//go:embed "style/product-card.css"
 	styleProductCard embed.FS
 )
 
 type ProductCardElement struct {
-	compton.BaseElement
+	*compton.BaseElement
 	r         compton.Registrar
 	poster    compton.Element
 	osSymbols []compton.Element
@@ -38,11 +39,11 @@ type ProductCardElement struct {
 }
 
 func (pc *ProductCardElement) Write(w io.Writer) error {
-	file, err := pc.Markup.Open(pc.Filename)
+	bts, err := pc.BaseElement.MarkupProvider.GetMarkup()
 	if err != nil {
 		return err
 	}
-	return compton.WriteContents(file, w, pc.elementFragmentWriter)
+	return compton.WriteContents(bytes.NewReader(bts), w, pc.elementFragmentWriter)
 }
 
 func (pc *ProductCardElement) elementFragmentWriter(t string, w io.Writer) error {
@@ -106,14 +107,10 @@ func (pc *ProductCardElement) SetHydratedPoster(hydratedSrc, posterSrc string) *
 
 func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.ReadableRedux) *ProductCardElement {
 	pc := &ProductCardElement{
-		BaseElement: compton.BaseElement{
-			TagName:  compton_atoms.ProductCard,
-			Markup:   markupProductCard,
-			Filename: "markup/product-card.html",
-		},
-		r:   r,
-		id:  id,
-		rdx: rdx,
+		BaseElement: compton.NewElement(compton.BytesMarkup(compton_atoms.ProductCard, markupProductCard)),
+		r:           r,
+		id:          id,
+		rdx:         rdx,
 	}
 
 	if viSrc, ok := rdx.GetLastVal(vangogh_local_data.VerticalImageProperty, id); ok {
@@ -147,7 +144,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 
 	pc.SetAttribute("data-id", id)
 
-	r.RegisterStyle("style/product-card.css", styleProductCard)
+	r.RegisterStyles(styleProductCard, pcFilename)
 
 	return pc
 }

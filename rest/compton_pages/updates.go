@@ -2,8 +2,8 @@ package compton_pages
 
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
@@ -20,7 +20,7 @@ func Updates(sections []string,
 
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
-	p.AppendStyle("style-product-labels", product_labels.StyleProductLabels)
+	p.RegisterStyles(compton_styles.VangoghStyles, "style/product-labels.css")
 
 	/* Nav stack = App navigation + Updates sections shortcuts */
 

@@ -30,7 +30,7 @@ func TagsEditor(
 	tagsPropertyTitle := compton_data.PropertyTitles[tagsProperty]
 
 	p, pageStack := compton_fragments.AppPage("Edit " + tagsPropertyTitle)
-	p.AppendStyle("style-tag-editor", compton_styles.TagEditorsStyle)
+	p.RegisterStyles(compton_styles.VangoghStyles, "style/tag-editors.css")
 
 	/* App navigation */
 
