@@ -26,72 +26,53 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 		votedColor = color.Green
 	}
 
-	votedRow := compton.FlexItems(r, direction.Row).
-		AlignItems(align.Center).
-		ColumnGap(size.Small)
+	container.Append(compton.H3Text(votedTitle))
 
-	fs := compton.Fspan(r, "").ForegroundColor(votedColor)
-	fs.AddClass("symbol")
-	fs.Append(compton.SvgUse(r, compton.Circle))
+	topFr := compton.Frow(r).IconColor(votedColor).Heading("Author")
 
-	votedHeading := compton.H3Text(votedTitle)
-	//votedHeading.Append(compton.Fspan(r, votedTitle))
-
-	votedRow.Append(fs, votedHeading)
-
-	container.Append(votedRow)
-
-	header := compton.FlexItems(r, direction.Row).ColumnGap(size.Small).RowGap(size.Unset).FontSize(size.Small)
-
-	authorRow := SteamReviewHeadingRow(r, "Author")
 	if review.Author.NumGamesOwned > 0 {
-		AppendSteamReviewPropertyValue(r, authorRow, "Games:", strconv.Itoa(review.Author.NumGamesOwned))
+		topFr.PropVal("Games", strconv.Itoa(review.Author.NumGamesOwned))
 	}
 	if review.Author.NumReviews > 0 {
-		AppendSteamReviewPropertyValue(r, authorRow, "Reviews:", strconv.Itoa(review.Author.NumReviews))
+		topFr.PropVal("Reviews", strconv.Itoa(review.Author.NumReviews))
 	}
 
-	datesRow := SteamReviewHeadingRow(r, "Review")
+	topFr.Heading("Review")
 	if review.TimestampCreated > 0 {
-		AppendSteamReviewPropertyValue(r, datesRow, "Cr:", EpochDate(review.TimestampCreated))
+		topFr.PropVal("Cr", EpochDate(review.TimestampCreated))
 	}
 	if review.TimestampUpdated > 0 {
-		AppendSteamReviewPropertyValue(r, datesRow, "Upd:", EpochDate(review.TimestampUpdated))
+		topFr.PropVal("Upd", EpochDate(review.TimestampUpdated))
 	}
 
-	playtimeRow := SteamReviewHeadingRow(r, "Playtime")
+	topFr.Heading("Playtime")
 	if review.Author.PlaytimeAtReview > 0 {
-		AppendSteamReviewPropertyValue(r, playtimeRow, "At review:", minutesToHours(review.Author.PlaytimeAtReview))
+		topFr.PropVal("At review", minutesToHours(review.Author.PlaytimeAtReview))
 	}
 	if review.Author.PlaytimeLastTwoWeeks > 0 {
-		AppendSteamReviewPropertyValue(r, playtimeRow, "Last 2w:", minutesToHours(review.Author.PlaytimeLastTwoWeeks))
+		topFr.PropVal("Last 2w", minutesToHours(review.Author.PlaytimeLastTwoWeeks))
 	}
 	if review.Author.PlaytimeForever > 0 {
-		AppendSteamReviewPropertyValue(r, playtimeRow, "Total:", minutesToHours(review.Author.PlaytimeForever))
+		topFr.PropVal("Total", minutesToHours(review.Author.PlaytimeForever))
 	}
 	if review.Author.DeckPlaytimeAtReview > 0 {
-		AppendSteamReviewPropertyValue(r, playtimeRow, "Steam Deck:", minutesToHours(review.Author.DeckPlaytimeAtReview))
+		topFr.PropVal("Steam Deck", minutesToHours(review.Author.DeckPlaytimeAtReview))
 	}
 
-	noticeRow := SteamReviewHeadingRow(r, "")
 	if review.PrimarilySteamDeck {
-		AppendSteamReviewNotice(r, noticeRow, "Primarily Steam Deck")
+		topFr.Highlight("Primarily Steam Deck")
 	}
 	if !review.SteamPurchase {
-		AppendSteamReviewNotice(r, noticeRow, "Not Steam purchase")
+		topFr.Highlight("Not Steam purchase")
 	}
 	if review.ReceivedForFree {
-		AppendSteamReviewNotice(r, noticeRow, "Received for free")
+		topFr.Highlight("Received for free")
 	}
 	if review.WrittenDuringEarlyAccess {
-		AppendSteamReviewNotice(r, noticeRow, "Written during Early Access")
+		topFr.Highlight("Written during Early Access")
 	}
 
-	header.Append(authorRow, playtimeRow, datesRow)
-	if noticeRow.HasChildren() {
-		header.Append(noticeRow)
-	}
-	container.Append(header)
+	container.Append(topFr)
 
 	var reviewContainer compton.Element
 	if len(review.Review) > longReviewThreshold {
@@ -107,16 +88,15 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 	}
 	reviewContainer.Append(compton.Fspan(r, review.Review))
 
-	votesRow := SteamReviewHeadingRow(r, "Votes")
-	if review.VotesUp > 0 {
-		AppendSteamReviewPropertyValue(r, votesRow, "Helpful:", strconv.Itoa(review.VotesUp))
-	}
-	if review.VotesFunny > 0 {
-		AppendSteamReviewPropertyValue(r, votesRow, "Funny:", strconv.Itoa(review.VotesFunny))
-	}
-
 	if review.VotesUp > 0 || review.VotesFunny > 0 {
-		container.Append(votesRow)
+		bottomFr := compton.Frow(r).Heading("Votes")
+		if review.VotesUp > 0 {
+			bottomFr.PropVal("Helpful", strconv.Itoa(review.VotesUp))
+		}
+		if review.VotesFunny > 0 {
+			bottomFr.PropVal("Funny", strconv.Itoa(review.VotesFunny))
+		}
+		container.Append(bottomFr)
 	}
 
 	return container

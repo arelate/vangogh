@@ -2,12 +2,10 @@ package rest
 
 import (
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/boggydigital/kevlar"
-	"net/http"
-	"strings"
-
 	"github.com/arelate/vangogh_local_data"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"net/http"
 )
 
 func GetDownloads(w http.ResponseWriter, r *http.Request) {
@@ -62,43 +60,4 @@ func getDownloads(id string,
 		[]vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType},
 		languageCodes,
 		excludePatches), nil
-}
-
-func getClientOperatingSystem(r *http.Request) vangogh_local_data.OperatingSystem {
-
-	var clientOS vangogh_local_data.OperatingSystem
-
-	//attempt to extract platform from user agent client hints first
-	secChUaPlatform := r.Header.Get("Sec-CH-UA-Platform")
-
-	switch secChUaPlatform {
-	case "Linux":
-		clientOS = vangogh_local_data.Linux
-	case "iOS":
-		fallthrough
-	case "macOS":
-		clientOS = vangogh_local_data.MacOS
-	case "Windows":
-		clientOS = vangogh_local_data.Windows
-	default:
-		// "Android", "Chrome OS", "Chromium OS" or "Unknown"
-		clientOS = vangogh_local_data.AnyOperatingSystem
-	}
-
-	if clientOS != vangogh_local_data.AnyOperatingSystem {
-		return clientOS
-	}
-
-	//use "User-Agent" header if we couldn't extract platform from user agent client hints
-	userAgent := r.UserAgent()
-
-	if strings.Contains(userAgent, "Windows") {
-		clientOS = vangogh_local_data.Windows
-	} else if strings.Contains(userAgent, "Mac OS X") {
-		clientOS = vangogh_local_data.MacOS
-	} else if strings.Contains(userAgent, "Linux") {
-		clientOS = vangogh_local_data.Linux
-	}
-
-	return clientOS
 }

@@ -22,31 +22,29 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 
 	container.Append(newItemHeading)
 
-	headingTitle := "News"
+	title := "News"
 	if len(item.Tags) > 0 {
 		for _, nit := range item.Tags {
 			if tagName, ok := compton_data.SteamNewsTags[nit]; ok {
-				headingTitle = tagName
+				title = tagName
 				break
 			}
 		}
 	}
 
-	header := SteamReviewHeadingRow(r, headingTitle)
+	fr := compton.Frow(r).Heading(title).PropVal("Posted", EpochDate(item.Date))
 
-	AppendSteamReviewPropertyValue(r, header, "Posted:", EpochDate(item.Date))
 	if item.Author != "" {
-		AppendSteamReviewPropertyValue(r, header, "Author:", item.Author)
+		fr.PropVal("Author", item.Author)
 	}
 	if item.FeedType != compton_data.FeedTypeCommunityAnnouncement {
 		// only showing feed label that are not community announcements
-		AppendSteamReviewPropertyValue(r, header, "Feed:", item.FeedLabel)
+		fr.PropVal("Feed", item.FeedLabel)
 	}
 
-	sourceLink := SteamNewsLink(r, "Source", item.Url)
-	header.Append(sourceLink)
+	fr.LinkExternal("Source", item.Url)
 
-	container.Append(header)
+	container.Append(fr)
 
 	dsTitle := compton.Fspan(r, "Show news item").
 		FontWeight(font_weight.Bolder).
