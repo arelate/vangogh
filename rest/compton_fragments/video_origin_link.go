@@ -2,7 +2,6 @@ package compton_fragments
 
 import (
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
@@ -45,14 +44,8 @@ func VideoOriginLink(r compton.Registrar, videoId, videoTitle, videoDuration str
 	linkColumn.Append(linkText)
 
 	if dur, err := strconv.ParseInt(videoDuration, 10, 64); err == nil {
-		durationRow := compton.FlexItems(r, direction.Row).
-			ColumnGap(size.Small).
-			JustifyContent(align.Center).
-			FontSize(size.Small)
-		durationTitle := compton.Fspan(r, "Duration:").ForegroundColor(color.Gray)
-		durationValue := compton.Fspan(r, formatSeconds(dur))
-		durationRow.Append(durationTitle, durationValue)
-		linkColumn.Append(durationRow)
+		frow := compton.Frow(r).PropVal("Duration", formatSeconds(dur))
+		linkColumn.Append(compton.FICenter(r, frow))
 	}
 
 	originLink.Append(linkColumn)
