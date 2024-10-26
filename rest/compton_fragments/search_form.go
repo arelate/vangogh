@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/input_types"
+	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
 	"slices"
@@ -29,7 +30,7 @@ func SearchForm(r compton.Registrar, query map[string][]string, searchQueryDispl
 	submitRow.Append(submit)
 	formStack.Append(submitRow)
 
-	inputsGrid := compton.GridItems(r).JustifyContent(align.Center)
+	inputsGrid := compton.GridItems(r).JustifyContent(align.Center).GridTemplateRows(size.XLarge)
 	formStack.Append(inputsGrid)
 
 	searchInputs(r, query, inputsGrid, rdx)

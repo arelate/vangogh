@@ -9,18 +9,18 @@
         contain-intrinsic-size: 288px 144px;
         overflow: hidden;
         display: grid;
-        grid-template-columns: 85px 1fr;
+        grid-template-columns: 85.5px 1fr;
         column-gap: var(--s-snh);
 
         & issa-image {
-            width: 85px;
-            height: 120px;
+            width: 85.5px;
+            height: 120.5px;
             overflow: hidden;
             border-radius: var(--br-n);
 
             & img {
-                width: 85px;
-                height: 120px;
+                width: 85.5px;
+                height: 120.5px;
             }
         }
 
