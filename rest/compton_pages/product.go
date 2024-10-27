@@ -20,7 +20,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 	}
 
 	p, pageStack := compton_fragments.AppPage(title)
-	p.RegisterStyles(compton_styles.VangoghStyles, "style/product-labels.css")
+	p.RegisterStyles(compton_styles.Styles, "product-labels.css")
 
 	/* App navigation */
 

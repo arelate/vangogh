@@ -20,7 +20,7 @@ func Updates(sections []string,
 
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
-	p.RegisterStyles(compton_styles.VangoghStyles, "style/product-labels.css")
+	p.RegisterStyles(compton_styles.Styles, "product-labels.css")
 
 	/* Nav stack = App navigation + Updates sections shortcuts */
 

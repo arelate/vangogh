@@ -8,7 +8,7 @@ import (
 
 func AppPage(current string) (p compton.PageElement, stack *compton.FlexItemsElement) {
 	p = compton.Page(current)
-	p.RegisterStyles(compton_styles.VangoghStyles, "style/app.css")
+	p.RegisterStyles(compton_styles.Styles, "app.css")
 
 	stack = compton.FlexItems(p, direction.Column)
 	p.Append(stack)

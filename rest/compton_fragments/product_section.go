@@ -12,7 +12,7 @@ func ProductSection(section string) compton.PageElement {
 	ifc := compton.IframeExpandContent(section, title)
 
 	if style, ok := compton_data.SectionStyles[section]; ok && style != "" {
-		ifc.RegisterStyles(compton_styles.VangoghStyles, style)
+		ifc.RegisterStyles(compton_styles.Styles, style)
 	}
 
 	return ifc

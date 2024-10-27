@@ -19,7 +19,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 	current := compton_data.AppNavSearch
 	p, pageStack := compton_fragments.AppPage(current)
-	p.RegisterStyles(compton_styles.VangoghStyles, "style/product-labels.css")
+	p.RegisterStyles(compton_styles.Styles, "product-labels.css")
 
 	/* Nav stack = App navigation + Search shortcuts */
 
