@@ -58,5 +58,5 @@ func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 	//	return
 	//}
 
-	http.Redirect(w, r, paths.ProductId(id), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, paths.Product(id), http.StatusTemporaryRedirect)
 }

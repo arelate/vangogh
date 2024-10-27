@@ -49,11 +49,11 @@ func ProductProperties(r compton.Registrar, id string, rdx kevlar.ReadableRedux)
 }
 
 func searchHref(property, value string) string {
-	return fmt.Sprintf("/search?%s=%s", property, value)
+	return fmt.Sprintf(paths.SearchPath+"?%s=%s", property, value)
 }
 
 func grdSortedSearchHref(property, value string) string {
-	return fmt.Sprintf("/search?%s=%s&sort=global-release-date&desc=true", property, value)
+	return fmt.Sprintf(paths.SearchPath+"?%s=%s&sort=global-release-date&desc=true", property, value)
 }
 
 func noHref() string {
@@ -108,7 +108,7 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 			if rtp, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, value); ok {
 				refTitle = rtp
 			}
-			fmtProperty.values[refTitle] = paths.ProductId(value)
+			fmtProperty.values[refTitle] = paths.Product(value)
 		case vangogh_local_data.GOGOrderDateProperty:
 			jtd := justTheDate(value)
 			fmtProperty.values[jtd] = searchHref(property, jtd)

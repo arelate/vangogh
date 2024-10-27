@@ -1,5 +1,5 @@
 package paths
 
 func ProductSlug(slug string) string {
-	return "/product?slug=" + slug
+	return ProductPath + "?slug=" + slug
 }

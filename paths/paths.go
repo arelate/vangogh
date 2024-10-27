@@ -1,4 +1,4 @@
-package compton_data
+package paths
 
 const (
 	UpdatesPath = "/updates"

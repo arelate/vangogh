@@ -14,7 +14,7 @@ func ProductsList(r compton.Registrar, ids []string, from, to int, rdx kevlar.Re
 
 	for ii := from; ii < to; ii++ {
 		id := ids[ii]
-		productLink := compton.A(paths.ProductId(id))
+		productLink := compton.A(paths.Product(id))
 
 		productCard := ProductCard(r, id, ii-from < dehydratedCount, rdx)
 		productLink.Append(productCard)

@@ -1,6 +1,7 @@
 package compton_pages
 
 import (
+	"github.com/arelate/vangogh/paths"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh_local_data"
@@ -28,7 +29,7 @@ func Screenshots(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 	}
 
 	for ii, src := range screenshots {
-		imageSrc := "/image?id=" + src
+		imageSrc := paths.Image(src)
 		link := compton.A(imageSrc)
 		link.SetAttribute("target", "_top")
 		var img compton.Element

@@ -69,7 +69,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Query().Has(vangogh_local_data.SlugProperty) {
 		if ids := rdx.Match(r.URL.Query(), kevlar.FullMatch); len(ids) > 0 {
 			for _, id := range ids {
-				http.Redirect(w, r, paths.ProductId(id), http.StatusPermanentRedirect)
+				http.Redirect(w, r, paths.Product(id), http.StatusPermanentRedirect)
 				return
 			}
 		} else {
