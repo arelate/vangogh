@@ -32,39 +32,40 @@
             flex-direction: column;
             row-gap: var(--s-xs);
             overflow: hidden;
-        }
 
-        & h3 {
-            margin: 0 0 var(--s-xs) 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-weight: var(--fw-n);
-        }
 
-        & li.labels {
-            margin-block-end: auto;
-        }
-
-        & .property {
-            color: var(--c-foreground);
-            font-size: calc((var(--fs-xs) + var(--fs-s)) / 2);
-            display: grid;
-            grid-template-columns: var(--s-xl) auto;
-            align-content: center;
-            grid-column-gap: var(--s-s);
-            grid-row-gap: var(--s-s);
-            align-items: center;
-
-            & .value {
+            & h3 {
+                margin: 0 0 var(--s-xs) 0;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                font-weight: var(--fw-n);
+            }
 
-                &.horizontal {
+            & li.labels {
+                margin-block-end: auto;
+            }
+
+            & .property {
+                color: var(--c-foreground);
+                font-size: calc((var(--fs-xs) + var(--fs-s)) / 2);
+                display: grid;
+                grid-template-columns: var(--s-xl) auto;
+                align-content: center;
+                grid-column-gap: var(--s-s);
+                grid-row-gap: var(--s-s);
+                align-items: center;
+
+                & .title {
+                    color: var(--c-gray);
+                }
+
+                & .value {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     display: flex;
                     flex-direction: row;
-                    flex-wrap: wrap;
                     gap: var(--s-s);
 
                     & svg {
@@ -72,10 +73,6 @@
                         height: calc(3 * var(--s-xs));
                     }
                 }
-            }
-
-            & .title {
-                color: var(--c-gray);
             }
         }
     }

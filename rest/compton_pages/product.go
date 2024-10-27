@@ -2,7 +2,7 @@ package compton_pages
 
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
+	"github.com/arelate/vangogh/rest/compton_elements/product_card"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/arelate/vangogh_local_data"
@@ -50,7 +50,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 	/* Product labels */
 
-	fmtLabels := product_labels.FormatLabels(id, rdx, compton_data.LabelProperties...)
+	fmtLabels := product_card.FormatLabels(id, rdx, compton_data.LabelProperties...)
 	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.Small).RowGap(size.XSmall).ColumnGap(size.XSmall)
 	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
 

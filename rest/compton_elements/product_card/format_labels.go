@@ -1,4 +1,4 @@
-package product_labels
+package product_card
 
 import (
 	"fmt"
@@ -34,11 +34,6 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 	case vangogh_local_data.OwnedProperty:
 		if res, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id); ok {
 			fmtLabel.Class = res
-			//if res == "OK" {
-			//	fmtLabel.Class = "validation-result-ok"
-			//} else {
-			//	fmtLabel.Class = "validation-result-err"
-			//}
 		}
 		fallthrough
 	case vangogh_local_data.WishlistedProperty:

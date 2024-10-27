@@ -6,7 +6,6 @@ import (
 	_ "embed"
 	"github.com/arelate/vangogh/rest/compton_atoms"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh/rest/compton_elements/product_labels"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/size"
@@ -95,16 +94,6 @@ func (pc *ProductCardElement) elementFragmentWriter(t string, w io.Writer) error
 	return nil
 }
 
-func (pc *ProductCardElement) SetDehydratedPoster(dehydratedSrc, posterSrc string) *ProductCardElement {
-	pc.poster = compton.IssaImageDehydrated(pc.r, dehydratedSrc, posterSrc)
-	return pc
-}
-
-func (pc *ProductCardElement) SetHydratedPoster(hydratedSrc, posterSrc string) *ProductCardElement {
-	pc.poster = compton.IssaImageHydrated(pc.r, hydratedSrc, posterSrc)
-	return pc
-}
-
 func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.ReadableRedux) *ProductCardElement {
 	pc := &ProductCardElement{
 		BaseElement: compton.NewElement(compton.BytesMarkup(compton_atoms.ProductCard, markupProductCard)),
@@ -117,9 +106,9 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 		dhSrc, _ := rdx.GetLastVal(vangogh_local_data.DehydratedVerticalImageProperty, id)
 		if hydrated {
 			hSrc := issa.HydrateColor(dhSrc)
-			pc.SetHydratedPoster(hSrc, "/image?id="+viSrc)
+			pc.poster = compton.IssaImageHydrated(pc.r, hSrc, "/image?id="+viSrc)
 		} else {
-			pc.SetDehydratedPoster(dhSrc, "/image?id="+viSrc)
+			pc.poster = compton.IssaImageDehydrated(pc.r, dhSrc, "/image?id="+viSrc)
 		}
 	}
 
@@ -137,7 +126,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 	}
 
 	pc.labels = compton.Labels(r,
-		product_labels.FormatLabels(id, rdx, compton_data.LabelProperties...)...).
+		FormatLabels(id, rdx, compton_data.LabelProperties...)...).
 		FontSize(size.XSmall).
 		ColumnGap(size.XXSmall).
 		RowGap(size.XXSmall)
