@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
@@ -108,29 +107,4 @@ func minutesToHours(m int) string {
 
 func EpochDate(e int64) string {
 	return time.Unix(e, 0).Format("Jan 2, '06")
-}
-
-func AppendSteamReviewPropertyValue(r compton.Registrar, c compton.Element, p, v string) {
-	c.Append(compton.Fspan(r, p).ForegroundColor(color.Gray))
-	c.Append(compton.Fspan(r, v))
-}
-
-func AppendSteamReviewNotice(r compton.Registrar, c compton.Element, n string) {
-	notice := compton.Fspan(r, n).
-		FontWeight(font_weight.Bolder).
-		ForegroundColor(color.Orange)
-	c.Append(notice)
-}
-
-func SteamReviewHeadingRow(r compton.Registrar, title string) compton.Element {
-	row := compton.FlexItems(r, direction.Row).
-		ColumnGap(size.XSmall).
-		RowGap(size.Unset).
-		AlignItems(align.Center).
-		FontSize(size.Small)
-	if title != "" {
-		row.Append(compton.Fspan(r, title).FontWeight(font_weight.Bolder))
-	}
-	return row
-
 }
