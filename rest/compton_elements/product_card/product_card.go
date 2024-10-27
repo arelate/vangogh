@@ -30,7 +30,7 @@ var (
 type ProductCardElement struct {
 	*compton.BaseElement
 	r         compton.Registrar
-	poster    compton.Element
+	poster    *compton.IssaImageElement
 	osSymbols []compton.Element
 	labels    *compton.LabelsElement
 	rdx       kevlar.ReadableRedux
@@ -110,6 +110,8 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 		} else {
 			pc.poster = compton.IssaImageDehydrated(pc.r, dhSrc, "/image?id="+viSrc)
 		}
+		pc.poster.WidthPixels(85.5)
+		pc.poster.HeightPixels(120.5)
 	}
 
 	osOrder := []vangogh_local_data.OperatingSystem{

@@ -13,15 +13,8 @@
         column-gap: var(--s-snh);
 
         & issa-image {
-            width: 85.5px;
-            height: 120.5px;
             overflow: hidden;
             border-radius: var(--br-n);
-
-            & img {
-                width: 85.5px;
-                height: 120.5px;
-            }
         }
 
         & ul {

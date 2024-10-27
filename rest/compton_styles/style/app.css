@@ -7,8 +7,8 @@
 @scope (.product-poster) {
     :scope {
         & img {
-            width: 800px;
-            height: 370px;
+            --w: 800px;
+            --h: 370px;
         }
     }
 
@@ -16,7 +16,7 @@
         :scope {
             & img {
                 max-width: 100%;
-                height: unset;
+                --h: unset;
             }
         }
     }
