@@ -1,4 +1,4 @@
-package product_card
+package compton_fragments
 
 import (
 	"fmt"
