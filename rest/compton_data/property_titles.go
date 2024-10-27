@@ -1,7 +1,6 @@
 package compton_data
 
 import (
-	"github.com/arelate/vangogh/data"
 	"github.com/arelate/vangogh_local_data"
 )
 
@@ -56,27 +55,27 @@ var PropertyTitles = map[string]string{
 	vangogh_local_data.HLTBPlatformsProperty:           "HLTB Platforms",
 	vangogh_local_data.HLTBReviewScoreProperty:         "HLTB Review Score",
 
-	data.GauginGOGLinksProperty:   "GOG.com Links",
-	data.GauginOtherLinksProperty: "Other Links",
-	data.GauginSteamLinksProperty: "Steam Links",
+	GauginGOGLinksProperty:   "GOG.com Links",
+	GauginOtherLinksProperty: "Other Links",
+	GauginSteamLinksProperty: "Steam Links",
 
 	vangogh_local_data.ForumUrlProperty:   "Forum",
 	vangogh_local_data.StoreUrlProperty:   "Store",
 	vangogh_local_data.SupportUrlProperty: "Support",
 
-	data.GauginSteamCommunityUrlProperty: "Community",
+	GauginSteamCommunityUrlProperty: "Community",
 
-	data.GauginGOGDBUrlProperty:        "GOGDB",
-	data.GauginIGDBUrlProperty:         "IGDB",
-	data.GauginHLTBUrlProperty:         "HLTB",
-	data.GauginMobyGamesUrlProperty:    "MobyGames",
-	data.GauginPCGamingWikiUrlProperty: "PCGamingWiki",
-	data.GauginProtonDBUrlProperty:     "ProtonDB",
-	data.GauginStrategyWikiUrlProperty: "StrategyWiki",
-	data.GauginWikipediaUrlProperty:    "Wikipedia",
-	data.GauginWineHQUrlProperty:       "WineHQ",
-	data.GauginVNDBUrlProperty:         "VNDB",
-	data.GauginIGNWikiUrlProperty:      "IGN Wiki",
+	GauginGOGDBUrlProperty:        "GOGDB",
+	GauginIGDBUrlProperty:         "IGDB",
+	GauginHLTBUrlProperty:         "HLTB",
+	GauginMobyGamesUrlProperty:    "MobyGames",
+	GauginPCGamingWikiUrlProperty: "PCGamingWiki",
+	GauginProtonDBUrlProperty:     "ProtonDB",
+	GauginStrategyWikiUrlProperty: "StrategyWiki",
+	GauginWikipediaUrlProperty:    "Wikipedia",
+	GauginWineHQUrlProperty:       "WineHQ",
+	GauginVNDBUrlProperty:         "VNDB",
+	GauginIGNWikiUrlProperty:      "IGN Wiki",
 
 	vangogh_local_data.TrueValue:  "Yes",
 	vangogh_local_data.FalseValue: "No",

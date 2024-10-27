@@ -1,7 +1,6 @@
 package compton_data
 
 import (
-	"github.com/arelate/vangogh/data"
 	"github.com/arelate/vangogh_local_data"
 )
 
@@ -74,9 +73,9 @@ var ProductProperties = []string{
 }
 
 var ProductExternalLinksProperties = []string{
-	data.GauginGOGLinksProperty,
-	data.GauginSteamLinksProperty,
-	data.GauginOtherLinksProperty,
+	GauginGOGLinksProperty,
+	GauginSteamLinksProperty,
+	GauginOtherLinksProperty,
 }
 
 var ProductHiddenProperties = []string{

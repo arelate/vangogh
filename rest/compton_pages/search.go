@@ -1,7 +1,6 @@
 package compton_pages
 
 import (
-	"github.com/arelate/vangogh/paths"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
@@ -69,7 +68,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 		query["from"] = []string{strconv.Itoa(to)}
 		enq := compton_data.EncodeQuery(query)
 
-		href := paths.SearchPath + "?" + enq
+		href := "/search?" + enq
 
 		pageStack.Append(compton_fragments.ShowMoreButton(p, "Next page", href))
 	}

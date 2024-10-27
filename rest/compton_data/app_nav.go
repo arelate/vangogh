@@ -1,7 +1,6 @@
 package compton_data
 
 import (
-	"github.com/arelate/vangogh/paths"
 	"github.com/boggydigital/compton"
 )
 
@@ -18,6 +17,6 @@ var AppNavIcons = map[string]compton.Symbol{
 }
 
 var AppNavLinks = map[string]string{
-	AppNavUpdates: paths.UpdatesPath,
-	AppNavSearch:  paths.SearchPath,
+	AppNavUpdates: "/updates",
+	AppNavSearch:  "/search",
 }

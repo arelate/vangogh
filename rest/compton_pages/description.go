@@ -1,7 +1,6 @@
 package compton_pages
 
 import (
-	"github.com/arelate/vangogh/paths"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh_local_data"
@@ -97,7 +96,7 @@ func rewriteGameLinks(desc string) string {
 			continue
 		} else {
 			_, slug := path.Split(u.Path)
-			ggUrl := paths.ProductSlug(slug)
+			ggUrl := "/product?slug=" + slug
 			desc = strings.Replace(desc, gameLink, ggUrl, -1)
 		}
 	}

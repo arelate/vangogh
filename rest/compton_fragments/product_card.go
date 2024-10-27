@@ -2,7 +2,6 @@ package compton_fragments
 
 import (
 	_ "embed"
-	"github.com/arelate/vangogh/paths"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
@@ -18,7 +17,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 
 	if viSrc, ok := rdx.GetLastVal(vangogh_local_data.VerticalImageProperty, id); ok {
 
-		posterUrl := paths.Image(viSrc)
+		posterUrl := "/image?id=" + viSrc
 		dhSrc, _ := rdx.GetLastVal(vangogh_local_data.DehydratedVerticalImageProperty, id)
 		placeholderSrc := dhSrc
 		pc.AppendPoster(placeholderSrc, posterUrl, hydrated)

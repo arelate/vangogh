@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"github.com/arelate/vangogh/paths"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
@@ -67,5 +66,5 @@ func GetTagsApply(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, paths.Product(id), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/product?id="+id, http.StatusTemporaryRedirect)
 }

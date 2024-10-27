@@ -1,4 +1,4 @@
-package data
+package compton_data
 
 const (
 	GauginGOGLinksProperty          = "gog-links"
