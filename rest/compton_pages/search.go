@@ -40,8 +40,12 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 	if len(query) > 0 {
 
-		itemsCount := compton_fragments.ItemsCount(p, from, to, len(ids))
-		filterSearchDetails.AppendSummary(itemsCount)
+		cf := compton.NewCountFormatter(
+			compton_data.SingleItemTemplate,
+			compton_data.ManyItemsSinglePageTemplate,
+			compton_data.ManyItemsManyPagesTemplate)
+
+		filterSearchDetails.AppendSummary(cf.TitleElement(p, from, to, len(ids)))
 	}
 
 	searchQuery := compton.Query(p, query,
@@ -69,7 +73,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 		href := "/search?" + enq
 
-		pageStack.Append(compton_fragments.ShowMoreButton(p, "Next page", href))
+		pageStack.Append(compton_fragments.Button(p, "Next page", href))
 	}
 
 	/* Standard app footer */

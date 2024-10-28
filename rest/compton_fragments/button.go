@@ -5,7 +5,7 @@ import (
 	"github.com/boggydigital/compton/consts/input_types"
 )
 
-func ShowMoreButton(r compton.Registrar, title, href string) compton.Element {
+func Button(r compton.Registrar, title, href string) compton.Element {
 
 	showAllLink := compton.A(href)
 

@@ -45,7 +45,7 @@ func Updates(sections []string,
 
 	var showAll compton.Element
 	if hasMoreItems(sections, updates, updateTotals) {
-		showAll = compton_fragments.ShowMoreButton(p, "Show all", "?show-all=true")
+		showAll = compton_fragments.Button(p, "Show all", "?show-all=true")
 		pageStack.Append(showAll)
 	}
 
@@ -65,8 +65,12 @@ func Updates(sections []string,
 			DetailsMarginBlockEnd(size.Unset).
 			SummaryRowGap(size.XXSmall)
 
-		itemsCount := compton_fragments.ItemsCount(p, 0, len(ids), updateTotals[section])
-		sectionDetailsToggle.AppendSummary(itemsCount)
+		cf := compton.NewCountFormatter(
+			compton_data.SingleItemTemplate,
+			compton_data.ManyItemsSinglePageTemplate,
+			compton_data.ManyItemsManyPagesTemplate)
+
+		sectionDetailsToggle.AppendSummary(cf.TitleElement(p, 0, len(ids), updateTotals[section]))
 
 		sectionDetailsToggle.SetId(sectionTitle)
 		pageStack.Append(sectionDetailsToggle)
