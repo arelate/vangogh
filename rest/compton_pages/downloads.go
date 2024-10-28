@@ -175,12 +175,8 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 }
 
 func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, dv *DownloadVariant, dls vangogh_local_data.DownloadsList) compton.Element {
-	downloadLinksTitle := compton.Fspan(r, "Show download links").
-		FontWeight(font_weight.Bolder).
-		ForegroundColor(color.Gray)
 
-	dsDownloadLinks := compton.DSSmall(r, downloadLinksTitle, false)
-
+	dsDownloadLinks := compton.DSSmall(r, compton.Fspan(r, "Download links"), false)
 	downloads := filterDownloads(os, dls, dv)
 
 	downloadsColumn := compton.FlexItems(r, direction.Column).

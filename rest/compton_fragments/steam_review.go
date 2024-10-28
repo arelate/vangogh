@@ -6,7 +6,6 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"strconv"
 	"time"
@@ -75,11 +74,8 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 
 	var reviewContainer compton.Element
 	if len(review.Review) > longReviewThreshold {
-		dsTitleText := fmt.Sprintf("Show full review (%d chars)", len(review.Review))
-		dsTitle := compton.Fspan(r, dsTitleText).
-			ForegroundColor(color.Gray).
-			FontWeight(font_weight.Bolder)
-		dsReview := compton.DSSmall(r, dsTitle, false)
+		dsTitleText := fmt.Sprintf("Full review (%d chars)", len(review.Review))
+		dsReview := compton.DSSmall(r, compton.Fspan(r, dsTitleText), false)
 		container.Append(dsReview)
 		reviewContainer = dsReview
 	} else {

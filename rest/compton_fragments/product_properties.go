@@ -8,7 +8,6 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
@@ -224,13 +223,14 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 		if len(fmtProperty.values) < 4 {
 			tv.AppendLinkValues(fmtProperty.values)
 		} else {
-			summaryTitle := fmt.Sprintf("Show all %d", len(fmtProperty.values))
+			summaryTitle := fmt.Sprintf("%d values", len(fmtProperty.values))
 			summaryElement := compton.Fspan(r, summaryTitle).
-				FontWeight(font_weight.Bolder)
+				ForegroundColor(color.Foreground)
 			ds := compton.DSSmall(r, summaryElement, false).
 				SummaryMarginBlockEnd(size.Normal).
 				DetailsMarginBlockEnd(size.Small)
-			row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start)
+			row := compton.FlexItems(r, direction.Row).
+				JustifyContent(align.Start)
 			keys := maps.Keys(fmtProperty.values)
 			slices.Sort(keys)
 			for _, link := range keys {

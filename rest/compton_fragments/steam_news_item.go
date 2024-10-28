@@ -46,11 +46,7 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 
 	container.Append(fr)
 
-	dsTitle := compton.Fspan(r, "Show news item").
-		FontWeight(font_weight.Bolder).
-		ForegroundColor(color.Gray)
-
-	ds := compton.DSSmall(r, dsTitle, open)
+	ds := compton.DSSmall(r, compton.Fspan(r, "News item"), open)
 
 	itemContents := compton.DivText(steamNewsToHTML(item.Contents))
 	itemContents.AddClass("steam-news-item")
