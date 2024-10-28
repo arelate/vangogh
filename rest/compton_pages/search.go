@@ -11,9 +11,7 @@ import (
 	"strconv"
 )
 
-const (
-	filterSearchTitle = "Filter & search"
-)
+const filterSearchTitle = "Filter & search"
 
 func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.ReadableRedux) compton.PageElement {
 
@@ -46,7 +44,8 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 		filterSearchDetails.AppendSummary(itemsCount)
 	}
 
-	searchQueryDisplay := compton_fragments.SearchQueryDisplay(query, p)
+	searchQueryDisplay := compton.Query(p, query,
+		compton_data.PropertyTitles, "/search", "Clear")
 
 	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, searchQueryDisplay, rdx))
 	pageStack.Append(filterSearchDetails)
