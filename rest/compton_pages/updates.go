@@ -74,8 +74,6 @@ func Updates(sections []string,
 		sectionStack := compton.FlexItems(p, direction.Column)
 		sectionDetailsToggle.Append(sectionStack)
 
-		//sectionStack.Append(itemsCount)
-
 		productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx)
 		sectionStack.Append(productsList)
 	}

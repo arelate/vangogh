@@ -44,14 +44,14 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 		filterSearchDetails.AppendSummary(itemsCount)
 	}
 
-	searchQueryDisplay := compton.Query(p, query,
+	searchQuery := compton.Query(p, query,
 		compton_data.PropertyTitles, "/search", "Clear")
 
-	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, searchQueryDisplay, rdx))
+	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, searchQuery, rdx))
 	pageStack.Append(filterSearchDetails)
 
-	if searchQueryDisplay != nil {
-		pageStack.Append(searchQueryDisplay)
+	if searchQuery != nil {
+		pageStack.Append(searchQuery)
 	}
 
 	/* Search results product cards */
@@ -74,8 +74,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 	/* Standard app footer */
 
-	pageStack.Append(compton.Br(),
-		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
+	pageStack.Append(compton.Br(), compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
 	return p
 }
