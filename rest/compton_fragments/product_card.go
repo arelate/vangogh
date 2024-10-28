@@ -30,8 +30,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 		pc.AppendTitle(title)
 	}
 
-	if labels := compton.Labels(r,
-		FormatLabels(id, rdx, compton_data.LabelProperties...)...).
+	if labels := compton.Labels(r, FormatLabels(id, rdx)...).
 		FontSize(size.XSmall).
 		ColumnGap(size.XXSmall).
 		RowGap(size.XXSmall); labels != nil {

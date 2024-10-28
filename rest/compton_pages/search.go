@@ -32,7 +32,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 	/* Filter & Search details */
 
-	filterSearchHeading := compton_fragments.DetailsSummaryTitle(p, filterSearchTitle)
+	filterSearchHeading := compton.DSTitle(p, filterSearchTitle)
 
 	filterSearchDetails := compton.DSLarge(p, filterSearchHeading, len(query) == 0).
 		BackgroundColor(color.Highlight).
@@ -75,7 +75,8 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 	/* Standard app footer */
 
-	pageStack.Append(compton.Br(), compton_fragments.Footer(p))
+	pageStack.Append(compton.Br(),
+		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
 	return p
 }

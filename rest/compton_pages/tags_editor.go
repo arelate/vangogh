@@ -61,7 +61,7 @@ func TagsEditor(
 
 	/* Tags Property Title */
 
-	tagsPropertyHeading := compton_fragments.DetailsSummaryTitle(p, tagsPropertyTitle)
+	tagsPropertyHeading := compton.DSTitle(p, tagsPropertyTitle)
 
 	dsTags := compton.DSLarge(p, tagsPropertyHeading, true).
 		BackgroundColor(color.Highlight).
@@ -116,7 +116,8 @@ func TagsEditor(
 
 	/* Footer */
 
-	pageStack.Append(compton.Br(), compton_fragments.Footer(p))
+	pageStack.Append(compton.Br(),
+		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
 	return p
 }

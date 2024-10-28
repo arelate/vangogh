@@ -8,15 +8,15 @@ import (
 	"github.com/boggydigital/kevlar"
 )
 
-func FormatLabels(id string, rdx kevlar.ReadableRedux, properties ...string) []compton.FormattedLabel {
+func FormatLabels(id string, rdx kevlar.ReadableRedux) []compton.FormattedLabel {
 	owned := false
 	if op, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok {
 		owned = op == vangogh_local_data.TrueValue
 	}
 
-	fmtLabels := make([]compton.FormattedLabel, 0, len(properties))
+	fmtLabels := make([]compton.FormattedLabel, 0, len(compton_data.LabelProperties))
 
-	for _, p := range properties {
+	for _, p := range compton_data.LabelProperties {
 		fmtLabels = append(fmtLabels, formatLabel(id, p, owned, rdx))
 	}
 

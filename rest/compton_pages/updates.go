@@ -57,7 +57,7 @@ func Updates(sections []string,
 
 		sectionTitle := sectionTitles[section]
 
-		sectionHeading := compton_fragments.DetailsSummaryTitle(p, sectionTitle)
+		sectionHeading := compton.DSTitle(p, sectionTitle)
 
 		sectionDetailsToggle := compton.DSLarge(p, sectionHeading, true).
 			BackgroundColor(color.Highlight).
@@ -92,7 +92,7 @@ func Updates(sections []string,
 
 	/* Standard app footer */
 
-	pageStack.Append(compton_fragments.Footer(p))
+	pageStack.Append(compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
 	return p
 }

@@ -49,7 +49,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 	/* Product labels */
 
-	fmtLabels := compton_fragments.FormatLabels(id, rdx, compton_data.LabelProperties...)
+	fmtLabels := compton_fragments.FormatLabels(id, rdx)
 	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.Small).RowGap(size.XSmall).ColumnGap(size.XSmall)
 	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
 
@@ -58,7 +58,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 	for _, section := range hasSections {
 
 		sectionTitle := compton_data.SectionTitles[section]
-		summaryHeading := compton_fragments.DetailsSummaryTitle(p, sectionTitle)
+		summaryHeading := compton.DSTitle(p, sectionTitle)
 		detailsSummary := compton.DSLarge(p, summaryHeading, section == compton_data.PropertiesSection).
 			BackgroundColor(color.Highlight).
 			ForegroundColor(color.Foreground).
@@ -85,7 +85,8 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 	/* Standard app footer */
 
-	pageStack.Append(compton.Br(), compton_fragments.Footer(p))
+	pageStack.Append(compton.Br(),
+		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
 	return p
 }
