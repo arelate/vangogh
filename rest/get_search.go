@@ -63,8 +63,9 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		}
 		desc := q.Get(vangogh_local_data.DescendingProperty) == "true"
 
-		var err error
 		found := rdx.Match(q)
+
+		var err error
 		ids, err = rdx.Sort(found, desc, sort, vangogh_local_data.TitleProperty, vangogh_local_data.ProductTypeProperty)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

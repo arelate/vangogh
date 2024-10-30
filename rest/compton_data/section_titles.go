@@ -1,16 +1,16 @@
 package compton_data
 
 const (
-	ChangelogSection     = "changelog"
-	DescriptionSection   = "description"
-	DownloadsSection     = "downloads"
-	ExternalLinksSection = "links"
 	PropertiesSection    = "properties"
+	ExternalLinksSection = "links"
+	DescriptionSection   = "description"
+	ChangelogSection     = "changelog"
 	ScreenshotsSection   = "screenshots"
+	VideosSection        = "videos"
 	SteamNewsSection     = "steam-news"
 	SteamReviewsSection  = "steam-reviews"
 	SteamDeckSection     = "steam-deck"
-	VideosSection        = "videos"
+	DownloadsSection     = "downloads"
 )
 
 var SectionTitles = map[string]string{
@@ -24,17 +24,4 @@ var SectionTitles = map[string]string{
 	SteamReviewsSection:  "Steam Reviews",
 	SteamDeckSection:     "Steam Deck",
 	VideosSection:        "Videos",
-}
-
-var SectionsTitlesOrder = []string{
-	SectionTitles[PropertiesSection],
-	SectionTitles[ExternalLinksSection],
-	SectionTitles[DescriptionSection],
-	SectionTitles[ChangelogSection],
-	SectionTitles[ScreenshotsSection],
-	SectionTitles[VideosSection],
-	SectionTitles[SteamNewsSection],
-	SectionTitles[SteamReviewsSection],
-	SectionTitles[SteamDeckSection],
-	SectionTitles[DownloadsSection],
 }

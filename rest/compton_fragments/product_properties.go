@@ -26,9 +26,6 @@ func ProductProperties(r compton.Registrar, id string, rdx kevlar.ReadableRedux)
 	grid := compton.GridItems(r).JustifyContent(align.Center)
 
 	for _, property := range compton_data.ProductProperties {
-		if slices.Contains(compton_data.ProductHiddenProperties, property) {
-			continue
-		}
 
 		if property == vangogh_local_data.OperatingSystemsProperty {
 			if tv := operatingSystemsTitleValues(r, id, rdx); tv != nil {

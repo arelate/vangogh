@@ -35,6 +35,13 @@ var downloadTypesStrings = map[vangogh_local_data.DownloadType]string{
 	vangogh_local_data.Movie:     "Movie",
 }
 
+var downloadTypesColors = map[vangogh_local_data.DownloadType]color.Color{
+	vangogh_local_data.Installer: color.Purple,
+	vangogh_local_data.DLC:       color.Indigo,
+	vangogh_local_data.Extra:     color.Orange,
+	vangogh_local_data.Movie:     color.Red,
+}
+
 // Downloads will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
@@ -161,7 +168,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.Operating
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	fr := compton.Frow(r).
-		Icon(dv.dlType.String()).
+		IconColor(downloadTypesColors[dv.dlType]).
 		Heading(downloadTypesStrings[dv.dlType])
 
 	if dv.langCode != "" {

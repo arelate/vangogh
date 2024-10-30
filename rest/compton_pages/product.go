@@ -55,11 +55,11 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 
 	/* Product details sections */
 
-	for _, section := range hasSections {
+	for ii, section := range hasSections {
 
 		sectionTitle := compton_data.SectionTitles[section]
 		summaryHeading := compton.DSTitle(p, sectionTitle)
-		detailsSummary := compton.DSLarge(p, summaryHeading, section == compton_data.PropertiesSection).
+		detailsSummary := compton.DSLarge(p, summaryHeading, ii == 0).
 			BackgroundColor(color.Highlight).
 			ForegroundColor(color.Foreground).
 			MarkerColor(color.Gray).
