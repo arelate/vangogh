@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
@@ -44,7 +45,8 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	/* Product title */
 
-	productTitle := compton.HeadingText(title, 1)
+	productTitle := compton.Heading(1)
+	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
 	productTitle.AddClass("product-title")
 
 	/* Product labels */

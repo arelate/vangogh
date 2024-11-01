@@ -5,7 +5,7 @@ var SectionStyles = map[string]string{
 	ExternalLinksSection: "external-links.css",
 	DescriptionSection:   "description.css",
 	ScreenshotsSection:   "screenshots.css",
-	VideosSection:        "videos.css",
+	VideosSection:        "",
 	ChangelogSection:     "changelog.css",
 	SteamNewsSection:     "steam-news.css",
 	SteamReviewsSection:  "steam-reviews.css",

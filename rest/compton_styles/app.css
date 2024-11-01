@@ -1,9 +1,3 @@
-@scope (h1) {
-    :scope {
-        text-align: center;
-    }
-}
-
 @scope (.product-poster) {
     :scope {
         & img {
