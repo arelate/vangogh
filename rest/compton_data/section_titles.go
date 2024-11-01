@@ -2,7 +2,7 @@ package compton_data
 
 const (
 	PropertiesSection    = "properties"
-	ExternalLinksSection = "links"
+	ExternalLinksSection = "external-links"
 	DescriptionSection   = "description"
 	ChangelogSection     = "changelog"
 	ScreenshotsSection   = "screenshots"

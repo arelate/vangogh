@@ -12,7 +12,7 @@ import (
 	"github.com/boggydigital/kevlar"
 )
 
-func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks map[string][]string) compton.PageElement {
+func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 	if !ok {
@@ -67,19 +67,9 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string, extLinks
 			DetailsMarginBlockEnd(size.Unset)
 		detailsSummary.SetId(sectionTitle)
 
-		switch section {
-		case compton_data.PropertiesSection:
-			if productProperties := compton_fragments.ProductProperties(p, id, rdx); productProperties != nil {
-				detailsSummary.Append(productProperties)
-			}
-		case compton_data.ExternalLinksSection:
-			if externalLinks := compton_fragments.ProductExternalLinks(p, extLinks); externalLinks != nil {
-				detailsSummary.Append(externalLinks)
-			}
-		default:
-			ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)
-			detailsSummary.Append(ifh)
-		}
+		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)
+		detailsSummary.Append(ifh)
+
 		pageStack.Append(detailsSummary)
 	}
 

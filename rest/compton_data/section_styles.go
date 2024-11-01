@@ -1,8 +1,8 @@
 package compton_data
 
 var SectionStyles = map[string]string{
-	PropertiesSection:    "",
-	ExternalLinksSection: "",
+	PropertiesSection:    "properties.css",
+	ExternalLinksSection: "external-links.css",
 	DescriptionSection:   "description.css",
 	ScreenshotsSection:   "screenshots.css",
 	VideosSection:        "videos.css",
