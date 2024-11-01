@@ -35,6 +35,7 @@ func externalLinks(r compton.Registrar, property string, links []string) compton
 	tv := compton.TitleValues(r, propertyTitle).
 		ForegroundColor(color.Cyan).
 		TitleForegroundColor(color.Foreground).
+		SetLinksTarget(compton.LinkTargetTop).
 		AppendLinkValues(linksHrefs)
 	return tv
 }

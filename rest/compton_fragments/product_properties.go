@@ -213,7 +213,9 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 	}
 
 	tv := compton.TitleValues(r, compton_data.PropertyTitles[property]).
-		ForegroundColor(color.Gray).TitleForegroundColor(color.Foreground)
+		SetLinksTarget(compton.LinkTargetTop).
+		ForegroundColor(color.Gray).
+		TitleForegroundColor(color.Foreground)
 
 	if len(fmtProperty.values) > 0 {
 
