@@ -8,9 +8,9 @@ import (
 
 func AppPage(current string) (p compton.PageElement, stack *compton.FlexItemsElement) {
 	p = compton.Page(current)
-	p.AppendManifest()
+	p.RegisterStyles(compton_styles.Styles, "product-labels.css")
 	p.AppendIcon()
-	p.RegisterStyles(compton_styles.Styles, "app.css")
+	p.AppendManifest()
 
 	stack = compton.FlexItems(p, direction.Column)
 	p.Append(stack)
