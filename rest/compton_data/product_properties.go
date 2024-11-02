@@ -5,7 +5,6 @@ import (
 )
 
 var ProductProperties = []string{
-	vangogh_local_data.ProductTypeProperty,
 	vangogh_local_data.TagIdProperty,
 	vangogh_local_data.LocalTagsProperty,
 
