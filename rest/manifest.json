@@ -1,11 +1,13 @@
 {
-  "short_name": "Gaugin",
-  "name": "Gaugin",
-  "start_url": "/",
+  "name": "vangogh",
+  "short_name": "vangogh",
+  "start_url": "https://vangogh.frmnt.io/updates",
   "display": "standalone",
   "icons": [
     {
-      "src": "icon.png"
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ]
 }

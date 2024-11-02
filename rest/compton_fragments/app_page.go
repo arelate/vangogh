@@ -8,6 +8,8 @@ import (
 
 func AppPage(current string) (p compton.PageElement, stack *compton.FlexItemsElement) {
 	p = compton.Page(current)
+	p.AppendManifest()
+	p.AppendIcon()
 	p.RegisterStyles(compton_styles.Styles, "app.css")
 
 	stack = compton.FlexItems(p, direction.Column)
