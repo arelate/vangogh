@@ -6,7 +6,7 @@ import (
 	"github.com/boggydigital/kevlar"
 )
 
-const dehydratedCount = 10
+const dehydratedCount = 3
 
 func ProductsList(r compton.Registrar, ids []string, from, to int, rdx kevlar.ReadableRedux) compton.Element {
 	productCards := compton.GridItems(r).JustifyContent(align.Center).GridTemplateRowsPixels(144)

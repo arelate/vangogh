@@ -20,7 +20,8 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 		posterUrl := "/image?id=" + viSrc
 		dhSrc, _ := rdx.GetLastVal(vangogh_local_data.DehydratedVerticalImageProperty, id)
 		placeholderSrc := dhSrc
-		pc.AppendPoster(placeholderSrc, posterUrl, hydrated)
+		repColor, _ := rdx.GetLastVal(vangogh_local_data.RepVerticalImageColorProperty, id)
+		pc.AppendPoster(repColor, placeholderSrc, posterUrl, hydrated)
 
 		pc.WidthPixels(85.5)
 		pc.HeightPixels(120.5)
