@@ -37,7 +37,8 @@ func Dehydrate(
 	for _, it := range its {
 		properties = append(properties,
 			vangogh_local_data.ImageTypeDehydratedProperty(it),
-			vangogh_local_data.ImageTypeDehydratedModifiedProperty(it))
+			vangogh_local_data.ImageTypeDehydratedModifiedProperty(it),
+			vangogh_local_data.ImageTypeRepColorProperty(it))
 	}
 
 	rdx, err := imageTypesReduxAssets(properties, its)
@@ -53,9 +54,13 @@ func Dehydrate(
 
 			asset := vangogh_local_data.PropertyFromImageType(it)
 			dehydratedProperty := vangogh_local_data.ImageTypeDehydratedProperty(it)
+			repColorProperty := vangogh_local_data.ImageTypeRepColorProperty(it)
 
 			for _, id := range rdx.Keys(asset) {
 				if !rdx.HasKey(dehydratedProperty, id) {
+					idSet[id] = true
+				}
+				if !rdx.HasKey(repColorProperty, id) {
 					idSet[id] = true
 				}
 			}
@@ -76,6 +81,7 @@ func Dehydrate(
 
 		dehydratedImages := make(map[string][]string)
 		dehydratedImageModified := make(map[string][]string)
+		repColors := make(map[string][]string)
 
 		for id := range idSet {
 
@@ -89,8 +95,9 @@ func Dehydrate(
 				return di.EndWithError(err)
 			}
 
-			if dhi, err := dehydrateImage(alip, plt); err == nil {
+			if dhi, rc, err := dehydrateImageRepColor(alip, plt); err == nil {
 				dehydratedImages[id] = []string{dhi}
+				repColors[id] = []string{rc}
 				dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
 			} else {
 				nod.Log(err.Error())
@@ -115,21 +122,26 @@ func Dehydrate(
 	return nil
 }
 
-func dehydrateImage(absImagePath string, plt color.Palette) (string, error) {
-	dhi := ""
+func dehydrateImageRepColor(absImagePath string, plt color.Palette) (string, string, error) {
+	dhi, rc := "", ""
 
 	fi, err := os.Open(absImagePath)
 	if err != nil {
-		return dhi, err
+		return dhi, rc, err
 	}
 	defer fi.Close()
 
 	img, _, err := image.Decode(fi)
 	if err != nil {
-		return dhi, err
+		return dhi, rc, err
 	}
 
 	gif := issa.GIFImage(img, plt, issa.DefaultSampling)
 
-	return issa.DehydrateColor(gif)
+	dhi, err = issa.DehydrateColor(gif)
+	if err != nil {
+		return dhi, rc, err
+	}
+
+	return dhi, issa.ColorHex(issa.RepColor(gif)), nil
 }

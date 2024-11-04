@@ -4,14 +4,14 @@ go 1.23.2
 
 require (
 	github.com/arelate/southern_light v0.1.51
-	github.com/arelate/vangogh_local_data v0.4.25
+	github.com/arelate/vangogh_local_data v0.4.28
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/backups v0.1.3
 	github.com/boggydigital/clo v1.0.4
 	github.com/boggydigital/compton v0.2.4
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.18
-	github.com/boggydigital/issa v0.1.12
+	github.com/boggydigital/issa v0.1.13
 	github.com/boggydigital/kevlar v0.5.19
 	github.com/boggydigital/kevlar_dolo v0.1.7
 	github.com/boggydigital/middleware v0.1.16
