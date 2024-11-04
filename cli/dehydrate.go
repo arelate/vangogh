@@ -115,6 +115,11 @@ func Dehydrate(
 		if err := rdx.BatchReplaceValues(dehydratedModifiedProperty, dehydratedImageModified); err != nil {
 			return di.EndWithError(err)
 		}
+
+		repColorProperty := vangogh_local_data.ImageTypeRepColorProperty(it)
+		if err := rdx.BatchReplaceValues(repColorProperty, repColors); err != nil {
+			return di.EndWithError(err)
+		}
 	}
 
 	di.EndWithResult("done")
