@@ -22,13 +22,13 @@ func DehydrateHandler(u *url.URL) error {
 	return Dehydrate(
 		idSet,
 		vangogh_local_data.ImageTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "missing"))
+		vangogh_local_data.FlagFromUrl(u, "force"))
 }
 
 func Dehydrate(
 	idSet map[string]bool,
 	its []vangogh_local_data.ImageType,
-	missing bool) error {
+	force bool) error {
 
 	di := nod.NewProgress("dehydrating images...")
 	defer di.End()
@@ -46,7 +46,7 @@ func Dehydrate(
 		return di.EndWithError(err)
 	}
 
-	if missing {
+	if len(idSet) == 0 {
 		for _, it := range its {
 			if !vangogh_local_data.IsImageTypeDehydrationSupported(it) {
 				continue
@@ -57,12 +57,12 @@ func Dehydrate(
 			repColorProperty := vangogh_local_data.ImageTypeRepColorProperty(it)
 
 			for _, id := range rdx.Keys(asset) {
-				if !rdx.HasKey(dehydratedProperty, id) {
-					idSet[id] = true
+				if rdx.HasKey(dehydratedProperty, id) &&
+					rdx.HasKey(repColorProperty, id) &&
+					!force {
+					continue
 				}
-				if !rdx.HasKey(repColorProperty, id) {
-					idSet[id] = true
-				}
+				idSet[id] = true
 			}
 		}
 	}

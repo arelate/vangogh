@@ -24,8 +24,8 @@ cleanup
 dehydrate
     id&
     slug&
-    missing
     image-type&*^={image-types}
+    force
 
 get-data
     id&

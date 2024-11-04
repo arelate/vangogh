@@ -224,7 +224,7 @@ func Sync(
 			return sa.EndWithError(err)
 		}
 
-		if err := Dehydrate(map[string]bool{}, vangogh_local_data.ImageTypesDehydration(), true); err != nil {
+		if err := Dehydrate(map[string]bool{}, vangogh_local_data.ImageTypesDehydration(), false); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
