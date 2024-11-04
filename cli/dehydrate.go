@@ -148,5 +148,7 @@ func dehydrateImageRepColor(absImagePath string, plt color.Palette) (string, str
 		return dhi, rc, err
 	}
 
-	return dhi, issa.ColorHex(issa.RepColor(gif)), nil
+	repColor := issa.RepColor(gif)
+
+	return dhi, issa.ColorHex(repColor), nil
 }

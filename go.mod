@@ -11,7 +11,7 @@ require (
 	github.com/boggydigital/compton v0.2.4
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.18
-	github.com/boggydigital/issa v0.1.13
+	github.com/boggydigital/issa v0.1.15
 	github.com/boggydigital/kevlar v0.5.19
 	github.com/boggydigital/kevlar_dolo v0.1.7
 	github.com/boggydigital/middleware v0.1.16
@@ -24,7 +24,7 @@ require (
 
 require (
 	github.com/boggydigital/busan v0.1.0 // indirect
-	github.com/boggydigital/match_node v0.1.16 // indirect
+	github.com/boggydigital/match_node v0.1.17 // indirect
 	golang.org/x/image v0.21.0 // indirect
 	golang.org/x/net v0.30.0 // indirect
 )
