@@ -10,7 +10,6 @@ issa-image.product-poster {
     issa-image.product-poster {
         & img {
             max-width: 100%;
-            aspect-ratio: 13/6;
             --h: unset;
         }
     }
