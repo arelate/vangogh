@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
@@ -16,6 +17,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 
 	current := compton_data.AppNavSearch
 	p, pageStack := compton_fragments.AppPage(current)
+	p.RegisterStyles(compton_styles.Styles, "product-card.css")
 
 	/* Nav stack = App navigation + Search shortcuts */
 

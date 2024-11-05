@@ -1,21 +1,21 @@
-@scope (.product-poster) {
-    :scope {
-        & img {
-            --w: 800px;
-            --h: 370px;
-        }
+issa-image.product-poster {
+    & img {
+        --w: 800px;
+        --h: 370px;
+        object-fit: fill;
     }
+}
 
-    @media only screen and (max-width: 800px) {
-        :scope {
-            & img {
-                max-width: 100%;
-                aspect-ratio: 13/6;
-                --h: unset;
-            }
+@media only screen and (max-width: 800px) {
+    issa-image.product-poster {
+        & img {
+            max-width: 100%;
+            aspect-ratio: 13/6;
+            --h: unset;
         }
     }
 }
+
 
 @scope (title-values) {
 
