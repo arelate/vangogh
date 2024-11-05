@@ -13,7 +13,8 @@ func ProductPoster(r compton.Registrar, id string, rdx kevlar.ReadableRedux) com
 		relImgSrc := "/image?id=" + imgSrc
 		if dehydSrc, sure := rdx.GetLastVal(vangogh_local_data.DehydratedImageProperty, id); sure {
 			hydSrc := issa.HydrateColor(dehydSrc)
-			poster = compton.IssaImageHydrated(r, hydSrc, relImgSrc)
+			repColor, _ := rdx.GetLastVal(vangogh_local_data.RepImageColorProperty, id)
+			poster = compton.IssaImageHydrated(r, repColor, hydSrc, relImgSrc)
 		} else {
 			poster = compton.Img(relImgSrc)
 		}

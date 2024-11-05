@@ -46,7 +46,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	/* Product poster */
 
 	if poster := compton_fragments.ProductPoster(p, id, rdx); poster != nil {
-		pageStack.Append(poster)
+		pageStack.Append(compton.FICenter(p, poster))
 	}
 
 	/* Product title */
