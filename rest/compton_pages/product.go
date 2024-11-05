@@ -23,6 +23,12 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	p, pageStack := compton_fragments.AppPage(title)
 	p.RegisterStyles(compton_styles.Styles, "product.css")
 
+	// tinting document background color to the representative product color
+	alpha := "5%"
+	if repColor, ok := rdx.GetLastVal(vangogh_local_data.RepImageColorProperty, id); ok {
+		p.SetAttribute("style", "background-color:color-mix(in display-p3,"+repColor+" "+alpha+",var(--c-background))")
+	}
+
 	/* App navigation */
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
