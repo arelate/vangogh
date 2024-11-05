@@ -15,6 +15,12 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 
 	pc := compton.Card(r, id)
 
+	alpha := "15%"
+	if rc, ok := rdx.GetLastVal(vangogh_local_data.RepVerticalImageColorProperty, id); ok {
+		pc.SetAttribute("style", "background-color:color-mix(in display-p3,"+rc+" "+alpha+", var(--c-highlight))")
+
+	}
+
 	if viSrc, ok := rdx.GetLastVal(vangogh_local_data.VerticalImageProperty, id); ok {
 
 		posterUrl := "/image?id=" + viSrc
