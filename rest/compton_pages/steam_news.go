@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 )
@@ -44,7 +45,9 @@ func SteamNews(id string, san *steam_integration.AppNews, all bool) compton.Page
 		if all {
 			title = "Steam news are not available for this product"
 		}
-		fs := compton.Fspan(s, title).ForegroundColor(color.Gray)
+		fs := compton.Fspan(s, title).
+			ForegroundColor(color.Gray).
+			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}
 

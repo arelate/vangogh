@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 )
@@ -18,7 +19,8 @@ func SteamReviews(id string, sar *steam_integration.AppReviews) compton.PageElem
 
 	if len(sar.Reviews) == 0 {
 		fs := compton.Fspan(s, "Steam reviews are not available for this product").
-			ForegroundColor(color.Gray)
+			ForegroundColor(color.Gray).
+			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}
 

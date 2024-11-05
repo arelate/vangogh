@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/kevlar"
@@ -22,7 +23,8 @@ func Changelog(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	if len(changelog) == 0 {
 		fs := compton.Fspan(s, "Changelog is not available for this product").
-			ForegroundColor(color.Gray)
+			ForegroundColor(color.Gray).
+			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}
 

@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/kevlar"
 	"net/url"
@@ -26,7 +27,8 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	if desc == "" {
 		fs := compton.Fspan(s, "Description is not available for this product").
-			ForegroundColor(color.Gray)
+			ForegroundColor(color.Gray).
+			TextAlign(align.Center)
 		descriptionDiv.Append(compton.FICenter(s, fs))
 	} else {
 		desc = rewriteItemsLinks(desc)

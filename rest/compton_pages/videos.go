@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 )
@@ -18,7 +19,8 @@ func Videos(videoIds []string, videoTitles, videoDurations map[string]string) co
 
 	if len(videoIds) == 0 {
 		fs := compton.Fspan(s, "Videos are not available for this product").
-			ForegroundColor(color.Gray)
+			ForegroundColor(color.Gray).
+			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}
 
