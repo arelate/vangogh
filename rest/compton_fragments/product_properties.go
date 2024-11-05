@@ -234,7 +234,9 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 			slices.Sort(keys)
 			for _, link := range keys {
 				href := fmtProperty.values[link]
-				row.Append(compton.AText(link, href))
+				anchor := compton.AText(link, href)
+				anchor.SetAttribute("target", "_top")
+				row.Append(anchor)
 			}
 			ds.Append(row)
 			tv.AppendValues(ds)
