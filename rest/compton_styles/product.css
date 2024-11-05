@@ -10,6 +10,7 @@
         :scope {
             & img {
                 max-width: 100%;
+                aspect-ratio: 13/6;
                 --h: unset;
             }
         }
