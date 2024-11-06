@@ -24,35 +24,3 @@ issa-image.product-poster {
         }
     }
 }
-
-
-@scope (title-values) {
-
-    &.positive .values {
-        --fg: var(--c-green);
-    }
-
-    &.negative .values {
-        --fg: var(--c-red);
-    }
-
-    &.neutral .values {
-        --fg: var(--c-gray);
-    }
-
-    &.Verified .values {
-        --fg: var(--c-green)
-    }
-
-    &.Playable .values {
-        --fg: var(--c-orange)
-    }
-
-    &.Unsupported .values {
-        --fg: var(--c-red)
-    }
-
-    &.Unknown .values {
-        --fg: var(--c-gray)
-    }
-}
