@@ -11,7 +11,7 @@ require (
 	github.com/boggydigital/compton v0.2.16
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.18
-	github.com/boggydigital/issa v0.1.17
+	github.com/boggydigital/issa v0.1.18
 	github.com/boggydigital/kevlar v0.5.19
 	github.com/boggydigital/kevlar_dolo v0.1.7
 	github.com/boggydigital/middleware v0.1.16
