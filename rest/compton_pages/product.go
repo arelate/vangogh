@@ -13,6 +13,8 @@ import (
 	"github.com/boggydigital/kevlar"
 )
 
+const colorBlendClass = "color-blend"
+
 func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
@@ -31,8 +33,10 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	/* App navigation */
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
-
+	appNavLinks.AddClass(colorBlendClass)
 	showToc := compton.InputValue(p, input_types.Button, "Sections")
+	showToc.AddClass(colorBlendClass)
+
 	pageStack.Append(compton.FICenter(p, appNavLinks, showToc))
 
 	/* Product details sections shortcuts */
@@ -51,6 +55,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	/* Product title */
 
 	productTitle := compton.Heading(1)
+	productTitle.AddClass(colorBlendClass)
 	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
 	productTitle.AddClass("product-title")
 
@@ -73,6 +78,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 			SummaryMarginBlockEnd(size.Normal).
 			DetailsMarginBlockEnd(size.Unset)
 		detailsSummary.SetId(sectionTitle)
+		detailsSummary.AddClassSummary(colorBlendClass)
 
 		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)
 		detailsSummary.Append(ifh)
