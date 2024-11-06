@@ -11,14 +11,12 @@ import (
 	"strings"
 )
 
-const productCardAlpha = "12.5%"
-
 func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.ReadableRedux) compton.Element {
 
 	pc := compton.Card(r, id)
 
 	if rc, ok := rdx.GetLastVal(vangogh_local_data.RepVerticalImageColorProperty, id); ok {
-		pc.SetAttribute("style", "background-color:color-mix(in display-p3,"+rc+" "+productCardAlpha+", var(--c-highlight))")
+		pc.SetAttribute("style", "background-color:color-mix(in display-p3,"+rc+" var(--cma), var(--c-background))")
 
 	}
 

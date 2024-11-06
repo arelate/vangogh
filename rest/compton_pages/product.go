@@ -13,8 +13,6 @@ import (
 	"github.com/boggydigital/kevlar"
 )
 
-const productAlpha = "7.5%"
-
 func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
@@ -27,7 +25,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	// tinting document background color to the representative product color
 	if repColor, ok := rdx.GetLastVal(vangogh_local_data.RepImageColorProperty, id); ok {
-		p.SetAttribute("style", "background-color:color-mix(in display-p3,"+repColor+" "+productAlpha+",var(--c-background))")
+		p.SetAttribute("style", "background-color:color-mix(in display-p3,"+repColor+" var(--cma),var(--c-background))")
 	}
 
 	/* App navigation */
