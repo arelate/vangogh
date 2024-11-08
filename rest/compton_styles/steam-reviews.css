@@ -1,9 +1,16 @@
 fspan.symbol {
     height: var(--s-n);
-    line-height: var(--s-n);
 
     & svg {
         width: var(--s-n);
         height: var(--s-n)
     }
+}
+
+pre {
+    line-height: calc(1.5 * var(--s-n));
+    font-family: sans-serif;
+    white-space: break-spaces;
+    max-width: 100%;
+    overflow: hidden;
 }

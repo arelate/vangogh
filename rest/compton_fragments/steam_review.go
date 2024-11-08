@@ -81,7 +81,7 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 	} else {
 		reviewContainer = container
 	}
-	reviewContainer.Append(compton.Fspan(r, review.Review))
+	reviewContainer.Append(compton.PreText(review.Review))
 
 	if review.VotesUp > 0 || review.VotesFunny > 0 {
 		bottomFr := compton.Frow(r).Heading("Votes")

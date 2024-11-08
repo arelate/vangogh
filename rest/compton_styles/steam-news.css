@@ -32,3 +32,11 @@ mark.spoiler::selection,
 mark.spoiler:active {
     color: var(--background-color);
 }
+
+pre {
+    line-height: calc(1.5 * var(--s-n));
+    font-family: sans-serif;
+    white-space: break-spaces;
+    max-width: 100%;
+    overflow: hidden;
+}
