@@ -33,7 +33,7 @@ func VideoOriginLink(r compton.Registrar, videoId, videoTitle, videoDuration str
 	originLink.SetAttribute("target", "_top")
 
 	linkColumn := compton.FlexItems(r, direction.Column).
-		RowGap(size.Unset)
+		RowGap(size.Small)
 
 	if videoTitle == "" {
 		videoTitle = "Watch at origin"

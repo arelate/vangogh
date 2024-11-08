@@ -201,7 +201,7 @@ func downloadLink(r compton.Registrar, dl vangogh_local_data.Download) compton.E
 	link.AddClass("download")
 
 	linkColumn := compton.FlexItems(r, direction.Column).
-		RowGap(size.Unset)
+		RowGap(size.Small)
 
 	name := dl.Name
 	if dl.Type == vangogh_local_data.DLC {
