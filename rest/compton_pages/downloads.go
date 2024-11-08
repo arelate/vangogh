@@ -180,7 +180,7 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, d
 	downloads := filterDownloads(os, dls, dv)
 
 	downloadsColumn := compton.FlexItems(r, direction.Column).
-		RowGap(size.Small)
+		RowGap(size.Normal)
 	dsDownloadLinks.Append(downloadsColumn)
 
 	for ii, dl := range downloads {
