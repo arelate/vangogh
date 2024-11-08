@@ -15,13 +15,6 @@ import (
 	"strconv"
 )
 
-var osOrder = []vangogh_local_data.OperatingSystem{
-	vangogh_local_data.Windows,
-	vangogh_local_data.MacOS,
-	vangogh_local_data.Linux,
-	vangogh_local_data.AnyOperatingSystem,
-}
-
 type DownloadVariant struct {
 	dlType   vangogh_local_data.DownloadType
 	version  string
@@ -168,7 +161,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.Operating
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	fr := compton.Frow(r).
-		IconColor(downloadTypesColors[dv.dlType]).
+		CircleIconColor(downloadTypesColors[dv.dlType]).
 		Heading(downloadTypesStrings[dv.dlType])
 
 	if dv.langCode != "" {
@@ -233,7 +226,7 @@ func downloadsOperatingSystems(dls vangogh_local_data.DownloadsList) []vangogh_l
 	}
 
 	oses := make([]vangogh_local_data.OperatingSystem, 0, len(dlOs))
-	for _, os := range osOrder {
+	for _, os := range compton_data.OSOrder {
 		if _, ok := dlOs[os]; ok {
 			oses = append(oses, os)
 		}

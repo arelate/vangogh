@@ -7,9 +7,31 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
-	"slices"
+	"golang.org/x/exp/slices"
 	"strings"
 )
+
+func SummarizeProductProperties(id string, rdx kevlar.ReadableRedux) ([]string, map[string][]string) {
+	properties := make([]string, 0)
+	values := make(map[string][]string)
+
+	if oses, ok := rdx.GetAllValues(vangogh_local_data.OperatingSystemsProperty, id); ok {
+		properties = append(properties, vangogh_local_data.OperatingSystemsProperty)
+		values[vangogh_local_data.OperatingSystemsProperty] = oses
+	}
+
+	if developers, ok := rdx.GetAllValues(vangogh_local_data.DevelopersProperty, id); ok {
+		properties = append(properties, vangogh_local_data.DevelopersProperty)
+		values[vangogh_local_data.DevelopersProperty] = developers
+	}
+
+	if publishers, ok := rdx.GetAllValues(vangogh_local_data.PublishersProperty, id); ok {
+		properties = append(properties, vangogh_local_data.PublishersProperty)
+		values[vangogh_local_data.PublishersProperty] = publishers
+	}
+
+	return properties, values
+}
 
 func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.ReadableRedux) compton.Element {
 
@@ -43,29 +65,22 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 		pc.AppendLabels(labels)
 	}
 
+	properties, values := SummarizeProductProperties(id, rdx)
 	osSymbols := make([]compton.Element, 0, 2)
-	osOrder := []vangogh_local_data.OperatingSystem{
-		vangogh_local_data.Windows,
-		vangogh_local_data.MacOS,
-		vangogh_local_data.Linux}
-	if oses, ok := rdx.GetAllValues(vangogh_local_data.OperatingSystemsProperty, id); ok {
-		pOses := vangogh_local_data.ParseManyOperatingSystems(oses)
-		for _, os := range osOrder {
-			if slices.Contains(pOses, os) {
-				osSymbols = append(osSymbols, compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
+
+	for _, p := range properties {
+		switch p {
+		case vangogh_local_data.OperatingSystemsProperty:
+			osValues := vangogh_local_data.ParseManyOperatingSystems(values[p])
+			for _, os := range compton_data.OSOrder {
+				if slices.Contains(osValues, os) {
+					osSymbols = append(osSymbols, compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
+				}
 			}
+			pc.AppendProperty(compton_data.PropertyTitles[vangogh_local_data.OperatingSystemsProperty], osSymbols...)
+		default:
+			pc.AppendProperty(compton_data.PropertyTitles[p], compton.Text(strings.Join(values[p], ", ")))
 		}
-	}
-	if len(osSymbols) > 0 {
-		pc.AppendProperty(compton_data.PropertyTitles[vangogh_local_data.OperatingSystemsProperty], osSymbols...)
-	}
-
-	if developers, ok := rdx.GetAllValues(vangogh_local_data.DevelopersProperty, id); ok {
-		pc.AppendProperty(compton_data.PropertyTitles[vangogh_local_data.DevelopersProperty], compton.Text(strings.Join(developers, ", ")))
-	}
-
-	if publishers, ok := rdx.GetAllValues(vangogh_local_data.PublishersProperty, id); ok {
-		pc.AppendProperty(compton_data.PropertyTitles[vangogh_local_data.PublishersProperty], compton.Text(strings.Join(publishers, ", ")))
 	}
 
 	return pc

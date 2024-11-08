@@ -8,7 +8,7 @@ require (
 	github.com/boggydigital/atomus v0.1.9
 	github.com/boggydigital/backups v0.1.3
 	github.com/boggydigital/clo v1.0.4
-	github.com/boggydigital/compton v0.2.18
+	github.com/boggydigital/compton v0.2.19
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.18
 	github.com/boggydigital/issa v0.1.19
@@ -25,6 +25,6 @@ require (
 require (
 	github.com/boggydigital/busan v0.1.0 // indirect
 	github.com/boggydigital/match_node v0.1.17 // indirect
-	golang.org/x/image v0.21.0 // indirect
+	golang.org/x/image v0.22.0 // indirect
 	golang.org/x/net v0.30.0 // indirect
 )

@@ -11,6 +11,8 @@ import (
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
+	"golang.org/x/exp/slices"
+	"strings"
 )
 
 const colorBlendClass = "color-blend"
@@ -64,6 +66,29 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	fmtLabels := compton_fragments.FormatLabels(id, rdx)
 	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.Small).RowGap(size.XSmall).ColumnGap(size.XSmall)
 	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
+
+	/* Product summary properties */
+
+	properties, values := compton_fragments.SummarizeProductProperties(id, rdx)
+	osSymbols := make([]compton.Symbol, 0, 2)
+
+	summaryRow := compton.Frow(p)
+
+	for _, p := range properties {
+		switch p {
+		case vangogh_local_data.OperatingSystemsProperty:
+			osValues := vangogh_local_data.ParseManyOperatingSystems(values[p])
+			for _, os := range compton_data.OSOrder {
+				if slices.Contains(osValues, os) {
+					osSymbols = append(osSymbols, compton_data.OperatingSystemSymbols[os])
+				}
+			}
+			summaryRow.PropIcons(compton_data.PropertyTitles[p], osSymbols...)
+		default:
+			summaryRow.PropVal(compton_data.PropertyTitles[p], strings.Join(values[p], ", "))
+		}
+	}
+	pageStack.Append(compton.FICenter(p, summaryRow))
 
 	/* Product details sections */
 

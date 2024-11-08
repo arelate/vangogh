@@ -26,7 +26,7 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 
 	container.Append(compton.H3Text(votedTitle))
 
-	topFr := compton.Frow(r).IconColor(votedColor).Heading("Author")
+	topFr := compton.Frow(r).CircleIconColor(votedColor).Heading("Author")
 
 	if review.Author.NumGamesOwned > 0 {
 		topFr.PropVal("Games", strconv.Itoa(review.Author.NumGamesOwned))
