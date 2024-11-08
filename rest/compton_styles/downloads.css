@@ -1,0 +1,16 @@
+a {
+    padding-inline-start: var(--s-s);
+    border-left: var(--s-xs) solid var(--c-gray);
+
+    &.installer {
+        border-color: var(--c-purple)
+    }
+
+    &.downloadable-content {
+        border-color: var(--c-indigo)
+    }
+
+    &.extra {
+        border-color: var(--c-orange)
+    }
+}

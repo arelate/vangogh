@@ -198,7 +198,7 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, d
 func downloadLink(r compton.Registrar, dl vangogh_local_data.Download) compton.Element {
 
 	link := compton.A("/files?manual-url=" + dl.ManualUrl)
-	link.AddClass("download")
+	link.AddClass("download", dl.Type.String())
 
 	linkColumn := compton.FlexItems(r, direction.Column).
 		RowGap(size.Small)

@@ -10,5 +10,5 @@ var SectionStyles = map[string]string{
 	SteamNewsSection:     "steam-news.css",
 	SteamReviewsSection:  "steam-reviews.css",
 	SteamDeckSection:     "steam-deck.css",
-	DownloadsSection:     "",
+	DownloadsSection:     "downloads.css",
 }
