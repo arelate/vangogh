@@ -1,5 +1,6 @@
 body {
     word-break: break-word;
+    line-height: calc(1.5 * var(--s-n));
 }
 
 a {
