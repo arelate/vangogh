@@ -4,7 +4,7 @@ import "github.com/arelate/vangogh_local_data"
 
 var DigestProperties = []string{
 	vangogh_local_data.TagIdProperty,
-	//vangogh_local_data.LocalTagsProperty,
+	vangogh_local_data.LocalTagsProperty,
 	vangogh_local_data.SteamDeckAppCompatibilityCategoryProperty,
 	vangogh_local_data.OperatingSystemsProperty,
 	vangogh_local_data.LanguageCodeProperty,

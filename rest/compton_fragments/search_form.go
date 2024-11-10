@@ -120,6 +120,18 @@ func tagsDatalist(rdx kevlar.ReadableRedux) map[string]string {
 	return dl
 }
 
+func localTagsDatalist(rdx kevlar.ReadableRedux) map[string]string {
+	dl := make(map[string]string)
+	for _, id := range rdx.Keys(vangogh_local_data.LocalTagsProperty) {
+		if lts, ok := rdx.GetAllValues(vangogh_local_data.LocalTagsProperty, id); ok {
+			for _, lt := range lts {
+				dl[lt] = lt
+			}
+		}
+	}
+	return dl
+}
+
 func searchInputs(r compton.Registrar, query map[string][]string, container compton.Element, rdx kevlar.ReadableRedux) {
 	for _, property := range compton_data.SearchProperties {
 		title := compton_data.PropertyTitles[property]
@@ -148,6 +160,8 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 				datalist = languagesDatalist()
 			case vangogh_local_data.TagIdProperty:
 				datalist = tagsDatalist(rdx)
+			case vangogh_local_data.LocalTagsProperty:
+				datalist = localTagsDatalist(rdx)
 			}
 		}
 
