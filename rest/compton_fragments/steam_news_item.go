@@ -26,7 +26,10 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 		}
 	}
 
-	fr := compton.Frow(r).Heading(title).PropVal("Posted", EpochDate(item.Date))
+	fr := compton.Frow(r).
+		FontSize(size.Small).
+		Heading(title).
+		PropVal("Posted", EpochDate(item.Date))
 
 	if item.Author != "" {
 		fr.PropVal("Author", item.Author)

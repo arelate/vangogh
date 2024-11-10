@@ -161,7 +161,8 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.Operating
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	fr := compton.Frow(r).
-		CircleIconColor(downloadTypesColors[dv.dlType]).
+		FontSize(size.Small).
+		IconColor(compton.Circle, downloadTypesColors[dv.dlType]).
 		Heading(downloadTypesStrings[dv.dlType])
 
 	if dv.langCode != "" {
@@ -211,7 +212,9 @@ func downloadLink(r compton.Registrar, dl vangogh_local_data.Download) compton.E
 		FontWeight(font_weight.Bolder)
 	linkColumn.Append(linkTitle)
 
-	sizeFr := compton.Frow(r).PropVal("Size", fmtBytes(dl.EstimatedBytes))
+	sizeFr := compton.Frow(r).
+		FontSize(size.Small).
+		PropVal("Size", fmtBytes(dl.EstimatedBytes))
 	linkColumn.Append(sizeFr)
 
 	link.Append(linkColumn)

@@ -70,7 +70,8 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	properties, values := compton_fragments.SummarizeProductProperties(id, rdx)
 	osSymbols := make([]compton.Symbol, 0, 2)
 
-	summaryRow := compton.Frow(p)
+	summaryRow := compton.Frow(p).
+		FontSize(size.Small)
 
 	for _, p := range properties {
 		switch p {

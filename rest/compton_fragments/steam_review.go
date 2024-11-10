@@ -26,7 +26,9 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 
 	container.Append(compton.H3Text(votedTitle))
 
-	topFr := compton.Frow(r).CircleIconColor(votedColor).Heading("Author")
+	topFr := compton.Frow(r).
+		FontSize(size.Small).
+		IconColor(compton.Circle, votedColor).Heading("Author")
 
 	if review.Author.NumGamesOwned > 0 {
 		topFr.PropVal("Games", strconv.Itoa(review.Author.NumGamesOwned))
@@ -84,7 +86,9 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 	reviewContainer.Append(compton.PreText(review.Review))
 
 	if review.VotesUp > 0 || review.VotesFunny > 0 {
-		bottomFr := compton.Frow(r).Heading("Votes")
+		bottomFr := compton.Frow(r).
+			FontSize(size.Small).
+			Heading("Votes")
 		if review.VotesUp > 0 {
 			bottomFr.PropVal("Helpful", strconv.Itoa(review.VotesUp))
 		}
