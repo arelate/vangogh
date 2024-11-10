@@ -19,12 +19,12 @@ require (
 	github.com/boggydigital/pathways v0.1.14
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yet_urls v0.1.54
-	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c
+	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
 )
 
 require (
 	github.com/boggydigital/busan v0.1.0 // indirect
 	github.com/boggydigital/match_node v0.1.17 // indirect
 	golang.org/x/image v0.22.0 // indirect
-	golang.org/x/net v0.30.0 // indirect
+	golang.org/x/net v0.31.0 // indirect
 )
