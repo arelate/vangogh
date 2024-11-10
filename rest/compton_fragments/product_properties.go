@@ -250,6 +250,7 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 	if len(fmtProperty.actions) > 0 {
 		for ac, acHref := range fmtProperty.actions {
 			actionLink := compton.A(acHref)
+			actionLink.SetAttribute("target", "_top")
 			actionLink.Append(compton.Fspan(r, ac).ForegroundColor(color.Blue))
 			tv.AppendValues(actionLink)
 		}
