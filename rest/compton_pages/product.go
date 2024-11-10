@@ -28,9 +28,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	p.RegisterStyles(compton_styles.Styles, "product.css")
 
 	// tinting document background color to the representative product color
-	if repColor, ok := rdx.GetLastVal(vangogh_local_data.RepImageColorProperty, id); ok {
-		p.SetAttribute("style", "background-color:color-mix(in display-p3,"+repColor+" var(--cma),var(--c-background))")
-	}
+	compton_fragments.SetTintedBackgroundColor(id, p, rdx)
 
 	/* App navigation */
 

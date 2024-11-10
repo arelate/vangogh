@@ -30,7 +30,11 @@ func TagsEditor(
 	tagsPropertyTitle := compton_data.PropertyTitles[tagsProperty]
 
 	p, pageStack := compton_fragments.AppPage("Edit " + tagsPropertyTitle)
+	p.RegisterStyles(compton_styles.Styles, "product.css")
 	p.RegisterStyles(compton_styles.Styles, "tag-editors.css")
+
+	// tinting document background color to the representative product color
+	compton_fragments.SetTintedBackgroundColor(id, p, rdx)
 
 	/* App navigation */
 
