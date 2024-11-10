@@ -34,7 +34,7 @@ func TagsEditor(
 	p.RegisterStyles(compton_styles.Styles, "tag-editors.css")
 
 	// tinting document background color to the representative product color
-	compton_fragments.SetTintedBackgroundColor(id, p, rdx)
+	compton_fragments.SetTint(id, p, rdx)
 
 	/* App navigation */
 

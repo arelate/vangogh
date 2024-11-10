@@ -37,7 +37,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 
 	pc := compton.Card(r, id)
 
-	SetTintedBackgroundColor(id, pc, rdx)
+	SetTint(id, pc, rdx)
 
 	if viSrc, ok := rdx.GetLastVal(vangogh_local_data.VerticalImageProperty, id); ok {
 
