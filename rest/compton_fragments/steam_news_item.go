@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 )
@@ -39,7 +40,7 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 		fr.PropVal("Feed", item.FeedLabel)
 	}
 
-	fr.LinkExternal("Source", item.Url)
+	fr.LinkColor("Source", item.Url, color.Cyan)
 
 	container.Append(fr)
 

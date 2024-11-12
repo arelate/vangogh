@@ -15,14 +15,14 @@ import (
 	"strings"
 )
 
-func SearchForm(r compton.Registrar, query map[string][]string, searchQuery compton.Element, rdx kevlar.ReadableRedux) compton.Element {
+func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx kevlar.ReadableRedux) compton.Element {
 
 	form := compton.Form("/search", "GET")
 	formStack := compton.FlexItems(r, direction.Column)
 	form.Append(formStack)
 
 	if searchQuery != nil {
-		formStack.Append(searchQuery)
+		formStack.Append(compton.FICenter(r, searchQuery))
 	}
 
 	submitRow := compton.FlexItems(r, direction.Row).JustifyContent(align.Center)

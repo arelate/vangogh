@@ -116,7 +116,7 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 			if tnp, ok := rdx.GetLastVal(vangogh_local_data.TagNameProperty, value); ok {
 				tagName = tnp
 			}
-			fmtProperty.values[tagName] = searchHref(property, tagName)
+			fmtProperty.values[tagName] = searchHref(property, value)
 		case vangogh_local_data.PriceProperty:
 			if !isFree {
 				if isDiscounted && !owned {
@@ -199,6 +199,7 @@ func operatingSystemsTitleValues(r compton.Registrar, id string, rdx kevlar.Read
 	if values, ok := rdx.GetAllValues(property, id); ok {
 		for _, os := range vangogh_local_data.ParseManyOperatingSystems(values) {
 			osLink := compton.A(searchHref(property, os.String()))
+			osLink.SetAttribute("target", "_top")
 			osLink.Append(compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
 			row.Append(osLink)
 		}

@@ -9,6 +9,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"strconv"
+	"strings"
 )
 
 const filterSearchTitle = "Filter & search"
@@ -48,14 +49,20 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 		filterSearchDetails.AppendSummary(cf.TitleElement(p, from, to, len(ids)))
 	}
 
-	searchQuery := compton.Query(p, query,
-		compton_data.PropertyTitles, "/search", "Clear")
+	var queryFrow *compton.FrowElement
+	if len(query) > 0 {
+		queryFrow = compton.Frow(p).FontSize(size.Small)
+		for prop, vals := range compton_fragments.FormatQuery(query, rdx) {
+			queryFrow.PropVal(compton_data.PropertyTitles[prop], strings.Join(vals, ","))
+		}
+		queryFrow.LinkColor("Clear", "/search", color.Blue)
+	}
 
-	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, searchQuery, rdx))
+	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, queryFrow, rdx))
 	pageStack.Append(filterSearchDetails)
 
-	if searchQuery != nil {
-		pageStack.Append(searchQuery)
+	if queryFrow != nil {
+		pageStack.Append(compton.FICenter(p, queryFrow))
 	}
 
 	/* Search results product cards */
