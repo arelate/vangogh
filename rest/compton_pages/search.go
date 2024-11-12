@@ -8,6 +8,8 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
+	"golang.org/x/exp/maps"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -52,7 +54,11 @@ func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.Re
 	var queryFrow *compton.FrowElement
 	if len(query) > 0 {
 		queryFrow = compton.Frow(p).FontSize(size.Small)
-		for prop, vals := range compton_fragments.FormatQuery(query, rdx) {
+		fq := compton_fragments.FormatQuery(query, rdx)
+		props := maps.Keys(query)
+		slices.Sort(props)
+		for _, prop := range props {
+			vals := fq[prop]
 			queryFrow.PropVal(compton_data.PropertyTitles[prop], strings.Join(vals, ","))
 		}
 		queryFrow.LinkColor("Clear", "/search", color.Blue)
