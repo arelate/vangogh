@@ -5,6 +5,7 @@ import (
 )
 
 var LabelProperties = []string{
+	vangogh_local_data.StoreTagsProperty, // Good Old Game label
 	vangogh_local_data.OwnedProperty,
 	vangogh_local_data.ProductTypeProperty,
 	vangogh_local_data.ComingSoonProperty,
@@ -15,7 +16,6 @@ var LabelProperties = []string{
 	vangogh_local_data.IsFreeProperty,
 	vangogh_local_data.DiscountPercentageProperty,
 	vangogh_local_data.WishlistedProperty,
-	vangogh_local_data.StoreTagsProperty,
 }
 
 var LabelTitles = map[string]string{
