@@ -35,6 +35,7 @@ func HandleFuncs() {
 		"GET /steam-reviews":      Log(http.HandlerFunc(GetSteamReviews)),
 		"GET /steam-deck":         Log(http.HandlerFunc(GetSteamDeck)),
 		"GET /downloads-metadata": Log(http.HandlerFunc(GetDownloadsMetadata)),
+		"GET /health":             Log(http.HandlerFunc(GetHealth)),
 		// unauth media endpoints
 		"GET /image":  Log(http.HandlerFunc(GetImage)),
 		"GET /items/": Log(http.HandlerFunc(GetItems)),
@@ -45,6 +46,7 @@ func HandleFuncs() {
 		"GET /local-tags/edit":  Auth(Log(http.HandlerFunc(GetLocalTagsEdit)), AdminRole),
 		"GET /tags/apply":       Auth(Log(http.HandlerFunc(GetTagsApply)), AdminRole),
 		"GET /local-tags/apply": Auth(Log(http.HandlerFunc(GetLocalTagsApply)), AdminRole),
+		"GET /health-auth":      Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
 		// auth media endpoints
 		"GET /files":       Auth(Log(http.HandlerFunc(GetFiles)), AdminRole, SharedRole),
 		"GET /local-file/": Auth(Log(http.HandlerFunc(GetLocalFile)), AdminRole, SharedRole),
