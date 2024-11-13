@@ -1,5 +1,7 @@
 @scope (.label) {
     :scope {
+        position:relative;
+
         &.owned {
             color: var(--c-highlight);
             background-color: var(--c-gray);
@@ -11,12 +13,12 @@
         }
 
         &.owned.missing-checksum {
-            color:var(--c-highlight);
+            color: var(--c-highlight);
             background-color: var(--c-mint);
         }
 
         &.owned.unresolved-manual-url {
-            color:var(--c-highlight);
+            color: var(--c-highlight);
             background-color: var(--c-teal);
         }
 
@@ -26,7 +28,7 @@
         }
 
         &.owned.failed-validation {
-            color:var(--c-highlight);
+            color: var(--c-highlight);
             background-color: var(--c-red);
         }
 
@@ -74,6 +76,34 @@
         &.discount-percentage {
             color: var(--c-highlight);
             background-color: var(--c-red);
+        }
+
+        &.good-old-game {
+            color: var(--c-foreground)
+        }
+
+        &.good-old-game::before {
+            z-index: -2;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            border-radius: inherit;
+            content: "";
+            background: linear-gradient(90deg, var(--c-purple), var(--c-pink), var(--c-yellow), var(--c-teal));
+        }
+
+        &.good-old-game::after {
+            z-index: -1;
+            position: absolute;
+            top: var(--s-xxxs);
+            right: var(--s-xxxs);
+            bottom: var(--s-xxxs);
+            left: var(--s-xxxs);
+            border-radius: inherit;
+            content: "";
+            background: var(--c-background);
         }
     }
 }
