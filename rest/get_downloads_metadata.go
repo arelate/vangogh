@@ -73,17 +73,22 @@ func getDownloadMetadata(id string, dls vangogh_local_data.DownloadsList, rdx ke
 		dm.Slug = slug
 	}
 
-	for _, download := range dls {
+	for _, dl := range dls {
 		link := vangogh_local_data.DownloadLink{
-			ManualUrl:      download.ManualUrl,
-			OS:             download.OS.String(),
-			Type:           download.Type.String(),
-			LanguageCode:   download.LanguageCode,
-			Version:        download.Version,
-			EstimatedBytes: download.EstimatedBytes,
+			ManualUrl:      dl.ManualUrl,
+			Name:           dl.Name,
+			OS:             dl.OS.String(),
+			Type:           dl.Type.String(),
+			LanguageCode:   dl.LanguageCode,
+			Version:        dl.Version,
+			EstimatedBytes: dl.EstimatedBytes,
 		}
 
-		if relLocalDownloadPath, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, download.ManualUrl); ok {
+		if dl.Type == vangogh_local_data.DLC {
+			link.Name = dl.ProductTitle
+		}
+
+		if relLocalDownloadPath, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
 			_, filename := filepath.Split(relLocalDownloadPath)
 			link.LocalFilename = filename
 
