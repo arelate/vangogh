@@ -89,7 +89,7 @@
             right: 0;
             bottom: 0;
             left: 0;
-            border-radius: inherit;
+            border-radius: calc(1.25 * var(--s-xxs));
             content: "";
             background: linear-gradient(90deg, var(--c-purple), var(--c-pink), var(--c-yellow), var(--c-teal));
         }
@@ -101,7 +101,7 @@
             right: var(--s-xxxs);
             bottom: var(--s-xxxs);
             left: var(--s-xxxs);
-            border-radius: inherit;
+            border-radius: var(--s-xxs);
             content: "";
             background: var(--c-background);
         }
