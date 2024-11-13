@@ -8,9 +8,10 @@ import (
 
 const (
 	SearchNew      = "New"
-	SearchOwned    = "Owned"
-	SearchWishlist = "Wishlist"
+	SearchOwned    = "Own"
+	SearchWishlist = "Wish"
 	SearchSale     = "Sale"
+	SearchGOG      = "GOG"
 	SearchAll      = "All"
 )
 
@@ -19,6 +20,7 @@ var SearchOrder = []string{
 	SearchOwned,
 	SearchWishlist,
 	SearchSale,
+	SearchGOG,
 	SearchAll,
 }
 
@@ -53,6 +55,11 @@ func SearchScopes() map[string]string {
 	q.Set(vangogh_local_data.SortProperty, vangogh_local_data.GOGReleaseDateProperty)
 	q.Set(vangogh_local_data.DescendingProperty, vangogh_local_data.TrueValue)
 	queries[SearchAll] = q.Encode()
+
+	q = make(url.Values)
+	q.Set(vangogh_local_data.StoreTagsProperty, "Good Old Game")
+	q.Set(vangogh_local_data.SortProperty, vangogh_local_data.TitleProperty)
+	queries[SearchGOG] = q.Encode()
 
 	return queries
 }
