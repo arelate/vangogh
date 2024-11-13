@@ -79,7 +79,8 @@
         }
 
         &.good-old-game {
-            color: var(--c-foreground)
+            color: var(--c-foreground);
+            --o: 0.9;
         }
 
         &.good-old-game::before {
@@ -104,6 +105,13 @@
             border-radius: var(--s-xxs);
             content: "";
             background: var(--c-background);
+            opacity: var(--o);
+        }
+
+        @media screen and (prefers-color-scheme: dark) {
+            &.good-old-game::after {
+                --o: 0.8;
+            }
         }
     }
 }
