@@ -78,6 +78,8 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 		if rdx.HasValue(vangogh_local_data.StoreTagsProperty, id, "Good Old Game") {
 			fmtLabel.Title = "GOG"
 			fmtLabel.Class = "good-old-game"
+		} else {
+			fmtLabel.Title = ""
 		}
 	}
 	return fmtLabel
