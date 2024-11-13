@@ -14,24 +14,6 @@ import (
 
 const applicationJsonContentType = "application/json"
 
-type downloadMetadata struct {
-	Id            string         `json:"id"`
-	Slug          string         `json:"slug"`
-	Title         string         `json:"title"`
-	DownloadLinks []downloadLink `json:"download-links,omitempty"`
-}
-
-type downloadLink struct {
-	ManualUrl      string `json:"manual-url"`
-	LocalFilename  string `json:"local-filename"`
-	Md5            string `json:"md5"`
-	OS             string `json:"os"`
-	Type           string `json:"type"`
-	LanguageCode   string `json:"language-code"`
-	Version        string `json:"version"`
-	EstimatedBytes int    `json:"estimated-bytes"`
-}
-
 func GetDownloadsMetadata(w http.ResponseWriter, r *http.Request) {
 
 	// GET /downloads-metadata?id&os&lang-code
@@ -82,8 +64,8 @@ func GetDownloadsMetadata(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getDownloadMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) (*downloadMetadata, error) {
-	dm := &downloadMetadata{Id: id}
+func getDownloadMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) (*vangogh_local_data.DownloadMetadata, error) {
+	dm := &vangogh_local_data.DownloadMetadata{Id: id}
 	if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
 		dm.Title = title
 	}
@@ -92,7 +74,7 @@ func getDownloadMetadata(id string, dls vangogh_local_data.DownloadsList, rdx ke
 	}
 
 	for _, download := range dls {
-		link := downloadLink{
+		link := vangogh_local_data.DownloadLink{
 			ManualUrl:      download.ManualUrl,
 			OS:             download.OS.String(),
 			Type:           download.Type.String(),
