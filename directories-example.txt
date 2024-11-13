@@ -2,6 +2,8 @@ backups
     /var/lib/vangogh/backups
 downloads
     /var/lib/vangogh/downloads
+checksums
+    /var/lib/vangogh/checksums
 images
     /var/lib/vangogh/images
 input

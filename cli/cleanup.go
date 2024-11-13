@@ -230,7 +230,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			return csa.EndWithError(err)
 		}
 
-		acp, err := pathways.GetAbsRelDir(vangogh_local_data.Checksums)
+		acp, err := pathways.GetAbsDir(vangogh_local_data.Checksums)
 		if err != nil {
 			return csa.EndWithError(err)
 		}
