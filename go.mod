@@ -1,6 +1,6 @@
 module github.com/arelate/vangogh
 
-go 1.23.2
+go 1.23.3
 
 require (
 	github.com/arelate/southern_light v0.1.51
@@ -10,7 +10,7 @@ require (
 	github.com/boggydigital/clo v1.0.4
 	github.com/boggydigital/compton v0.2.23
 	github.com/boggydigital/coost v0.3.9
-	github.com/boggydigital/dolo v0.2.18
+	github.com/boggydigital/dolo v0.2.19
 	github.com/boggydigital/issa v0.1.19
 	github.com/boggydigital/kevlar v0.5.19
 	github.com/boggydigital/kevlar_dolo v0.1.7
