@@ -13,10 +13,10 @@ cascade-validation
 cleanup
     id^&
     slug&
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
+    lang-code&$={language-codes^}
+    no-patches$
     all
     test
     delete
@@ -39,10 +39,10 @@ get-data
 get-downloads
     id^&
     slug&
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
+    lang-code&$={language-codes^}
+    no-patches$
     missing
     force
 
@@ -59,11 +59,10 @@ get-items
 get-purchases
     id^&
     since-hours-ago
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
-    external-url
+    lang-code&$={language-codes^}
+    no-patches$
     force
 
 get-summary
@@ -112,9 +111,9 @@ search
 serve
     port$*
     stderr$
-    operating-system$
-    language-code$
-    exclude-patches$
+    os$
+    lang-code$
+    no-patches$
     admin-username$
     admin-password$
     shared-username$
@@ -123,24 +122,22 @@ serve
 size
     id^&
     slug&
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
+    lang-code&$={language-codes^}
+    no-patches$
     missing
     all
 
 summarize
     since-hours-ago
-    external-url$
 
 sync
     since-hours-ago
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
-    external-url$
+    lang-code&$={language-codes^}
+    no-patches$
     debug$
     {sync-options^&}
 
@@ -151,30 +148,30 @@ tag
     tag-name
 
 update-downloads
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
+    lang-code&$={language-codes^}
+    no-patches$
     since-hours-ago
     updates-only
 
 validate
     id^&
     slug&
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
+    lang-code&$={language-codes^}
+    no-patches$
     all
     skip-valid
 
 version
 
 vet
-    operating-system&$={operating-systems^}
+    os&$={operating-systems^}
     download-type&$={download-types^}
-    language-code&$={language-codes^}
-    exclude-patches$
+    lang-code&$={language-codes^}
+    no-patches$
     fix
     {vet-options^&}
 

@@ -44,7 +44,7 @@ func GetDownloadsMetadata(w http.ResponseWriter, r *http.Request) {
 		langCodes = languageCodes
 	}
 
-	dls, err := getDownloads(id, oses, langCodes, excludePatches, rdx)
+	dls, err := getDownloads(id, oses, langCodes, noPatches, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

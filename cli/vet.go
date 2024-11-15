@@ -72,8 +72,8 @@ func VetHandler(u *url.URL) error {
 		vetOpts,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, "language-code"),
-		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
+		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.FlagFromUrl(u, "no-patches"),
 		vangogh_local_data.FlagFromUrl(u, "fix"))
 }
 

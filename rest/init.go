@@ -17,7 +17,7 @@ const (
 var (
 	operatingSystems []vangogh_local_data.OperatingSystem
 	languageCodes    []string
-	excludePatches   bool
+	noPatches        bool
 
 	rdx kevlar.ReadableRedux
 )
@@ -25,10 +25,10 @@ var (
 func SetDefaultDownloadsFilters(
 	os []vangogh_local_data.OperatingSystem,
 	lc []string,
-	ep bool) {
+	np bool) {
 	operatingSystems = os
 	languageCodes = lc
-	excludePatches = ep
+	noPatches = np
 }
 
 func SetUsername(role, u string) {

@@ -18,11 +18,9 @@ services:
     image: ghcr.io/arelate/vangogh:latest
     environment:
     # Download lists filters
-    # - VG_OPERATING-SYSTEM=Windows,macOS
-    # - VG_LANGUAGE-CODE=en,fr
-    # - VG_EXCLUDE-PATCHES=true
-    # External URL for Atom feed
-    # - VG_EXTERNAL-URL=https://vangogh.arles
+    # - VG_OS=Windows,macOS
+    # - VG_LANG-CODE=en,fr
+    # - VG_NO-PATCHES=true
     # debug
     # - VG_SYNC_DEBUG=true    
     volumes:

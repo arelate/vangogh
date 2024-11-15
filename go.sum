@@ -18,8 +18,12 @@ github.com/arelate/vangogh_local_data v0.4.32 h1:2hP3oQrFyr+OjfUoBwyKWnF3hv9o2CT
 github.com/arelate/vangogh_local_data v0.4.32/go.mod h1:hXcjRAhGb6tjpOuSc7kN94kZANnybUVZALXfYstrjfw=
 github.com/arelate/vangogh_local_data v0.4.33 h1:Dgjjhp710QZplTlzqzBautjGVF2CIR2PY6SnI7YgYMs=
 github.com/arelate/vangogh_local_data v0.4.33/go.mod h1:hXcjRAhGb6tjpOuSc7kN94kZANnybUVZALXfYstrjfw=
+github.com/arelate/vangogh_local_data v0.4.34 h1:DRHk2vH0n2fIdQ7ZydGm1vw7/u2G+HKYybMo0Ny4Ud0=
+github.com/arelate/vangogh_local_data v0.4.34/go.mod h1:hXcjRAhGb6tjpOuSc7kN94kZANnybUVZALXfYstrjfw=
 github.com/boggydigital/atomus v0.1.9 h1:zAmXtAAXtBzMfz/83nEO4x8/uSLlPOq5wynW1jR/rbk=
 github.com/boggydigital/atomus v0.1.9/go.mod h1:mvPDNDMrpFZ7RHbyMrt30hVXFU+VoeCvHnT83Zhj91I=
+github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
+github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/backups v0.1.3 h1:Yq4/2kVxpexc0bAVA5tQPgdcKXPWsqihzgI759VPgVM=
 github.com/boggydigital/backups v0.1.3/go.mod h1:xIV5pr0U178hTV3mHfStSU+s1IOJUH4fOU81ad4Cq7Y=
 github.com/boggydigital/busan v0.1.0 h1:mUpe4b3vdt9Kcf4Z/C2YSuX5L7ru+J/iZW+IcSfW0cM=

@@ -17,10 +17,10 @@ func UpdateDownloadsHandler(u *url.URL) error {
 	return UpdateDownloads(
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, "language-code"),
-		vangogh_local_data.FlagFromUrl(u, "exclude-patches"),
+		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.FlagFromUrl(u, "no-patches"),
 		since,
-		vangogh_local_data.FlagFromUrl(u, "Updates-only"))
+		vangogh_local_data.FlagFromUrl(u, "updates-only"))
 }
 
 func UpdateDownloads(
