@@ -12,6 +12,7 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
+	"slices"
 	"strconv"
 )
 
@@ -39,6 +40,11 @@ var downloadTypesColors = map[vangogh_local_data.DownloadType]color.Color{
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
 func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.PageElement {
+
+	//if err := json.NewEncoder(os.Stdout).Encode(dls); err != nil {
+	//	panic(err)
+	//}
+
 	s := compton_fragments.ProductSection(compton_data.DownloadsSection)
 
 	pageStack := compton.FlexItems(s, direction.Column)
@@ -63,14 +69,26 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 			pageStack.Append(osHeading)
 		}
 
-		variants := getDownloadVariants(os, dls)
-		for _, variant := range variants {
-			if dv := downloadVariant(s, variant); dv != nil {
-				pageStack.Append(dv)
-			}
-			if dlLinks := downloadLinks(s, os, variant, dls); dlLinks != nil {
-				pageStack.Append(dlLinks)
+		productTitles := getProductTitles(os, dls)
+		for jj, productTitle := range productTitles {
 
+			titleHeadings := compton.H4Text(productTitle)
+			pageStack.Append(titleHeadings)
+
+			variants := getDownloadVariants(os, productTitle, dls)
+
+			for _, variant := range variants {
+				if dv := downloadVariant(s, variant); dv != nil {
+					pageStack.Append(dv)
+				}
+				if dlLinks := downloadLinks(s, os, productTitle, variant, dls); dlLinks != nil {
+					pageStack.Append(dlLinks)
+
+				}
+			}
+
+			if jj != len(productTitles)-1 {
+				pageStack.Append(compton.Hr())
 			}
 		}
 
@@ -182,10 +200,16 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 	return fr
 }
 
-func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, dv *DownloadVariant, dls vangogh_local_data.DownloadsList) compton.Element {
+func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, productTitle string, dv *DownloadVariant, dls vangogh_local_data.DownloadsList) compton.Element {
 
-	dsDownloadLinks := compton.DSSmall(r, compton.Fspan(r, "Download links"), false)
-	downloads := filterDownloads(os, dls, dv)
+	downloads := filterDownloads(os, dls, productTitle, dv)
+
+	dsTitle := "Download link"
+	if len(downloads) > 1 {
+		dsTitle = fmt.Sprintf("%d download links", len(downloads))
+	}
+
+	dsDownloadLinks := compton.DSSmall(r, compton.Fspan(r, dsTitle), len(downloads) < 2)
 
 	downloadsColumn := compton.FlexItems(r, direction.Column).
 		RowGap(size.Normal)
@@ -259,11 +283,28 @@ func hasDownloadVariant(dvs []*DownloadVariant, other *DownloadVariant) bool {
 	return false
 }
 
-func getDownloadVariants(os vangogh_local_data.OperatingSystem, dls vangogh_local_data.DownloadsList) []*DownloadVariant {
+func getProductTitles(os vangogh_local_data.OperatingSystem, dls vangogh_local_data.DownloadsList) []string {
+	titles := make([]string, 0)
+	for _, dl := range dls {
+		if dl.OS != os {
+			continue
+		}
+
+		if !slices.Contains(titles, dl.ProductTitle) {
+			titles = append(titles, dl.ProductTitle)
+		}
+	}
+	return titles
+}
+
+func getDownloadVariants(os vangogh_local_data.OperatingSystem, title string, dls vangogh_local_data.DownloadsList) []*DownloadVariant {
 
 	variants := make([]*DownloadVariant, 0)
 	for _, dl := range dls {
 		if dl.OS != os {
+			continue
+		}
+		if dl.ProductTitle != title {
 			continue
 		}
 
@@ -281,13 +322,14 @@ func getDownloadVariants(os vangogh_local_data.OperatingSystem, dls vangogh_loca
 	return variants
 }
 
-func filterDownloads(os vangogh_local_data.OperatingSystem, dls vangogh_local_data.DownloadsList, dv *DownloadVariant) []vangogh_local_data.Download {
+func filterDownloads(os vangogh_local_data.OperatingSystem, dls vangogh_local_data.DownloadsList, productTitle string, dv *DownloadVariant) []vangogh_local_data.Download {
 	downloads := make([]vangogh_local_data.Download, 0)
 	for _, dl := range dls {
 		if dl.OS != os ||
 			dl.Type != dv.dlType ||
 			dv.version != dl.Version ||
-			dv.langCode != dl.LanguageCode {
+			dv.langCode != dl.LanguageCode ||
+			productTitle != dl.ProductTitle {
 			continue
 		}
 		downloads = append(downloads, dl)
