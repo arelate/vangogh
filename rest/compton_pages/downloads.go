@@ -14,6 +14,7 @@ import (
 	"github.com/boggydigital/kevlar"
 	"slices"
 	"strconv"
+	"strings"
 )
 
 type DownloadVariant struct {
@@ -209,14 +210,14 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, p
 		dsTitle = fmt.Sprintf("%d download links", len(downloads))
 	}
 
-	dsDownloadLinks := compton.DSSmall(r, compton.Fspan(r, dsTitle), len(downloads) < 2)
+	dsDownloadLinks := compton.DSSmall(r, compton.Fspan(r, dsTitle), false)
 
 	downloadsColumn := compton.FlexItems(r, direction.Column).
 		RowGap(size.Normal)
 	dsDownloadLinks.Append(downloadsColumn)
 
 	for ii, dl := range downloads {
-		if link := downloadLink(r, dl); link != nil {
+		if link := downloadLink(r, productTitle, dl); link != nil {
 			downloadsColumn.Append(link)
 		}
 		if ii != len(downloads)-1 {
@@ -227,7 +228,7 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, p
 	return dsDownloadLinks
 }
 
-func downloadLink(r compton.Registrar, dl vangogh_local_data.Download) compton.Element {
+func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_data.Download) compton.Element {
 
 	link := compton.A("/files?manual-url=" + dl.ManualUrl)
 	link.AddClass("download", dl.Type.String())
@@ -239,8 +240,19 @@ func downloadLink(r compton.Registrar, dl vangogh_local_data.Download) compton.E
 	if dl.Type == vangogh_local_data.DLC {
 		name = dl.ProductTitle
 	}
-	linkTitle := compton.Fspan(r, name).
-		FontWeight(font_weight.Bolder)
+
+	namePrefix := ""
+	if strings.Contains(name, productTitle) {
+		namePrefix = productTitle
+	}
+	nameSuffix := strings.TrimPrefix(name, productTitle)
+
+	linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.Gray)
+	linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.Foreground)
+
+	linkTitle := compton.FlexItems(r, direction.Row).ColumnGap(size.XSmall).FontWeight(font_weight.Normal)
+
+	linkTitle.Append(linkPrefix, linkSuffix)
 	linkColumn.Append(linkTitle)
 
 	sizeFr := compton.Frow(r).
