@@ -210,7 +210,9 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, p
 		dsTitle = fmt.Sprintf("%d download links", len(downloads))
 	}
 
-	dsDownloadLinks := compton.DSSmall(r, compton.Fspan(r, dsTitle), false)
+	dsHeading := compton.Fspan(r, dsTitle).FontSize(size.Small)
+
+	dsDownloadLinks := compton.DSSmall(r, dsHeading, false)
 
 	downloadsColumn := compton.FlexItems(r, direction.Column).
 		RowGap(size.Normal)

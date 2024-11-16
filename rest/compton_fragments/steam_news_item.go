@@ -44,7 +44,9 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 
 	container.Append(fr)
 
-	ds := compton.DSSmall(r, compton.Fspan(r, "News item"), open)
+	dsHeading := compton.Fspan(r, "News item").FontSize(size.Small)
+
+	ds := compton.DSSmall(r, dsHeading, open)
 
 	itemContents := compton.PreText(item.Contents)
 
