@@ -44,6 +44,13 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
+	if owned, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok && owned == vangogh_local_data.FalseValue {
+		ownershipRequiredNotice := compton.Fspan(s, "Downloads are available for owned products only").
+			ForegroundColor(color.Gray)
+		pageStack.Append(ownershipRequiredNotice)
+		return s
+	}
+
 	if valRes := validationResults(s, id, rdx); valRes != nil {
 		pageStack.Append(valRes)
 	}

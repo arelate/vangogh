@@ -42,7 +42,7 @@ func getDownloads(id string,
 		return nil, err
 	}
 
-	has, err := vrDetails.Has(id)
+	hasDetails, err := vrDetails.Has(id)
 	if err != nil {
 		return nil, err
 	}
@@ -50,26 +50,20 @@ func getDownloads(id string,
 	// if we don't have product details for the id this can mean two things:
 	// - id represents a PACK that includes individual products (owned, not owned)
 	// in this case we can iterate over included products and combine downloads for each one of them
+	// - id represents a DLC that includes individual products (owned, not owned)
+	// in this case we can iterate over required products and combine downloads for each one of them
 	// - id represents a product that the user doesn't own
 	// in this case we can remove basic product metadata (title, slug, etc) and no downloads
 
-	if !has {
-		if err := rdx.MustHave(vangogh_local_data.IncludesGamesProperty); err != nil {
-			return nil, err
-		}
-		var includesDownloadsList vangogh_local_data.DownloadsList
-		if includesIds, ok := rdx.GetAllValues(vangogh_local_data.IncludesGamesProperty, id); ok {
-
-			for _, includesId := range includesIds {
-				if idl, err := getDownloads(includesId, operatingSystems, langCodes, noPatches, rdx); err == nil {
-					includesDownloadsList = append(includesDownloadsList, idl...)
-				} else {
-					return nil, err
-				}
+	if !hasDetails {
+		if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok {
+			switch pt {
+			case "PACK":
+				return relatedGamesDownloads(id, vangogh_local_data.IncludesGamesProperty, operatingSystems, langCodes, noPatches, rdx)
+			case "DLC":
+				return relatedGamesDownloads(id, vangogh_local_data.RequiresGamesProperty, operatingSystems, langCodes, noPatches, rdx)
 			}
-			return includesDownloadsList, nil
 		}
-		return includesDownloadsList, nil
 	}
 
 	// at this point we know that we should have product details in storage (see above)
@@ -93,4 +87,27 @@ func getDownloads(id string,
 		[]vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType},
 		langCodes,
 		noPatches), nil
+}
+
+func relatedGamesDownloads(id, property string,
+	operatingSystems []vangogh_local_data.OperatingSystem,
+	langCodes []string,
+	noPatches bool,
+	rdx kevlar.ReadableRedux) (vangogh_local_data.DownloadsList, error) {
+	if err := rdx.MustHave(property); err != nil {
+		return nil, err
+	}
+	var relatedDownloadsList vangogh_local_data.DownloadsList
+	if relatedIds, ok := rdx.GetAllValues(property, id); ok {
+
+		for _, relatedId := range relatedIds {
+			if idl, err := getDownloads(relatedId, operatingSystems, langCodes, noPatches, rdx); err == nil {
+				relatedDownloadsList = append(relatedDownloadsList, idl...)
+			} else {
+				return nil, err
+			}
+		}
+		return relatedDownloadsList, nil
+	}
+	return relatedDownloadsList, nil
 }
