@@ -94,7 +94,9 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 		}
 
 		if ii != len(dlOs)-1 {
-			pageStack.Append(compton.Hr())
+			thickHr := compton.Hr()
+			thickHr.AddClass("thick")
+			pageStack.Append(thickHr)
 		}
 	}
 

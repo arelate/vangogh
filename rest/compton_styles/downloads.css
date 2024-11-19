@@ -14,3 +14,7 @@ a {
         border-color: var(--c-orange)
     }
 }
+
+hr.thick {
+    border-width: var(--s-xxs);
+}
