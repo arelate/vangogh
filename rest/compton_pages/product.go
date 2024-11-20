@@ -1,6 +1,7 @@
 package compton_pages
 
 import (
+	_ "embed"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
@@ -16,6 +17,11 @@ import (
 )
 
 const colorBlendClass = "color-blend"
+
+var (
+	//go:embed "scripts/check_theo.js"
+	scriptCheckTheo []byte
+)
 
 func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.PageElement {
 
@@ -114,6 +120,16 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	pageStack.Append(compton.Br(),
 		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
+
+	/* Checking for theo presence */
+
+	theoSpan := compton.Fspan(p, "Checking for theo presence...").
+		ForegroundColor(color.Gray).
+		FontSize(size.Small)
+	theoSpan.AddClass("theo-span")
+	pageStack.Append(compton.FICenter(p, theoSpan))
+
+	pageStack.Append(compton.ScriptAsync(scriptCheckTheo))
 
 	return p
 }

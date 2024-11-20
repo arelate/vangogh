@@ -17,6 +17,7 @@ var (
 func HandleFuncs() {
 
 	patternHandlers := map[string]http.Handler{
+		// static resources
 		"GET /manifest.json": Log(http.HandlerFunc(GetManifest)),
 		"GET /icon.png":      Log(http.HandlerFunc(GetIcon)),
 		"GET /atom":          Log(http.HandlerFunc(GetAtom)),
