@@ -80,7 +80,18 @@
 
         &.good-old-game {
             color: var(--c-foreground);
-            --o: 0.9;
+            /* TODO: this should replace pseudo-elements solution below when available in more browsers:
+            - https://developer.mozilla.org/en-US/docs/Web/CSS/background-clip#border-area
+            - https://webkit.org/blog/16214/background-clip-border-area/
+            - https://issues.chromium.org/issues/329302543
+            - https://bugzilla.mozilla.org/show_bug.cgi?id=1880365
+             */
+            /*background-image: linear-gradient(90deg, var(--c-purple), var(--c-pink), var(--c-yellow), var(--c-cyan));*/
+            /*background-size: cover;*/
+            /*background-origin: border-box;*/
+            /*background-clip: border-area;*/
+            /*border: var(--s-xxxs) solid transparent;*/
+            --o: 0.85;
         }
 
         &.good-old-game::before {
@@ -92,7 +103,7 @@
             left: 0;
             border-radius: calc(1.25 * var(--s-xxs));
             content: "";
-            background: linear-gradient(90deg, var(--c-purple), var(--c-pink), var(--c-yellow), var(--c-teal));
+            background: linear-gradient(90deg, var(--c-purple), var(--c-pink), var(--c-yellow), var(--c-cyan));
         }
 
         &.good-old-game::after {
@@ -106,12 +117,6 @@
             content: "";
             background: var(--c-background);
             opacity: var(--o);
-        }
-
-        @media screen and (prefers-color-scheme: dark) {
-            &.good-old-game::after {
-                --o: 0.8;
-            }
         }
     }
 }
