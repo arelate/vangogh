@@ -123,13 +123,13 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	/* Checking for theo presence */
 
-	theoSpan := compton.Fspan(p, "Checking for theo presence...").
-		ForegroundColor(color.Gray).
-		FontSize(size.Small)
-	theoSpan.AddClass("theo-span")
-	pageStack.Append(compton.FICenter(p, theoSpan))
-
-	pageStack.Append(compton.ScriptAsync(scriptCheckTheo))
+	//theoSpan := compton.Fspan(p, "Checking for theo presence...").
+	//	ForegroundColor(color.Gray).
+	//	FontSize(size.Small)
+	//theoSpan.AddClass("theo-span")
+	//pageStack.Append(compton.FICenter(p, theoSpan))
+	//
+	//pageStack.Append(compton.ScriptAsync(scriptCheckTheo))
 
 	return p
 }
