@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", e=>{
     let theoCheck = document.querySelector(".theo-span")
-    fetch("http://localhost:1857/health")
+    fetch("https://localhost:1857/health")
     .then(resp => {
         if (resp && resp.ok) {
             resp.text()
