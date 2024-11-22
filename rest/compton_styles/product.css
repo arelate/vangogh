@@ -28,3 +28,7 @@ issa-image.product-poster {
 .color-blend {
     opacity: 0.8
 }
+
+fspan.cmd {
+    font-family: monospace;
+}

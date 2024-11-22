@@ -18,6 +18,13 @@ import (
 
 const colorBlendClass = "color-blend"
 
+const (
+	theoInstallTemplate        = "theo install {id}"
+	theoUninstallTemplate      = "theo uninstall {id}"
+	theoDownloadTemplate       = "theo download {id} -os windows && theo reveal-downloads {id}"
+	theoRemoveDownloadTemplate = "theo remove-download {id} -os windows"
+)
+
 var (
 	//go:embed "scripts/check_theo.js"
 	scriptCheckTheo []byte
@@ -116,20 +123,34 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 		pageStack.Append(detailsSummary)
 	}
 
+	/* Theo commands */
+
+	if owned, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok && owned == vangogh_local_data.TrueValue {
+		var os []vangogh_local_data.OperatingSystem
+		if vals, ok := rdx.GetAllValues(vangogh_local_data.OperatingSystemsProperty, id); ok {
+			os = vangogh_local_data.ParseManyOperatingSystems(vals)
+		}
+
+		if slices.Contains(os, vangogh_local_data.MacOS) {
+			pageStack.Append(theoCommand(p, theoInstallTemplate, id))
+			pageStack.Append(theoCommand(p, theoUninstallTemplate, id))
+		} else {
+			pageStack.Append(theoCommand(p, theoDownloadTemplate, id))
+			pageStack.Append(theoCommand(p, theoRemoveDownloadTemplate, id))
+		}
+	}
+
 	/* Standard app footer */
 
 	pageStack.Append(compton.Br(),
 		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
-	/* Checking for theo presence */
-
-	//theoSpan := compton.Fspan(p, "Checking for theo presence...").
-	//	ForegroundColor(color.Gray).
-	//	FontSize(size.Small)
-	//theoSpan.AddClass("theo-span")
-	//pageStack.Append(compton.FICenter(p, theoSpan))
-	//
-	//pageStack.Append(compton.ScriptAsync(scriptCheckTheo))
-
 	return p
+}
+
+func theoCommand(r compton.Registrar, cmdTemplate, id string) compton.Element {
+	cmd := strings.Replace(cmdTemplate, "{id}", id, -1)
+	cmdContainer := compton.Fspan(r, cmd).ForegroundColor(color.Gray)
+	cmdContainer.AddClass("cmd")
+	return compton.FICenter(r, cmdContainer)
 }
