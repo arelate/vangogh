@@ -150,7 +150,9 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 func theoCommand(r compton.Registrar, cmdTemplate, id string) compton.Element {
 	cmd := strings.Replace(cmdTemplate, "{id}", id, -1)
-	cmdContainer := compton.Fspan(r, cmd).ForegroundColor(color.Gray)
+	cmdContainer := compton.Fspan(r, cmd).
+		ForegroundColor(color.Gray).
+		TextAlign(align.Center)
 	cmdContainer.AddClass("cmd")
 	return compton.FICenter(r, cmdContainer)
 }
