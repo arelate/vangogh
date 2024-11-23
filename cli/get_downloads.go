@@ -249,7 +249,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			return dmua.EndWithError(err)
 		}
 
-		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) {
+		if _, err := os.Stat(localChecksumPath); os.IsNotExist(err) || gdd.forceUpdate {
 			checksumDir, checksumFilename := filepath.Split(localChecksumPath)
 			dca := nod.NewProgress(" - %s", checksumFilename)
 			originalPath := resolvedUrl.Path
