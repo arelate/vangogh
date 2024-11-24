@@ -5,12 +5,12 @@ WORKDIR /go/src/app
 RUN go get ./...
 RUN go build \
     -a -tags timetzdata \
-    -o vg \
+    -o vangogh \
     -ldflags="-s -w -X 'github.com/arelate/vangogh/cli.GitTag=`git describe --tags --abbrev=0`'" \
     main.go
 
 FROM alpine:latest
-COPY --from=build /go/src/app/vg /usr/bin/vg
+COPY --from=build /go/src/app/vangogh /usr/bin/vangogh
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
@@ -41,5 +41,5 @@ VOLUME /var/lib/vangogh/output
 # recycle_bin (cold storage)
 VOLUME /var/lib/vangogh/recycle_bin
 
-ENTRYPOINT ["/usr/bin/vg"]
+ENTRYPOINT ["/usr/bin/vangogh"]
 CMD ["serve","-port", "1853", "-stderr"]
