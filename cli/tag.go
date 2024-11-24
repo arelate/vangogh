@@ -5,7 +5,6 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
-	"golang.org/x/exp/maps"
 	"net/url"
 	"strings"
 )
@@ -18,18 +17,18 @@ const (
 )
 
 func TagHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Tag(
-		idSet,
+		ids,
 		vangogh_local_data.ValueFromUrl(u, "operation"),
 		vangogh_local_data.ValueFromUrl(u, "tag-name"))
 }
 
-func Tag(idSet map[string]bool, operation, tagName string) error {
+func Tag(ids []string, operation, tagName string) error {
 
 	ta := nod.Begin("performing requested tag operation...")
 	defer ta.End()
@@ -59,8 +58,6 @@ func Tag(idSet map[string]bool, operation, tagName string) error {
 
 	toa := nod.NewProgress(" %s tag %s...", operation, tagName)
 	defer toa.End()
-
-	ids := maps.Keys(idSet)
 
 	switch operation {
 	case createOp:

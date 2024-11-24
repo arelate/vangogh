@@ -13,7 +13,7 @@ func MissingLocalDownloads(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
-	excludePatches bool) (map[string]bool, error) {
+	excludePatches bool) ([]string, error) {
 	//enumerating missing local downloads is a bit more complicated than images
 	//due to the fact that actual filenames are resolved when downloads are processed, so we can't compare
 	//manualUrls and available files, we need to resolve manualUrls to actual local filenames first.
@@ -26,28 +26,24 @@ func MissingLocalDownloads(
 	mlda := nod.NewProgress(" itemizing missing local downloads")
 	defer mlda.End()
 
-	emptySet := make(map[string]bool)
-
 	if err := rdx.MustHave(
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.DownloadStatusErrorProperty); err != nil {
-		return emptySet, mlda.EndWithError(err)
+		return nil, mlda.EndWithError(err)
 	}
 
 	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
 	if err != nil {
-		return emptySet, mlda.EndWithError(err)
+		return nil, mlda.EndWithError(err)
 	}
 
 	//1
-	allIds := make(map[string]bool)
+	var allIds []string
 	keys, err := vrDetails.Keys()
 	if err != nil {
-		return emptySet, mlda.EndWithError(err)
+		return nil, mlda.EndWithError(err)
 	}
-	for _, id := range keys {
-		allIds[id] = true
-	}
+	allIds = append(allIds, keys...)
 
 	mlda.TotalInt(len(allIds))
 
@@ -71,13 +67,13 @@ func MissingLocalDownloads(
 
 type missingDownloadsDelegate struct {
 	rdx        kevlar.ReadableRedux
-	missingIds map[string]bool
+	missingIds []string
 }
 
 func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_local_data.DownloadsList) error {
 
 	if mdd.missingIds == nil {
-		mdd.missingIds = make(map[string]bool)
+		mdd.missingIds = make([]string, 0)
 	}
 
 	//pDir = s/slug
@@ -100,7 +96,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_local
 		localFilename, ok := mdd.rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
 		// 2
 		if !ok || localFilename == "" {
-			mdd.missingIds[id] = true
+			mdd.missingIds = append(mdd.missingIds, id)
 			break
 		}
 		//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
@@ -123,7 +119,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_local
 		return err
 	}
 	if _, err := os.Stat(absDir); os.IsNotExist(err) {
-		mdd.missingIds[id] = true
+		mdd.missingIds = append(mdd.missingIds, id)
 		return nil
 	}
 
@@ -142,7 +138,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_local
 	}
 
 	if len(missingFiles) > 0 {
-		mdd.missingIds[id] = true
+		mdd.missingIds = append(mdd.missingIds, id)
 	}
 
 	return nil

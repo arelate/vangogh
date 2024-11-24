@@ -3,10 +3,11 @@ package itemizations
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 	"strconv"
 )
 
-func AccountProductsUpdates() (map[string]bool, error) {
+func AccountProductsUpdates() ([]string, error) {
 
 	apua := nod.Begin(" finding %s updates...", vangogh_local_data.AccountProducts)
 	defer apua.End()
@@ -38,5 +39,5 @@ func AccountProductsUpdates() (map[string]bool, error) {
 
 	apua.EndWithResult(itemizationResult(updatesSet))
 
-	return updatesSet, nil
+	return maps.Keys(updatesSet), nil
 }

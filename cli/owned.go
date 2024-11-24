@@ -7,6 +7,7 @@ import (
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
+	"slices"
 )
 
 const (
@@ -15,15 +16,15 @@ const (
 )
 
 func OwnedHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	return Owned(idSet)
+	return Owned(ids)
 }
 
-func Owned(idSet map[string]bool) error {
+func Owned(ids []string) error {
 
 	oa := nod.Begin("checking ownership...")
 	defer oa.End()
@@ -41,22 +42,22 @@ func Owned(idSet map[string]bool) error {
 		return oa.EndWithError(err)
 	}
 
-	ownedSet, err := reductions.CheckOwnership(idSet, rdx)
+	owned, err := reductions.CheckOwnership(ids, rdx)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
 
 	ownSummary := make(map[string][]string)
-	ownSummary[ownedSection] = make([]string, 0, len(ownedSet))
-	for id := range ownedSet {
+	ownSummary[ownedSection] = make([]string, 0, len(owned))
+	for _, id := range owned {
 		if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
 			ownSummary[ownedSection] = append(ownSummary[ownedSection], fmt.Sprintf("%s %s", id, title))
 		}
 	}
 
 	notOwned := make(map[string]bool)
-	for id := range idSet {
-		if !ownedSet[id] {
+	for _, id := range ids {
+		if !slices.Contains(owned, id) {
 			notOwned[id] = true
 		}
 	}

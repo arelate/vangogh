@@ -14,19 +14,19 @@ import (
 )
 
 func DehydrateHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Dehydrate(
-		idSet,
+		ids,
 		vangogh_local_data.ImageTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "force"))
 }
 
 func Dehydrate(
-	idSet map[string]bool,
+	ids []string,
 	its []vangogh_local_data.ImageType,
 	force bool) error {
 
@@ -46,7 +46,7 @@ func Dehydrate(
 		return di.EndWithError(err)
 	}
 
-	if len(idSet) == 0 {
+	if len(ids) == 0 {
 		for _, it := range its {
 			if !vangogh_local_data.IsImageTypeDehydrationSupported(it) {
 				continue
@@ -62,12 +62,12 @@ func Dehydrate(
 					!force {
 					continue
 				}
-				idSet[id] = true
+				ids = append(ids, id)
 			}
 		}
 	}
 
-	di.TotalInt(len(idSet) * len(its))
+	di.TotalInt(len(ids) * len(its))
 
 	plt := issa.ColorPalette()
 
@@ -83,7 +83,7 @@ func Dehydrate(
 		dehydratedImageModified := make(map[string][]string)
 		repColors := make(map[string][]string)
 
-		for id := range idSet {
+		for _, id := range ids {
 
 			imageId, ok := rdx.GetLastVal(asset, id)
 			if !ok {

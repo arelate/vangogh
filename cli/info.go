@@ -8,19 +8,19 @@ import (
 )
 
 func InfoHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Info(
-		idSet,
+		ids,
 		vangogh_local_data.FlagFromUrl(u, "all-text"),
 		vangogh_local_data.FlagFromUrl(u, "images"),
 		vangogh_local_data.FlagFromUrl(u, "video-id"))
 }
 
-func Info(idSet map[string]bool, allText, images, videoId bool) error {
+func Info(ids []string, allText, images, videoId bool) error {
 
 	ia := nod.Begin("information:")
 	defer ia.End()
@@ -54,7 +54,7 @@ func Info(idSet map[string]bool, allText, images, videoId bool) error {
 	}
 
 	itp, err := vangogh_local_data.PropertyListsFromIdSet(
-		maps.Keys(idSet),
+		ids,
 		nil,
 		maps.Keys(propSet),
 		rdx)

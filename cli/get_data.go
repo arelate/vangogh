@@ -12,7 +12,7 @@ import (
 )
 
 func GetDataHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func GetDataHandler(u *url.URL) error {
 	missing := vangogh_local_data.FlagFromUrl(u, "missing")
 
 	return GetData(
-		idSet,
+		ids,
 		skipIds,
 		productType,
 		since,
@@ -40,7 +40,7 @@ func GetDataHandler(u *url.URL) error {
 
 // GetData gets remote data from GOG.com and stores as local products (splitting as paged data if needed)
 func GetData(
-	idSet map[string]bool,
+	ids []string,
 	skipIds []string,
 	pt vangogh_local_data.ProductType,
 	since int64,
@@ -91,7 +91,7 @@ func GetData(
 		return split(pt, since)
 	}
 
-	idSet, err = itemizations.All(idSet, missing, updated, since, pt)
+	ids, err = itemizations.All(ids, missing, updated, since, pt)
 	if err != nil {
 		return gda.EndWithError(err)
 	}
@@ -101,9 +101,9 @@ func GetData(
 		skipIdSet[id] = true
 	}
 
-	approvedIds := make([]string, 0, len(idSet))
+	approvedIds := make([]string, 0, len(ids))
 
-	for id := range idSet {
+	for _, id := range ids {
 		if !skipIdSet[id] {
 			approvedIds = append(approvedIds, id)
 		}

@@ -36,7 +36,7 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 		return err
 	}
 
-	staleIds := make(map[string]bool)
+	staleIds := make([]string, 0)
 
 	ids := rdx.Keys(imageProperty)
 	sdia.TotalInt(len(ids))
@@ -53,7 +53,7 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 						dimTime := time.Unix(dim, 0)
 						imt := stat.ModTime()
 						if imt.After(dimTime) {
-							staleIds[id] = true
+							staleIds = append(staleIds, id)
 						}
 					}
 				}

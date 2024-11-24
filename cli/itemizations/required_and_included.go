@@ -3,10 +3,11 @@ package itemizations
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 )
 
 // RequiredAndIncluded enumerates all base products for a newly acquired DLCs
-func RequiredAndIncluded(createdAfter int64) (map[string]bool, error) {
+func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 
 	raia := nod.Begin(" finding new DLCs missing required base product...")
 	defer raia.End()
@@ -80,7 +81,7 @@ func RequiredAndIncluded(createdAfter int64) (map[string]bool, error) {
 		}
 		apv2, err := vrApv2.ApiProductV2(id)
 		if err != nil {
-			return newLicSet, raia.EndWithError(err)
+			return nil, raia.EndWithError(err)
 		}
 		if apv2.Embedded.ProductType != "GAME" {
 			delete(newLicSet, id)
@@ -89,5 +90,5 @@ func RequiredAndIncluded(createdAfter int64) (map[string]bool, error) {
 
 	raia.EndWithResult(itemizationResult(newLicSet))
 
-	return newLicSet, nil
+	return maps.Keys(newLicSet), nil
 }

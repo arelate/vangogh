@@ -3,9 +3,10 @@ package itemizations
 import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 )
 
-func linkedGames(modifiedAfter int64) (map[string]bool, error) {
+func linkedGames(modifiedAfter int64) ([]string, error) {
 
 	lga := nod.Begin(" finding missing linked %s...", vangogh_local_data.ApiProductsV2)
 	defer lga.End()
@@ -61,17 +62,15 @@ func linkedGames(modifiedAfter int64) (map[string]bool, error) {
 		lgs = append(lgs, girbg...)
 
 		for _, lid := range lgs {
-			has, err := vrApv2.Has(lid)
-			if err != nil {
-				return nil, lga.EndWithError(err)
-			}
-			if !has {
+			if has, err := vrApv2.Has(lid); err == nil && !has {
 				missingSet[lid] = true
+			} else if err != nil {
+				return nil, lga.EndWithError(err)
 			}
 		}
 	}
 
 	lga.EndWithResult(itemizationResult(missingSet))
 
-	return missingSet, nil
+	return maps.Keys(missingSet), nil
 }

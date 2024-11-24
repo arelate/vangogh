@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 	"net/url"
 )
 
@@ -44,9 +45,15 @@ func UpdateDownloads(
 	// Updates (so .IsNew or .Updates > 0 won't be true anymore) and have updated
 	// details as a result. This is somewhat excessive for general case, however would
 	// allow us to capture all updated account-products at a price of some extra checks
-	updAccountProductIds, err := itemizations.AccountProductsUpdates()
+	updAccountProductIds := make(map[string]bool)
+
+	uapIds, err := itemizations.AccountProductsUpdates()
 	if err != nil {
 		return uda.EndWithError(err)
+	}
+
+	for _, id := range uapIds {
+		updAccountProductIds[id] = true
 	}
 
 	//Additionally itemize required games for newly acquired DLCs
@@ -55,7 +62,7 @@ func UpdateDownloads(
 		return uda.EndWithError(err)
 	}
 
-	for rg := range requiredGamesForNewDLCs {
+	for _, rg := range requiredGamesForNewDLCs {
 		updAccountProductIds[rg] = true
 	}
 
@@ -66,7 +73,7 @@ func UpdateDownloads(
 		return uda.EndWithError(err)
 	}
 
-	for md := range modifiedDetails {
+	for _, md := range modifiedDetails {
 		updAccountProductIds[md] = true
 	}
 
@@ -97,7 +104,7 @@ func UpdateDownloads(
 	uda.EndWithResult("done")
 
 	return GetDownloads(
-		updAccountProductIds,
+		maps.Keys(updAccountProductIds),
 		operatingSystems,
 		downloadTypes,
 		langCodes,

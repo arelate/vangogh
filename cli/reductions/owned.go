@@ -4,9 +4,11 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
+	"slices"
 )
 
-func CheckOwnership(idSet map[string]bool, rdx kevlar.ReadableRedux) (map[string]bool, error) {
+func CheckOwnership(ids []string, rdx kevlar.ReadableRedux) ([]string, error) {
 
 	ownedSet := make(map[string]bool)
 
@@ -23,7 +25,7 @@ func CheckOwnership(idSet map[string]bool, rdx kevlar.ReadableRedux) (map[string
 		return nil, err
 	}
 
-	for id := range idSet {
+	for _, id := range ids {
 
 		if val, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok && val == "true" {
 			ownedSet[id] = true
@@ -70,7 +72,7 @@ func CheckOwnership(idSet map[string]bool, rdx kevlar.ReadableRedux) (map[string
 
 	}
 
-	return ownedSet, nil
+	return maps.Keys(ownedSet), nil
 }
 
 func isIncludedByIsOwned(id string, rdx kevlar.ReadableRedux, vrLicenceProducts *vangogh_local_data.ProductReader) bool {
@@ -108,12 +110,8 @@ func Owned() error {
 		return oa.EndWithError(err)
 	}
 
-	idSet := make(map[string]bool)
-	for _, id := range rdx.Keys(vangogh_local_data.TitleProperty) {
-		idSet[id] = true
-	}
-
-	owned, err := CheckOwnership(idSet, rdx)
+	ids := rdx.Keys(vangogh_local_data.TitleProperty)
+	owned, err := CheckOwnership(ids, rdx)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
@@ -121,7 +119,7 @@ func Owned() error {
 	ownedRdx := make(map[string][]string)
 
 	for _, id := range rdx.Keys(vangogh_local_data.TitleProperty) {
-		if _, ok := owned[id]; ok {
+		if slices.Contains(owned, id) {
 			ownedRdx[id] = []string{"true"}
 		} else {
 			ownedRdx[id] = []string{"false"}

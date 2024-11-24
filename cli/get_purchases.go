@@ -12,14 +12,14 @@ func GetPurchasesHandler(u *url.URL) error {
 		return err
 	}
 
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return GetPurchases(
 		since,
-		idSet,
+		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
@@ -29,7 +29,7 @@ func GetPurchasesHandler(u *url.URL) error {
 
 func GetPurchases(
 	since int64,
-	idSet map[string]bool,
+	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
@@ -44,7 +44,7 @@ func GetPurchases(
 	}
 
 	for _, pt := range productTypes {
-		if err := GetData(idSet, nil, pt, since, false, false); err != nil {
+		if err := GetData(ids, nil, pt, since, false, false); err != nil {
 			return err
 		}
 	}
@@ -57,11 +57,11 @@ func GetPurchases(
 		return err
 	}
 
-	if err := GetDownloads(idSet, operatingSystems, downloadTypes, langCodes, excludePatches, false, force); err != nil {
+	if err := GetDownloads(ids, operatingSystems, downloadTypes, langCodes, excludePatches, false, force); err != nil {
 		return err
 	}
 
-	if err := Validate(idSet, operatingSystems, downloadTypes, langCodes, excludePatches, false, false); err != nil {
+	if err := Validate(ids, operatingSystems, downloadTypes, langCodes, excludePatches, false, false); err != nil {
 		return err
 	}
 

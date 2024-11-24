@@ -5,31 +5,27 @@ import (
 )
 
 func All(
-	idSet map[string]bool,
+	ids []string,
 	missing, updated bool,
 	modifiedAfter int64,
-	pt vangogh_local_data.ProductType) (map[string]bool, error) {
+	pt vangogh_local_data.ProductType) ([]string, error) {
 
 	for _, mainPt := range vangogh_local_data.MainProductTypes(pt) {
 		if missing {
 			missingIds, err := missingDetail(pt, mainPt, modifiedAfter)
 			if err != nil {
-				return idSet, err
+				return nil, err
 			}
-			for id := range missingIds {
-				idSet[id] = true
-			}
+			ids = append(ids, missingIds...)
 		}
 		if updated {
 			modifiedIds, err := Modified(modifiedAfter, mainPt)
 			if err != nil {
-				return idSet, err
+				return nil, err
 			}
-			for id := range modifiedIds {
-				idSet[id] = true
-			}
+			ids = append(ids, modifiedIds...)
 		}
 	}
 
-	return idSet, nil
+	return ids, nil
 }

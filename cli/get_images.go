@@ -13,13 +13,13 @@ import (
 )
 
 func GetImagesHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return GetImages(
-		idSet,
+		ids,
 		vangogh_local_data.ImageTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "missing"))
 }
@@ -28,7 +28,7 @@ func GetImagesHandler(u *url.URL) error {
 // If requested it can check locally present files and download all missing (used in data files,
 // but not present locally) images for a given type.
 func GetImages(
-	idSet map[string]bool,
+	ids []string,
 	its []vangogh_local_data.ImageType,
 	missing bool) error {
 
@@ -67,7 +67,7 @@ func GetImages(
 			}
 		}
 	} else {
-		for id := range idSet {
+		for _, id := range ids {
 			idMissingTypes[id] = its
 		}
 	}

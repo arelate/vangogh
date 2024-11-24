@@ -12,18 +12,18 @@ import (
 const limitVideoRequests = 1000
 
 func GetVideoMetadataHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return GetVideoMetadata(
-		idSet,
+		ids,
 		vangogh_local_data.FlagFromUrl(u, "missing"),
 		vangogh_local_data.FlagFromUrl(u, "force"))
 }
 
-func GetVideoMetadata(idSet map[string]bool, missing, force bool) error {
+func GetVideoMetadata(ids []string, missing, force bool) error {
 
 	gvma := nod.NewProgress("getting video metadata...")
 	defer gvma.End()
@@ -33,8 +33,8 @@ func GetVideoMetadata(idSet map[string]bool, missing, force bool) error {
 		return gvma.EndWithError(err)
 	}
 
-	videoIds := make([]string, 0, len(idSet))
-	for id := range idSet {
+	videoIds := make([]string, 0, len(ids))
+	for _, id := range ids {
 		if vip, ok := rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id); ok {
 			for _, vid := range vip {
 				if rdx.HasKey(vangogh_local_data.VideoTitleProperty, vid) && !force {

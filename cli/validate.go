@@ -25,13 +25,13 @@ var (
 )
 
 func ValidateHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Validate(
-		idSet,
+		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
@@ -41,7 +41,7 @@ func ValidateHandler(u *url.URL) error {
 }
 
 func Validate(
-	idSet map[string]bool,
+	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
@@ -78,14 +78,14 @@ func Validate(
 					continue
 				}
 			}
-			idSet[id] = true
+			ids = append(ids, id)
 		}
 	}
 
 	vd := &validateDelegate{rdx: rdx}
 
 	if err := vangogh_local_data.MapDownloads(
-		idSet,
+		ids,
 		rdx,
 		operatingSystems,
 		downloadTypes,
@@ -326,14 +326,12 @@ func validateUpdated(since int64,
 		return err
 	}
 
-	idSet := make(map[string]bool)
+	var ids []string
 	updatedAfter, err := vrAccountProducts.CreatedOrUpdatedAfter(since)
 	if err != nil {
 		return err
 	}
-	for _, id := range updatedAfter {
-		idSet[id] = true
-	}
+	ids = append(ids, updatedAfter...)
 
-	return Validate(idSet, operatingSystems, downloadTypes, langCodes, excludePatches, false, false)
+	return Validate(ids, operatingSystems, downloadTypes, langCodes, excludePatches, false, false)
 }

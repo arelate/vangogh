@@ -16,13 +16,13 @@ import (
 const spaceSavingsSummary = "est. disk space savings:"
 
 func CleanupHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Cleanup(
-		idSet,
+		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
@@ -33,7 +33,7 @@ func CleanupHandler(u *url.URL) error {
 }
 
 func Cleanup(
-	idSet map[string]bool,
+	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
@@ -64,9 +64,7 @@ func Cleanup(
 		if err != nil {
 			return ca.EndWithError(err)
 		}
-		for _, id := range keys {
-			idSet[id] = true
-		}
+		ids = append(ids, keys...)
 	}
 
 	cd := &cleanupDelegate{
@@ -78,7 +76,7 @@ func Cleanup(
 
 	// cleaning files in local download directory that no longer map to downloads
 	if err := vangogh_local_data.MapDownloads(
-		idSet,
+		ids,
 		rdx,
 		operatingSystems,
 		downloadTypes,

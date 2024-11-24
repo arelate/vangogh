@@ -8,13 +8,13 @@ import (
 )
 
 func SizeHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Size(
-		idSet,
+		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
@@ -24,7 +24,7 @@ func SizeHandler(u *url.URL) error {
 }
 
 func Size(
-	idSet map[string]bool,
+	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
@@ -60,9 +60,7 @@ func Size(
 			return nil
 		}
 
-		for id := range missingIds {
-			idSet[id] = true
-		}
+		ids = append(ids, missingIds...)
 	}
 
 	if all {
@@ -74,22 +72,21 @@ func Size(
 		if err != nil {
 			return sa.EndWithError(err)
 		}
-		for _, id := range keys {
-			idSet[id] = true
-		}
+
+		ids = append(ids, keys...)
 	}
 
-	if len(idSet) == 0 {
+	if len(ids) == 0 {
 		sa.EndWithResult("no ids to estimate size")
 		return nil
 	}
 
 	sd := &sizeDelegate{}
 
-	sa.TotalInt(len(idSet))
+	sa.TotalInt(len(ids))
 
 	if err := vangogh_local_data.MapDownloads(
-		idSet,
+		ids,
 		rdx,
 		operatingSystems,
 		downloadTypes,

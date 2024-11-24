@@ -139,7 +139,7 @@ func Sync(
 			vangogh_local_data.HLTBArrayProducts()...)
 
 		for _, pt := range pagedArrayData {
-			if err := GetData(map[string]bool{}, nil, pt, since, false, false); err != nil {
+			if err := GetData(nil, nil, pt, since, false, false); err != nil {
 				return sa.EndWithError(err)
 			}
 		}
@@ -203,7 +203,7 @@ func Sync(
 
 	// get items (embedded into descriptions)
 	if syncOpts.items {
-		if err := GetItems(map[string]bool{}, since); err != nil {
+		if err := GetItems(nil, since); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
@@ -217,17 +217,17 @@ func Sync(
 			}
 			imageTypes = append(imageTypes, it)
 		}
-		if err := GetImages(map[string]bool{}, imageTypes, true); err != nil {
+		if err := GetImages(nil, imageTypes, true); err != nil {
 			return sa.EndWithError(err)
 		}
 
-		if err := Dehydrate(map[string]bool{}, vangogh_local_data.ImageTypesDehydration(), false); err != nil {
+		if err := Dehydrate(nil, vangogh_local_data.ImageTypesDehydration(), false); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
 
 	if syncOpts.videosMetadata {
-		if err := GetVideoMetadata(map[string]bool{}, true, false); err != nil {
+		if err := GetVideoMetadata(nil, true, false); err != nil {
 			return sa.EndWithError(err)
 		}
 	}
@@ -307,7 +307,7 @@ func getDetailData(pts []vangogh_local_data.ProductType, since int64) error {
 		}
 
 		skipIds := skipList[pt.String()]
-		if err := GetData(map[string]bool{}, skipIds, pt, since, true, true); err != nil {
+		if err := GetData(nil, skipIds, pt, since, true, true); err != nil {
 			return err
 		}
 	}

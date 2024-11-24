@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 )
 
 func itemizationResult(idSet map[string]bool) string {
@@ -17,29 +18,29 @@ func itemizationResult(idSet map[string]bool) string {
 
 func missingDetail(
 	detailPt, mainPt vangogh_local_data.ProductType,
-	since int64) (map[string]bool, error) {
+	since int64) ([]string, error) {
 
 	//api-products-v2 provides
 	//includes-games, is-included-by-games,
 	//requires-games, is-required-by-games
 	if mainPt == vangogh_local_data.ApiProductsV2 &&
 		detailPt == vangogh_local_data.ApiProductsV2 {
-		lg, err := linkedGames(since)
+		lgs, err := linkedGames(since)
 		if err != nil {
-			return lg, err
+			return nil, err
 		}
-		return lg, nil
+		return lgs, nil
 	}
 
 	//licences give a signal when DLC has been purchased, this would add
 	//required (base) game details to the updates
 	if mainPt == vangogh_local_data.LicenceProducts &&
 		detailPt == vangogh_local_data.Details {
-		rg, err := RequiredAndIncluded(since)
+		rgs, err := RequiredAndIncluded(since)
 		if err != nil {
 			return nil, err
 		}
-		return rg, nil
+		return rgs, nil
 	}
 
 	mda := nod.Begin(" finding missing %s for %s...", detailPt, mainPt)
@@ -88,12 +89,12 @@ func missingDetail(
 		detailPt == vangogh_local_data.Details {
 		updatedAccountProducts, err := AccountProductsUpdates()
 		if err != nil {
-			return missingIdSet, err
+			return nil, err
 		}
-		for uapId := range updatedAccountProducts {
+		for _, uapId := range updatedAccountProducts {
 			missingIdSet[uapId] = true
 		}
 	}
 
-	return missingIdSet, nil
+	return maps.Keys(missingIdSet), nil
 }

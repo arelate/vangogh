@@ -19,13 +19,13 @@ import (
 )
 
 func GetDownloadsHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return GetDownloads(
-		idSet,
+		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
@@ -35,7 +35,7 @@ func GetDownloadsHandler(u *url.URL) error {
 }
 
 func GetDownloads(
-	idSet map[string]bool,
+	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
@@ -90,9 +90,7 @@ func GetDownloads(
 			return nil
 		}
 
-		for id := range missingIds {
-			idSet[id] = true
-		}
+		ids = append(ids, missingIds...)
 	}
 
 	gdd := &getDownloadsDelegate{
@@ -101,7 +99,7 @@ func GetDownloads(
 	}
 
 	if err := vangogh_local_data.MapDownloads(
-		idSet,
+		ids,
 		rdx,
 		operatingSystems,
 		downloadTypes,

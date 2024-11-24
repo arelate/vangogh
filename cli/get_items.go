@@ -15,16 +15,16 @@ func GetItemsHandler(u *url.URL) error {
 		return nil
 	}
 
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	return GetItems(idSet, since)
+	return GetItems(ids, since)
 }
 
 func GetItems(
-	idSet map[string]bool,
+	ids []string,
 	since int64) error {
 
 	gia := nod.NewProgress("getting description items...")
@@ -40,14 +40,14 @@ func GetItems(
 
 	dl := dolo.DefaultClient
 
-	all, err := itemizations.All(idSet, false, true, since, vangogh_local_data.ApiProductsV2)
+	all, err := itemizations.All(ids, false, true, since, vangogh_local_data.ApiProductsV2)
 	if err != nil {
 		return gia.EndWithError(err)
 	}
 
 	gia.TotalInt(len(all))
 
-	for id := range all {
+	for _, id := range all {
 
 		title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
 		if !ok {

@@ -10,7 +10,7 @@ import (
 )
 
 func ListHandler(u *url.URL) error {
-	idSet, err := vangogh_local_data.IdSetFromUrl(u)
+	ids, err := vangogh_local_data.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func ListHandler(u *url.URL) error {
 	}
 
 	return List(
-		idSet,
+		ids,
 		since,
 		vangogh_local_data.ProductTypeFromUrl(u),
 		vangogh_local_data.PropertiesFromUrl(u))
@@ -31,7 +31,7 @@ func ListHandler(u *url.URL) error {
 // Can be filtered to products that were created or modified since a certain time.
 // Provided properties will be printed for each product (if supported) in addition to default ID, Title.
 func List(
-	idSet map[string]bool,
+	ids []string,
 	modifiedSince int64,
 	pt vangogh_local_data.ProductType,
 	properties []string) error {
@@ -77,27 +77,24 @@ func List(
 			return la.EndWithError(err)
 		}
 
-		for _, mid := range updatedAfter {
-			idSet[mid] = true
-		}
-		if len(idSet) == 0 {
+		ids = append(ids, updatedAfter...)
+
+		if len(ids) == 0 {
 			la.EndWithResult("no new or updated %s (%s) since %v\n", pt, time.Unix(modifiedSince, 0).Format(time.Kitchen))
 		}
 	}
 
-	if len(idSet) == 0 &&
+	if len(ids) == 0 &&
 		modifiedSince == 0 {
 		keys, err := vr.Keys()
 		if err != nil {
 			return la.EndWithError(err)
 		}
-		for _, id := range keys {
-			idSet[id] = true
-		}
+		ids = append(ids, keys...)
 	}
 
 	itp, err := vangogh_local_data.PropertyListsFromIdSet(
-		maps.Keys(idSet),
+		ids,
 		nil,
 		vangogh_local_data.SupportedPropertiesOnly(pt, maps.Keys(propSet)),
 		nil)

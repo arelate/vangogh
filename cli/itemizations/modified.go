@@ -4,11 +4,12 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/maps"
 )
 
 func Modified(
 	since int64,
-	pt vangogh_local_data.ProductType) (map[string]bool, error) {
+	pt vangogh_local_data.ProductType) ([]string, error) {
 
 	ma := nod.Begin(" finding modified %s...", pt)
 	defer ma.End()
@@ -41,5 +42,5 @@ func Modified(
 
 	ma.EndWithResult(itemizationResult(modSet))
 
-	return modSet, nil
+	return maps.Keys(modSet), nil
 }
