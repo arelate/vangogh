@@ -303,7 +303,7 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 		!vd.failed[slug] &&
 		vd.slugLastError[slug] == "" {
 		vd.validated[slug] = true
-		results = append(results, vangogh_local_data.OKValue)
+		results = append(results, "OK")
 	}
 
 	//if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationResultProperty, id, results...); err != nil {

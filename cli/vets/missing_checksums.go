@@ -9,6 +9,7 @@ import (
 	"github.com/boggydigital/nod"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func MissingChecksums(fix bool) error {
@@ -16,63 +17,46 @@ func MissingChecksums(fix bool) error {
 	mca := nod.Begin("looking for missing checksums...")
 	defer mca.End()
 
-	rdx, err := vangogh_local_data.NewReduxReader(
-		//vangogh_local_data.ValidationResultProperty,
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.ManualUrlStatusProperty,
+		vangogh_local_data.ManualUrlGeneratedChecksumProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.ProductTypeProperty)
 	if err != nil {
 		return mca.EndWithError(err)
 	}
 
-	ids := make(map[string]interface{})
+	idManualUrls := make(map[string][]string)
 
-	//for _, id := range rdx.Keys(vangogh_local_data.ValidationResultProperty) {
-	//
-	//	// skip DLC and PACK product types as they don't have Details for their ids and would
-	//	// crash below attempting to read vrDetails for missing product. That's totally ok, since
-	//	// DLC and PACK product types get validation status from cascading, so as we fix GAME
-	//	// product types and perform cascade - we'll eventually get correct status for all cascaded types
-	//	if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
-	//		continue
-	//	}
-	//
-	//	if results, ok := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); ok {
-	//		for _, res := range results {
-	//			if res == "missing-checksum" {
-	//				ids[id] = nil
-	//			}
-	//		}
-	//	}
-	//}
+	for _, id := range rdx.Keys(vangogh_local_data.ManualUrlStatusProperty) {
 
-	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
-	if err != nil {
-		return mca.EndWithError(err)
+		// skip DLC and PACK product types as they don't have Details for their ids and would
+		// crash below attempting to read vrDetails for missing product. That's totally ok, since
+		// DLC and PACK product types get validation status from cascading, so as we fix GAME
+		// product types and perform cascade - we'll eventually get correct status for all cascaded types
+		if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
+			continue
+		}
+
+		if muses, ok := rdx.GetAllValues(vangogh_local_data.ManualUrlStatusProperty, id); ok {
+			for _, mus := range muses {
+				if mu, str, ok := strings.Cut(mus, "="); ok {
+					if status := vangogh_local_data.ParseManualUrlStatus(str); status == vangogh_local_data.ManualUrlNotValidatedMissingChecksum {
+						idManualUrls[id] = append(idManualUrls[id], mu)
+					}
+				}
+			}
+		}
 	}
 
 	filesMissingChecksums := make(map[string]interface{})
 
-	for id := range ids {
+	for id, manualUrls := range idManualUrls {
 
-		det, err := vrDetails.Details(id)
-		if err != nil {
-			return mca.EndWithError(err)
-		}
-
-		dls, err := vangogh_local_data.FromDetails(det, rdx)
-		if err != nil {
-			return mca.EndWithError(err)
-		}
-
-		for _, dl := range dls {
-			relFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
+		for _, mu := range manualUrls {
+			relFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, mu)
 			if !ok {
-				continue
-			}
-
-			if !vangogh_local_data.IsPathSupportingValidation(relFile) {
 				continue
 			}
 
@@ -80,44 +64,54 @@ func MissingChecksums(fix bool) error {
 			if err != nil {
 				return mca.EndWithError(err)
 			}
-			if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
+			if _, err := os.Stat(absChecksumFile); err == nil {
+				continue
+			}
+
+			if fix {
+
+				if err := generateChecksumForFile(id, mu, relFile); err != nil {
+					return mca.EndWithError(err)
+				}
+
+				if err := rdx.AddValues(vangogh_local_data.ManualUrlGeneratedChecksumProperty, id, mu); err != nil {
+					return mca.EndWithError(err)
+				}
+
+			} else {
 				filesMissingChecksums[relFile] = nil
 			}
+
 		}
 	}
 
-	if fix {
+	return nil
+}
 
-		gca := nod.NewProgress("generating missing checksums (note: this assumes downloads have no issues)...")
+func generateChecksumForFile(id, manualUrl, relFile string) error {
+	gca := nod.NewProgress("generating checksums for %s...", relFile)
 
-		gca.TotalInt(len(filesMissingChecksums))
-
-		for relFile := range filesMissingChecksums {
-			vf, err := generateChecksumData(relFile)
-			if err != nil {
-				gca.Error(err)
-			}
-
-			absChecksum, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
-			if err != nil {
-				return gca.EndWithError(err)
-			}
-
-			checksumFile, err := os.Create(absChecksum)
-			if err != nil {
-				return gca.EndWithError(err)
-			}
-
-			if err := xml.NewEncoder(checksumFile).Encode(vf); err != nil {
-				return gca.EndWithError(err)
-			}
-		}
-
-		gca.EndWithResult("done")
-
-	} else {
-		mca.EndWithResult("found %d local files missing checksums", len(filesMissingChecksums))
+	vf, err := generateChecksumData(relFile)
+	if err != nil {
+		return gca.EndWithError(err)
 	}
+
+	absChecksum, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
+	if err != nil {
+		return gca.EndWithError(err)
+	}
+
+	checksumFile, err := os.Create(absChecksum)
+	if err != nil {
+		return gca.EndWithError(err)
+	}
+	defer checksumFile.Close()
+
+	if err := xml.NewEncoder(checksumFile).Encode(vf); err != nil {
+		return gca.EndWithError(err)
+	}
+
+	gca.EndWithResult("done")
 
 	return nil
 }

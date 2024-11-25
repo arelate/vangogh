@@ -71,6 +71,7 @@ func GetDownloads(
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.LocalManualUrlProperty,
+		vangogh_local_data.ManualUrlStatusProperty,
 		vangogh_local_data.DownloadStatusErrorProperty)
 	if err != nil {
 		return gda.EndWithError(err)
@@ -122,7 +123,7 @@ type getDownloadsDelegate struct {
 	forceUpdate bool
 }
 
-func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_local_data.DownloadsList) error {
+func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_local_data.DownloadsList) error {
 	sda := nod.Begin(slug)
 	defer sda.End()
 
@@ -130,6 +131,8 @@ func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_local_data
 		sda.EndWithResult("no downloads for requested operating systems, download types, languages")
 		return nil
 	}
+
+	// set manual-urls status to queued
 
 	acp, err := vangogh_local_data.AbsCookiePath()
 	if err != nil {
