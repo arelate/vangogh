@@ -12,8 +12,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"strconv"
-	"time"
 )
 
 var (
@@ -58,30 +56,31 @@ func Validate(
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty,
-		vangogh_local_data.ValidationResultProperty,
-		vangogh_local_data.ValidationCompletedProperty)
+		vangogh_local_data.ManualUrlStatusProperty)
+	//vangogh_local_data.ValidationResultProperty,
+	//vangogh_local_data.ValidationCompletedProperty)
 	if err != nil {
 		return err
 	}
 
 	if all {
-		vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
-		if err != nil {
-			return err
-		}
-		keys, err := vrDetails.Keys()
-		if err != nil {
-			return err
-		}
-		for _, id := range keys {
-			if skipValid {
-				valid, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id)
-				if ok && valid == vangogh_local_data.OKValue {
-					continue
-				}
-			}
-			ids = append(ids, id)
-		}
+		//vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+		//if err != nil {
+		//	return err
+		//}
+		//keys, err := vrDetails.Keys()
+		//if err != nil {
+		//	return err
+		//}
+		//for _, id := range keys {
+		//	if skipValid {
+		//		valid, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id)
+		//		if ok && valid == vangogh_local_data.OKValue {
+		//			continue
+		//		}
+		//	}
+		//	ids = append(ids, id)
+		//}
 	}
 
 	vd := &validateDelegate{rdx: rdx}
@@ -292,10 +291,10 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 		hasValidationTargets = true
 	}
 
-	now := strconv.FormatInt(time.Now().UTC().Unix(), 10)
-	if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationCompletedProperty, id, now); err != nil {
-		return err
-	}
+	//now := strconv.FormatInt(time.Now().UTC().Unix(), 10)
+	//if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationCompletedProperty, id, now); err != nil {
+	//	return err
+	//}
 
 	if hasValidationTargets &&
 		!vd.missingChecksum[slug] &&
@@ -307,9 +306,9 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 		results = append(results, vangogh_local_data.OKValue)
 	}
 
-	if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationResultProperty, id, results...); err != nil {
-		return err
-	}
+	//if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationResultProperty, id, results...); err != nil {
+	//	return err
+	//}
 
 	return nil
 }

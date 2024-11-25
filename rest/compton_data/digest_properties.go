@@ -11,7 +11,7 @@ var DigestProperties = []string{
 	vangogh_local_data.ProductTypeProperty,
 	vangogh_local_data.TypesProperty,
 	vangogh_local_data.SteamReviewScoreDescProperty,
-	vangogh_local_data.ValidationResultProperty,
+	//vangogh_local_data.LocalManualUrlProperty,
 	vangogh_local_data.SortProperty,
 }
 

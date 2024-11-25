@@ -13,7 +13,6 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"slices"
-	"strconv"
 	"strings"
 )
 
@@ -104,61 +103,61 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 }
 
 func validationResults(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
-	if valDate, ok := rdx.GetLastVal(vangogh_local_data.ValidationCompletedProperty, id); ok {
-		if valRes, sure := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); sure && len(valRes) > 0 {
-
-			lastResult := valRes[len(valRes)-1]
-			valSect := compton.FlexItems(r, direction.Row).
-				JustifyContent(align.Center).
-				ColumnGap(size.Small).
-				FontSize(size.Small)
-			valSect.AddClass("validation-results", lastResult)
-
-			var valDateElement compton.Element
-
-			if vd, err := strconv.ParseInt(valDate, 10, 64); err == nil {
-				valDateElement = compton.Fspan(r, compton_fragments.EpochDate(vd)).
-					ForegroundColor(color.Gray)
-			}
-
-			valResTitle := ""
-			valResColor := color.Gray
-			switch lastResult {
-			case "OK":
-				valResTitle = "Validation successful"
-				valResColor = color.Green
-			case "missing-checksum":
-				valResTitle = "Missing checksum"
-				valResColor = color.Mint
-			case "unresolved-manual-url":
-				valResTitle = "Unresolved URL"
-				valResColor = color.Teal
-			case "missing-download":
-				valResTitle = "Missing download"
-				valResColor = color.Yellow
-			case "failed-validation":
-				valResTitle = "Failed validation"
-				valResColor = color.Red
-			case "":
-				valResTitle = "Not validated yet"
-			default:
-				valResTitle = "Unknown result"
-				valResColor = color.Gray
-			}
-
-			valResElement := compton.Fspan(r, valResTitle).
-				FontWeight(font_weight.Bolder).
-				ForegroundColor(valResColor)
-
-			if valDateElement != nil {
-				valSect.Append(valDateElement)
-			}
-			valSect.Append(valResElement)
-
-			return valSect
-
-		}
-	}
+	//if valDate, ok := rdx.GetLastVal(vangogh_local_data.ValidationCompletedProperty, id); ok {
+	//	if valRes, sure := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); sure && len(valRes) > 0 {
+	//
+	//		lastResult := valRes[len(valRes)-1]
+	//		valSect := compton.FlexItems(r, direction.Row).
+	//			JustifyContent(align.Center).
+	//			ColumnGap(size.Small).
+	//			FontSize(size.Small)
+	//		valSect.AddClass("validation-results", lastResult)
+	//
+	//		var valDateElement compton.Element
+	//
+	//		if vd, err := strconv.ParseInt(valDate, 10, 64); err == nil {
+	//			valDateElement = compton.Fspan(r, compton_fragments.EpochDate(vd)).
+	//				ForegroundColor(color.Gray)
+	//		}
+	//
+	//		valResTitle := ""
+	//		valResColor := color.Gray
+	//		switch lastResult {
+	//		case "OK":
+	//			valResTitle = "Validation successful"
+	//			valResColor = color.Green
+	//		case "missing-checksum":
+	//			valResTitle = "Missing checksum"
+	//			valResColor = color.Mint
+	//		case "unresolved-manual-url":
+	//			valResTitle = "Unresolved URL"
+	//			valResColor = color.Teal
+	//		case "missing-download":
+	//			valResTitle = "Missing download"
+	//			valResColor = color.Yellow
+	//		case "failed-validation":
+	//			valResTitle = "Failed validation"
+	//			valResColor = color.Red
+	//		case "":
+	//			valResTitle = "Not validated yet"
+	//		default:
+	//			valResTitle = "Unknown result"
+	//			valResColor = color.Gray
+	//		}
+	//
+	//		valResElement := compton.Fspan(r, valResTitle).
+	//			FontWeight(font_weight.Bolder).
+	//			ForegroundColor(valResColor)
+	//
+	//		if valDateElement != nil {
+	//			valSect.Append(valDateElement)
+	//		}
+	//		valSect.Append(valResElement)
+	//
+	//		return valSect
+	//
+	//	}
+	//}
 
 	return nil
 }

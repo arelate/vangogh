@@ -9,7 +9,7 @@ var ProductsProperties = []string{
 	vangogh_local_data.VerticalImageProperty,
 
 	vangogh_local_data.OwnedProperty,
-	vangogh_local_data.ValidationResultProperty,
+	//vangogh_local_data.ValidationResultProperty,
 	vangogh_local_data.ProductTypeProperty,
 	vangogh_local_data.WishlistedProperty,
 	vangogh_local_data.ComingSoonProperty,

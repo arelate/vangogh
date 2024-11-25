@@ -156,9 +156,9 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 	// format actions, class
 	switch property {
 	case vangogh_local_data.OwnedProperty:
-		if res, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id); ok {
-			fmtProperty.class = res
-		}
+		//if res, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id); ok {
+		//	fmtProperty.class = res
+		//}
 	case vangogh_local_data.WishlistedProperty:
 		if !owned {
 			switch firstValue {

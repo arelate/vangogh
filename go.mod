@@ -4,7 +4,7 @@ go 1.23.3
 
 require (
 	github.com/arelate/southern_light v0.1.51
-	github.com/arelate/vangogh_local_data v0.4.37
+	github.com/arelate/vangogh_local_data v0.4.38
 	github.com/boggydigital/atomus v0.1.10
 	github.com/boggydigital/backups v0.1.3
 	github.com/boggydigital/clo v1.0.5

@@ -17,8 +17,9 @@ func MissingChecksums(fix bool) error {
 	defer mca.End()
 
 	rdx, err := vangogh_local_data.NewReduxReader(
-		vangogh_local_data.ValidationResultProperty,
+		//vangogh_local_data.ValidationResultProperty,
 		vangogh_local_data.LocalManualUrlProperty,
+		vangogh_local_data.ManualUrlStatusProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.ProductTypeProperty)
 	if err != nil {
@@ -27,24 +28,24 @@ func MissingChecksums(fix bool) error {
 
 	ids := make(map[string]interface{})
 
-	for _, id := range rdx.Keys(vangogh_local_data.ValidationResultProperty) {
-
-		// skip DLC and PACK product types as they don't have Details for their ids and would
-		// crash below attempting to read vrDetails for missing product. That's totally ok, since
-		// DLC and PACK product types get validation status from cascading, so as we fix GAME
-		// product types and perform cascade - we'll eventually get correct status for all cascaded types
-		if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
-			continue
-		}
-
-		if results, ok := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); ok {
-			for _, res := range results {
-				if res == "missing-checksum" {
-					ids[id] = nil
-				}
-			}
-		}
-	}
+	//for _, id := range rdx.Keys(vangogh_local_data.ValidationResultProperty) {
+	//
+	//	// skip DLC and PACK product types as they don't have Details for their ids and would
+	//	// crash below attempting to read vrDetails for missing product. That's totally ok, since
+	//	// DLC and PACK product types get validation status from cascading, so as we fix GAME
+	//	// product types and perform cascade - we'll eventually get correct status for all cascaded types
+	//	if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
+	//		continue
+	//	}
+	//
+	//	if results, ok := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); ok {
+	//		for _, res := range results {
+	//			if res == "missing-checksum" {
+	//				ids[id] = nil
+	//			}
+	//		}
+	//	}
+	//}
 
 	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
 	if err != nil {

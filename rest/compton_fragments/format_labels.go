@@ -32,9 +32,9 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 	fmtLabel.Title, _ = rdx.GetLastVal(property, id)
 	switch property {
 	case vangogh_local_data.OwnedProperty:
-		if res, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id); ok {
-			fmtLabel.Class = res
-		}
+		//if res, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id); ok {
+		//	fmtLabel.Class = res
+		//}
 		fallthrough
 	case vangogh_local_data.WishlistedProperty:
 		fallthrough
