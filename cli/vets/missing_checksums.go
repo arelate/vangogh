@@ -145,9 +145,6 @@ func generateChecksumData(relFile string) (*vangogh_local_data.ValidationFile, e
 	}
 
 	fa.Total(uint64(stat.Size()))
-	if err != nil {
-		return nil, fa.EndWithError(err)
-	}
 
 	if err := dolo.CopyWithProgress(h, inputFile, fa); err != nil {
 		return nil, fa.EndWithError(err)
