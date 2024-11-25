@@ -33,8 +33,8 @@ func ValidateHandler(u *url.URL) error {
 	return Validate(
 		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "no-patches"),
 		vangogh_local_data.FlagFromUrl(u, "all"),
 		vangogh_local_data.FlagFromUrl(u, "skip-valid"))
@@ -43,14 +43,16 @@ func ValidateHandler(u *url.URL) error {
 func Validate(
 	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
-	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
 	excludePatches bool,
 	all bool,
 	skipValid bool) error {
 
 	va := nod.NewProgress("validating...")
 	defer va.End()
+
+	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes)
 
 	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.SlugProperty,
@@ -204,9 +206,6 @@ func validateManualUrl(
 	vlfa := nod.NewProgress(" - %s", filename)
 
 	vlfa.Total(uint64(stat.Size()))
-	if err != nil {
-		return vlfa.EndWithError(err)
-	}
 
 	if err := dolo.CopyWithProgress(h, sourceFile, vlfa); err != nil {
 		return mua.EndWithError(err)
@@ -317,8 +316,8 @@ func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_d
 
 func validateUpdated(since int64,
 	operatingSystems []vangogh_local_data.OperatingSystem,
-	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
 	excludePatches bool) error {
 
 	vrAccountProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountProducts)
@@ -333,5 +332,5 @@ func validateUpdated(since int64,
 	}
 	ids = append(ids, updatedAfter...)
 
-	return Validate(ids, operatingSystems, downloadTypes, langCodes, excludePatches, false, false)
+	return Validate(ids, operatingSystems, langCodes, downloadTypes, excludePatches, false, false)
 }

@@ -14,8 +14,8 @@ cleanup
     id^&
     slug&
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     all
     test
@@ -40,8 +40,8 @@ get-downloads
     id^&
     slug&
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     missing
     force
@@ -60,8 +60,8 @@ get-purchases
     id^&
     since-hours-ago
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     force
 
@@ -123,8 +123,8 @@ size
     id^&
     slug&
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     missing
     all
@@ -135,8 +135,8 @@ summarize
 sync
     since-hours-ago
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     debug$
     {sync-options^&}
@@ -149,8 +149,8 @@ tag
 
 update-downloads
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     since-hours-ago
     updates-only
@@ -159,8 +159,8 @@ validate
     id^&
     slug&
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     all
     skip-valid
@@ -169,8 +169,8 @@ version
 
 vet
     os&$={operating-systems^}
-    download-type&$={download-types^}
     lang-code&$={language-codes^}
+    download-type&$={download-types^}
     no-patches$
     fix
     {vet-options^&}

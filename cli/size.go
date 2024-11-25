@@ -16,8 +16,8 @@ func SizeHandler(u *url.URL) error {
 	return Size(
 		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "no-patches"),
 		vangogh_local_data.FlagFromUrl(u, "missing"),
 		vangogh_local_data.FlagFromUrl(u, "all"))
@@ -26,14 +26,16 @@ func SizeHandler(u *url.URL) error {
 func Size(
 	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
-	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
 	excludePatches bool,
 	missing bool,
 	all bool) error {
 
 	sa := nod.NewProgress("estimating downloads size...")
 	defer sa.End()
+
+	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes)
 
 	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.LocalManualUrlProperty,

@@ -76,8 +76,8 @@ func SyncHandler(u *url.URL) error {
 		since,
 		syncOpts,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "no-patches"),
 		debug)
 }
@@ -86,8 +86,8 @@ func Sync(
 	since int64,
 	syncOpts *syncOptions,
 	operatingSystems []vangogh_local_data.OperatingSystem,
-	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
 	noPatches bool,
 	debug bool) error {
 
@@ -236,8 +236,8 @@ func Sync(
 	if syncOpts.downloadsUpdates {
 		if err := UpdateDownloads(
 			operatingSystems,
-			downloadTypes,
 			langCodes,
+			downloadTypes,
 			noPatches,
 			since,
 			false); err != nil {
@@ -247,8 +247,8 @@ func Sync(
 		if err := validateUpdated(
 			since,
 			operatingSystems,
-			downloadTypes,
 			langCodes,
+			downloadTypes,
 			noPatches); err != nil {
 			return sa.EndWithError(err)
 		}

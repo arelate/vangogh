@@ -24,8 +24,8 @@ func CleanupHandler(u *url.URL) error {
 	return Cleanup(
 		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "no-patches"),
 		vangogh_local_data.FlagFromUrl(u, "all"),
 		vangogh_local_data.FlagFromUrl(u, "test"),
@@ -35,8 +35,8 @@ func CleanupHandler(u *url.URL) error {
 func Cleanup(
 	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
-	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
 	excludePatches bool,
 	all, test, delete bool) error {
 
@@ -54,6 +54,8 @@ func Cleanup(
 
 	ca := nod.NewProgress("cleaning up...")
 	defer ca.End()
+
+	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes)
 
 	if all {
 		vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)

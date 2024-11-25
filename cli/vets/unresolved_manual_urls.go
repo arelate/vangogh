@@ -9,13 +9,15 @@ import (
 
 func UnresolvedManualUrls(
 	operatingSystems []vangogh_local_data.OperatingSystem,
-	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
 	excludePatches bool,
 	fix bool) error {
 
 	cumu := nod.NewProgress("checking unresolved manual-urls...")
 	defer cumu.End()
+
+	vangogh_local_data.PrintParams(nil, operatingSystems, langCodes, downloadTypes)
 
 	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.TitleProperty,

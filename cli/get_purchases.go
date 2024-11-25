@@ -21,8 +21,8 @@ func GetPurchasesHandler(u *url.URL) error {
 		since,
 		ids,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "no-patches"),
 		vangogh_local_data.FlagFromUrl(u, "force"))
 }
@@ -31,8 +31,8 @@ func GetPurchases(
 	since int64,
 	ids []string,
 	operatingSystems []vangogh_local_data.OperatingSystem,
-	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
 	excludePatches bool,
 	force bool) error {
 
@@ -57,11 +57,11 @@ func GetPurchases(
 		return err
 	}
 
-	if err := GetDownloads(ids, operatingSystems, downloadTypes, langCodes, excludePatches, false, force); err != nil {
+	if err := GetDownloads(ids, operatingSystems, langCodes, downloadTypes, excludePatches, false, force); err != nil {
 		return err
 	}
 
-	if err := Validate(ids, operatingSystems, downloadTypes, langCodes, excludePatches, false, false); err != nil {
+	if err := Validate(ids, operatingSystems, langCodes, downloadTypes, excludePatches, false, false); err != nil {
 		return err
 	}
 
