@@ -18,11 +18,11 @@ services:
     image: ghcr.io/arelate/vangogh:latest
     environment:
     # Download lists filters
-    # - VG_OS=Windows,macOS
-    # - VG_LANG-CODE=en,fr
-    # - VG_NO-PATCHES=true
+    # - VANGOGH_OS=Windows,macOS
+    # - VANGOGH_LANG-CODE=en,fr
+    # - VANGOGH_NO-PATCHES=true
     # debug
-    # - VG_SYNC_DEBUG=true    
+    # - VANGOGH_SYNC_DEBUG=true    
     volumes:
       # cold storage is less frequently accessed data,
       # that can be stored on hibernating HDD.
