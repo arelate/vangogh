@@ -116,7 +116,7 @@ func validationResults(r compton.Registrar, dls vangogh_local_data.DownloadsList
 	results := make(map[vangogh_local_data.ValidationResult]int)
 
 	for _, dl := range dls {
-		// only display installers validation summary
+		// only display installers, DLCs validation summary
 		if dl.Type != vangogh_local_data.Installer && dl.Type != vangogh_local_data.DLC {
 			continue
 		}
@@ -231,12 +231,17 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_dat
 	}
 	nameSuffix := strings.TrimPrefix(name, productTitle)
 
-	linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.Gray)
-	linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.Foreground)
-
 	linkTitle := compton.FlexItems(r, direction.Row).ColumnGap(size.XSmall).FontWeight(font_weight.Normal)
 
-	linkTitle.Append(linkPrefix, linkSuffix)
+	if namePrefix != "" {
+		linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.Gray)
+		linkTitle.Append(linkPrefix)
+	}
+	if nameSuffix != "" {
+		linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.Foreground)
+		linkTitle.Append(linkSuffix)
+	}
+
 	linkColumn.Append(linkTitle)
 
 	vr := vangogh_local_data.ValidationResultUnknown
