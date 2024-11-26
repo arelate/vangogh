@@ -85,7 +85,7 @@
         &.is-free,
         &.discount-percentage {
             color: var(--c-highlight);
-            background-color: var(--c-red);
+            background-color: var(--c-mint);
         }
 
         &.good-old-game {
