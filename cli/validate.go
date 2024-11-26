@@ -3,7 +3,6 @@ package cli
 import (
 	"crypto/md5"
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
@@ -12,14 +11,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-)
-
-var (
-	ErrUnresolvedManualUrl    = errors.New("unresolved manual-url")
-	ErrMissingDownload        = errors.New("not downloaded")
-	ErrMissingChecksum        = errors.New("missing checksum")
-	ErrValidationNotSupported = errors.New("validation not supported")
-	ErrValidationFailed       = errors.New("failed validation")
 )
 
 func ValidateHandler(u *url.URL) error {
@@ -34,8 +25,7 @@ func ValidateHandler(u *url.URL) error {
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
 		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "no-patches"),
-		vangogh_local_data.FlagFromUrl(u, "all"),
-		vangogh_local_data.FlagFromUrl(u, "skip-valid"))
+		vangogh_local_data.FlagFromUrl(u, "all-not-valid"))
 }
 
 func Validate(
@@ -43,154 +33,183 @@ func Validate(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
-	all bool,
-	skipValid bool) error {
+	noPatches bool,
+	allNotValid bool) error {
 
 	va := nod.NewProgress("validating...")
 	defer va.End()
 
-	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes)
+	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.LocalManualUrlProperty,
-		vangogh_local_data.ManualUrlStatusProperty)
-	//vangogh_local_data.ValidationResultProperty,
-	//vangogh_local_data.ValidationCompletedProperty)
+		vangogh_local_data.ManualUrlStatusProperty,
+		vangogh_local_data.ManualUrlValidationResultProperty,
+		vangogh_local_data.ManualUrlGeneratedChecksumProperty)
 	if err != nil {
 		return err
 	}
 
-	if all {
-		//vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
-		//if err != nil {
-		//	return err
-		//}
-		//keys, err := vrDetails.Keys()
-		//if err != nil {
-		//	return err
-		//}
-		//for _, id := range keys {
-		//	if skipValid {
-		//		valid, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id)
-		//		if ok && valid == vangogh_local_data.OKValue {
-		//			continue
-		//		}
-		//	}
-		//	ids = append(ids, id)
-		//}
+	if allNotValid {
+		ids, err = allNotValidIds(rdx, operatingSystems, langCodes, downloadTypes, noPatches)
+		if err != nil {
+			return va.EndWithError(err)
+		}
 	}
 
-	vd := &validateDelegate{rdx: rdx}
+	vd := &validateDelegate{
+		rdx:     rdx,
+		results: make(map[vangogh_local_data.ValidationResult]int),
+	}
 
 	if err := vangogh_local_data.MapDownloads(
 		ids,
 		rdx,
 		operatingSystems,
-		downloadTypes,
 		langCodes,
-		excludePatches,
+		downloadTypes,
+		noPatches,
 		vd,
 		va); err != nil {
 		return err
 	}
 
 	summary := map[string][]string{}
-	tp := fmt.Sprintf("%d product(s) successfully validated", len(vd.validated))
+	tp := fmt.Sprintf("%d manual-url(s) successfully validated", vd.results[vangogh_local_data.ValidatedSuccessfully])
 	summary[tp] = []string{}
-	maybeAddTopic(summary, "%d product(s) have unresolved manual-url (not downloaded)", vd.unresolvedManualUrl)
-	maybeAddTopic(summary, "%d product(s) missing downloads", vd.missingDownloads)
-	maybeAddTopic(summary, "%d product(s) without checksum", vd.missingChecksum)
-	maybeAddTopic(summary, "%d product extra(s) without checksum", vd.missingExtraChecksum)
-	maybeAddTopic(summary, "%d product(s) failed validation", vd.failed)
-	if len(vd.slugLastError) > 0 {
-		tp = fmt.Sprintf("%d product(s) validation caused an error", len(vd.slugLastError))
-		summary[tp] = make([]string, 0, len(vd.slugLastError))
-		for slug, err := range vd.slugLastError {
-			summary[tp] = append(summary[tp], fmt.Sprintf(" %s: %s", slug, err))
-		}
-	}
+	maybeAddTopic(summary, "%d manual-url(s) validated with generated checksum", vd.results, vangogh_local_data.ValidatedWithGeneratedChecksum)
+	maybeAddTopic(summary, "%d manual-url(s) are unresolved (not downloaded)", vd.results, vangogh_local_data.ValidatedUnresolvedManualUrl)
+	maybeAddTopic(summary, "%d manual-url(s) are missing downloads", vd.results, vangogh_local_data.ValidatedMissingLocalFile)
+	maybeAddTopic(summary, "%d manual-url(s) are missing checksum", vd.results, vangogh_local_data.ValidatedMissingChecksum)
+	maybeAddTopic(summary, "%d manual-url(s) have checksum mismatch", vd.results, vangogh_local_data.ValidatedChecksumMismatch)
+	maybeAddTopic(summary, "%d manual-url(s) have validation errors", vd.results, vangogh_local_data.ValidationError)
 
 	va.EndWithSummary("", summary)
 
 	return nil
 }
 
-func maybeAddTopic(summary map[string][]string, tmpl string, col map[string]bool) {
-	if len(col) > 0 {
-		tp := fmt.Sprintf(tmpl, len(col))
-		summary[tp] = make([]string, 0, len(col))
-		for it := range col {
-			summary[tp] = append(summary[tp], it)
+func allNotValidIds(
+	rdx kevlar.ReadableRedux,
+	operatingSystems []vangogh_local_data.OperatingSystem,
+	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
+	noPatches bool) ([]string, error) {
+
+	avia := nod.NewProgress("itemizing all not valid products...")
+	defer avia.EndWithResult("done")
+
+	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+	if err != nil {
+		return nil, err
+	}
+	keys, err := vrDetails.Keys()
+	if err != nil {
+		return nil, err
+	}
+
+	ids := make([]string, 0, len(keys))
+
+	avia.TotalInt(len(keys))
+
+	for _, id := range keys {
+
+		det, err := vrDetails.Details(id)
+		if err != nil {
+			return nil, err
 		}
+
+		dls, err := vangogh_local_data.FromDetails(det, rdx)
+		if err != nil {
+			return nil, err
+		}
+
+		dls = dls.Only(operatingSystems, langCodes, downloadTypes, noPatches)
+
+		for _, dl := range dls {
+
+			if vr, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); !ok || vr != vangogh_local_data.ValidatedSuccessfully.String() {
+				ids = append(ids, id)
+				avia.Increment()
+				continue
+			}
+		}
+
+		avia.Increment()
+	}
+
+	return ids, nil
+}
+
+func maybeAddTopic(summary map[string][]string,
+	tmpl string,
+	results map[vangogh_local_data.ValidationResult]int,
+	status vangogh_local_data.ValidationResult) {
+	if count, ok := results[status]; ok {
+		tp := fmt.Sprintf(tmpl, count)
+		summary[tp] = nil
 	}
 }
 
 func validateManualUrl(
 	dl *vangogh_local_data.Download,
-	rdx kevlar.ReadableRedux) error {
+	rdx kevlar.ReadableRedux) (vangogh_local_data.ValidationResult, error) {
 
 	if err := rdx.MustHave(vangogh_local_data.LocalManualUrlProperty); err != nil {
-		return err
+		return vangogh_local_data.ValidationError, err
 	}
 
 	mua := nod.NewProgress(" %s:", dl.String())
-	defer mua.End()
+	defer mua.EndWithResult("done")
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 	localFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl)
 	if !ok {
-		mua.EndWithResult(ErrUnresolvedManualUrl.Error())
-		return ErrUnresolvedManualUrl
+		vr := vangogh_local_data.ValidatedUnresolvedManualUrl
+		mua.EndWithResult(vr.String())
+		return vr, nil
 	}
 
 	//absolute path (given a downloads/ root) for a s/slug/local_filename,
 	//e.g. downloads/s/slug/local_filename
 	absLocalFile, err := vangogh_local_data.AbsDownloadDirFromRel(localFile)
 	if err != nil {
-		return mua.EndWithError(err)
-	}
-	if !vangogh_local_data.IsPathSupportingValidation(absLocalFile) {
-		if _, err := os.Stat(absLocalFile); err == nil {
-			mua.EndWithResult(ErrValidationNotSupported.Error())
-			return ErrValidationNotSupported
-		} else {
-			mua.EndWithResult(ErrMissingDownload.Error())
-			return ErrMissingDownload
-		}
+		return vangogh_local_data.ValidationError, mua.EndWithError(err)
 	}
 
 	if _, err := os.Stat(absLocalFile); os.IsNotExist(err) {
-		mua.EndWithResult(ErrMissingDownload.Error())
-		return ErrMissingDownload
+		vr := vangogh_local_data.ValidatedMissingLocalFile
+		mua.EndWithResult(vr.String())
+		return vr, nil
 	}
 
 	absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(absLocalFile)
 	if err != nil {
-		return mua.EndWithError(err)
+		return vangogh_local_data.ValidationError, mua.EndWithError(err)
 	}
 
 	if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
-		mua.EndWithResult(ErrMissingChecksum.Error())
-		return ErrMissingChecksum
+		vr := vangogh_local_data.ValidatedMissingChecksum
+		mua.EndWithResult(vr.String())
+		return vr, nil
 	}
 
 	chkFile, err := os.Open(absChecksumFile)
 	if err != nil {
-		return mua.EndWithError(err)
+		return vangogh_local_data.ValidationError, mua.EndWithError(err)
 	}
 	defer chkFile.Close()
 
 	var chkData vangogh_local_data.ValidationFile
 	if err := xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
-		return mua.EndWithError(err)
+		return vangogh_local_data.ValidationError, mua.EndWithError(err)
 	}
 
 	sourceFile, err := os.Open(absLocalFile)
 	if err != nil {
-		return mua.EndWithError(err)
+		return vangogh_local_data.ValidationError, mua.EndWithError(err)
 	}
 	defer sourceFile.Close()
 
@@ -198,7 +217,7 @@ func validateManualUrl(
 
 	stat, err := sourceFile.Stat()
 	if err != nil {
-		return mua.EndWithError(err)
+		return vangogh_local_data.ValidationError, mua.EndWithError(err)
 	}
 
 	_, filename := filepath.Split(localFile)
@@ -207,108 +226,61 @@ func validateManualUrl(
 	vlfa.Total(uint64(stat.Size()))
 
 	if err := dolo.CopyWithProgress(h, sourceFile, vlfa); err != nil {
-		return mua.EndWithError(err)
+		return vangogh_local_data.ValidationError, mua.EndWithError(err)
 	}
 
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
 
 	if chkData.MD5 != sourceFileMD5 {
-		vlfa.EndWithResult("error")
-		return ErrValidationFailed
+		vr := vangogh_local_data.ValidatedChecksumMismatch
+		vlfa.EndWithResult(vr.String())
+		return vr, nil
 	} else {
-		vlfa.EndWithResult("valid")
+		vr := vangogh_local_data.ValidatedSuccessfully
+		if gc, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlGeneratedChecksumProperty, dl.ManualUrl); ok && gc == vangogh_local_data.TrueValue {
+			vr = vangogh_local_data.ValidatedWithGeneratedChecksum
+		}
+		vlfa.EndWithResult(vr.String())
+		return vr, nil
 	}
-
-	return nil
 }
 
 type validateDelegate struct {
-	rdx                  kevlar.WriteableRedux
-	validated            map[string]bool
-	unresolvedManualUrl  map[string]bool
-	missingDownloads     map[string]bool
-	missingChecksum      map[string]bool
-	missingExtraChecksum map[string]bool
-	failed               map[string]bool
-	slugLastError        map[string]string
+	rdx     kevlar.WriteableRedux
+	results map[vangogh_local_data.ValidationResult]int
 }
 
-func (vd *validateDelegate) Process(id string, slug string, list vangogh_local_data.DownloadsList) error {
+func (vd *validateDelegate) Process(_ string, slug string, list vangogh_local_data.DownloadsList) error {
 
 	sva := nod.Begin(slug)
 	defer sva.End()
 
-	if vd.validated == nil {
-		vd.validated = make(map[string]bool)
-	}
-	if vd.unresolvedManualUrl == nil {
-		vd.unresolvedManualUrl = make(map[string]bool)
-	}
-	if vd.missingDownloads == nil {
-		vd.missingDownloads = make(map[string]bool)
-	}
-	if vd.missingChecksum == nil {
-		vd.missingChecksum = make(map[string]bool)
-	}
-	if vd.missingExtraChecksum == nil {
-		vd.missingExtraChecksum = make(map[string]bool)
-	}
-	if vd.failed == nil {
-		vd.failed = make(map[string]bool)
-	}
-	if vd.slugLastError == nil {
-		vd.slugLastError = make(map[string]string)
-	}
-
-	hasValidationTargets := false
-	results := make([]string, 0, 1)
+	manualUrlsValidationResults := make(map[string][]string)
 
 	for _, dl := range list {
-		if err := validateManualUrl(&dl, vd.rdx); errors.Is(err, ErrValidationNotSupported) {
-			continue
-		} else if errors.Is(err, ErrMissingChecksum) {
-			if dl.Type == vangogh_local_data.Extra {
-				vd.missingExtraChecksum[slug] = true
-			} else {
-				vd.missingChecksum[slug] = true
-				results = append(results, "missing-checksum")
-			}
-		} else if errors.Is(err, ErrUnresolvedManualUrl) {
-			vd.unresolvedManualUrl[slug] = true
-			results = append(results, "unresolved-manual-url")
-		} else if errors.Is(err, ErrMissingDownload) {
-			vd.missingDownloads[slug] = true
-			results = append(results, "missing-download")
-		} else if errors.Is(err, ErrValidationFailed) {
-			vd.failed[slug] = true
-			results = append(results, "failed-validation")
-		} else if err != nil {
-			results = append(results, err.Error())
-			vd.slugLastError[slug] = err.Error()
-			continue
+
+		vr, err := validateManualUrl(&dl, vd.rdx)
+		if err != nil {
+			vr = vangogh_local_data.ValidationError
+			sva.Error(err)
 		}
-		// don't attempt to assess success for files that don't support validation
-		hasValidationTargets = true
+
+		manualUrlsValidationResults[dl.ManualUrl] = []string{vr.String()}
+		vd.results[vr] = vd.results[vr] + 1
+
+		if err := vd.rdx.BatchReplaceValues(vangogh_local_data.ManualUrlValidationResultProperty, manualUrlsValidationResults); err != nil {
+			return sva.EndWithError(err)
+		}
+
+		if err := vd.rdx.ReplaceValues(
+			vangogh_local_data.ManualUrlStatusProperty,
+			dl.ManualUrl,
+			vangogh_local_data.ManualUrlValidated.String()); err != nil {
+			return sva.EndWithError(err)
+		}
 	}
 
-	//now := strconv.FormatInt(time.Now().UTC().Unix(), 10)
-	//if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationCompletedProperty, id, now); err != nil {
-	//	return err
-	//}
-
-	if hasValidationTargets &&
-		!vd.missingChecksum[slug] &&
-		!vd.unresolvedManualUrl[slug] &&
-		!vd.missingDownloads[slug] &&
-		!vd.failed[slug] &&
-		vd.slugLastError[slug] == "" {
-		vd.validated[slug] = true
-		results = append(results, "OK")
-	}
-
-	//if err := vd.rdx.ReplaceValues(vangogh_local_data.ValidationResultProperty, id, results...); err != nil {
-	//	return err
-	//}
+	sva.EndWithSummary("validation results:", manualUrlsValidationResults)
 
 	return nil
 }
@@ -317,7 +289,7 @@ func validateUpdated(since int64,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool) error {
+	noPatches bool) error {
 
 	vrAccountProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountProducts)
 	if err != nil {
@@ -331,5 +303,5 @@ func validateUpdated(since int64,
 	}
 	ids = append(ids, updatedAfter...)
 
-	return Validate(ids, operatingSystems, langCodes, downloadTypes, excludePatches, false, false)
+	return Validate(ids, operatingSystems, langCodes, downloadTypes, noPatches, false)
 }

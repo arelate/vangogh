@@ -22,7 +22,6 @@ func CascadeValidation() error {
 		vangogh_local_data.IsIncludedByGamesProperty,
 		vangogh_local_data.ProductTypeProperty,
 		vangogh_local_data.ManualUrlStatusProperty)
-	//vangogh_local_data.ValidationResultProperty)
 	if err != nil {
 		return err
 	}

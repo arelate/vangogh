@@ -33,7 +33,7 @@ func GetPurchases(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
+	noPatches bool,
 	force bool) error {
 
 	productTypes := []vangogh_local_data.ProductType{
@@ -57,11 +57,11 @@ func GetPurchases(
 		return err
 	}
 
-	if err := GetDownloads(ids, operatingSystems, langCodes, downloadTypes, excludePatches, false, force); err != nil {
+	if err := GetDownloads(ids, operatingSystems, langCodes, downloadTypes, noPatches, false, force); err != nil {
 		return err
 	}
 
-	if err := Validate(ids, operatingSystems, langCodes, downloadTypes, excludePatches, false, false); err != nil {
+	if err := Validate(ids, operatingSystems, langCodes, downloadTypes, noPatches, false); err != nil {
 		return err
 	}
 

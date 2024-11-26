@@ -111,7 +111,7 @@ search
 serve
     port$*
     stderr$
-    os$
+    os&$
     lang-code$
     no-patches$
     admin-username$
@@ -162,8 +162,7 @@ validate
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
-    all
-    skip-valid
+    all-not-valid
 
 version
 

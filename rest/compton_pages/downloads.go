@@ -13,6 +13,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"slices"
+	"strconv"
 	"strings"
 )
 
@@ -36,14 +37,21 @@ var downloadTypesColors = map[vangogh_local_data.DownloadType]color.Color{
 	vangogh_local_data.Movie:     color.Red,
 }
 
+var validationResultsColors = map[vangogh_local_data.ValidationResult]color.Color{
+	vangogh_local_data.ValidationResultUnknown:        color.Gray,
+	vangogh_local_data.ValidatedSuccessfully:          color.Green,
+	vangogh_local_data.ValidatedWithGeneratedChecksum: color.Green,
+	vangogh_local_data.ValidatedUnresolvedManualUrl:   color.Teal,
+	vangogh_local_data.ValidatedMissingLocalFile:      color.Teal,
+	vangogh_local_data.ValidatedMissingChecksum:       color.Teal,
+	vangogh_local_data.ValidationError:                color.Orange,
+	vangogh_local_data.ValidatedChecksumMismatch:      color.Red,
+}
+
 // Downloads will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
 func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.PageElement {
-
-	//if err := json.NewEncoder(os.Stdout).Encode(dls); err != nil {
-	//	panic(err)
-	//}
 
 	s := compton_fragments.ProductSection(compton_data.DownloadsSection)
 
@@ -57,7 +65,7 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 		return s
 	}
 
-	if valRes := validationResults(s, id, rdx); valRes != nil {
+	if valRes := validationResults(s, dls, rdx); valRes != nil {
 		pageStack.Append(valRes)
 	}
 
@@ -81,7 +89,7 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 				if dv := downloadVariant(s, variant); dv != nil {
 					pageStack.Append(dv)
 				}
-				if dlLinks := downloadLinks(s, os, productTitle, variant, dls); dlLinks != nil {
+				if dlLinks := downloadLinks(s, os, productTitle, variant, dls, rdx); dlLinks != nil {
 					pageStack.Append(dlLinks)
 
 				}
@@ -102,64 +110,28 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 	return s
 }
 
-func validationResults(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
-	//if valDate, ok := rdx.GetLastVal(vangogh_local_data.ValidationCompletedProperty, id); ok {
-	//	if valRes, sure := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id); sure && len(valRes) > 0 {
-	//
-	//		lastResult := valRes[len(valRes)-1]
-	//		valSect := compton.FlexItems(r, direction.Row).
-	//			JustifyContent(align.Center).
-	//			ColumnGap(size.Small).
-	//			FontSize(size.Small)
-	//		valSect.AddClass("validation-results", lastResult)
-	//
-	//		var valDateElement compton.Element
-	//
-	//		if vd, err := strconv.ParseInt(valDate, 10, 64); err == nil {
-	//			valDateElement = compton.Fspan(r, compton_fragments.EpochDate(vd)).
-	//				ForegroundColor(color.Gray)
-	//		}
-	//
-	//		valResTitle := ""
-	//		valResColor := color.Gray
-	//		switch lastResult {
-	//		case "OK":
-	//			valResTitle = "Validation successful"
-	//			valResColor = color.Green
-	//		case "missing-checksum":
-	//			valResTitle = "Missing checksum"
-	//			valResColor = color.Mint
-	//		case "unresolved-manual-url":
-	//			valResTitle = "Unresolved URL"
-	//			valResColor = color.Teal
-	//		case "missing-download":
-	//			valResTitle = "Missing download"
-	//			valResColor = color.Yellow
-	//		case "failed-validation":
-	//			valResTitle = "Failed validation"
-	//			valResColor = color.Red
-	//		case "":
-	//			valResTitle = "Not validated yet"
-	//		default:
-	//			valResTitle = "Unknown result"
-	//			valResColor = color.Gray
-	//		}
-	//
-	//		valResElement := compton.Fspan(r, valResTitle).
-	//			FontWeight(font_weight.Bolder).
-	//			ForegroundColor(valResColor)
-	//
-	//		if valDateElement != nil {
-	//			valSect.Append(valDateElement)
-	//		}
-	//		valSect.Append(valResElement)
-	//
-	//		return valSect
-	//
-	//	}
-	//}
+func validationResults(r compton.Registrar, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
 
-	return nil
+	valRes := compton.Frow(r).FontSize(size.Small).Heading("Validation Results")
+	results := make(map[vangogh_local_data.ValidationResult]int)
+
+	for _, dl := range dls {
+		vr := vangogh_local_data.ValidationResultUnknown
+		if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_local_data.ParseManualUrlStatus(muss) == vangogh_local_data.ManualUrlValidated {
+			if vrs, sure := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+				vr = vangogh_local_data.ParseValidationResult(vrs)
+			}
+		}
+		results[vr] = results[vr] + 1
+	}
+
+	for _, vr := range vangogh_local_data.ValidationResultsOrder {
+		if result, ok := results[vr]; ok && result > 0 {
+			valRes.PropVal(vr.HumanReadableString(), strconv.Itoa(result))
+		}
+	}
+
+	return compton.FICenter(r, valRes)
 }
 
 func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.OperatingSystem) compton.Element {
@@ -202,7 +174,12 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 	return fr
 }
 
-func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, productTitle string, dv *DownloadVariant, dls vangogh_local_data.DownloadsList) compton.Element {
+func downloadLinks(r compton.Registrar,
+	os vangogh_local_data.OperatingSystem,
+	productTitle string,
+	dv *DownloadVariant,
+	dls vangogh_local_data.DownloadsList,
+	rdx kevlar.ReadableRedux) compton.Element {
 
 	downloads := filterDownloads(os, dls, productTitle, dv)
 
@@ -220,7 +197,7 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, p
 	dsDownloadLinks.Append(downloadsColumn)
 
 	for ii, dl := range downloads {
-		if link := downloadLink(r, productTitle, dl); link != nil {
+		if link := downloadLink(r, productTitle, dl, rdx); link != nil {
 			downloadsColumn.Append(link)
 		}
 		if ii != len(downloads)-1 {
@@ -231,7 +208,7 @@ func downloadLinks(r compton.Registrar, os vangogh_local_data.OperatingSystem, p
 	return dsDownloadLinks
 }
 
-func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_data.Download) compton.Element {
+func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_data.Download, rdx kevlar.ReadableRedux) compton.Element {
 
 	link := compton.A("/files?manual-url=" + dl.ManualUrl)
 	link.AddClass("download", dl.Type.String())
@@ -258,8 +235,20 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_dat
 	linkTitle.Append(linkPrefix, linkSuffix)
 	linkColumn.Append(linkTitle)
 
-	sizeFr := compton.Frow(r).
+	vr := vangogh_local_data.ValidationResultUnknown
+
+	if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_local_data.ParseManualUrlStatus(muss) == vangogh_local_data.ManualUrlValidated {
+		if vrs, sure := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+			vr = vangogh_local_data.ParseValidationResult(vrs)
+		}
+	}
+
+	validationResult := compton.Fspan(r, vr.HumanReadableString()).
 		FontSize(size.Small).
+		ForegroundColor(validationResultsColors[vr])
+	linkColumn.Append(validationResult)
+
+	sizeFr := compton.Frow(r).FontSize(size.Small).
 		PropVal("Size", fmtBytes(dl.EstimatedBytes))
 	linkColumn.Append(sizeFr)
 

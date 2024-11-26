@@ -84,8 +84,8 @@ func getDownloads(id string,
 	}
 
 	return dl.Only(operatingSystems,
-		[]vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType},
 		langCodes,
+		[]vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType},
 		noPatches), nil
 }
 

@@ -11,13 +11,13 @@ func UnresolvedManualUrls(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
+	noPatches bool,
 	fix bool) error {
 
 	cumu := nod.NewProgress("checking unresolved manual-urls...")
 	defer cumu.End()
 
-	vangogh_local_data.PrintParams(nil, operatingSystems, langCodes, downloadTypes)
+	vangogh_local_data.PrintParams(nil, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.TitleProperty,
@@ -55,7 +55,7 @@ func UnresolvedManualUrls(
 			continue
 		}
 
-		downloadsList = downloadsList.Only(operatingSystems, downloadTypes, langCodes, excludePatches)
+		downloadsList = downloadsList.Only(operatingSystems, langCodes, downloadTypes, noPatches)
 
 		for _, dl := range downloadsList {
 			if _, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); !ok {

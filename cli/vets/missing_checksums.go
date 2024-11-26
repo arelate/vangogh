@@ -9,17 +9,22 @@ import (
 	"github.com/boggydigital/nod"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
-func MissingChecksums(fix bool) error {
+func MissingChecksums(
+	operatingSystems []vangogh_local_data.OperatingSystem,
+	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
+	noPatches bool,
+	fix bool) error {
 
-	mca := nod.Begin("looking for missing checksums...")
+	mca := nod.NewProgress("checking for missing checksums...")
 	defer mca.End()
 
 	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.ManualUrlStatusProperty,
+		vangogh_local_data.ManualUrlValidationResultProperty,
 		vangogh_local_data.ManualUrlGeneratedChecksumProperty,
 		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.ProductTypeProperty)
@@ -27,9 +32,21 @@ func MissingChecksums(fix bool) error {
 		return mca.EndWithError(err)
 	}
 
-	idManualUrls := make(map[string][]string)
+	manualUrlsMissingChecksums := make([]string, 0)
 
-	for _, id := range rdx.Keys(vangogh_local_data.ManualUrlStatusProperty) {
+	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+	if err != nil {
+		return mca.EndWithError(err)
+	}
+
+	keys, err := vrDetails.Keys()
+	if err != nil {
+		return mca.EndWithError(err)
+	}
+
+	mca.TotalInt(len(keys))
+
+	for _, id := range keys {
 
 		// skip DLC and PACK product types as they don't have Details for their ids and would
 		// crash below attempting to read vrDetails for missing product. That's totally ok, since
@@ -39,56 +56,72 @@ func MissingChecksums(fix bool) error {
 			continue
 		}
 
-		if muses, ok := rdx.GetAllValues(vangogh_local_data.ManualUrlStatusProperty, id); ok {
-			for _, mus := range muses {
-				if mu, str, ok := strings.Cut(mus, "="); ok {
-					if status := vangogh_local_data.ParseManualUrlStatus(str); status == vangogh_local_data.ManualUrlNotValidatedMissingChecksum {
-						idManualUrls[id] = append(idManualUrls[id], mu)
-					}
+		det, err := vrDetails.Details(id)
+		if err != nil {
+			return mca.EndWithError(err)
+		}
+
+		dls, err := vangogh_local_data.FromDetails(det, rdx)
+		if err != nil {
+			return mca.EndWithError(err)
+		}
+
+		dls = dls.Only(operatingSystems, langCodes, downloadTypes, noPatches)
+
+		for _, dl := range dls {
+			if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok {
+				if vangogh_local_data.ParseManualUrlStatus(muss) != vangogh_local_data.ManualUrlValidated {
+					continue
+				}
+			}
+
+			if vrs, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); ok {
+				if vangogh_local_data.ParseValidationResult(vrs) == vangogh_local_data.ValidatedMissingChecksum {
+					manualUrlsMissingChecksums = append(manualUrlsMissingChecksums, dl.ManualUrl)
 				}
 			}
 		}
+		mca.Increment()
+
 	}
 
 	filesMissingChecksums := make(map[string]interface{})
 
-	for id, manualUrls := range idManualUrls {
+	for _, manualUrl := range manualUrlsMissingChecksums {
 
-		for _, mu := range manualUrls {
-			relFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, mu)
-			if !ok {
-				continue
-			}
+		relFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, manualUrl)
+		if !ok {
+			continue
+		}
 
-			absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
-			if err != nil {
+		absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
+		if err != nil {
+			return mca.EndWithError(err)
+		}
+		if _, err := os.Stat(absChecksumFile); err == nil {
+			continue
+		}
+
+		if fix {
+
+			if err := generateChecksumForFile(relFile); err != nil {
 				return mca.EndWithError(err)
 			}
-			if _, err := os.Stat(absChecksumFile); err == nil {
-				continue
+
+			if err := rdx.AddValues(vangogh_local_data.ManualUrlGeneratedChecksumProperty, manualUrl, vangogh_local_data.TrueValue); err != nil {
+				return mca.EndWithError(err)
 			}
 
-			if fix {
-
-				if err := generateChecksumForFile(id, mu, relFile); err != nil {
-					return mca.EndWithError(err)
-				}
-
-				if err := rdx.AddValues(vangogh_local_data.ManualUrlGeneratedChecksumProperty, id, mu); err != nil {
-					return mca.EndWithError(err)
-				}
-
-			} else {
-				filesMissingChecksums[relFile] = nil
-			}
-
+		} else {
+			filesMissingChecksums[relFile] = nil
 		}
+
 	}
 
 	return nil
 }
 
-func generateChecksumForFile(id, manualUrl, relFile string) error {
+func generateChecksumForFile(relFile string) error {
 	gca := nod.NewProgress("generating checksums for %s...", relFile)
 
 	vf, err := generateChecksumData(relFile)
@@ -96,12 +129,19 @@ func generateChecksumForFile(id, manualUrl, relFile string) error {
 		return gca.EndWithError(err)
 	}
 
-	absChecksum, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
+	absChecksumPath, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
 	if err != nil {
 		return gca.EndWithError(err)
 	}
 
-	checksumFile, err := os.Create(absChecksum)
+	absChecksumDir, _ := filepath.Split(absChecksumPath)
+	if _, err := os.Stat(absChecksumDir); os.IsNotExist(err) {
+		if err := os.MkdirAll(absChecksumDir, 0755); err != nil {
+			return gca.EndWithError(err)
+		}
+	}
+
+	checksumFile, err := os.Create(absChecksumPath)
 	if err != nil {
 		return gca.EndWithError(err)
 	}

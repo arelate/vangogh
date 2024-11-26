@@ -82,7 +82,7 @@ func Vet(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
+	noPatches bool,
 	fix bool) error {
 
 	sda := nod.Begin("vetting local data...")
@@ -113,7 +113,7 @@ func Vet(
 	}
 
 	if vetOpts.unresolvedManualUrls {
-		if err := vets.UnresolvedManualUrls(operatingSystems, langCodes, downloadTypes, excludePatches, fix); err != nil {
+		if err := vets.UnresolvedManualUrls(operatingSystems, langCodes, downloadTypes, noPatches, fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}
@@ -125,7 +125,7 @@ func Vet(
 	}
 
 	if vetOpts.missingChecksums {
-		if err := vets.MissingChecksums(fix); err != nil {
+		if err := vets.MissingChecksums(operatingSystems, langCodes, downloadTypes, noPatches, fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}

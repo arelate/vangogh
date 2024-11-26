@@ -37,7 +37,7 @@ func Cleanup(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
+	noPatches bool,
 	all, test, delete bool) error {
 
 	if test && delete {
@@ -55,7 +55,7 @@ func Cleanup(
 	ca := nod.NewProgress("cleaning up...")
 	defer ca.End()
 
-	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes)
+	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	if all {
 		vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
@@ -81,9 +81,9 @@ func Cleanup(
 		ids,
 		rdx,
 		operatingSystems,
-		downloadTypes,
 		langCodes,
-		excludePatches,
+		downloadTypes,
+		noPatches,
 		cd,
 		ca); err != nil {
 		return err

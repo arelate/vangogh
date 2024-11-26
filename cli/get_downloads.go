@@ -39,14 +39,14 @@ func GetDownloads(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
+	noPatches bool,
 	missing,
 	force bool) error {
 
 	gda := nod.NewProgress("downloading product files...")
 	defer gda.End()
 
-	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes)
+	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	acp, err := vangogh_local_data.AbsCookiePath()
 	if err != nil {
@@ -83,7 +83,7 @@ func GetDownloads(
 			operatingSystems,
 			downloadTypes,
 			langCodes,
-			excludePatches)
+			noPatches)
 		if err != nil {
 			return gda.EndWithError(err)
 		}
@@ -105,9 +105,9 @@ func GetDownloads(
 		ids,
 		rdx,
 		operatingSystems,
-		downloadTypes,
 		langCodes,
-		excludePatches,
+		downloadTypes,
+		noPatches,
 		gdd,
 		gda); err != nil {
 		return gda.EndWithError(err)
@@ -123,7 +123,7 @@ type getDownloadsDelegate struct {
 	forceUpdate bool
 }
 
-func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_local_data.DownloadsList) error {
+func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_local_data.DownloadsList) error {
 	sda := nod.Begin(slug)
 	defer sda.End()
 
@@ -132,7 +132,14 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_local_dat
 		return nil
 	}
 
-	// set manual-urls status to queued
+	// (re-)set manual-urls status to queued prior to downloading
+	manualUrlsQueued := make(map[string][]string)
+	for _, dl := range list {
+		manualUrlsQueued[dl.ManualUrl] = []string{vangogh_local_data.ManualUrlQueued.String()}
+	}
+	if err := gdd.rdx.BatchAddValues(vangogh_local_data.ManualUrlStatusProperty, manualUrlsQueued); err != nil {
+		return sda.EndWithError(err)
+	}
 
 	acp, err := vangogh_local_data.AbsCookiePath()
 	if err != nil {
@@ -269,6 +276,11 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	lfa := nod.NewProgress(" - %s", filename)
 	defer lfa.End()
 	if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, filename); err != nil {
+		return dmua.EndWithError(err)
+	}
+
+	if err := gdd.rdx.ReplaceValues(vangogh_local_data.ManualUrlStatusProperty,
+		dl.ManualUrl, vangogh_local_data.ManualUrlDownloaded.String()); err != nil {
 		return dmua.EndWithError(err)
 	}
 

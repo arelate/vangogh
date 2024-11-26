@@ -13,7 +13,7 @@ func MissingLocalDownloads(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	downloadTypes []vangogh_local_data.DownloadType,
 	langCodes []string,
-	excludePatches bool) ([]string, error) {
+	noPatches bool) ([]string, error) {
 	//enumerating missing local downloads is a bit more complicated than images
 	//due to the fact that actual filenames are resolved when downloads are processed, so we can't compare
 	//manualUrls and available files, we need to resolve manualUrls to actual local filenames first.
@@ -54,9 +54,9 @@ func MissingLocalDownloads(
 		allIds,
 		rdx,
 		operatingSystems,
-		downloadTypes,
 		langCodes,
-		excludePatches,
+		downloadTypes,
+		noPatches,
 		mdd,
 		mlda); err != nil {
 		return mdd.missingIds, mlda.EndWithError(err)

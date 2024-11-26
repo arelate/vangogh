@@ -28,14 +28,14 @@ func Size(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
+	noPatches bool,
 	missing bool,
 	all bool) error {
 
 	sa := nod.NewProgress("estimating downloads size...")
 	defer sa.End()
 
-	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes)
+	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	rdx, err := vangogh_local_data.NewReduxReader(
 		vangogh_local_data.LocalManualUrlProperty,
@@ -52,7 +52,7 @@ func Size(
 			operatingSystems,
 			downloadTypes,
 			langCodes,
-			excludePatches)
+			noPatches)
 		if err != nil {
 			return sa.EndWithError(err)
 		}
@@ -91,9 +91,9 @@ func Size(
 		ids,
 		rdx,
 		operatingSystems,
-		downloadTypes,
 		langCodes,
-		excludePatches,
+		downloadTypes,
+		noPatches,
 		sd,
 		sa); err != nil {
 		return err

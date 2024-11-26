@@ -28,7 +28,7 @@ func UpdateDownloads(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
-	excludePatches bool,
+	noPatches bool,
 	since int64,
 	updatesOnly bool) error {
 
@@ -108,7 +108,7 @@ func UpdateDownloads(
 		operatingSystems,
 		langCodes,
 		downloadTypes,
-		excludePatches,
+		noPatches,
 		false,
 		true)
 }
