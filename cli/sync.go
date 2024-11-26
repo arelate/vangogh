@@ -253,7 +253,7 @@ func Sync(
 			return sa.EndWithError(err)
 		}
 
-		if err := CascadeValidation(operatingSystems, langCodes, downloadTypes, noPatches); err != nil {
+		if err := CascadeValidation(operatingSystems, langCodes, noPatches); err != nil {
 			return sa.EndWithError(err)
 		}
 	}

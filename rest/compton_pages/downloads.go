@@ -112,10 +112,14 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 
 func validationResults(r compton.Registrar, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
 
-	valRes := compton.Frow(r).FontSize(size.Small).Heading("Validation Results")
+	valRes := compton.Frow(r).FontSize(size.Small).Heading("Installers")
 	results := make(map[vangogh_local_data.ValidationResult]int)
 
 	for _, dl := range dls {
+		// only display installers validation summary
+		if dl.Type != vangogh_local_data.Installer {
+			continue
+		}
 		vr := vangogh_local_data.ValidationResultUnknown
 		if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_local_data.ParseManualUrlStatus(muss) == vangogh_local_data.ManualUrlValidated {
 			if vrs, sure := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); sure {

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -13,17 +14,15 @@ func CascadeValidationHandler(u *url.URL) error {
 	return CascadeValidation(
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
-		vangogh_local_data.DownloadTypesFromUrl(u),
 		vangogh_local_data.FlagFromUrl(u, "no-patches"))
 }
 
 func CascadeValidation(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
 	noPatches bool) error {
 
-	cva := nod.NewProgress("cascading product validation...")
+	cva := nod.NewProgress("cascading product installers validation...")
 	defer cva.End()
 
 	rdx, err := vangogh_local_data.NewReduxWriter(
@@ -55,6 +54,10 @@ func CascadeValidation(
 
 	for _, id := range keys {
 
+		if id == "1453375253" {
+			fmt.Println("1453375253")
+		}
+
 		det, err := vrDetails.Details(id)
 		if err != nil {
 			return cva.EndWithError(err)
@@ -65,7 +68,8 @@ func CascadeValidation(
 			return cva.EndWithError(err)
 		}
 
-		dls = dls.Only(operatingSystems, langCodes, downloadTypes, noPatches)
+		// will only propagate installers validation results
+		dls = dls.Only(operatingSystems, langCodes, []vangogh_local_data.DownloadType{vangogh_local_data.Installer}, noPatches)
 
 		productVrs := make([]vangogh_local_data.ValidationResult, 0, len(dls))
 
