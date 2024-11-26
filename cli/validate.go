@@ -251,7 +251,7 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_local_data.Dow
 			sva.Error(err)
 		}
 
-		if dl.Type == vangogh_local_data.Installer {
+		if dl.Type == vangogh_local_data.Installer || dl.Type == vangogh_local_data.DLC {
 			productVrs = append(productVrs, vr)
 		}
 
