@@ -132,7 +132,6 @@ func allNotValidIds(
 
 			if vr, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); !ok || vr != vangogh_local_data.ValidatedSuccessfully.String() {
 				ids = append(ids, id)
-				avia.Increment()
 				continue
 			}
 		}
