@@ -9,6 +9,10 @@
 backup
 
 cascade-validation
+    os&$={operating-systems^}
+    lang-code&$={language-codes^}
+    download-type&$={download-types^}
+    no-patches$
 
 cleanup
     id^&

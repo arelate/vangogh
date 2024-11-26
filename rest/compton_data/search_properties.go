@@ -40,7 +40,7 @@ var SearchProperties = []string{
 	vangogh_local_data.GOGReleaseDateProperty,
 	vangogh_local_data.GlobalReleaseDateProperty,
 	vangogh_local_data.GOGOrderDateProperty,
-	//vangogh_local_data.ValidationResultProperty,
+	vangogh_local_data.ProductValidationResultProperty,
 	vangogh_local_data.SortProperty,
 	vangogh_local_data.DescendingProperty,
 }

@@ -7,14 +7,14 @@
             background-color: var(--c-gray);
         }
 
-        &.owned.OK {
+        &.owned.valid {
             color: var(--c-highlight);
             background-color: var(--c-green);
         }
 
-        &.owned.missing-checksum {
+        &.owned.valid-with-gen-checksum {
             color: var(--c-highlight);
-            background-color: var(--c-mint);
+            background-color: var(--c-green);
         }
 
         &.owned.unresolved-manual-url {
@@ -22,12 +22,22 @@
             background-color: var(--c-teal);
         }
 
-        &.owned.missing-download {
+        &.owned.missing-local-file {
             color: black;
-            background-color: var(--c-yellow);
+            background-color: var(--c-teal);
         }
 
-        &.owned.failed-validation {
+        &.owned.missing-checksum {
+            color: var(--c-highlight);
+            background-color: var(--c-teal);
+        }
+
+        &.owned.error {
+            color: var(--c-highlight);
+            background-color: var(--c-orange);
+        }
+
+        &.owned.checksum-mismatch {
             color: var(--c-highlight);
             background-color: var(--c-red);
         }

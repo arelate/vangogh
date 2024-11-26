@@ -5,51 +5,93 @@ import (
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/url"
+	"slices"
 )
 
 func CascadeValidationHandler(u *url.URL) error {
-	return CascadeValidation()
+
+	return CascadeValidation(
+		vangogh_local_data.OperatingSystemsFromUrl(u),
+		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
+		vangogh_local_data.DownloadTypesFromUrl(u),
+		vangogh_local_data.FlagFromUrl(u, "no-patches"))
 }
 
-func CascadeValidation() error {
+func CascadeValidation(
+	operatingSystems []vangogh_local_data.OperatingSystem,
+	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
+	noPatches bool) error {
 
-	cva := nod.NewProgress("cascading validation...")
+	cva := nod.NewProgress("cascading product validation...")
 	defer cva.End()
 
-	_, err := vangogh_local_data.NewReduxWriter(
+	rdx, err := vangogh_local_data.NewReduxWriter(
 		vangogh_local_data.OwnedProperty,
+		vangogh_local_data.NativeLanguageNameProperty,
 		vangogh_local_data.IsRequiredByGamesProperty,
 		vangogh_local_data.IsIncludedByGamesProperty,
 		vangogh_local_data.ProductTypeProperty,
-		vangogh_local_data.ManualUrlStatusProperty)
+		vangogh_local_data.ManualUrlStatusProperty,
+		vangogh_local_data.ManualUrlValidationResultProperty,
+		vangogh_local_data.ProductValidationResultProperty)
 	if err != nil {
 		return err
 	}
 
-	//cascadedResults := make(map[string][]string)
+	productValidationResults := make(map[string][]string)
 
-	ids := make([]string, 0) //rdx.Keys(vangogh_local_data.ValidationResultProperty)
+	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+	if err != nil {
+		return cva.EndWithError(err)
+	}
 
-	cva.TotalInt(len(ids))
+	keys, err := vrDetails.Keys()
+	if err != nil {
+		return cva.EndWithError(err)
+	}
 
-	for range ids {
+	cva.TotalInt(len(keys))
 
-		//vr, _ := rdx.GetAllValues(vangogh_local_data.ValidationResultProperty, id)
-		//
-		//for _, ri := range filterOwnedRelated(rdx, vangogh_local_data.IsRequiredByGamesProperty, id) {
-		//	cascadedResults[ri] = vr
-		//}
-		//
-		//for _, ii := range filterOwnedRelated(rdx, vangogh_local_data.IsIncludedByGamesProperty, id) {
-		//	cascadedResults[ii] = vr
-		//}
+	for _, id := range keys {
+
+		det, err := vrDetails.Details(id)
+		if err != nil {
+			return cva.EndWithError(err)
+		}
+
+		dls, err := vangogh_local_data.FromDetails(det, rdx)
+		if err != nil {
+			return cva.EndWithError(err)
+		}
+
+		dls = dls.Only(operatingSystems, langCodes, downloadTypes, noPatches)
+
+		productVrs := make([]vangogh_local_data.ValidationResult, 0, len(dls))
+
+		for _, dl := range dls {
+			if vrs, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); ok {
+				vr := vangogh_local_data.ParseValidationResult(vrs)
+				productVrs = append(productVrs, vr)
+			} else {
+				productVrs = append(productVrs, vangogh_local_data.ValidationResultUnknown)
+			}
+		}
+
+		slices.Sort(productVrs)
+
+		if len(productVrs) > 0 {
+			productValidationResults[id] = []string{productVrs[len(productVrs)-1].String()}
+		} else {
+			productValidationResults[id] = []string{vangogh_local_data.ValidationResultUnknown.String()}
+		}
 
 		cva.Increment()
 	}
 
-	//if err := rdx.BatchReplaceValues(vangogh_local_data.ValidationResultProperty, cascadedResults); err != nil {
-	//	return err
-	//}
+	if err := rdx.BatchReplaceValues(vangogh_local_data.ProductValidationResultProperty, productValidationResults); err != nil {
+		return cva.EndWithError(err)
+	}
 
 	return nil
 }
