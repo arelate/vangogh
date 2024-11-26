@@ -97,6 +97,18 @@ func getDownloadMetadata(id string, dls vangogh_local_data.DownloadsList, rdx ke
 			}
 		}
 
+		if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok && muss != "" {
+			link.Status = muss
+		} else {
+			link.Status = vangogh_local_data.ManualUrlStatusUnknown.String()
+		}
+
+		if vrs, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
+			link.ValidationResult = vrs
+		} else {
+			link.ValidationResult = vangogh_local_data.ValidationResultUnknown.String()
+		}
+
 		dm.DownloadLinks = append(dm.DownloadLinks, link)
 	}
 
