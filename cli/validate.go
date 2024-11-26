@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"golang.org/x/exp/slices"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -47,13 +48,14 @@ func Validate(
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.ManualUrlStatusProperty,
 		vangogh_local_data.ManualUrlValidationResultProperty,
-		vangogh_local_data.ManualUrlGeneratedChecksumProperty)
+		vangogh_local_data.ManualUrlGeneratedChecksumProperty,
+		vangogh_local_data.ProductValidationResultProperty)
 	if err != nil {
 		return err
 	}
 
 	if allNotValid {
-		ids, err = allNotValidIds(rdx, operatingSystems, langCodes, downloadTypes, noPatches)
+		ids, err = allNotValidIds(rdx)
 		if err != nil {
 			return va.EndWithError(err)
 		}
@@ -91,12 +93,7 @@ func Validate(
 	return nil
 }
 
-func allNotValidIds(
-	rdx kevlar.ReadableRedux,
-	operatingSystems []vangogh_local_data.OperatingSystem,
-	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
-	noPatches bool) ([]string, error) {
+func allNotValidIds(rdx kevlar.ReadableRedux) ([]string, error) {
 
 	avia := nod.NewProgress("itemizing all not valid products...")
 	defer avia.EndWithResult("done")
@@ -116,26 +113,14 @@ func allNotValidIds(
 
 	for _, id := range keys {
 
-		det, err := vrDetails.Details(id)
-		if err != nil {
-			return nil, err
-		}
-
-		dls, err := vangogh_local_data.FromDetails(det, rdx)
-		if err != nil {
-			return nil, err
-		}
-
-		dls = dls.Only(operatingSystems, langCodes, downloadTypes, noPatches)
-
-		for _, dl := range dls {
-
-			if vr, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); !ok || vr != vangogh_local_data.ValidatedSuccessfully.String() {
-				ids = append(ids, id)
-				break
+		if pvrs, ok := rdx.GetLastVal(vangogh_local_data.ProductValidationResultProperty, id); ok {
+			if pvr := vangogh_local_data.ParseValidationResult(pvrs); pvr == vangogh_local_data.ValidatedSuccessfully || pvr == vangogh_local_data.ValidatedWithGeneratedChecksum {
+				avia.Increment()
+				continue
 			}
 		}
 
+		ids = append(ids, id)
 		avia.Increment()
 	}
 
@@ -249,12 +234,14 @@ type validateDelegate struct {
 	results map[vangogh_local_data.ValidationResult]int
 }
 
-func (vd *validateDelegate) Process(_ string, slug string, list vangogh_local_data.DownloadsList) error {
+func (vd *validateDelegate) Process(id, slug string, list vangogh_local_data.DownloadsList) error {
 
 	sva := nod.Begin(slug)
 	defer sva.End()
 
 	manualUrlsValidationResults := make(map[string][]string)
+
+	productVrs := make([]vangogh_local_data.ValidationResult, 0, len(list))
 
 	for _, dl := range list {
 
@@ -262,6 +249,10 @@ func (vd *validateDelegate) Process(_ string, slug string, list vangogh_local_da
 		if err != nil {
 			vr = vangogh_local_data.ValidationError
 			sva.Error(err)
+		}
+
+		if dl.Type == vangogh_local_data.Installer {
+			productVrs = append(productVrs, vr)
 		}
 
 		manualUrlsValidationResults[dl.ManualUrl] = []string{vr.String()}
@@ -279,7 +270,19 @@ func (vd *validateDelegate) Process(_ string, slug string, list vangogh_local_da
 		}
 	}
 
-	sva.EndWithSummary("validation results:", manualUrlsValidationResults)
+	slices.Sort(productVrs)
+
+	productValidationResult := vangogh_local_data.ValidationResultUnknown
+
+	if len(productVrs) > 0 {
+		productValidationResult = productVrs[len(productVrs)-1]
+	}
+
+	if err := vd.rdx.ReplaceValues(vangogh_local_data.ProductValidationResultProperty, id, productValidationResult.String()); err != nil {
+		return sva.EndWithError(err)
+	}
+
+	sva.EndWithResult(productValidationResult.String())
 
 	return nil
 }
