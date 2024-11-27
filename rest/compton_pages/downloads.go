@@ -48,6 +48,17 @@ var validationResultsColors = map[vangogh_local_data.ValidationResult]color.Colo
 	vangogh_local_data.ValidatedChecksumMismatch:      color.Red,
 }
 
+var validationResultsFontWeights = map[vangogh_local_data.ValidationResult]font_weight.Weight{
+	vangogh_local_data.ValidationResultUnknown:        font_weight.Normal,
+	vangogh_local_data.ValidatedSuccessfully:          font_weight.Bolder,
+	vangogh_local_data.ValidatedWithGeneratedChecksum: font_weight.Normal,
+	vangogh_local_data.ValidatedUnresolvedManualUrl:   font_weight.Normal,
+	vangogh_local_data.ValidatedMissingLocalFile:      font_weight.Normal,
+	vangogh_local_data.ValidatedMissingChecksum:       font_weight.Normal,
+	vangogh_local_data.ValidationError:                font_weight.Normal,
+	vangogh_local_data.ValidatedChecksumMismatch:      font_weight.Normal,
+}
+
 // Downloads will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
@@ -254,7 +265,8 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_dat
 
 	validationResult := compton.Fspan(r, vr.HumanReadableString()).
 		FontSize(size.Small).
-		ForegroundColor(validationResultsColors[vr])
+		ForegroundColor(validationResultsColors[vr]).
+		FontWeight(validationResultsFontWeights[vr])
 	linkColumn.Append(validationResult)
 
 	sizeFr := compton.Frow(r).FontSize(size.Small).

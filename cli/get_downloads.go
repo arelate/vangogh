@@ -72,7 +72,8 @@ func GetDownloads(
 		vangogh_local_data.SlugProperty,
 		vangogh_local_data.LocalManualUrlProperty,
 		vangogh_local_data.ManualUrlStatusProperty,
-		vangogh_local_data.DownloadStatusErrorProperty)
+		vangogh_local_data.DownloadStatusErrorProperty,
+		vangogh_local_data.ProductValidationResultProperty)
 	if err != nil {
 		return gda.EndWithError(err)
 	}
@@ -123,7 +124,7 @@ type getDownloadsDelegate struct {
 	forceUpdate bool
 }
 
-func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_local_data.DownloadsList) error {
+func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_local_data.DownloadsList) error {
 	sda := nod.Begin(slug)
 	defer sda.End()
 
@@ -138,6 +139,14 @@ func (gdd *getDownloadsDelegate) Process(_, slug string, list vangogh_local_data
 		manualUrlsQueued[dl.ManualUrl] = []string{vangogh_local_data.ManualUrlQueued.String()}
 	}
 	if err := gdd.rdx.BatchAddValues(vangogh_local_data.ManualUrlStatusProperty, manualUrlsQueued); err != nil {
+		return sda.EndWithError(err)
+	}
+
+	// (re-)set product validation result prior to downloading
+	if err := gdd.rdx.ReplaceValues(
+		vangogh_local_data.ProductValidationResultProperty,
+		id,
+		vangogh_local_data.ValidationResultUnknown.String()); err != nil {
 		return sda.EndWithError(err)
 	}
 
