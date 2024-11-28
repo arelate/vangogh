@@ -55,8 +55,8 @@ var validationResultsFontWeights = map[vangogh_local_data.ValidationResult]font_
 	vangogh_local_data.ValidatedUnresolvedManualUrl:   font_weight.Normal,
 	vangogh_local_data.ValidatedMissingLocalFile:      font_weight.Normal,
 	vangogh_local_data.ValidatedMissingChecksum:       font_weight.Normal,
-	vangogh_local_data.ValidationError:                font_weight.Normal,
-	vangogh_local_data.ValidatedChecksumMismatch:      font_weight.Normal,
+	vangogh_local_data.ValidationError:                font_weight.Bolder,
+	vangogh_local_data.ValidatedChecksumMismatch:      font_weight.Bolder,
 }
 
 // Downloads will present available installers, DLCs in the following hierarchy:
