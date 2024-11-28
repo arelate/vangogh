@@ -125,7 +125,7 @@ func Vet(
 	}
 
 	if vetOpts.missingChecksums {
-		if err := vets.MissingChecksums(operatingSystems, langCodes, downloadTypes, noPatches, fix); err != nil {
+		if err := vets.MissingChecksums(operatingSystems, langCodes, noPatches, fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}

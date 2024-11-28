@@ -14,7 +14,6 @@ import (
 func MissingChecksums(
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
 	noPatches bool,
 	fix bool) error {
 
@@ -66,7 +65,10 @@ func MissingChecksums(
 			return mca.EndWithError(err)
 		}
 
-		dls = dls.Only(operatingSystems, langCodes, downloadTypes, noPatches)
+		dls = dls.Only(operatingSystems,
+			langCodes,
+			[]vangogh_local_data.DownloadType{vangogh_local_data.Installer, vangogh_local_data.DLC},
+			noPatches)
 
 		for _, dl := range dls {
 			if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok {
