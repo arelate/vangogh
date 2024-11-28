@@ -123,6 +123,18 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 
 func validationResults(r compton.Registrar, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
 
+	hasInstallerDlcs := false
+	for _, dl := range dls {
+		if dl.Type != vangogh_local_data.Extra {
+			hasInstallerDlcs = true
+			break
+		}
+	}
+
+	if !hasInstallerDlcs {
+		return nil
+	}
+
 	valRes := compton.Frow(r).FontSize(size.Small).Heading("Installers, DLC")
 	results := make(map[vangogh_local_data.ValidationResult]int)
 
