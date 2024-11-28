@@ -76,7 +76,7 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 		return s
 	}
 
-	if valRes := validationResults(s, dls, rdx); valRes != nil {
+	if valRes := validationResults(s, id, dls, rdx); valRes != nil {
 		pageStack.Append(valRes)
 	}
 
@@ -121,7 +121,7 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 	return s
 }
 
-func validationResults(r compton.Registrar, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
+func validationResults(r compton.Registrar, id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
 
 	hasInstallerDlcs := false
 	for _, dl := range dls {
@@ -135,7 +135,15 @@ func validationResults(r compton.Registrar, dls vangogh_local_data.DownloadsList
 		return nil
 	}
 
-	valRes := compton.Frow(r).FontSize(size.Small).Heading("Installers, DLC")
+	pvrc := color.Gray
+	if pvrs, ok := rdx.GetLastVal(vangogh_local_data.ProductValidationResultProperty, id); ok {
+		pvr := vangogh_local_data.ParseValidationResult(pvrs)
+		pvrc = validationResultsColors[pvr]
+	}
+
+	valRes := compton.Frow(r).FontSize(size.Small).
+		IconColor(compton.Circle, pvrc).
+		Heading("Installers, DLC")
 	results := make(map[vangogh_local_data.ValidationResult]int)
 
 	for _, dl := range dls {
