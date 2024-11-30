@@ -234,6 +234,15 @@ type validateDelegate struct {
 	results map[vangogh_local_data.ValidationResult]int
 }
 
+func downloadsListIsExtrasOnly(dls vangogh_local_data.DownloadsList) bool {
+	for _, dl := range dls {
+		if dl.Type != vangogh_local_data.Extra {
+			return false
+		}
+	}
+	return true
+}
+
 func (vd *validateDelegate) Process(id, slug string, list vangogh_local_data.DownloadsList) error {
 
 	sva := nod.Begin(slug)
@@ -274,7 +283,9 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_local_data.Dow
 
 	productValidationResult := vangogh_local_data.ValidationResultUnknown
 
-	if len(productVrs) > 0 {
+	if downloadsListIsExtrasOnly(list) {
+		productValidationResult = vangogh_local_data.ValidatedSuccessfully
+	} else if len(productVrs) > 0 {
 		productValidationResult = productVrs[len(productVrs)-1]
 	}
 
