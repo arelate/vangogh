@@ -234,7 +234,14 @@ func Sync(
 
 	// get downloads updates
 	if syncOpts.downloadsUpdates {
+
+		ids, err := itemizeUpdatedAccountProducts(since)
+		if err != nil {
+			return sa.EndWithError(err)
+		}
+
 		if err := UpdateDownloads(
+			ids,
 			operatingSystems,
 			langCodes,
 			downloadTypes,
@@ -245,6 +252,7 @@ func Sync(
 		}
 
 		if err := validateUpdated(
+			ids,
 			since,
 			operatingSystems,
 			langCodes,

@@ -16,6 +16,7 @@ func UpdateDownloadsHandler(u *url.URL) error {
 	}
 
 	return UpdateDownloads(
+		nil,
 		vangogh_local_data.OperatingSystemsFromUrl(u),
 		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
 		vangogh_local_data.DownloadTypesFromUrl(u),
@@ -24,16 +25,7 @@ func UpdateDownloadsHandler(u *url.URL) error {
 		vangogh_local_data.FlagFromUrl(u, "updates-only"))
 }
 
-func UpdateDownloads(
-	operatingSystems []vangogh_local_data.OperatingSystem,
-	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
-	noPatches bool,
-	since int64,
-	updatesOnly bool) error {
-
-	uda := nod.Begin("itemizing updated downloads...")
-	defer uda.End()
+func itemizeUpdatedAccountProducts(since int64) ([]string, error) {
 
 	//Here is a set of items we'll consider as updated for updating downloads:
 	//1) account-products Updates, all products that have .IsNew or .Updates > 0 -
@@ -45,39 +37,62 @@ func UpdateDownloads(
 	// Updates (so .IsNew or .Updates > 0 won't be true anymore) and have updated
 	// details as a result. This is somewhat excessive for general case, however would
 	// allow us to capture all updated account-products at a price of some extra checks
-	updAccountProductIds := make(map[string]bool)
+	updAccountProductIds := make(map[string]any)
 
 	uapIds, err := itemizations.AccountProductsUpdates()
 	if err != nil {
-		return uda.EndWithError(err)
+		return nil, err
 	}
 
 	for _, id := range uapIds {
-		updAccountProductIds[id] = true
+		updAccountProductIds[id] = nil
 	}
 
 	//Additionally itemize required games for newly acquired DLCs
 	requiredGamesForNewDLCs, err := itemizations.RequiredAndIncluded(since)
 	if err != nil {
-		return uda.EndWithError(err)
+		return nil, err
 	}
 
 	for _, rg := range requiredGamesForNewDLCs {
-		updAccountProductIds[rg] = true
+		updAccountProductIds[rg] = nil
 	}
 
 	//Additionally add modified details in case the sync was interrupted and
 	//account-products doesn't have .IsNew or .Updates > 0 items
 	modifiedDetails, err := itemizations.Modified(since, vangogh_local_data.Details)
 	if err != nil {
-		return uda.EndWithError(err)
+		return nil, err
 	}
 
 	for _, md := range modifiedDetails {
-		updAccountProductIds[md] = true
+		updAccountProductIds[md] = nil
 	}
 
-	if len(updAccountProductIds) == 0 {
+	return maps.Keys(updAccountProductIds), nil
+}
+
+func UpdateDownloads(
+	ids []string,
+	operatingSystems []vangogh_local_data.OperatingSystem,
+	langCodes []string,
+	downloadTypes []vangogh_local_data.DownloadType,
+	noPatches bool,
+	since int64,
+	updatesOnly bool) error {
+
+	uda := nod.Begin("itemizing updated downloads...")
+	defer uda.End()
+
+	if ids == nil {
+		var err error
+		ids, err = itemizeUpdatedAccountProducts(since)
+		if err != nil {
+			return uda.EndWithError(err)
+		}
+	}
+
+	if len(ids) == 0 {
 		uda.EndWithResult("all downloads are up to date")
 		return nil
 	}
@@ -90,21 +105,26 @@ func UpdateDownloads(
 			return uda.EndWithError(err)
 		}
 
-		for id := range updAccountProductIds {
+		updatesOnlyIds := make([]string, 0, len(ids))
+
+		for _, id := range ids {
 			ok, err := vangogh_local_data.IsProductDownloaded(id, rdx)
 			if err != nil {
 				return uda.EndWithError(err)
 			}
 			if !ok {
-				delete(updAccountProductIds, id)
+				continue
 			}
+			updatesOnlyIds = append(updatesOnlyIds, id)
 		}
+
+		ids = updatesOnlyIds
 	}
 
 	uda.EndWithResult("done")
 
 	return GetDownloads(
-		maps.Keys(updAccountProductIds),
+		ids,
 		operatingSystems,
 		langCodes,
 		downloadTypes,

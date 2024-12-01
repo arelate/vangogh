@@ -298,23 +298,20 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_local_data.Dow
 	return nil
 }
 
-func validateUpdated(since int64,
+func validateUpdated(ids []string,
+	since int64,
 	operatingSystems []vangogh_local_data.OperatingSystem,
 	langCodes []string,
 	downloadTypes []vangogh_local_data.DownloadType,
 	noPatches bool) error {
 
-	vrAccountProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountProducts)
-	if err != nil {
-		return err
+	if ids == nil {
+		var err error
+		ids, err = itemizeUpdatedAccountProducts(since)
+		if err != nil {
+			return err
+		}
 	}
-
-	var ids []string
-	updatedAfter, err := vrAccountProducts.CreatedOrUpdatedAfter(since)
-	if err != nil {
-		return err
-	}
-	ids = append(ids, updatedAfter...)
 
 	return Validate(ids, operatingSystems, langCodes, downloadTypes, noPatches, false)
 }
