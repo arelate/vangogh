@@ -90,7 +90,7 @@ func Validate(
 
 	va.EndWithSummary("", summary)
 
-	return nil
+	return CascadeValidation()
 }
 
 func allNotValidIds(rdx kevlar.ReadableRedux) ([]string, error) {
