@@ -48,7 +48,7 @@ func CascadeValidation() error {
 	}
 
 	if err := rdx.BatchReplaceValues(vangogh_local_data.ProductValidationResultProperty, cascadedResults); err != nil {
-
+		return cva.EndWithError(err)
 	}
 
 	return nil
