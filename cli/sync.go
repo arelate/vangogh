@@ -260,10 +260,6 @@ func Sync(
 			noPatches); err != nil {
 			return sa.EndWithError(err)
 		}
-
-		if err := CascadeValidation(); err != nil {
-			return sa.EndWithError(err)
-		}
 	}
 
 	syncEventsRdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.SyncEventsProperty)
