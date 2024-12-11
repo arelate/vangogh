@@ -14,6 +14,8 @@ github.com/boggydigital/clo v1.0.5 h1:gew1pTjYdatAV/6Kbly5P0DoA/LneiZ9mNlbdfZQqU
 github.com/boggydigital/clo v1.0.5/go.mod h1:7QbdMB008okXsdk41qJyJ6k/oJALIIXQ0GLYSxY9WFM=
 github.com/boggydigital/compton v0.2.25 h1:tO15LZjrpm2MAgHT8rOsu3qOyoR1zQEoC0cPXoXbZEQ=
 github.com/boggydigital/compton v0.2.25/go.mod h1:dj/yZ2cCfts6+heUS60Favateu+gNTIsoxfX6yNZWLg=
+github.com/boggydigital/compton v0.2.26 h1:2xDQ7+V+Ey8hZT34SmMljvBbDcPaYufmo8LayB/fYPU=
+github.com/boggydigital/compton v0.2.26/go.mod h1:dj/yZ2cCfts6+heUS60Favateu+gNTIsoxfX6yNZWLg=
 github.com/boggydigital/coost v0.3.9 h1:lMfR5PyexBDR4xDOQp0zWZWUk/Dqlrx7gw7i7XdsC4c=
 github.com/boggydigital/coost v0.3.9/go.mod h1:w7ChGaah1DKsBIXb9ANdILg2pe2Jp7JkNpnK2R6rBec=
 github.com/boggydigital/dolo v0.2.19 h1:/lWxHGI26xVtacOjWwnVwB4Iwg5x0+ou6xYjHbqTl60=
@@ -42,6 +44,8 @@ golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f h1:XdNn9LlyWAhLVp6P/i8QYBW+h
 golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f/go.mod h1:D5SMRVC3C2/4+F/DB1wZsLRnSNimn2Sp/NPsCrsv8ak=
 golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d h1:0olWaB5pg3+oychR51GUVCEsGkeCU/2JxjBgIo4f3M0=
 golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
+golang.org/x/exp v0.0.0-20241210194714-1829a127f884 h1:Y/Mj/94zIQQGHVSv1tTtQBDaQaJe62U9bkDZKKyhPCU=
+golang.org/x/exp v0.0.0-20241210194714-1829a127f884/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
 golang.org/x/image v0.22.0 h1:UtK5yLUzilVrkjMAZAZ34DXGpASN8i8pj8g+O+yd10g=
 golang.org/x/image v0.22.0/go.mod h1:9hPFhljd4zZ1GNSIZJ49sqbp45GKK9t6w+iXvGqZUz4=
 golang.org/x/image v0.23.0 h1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=
