@@ -31,7 +31,7 @@ func SearchScopes() map[string]string {
 	queries[SearchNew] = ""
 
 	q := make(url.Values)
-	q.Set(vangogh_local_data.TypesProperty, vangogh_local_data.AccountProducts.String())
+	q.Set(vangogh_local_data.OwnedProperty, vangogh_local_data.TrueValue)
 	q.Set(vangogh_local_data.SortProperty, vangogh_local_data.GOGOrderDateProperty)
 	q.Set(vangogh_local_data.DescendingProperty, vangogh_local_data.TrueValue)
 	queries[SearchOwned] = q.Encode()
