@@ -268,6 +268,13 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			return dmua.EndWithError(err)
 		}
 		checksumDir, checksumFilename := filepath.Split(localChecksumPath)
+		// delete existing checksum in case the origin checksum produced 404 for a silently
+		// updated new version and we'd use a generated checksum to validate
+		if _, err := os.Stat(localChecksumPath); err == nil && gdd.forceUpdate {
+			if err := os.Remove(localChecksumPath); err != nil {
+				return dmua.EndWithError(err)
+			}
+		}
 		dca := nod.NewProgress(" - %s", checksumFilename)
 		originalPath := resolvedUrl.Path
 		resolvedUrl.Path = remoteChecksumPath
