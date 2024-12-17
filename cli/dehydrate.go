@@ -4,7 +4,6 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
-	_ "image/jpeg"
 	"net/url"
 	"strconv"
 	"time"
