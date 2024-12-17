@@ -4,11 +4,8 @@ import (
 	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
-	"image"
-	"image/color"
 	_ "image/jpeg"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 )
@@ -69,8 +66,6 @@ func Dehydrate(
 
 	di.TotalInt(len(ids) * len(its))
 
-	plt := issa.ColorPalette()
-
 	for _, it := range its {
 
 		if !vangogh_local_data.IsImageTypeDehydrationSupported(it) {
@@ -95,7 +90,7 @@ func Dehydrate(
 				return di.EndWithError(err)
 			}
 
-			if dhi, rc, err := dehydrateImageRepColor(alip, plt); err == nil {
+			if dhi, rc, err := issa.DehydrateImageRepColor(alip); err == nil {
 				dehydratedImages[id] = []string{dhi}
 				repColors[id] = []string{rc}
 				dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
@@ -125,30 +120,4 @@ func Dehydrate(
 	di.EndWithResult("done")
 
 	return nil
-}
-
-func dehydrateImageRepColor(absImagePath string, plt color.Palette) (string, string, error) {
-	dhi, rc := "", ""
-
-	fi, err := os.Open(absImagePath)
-	if err != nil {
-		return dhi, rc, err
-	}
-	defer fi.Close()
-
-	img, _, err := image.Decode(fi)
-	if err != nil {
-		return dhi, rc, err
-	}
-
-	gif := issa.GIFImage(img, plt, issa.DefaultSampling)
-
-	dhi, err = issa.DehydrateColor(gif)
-	if err != nil {
-		return dhi, rc, err
-	}
-
-	repColor := issa.RepColor(gif)
-
-	return dhi, issa.ColorHex(repColor), nil
 }

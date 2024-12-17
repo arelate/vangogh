@@ -24,6 +24,8 @@ github.com/boggydigital/dolo v0.2.19 h1:/lWxHGI26xVtacOjWwnVwB4Iwg5x0+ou6xYjHbqT
 github.com/boggydigital/dolo v0.2.19/go.mod h1:iFo1k9TpMP2aLy03ZLr2kB5sj6yRxpuC/wx5p2jpAMQ=
 github.com/boggydigital/issa v0.1.19 h1:Oue2vdRiiV2xh1h/PYRAP8F88bt++ADNeaaWwlT/QB4=
 github.com/boggydigital/issa v0.1.19/go.mod h1:Za10zkG7QvOGC7dDRjvzVr6GWDQm4f7FwO8/fH8usZY=
+github.com/boggydigital/issa v0.1.20 h1:onavxg8qjkmXqigz/VCA+QTrquOatZtoDj2nIykad5w=
+github.com/boggydigital/issa v0.1.20/go.mod h1:Za10zkG7QvOGC7dDRjvzVr6GWDQm4f7FwO8/fH8usZY=
 github.com/boggydigital/kevlar v0.5.19 h1:NPNxTSLReQyYDzYlxX+Vb9XbOy2BIgh3W+i28Oh2PKY=
 github.com/boggydigital/kevlar v0.5.19/go.mod h1:hoHfBGc8xq2afcKcbPG5699SJDQ9TjiNeWJ7kwA6XF0=
 github.com/boggydigital/kevlar_dolo v0.1.7 h1:9HmNcSTrZDu1PZOw5OyCDQewQsh0Iq9hmOJ7Ib+Lw0I=
@@ -48,6 +50,8 @@ golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d h1:0olWaB5pg3+oychR51GUVCEsG
 golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
 golang.org/x/exp v0.0.0-20241210194714-1829a127f884 h1:Y/Mj/94zIQQGHVSv1tTtQBDaQaJe62U9bkDZKKyhPCU=
 golang.org/x/exp v0.0.0-20241210194714-1829a127f884/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
+golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 h1:1UoZQm6f0P/ZO0w1Ri+f+ifG/gXhegadRdwBIXEFWDo=
+golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
 golang.org/x/image v0.22.0 h1:UtK5yLUzilVrkjMAZAZ34DXGpASN8i8pj8g+O+yd10g=
 golang.org/x/image v0.22.0/go.mod h1:9hPFhljd4zZ1GNSIZJ49sqbp45GKK9t6w+iXvGqZUz4=
 golang.org/x/image v0.23.0 h1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=
