@@ -34,13 +34,11 @@ github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6j
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=
 github.com/boggydigital/wits v0.2.3/go.mod h1:aR/z0vfMLtg0b4hcts0qiSTZcA51O8A2N3U9laqd2Lc=
-github.com/boggydigital/yet_urls v0.1.54 h1:UWtw0glV0wC6Fu8AsXCWUVJFB5s155A6OIibu9bXzZw=
-github.com/boggydigital/yet_urls v0.1.54/go.mod h1:gwp6JmGZPfDTYn7DZJWk3cM2+8cBjatpCJmXR3AzIRo=
+github.com/boggydigital/yet_urls v0.1.55 h1:BNAUl7aR/PRZivIk/t8fJFqP7bXHNQZX+ZTGdBOvjHE=
+github.com/boggydigital/yet_urls v0.1.55/go.mod h1:wFm8i6tGY9rIAuscxYJBiIgtpJGUn3FX+0g0pE43ZWQ=
 golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 h1:1UoZQm6f0P/ZO0w1Ri+f+ifG/gXhegadRdwBIXEFWDo=
 golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
 golang.org/x/image v0.23.0 h1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=
 golang.org/x/image v0.23.0/go.mod h1:wJJBTdLfCCf3tiHa1fNxpZmUI4mmoZvwMCPP0ddoNKY=
-golang.org/x/net v0.32.0 h1:ZqPmj8Kzc+Y6e0+skZsuACbx+wzMgo5MQsJh9Qd6aYI=
-golang.org/x/net v0.32.0/go.mod h1:CwU0IoeOlnQQWJ6ioyFrfRuomB8GKF6KbYXZVyeXNfs=
 golang.org/x/net v0.33.0 h1:74SYHlV8BIgHIFC/LrYkOGIwL19eTYXQ5wc6TBuO36I=
 golang.org/x/net v0.33.0/go.mod h1:HXLR5J+9DxmrqMwG9qjGCxZ+zKXxBru04zlTvWlWuN4=
