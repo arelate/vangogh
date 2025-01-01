@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
+	"golang.org/x/net/html/atom"
 	"slices"
 	"strings"
 )
@@ -133,10 +134,16 @@ func propertyValuesDatalist(property string, rdx kevlar.ReadableRedux) map[strin
 }
 
 func searchInputs(r compton.Registrar, query map[string][]string, container compton.Element, rdx kevlar.ReadableRedux) {
-	for _, property := range compton_data.SearchProperties {
+	for ii, property := range compton_data.SearchProperties {
 		title := compton_data.PropertyTitles[property]
 		value := strings.Join(query[property], ", ")
 		titleInput := compton.TISearchValue(r, title, property, value)
+
+		if ii == 0 {
+			if inputs := titleInput.GetElementsByTagName(atom.Input); len(inputs) > 0 {
+				inputs[0].SetAttribute("autofocus", "")
+			}
+		}
 
 		var datalist map[string]string
 		var listId string
