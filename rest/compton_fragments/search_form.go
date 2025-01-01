@@ -140,8 +140,8 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 		titleInput := compton.TISearchValue(r, title, property, value)
 
 		if ii == 0 {
-			if inputs := titleInput.GetElementsByTagName(atom.Input); len(inputs) > 0 {
-				inputs[0].SetAttribute("autofocus", "")
+			if input := titleInput.GetFirstElementByTagName(atom.Input); input != nil {
+				input.SetAttribute("autofocus", "")
 			}
 		}
 
