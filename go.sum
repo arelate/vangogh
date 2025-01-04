@@ -12,6 +12,8 @@ github.com/arelate/vangogh_local_data v0.4.43 h1:3B7cGIgzOWQ6NmGIh4cQvW7Otdk7NhZ
 github.com/arelate/vangogh_local_data v0.4.43/go.mod h1:Wc0/Oto0/3QVfdtKs+m6JVGhHl0YcpU3kjVKuWQINco=
 github.com/arelate/vangogh_local_data v0.4.44 h1:VjRlMD1OZ4bQ/OTtz21QBSrWDjFa2T98MUhd3rk/XX8=
 github.com/arelate/vangogh_local_data v0.4.44/go.mod h1:Wc0/Oto0/3QVfdtKs+m6JVGhHl0YcpU3kjVKuWQINco=
+github.com/arelate/vangogh_local_data v0.4.45 h1:C9SDXUi5LwvCjQVkmq+PAV/6/6CrnvtjPTE39o8oOrs=
+github.com/arelate/vangogh_local_data v0.4.45/go.mod h1:Wc0/Oto0/3QVfdtKs+m6JVGhHl0YcpU3kjVKuWQINco=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/backups v0.1.5 h1:4CSStM0rGEXqaatnK0vZzMTkjZfDwXrrZU1GOYhpsBM=
