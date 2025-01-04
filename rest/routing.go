@@ -51,9 +51,9 @@ func HandleFuncs() {
 		// products redirects
 		"GET /products": Redirect("/search", http.StatusPermanentRedirect),
 		// API
-		"GET /api/health":             Log(http.HandlerFunc(GetHealth)),
-		"GET /api/health-auth":        Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
-		"GET /api/downloads-metadata": Log(http.HandlerFunc(GetDownloadsMetadata)),
+		"GET /api/health":      Log(http.HandlerFunc(GetHealth)),
+		"GET /api/health-auth": Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
+		"GET /api/metadata":    Log(http.HandlerFunc(GetMetadata)),
 		// start at the updates
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
 	}

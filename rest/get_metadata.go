@@ -14,9 +14,9 @@ import (
 
 const applicationJsonContentType = "application/json"
 
-func GetDownloadsMetadata(w http.ResponseWriter, r *http.Request) {
+func GetMetadata(w http.ResponseWriter, r *http.Request) {
 
-	// GET /downloads-metadata?id&os&lang-code
+	// GET /metadata?id&os&lang-code
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -52,7 +52,7 @@ func GetDownloadsMetadata(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", applicationJsonContentType)
 
-	dm, err := getDownloadMetadata(id, dls, rdx)
+	dm, err := getProductMetadata(id, dls, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -64,13 +64,26 @@ func GetDownloadsMetadata(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getDownloadMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) (*vangogh_local_data.DownloadMetadata, error) {
-	dm := &vangogh_local_data.DownloadMetadata{Id: id}
+func getProductMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) (*vangogh_local_data.TheoMetadata, error) {
+	tm := &vangogh_local_data.TheoMetadata{Id: id}
 	if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
-		dm.Title = title
+		tm.Title = title
 	}
 	if slug, ok := rdx.GetLastVal(vangogh_local_data.SlugProperty, id); ok {
-		dm.Slug = slug
+		tm.Slug = slug
+	}
+
+	if image, ok := rdx.GetLastVal(vangogh_local_data.ImageProperty, id); ok {
+		tm.Images.Image = image
+	}
+	if verticalImage, ok := rdx.GetLastVal(vangogh_local_data.VerticalImageProperty, id); ok {
+		tm.Images.VerticalImage = verticalImage
+	}
+	if hero, ok := rdx.GetLastVal(vangogh_local_data.HeroProperty, id); ok {
+		tm.Images.Hero = hero
+	}
+	if logo, ok := rdx.GetLastVal(vangogh_local_data.LogoProperty, id); ok {
+		tm.Images.Logo = logo
 	}
 
 	for _, dl := range dls {
@@ -109,10 +122,10 @@ func getDownloadMetadata(id string, dls vangogh_local_data.DownloadsList, rdx ke
 			link.ValidationResult = vangogh_local_data.ValidationResultUnknown.String()
 		}
 
-		dm.DownloadLinks = append(dm.DownloadLinks, link)
+		tm.DownloadLinks = append(tm.DownloadLinks, link)
 	}
 
-	return dm, nil
+	return tm, nil
 }
 
 func getMd5Checksum(relLocalDownloadPath string) (string, error) {
