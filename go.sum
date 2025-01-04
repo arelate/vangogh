@@ -2,10 +2,14 @@ github.com/arelate/southern_light v0.1.52 h1:jBO2Vga/CaZV0Yh3zCHZ7l1MrANlf5RpPzh
 github.com/arelate/southern_light v0.1.52/go.mod h1:IR7j2+TrHdoNfZrTNeXOvL3UYsotcNED3aOAEpm7VCY=
 github.com/arelate/southern_light v0.1.53 h1:ubNnOp+0GYlZYVU+UoGFYzOJTP7DvxG0OYOg38/uTLA=
 github.com/arelate/southern_light v0.1.53/go.mod h1:o0LXUTDopokcqi0wZLv1tOMkGjfvQgDxiFpNJwdpqEI=
+github.com/arelate/southern_light v0.1.56 h1:EhQUNWh8tPkPI01p0id0JqFCgHIDtmcQ/F8cj8TKZjw=
+github.com/arelate/southern_light v0.1.56/go.mod h1:TgB++EVc5llyp7TjSHSV11vmOHixkcm0h6VbeSvTp9o=
 github.com/arelate/vangogh_local_data v0.4.41 h1:9UgVIPfvbMCEs16yeHjydkdm3vU/YmTgEmUw0lV/X58=
 github.com/arelate/vangogh_local_data v0.4.41/go.mod h1:hXcjRAhGb6tjpOuSc7kN94kZANnybUVZALXfYstrjfw=
 github.com/arelate/vangogh_local_data v0.4.42 h1:f9GnHpN341pK4X0F4IfZe7NcP7ZXyv/njK+sBfKOUvw=
 github.com/arelate/vangogh_local_data v0.4.42/go.mod h1:KVfL94zwVILTbZnpKvTNy6Tq83gODtu2OBKomfoB/60=
+github.com/arelate/vangogh_local_data v0.4.43 h1:3B7cGIgzOWQ6NmGIh4cQvW7Otdk7NhZUHWS03pPEJAA=
+github.com/arelate/vangogh_local_data v0.4.43/go.mod h1:Wc0/Oto0/3QVfdtKs+m6JVGhHl0YcpU3kjVKuWQINco=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/backups v0.1.5 h1:4CSStM0rGEXqaatnK0vZzMTkjZfDwXrrZU1GOYhpsBM=
@@ -50,6 +54,8 @@ github.com/boggydigital/yet_urls v0.1.55 h1:BNAUl7aR/PRZivIk/t8fJFqP7bXHNQZX+ZTG
 github.com/boggydigital/yet_urls v0.1.55/go.mod h1:wFm8i6tGY9rIAuscxYJBiIgtpJGUn3FX+0g0pE43ZWQ=
 golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 h1:1UoZQm6f0P/ZO0w1Ri+f+ifG/gXhegadRdwBIXEFWDo=
 golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
+golang.org/x/exp v0.0.0-20250103183323-7d7fa50e5329 h1:9kj3STMvgqy3YA4VQXBrN7925ICMxD5wzMRcgA30588=
+golang.org/x/exp v0.0.0-20250103183323-7d7fa50e5329/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
 golang.org/x/image v0.23.0 h1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=
 golang.org/x/image v0.23.0/go.mod h1:wJJBTdLfCCf3tiHa1fNxpZmUI4mmoZvwMCPP0ddoNKY=
 golang.org/x/net v0.32.0 h1:ZqPmj8Kzc+Y6e0+skZsuACbx+wzMgo5MQsJh9Qd6aYI=
