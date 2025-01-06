@@ -85,6 +85,12 @@ func getProductMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kev
 	if logo, ok := rdx.GetLastVal(vangogh_local_data.LogoProperty, id); ok {
 		tm.Images.Logo = logo
 	}
+	if icon, ok := rdx.GetLastVal(vangogh_local_data.IconProperty, id); ok {
+		tm.Images.Icon = icon
+	}
+	if iconSquare, ok := rdx.GetLastVal(vangogh_local_data.IconSquareProperty, id); ok {
+		tm.Images.IconSquare = iconSquare
+	}
 
 	for _, dl := range dls {
 		link := vangogh_local_data.DownloadLink{
