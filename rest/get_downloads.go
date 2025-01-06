@@ -64,6 +64,7 @@ func getDownloads(id string,
 				return relatedGamesDownloads(id, vangogh_local_data.RequiresGamesProperty, operatingSystems, langCodes, noPatches, rdx)
 			}
 		}
+		return nil, nil
 	}
 
 	// at this point we know that we should have product details in storage (see above)
