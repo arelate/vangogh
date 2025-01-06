@@ -4,6 +4,8 @@ github.com/arelate/southern_light v0.1.53 h1:ubNnOp+0GYlZYVU+UoGFYzOJTP7DvxG0OYO
 github.com/arelate/southern_light v0.1.53/go.mod h1:o0LXUTDopokcqi0wZLv1tOMkGjfvQgDxiFpNJwdpqEI=
 github.com/arelate/southern_light v0.1.56 h1:EhQUNWh8tPkPI01p0id0JqFCgHIDtmcQ/F8cj8TKZjw=
 github.com/arelate/southern_light v0.1.56/go.mod h1:TgB++EVc5llyp7TjSHSV11vmOHixkcm0h6VbeSvTp9o=
+github.com/arelate/southern_light v0.1.57 h1:VhDcKQn72WuLkimO754mJopmfHNlSdDRxfVR47PGZf0=
+github.com/arelate/southern_light v0.1.57/go.mod h1:TgB++EVc5llyp7TjSHSV11vmOHixkcm0h6VbeSvTp9o=
 github.com/arelate/vangogh_local_data v0.4.41 h1:9UgVIPfvbMCEs16yeHjydkdm3vU/YmTgEmUw0lV/X58=
 github.com/arelate/vangogh_local_data v0.4.41/go.mod h1:hXcjRAhGb6tjpOuSc7kN94kZANnybUVZALXfYstrjfw=
 github.com/arelate/vangogh_local_data v0.4.42 h1:f9GnHpN341pK4X0F4IfZe7NcP7ZXyv/njK+sBfKOUvw=
@@ -16,6 +18,8 @@ github.com/arelate/vangogh_local_data v0.4.45 h1:C9SDXUi5LwvCjQVkmq+PAV/6/6Crnvt
 github.com/arelate/vangogh_local_data v0.4.45/go.mod h1:Wc0/Oto0/3QVfdtKs+m6JVGhHl0YcpU3kjVKuWQINco=
 github.com/arelate/vangogh_local_data v0.4.46 h1:rZNhpm657bjrAHwKOM5TbE8SjqBGANsioGV/6YqckKU=
 github.com/arelate/vangogh_local_data v0.4.46/go.mod h1:Wc0/Oto0/3QVfdtKs+m6JVGhHl0YcpU3kjVKuWQINco=
+github.com/arelate/vangogh_local_data v0.4.47 h1:pXlzPUi9vakOBrD/8I4cDOejvF1x3RXotvhSAqz1ZI4=
+github.com/arelate/vangogh_local_data v0.4.47/go.mod h1:xIps+D5EjeGyR+m3YSgBeA1OGMtaNUBFBNzXgoR441o=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/backups v0.1.5 h1:4CSStM0rGEXqaatnK0vZzMTkjZfDwXrrZU1GOYhpsBM=
@@ -62,9 +66,13 @@ golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 h1:1UoZQm6f0P/ZO0w1Ri+f+ifG/
 golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
 golang.org/x/exp v0.0.0-20250103183323-7d7fa50e5329 h1:9kj3STMvgqy3YA4VQXBrN7925ICMxD5wzMRcgA30588=
 golang.org/x/exp v0.0.0-20250103183323-7d7fa50e5329/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
+golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 h1:yqrTHse8TCMW1M1ZCP+VAR/l0kKxwaAIqN/il7x4voA=
+golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8/go.mod h1:tujkw807nyEEAamNbDrEGzRav+ilXA7PCRAd6xsmwiU=
 golang.org/x/image v0.23.0 h1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=
 golang.org/x/image v0.23.0/go.mod h1:wJJBTdLfCCf3tiHa1fNxpZmUI4mmoZvwMCPP0ddoNKY=
 golang.org/x/net v0.32.0 h1:ZqPmj8Kzc+Y6e0+skZsuACbx+wzMgo5MQsJh9Qd6aYI=
 golang.org/x/net v0.32.0/go.mod h1:CwU0IoeOlnQQWJ6ioyFrfRuomB8GKF6KbYXZVyeXNfs=
 golang.org/x/net v0.33.0 h1:74SYHlV8BIgHIFC/LrYkOGIwL19eTYXQ5wc6TBuO36I=
 golang.org/x/net v0.33.0/go.mod h1:HXLR5J+9DxmrqMwG9qjGCxZ+zKXxBru04zlTvWlWuN4=
+golang.org/x/net v0.34.0 h1:Mb7Mrk043xzHgnRM88suvJFwzVrRfHEHJEl5/71CKw0=
+golang.org/x/net v0.34.0/go.mod h1:di0qlW3YNM5oh6GqDGQr92MyTozJPmybPK4Ev/Gm31k=
