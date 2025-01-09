@@ -6,6 +6,8 @@ github.com/arelate/southern_light v0.1.56 h1:EhQUNWh8tPkPI01p0id0JqFCgHIDtmcQ/F8
 github.com/arelate/southern_light v0.1.56/go.mod h1:TgB++EVc5llyp7TjSHSV11vmOHixkcm0h6VbeSvTp9o=
 github.com/arelate/southern_light v0.1.57 h1:VhDcKQn72WuLkimO754mJopmfHNlSdDRxfVR47PGZf0=
 github.com/arelate/southern_light v0.1.57/go.mod h1:TgB++EVc5llyp7TjSHSV11vmOHixkcm0h6VbeSvTp9o=
+github.com/arelate/southern_light v0.1.61 h1:NGu6y4KcDjfM+KQSq3wFntLTAmfKahDRbPJLdZfe20E=
+github.com/arelate/southern_light v0.1.61/go.mod h1:TgB++EVc5llyp7TjSHSV11vmOHixkcm0h6VbeSvTp9o=
 github.com/arelate/vangogh_local_data v0.4.41 h1:9UgVIPfvbMCEs16yeHjydkdm3vU/YmTgEmUw0lV/X58=
 github.com/arelate/vangogh_local_data v0.4.41/go.mod h1:hXcjRAhGb6tjpOuSc7kN94kZANnybUVZALXfYstrjfw=
 github.com/arelate/vangogh_local_data v0.4.42 h1:f9GnHpN341pK4X0F4IfZe7NcP7ZXyv/njK+sBfKOUvw=
@@ -22,6 +24,8 @@ github.com/arelate/vangogh_local_data v0.4.47 h1:pXlzPUi9vakOBrD/8I4cDOejvF1x3RX
 github.com/arelate/vangogh_local_data v0.4.47/go.mod h1:xIps+D5EjeGyR+m3YSgBeA1OGMtaNUBFBNzXgoR441o=
 github.com/arelate/vangogh_local_data v0.4.48 h1:Hui9ytKopOFHR4sSvOyYG644KAi700dmxq3oVIlskfA=
 github.com/arelate/vangogh_local_data v0.4.48/go.mod h1:xIps+D5EjeGyR+m3YSgBeA1OGMtaNUBFBNzXgoR441o=
+github.com/arelate/vangogh_local_data v0.4.49 h1:3mXTTYnVVACp6QLqliSARiPsh3WkDmcyhrdv8jK1/WQ=
+github.com/arelate/vangogh_local_data v0.4.49/go.mod h1:xIps+D5EjeGyR+m3YSgBeA1OGMtaNUBFBNzXgoR441o=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/backups v0.1.5 h1:4CSStM0rGEXqaatnK0vZzMTkjZfDwXrrZU1GOYhpsBM=
