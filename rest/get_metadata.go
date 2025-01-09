@@ -9,14 +9,13 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 const applicationJsonContentType = "application/json"
 
 func GetMetadata(w http.ResponseWriter, r *http.Request) {
 
-	// GET /metadata?id&os&lang-code
+	// GET /metadata?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -27,24 +26,7 @@ func GetMetadata(w http.ResponseWriter, r *http.Request) {
 
 	id := q.Get("id")
 
-	var oses []vangogh_local_data.OperatingSystem
-	if q.Has(vangogh_local_data.OperatingSystemsProperty) {
-		osesStr := strings.Split(q.Get(vangogh_local_data.OperatingSystemsProperty), ",")
-		oses = vangogh_local_data.ParseManyOperatingSystems(osesStr)
-	}
-	if len(oses) == 0 {
-		oses = operatingSystems
-	}
-
-	var langCodes []string
-	if q.Has(vangogh_local_data.LanguageCodeProperty) {
-		langCodes = strings.Split(q.Get(vangogh_local_data.LanguageCodeProperty), ",")
-	}
-	if len(langCodes) == 0 {
-		langCodes = languageCodes
-	}
-
-	dls, err := getDownloads(id, oses, langCodes, noPatches, rdx)
+	dls, err := getDownloads(id, operatingSystems, langCodes, noPatches, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

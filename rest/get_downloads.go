@@ -19,7 +19,7 @@ func GetDownloads(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	dls, err := getDownloads(id, operatingSystems, languageCodes, noPatches, rdx)
+	dls, err := getDownloads(id, operatingSystems, langCodes, noPatches, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

@@ -16,7 +16,7 @@ const (
 
 var (
 	operatingSystems []vangogh_local_data.OperatingSystem
-	languageCodes    []string
+	langCodes        []string
 	noPatches        bool
 
 	rdx kevlar.ReadableRedux
@@ -27,7 +27,7 @@ func SetDefaultDownloadsFilters(
 	lc []string,
 	np bool) {
 	operatingSystems = os
-	languageCodes = lc
+	langCodes = lc
 	noPatches = np
 }
 
