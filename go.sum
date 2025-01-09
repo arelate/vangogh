@@ -50,6 +50,8 @@ github.com/boggydigital/dolo v0.2.19 h1:/lWxHGI26xVtacOjWwnVwB4Iwg5x0+ou6xYjHbqT
 github.com/boggydigital/dolo v0.2.19/go.mod h1:iFo1k9TpMP2aLy03ZLr2kB5sj6yRxpuC/wx5p2jpAMQ=
 github.com/boggydigital/issa v0.1.21 h1:HUg7ZjUoZbv2Upc+WCBQXdiF/HyNlnf0qIWSo/hz9h8=
 github.com/boggydigital/issa v0.1.21/go.mod h1:Za10zkG7QvOGC7dDRjvzVr6GWDQm4f7FwO8/fH8usZY=
+github.com/boggydigital/issa v0.1.22 h1:yfD/X5EeaPyI44XTobwjafMSzeKnuB7cxWsXY3XewO4=
+github.com/boggydigital/issa v0.1.22/go.mod h1:Za10zkG7QvOGC7dDRjvzVr6GWDQm4f7FwO8/fH8usZY=
 github.com/boggydigital/kevlar v0.5.19 h1:NPNxTSLReQyYDzYlxX+Vb9XbOy2BIgh3W+i28Oh2PKY=
 github.com/boggydigital/kevlar v0.5.19/go.mod h1:hoHfBGc8xq2afcKcbPG5699SJDQ9TjiNeWJ7kwA6XF0=
 github.com/boggydigital/kevlar_dolo v0.1.7 h1:9HmNcSTrZDu1PZOw5OyCDQewQsh0Iq9hmOJ7Ib+Lw0I=
