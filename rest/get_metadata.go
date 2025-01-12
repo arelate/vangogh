@@ -75,7 +75,7 @@ func getProductMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kev
 	}
 
 	for _, dl := range dls {
-		link := vangogh_local_data.DownloadLink{
+		link := vangogh_local_data.TheoDownloadLink{
 			ManualUrl:      dl.ManualUrl,
 			Name:           dl.Name,
 			OS:             dl.OS.String(),
