@@ -18,6 +18,8 @@ github.com/arelate/southern_light v0.1.68 h1:YkgJYiYuAswK1a/7/KVL/h3GqQAeG9XhVAj
 github.com/arelate/southern_light v0.1.68/go.mod h1:4JqQiq89TUq0/3znTEjW4w0l4eXRUZZhbD0JFddpKcw=
 github.com/arelate/southern_light v0.1.69 h1:JnWe+4XdrvFKozgk3deAqqLfWzDYSWA3xndZfhvj0Zs=
 github.com/arelate/southern_light v0.1.69/go.mod h1:4JqQiq89TUq0/3znTEjW4w0l4eXRUZZhbD0JFddpKcw=
+github.com/arelate/southern_light v0.1.70 h1:qc4b0MrMohSEAt7DfnoGxr+O/NXoPUEERL7eG964P7A=
+github.com/arelate/southern_light v0.1.70/go.mod h1:4JqQiq89TUq0/3znTEjW4w0l4eXRUZZhbD0JFddpKcw=
 github.com/arelate/vangogh_local_data v0.4.41 h1:9UgVIPfvbMCEs16yeHjydkdm3vU/YmTgEmUw0lV/X58=
 github.com/arelate/vangogh_local_data v0.4.41/go.mod h1:hXcjRAhGb6tjpOuSc7kN94kZANnybUVZALXfYstrjfw=
 github.com/arelate/vangogh_local_data v0.4.42 h1:f9GnHpN341pK4X0F4IfZe7NcP7ZXyv/njK+sBfKOUvw=
