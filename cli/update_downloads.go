@@ -6,6 +6,7 @@ import (
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
+	"os"
 )
 
 func UpdateDownloadsHandler(u *url.URL) error {
@@ -108,13 +109,17 @@ func UpdateDownloads(
 		updatesOnlyIds := make([]string, 0, len(ids))
 
 		for _, id := range ids {
-			ok, err := vangogh_integration.IsProductDownloaded(id, rdx)
-			if err != nil {
-				return uda.EndWithError(err)
+
+			if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
+				pDir, err := vangogh_integration.AbsProductDownloadsDir(slug)
+				if err != nil {
+					return uda.EndWithError(err)
+				}
+				if _, err := os.Stat(pDir); os.IsNotExist(err) {
+					continue
+				}
 			}
-			if !ok {
-				continue
-			}
+
 			updatesOnlyIds = append(updatesOnlyIds, id)
 		}
 
