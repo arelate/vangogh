@@ -22,7 +22,7 @@ func missingDetail(
 
 	// gamesdb products don't exist for DLC, PACK product types,
 	// only exist for GAME - so we need to filter them specially
-	if mainPt == vangogh_integration.CatalogPage &&
+	if mainPt == vangogh_integration.CatalogProducts &&
 		detailPt == vangogh_integration.GamesDBProducts {
 		return missingGamesDbCatalogGames(since)
 	}
