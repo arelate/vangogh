@@ -20,27 +20,26 @@ func missingDetail(
 	detailPt, mainPt vangogh_integration.ProductType,
 	since int64) ([]string, error) {
 
+	// gamesdb products don't exist for DLC, PACK product types,
+	// only exist for GAME - so we need to filter them specially
+	if mainPt == vangogh_integration.CatalogPage &&
+		detailPt == vangogh_integration.GamesDBProducts {
+		return missingGamesDbCatalogGames(since)
+	}
+
 	//api-products-v2 provides
 	//includes-games, is-included-by-games,
 	//requires-games, is-required-by-games
 	if mainPt == vangogh_integration.ApiProductsV2 &&
 		detailPt == vangogh_integration.ApiProductsV2 {
-		lgs, err := linkedGames(since)
-		if err != nil {
-			return nil, err
-		}
-		return lgs, nil
+		return linkedGames(since)
 	}
 
 	//licences give a signal when DLC has been purchased, this would add
 	//required (base) game details to the updates
 	if mainPt == vangogh_integration.LicenceProducts &&
 		detailPt == vangogh_integration.Details {
-		rgs, err := RequiredAndIncluded(since)
-		if err != nil {
-			return nil, err
-		}
-		return rgs, nil
+		return RequiredAndIncluded(since)
 	}
 
 	mda := nod.Begin(" finding missing %s for %s...", detailPt, mainPt)
