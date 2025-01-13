@@ -24,7 +24,7 @@ func missingDetail(
 	// only exist for GAME - so we need to filter them specially
 	if mainPt == vangogh_integration.CatalogProducts &&
 		detailPt == vangogh_integration.GamesDBProducts {
-		return missingGamesDbCatalogGames(since)
+		return gamesDbCatalogGames(since, true)
 	}
 
 	//api-products-v2 provides

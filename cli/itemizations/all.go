@@ -19,11 +19,20 @@ func All(
 			ids = append(ids, missingIds...)
 		}
 		if updated {
-			modifiedIds, err := Modified(modifiedAfter, mainPt)
-			if err != nil {
-				return nil, err
+			// don't update gamesdb-products on catalog-products updates
+			if pt == vangogh_integration.GamesDBProducts {
+				modifiedCatalogGameProductsIds, err := gamesDbCatalogGames(modifiedAfter, false)
+				if err != nil {
+					return nil, err
+				}
+				ids = append(ids, modifiedCatalogGameProductsIds...)
+			} else {
+				modifiedIds, err := Modified(modifiedAfter, mainPt)
+				if err != nil {
+					return nil, err
+				}
+				ids = append(ids, modifiedIds...)
 			}
-			ids = append(ids, modifiedIds...)
 		}
 	}
 

@@ -6,7 +6,7 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-func missingGamesDbCatalogGames(since int64) ([]string, error) {
+func gamesDbCatalogGames(since int64, missing bool) ([]string, error) {
 
 	mcga := nod.Begin(" finding missing %s products of GAME type...", vangogh_integration.CatalogProducts)
 	defer mcga.End()
@@ -46,10 +46,12 @@ func missingGamesDbCatalogGames(since int64) ([]string, error) {
 			continue
 		}
 
-		if has, err := vrGamesDbProducts.Has(id); err == nil && has {
-			continue
-		} else if err != nil {
-			return nil, mcga.EndWithError(err)
+		if missing {
+			if has, err := vrGamesDbProducts.Has(id); err == nil && has {
+				continue
+			} else if err != nil {
+				return nil, mcga.EndWithError(err)
+			}
 		}
 
 		missingSet[id] = true
