@@ -19,7 +19,7 @@ const (
 	SyncOptionImages           = "images"
 	SyncOptionScreenshots      = "screenshots"
 	SyncOptionVideosMetadata   = "videos-metadata"
-	SyncOptionDownloadsUpdates = "downloads-Updates"
+	SyncOptionDownloadsUpdates = "downloads-updates"
 	negativePrefix             = "no-"
 )
 
