@@ -13,7 +13,7 @@ func gamesDbCatalogGames(since int64, missing bool) ([]string, error) {
 
 	missingSet := make(map[string]bool)
 
-	vrGamesDbProducts, err := vangogh_integration.NewProductReader(vangogh_integration.GamesDBProducts)
+	vrGamesDbProducts, err := vangogh_integration.NewProductReader(vangogh_integration.GamesDbProducts)
 	if err != nil {
 		return nil, mcga.EndWithError(err)
 	}
