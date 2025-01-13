@@ -147,7 +147,10 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 			fmtProperty.values[value] = grdSortedSearchHref(property, value)
 		case vangogh_integration.EnginesBuildsProperty:
 			fmtProperty.values[value] = noHref()
-
+		case vangogh_integration.AggregatedRatingProperty:
+			if value != "" {
+				fmtProperty.values[fmtAggregatedRating(value)] = noHref()
+			}
 		default:
 			fmtProperty.values[value] = searchHref(property, value)
 		}
@@ -180,6 +183,8 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 		fmtProperty.class = reviewClass(fmtGOGRating(firstValue))
 	case vangogh_integration.HLTBReviewScoreProperty:
 		fmtProperty.class = reviewClass(fmtHLTBRating(firstValue))
+	case vangogh_integration.AggregatedRatingProperty:
+		fmtProperty.class = reviewClass(fmtAggregatedRating(firstValue))
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 		fmtProperty.class = firstValue
 		if firstValue != "" {
@@ -284,6 +289,18 @@ func fmtGOGRating(rs string) string {
 func fmtHLTBRating(rs string) string {
 	rd := ""
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
+		rd = ratingDesc(ri)
+		if ri > 0 {
+			rd += fmt.Sprintf(" (%d)", ri)
+		}
+	}
+	return rd
+}
+
+func fmtAggregatedRating(rs string) string {
+	rd := ""
+	if rf, err := strconv.ParseFloat(rs, 64); err == nil {
+		ri := int64(rf)
 		rd = ratingDesc(ri)
 		if ri > 0 {
 			rd += fmt.Sprintf(" (%d)", ri)
